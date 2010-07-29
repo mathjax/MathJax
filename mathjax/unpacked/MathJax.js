@@ -1699,8 +1699,7 @@ MathJax.Hub.Startup = {
     version: "1.0",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
-//    fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts"
-    fontDir: ROOT+"/fonts"
+    fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts"
   });
   
   /***********************************/
