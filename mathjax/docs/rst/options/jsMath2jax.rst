@@ -5,9 +5,10 @@ The jsMath2jax Preprocessor
 ***************************
 
 The options below control the operation of the `jsMath2jax`
-preprocessor.  They are listed with their default values.  To set any
-of these options, include a ``jsMath2jax`` section in your
-:meth:`MathJax.Hub.Config()` call.  For example
+preprocessor that is run when you include ``"jsMath2jax.js"`` in the
+`extensions` array of your configuration.  They are listed with their
+default values.  To set any of these options, include a ``jsMath2jax``
+section in your :meth:`MathJax.Hub.Config()` call.  For example
 
 .. code-block:: javascript
 

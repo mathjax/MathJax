@@ -31,6 +31,8 @@ Basic Usage
     The MathJax Community <community>
 
 
+.. _advanced-topics:
+
 Advanced Topics
 ===============
 

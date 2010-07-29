@@ -5,10 +5,11 @@ The FontWarnings extension
 **************************
 
 The options below control the operation of the `FontWarnings`
-extension, when it is loaded in teh `extensions` array of your
-configuration.  They are listed with their default values.  To set any
-of these options, include a ``FontWarnings`` section in your
-:meth:`MathJax.Hub.Config()` call.  For example
+extension that is run when you include ``"FontWarnings.js"`` in the
+`extensions` array of your configuration.  They are listed with their
+default values.  To set any of these options, include a
+``FontWarnings`` section in your :meth:`MathJax.Hub.Config()` call.
+For example
 
 .. code-block:: javascript
 

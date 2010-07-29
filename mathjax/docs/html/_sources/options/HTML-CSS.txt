@@ -4,11 +4,12 @@
 The HTML-CSS output processor
 *****************************
 
-The options below control the operation of the HTML-CSS output processor.
-They are listed with their default values.  To set any of these
-options, include a ``"HTML-CSS"`` section in your
-:meth:`MathJax.Hub.Config()` call.  Note that, because of the dash,
-you need to enclose the name in quotes.  For example
+The options below control the operation of the HTML-CSS output
+processor that is run when you include ``"output/HTML-CSS"`` in the
+`jax` array of your configuration.  They are listed with their default
+values.  To set any of these options, include a ``"HTML-CSS"`` section
+in your :meth:`MathJax.Hub.Config()` call.  Note that, because of the
+dash, you need to enclose the name in quotes.  For example
 
 .. code-block:: javascript
 
