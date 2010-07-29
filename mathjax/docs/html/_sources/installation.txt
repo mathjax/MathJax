@@ -23,7 +23,7 @@ The easiest way to get MathJax and keep it up to date is to use the
 
 .. code-block:: sh
 
-    svn co https://mathjax.svn.sourceforge.net/svnroot/trunk/mathjax mathjax
+    svn co http://mathjax.svn.sourceforge.net/svnroot/trunk/mathjax mathjax
     cd mathjax
     unzip fonts.zip
 
@@ -64,8 +64,7 @@ may not include all the latest patches and features), use
 
 .. code-block:: sh
 
-    svn co
-    https://mathjax.svn.sourcesforge.net/svnroot/tags/mathjax-1.0 mathajx
+    svn co http://mathjax.svn.sourcesforge.net/svnroot/tags/mathjax-1.0 mathajx
     cd mathjax
     unzip fonts.zip
 
