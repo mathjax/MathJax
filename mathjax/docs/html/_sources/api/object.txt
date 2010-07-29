@@ -53,7 +53,7 @@ Static Methods
 
     :Parameters:
         - **def** --- object that defines the properties and methods
-	- **static** --- object that defines stati properties and methods
+	- **static** --- object that defines static properties and methods
     :Returns: the new object class
  
 .. method:: Augment(def[,static])
@@ -64,7 +64,7 @@ Static Methods
 
     :Parameters:
         - **def** --- object that defines the properties and methods
-	- **static** --- object that defines stati properties and methods
+	- **static** --- object that defines static properties and methods
     :Returns: the object class itself
 
 

@@ -4,7 +4,7 @@
 Synchronizing your code with MathJax
 ************************************
 
-MathJax performs mauch of its activity asynchronously, meaning that
+MathJax performs much of its activity asynchronously, meaning that
 the calls that you make to initiate these actions will return before
 the actions are completed, and your code will continue to run even
 though the actions have not been finished (and may not even be started

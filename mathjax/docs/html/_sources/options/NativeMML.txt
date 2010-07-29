@@ -5,9 +5,10 @@ The NativeMML output processor
 ******************************
 
 The options below control the operation of the NativeMML output
-processor.  They are listed with their default values.  To set any of
-these options, include a ``NativeMML`` section in your
-:meth:`MathJax.Hub.Config()` call.  For example
+processor that is run when you include ``"output/NativeMML"`` in the
+`jax` array of your configuration.  They are listed with their default
+values.  To set any of these options, include a ``NativeMML`` section
+in your :meth:`MathJax.Hub.Config()` call.  For example
 
 .. code-block:: javascript
 

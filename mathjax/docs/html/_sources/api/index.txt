@@ -14,6 +14,9 @@ speak of an "object", as it could be either a native JavaScript
 object, or a MathJax object.  We will use `Object` (capitalized) or
 `MathJax.Object` for, when the distinction is important.
 
+You may also want to view the :ref:`advanced topics <advanced-topics>`
+on the main MathJax documentation page.
+
 
 .. toctree::
     :maxdepth: 1

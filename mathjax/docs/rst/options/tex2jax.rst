@@ -4,9 +4,10 @@
 The tex2jax Preprocessor
 ************************
 
-The options below control the operation of the `tex2jax`
-preprocessor.  They are listed with their default values.  To set any
-of these options, include a ``tex2jax`` section in your
+The options below control the operation of the `tex2jax` preprocessor
+that is run when you include ``"tex2jax.js"`` in the `extensions` array
+of your configuration.  They are listed with their default values.  To
+set any of these options, include a ``tex2jax`` section in your
 :meth:`MathJax.Hub.Config()` call.  For example
 
 .. code-block:: javascript

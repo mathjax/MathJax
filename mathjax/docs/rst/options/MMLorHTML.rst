@@ -4,15 +4,16 @@
 The MMLorHTML configuration options
 ***********************************
 
-The options below control the operation of the MMLorHTML selection.
-They are listed with their default values.  To set any of these
-options, include a ``MMLorHTML`` section in your
-:meth:`MathJax.Hub.Config()` call.  For example
+The options below control the operation of the MMLorHTML configuration
+file that is run when you include ``"MMLorHTML.js"`` in the `config`
+array of your configuration.  They are listed with their default
+values.  To set any of these options, include a ``MMLorHTML`` section
+in your :meth:`MathJax.Hub.Config()` call.  For example
 
 .. code-block:: javascript
 
     MathJax.Hub.Config({
-      MMorHTMLL: {
+      MMLorHTML: {
         prefer: {
 	  Opera: "MML"
 	}
