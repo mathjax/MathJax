@@ -63,7 +63,7 @@ Reference Pages
     CSS style objects <CSS-styles>
     Glossary <glossary>
 
-* :ref:`search`
+* :ref:`Search <search>`
 
 --------
 
