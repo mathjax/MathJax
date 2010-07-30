@@ -27,7 +27,6 @@ Basic Usage
 .. toctree::
     :maxdepth: 1
 
-    "Powered by MathJax" <badge>
     The MathJax Community <community>
 
 
