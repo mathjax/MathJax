@@ -29,7 +29,7 @@
   
   var CONFIG = HUB.Insert({
     delay: 150,                                    // the delay for submenus
-    helpURL: "http://www.mathjax.org/Help-User/",  // the URL for the "MathJax Help" menu
+    helpURL: "http://www.mathjax.org/help/user/",  // the URL for the "MathJax Help" menu
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
     showFontMenu: false,                           //  show the "Font Preference" menu?
