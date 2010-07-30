@@ -386,10 +386,13 @@
     ContextMenu: function (event,force) {
       if (HTMLCSS.config.showMathMenu && (HTMLCSS.settings.context === "MathJax" || force)) {
         if (HTMLCSS.safariContextMenuBug) {setTimeout('window.getSelection().empty()',0)}
-        if (MathJax.Menu) {
+        var MENU = MathJax.Menu;
+        if (MENU) {
           var math = (this.parentNode.className === "MathJax_Display" ? this.parentNode : this)
-          MathJax.Menu.jax = HUB.getJaxFor(math.nextSibling);
-          return MathJax.Menu.menu.Post(event);
+          MENU.jax = HUB.getJaxFor(math.nextSibling);
+          MENU.menu.items[1].menu.items[1].name = 
+            (MENU.jax.inputJax.name === "MathML" ? "Original" : MENU.jax.inputJax.name);
+          return MENU.menu.Post(event);
         } else {
           if (!AJAX.loadingMathMenu) {
             AJAX.loadingMathMenu = true;

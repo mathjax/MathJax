@@ -149,12 +149,15 @@
     ContextMenu: function (event,force) {
       if (nMML.config.showMathMenu && (nMML.settings.context === "MathJax" || force)) {
         if (nMML.safariContextMenuBug) {setTimeout('window.getSelection().empty()',0)}
-        if (MathJax.Menu) {
+        var MENU = MathJax.Menu;
+        if (MENU) {
           if (document.selection) {setTimeout("document.selection.empty()",0)}
           var script = (isMSIE ? this.parentNode.parentNode.nextSibling : this.parentNode.nextSibling);
-          MathJax.Menu.jax = HUB.getJaxFor(script);
+          MENU.jax = HUB.getJaxFor(script);
+          MENU.menu.items[1].menu.items[1].name = 
+            (MENU.jax.inputJax.name === "MathML" ? "Original" : MENU.jax.inputJax.name);
           delete nMML.trapClick; delete nMML.trapUp;
-          return MathJax.Menu.menu.Post(event);
+          return MENU.menu.Post(event);
         } else {
           if (!AJAX.loadingMathMenu) {
             AJAX.loadingMathMenu = true;
