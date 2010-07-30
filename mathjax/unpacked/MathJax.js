@@ -949,7 +949,7 @@ MathJax.HTML = {
         var time = new Date(); time.setDate(time.getDate() + this.expires);
         cookie += '; expires='+time.toGMTString();
       }
-      document.cookie = cookie;
+      document.cookie = cookie+"; path=/";
     },
     
     //
