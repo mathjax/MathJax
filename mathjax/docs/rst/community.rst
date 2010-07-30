@@ -48,3 +48,13 @@ first to see if it has already been reported.
 You could also be using an outdated version of MathJax, so be sure to
 :ref:`upgrade your copy <getting-mathjax-svn>` to verify that the
 problem persists in the lastest version.
+
+
+.. _badge:
+
+"Powered by MathJax"
+====================
+
+If you are using MathJax and want to show your support, please
+consider using our `"Powered by MathJax" badge
+<http://www.mathjax.org/community/mathjax-badge>`_.
