@@ -75,30 +75,30 @@ pushed into the queue:
 
 3.  Load the cookie values:
 
-    - Post the "Begin Cookie" startup signal
+    - Post the ``Begin Cookie`` startup signal
     - Load the menu cookie values
     - Use the cookie to set the renderer, if it is set
-    - Post the "End Cookie" startup signal
+    - Post the ``End Cookie`` startup signal
 
 ..
 
 4.  Define the MathJax styles:
 
-    - Post the "Begin Styles" startup signal
+    - Post the ``Begin Styles`` startup signal
     - Load the stylesheet files from the ``MathJax.Hub.config.stylesheets`` array
     - Define the stylesheet described in ``MathJax.Hub.config.styles``
-    - Post the "End Styles" startup signal
+    - Post the ``End Styles`` startup signal
 
 ..
 
 5.  Load the jax configuration files:
 
-    - Post the "Begin Jax" startup signal
+    - Post the ``Begin Jax`` startup signal
     - Load the jax config files from the ``MathJax.Hub.config.jax`` array
 
       - The jax will register themselves when they are loaded
 
-    - Post the "End Jax" startup signal
+    - Post the ``End Jax`` startup signal
 
 ..
 
