@@ -456,10 +456,6 @@ MathJax.Hub.Config({
     //  
     //  Example:
     //      styles: {
-    //        ".MathJax_Display": {
-    //          "text-align": "left",        // left aligned displayed math
-    //          "margin-left": "3em",        //   with 3em indentation
-    //        },
     //        ".MathJax_Preview": {
     //          "font-size": "80%",          // preview uses a smaller font
     //          color: "red"                 //    and is in red
@@ -541,7 +537,7 @@ MathJax.Hub.Config({
     //
     //  This is the URL for the MathJax Help menu item.
     //
-    helpURL: "http://www.mathjax.org/Help-User/",
+    helpURL: "http://www.mathjax.org/help/user/",
 
     //
     //  These control whether the "Math Renderer", "Font Preferences",
