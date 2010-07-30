@@ -29,7 +29,7 @@
   
   var CONFIG = HUB.Insert({
     delay: 150,                                    // the delay for submenus
-    helpURL: "http://www.mathjax.org/help/user/",  // the URL for the "MathJax Help" menu
+    helpURL: "http://www.mathjax.org/Help-User/",  // the URL for the "MathJax Help" menu
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
     showFontMenu: false,                           //  show the "Font Preference" menu?
@@ -672,7 +672,7 @@
    */
   CONFIG.settings = HUB.config.menuSettings;
   if (!CONFIG.settings.format)
-    {CONFIG.settings.format = (MathJax.InputJax.TeX ? "TeX" : "MathML")}
+    {CONFIG.settings.format = (MathJax.InputJax.TeX ? "Original" : "MathML")}
   if (typeof(CONFIG.settings.showRenderer) !== "undefined") {CONFIG.showRenderer = CONFIG.settings.showRenderer}
   if (typeof(CONFIG.settings.showFontMenu) !== "undefined") {CONFIG.showFontMenu = CONFIG.settings.showFontMenu}
   if (typeof(CONFIG.settings.showContext)  !== "undefined") {CONFIG.showContext  = CONFIG.settings.showContext}
@@ -684,8 +684,8 @@
   MENU.menu = MENU(
     ITEM.COMMAND("Show Source",MENU.ShowSource),
     ITEM.SUBMENU("Format",
-      ITEM.RADIO("MathML", "format"),
-      ITEM.RADIO("TeX",    "format", {disabled: !MathJax.InputJax.TeX})
+      ITEM.RADIO("MathML",   "format"),
+      ITEM.RADIO("Original", "format", {value: "Original"})
     ),
     ITEM.RULE(),
     ITEM.SUBMENU("Settings",
