@@ -2009,7 +2009,7 @@
       //
       //  Handle indentalign and indentshift for single-line display equations
       //
-      if (!this.isMultiline && this.Get("display") && span.bbox.width == null) {
+      if (!this.isMultiline && this.Get("display") === "block" && span.bbox.width == null) {
         var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
         if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) {values.indentalign = values.indentalignfirst}
         if (values.indentalign === MML.INDENTALIGN.AUTO) {values.indentalign = this.displayAlign}

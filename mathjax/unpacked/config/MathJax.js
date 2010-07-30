@@ -456,10 +456,6 @@ MathJax.Hub.Config({
     //  
     //  Example:
     //      styles: {
-    //        ".MathJax_Display": {
-    //          "text-align": "left",        // left aligned displayed math
-    //          "margin-left": "3em",        //   with 3em indentation
-    //        },
     //        ".MathJax_Preview": {
     //          "font-size": "80%",          // preview uses a smaller font
     //          color: "red"                 //    and is in red
