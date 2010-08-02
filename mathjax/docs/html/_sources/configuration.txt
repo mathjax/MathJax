@@ -37,7 +37,7 @@ response time in any case).
 
 It is best to load MathJax in the document's ``<head>`` block, but it
 is also possible to load MathJax into the ``<body>`` section, if
-needed.  If you do this, load it as earlier early as possible, as
+needed.  If you do this, load it as early as possible, as
 MathJax will begin to load its components as soon as it is included in
 the page, and that will help speed up the processing of the
 mathematics on your page.  MathJax does expect there to be a
