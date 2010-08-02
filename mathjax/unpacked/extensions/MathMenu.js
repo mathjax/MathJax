@@ -487,15 +487,15 @@
     var about = MathJax.HTML.addElement(MENU.About.div,"div",{
       style:{
         position:"fixed", left:"50%", width:"auto", "text-align":"center",
-        border:"2px outset", padding:"1em 2em", "background-color":"#DDDDDD",
-        cursor: "default", "font-family":"serif",
+        border:"3px outset", padding:"1em 2em", "background-color":"#DDDDDD",
+        cursor: "default", "font-family":"message-box", "font-size":"120%",
         "font-style":"normal", "text-indent":0, "text-transform":"none",
         "line-height":"normal", "letter-spacing":"normal", "word-spacing":"normal",
         "word-wrap":"normal", "white-space":"nowrap", "float":"none", "z-index":201,
-        "box-shadow":"5px 5px 10px #AAAAAA",         // Opera 10.5
-        "-webkit-box-shadow":"5px 5px 10px #AAAAAA", // Safari 3 and Chrome
-        "-moz-box-shadow":"5px 5px 10px #AAAAAA",    // Forefox 3.5
-        "-khtml-box-shadow":"5px 5px 10px #AAAAAA",  // Konqueror
+        "box-shadow":"0px 10px 20px #808080",         // Opera 10.5
+        "-webkit-box-shadow":"0px 10px 20px #808080", // Safari 3 and Chrome
+        "-moz-box-shadow":"0px 10px 20px #808080",    // Forefox 3.5
+        "-khtml-box-shadow":"0px 10px 20px #808080",  // Konqueror
         filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
       },
       onclick: MENU.About.Remove
