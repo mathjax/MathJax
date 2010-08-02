@@ -198,7 +198,7 @@ files, so you might need to use the command-line interface to
 accomplish this.)
 
 This file should make it possible for pages at other sites to load
-MathJax from this server in such a way that Forefox will be able to
+MathJax from this server in such a way that Firefox will be able to
 download the web-based fonts.  If you want to restrict the sites that
 can access the web fonts, change the ``Access-Control-Allow-Origin``
 line to something like::

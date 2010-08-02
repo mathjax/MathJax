@@ -38,7 +38,7 @@ Glossary
         ``MathJax/jax`` directory.
 
     LaTeX
-        Build on the :term:`TeX` language 
+        LaTeX is a variant of :term:`TeX` that is now the dominant TeX style.
         
         .. seealso::
             
