@@ -1,0 +1,9 @@
+#! /bin/tcsh -f
+
+#  Moves the image files to the proper location and
+#  removes the depth data files
+
+rm TeX/png/*/*/depths.pl
+rm -rf ../../../../mathjax/fonts/HTML-CSS/TeX/png
+mv TeX/png ../../../../mathjax/fonts/HTML-CSS/TeX/png
+

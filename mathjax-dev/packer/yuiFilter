@@ -1,0 +1,17 @@
+#! /usr/local/bin/perl
+
+# used internally to filter the yuicompressor output to not show certain messages
+
+while ($line = <>) {
+  if ($line =~ m/use a single 'var' statement per scope/) {
+    $line = <>; $line = <>; # skip next two lines
+  } elsif ($line =~ m/Using 'eval' is not recommended/) {
+    $line = <>; $line = <>; # skip next two lines
+  } elsif ($line =~ m/Using charset MacRoman/) {
+    $line = <>; # skip blank line
+  } else {
+    print $line;
+  }
+}
+
+1;

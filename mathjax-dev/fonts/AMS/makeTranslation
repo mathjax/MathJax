@@ -1,0 +1,47 @@
+#! /usr/bin/perl
+
+#  Makes the translation data between the AMS font positions and unicode
+#  
+#  Usage:  ./makeTranslation > AMS.pl
+
+open(INFILE,"msam10.txt");
+while ($line = <INFILE>) {
+  chomp($line);
+  ($code,$macro) = split(/ /,$line);
+  $msam10{$code} = $macro;
+}
+close(INFILE);
+
+open(INFILE,"msbm10.txt");
+while ($line = <INFILE>) {
+  chomp($line);
+  next unless $line =~ m/\S/;
+  ($code,$macro) = split(/ /,$line);
+  $msbm10{$code} = $macro;
+}
+close(INFILE);
+
+open(INFILE,"AMS-unicode-list.txt");
+while ($line = <INFILE>) {
+  chomp($line);
+  ($code,$macro) = split(/ /,$line);
+  $AMS{$macro} = "0x".$code;
+}
+close(INFILE);
+
+
+print "// msam10\n";
+print '  "MathJax_AMS" => [',"\n";
+foreach $code (sort keys %msam10) {
+  if ($AMS{$msam10{$code}}) {print "    $code => $AMS{$msam10{$code}},         # $msam10{$code}\n"}
+                       else {print "    $code => '???', // $msam10{$code}\n"}
+}
+print "  ]\n\n";
+
+print "// msbm10\n";
+print '  "MathJax_AMS" => [',"\n";
+foreach $code (sort keys %msbm10) {
+  if ($AMS{$msbm10{$code}}) {print "    $code => $AMS{$msbm10{$code}},         # $msbm10{$code}\n"}
+                       else {print "    $code => '???, // $msbm10{$code}'\n"}
+}
+print "  ]\n";

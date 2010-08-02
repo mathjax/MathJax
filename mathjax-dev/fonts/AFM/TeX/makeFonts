@@ -1,0 +1,10 @@
+#! /bin/csh -f
+
+#  Creates the individual font files for each of the MathJax fonts
+#  
+#  Usage:  ./makeFonts
+
+foreach file (afm/*.afm)
+  echo $file:t
+  ./break-up-font $file
+end

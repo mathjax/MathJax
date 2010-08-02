@@ -1,0 +1,244 @@
+      prefix: {
+        '\u2111': ORD11,       // black-letter capital i
+        '\u2113': ORD11,       // script small l
+        '\u211C': ORD11,       // black-letter capital r
+        '\u2200': ORD21,       // for all
+        '\u2202': ORD21,       // partial differential
+        '\u2203': ORD21,       // there exists
+        '\u2207': ORD21,       // nabla
+        '\u220F': OP,          // n-ary product
+        '\u2210': OP,          // n-ary coproduct
+        '\u2211': OP,          // n-ary summation
+        '\u2212': BIN01,       // minus sign
+        '\u2213': BIN01,       // minus-or-plus sign
+        '\u221A': [1,1,TEXCLASS.ORD,{stretchy: true}], // square root
+        '\u2220': ORD,         // angle
+        '\u222B': INTEGRAL,    // integral
+        '\u222E': INTEGRAL,    // contour integral
+        '\u22C0': OP,          // n-ary logical and
+        '\u22C1': OP,          // n-ary logical or
+        '\u22C2': OP,          // n-ary intersection
+        '\u22C3': OP,          // n-ary union
+        '\u2308': OPEN,        // left ceiling
+        '\u230A': OPEN,        // left floor
+        '\u27E8': OPEN,        // mathematical left angle bracket
+        '\u2A00': OP,          // n-ary circled dot operator
+        '\u2A01': OP,          // n-ary circled plus operator
+        '\u2A02': OP,          // n-ary circled times operator
+        '\u2A04': OP,          // n-ary union operator with plus
+        '\u2A06': OP,          // n-ary square union operator
+        '\u00AC': ORD21,       // not sign
+        '\u00B1': BIN01,       // plus-minus sign
+        '(': OPEN,             // left parenthesis
+        '+': BIN01,            // plus sign
+        '-': BIN01,            // hyphen-minus
+        '[': OPEN,             // left square bracket
+        '{': OPEN,             // left curly bracket
+      },
+      postfix: {
+        '!': [1,0,TEXCLASS.CLOSE], // exclamation mark
+        '&': ORD,              // ampersand
+        '\u2032': ORD02,       // prime
+        '\u203E': WIDEACCENT,  // overline
+        '\u2309': CLOSE,       // right ceiling
+        '\u230B': CLOSE,       // right floor
+        '\u23DE': WIDEACCENT,  // top curly bracket
+        '\u23DF': WIDEACCENT,  // bottom curly bracket
+        '\u266D': ORD02,       // music flat sign
+        '\u266E': ORD02,       // music natural sign
+        '\u266F': ORD02,       // music sharp sign
+        '\u27E9': CLOSE,       // mathematical right angle bracket
+        '\u02C6': WIDEACCENT,  // modifier letter circumflex accent
+        '\u02C7': WIDEACCENT,  // caron
+        '\u02D8': ACCENT,      // breve
+        '\u02D9': ACCENT,      // dot above
+        '\u02DC': WIDEACCENT,  // small tilde
+        '\u0302': ACCENT,      // combining circumflex accent
+        '\u00A8': ACCENT,      // diaeresis
+        '\u00AF': WIDEACCENT,  // macron
+        ')': CLOSE,            // right parenthesis
+        ']': CLOSE,            // right square bracket
+        '_': WIDEACCENT,       // low line
+        '}': CLOSE,            // right curly bracket
+      },
+      infix: {
+        '%': [3,3,TEXCLASS.ORD], // percent sign
+        '\u2022': BIN4,        // bullet
+        '\u2026': INNER,       // horizontal ellipsis
+        '\u2044': TALLBIN,     // fraction slash
+        '\u2061': ORD,         // function application
+        '\u2062': ORD,         // invisible times
+        '\u2063': [0,0,TEXCLASS.ORD,{separator: true}], // invisible separator
+        '\u2064': ORD,         // invisible plus
+        '\u2190': RELACCENT,   // leftwards arrow
+        '\u2191': WIDEREL,     // upwards arrow
+        '\u2192': RELACCENT,   // rightwards arrow
+        '\u2193': WIDEREL,     // downwards arrow
+        '\u2194': RELACCENT,   // left right arrow
+        '\u2195': WIDEREL,     // up down arrow
+        '\u2196': WIDEREL,     // north west arrow
+        '\u2197': WIDEREL,     // north east arrow
+        '\u2198': WIDEREL,     // south east arrow
+        '\u2199': WIDEREL,     // south west arrow
+        '\u21A6': WIDEREL,     // rightwards arrow from bar
+        '\u21A9': WIDEREL,     // leftwards arrow with hook
+        '\u21AA': WIDEREL,     // rightwards arrow with hook
+        '\u21BC': RELACCENT,   // leftwards harpoon with barb upwards
+        '\u21BD': WIDEREL,     // leftwards harpoon with barb downwards
+        '\u21C0': RELACCENT,   // rightwards harpoon with barb upwards
+        '\u21C1': WIDEREL,     // rightwards harpoon with barb downwards
+        '\u21CC': WIDEREL,     // rightwards harpoon over leftwards harpoon
+        '\u21D0': WIDEREL,     // leftwards double arrow
+        '\u21D1': WIDEREL,     // upwards double arrow
+        '\u21D2': WIDEREL,     // rightwards double arrow
+        '\u21D3': WIDEREL,     // downwards double arrow
+        '\u21D4': WIDEREL,     // left right double arrow
+        '\u21D5': WIDEREL,     // up down double arrow
+        '\u2208': REL,         // element of
+        '\u2209': REL,         // not an element of
+        '\u220B': REL,         // contains as member
+        '\u2212': BIN4,        // minus sign
+        '\u2213': BIN4,        // minus-or-plus sign
+        '\u2215': TALLBIN,     // division slash
+        '\u2216': BIN4,        // set minus
+        '\u2217': BIN4,        // asterisk operator
+        '\u2218': BIN4,        // ring operator
+        '\u2219': BIN4,        // bullet operator
+        '\u221D': REL,         // proportional to
+        '\u2223': REL,         // divides
+        '\u2225': REL,         // parallel to
+        '\u2227': BIN4,        // logical and
+        '\u2228': BIN4,        // logical or
+        '\u2229': BIN4,        // intersection
+        '\u222A': BIN4,        // union
+        '\u223C': REL,         // tilde operator
+        '\u2240': BIN4,        // wreath product
+        '\u2243': REL,         // asymptotically equal to
+        '\u2245': REL,         // approximately equal to
+        '\u2248': REL,         // almost equal to
+        '\u224D': REL,         // equivalent to
+        '\u2250': REL,         // approaches the limit
+        '\u2260': REL,         // not equal to
+        '\u2261': REL,         // identical to
+        '\u2264': REL,         // less-than or equal to
+        '\u2265': REL,         // greater-than or equal to
+        '\u226A': REL,         // much less-than
+        '\u226B': REL,         // much greater-than
+        '\u227A': REL,         // precedes
+        '\u227B': REL,         // succeeds
+        '\u2282': REL,         // subset of
+        '\u2283': REL,         // superset of
+        '\u2286': REL,         // subset of or equal to
+        '\u2287': REL,         // superset of or equal to
+        '\u228E': BIN4,        // multiset union
+        '\u2291': REL,         // square image of or equal to
+        '\u2292': REL,         // square original of or equal to
+        '\u2293': BIN4,        // square cap
+        '\u2294': BIN4,        // square cup
+        '\u2295': BIN4,        // circled plus
+        '\u2296': BIN4,        // circled minus
+        '\u2297': BIN4,        // circled times
+        '\u2298': BIN4,        // circled division slash
+        '\u2299': BIN4,        // circled dot operator
+        '\u22A2': REL,         // right tack
+        '\u22A3': REL,         // left tack
+        '\u22A4': ORD55,       // down tack
+        '\u22A5': REL,         // up tack
+        '\u22A8': REL,         // true
+        '\u22C4': BIN4,        // diamond operator
+        '\u22C5': BIN4,        // dot operator
+        '\u22C6': BIN4,        // star operator
+        '\u22C8': REL,         // bowtie
+        '\u22EE': ORD55,       // vertical ellipsis
+        '\u22EF': INNER,       // midline horizontal ellipsis
+        '\u22F1': [5,5,TEXCLASS.INNER], // down right diagonal ellipsis
+        '\u2500': [0,0,TEXCLASS.ORD,{stretchy: true}], // box drawings light horizontal
+        '\u25B3': BIN4,        // white up-pointing triangle
+        '\u25B5': BIN4,        // white up-pointing small triangle
+        '\u25B9': BIN4,        // white right-pointing small triangle
+        '\u25BD': BIN4,        // white down-pointing triangle
+        '\u25BF': BIN4,        // white down-pointing small triangle
+        '\u25C3': BIN4,        // white left-pointing small triangle
+        '\u2758': [4,4,TEXCLASS.REL,{fence: true, stretchy: true, symmetric: true}], // light vertical bar
+        '\u27F5': REL1,        // long leftwards arrow
+        '\u27F6': REL1,        // long rightwards arrow
+        '\u27F7': REL1,        // long left right arrow
+        '\u27F8': REL1,        // long leftwards double arrow
+        '\u27F9': REL1,        // long rightwards double arrow
+        '\u27FA': REL1,        // long left right double arrow
+        '\u2A2F': BIN4,        // vector or cross product
+        '\u2A3F': BIN4,        // amalgamation or coproduct
+        '\u2AAF': REL,         // precedes above single-line equals sign
+        '\u2AB0': REL,         // succeeds above single-line equals sign
+        '\u00B1': BIN4,        // plus-minus sign
+        '\u00B7': BIN4,        // middle dot
+        '\u00D7': BIN4,        // multiplication sign
+        '\u00F7': BIN4,        // division sign
+        '*': BIN3,             // asterisk
+        '+': BIN4,             // plus sign
+        ',': [0,3,TEXCLASS.PUNCT,{separator: true}], // comma
+        '-': BIN4,             // hyphen-minus
+        '.': [3,3,TEXCLASS.ORD], // full stop
+        '/': ORD11,            // solidus
+        ':': [1,2,TEXCLASS.REL], // colon
+        ';': [0,3,TEXCLASS.PUNCT,{separator: true}], // semicolon
+        '<': REL,              // less-than sign
+        '=': REL,              // equals sign
+        '>': REL,              // greater-than sign
+        '?': [1,1,TEXCLASS.CLOSE], // question mark
+        '\\': ORD,             // reverse solidus
+        '_': ORD11,            // low line
+        '|': [2,2,TEXCLASS.ORD,{fence: true, stretchy: true, symmetric: true}], // vertical line
+        '#': ORD,              // #
+        '$': ORD,              // $
+        '\u002E': [0,3,TEXCLASS.PUNCT,{separator: true}], // \ldotp
+        '\u00A7': ORD,         // \S
+        '\u0131': ORD,         // \imath
+        '\u0237': ORD,         // \jmath
+        '\u02B9': ORD,         // prime
+        '\u02C9': ACCENT,      // \bar
+        '\u02CA': ACCENT,      // \acute
+        '\u02CB': ACCENT,      // \grave
+        '\u0300': ACCENT,      // \grave
+        '\u0301': ACCENT,      // \acute
+        '\u0303': WIDEACCENT,  // \tilde
+        '\u0304': ACCENT,      // \bar
+        '\u0306': ACCENT,      // \breve
+        '\u0307': ACCENT,      // \dot
+        '\u0308': ACCENT,      // \ddot
+        '\u030C': ACCENT,      // \check
+        '\u0332': WIDEACCENT,  // horizontal line
+        '\u0338': REL4,        // \not
+        '\u2015': [0,0,TEXCLASS.ORD,{stretchy: true}], // horizontal line
+        '\u2017': [0,0,TEXCLASS.ORD,{stretchy: true}], // horizontal line
+        '\u2020': BIN3,        // \dagger
+        '\u2021': BIN3,        // \ddagger
+        '\u20D7': ACCENT,      // \vec
+        '\u210F': ORD,         // \hbar
+        '\u2118': ORD,         // \wp
+        '\u2135': ORD,         // \aleph
+        '\u2205': ORD,         // \emptyset
+        '\u221E': ORD,         // \infty
+        '\u2305': BIN3,        // barwedge
+        '\u2306': BIN3,        // doublebarwedge
+        '\u2322': REL4,        // \frown
+        '\u2323': REL4,        // \smile
+        '\u2329': OPEN,        // langle
+        '\u232A': CLOSE,       // rangle
+        '\u23AA': ORD,         // \bracevert
+        '\u23AF': [0,0,TEXCLASS.ORD,{stretchy: true}], // \underline
+        '\u23B0': OPEN,        // \lmoustache
+        '\u23B1': CLOSE,       // \rmoustache
+        '\u25EF': BIN3,        // \bigcirc
+        '\u2660': ORD,         // \spadesuit
+        '\u2661': ORD,         // \heartsuit
+        '\u2662': ORD,         // \diamondsuit
+        '\u2663': ORD,         // \clubsuit
+        '\u27EE': OPEN,        // \lgroup
+        '\u27EF': CLOSE,       // \rgroup
+        '\u27FC': REL4,        // \longmapsto
+        '\u3008': OPEN,        // langle
+        '\u3009': CLOSE,       // rangle
+        '\uFE37': WIDEACCENT,  // horizontal brace down
+        '\uFE38': WIDEACCENT,  // horizontal brace up
+      },

@@ -1,0 +1,22 @@
+#! /bin/sh
+
+#
+#  Creates the optable.js data (for inclusion on jax/element/mml/jax.js)
+#  and the optable directory of auxiliary operator data.
+#  Then it installs them.
+#
+#  Usage: ./makeAll
+
+rm optable/*.js
+rm optable.js
+
+./makeOpTable
+
+cp optable/*.js ../mathjax/unpacked/jax/element/mml/optable
+
+#
+#  This file contains the operator table data needed
+#  for the common operators, that needs to be included
+#  into jax/element/mml/jax.js
+#
+open -a AlphaX optable.js

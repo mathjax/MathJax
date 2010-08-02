@@ -1,0 +1,27 @@
+#! /usr/bin/perl
+
+#  Creates the fontdata.js file from the individual font data files
+#  
+#  Usage:  ./makeData
+
+opendir(AFM,"afm");
+@files = grep {/.*\.afm/} (readdir(AFM));
+closedir(AFM);
+
+open(DATA,">fontdata.js");
+foreach $file (@files) {
+  $file =~ s/\.afm//; $file =~ s/MathJax_//;
+  $file .= "-Regular" unless $file =~ m/-/;
+  next if $file =~ /Math-Regular|-BoldItalic|AMS|Caligraphic-Bold/;
+  next if $file =~ /Fraktur|SansSerif|Script|Typewriter|WinIE/;
+  $file = "fonts/TeX/$file"; $file =~ s!-!/!g;
+  $file .= (-e "$file/Main.js" ? "/Main.js" : "/All.js");
+  open(FONT,$file) || print "Can't open $file\n";
+  $lines = "  ".join("  ",<FONT>);
+  close(FONT);
+  $lines =~ s/.*FONTDATA/  HTMLCSS.FONTDATA/s;
+  $lines =~ s/};.*/};\n/s;
+  print DATA $lines,"\n";
+}
+close(DATA);
+

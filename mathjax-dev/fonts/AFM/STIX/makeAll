@@ -1,0 +1,28 @@
+#! /bin/sh
+
+#  Creates the data needed for the 
+#  jax/output/HTML-CSS/fonts/STIX/fontdata.js file, plus
+#  the auxiliary files in the subdirectories of that directory.
+#
+#  Usage:  ./makeAll
+
+rm afm/*
+rm -rf fonts
+
+./makeAFM
+echo "-------------------"
+./makeNames
+echo "-------------------"
+./makeFonts
+./makeData
+
+rm ../../../../mathjax/unpacked/jax/output/HTML-CSS/fonts/STIX/*/*/*.js
+cp -R fonts/STIX/* ../../../../mathjax/unpacked/jax/output/HTML-CSS/fonts/STIX
+
+#
+#  This is the data needed for the fonts in jax/output/HTML-CSS/fonts/STIX/fontdata.js
+#  The data must be entered into the fontdata.js file by hand (do NOT 
+#  replace the one in that directory with this one; it is not the complete 
+#  file).
+#
+open -a AlphaX fontdata.js

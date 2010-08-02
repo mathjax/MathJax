@@ -1,0 +1,45 @@
+#! /usr/bin/perl
+
+#  Makes the operator table data needed for the AMS symbols
+#  
+#  Usage:  ./makeOpTable
+
+open(INFILE,"AMS-unicode-list.txt");
+while ($line = <INFILE>) {
+  chomp($line); $line =~ s/\\//g;
+  ($code,$macro) = split(/ /,$line);
+  $code{$macro} = $code;
+}
+close(INFILE);
+
+open(INFILE,"amssymb.txt");
+while ($line = <INFILE>) {
+  chomp($line); $line =~ s/\\//g;
+  ($code,$macro,$class) = split(/ /,$line);
+  $class{$macro} = uc($class);
+}
+close(INFILE);
+
+@lines = ();
+foreach $macro (sort keys %code) {
+  next if !$class{$macro} || $class{$macro} eq "ORD";
+  push(@lines,"        '&#x$code{$macro};': ".sprintf("%-5s",$class{$macro}.",")." // $macro");
+}
+@lines[$#lines] =~ s!,( +//)! \1!;
+
+open(OUTFILE,">optable.js");
+print OUTFILE "  var ORD   = [0,0],\n";
+print OUTFILE "      OP    = [1,2,TEXCLASS.OP],\n";
+print OUTFILE "      BIN   = [4,4,TEXCLASS.BIN],\n";
+print OUTFILE "      REL   = [5,5,TEXCLASS.REL],\n";
+print OUTFILE "      OPEN  = [1,2,TEXCLASS.OPEN],\n";
+print OUTFILE "      CLOSE = [0,2,TEXCLASS.CLOSE],\n";
+print OUTFILE "      INNER = [0,0,TEXCLASS.INNER];\n\n";
+
+print OUTFILE "  MML.mo.Augment({\n";
+print OUTFILE "    OPTABLE: {\n";
+print OUTFILE "      infix: MML.FIXUNICODE({\n";
+print OUTFILE join("\n",@lines,"");
+print OUTFILE "      })\n";
+print OUTFILE "    }\n";
+print OUTFILE "  });\n";

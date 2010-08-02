@@ -1,0 +1,172 @@
+#! /usr/bin/perl
+
+# Don't run this file by hand, it is used by the make* scripts
+
+require "config.pl";
+require "../../Tables/STIX/unicode.pl";
+
+$font = shift; $font =~ s/\.afm//;
+$FONT = $font; $FONT .= ".afm";
+$font =~ s!^afm/!!;
+
+exit if $font eq "MathJax_Math-Regular";
+
+$dir = $font; $dir .= "-Regular" unless $font =~ m/-/;
+$dir =~ s!-!/!; $dir =~ s!$prefix!fonts/$fontdir/!;
+CheckDir($dir);
+
+$font =~ s/-Regular//;
+$font =~ s/BoldItalic/bold-italic/i;
+$font =~ s/-I/-i/; $font =~ s/-B/-b/;
+
+$family = $font; $family =~ s/-.*//;
+
+$style = "";
+$style .= "B" if $font =~ m/-b/;
+$style .= "I" if $font =~ m/-i/;
+$style = "R" if $style eq "";
+
+@ranges = @{$ranges{substr($font,length($prefix),4)}};
+
+open(INFILE,$FONT) || die "Can't open '$FONT': $!";
+
+while ($line = <INFILE>) {
+  chomp($line);
+  if ($line =~ m/C (.*?) ; WX (.*?) ; N (.*) ; B (.*?) (.*?) (.*?) (.*?) ;/) {
+    ($C,$w,$name,$lw,$d,$rw,$h) = ($1,$2,$3,$4,-($5+0),$6,$7); $d = 0 if $d eq "-0";
+    next if $name eq ".notdef" || $name eq ".null" || $name eq "nonmarkingreturn";
+    next if $name =~ m/uniEFF[DEF]/;  # used for version number and style information (width encodes version and style)
+    if ($C == -1) {
+      if ($name =~ m/^uni[A-F0-9]/) {$C = hex(substr($name,3))} else {
+        $C = `fontforge -lang=ff -c 'Print(UnicodeFromName("$name"))' 2>/dev/null`;
+        chomp($C);
+      }
+    }
+    $char{$C} = sprintf("  %-35s",HEX($C).": [$h,$d,$w,$lw,$rw],")."// ".UNICODE($C)
+      unless $C >= 0xE000 && $C <= 0xF8FF && $family !~ m/NonUni/i;
+  }
+}
+close(INFILE);
+
+foreach $i (0..$#ranges) {
+  @data = @{$ranges[$i]};
+  $file = shift(@data);
+  if (substr($file,0,5) eq "Main ") {
+    next unless $file eq "Main $style";
+    $file = "Main";
+    $lines{$file} = [];
+  }
+  $rh = -1;
+  foreach $c (sort {$a <=> $b} (keys %char)) {
+    while ($c > $rh && @data) {
+      $R = shift(@data); $R = [$R,$R] unless ref($R) eq 'ARRAY';
+      ($rl,$rh) = @$R;
+      $ranges[$i] = [$rl,$rh,$file];
+    }
+    last if $c > $rh;
+    if ($c >= $rl) {
+      $lines{$file} = [] unless defined $lines{$file};
+      push(@{$lines{$file}},$char{$c});
+      $rangeUsed{$i} = 1 unless $file eq 'Main';
+      delete $char{$c};
+    }
+  }
+}
+
+if (scalar(keys %char)) {
+  print ">> Missing chars:\n";
+  print join("\n",map {sprintf("U%04X",$_)} sort(keys %char)),"\n";
+}
+
+
+@RANGES = ();
+foreach $n (sort {$a <=> $b} keys(%rangeUsed)) {push(@RANGES,$ranges[$n])}
+
+$DIR = $dir; $DIR =~ s!fonts/[^/]*/!!;
+
+open(INFILE,"skew.js"); $skew = join("",<INFILE>); close(INFILE);
+if ($skew =~ s/.*FONTDATA\.FONTS\['$font'\]\.skew = {\n//ms) {$skew =~ s/  \};\n.*//s} else {$skew = ""}
+
+
+foreach $file (sort(keys %lines)) {
+  open(JSFILE,">$dir/$file.js") || die "Can't open '$dir/$file.js': $!";
+  $lines{$file}[scalar(@{$lines{$file}})-1] =~ s/],( )?/]\1\1/ if @{$lines{$file}};
+  print JSFILE "/*************************************************************\n";
+  print JSFILE " *\n";
+  print JSFILE " *  MathJax/jax/output/HTML-CSS/$dir/$file.js\n";
+  print JSFILE " *\n";
+  print JSFILE " *  Copyright (c) 2009-2010 Design Science, Inc.\n";
+  print JSFILE " *\n";
+  print JSFILE " *  Licensed under the Apache License, Version 2.0 (the \"License\");\n";
+  print JSFILE " *  you may not use this file except in compliance with the License.\n";
+  print JSFILE " *  You may obtain a copy of the License at\n";
+  print JSFILE " *\n";
+  print JSFILE " *     http://www.apache.org/licenses/LICENSE-2.0\n";
+  print JSFILE " *\n";
+  print JSFILE " *  Unless required by applicable law or agreed to in writing, software\n";
+  print JSFILE " *  distributed under the License is distributed on an \"AS IS\" BASIS,\n";
+  print JSFILE " *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n";
+  print JSFILE " *  See the License for the specific language governing permissions and\n";
+  print JSFILE " *  limitations under the License.\n";
+  print JSFILE " *\n";
+  print JSFILE " */\n\n";
+  if ($file eq 'Main') {
+    print JSFILE "MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['$font'] = {\n";
+    print JSFILE "  directory: '$DIR',\n";
+    print JSFILE "  family: '$family',\n";
+    print JSFILE "  weight: 'bold',\n" if $style =~ m/B/;
+    print JSFILE "  style: 'italic',\n" if $style =~ m/I/;
+    print JSFILE "  testString: $test{substr($font,length($prefix),4)},\n" if $test{substr($font,length($prefix),4)};
+    print JSFILE "  skew: {\n",$skew,"  },\n" if $skew ne "";
+    if (@RANGES) {
+      $comma = (@{$lines{$file}} ? "," : "");
+      print JSFILE "  Ranges: [\n";
+      print JSFILE join(",\n",map {sprintf('    [0x%X,0x%X,"%s"]',@$_)} (sort {$a->[0] <=> $b->[0]} @RANGES));
+      print JSFILE "\n  ]$comma\n";
+    }
+    print JSFILE join("\n",@{$lines{$file}});
+    print JSFILE "\n};\n";
+    print JSFILE "\n",'MathJax.OutputJax["HTML-CSS"].initFont("',$font,'");',"\n";
+  } else {
+    print JSFILE "MathJax.Hub.Insert(\n";
+    print JSFILE "  MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['$font'],\n";
+    print JSFILE "  {\n  ";
+    print JSFILE join("\n  ",@{$lines{$file}});
+    print JSFILE "\n  }\n);\n";
+  }
+  print JSFILE "\n",'MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/',$DIR,"/",$file,'.js");',"\n";
+  close(JSFILE);
+}
+
+sub CheckDir {
+  my $dir = shift; my @cur = ();
+  foreach my $name (split(/\//,$dir)) {
+    push(@cur,$name);
+    my $cur = join('/',@cur);
+    if (!-e $cur) {mkdir $cur}
+  }
+}
+
+#use Encode;
+#sub UNICODE {
+#  my $CC = shift, $uni;
+#  if ($CC > 0xFFFF) {
+#    my ($H,$L) = (($CC-0x10000)/0x400 + 0xD800,($CC-0x10000)%0x400+0xDC00);
+#    $uni = sprintf("%c%c%c%c", $H >> 8, $H & 0xFF, $L >> 8, $L & 0xFF);
+#  } else {
+#    $uni = sprintf("%c%c", $CC >> 8, $CC & 0xFF);
+#  }
+#  Encode::from_to($uni,"utf16be","utf8");
+##  $uni =~ s/(['\\])/\\\1/g;
+#  return $uni;
+#}
+
+sub UNICODE {
+  my $C = sprintf("%05X",shift);
+  return $CHARNAME{$C} || "??";
+}
+
+sub HEX {
+  my $c = shift;
+  return sprintf("0x%X",$c);
+}
