@@ -294,12 +294,12 @@ You could also read more about the details of how to :ref:`customize
 MathJax <configuration>`.
 
 If you are trying to use MathJax in blog or wiki software or in some
-other content-manangement system, you might want to read about :ref:`using
+other content-management system, you might want to read about :ref:`using
 MathJax in popular platforms <platforms>`.
 
 If you are working on dynamic pages that include mathematics, you
 might want to read about the :ref:`MathJax Application Programming
-Interface <mathjax-api>` (it's API), so you know how to include
+Interface <mathjax-api>` (its API), so you know how to include
 mathematics in your interactive pages.
 
 If you are having trouble getting MathJax to work, you can read more

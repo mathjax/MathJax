@@ -29,7 +29,7 @@ past it into other programs.
 
 MathJax is modular, so it loads components only when necessary, and
 can be extended to include new capabilities as needed.  MathJax is
-highly configurble, allowing authors to customize it for the special
+highly configurable, allowing authors to customize it for the special
 requirements of their web sites.  Finally, MathJax has a rich
 application programming interface (API) that can be used to make the
 mathematics on your web pages interactive and dynamic.
