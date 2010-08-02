@@ -2130,7 +2130,8 @@
         //  Force image mode for iPhone and Droid
 	//  FIXME:  need to work more on this
 	var config = MathJax.Hub.config["HTML-CSS"];
-	config.availableFonts = []; config.preferredFont = null;
+        if (config) {config.availableFonts = []; config.preferredFont = null}
+          else {MathJax.Hub.config["HTML-CSS"] = {availableFonts: [], preferredFont: null}}
       }
     },
 
