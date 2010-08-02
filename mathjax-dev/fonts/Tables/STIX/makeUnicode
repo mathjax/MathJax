@@ -1,0 +1,55 @@
+#! /usr/bin/perl
+
+#  Read's STIX character list HMTL file and extracts
+#  unicode character names for the various characters
+
+#  Usage:  ./makeUnicode > unicode.pl
+
+sub GetTableData {
+  open(INFILE,"STIX character list.html");
+  my @lines = <INFILE>;
+  close(INFILE);
+  chomp(@lines);
+  @lines = split(/<tr>|<table>/i,join('',@lines));
+  FindRanges(grep /<caption/, @lines);
+  FindChars(grep /&\#xA0;&\#x/, @lines);
+}
+
+sub FindRanges {
+  foreach my $line (@_) {
+    my ($name,$start,$end) = ($line =~ m/> *(.*?);? ([^ ]+)-([^ ]+?) *</);
+    push(@ranges,[$name,hex($start),hex($end)]);
+  }
+}
+
+sub FindChars {
+  foreach my $line (@_) {
+    my ($char,$name) = ($line =~ m!&\#xA0;&\#x([^;]+);.*<td>([^<]*)</td></tr>!);
+    $char = sprintf("%05X",hex($char));
+    $name =~ s/'/\\'/g;
+    $CHARNAME{$char} = $name;
+  }
+}
+
+sub PrintRanges {
+  print "\@ranges = (\n";
+  foreach $range (@ranges) {
+    print "  ['$range->[0]',$range->[1],$range->[2]],\n";
+  }
+  print ");\n\n";
+}
+
+sub PrintChars {
+  print "%CHARNAME = (\n";
+  foreach $char (sort keys %CHARNAME) {
+    print "  '$char' => '$CHARNAME{$char}',\n";
+  }
+  print ");\n";
+}
+
+GetTableData();
+PrintRanges();
+PrintChars();
+
+
+1;

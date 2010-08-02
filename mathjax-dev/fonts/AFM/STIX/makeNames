@@ -1,0 +1,23 @@
+#! /usr/bin/perl
+
+#  Renames the afm files to the form needed by MathJax
+#  
+#  Usage: ./makeNames
+
+@names = split(/\n/,`ls -1 afm`);
+
+foreach $file (@names) {
+  $old = $file; $new = $file;
+  $new =~ s/Int/Integrals/;
+  $new =~ s/Uni/Unicode/;
+  $new =~ s/Siz/Size/;
+  $new =~ s/Var/Variants/;
+  $new =~ s/Italic/-Italic/;
+  $new =~ s/Reg/-Regular/;
+  $new =~ s/Bol\./-Bold./;
+  $new =~ s/BolIta/-BoldItalic/;
+  $new =~ s/Ita\./-Italic./;
+  $new =~ s/\.afm/-Regular.afm/ unless $new =~ m/-/;
+  print "$old -> $new\n";
+  rename "afm/$old", "afm/$new";
+}

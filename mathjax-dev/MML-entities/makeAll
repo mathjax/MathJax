@@ -1,0 +1,18 @@
+#! /bin/sh
+
+#  Create the data.js file of common entity names
+#  plus the entities directory of less-common ones
+#  and installs them
+#  
+#  Usage:  ./makeAll
+
+rm -rf entities
+rm ../mathjax/unpacked/jax/input/MathML/entities/*.js
+./makeEntities
+cp entities/*.js ../mathjax/unpacked/jax/input/MathML/entities
+
+#
+#  This file contains the entity table to be added
+#  to jax/input/MathML/jax.js
+#
+open -a AlphaX data.js

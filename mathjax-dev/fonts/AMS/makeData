@@ -1,0 +1,38 @@
+#! /usr/bin/perl
+
+#  Creates the symbol data needed for the AMSsymbols extension
+#  
+#  Usage:  ./makeData
+
+open(INFILE,"AMS-unicode-list.txt");
+while ($line = <INFILE>) {
+  chomp($line); $line =~ s/\\//g;
+  ($code,$macro,$macro2) = split(/ /,$line);
+  $def{$macro}  = $code;
+  $def{$macro2} = $code if $macro2;
+}
+close(INFILE);
+
+open(OUTFILE,">data.js");
+
+$comma = "";
+print OUTFILE "    mathchar0mi: {";
+open(INFILE,"AMS-unicode.txt");
+while ($line = <INFILE>) {
+  chomp($line);
+  if ($line eq "Binary operators") {
+    print OUTFILE "\n    },\n\n";
+    print OUTFILE "    mathchar0mo: {";
+    $comma = "";
+  }
+  if (substr($line,0,1) eq " ") {
+    $line =~ s/^ //; $line =~ s/ \(U\)//; $line =~ s/[,\\]//g;
+    ($code,$macro,$macro2) = split(/ /,$line);
+    print OUTFILE "$comma\n",sprintf("      %-24s",$macro.":"),"'$def{$macro}'"; $comma = ",";
+    print OUTFILE "$comma\n",sprintf("      %-24s",$macro2.":"),"'$def{$macro2}'" if $macro2;
+  } else {
+    print OUTFILE "$comma\n\n      // $line";
+    $comma = "";
+  }
+}
+print OUTFILE "\n    }\n";

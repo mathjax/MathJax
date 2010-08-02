@@ -1,0 +1,31 @@
+#! /bin/tcsh -f
+
+#  Makes the .png files for ALL the fonts
+#  
+#  Usage:  ./makePNGsuite
+
+./makePNG otf/MathJax_AMS-Regular.otf
+./makePNG otf/MathJax_Caligraphic-Bold.otf
+./makePNG otf/MathJax_Caligraphic-Regular.otf
+./makePNG otf/MathJax_Main-Bold.otf
+./makePNG otf/MathJax_Main-Italic.otf
+./makePNG otf/MathJax_Main-Regular.otf
+./makePNG otf/MathJax_Math-BoldItalic.otf
+./makePNG otf/MathJax_Math-Italic.otf
+./makePNG otf/MathJax_Size1-Regular.otf
+./makePNG otf/MathJax_Size2-Regular.otf
+./makePNG otf/MathJax_Size3-Regular.otf
+./makePNG otf/MathJax_Size4-Regular.otf
+./makePNG otf/MathJax_Fraktur-Regular.otf
+./makePNG otf/MathJax_Fraktur-Bold.otf
+./makePNG otf/MathJax_SansSerif-Regular.otf
+./makePNG otf/MathJax_SansSerif-Bold.otf
+./makePNG otf/MathJax_SansSerif-Italic.otf
+./makePNG otf/MathJax_Script-Regular.otf
+./makePNG otf/MathJax_Typewriter-Regular.otf
+
+#./makePNG ttf/MathJax_Greek-Bold.ttf
+#./makePNG ttf/MathJax_Greek-BoldItalic.ttf
+#./makePNG ttf/MathJax_Greek-Italic.ttf
+#./makePNG ttf/MathJax_Greek-Regular.ttf
+

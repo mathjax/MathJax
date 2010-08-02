@@ -1,0 +1,53 @@
+#! /usr/bin/perl
+
+#  Creates the imagedata.js file for the image fonts
+#  (to be placed in the fonts/HTML-CSS/TeX/png/unpacked directory).
+#  
+#  Usage:  ./makeData
+
+mkdir "TeX/png/unpacked" unless -e "TeX/png/unpacked";
+open(JS,">TeX/png/unpacked/imagedata.js");
+
+print JS "/*************************************************************\n";
+print JS " *\n";
+print JS " *  MathJax/fonts/HTML-CSS/TeX/png/imagedata.js\n";
+print JS " *  \n";
+print JS " *  Copyright (c) 2009-2010 by Design Science, Inc.\n";
+print JS " *\n";
+print JS " *  Licensed under the Apache License, Version 2.0 (the \"License\");\n";
+print JS " *  you may not use this file except in compliance with the License.\n";
+print JS " *  You may obtain a copy of the\n";
+print JS " *\n";
+print JS " *     http://www.apache.org/licenses/LICENSE-2.0\n";
+print JS " *\n";
+print JS " *  Unless required by applicable law or agreed to in writing, software\n";
+print JS " *  distributed under the License is distributed on an \"AS IS\" BASIS,\n";
+print JS " *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n";
+print JS " *  See the License for the specific language governing permissions and\n";
+print JS " *  limitations under the License.\n";
+print JS " */\n\n";
+
+print JS "(function (HTMLCSS,AJAX) {\n\n";
+print JS "  HTMLCSS.defineImageData({\n";
+
+$files = `ls -1 TeX/png/*/*/unpacked/Main.js`;
+chomp($files);
+
+$comma = "";
+foreach $file (split(/\n/,$files)) {
+  next if $file =~ m!/AMS/|/Caligraphic/Bold|/Greek/|/Frakture/|/SansSerif/|/Script/|/Typewriter/!;
+  open(MAIN,$file); $lines = join("",<MAIN>); close(MAIN);
+  $lines =~ s/.*MathJax.*\.defineImageData\({\n/\n/s;
+  $lines =~ s/\n}\);\n.*//s;
+  $lines =~ s/\n/\n  /g;
+  print JS $comma,$lines;
+  $comma = ",\n";
+}
+
+print JS "\n\n  });\n\n";
+print JS "  AJAX.loadComplete(HTMLCSS.imgDir+HTMLCSS.imgPacked+\"/imagedata.js\");\n\n";
+print JS "})(MathJax.OutputJax[\"HTML-CSS\"],MathJax.Ajax);\n";
+
+close(JS);
+
+1;

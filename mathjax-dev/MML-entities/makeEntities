@@ -1,0 +1,90 @@
+#! /usr/bin/perl
+
+#  Create the data.js file of common entity names
+#  plus the entities directory of less-common ones
+#
+#  Usage:  ./makeEntities
+
+open(MATHJAX,"MJ-Unicode-TeX.txt");
+while ($line = <MATHJAX>) {$MJ{substr($line,2,4)} = 1}
+close(MATHJAX);
+
+foreach $code (
+  '02C6', '02C7', '02C9', '02CA', '02CB', '02CD', '02CE', '02CF',
+  '02D8', '02D9', '02DA', '02DC', '0331', '0332', '203E',
+  '2329', '232A', 'FE37', 'FE38',
+  '002D', '005E', '005F', '007E',
+  '00A8', '00AF', '00B0', '00B4', '00B7',
+  '02B9', '2022',
+  '25AA', '25B4', '25B5', '25BE', '25Bf', '25C2', '2A2F',
+  '2061', '2062', '2063', '2064',
+  '2146', '2147', '2148',
+) {$MJ{$code} = 1}
+
+
+open(UNICODE,"MML-Unicode-List.txt");
+while ($line = <UNICODE>) {
+  chomp($line); next unless $line =~ m/\S/;
+  ($entity,$code,$code2,$name) = ($line =~ m/(.*), *U0?([0-9A-F]+)(?:-0([0-9A-F]+))?, (.*)/);
+  if (length($code) == 5 || $entity =~ m/^[a-zA-Z0-9](fr|opf|scr)$/) {
+    $font = substr($entity,1);
+    if (length($code) == 5) {$code = "D835\\u".sprintf("%04X",hex($code)-0x1D400+0xDC00)}
+    $range{$font}{$entity} = $code;
+  } elsif ($MJ{$code} && !$code2 && $MJcode{$code} &&
+           $entity =~ m/^[A-Z]/ && $entity !~ m/Diacritical|Short|Lower|Upper/) {
+    $range{lc(substr($MJcode{$code},0,1))}{$MJcode{$code}} = $code;
+    delete $range{main}{$MJcode{$code}};
+    $range{main}{$entity} = $code;
+    $MJcode{$code} = $entity;
+  } elsif ($MJ{$code} && !$code2 && !$MJcode{$code} && $entity !~ m/Diacritical|Lower|Upper/) {
+    $range{main}{$entity} = $code;
+    $MJcode{$code} = $entity;
+  } else {
+    $code .= "\\u$code2" if $code2;
+    $range{lc(substr($entity,0,1))}{$entity} = $code;
+  }
+}
+close(UNICODE);
+
+mkdir "entities" unless -d "entities";
+
+foreach $name (sort(keys %range)) {
+  next if $name eq "";
+  print "$name...";
+  if ($name eq "main") {
+    open(JSFILE,">data.js") || die "Can't write data.js";
+    print JSFILE "  MATHML.Parse.Entity = {\n";
+    print JSFILE "    ",join(",\n    ",map {"$_: '\\u$range{$name}{$_}'"} sort(keys(%{$range{$name}}))),"\n";
+    print JSFILE "  }\n";
+    close(JSFILE);
+  } else {
+    open(JSFILE,">entities/$name.js") || die "Can't write entitied/$name.js";
+    print JSFILE "/*************************************************************\n";
+    print JSFILE " *\n";
+    print JSFILE " *  MathJax/jax/output/HTML-CSS/entities/$name.js\n";
+    print JSFILE " *\n";
+    print JSFILE " *  Copyright (c) 2010 Design Science, Inc.\n";
+    print JSFILE " *\n";
+    print JSFILE " *  Licensed under the Apache License, Version 2.0 (the \"License\");\n";
+    print JSFILE " *  you may not use this file except in compliance with the License.\n";
+    print JSFILE " *  You may obtain a copy of the License at\n";
+    print JSFILE " *\n";
+    print JSFILE " *     http://www.apache.org/licenses/LICENSE-2.0\n";
+    print JSFILE " *\n";
+    print JSFILE " *  Unless required by applicable law or agreed to in writing, software\n";
+    print JSFILE " *  distributed under the License is distributed on an \"AS IS\" BASIS,\n";
+    print JSFILE " *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n";
+    print JSFILE " *  See the License for the specific language governing permissions and\n";
+    print JSFILE " *  limitations under the License.\n";
+    print JSFILE " *\n";
+    print JSFILE " */\n\n";
+    print JSFILE "(function (MATHML) {\n";
+    print JSFILE "  MathJax.Hub.Insert(MATHML.Parse.Entity,{\n";
+    print JSFILE "    ",join(",\n    ",map {"'$_': '\\u$range{$name}{$_}'"} sort(keys(%{$range{$name}}))),"\n";
+    print JSFILE "  });\n\n";
+    print JSFILE "  MathJax.Ajax.loadComplete(MATHML.entityDir+\"/$name.js\");\n\n";
+    print JSFILE "})(MathJax.InputJax.MathML);\n";
+    close(JSFILE);
+  }
+  print "\n";
+}

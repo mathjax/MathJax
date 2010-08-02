@@ -1,0 +1,11 @@
+#! /bin/csh -f
+
+#  Creates .afm files from the MathJax .otf fonts
+#  
+#  Usage:  ./makeAFM
+
+foreach file (~/Library/Fonts/MathJax*.*tf)
+  echo ""
+  echo $file:t
+  fontforge -lang=ff -c 'Open("'$file'");Generate("afm/'$file:t:r'.afm")'
+end

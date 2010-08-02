@@ -1,0 +1,20 @@
+#! /bin/csh -f
+
+#  Makes all the font files, and installs
+#  them in the mathjax/fonts/HTML-CSS/TeX directory
+#  
+#  Usage:  ./makeAll
+
+
+rm ff/* otf/* ttf/* eot/* svg/*
+
+echo "------------------"
+./makeBlacker 15   # values between 10 and 30 seem best
+echo "------------------"
+./makePFA
+echo "------------------"
+./makeFF
+echo "------------------"
+./makeOTF
+echo "------------------"
+./makeInstall
