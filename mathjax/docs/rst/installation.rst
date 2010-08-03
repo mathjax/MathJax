@@ -84,38 +84,8 @@ Release versions of MathJax are available in archive files from the
 <http://sourceforge.net/projects/mathjax/files/>`_, where you can
 download the archives that you need. 
 
-You should download **either**
-
-- the ``MathJax-complete-v1.0.zip`` file, **or**
-- both ``MathJax-v1.0.zip`` and ``MathJax-webfonts-v1.0.zip``.
-
-You do not need to get all three, as the first is a combination of the
-other two.  (The code and fonts are in separate archives because the
-web fonts are not likely to change often, while the MathJax code will
-be updated regularly).
-
-If you obtained the "complete" archive, simply unzip it.  If you
-obtained the two separate archives, unzip ``MathJax-v1.0.zip`` which
-should create a ``MathJax/`` directory. Then unzip
-``MathJax-webfonts-v1.0.zip`` inside the MathJax directory.  Commands
-to do this might look like
-
-.. code-block:: sh
-
-    unzip MathJax-v1.0.zip
-    cd MathJax
-    unzip ../MathJax-webfonts-v1.0.zip
-
-You should end up with a ``MathJax`` directory containing a ``fonts``
-folder along with ``config``, ``extensions``, ``MathJax.js`` and other
-files and folders.  The ``MathJax/fonts`` folder should contain an
-``HTML-CSS`` folder and nothing else.  If you end up with
-``MathJax/MathJax/fonts`` or ``MathJax/MathJax-webfonts-v1.0/fonts``
-or something similar, then you need to move the fonts folder up one
-level in the hierarchy so that it is ``MathJax/fonts``.  (You can then
-remove the empty ``MathJax`` or ``MathJax-webfonts-v1.0`` folder.)
-
-Once the MathJax directory is unpacked, you should move it to the
+You should download the ``MathJax-v1.0.zip`` file, then simply unzip
+it. Once the MathJax directory is unpacked, you should move it to the
 desired location on your server (or your hard disk, if you are using
 it locally rather then through a web server).  One natural location is
 to put it at the top level of your web server's hierarchy.  That would
