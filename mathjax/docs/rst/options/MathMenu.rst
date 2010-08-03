@@ -27,7 +27,7 @@ would set the ``delay`` option to 600 milliseconds.
     label for this long, the menu will appear.  (The submenu also will
     appear if you click on its label.)
 
-.. describe:: helpURL: "http://www.mathjax.org/Help-User/"
+.. describe:: helpURL: "http://www.mathjax.org/help/user/"
 
     This is the URL for the MathJax Help menu item.  When the user
     selects that item, the browser opens a new window with this URL.
