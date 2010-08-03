@@ -93,16 +93,18 @@ MathJax is not working!
 <p>
 
 If the mathematics does not show up properly, you may not have not
-installed the MathJax web fonts correctly.  Follow the instructions in the 
-<A HREF="../README.txt">README file</A>.
+installed the MathJax web fonts correctly.  Follow the steps in the 
+<A HREF="../docs/html/installation.html">installation instructions</A>.
 <p>
 
-The MathJax-webfonts archive is available from the <A 
-HREF="http://sourceforge.net/projects/mathjax/files/">MathJax SourceForge 
-project</A>.  Unpack the archive in the MathJax directory; you should 
-obtain a fonts directory, with a hierarchy of:
+If you obtained MathJax via an archive (<code>.zip</code>) file, the fonts are included 
+and should not need any special installation.  If you obtained MathJax via 
+svn, the distribution includes a <code>fonts.zip</code> file that you will 
+need to unpack before the image fonts will work.  Once unpacked, you 
+should have a directory with the following hierarchy:
 <PRE>
-    MathJax/
+    mathjax/
+      ...
       fonts/
         HTML-CSS/
           TeX/
@@ -115,6 +117,8 @@ obtain a fonts directory, with a hierarchy of:
               ...
             svg/
               ...
+      fonts.zip
+      ...
 </PRE>
 
 </BLOCKQUOTE>
