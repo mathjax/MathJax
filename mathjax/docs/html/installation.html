@@ -108,34 +108,8 @@ release number.</p>
 <a class="reference external" href="http://www.mathjax.org/download/">MathJax download page</a> or the
 <a class="reference external" href="http://sourceforge.net/projects/mathjax/files/">SourceForge files page</a>, where you can
 download the archives that you need.</p>
-<p>You should download <strong>either</strong></p>
-<ul class="simple">
-<li>the <tt class="docutils literal"><span class="pre">MathJax-complete-v1.0.zip</span></tt> file, <strong>or</strong></li>
-<li>both <tt class="docutils literal"><span class="pre">MathJax-v1.0.zip</span></tt> and <tt class="docutils literal"><span class="pre">MathJax-webfonts-v1.0.zip</span></tt>.</li>
-</ul>
-<p>You do not need to get all three, as the first is a combination of the
-other two.  (The code and fonts are in separate archives because the
-web fonts are not likely to change often, while the MathJax code will
-be updated regularly).</p>
-<p>If you obtained the &#8220;complete&#8221; archive, simply unzip it.  If you
-obtained the two separate archives, unzip <tt class="docutils literal"><span class="pre">MathJax-v1.0.zip</span></tt> which
-should create a <tt class="docutils literal"><span class="pre">MathJax/</span></tt> directory. Then unzip
-<tt class="docutils literal"><span class="pre">MathJax-webfonts-v1.0.zip</span></tt> inside the MathJax directory.  Commands
-to do this might look like</p>
-<div class="highlight-sh"><div class="highlight"><pre>unzip MathJax-v1.0.zip
-<span class="nb">cd </span>MathJax
-unzip ../MathJax-webfonts-v1.0.zip
-</pre></div>
-</div>
-<p>You should end up with a <tt class="docutils literal"><span class="pre">MathJax</span></tt> directory containing a <tt class="docutils literal"><span class="pre">fonts</span></tt>
-folder along with <tt class="docutils literal"><span class="pre">config</span></tt>, <tt class="docutils literal"><span class="pre">extensions</span></tt>, <tt class="docutils literal"><span class="pre">MathJax.js</span></tt> and other
-files and folders.  The <tt class="docutils literal"><span class="pre">MathJax/fonts</span></tt> folder should contain an
-<tt class="docutils literal"><span class="pre">HTML-CSS</span></tt> folder and nothing else.  If you end up with
-<tt class="docutils literal"><span class="pre">MathJax/MathJax/fonts</span></tt> or <tt class="docutils literal"><span class="pre">MathJax/MathJax-webfonts-v1.0/fonts</span></tt>
-or something similar, then you need to move the fonts folder up one
-level in the hierarchy so that it is <tt class="docutils literal"><span class="pre">MathJax/fonts</span></tt>.  (You can then
-remove the empty <tt class="docutils literal"><span class="pre">MathJax</span></tt> or <tt class="docutils literal"><span class="pre">MathJax-webfonts-v1.0</span></tt> folder.)</p>
-<p>Once the MathJax directory is unpacked, you should move it to the
+<p>You should download the <tt class="docutils literal"><span class="pre">MathJax-v1.0.zip</span></tt> file, then simply unzip
+it. Once the MathJax directory is unpacked, you should move it to the
 desired location on your server (or your hard disk, if you are using
 it locally rather then through a web server).  One natural location is
 to put it at the top level of your web server&#8217;s hierarchy.  That would

@@ -27,12 +27,14 @@ Obtaining and Installing MathJax
 ================================
 
 The easiest way to set up MathJax is to obtain the
-``MathJax-complete-v1.0.zip`` archive from the `MathJax download page
+``MathJax-v1.0.zip`` archive from the `MathJax download page
 <http://www.mathjax.org/download/>`_.  This includes both the MathJax code
-and the MathJax webfonts, so this is the only file you need.
+and the MathJax webfonts, so this is the only file you need.  (This is
+different from the beta releases, which had the fonts separate from
+the rest of the code).
 
-Unpack the ``MathJax-complete-v1.0.zip`` archive and place the
-resulting ``MathJax`` folder onto your web server at a convenient
+Unpack the ``MathJax-v1.0.zip`` archive and place the
+resulting MathJax folder onto your web server at a convenient
 location where you can include it into your web pages.  For example,
 making ``MathJax`` a top-level directory on your server would be
 one natural way to do this.  That would let you refer to the main
