@@ -24,6 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
+  varsion: "1.0.1",
   config: {
     element: null,          // The ID of the element to be processed
                             //   (defaults to full document)
@@ -69,7 +70,8 @@ MathJax.Extension.mml2jax = {
       script.text = html;
       parent.removeChild(math);
     } else {
-      script.appendChild(math);
+      var span = MathJax.HTML.Element("span"); span.appendChild(math);
+      MathJax.HTML.addText(script,span.innerHTML);
     }
     if (this.config.preview !== "none") {this.createPreview(math,script)}
   },
