@@ -24,6 +24,8 @@
  */
 
 (function (HUB,HTML,AJAX) {
+  var VERSION = "1.0.1";
+  
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE;
   var ROUND = (isPC ? null : "5px");
   
@@ -130,6 +132,7 @@
    *  The main menu class
    */
   var MENU = MathJax.Menu = MathJax.Object.Subclass({
+    version: VERSION,
     items: [],
     posted: false,
     title: null,
@@ -333,7 +336,7 @@
     },
     Label: function (def,menu) {return [this.name]},
     Mouseup: function (event,menu) {
-      if (!this.disabled) {this.Remove(event,menu); this.action.call(this)}
+      if (!this.disabled) {this.Remove(event,menu); this.action.call(this,event)}
       return this.False(event);
     }
   });
@@ -553,7 +556,7 @@
         MENU.ShowSource.Window(event); // WeBKit needs to open window on click event
         MathJax.Callback.Queue(
           AJAX.Require("[MathJax]/extensions/toMathML.js"),
-          function () {delete AJAX.loadingToMenu},
+          function () {delete AJAX.loadingToMathML},
           [this,arguments.callee,EVENT]  // call this function again
         );
         return;
