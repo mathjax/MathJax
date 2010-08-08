@@ -2147,7 +2147,7 @@
     },
 
     Opera: function (browser) {
-      var isMini = (navigator.appVersion.match("Opera Mini") != null);
+      browser.isMini = (navigator.appVersion.match("Opera Mini") != null);
       HTMLCSS.config.styles[".MathJax .merror"]["vertical-align"] = null;
       HTMLCSS.Augment({
         operaHeightBug: true,
@@ -2156,7 +2156,7 @@
         zeroWidthBug: true,
         FontFaceBug: true,
         PaddingWidthBug: true,
-        allowWebFonts: (browser.versionAtLeast("10.0") && !isMini ? "otf" : false)
+        allowWebFonts: (browser.versionAtLeast("10.0") && !browser.isMini ? "otf" : false)
       });
     },
 
