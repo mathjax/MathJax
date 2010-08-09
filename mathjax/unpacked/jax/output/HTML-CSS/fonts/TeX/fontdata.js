@@ -23,6 +23,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
+  var VERSION = "1.0";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -36,6 +37,8 @@
 
   HTMLCSS.Augment({
     FONTDATA: {
+      version: VERSION,
+      
       TeX_factor: 1,    // TeX em's to font em's
       baselineskip: 1.2,
       lineH: .8, lineD: .2,

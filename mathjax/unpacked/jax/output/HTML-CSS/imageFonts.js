@@ -22,6 +22,8 @@
  */
 
 (function (HUB,HTMLCSS,AJAX) {
+  var VERSION = "1.0";
+  
   HUB.Register.LoadHook(HTMLCSS.fontDir + "/fontdata.js",function () {
 
     HTMLCSS.Augment({

@@ -22,6 +22,7 @@
  */
 
 (function (MML,HTMLCSS) {
+  var VERSION = "1.0";
   
   MML.mbase.Augment({
     toHTMLmultiline: function (span,split) {

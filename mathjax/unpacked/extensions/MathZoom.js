@@ -23,6 +23,8 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
+  var VERSION = "1.0";
+  
   var CONFIG = HUB.Insert({
     delay: 400,   // mouse must be still this long (milliseconds)
 
@@ -73,6 +75,7 @@
   /*************************************************************/
 
   var ZOOM = MathJax.Extension.MathZoom = {
+    version: VERSION,
     settings: HUB.config.menuSettings,
 
     //

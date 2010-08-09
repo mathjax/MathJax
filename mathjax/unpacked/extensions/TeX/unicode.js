@@ -59,6 +59,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/unicode"] = {
+  version: "1.0",
   unicode: {},
   config: MathJax.Hub.Insert({
     fonts: "STIXGeneral,'Arial Unicode MS'"

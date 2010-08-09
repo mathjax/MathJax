@@ -22,6 +22,7 @@
  */
 
 (function (MML,HTMLCSS) {
+  var VERSION = "1.0";
   
   MML.mmultiscripts.Augment({
     toHTML: function (span,HW,D) {

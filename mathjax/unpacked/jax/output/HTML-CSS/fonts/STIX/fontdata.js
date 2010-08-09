@@ -23,6 +23,7 @@
  */
 
 (function (HTMLCSS) {
+  var VERSION = "1.0";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -39,6 +40,8 @@
 
   HTMLCSS.Augment({
     FONTDATA: {
+      version: VERSION,
+      
       TeX_factor: 1.125,    // TeX em's to STIX em's seem to need this
       baselineskip: 1.2,
       lineH: .8, lineD: .2,

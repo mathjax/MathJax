@@ -13,6 +13,6 @@
  */
 
 MathJax.Unpack([
-  ['(','function(','a){a.ms.Augment({toHTML:',1,'c){c=this.HTMLhandleSize(this.HTMLcreateSpan(c));var b=this.getValues("lquote","rquote");var e=this.data.join("");var d=[];if(b.lquote','.length===1){d.push(this.HTMLquoteRegExp(b.','lquote))}if(b.rquote',5,'rquote))}if(d.length){e=e.replace(RegExp("("+d.join("|")+")","g"),"\\\\$1")}this.HTMLhandleVariant(c,this.HTMLgetVariant(),b.lquote+e+b.rquote);this.HTMLhandleSpace(c);this.HTMLhandleColor(c);return c},HTMLquoteRegExp:',1,'b){return b.replace(/([.*+?|{}()\\[\\]\\\\])/g,"\\\\$1")}});a.ms.prototype.defaults.fontfamily="monospace";MathJax.Hub.Startup.signal.Post("HTML-CSS ms Ready")})(MathJax.ElementJax.mml);MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].autoloadDir+"/ms.js");']
+  ['(','function(','a){var b="1.0";a.ms.Augment({toHTML:',1,'d){d=this.HTMLhandleSize(this.HTMLcreateSpan(d));var c=this.getValues("lquote","rquote");var f=this.data.join("");var e=[];if(c.lquote','.length===1){e.push(this.HTMLquoteRegExp(c.','lquote))}if(c.rquote',5,'rquote))}if(e.length){f=f.replace(RegExp("("+e.join("|")+")","g"),"\\\\$1")}this.HTMLhandleVariant(d,this.HTMLgetVariant(),c.lquote+f+c.rquote);this.HTMLhandleSpace(d);this.HTMLhandleColor(d);return d},HTMLquoteRegExp:',1,'c){return c.replace(/([.*+?|{}()\\[\\]\\\\])/g,"\\\\$1")}});a.ms.prototype.defaults.fontfamily="monospace";MathJax.Hub.Startup.signal.Post("HTML-CSS ms Ready")})(MathJax.ElementJax.mml);MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].autoloadDir+"/ms.js");']
 ]);
 
