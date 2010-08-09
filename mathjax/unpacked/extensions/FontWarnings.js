@@ -83,6 +83,8 @@
  */
 
 (function (HUB,HTML) {
+  var VERSION = "1.0";
+  
   var CONFIG = HUB.Insert({
     //
     // The CSS for the message window

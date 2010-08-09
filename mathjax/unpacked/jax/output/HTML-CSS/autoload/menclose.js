@@ -22,6 +22,8 @@
  */
 
 (function (MML,HTMLCSS) {
+  var VERSION = "1.0";
+  
   var SVGNS = "http://www.w3.org/2000/svg";
   var VMLNS = "urn:schemas-microsoft-com:vml";
   var vmlns = "mjxvml";

@@ -13,6 +13,6 @@
  */
 
 MathJax.Unpack([
-  ['MathJax.','Hub.Register.StartupHook("TeX Jax Ready",function(){var b=',0,'InputJax.TeX;var a=','b.prefilterMath',';',4,'=function(f,g,d){var e=d.parentNode.insertBefore(document.createElement("span"),d);e.visibility="hidden";e.style.fontFamily="Times, serif";e.appendChild(document.createTextNode("ABCXYZabcxyz"));var c=','e.offsetWidth',';e.style.fontWeight="bold";if(',8,'==c){f="\\\\bf {"+f+"}"}e.parentNode.removeChild(e);return a.call(b,f,g,d)};',0,'Hub.Startup.signal.Post("TeX autobold Ready")});',0,'Ajax.loadComplete("[MathJax]/extensions/TeX/autobold.js");']
+  ['MathJax.','Hub.Register.StartupHook("TeX Jax Ready",function(){var b="1.0";var c=',0,'InputJax.TeX;var a=','c.prefilterMath',';',4,'=function(g,h,e){var f=e.parentNode.insertBefore(document.createElement("span"),e);f.visibility="hidden";f.style.fontFamily="Times, serif";f.appendChild(document.createTextNode("ABCXYZabcxyz"));var d=f.offsetWidth;f.style.fontWeight="bold";if(f.offsetWidth==d){g="\\\\bf {"+g+"}"}f.parentNode.removeChild(f);return a.call(c,g,h,e)};',0,'Hub.Startup.signal.Post("TeX autobold Ready")});',0,'Ajax.loadComplete("[MathJax]/extensions/TeX/autobold.js");']
 ]);
 

@@ -22,6 +22,7 @@
  */
 
 (function (MML) {
+  var VERSION = "1.0";
   
   MML.ms.Augment({
     toHTML: function (span) {

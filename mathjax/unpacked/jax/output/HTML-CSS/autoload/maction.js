@@ -22,6 +22,8 @@
  */
 
 (function (MML,HTMLCSS) {
+  var VERSION = "1.0";
+  
   var currentTip, hover, clear;
 
   //

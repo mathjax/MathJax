@@ -67,11 +67,13 @@
  */
 
 (function () {
+  var VERSION = "1.0";
   
   //
   //  The configuration defaults, augmented by the user settings
   //  
   MathJax.Extension["TeX/noErrors"] = {
+    version: VERSION,
     config: MathJax.Hub.Insert({
       multiLine: true,
       inlineDelimiters: ["",""],     // or use ["$","$"] or ["\\(","\\)"]

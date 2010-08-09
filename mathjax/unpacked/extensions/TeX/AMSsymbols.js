@@ -21,6 +21,8 @@
  *  limitations under the License.
  */
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+  var VERSION = "1.0";
+  
   var MML = MathJax.ElementJax.mml;
   
   MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions,{

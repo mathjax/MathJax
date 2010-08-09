@@ -22,6 +22,8 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+  var VERSION = "1.0";
+  
   var MML = MathJax.ElementJax.mml;
   var TEX = MathJax.InputJax.TeX;
   var TEXDEF = TEX.Definitions;
