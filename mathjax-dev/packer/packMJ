@@ -1,15 +1,6 @@
 #! /usr/local/bin/perl
 
-#  Compresses the MathJax javascript files that have changed
-#  since the last compression was performed.
-#  Note that the mathjax/font/HTML-CSS/TeX/png font data files
-#  are handled separately by packMJfonts.
-#  Note also that you need a copy of yuicompressor to be
-#  in this directory.
-#  
-#  Usage:  ./packMJ
-
-$SRC = "../../mathjax/unpacked";
+$SRC = "../SourceForge/trunk/mathjax/unpacked";
 $DST = $SRC; $DST =~ s!/unpacked$!!;
 
 sub packDir {
@@ -38,7 +29,7 @@ sub packFile {
   return if $stime <= $dtime || $ssize <= 1024;
   system("./packMJfile '$src' '$dst'");
   my $dsize = (stat($dst))[7];
-  print "Size: $dsize  was: $ssize [saved: ",$ssize-$dsize," or ",
+  print "Size: $dsize,  Original: $ssize [",$ssize-$dsize," or ",
     sprintf("%.1f",100*($ssize-$dsize)/$ssize),"%]\n";
 }
 
