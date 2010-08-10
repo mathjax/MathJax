@@ -47,6 +47,8 @@
  */
 
 (function (HUB) {
+  var VERSION = "1.0";
+  
   var CONFIG = MathJax.Hub.Insert({
     prefer: {MSIE:"MML", Firefox:"MML", Opera:"HTML", other:"HTML"}
   },(MathJax.Hub.config.MMLorHTML||{}));
@@ -71,7 +73,7 @@
 
   var prefer = (CONFIG.prefer && typeof(CONFIG.prefer) === "object" ? 
                 CONFIG.prefer[MathJax.Hub.Browser]||CONFIG.prefer.other||"HTML" :
-                CONFIG.prefer);   
+                CONFIG.prefer);
 
   if (canUseHTML || canUseMML) {
     if (canUseMML && (prefer === "MML" || !canUseHTML))
