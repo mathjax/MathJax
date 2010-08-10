@@ -92,7 +92,7 @@
     messageStyle: {
       position:"fixed", bottom:"4em", left:"3em", width:"40em",
       border: "3px solid #880000", "background-color": "#E0E0E0",
-      padding: "1em", "font-size":"small",
+      padding: "1em", "font-size":"small", "white-space":"normal",
       
       "border-radius": ".75em",                     // Opera 10.5
       "-webkit-border-radius": ".75em",             // Safari and Chrome
@@ -227,7 +227,7 @@
         CONFIG.messageStyle.position = "absolute";
       }
     } else {delete CONFIG.messageStyle.filter}
-    CONFIG.messageStyle.maxWidth = (document.body.clientWidth-5*HTMLCSS.em) + "px";
+    CONFIG.messageStyle.maxWidth = (document.body.clientWidth-75) + "px";
     var i = 0; while (i < data.length) {
       if (data[i] instanceof Array && CONFIG.HTML[data[i][0]])
         {data.splice.apply(data,[i,1].concat(CONFIG.HTML[data[i][0]]))} else {i++}
