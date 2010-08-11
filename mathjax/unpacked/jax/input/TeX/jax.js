@@ -1708,7 +1708,7 @@
     },
     prefilterMath: function (math,displaystyle,script) {
       // avoid parsing super- and subscript numbers as a unit
-      return math.replace(/([_^]\s*\d)(\d)/g,"$1 $2");
+      return math.replace(/([_^]\s*\d)([0-9.,])/g,"$1 $2");
     },
     formatError: function (err,math,displaystyle,script) {
       return MML.merror(err.message.replace(/\n.*/,""));
