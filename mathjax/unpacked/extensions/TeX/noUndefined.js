@@ -41,7 +41,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/noUndefined"] = {
-  version: 1.0",
+  version: "1.0",
   config: MathJax.Hub.Insert({
     attributes: {
       mathcolor: "red"
