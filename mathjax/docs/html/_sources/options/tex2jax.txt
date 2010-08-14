@@ -27,7 +27,7 @@ preprocessor.
     The id name of the element that should be processed by `tex2jax`.
     The default is the whole document.
 
-.. describe:: inlineMath: [['\\(','\\)']]
+.. describe:: inlineMath: [['\\\(','\\\)']]
 
     Array of pairs of strings that are to be used as in-line math
     delimters.  The first in each pair is the initial delimiter and
@@ -49,7 +49,7 @@ preprocessor.
     the browser before MathJax has the chance to run.  You can only
     include text, not tags, as your math delimiters.
 
-.. describe:: displayMath: [ ['$$','$$'], ['\\[','\\]'] ]
+.. describe:: displayMath: [ ['$$','$$'], ['\\\[','\\\]'] ]
 
     Array of pairs of strings that are to be used as delimters for
     displayed equations.  The first in each pair is the initial
