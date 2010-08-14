@@ -95,6 +95,7 @@
     },
     
     replaceEntity: function (match,entity) {
+      if (entity === "lt" || entity === "amp") {return match}
       if (MATHML.Parse.Entity[entity]) {return MATHML.Parse.Entity[entity]}
       var file = entity.charAt(0).toLowerCase();
       var font = entity.match(/^[a-zA-Z](fr|scr|opf)$/);
@@ -125,8 +126,7 @@
         math = this.prefilterMathML(script.firstChild);
       } else {
         math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
-        if (BROWSER.isMSIE) 
-          {math = math.replace(/(&nbsp;)+$/,"").replace(/&amp;/g,"&").replace(/&lt;/g,"&amp;lt;")}
+        if (BROWSER.isMSIE) {math = math.replace(/(&nbsp;)+$/,"")}
         else if (BROWSER.isKonqueror)
           {math = math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
         math = this.prefilterMath(math,script);
