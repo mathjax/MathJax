@@ -95,13 +95,13 @@ HTML-CSS with IE8
 
 Internet Explorer 8 has at least eight different rendering modes in
 which can operate, and that are triggered by the `DOCTYPE` of the
-document being viewed.  It's "quirks" mode is its fasted mode, and its
+document being viewed.  Its "quirks" mode is its fastest mode, and its
 "IE8 standards" mode is its slowest.  This is the mode triggered by
 strict HTML document types, and since most modern content management
 systems now include a `DOCTYPE` that activates "standards" mode, IE8
 will operate in its slowest manner.  This is particularly apparent
 when MathJax is used, since IE8 in standards mode runs 20 to 30 times
-slower than its does in its IE7 emulation mode, and 60 times slower
+slower than it does in its IE7 emulation mode, and 60 times slower
 than in quirks mode.
 
 Most users find this speed reduction unacceptable when there is much
@@ -115,7 +115,7 @@ mode.  You can accomplish this by including the line
 
 at the top of the ``<head>`` section of your HTML documents.  This
 lets you keep the strict `DOCTYPE` for validation purposes, while
-still managing to get reasonable perforance from Internext Explorer
+still managing to get reasonable perforance from Internet Explorer
 8.  Note that this line must come at the beginning of the ``<head>``,
 before any stylesheets or other content are loaded.
 

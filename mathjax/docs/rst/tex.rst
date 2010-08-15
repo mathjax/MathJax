@@ -9,8 +9,8 @@ The support for TeX and LaTeX in MathJax consists of two parts:  the
 these looks for mathematics within your web page (indicated by math
 delimiters like ``$$...$$``) and marks the mathematics for later
 processing by MathJax.  The TeX input processor is what converts the
-TeX notation into MathJax's internal format, where on of MathJax's
-output processors then displays is in the web page.
+TeX notation into MathJax's internal format, where one of MathJax's
+output processors then displays it in the web page.
 
 The `tex2jax` preprocessor can be configured to look for whatever
 markers you want to use for your math delimiters.  See the
@@ -202,7 +202,7 @@ noUndefined
 
 The `noUndefined` extension causes undefined control sequences to be
 shown as their macro names rather than produce an error message. So
-$X_{\xxx}$ would display as an "X" with a subscript consiting of the
+``$X_{\xxx}$`` would display as an "X" with a subscript consiting of the
 text ``\xxx`` in red.
 
 To enable and configure this extension, use for example

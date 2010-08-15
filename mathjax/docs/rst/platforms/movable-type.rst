@@ -1,8 +1,8 @@
 .. _platform-movable-type:
 
-==========================
-Using MathJax in WordPress
-==========================
+=============================
+Using MathJax in Movable Type
+=============================
 
 These instructions assume you already have placed the MathJax files on
 your server (see :ref:`Installing and Testing MathJax <installation>`).
