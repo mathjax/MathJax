@@ -10,8 +10,8 @@ configutation files even though they are not HTML files themselves.
 The format is fairly simple, but flexible enough to let you represent
 complicated HTML trees.
 
-An HTML snippet is an array consisting of a series elements that formt
-he HTML tree.  Those elements are one of two things: either a string,
+An HTML snippet is an array consisting of a series of elements that format
+the HTML tree.  Those elements are one of two things: either a string,
 which represents text to be included in the snippet, or an array,
 which represents an HTML tag to be included.  In the latter case, the
 array consists of three items: a string that is the tag name (e.g.,
