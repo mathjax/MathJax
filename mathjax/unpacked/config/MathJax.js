@@ -24,6 +24,18 @@
  *  limitations under the License.
  */
 
+
+/*
+ *  This file lists most, but not all, of the options that can be set for
+ *  MathJax and its various components.  Some additional options are
+ *  available, however, and are listed in the various links at:
+ *  
+ *  http://www.mathjax.org/resources/docs/?configuration.html#configuration-options-by-component
+ *
+ *  You can add these to the configuration object below if you 
+ *  want to change them from their default values.
+ */
+
 MathJax.Hub.Config({
 
   //
