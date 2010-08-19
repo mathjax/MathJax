@@ -36,6 +36,9 @@
     Init: function () {
       this.div = MathJax.HTML.addElement(document.body,"div",{
         style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
+                padding:0, border:0, margin:0,
+                textAlign:"left", textIndent:0, textTransform:"none",
+                lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
                 fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal"}
       },[""]);
       this.text = this.div.firstChild;
@@ -293,8 +296,10 @@
 
       // Make hidden div for when math is in a display:none block
       this.hiddenDiv = this.Element("div",{
-        style:{visibility:"hidden", overflow:"hidden", height:"1px", width: "auto",
-               position:"absolute", top:0}
+        style:{visibility:"hidden", overflow:"hidden", position:"absolute", top:0,
+               height:"1px", width: "auto", padding:0, border:0, margin:0,
+               textAlign:"left", textIndent:0, textTransform:"none",
+               lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal"}
       });
       if (!document.body.firstChild) {document.body.appendChild(this.hiddenDiv)}
         else {document.body.insertBefore(this.hiddenDiv,document.body.firstChild)}
