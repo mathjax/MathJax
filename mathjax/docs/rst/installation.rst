@@ -143,7 +143,7 @@ from a different server, Firefox won't be able to access those web
 fonts.  In this case, MathJax will pause while waiting for the font to
 download (which will never happen) and will time out after about 15
 seconds for each font it tries to access.  Typically that is three or
-four fonts, so your Foirefox users will experience a minute or so
+four fonts, so your Firefox users will experience a minute or so
 delay before mathematics is displayed, and then it will probably
 display incorrectly because the browser doesn't have access to the
 correct fonts.
