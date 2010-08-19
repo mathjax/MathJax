@@ -134,7 +134,7 @@ Firefox's same-origin security policy for cross-domain scripting.
 
 Firefox’s interpretation of the same-origin policy is more strict than
 most other browsers, and it affects how fonts are loaded with the
-`@font-face` CSS directive.  MathJax uses this directory to load
+`@font-face` CSS directive.  MathJax uses this directive to load
 web-based math fonts into a page when the user doesn't have them
 installed locally on their own computer.  Firefox's security policy,
 however, only allows this when the fonts come from the same server as
