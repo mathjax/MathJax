@@ -120,7 +120,7 @@ MathJax.Extension.tex2jax = {
   },
   
   scanElement: function (element,stop,ignore) {
-    var cname, tname;
+    var cname, tname, ignoreChild;
     while (element && element != stop) {
       if (element.nodeName.toLowerCase() === '#text') {
         if (!ignore) {element = this.scanText(element)}
@@ -129,8 +129,8 @@ MathJax.Extension.tex2jax = {
         tname = (typeof(element.tagName)   === "undefined" ? "" : element.tagName);
         if (typeof(cname) !== "string") {cname = String(cname)} // jsxgraph uses non-string class names!
         if (element.firstChild && !cname.match(/(^| )MathJax/) && !this.skipTags.exec(tname)) {
-          ignore = (ignore || this.ignoreClass.exec(cname)) && !this.processClass.exec(cname);
-          this.scanElement(element.firstChild,stop,ignore);
+          ignoreChild = (ignore || this.ignoreClass.exec(cname)) && !this.processClass.exec(cname);
+          this.scanElement(element.firstChild,stop,ignoreChild);
         }
       }
       if (element) {element = element.nextSibling}
