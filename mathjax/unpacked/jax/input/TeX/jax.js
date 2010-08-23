@@ -1330,7 +1330,7 @@
     },
     
     FBox: function (name) {
-      this.Push(MML.menclose.apply(MML,this.InternalMath(this.GetArgument(name))));
+      this.Push(MML.menclose.apply(MML,this.InternalMath(this.GetArgument(name))).With({notation:"box"}));
     },
     
     Require: function (name) {
