@@ -53,8 +53,8 @@ One way that MathJax makes use of this feature is in configuring its
 various extensions.  The extension may not be loaded when the user's
 configuration code runs, so the configuration code can't modify the
 extension because it isn't there yet.  Fortunately, most extensions
-signal when they are set up via an ``Extension [name] Ready`` message,
-so the configuration code can set up a listener for that message, and
+signal when they are loaded and initialized via an ``Extension [name] Ready`` message,
+so the configuration code can implement a listener for that message, and
 have the listener perform the configuration when the message arrives.
 But even if the extension *has* already been loaded, this will still
 work, because the listener will receive the ready signal even if it
@@ -70,7 +70,7 @@ sender can also indicate that past messages are not appropriate for
 new listeners.  It does this by clearing the message history so that
 new listeners have no old posts to hear.
 
-The actual message passed along the signal can be anything, but is
+The actual message passed along by the signal can be anything, but is
 frequently a string constant indicating the message value.  It could
 also be a JavaScript array containing data, or an object containing
 `key:value` pairs.  All the listeners receive the data as part of the
@@ -81,7 +81,7 @@ Creating a Listener
 
 MathJax maintains two separate signal channels: the `startup signal`
 and the `processing signal` (or the `hub signal`).  The startup signal
-is where the messages about different components startup up and
+is where the messages about different components starting up and
 becoming ready appear.  The processing signal is where the messages
 are sent about processing mathematics, like the ``New Math`` messages
 for when newly typeset mathematics appears on the page.  The latter is

@@ -199,7 +199,7 @@ information about the valid methods of specifying a callback.
 Creating a Callback Explicitly
 ==============================
 
-When you call a method that accpets a callback, you usually pass it a
+When you call a method that accepts a callback, you usually pass it a
 callback specification (like in the examples above), which *describes*
 a callback (the method will create the actual `Callback` object, and
 return that to you as its return value).  You don't usually create
