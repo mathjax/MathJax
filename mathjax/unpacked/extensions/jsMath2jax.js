@@ -81,6 +81,7 @@ MathJax.Extension.jsMath2jax = {
   },
   
   createMathTag: function (mode,tex) {
+    tex = tex.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&");
     var script = document.createElement("script");
     script.type = "math/tex" + mode;
     if (MathJax.Hub.Browser.isMSIE) {script.text = tex}
