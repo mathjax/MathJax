@@ -64,11 +64,11 @@ may not include all the latest patches and features), use
 
 .. code-block:: sh
 
-    svn co http://mathjax.svn.sourcesforge.net/svnroot/mathjax/tags/mathjax-1.0 mathajx
+    svn co http://mathjax.svn.sourceforge.net/svnroot/mathjax/tags/mathjax-1.0.1 mathajx
     cd mathjax
     unzip fonts.zip
 
-to obtain the version 1.0 release.  When you wish to update to a new
+to obtain the version 1.0.1 release.  When you wish to update to a new
 release, you will need to check out a new copy of MathJax with the new
 release number.
 
@@ -84,7 +84,7 @@ Release versions of MathJax are available in archive files from the
 <http://sourceforge.net/projects/mathjax/files/>`_, where you can
 download the archives that you need. 
 
-You should download the ``MathJax-v1.0.zip`` file, then simply unzip
+You should download the ``MathJax-v1.0.1.zip`` file, then simply unzip
 it. Once the MathJax directory is unpacked, you should move it to the
 desired location on your server (or your hard disk, if you are using
 it locally rather then through a web server).  One natural location is
