@@ -55,10 +55,10 @@ MathJax.Extension.jsMath2jax = {
     if (!element) {element = this.config.element || document.body}
     var span = element.getElementsByTagName("span"), i;
     for (i = span.length-1; i >= 0; i--)
-      {if (String(span[i].className).match(/\bmath\b/)) {this.ConvertMath(span[i],"")}}
+      {if (String(span[i].className).match(/(^| )math( |$)/)) {this.ConvertMath(span[i],"")}}
     var div = element.getElementsByTagName("div");
     for (i = div.length-1; i >= 0; i--)
-      {if (String(div[i].className).match(/\bmath\b/)) {this.ConvertMath(div[i],"; mode=display")}}
+      {if (String(div[i].className).match(/(^| )math( |$)/)) {this.ConvertMath(div[i],"; mode=display")}}
   },
   
   ConvertMath: function (node,mode) {
