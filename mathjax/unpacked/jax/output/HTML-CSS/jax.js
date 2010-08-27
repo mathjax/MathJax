@@ -466,6 +466,10 @@
       var scale = Math.floor((ex/this.TeX.x_height) / em * this.config.scale);
       mj.style.fontSize = this.HDMspan.style.fontSize = scale+"%";
       this.em = MML.mbase.prototype.em = this.HDMspan.offsetWidth/60;
+      if (this.operaFontSizeBug && em === this.em && scale !== 100) {
+        // Opera 10.61 doesn't seem to process the fontSize setting above, so adjust manually
+        this.em = MML.mbase.prototype.em = em * scale/100;
+      }
       span.parentNode.removeChild(this.HDMspan);
       this.msieMarginScale = this.getMarginScale(mj);
     },
@@ -2157,6 +2161,7 @@
       HTMLCSS.Augment({
         operaHeightBug: true,
         operaVerticalAlignBug: true,
+        operaFontSizeBug: browser.versionAtLeast("10.61"),
         negativeSkipBug: true,
         zeroWidthBug: true,
         FontFaceBug: true,
