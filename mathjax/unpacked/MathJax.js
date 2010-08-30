@@ -944,7 +944,7 @@ MathJax.HTML = {
           keys.push(id+":"+def[id].toString().replace(/&/g,"&&"));
         }}
       }
-      var cookie = this.prefix+"/"+name+"="+escape(keys.join('&;'));
+      var cookie = this.prefix+"."+name+"="+escape(keys.join('&;'));
       if (this.expires) {
         var time = new Date(); time.setDate(time.getDate() + this.expires);
         cookie += '; expires='+time.toGMTString();
@@ -958,7 +958,7 @@ MathJax.HTML = {
     //
     Get: function (name,obj) {
       if (!obj) {obj = {}}
-      var pattern = new RegExp("(?:^|;\\s*)"+this.prefix+"/"+name+"=([^;]*)(?:;|$)");
+      var pattern = new RegExp("(?:^|;\\s*)"+this.prefix+"\\."+name+"=([^;]*)(?:;|$)");
       var match = pattern.exec(document.cookie);
       if (match && match[1] !== "") {
         var keys = unescape(match[1]).split('&;');
