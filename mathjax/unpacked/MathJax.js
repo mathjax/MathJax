@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.1";
+MathJax.version = "1.0.2";
 
 /**********************************************************/
 
@@ -1810,12 +1810,12 @@ MathJax.Hub.Startup = {
   var BROWSERS = {
     isMac:       (navigator.platform.substr(0,3) === "Mac"),
     isPC:        (navigator.platform.substr(0,3) === "Win"),
-    isMSIE:      (document.all != null && !window.opera),
-    isFirefox:   (document.ATTRIBUTE_NODE != null && window.directories != null),
-    isSafari:    (navigator.vendor != null && navigator.vendor.match(/Apple/) != null && !navigator.omniWebString),
+    isMSIE:      (window.ActiveXObject != null && window.clipboardData != null),
+    isFirefox:   (window.netscape != null && document.ATTRIBUTE_NODE != null && window.opera == null),
+    isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null && window.chrome == null),
+    isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
     isOpera:     (window.opera != null && window.opera.version != null),
-    isChrome:    (navigator.vendor != null && navigator.vendor.match(/Google/) != null),
-    isKonqueror: (window.hasOwnProperty && window.hasOwnProperty("konqueror")),
+    isKonqueror: (window.hasOwnProperty && window.hasOwnProperty("konqueror") && navigator.vendor == "KDE"),
     versionAtLeast: function (v) {
       var bv = (this.version).split('.'); v = (new String(v)).split('.');
       for (var i = 0, m = v.length; i < m; i++)
