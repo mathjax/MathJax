@@ -2116,6 +2116,10 @@
       var v3p0 = browser.versionAtLeast("3.0");
       var v3p1 = browser.versionAtLeast("3.1");
       browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
+      var android = (navigator.appVersion.match(/ Android (\d+)\.(\d+)/));
+      var forceImages = (v3p1 && browser.isMobile &&
+        (navigator.platform === "iPod" || (android != null &&
+          (android[1] < 2 || (android[1] == 2 && android[2] < 2)))));
       HTMLCSS.Augment({
         config: {
           styles: {
@@ -2133,11 +2137,11 @@
         safariVerticalAlignBug: !v3p1,
         safariTextNodeBug: !v3p0,
         safariWebFontSerif: ["serif"],
-        allowWebFonts: (v3p1 && !browser.isMobile ? (browser.isPC ? "svg" : "otf") : false)
+        allowWebFonts: (v3p1 && !forceImages ? (browser.isPC ? "svg" : "otf") : false)
       });
-      if (browser.isMobile) {
-        //  Force image mode for iPhone and Droid
-	//  FIXME:  need to work more on this
+      if (forceImages) {
+        //  Force image mode for iPhone and Droid prior to 2.2
+        //  (iPhone should do SVG web fonts, but crashes with MathJax)
 	var config = MathJax.Hub.config["HTML-CSS"];
         if (config) {config.availableFonts = []; config.preferredFont = null}
           else {MathJax.Hub.config["HTML-CSS"] = {availableFonts: [], preferredFont: null}}
