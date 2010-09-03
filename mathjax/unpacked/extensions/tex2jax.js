@@ -151,7 +151,7 @@ MathJax.Extension.tex2jax = {
       }
       if (this.search.matched) {element = this.encloseMath(element)}
       if (element) {
-        do {prev = element; element = element.nextSibling} 
+        do {prev = element; element = element.nextSibling}
           while (element && (element.nodeName.toLowerCase() === 'br' ||
                              element.nodeName.toLowerCase() === '#comment'));
         if (!element || element.nodeName !== '#text') {return prev}
@@ -213,7 +213,7 @@ MathJax.Extension.tex2jax = {
     while (math.nextSibling && math.nextSibling !== close) {
       if (math.nextSibling.nodeValue !== null) {
         if (math.nextSibling.nodeName === "#comment") {
-          math.nodeValue += math.nextSibling.nodeValue.replace(/^\[CDATA\[(.*)\]\]$/,"$1");
+          math.nodeValue += math.nextSibling.nodeValue.replace(/^\[CDATA\[((.|\n|\r)*)\]\]$/,"$1");
         } else {
           math.nodeValue += math.nextSibling.nodeValue;
         }
