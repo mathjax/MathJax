@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  varsion: "1.0.1",
+  varsion: "1.0.2",
   config: {
     element: null,          // The ID of the element to be processed
                             //   (defaults to full document)
@@ -65,7 +65,7 @@ MathJax.Extension.mml2jax = {
     parent.insertBefore(script,math);
     if (this.msieScriptBug) {
       var html = math.outerHTML;
-      html = html.replace(/<\?import .*?>/,"").replace(/<\?xml:namespace .*?\/>/,"");
+      html = html.replace(/<\?import .*?>/i,"").replace(/<\?xml:namespace .*?\/>/i,"");
       html = html.replace(/<(\/?)m:/g,"<$1").replace(/&nbsp;/g,"&#xA0;");
       script.text = html;
       parent.removeChild(math);
