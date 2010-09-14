@@ -97,8 +97,8 @@ it starts listening after they were sent.</p>
 various extensions.  The extension may not be loaded when the user&#8217;s
 configuration code runs, so the configuration code can&#8217;t modify the
 extension because it isn&#8217;t there yet.  Fortunately, most extensions
-signal when they are set up via an <tt class="docutils literal"><span class="pre">Extension</span> <span class="pre">[name]</span> <span class="pre">Ready</span></tt> message,
-so the configuration code can set up a listener for that message, and
+signal when they are loaded and initialized via an <tt class="docutils literal"><span class="pre">Extension</span> <span class="pre">[name]</span> <span class="pre">Ready</span></tt> message,
+so the configuration code can implement a listener for that message, and
 have the listener perform the configuration when the message arrives.
 But even if the extension <em>has</em> already been loaded, this will still
 work, because the listener will receive the ready signal even if it
@@ -112,7 +112,7 @@ to hear old messages when it attaches itself to a signal object.  The
 sender can also indicate that past messages are not appropriate for
 new listeners.  It does this by clearing the message history so that
 new listeners have no old posts to hear.</p>
-<p>The actual message passed along the signal can be anything, but is
+<p>The actual message passed along by the signal can be anything, but is
 frequently a string constant indicating the message value.  It could
 also be a JavaScript array containing data, or an object containing
 <cite>key:value</cite> pairs.  All the listeners receive the data as part of the
@@ -121,7 +121,7 @@ message, and can act on it in whatever ways they see fit.</p>
 <h2>Creating a Listener<a class="headerlink" href="#creating-a-listener" title="Permalink to this headline">¶</a></h2>
 <p>MathJax maintains two separate signal channels: the <cite>startup signal</cite>
 and the <cite>processing signal</cite> (or the <cite>hub signal</cite>).  The startup signal
-is where the messages about different components startup up and
+is where the messages about different components starting up and
 becoming ready appear.  The processing signal is where the messages
 are sent about processing mathematics, like the <tt class="docutils literal"><span class="pre">New</span> <span class="pre">Math</span></tt> messages
 for when newly typeset mathematics appears on the page.  The latter is

@@ -41,7 +41,7 @@ TeX and LaTeX in HTML documents
 
 Keep in mind that your mathematics is part of an HTML document, so you
 need to be aware of the special characters used by HTML as part of its
-markup.  There can not be HTML tags within the math delimiters (other
+markup.  There cannot be HTML tags within the math delimiters (other
 than ``<BR>``) as TeX-formatted math does not include HTML tags.
 Also, since the mathematics is initially given as text on the page,
 you need to be careful that your mathematics doesn't look like HTML
@@ -61,7 +61,7 @@ HTML).  When this happens, the browser will think the tag continues up
 to the next ``>`` in the document (typically the end of the next
 actual tag in the HTML file), and you may notice that you are missing
 part of the text of the document.  In the example above, the `` we
-have ...`` will not be displayed because the browsers thinks it is
+have ...`` will not be displayed because the browser thinks it is
 part of the tag starting at ``<y``.  This is one indication you can
 use to spot this prooblem; it is a common error and should be avoided.
 
