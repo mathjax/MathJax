@@ -142,7 +142,7 @@ provide are defined for use on the page.
 
 .. code-block:: javascript
     
-    MathJax.Hub.config({
+    MathJax.Hub.Config({
         extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
         jax: ["input/TeX","output/HTML-CSS"],
         tex2jax: {
@@ -179,7 +179,7 @@ formulas.
 
 .. code-block:: javascript
 
-    MathJax.Hub.config({
+    MathJax.Hub.Config({
         extensions: ["mml2jax.js"],
         jax: ["input/MathML","output/HTML-CSS"]
     });
@@ -206,7 +206,7 @@ TeX and MathML input jax to do the job.
 
 .. code-block:: javascript
 
-    MathJax.Hub.config({
+    MathJax.Hub.Config({
         extensions: ["tex2jax.js", "mml2jax.js"],
         jax: ["input/TeX", "input/MathML", "output/HTML-CSS"],
     });
