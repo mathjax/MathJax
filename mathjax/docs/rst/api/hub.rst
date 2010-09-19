@@ -55,7 +55,7 @@ Properties
         running on a Macintosh computer or a Windows computer.  They
         will both be ``false`` for a Linux computer
 
-    .. describe:: isForefox, isSafari, isChrome, isOpera, isMSIE, isKonqueror
+    .. describe:: isFirefox, isSafari, isChrome, isOpera, isMSIE, isKonqueror
 
         These are ``true`` when the browser is the indicated one, and
         ``false`` otherwise.

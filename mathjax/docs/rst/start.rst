@@ -79,7 +79,7 @@ the ``AMSmath`` and ``AMSsymbols`` extensions.  The comments in the
 file should help you do this, but more detailed instructions are
 included in the :ref:`Configuring MathJax <configuration>` document.
 There are also ways to configure MathJax other than by using the
-``config/MathJax.js`` file; these are descibed on that page as well.
+``config/MathJax.js`` file; these are described on that page as well.
 
 
 Linking MathJax into a web page

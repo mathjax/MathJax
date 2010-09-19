@@ -14,7 +14,7 @@ then MathJax will look for unprocessed mathematics on the page and
 typeset it, leaving unchanged any math that has already been typeset.
 
 You should not simply call this method directly, however.  Because
-MathJax operates asynchonously (see :ref:`Synchronizing with MathJax
+MathJax operates asynchronously (see :ref:`Synchronizing with MathJax
 <synchronization>` for details), you need to be sure that
 your call to :meth:`MathJax.Hub.Typeset()` is synchronized with the
 other actions that MathJax is taking.  For example, it may already be
@@ -32,7 +32,7 @@ To queue the typeset action, use the command
 This will cause MathJax to typeset the page when it is next able to do
 so.  It guarantees that the typesetting will synchronize properly
 with the loading of jax, extensions, fonts, stylesheets, and other
-asynchornous activity, and is the only truely safe way to ask MathJax
+asynchronous activity, and is the only truly safe way to ask MathJax
 to process additional material.
 
 The :meth:`MathJax.Hub.Typeset()` command also accepts a parameter
@@ -60,7 +60,7 @@ Note that the :meth:`MathJax.Hub.Queue()` method will return
 immediately, regardless of whether the typesetting has taken place or
 not, so you can not assume that the mathematics is visible after you
 make this call.  That means that things like the size of the container
-for the mathematics may not yet reflect the size of the typeet
+for the mathematics may not yet reflect the size of the typeset
 mathematics.  If you need to perform actions that depend on the
 mathematics being typeset, you should push *those* actions onto the
 ``MathJax.Hub.queue`` as well.  
@@ -140,7 +140,7 @@ The actions you can perform on an element jax include:
     .. describe:: SourceElement()
 
         to obtain a reference to the original
-        ``<script>`` object that is assocaited with this element jax.
+        ``<script>`` object that is associated with this element jax.
 
 
 Note that once you have located an element jax, you can keep using it
@@ -153,7 +153,7 @@ displayed.
 
 To get the element jax the first time, you need to be sure that you
 ask MathJax for it **after** MathJax has processed the page the first
-time.  This is another sitaution where you want to use the MathJax
+time.  This is another situation where you want to use the MathJax
 queue.  If your startup code performs the commands
 
 .. code-block:: javascript

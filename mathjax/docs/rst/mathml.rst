@@ -36,7 +36,7 @@ mathematics so that the browser will render it as MathML.  In
 addition, MathJax provides its contextual menu for the MathML, which
 lets the user zoom the mathematics for easier reading, get the copy
 the source markup, and so on, so there is added value to using MathJax
-even whith a pure MathML workflow.
+even with a pure MathML workflow.
 
 
 MathML in HTML pages
@@ -44,7 +44,7 @@ MathML in HTML pages
 
 For MathML that is handled via the pre-processor, you should not use
 the named MathML entities, but rather use the numeric entities like
-``&#x221A;`` or unicode characters embedded in the page itself.  The
+``&#x221A;`` or Unicode characters embedded in the page itself.  The
 reason is that entities are replaced by the browser before MathJax
 runs, and some browsers report errors for unknown entities.  For
 browsers that are not MathML-aware, that will cause errors to be
@@ -55,7 +55,7 @@ If you must use named entities, you may need to declare them in the
 `DOCTYPE` declaration by hand.
 
 When you use MathML in an HTML document rather than an XHTML one
-(MathJax will work woth both), you should not use the "self-closing"
+(MathJax will work with both), you should not use the "self-closing"
 form for tags with no content, but should use separate open and close
 tags.  That is, use
 

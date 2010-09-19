@@ -105,7 +105,7 @@ of a copy of MathJax from your own server.
 Here is a script that runs MathJax in any document that contains
 MathML (whether its includes MathJax or not).  That allows 
 browsers that don't have native MathML support to view any web pages
-with MathML, even if they say it only works in Forefox and
+with MathML, even if they say it only works in Firefox and
 IE+MathPlayer.
 
 .. code-block:: javascript

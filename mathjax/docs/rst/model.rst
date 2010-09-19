@@ -46,7 +46,7 @@ directly, as described below, rather than having MathJax run
 another preprocessor.  This will speed up the final display of the
 mathematics, since the extra preprocessing step would not be needed,
 and it also avoids the conflict between the use of the less-than sign,
-``<``, in mathematics and asn an HTML special character (that starts
+``<``, in mathematics and as a special character in HTML (that starts
 an HTML tag).
 
 
@@ -194,7 +194,7 @@ jax acts as a translator into MathML.
 output format.  For example, the NativeMML output jax inserts MathML
 tags into the page to represent the mathematics, while the HTML-CSS
 output jax uses HTML with CSS styling to lay out the mathematics so
-that it can be displayed even in browsers that dont understand
+that it can be displayed even in browsers that don't understand
 MathML.  Output jax could be produced that render the mathematics
 using SVG, for example, or that speak an equation for the blind
 users.  The MathJax contextual menu can be used to switch between the

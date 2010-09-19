@@ -49,7 +49,7 @@ use
     rm -rf fonts
     unzip fonts.zip
 
-to udpate your copy of MathJax to the current release version.  If the
+to update your copy of MathJax to the current release version.  If the
 ``fonts.zip`` file has been updated, you will need to remove the old
 fonts directory and unpack the new one bring your installation up to
 date.  If you keep MathJax updated in this way, you will be sure that
@@ -64,7 +64,7 @@ may not include all the latest patches and features), use
 
 .. code-block:: sh
 
-    svn co http://mathjax.svn.sourcesforge.net/svnroot/mathjax/tags/mathjax-1.0 mathajx
+    svn co http://mathjax.svn.sourceforge.net/svnroot/mathjax/tags/mathjax-1.0 mathjax
     cd mathjax
     unzip fonts.zip
 
@@ -129,10 +129,10 @@ a different site.  For example, a departmental server at
 ``www.math.yourcollege.edu`` might like to use a college-wide
 installation at ``www.yourcollege.edu`` rather than installing a
 separate copy on the departmental machine.  MathJax can certainly
-be loaded from another server, but there is one imporant caveat ---
+be loaded from another server, but there is one important caveat ---
 Firefox's same-origin security policy for cross-domain scripting.
 
-Firefox’s interpretation of the same-origin policy is more strict than
+Firefox's interpretation of the same-origin policy is more strict than
 most other browsers, and it affects how fonts are loaded with the
 `@font-face` CSS directive.  MathJax uses this directive to load
 web-based math fonts into a page when the user doesn't have them
@@ -162,7 +162,7 @@ server <http://www.apache.org/>`_.  In the remote server's
 
 and make sure the permissions allow the server to read this file.
 (The file's name starts with a period, which causes it to be an
-"invisible" file on unix-based operating systems.  Some systems,
+"invisible" file on UNIX-based operating systems.  Some systems,
 particularly graphic user interfaces, may not allow you to create such
 files, so you might need to use the command-line interface to
 accomplish this.)

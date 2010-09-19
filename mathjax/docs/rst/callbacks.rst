@@ -36,8 +36,8 @@ and wait for them all to be loaded before performing some action, you
 can create a `Queue` into which you push the results of the
 :meth:`MathJax.Ajax.Require()` calls, and then push a callback for the
 action.  The final action will not be performed until all the
-file-load callbacks (which preceed it int he queue) have been called;
-i.e., the action will not occur until all the files are loaded.
+file-load callbacks (which preceed it in the queue) have been called;
+i.e. the action will not occur until all the files are loaded.
 
 
 Specifying a Callback
@@ -199,7 +199,7 @@ information about the valid methods of specifying a callback.
 Creating a Callback Explicitly
 ==============================
 
-When you call a method that accpets a callback, you usually pass it a
+When you call a method that accepts a callback, you usually pass it a
 callback specification (like in the examples above), which *describes*
 a callback (the method will create the actual `Callback` object, and
 return that to you as its return value).  You don't usually create
@@ -212,8 +212,8 @@ argument, and you may want that function to be a method of an object,
 and would run into the problem described in the previous section if
 you simply passed the object's method to ``setTimeout()``.  Or you
 might want to pass an argument to the function called by
-``setTimeout()``.  (Altough the ``setTimeout()`` function can accept
-additional arguements that are supposed to be passed on to the code
+``setTimeout()``.  (Although the ``setTimeout()`` function can accept
+additional arguments that are supposed to be passed on to the code
 when it is called, Internet Explorer does not implement that feature,
 so you can't rely on it.)  You can use a `Callback` object to
 do this, and the :meth:`MathJax.Callback()` method will create one for

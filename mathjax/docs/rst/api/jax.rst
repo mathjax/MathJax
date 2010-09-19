@@ -88,7 +88,7 @@ Methods
     This is a temporary routine that is used while the ``jax.js`` file
     is loading.  It throws an error indicating the the
     :meth:`Translate()` method hasn't been redefined.  That way, if
-    the ``jax.js`` file failes to load for some reason, you will
+    the ``jax.js`` file fails to load for some reason, you will
     receive an error trying to process mathematics with this input
     jax.
 

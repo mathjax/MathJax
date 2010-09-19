@@ -55,7 +55,7 @@ example,
 
 	... when $x<y$ we have ...
 
-will cause a problem, because the brower will think ``<y`` is the
+will cause a problem, because the browser will think ``<y`` is the
 beginning of a tag named ``y`` (even though there is no such tag in
 HTML).  When this happens, the browser will think the tag continues up
 to the next ``>`` in the document (typically the end of the next
@@ -63,7 +63,7 @@ actual tag in the HTML file), and you may notice that you are missing
 part of the text of the document.  In the example above, the `` we
 have ...`` will not be displayed because the browsers thinks it is
 part of the tag starting at ``<y``.  This is one indication you can
-use to spot this prooblem; it is a common error and should be avoided.
+use to spot this problem; it is a common error and should be avoided.
 
 Usually, it is sufficient to simply put spaces around these symbols to
 cause the browser to avoid them, so
@@ -202,7 +202,7 @@ noUndefined
 
 The `noUndefined` extension causes undefined control sequences to be
 shown as their macro names rather than produce an error message. So
-``$X_{\xxx}$`` would display as an "X" with a subscript consiting of the
+``$X_{\xxx}$`` would display as an "X" with a subscript consisting of the
 text ``\xxx`` in red.
 
 To enable and configure this extension, use for example
@@ -243,7 +243,7 @@ Examples:
     \unicode{65}                        % the character 'A'
     \unicode{x41}                       % the character 'A'
     \unicode[.55,0.05]{x22D6}           % less-than with dot, with height .55em and depth 0.05em
-    \unicode[.55,0.05][Geramond]{x22D6} % same taken from Geramond font
+    \unicode[.55,0.05][Garamond]{x22D6} % same taken from Garamond font
     \unicode[Garamond]{x22D6}           % same, but with default height, depth of .8em,.2em
     
 Once a size and font are provided for a given unicode point, they need

@@ -59,7 +59,7 @@ have the listener perform the configuration when the message arrives.
 But even if the extension *has* already been loaded, this will still
 work, because the listener will receive the ready signal even if it
 has already been posted.  In this way, listening for signals is a
-robust method of synchonizing code components no matter when they are
+robust method of synchronizing code components no matter when they are
 loaded and run.
 
 In some cases, it may be inappropriate for a new listener to receive
@@ -106,7 +106,7 @@ details of the messages sent during startup.  See also the
 ``test/sample-signals.html`` file (and its source) for examples of
 using signals.  This example lists all the signals that occur while
 MathJax is processing that page, so it gives useful information about
-the details of the signals produced by variuous components.
+the details of the signals produced by various components.
 
 In this example, the listener starts loading an extra configuration
 file (from the same directory as the web page).  Since it returns

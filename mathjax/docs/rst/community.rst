@@ -7,7 +7,7 @@ the wider community of MathJax users.  The MathJax project maintains
 forums where users can ask questions about how to use MathJax, make
 suggestions about future features for MathJax, and present their own
 solutions to problems that they have faced.  There is also a
-bug-traking system where you can report errors that you have found
+bug-tracking system where you can report errors that you have found
 with MathJax in your environment.
 
 
@@ -47,7 +47,7 @@ and `existing tickets
 first to see if it has already been reported. 
 You could also be using an outdated version of MathJax, so be sure to
 :ref:`upgrade your copy <getting-mathjax-svn>` to verify that the
-problem persists in the lastest version.
+problem persists in the latest version.
 
 
 .. _badge:

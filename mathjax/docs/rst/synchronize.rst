@@ -29,7 +29,7 @@ how to specify a callback.
 **Queues** are MathJax's means of synchronizing actions that must be
 performed sequentially, even when they involve asynchronous events
 like loading files or dynamically creating stylesheets.  The actions
-that you put in the queue are `Callback` objects that will be perfomed
+that you put in the queue are `Callback` objects that will be performed
 in sequence, with MathJax handling the linking of one action to the
 next.  MathJax maintains a master queue that you can use to
 synchronize with MathJax, but you can also create your own private
@@ -48,7 +48,7 @@ This works somewhat like an event handler, except that many different
 types of events can go through the same signal, and the signals have a
 "memory", meaning that if you register an interest in a particular
 type of signal and that signal has already occurred, you will be told
-about the past occurrances as well as any future ones.  See the
+about the past occurrences as well as any future ones.  See the
 :ref:`Signal Object <api-signal>` reference page for more details.
 See also the ``test/sample-signals.html`` file in the MathJax ``test``
 directory for a working example of using signals.

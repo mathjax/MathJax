@@ -65,8 +65,8 @@ Methods
     :Parameters:
         - **message** --- the text to display in the message area
         - **n** --- the message id number
-        - **delay** --- amout of time to display the message
-    :Returns: the message id nuber for this message.
+        - **delay** --- amount of time to display the message
+    :Returns: the message id number for this message.
 
 .. method:: Clear(n[,delay])
 

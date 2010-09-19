@@ -8,7 +8,7 @@ The `callback queue` is one of MathJax's main tools for synchronizing
 its actions, both internally, and with external programs, like
 javascript code that you may write as part of dynamic web pages.
 Because many actions in MathJax (like loading files) operate
-asynchornously, MathJax needs a way to coordinate those actions so
+asynchronously, MathJax needs a way to coordinate those actions so
 that they occur in the right order.  The
 `MathJax.Callback.Queue` object provides that mechanism.
 
@@ -197,13 +197,13 @@ instead are defined in extensions that are loaded automatically when
 needed.  The typesetting of an expression containing one of these TeX
 commands can cause the typesetting process to be suspended while the
 file is loaded, and then restarted when the extension has become
-evailable.
+available.
 
 As a result, any call to :meth:`MathJax.Hub.Typeset()` (or
 :meth:`MathJax.Hub.Process()`, or :meth:`MathJax.Hub.Update()`, etc.)
 could return long before the mathematics is actually typeset, and the
 rest of your code may run before the mathematics is available.  If you
-have code that relys on the mathematics being visible on screen, you
+have code that relies on the mathematics being visible on screen, you
 will need to break that out into a separate operation that is
 synchronized with the typesetting via the MathJax queue.
 

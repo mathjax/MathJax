@@ -7,7 +7,7 @@ The MathJax API
 The following links document the various components that make up
 MathJax.  These are implemented as JavaScript objects contained within
 the single global variable, ``MathJax``.  Although JavaScript includes
-an objects with some inheritance capabilities, they do not constitute
+objects with some inheritance capabilities, they do not constitute
 a full object-oriented programming model, so MathJax implements
 its own object library.  This means there is an ambiguity when we
 speak of an "object", as it could be either a native JavaScript
