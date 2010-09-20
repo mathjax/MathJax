@@ -156,7 +156,7 @@ dollar sign in your document, you must &#8220;escape&#8221; it using a slash:
 <tt class="docutils literal"><span class="pre">\$</span></tt>.  This configuration also loads the <tt class="docutils literal"><span class="pre">AMSmath</span></tt> and
 <tt class="docutils literal"><span class="pre">AMSsymbols</span></tt> extensions so that the macros and environments they
 provide are defined for use on the page.</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
     <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;tex2jax.js&quot;</span><span class="p">,</span><span class="s2">&quot;TeX/AMSmath.js&quot;</span><span class="p">,</span><span class="s2">&quot;TeX/AMSsymbols.js&quot;</span><span class="p">],</span>
     <span class="nx">jax</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;input/TeX&quot;</span><span class="p">,</span><span class="s2">&quot;output/HTML-CSS&quot;</span><span class="p">],</span>
     <span class="nx">tex2jax</span><span class="o">:</span> <span class="p">{</span>
@@ -188,7 +188,7 @@ mathematics in the page that is in <a class="reference internal" href="glossary.
 <tt class="docutils literal"><span class="pre">&lt;math</span> <span class="pre">display=&quot;block&quot;&gt;</span></tt> to indicate displayed equations, and
 <tt class="docutils literal"><span class="pre">&lt;math</span> <span class="pre">display=&quot;inline&quot;&gt;</span></tt> or simply <tt class="docutils literal"><span class="pre">&lt;math&gt;</span></tt> to mark in-line
 formulas.</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
     <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;mml2jax.js&quot;</span><span class="p">],</span>
     <span class="nx">jax</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;input/MathML&quot;</span><span class="p">,</span><span class="s2">&quot;output/HTML-CSS&quot;</span><span class="p">]</span>
 <span class="p">});</span>
@@ -210,7 +210,7 @@ options that control the MathML input processor.</p>
 <p>This example provides for both TeX and MathML input in the same file.
 It calls on both the <tt class="docutils literal"><span class="pre">tex2jax</span></tt> and <tt class="docutils literal"><span class="pre">mml2jax</span></tt> preprocessors and the
 TeX and MathML input jax to do the job.</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
     <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;tex2jax.js&quot;</span><span class="p">,</span> <span class="s2">&quot;mml2jax.js&quot;</span><span class="p">],</span>
     <span class="nx">jax</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;input/TeX&quot;</span><span class="p">,</span> <span class="s2">&quot;input/MathML&quot;</span><span class="p">,</span> <span class="s2">&quot;output/HTML-CSS&quot;</span><span class="p">],</span>
 <span class="p">});</span>
