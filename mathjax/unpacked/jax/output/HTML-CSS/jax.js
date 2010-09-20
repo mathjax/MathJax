@@ -2118,7 +2118,7 @@
       browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
       var android = (navigator.appVersion.match(/ Android (\d+)\.(\d+)/));
       var forceImages = (v3p1 && browser.isMobile &&
-        (navigator.platform === "iPod" || (android != null &&
+        (navigator.platform.match(/iPad|iPod|iPhone/) || (android != null &&
           (android[1] < 2 || (android[1] == 2 && android[2] < 2)))));
       HTMLCSS.Augment({
         config: {
