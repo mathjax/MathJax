@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.0.1";
+  var VERSION = "1.0.2";
   
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE;
   var ROUND = (isPC ? null : "5px");
@@ -528,7 +528,7 @@
   MENU.About.GetJax = function (jax,JAX,type) {
     for (var id in JAX) {
       if (JAX[id].isa && JAX[id].isa(JAX))
-        {jax.push(JAX[id].name+" "+type+" Jax v"+JAX[id].version,["br"])}
+        {jax.push(JAX[id].id+" "+type+" Jax v"+JAX[id].version,["br"])}
     }
     return jax;
   };

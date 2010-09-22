@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.2";
+MathJax.version = "1.0.3";
 
 /**********************************************************/
 
@@ -1640,32 +1640,32 @@ MathJax.Hub.Startup = {
     },
     Register: function (mimetype) {},
     Config: function () {
-      HUB.Insert(this.config,(HUB.config[this.name]||{}));
+      HUB.Insert(this.config,(HUB.config[this.id]||{}));
       if (this.config.Augment) {this.Augment(this.config.Augment)}
     },
     Startup: function () {},
     loadComplete: function (file) {
       if (file === "jax.js") {
         var queue = CALLBACK.Queue();
-        queue.Push(["Post",HUB.Startup.signal,this.name+" Jax Config"]);
+        queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Config"]);
         queue.Push(["Config",this]);
-        queue.Push(["Post",HUB.Startup.signal,this.name+" Jax Require"]);
+        queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Require"]);
         if (this.require) {
           var require = this.require; if (!(require instanceof Array)) {require = [require]}
           for (var i = 0, m = require.length; i < m; i++) {queue.Push(AJAX.Require(require[i]))}
           queue.Push(["loadArray",MathJax.Hub.Startup,this.config.require,"config"]);
         }
-        queue.Push(["Post",HUB.Startup.signal,this.name+" Jax Startup"]);
+        queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Startup"]);
         queue.Push(["Startup",this]);
-        queue.Push(["Post",HUB.Startup.signal,this.name+" Jax Ready"]);
+        queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Ready"]);
         return queue.Push(["loadComplete",AJAX,this.directory+"/"+file]);
       } else {
         return AJAX.loadComplete(this.directory+"/"+file);
       }
     }
   },{
-    name: "unknown",
-    version: "1.0",
+    id: "unknown",
+    version: "1.0.1",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -1690,7 +1690,7 @@ MathJax.Hub.Startup = {
       if (!HUB.config.outputJax) {HUB.config.outputJax = {}}
       if (!HUB.config.outputJax[mimetype]) {
         HUB.config.outputJax[mimetype] = [];
-        if (!HUB.config.menuSettings.renderer) {HUB.config.menuSettings.renderer = this.name}
+        if (!HUB.config.menuSettings.renderer) {HUB.config.menuSettings.renderer = this.id}
       }
       HUB.config.outputJax[mimetype].push(this);
     },

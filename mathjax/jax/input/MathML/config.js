@@ -13,6 +13,6 @@
  */
 
 MathJax.Unpack([
-  ['MathJax.InputJax','.MathML','=',0,'({name:"','MathML",','version:"1.0.1",directory:',0,'.directory+"/',5,'extensionDir',':',0,'.',10,'+"/',5,'entityDir:',0,8,'MathML/entities",require:[MathJax.ElementJax',8,'mml/jax.js"],config:{useMathMLspacing:false}});',0,1,'.Register("math/mml");',0,1,'.loadComplete("config.js");']
+  ['MathJax.InputJax','.MathML','=',0,'({id:"','MathML",','version:"1.0.2",directory:',0,'.directory+"/',5,'extensionDir',':',0,'.',10,'+"/',5,'entityDir:',0,8,'MathML/entities",require:[MathJax.ElementJax',8,'mml/jax.js"],config:{useMathMLspacing:false}});',0,1,'.Register("math/mml");',0,1,'.loadComplete("config.js");']
 ]);
 

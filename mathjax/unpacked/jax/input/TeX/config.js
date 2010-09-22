@@ -23,8 +23,8 @@
  */
 
 MathJax.InputJax.TeX = MathJax.InputJax({
-  name: "TeX",
-  version: "1.0",
+  id: "TeX",
+  version: "1.0.1",
   directory: MathJax.InputJax.directory + "/TeX",
   extensionDir: MathJax.InputJax.extensionDir + "/TeX",
   require: [MathJax.ElementJax.directory + "/mml/jax.js"],
