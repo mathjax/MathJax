@@ -26,6 +26,8 @@
 (function (MML,AJAX,HUB,HTMLCSS) {
    
   var FONTTEST = MathJax.Object.Subclass({
+    timeout:  5*1000,   // timeout for loading web fonts
+
     FontInfo: {
       STIX: {family: "STIXSizeOneSym", testString: "() {} []"},
       TeX:  {family: "MathJax_Size1",  testString: "() {} []"}
@@ -126,22 +128,23 @@
     loadWebFont: function (font) {
       HUB.Startup.signal.Post("HTML-CSS Jax - Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
       var n = MathJax.Message.File("Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
-      var callback = MathJax.Callback(["loadComplete",this,font,n]);
-      AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],1);
-      return callback;
+      var done = MathJax.Callback({}); // called when font is loaded
+      var callback = MathJax.Callback(["loadComplete",this,font,n,done]);
+      AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],1,this.timeout);
+      return done;
     },
-    loadComplete: function (font,n,status) {
-      if (status !== AJAX.STATUS.OK) {
-        this.loadError(font);
-        if (HUB.Browser.isFirefox && HTMLCSS.allowWebFonts) {
-          var host = document.location.protocol + "//" + document.location.hostname;
-          if (document.location.port != "") {host += ":" + document.location.port}
-          host += "/";
-          if (AJAX.fileURL(HTMLCSS.webfontDir).substr(0,host.length) !== host)
-            {this.firefoxFontError(font)}
-        }
-      }
+    loadComplete: function (font,n,done,status) {
       MathJax.Message.Clear(n);
+      if (status === AJAX.STATUS.OK) {done(); return}
+      this.loadError(font);
+      if (HUB.Browser.isFirefox && HTMLCSS.allowWebFonts) {
+        var host = document.location.protocol + "//" + document.location.hostname;
+        if (document.location.port != "") {host += ":" + document.location.port}
+        host += "/";
+        if (AJAX.fileURL(HTMLCSS.webfontDir).substr(0,host.length) !== host)
+          {this.firefoxFontError(font)}
+      }
+      HTMLCSS.loadWebFontError(font,done);
     },
     loadError: function (font) {
       MathJax.Message.Set("Can't load web font "+HTMLCSS.fontInUse+"/"+font.directory,null,2000);
@@ -1049,6 +1052,24 @@
       font.available = font.isWebFont = true;
       if (HTMLCSS.FontFaceBug) {font.family = font.name}
       HUB.RestartAfter(this.Font.loadWebFont(font));
+    },
+    loadWebFontError: function (font,done) {
+      //
+      //  After the first web font fails to load, switch to image fonts, if possible
+      //  otherwise, give up on web fonts all together
+      // 
+      HUB.Startup.signal.Post("HTML-CSS Jax - disable web fonts");
+      font.isWebFont = false;
+      if (this.config.imageFont && this.config.imageFont === this.fontInUse) {
+        this.imgFonts = true;
+        HUB.Startup.signal.Post("HTML-CSS Jax - switch to image fonts");
+        HUB.Startup.signal.Post("HTML-CSS Jax - using image fonts");
+        MathJax.Message.Set("Web-Fonts not available -- using image fonts instead",null,3000);
+        AJAX.Require(this.directory+"/imageFonts.js",done);
+      } else {
+        this.allowWebFonts = false;
+        done();
+      }
     },
 
     Element: MathJax.HTML.Element,

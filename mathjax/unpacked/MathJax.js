@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.3";
+MathJax.version = "1.0.4";
 
 /**********************************************************/
 
@@ -723,10 +723,10 @@ MathJax.version = "1.0.3";
       //
       //  Start the timer for the given callback checker
       //
-      start: function (AJAX,check,delay) {
+      start: function (AJAX,check,delay,timeout) {
         check = BASE.Callback(check);
         check.execute = this.execute; check.time = this.time;
-        check.STATUS = AJAX.STATUS; check.timeout = AJAX.timeout;
+        check.STATUS = AJAX.STATUS; check.timeout = timeout || AJAX.timeout;
         check.delay = check.total = 0;
         setTimeout(check,delay);
       },

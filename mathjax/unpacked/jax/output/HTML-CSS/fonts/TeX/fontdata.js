@@ -23,7 +23,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "1.0";
+  var VERSION = "1.0.1";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -406,8 +406,8 @@
   //  Handle error with reversed glyphs for \bigcap and \bigcup in version 1 of fonts
   //
   HTMLCSS.Font.oldLoadComplete = HTMLCSS.Font.loadComplete;
-  HTMLCSS.Font.loadComplete = function (font,n,status) {
-    if (n != null) {this.oldLoadComplete(font,n,status)}
+  HTMLCSS.Font.loadComplete = function (font,n,done,status) {
+    if (n != null) {this.oldLoadComplete(font,n,done,status)}
     if (font.family === SIZE1 || font.family === SIZE2) {
       if (font.version === 1) {
         HTMLCSS.FONTDATA.VARIANT["-largeOp"].remap = {0x22C2: 0x22C3, 0x22C3: 0x22C2};
