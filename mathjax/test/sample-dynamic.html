@@ -50,5 +50,18 @@ Type some TeX code and press RETURN:<br/>
 You typed: ${}$
 </div>
 
+<script>
+//
+//  IE doesn't fire onchange events for RETURN, so
+//   use onkeypress to do a blur (and refocus) to
+//   force the onchange to occur
+//
+if (MathJax.Hub.Browser.isMSIE) {
+  window.MathInput.onkeypress = function () {
+    if (window.event && window.event.keyCode === 13) {this.blur(); this.focus()}
+  }
+}
+</script>
+
 </body>
 </html>
