@@ -850,14 +850,14 @@
         nonumber:          ['Macro',''],             // not implemented yet
 
         //  Extensions to TeX
-        unicode:    ['Extension','unicode'],
-        color:      'Color',
+        unicode:           ['Extension','unicode'],
+        color:              'Color',
         
-//      href:       ['Extension','HTML'],
-//      'class':    ['Extension','HTML'],
-//      style:      ['Extension','HTML'],
-//      cssId:      ['Extension','HTML'],
-//      bbox:       ['Extension','bbox'],
+        href:              ['Extension','HTML'],
+        'class':           ['Extension','HTML'],
+        style:             ['Extension','HTML'],
+        cssId:             ['Extension','HTML'],
+//      bbox:              ['Extension','bbox'],
     
         require:            'Require'
 
