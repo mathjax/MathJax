@@ -1271,7 +1271,11 @@
       var values = this.getValues("mathcolor","color");
       if (this.mathbackground) {values.mathbackground = this.mathbackground}
       if (this.background) {values.background = this.background}
-      if (this.style && span.style.backgroundColor) {values.mathbackground = span.style.backgroundColor}
+      // @@@ FIXME:  handle border as well?
+      if (this.style && span.style.backgroundColor) {
+        values.mathbackground = span.style.backgroundColor;
+        span.style.backgroundColor = "transparent";
+      }
       if (values.color && !this.mathcolor) {values.mathcolor = values.color}
       if (values.background && !this.mathbackground) {values.mathbackground = values.background}
       if (values.mathcolor) {span.style.color = values.mathcolor}
