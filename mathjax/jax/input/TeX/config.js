@@ -13,6 +13,6 @@
  */
 
 MathJax.Unpack([
-  ['MathJax.InputJax','.TeX','=',0,'({id:"TeX",version:"1.0.1",directory:',0,'.directory+"/','TeX",extensionDir:',0,'.extensionDir+"/TeX",require:[MathJax.ElementJax',6,'mml/jax.js"],config:{TagSide:"right",TagIndent:"0.8em",MultLineWidth:"85%"}});',0,1,'.Register("math/tex");',0,1,'.loadComplete("config.js");']
+  ['MathJax.InputJax','.TeX','=',0,'({id:"TeX",version:"1.0.2",directory:',0,'.directory+"/','TeX",extensionDir:',0,'.extensionDir+"/TeX",require:[MathJax.ElementJax',6,'mml/jax.js"],config:{TagSide:"right",TagIndent:"0.8em",MultLineWidth:"85%"}});',0,1,'.Register("math/tex");',0,1,'.loadComplete("config.js");']
 ]);
 
