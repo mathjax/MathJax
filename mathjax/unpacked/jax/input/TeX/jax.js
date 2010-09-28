@@ -1704,11 +1704,15 @@
       }
       if (mml.inferred) {mml = MML.apply(MathJax.ElementJax,mml.data)} else {mml = MML(mml)}
       if (displaystyle) {mml.root.display = "block"}
-      return mml;
+      return this.postfilterMath(mml,displaystyle,script);
     },
     prefilterMath: function (math,displaystyle,script) {
       // avoid parsing super- and subscript numbers as a unit
       return math.replace(/([_^]\s*\d)([0-9.,])/g,"$1 $2");
+    },
+    postfilterMath: function (math,displaystyle,script) {
+      this.combineRelations(math.root);
+      return math;
     },
     formatError: function (err,math,displaystyle,script) {
       return MML.merror(err.message.replace(/\n.*/,""));
@@ -1718,6 +1722,20 @@
     },
     Macro: function (name,def,argn) {
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
+    },
+    
+    combineRelations: function (mml) {
+      for (var i = 0, m = mml.data.length; i < m; i++) {
+        if (mml.data[i]) {
+          while (i+1 < m && mml.data[i].isa(MML.mo) && mml.data[i+1].isa(MML.mo) &&
+                 mml.data[i].Get("texClass") === MML.TEXCLASS.REL &&
+                 mml.data[i+1].Get("texClass") === MML.TEXCLASS.REL) {
+            mml.data[i].Append.apply(mml.data[i],mml.data[i+1].data);
+            mml.data.splice(i+1,1); m--;
+          }
+          if (!mml.data[i].isToken) {this.combineRelations(mml.data[i])}
+        }
+      }
     }
   });
 
