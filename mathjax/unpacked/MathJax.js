@@ -1471,8 +1471,17 @@ MathJax.Hub.Startup = {
         if (user.Config) {MathJax.userConfig = new Function(user.Config)}
       } else {MathJax.HTML.Cookie.Set("user",{})}
     }
-    if (this.script.match(/\S/)) {this.queue.Push(this.script+";\n1;")}
-      else {this.queue.Push(["Require",MathJax.Ajax,this.URL("config","MathJax.js")])}
+    if (this.script.match(/\S/)) {
+      this.queue.Push(this.script+";\n1;");
+    } else if (this.params.config) {
+      var files = this.params.config.split(/,/);
+      for (var i = 0, m = files.length; i < m; i++) {
+        if (!files[i].match(/\.js$/)) {files[i] += ".js"}
+        this.queue.Push(["Require",MathJax.Ajax,this.URL("config",files[i])]);
+      }
+    } else {
+      this.queue.Push(["Require",MathJax.Ajax,this.URL("config","MathJax.js")]);
+    }
     return this.queue.Push(
       [function (config,onload) {
         if (config.delayStartupUntil.isCallback) {return config.delayStartupUntil}
@@ -1796,10 +1805,18 @@ MathJax.Hub.Startup = {
   var HEAD = document.getElementsByTagName("head")[0];
   if (!HEAD) {HEAD = document.childNodes[0]};
   var scripts = (document.documentElement || document).getElementsByTagName("script");
-  var namePattern = new RegExp("(^|/)"+BASENAME+"\\.js$");
+  var namePattern = new RegExp("(^|/)"+BASENAME+"\\.js(\\?.*)?$");
   for (var i = scripts.length-1; i >= 0; i--) {
     if (scripts[i].src.match(namePattern)) {
       STARTUP.script = scripts[i].innerHTML;
+      if (RegExp.$2 !== "") {
+        STARTUP.params = {};
+        var params = RegExp.$2.substr(1).split(/\&/);
+        for (var j = 0, m = params.length; j < m; j++) {
+          var KV = params[j].match(/(.*)=(.*)/);
+          if (KV) {STARTUP.params[unescape(KV[1])] = unescape(KV[2])}
+        }
+      }
       CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*$/,'');
       break;
     }
