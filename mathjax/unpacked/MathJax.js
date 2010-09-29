@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.4";
+MathJax.version = "1.0.5";
 
 /**********************************************************/
 
@@ -631,7 +631,8 @@ MathJax.version = "1.0.4";
         else {type = file.split(/\./).pop().toUpperCase()}
       file = this.fileURL(file);
       if (this.loading[file]) {
-        this.loading[file].callbacks.push(callback);
+        if (!this.loadHooks[file]) {this.loadHooks[file] = []}
+        this.loadHooks[file].push(callback);
       } else {
         this.head = HEAD(this.head);
         if (this.loader[type]) {this.loader[type].call(this,file,callback)}
@@ -669,7 +670,7 @@ MathJax.version = "1.0.4";
         var script = document.createElement("script");
         var timeout = BASE.Callback(["loadTimeout",this,file]);
         this.loading[file] = {
-          callbacks: [callback],
+          callback: callback,
           message: BASE.Message.File(file),
           timeout: setTimeout(timeout,this.timeout),
           status: this.STATUS.OK,
@@ -687,7 +688,7 @@ MathJax.version = "1.0.4";
         var link = document.createElement("link");
         link.rel = "stylesheet"; link.type = "text/css"; link.href = file;
         this.loading[file] = {
-          callbacks: [callback],
+          callback: callback,
           message: BASE.Message.File(file),
           status: this.STATUS.OK
         };
@@ -803,15 +804,13 @@ MathJax.version = "1.0.4";
 	  SCRIPTS.push(loading.script);
 	}
         this.loaded[file] = loading.status; delete this.loading[file];
-        if (this.loadHooks[file]) {
-          BASE.Callback.Queue(
-            [BASE.Callback.ExecuteHooks,this.loadHooks[file],loading.status],
-            [BASE.Callback.ExecuteHooks,loading.callbacks,loading.status]
-          );
-        } else {
-          BASE.Callback.ExecuteHooks(loading.callbacks,loading.status);
-        }
+        if (!this.loadHooks[file]) {this.loadHooks[file] = []}
+        this.loadHooks[file].push(loading.callback);
+      } else {
+        this.loaded[file] = this.STATUS.OK;
+        loading = {status: this.STATUS.OK}
       }
+      BASE.Callback.ExecuteHooks(this.loadHooks[file],loading.status);
     },
     
     //
