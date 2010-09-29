@@ -37,7 +37,7 @@
       var doc;
       if (typeof math !== "string") {doc = math.parentNode} else {
         if (math.match(/^<[a-z]+:/i) && !math.match(/^<[^<>]* xmlns:/))
-          {math = math.replace(/^<([a-z]+):math/i,'<$1:math xmlns:$1="http://www.w3.org/1998/Math/MathML"')}
+          {math = math.replace(/^<([a-z]+)(:math)/i,'<$1$2 xmlns:$1="http://www.w3.org/1998/Math/MathML"')}
         math = math.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/,"$2");
         math = math.replace(/&([a-z]+);/ig,this.replaceEntity);
         doc = MATHML.ParseXML(math); if (doc == null) {MATHML.Error("Error parsing MathML")}
