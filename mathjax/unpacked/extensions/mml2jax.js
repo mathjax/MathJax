@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  varsion: "1.0.2",
+  varsion: "1.0.3",
   config: {
     element: null,          // The ID of the element to be processed
                             //   (defaults to full document)
@@ -45,16 +45,39 @@ MathJax.Extension.mml2jax = {
     }
     if (typeof(element) === "string") {element = document.getElementById(element)}
     if (!element) {element = this.config.element || document.body}
-    var math = element.getElementsByTagName("math"), i;
-    if (math.length === 0 && element.getElementsByTagNameNS)
-      {math = element.getElementsByTagNameNS(this.MMLnamespace,"math")}
-    if (this.msieMathTagBug) {
-      for (i = math.length-1; i >= 0; i--) {
-        if (math[i].nodeName === "MATH") {this.msieProcessMath(math[i])}
-                                    else {this.ProcessMath(math[i])}
+    //
+    //  Handle all math tags with no namespaces
+    //
+    this.ProcessMathArray(element.getElementsByTagName("math"));
+    //
+    //  Handle math with namespaces in XHTML
+    //
+    if (element.getElementsByTagNameNS)
+      {this.ProcessMathArray(element.getElementsByTagNameNS(this.MMLnamespace,"math"))}
+    //
+    //  Handle math with namespaces in HTML
+    //
+    var html = document.getElementsByTagName("html")[0];
+    if (html) {
+      for (var i = 0, m = html.attributes.length; i < m; i++) {
+        var attr = html.attributes[i];
+        if (attr.nodeName.substr(0,6) === "xmlns:" && attr.nodeValue === this.MMLnamespace)
+          {this.ProcessMathArray(element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
       }
-    } else {
-      for (i = math.length-1; i >= 0; i--) {this.ProcessMath(math[i])}
+    }
+  },
+  
+  ProcessMathArray: function (math) {
+    var i;
+    if (math.length) {
+      if (this.msieMathTagBug) {
+        for (i = math.length-1; i >= 0; i--) {
+          if (math[i].nodeName === "MATH") {this.msieProcessMath(math[i])}
+                                      else {this.ProcessMath(math[i])}
+        }
+      } else {
+        for (i = math.length-1; i >= 0; i--) {this.ProcessMath(math[i])}
+      }
     }
   },
   
@@ -66,8 +89,7 @@ MathJax.Extension.mml2jax = {
     if (this.msieScriptBug) {
       var html = math.outerHTML;
       html = html.replace(/<\?import .*?>/i,"").replace(/<\?xml:namespace .*?\/>/i,"");
-      html = html.replace(/<(\/?)m:/g,"<$1").replace(/&nbsp;/g,"&#xA0;");
-      script.text = html;
+      script.text = html.replace(/&nbsp;/g,"&#xA0;");
       parent.removeChild(math);
     } else {
       var span = MathJax.HTML.Element("span"); span.appendChild(math);
