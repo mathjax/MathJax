@@ -1727,11 +1727,14 @@
     combineRelations: function (mml) {
       for (var i = 0, m = mml.data.length; i < m; i++) {
         if (mml.data[i]) {
-          while (i+1 < m && mml.data[i].isa(MML.mo) && mml.data[i+1].isa(MML.mo) &&
-                 mml.data[i].Get("texClass") === MML.TEXCLASS.REL &&
-                 mml.data[i+1].Get("texClass") === MML.TEXCLASS.REL) {
-            mml.data[i].Append.apply(mml.data[i],mml.data[i+1].data);
-            mml.data.splice(i+1,1); m--;
+          if (mml.isa(MML.mrow)) {
+            while (i+1 < m && mml.data[i+1] &&
+                   mml.data[i].isa(MML.mo) && mml.data[i+1].isa(MML.mo) &&
+                   mml.data[i].Get("texClass") === MML.TEXCLASS.REL &&
+                   mml.data[i+1].Get("texClass") === MML.TEXCLASS.REL) {
+              mml.data[i].Append.apply(mml.data[i],mml.data[i+1].data);
+              mml.data.splice(i+1,1); m--;
+            }
           }
           if (!mml.data[i].isToken) {this.combineRelations(mml.data[i])}
         }
