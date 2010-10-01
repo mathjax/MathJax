@@ -1473,7 +1473,7 @@ MathJax.Hub.Startup = {
     }
     if (this.script.match(/\S/)) {
       this.queue.Push(this.script+";\n1;");
-    } else if (this.params.config) {
+    } else if (this.params && this.params.config) {
       var files = this.params.config.split(/,/);
       for (var i = 0, m = files.length; i < m; i++) {
         if (!files[i].match(/\.js$/)) {files[i] += ".js"}
