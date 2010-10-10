@@ -1203,6 +1203,7 @@
     UnderOver: function (name,c,stack) {
       var pos = {o: "over", u: "under"}[name.charAt(1)];
       var base = this.ParseArg(name);
+      if (base.Get("movablelimits")) {base.movablelimits = false}
       var mml = MML.munderover(base,null,null);
       if (stack) {mml.movesupsub = TRUE}
       mml.data[mml[pos]] = 
