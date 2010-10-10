@@ -41,6 +41,7 @@ MathJax.Extension.mml2jax = {
     if (!this.configured) {
       MathJax.Hub.Insert(this.config,(MathJax.Hub.config.mml2jax||{}));
       if (this.config.Augment) {MathJax.Hub.Insert(this,this.config.Augment)}
+      this.InitBrowser();
       this.configured = true;
     }
     if (typeof(element) === "string") {element = document.getElementById(element)}
@@ -87,7 +88,7 @@ MathJax.Extension.mml2jax = {
     script.type = "math/mml";
     parent.insertBefore(script,math);
     if (this.msieScriptBug) {
-      var html = math.outerHTML;
+      var html = this.msieOuterHTML(math);
       html = html.replace(/<\?import .*?>/i,"").replace(/<\?xml:namespace .*?\/>/i,"");
       script.text = html.replace(/&nbsp;/g,"&#xA0;");
       parent.removeChild(math);
@@ -103,23 +104,47 @@ MathJax.Extension.mml2jax = {
     var script = document.createElement("script");
     script.type = "math/mml";
     parent.insertBefore(script,math);
-    var mml = "";
+    var mml = "", node;
     while (math && math.nodeName !== "/MATH") {
-      if (math.nodeName === "#text" || math.nodeName === "#comment")
-        {mml += math.nodeValue.replace(/&/g,"&#x26;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-        else {mml += this.toLowerCase(math.outerHTML)}
-      var node = math;
-      math = math.nextSibling;
+      node = math; math = math.nextSibling;
+      mml += this.msieNodeHTML(node);
       node.parentNode.removeChild(node);
     }
     if (math && math.nodeName === "/MATH") {math.parentNode.removeChild(math)}
     script.text = mml + "</math>";
     if (this.config.preview !== "none") {this.createPreview(math,script)}
   },
-  toLowerCase: function (string) {
-    var parts = string.split(/"/);
-    for (var i = 0, m = parts.length; i < m; i += 2) {parts[i] = parts[i].toLowerCase()}
-    return parts.join('"');
+  msieNodeHTML: function (node) {
+    var html, i, m;
+    if (node.nodeName === "#text" || node.nodeName === "#comment")
+      {html = node.nodeValue.replace(/&/g,"&#x26;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+    else if (this.msieAttributeBug) {
+      // In IE, outerHTML doesn't properly quote attributes, so quote them by hand
+      html = "<"+node.nodeName.toLowerCase();
+      for (i = 0, m = node.attributes.length; i < m; i++) {
+        if (node.attributes[i].specified) {
+          html += " "+node.attributes[i].nodeName.toLowerCase()+"=";
+          html += '"'+node.attributes[i].nodeValue.replace(/\"/g,'\\"')+'"';
+        }
+      }
+      html += ">";
+    } else {
+      html = this.toLowerCase(node.outerHTML)
+      var parts = html.split(/"/);
+      for (i = 0, m = parts.length; i < m; i += 2) {parts[i] = parts[i].toLowerCase()}
+      html = parts.join('"');
+    }
+    return html;
+  },
+  msieOuterHTML: function (node) {
+    // IE's outerHTML doesn't properly quote 
+    if (node.nodeName.charAt(0) === "#") {return this.msieNodeHTML(node)}
+    if (!this.msieAttributeBug) {return node.outerHTML}
+    var html = this.msieNodeHTML(node);
+    for (var i = 0, m = node.childNodes.length; i < m; i++)
+      {html += this.msieOuterHTML(node.childNodes[i])}
+    html += "</"+node.nodeName.toLowerCase()+">"
+    return html;
   },
   
   createPreview: function (math,script) {
@@ -134,18 +159,23 @@ MathJax.Extension.mml2jax = {
     }
   },
   
-  filterText: function (text) {return text}
+  filterText: function (text) {return text},
+  
+  InitBrowser: function () {
+    MathJax.Hub.Browser.Select({
+      MSIE: function (browser) {
+        var test = MathJax.HTML.Element("span",{className:"mathjax"});
+        MathJax.Hub.Insert(MathJax.Extension.mml2jax,{
+          msieScriptBug: true,
+          msieMathTagBug: true,
+          msieAttributeBug: (test.outerHTML.substr(12) !== '"') // attributes aren't quoted?
+        })
+      }
+    });
+  }
 
 };
 
-MathJax.Hub.Browser.Select({
-  MSIE: function (browser) {
-    MathJax.Hub.Insert(MathJax.Extension.mml2jax,{
-      msieScriptBug: true,
-      msieMathTagBug: true
-    })
-  }
-});
   
 MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.mml2jax]);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
