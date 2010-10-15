@@ -1812,7 +1812,7 @@ MathJax.Hub.Startup = {
   for (var i = scripts.length-1; i >= 0; i--) {
     if (scripts[i].src.match(namePattern)) {
       STARTUP.script = scripts[i].innerHTML;
-      if (RegExp.$2 !== "") {
+      if (RegExp.$2) {
         STARTUP.params = {};
         var params = RegExp.$2.substr(1).split(/\&/);
         for (var j = 0, m = params.length; j < m; j++) {
