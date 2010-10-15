@@ -247,7 +247,10 @@ MathJax.version = "1.0.5";
   //
   var EVAL = function (code) {return eval.call(window,code)}
   EVAL("var __TeSt_VaR__ = 1"); // check if it works in global context
-  if (window.__TeSt_VaR__) {delete window.__TeSt_VaR__} else {
+  if (window.__TeSt_VaR__) {
+    try { delete window.__TeSt_VaR__; } // NOTE IE9 throws when in IE7 mode
+    catch (error) { window.__TeSt_VaR__ = null; } 
+  } else {
     if (window.execScript) {
       // IE
       EVAL = function (code) {
