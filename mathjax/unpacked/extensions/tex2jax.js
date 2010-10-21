@@ -210,7 +210,7 @@ MathJax.Extension.tex2jax = {
     if (element === search.close) {element = close}
     search.close = close;
     var math = search.open.splitText(search.opos);
-    if (search.open.nodeValue === "") {search.open.parentNode.removeChild(search.open)}
+    if (search.open.nodeValue === "" && search.open.parentNode) {search.open.parentNode.removeChild(search.open)}
     while (math.nextSibling && math.nextSibling !== close) {
       if (math.nextSibling.nodeValue !== null) {
         if (math.nextSibling.nodeName === "#comment") {
