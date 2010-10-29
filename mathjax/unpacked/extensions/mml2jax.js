@@ -142,10 +142,10 @@ MathJax.Hub.Browser.Select({
   MSIE: function (browser) {
     MathJax.Hub.Insert(MathJax.Extension.mml2jax,{
       msieScriptBug: true,
-      msieMathTagBug: true
-    })
+      msieMathTagBug: (MathJax.HTML.Element("span", {innerHTML:"<math><mi>x</mi></math>"}).childNodes.length !== 1) // IE < 9 corrupts MathML
+    });
   }
 });
-  
+
 MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.mml2jax]);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
