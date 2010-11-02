@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/input/MathML/entities/q.js
+ *  /MathJax/jax/input/MathML/entities/q.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

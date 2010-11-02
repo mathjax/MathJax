@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/General/Italic/ControlPictures.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Italic/ControlPictures.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

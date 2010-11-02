@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/element/mml/optable/SpacingModLetters.js
+ *  /MathJax/jax/element/mml/optable/SpacingModLetters.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

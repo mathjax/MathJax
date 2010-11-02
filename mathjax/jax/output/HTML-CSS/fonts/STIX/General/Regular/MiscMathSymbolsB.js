@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/General/Regular/MiscMathSymbolsB.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Regular/MiscMathSymbolsB.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

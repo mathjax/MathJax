@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/General/Bold/AlphaPresentForms.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Bold/AlphaPresentForms.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

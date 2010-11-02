@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/fontdata-beta.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/fontdata-beta.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/TeX/autobold.js
+ *  /MathJax/extensions/TeX/autobold.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

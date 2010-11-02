@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/Fraktur/Bold/BasicLatin.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/Fraktur/Bold/BasicLatin.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

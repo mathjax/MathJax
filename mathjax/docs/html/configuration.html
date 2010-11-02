@@ -229,7 +229,7 @@ reasonably efficient to specify both input processors even if only one
 <h3>TeX input with MathML output<a class="headerlink" href="#tex-input-with-mathml-output" title="Permalink to this headline">¶</a></h3>
 <p>This example configures MathJax to use the <tt class="docutils literal"><span class="pre">tex2jax</span></tt> preprocessor
 and TeX input processor, but the choice of output format is determined
-by MathJax depending on the capabilities of the users&#8217;s browser.  The
+by MathJax depending on the capabilities of the user&#8217;s browser.  The
 is performed by the <tt class="docutils literal"><span class="pre">MMLorHTML.js</span></tt> configuration file that is loaded
 in the <cite>config`</cite> array.</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
@@ -244,7 +244,7 @@ plugin</a> installed
 will use the NativeMML output processor, while all other browsers will
 use the HTML-CSS output processor.  Since native MathML support is
 faster than MathJax&#8217;s HTML-CSS processor, this will mean that the web
-pages will display faster for Firefox and IE than they woudl
+pages will display faster for Firefox and IE than they would
 otherwise.  This speed comes at the cost, however, as you are now
 relying on the native MathML support to render the mathematics, and
 that is outside of MathJax&#8217;s control.  There may be spacing or other
@@ -311,7 +311,7 @@ configuration options for the component.</p>
 <span class="p">});</span>
 </pre></div>
 </div>
-<p>is a configration that includes two settings for the MathJax Hub (one
+<p>is a configuration that includes two settings for the MathJax Hub (one
 for <cite>showProcessingMessages</cite> and one of the <cite>jax</cite> array), and a
 configuration object for the TeX input processor.  The latter includes
 a setting for the TeX input processor&#8217;s <cite>TagSide</cite> option (to set tags

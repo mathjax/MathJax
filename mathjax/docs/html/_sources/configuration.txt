@@ -227,7 +227,7 @@ TeX input with MathML output
 
 This example configures MathJax to use the ``tex2jax`` preprocessor
 and TeX input processor, but the choice of output format is determined
-by MathJax depending on the capabilities of the users's browser.  The
+by MathJax depending on the capabilities of the user's browser.  The
 is performed by the ``MMLorHTML.js`` configuration file that is loaded
 in the `config`` array.
 
@@ -244,7 +244,7 @@ plugin <http://www.dessci.com/en/products/mathplayer/>`_ installed
 will use the NativeMML output processor, while all other browsers will
 use the HTML-CSS output processor.  Since native MathML support is
 faster than MathJax's HTML-CSS processor, this will mean that the web
-pages will display faster for Firefox and IE than they woudl
+pages will display faster for Firefox and IE than they would
 otherwise.  This speed comes at the cost, however, as you are now
 relying on the native MathML support to render the mathematics, and
 that is outside of MathJax's control.  There may be spacing or other
@@ -325,7 +325,7 @@ For example,
       }
     });
 
-is a configration that includes two settings for the MathJax Hub (one
+is a configuration that includes two settings for the MathJax Hub (one
 for `showProcessingMessages` and one of the `jax` array), and a
 configuration object for the TeX input processor.  The latter includes
 a setting for the TeX input processor's `TagSide` option (to set tags

@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/General/Regular/MiscTechnical.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Regular/MiscTechnical.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

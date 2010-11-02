@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/element/mml/optable/MiscMathSymbolsA.js
+ *  /MathJax/jax/element/mml/optable/MiscMathSymbolsA.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/autoload/mglyph.js
+ *  /MathJax/jax/output/HTML-CSS/autoload/mglyph.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

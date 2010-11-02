@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/imageFonts.js
+ *  /MathJax/jax/output/HTML-CSS/imageFonts.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

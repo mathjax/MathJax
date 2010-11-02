@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/TeX/HTML.js
+ *  /MathJax/extensions/TeX/HTML.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

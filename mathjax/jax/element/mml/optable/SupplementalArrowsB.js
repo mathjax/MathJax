@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/element/mml/optable/SupplementalArrowsB.js
+ *  /MathJax/jax/element/mml/optable/SupplementalArrowsB.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

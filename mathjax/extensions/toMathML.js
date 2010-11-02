@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/toMathML.js
+ *  /MathJax/extensions/toMathML.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

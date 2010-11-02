@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/Typewriter/Regular/Other.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/Typewriter/Regular/Other.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

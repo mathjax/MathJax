@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/WinIE6/Regular/Bold.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/WinIE6/Regular/Bold.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

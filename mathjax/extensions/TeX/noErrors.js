@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/TeX/noErrors.js
+ *  /MathJax/extensions/TeX/noErrors.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

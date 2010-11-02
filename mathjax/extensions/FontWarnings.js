@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/FontWarnings.js
+ *  /MathJax/extensions/FontWarnings.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

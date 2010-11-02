@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/Main/Bold/GreekAndCoptic.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/Main/Bold/GreekAndCoptic.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

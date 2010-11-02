@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/Greek/Regular/Main.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/Greek/Regular/Main.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

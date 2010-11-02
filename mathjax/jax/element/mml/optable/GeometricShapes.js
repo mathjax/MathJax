@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/element/mml/optable/GeometricShapes.js
+ *  /MathJax/jax/element/mml/optable/GeometricShapes.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *
