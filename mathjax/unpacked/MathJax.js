@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.5";
+MathJax.version = "1.0.6";
 
 /**********************************************************/
 
@@ -247,7 +247,10 @@ MathJax.version = "1.0.5";
   //
   var EVAL = function (code) {return eval.call(window,code)}
   EVAL("var __TeSt_VaR__ = 1"); // check if it works in global context
-  if (window.__TeSt_VaR__) {delete window.__TeSt_VaR__} else {
+  if (window.__TeSt_VaR__) {
+    try { delete window.__TeSt_VaR__; } // NOTE IE9 throws when in IE7 mode
+    catch (error) { window.__TeSt_VaR__ = null; } 
+  } else {
     if (window.execScript) {
       // IE
       EVAL = function (code) {
@@ -1809,7 +1812,7 @@ MathJax.Hub.Startup = {
   for (var i = scripts.length-1; i >= 0; i--) {
     if (scripts[i].src.match(namePattern)) {
       STARTUP.script = scripts[i].innerHTML;
-      if (RegExp.$2 !== "") {
+      if (RegExp.$2) {
         STARTUP.params = {};
         var params = RegExp.$2.substr(1).split(/\&/);
         for (var j = 0, m = params.length; j < m; j++) {

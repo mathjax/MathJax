@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  varsion: "1.0.3",
+  varsion: "1.0.4",
   config: {
     element: null,          // The ID of the element to be processed
                             //   (defaults to full document)
@@ -130,7 +130,7 @@ MathJax.Extension.mml2jax = {
       html += ">";
     } else {
       html = this.toLowerCase(node.outerHTML)
-      var parts = html.split(/"/);
+      var parts = html.split(/\"/);
       for (i = 0, m = parts.length; i < m; i += 2) {parts[i] = parts[i].toLowerCase()}
       html = parts.join('"');
     }
@@ -167,15 +167,14 @@ MathJax.Extension.mml2jax = {
         var test = MathJax.HTML.Element("span",{className:"mathjax"});
         MathJax.Hub.Insert(MathJax.Extension.mml2jax,{
           msieScriptBug: true,
-          msieMathTagBug: true,
+	  msieMathTagBug: (MathJax.HTML.Element("span", {innerHTML:"<math><mi>x</mi></math>"}).childNodes.length !== 1), // IE < 9 corrupts MathML
           msieAttributeBug: (test.outerHTML.substr(12) !== '"') // attributes aren't quoted?
-        })
+	})
       }
     });
   }
 
 };
 
-  
 MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.mml2jax]);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
