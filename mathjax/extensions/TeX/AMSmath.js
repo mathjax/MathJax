@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/TeX/AMSmath.js
+ *  /MathJax/extensions/TeX/AMSmath.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

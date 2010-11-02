@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/TeX/noUndefined.js
+ *  /MathJax/extensions/TeX/noUndefined.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

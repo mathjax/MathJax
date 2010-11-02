@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/General/Regular/ij.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Regular/ij.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

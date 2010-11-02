@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/autoload/mmultiscripts.js
+ *  /MathJax/jax/output/HTML-CSS/autoload/mmultiscripts.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

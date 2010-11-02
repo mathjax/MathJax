@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/TeX/mathchoice.js
+ *  /MathJax/extensions/TeX/mathchoice.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

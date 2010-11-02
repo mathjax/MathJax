@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/MathMenu.js
+ *  /MathJax/extensions/MathMenu.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

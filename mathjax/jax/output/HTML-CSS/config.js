@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/config.js
+ *  /MathJax/jax/output/HTML-CSS/config.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

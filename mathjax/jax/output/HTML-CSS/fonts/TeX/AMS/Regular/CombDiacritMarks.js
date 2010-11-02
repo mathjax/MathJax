@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/CombDiacritMarks.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/CombDiacritMarks.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/General/Regular/GreekItalic.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Regular/GreekItalic.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

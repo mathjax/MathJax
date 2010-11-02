@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/General/Regular/PhoneticExtensions.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Regular/PhoneticExtensions.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

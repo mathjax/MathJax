@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/TeX/newcommand.js
+ *  /MathJax/extensions/TeX/newcommand.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

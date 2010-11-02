@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/IntegralsUpSm/Regular/Main.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/IntegralsUpSm/Regular/Main.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

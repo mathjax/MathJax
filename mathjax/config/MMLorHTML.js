@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/config/MMLorHTML.js
+ *  /MathJax/config/MMLorHTML.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

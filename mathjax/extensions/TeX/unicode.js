@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/TeX/unicode.js
+ *  /MathJax/extensions/TeX/unicode.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

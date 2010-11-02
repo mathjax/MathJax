@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/element/mml/jax.js
+ *  /MathJax/jax/element/mml/jax.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

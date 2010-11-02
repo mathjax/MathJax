@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/General/BoldItalic/SpacingModLetters.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/BoldItalic/SpacingModLetters.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/NonUnicode/Italic/All.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/NonUnicode/Italic/All.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

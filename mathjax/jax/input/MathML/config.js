@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/input/MathML/config.js
+ *  /MathJax/jax/input/MathML/config.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

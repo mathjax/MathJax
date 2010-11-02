@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/element/mml/optable/SuppMathOperators.js
+ *  /MathJax/jax/element/mml/optable/SuppMathOperators.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

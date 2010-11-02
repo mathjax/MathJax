@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/TeX/AMSsymbols.js
+ *  /MathJax/extensions/TeX/AMSsymbols.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

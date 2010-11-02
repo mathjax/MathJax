@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/Main/Bold/Latin1Supplement.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/Main/Bold/Latin1Supplement.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

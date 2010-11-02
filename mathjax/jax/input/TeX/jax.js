@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/input/TeX/jax.js
+ *  /MathJax/jax/input/TeX/jax.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

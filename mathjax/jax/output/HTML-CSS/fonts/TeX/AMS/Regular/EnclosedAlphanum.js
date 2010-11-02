@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/EnclosedAlphanum.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/EnclosedAlphanum.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/Main/Regular/GeometricShapes.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/Main/Regular/GeometricShapes.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

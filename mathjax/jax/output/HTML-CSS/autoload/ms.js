@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/autoload/ms.js
+ *  /MathJax/jax/output/HTML-CSS/autoload/ms.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

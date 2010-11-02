@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/WinIE6/Regular/AMS.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/WinIE6/Regular/AMS.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

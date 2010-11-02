@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/STIX/General/Regular/SupplementalArrowsB.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Regular/SupplementalArrowsB.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/autoload/menclose.js
+ *  /MathJax/jax/output/HTML-CSS/autoload/menclose.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

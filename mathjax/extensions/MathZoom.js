@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/MathZoom.js
+ *  /MathJax/extensions/MathZoom.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

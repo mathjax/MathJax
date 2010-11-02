@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/extensions/TeX/boldsymbol.js
+ *  /MathJax/extensions/TeX/boldsymbol.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *

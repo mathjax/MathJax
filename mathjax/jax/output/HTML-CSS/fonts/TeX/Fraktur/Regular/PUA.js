@@ -1,5 +1,5 @@
 /*
- *  ../SourceForge/trunk/mathjax/jax/output/HTML-CSS/fonts/TeX/Fraktur/Regular/PUA.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/TeX/Fraktur/Regular/PUA.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *
