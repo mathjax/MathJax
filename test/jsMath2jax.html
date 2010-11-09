@@ -1,0 +1,30 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" >
+<title>jsMath2jax Test</title>
+<script src="../mathjax/unpacked/MathJax.js">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/HTML-CSS"],
+    extensions: ["tex2jax.js","jsMath2jax.js"]
+  });
+</script>
+</head>
+<body>
+
+\begin{eqnarray}
+    x & = & 4y + 3z \\
+    z & > & a + b + ... + j +  \\
+      &   & k + l + m
+    \end{eqnarray}
+
+<div class="math">
+\begin{eqnarray}
+    x & = & 4y + 3z \\
+    z & > & a + b + ... + j +  \\
+      &   & k + l + m
+    \end{eqnarray}
+
+</div>
+
+</body>
+</html>
