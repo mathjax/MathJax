@@ -220,7 +220,7 @@
         },
         
 	".MathJax span": {
-	  display: "inline",
+	  display: "inline", position: "static",
 	  border: 0, padding: 0, margin: 0,
 	  "vertical-align": 0, "line-height": "normal",
 	  "text-decoration": "none"
@@ -366,7 +366,8 @@
         {prev.parentNode.removeChild(prev)}
       var math = script.MathJax.elementJax.root, span, div;
       span = div = this.Element("span",{
-        className:"MathJax", oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
+        className:"MathJax MathJax_Processing",
+        oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
         onmouseover:this.Mouseover, onclick:this.Click, ondblclick:this.DblClick
       });
       if (math.Get("display") === "block") {
@@ -386,6 +387,7 @@
         throw err;
       }
       if (isHidden) {script.parentNode.insertBefore(div,script)}
+      span.className = "MathJax";  // remove MathJax_Processing
     },
 
     /*
@@ -2092,7 +2094,7 @@
       var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
       var quirks = (document.compatMode === "BackCompat");
       // MSIE can't measure widths properly without this
-      HTMLCSS.config.styles[".MathJax span"] = {position: "relative"};
+      HTMLCSS.config.styles[".MathJax .MathJax_Processing span"] = {position: "relative"};
       // IE doesn't do mouse events on trasparent objects,
       //   so give a background color, but opacity makes it transparent
       HTMLCSS.config.styles[".MathJax .MathJax_HitBox"]["background-color"] = "white";
