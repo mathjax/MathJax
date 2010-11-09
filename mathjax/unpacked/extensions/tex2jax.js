@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.0",
+  version: "1.0.1",
   config: {
     element: null,             // The ID of the element to be processed
                                //   (defaults to full document)
@@ -203,14 +203,13 @@ MathJax.Extension.tex2jax = {
   },
   
   encloseMath: function (element) {
-    var search = this.search, close = search.close, CLOSE;
+    var search = this.search, close = search.close, CLOSE, math;
     if (search.cpos === close.length) {close = close.nextSibling}
        else {close = close.splitText(search.cpos)}
-    if (!close) {CLOSE = close = search.close.parentNode.appendChild(document.createTextNode(""))}
+    if (!close) {CLOSE = close = MathJax.HTML.addText(search.close.parentNode,"")}
     if (element === search.close) {element = close}
     search.close = close;
-    var math = search.open.splitText(search.opos);
-    if (search.open.nodeValue === "" && search.open.parentNode) {search.open.parentNode.removeChild(search.open)}
+    math = (search.opos ? search.open.splitText(search.opos) : search.open);
     while (math.nextSibling && math.nextSibling !== close) {
       if (math.nextSibling.nodeValue !== null) {
         if (math.nextSibling.nodeName === "#comment") {
@@ -232,13 +231,7 @@ MathJax.Extension.tex2jax = {
   
   insertNode: function (node) {
     var search = this.search;
-    if (search.close && search.close.parentNode) {
-      search.close.parentNode.insertBefore(node,search.close);
-    } else if (search.open.nextSibling) {
-      search.open.parentNode.insertBefore(node,search.open.nextSibling);
-    } else {
-      search.open.parentNode.appendChild(node);
-    }
+    search.close.parentNode.insertBefore(node,search.close);
   },
   
   createPreview: function (mode,tex) {
