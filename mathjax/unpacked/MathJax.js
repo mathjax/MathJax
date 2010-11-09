@@ -1180,7 +1180,7 @@ MathJax.Hub = {
     }
   },
   
-  processUpdateTime: 500, // time between screen updates when processing math (milliseconds)
+  processUpdateTime: 250, // time between screen updates when processing math (milliseconds)
 
   signal: MathJax.Callback.Signal("Hub"), // Signal used for Hub events
 
