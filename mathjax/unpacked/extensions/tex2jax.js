@@ -207,7 +207,6 @@ MathJax.Extension.tex2jax = {
     if (search.cpos === close.length) {close = close.nextSibling}
        else {close = close.splitText(search.cpos)}
     if (!close) {CLOSE = close = MathJax.HTML.addText(search.close.parentNode,"")}
-    if (element === search.close) {element = close}
     search.close = close;
     math = (search.opos ? search.open.splitText(search.opos) : search.open);
     while (math.nextSibling && math.nextSibling !== close) {
