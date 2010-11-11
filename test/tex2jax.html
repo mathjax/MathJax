@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>MathJax tex2jax Test</title>
+<script src="../mathjax/unpacked/MathJax.js">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/HTML-CSS"],
+    extensions: ["tex2jax.js"]
+  });
+</script>
+<style>
+  p {border: 1px solid black; background:#EEEEEE;}
+</style>
+</head>
+<body>
+
+<p>Text Before: \(x+1\)</p>
+<p>\(x+1\) Text after</p>
+<p>\(\text{no text}\)</p>
+
+<p>Text Before: $$x+1$$</p>
+<p>$$x+1$$ Text after</p>
+<p>$$\text{no text}$$</p>
+
+</body>
+</html>
