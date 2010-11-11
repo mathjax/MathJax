@@ -66,21 +66,23 @@ read the details in order to customize the setup for your pages.</p>
 <div class="section" id="obtaining-and-installing-mathjax">
 <h2>Obtaining and Installing MathJax<a class="headerlink" href="#obtaining-and-installing-mathjax" title="Permalink to this headline">¶</a></h2>
 <p>The easiest way to set up MathJax is to obtain the
-<tt class="docutils literal"><span class="pre">MathJax-v1.0.zip</span></tt> archive from the <a class="reference external" href="http://www.mathjax.org/download/">MathJax download page</a>.  This includes both the MathJax code
+<tt class="docutils literal"><span class="pre">MathJax-v1.0.1.zip</span></tt> archive from the <a class="reference external" href="http://www.mathjax.org/download/">MathJax download page</a>.  This includes both the MathJax code
 and the MathJax webfonts, so this is the only file you need.  (This is
 different from the beta releases, which had the fonts separate from
 the rest of the code).</p>
-<p>Unpack the <tt class="docutils literal"><span class="pre">MathJax-v1.0.zip</span></tt> archive and place the
+<p>Unpack the <tt class="docutils literal"><span class="pre">MathJax-v1.0.1.zip</span></tt> archive and place the
 resulting MathJax folder onto your web server at a convenient
 location where you can include it into your web pages.  For example,
 making <tt class="docutils literal"><span class="pre">MathJax</span></tt> a top-level directory on your server would be
 one natural way to do this.  That would let you refer to the main
 MathJax file via the URL <tt class="docutils literal"><span class="pre">/MathJax/MathJax.js</span></tt> from within any page
 on your server.</p>
-<p>Note: While this is the easiest way to set up MathJax initially, there
-is a better way to do it if you want to be able to keep your copy of
-MathJax up-to-date easily.  That uses the <a class="reference external" href="http://subversion.apache.org/">subversion</a> program, and is described in the
-<a class="reference internal" href="installation.html#getting-mathjax-svn"><em>Installing MathJax</em></a> document.</p>
+<p>Note: While this is the easiest way to set up MathJax initially, there is a
+better way to do it if you want to be able to keep your copy of MathJax
+up-to-date easily. That uses the <a class="reference external" href="http://git-scm.com/">Git</a> version control
+system, and is described in the <a class="reference internal" href="installation.html#getting-mathjax-git"><em>Installing MathJax</em></a>
+document. If you prefer using <a class="reference external" href="http://subversion.apache.org/">Subversion</a>, we
+also maintain an SVN mirror (see <a class="reference internal" href="installation.html#getting-mathjax-svn"><em>Installing MathJax via SVN</em></a>).</p>
 <p>Once you have MathJax set up on your server, you can test it using the
 files in the <tt class="docutils literal"><span class="pre">MathJax/test</span></tt> directory.  Load them in your browser
 using its web address rather than opening them locally (i.e., use an
@@ -170,7 +172,7 @@ In particular, the <tt class="docutils literal"><span class="pre">$...$</span></
 default.  That is because dollar signs appear too often in
 non-mathematical settings, which could cause some text to be treated
 as mathematics unexpectedly.  For example, with single-dollar
-delimiters, &#8220;... the cost is $2.50 for the first one, and $2.00 for
+delimiters, &#8221;... the cost is $2.50 for the first one, and $2.00 for
 each additional one ...&#8221; would cause the phrase &#8220;2.50 for the first
 one, and&#8221; to be treated as mathematics since it falls between dollar
 signs.  For this reason, if you want to use single-dollars for in-line
@@ -368,7 +370,7 @@ MathJax, you could visit the <a class="reference internal" href="community.html#
     </div>
     <div class="footer">
         &copy; Copyright 2010 Design Science.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

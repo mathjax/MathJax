@@ -4,12 +4,61 @@
 Installing and Testing MathJax
 ******************************
 
-MathJax can be loaded from a public web server or privately from your
-hard drive or other local media.  To use MathJax in either way, you
-will need to obtain a copy of MathJax and its font package.  There are
-two main ways to do this:  via ``svn`` or via a pre-packaged archive.
-We recommend the former, as it is easier to keep your installation up
-to date using ``svn``.
+MathJax can be loaded from a public web server or privately from your hard drive
+or other local media. To use MathJax in either way, you will need to obtain a
+copy of MathJax and its font package. There are three ways to do this: via
+``git``, ``svn``, or via a pre-packaged archive. We recommend git or svn, as it
+is easier to keep your installation up to date.
+
+
+.. _getting-mathjax-git:
+
+Obtaining MathJax via Git
+=========================
+
+The easiest way to get MathJax and keep it up to date is to use the `Git
+<http://git-scm.com/>`_ version control system to access our `GitHub repository
+<http://github.com/mathjax/mathjax>`_. Use the commands
+
+.. code-block:: sh
+
+    git clone git://github.com/mathjax/MathJax.git mathjax
+    cd mathjax
+    unzip fonts.zip
+
+to obtain and set up a copy of MathJax.
+
+Whenever you want to update MathJax, you can now use
+
+.. code-block:: sh
+
+    cd mathjax
+    git status
+
+to check if there are updates to MathJax. If MathJax needs updating, use
+
+.. code-block:: sh
+
+    cd mathjax
+    git pull origin
+    # if fonts.zip is updated, do the following as well:
+    rm -rf fonts
+    unzip fonts.zip
+
+to udpate your copy of MathJax to the current release version. If the
+``fonts.zip`` file has been updated, you will need to remove the old fonts
+directory and unpack the new one bring your installation up to date. If you keep
+MathJax updated in this way, you will be sure that you have the latest bug fixes
+and new features as they become available.
+
+This gets you the current development copy of MathJax, which is the
+"bleeding-edge" version that contains all the latest changes to MathJax. At
+times, however, these may be less stable than the "release" version. If you
+prefer to use the most stable version (that may not include all the latest
+patches and features), use ``git tag -l`` to see all versions and use ``git
+checkout <tag_name>`` to checkout that version of MathJax. When you want to
+upgrade to a new release, you will need to repeat this for the latest release
+tag.
 
 
 .. _getting-mathjax-svn:
@@ -17,9 +66,9 @@ to date using ``svn``.
 Obtaining MathJax via SVN
 =========================
 
-The easiest way to get MathJax and keep it up to date is to use the
-`subversion <http://subversion.apache.org/>`_  source control system,
-``svn``.  Use the commands
+If you are more comfortable with the `subversion
+<http://subversion.apache.org/>`_  source control system, you may want to use
+our svn mirror. If you want to get the latest svn revision, use the commands
 
 .. code-block:: sh
 
@@ -80,9 +129,8 @@ Obtaining MathJax via an archive
 
 Release versions of MathJax are available in archive files from the
 `MathJax download page <http://www.mathjax.org/download/>`_ or the
-`SourceForge files page
-<http://sourceforge.net/projects/mathjax/files/>`_, where you can
-download the archives that you need. 
+`GitHub downloads <http://github.com/mathjax/mathjax/>`_ (click the big download
+button on the right), where you can download the archives that you need. 
 
 You should download the ``MathJax-v1.0.1.zip`` file, then simply unzip
 it. Once the MathJax directory is unpacked, you should move it to the
