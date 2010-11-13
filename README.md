@@ -3,4 +3,5 @@
 
 Please see `mathjax/README.txt` to use MathJax.
 
-See `mathjax-dev/README.txt` if you want to help develop MathJax.
+If you want to help develop MathJax, see README.txt in the
+MathJax-dev repository.
