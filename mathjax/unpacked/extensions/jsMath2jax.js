@@ -31,7 +31,7 @@
  */
 
 MathJax.Extension.jsMath2jax = {
-  version: "1.0",
+  version: "1.0.1",
   
   config: {
     element: null,    // The ID of the element to be processed
@@ -62,12 +62,14 @@ MathJax.Extension.jsMath2jax = {
   },
   
   ConvertMath: function (node,mode) {
-    var parent = node.parentNode,
-        script = this.createMathTag(mode,node.innerHTML);
-    if (node.nextSibling) {parent.insertBefore(script,node.nextSibling)}
-      else {parent.appendChild(script)}
-    if (this.config.preview !== "none") {this.createPreview(node)}
-    parent.removeChild(node);
+    if (node.getElementsByTagName("script").length === 0) {
+      var parent = node.parentNode,
+          script = this.createMathTag(mode,node.innerHTML);
+      if (node.nextSibling) {parent.insertBefore(script,node.nextSibling)}
+        else {parent.appendChild(script)}
+      if (this.config.preview !== "none") {this.createPreview(node)}
+      parent.removeChild(node);
+    }
   },
   
   createPreview: function (node) {
