@@ -1533,9 +1533,16 @@ MathJax.Hub.Startup = {
   //  Load the input and output jax
   //
   Jax: function () {
+    var config = MathJax.Hub.config;
+    //  Save the order of the output jax since they are loading asynchronously
+    config.outputJax.order = {};
+    for (var i = 0, m = config.jax.length, k = 0; i < m; i++) {
+      if (config.jax[i].substr(0,7) === "output/") 
+        {config.outputJax.order[config.jax[i].substr(7)] = k; k++}
+    }
     return this.queue.Push(
       ["Post",this.signal,"Begin Jax"],
-      ["loadArray",this,MathJax.Hub.config.jax,"jax","config.js",true],
+      ["loadArray",this,config.jax,"jax","config.js"],
       ["Post",this.signal,"End Jax"]
     );
   },
@@ -1719,12 +1726,15 @@ MathJax.Hub.Startup = {
 
   BASE.OutputJax = JAX.Subclass({
     Register: function (mimetype) {
-      if (!HUB.config.outputJax) {HUB.config.outputJax = {}}
-      if (!HUB.config.outputJax[mimetype]) {
-        HUB.config.outputJax[mimetype] = [];
-        if (!HUB.config.menuSettings.renderer) {HUB.config.menuSettings.renderer = this.id}
+      var jax = HUB.config.outputJax;
+      if (!jax[mimetype]) {
+        jax[mimetype] = [];
+        if (!HUB.config.menuSettings.renderer)
+          {HUB.config.menuSettings.renderer = this.id}
       }
-      HUB.config.outputJax[mimetype].push(this);
+      //  If the output jax is earlier in the original configuration list, put it first here
+      if (jax[mimetype].length && (jax.order[this.id]||0) < (jax.order[jax[mimetype][0].id]||0))
+        {jax[mimetype].unshift(this)} else {jax[mimetype].push(this)}
       //  Make sure the element jax is loaded before Startup is called
       if (!this.require) {this.require = []}
         else if (!(this.require instanceof Array)) {this.require = [this.require]};
