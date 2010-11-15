@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.7";
+MathJax.version = "1.0.8";
 
 /**********************************************************/
 
@@ -1684,12 +1684,33 @@ MathJax.Hub.Startup = {
   /***********************************/
 
   BASE.InputJax = JAX.Subclass({
+    elementJax: "mml",  // the element jax to load for this input jax
+    Translate: function (element) {
+      // Make Translate produce an error message until the true one is loaded
+      this.constructor.prototype.Translate = this.noTranslate;
+      var queue = CALLBACK.Queue();
+      // Load any needed the element jax
+      var jax = this.elementJax; if (!(jax instanceof Array)) {jax = [jax]}
+      for (var i = 0, m = jax.length; i < m; i++) {
+        var file = BASE.ElementJax.directory+"/"+jax[i]+"/jax.js";
+        if (!this.require) {this.require = []}
+          else if (!(this.require instanceof Array)) {this.require = [this.require]};
+        this.require.push(file);  // so Startup will wait for it to be loaded
+        queue.Push(AJAX.Require(file));
+      }
+      // Load the input jax
+      queue.Push(AJAX.Require(this.directory+"/jax.js"));
+      // Load the associated output jax
+      jax = HUB.config.outputJax["jax/"+jax[0]];
+      if (jax) {queue.Push(AJAX.Require(jax[0].directory+"/jax.js"))}
+      return queue.Push({});
+    },
     Register: function (mimetype) {
       if (!BASE.Hub.config.inputJax) {HUB.config.inputJax = {}}
       HUB.config.inputJax[mimetype] = this;
     }
   },{
-    version: "1.0",
+    version: "1.0.1",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -1704,10 +1725,14 @@ MathJax.Hub.Startup = {
         if (!HUB.config.menuSettings.renderer) {HUB.config.menuSettings.renderer = this.id}
       }
       HUB.config.outputJax[mimetype].push(this);
+      //  Make sure the element jax is loaded before Startup is called
+      if (!this.require) {this.require = []}
+        else if (!(this.require instanceof Array)) {this.require = [this.require]};
+      this.require.push(BASE.ElementJax.directory+"/"+(mimetype.split(/\//)[1])+"/jax.js");
     },
     Remove: function (jax) {}
   },{
-    version: "1.0",
+    version: "1.0.1",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts"

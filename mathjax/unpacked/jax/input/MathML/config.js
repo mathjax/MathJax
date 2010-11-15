@@ -28,7 +28,6 @@ MathJax.InputJax.MathML = MathJax.InputJax({
   directory: MathJax.InputJax.directory + "/MathML",
   extensionDir: MathJax.InputJax.extensionDir + "/MathML",
   entityDir: MathJax.InputJax.directory + "/MathML/entities",
-  require: [MathJax.ElementJax.directory + "/mml/jax.js"],
   
   config: {
     useMathMLspacing: false         // false means use TeX spacing, true means MML spacing

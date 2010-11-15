@@ -27,7 +27,6 @@ MathJax.InputJax.TeX = MathJax.InputJax({
   version: "1.0.3",
   directory: MathJax.InputJax.directory + "/TeX",
   extensionDir: MathJax.InputJax.extensionDir + "/TeX",
-  require: [MathJax.ElementJax.directory + "/mml/jax.js"],
   
   config: {
     TagSide:       "right",

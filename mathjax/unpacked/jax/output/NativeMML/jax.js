@@ -22,8 +22,8 @@
  *  limitations under the License.
  */
 
-(function (MML,nMML,HUB,AJAX) {
-  var isMSIE = HUB.Browser.isMSIE;
+(function (nMML,HUB,AJAX) {
+  var MML, isMSIE = HUB.Browser.isMSIE;
   
   nMML.Augment({
     LEFTBUTTON: (isMSIE ? 1 : 0),  // the event.button value for left button
@@ -207,6 +207,10 @@
       negativeveryverythickmathspace: "-.3889em"
     }
   });
+
+MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
+
+  MML = MathJax.ElementJax.mml;
   
   MML.mbase.Augment({
     //
@@ -435,9 +439,11 @@
     });
   });
   
+});
+  
   if (HUB.config.menuSettings.zoom !== "None")
     {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
 
   nMML.loadComplete("jax.js");
 
-})(MathJax.ElementJax.mml, MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax);
+})(MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax);
