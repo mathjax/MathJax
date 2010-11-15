@@ -1540,7 +1540,8 @@ MathJax.Hub.Startup = {
       if (config.jax[i].substr(0,7) === "output/") 
         {config.outputJax.order[config.jax[i].substr(7)] = k; k++}
     }
-    return this.queue.Push(
+    var queue = MathJax.Callback.Queue();
+    return queue.Push(
       ["Post",this.signal,"Begin Jax"],
       ["loadArray",this,config.jax,"jax","config.js"],
       ["Post",this.signal,"End Jax"]
@@ -1550,7 +1551,8 @@ MathJax.Hub.Startup = {
   //  Load the extensions
   //
   Extensions: function () {
-    return this.queue.Push(
+    var queue = MathJax.Callback.Queue();
+    return queue.Push(
       ["Post",this.signal,"Begin Extensions"],
       ["loadArray",this,MathJax.Hub.config.extensions,"extensions"],
       ["Post",this.signal,"End Extensions"]
@@ -1935,8 +1937,14 @@ MathJax.Hub.Startup = {
     ["Config",STARTUP],
     ["Cookie",STARTUP],
     ["Styles",STARTUP],
-    ["Jax",STARTUP],
-    ["Extensions",STARTUP],
+    function () {
+      // Do Jax and Extensions in parallel, but wait for them all to complete
+      var queue = BASE.Callback.Queue(
+        STARTUP.Jax(),
+        STARTUP.Extensions()
+      );
+      return queue.Push({});
+    },
     STARTUP.onLoad(),
     function () {MathJax.isReady = true}, // indicates that MathJax is ready to process math
     ["Typeset",STARTUP],
