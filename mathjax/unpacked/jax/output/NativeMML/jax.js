@@ -208,238 +208,238 @@
     }
   });
 
-MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
+  MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
 
-  MML = MathJax.ElementJax.mml;
-  
-  MML.mbase.Augment({
-    //
-    //  Add a MathML tag of the correct type, and set its attributes
-    //    then populate it with its children and append it to the parent
-    //
-    toNativeMML: function (parent) {
-      var tag = this.NativeMMLelement(this.type);
-      this.NativeMMLattributes(tag);
-      for (var i = 0, m = this.data.length; i < m; i++) {
-        if (this.data[i]) {this.data[i].toNativeMML(tag)}
-          else {tag.appendChild(this.NativeMMLelement("mrow"))}
-      }
-      parent.appendChild(tag);
-    },
-    //
-    //  Look for attributes that are different from the defaults
-    //    and set those in the tag's attribute list
-    //
-    NativeMMLattributes: function (tag) {
-      var defaults = this.defaults;
-      var copy = this.NativeMMLcopyAttributes,
-          skip = this.NativeMMLskipAttributes;
-      if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
-      for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
-        if (this[id] != null) {tag.setAttribute(id,this.NativeMMLattribute(id,this[id]))}
-      }}
-      for (var i = 0, m = copy.length; i < m; i++) {
-        if (this[copy[i]] != null)
-          {tag.setAttribute(copy[i],this.NativeMMLattribute(copy[i],this[copy[i]]))}
-      }
-    },
-    NativeMMLcopyAttributes: [
-      "fontfamily","fontsize","fontweight","fontstyle",
-      "color","background",
-      "id","class","href","style"
-    ],
-    NativeMMLskipAttributes: {texClass: 1, useHeight: 1, texprimestyle: 1},
-    NativeMMLattribute: function (id,value) {
-      value = String(value);
-      if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaes
-      else if (value.match(/^\s*([-+]?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/)) {value = ((1/18)*RegExp.$1)+"em"} // FIXME:  should take scriptlevel into account
-      else if (value === "-tex-caligraphic") {value = "script"}
-      else if (value === "-tex-oldstyle") {value = "normal"}
-      return value;
-    },
-    //
-    //  Create a MathML element
-    //
-    NativeMMLelement: (
-      isMSIE ?
-        function (type) {return document.createElement("mjx:"+type)} :
-        function (type) {return document.createElementNS(nMML.MMLnamespace,type)}
-    )
-  });
-  
-  MML.mrow.Augment({
-    //
-    //  Make inferred rows not include an mrow tag
-    //
-    toNativeMML: function (parent) {
-      if (this.inferred  && this.parent.inferRow) {
-        for (var i = 0, m = this.data.length; i < m; i++) {
-          if (this.data[i]) {this.data[i].toNativeMML(parent)}
-            else {parent.appendChild(this.NativeMMLelement("mrow"))}
-        }
-      } else {
-        this.SUPER(arguments).toNativeMML.call(this,parent);
-      }
-    }
-  });
-  
-  MML.msubsup.Augment({
-    //
-    //  Use proper version of msub, msup, or msubsup, depending on
-    //  which items are present
-    //
-    toNativeMML: function (parent) {
-      var type = this.type;
-      if (this.data[this.sup] == null) {type = "msub"}
-      if (this.data[this.sub] == null) {type = "msup"}
-      var tag = this.NativeMMLelement(type);
-      this.NativeMMLattributes(tag);
-      delete this.data[0].inferred;
-      for (var i = 0, m = this.data.length; i < m; i++)
-        {if (this.data[i]) {this.data[i].toNativeMML(tag)}}
-      parent.appendChild(tag);
-    }
-  });
-  
-  MML.munderover.Augment({
-    //
-    //  Use proper version of munder, mover, or munderover, depending on
-    //  which items are present
-    //
-    toNativeMML: function (parent) {
-      var type = this.type;
-      if (this.data[this.under] == null) {type = "mover"}
-      if (this.data[this.over] == null)  {type = "munder"}
-      var tag = this.NativeMMLelement(type);
-      this.NativeMMLattributes(tag);
-      delete this.data[0].inferred;
-      for (var i = 0, m = this.data.length; i < m; i++)
-        {if (this.data[i]) {this.data[i].toNativeMML(tag)}}
-      parent.appendChild(tag);
-    }
-  });
-  
-  if (MathJax.Hub.Browser.isFirefox) {
-    MML.mtable.Augment({
-      toNativeMML: function (parent) {
-        //
-        //  FF doesn't handle width, so put it in styles instead
-        //
-        if (this.width) {
-          var styles = (this.style||"").replace(/;\s*$/,"").split(";");
-          styles.push("width:"+this.width);
-          this.style = styles.join(";");
-        }
-        this.SUPER(arguments).toNativeMML.call(this,parent);
-      }
-    });
-    MML.mlabeledtr.Augment({
-      toNativeMML: function (parent) {
-        //
-        //  FF doesn't handle mlabeledtr, so remove the label
-        //
-        var tag = this.NativeMMLelement("mtr");
-        this.NativeMMLattributes(tag);
-        for (var i = 1, m = this.data.length; i < m; i++) {
-          if (this.data[i]) {this.data[i].toNativeMML(tag)}
-          else {tag.appendChild(this.NativeMMLelement("mrow"))}
-        }
-        parent.appendChild(tag);
-      }
-    });
-    
-    var fontDir = MathJax.Hub.config.root + "/fonts/HTML-CSS/TeX/otf";
-    
-    /*
-     *  Add fix for mathvariant issues in FF
-     */
-    nMML.Augment({
-      config: {
-        styles: {
-          '[mathvariant="double-struck"]':          {"font-family":"MathJax_AMS"},
-          '[mathvariant="script"]':                 {"font-family":"MathJax_Script"},
-          '[mathvariant="fraktur"]':                {"font-family":"MathJax_Fraktur"},
-          '[mathvariant="-tex-oldstyle"]':          {"font-family":"MathJax_Caligraphic"},
-          '[mathvariant="-tex-oldstyle-bold"]':     {"font-family":"MathJax_Caligraphic", "font-weight":"bold"},
-          '[mathvariant="-tex-caligraphic"]':       {"font-family":"MathJax_Caligraphic"},
-          '[mathvariant="-tex-caligraphic-bold"]':  {"font-family":"MathJax_Caligraphic", "font-weight":"bold"},
-          '[mathvariant="bold-script"]':            {"font-family":"MathJax_Script", "font-weight":"bold"},
-          '[mathvariant="bold-fraktur"]':           {"font-family":"MathJax_Fraktur", "font-weight":"bold"},
-          '[mathvariant="monospace"]':              {"font-family":"monospace"},
-          '[mathvariant="sans-serif"]':             {"font-family":"sansserif"},
-          '[mathvariant="bold-sans-serif"]':        {"font-family":"sansserif", "font-weight":"bold"},
-          '[mathvariant="sans-serif-italic"]':      {"font-family":"sansserif", "font-style":"italic"},
-          '[mathvariant="sans-serif-bold-italic"]': {"font-family":"sansserif", "font-style":"italic", "font-weight":"bold"},
+    MML = MathJax.ElementJax.mml;
 
-          '@font-face /*1*/': {
-            "font-family": "MathJax_AMS",
-            "src": "local('MathJax_AMS'), url('"+fontDir+"/MathJax_AMS-Regular.otf')"
-          },
-          '@font-face /*2*/': {
-            "font-family": "MathJax_Script",
-            "src": "local('MathJax_Script'), url('"+fontDir+"/MathJax_Script-Regular.otf')"
-          },
-          '@font-face /*3*/': {
-            "font-family": "MathJax_Fraktur",
-            "src": "local('MathJax_Fraktur'), url('"+fontDir+"/MathJax_Fraktur-Regular.otf')"
-          },
-          '@font-face /*4*/': {
-            "font-family": "MathJax_Caligraphic",
-            "src": "local('MathJax_Caligraphic'), url('"+fontDir+"/MathJax_Caligraphic-Regular.otf')"
-          },
-          '@font-face /*5*/': {
-            "font-family": "MathJax_Fraktur", "font-weight":"bold",
-            "src": "local('MathJax_Fraktur-Bold'), url('"+fontDir+"/MathJax_Fraktur-Bold.otf')"
-          },
-          '@font-face /*6*/': {
-            "font-family": "MathJax_Caligraphic", "font-weight":"bold",
-            "src": "local('MathJax_Caligraphic-Bold'), url('"+fontDir+"/MathJax_Caligraphic-Bold.otf')"
-          }
-        }
+    MML.mbase.Augment({
+      //
+      //  Add a MathML tag of the correct type, and set its attributes
+      //    then populate it with its children and append it to the parent
+      //
+      toNativeMML: function (parent) {
+	var tag = this.NativeMMLelement(this.type);
+	this.NativeMMLattributes(tag);
+	for (var i = 0, m = this.data.length; i < m; i++) {
+	  if (this.data[i]) {this.data[i].toNativeMML(tag)}
+	    else {tag.appendChild(this.NativeMMLelement("mrow"))}
+	}
+	parent.appendChild(tag);
+      },
+      //
+      //  Look for attributes that are different from the defaults
+      //    and set those in the tag's attribute list
+      //
+      NativeMMLattributes: function (tag) {
+	var defaults = this.defaults;
+	var copy = this.NativeMMLcopyAttributes,
+	    skip = this.NativeMMLskipAttributes;
+	if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
+	for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
+	  if (this[id] != null) {tag.setAttribute(id,this.NativeMMLattribute(id,this[id]))}
+	}}
+	for (var i = 0, m = copy.length; i < m; i++) {
+	  if (this[copy[i]] != null)
+	    {tag.setAttribute(copy[i],this.NativeMMLattribute(copy[i],this[copy[i]]))}
+	}
+      },
+      NativeMMLcopyAttributes: [
+	"fontfamily","fontsize","fontweight","fontstyle",
+	"color","background",
+	"id","class","href","style"
+      ],
+      NativeMMLskipAttributes: {texClass: 1, useHeight: 1, texprimestyle: 1},
+      NativeMMLattribute: function (id,value) {
+	value = String(value);
+	if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaes
+	else if (value.match(/^\s*([-+]?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/)) {value = ((1/18)*RegExp.$1)+"em"} // FIXME:  should take scriptlevel into account
+	else if (value === "-tex-caligraphic") {value = "script"}
+	else if (value === "-tex-oldstyle") {value = "normal"}
+	return value;
+      },
+      //
+      //  Create a MathML element
+      //
+      NativeMMLelement: (
+	isMSIE ?
+	  function (type) {return document.createElement("mjx:"+type)} :
+	  function (type) {return document.createElementNS(nMML.MMLnamespace,type)}
+      )
+    });
+
+    MML.mrow.Augment({
+      //
+      //  Make inferred rows not include an mrow tag
+      //
+      toNativeMML: function (parent) {
+	if (this.inferred  && this.parent.inferRow) {
+	  for (var i = 0, m = this.data.length; i < m; i++) {
+	    if (this.data[i]) {this.data[i].toNativeMML(parent)}
+	      else {parent.appendChild(this.NativeMMLelement("mrow"))}
+	  }
+	} else {
+	  this.SUPER(arguments).toNativeMML.call(this,parent);
+	}
       }
     });
-  }
-  
-  MML.TeXAtom.Augment({
-    //
-    //  Convert TeXatom to an mrow
-    //
-    toNativeMML: function (parent) {
-      // FIXME:  Handle spacing using mpadded?
-      var tag = this.NativeMMLelement("mrow");
-      this.data[0].toNativeMML(tag);
-      parent.appendChild(tag);
-    }
-  });
-  
-  MML.chars.Augment({
-    //
-    //  Add a text node
-    //
-    toNativeMML: function (parent) {
-      parent.appendChild(document.createTextNode(this.toString()));
-    }
-  });
-  
-  MML.entity.Augment({
-    //
-    //  Add a text node
-    //
-    toNativeMML: function (parent) {
-      parent.appendChild(document.createTextNode(this.toString()));
-    }
-  });
-  
-  MathJax.Hub.Register.StartupHook("TeX mathchoice Ready",function () {
-    MML.TeXmathchoice.Augment({
+
+    MML.msubsup.Augment({
       //
-      //  Get the MathML for the selected choice
+      //  Use proper version of msub, msup, or msubsup, depending on
+      //  which items are present
       //
-      toNativeMML: function (parent) {this.Core().toNativeMML(parent)}
+      toNativeMML: function (parent) {
+	var type = this.type;
+	if (this.data[this.sup] == null) {type = "msub"}
+	if (this.data[this.sub] == null) {type = "msup"}
+	var tag = this.NativeMMLelement(type);
+	this.NativeMMLattributes(tag);
+	delete this.data[0].inferred;
+	for (var i = 0, m = this.data.length; i < m; i++)
+	  {if (this.data[i]) {this.data[i].toNativeMML(tag)}}
+	parent.appendChild(tag);
+      }
     });
+
+    MML.munderover.Augment({
+      //
+      //  Use proper version of munder, mover, or munderover, depending on
+      //  which items are present
+      //
+      toNativeMML: function (parent) {
+	var type = this.type;
+	if (this.data[this.under] == null) {type = "mover"}
+	if (this.data[this.over] == null)  {type = "munder"}
+	var tag = this.NativeMMLelement(type);
+	this.NativeMMLattributes(tag);
+	delete this.data[0].inferred;
+	for (var i = 0, m = this.data.length; i < m; i++)
+	  {if (this.data[i]) {this.data[i].toNativeMML(tag)}}
+	parent.appendChild(tag);
+      }
+    });
+
+    if (MathJax.Hub.Browser.isFirefox) {
+      MML.mtable.Augment({
+	toNativeMML: function (parent) {
+	  //
+	  //  FF doesn't handle width, so put it in styles instead
+	  //
+	  if (this.width) {
+	    var styles = (this.style||"").replace(/;\s*$/,"").split(";");
+	    styles.push("width:"+this.width);
+	    this.style = styles.join(";");
+	  }
+	  this.SUPER(arguments).toNativeMML.call(this,parent);
+	}
+      });
+      MML.mlabeledtr.Augment({
+	toNativeMML: function (parent) {
+	  //
+	  //  FF doesn't handle mlabeledtr, so remove the label
+	  //
+	  var tag = this.NativeMMLelement("mtr");
+	  this.NativeMMLattributes(tag);
+	  for (var i = 1, m = this.data.length; i < m; i++) {
+	    if (this.data[i]) {this.data[i].toNativeMML(tag)}
+	    else {tag.appendChild(this.NativeMMLelement("mrow"))}
+	  }
+	  parent.appendChild(tag);
+	}
+      });
+
+      var fontDir = MathJax.Hub.config.root + "/fonts/HTML-CSS/TeX/otf";
+
+      /*
+       *  Add fix for mathvariant issues in FF
+       */
+      nMML.Augment({
+	config: {
+	  styles: {
+	    '[mathvariant="double-struck"]':          {"font-family":"MathJax_AMS"},
+	    '[mathvariant="script"]':                 {"font-family":"MathJax_Script"},
+	    '[mathvariant="fraktur"]':                {"font-family":"MathJax_Fraktur"},
+	    '[mathvariant="-tex-oldstyle"]':          {"font-family":"MathJax_Caligraphic"},
+	    '[mathvariant="-tex-oldstyle-bold"]':     {"font-family":"MathJax_Caligraphic", "font-weight":"bold"},
+	    '[mathvariant="-tex-caligraphic"]':       {"font-family":"MathJax_Caligraphic"},
+	    '[mathvariant="-tex-caligraphic-bold"]':  {"font-family":"MathJax_Caligraphic", "font-weight":"bold"},
+	    '[mathvariant="bold-script"]':            {"font-family":"MathJax_Script", "font-weight":"bold"},
+	    '[mathvariant="bold-fraktur"]':           {"font-family":"MathJax_Fraktur", "font-weight":"bold"},
+	    '[mathvariant="monospace"]':              {"font-family":"monospace"},
+	    '[mathvariant="sans-serif"]':             {"font-family":"sansserif"},
+	    '[mathvariant="bold-sans-serif"]':        {"font-family":"sansserif", "font-weight":"bold"},
+	    '[mathvariant="sans-serif-italic"]':      {"font-family":"sansserif", "font-style":"italic"},
+	    '[mathvariant="sans-serif-bold-italic"]': {"font-family":"sansserif", "font-style":"italic", "font-weight":"bold"},
+
+	    '@font-face /*1*/': {
+	      "font-family": "MathJax_AMS",
+	      "src": "local('MathJax_AMS'), url('"+fontDir+"/MathJax_AMS-Regular.otf')"
+	    },
+	    '@font-face /*2*/': {
+	      "font-family": "MathJax_Script",
+	      "src": "local('MathJax_Script'), url('"+fontDir+"/MathJax_Script-Regular.otf')"
+	    },
+	    '@font-face /*3*/': {
+	      "font-family": "MathJax_Fraktur",
+	      "src": "local('MathJax_Fraktur'), url('"+fontDir+"/MathJax_Fraktur-Regular.otf')"
+	    },
+	    '@font-face /*4*/': {
+	      "font-family": "MathJax_Caligraphic",
+	      "src": "local('MathJax_Caligraphic'), url('"+fontDir+"/MathJax_Caligraphic-Regular.otf')"
+	    },
+	    '@font-face /*5*/': {
+	      "font-family": "MathJax_Fraktur", "font-weight":"bold",
+	      "src": "local('MathJax_Fraktur-Bold'), url('"+fontDir+"/MathJax_Fraktur-Bold.otf')"
+	    },
+	    '@font-face /*6*/': {
+	      "font-family": "MathJax_Caligraphic", "font-weight":"bold",
+	      "src": "local('MathJax_Caligraphic-Bold'), url('"+fontDir+"/MathJax_Caligraphic-Bold.otf')"
+	    }
+	  }
+	}
+      });
+    }
+
+    MML.TeXAtom.Augment({
+      //
+      //  Convert TeXatom to an mrow
+      //
+      toNativeMML: function (parent) {
+	// FIXME:  Handle spacing using mpadded?
+	var tag = this.NativeMMLelement("mrow");
+	this.data[0].toNativeMML(tag);
+	parent.appendChild(tag);
+      }
+    });
+
+    MML.chars.Augment({
+      //
+      //  Add a text node
+      //
+      toNativeMML: function (parent) {
+	parent.appendChild(document.createTextNode(this.toString()));
+      }
+    });
+
+    MML.entity.Augment({
+      //
+      //  Add a text node
+      //
+      toNativeMML: function (parent) {
+	parent.appendChild(document.createTextNode(this.toString()));
+      }
+    });
+
+    MathJax.Hub.Register.StartupHook("TeX mathchoice Ready",function () {
+      MML.TeXmathchoice.Augment({
+	//
+	//  Get the MathML for the selected choice
+	//
+	toNativeMML: function (parent) {this.Core().toNativeMML(parent)}
+      });
+    });
+
   });
-  
-});
   
   if (HUB.config.menuSettings.zoom !== "None")
     {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
