@@ -46,9 +46,8 @@ http://sourceforge.net/projects/mathjax/ that includes the download site
 for the MathJax distribution, the bug-tracker for reporting bugs, and
 several user forums for asking questions and getting assistance:
 
-    Bug tracker:      http://sourceforge.net/tracker/?group_id=261188&atid=1240827
-    MathJax Help:     http://sourceforge.net/projects/mathjax/forums/forum/948701
-    Open Discussion:  http://sourceforge.net/projects/mathjax/forums/forum/948700
+  Bug tracker:         https://github.com/mathjax/MathJax/issues 
+  MathJax-Users Group: http://groups.google.com/group/mathjax-users    
 
 Before reporting a bug, please check that it has not already been reported.
 Also, please use the bug tracker for reporting bugs rather than the help
