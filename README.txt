@@ -43,8 +43,8 @@ COMMUNITY:
 The main MathJax website is www.mathjax.org, and it includes announcements
 and other important information.  MathJax also has a SourceForge site at
 http://sourceforge.net/projects/mathjax/ that includes the download site
-for the MathJax distribution, and several user forums for asking questions
-and getting assistance:
+for the MathJax distribution. A user forum for asking questions and getting 
+assistance is hosted at Google, and the bug tracker is hosted at GitHub:
 
   Bug tracker:         https://github.com/mathjax/MathJax/issues 
   MathJax-Users Group: http://groups.google.com/group/mathjax-users    
