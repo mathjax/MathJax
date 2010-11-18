@@ -1622,6 +1622,7 @@ MathJax.Hub.Startup = {
   var HUB = BASE.Hub, AJAX = BASE.Ajax, CALLBACK = BASE.Callback;
 
   var JAX = MathJax.Object.Subclass({
+    JAXFILE: "jax.js",
     require: null, // array of files to load before jax.js is complete
     config: {},
     //
@@ -1653,10 +1654,10 @@ MathJax.Hub.Startup = {
     },
     Translate: function (element) {
       this.constructor.prototype.Translate = this.noTranslate;
-      return AJAX.Require(this.directory+"/jax.js");
+      return AJAX.Require(this.directory+"/"+this.JAXFILE);
     },
     noTranslate: function (element) {
-      throw Error(this.directory+"/jax.js failed to redefine the Translate() method");
+      throw Error(this.directory+"/"+this.JAXFILE+" failed to redefine the Translate() method");
     },
     Register: function (mimetype) {},
     Config: function () {
@@ -1665,7 +1666,9 @@ MathJax.Hub.Startup = {
     },
     Startup: function () {},
     loadComplete: function (file) {
-      if (file === "jax.js") {
+      if (file === "config.js") {
+        return AJAX.loadComplete(this.directory+"/"+file);
+      } else {
         var queue = CALLBACK.Queue();
         queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Config"]);
         queue.Push(["Config",this]);
@@ -1679,8 +1682,6 @@ MathJax.Hub.Startup = {
         queue.Push(["Startup",this]);
         queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Ready"]);
         return queue.Push(["loadComplete",AJAX,this.directory+"/"+file]);
-      } else {
-        return AJAX.loadComplete(this.directory+"/"+file);
       }
     }
   },{
@@ -1701,17 +1702,17 @@ MathJax.Hub.Startup = {
       // Load any needed the element jax
       var jax = this.elementJax; if (!(jax instanceof Array)) {jax = [jax]}
       for (var i = 0, m = jax.length; i < m; i++) {
-        var file = BASE.ElementJax.directory+"/"+jax[i]+"/jax.js";
+        var file = BASE.ElementJax.directory+"/"+jax[i]+"/"+this.JAXFILE;
         if (!this.require) {this.require = []}
           else if (!(this.require instanceof Array)) {this.require = [this.require]};
         this.require.push(file);  // so Startup will wait for it to be loaded
         queue.Push(AJAX.Require(file));
       }
       // Load the input jax
-      queue.Push(AJAX.Require(this.directory+"/jax.js"));
+      queue.Push(AJAX.Require(this.directory+"/"+this.JAXFILE));
       // Load the associated output jax
       jax = HUB.config.outputJax["jax/"+jax[0]];
-      if (jax) {queue.Push(AJAX.Require(jax[0].directory+"/jax.js"))}
+      if (jax) {queue.Push(AJAX.Require(jax[0].directory+"/"+this.JAXFILE))}
       return queue.Push({});
     },
     Register: function (mimetype) {
@@ -1740,7 +1741,7 @@ MathJax.Hub.Startup = {
       //  Make sure the element jax is loaded before Startup is called
       if (!this.require) {this.require = []}
         else if (!(this.require instanceof Array)) {this.require = [this.require]};
-      this.require.push(BASE.ElementJax.directory+"/"+(mimetype.split(/\//)[1])+"/jax.js");
+      this.require.push(BASE.ElementJax.directory+"/"+(mimetype.split(/\//)[1])+"/"+this.JAXFILE);
     },
     Remove: function (jax) {}
   },{
