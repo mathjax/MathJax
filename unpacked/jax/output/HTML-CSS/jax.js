@@ -226,6 +226,11 @@
 	  "text-decoration": "none"
 	},
         
+        ".MathJax_Processing": {
+          visibility: "hidden", position:"fixed",
+          width: 0, height: 0, overflow:"hidden"
+        },
+        
         ".MathJax .MathJax_HitBox": {
           cursor: "text"
         },
@@ -2009,7 +2014,7 @@
   MML.math.Augment({
     toHTML: function (span,node) {
       var alttext = this.Get("alttext"); if (alttext) {node.setAttribute("aria-label",alttext)}
-      var nobr = HTMLCSS.addElement(span,"nobr",{style:{visibility:"hidden"}});
+      var nobr = HTMLCSS.addElement(span,"nobr",{className:"MathJax_Processing"});
       span = this.HTMLcreateSpan(nobr);
       var stack = HTMLCSS.createStack(span), box = HTMLCSS.createBox(stack), math;
       // Move font-size from outer span to stack to avoid line separation 
@@ -2058,7 +2063,7 @@
 	    HTMLCSS.Em(HTMLCSS.length2em(values.indentshift));
 	}
       }
-      nobr.style.visibility = "";
+      nobr.className = "";
       return span;
     }
   });
