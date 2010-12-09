@@ -333,8 +333,6 @@
 
       // Used in getScales
       this.HDMspan = this.Element("span",{style: {position:"absolute", "font-size-adjust":"none"}});
-      this.HDMframe = this.Element("span", {className: "MathJax_Processing"});
-      this.HDMframe.appendChild(this.HDMspan);
       if (this.msieInlineBlockAlignBug) {
         this.HDMimg = this.addElement(this.HDMspan,"img",{
           style:{
@@ -466,8 +464,7 @@
     },
 
     getScales: function (span,mj) {
-      // span.parentNode.insertBefore(this.HDMspan,span);
-      span.parentNode.insertBefore(this.HDMframe,span);
+      span.parentNode.insertBefore(this.HDMspan,span);
       this.HDMspan.className = ""; this.HDspan.id = ""; this.HDMspan.style.fontSize = "";
       this.HDMimg.style.height = "1px"; this.HDMimg.style.width = "60ex";
       var ex = this.HDMspan.offsetWidth/60;
@@ -481,8 +478,7 @@
         // Opera 10.61 doesn't seem to process the fontSize setting above, so adjust manually
         this.em = MML.mbase.prototype.em = em * scale/100;
       }
-      //span.parentNode.removeChild(this.HDMspan);
-      span.parentNode.removeChild(this.HDMframe);
+      span.parentNode.removeChild(this.HDMspan);
       this.msieMarginScale = this.getMarginScale(mj);
     },
     getMarginScale: function (span) {return 1},
