@@ -369,7 +369,7 @@
       var prev = script.previousSibling;
       if (prev && String(prev.className).match(/^MathJax(_MathML|_Display)?$/))
         {prev.parentNode.removeChild(prev)}
-      var math = script.MathJax.elementJax.root, span, div;
+      var math = script.MathJax.elementJax.root, span, div, frame;
       span = div = this.Element("span",{
         className:"MathJax", oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
         onmouseover:this.Mouseover, onclick:this.Click, ondblclick:this.DblClick
@@ -380,17 +380,20 @@
       }
       // (screen readers don't know about role="math" yet, so use "textbox" instead)
       div.setAttribute("role","textbox"); div.setAttribute("aria-readonly","true");
-      script.parentNode.insertBefore(div,script); var isHidden;
-      try {this.getScales(div,span); isHidden = (this.em === 0 || String(this.em) === "NaN")} catch (err) {isHidden = true}
-      if (isHidden) {this.hiddenDiv.appendChild(div); this.getScales(div,span)}
+      frame = this.Element("div",{className:"MathJax_Processing"});
+      frame.appendChild(div);
+      script.parentNode.insertBefore(frame,script); var isHidden;
+      try {this.getScales(span,span); isHidden = (this.em === 0 || String(this.em) === "NaN")} catch (err) {isHidden = true}
+      if (isHidden) {this.hiddenDiv.appendChild(frame); this.getScales(span,span)}
       this.initImg(span);
       this.initHTML(math,span);
       math.setTeXclass();
       try {math.toHTML(span,div)} catch (err) {
-        if (err.restart) {div.parentNode.removeChild(div)}
+        if (err.restart) {frame.parentNode.removeChild(frame);}
         throw err;
       }
-      if (isHidden) {script.parentNode.insertBefore(div,script)}
+      if (isHidden) {script.parentNode.insertBefore(frame,script);}
+      frame.parentNode.replaceChild(div,frame);
     },
 
     /*
@@ -2014,7 +2017,7 @@
   MML.math.Augment({
     toHTML: function (span,node) {
       var alttext = this.Get("alttext"); if (alttext) {node.setAttribute("aria-label",alttext)}
-      var nobr = HTMLCSS.addElement(span,"nobr",{className:"MathJax_Processing"});
+      var nobr = HTMLCSS.addElement(span,"nobr");
       span = this.HTMLcreateSpan(nobr);
       var stack = HTMLCSS.createStack(span), box = HTMLCSS.createBox(stack), math;
       // Move font-size from outer span to stack to avoid line separation 
