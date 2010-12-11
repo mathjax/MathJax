@@ -5,7 +5,7 @@ MathML that works in all modern browsers.  It was designed with the
 goal of consolidating the recent advances in web technologies into a
 single, definitive, math-on-the-web platform supporting the major
 browsers and operating systems.  It requires no setup on the part of
-the user (no plugins to downlaod or software to install), so the page
+the user (no plugins to download or software to install), so the page
 author can write web documents that include mathematics and be
 confident that users will be able to view it naturally and easily.
 One simply includes MathJax and some mathematics in a web page, and
@@ -43,8 +43,8 @@ COMMUNITY:
 The main MathJax website is www.mathjax.org, and it includes announcements
 and other important information.  MathJax also has a SourceForge site at
 http://sourceforge.net/projects/mathjax/ that includes the download site
-for the MathJax distribution, the bug-tracker for reporting bugs, and
-several user forums for asking questions and getting assistance:
+for the MathJax distribution. A user forum for asking questions and getting 
+assistance is hosted at Google, and the bug tracker is hosted at GitHub:
 
   Bug tracker:         https://github.com/mathjax/MathJax/issues 
   MathJax-Users Group: http://groups.google.com/group/mathjax-users    
