@@ -369,19 +369,23 @@
       var prev = script.previousSibling;
       if (prev && String(prev.className).match(/^MathJax(_MathML|_Display)?$/))
         {prev.parentNode.removeChild(prev)}
-      var math = script.MathJax.elementJax.root, span, div, frame;
+      var math = script.MathJax.elementJax.root, span, div;
       span = div = this.Element("span",{
         className:"MathJax", oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
         onmouseover:this.Mouseover, onclick:this.Click, ondblclick:this.DblClick
       });
-      if (math.Get("display") === "block") {
+      var blockMode = (math.Get("display") === "block");
+      if (blockMode) {
         div = this.Element("div",{className:"MathJax_Display", style:{width:"100%", position:"relative"}});
         div.appendChild(span);
       }
       // (screen readers don't know about role="math" yet, so use "textbox" instead)
       div.setAttribute("role","textbox"); div.setAttribute("aria-readonly","true");
-      frame = this.Element("div",{className:"MathJax_Processing"});
-      frame.appendChild(div);
+      var frame = div;
+      if (this.useProcessingFrame) {
+        frame = this.Element((blockMode ? "div" : "span"),{className:"MathJax_Processing"});
+        frame.appendChild(div);
+      }
       script.parentNode.insertBefore(frame,script); var isHidden;
       try {this.getScales(span,span); isHidden = (this.em === 0 || String(this.em) === "NaN")} catch (err) {isHidden = true}
       if (isHidden) {this.hiddenDiv.appendChild(frame); this.getScales(span,span)}
@@ -393,7 +397,7 @@
         throw err;
       }
       if (isHidden) {script.parentNode.insertBefore(frame,script);}
-      frame.parentNode.replaceChild(div,frame);
+      if (this.useProcessingFrame) frame.parentNode.replaceChild(div,frame);
     },
 
     /*
@@ -468,10 +472,10 @@
 
     getScales: function (span,mj) {
       span.parentNode.insertBefore(this.HDMspan,span);
-      this.HDMspan.className = ""; this.HDspan.id = ""; this.HDMspan.style.fontSize = "";
+      this.HDMspan.className = ""; this.HDMspan.id = ""; this.HDMspan.style.fontSize = "";
       this.HDMimg.style.height = "1px"; this.HDMimg.style.width = "60ex";
       var ex = this.HDMspan.offsetWidth/60;
-      this.HDMspan.className = "MathJax"; this.HDspan.id = "MathJax_getScales";
+      this.HDMspan.className = "MathJax"; this.HDMspan.id = "MathJax_getScales";
       this.HDMimg.style.width = "60em";
       var em = this.outerEm = this.HDMspan.offsetWidth/60;
       var scale = Math.floor((ex/this.TeX.x_height) / em * this.config.scale);
@@ -2137,6 +2141,7 @@
             (HUB.config.root+"/").substr(0,root.length) === root) {webFonts = "otf"}
       }
       HTMLCSS.Augment({
+        useProcessingFrame: true,
         ffVerticalAlignBug: true,
         AccentBug: true,
         allowWebFonts: webFonts
@@ -2160,6 +2165,7 @@
             }
           }
         },
+        useProcessingFrame: true,
         rfuzz: .05,
         AccentBug: true,
         AdjustSurd: true,
@@ -2181,6 +2187,7 @@
 
     Chrome: function (browser) {
       HTMLCSS.Augment({
+        useProcessingFrame: true,
         rfuzz: .05,
         AccentBug: true,
         AdjustSurd: true,
