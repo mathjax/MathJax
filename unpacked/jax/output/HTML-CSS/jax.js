@@ -2087,6 +2087,14 @@
 	return span;
       }
     });
+    
+    //
+    //  Loading isn't complete until the element jax is modified,
+    //  but can't call loadComplete within the callback for "mml Jax Ready"
+    //  (it would call HTMLCSS's Require routine, asking for the mml jax again)
+    //  so wait until after the mml jax has finished processing.
+    //
+    setTimeout(MathJax.Callback(["loadComplete",HTMLCSS,"jax.js"]),0);
   });
 
   //
@@ -2213,7 +2221,5 @@
   
   if (HUB.config.menuSettings.zoom !== "None")
     {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
-
-  HTMLCSS.loadComplete("jax.js");
-  
+    
 })(MathJax.Ajax, MathJax.Hub, MathJax.OutputJax["HTML-CSS"]);
