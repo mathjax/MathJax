@@ -348,7 +348,7 @@ MathJax.version = "1.0.8";
 
   //
   //  Create a callback that is called when a collection of other callbacks have
-  //  all been executed.  If the callback gets calledimmediately (i.e., the
+  //  all been executed.  If the callback gets called immediately (i.e., the
   //  others are all already called), check if it returns another callback
   //  and return that instead.
   //
@@ -1699,7 +1699,7 @@ MathJax.Hub.Startup = {
       // Make Translate produce an error message until the true one is loaded
       this.constructor.prototype.Translate = this.noTranslate;
       var queue = CALLBACK.Queue();
-      // Load any needed the element jax
+      // Load any needed element jax
       var jax = this.elementJax; if (!(jax instanceof Array)) {jax = [jax]}
       for (var i = 0, m = jax.length; i < m; i++) {
         var file = BASE.ElementJax.directory+"/"+jax[i]+"/"+this.JAXFILE;
