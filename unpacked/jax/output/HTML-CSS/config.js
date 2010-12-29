@@ -32,7 +32,7 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   webfontDir: MathJax.OutputJax.fontDir + "/HTML-CSS",      // font name added later
   
   config: {
-    scale: 100,
+    scale: 100, minScaleAdjust: 50,
     availableFonts: ["STIX","TeX"],
     preferredFont: "TeX",
     webFont: "TeX",
