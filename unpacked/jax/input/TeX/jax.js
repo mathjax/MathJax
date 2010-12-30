@@ -1628,13 +1628,13 @@
           if (match === '$') {
             mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1)).mml().With(def)));
             match = ''; k = i;
-          } else {
+          } else if (match === '') {
             if (k < i-1) {mml.push(this.InternalText(text.slice(k,i-1),def))}
             match = '$'; k = i;
           }
         } else if (c === '\\') {
           c = text.charAt(i++);
-          if (c === '(' && match == '') {
+          if (c === '(' && match === '') {
             if (k < i-2) {mml.push(this.InternalText(text.slice(k,i-2),def))}
             match = ')'; k = i;
           } else if (c === ')' && match === ')') {
