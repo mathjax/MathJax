@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.7";
+MathJax.version = "1.0.8";
 
 /**********************************************************/
 
@@ -348,7 +348,7 @@ MathJax.version = "1.0.7";
 
   //
   //  Create a callback that is called when a collection of other callbacks have
-  //  all been executed.  If the callback gets calledimmediately (i.e., the
+  //  all been executed.  If the callback gets called immediately (i.e., the
   //  others are all already called), check if it returns another callback
   //  and return that instead.
   //
@@ -1533,9 +1533,17 @@ MathJax.Hub.Startup = {
   //  Load the input and output jax
   //
   Jax: function () {
-    return this.queue.Push(
+    var config = MathJax.Hub.config;
+    //  Save the order of the output jax since they are loading asynchronously
+    config.outputJax.order = {};
+    for (var i = 0, m = config.jax.length, k = 0; i < m; i++) {
+      if (config.jax[i].substr(0,7) === "output/") 
+        {config.outputJax.order[config.jax[i].substr(7)] = k; k++}
+    }
+    var queue = MathJax.Callback.Queue();
+    return queue.Push(
       ["Post",this.signal,"Begin Jax"],
-      ["loadArray",this,MathJax.Hub.config.jax,"jax","config.js",true],
+      ["loadArray",this,config.jax,"jax","config.js"],
       ["Post",this.signal,"End Jax"]
     );
   },
@@ -1543,7 +1551,8 @@ MathJax.Hub.Startup = {
   //  Load the extensions
   //
   Extensions: function () {
-    return this.queue.Push(
+    var queue = MathJax.Callback.Queue();
+    return queue.Push(
       ["Post",this.signal,"Begin Extensions"],
       ["loadArray",this,MathJax.Hub.config.extensions,"extensions"],
       ["Post",this.signal,"End Extensions"]
@@ -1613,6 +1622,7 @@ MathJax.Hub.Startup = {
   var HUB = BASE.Hub, AJAX = BASE.Ajax, CALLBACK = BASE.Callback;
 
   var JAX = MathJax.Object.Subclass({
+    JAXFILE: "jax.js",
     require: null, // array of files to load before jax.js is complete
     config: {},
     //
@@ -1644,10 +1654,10 @@ MathJax.Hub.Startup = {
     },
     Translate: function (element) {
       this.constructor.prototype.Translate = this.noTranslate;
-      return AJAX.Require(this.directory+"/jax.js");
+      return AJAX.Require(this.directory+"/"+this.JAXFILE);
     },
     noTranslate: function (element) {
-      throw Error(this.directory+"/jax.js failed to redefine the Translate() method");
+      throw Error(this.directory+"/"+this.JAXFILE+" failed to redefine the Translate() method");
     },
     Register: function (mimetype) {},
     Config: function () {
@@ -1656,7 +1666,9 @@ MathJax.Hub.Startup = {
     },
     Startup: function () {},
     loadComplete: function (file) {
-      if (file === "jax.js") {
+      if (file === "config.js") {
+        return AJAX.loadComplete(this.directory+"/"+file);
+      } else {
         var queue = CALLBACK.Queue();
         queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Config"]);
         queue.Push(["Config",this]);
@@ -1670,8 +1682,6 @@ MathJax.Hub.Startup = {
         queue.Push(["Startup",this]);
         queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Ready"]);
         return queue.Push(["loadComplete",AJAX,this.directory+"/"+file]);
-      } else {
-        return AJAX.loadComplete(this.directory+"/"+file);
       }
     }
   },{
@@ -1684,12 +1694,33 @@ MathJax.Hub.Startup = {
   /***********************************/
 
   BASE.InputJax = JAX.Subclass({
+    elementJax: "mml",  // the element jax to load for this input jax
+    Translate: function (element) {
+      // Make Translate produce an error message until the true one is loaded
+      this.constructor.prototype.Translate = this.noTranslate;
+      var queue = CALLBACK.Queue();
+      // Load any needed element jax
+      var jax = this.elementJax; if (!(jax instanceof Array)) {jax = [jax]}
+      for (var i = 0, m = jax.length; i < m; i++) {
+        var file = BASE.ElementJax.directory+"/"+jax[i]+"/"+this.JAXFILE;
+        if (!this.require) {this.require = []}
+          else if (!(this.require instanceof Array)) {this.require = [this.require]};
+        this.require.push(file);  // so Startup will wait for it to be loaded
+        queue.Push(AJAX.Require(file));
+      }
+      // Load the input jax
+      queue.Push(AJAX.Require(this.directory+"/"+this.JAXFILE));
+      // Load the associated output jax
+      jax = HUB.config.outputJax["jax/"+jax[0]];
+      if (jax) {queue.Push(AJAX.Require(jax[0].directory+"/"+this.JAXFILE))}
+      return queue.Push({});
+    },
     Register: function (mimetype) {
       if (!BASE.Hub.config.inputJax) {HUB.config.inputJax = {}}
       HUB.config.inputJax[mimetype] = this;
     }
   },{
-    version: "1.0",
+    version: "1.0.1",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -1698,16 +1729,23 @@ MathJax.Hub.Startup = {
 
   BASE.OutputJax = JAX.Subclass({
     Register: function (mimetype) {
-      if (!HUB.config.outputJax) {HUB.config.outputJax = {}}
-      if (!HUB.config.outputJax[mimetype]) {
-        HUB.config.outputJax[mimetype] = [];
-        if (!HUB.config.menuSettings.renderer) {HUB.config.menuSettings.renderer = this.id}
+      var jax = HUB.config.outputJax;
+      if (!jax[mimetype]) {
+        jax[mimetype] = [];
+        if (!HUB.config.menuSettings.renderer)
+          {HUB.config.menuSettings.renderer = this.id}
       }
-      HUB.config.outputJax[mimetype].push(this);
+      //  If the output jax is earlier in the original configuration list, put it first here
+      if (jax[mimetype].length && (jax.order[this.id]||0) < (jax.order[jax[mimetype][0].id]||0))
+        {jax[mimetype].unshift(this)} else {jax[mimetype].push(this)}
+      //  Make sure the element jax is loaded before Startup is called
+      if (!this.require) {this.require = []}
+        else if (!(this.require instanceof Array)) {this.require = [this.require]};
+      this.require.push(BASE.ElementJax.directory+"/"+(mimetype.split(/\//)[1])+"/"+this.JAXFILE);
     },
     Remove: function (jax) {}
   },{
-    version: "1.0",
+    version: "1.0.1",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts"
@@ -1900,8 +1938,14 @@ MathJax.Hub.Startup = {
     ["Config",STARTUP],
     ["Cookie",STARTUP],
     ["Styles",STARTUP],
-    ["Jax",STARTUP],
-    ["Extensions",STARTUP],
+    function () {
+      // Do Jax and Extensions in parallel, but wait for them all to complete
+      var queue = BASE.Callback.Queue(
+        STARTUP.Jax(),
+        STARTUP.Extensions()
+      );
+      return queue.Push({});
+    },
     STARTUP.onLoad(),
     function () {MathJax.isReady = true}, // indicates that MathJax is ready to process math
     ["Typeset",STARTUP],

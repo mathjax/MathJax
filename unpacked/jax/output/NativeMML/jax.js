@@ -22,8 +22,8 @@
  *  limitations under the License.
  */
 
-(function (MML,nMML,HUB,AJAX) {
-  var isMSIE = HUB.Browser.isMSIE;
+(function (nMML,HUB,AJAX) {
+  var MML, isMSIE = HUB.Browser.isMSIE;
   
   nMML.Augment({
     LEFTBUTTON: (isMSIE ? 1 : 0),  // the event.button value for left button
@@ -207,7 +207,11 @@
       negativeveryverythickmathspace: "-.3889em"
     }
   });
-  
+
+  MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
+
+    MML = MathJax.ElementJax.mml;
+
     MML.mbase.Augment({
       //
       //  Add a MathML tag of the correct type, and set its attributes
@@ -434,10 +438,17 @@
 	toNativeMML: function (parent) {this.Core().toNativeMML(parent)}
       });
     });
+
+    //
+    //  Loading isn't complete until the element jax is modified,
+    //  but can't call loadComplete within the callback for "mml Jax Ready"
+    //  (it would call NativeMML's Require routine, asking for the mml jax again)
+    //  so wait until after the mml jax has finished processing.
+    //
+    setTimeout(MathJax.Callback(["loadComplete",nMML,"jax.js"]),0);
+  });
   
   if (HUB.config.menuSettings.zoom !== "None")
     {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
 
-  nMML.loadComplete("jax.js");
-
-})(MathJax.ElementJax.mml, MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax);
+})(MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax);
