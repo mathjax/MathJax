@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{postfix:{"\\u23B4','":c.WIDEACCENT',',"\\u23B5',1,',"\\u23DC',1,',"\\u23DD',1,'}}});MathJax.Ajax.loadComplete(a.optableDir+"/MiscTechnical.js")})(MathJax.ElementJax.mml);']
-]);
+(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{postfix:{"\u23B4":c.WIDEACCENT,"\u23B5":c.WIDEACCENT,"\u23DC":c.WIDEACCENT,"\u23DD":c.WIDEACCENT}}});MathJax.Ajax.loadComplete(a.optableDir+"/MiscTechnical.js")})(MathJax.ElementJax.mml);
 

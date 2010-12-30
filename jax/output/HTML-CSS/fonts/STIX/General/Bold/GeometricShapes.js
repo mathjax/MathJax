@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["STIXGeneral-bold"],{9651',':[811,127,1145,35,1110','],9655',':[791,284,1043,','70,1008],9661',3,'],9665',5,'35,973],9674:[795,289,790,45,745],9708',3,']});MathJax.Ajax.loadComplete',1,'fontDir+"/General/Bold/GeometricShapes.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXGeneral-bold"],{9651:[811,127,1145,35,1110],9655:[791,284,1043,70,1008],9661:[811,127,1145,35,1110],9665:[791,284,1043,35,973],9674:[795,289,790,45,745],9708:[811,127,1145,35,1110]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/Bold/GeometricShapes.js");
 

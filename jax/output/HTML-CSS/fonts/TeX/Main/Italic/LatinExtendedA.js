@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["MathJax_Main-italic"],{305:[441,10,307,75,340]});MathJax.Ajax.loadComplete',1,'fontDir+"/Main/Italic/LatinExtendedA.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["MathJax_Main-italic"],{305:[441,10,307,75,340]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Italic/LatinExtendedA.js");
 

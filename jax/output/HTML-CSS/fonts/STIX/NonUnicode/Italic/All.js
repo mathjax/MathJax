@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["STIXNonUnicode-italic"],{32',':[0,0,250,0,0','],160',3,']});MathJax.Ajax.loadComplete',1,'fontDir+"/NonUnicode/Italic/All.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXNonUnicode-italic"],{32:[0,0,250,0,0],160:[0,0,250,0,0]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/NonUnicode/Italic/All.js");
 

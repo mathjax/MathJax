@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['(function(a){MathJax.Hub.Insert(a.Parse.Entity,{ZHcy:"\\u0416",Zacute:"\\u0179",Zcaron:"\\u017D",Zcy:"\\u0417",Zdot:"\\u017B",ZeroWidthSpace:"\\u200B",zacute:"\\u017A",zcaron:"\\u017E",zcy:"\\u0437",zdot:"\\u017C",zeetrf:"\\u2128",zhcy:"\\u0436"});MathJax.Ajax.loadComplete(a.entityDir+"/z.js")})(MathJax.InputJax.MathML);']
-]);
+(function(a){MathJax.Hub.Insert(a.Parse.Entity,{ZHcy:"\u0416",Zacute:"\u0179",Zcaron:"\u017D",Zcy:"\u0417",Zdot:"\u017B",ZeroWidthSpace:"\u200B",zacute:"\u017A",zcaron:"\u017E",zcy:"\u0437",zdot:"\u017C",zeetrf:"\u2128",zhcy:"\u0436"});MathJax.Ajax.loadComplete(a.entityDir+"/z.js")})(MathJax.InputJax.MathML);
 

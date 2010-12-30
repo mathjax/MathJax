@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.MathJax_Main,{10216',':[750,250,389,','110,333],10217',3,'55,278],10222:[743,242,400,100,344],10223:[743,241,400,56,301]});MathJax.Ajax.loadComplete',1,'fontDir+"/Main/Regular/MiscMathSymbolsA.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_Main,{10216:[750,250,389,110,333],10217:[750,250,389,55,278],10222:[743,242,400,100,344],10223:[743,241,400,56,301]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Regular/MiscMathSymbolsA.js");
 

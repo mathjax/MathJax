@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{prefix:{"\\u27E6":c.OPEN},postfix:{"\\u27E7":c.CLOSE}}});MathJax.Ajax.loadComplete(a.optableDir+"/MiscMathSymbolsA.js")})(MathJax.ElementJax.mml);']
-]);
+(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{prefix:{"\u27E6":c.OPEN},postfix:{"\u27E7":c.CLOSE}}});MathJax.Ajax.loadComplete(a.optableDir+"/MiscMathSymbolsA.js")})(MathJax.ElementJax.mml);
 

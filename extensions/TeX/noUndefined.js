@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Extension["TeX/noUndefined','"]={version:"1.0",config:','MathJax.Hub.','Insert({attributes:{mathcolor:"red"}},((',2,'config.TeX||{}).','noUndefined','||{}))};',2,'Register.StartupHook("TeX Jax Ready",function(){var b=',0,'"].config;var a=MathJax.ElementJax.mml;MathJax.InputJax.TeX.Parse.Augment({csUndefined:function(c){this.Push(a.mtext(c).With(b.attributes))}});',2,'Startup.signal.Post("TeX ',6,' Ready")});MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/',6,'.js");']
-]);
+MathJax.Extension["TeX/noUndefined"]={version:"1.0",config:MathJax.Hub.Insert({attributes:{mathcolor:"red"}},((MathJax.Hub.config.TeX||{}).noUndefined||{}))};MathJax.Hub.Register.StartupHook("TeX Jax Ready",function(){var b=MathJax.Extension["TeX/noUndefined"].config;var a=MathJax.ElementJax.mml;MathJax.InputJax.TeX.Parse.Augment({csUndefined:function(c){this.Push(a.mtext(c).With(b.attributes))}});MathJax.Hub.Startup.signal.Post("TeX noUndefined Ready")});MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/noUndefined.js");
 

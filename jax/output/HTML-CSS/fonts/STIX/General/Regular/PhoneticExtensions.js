@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.STIXGeneral,{7424:[468,0,510,15,495],7431:[464,0,504,21,481],7452:[464,14,583,21,560],7553',':[683,287,','528,27,491],7556',3,'542,7,505],7557',3,'294,19,257],7562:[459,287,389,51,348],7565:[450,287,516,17,479],7566:[450,287,453,27,416]});MathJax.Ajax.loadComplete',1,'fontDir+"/General/Regular/PhoneticExtensions.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.STIXGeneral,{7424:[468,0,510,15,495],7431:[464,0,504,21,481],7452:[464,14,583,21,560],7553:[683,287,528,27,491],7556:[683,287,542,7,505],7557:[683,287,294,19,257],7562:[459,287,389,51,348],7565:[450,287,516,17,479],7566:[450,287,453,27,416]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/Regular/PhoneticExtensions.js");
 

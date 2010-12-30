@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.MathJax_Main,{10815:[684,0,750,28,721],10927',':[636,138,778,83,','695],10928',3,'694]});MathJax.Ajax.loadComplete',1,'fontDir+"/Main/Regular/SuppMathOperators.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_Main,{10815:[684,0,750,28,721],10927:[636,138,778,83,695],10928:[636,138,778,83,694]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Regular/SuppMathOperators.js");
 

@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.MathJax_Main,{8968',':[751,250,444,','174,422],8969',3,'21,269],8970:[750,251,444,174,422],8971:[751,251,444,20,269],8994:[388,-122',',1000,55,944],','8995:[378,-134',7,'9136:[743,241,512,56,456],9137:[743,242,512,56,457]});MathJax.Ajax.loadComplete',1,'fontDir+"/Main/Regular/MiscTechnical.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_Main,{8968:[751,250,444,174,422],8969:[751,250,444,21,269],8970:[750,251,444,174,422],8971:[751,251,444,20,269],8994:[388,-122,1000,55,944],8995:[378,-134,1000,55,944],9136:[743,241,512,56,456],9137:[743,242,512,56,457]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Regular/MiscTechnical.js");
 

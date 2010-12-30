@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['(function(a){MathJax.Hub.Insert(a.Parse.Entity,{qint:"\\u2A0C",qprime:"\\u2057",quaternions:"\\u210D",quatint:"\\u2A16",quest:"\\u003F",questeq:"\\u225F",quot:"\\u0022"});MathJax.Ajax.loadComplete(a.entityDir+"/q.js")})(MathJax.InputJax.MathML);']
-]);
+(function(a){MathJax.Hub.Insert(a.Parse.Entity,{qint:"\u2A0C",qprime:"\u2057",quaternions:"\u210D",quatint:"\u2A16",quest:"\u003F",questeq:"\u225F",quot:"\u0022"});MathJax.Ajax.loadComplete(a.entityDir+"/q.js")})(MathJax.InputJax.MathML);
 

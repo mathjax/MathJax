@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.MathJax_AMS,{989:[605,85,778,55,719],1008:[434,6,667,37,734]});MathJax.Ajax.loadComplete',1,'fontDir+"/AMS/Regular/GreekAndCoptic.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_AMS,{989:[605,85,778,55,719],1008:[434,6,667,37,734]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/AMS/Regular/GreekAndCoptic.js");
 

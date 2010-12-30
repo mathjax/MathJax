@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.STIXGeneral,{42791:[683,233,481,9,427]});MathJax.Ajax.loadComplete',1,'fontDir+"/General/Regular/LatinExtendedD.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.STIXGeneral,{42791:[683,233,481,9,427]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/Regular/LatinExtendedD.js");
 

@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["','STIXNonUnicode-bold-italic','"]={directory:"','NonUnicode/BoldItalic','",family:"STIXNonUnicode",weight:"bold",style:"italic",Ranges:[[32,32,"All"],[160,160,"All"],[57344,63743,"PrivateUse"]]};',0,'initFont("',2,'");MathJax.Ajax.loadComplete(',0,'fontDir+"/',4,'/Main.js");']
-]);
+MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXNonUnicode-bold-italic"]={directory:"NonUnicode/BoldItalic",family:"STIXNonUnicode",weight:"bold",style:"italic",Ranges:[[32,32,"All"],[160,160,"All"],[57344,63743,"PrivateUse"]]};MathJax.OutputJax["HTML-CSS"].initFont("STIXNonUnicode-bold-italic");MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/NonUnicode/BoldItalic/Main.js");
 

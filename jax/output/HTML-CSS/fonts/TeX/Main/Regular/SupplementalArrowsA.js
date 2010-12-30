@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.MathJax_Main,{10229:[511,12,1609,54,1525],10230',':[512,11,1638,','83,1554],10231:[512,12,1859,54,1804],10232:[525,24,1609,55,1553],10233:[525,25,1638,55,1582],10234:[525,24,1858,55,1802],10236',3,'54,1554]});MathJax.Ajax.loadComplete',1,'fontDir+"/Main/Regular/SupplementalArrowsA.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_Main,{10229:[511,12,1609,54,1525],10230:[512,11,1638,83,1554],10231:[512,12,1859,54,1804],10232:[525,24,1609,55,1553],10233:[525,25,1638,55,1582],10234:[525,24,1858,55,1802],10236:[512,11,1638,54,1554]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Regular/SupplementalArrowsA.js");
 

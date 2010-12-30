@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{infix:{"\\u25A0','":c.BIN3,"\\','u25A1',1,'u25AA',1,'u25AB',1,'u25AD',1,'u25AE',1,'u25AF',1,'u25B0',1,'u25B1',1,'u25B2','":c.BIN4,"\\','u25B4',19,'u25B6',19,'u25B7',19,'u25B8',19,'u25BC',19,'u25BE',19,'u25C0',19,'u25C1',19,'u25C2',19,'u25C4',19,'u25C5',19,'u25C6',19,'u25C7',19,'u25C8',19,'u25C9',19,'u25CC',19,'u25CD',19,'u25CE',19,'u25CF',19,'u25D6',19,'u25D7',19,'u25E6":c.BIN4}}});MathJax.Ajax.loadComplete(a.optableDir+"/GeometricShapes.js")})(MathJax.ElementJax.mml);']
-]);
+(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{infix:{"\u25A0":c.BIN3,"\u25A1":c.BIN3,"\u25AA":c.BIN3,"\u25AB":c.BIN3,"\u25AD":c.BIN3,"\u25AE":c.BIN3,"\u25AF":c.BIN3,"\u25B0":c.BIN3,"\u25B1":c.BIN3,"\u25B2":c.BIN4,"\u25B4":c.BIN4,"\u25B6":c.BIN4,"\u25B7":c.BIN4,"\u25B8":c.BIN4,"\u25BC":c.BIN4,"\u25BE":c.BIN4,"\u25C0":c.BIN4,"\u25C1":c.BIN4,"\u25C2":c.BIN4,"\u25C4":c.BIN4,"\u25C5":c.BIN4,"\u25C6":c.BIN4,"\u25C7":c.BIN4,"\u25C8":c.BIN4,"\u25C9":c.BIN4,"\u25CC":c.BIN4,"\u25CD":c.BIN4,"\u25CE":c.BIN4,"\u25CF":c.BIN4,"\u25D6":c.BIN4,"\u25D7":c.BIN4,"\u25E6":c.BIN4}}});MathJax.Ajax.loadComplete(a.optableDir+"/GeometricShapes.js")})(MathJax.ElementJax.mml);
 

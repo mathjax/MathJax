@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["STIXGeneral-bold-italic"],{9251:[31,120,500,40,460]});MathJax.Ajax.loadComplete',1,'fontDir+"/General/BoldItalic/ControlPictures.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXGeneral-bold-italic"],{9251:[31,120,500,40,460]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/BoldItalic/ControlPictures.js");
 

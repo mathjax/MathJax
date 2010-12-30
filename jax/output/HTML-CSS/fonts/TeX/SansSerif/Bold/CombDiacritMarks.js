@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["MathJax_SansSerif-bold"],{768:[695,-537,0,-458,-218],769:[694,-536,0,-334,-93],770',':[694,-537,0,-','442,-109],771:[694,-547,0,-458,-93],772:[660,-560,0,-474,-77],774:[695,-552,0,-470,-80],775:[695,-596,0,-357,-194],776:[696,-594,0,-459,-90],778',3,'365,-118],779:[695,-536,0,-440,-93],780:[658,-500,0,-442,-109]});MathJax.Ajax.loadComplete',1,'fontDir+"/SansSerif/Bold/CombDiacritMarks.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["MathJax_SansSerif-bold"],{768:[695,-537,0,-458,-218],769:[694,-536,0,-334,-93],770:[694,-537,0,-442,-109],771:[694,-547,0,-458,-93],772:[660,-560,0,-474,-77],774:[695,-552,0,-470,-80],775:[695,-596,0,-357,-194],776:[696,-594,0,-459,-90],778:[694,-537,0,-365,-118],779:[695,-536,0,-440,-93],780:[658,-500,0,-442,-109]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/SansSerif/Bold/CombDiacritMarks.js");
 

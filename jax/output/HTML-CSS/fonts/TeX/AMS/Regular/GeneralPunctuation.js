@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.MathJax_AMS,{8245:[560,-43,275,12,244]});MathJax.Ajax.loadComplete',1,'fontDir+"/AMS/Regular/GeneralPunctuation.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_AMS,{8245:[560,-43,275,12,244]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/AMS/Regular/GeneralPunctuation.js");
 

@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["MathJax_Main-italic"],{8463:[695,13,540,42,562]});MathJax.Ajax.loadComplete',1,'fontDir+"/Main/Italic/LetterlikeSymbols.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["MathJax_Main-italic"],{8463:[695,13,540,42,562]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Italic/LetterlikeSymbols.js");
 

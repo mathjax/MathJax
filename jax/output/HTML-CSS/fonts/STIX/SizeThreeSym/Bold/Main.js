@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["','STIXSizeThreeSym','-bold"]={directory:"','SizeThreeSym/Bold','",family:"',2,'",weight:"bold",32',':[0,0,250,0,0],','40',':[2104,355,','750,163,686],41',10,'750,64,587],47',10,'1102,11,1091],','91',10,'538,236,540],92',10,15,'93',10,'538,-2,302],123',10,'906,124,736],125',10,'906,170,782],160',8,'8730:[2604,471,1076,104,1139],8968',10,'595,236,599],','8969',10,'595,-4,359],','8970',10,31,'8971',10,34,'10216',10,'765,108,720],10217',10,'765,45,657]};',0,'initFont("',2,'-bold");MathJax.Ajax.loadComplete(',0,'fontDir+"/',4,'/Main.js");']
-]);
+MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXSizeThreeSym-bold"]={directory:"SizeThreeSym/Bold",family:"STIXSizeThreeSym",weight:"bold",32:[0,0,250,0,0],40:[2104,355,750,163,686],41:[2104,355,750,64,587],47:[2104,355,1102,11,1091],91:[2104,355,538,236,540],92:[2104,355,1102,11,1091],93:[2104,355,538,-2,302],123:[2104,355,906,124,736],125:[2104,355,906,170,782],160:[0,0,250,0,0],8730:[2604,471,1076,104,1139],8968:[2104,355,595,236,599],8969:[2104,355,595,-4,359],8970:[2104,355,595,236,599],8971:[2104,355,595,-4,359],10216:[2104,355,765,108,720],10217:[2104,355,765,45,657]};MathJax.OutputJax["HTML-CSS"].initFont("STIXSizeThreeSym-bold");MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/SizeThreeSym/Bold/Main.js");
 

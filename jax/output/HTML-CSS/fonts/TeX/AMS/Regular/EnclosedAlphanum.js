@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.MathJax_AMS,{9416:[709,175,902,8,894]});MathJax.Ajax.loadComplete',1,'fontDir+"/AMS/Regular/EnclosedAlphanum.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_AMS,{9416:[709,175,902,8,894]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/AMS/Regular/EnclosedAlphanum.js");
 

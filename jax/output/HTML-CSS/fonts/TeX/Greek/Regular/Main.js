@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.','MathJax_Greek','={directory:"','Greek/Regular','",family:"',2,'",testString:','String.fromCharCode(','915)+" "+',8,'933)+" "+',8,'923),32',':[0,0,250,0,0],','160',14,'915:[680,0,625,25,582],916:[716,0,833,46,786],920:[705,22,778,56,722],923:[716,0,694,32,661],926:[677,0,667,42,624],928:[680,0,750,25,724],931:[683,0,722,55,666],933:[705',',0,778,55,722],','934:[683,0,722,56,665],936:[683',18,'937:[704,0,722,44,677]};',0,'initFont("',2,'");MathJax.Ajax.loadComplete(',0,'fontDir+"/',4,'/Main.js");']
-]);
+MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_Greek={directory:"Greek/Regular",family:"MathJax_Greek",testString:String.fromCharCode(915)+" "+String.fromCharCode(933)+" "+String.fromCharCode(923),32:[0,0,250,0,0],160:[0,0,250,0,0],915:[680,0,625,25,582],916:[716,0,833,46,786],920:[705,22,778,56,722],923:[716,0,694,32,661],926:[677,0,667,42,624],928:[680,0,750,25,724],931:[683,0,722,55,666],933:[705,0,778,55,722],934:[683,0,722,56,665],936:[683,0,778,55,722],937:[704,0,722,44,677]};MathJax.OutputJax["HTML-CSS"].initFont("MathJax_Greek");MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Greek/Regular/Main.js");
 

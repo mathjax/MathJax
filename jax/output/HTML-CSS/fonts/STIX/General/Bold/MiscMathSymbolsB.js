@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["STIXGeneral-bold"],{10624:[705,200,675,105,570],10678',':[634,130,864,50,814],','10679',3,'10680',3,'10688',3,'10689',3,'10692',':[661,158,910,45,865','],10693',13,'],10694',13,'],10695',13,']});MathJax.Ajax.loadComplete',1,'fontDir+"/General/Bold/MiscMathSymbolsB.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXGeneral-bold"],{10624:[705,200,675,105,570],10678:[634,130,864,50,814],10679:[634,130,864,50,814],10680:[634,130,864,50,814],10688:[634,130,864,50,814],10689:[634,130,864,50,814],10692:[661,158,910,45,865],10693:[661,158,910,45,865],10694:[661,158,910,45,865],10695:[661,158,910,45,865]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/Bold/MiscMathSymbolsB.js");
 

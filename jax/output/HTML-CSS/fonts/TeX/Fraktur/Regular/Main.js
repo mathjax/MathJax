@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.','MathJax_Fraktur','={directory:"','Fraktur/Regular','",family:"',2,'",testString:"MathJax Fraktur",Ranges:[[0,127,"BasicLatin"],[128,57343,"Other"],[58112,58128,"PUA"]]};',0,'initFont("',2,'");MathJax.Ajax.loadComplete(',0,'fontDir+"/',4,'/Main.js");']
-]);
+MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_Fraktur={directory:"Fraktur/Regular",family:"MathJax_Fraktur",testString:"MathJax Fraktur",Ranges:[[0,127,"BasicLatin"],[128,57343,"Other"],[58112,58128,"PUA"]]};MathJax.OutputJax["HTML-CSS"].initFont("MathJax_Fraktur");MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Fraktur/Regular/Main.js");
 

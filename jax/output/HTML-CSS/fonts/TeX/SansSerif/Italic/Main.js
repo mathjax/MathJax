@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["','MathJax_SansSerif','-italic','"]={directory:"','SansSerif/Italic','",family:"',2,'",style:"italic",testString:"MathJax SansSerif",Ranges:[[0,127,"BasicLatin"],[128,65535,"Other"],[768,879,"CombDiacritMarks"]]};',0,'initFont("',2,3,'");MathJax.Ajax.loadComplete(',0,'fontDir+"/',5,'/Main.js");']
-]);
+MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["MathJax_SansSerif-italic"]={directory:"SansSerif/Italic",family:"MathJax_SansSerif",style:"italic",testString:"MathJax SansSerif",Ranges:[[0,127,"BasicLatin"],[128,65535,"Other"],[768,879,"CombDiacritMarks"]]};MathJax.OutputJax["HTML-CSS"].initFont("MathJax_SansSerif-italic");MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/SansSerif/Italic/Main.js");
 

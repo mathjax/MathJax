@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{postfix:{"\\u20DB":c.ACCENT}}});MathJax.Ajax.loadComplete(a.optableDir+"/CombDiactForSymbols.js")})(MathJax.ElementJax.mml);']
-]);
+(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{postfix:{"\u20DB":c.ACCENT}}});MathJax.Ajax.loadComplete(a.optableDir+"/CombDiactForSymbols.js")})(MathJax.ElementJax.mml);
 

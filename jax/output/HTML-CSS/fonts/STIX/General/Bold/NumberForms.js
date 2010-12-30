@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["STIXGeneral-bold"],{8531',':[688,12,750',',-7,763],8532',3,',28,763],8533',3,',-7,775],','8534',3,',28,775],8535',3,',23,775],','8536',3,',22,775],8537',3,',-7,758],8538',3,',49,758],8539',3,8,'8540',3,13,'8541',3,',49,775],8542',3,',30,775]});MathJax.Ajax.loadComplete',1,'fontDir+"/General/Bold/NumberForms.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXGeneral-bold"],{8531:[688,12,750,-7,763],8532:[688,12,750,28,763],8533:[688,12,750,-7,775],8534:[688,12,750,28,775],8535:[688,12,750,23,775],8536:[688,12,750,22,775],8537:[688,12,750,-7,758],8538:[688,12,750,49,758],8539:[688,12,750,-7,775],8540:[688,12,750,23,775],8541:[688,12,750,49,775],8542:[688,12,750,30,775]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/Bold/NumberForms.js");
 

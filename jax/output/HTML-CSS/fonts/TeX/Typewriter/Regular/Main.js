@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.','MathJax_Typewriter','={directory:"','Typewriter/Regular','",family:"',2,'",testString:"MathJax Typewriter",Ranges:[[0,127,"BasicLatin"],[128,65535,"Other"],[768,879,"CombDiacritMarks"]]};',0,'initFont("',2,'");MathJax.Ajax.loadComplete(',0,'fontDir+"/',4,'/Main.js");']
-]);
+MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_Typewriter={directory:"Typewriter/Regular",family:"MathJax_Typewriter",testString:"MathJax Typewriter",Ranges:[[0,127,"BasicLatin"],[128,65535,"Other"],[768,879,"CombDiacritMarks"]]};MathJax.OutputJax["HTML-CSS"].initFont("MathJax_Typewriter");MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Typewriter/Regular/Main.js");
 

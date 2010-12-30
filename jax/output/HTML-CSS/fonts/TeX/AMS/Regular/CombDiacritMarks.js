@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS.MathJax_AMS,{770:[845,-561,0,-2347,13],771:[899,-628,0,-2332,-3]});MathJax.Ajax.loadComplete',1,'fontDir+"/AMS/Regular/CombDiacritMarks.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_AMS,{770:[845,-561,0,-2347,13],771:[899,-628,0,-2332,-3]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/AMS/Regular/CombDiacritMarks.js");
 

@@ -12,7 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Unpack([
-  ['MathJax.Hub.Insert','(MathJax.OutputJax["HTML-CSS"].','FONTDATA.FONTS["STIXGeneral-italic"],{8355:[653,0,611,8,645],8356:[670,8,500,10,517],8359:[653,13,1149,0,1126],8364:[664,12,500,16,538]});MathJax.Ajax.loadComplete',1,'fontDir+"/General/Italic/CurrencySymbols.js");']
-]);
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXGeneral-italic"],{8355:[653,0,611,8,645],8356:[670,8,500,10,517],8359:[653,13,1149,0,1126],8364:[664,12,500,16,538]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/Italic/CurrencySymbols.js");
 
