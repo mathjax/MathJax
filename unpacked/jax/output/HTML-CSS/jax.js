@@ -226,6 +226,11 @@
 	  "text-decoration": "none"
 	},
         
+        ".MathJax_Processing": {
+          visibility: "hidden", position:"fixed",
+          width: 0, height: 0, overflow:"hidden"
+        },
+        
         ".MathJax .MathJax_HitBox": {
           cursor: "text"
         },
@@ -364,28 +369,34 @@
       var prev = script.previousSibling;
       if (prev && String(prev.className).match(/^MathJax(_MathML|_Display)?$/))
         {prev.parentNode.removeChild(prev)}
-      var math = script.MathJax.elementJax.root, span, div;
-      span = div = this.Element("span",{
+      var math = script.MathJax.elementJax.root, span, div, frame;
+      span = div = frame = this.Element("span",{
         className:"MathJax", oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
         onmouseover:this.Mouseover, onclick:this.Click, ondblclick:this.DblClick
       });
-      if (math.Get("display") === "block") {
-        div = this.Element("div",{className:"MathJax_Display", style:{width:"100%", position:"relative"}});
+      var blockMode = (math.Get("display") === "block");
+      if (blockMode) {
+        div = frame = this.Element("div",{className:"MathJax_Display", style:{width:"100%", position:"relative"}});
         div.appendChild(span);
       }
       // (screen readers don't know about role="math" yet, so use "textbox" instead)
       div.setAttribute("role","textbox"); div.setAttribute("aria-readonly","true");
-      script.parentNode.insertBefore(div,script); var isHidden;
-      try {this.getScales(div,span); isHidden = (this.em === 0 || String(this.em) === "NaN")} catch (err) {isHidden = true}
-      if (isHidden) {this.hiddenDiv.appendChild(div); this.getScales(div,span)}
+      if (this.useProcessingFrame) {
+        frame = this.Element((blockMode ? "div" : "span"),{className:"MathJax_Processing"});
+        frame.appendChild(div);
+      }
+      script.parentNode.insertBefore(frame,script); var isHidden;
+      try {this.getScales(span); isHidden = (this.em === 0 || String(this.em) === "NaN")} catch (err) {isHidden = true}
+      if (isHidden) {this.hiddenDiv.appendChild(frame); this.getScales(span)}
       this.initImg(span);
       this.initHTML(math,span);
       math.setTeXclass();
       try {math.toHTML(span,div)} catch (err) {
-        if (err.restart) {div.parentNode.removeChild(div)}
+        if (err.restart) {frame.parentNode.removeChild(frame)}
         throw err;
       }
-      if (isHidden) {script.parentNode.insertBefore(div,script)}
+      if (isHidden) {script.parentNode.insertBefore(frame,script)}
+      if (this.useProcessingFrame) frame.parentNode.replaceChild(div,frame);
     },
 
     /*
@@ -458,23 +469,23 @@
       if (span.className.match(/^MathJax/)) {span.parentNode.removeChild(span)}
     },
 
-    getScales: function (span,mj) {
+    getScales: function (span) {
       span.parentNode.insertBefore(this.HDMspan,span);
-      this.HDMspan.className = ""; this.HDspan.id = ""; this.HDMspan.style.fontSize = "";
+      this.HDMspan.className = ""; this.HDMspan.id = ""; this.HDMspan.style.fontSize = "";
       this.HDMimg.style.height = "1px"; this.HDMimg.style.width = "60ex";
       var ex = this.HDMspan.offsetWidth/60;
-      this.HDMspan.className = "MathJax"; this.HDspan.id = "MathJax_getScales";
+      this.HDMspan.className = "MathJax"; this.HDMspan.id = "MathJax_getScales";
       this.HDMimg.style.width = "60em";
       var em = this.outerEm = this.HDMspan.offsetWidth/60;
-      var scale = Math.floor((ex/this.TeX.x_height) / em * this.config.scale);
-      mj.style.fontSize = this.HDMspan.style.fontSize = scale+"%";
+      var scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
+      span.style.fontSize = this.HDMspan.style.fontSize = scale+"%";
       this.em = MML.mbase.prototype.em = this.HDMspan.offsetWidth/60;
       if (this.operaFontSizeBug && em === this.em && scale !== 100) {
         // Opera 10.61 doesn't seem to process the fontSize setting above, so adjust manually
         this.em = MML.mbase.prototype.em = em * scale/100;
       }
       span.parentNode.removeChild(this.HDMspan);
-      this.msieMarginScale = this.getMarginScale(mj);
+      this.msieMarginScale = this.getMarginScale(span);
     },
     getMarginScale: function (span) {return 1},
     getMSIEmarginScale: function (span) {
@@ -2009,7 +2020,7 @@
   MML.math.Augment({
     toHTML: function (span,node) {
       var alttext = this.Get("alttext"); if (alttext) {node.setAttribute("aria-label",alttext)}
-      var nobr = HTMLCSS.addElement(span,"nobr",{style:{visibility:"hidden"}});
+      var nobr = HTMLCSS.addElement(span,"nobr");
       span = this.HTMLcreateSpan(nobr);
       var stack = HTMLCSS.createStack(span), box = HTMLCSS.createBox(stack), math;
       // Move font-size from outer span to stack to avoid line separation 
@@ -2058,7 +2069,6 @@
 	    HTMLCSS.Em(HTMLCSS.length2em(values.indentshift));
 	}
       }
-      nobr.style.visibility = "";
       return span;
     }
   });
@@ -2129,6 +2139,7 @@
             (HUB.config.root+"/").substr(0,root.length) === root) {webFonts = "otf"}
       }
       HTMLCSS.Augment({
+        useProcessingFrame: true,
         ffVerticalAlignBug: true,
         AccentBug: true,
         allowWebFonts: webFonts
@@ -2152,6 +2163,7 @@
             }
           }
         },
+        useProcessingFrame: true,
         rfuzz: .05,
         AccentBug: true,
         AdjustSurd: true,
@@ -2173,6 +2185,7 @@
 
     Chrome: function (browser) {
       HTMLCSS.Augment({
+        useProcessingFrame: true,
         rfuzz: .05,
         AccentBug: true,
         AdjustSurd: true,
