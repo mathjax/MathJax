@@ -8,7 +8,7 @@ MathJax can be loaded from a public web server or privately from your hard drive
 or other local media. To use MathJax in either way, you will need to obtain a
 copy of MathJax and its font package. There are three ways to do this: via
 ``git``, ``svn``, or via a pre-packaged archive. We recommend git or svn, as it
-is easier to keep your installation up to date.
+is easier to keep your installation up to date with these tools.
 
 
 .. _getting-mathjax-git:
@@ -33,9 +33,11 @@ Whenever you want to update MathJax, you can now use
 .. code-block:: sh
 
     cd mathjax
-    git status
+    git remote show origin
 
-to check if there are updates to MathJax. If MathJax needs updating, use
+to check if there are updates to MathJax (this will print several
+lines of data, but the last line should tell you if your copy is up to
+date or out of date). If MathJax needs updating, use
 
 .. code-block:: sh
 
@@ -67,25 +69,24 @@ Obtaining MathJax via SVN
 =========================
 
 If you are more comfortable with the `subversion
-<http://subversion.apache.org/>`_  source control system, you may want to use
-our svn mirror. If you want to get the latest svn revision, use the commands
+<http://subversion.apache.org/>`_ source control system, you may want
+to use GitHub's ``svn`` service to obtain MathJax.  If you want to get the
+latest revision using ``svn``, use the commands
 
 .. code-block:: sh
 
-    svn co http://mathjax.svn.sourceforge.net/svnroot/mathjax/trunk/mathjax mathjax
+    svn checkout http://svn.github.com/mathjax/MathJax.git mathjax
     cd mathjax
     unzip fonts.zip
 
-to obtain and set up a copy of MathJax.  (The `SourceForge development
-page <http://sourceforge.net/projects/mathjax/develop>`_ also shows
-how to do this.)
+to obtain and set up a copy of MathJax.
 
 Whenever you want to update MathJax, you can now use
 
 .. code-block:: sh
 
     cd mathjax
-    svn status
+    svn status -u
 
 to check if there are updates to MathJax.  If MathJax needs updating,
 use
@@ -108,18 +109,31 @@ available.
 This gets you the current development copy of MathJax, which is the
 "bleeding-edge" version that contains all the latest changes to
 MathJax.  At times, however, these may be less stable than the
-"release" version.  If you prefer to use the most stable version (that
-may not include all the latest patches and features), use
+"release" version.  If you prefer to use one of the tagged releases
+instead, then either use ``git`` as described above, or one of the
+archive files as described below.  You can use
 
 .. code-block:: sh
 
-    svn co http://mathjax.svn.sourceforge.net/svnroot/mathjax/tags/mathjax-1.0.1 mathajx
-    cd mathjax
-    unzip fonts.zip
+    svn checkout http://svn.github.com/mathjax/MathJax.git@nnn mathjax
 
-to obtain the version 1.0.1 release.  When you wish to update to a new
-release, you will need to check out a new copy of MathJax with the new
-release number.
+to check out revision number `nnn`, but it is not easy to tell what
+revision number is associated with a particular release.  GitHub's
+``svn`` service doesn't appear to allow you to sepecify a particular
+tagged version.
+
+.. If you prefer to use the most stable version (that
+   may not include all the latest patches and features), use
+
+.. .. code-block:: sh
+
+   svn co http://mathjax.svn.sourceforge.net/svnroot/mathjax/tags/mathjax-1.0.1 mathajx
+   cd mathjax
+   unzip fonts.zip
+
+.. to obtain the version 1.0.1 release.  When you wish to update to a new
+   release, you will need to check out a new copy of MathJax with the new
+   release number.
 
 
 .. _getting-mathjax-zip:
@@ -132,8 +146,8 @@ Release versions of MathJax are available in archive files from the
 `GitHub downloads <http://github.com/mathjax/mathjax/>`_ (click the big download
 button on the right), where you can download the archives that you need. 
 
-You should download the ``MathJax-v1.0.1.zip`` file, then simply unzip
-it. Once the MathJax directory is unpacked, you should move it to the
+You should download the ``MathJax-v1.1.zip`` file, then simply unzip
+it.  Once the MathJax directory is unpacked, you should move it to the
 desired location on your server (or your hard disk, if you are using
 it locally rather then through a web server).  One natural location is
 to put it at the top level of your web server's hierarchy.  That would

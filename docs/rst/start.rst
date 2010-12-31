@@ -27,13 +27,13 @@ Obtaining and Installing MathJax
 ================================
 
 The easiest way to set up MathJax is to obtain the
-``MathJax-v1.0.1.zip`` archive from the `MathJax download page
+``MathJax-v1.1.zip`` archive from the `MathJax download page
 <http://www.mathjax.org/download/>`_.  This includes both the MathJax code
-and the MathJax webfonts, so this is the only file you need.  (This is
+and the MathJax webfonts, so it is the only file you need.  (This is
 different from the beta releases, which had the fonts separate from
 the rest of the code).
 
-Unpack the ``MathJax-v1.0.1.zip`` archive and place the
+Unpack the ``MathJax-v1.1.zip`` archive and place the
 resulting MathJax folder onto your web server at a convenient
 location where you can include it into your web pages.  For example,
 making ``MathJax`` a top-level directory on your server would be
@@ -41,12 +41,13 @@ one natural way to do this.  That would let you refer to the main
 MathJax file via the URL ``/MathJax/MathJax.js`` from within any page
 on your server.
 
-Note: While this is the easiest way to set up MathJax initially, there is a
-better way to do it if you want to be able to keep your copy of MathJax
-up-to-date easily. That uses the `Git <http://git-scm.com/>`_ version control
-system, and is described in the :ref:`Installing MathJax <getting-mathjax-git>`
-document. If you prefer using `Subversion <http://subversion.apache.org/>`_, we
-also maintain an SVN mirror (see :ref:`Installing MathJax via SVN
+Note: While this is the easiest way to set up MathJax initially, there
+is a better way to do it if you want to be able to keep your copy of
+MathJax up-to-date easily. That uses the `Git <http://git-scm.com/>`_
+version control system, and is described in the :ref:`Installing
+MathJax <getting-mathjax-git>` document. If you prefer using
+`Subversion <http://subversion.apache.org/>`_, you can also use that
+to get a copy of MathJax (see :ref:`Installing MathJax via SVN
 <getting-mathjax-svn>`).
 
 Once you have MathJax set up on your server, you can test it using the
