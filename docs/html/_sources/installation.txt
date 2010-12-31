@@ -119,16 +119,25 @@ Obtaining MathJax via an archive
 
 Release versions of MathJax are available in archive files from the
 `MathJax download page <http://www.mathjax.org/download/>`_ or the
-`GitHub downloads <http://github.com/mathjax/mathjax/>`_ (click the big download
-button on the right), where you can download the archives that you need. 
+`GitHub downloads <http://github.com/mathjax/mathjax/>`_ (click the
+big download button on the right), where you can download the archive
+that you need.
 
-You should download the ``MathJax-v1.1.zip`` file, then simply unzip
+You should download the v1.1 archive (which will get you a file with a
+name like ``mathjax-MathJax-v1.1-X-XXXXXXXX.zip``, where the X's are
+some sequence of random-looking letters and numbers), then simply unzip
 it.  Once the MathJax directory is unpacked, you should move it to the
 desired location on your server (or your hard disk, if you are using
 it locally rather then through a web server).  One natural location is
 to put it at the top level of your web server's hierarchy.  That would
 let you refer to the main MathJax file as ``/MathJax/MathJax.js`` from
 within any page on your server.
+
+From the `MathJax GitHub download link
+<http://github.com/mathjax/mathjax/>`_ (the big download button at the
+right), you can also select the ``Download .tar.gz`` or ``Download
+.zip`` buttons to get a copy of the current "bleeding-edge" version of
+MathJax that contains all the latest changes and bug-fixes.
 
 
 Testing your installation
