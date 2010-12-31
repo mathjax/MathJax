@@ -58,11 +58,11 @@ is easier to keep your installation up to date with these tools.</p>
 <span id="getting-mathjax-git"></span><h2>Obtaining MathJax via Git<a class="headerlink" href="#obtaining-mathjax-via-git" title="Permalink to this headline">¶</a></h2>
 <p>The easiest way to get MathJax and keep it up to date is to use the <a class="reference external" href="http://git-scm.com/">Git</a> version control system to access our <a class="reference external" href="http://github.com/mathjax/mathjax">GitHub repository</a>. Use the commands</p>
 <div class="highlight-sh"><div class="highlight"><pre>git clone git://github.com/mathjax/MathJax.git mathjax
-<span class="nb">cd </span>mathjax
-unzip fonts.zip
 </pre></div>
 </div>
-<p>to obtain and set up a copy of MathJax.</p>
+<p>to obtain and set up a copy of MathJax.  Note that there is no longer
+a <tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file, and that the <tt class="docutils literal"><span class="pre">fonts</span></tt> directory is now part of
+the repository itself.</p>
 <p>Whenever you want to update MathJax, you can now use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>mathjax
 git remote show origin
@@ -73,24 +73,19 @@ lines of data, but the last line should tell you if your copy is up to
 date or out of date). If MathJax needs updating, use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>mathjax
 git pull origin
-<span class="c"># if fonts.zip is updated, do the following as well:</span>
-rm -rf fonts
-unzip fonts.zip
 </pre></div>
 </div>
-<p>to udpate your copy of MathJax to the current release version. If the
-<tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file has been updated, you will need to remove the old fonts
-directory and unpack the new one bring your installation up to date. If you keep
-MathJax updated in this way, you will be sure that you have the latest bug fixes
-and new features as they become available.</p>
+<p>to udpate your copy of MathJax to the current release version.  If you
+keep MathJax updated in this way, you will be sure that you have the
+latest bug fixes and new features as they become available.</p>
 <p>This gets you the current development copy of MathJax, which is the
-&#8220;bleeding-edge&#8221; version that contains all the latest changes to MathJax. At
-times, however, these may be less stable than the &#8220;release&#8221; version. If you
-prefer to use the most stable version (that may not include all the latest
-patches and features), use <tt class="docutils literal"><span class="pre">git</span> <span class="pre">tag</span> <span class="pre">-l</span></tt> to see all versions and use <tt class="docutils literal"><span class="pre">git</span>
-<span class="pre">checkout</span> <span class="pre">&lt;tag_name&gt;</span></tt> to checkout that version of MathJax. When you want to
-upgrade to a new release, you will need to repeat this for the latest release
-tag.</p>
+&#8220;bleeding-edge&#8221; version that contains all the latest changes to
+MathJax. At times, however, these may be less stable than the
+&#8220;release&#8221; version. If you prefer to use the most stable version (that
+may not include all the latest patches and features), use <tt class="docutils literal"><span class="pre">git</span> <span class="pre">tag</span>
+<span class="pre">-l</span></tt> to see all versions and use <tt class="docutils literal"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">&lt;tag_name&gt;</span></tt> to
+checkout that version of MathJax. When you want to upgrade to a new
+release, you will need to repeat this for the latest release tag.</p>
 </div>
 <div class="section" id="obtaining-mathjax-via-svn">
 <span id="getting-mathjax-svn"></span><h2>Obtaining MathJax via SVN<a class="headerlink" href="#obtaining-mathjax-via-svn" title="Permalink to this headline">¶</a></h2>
@@ -98,11 +93,11 @@ tag.</p>
 to use GitHub&#8217;s <tt class="docutils literal"><span class="pre">svn</span></tt> service to obtain MathJax.  If you want to get the
 latest revision using <tt class="docutils literal"><span class="pre">svn</span></tt>, use the commands</p>
 <div class="highlight-sh"><div class="highlight"><pre>svn checkout http://svn.github.com/mathjax/MathJax.git mathjax
-<span class="nb">cd </span>mathjax
-unzip fonts.zip
 </pre></div>
 </div>
-<p>to obtain and set up a copy of MathJax.</p>
+<p>to obtain and set up a copy of MathJax.  Note that there is no longer
+a <tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file, and that the <tt class="docutils literal"><span class="pre">fonts</span></tt> directory is now part of
+the repository itself.</p>
 <p>Whenever you want to update MathJax, you can now use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>mathjax
 svn status -u
@@ -112,17 +107,11 @@ svn status -u
 use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>mathjax
 svn update
-<span class="c">#  if fonts.zip is updated, do the following as well:</span>
-rm -rf fonts
-unzip fonts.zip
 </pre></div>
 </div>
-<p>to udpate your copy of MathJax to the current release version.  If the
-<tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file has been updated, you will need to remove the old
-fonts directory and unpack the new one bring your installation up to
-date.  If you keep MathJax updated in this way, you will be sure that
-you have the latest bug fixes and new features as they become
-available.</p>
+<p>to udpate your copy of MathJax to the current release version.  If you
+keep MathJax updated in this way, you will be sure that you have the
+latest bug fixes and new features as they become available.</p>
 <p>This gets you the current development copy of MathJax, which is the
 &#8220;bleeding-edge&#8221; version that contains all the latest changes to
 MathJax.  At times, however, these may be less stable than the
@@ -133,7 +122,7 @@ archive files as described below.  You can use</p>
 </pre></div>
 </div>
 <p>to check out revision number <cite>nnn</cite>, but it is not easy to tell what
-revision number is associated with a particular release.  GitHub&#8217;s
+svn revision number is associated with a particular release.  GitHub&#8217;s
 <tt class="docutils literal"><span class="pre">svn</span></tt> service doesn&#8217;t appear to allow you to sepecify a particular
 tagged version.</p>
 </div>
