@@ -226,6 +226,10 @@
 	  "vertical-align": 0, "line-height": "normal",
 	  "text-decoration": "none"
 	},
+
+        ".MathJax nobr": {
+          "white-space": "no-wrap"
+        },
         
         ".MathJax_Processing": {
           visibility: "hidden", position:"fixed",
