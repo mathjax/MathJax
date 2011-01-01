@@ -1,5 +1,5 @@
 /*
- *  /MathJax/extensions/TeX/AMSsymbols.js
+ *  /MathJax/Code/Git/dpvc-MathJax/extensions/TeX/AMSsymbols.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *
