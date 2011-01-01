@@ -24,7 +24,7 @@
 
 MathJax.OutputJax.NativeMML = MathJax.OutputJax({
   id: "NativeMML",
-  version: "1.0.2",
+  version: "1.0.3",
   directory: MathJax.OutputJax.directory + "/NativeMML",
   extensionDir: MathJax.OutputJax.extensionDir + "/NativeMML",
   
@@ -41,7 +41,9 @@ MathJax.OutputJax.NativeMML = MathJax.OutputJax({
     }
   }
 });
-MathJax.OutputJax.NativeMML.Register("jax/mml");
+
+if (!MathJax.Hub.config.delayJaxRegistration)
+  MathJax.OutputJax.NativeMML.Register("jax/mml");
 
 (function (browser) {
   if (browser.isMSIE) {

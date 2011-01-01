@@ -47,7 +47,7 @@
  */
 
 (function (HUB) {
-  var VERSION = "1.0";
+  var VERSION = "1.0.1";
   
   var CONFIG = MathJax.Hub.Insert({
     prefer: {MSIE:"MML", Firefox:"MML", Opera:"HTML", other:"HTML"}
@@ -76,8 +76,13 @@
                 CONFIG.prefer);
 
   if (canUseHTML || canUseMML) {
-    if (canUseMML && (prefer === "MML" || !canUseHTML))
-      {HUB.config.jax.unshift("output/NativeMML")} else {HUB.config.jax.unshift("output/HTML-CSS")}
+    if (canUseMML && (prefer === "MML" || !canUseHTML)) {
+      if (MathJax.OutputJax.NativeMML) {MathJax.OutputJax.NativeMML.Register("jax/mml")}
+        else {HUB.config.jax.unshift("output/NativeMML")}
+    } else {
+      if (MathJax.OutputJax["HTML-CSS"]) {MathJax.OutputJax["HTML-CSS"].Register("jax/mml")}
+        else {HUB.config.jax.unshift("output/HTML-CSS")}
+    }
   } else {
     HUB.PreProcess.disabled = true;
     HUB.prepareScripts.disabled = true;
