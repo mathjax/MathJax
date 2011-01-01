@@ -1473,6 +1473,9 @@ MathJax.Hub.Startup = {
   //
   Config: function () {
     this.queue.Push(["Post",this.signal,"Begin Config"]);
+    //
+    //  Check for user cookie configuration
+    //
     var user = MathJax.HTML.Cookie.Get("user");
     if (user.URL || user.Config) {
       if (confirm(
@@ -1484,24 +1487,38 @@ MathJax.Hub.Startup = {
         if (user.Config) {MathJax.userConfig = new Function(user.Config)}
       } else {MathJax.HTML.Cookie.Set("user",{})}
     }
+    //
+    //  Run the configuration script, if any
+    //  Then load the config files specified in the parameters
+    //  If neither of the above, load the default configuration file
+    //
+    var loadDefault = true;
     if (this.script.match(/\S/)) {
       this.queue.Push(this.script+";\n1;");
-    } else if (this.params && this.params.config) {
+      loadDefault = false;
+    }
+    if (this.params && this.params.config) {
       var files = this.params.config.split(/,/);
       for (var i = 0, m = files.length; i < m; i++) {
         if (!files[i].match(/\.js$/)) {files[i] += ".js"}
         this.queue.Push(["Require",MathJax.Ajax,this.URL("config",files[i])]);
       }
-    } else {
+      loadDefault = false;
+    }
+    if (loadDefault) {
       this.queue.Push(["Require",MathJax.Ajax,this.URL("config","MathJax.js")]);
     }
-    return this.queue.Push(
+    //
+    //  Delay the startup, if requested,
+    //  then load the files in the configuration's config array
+    //
+    this.queue.Push(
       [function (config,onload) {
         if (config.delayStartupUntil.isCallback) {return config.delayStartupUntil}
         if (config.delayStartupUntil === "onload") {return onload}
         return function () {};
       }, MathJax.Hub.config, this.onload],
-      // use a function here since MathJax.Hub.config.config might change in MathJax.js above
+      // use a function here since MathJax.Hub.config.config might change in files loaded above
       [function (THIS) {return THIS.loadArray(MathJax.Hub.config.config,"config",null,true)},this],
       ["Post",this.signal,"End Config"]
     );
