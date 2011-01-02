@@ -228,7 +228,7 @@
 	},
 
         ".MathJax nobr": {
-          "white-space": "no-wrap"
+          "white-space": "nowrap"
         },
         
         ".MathJax_Processing": {
