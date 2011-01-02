@@ -20,6 +20,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var VERSION = "1.0";
   
