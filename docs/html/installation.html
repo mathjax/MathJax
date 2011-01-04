@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installing and Testing MathJax &mdash; MathJax v1.0 documentation</title>
+    <title>Installing and Testing MathJax &mdash; MathJax v1.1 documentation</title>
     <link rel="stylesheet" href="_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.0',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="MathJax v1.0 documentation" href="index.html" />
+    <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
     <link rel="next" title="Loading and Configuring MathJax" href="configuration.html" />
     <link rel="prev" title="Getting Started" href="start.html" /> 
   </head>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="start.html" title="Getting Started"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">MathJax v1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -53,102 +53,99 @@
 or other local media. To use MathJax in either way, you will need to obtain a
 copy of MathJax and its font package. There are three ways to do this: via
 <tt class="docutils literal"><span class="pre">git</span></tt>, <tt class="docutils literal"><span class="pre">svn</span></tt>, or via a pre-packaged archive. We recommend git or svn, as it
-is easier to keep your installation up to date.</p>
+is easier to keep your installation up to date with these tools.</p>
 <div class="section" id="obtaining-mathjax-via-git">
 <span id="getting-mathjax-git"></span><h2>Obtaining MathJax via Git<a class="headerlink" href="#obtaining-mathjax-via-git" title="Permalink to this headline">¶</a></h2>
 <p>The easiest way to get MathJax and keep it up to date is to use the <a class="reference external" href="http://git-scm.com/">Git</a> version control system to access our <a class="reference external" href="http://github.com/mathjax/mathjax">GitHub repository</a>. Use the commands</p>
 <div class="highlight-sh"><div class="highlight"><pre>git clone git://github.com/mathjax/MathJax.git mathjax
-<span class="nb">cd </span>mathjax
-unzip fonts.zip
 </pre></div>
 </div>
-<p>to obtain and set up a copy of MathJax.</p>
+<p>to obtain and set up a copy of MathJax.  Note that there is no longer
+a <tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file, and that the <tt class="docutils literal"><span class="pre">fonts</span></tt> directory is now part of
+the repository itself.</p>
 <p>Whenever you want to update MathJax, you can now use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>mathjax
-git status
+git remote show origin
 </pre></div>
 </div>
-<p>to check if there are updates to MathJax. If MathJax needs updating, use</p>
+<p>to check if there are updates to MathJax (this will print several
+lines of data, but the last line should tell you if your copy is up to
+date or out of date). If MathJax needs updating, use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>mathjax
 git pull origin
-<span class="c"># if fonts.zip is updated, do the following as well:</span>
-rm -rf fonts
-unzip fonts.zip
 </pre></div>
 </div>
-<p>to udpate your copy of MathJax to the current release version. If the
-<tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file has been updated, you will need to remove the old fonts
-directory and unpack the new one bring your installation up to date. If you keep
-MathJax updated in this way, you will be sure that you have the latest bug fixes
-and new features as they become available.</p>
+<p>to udpate your copy of MathJax to the current release version.  If you
+keep MathJax updated in this way, you will be sure that you have the
+latest bug fixes and new features as they become available.</p>
 <p>This gets you the current development copy of MathJax, which is the
-&#8220;bleeding-edge&#8221; version that contains all the latest changes to MathJax. At
-times, however, these may be less stable than the &#8220;release&#8221; version. If you
-prefer to use the most stable version (that may not include all the latest
-patches and features), use <tt class="docutils literal"><span class="pre">git</span> <span class="pre">tag</span> <span class="pre">-l</span></tt> to see all versions and use <tt class="docutils literal"><span class="pre">git</span>
-<span class="pre">checkout</span> <span class="pre">&lt;tag_name&gt;</span></tt> to checkout that version of MathJax. When you want to
-upgrade to a new release, you will need to repeat this for the latest release
-tag.</p>
+&#8220;bleeding-edge&#8221; version that contains all the latest changes to
+MathJax. At times, however, these may be less stable than the
+&#8220;release&#8221; version. If you prefer to use the most stable version (that
+may not include all the latest patches and features), use <tt class="docutils literal"><span class="pre">git</span> <span class="pre">tag</span>
+<span class="pre">-l</span></tt> to see all versions and use <tt class="docutils literal"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">&lt;tag_name&gt;</span></tt> to
+checkout that version of MathJax. When you want to upgrade to a new
+release, you will need to repeat this for the latest release tag.</p>
 </div>
 <div class="section" id="obtaining-mathjax-via-svn">
 <span id="getting-mathjax-svn"></span><h2>Obtaining MathJax via SVN<a class="headerlink" href="#obtaining-mathjax-via-svn" title="Permalink to this headline">¶</a></h2>
-<p>If you are more comfortable with the <a class="reference external" href="http://subversion.apache.org/">subversion</a>  source control system, you may want to use
-our svn mirror. If you want to get the latest svn revision, use the commands</p>
-<div class="highlight-sh"><div class="highlight"><pre>svn co http://mathjax.svn.sourceforge.net/svnroot/mathjax/trunk/mathjax mathjax
-<span class="nb">cd </span>mathjax
-unzip fonts.zip
+<p>If you are more comfortable with the <a class="reference external" href="http://subversion.apache.org/">subversion</a> source control system, you may want
+to use GitHub&#8217;s <tt class="docutils literal"><span class="pre">svn</span></tt> service to obtain MathJax.  If you want to get the
+latest revision using <tt class="docutils literal"><span class="pre">svn</span></tt>, use the commands</p>
+<div class="highlight-sh"><div class="highlight"><pre>svn checkout http://svn.github.com/mathjax/MathJax.git mathjax
 </pre></div>
 </div>
-<p>to obtain and set up a copy of MathJax.  (The <a class="reference external" href="http://sourceforge.net/projects/mathjax/develop">SourceForge development
-page</a> also shows
-how to do this.)</p>
+<p>to obtain and set up a copy of MathJax.  Note that there is no longer
+a <tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file, and that the <tt class="docutils literal"><span class="pre">fonts</span></tt> directory is now part of
+the repository itself.</p>
 <p>Whenever you want to update MathJax, you can now use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>mathjax
-svn status
+svn status -u
 </pre></div>
 </div>
 <p>to check if there are updates to MathJax.  If MathJax needs updating,
 use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>mathjax
 svn update
-<span class="c">#  if fonts.zip is updated, do the following as well:</span>
-rm -rf fonts
-unzip fonts.zip
 </pre></div>
 </div>
-<p>to udpate your copy of MathJax to the current release version.  If the
-<tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file has been updated, you will need to remove the old
-fonts directory and unpack the new one bring your installation up to
-date.  If you keep MathJax updated in this way, you will be sure that
-you have the latest bug fixes and new features as they become
-available.</p>
+<p>to udpate your copy of MathJax to the current release version.  If you
+keep MathJax updated in this way, you will be sure that you have the
+latest bug fixes and new features as they become available.</p>
 <p>This gets you the current development copy of MathJax, which is the
 &#8220;bleeding-edge&#8221; version that contains all the latest changes to
 MathJax.  At times, however, these may be less stable than the
-&#8220;release&#8221; version.  If you prefer to use the most stable version (that
-may not include all the latest patches and features), use</p>
-<div class="highlight-sh"><div class="highlight"><pre>svn co http://mathjax.svn.sourceforge.net/svnroot/mathjax/tags/mathjax-1.0.1 mathajx
-<span class="nb">cd </span>mathjax
-unzip fonts.zip
+&#8220;release&#8221; version.  If you prefer to use one of the tagged releases
+instead, then either use <tt class="docutils literal"><span class="pre">git</span></tt> as described above, or one of the
+archive files as described below.  You can use</p>
+<div class="highlight-sh"><div class="highlight"><pre>svn checkout http://svn.github.com/mathjax/MathJax.git@nnn mathjax
 </pre></div>
 </div>
-<p>to obtain the version 1.0.1 release.  When you wish to update to a new
-release, you will need to check out a new copy of MathJax with the new
-release number.</p>
+<p>to check out revision number <cite>nnn</cite>, but it is not easy to tell what
+svn revision number is associated with a particular release.  GitHub&#8217;s
+<tt class="docutils literal"><span class="pre">svn</span></tt> service doesn&#8217;t appear to allow you to sepecify a particular
+tagged version.</p>
 </div>
 <div class="section" id="obtaining-mathjax-via-an-archive">
 <span id="getting-mathjax-zip"></span><h2>Obtaining MathJax via an archive<a class="headerlink" href="#obtaining-mathjax-via-an-archive" title="Permalink to this headline">¶</a></h2>
 <p>Release versions of MathJax are available in archive files from the
 <a class="reference external" href="http://www.mathjax.org/download/">MathJax download page</a> or the
-<a class="reference external" href="http://github.com/mathjax/mathjax/">GitHub downloads</a> (click the big download
-button on the right), where you can download the archives that you need.</p>
-<p>You should download the <tt class="docutils literal"><span class="pre">MathJax-v1.0.1.zip</span></tt> file, then simply unzip
-it. Once the MathJax directory is unpacked, you should move it to the
+<a class="reference external" href="http://github.com/mathjax/mathjax/">GitHub downloads</a> (click the
+big download button on the right), where you can download the archive
+that you need.</p>
+<p>You should download the v1.1 archive (which will get you a file with a
+name like <tt class="docutils literal"><span class="pre">mathjax-MathJax-v1.1-X-XXXXXXXX.zip</span></tt>, where the X&#8217;s are
+some sequence of random-looking letters and numbers), then simply unzip
+it.  Once the MathJax directory is unpacked, you should move it to the
 desired location on your server (or your hard disk, if you are using
 it locally rather then through a web server).  One natural location is
 to put it at the top level of your web server&#8217;s hierarchy.  That would
 let you refer to the main MathJax file as <tt class="docutils literal"><span class="pre">/MathJax/MathJax.js</span></tt> from
 within any page on your server.</p>
+<p>From the <a class="reference external" href="http://github.com/mathjax/mathjax/">MathJax GitHub download link</a> (the big download button at the
+right), you can also select the <tt class="docutils literal"><span class="pre">Download</span> <span class="pre">.tar.gz</span></tt> or <tt class="docutils literal"><span class="pre">Download</span>
+<span class="pre">.zip</span></tt> buttons to get a copy of the current &#8220;bleeding-edge&#8221; version of
+MathJax that contains all the latest changes and bug-fixes.</p>
 </div>
 <div class="section" id="testing-your-installation">
 <h2>Testing your installation<a class="headerlink" href="#testing-your-installation" title="Permalink to this headline">¶</a></h2>
@@ -286,7 +283,7 @@ for more details.</p>
         <li class="right" >
           <a href="start.html" title="Getting Started"
              >previous</a> |</li>
-        <li><a href="index.html">MathJax v1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
