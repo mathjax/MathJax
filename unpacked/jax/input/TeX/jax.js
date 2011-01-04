@@ -1408,6 +1408,8 @@
       var env = this.GetArgument(name);
       if (env.match(/[^a-z*]/i)) {TEX.Error('Invalid environment name "'+env+'"')}
       if (!TEXDEF.environment[env]) {TEX.Error('Unknown environment "'+env+'"')}
+      if (++this.macroCount > TEX.config.MAXMACROS)
+        {TEX.Error("MathJax maximum substitution count exceeded; is there a recursive latex environment?")}
       var cmd = TEXDEF.environment[env]; if (!(cmd instanceof Array)) {cmd = [cmd]}
       var mml = STACKITEM.begin().With({name: env, end: cmd[1], parse:this});
       if (cmd[0] && this[cmd[0]]) {mml = this[cmd[0]].apply(this,[mml].concat(cmd.slice(2)))}
