@@ -1676,8 +1676,9 @@ MathJax.Hub.Startup = {
         if (this.require) {
           var require = this.require; if (!(require instanceof Array)) {require = [require]}
           for (var i = 0, m = require.length; i < m; i++) {queue.Push(AJAX.Require(require[i]))}
-          queue.Push(["loadArray",MathJax.Hub.Startup,this.config.require,"config"]);
         }
+        // Config may set the extensions, so use a function to delay making the reference
+        queue.Push([function (config,id) {return MathJax.Hub.Startup.loadArray(config.extensions,"extensions/"+id)},this.config||{},this.id]);
         queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Startup"]);
         queue.Push(["Startup",this]);
         queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Ready"]);
