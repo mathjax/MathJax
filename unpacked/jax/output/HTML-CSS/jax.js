@@ -1764,13 +1764,13 @@
 	var scale = this.HTMLgetScale();
 	var t = HTMLCSS.TeX.rule_thickness * scale, p,q, H, W;
 	if (this.Get("displaystyle")) {p = HTMLCSS.TeX.x_height * scale} else {p = t}
-	q = Math.max(t + p/4,2*HTMLCSS.TeX.min_rule_thickness/this.em); // force to be at least 2px
+	q = Math.max(t + p/4,1.5*HTMLCSS.TeX.min_rule_thickness/this.em); // force to be at least 1px
 	H = base.bbox.h + base.bbox.d + q + t;
 	W = base.bbox.w;
 	HTMLCSS.createDelimiter(surd,0x221A,H,scale); HTMLCSS.Measured(surd);
 	var x = 0;
 	if (surd.isMultiChar || (HTMLCSS.AdjustSurd && HTMLCSS.imgFonts)) {surd.bbox.w *= .95}
-	if (surd.bbox.h + surd.bbox.d > H) {q += ((surd.bbox.h+surd.bbox.d) - (H-t))/2}
+	if (surd.bbox.h + surd.bbox.d > H) {q = ((surd.bbox.h+surd.bbox.d) - (H-t))/2}
 	var ruleC = HTMLCSS.FONTDATA.DELIMITERS[HTMLCSS.FONTDATA.RULECHAR];
 	if (!ruleC || W < ruleC.HW[0][0]*scale || scale < .75) {
 	  HTMLCSS.createRule(rule,t,0,W);
@@ -1782,7 +1782,6 @@
 	HTMLCSS.placeBox(surd,x,H-surd.bbox.h);
 	HTMLCSS.placeBox(rule,x+surd.bbox.w,H-rule.bbox.h+HTMLCSS.rfuzz);
 	HTMLCSS.placeBox(base,x+surd.bbox.w,0);
-	span.bbox.h += t;
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
 	return span;
