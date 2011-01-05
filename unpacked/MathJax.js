@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.8";
+MathJax.version = "1.0.9";
 
 /**********************************************************/
 
@@ -662,6 +662,16 @@ MathJax.version = "1.0.8";
     },
     
     //
+    //  Used when files are combined in a preloading configuration file
+    //
+    Preloading: function () {
+      for (var i = 0, m = arguments.length; i < m; i++) {
+        var file = this.fileURL(arguments[i]);
+        if (!this.loading[file]) {this.loading[file] = {preloaded: true}}
+      }
+    },
+    
+    //
     //  Code used to load the various types of files
     //  (JS for JavaScript, CSS for style sheets)
     //
@@ -799,7 +809,7 @@ MathJax.version = "1.0.8";
     loadComplete: function (file) {
       file = this.fileURL(file);
       var loading = this.loading[file];
-      if (loading) {
+      if (loading && !loading.preloaded) {
         BASE.Message.Clear(loading.message);
         clearTimeout(loading.timeout);
 	if (loading.script) {
@@ -1361,9 +1371,9 @@ MathJax.Hub = {
         if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) continue;
         if (!script.MathJax.elementJax || script.MathJax.state === STATE.UPDATE) {
           this.checkScriptSiblings(script);
-          result = inputJax[type].Translate(script);
+          result = inputJax[type].Process(script);
           if (typeof result === 'function') {
-            if (result.called) continue; // go back and call Translate() again
+            if (result.called) continue; // go back and call Process() again
             this.RestartAfter(result);
           }
           result.Attach(script,inputJax[type]);
@@ -1374,10 +1384,10 @@ MathJax.Hub = {
           throw Error("No output jax registered for "+jax.mimeType);
         }
         jax.outputJax = outputJax[jax.mimeType][0];
-        result = jax.outputJax.Translate(script);
+        result = jax.outputJax.Process(script);
         if (typeof result === 'function') {
           script.MathJax.state = STATE.UPDATE;
-          if (result.called) continue; // go back and call Translate() again
+          if (result.called) continue; // go back and call Process() again
           this.RestartAfter(result);
         }
         script.MathJax.state = STATE.PROCESSED;
@@ -1463,6 +1473,9 @@ MathJax.Hub.Startup = {
   //
   Config: function () {
     this.queue.Push(["Post",this.signal,"Begin Config"]);
+    //
+    //  Check for user cookie configuration
+    //
     var user = MathJax.HTML.Cookie.Get("user");
     if (user.URL || user.Config) {
       if (confirm(
@@ -1474,24 +1487,38 @@ MathJax.Hub.Startup = {
         if (user.Config) {MathJax.userConfig = new Function(user.Config)}
       } else {MathJax.HTML.Cookie.Set("user",{})}
     }
+    //
+    //  Run the configuration script, if any
+    //  Then load the config files specified in the parameters
+    //  If neither of the above, load the default configuration file
+    //
+    var loadDefault = true;
     if (this.script.match(/\S/)) {
       this.queue.Push(this.script+";\n1;");
-    } else if (this.params && this.params.config) {
+      loadDefault = false;
+    }
+    if (this.params && this.params.config) {
       var files = this.params.config.split(/,/);
       for (var i = 0, m = files.length; i < m; i++) {
         if (!files[i].match(/\.js$/)) {files[i] += ".js"}
         this.queue.Push(["Require",MathJax.Ajax,this.URL("config",files[i])]);
       }
-    } else {
+      loadDefault = false;
+    }
+    if (loadDefault) {
       this.queue.Push(["Require",MathJax.Ajax,this.URL("config","MathJax.js")]);
     }
-    return this.queue.Push(
+    //
+    //  Delay the startup, if requested,
+    //  then load the files in the configuration's config array
+    //
+    this.queue.Push(
       [function (config,onload) {
         if (config.delayStartupUntil.isCallback) {return config.delayStartupUntil}
         if (config.delayStartupUntil === "onload") {return onload}
         return function () {};
       }, MathJax.Hub.config, this.onload],
-      // use a function here since MathJax.Hub.config.config might change in MathJax.js above
+      // use a function here since MathJax.Hub.config.config might change in files loaded above
       [function (THIS) {return THIS.loadArray(MathJax.Hub.config.config,"config",null,true)},this],
       ["Post",this.signal,"End Config"]
     );
@@ -1652,11 +1679,12 @@ MathJax.Hub.Startup = {
       cObject.Augment(null,cdef);
       return this;
     },
-    Translate: function (element) {
-      this.constructor.prototype.Translate = this.noTranslate;
-      return AJAX.Require(this.directory+"/"+this.JAXFILE);
+    Process: function (element) {
+      var load = AJAX.Require(this.directory+"/"+this.JAXFILE);
+      if (!load.called) {this.constructor.prototype.Process = function (element) {return load}}
+      return load;
     },
-    noTranslate: function (element) {
+    Translate: function (element) {
       throw Error(this.directory+"/"+this.JAXFILE+" failed to redefine the Translate() method");
     },
     Register: function (mimetype) {},
@@ -1682,6 +1710,7 @@ MathJax.Hub.Startup = {
         queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Startup"]);
         queue.Push(["Startup",this]);
         queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Ready"]);
+        queue.Push([function (THIS) {THIS.Process = THIS.Translate},this.constructor.prototype]);
         return queue.Push(["loadComplete",AJAX,this.directory+"/"+file]);
       }
     }
@@ -1696,9 +1725,7 @@ MathJax.Hub.Startup = {
 
   BASE.InputJax = JAX.Subclass({
     elementJax: "mml",  // the element jax to load for this input jax
-    Translate: function (element) {
-      // Make Translate produce an error message until the true one is loaded
-      this.constructor.prototype.Translate = this.noTranslate;
+    Process: function (element) {
       var queue = CALLBACK.Queue();
       // Load any needed element jax
       var jax = this.elementJax; if (!(jax instanceof Array)) {jax = [jax]}
@@ -1710,7 +1737,8 @@ MathJax.Hub.Startup = {
         queue.Push(AJAX.Require(file));
       }
       // Load the input jax
-      queue.Push(AJAX.Require(this.directory+"/"+this.JAXFILE));
+      var load = queue.Push(AJAX.Require(this.directory+"/"+this.JAXFILE));
+      if (!load.called) {this.constructor.prototype.Process = function () {return load}}
       // Load the associated output jax
       jax = HUB.config.outputJax["jax/"+jax[0]];
       if (jax) {queue.Push(AJAX.Require(jax[0].directory+"/"+this.JAXFILE))}

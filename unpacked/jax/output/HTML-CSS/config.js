@@ -24,7 +24,7 @@
 
 MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   id: "HTML-CSS",
-  version: "1.0.5",
+  version: "1.0.6",
   directory: MathJax.OutputJax.directory + "/HTML-CSS",
   extensionDir: MathJax.OutputJax.extensionDir + "/HTML-CSS",
   autoloadDir: MathJax.OutputJax.directory + "/HTML-CSS/autoload",
@@ -70,7 +70,9 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
     
   }
 });
-MathJax.OutputJax["HTML-CSS"].Register("jax/mml");
+
+if (!MathJax.Hub.config.delayJaxRegistration)
+  {MathJax.OutputJax["HTML-CSS"].Register("jax/mml")}
 
 (function (HUB,HTMLCSS) {
   var CONFIG;

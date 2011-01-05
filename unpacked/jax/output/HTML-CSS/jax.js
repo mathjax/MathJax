@@ -2106,8 +2106,13 @@
     //  but can't call loadComplete within the callback for "mml Jax Ready"
     //  (it would call HTMLCSS's Require routine, asking for the mml jax again)
     //  so wait until after the mml jax has finished processing.
+    //  
+    //  We also need to wait for the onload handler to run, since the loadComplete
+    //  will call Config and Startup, which need to modify the body.
     //
-    setTimeout(MathJax.Callback(["loadComplete",HTMLCSS,"jax.js"]),0);
+    MathJax.Hub.Register.StartupHook("onLoad",function () {
+      setTimeout(MathJax.Callback(["loadComplete",HTMLCSS,"jax.js"]),0);
+    });
   });
 
   //
