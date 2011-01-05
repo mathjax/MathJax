@@ -23,7 +23,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.0";
+  var VERSION = "1.0.1";
   
   var TEX = MathJax.InputJax.TeX;
   var TEXDEF = TEX.Definitions;
@@ -123,6 +123,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       }
       this.string = this.AddArgs(text,this.string.slice(this.i));
       this.i = 0;
+      if (++this.macroCount > TEX.config.MAXMACROS)
+        {TEX.Error("MathJax maximum macro substitution count exceeded; is there a recursive macro call?")}
     },
     
     /*

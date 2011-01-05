@@ -915,7 +915,7 @@
 
   var PARSE = MathJax.Object.Subclass({
     Init: function (string,env) {
-      this.string = string; this.i = 0;
+      this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       this.stack = TEX.Stack(ENV);
       this.Parse();
@@ -1357,6 +1357,8 @@
       }
       this.string = this.AddArgs(macro,this.string.slice(this.i));
       this.i = 0;
+      if (++this.macroCount > TEX.config.MAXMACROS)
+        {TEX.Error("MathJax maximum macro substitution count exceeded; is there a recursive macro call?")}
     },
     
     Matrix: function (name,open,close,align,spacing,vspacing,style) {
@@ -1406,6 +1408,8 @@
       var env = this.GetArgument(name);
       if (env.match(/[^a-z*]/i)) {TEX.Error('Invalid environment name "'+env+'"')}
       if (!TEXDEF.environment[env]) {TEX.Error('Unknown environment "'+env+'"')}
+      if (++this.macroCount > TEX.config.MAXMACROS)
+        {TEX.Error("MathJax maximum substitution count exceeded; is there a recursive latex environment?")}
       var cmd = TEXDEF.environment[env]; if (!(cmd instanceof Array)) {cmd = [cmd]}
       var mml = STACKITEM.begin().With({name: env, end: cmd[1], parse:this});
       if (cmd[0] && this[cmd[0]]) {mml = this[cmd[0]].apply(this,[mml].concat(cmd.slice(2)))}
@@ -1679,6 +1683,8 @@
      */
     AddArgs: function (s1,s2) {
       if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {s1 += ' '}
+      if (s1.length + s2.length > TEX.config.MAXBUFFER)
+        {TEX.Error("MathJax internal buffer size exceeded; is there a recursive macro call?")}
       return s1+s2;
     }
     
@@ -1688,6 +1694,11 @@
 
   TEX.Augment({
     Stack: STACK, Parse: PARSE, Definitions: TEXDEF, Startup: STARTUP,
+    
+    config: {
+      MAXMACROS: 10000,    // maximum number of macro substitutions per equation
+      MAXBUFFER: 5*1024    // maximum size of TeX string to process
+    },
     
     Translate: function (script) {
       var mml, math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
