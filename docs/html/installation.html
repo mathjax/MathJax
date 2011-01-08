@@ -223,6 +223,26 @@ download the fonts from this site.  See the open font library
 discussion of <a class="reference external" href="http://openfontlibrary.org/wiki/Web_Font_linking_and_Cross-Origin_Resource_Sharing">web-font linking</a>
 for more details.</p>
 </div>
+<div class="section" id="forefox-and-local-fonts">
+<span id="ff-local-fonts"></span><h2>Forefox and Local Fonts<a class="headerlink" href="#forefox-and-local-fonts" title="Permalink to this headline">¶</a></h2>
+<p>Firefox&#8217;s same-origin security policy affects its ability to load
+web-based fonts, as described above.  This has implications not only
+to cross-domain loading of MathJax, but also to using MathJax locally
+from your hard disk.  Firefox&#8217;s interpretation of the same-origin
+policy for local files is that the &#8220;same domain&#8221; for a page is the
+directory where that page exists, or any of its subdirectories.  So if
+you use MathJax in a page with a <tt class="docutils literal"><span class="pre">file://</span></tt> URL, and if MathJax is
+loaded from a diretory other than the one containing the original
+page, then MathJax will not be able to access the web-based fonts in
+Firefox.  In that case, MathJax will fall back on image fonts to
+display the mathematics.</p>
+<p>In order for Firefox to be able to load the fonts properly for a local
+file, your MathJax installation must be in a subdirectory of the one
+containing the page that uses MathJax.  This is an unfortunate
+restriction, but it is a limitiation imposed by Firefox&#8217;s security
+model that MathJax can not circumvent.  Currently, this is not a
+problem for other browsers.</p>
+</div>
 </div>
 
 
@@ -239,6 +259,7 @@ for more details.</p>
 <li><a class="reference internal" href="#obtaining-mathjax-via-an-archive">Obtaining MathJax via an archive</a></li>
 <li><a class="reference internal" href="#testing-your-installation">Testing your installation</a></li>
 <li><a class="reference internal" href="#notes-about-shared-installations">Notes about shared installations</a></li>
+<li><a class="reference internal" href="#forefox-and-local-fonts">Forefox and Local Fonts</a></li>
 </ul>
 </li>
 </ul>

@@ -229,3 +229,26 @@ discussion of `web-font linking
 for more details.
 
 
+.. _ff-local-fonts:
+
+Forefox and Local Fonts
+=======================
+
+Firefox's same-origin security policy affects its ability to load
+web-based fonts, as described above.  This has implications not only
+to cross-domain loading of MathJax, but also to using MathJax locally
+from your hard disk.  Firefox's interpretation of the same-origin
+policy for local files is that the "same domain" for a page is the
+directory where that page exists, or any of its subdirectories.  So if
+you use MathJax in a page with a ``file://`` URL, and if MathJax is
+loaded from a diretory other than the one containing the original
+page, then MathJax will not be able to access the web-based fonts in
+Firefox.  In that case, MathJax will fall back on image fonts to
+display the mathematics.
+
+In order for Firefox to be able to load the fonts properly for a local
+file, your MathJax installation must be in a subdirectory of the one
+containing the page that uses MathJax.  This is an unfortunate
+restriction, but it is a limitiation imposed by Firefox's security
+model that MathJax can not circumvent.  Currently, this is not a
+problem for other browsers.
