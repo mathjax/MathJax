@@ -2173,9 +2173,10 @@
       var v3p1 = browser.versionAtLeast("3.1");
       browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
       var android = (navigator.appVersion.match(/ Android (\d+)\.(\d+)/));
-      var forceImages = (v3p1 && browser.isMobile &&
-        (navigator.platform.match(/iPad|iPod|iPhone/) || (android != null &&
-          (android[1] < 2 || (android[1] == 2 && android[2] < 2)))));
+      var forceImages = (v3p1 && browser.isMobile && (
+        (navigator.platform.match(/iPad|iPod|iPhone/) && !browser.versionAtLeast("5.0.2")) ||
+        (android != null && (android[1] < 2 || (android[1] == 2 && android[2] < 2)))
+      ));
       HTMLCSS.Augment({
         config: {
           styles: {
@@ -2197,7 +2198,7 @@
         allowWebFonts: (v3p1 && !forceImages ? (browser.isPC ? "svg" : "otf") : false)
       });
       if (forceImages) {
-        //  Force image mode for iPhone and Droid prior to 2.2
+        //  Force image mode for iOS prior to 4.2 and Droid prior to 2.2
         //  (iPhone should do SVG web fonts, but crashes with MathJax)
 	var config = MathJax.Hub.config["HTML-CSS"];
         if (config) {config.availableFonts = []; config.preferredFont = null}
