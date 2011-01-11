@@ -526,10 +526,10 @@
     if (MENU.About.div) {document.body.removeChild(MENU.About.div); delete MENU.About.div}
   };
   MENU.About.GetJax = function (jax,JAX,type) {
-    for (var id in JAX) {
+    for (var id in JAX) {if (JAX.hasOwnProperty(id)) {
       if (JAX[id].isa && JAX[id].isa(JAX))
         {jax.push(JAX[id].id+" "+type+" Jax v"+JAX[id].version,["br"])}
-    }
+    }}
     return jax;
   };
   
