@@ -260,6 +260,7 @@
 
     Config: function () {
       this.SUPER(arguments).Config.call(this); var settings = this.settings;
+      if (this.adjustAvailableFonts) {this.adjustAvailableFonts(this.config.availableFonts)}
       if (settings.scale) {this.config.scale = settings.scale}
       if (settings.font && settings.font !== "Auto") {
         if (settings.font === "TeX (local)")
@@ -2229,7 +2230,17 @@
         zeroWidthBug: true,
         FontFaceBug: true,
         PaddingWidthBug: true,
-        allowWebFonts: (browser.versionAtLeast("10.0") && !browser.isMini ? "otf" : false)
+        allowWebFonts: (browser.versionAtLeast("10.0") && !browser.isMini ? "otf" : false),
+        //
+        //  Opera doesn't display many STIX characters, so remove it
+        //  from the availableFonts array, if it is there.
+        //
+        adjustAvailableFonts: function (fonts) {
+          for (var i = 0, m = fonts.length; i < m; i++) {
+            if (fonts[i] === "STIX") {fonts.splice(i,1); m--; i--;}
+          }
+          if (this.config.preferredFont === "STIX") {this.config.preferredFont = fonts[0]}
+        }
       });
     },
 
