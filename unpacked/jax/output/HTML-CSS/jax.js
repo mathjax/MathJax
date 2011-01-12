@@ -2223,6 +2223,7 @@
       browser.isMini = (navigator.appVersion.match("Opera Mini") != null);
       HTMLCSS.config.styles[".MathJax .merror"]["vertical-align"] = null;
       HTMLCSS.Augment({
+        useProcessingFrame: true,
         operaHeightBug: true,
         operaVerticalAlignBug: true,
         operaFontSizeBug: browser.versionAtLeast("10.61"),
