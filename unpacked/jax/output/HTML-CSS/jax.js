@@ -260,6 +260,7 @@
 
     Config: function () {
       this.SUPER(arguments).Config.call(this); var settings = this.settings;
+      if (this.adjustAvailableFonts) {this.adjustAvailableFonts(this.config.availableFonts)}
       if (settings.scale) {this.config.scale = settings.scale}
       if (settings.font && settings.font !== "Auto") {
         if (settings.font === "TeX (local)")
@@ -2173,9 +2174,10 @@
       var v3p1 = browser.versionAtLeast("3.1");
       browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
       var android = (navigator.appVersion.match(/ Android (\d+)\.(\d+)/));
-      var forceImages = (v3p1 && browser.isMobile &&
-        (navigator.platform.match(/iPad|iPod|iPhone/) || (android != null &&
-          (android[1] < 2 || (android[1] == 2 && android[2] < 2)))));
+      var forceImages = (v3p1 && browser.isMobile && (
+        (navigator.platform.match(/iPad|iPod|iPhone/) && !browser.versionAtLeast("5.0.2")) ||
+        (android != null && (android[1] < 2 || (android[1] == 2 && android[2] < 2)))
+      ));
       HTMLCSS.Augment({
         config: {
           styles: {
@@ -2197,7 +2199,7 @@
         allowWebFonts: (v3p1 && !forceImages ? (browser.isPC ? "svg" : "otf") : false)
       });
       if (forceImages) {
-        //  Force image mode for iPhone and Droid prior to 2.2
+        //  Force image mode for iOS prior to 4.2 and Droid prior to 2.2
         //  (iPhone should do SVG web fonts, but crashes with MathJax)
 	var config = MathJax.Hub.config["HTML-CSS"];
         if (config) {config.availableFonts = []; config.preferredFont = null}
@@ -2221,6 +2223,7 @@
       browser.isMini = (navigator.appVersion.match("Opera Mini") != null);
       HTMLCSS.config.styles[".MathJax .merror"]["vertical-align"] = null;
       HTMLCSS.Augment({
+        useProcessingFrame: true,
         operaHeightBug: true,
         operaVerticalAlignBug: true,
         operaFontSizeBug: browser.versionAtLeast("10.61"),
@@ -2228,7 +2231,17 @@
         zeroWidthBug: true,
         FontFaceBug: true,
         PaddingWidthBug: true,
-        allowWebFonts: (browser.versionAtLeast("10.0") && !browser.isMini ? "otf" : false)
+        allowWebFonts: (browser.versionAtLeast("10.0") && !browser.isMini ? "otf" : false),
+        //
+        //  Opera doesn't display many STIX characters, so remove it
+        //  from the availableFonts array, if it is there.
+        //
+        adjustAvailableFonts: function (fonts) {
+          for (var i = 0, m = fonts.length; i < m; i++) {
+            if (fonts[i] === "STIX") {fonts.splice(i,1); m--; i--;}
+          }
+          if (this.config.preferredFont === "STIX") {this.config.preferredFont = fonts[0]}
+        }
       });
     },
 
