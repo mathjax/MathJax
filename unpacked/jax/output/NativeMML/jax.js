@@ -53,7 +53,7 @@
       var type = (math.Get("display") === "block" ? "div" : "span");
       var span = document.createElement(type), container = span;
       span.className = "MathJax_MathML"; span.style.fontSize = this.config.scale+"%";
-      if (isMSIE) {
+      if (isMSIE && this.config.showMathMenuMSIE) {
         container = MathJax.HTML.addElement(span,"span",{
           className:"MathJax_MathContainer",
           style:{display:"inline-block",position:"relative"}
