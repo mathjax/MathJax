@@ -848,6 +848,7 @@
         notag:             ['Extension','AMSmath'],
         label:             ['Macro','',1],           // not implemented yet
         nonumber:          ['Macro',''],             // not implemented yet
+        string:             'String',
 
         //  Extensions to TeX
         unicode:           ['Extension','unicode'],
@@ -1399,6 +1400,10 @@
       }
     },
     
+    String: function (name) {
+      this.Push(MML.mtext(this.GetArgument(name)));
+    },
+
    /************************************************************************/
    /*
     *   LaTeX environments
