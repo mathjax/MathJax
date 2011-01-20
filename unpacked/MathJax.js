@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.9";
+MathJax.version = "1.0.10";
 
 /**********************************************************/
 
@@ -1169,7 +1169,7 @@ MathJax.Hub = {
     
     preProcessors: [], // list of callbacks for preprocessing (initialized by extensions)
     inputJax: {},      // mime-type mapped to input jax (by registration)
-    outputJax: {},     // mime-type mapped to output jax list (by registration)
+    outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
 
     menuSettings: {
       //format: "MathML",  //  the Show Source format (set in MathMenu.js)
@@ -1562,7 +1562,6 @@ MathJax.Hub.Startup = {
   Jax: function () {
     var config = MathJax.Hub.config;
     //  Save the order of the output jax since they are loading asynchronously
-    config.outputJax.order = {};
     for (var i = 0, m = config.jax.length, k = 0; i < m; i++) {
       if (config.jax[i].substr(0,7) === "output/") 
         {config.outputJax.order[config.jax[i].substr(7)] = k; k++}
@@ -1584,6 +1583,19 @@ MathJax.Hub.Startup = {
       ["loadArray",this,MathJax.Hub.config.extensions,"extensions"],
       ["Post",this.signal,"End Extensions"]
     );
+  },
+  
+  //
+  //  Set the math menu renderer, if it isn't already
+  //  (this must come after the jax are loaded)
+  //
+  Menu: function () {
+    var menu = MathJax.Hub.config.menuSettings, jax = MathJax.Hub.config.outputJax;
+    if (!menu.renderer) {
+      for (var id in jax) {if (jax.hasOwnProperty(id)) {
+        if (jax[id].length) {menu.renderer = jax[id][0].id; return}
+      }}
+    }
   },
   
   //
@@ -1759,13 +1771,10 @@ MathJax.Hub.Startup = {
   BASE.OutputJax = JAX.Subclass({
     Register: function (mimetype) {
       var jax = HUB.config.outputJax;
-      if (!jax[mimetype]) {
-        jax[mimetype] = [];
-        if (!HUB.config.menuSettings.renderer)
-          {HUB.config.menuSettings.renderer = this.id}
-      }
+      if (!jax[mimetype]) {jax[mimetype] = []}
       //  If the output jax is earlier in the original configuration list, put it first here
-      if (jax[mimetype].length && (jax.order[this.id]||0) < (jax.order[jax[mimetype][0].id]||0))
+      if (jax[mimetype].length && (this.id === HUB.config.menuSettings.renderer ||
+            (jax.order[this.id]||0) < (jax.order[jax[mimetype][0].id]||0)))
         {jax[mimetype].unshift(this)} else {jax[mimetype].push(this)}
       //  Make sure the element jax is loaded before Startup is called
       if (!this.require) {this.require = []}
@@ -1774,7 +1783,7 @@ MathJax.Hub.Startup = {
     },
     Remove: function (jax) {}
   },{
-    version: "1.0.1",
+    version: "1.0.2",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts"
@@ -1975,6 +1984,7 @@ MathJax.Hub.Startup = {
       );
       return queue.Push({});
     },
+    ["Menu",STARTUP],
     STARTUP.onLoad(),
     function () {MathJax.isReady = true}, // indicates that MathJax is ready to process math
     ["Typeset",STARTUP],
