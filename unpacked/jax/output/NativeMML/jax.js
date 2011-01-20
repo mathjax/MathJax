@@ -46,9 +46,9 @@
         var align = HUB.config.displayAlign, indent = HUB.config.displayIndent;
         var def = {"text-align": align+"!important"}; def["margin-"+align] = indent+"!important";
         MathJax.Hub.Insert(this.config.styles,{
-          ".MathJax_MathML": def,
-          ".MathJax_MathML math": {"text-align": align},
-          ".MathJax_MathContainer > span": {"text-align": align+"!important"}
+          "div.MathJax_MathML": def,
+          "div.MathJax_MathML math": {"text-align": align},
+          "div.MathJax_MathContainer > span": {"text-align": align+"!important"}
         });
       }
     },
