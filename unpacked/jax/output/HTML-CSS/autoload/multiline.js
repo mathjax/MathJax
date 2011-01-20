@@ -21,8 +21,10 @@
  *  limitations under the License.
  */
 
-(function (MML,HTMLCSS) {
-  var VERSION = "1.0";
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+  var VERSION = "1.0.1";
+  var MML = MathJax.ElementJax.mml,
+      HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
   MML.mbase.Augment({
     toHTMLmultiline: function (span,split) {
@@ -90,5 +92,5 @@
   MathJax.Hub.Startup.signal.Post("HTML-CSS multiline Ready");
   MathJax.Ajax.loadComplete(HTMLCSS.autoloadDir+"/multiline.js");
   
-})(MathJax.ElementJax.mml,MathJax.OutputJax["HTML-CSS"]);
+});
 
