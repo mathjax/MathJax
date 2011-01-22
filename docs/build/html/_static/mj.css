@@ -1,0 +1,379 @@
+/**
+ * Sphinx stylesheet -- default theme
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+@import url("basic.css");
+
+/* style copied over from http://mathjax.org/ for the header */
+
+body {
+    background: #D2D3D3 !important;
+}
+#wrapper {
+    background: white;
+    padding: 0;
+    margin: 20px auto;
+    width: 980px;
+}
+
+#header {
+    background: #ffffff;
+    padding: 20px;
+    height: 95px;
+}
+#branding {
+}
+#site-title {
+    float: left;
+    margin: 0;
+    width: 300px;
+}
+#branding img {
+    border: 0;
+}
+#site-description {
+    margin: 36px 0 0;
+    font-size: 18px; line-height: 18px;
+    float: left;
+    width: auto;
+    font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    letter-spacing: -1px;
+    color: #a5a5a5;
+}
+
+#access {
+    margin: 10px 0;
+}
+#access ul { padding: 0; }
+#access li { min-width: 20px; }
+#access a { color: #dddddd; font-weight: bold; }
+#access a:hover, #access ul li.current_page_item > a, #access ul li.current-menu-ancestor > a,
+#access ul li.current-menu-item > a, #access ul li.current-menu-parent > a {
+    color: #ffffff;
+    font-weight: bold;
+}
+#access li:hover > a, #access ul ul :hover > a {
+    color:#fff;
+    background:#444;
+}
+#access ul ul a {
+    background:#444;
+}
+
+#menu-item-1167 {
+    float: right !important;
+    background: #E18B16 !important;
+}
+#menu-item-1167:hover > a {
+    background: #ef9d32 !important;
+}
+#menu-item-1167 a, #menu-item-1167 a:visited {
+    color: #ffffff !important;
+}
+
+#access {
+    font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', sans-serif;
+    background: #000;
+    margin: 20px auto 0;
+    width: 940px;
+    display:block;
+    float:left;
+}
+#access .menu-header,
+div.menu {
+    font-size: 13px;
+    margin-left: 12px;
+}
+#access .menu-header ul,
+div.menu ul {
+    list-style: none;
+    margin: 0;
+}
+#access .menu-header li,
+div.menu li {
+    float:left;
+    position: relative;
+}
+#access a {
+    display:block;
+    text-decoration:none;
+    color: #DDD;
+    font-weight: bold;
+    padding:0 10px;
+    line-height:38px;
+}
+#access ul ul {
+    display:none;
+    position:absolute;
+    top:38px;
+    left:0;
+    float:left;
+    box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+    width: 180px;
+    z-index: 99999;
+}
+#access ul ul li {
+    min-width: 180px;   
+}
+#access ul ul ul {
+    left:100%;
+    top:0;
+}
+#access ul ul a {
+    background:#333;
+    height:auto;
+    line-height:1em;
+    padding:10px;
+    width: 160px;
+}
+#access li:hover > a,
+#access ul ul :hover > a {
+    color:#fff;
+    background:#333;
+}
+#access ul li:hover > ul {
+    display:block;
+}
+#access ul li.current_page_item > a,
+#access ul li.current-menu-ancestor > a,
+#access ul li.current-menu-item > a,
+#access ul li.current-menu-parent > a {
+    color: #fff;
+}
+
+* html #access ul li.current_page_item a,
+* html #access ul li.current-menu-ancestor a,
+* html #access ul li.current-menu-item a,
+* html #access ul li.current-menu-parent a,
+* html #access ul li a:hover {
+    color:#fff;
+}
+
+/* modify layout to match mathjax site */
+
+.related, .document { 
+    width: 940px !important;
+    margin: 0 auto;
+}
+
+/* -- page layout ----------------------------------------------------------- */
+
+body {
+    font-family: sans-serif;
+    font-size: 100%;
+    background-color: #11303d;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+div.document {
+    background-color: #d4e9f7;
+}
+
+div.documentwrapper {
+    float: left;
+    width: 100%;
+}
+
+div.bodywrapper {
+    margin: 0 0 0 230px;
+}
+
+div.body {
+    background-color: #ffffff;
+    color: #222222;
+    padding: 0 20px 30px 20px;
+}
+
+div.footer {
+    color: #ffffff;
+    width: 100%;
+    padding: 9px 0 9px 0;
+    text-align: center;
+    font-size: 75%;
+}
+
+div.footer a {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+div.related {
+    background-color: #191a19;
+    line-height: 30px;
+    color: #ffffff;
+}
+
+div.related a {
+    color: #ffffff;
+}
+
+div.sphinxsidebar {
+}
+
+div.sphinxsidebar h3 {
+    font-family: 'Trebuchet MS', sans-serif;
+    color: #3a3a3a;
+    font-size: 1.4em;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+}
+
+div.sphinxsidebar h3 a {
+    color: #3a3a3a;
+}
+
+div.sphinxsidebar h4 {
+    font-family: 'Trebuchet MS', sans-serif;
+    color: #3a3a3a;
+    font-size: 1.3em;
+    font-weight: normal;
+    margin: 5px 0 0 0;
+    padding: 0;
+}
+
+div.sphinxsidebar p {
+    color: #3a3a3a;
+}
+
+div.sphinxsidebar p.topless {
+    margin: 5px 10px 10px 10px;
+}
+
+div.sphinxsidebar ul {
+    margin: 10px;
+    padding: 0;
+    color: #3a3a3a;
+}
+
+div.sphinxsidebar ul li {
+    margin-top: .2em;
+}
+
+div.sphinxsidebar a {
+    color: #3a8942;
+}
+
+div.sphinxsidebar input {
+    border: 1px solid #3a8942;
+    font-family: sans-serif;
+    font-size: 1em;
+}
+
+/* -- body styles ----------------------------------------------------------- */
+
+a {
+    color: #355f7c;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+div.body p, div.body dd, div.body li {
+    text-align: justify;
+    line-height: 130%;
+}
+
+div.body h1,
+div.body h2,
+div.body h3,
+div.body h4,
+div.body h5,
+div.body h6 {
+    font-family: 'Trebuchet MS', sans-serif;
+    background-color: #f2f2f2;
+    font-weight: normal;
+    color: #20435c;
+    border-top: 1px solid #cccccc;
+    border-bottom: 2px solid #cccccc;
+    margin: 30px -20px 20px -20px;
+    padding: 3px 0 3px 10px;
+}
+
+div.body h1 { margin-top: 0; font-size: 200%; }
+div.body h2 { font-size: 160%; }
+div.body h3 { font-size: 140%; padding-left: 20px; }
+div.body h4 { font-size: 120%; padding-left: 20px; }
+div.body h5 { font-size: 110%; padding-left: 20px; }
+div.body h6 { font-size: 100%; padding-left: 20px; }
+
+a.headerlink {
+    color: #c60f0f;
+    font-size: 0.8em;
+    padding: 0 4px 0 4px;
+    text-decoration: none;
+}
+
+a.headerlink:hover {
+    background-color: #c60f0f;
+    color: white;
+}
+
+div.body p, div.body dd, div.body li {
+    text-align: justify;
+    line-height: 130%;
+}
+
+div.admonition p.admonition-title + p {
+    display: inline;
+}
+
+div.note {
+    background-color: #eee;
+    border: 1px solid #ccc;
+}
+
+div.seealso {
+    background-color: #ffc;
+    border: 1px solid #ff6;
+}
+
+div.topic {
+    background-color: #eee;
+}
+
+div.warning {
+    background-color: #ffe4e4;
+    border: 1px solid #f66;
+}
+
+p.admonition-title {
+    display: inline;
+}
+
+p.admonition-title:after {
+    content: ":";
+}
+
+pre {
+    padding: 5px;
+    background-color: #f1f8ff;
+    color: #333333;
+    line-height: 130%;
+    border: 2px solid #6799b3;
+    border-left: none;
+    border-right: none;
+}
+
+tt {
+    background-color: #ecf0f3;
+    padding: 0 1px 0 1px;
+/*    font-size: 0.95em;*/
+}
+
+.warning tt {
+    background: #efc2c2;
+}
+
+.note tt {
+    background: #d6d6d6;
+}

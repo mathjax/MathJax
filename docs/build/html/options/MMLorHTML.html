@@ -1,0 +1,197 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The MMLorHTML configuration options &mdash; MathJax v1.1 documentation</title>
+    <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../MathJax.js"></script>
+    <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
+    <link rel="up" title="Loading and Configuring MathJax" href="../configuration.html" />
+    <link rel="next" title="The MathMenu extension" href="MathMenu.html" />
+    <link rel="prev" title="The NativeMML output processor" href="NativeMML.html" /> 
+  </head>
+  <body>
+      <div id="wrapper">
+<div id="header">
+    <div id="branding" role="banner">
+        <h1 id="site-title">
+            <span>
+                <a href="http://www.mathjax.org/" title="MathJax" rel="home">
+                    <img src="../_static/logo.gif" alt="MathJax">
+                </a>
+            </span>
+        </h1>
+        
+        <div id="site-description">Beautiful math in all browsers</div>
+        <div class="clear"></div>
+        
+        <div id="access" role="navigation">
+            <div class="menu-header">
+                <ul id="menu-navigation" class="menu">
+                    <li id="menu-item-868" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/news/">News</a></li>
+                    <li id="menu-item-846" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/demos/">Demos</a>
+                        <ul class="sub-menu">
+                            <li id="menu-item-859" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/demos/tex-samples/">TeX Samples</a></li>
+                            <li id="menu-item-858" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/demos/mathml-samples/">MathML Samples</a></li>
+                            <li id="menu-item-1078" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/demos/scaling-math/">Scaling Math</a></li>
+                            <li id="menu-item-1097" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/demos/copy-and-paste/">Copy and Paste Math</a></li>
+                        </ul>
+                    </li>
+                    <li id="menu-item-848" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/resources/">Resources</a>
+                        <ul class="sub-menu">
+                            <li id="menu-item-1262" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/download/">Download</a></li>
+                            <li id="menu-item-1151" class="menu-item menu-item-type-custom"><a href="/resources/docs/">Documentation</a></li>
+                            <li id="menu-item-1257" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/resources/articles-and-presentations/">Articles, Presentations, and Tutorials</a></li>
+                            <li id="menu-item-860" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/resources/browser-compatibility/">Browser Compatibility</a></li>
+                            <li id="menu-item-856" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/resources/faqs/">FAQs</a></li>
+                        </ul>
+                    </li>
+                    <li id="menu-item-847" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/community/">Community</a>
+                        <ul class="sub-menu">
+                            <li id="menu-item-1347" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/community/mathjax-badge/">MathJax Badge</a></li>
+                            <li id="menu-item-1145" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/community/mathjax-in-use/">MathJax in Use</a></li>
+                            <li id="menu-item-1577" class="menu-item menu-item-type-custom"><a href="http://groups.google.com/group/mathjax-users/">MathJax User Group</a></li>
+                        </ul>
+                    </li>
+                    <li id="menu-item-853" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/sponsors/">Sponsors</a></li>
+                    <li id="menu-item-854" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/contact/">Contact</a></li>
+                    <li id="menu-item-1167" class="menu-item menu-item-type-post_type"><a href="http://www.mathjax.org/download/">Download</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="MathMenu.html" title="The MathMenu extension"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="NativeMML.html" title="The NativeMML output processor"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+          <li><a href="../configuration.html" accesskey="U">Loading and Configuring MathJax</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-mmlorhtml-configuration-options">
+<span id="configure-mmlorhtml"></span><h1>The MMLorHTML configuration options<a class="headerlink" href="#the-mmlorhtml-configuration-options" title="Permalink to this headline">¶</a></h1>
+<p>The options below control the operation of the MMLorHTML configuration
+file that is run when you include <tt class="docutils literal"><span class="pre">&quot;MMLorHTML.js&quot;</span></tt> in the <cite>config</cite>
+array of your configuration.  They are listed with their default
+values.  To set any of these options, include a <tt class="docutils literal"><span class="pre">MMLorHTML</span></tt> section
+in your <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call.  For example</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
+  <span class="nx">MMLorHTML</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">prefer</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">Opera</span><span class="o">:</span> <span class="s2">&quot;MML&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>would set the <tt class="docutils literal"><span class="pre">prefer</span></tt> option so that Opera browser would prefer
+MathML to HTML-CSS output (while leaving the settings for other
+browsers unchanged).</p>
+<p>Note that if you use the <tt class="docutils literal"><span class="pre">MMLorHTML.js</span></tt> configuration file, you should
+<strong>not</strong> specify an output processor in the <cite>jax</cite> array of your
+configuration; <cite>MMLorHTML</cite> will fill that in for you.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">prefer: { MSIE: &quot;MML&quot;, Firefox: &quot;MML&quot;, Opera: &quot;HTML&quot;, other: &quot;HTML&quot; }</tt></dt>
+<dd><p>This lets you set the preferred renderer on a browser-by-browser
+basis.  You set the browser to either <tt class="docutils literal"><span class="pre">&quot;MML&quot;</span></tt> or <tt class="docutils literal"><span class="pre">&quot;HTML&quot;</span></tt>
+depending on whether you want to use the <cite>NativeMML</cite> or <cite>HTML-CSS</cite>
+output processor.  Note that although Opera does process some MathML
+natively, its support is not sufficient to handle the more
+complicated output generated by MathJax, so its setting is
+<tt class="docutils literal"><span class="pre">&quot;HTML&quot;</span></tt> by default.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="NativeMML.html"
+                        title="previous chapter">The NativeMML output processor</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="MathMenu.html"
+                        title="next chapter">The MathMenu extension</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/options/MMLorHTML.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="MathMenu.html" title="The MathMenu extension"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="NativeMML.html" title="The NativeMML output processor"
+             >previous</a> |</li>
+        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+          <li><a href="../configuration.html" >Loading and Configuring MathJax</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011 Design Science.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+    </div>
+  </body>
+</html>
