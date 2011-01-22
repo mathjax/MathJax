@@ -1274,7 +1274,7 @@
       var h = this.GetDimen(name);
       var item = STACKITEM.position().With({name: name, move: 'vertical'});
       if (h.charAt(0) === '-') {h = h.slice(1); name = {raise: "\\lower", lower: "\\raise"}[name.substr(1)]}
-      if (name === "\\lower") {item.dh = '-'+h; item.dd = h} else {item.dh = h; item.dd = '-'+h}
+      if (name === "\\lower") {item.dh = '-'+h; item.dd = '+'+h} else {item.dh = '+'+h; item.dd = '-'+h}
       this.Push(item);
     },
     
