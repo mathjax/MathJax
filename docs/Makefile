@@ -41,6 +41,11 @@ html:
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
+html-mathjax-site:
+	$(SPHINXBUILD) -b html -A for_site=True $(ALLSPHINXOPTS) $(BUILDDIR)/html-mathjax-site
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html-mathjax-site."
+
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
 	@echo

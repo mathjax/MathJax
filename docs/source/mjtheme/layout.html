@@ -145,6 +145,7 @@
 {%- block extrahead %} {% endblock %}
   </head>
   <body>
+    {% if for_site %}
     <div id="wrapper">
       <div id="header">
         <div id="branding" role="banner">
@@ -194,6 +195,7 @@
           <div class="clear"></div>
         </div>
       </div>
+    {% endif %}
 {%- block header %}{% endblock %}
 
 {%- block relbar1 %}{{ relbar() }}{% endblock %}
@@ -240,6 +242,8 @@
     {%- endif %}
     </div>
 {%- endblock %}
-    </div>
+    {% if for_site %}
+      </div>
+    {% endif %}
   </body>
 </html>

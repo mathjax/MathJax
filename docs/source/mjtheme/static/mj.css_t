@@ -5,6 +5,8 @@
 
 @import url("basic.css");
 
+{% if for_site %}
+
 /* style copied over from http://mathjax.org/ for the header */
 
 body {
@@ -160,6 +162,8 @@ div.menu li {
     width: 940px !important;
     margin: 0 auto;
 }
+
+{% endif %}
 
 /* -- page layout ----------------------------------------------------------- */
 
