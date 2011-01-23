@@ -19,61 +19,43 @@ body {
     width: 980px;
 }
 
-#header {
-    background: #ffffff;
-    padding: 20px;
-    height: 95px;
-}
-#branding {
-}
-#site-title {
-    float: left;
-    margin: 0;
-    width: 300px;
-}
-#branding img {
+/* deal with sphinx css not reseting anything */
+
+.widget_search fieldset {
     border: 0;
+    margin: 0;
+    padding: 0;
 }
-#site-description {
-    margin: 36px 0 0;
-    font-size: 18px; line-height: 18px;
-    float: left;
-    width: auto;
-    font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    letter-spacing: -1px;
-    color: #a5a5a5;
+.icon-list {
+    margin: 0; padding: 0;
 }
 
-#access {
-    margin: 10px 0;
-}
-#access ul { padding: 0; }
-#access li { min-width: 20px; }
-#access a { color: #dddddd; font-weight: bold; }
-#access a:hover, #access ul li.current_page_item > a, #access ul li.current-menu-ancestor > a,
-#access ul li.current-menu-item > a, #access ul li.current-menu-parent > a {
-    color: #ffffff;
-    font-weight: bold;
-}
-#access li:hover > a, #access ul ul :hover > a {
-    color:#fff;
-    background:#444;
-}
-#access ul ul a {
-    background:#444;
+/* from wp twentyten */
+
+#branding img {
+    display: block;
 }
 
-#menu-item-1167 {
-    float: right !important;
-    background: #E18B16 !important;
+.widget_search label {
+    display: none;
 }
-#menu-item-1167:hover > a {
-    background: #ef9d32 !important;
+.screen-reader-text {
+    left: -9000px;
+    position: absolute;
 }
-#menu-item-1167 a, #menu-item-1167 a:visited {
-    color: #ffffff !important;
+.widget_search input {
+    color: #666;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.widget_search input[type="text"] {
+    -webkit-box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 1px inset;
+    -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) inset;
+    background: #F9F9F9;
+    border: 1px solid #CCC;
+    padding: 2px;
 }
 
 #access {
@@ -154,6 +136,107 @@ div.menu li {
 * html #access ul li.current-menu-parent a,
 * html #access ul li a:hover {
     color:#fff;
+}
+
+/* HEADER */
+
+#header {
+    background: #ffffff;
+    padding: 20px;
+    height: 95px;
+}
+#branding {
+}
+#site-title {
+    float: left;
+    margin: 0;
+    width: 300px;
+}
+#branding img {
+    border: 0;
+}
+#site-description {
+    margin: 36px 0 0;
+    font-size: 18px; line-height: 18px;
+    float: left;
+    width: auto;
+    font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    letter-spacing: -1px;
+    color: #a5a5a5;
+}
+
+#header-box-right {
+    margin: 10px 0 0;
+    float: right;
+}
+.icon-list {
+    display: block;
+    margin: 0 0 0 93px;
+    list-style: none;
+}
+.icon-list li {
+    float: left;
+    display: inline;
+    margin: 0 8px 5px 0;
+}
+.icon-list img { border: 0; }
+.widget_search {
+    clear: both;
+    margin: 0;
+}
+.widget_search #s {
+    width: 150px;
+    height: 16px;
+    float: left;
+}
+.widget_search input[type="text"] {
+    border: 2px solid #b5bfb8;
+    background-color: #eaeaea;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+.widget_search input[type="text"]:focus {
+    outline-width: 0;
+    border-color: #169538;
+}
+.search-button {
+    float: left;
+    display: inline;
+    margin: 2px 0 0 5px;
+}
+
+/* NAVIGATION */
+
+#access {
+    margin: 20px 0px 0px;
+}
+#access ul { padding: 0; }
+#access li { min-width: 20px; }
+#access a { color: #dddddd; font-weight: bold; }
+#access a:hover, #access ul li.current_page_item > a, #access ul li.current-menu-ancestor > a,
+#access ul li.current-menu-item > a, #access ul li.current-menu-parent > a {
+    color: #ffffff;
+    font-weight: bold;
+}
+#access li:hover > a, #access ul ul :hover > a {
+    color:#fff;
+    background:#444;
+}
+#access ul ul a {
+    background:#444;
+}
+
+#menu-item-1167 {
+    float: right !important;
+    background: #E18B16 !important;
+}
+#menu-item-1167:hover > a {
+    background: #ef9d32 !important;
+}
+#menu-item-1167 a, #menu-item-1167 a:visited {
+    color: #ffffff !important;
 }
 
 /* modify layout to match mathjax site */
