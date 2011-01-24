@@ -73,7 +73,7 @@
         var child = node.childNodes[i];
         if (child.nodeName === "#comment") continue;
         if (child.nodeName === "#text") {
-          if (mml.isToken) {
+          if (mml.isToken && !mml.mmlSelfClosing) {
             var text = this.trimSpace(child.nodeValue);
             if (mml.isa(MML.mo) && text.length === 1 && this.Remap[text.charAt(0)])
               {text = this.Remap[text.charAt(0)]}
@@ -82,7 +82,11 @@
           } else if (child.nodeValue.match(/\S/)) {
             MATHML.Error("Unexpected text node: '"+child.nodeValue+"'");
           }
-        } else {mml.Append(this.MakeMML(child))}
+        } else {
+          var cmml = this.MakeMML(child); mml.Append(cmml);
+          if (cmml.mmlSelfClosing && cmml.data.length)
+            {mml.Append.apply(mml,cmml.data); cmml.data = []}
+        }
       }
       if (MATHML.config.useMathMLspacing) {mml.useMMLspacing = 0x08}
       return mml;
@@ -161,6 +165,9 @@
     //
     Startup: function () {
       MML = MathJax.ElementJax.mml;
+      MML.mspace.Augment({mmlSelfClosing: true});
+      MML.none.Augment({mmlSelfClosing: true});
+      MML.mprescripts.Augment({mmlSelfClossing:true});
       if (window.DOMParser) {
         this.parser = new DOMParser();
         this.ParseXML = this.parseDOM;
