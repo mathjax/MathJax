@@ -231,7 +231,7 @@
       this.SUPER(arguments).Init.apply(this,arguments);
     },
     checkItem: function (item) {
-      if (item.isClose) {
+      if (item.isClose && item.type !== "over") {
         if (item.isEntry) {this.EndEntry(); this.clearEnv(); return FALSE}
         if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return FALSE}
         this.EndTable(); this.clearEnv();
