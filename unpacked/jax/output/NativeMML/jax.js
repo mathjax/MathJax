@@ -39,6 +39,18 @@
     Config: function () {
       this.SUPER(arguments).Config.call(this);
       if (this.settings.scale) {this.config.scale = this.settings.scale}
+      //
+      //  Insert styling to take account of displayAlign and displayIndent
+      //
+      if (HUB.config.displayAlign !== "center") {
+        var align = HUB.config.displayAlign, indent = HUB.config.displayIndent;
+        var def = {"text-align": align+"!important"}; def["margin-"+align] = indent+"!important";
+        MathJax.Hub.Insert(this.config.styles,{
+          "div.MathJax_MathML": def,
+          "div.MathJax_MathML math": {"text-align": align},
+          "div.MathJax_MathContainer > span": {"text-align": align+"!important"}
+        });
+      }
     },
     
     //
@@ -266,7 +278,7 @@
 	  function (type) {return document.createElementNS(nMML.MMLnamespace,type)}
       )
     });
-
+    
     MML.mrow.Augment({
       //
       //  Make inferred rows not include an mrow tag
