@@ -256,9 +256,10 @@
     LEFTBUTTON: (HUB.Browser.isMSIE ? 1 : 0),  // the event.button value for left button
     MENUKEY: "altKey",                         // the event value for alternate context menu
 
-    Font: FONTTEST(),
+    Font: null,  // created by Config() below
 
     Config: function () {
+      this.Font = FONTTEST();
       this.SUPER(arguments).Config.call(this); var settings = this.settings;
       if (this.adjustAvailableFonts) {this.adjustAvailableFonts(this.config.availableFonts)}
       if (settings.scale) {this.config.scale = settings.scale}
