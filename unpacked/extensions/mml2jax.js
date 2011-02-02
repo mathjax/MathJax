@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  varsion: "1.0.4",
+  varsion: "1.0.5",
   config: {
     element: null,          // The ID of the element to be processed
                             //   (defaults to full document)
@@ -116,9 +116,10 @@ MathJax.Extension.mml2jax = {
   },
   msieNodeHTML: function (node) {
     var html, i, m;
-    if (node.nodeName === "#text" || node.nodeName === "#comment") {
+    if (node.nodeName === "#text") {
       html = node.nodeValue.replace(/&/g,"&#x26;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-      if (node.nodeName === "#comment") {html = "<!--"+html+"-->"}
+    } else if (node.nodeName === "#comment") {
+      html = "<!--" + node.nodeValue + "-->"
     }
     else if (this.msieAttributeBug) {
       // In IE, outerHTML doesn't properly quote attributes, so quote them by hand
