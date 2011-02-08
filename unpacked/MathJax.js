@@ -884,10 +884,12 @@ MathJax.version = "1.0.11";
           string += id + " {"+this.StyleString(styles[id])+"}\n";
         } else if (styles[id] != null) {
           style = [];
-          for (var name in styles[id]) {
-            if (styles[id][name] != null)
-              {style[style.length] = name + ': ' + styles[id][name]}
-          }
+          for (var name in styles[id]) {if (styles[id].hasOwnProperty(name)) {
+            if (styles[id][name] != null) {
+              if (name !== "filter" || !MathJax.Hub.Browser.isIE9 || !styles[id][name].match(/dropshadow/i))
+                {style[style.length] = name + ': ' + styles[id][name]}
+            }
+          }}
           string += id +" {"+style.join('; ')+"}\n";
         }
       }}

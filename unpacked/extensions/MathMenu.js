@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.0.2";
+  var VERSION = "1.0.3";
   
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE;
   var ROUND = (isPC ? null : "5px");
@@ -44,6 +44,26 @@
     },
     
     styles: {
+      "#MathJax_About": {
+        position:"fixed", left:"50%", width:"auto", "text-align":"center",
+        border:"3px outset", padding:"1em 2em", "background-color":"#DDDDDD",
+        cursor: "default", "font-family":"message-box", "font-size":"120%",
+        "font-style":"normal", "text-indent":0, "text-transform":"none",
+        "line-height":"normal", "letter-spacing":"normal", "word-spacing":"normal",
+        "word-wrap":"normal", "white-space":"nowrap", "float":"none", "z-index":201,
+
+        "border-radius": "15px",                     // Opera 10.5
+        "-webkit-border-radius": "15px",             // Safari and Chrome
+        "-moz-border-radius": "15px",                // Firefox
+        "-khtml-border-radius": "15px",              // Konqueror
+
+        "box-shadow":"0px 10px 20px #808080",         // Opera 10.5
+        "-webkit-box-shadow":"0px 10px 20px #808080", // Safari 3 and Chrome
+        "-moz-box-shadow":"0px 10px 20px #808080",    // Forefox 3.5
+        "-khtml-box-shadow":"0px 10px 20px #808080",  // Konqueror
+        filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
+      },
+
       ".MathJax_Menu": {
         position:"absolute", "background-color":"white", color:"black",
         width:"auto", padding:(isPC ? "2px" : "5px 0px"),
@@ -488,20 +508,7 @@
     MENU.About.GetJax(jax,MathJax.ElementJax,"Element");
     MENU.About.div = MENU.Background(MENU.About);
     var about = MathJax.HTML.addElement(MENU.About.div,"div",{
-      style:{
-        position:"fixed", left:"50%", width:"auto", "text-align":"center",
-        border:"3px outset", padding:"1em 2em", "background-color":"#DDDDDD",
-        cursor: "default", "font-family":"message-box", "font-size":"120%",
-        "font-style":"normal", "text-indent":0, "text-transform":"none",
-        "line-height":"normal", "letter-spacing":"normal", "word-spacing":"normal",
-        "word-wrap":"normal", "white-space":"nowrap", "float":"none", "z-index":201,
-        "box-shadow":"0px 10px 20px #808080",         // Opera 10.5
-        "-webkit-box-shadow":"0px 10px 20px #808080", // Safari 3 and Chrome
-        "-moz-box-shadow":"0px 10px 20px #808080",    // Forefox 3.5
-        "-khtml-box-shadow":"0px 10px 20px #808080",  // Konqueror
-        filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
-      },
-      onclick: MENU.About.Remove
+      id: "MathJax_About", onclick: MENU.About.Remove
     },[
       ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
       "using "+font+" fonts",["br"],["br"],
