@@ -31,7 +31,7 @@
  */
 
 MathJax.Extension.jsMath2jax = {
-  version: "1.0.1",
+  version: "1.0.2",
   
   config: {
     element: null,    // The ID of the element to be processed
@@ -86,8 +86,7 @@ MathJax.Extension.jsMath2jax = {
     tex = tex.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&");
     var script = document.createElement("script");
     script.type = "math/tex" + mode;
-    if (MathJax.Hub.Browser.isMSIE) {script.text = tex}
-      else {script.appendChild(document.createTextNode(tex))}
+    MathJax.HTML.setScript(script,tex);
     return script;
   },
   
