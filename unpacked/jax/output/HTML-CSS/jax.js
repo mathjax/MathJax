@@ -412,6 +412,7 @@
     ContextMenu: function (event,force) {
       if (HTMLCSS.config.showMathMenu && (HTMLCSS.settings.context === "MathJax" || force)) {
         if (HTMLCSS.safariContextMenuBug) {setTimeout('window.getSelection().empty()',0)}
+        if (!event || HTMLCSS.msieEventBug) {event = window.event}
         var MENU = MathJax.Menu;
         if (MENU) {
           var math = (this.parentNode.className === "MathJax_Display" ? this.parentNode : this)
@@ -422,7 +423,6 @@
         } else {
           if (!AJAX.loadingMathMenu) {
             AJAX.loadingMathMenu = true;
-            if (!event) {event = window.event}
             var EVENT = {pageX:event.pageX, pageY:event.pageY, clientX:event.clientX, clientY:event.clientY};
             MathJax.Callback.Queue(
               AJAX.Require("[MathJax]/extensions/MathMenu.js"),
@@ -2134,6 +2134,7 @@
       HTMLCSS.Augment({
         getMarginScale: HTMLCSS.getMSIEmarginScale,
         PaddingWidthBug: true,
+        msieEventBug: browser.isIE9,
         msieAccentBug: true,
         msieColorBug: true,
         msieRelativeWidthBug: quirks,

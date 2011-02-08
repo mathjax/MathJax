@@ -30,6 +30,7 @@
     MENUKEY: "altKey",                         // the event value for alternate context menu
     noContextMenuBug: HUB.Browser.isKonequeror,
     msieQuirks: (isMSIE && !(document.compatMode === "BackCompat")),
+    msieEventBug: HUB.Browser.isIE9,
     
     //
     //  User can configure styles
@@ -161,6 +162,7 @@
     ContextMenu: function (event,force) {
       if (nMML.config.showMathMenu && (nMML.settings.context === "MathJax" || force)) {
         if (nMML.safariContextMenuBug) {setTimeout('window.getSelection().empty()',0)}
+        if (!event || nMML.msieEventBug) {event = window.event}
         var MENU = MathJax.Menu;
         if (MENU) {
           if (document.selection) {setTimeout("document.selection.empty()",0)}
@@ -173,7 +175,6 @@
         } else {
           if (!AJAX.loadingMathMenu) {
             AJAX.loadingMathMenu = true;
-            if (!event) {event = window.event}
             var EVENT = {pageX:event.pageX, pageY:event.pageY, clientX:event.clientX, clientY:event.clientY};
             MathJax.Callback.Queue(
               AJAX.Require("[MathJax]/extensions/MathMenu.js"),
