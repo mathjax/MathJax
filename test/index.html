@@ -19,20 +19,19 @@
     jax: ["input/TeX","output/HTML-CSS"],
     "HTML-CSS": {
       availableFonts:[],
-      styles: {".MathJax_Preview": {visibility: "hidden"}},
-      Augment: {
-        Font: {
-          loadError: function (font) {
-            MathJax.Message.Set("Can't load web font TeX/"+font.directory,null,2000);
-            document.getElementById("noWebFont").style.display = "";
-          },
-          firefoxFontError: function (font) {
-            MathJax.Message.Set("Firefox can't load web fonts from a remote host",null,3000);
-            document.getElementById("ffWebFont").style.display = "";
-          }
-        }
-      }
+      styles: {".MathJax_Preview": {visibility: "hidden"}}
     }
+  });
+  MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var FONT = MathJax.OutputJax["HTML-CSS"].Font;
+    FONT.loadError = function (font) {
+      MathJax.Message.Set("Can't load web font TeX/"+font.directory,null,2000);
+      document.getElementById("noWebFont").style.display = "";
+    };
+    FONT.firefoxFontError = function (font) {
+      MathJax.Message.Set("Firefox can't load web fonts from a remote host",null,3000);
+      document.getElementById("ffWebFont").style.display = "";
+    };
   });
 
 (function (HUB) {
@@ -59,11 +58,7 @@
 
 MathJax.Hub.Register.StartupHook("End",function () {
   var HTMLCSS = MathJax.OutputJax["HTML-CSS"];
-  var MAIN = HTMLCSS.FONTDATA.FONTS["MathJax_Main"];
-  if (MAIN.version < 2) {
-    document.getElementById("version").innerHTML = MAIN.version;
-    document.getElementById("webfonts").style.display="";
-  } else if (HTMLCSS.imgFonts) {
+  if (HTMLCSS.imgFonts) {
     alert("The browser you are using does not seem to support web-based " +
           "fonts, so we can't test the MathJax web fonts with this browser " +
           "(image fonts have been used instead)\n\n" +
@@ -84,12 +79,6 @@ If your browser supports JavaScript, be sure it is enabled.<B>
 </NOSCRIPT>
 
 <BLOCKQUOTE>
-
-<!--
- | <DIV STYLE="float:right; width:auto; margin-top:.5em">
- | <INPUT TYPE="button" VALUE="Check for Updates" ONCLICK="CheckVersion()">
- | </DIV>
--->
 
 <H1>MathJax Test Page</H1>
 
@@ -119,35 +108,12 @@ MathJax is not working!
 
 <DIV ID="noWebFont" STYLE="display:none; color:red">
 <B>WARNING</B>: The web fonts don't seem to be available.  Be sure you have
-downloaded and installed the latest MathJax-webfonts ZIP file from
-<p>
-<BLOCKQUOTE>
-<A HREF="http://sourceforge.net/projects/mathjax/files/">http://sourceforge.net/projects/mathjax/files/</A>
-</BLOCKQUOTE>
-before continuing.  If you fail to install these fonts, MathJax will not 
+the <code>MathJax/fonts</code> in place before continuing.
+If you fail to install these fonts, MathJax will not 
 work properly with some browsers.  If you can't install the image fonts, 
 be sure to set the noImageFonts parameter in your MathJax configuration 
-(either MathJax/config/MathJax.js, or the MathJax.Hub.Config() call in 
-your web page).
-<p>
-<HR>
-</DIV>
-<p>
-
-<!------------------------------------------------------------------------>
-
-<DIV ID="ffWebFont" STYLE="display:none; color:red">
-<B>WARNING</B>: Your MathJax web fonts seem to be version <SPAN ID="version">1</SPAN>
-rather than version 2.  Be sure you have downloaded and installed the latest
-MathJax-webfonts ZIP file from
-<p>
-<BLOCKQUOTE>
-<A HREF="http://sourceforge.net/projects/mathjax/files/">http://sourceforge.net/projects/mathjax/files/</A>
-</BLOCKQUOTE>
-before continuing.  Failure to install the new versions of the fonts will 
-mean that the data MathJax is using will not match the fonts, and so 
-display errors will occur.  You can probably see this in the equation 
-above: the radial will be out of place.
+(either <code>MathJax/config/MathJax.js</code>, or the 
+<code>MathJax.Hub.Config()</code> call in your web page).
 <p>
 <HR>
 </DIV>
@@ -158,8 +124,8 @@ above: the radial will be out of place.
 <DIV ID="webfonts" STYLE="display:none; color:red">
 <B>WARNING</B>: You are trying to load MathJax from a remote site where the
 web-based fonts are not set up to be shipped to Firefox properly.  See the
-<A HREF="http://sourceforge.net/projects/mathjax/forums/forum/948701/topic/3527522?message=8016693">discussion
-of Firefox's same-origin policy</A> on the MathJax SourceForge site.
+<A HREF="../docs/html/installation.html#notes-about-shared-installations">discussion
+of Firefox's same-origin policy</A> in the MathJax documentation.
 <p>
 <HR>
 </DIV>
