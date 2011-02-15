@@ -12,5 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["MathJax_SansSerif-bold"]={directory:"SansSerif/Bold",family:"MathJax_SansSerif",weight:"bold",testString:"MathJax SansSerif",Ranges:[[0,127,"BasicLatin"],[128,65535,"Other"],[768,879,"CombDiacritMarks"]]};MathJax.OutputJax["HTML-CSS"].initFont("MathJax_SansSerif-bold");MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/SansSerif/Bold/Main.js");
+MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["MathJax_SansSerif-bold"]={directory:"SansSerif/Bold",family:"MathJax_SansSerif",weight:"bold",testString:"MathJax SansSerif",Ranges:[[0,127,"BasicLatin"],[128,65535,"Other"],[768,879,"CombDiacritMarks"]]};MathJax.Callback.Queue(["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_SansSerif-bold"],["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/SansSerif/Bold/Main.js"]);
 
