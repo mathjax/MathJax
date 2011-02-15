@@ -90,6 +90,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Caligraphic'] = {
   0xA0: [0,0,250,0,0]                // NO-BREAK SPACE
 };
 
-MathJax.OutputJax["HTML-CSS"].initFont("MathJax_Caligraphic");
-
-MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/Caligraphic/Regular/Main.js");
+MathJax.Callback.Queue(
+  ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Caligraphic"],
+  ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Caligraphic/Regular/Main.js"]
+);

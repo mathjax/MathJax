@@ -38,6 +38,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Greek-bold'] = {
   0x3A9: [696,1,831,51,779]          // GREEK CAPITAL LETTER OMEGA
 };
 
-MathJax.OutputJax["HTML-CSS"].initFont("MathJax_Greek-bold");
-
-MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/Greek/Bold/Main.js");
+MathJax.Callback.Queue(
+  ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Greek-bold"],
+  ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Greek/Bold/Main.js"]
+);

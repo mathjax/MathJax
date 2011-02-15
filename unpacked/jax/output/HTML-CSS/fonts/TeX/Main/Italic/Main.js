@@ -132,6 +132,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Main-italic'] = {
   0x3A9: [705,0,716,100,759]         // GREEK CAPITAL LETTER OMEGA
 };
 
-MathJax.OutputJax["HTML-CSS"].initFont("MathJax_Main-italic");
-
-MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/Main/Italic/Main.js");
+MathJax.Callback.Queue(
+  ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Main-italic"],
+  ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Italic/Main.js"]
+);
