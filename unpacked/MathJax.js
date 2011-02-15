@@ -885,10 +885,8 @@ MathJax.version = "1.0.11";
         } else if (styles[id] != null) {
           style = [];
           for (var name in styles[id]) {if (styles[id].hasOwnProperty(name)) {
-            if (styles[id][name] != null) {
-              if (name !== "filter" || !MathJax.Hub.Browser.isIE9 || !styles[id][name].match(/dropshadow/i))
-                {style[style.length] = name + ': ' + styles[id][name]}
-            }
+            if (styles[id][name] != null) 
+              {style[style.length] = name + ': ' + styles[id][name]}
           }}
           string += id +" {"+style.join('; ')+"}\n";
         }
@@ -1977,7 +1975,7 @@ MathJax.Hub.Startup = {
     },
     Opera: function (browser) {browser.version = opera.version()},
     MSIE: function (browser) {
-      browser.isIE9 = !!(document.documentMode && window.msPerformance);
+      browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
     }
   });
