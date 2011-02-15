@@ -63,6 +63,7 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
         "box-shadow": "2px 2px 5px #AAAAAA",         // Opera 10.5
         "-webkit-box-shadow": "2px 2px 5px #AAAAAA", // Safari 3 and Chrome
         "-moz-box-shadow": "2px 2px 5px #AAAAAA",    // Forefox 3.5
+        "-khtml-box-shadow": "2px 2px 5px #AAAAAA",  // Konqueror
         filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')", // IE
         padding: "3px 4px"
       }
@@ -70,13 +71,14 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
     
   }
 });
+if (MathJax.Hub.Browser.isMSIE && document.documentMode >= 9)
+  {delete MathJax.OutputJax["HTML-CSS"].config.styles["#MathJax_Tooltip"].filter}
 
 if (!MathJax.Hub.config.delayJaxRegistration)
   {MathJax.OutputJax["HTML-CSS"].Register("jax/mml")}
 
 (function (HUB,HTMLCSS) {
-  var CONFIG;
-  CONFIG = HUB.Insert({
+  var CONFIG = HUB.Insert({
 
     //
     //  The minimum versions that HTML-CSS supports
