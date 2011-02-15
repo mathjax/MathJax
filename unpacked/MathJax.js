@@ -9,7 +9,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.10";
+MathJax.version = "1.0.11";
 
 /**********************************************************/
 
@@ -1938,7 +1938,7 @@ MathJax.Hub.Startup = {
       var VERSION = new RegExp(
         ".*(Version)/((?:\\d+\\.)+\\d+)|" +                                       // for Safari and Opera10
         ".*("+browser+")"+(browser == "MSIE" ? " " : "/")+"((?:\\d+\\.)*\\d+)|"+  // for one of the main browser
-        "(?:^|\\(| )([a-z][-a-z0-9._: ]+|WebKit)/((?:\\d+\\.)+\\d+)");            // for unrecognized browser
+        "(?:^|\\(| )([a-z][-a-z0-9._: ]+|(?:Apple)?WebKit)/((?:\\d+\\.)+\\d+)");  // for unrecognized browser
       var MATCH = VERSION.exec(AGENT) || ["","","","unknown","0.0"];
       HUB.Browser.name = (MATCH[1] == "Version" ? browser : (MATCH[3] || MATCH[5]));
       HUB.Browser.version = MATCH[2] || MATCH[4] || MATCH[6];
