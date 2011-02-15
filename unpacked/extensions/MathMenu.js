@@ -52,12 +52,12 @@
         "line-height":"normal", "letter-spacing":"normal", "word-spacing":"normal",
         "word-wrap":"normal", "white-space":"nowrap", "float":"none", "z-index":201,
 
-        "border-radius": "15px",                     // Opera 10.5
+        "border-radius": "15px",                     // Opera 10.5 and IE9
         "-webkit-border-radius": "15px",             // Safari and Chrome
         "-moz-border-radius": "15px",                // Firefox
         "-khtml-border-radius": "15px",              // Konqueror
 
-        "box-shadow":"0px 10px 20px #808080",         // Opera 10.5
+        "box-shadow":"0px 10px 20px #808080",         // Opera 10.5 and IE9
         "-webkit-box-shadow":"0px 10px 20px #808080", // Safari 3 and Chrome
         "-moz-box-shadow":"0px 10px 20px #808080",    // Forefox 3.5
         "-khtml-box-shadow":"0px 10px 20px #808080",  // Konqueror
@@ -72,12 +72,12 @@
         "line-height":"normal", "letter-spacing":"normal", "word-spacing":"normal",
         "word-wrap":"normal", "white-space":"nowrap", "float":"none", "z-index":201,
 
-        "border-radius": ROUND,                     // Opera 10.5
+        "border-radius": ROUND,                     // Opera 10.5 and IE9
         "-webkit-border-radius": ROUND,             // Safari and Chrome
         "-moz-border-radius": ROUND,                // Firefox
         "-khtml-border-radius": ROUND,              // Konqueror
 
-        "box-shadow":"0px 10px 20px #808080",         // Opera 10.5
+        "box-shadow":"0px 10px 20px #808080",         // Opera 10.5 and IE9
         "-webkit-box-shadow":"0px 10px 20px #808080", // Safari 3 and Chrome
         "-moz-box-shadow":"0px 10px 20px #808080",    // Forefox 3.5
         "-khtml-box-shadow":"0px 10px 20px #808080",  // Konqueror
@@ -670,6 +670,10 @@
         msieBackgroundBug: (quirks || !isIE8),
         msieAboutBug: quirks
       });
+      if (document.documentMode >= 9) {
+        delete CONFIG.styles["#MathJax_About"].filter;
+        delete CONFIG.styles[".MathJax_Menu"].filter;
+      }
     }
   });
 

@@ -39,7 +39,7 @@
         "font-style":"normal", "text-align":"left", "text-indent":0, "text-transform":"none",
         "line-height":"normal", "letter-spacing":"normal", "word-spacing":"normal",
         "word-wrap":"normal", "white-space":"nowrap", "float":"none",
-        "box-shadow":"5px 5px 15px #AAAAAA",         // Opera 10.5
+        "box-shadow":"5px 5px 15px #AAAAAA",         // Opera 10.5 and IE9
         "-webkit-box-shadow":"5px 5px 15px #AAAAAA", // Safari 3 and Chrome
         "-moz-box-shadow":"5px 5px 15px #AAAAAA",    // Forefox 3.5
         "-khtml-box-shadow":"5px 5px 15px #AAAAAA",  // Konqueror
@@ -378,6 +378,7 @@
       ZOOM.msieIE8Bug = isIE8;
       ZOOM.msieZIndexBug = !isIE8;
       ZOOM.msieInlineBlockAlignBug = (!isIE8 || quirks);
+      if (document.documentMode >= 9) {delete CONFIG.styles["#MathJax_Zoom"].filter}
     },
     
     Opera: function (browser) {
