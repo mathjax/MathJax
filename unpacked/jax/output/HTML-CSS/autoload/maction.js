@@ -6,7 +6,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010 Design Science, Inc.
+ *  Copyright (c) 2010-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.0.1";
+  var VERSION = "1.0.2";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -40,11 +40,14 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
   MML.maction.Augment({
     HTMLtooltip: HTMLCSS.addElement(document.body,"div",{id:"MathJax_Tooltip"}),
     
-    toHTML: function (span) {
+    toHTML: function (span,HW,D) {
       span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
       var values = this.getValues("actiontype","selection"), frame;
-      if (this.data[values.selection-1]) {
-        HTMLCSS.Measured(this.data[values.selection-1].toHTML(span),span);
+      var selected = this.data[values.selection-1];
+      if (selected) {
+        HTMLCSS.Measured(selected.toHTML(span),span);
+        if (D != null) {HTMLCSS.Remeasured(selected.HTMLstretchV(span,HW,D),span)}
+        else if (HW != null) {HTMLCSS.Remeasured(selected.HTMLstretchH(span,HW),span)}
         if (HTMLCSS.msieHitBoxBug) {
           // margin-left doesn't work on inline-block elements in IE, so put it in a SPAN
           var box = HTMLCSS.addElement(span,"span");
@@ -68,6 +71,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       this.HTMLhandleColor(span);
       return span;
     },
+    HTMLstretchH: MML.mbase.HTMLstretchH,
+    HTMLstretchV: MML.mbase.HTMLstretchV,
     
     //
     //  Implementations for the various actions
