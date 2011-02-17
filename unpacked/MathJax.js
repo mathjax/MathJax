@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.11";
+MathJax.version = "1.0.12";
 
 /**********************************************************/
 
@@ -1164,8 +1164,10 @@ MathJax.Hub = {
     showProcessingMessages: true, // display "Processing math: nn%" messages or not
     messageStyle: "normal",       // set to "none" or "simple" (for "Loading..." and "Processing...")
     delayStartupUntil: "none",    // set to "onload" to delay setup until the onload handler runs
-                                  //  or to a Callback to wait for before continuing with the startup
+                                  // set to "configured" to delay startup until MathJax.Hub.Configured() is called
+                                  // set to a Callback to wait for before continuing with the startup
     skipStartupTypeset: false,    // set to true to skip PreProcess and Process during startup
+    "v1.0-compatible": true,  // set to false to prevent loading of default configuration file
     
     preProcessors: [], // list of callbacks for preprocessing (initialized by extensions)
     inputJax: {},      // mime-type mapped to input jax (by registration)
@@ -1463,10 +1465,12 @@ MathJax.Extension = {};
 //
 //  Hub Startup code
 //
+MathJax.Hub.Configured = MathJax.Callback({}); // called when configuration is complete
 MathJax.Hub.Startup = {
   script: "", // the startup script from the SCRIPT call that loads MathJax.js
   queue:   MathJax.Callback.Queue(),           // Queue used for startup actions
   signal:  MathJax.Callback.Signal("Startup"), // Signal used for startup events
+  params:  {},
 
   //
   //  Load the configuration files
@@ -1484,45 +1488,68 @@ MathJax.Hub.Startup = {
          "(You should press Cancel unless you set up the cookie yourself.)"
       )) {
         if (user.URL) {this.queue.Push(["Require",MathJax.Ajax,user.URL])}
-        if (user.Config) {MathJax.userConfig = new Function(user.Config)}
+        if (user.Config) {this.queue.Push(new Function(user.Config))}
       } else {MathJax.HTML.Cookie.Set("user",{})}
     }
     //
-    //  Run the configuration script, if any
-    //  Then load the config files specified in the parameters
-    //  If neither of the above, load the default configuration file
+    //  Run the config files, if any are given in the parameter list
     //
-    var loadDefault = true;
-    if (this.script.match(/\S/)) {
-      this.queue.Push(this.script+";\n1;");
-      loadDefault = false;
-    }
-    if (this.params && this.params.config) {
+    if (this.params.config) {
       var files = this.params.config.split(/,/);
       for (var i = 0, m = files.length; i < m; i++) {
         if (!files[i].match(/\.js$/)) {files[i] += ".js"}
         this.queue.Push(["Require",MathJax.Ajax,this.URL("config",files[i])]);
       }
-      loadDefault = false;
-    }
-    if (loadDefault) {
-      this.queue.Push(["Require",MathJax.Ajax,this.URL("config","MathJax.js")]);
     }
     //
-    //  Delay the startup, if requested,
-    //  then load the files in the configuration's config array
+    //  Run the deprecated configuration script, if any (ignoring return value)
+    //  Wait for the startup delay signal
+    //  Run the mathjax-config blocks
+    //  Handle the default configuration (v1.0 compatible)
+    //  Load the files in the configuration's config array
     //
+    if (this.script.match(/\S/)) {this.queue.Push(this.script+";\n1;")}
     this.queue.Push(
-      [function (config,onload) {
-        if (config.delayStartupUntil.isCallback) {return config.delayStartupUntil}
-        if (config.delayStartupUntil === "onload") {return onload}
-        return function () {};
-      }, MathJax.Hub.config, this.onload],
-      // use a function here since MathJax.Hub.config.config might change in files loaded above
+      ["ConfigDelay",this],
+      ["ConfigBlocks",this],
+      ["ConfigDefault",this],
       [function (THIS) {return THIS.loadArray(MathJax.Hub.config.config,"config",null,true)},this],
       ["Post",this.signal,"End Config"]
     );
   },
+  //
+  //  Return the delay callback
+  //
+  ConfigDelay: function () {
+    var delay = this.params.delayStartupUntil || MathJax.Hub.config.delayStartupUntil;
+    if (delay === "onload") {return this.onload}
+    if (delay === "configured") {return MathJax.Hub.Configured}
+    return delay;
+  },
+  //
+  //  Run the scipts of type=text/x-mathajx-config
+  //
+  ConfigBlocks: function () {
+    var scripts = document.getElementsByTagName("script");
+    var last = null, queue = MathJax.Callback.Queue();
+    for (var i = 0, m = scripts.length; i < m; i++) {
+      var type = String(scripts[i].type).replace(/ /g,"");
+      if (type.match(/^text\/x-mathjax-config(;.*)?$/) && !type.match(/;executed=true/)) {
+        scripts[i].type += ";executed=true";
+        last = queue.Push(scripts[i].innerHTML+";\n1;");
+      }
+    }
+    return last;
+  },
+  //
+  //  Do the (v1.0-compatible, no configuration) default action
+  //
+  ConfigDefault: function () {
+    var CONFIG = MathJax.Hub.config;
+    if (CONFIG["v1.0-compatible"] && CONFIG.jax.length === 0)
+      {return MathJax.Ajax.Require(this.URL("config","MathJax.js"))}
+  },
+
   //
   //  Read cookie and set up menu defaults
   //  (adjust the jax to accommodate renderer preferences)
@@ -1889,7 +1916,6 @@ MathJax.Hub.Startup = {
     if (scripts[i].src.match(namePattern)) {
       STARTUP.script = scripts[i].innerHTML;
       if (RegExp.$2) {
-        STARTUP.params = {};
         var params = RegExp.$2.substr(1).split(/\&/);
         for (var j = 0, m = params.length; j < m; j++) {
           var KV = params[j].match(/(.*)=(.*)/);
