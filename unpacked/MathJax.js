@@ -1542,12 +1542,12 @@ MathJax.Hub.Startup = {
     return last;
   },
   //
-  //  Do the (v1.0-compatible, no configuration) default action
+  //  Check for v1.0 no-configuration and put up a warning message.
   //
   ConfigDefault: function () {
     var CONFIG = MathJax.Hub.config;
     if (CONFIG["v1.0-compatible"] && CONFIG.jax.length === 0)
-      {return MathJax.Ajax.Require(this.URL("config","MathJax.js"))}
+      {return MathJax.Ajax.Require(this.URL("extensions","v1.0-warning.js"))}
   },
 
   //
