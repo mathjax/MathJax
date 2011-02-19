@@ -42,87 +42,50 @@
       "-moz-box-shadow": "4px 4px 10px #AAAAAA",    // Forefox 3.5
       "-khtml-box-shadow": "4px 4px 10px #AAAAAA",  // Konqueror
       filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=3, OffY=3, Color='gray', Positive='true')" // IE
-    },
-    
-    removeAfter: 12*1000,  // time to show message (in ms)
-    fadeoutSteps: 10,      // fade-out steps
-    fadeoutTime: 1.5*1000  // fadeout over this amount of time (in ms)
-  };
-  if (HUB.Browser.isIE9 && document.documentMode >= 9) {delete CONFIG.style.filter}
-
-  //
-  //  Set the opacity based on the number of steps taken so far
-  //  and remove the window when it gets to 0
-  //
-  var FADEOUT = function () {
-    DATA.fade++; if (DATA.timer) {delete DATA.timer}
-    if (DATA.fade < CONFIG.fadeoutSteps) {
-      var opacity = 1 - DATA.fade/CONFIG.fadeoutSteps;
-      DATA.div.style.opacity = opacity;
-      DATA.div.style.filter = "alpha(opacity="+Math.floor(100*opacity)+")";
-      setTimeout(FADEOUT,CONFIG.fadeoutTime/CONFIG.fadeoutSteps);
-    } else {
-      DATA.div.style.display = "none";
     }
   };
+  if (HUB.Browser.isIE9 && document.documentMode >= 9) {delete CONFIG.style.filter}
   
-  //
-  //  Data for the window
-  //
-  var DATA = {
-    div: null,  // the message window, when displayed
-    fade: 0     // number of fade-out steps so far
-  };
-  
-  if (!HTML.Cookie.Get("configWarn").warned) {
-    HUB.Register.StartupHook("onLoad",function () {
-      var frame = document.body;
-      if (HUB.Browser.isMSIE) {
-        MathJax.Message.Init();  // make sure MathJax_MSIE_frame exists
-        frame = document.getElementById("MathJax_MSIE_frame");
-        CONFIG.style.position = "absolute";
-      } else {delete CONFIG.style.filter}
-      CONFIG.style.maxWidth = (document.body.clientWidth-75) + "px";
-      DATA.div = HTML.addElement(frame,"div",{id:"MathJax_ConfigWarning",style:CONFIG.style},[
-        [
-          "div",{
-            style: {
-              position:"absolute", overflow:"hidden", top:".1em", right:".1em",
-              border: "1px outset", width:"1em", height:"1em",
-              "text-align": "center", cursor: "pointer",
-              "background-color": "#EEEEEE", color:"#606060",
+  var DIV;
 
-              "border-radius": ".5em",           // Opera 10.5
-              "-webkit-border-radius": ".5em",   // Safari and Chrome
-              "-moz-border-radius": ".5em",      // Firefox
-              "-khtml-border-radius": ".5em"     // Konqueror
-            },
-            onclick: function () {
-              if (DATA.div && DATA.fade === 0)
-                {if (DATA.timer) {clearTimeout(DATA.timer)}; DATA.div.style.display = "none"}
-            }
+  HUB.Register.StartupHook("onLoad",function () {
+    var frame = document.body;
+    if (HUB.Browser.isMSIE) {
+      MathJax.Message.Init();  // make sure MathJax_MSIE_frame exists
+      frame = document.getElementById("MathJax_MSIE_frame");
+      CONFIG.style.position = "absolute";
+    } else {delete CONFIG.style.filter}
+    CONFIG.style.maxWidth = (document.body.clientWidth-75) + "px";
+    DIV = HTML.addElement(frame,"div",{id:"MathJax_ConfigWarning",style:CONFIG.style},[
+      [
+        "div",{
+          style: {
+            position:"absolute", overflow:"hidden", top:".1em", right:".1em",
+            border: "1px outset", width:"1em", height:"1em",
+            "text-align": "center", cursor: "pointer",
+            "background-color": "#EEEEEE", color:"#606060",
+
+            "border-radius": ".5em",           // Opera 10.5
+            "-webkit-border-radius": ".5em",   // Safari and Chrome
+            "-moz-border-radius": ".5em",      // Firefox
+            "-khtml-border-radius": ".5em"     // Konqueror
           },
-          [["span",{style:{position:"relative", bottom:".2em"}},["x"]]]
-        ],
-        "The method used by MathJax to load its default " +
-        "configuration file has changed from that used in " +
-        "earlier versions.  This page seems to use the " +
-        "older technique, and shoudl be updated.  " +
-        "This is explained further at",
-        ["p",{style:{"text-align":"center"}},[
-          ["a",
-            {href:"    http://www.mathjax.org/help/configuration"},
-            ["http://www.mathjax.org/help/configuration"]
-          ]
-        ]]
-      ]);
-      if (CONFIG.removeAfter) {
-        HUB.Register.StartupHook("End",function () 
-          {DATA.timer = setTimeout(FADEOUT,CONFIG.removeAfter)});
-      }
-      HTML.Cookie.Set("configWarn",{warned:true});
-    });
-  }
+          onclick: function () {DIV.style.display = "none"}
+        },
+        [["span",{style:{position:"relative", bottom:".2em"}},["x"]]]
+      ],
+      "MathJax no longer loads a default configuration file; " +
+      "you must specify such files explicitly. " +
+      "This page seems to use the older default ",["code",{},["config/MathJax.js"]],
+      " file, and so needs to be updated.  This is explained further at",
+      ["p",{style:{"text-align":"center"}},[
+        ["a",
+          {href:"http://www.mathjax.org/help/configuration"},
+          ["http://www.mathjax.org/help/configuration"]
+        ]
+      ]]
+    ]);
+  });
 
 })(MathJax.Hub,MathJax.HTML);
 
