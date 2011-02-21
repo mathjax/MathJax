@@ -24,12 +24,12 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.0.2";
+  var VERSION = "1.0.3";
   
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE;
   var ROUND = (isPC ? null : "5px");
   
-  var CONFIG = HUB.Insert({
+  var CONFIG = HUB.CombineConfig("MathMenu",{
     delay: 150,                                    // the delay for submenus
     helpURL: "http://www.mathjax.org/help/user/",  // the URL for the "MathJax Help" menu
 
@@ -110,7 +110,7 @@
         color: (isPC ? "HighlightText" : "white")
       }
     }
-  },(HUB.config.MathMenu||{}));
+  });
   
   /*************************************************************/
   /*
@@ -668,6 +668,8 @@
 
   /*************************************************************/
 
+HUB.Register.StartupHook("End Config",function () {
+
   /*
    *  Get the menu settings from the HUB (which includes the
    *  data from the cookie already), and add the format, if
@@ -739,6 +741,8 @@
     ITEM.COMMAND("About MathJax",MENU.About),
     ITEM.COMMAND("MathJax Help",MENU.Help)
   );
+
+});
 
   MENU.showRenderer = function (show) {
     MENU.cookie.showRenderer = CONFIG.showRenderer = show; MENU.saveCookie();

@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.12";
+MathJax.version = "1.0.13";
 
 /**********************************************************/
 
@@ -1200,6 +1200,15 @@ MathJax.Hub = {
     this.Insert(this.config,def);
     if (this.config.Augment) {this.Augment(this.config.Augment)}
   },
+  CombineConfig: function (name,def) {
+    var config = this.config, id, parent; name = name.split(/\./);
+    for (var i = 0, m = name.length; i < m; i++) {
+      id = name[i]; if (!config[id]) {config[id] = {}}
+      parent = config; config = config[id];
+    }
+    parent[id] = config = this.Insert(def,config);
+    return config;
+  },
   
   Register: {
     PreProcessor: function (callback) {MathJax.Hub.config.preProcessors.push(MathJax.Callback(callback))},
@@ -1728,7 +1737,7 @@ MathJax.Hub.Startup = {
     },
     Register: function (mimetype) {},
     Config: function () {
-      HUB.Insert(this.config,(HUB.config[this.id]||{}));
+      this.config = HUB.CombineConfig(this.id,this.config);
       if (this.config.Augment) {this.Augment(this.config.Augment)}
     },
     Startup: function () {},
@@ -1755,7 +1764,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "unknown",
-    version: "1.0.1",
+    version: "1.0.2",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -1784,7 +1793,7 @@ MathJax.Hub.Startup = {
       return queue.Push({});
     },
     Register: function (mimetype) {
-      if (!BASE.Hub.config.inputJax) {HUB.config.inputJax = {}}
+      if (!HUB.config.inputJax) {HUB.config.inputJax = {}}
       HUB.config.inputJax[mimetype] = this;
     }
   },{

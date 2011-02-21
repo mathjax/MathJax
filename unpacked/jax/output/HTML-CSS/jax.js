@@ -2117,6 +2117,7 @@
     });
   });
 
+HUB.Register.StartupHook("End Config",function () {
   //
   //  Handle browser-specific setup
   //
@@ -2202,9 +2203,9 @@
       if (forceImages) {
         //  Force image mode for iOS prior to 4.2 and Droid prior to 2.2
         //  (iPhone should do SVG web fonts, but crashes with MathJax)
-	var config = MathJax.Hub.config["HTML-CSS"];
+	var config = HUB.config["HTML-CSS"];
         if (config) {config.availableFonts = []; config.preferredFont = null}
-          else {MathJax.Hub.config["HTML-CSS"] = {availableFonts: [], preferredFont: null}}
+          else {HUB.config["HTML-CSS"] = {availableFonts: [], preferredFont: null}}
       }
     },
 
@@ -2256,5 +2257,7 @@
   
   if (HUB.config.menuSettings.zoom !== "None")
     {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
+
+});
     
 })(MathJax.Ajax, MathJax.Hub, MathJax.OutputJax["HTML-CSS"]);

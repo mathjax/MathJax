@@ -220,7 +220,7 @@
     }
   });
 
-  MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
+  HUB.Register.StartupHook("mml Jax Ready",function () {
 
     MML = MathJax.ElementJax.mml;
 
@@ -442,7 +442,7 @@
       }
     });
 
-    MathJax.Hub.Register.StartupHook("TeX mathchoice Ready",function () {
+    HUB.Register.StartupHook("TeX mathchoice Ready",function () {
       MML.TeXmathchoice.Augment({
 	//
 	//  Get the MathML for the selected choice
@@ -459,8 +459,10 @@
     //
     setTimeout(MathJax.Callback(["loadComplete",nMML,"jax.js"]),0);
   });
-  
-  if (HUB.config.menuSettings.zoom !== "None")
-    {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
+
+  HUB.Register.StartupHook("End Config",function () {
+    if (HUB.config.menuSettings.zoom !== "None")
+      {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
+  });
 
 })(MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax);

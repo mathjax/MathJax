@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  varsion: "1.0.5",
+  varsion: "1.0.6",
   config: {
     element: null,          // The ID of the element to be processed
                             //   (defaults to full document)
@@ -39,7 +39,7 @@ MathJax.Extension.mml2jax = {
   
   PreProcess: function (element) {
     if (!this.configured) {
-      MathJax.Hub.Insert(this.config,(MathJax.Hub.config.mml2jax||{}));
+      this.config = MathJax.Hub.CombineConfig("mml2jax",this.config);
       if (this.config.Augment) {MathJax.Hub.Insert(this,this.config.Augment)}
       this.InitBrowser();
       this.configured = true;
