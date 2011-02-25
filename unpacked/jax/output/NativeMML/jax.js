@@ -460,7 +460,7 @@
     setTimeout(MathJax.Callback(["loadComplete",nMML,"jax.js"]),0);
   });
 
-  HUB.Register.StartupHook("End Config",function () {
+  HUB.Register.StartupHook("End Cookie",function () {
     if (HUB.config.menuSettings.zoom !== "None")
       {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
   });

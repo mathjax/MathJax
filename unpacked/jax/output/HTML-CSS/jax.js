@@ -2255,9 +2255,11 @@ HUB.Register.StartupHook("End Config",function () {
     }
   });
   
+});
+
+MathJax.Hub.Register.StartupHook("End Cookie", function () {  
   if (HUB.config.menuSettings.zoom !== "None")
     {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
-
 });
     
 })(MathJax.Ajax, MathJax.Hub, MathJax.OutputJax["HTML-CSS"]);
