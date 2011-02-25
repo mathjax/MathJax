@@ -23,9 +23,9 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
-  var VERSION = "1.0";
+  var VERSION = "1.0.1";
   
-  var CONFIG = HUB.Insert({
+  var CONFIG = HUB.CombineConfig("MathZoom",{
     delay: 400,   // mouse must be still this long (milliseconds)
 
     styles: {
@@ -55,7 +55,7 @@
         "background-color":"white", opacity:0, filter:"alpha(opacity=0)"
       }
     }
-  },(HUB.config.MathZoom||{}));
+  });
   
   /*************************************************************/
   /*

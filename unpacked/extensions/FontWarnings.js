@@ -83,9 +83,9 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "1.0";
+  var VERSION = "1.0.1";
   
-  var CONFIG = HUB.Insert({
+  var CONFIG = HUB.CombineConfig("FontWarnings",{
     //
     // The CSS for the message window
     //
@@ -204,7 +204,7 @@
     fadeoutSteps: 10,      // fade-out steps
     fadeoutTime: 1.5*1000  // fadeout over this amount of time (in ms)
 
-  },(HUB.config.FontWarnings||{}));
+  });
 
   //
   //  Data for the window

@@ -47,11 +47,11 @@
  */
 
 (function (HUB) {
-  var VERSION = "1.0.1";
+  var VERSION = "1.0.2";
   
-  var CONFIG = MathJax.Hub.Insert({
+  var CONFIG = MathJax.Hub.CombineConfig("MMLorHTML",{
     prefer: {MSIE:"MML", Firefox:"MML", Opera:"HTML", other:"HTML"}
-  },(MathJax.Hub.config.MMLorHTML||{}));
+  });
 
   var MINBROWSERVERSION = {
     Firefox: 3.0,
@@ -71,24 +71,26 @@
                   (HUB.Browser.isMSIE && MathPlayer) ||
                   (HUB.Browser.isOpera && HUB.Browser.versionAtLeast("9.52"));
 
-  var prefer = (CONFIG.prefer && typeof(CONFIG.prefer) === "object" ? 
-                CONFIG.prefer[MathJax.Hub.Browser]||CONFIG.prefer.other||"HTML" :
-                CONFIG.prefer);
+  HUB.Register.StartupHook("End Config",function () {
+    var prefer = (CONFIG.prefer && typeof(CONFIG.prefer) === "object" ? 
+                  CONFIG.prefer[MathJax.Hub.Browser]||CONFIG.prefer.other||"HTML" :
+                  CONFIG.prefer);
 
-  if (canUseHTML || canUseMML) {
-    if (canUseMML && (prefer === "MML" || !canUseHTML)) {
-      if (MathJax.OutputJax.NativeMML) {MathJax.OutputJax.NativeMML.Register("jax/mml")}
-        else {HUB.config.jax.unshift("output/NativeMML")}
+    if (canUseHTML || canUseMML) {
+      if (canUseMML && (prefer === "MML" || !canUseHTML)) {
+        if (MathJax.OutputJax.NativeMML) {MathJax.OutputJax.NativeMML.Register("jax/mml")}
+          else {HUB.config.jax.unshift("output/NativeMML")}
+      } else {
+        if (MathJax.OutputJax["HTML-CSS"]) {MathJax.OutputJax["HTML-CSS"].Register("jax/mml")}
+          else {HUB.config.jax.unshift("output/HTML-CSS")}
+      }
     } else {
-      if (MathJax.OutputJax["HTML-CSS"]) {MathJax.OutputJax["HTML-CSS"].Register("jax/mml")}
-        else {HUB.config.jax.unshift("output/HTML-CSS")}
+      HUB.PreProcess.disabled = true;
+      HUB.prepareScripts.disabled = true;
+      MathJax.Message.Set("Your browser does not support MathJax",null,4000);
+      HUB.Startup.signal.Post("MathJax not supported");
     }
-  } else {
-    HUB.PreProcess.disabled = true;
-    HUB.prepareScripts.disabled = true;
-    MathJax.Message.Set("Your browser does not support MathJax",null,4000);
-    HUB.Startup.signal.Post("MathJax not supported");
-  }
+  });
 
 })(MathJax.Hub);
 

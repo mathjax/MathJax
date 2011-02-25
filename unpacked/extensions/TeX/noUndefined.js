@@ -41,12 +41,12 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/noUndefined"] = {
-  version: "1.0",
-  config: MathJax.Hub.Insert({
+  version: "1.0.1",
+  config: MathJax.Hub.CombineConfig("TeX.noUndefined",{
     attributes: {
       mathcolor: "red"
     }
-  },((MathJax.Hub.config.TeX||{}).noUndefined||{}))
+  })
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {

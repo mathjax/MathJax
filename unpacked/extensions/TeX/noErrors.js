@@ -67,57 +67,60 @@
  */
 
 (function () {
-  var VERSION = "1.0";
+  var VERSION = "1.0.1";
   
+  var CONFIG = MathJax.Hub.CombineConfig("TeX.noErrors",{
+    multiLine: true,
+    inlineDelimiters: ["",""],     // or use ["$","$"] or ["\\(","\\)"]
+    style: {
+      "font-family": "serif",
+      "font-size":   "80%",
+      "text-align":  "left",
+      "color":       "black",
+      "padding":     "1px 3px",
+      "border":      "1px solid"
+    }
+  });
+  
+  var NBSP = "\u00A0";
+
   //
   //  The configuration defaults, augmented by the user settings
   //  
   MathJax.Extension["TeX/noErrors"] = {
     version: VERSION,
-    config: MathJax.Hub.Insert({
-      multiLine: true,
-      inlineDelimiters: ["",""],     // or use ["$","$"] or ["\\(","\\)"]
-      style: {
-        "font-family": "serif",
-        "font-size":   "80%",
-        "text-align":  "left",
-        "color":       "black",
-        "padding":     "1px 3px",
-        "border":      "1px solid"
-      }
-    },((MathJax.Hub.config.TeX||{}).noErrors||{}))
+    config: CONFIG
   };
   
-  var CONFIG = MathJax.Extension["TeX/noErrors"].config;
-  var NBSP = String.fromCharCode(0xA0);
-  
-  MathJax.Hub.Config({
-    TeX: {
-      Augment: {
-        //
-        //  Make error messages be the original TeX code
-        //  Mark them as errors and multi-line or not, and for
-        //  multi-line TeX, make spaces non-breakable (to get formatting right)
-        //
-        formatError: function (err,math,displaystyle,script) {
-          var delim = CONFIG.inlineDelimiters;
-          var multiLine = (displaystyle || CONFIG.multiLine);
-          if (!displaystyle) {math = delim[0] + math + delim[1]}
-          if (multiLine) {math = math.replace(/ /g,NBSP)} else {math = math.replace(/\n/g," ")}
-          return MathJax.ElementJax.mml.merror(math).With({isError:true, multiLine: multiLine});
+  MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+    MathJax.InputJax.TeX.Augment({
+      //
+      //  Make error messages be the original TeX code
+      //  Mark them as errors and multi-line or not, and for
+      //  multi-line TeX, make spaces non-breakable (to get formatting right)
+      //
+      formatError: function (err,math,displaystyle,script) {
+        var delim = CONFIG.inlineDelimiters;
+        var multiLine = (displaystyle || CONFIG.multiLine);
+        if (!displaystyle) {math = delim[0] + math + delim[1]}
+        if (multiLine) {math = math.replace(/ /g,NBSP)} else {math = math.replace(/\n/g," ")}
+        return MathJax.ElementJax.mml.merror(math).With({isError:true, multiLine: multiLine});
+      }
+    });
+  });
+
+  MathJax.Hub.Register.StartupHook("HTML-CSS Jax Config",function () {
+    MathJax.Hub.Config({
+      "HTML-CSS": {
+        styles: {
+          ".MathJax .merror": MathJax.Hub.Insert({
+            "font-style":       null,
+            "background-color": null,
+            "vertical-align":   (MathJax.Hub.Browser.isMSIE && CONFIG.multiLine ? "-2px" : "")
+          },CONFIG.style)
         }
       }
-    },
-    
-    "HTML-CSS": {
-      styles: {
-        ".MathJax .merror": MathJax.Hub.Insert({
-          "font-style":       null,
-          "background-color": null,
-          "vertical-align":   (MathJax.Hub.Browser.isMSIE && CONFIG.multiLine ? "-2px" : "")
-        },CONFIG.style)
-      }
-    }
+    });
   });
 
 })();
