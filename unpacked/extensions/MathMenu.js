@@ -679,81 +679,81 @@
 
   /*************************************************************/
 
-HUB.Register.StartupHook("End Config",function () {
+  HUB.Register.StartupHook("End Config",function () {
 
-  /*
-   *  Get the menu settings from the HUB (which includes the
-   *  data from the cookie already), and add the format, if
-   *  it wasn't set in the cookie.
-   */
-  CONFIG.settings = HUB.config.menuSettings;
-  if (!CONFIG.settings.format)
-    {CONFIG.settings.format = (MathJax.InputJax.TeX ? "Original" : "MathML")}
-  if (typeof(CONFIG.settings.showRenderer) !== "undefined") {CONFIG.showRenderer = CONFIG.settings.showRenderer}
-  if (typeof(CONFIG.settings.showFontMenu) !== "undefined") {CONFIG.showFontMenu = CONFIG.settings.showFontMenu}
-  if (typeof(CONFIG.settings.showContext)  !== "undefined") {CONFIG.showContext  = CONFIG.settings.showContext}
-  MENU.getCookie();
+    /*
+     *  Get the menu settings from the HUB (which includes the
+     *  data from the cookie already), and add the format, if
+     *  it wasn't set in the cookie.
+     */
+    CONFIG.settings = HUB.config.menuSettings;
+    if (!CONFIG.settings.format)
+      {CONFIG.settings.format = (MathJax.InputJax.TeX ? "Original" : "MathML")}
+    if (typeof(CONFIG.settings.showRenderer) !== "undefined") {CONFIG.showRenderer = CONFIG.settings.showRenderer}
+    if (typeof(CONFIG.settings.showFontMenu) !== "undefined") {CONFIG.showFontMenu = CONFIG.settings.showFontMenu}
+    if (typeof(CONFIG.settings.showContext)  !== "undefined") {CONFIG.showContext  = CONFIG.settings.showContext}
+    MENU.getCookie();
 
-  /*
-   *  The main menu
-   */
-  MENU.menu = MENU(
-    ITEM.COMMAND("Show Source",MENU.ShowSource),
-    ITEM.SUBMENU("Format",
-      ITEM.RADIO("MathML",   "format"),
-      ITEM.RADIO("Original", "format", {value: "Original"})
-    ),
-    ITEM.RULE(),
-    ITEM.SUBMENU("Settings",
-      ITEM.SUBMENU("Zoom Trigger",
-        ITEM.RADIO("Hover",         "zoom", {action: MENU.Zoom}),
-        ITEM.RADIO("Click",         "zoom", {action: MENU.Zoom}),
-        ITEM.RADIO("Double-Click",  "zoom", {action: MENU.Zoom}),
-        ITEM.RADIO("No Zoom",       "zoom", {value: "None"}),
-        ITEM.RULE(),
-        ITEM.LABEL("Trigger Requires:"),
-        ITEM.CHECKBOX((HUB.Browser.isMac ? "Option" : "Alt"), "ALT"),
-        ITEM.CHECKBOX("Command",    "CMD",  {hidden: !HUB.Browser.isMac}),
-        ITEM.CHECKBOX("Control",    "CTRL", {hidden:  HUB.Browser.isMac}),
-        ITEM.CHECKBOX("Shift",      "Shift")
-      ),
-      ITEM.SUBMENU("Zoom Factor",
-        ITEM.RADIO("125%", "zscale"),
-        ITEM.RADIO("133%", "zscale"),
-        ITEM.RADIO("150%", "zscale"),
-        ITEM.RADIO("175%", "zscale"),
-        ITEM.RADIO("200%", "zscale"),
-        ITEM.RADIO("250%", "zscale"),
-        ITEM.RADIO("300%", "zscale"),
-        ITEM.RADIO("400%", "zscale")
+    /*
+     *  The main menu
+     */
+    MENU.menu = MENU(
+      ITEM.COMMAND("Show Source",MENU.ShowSource),
+      ITEM.SUBMENU("Format",
+        ITEM.RADIO("MathML",   "format"),
+        ITEM.RADIO("Original", "format", {value: "Original"})
       ),
       ITEM.RULE(),
-      ITEM.SUBMENU("Math Renderer",         {hidden:!CONFIG.showRenderer},
-        ITEM.RADIO("HTML-CSS",  "renderer", {action: MENU.Renderer}),
-        ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"})
-      ),
-      ITEM.SUBMENU("Font Preference",       {hidden:!CONFIG.showFontMenu},
-        ITEM.LABEL("For HTML-CSS:"),
-        ITEM.RADIO("Auto",          "font", {action: MENU.Font}),
+      ITEM.SUBMENU("Settings",
+        ITEM.SUBMENU("Zoom Trigger",
+          ITEM.RADIO("Hover",         "zoom", {action: MENU.Zoom}),
+          ITEM.RADIO("Click",         "zoom", {action: MENU.Zoom}),
+          ITEM.RADIO("Double-Click",  "zoom", {action: MENU.Zoom}),
+          ITEM.RADIO("No Zoom",       "zoom", {value: "None"}),
+          ITEM.RULE(),
+          ITEM.LABEL("Trigger Requires:"),
+          ITEM.CHECKBOX((HUB.Browser.isMac ? "Option" : "Alt"), "ALT"),
+          ITEM.CHECKBOX("Command",    "CMD",  {hidden: !HUB.Browser.isMac}),
+          ITEM.CHECKBOX("Control",    "CTRL", {hidden:  HUB.Browser.isMac}),
+          ITEM.CHECKBOX("Shift",      "Shift")
+        ),
+        ITEM.SUBMENU("Zoom Factor",
+          ITEM.RADIO("125%", "zscale"),
+          ITEM.RADIO("133%", "zscale"),
+          ITEM.RADIO("150%", "zscale"),
+          ITEM.RADIO("175%", "zscale"),
+          ITEM.RADIO("200%", "zscale"),
+          ITEM.RADIO("250%", "zscale"),
+          ITEM.RADIO("300%", "zscale"),
+          ITEM.RADIO("400%", "zscale")
+        ),
         ITEM.RULE(),
-        ITEM.RADIO("TeX (local)",   "font", {action: MENU.Font}),
-        ITEM.RADIO("TeX (web)",     "font", {action: MENU.Font}),
-        ITEM.RADIO("TeX (image)",   "font", {action: MENU.Font}),
-        ITEM.RULE(),
-        ITEM.RADIO("STIX (local)",  "font", {action: MENU.Font})
+        ITEM.SUBMENU("Math Renderer",         {hidden:!CONFIG.showRenderer},
+          ITEM.RADIO("HTML-CSS",  "renderer", {action: MENU.Renderer}),
+          ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"})
+        ),
+        ITEM.SUBMENU("Font Preference",       {hidden:!CONFIG.showFontMenu},
+          ITEM.LABEL("For HTML-CSS:"),
+          ITEM.RADIO("Auto",          "font", {action: MENU.Font}),
+          ITEM.RULE(),
+          ITEM.RADIO("TeX (local)",   "font", {action: MENU.Font}),
+          ITEM.RADIO("TeX (web)",     "font", {action: MENU.Font}),
+          ITEM.RADIO("TeX (image)",   "font", {action: MENU.Font}),
+          ITEM.RULE(),
+          ITEM.RADIO("STIX (local)",  "font", {action: MENU.Font})
+        ),
+        ITEM.SUBMENU("Contextual Menu",       {hidden:!CONFIG.showContext},
+          ITEM.RADIO("MathJax", "context"),
+          ITEM.RADIO("Browser", "context")
+        ),
+        ITEM.COMMAND("Scale All Math ...",MENU.Scale)
       ),
-      ITEM.SUBMENU("Contextual Menu",       {hidden:!CONFIG.showContext},
-        ITEM.RADIO("MathJax", "context"),
-        ITEM.RADIO("Browser", "context")
-      ),
-      ITEM.COMMAND("Scale All Math ...",MENU.Scale)
-    ),
-    ITEM.RULE(),
-    ITEM.COMMAND("About MathJax",MENU.About),
-    ITEM.COMMAND("MathJax Help",MENU.Help)
-  );
+      ITEM.RULE(),
+      ITEM.COMMAND("About MathJax",MENU.About),
+      ITEM.COMMAND("MathJax Help",MENU.Help)
+    );
 
-});
+  });
 
   MENU.showRenderer = function (show) {
     MENU.cookie.showRenderer = CONFIG.showRenderer = show; MENU.saveCookie();
