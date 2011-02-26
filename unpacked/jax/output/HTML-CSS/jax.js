@@ -163,16 +163,18 @@
 
     fontFace: function (name) {
       var type = HTMLCSS.allowWebFonts;
+      var FONT = HTMLCSS.FONTDATA.FONTS[name];
+      if (HTMLCSS.msieFontCSSBug && !FONT.family.match(/-Web$/)) {FONT.family += "-Web"}
       var dir = AJAX.fileURL(HTMLCSS.webfontDir+"/"+type);
       var fullname = name.replace(/-b/,"-B").replace(/-i/,"-I").replace(/-Bold-/,"-Bold");
       if (!fullname.match(/-/)) {fullname += "-Regular"}
       if (type === "svg") {fullname += ".svg#"+fullname} else {fullname += "."+type}
       var def = {
-        "font-family": HTMLCSS.FONTDATA.FONTS[name].family,
+        "font-family": FONT.family,
         src: "url('"+dir+"/"+fullname+"')"
       };
       if (type === "svg") def.src += " format('svg')";
-      if (!(HTMLCSS.FontFaceBug && HTMLCSS.FONTDATA.FONTS[name].isWebFont)) {
+      if (!(HTMLCSS.FontFaceBug && FONT.isWebFont)) {
         if (name.match(/-bold/)) {def["font-weight"] = "bold"}
         if (name.match(/-italic/)) {def["font-style"] = "italic"}
       }
@@ -412,6 +414,7 @@
     ContextMenu: function (event,force) {
       if (HTMLCSS.config.showMathMenu && (HTMLCSS.settings.context === "MathJax" || force)) {
         if (HTMLCSS.safariContextMenuBug) {setTimeout('window.getSelection().empty()',0)}
+        if (!event || HTMLCSS.msieEventBug) {event = window.event}
         var MENU = MathJax.Menu;
         if (MENU) {
           var math = (this.parentNode.className === "MathJax_Display" ? this.parentNode : this)
@@ -422,7 +425,6 @@
         } else {
           if (!AJAX.loadingMathMenu) {
             AJAX.loadingMathMenu = true;
-            if (!event) {event = window.event}
             var EVENT = {pageX:event.pageX, pageY:event.pageY, clientX:event.clientX, clientY:event.clientY};
             MathJax.Callback.Queue(
               AJAX.Require("[MathJax]/extensions/MathMenu.js"),
@@ -466,7 +468,10 @@
         {FONTS[name].available = true; return null}
       if (!this.allowWebFonts) {return null}
       FONTS[name].isWebFont = true;
-      if (HTMLCSS.FontFaceBug) {FONTS[name].family = name}
+      if (HTMLCSS.FontFaceBug) {
+        FONTS[name].family = name;
+        if (HTMLCSS.msieFontCSSBug) {FONTS[name].family += "-Web"}
+      }
       return AJAX.Styles({"@font-face":this.Font.fontFace(name)});
     },
 
@@ -1068,7 +1073,10 @@
 
     loadWebFont: function (font) {
       font.available = font.isWebFont = true;
-      if (HTMLCSS.FontFaceBug) {font.family = font.name}
+      if (HTMLCSS.FontFaceBug) {
+        font.family = font.name;
+        if (HTMLCSS.msieFontCSSBug) {font.family += "-Web"}
+      }
       HUB.RestartAfter(this.Font.loadWebFont(font));
     },
     loadWebFontError: function (font,done) {
@@ -2135,6 +2143,7 @@ HUB.Register.StartupHook("End Config",function () {
       HTMLCSS.Augment({
         getMarginScale: HTMLCSS.getMSIEmarginScale,
         PaddingWidthBug: true,
+        msieEventBug: browser.isIE9,
         msieAccentBug: true,
         msieColorBug: true,
         msieRelativeWidthBug: quirks,
@@ -2152,6 +2161,7 @@ HUB.Register.StartupHook("End Config",function () {
         msieItalicWidthBug: true,
         zeroWidthBug: true,
         FontFaceBug: true,
+        msieFontCSSBug: browser.isIE9,
         allowWebFonts: "eot"
       });
     },

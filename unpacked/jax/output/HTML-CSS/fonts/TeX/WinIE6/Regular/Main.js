@@ -106,6 +106,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_WinIE6'] = {
   0xE2B2: [40,2961,1000,111,1020]    // ??
 };
 
-MathJax.OutputJax["HTML-CSS"].initFont("MathJax_WinIE6");
-
-MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/WinIE6/Regular/Main.js");
+MathJax.Callback.Queue(
+  ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_WinIE6"],
+  ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/WinIE6/Regular/Main.js"]
+);

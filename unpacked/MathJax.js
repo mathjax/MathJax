@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.13";
+MathJax.version = "1.0.14";
 
 /**********************************************************/
 
@@ -884,10 +884,10 @@ MathJax.version = "1.0.13";
           string += id + " {"+this.StyleString(styles[id])+"}\n";
         } else if (styles[id] != null) {
           style = [];
-          for (var name in styles[id]) {
-            if (styles[id][name] != null)
+          for (var name in styles[id]) {if (styles[id].hasOwnProperty(name)) {
+            if (styles[id][name] != null) 
               {style[style.length] = name + ': ' + styles[id][name]}
-          }
+          }}
           string += id +" {"+style.join('; ')+"}\n";
         }
       }}
@@ -938,6 +938,16 @@ MathJax.HTML = {
   addElement: function (span,type,def,contents) {return span.appendChild(this.Element(type,def,contents))},
   TextNode: function (text) {return document.createTextNode(text)},
   addText: function (span,text) {return span.appendChild(this.TextNode(text))},
+
+  //
+  //  Set the text of a script
+  //
+  setScript: function (script,text) {
+    if (this.setScriptBug) {script.text = text} else {
+      while (script.firstChild) {script.removeChild(script.firstChild)}
+      this.addText(script,text);
+    }
+  },
 
   //
   //  Manage cookies
@@ -1308,7 +1318,7 @@ MathJax.Hub = {
     Update: function (script) {
       var jax = script.MathJax.elementJax;
       //  FIXME:  Have intputJax determine if things have changed?
-      if (jax && jax.originalText === (script.text == ""? script.innerHTML : script.text))
+      if (jax && jax.originalText === (script.text == "" ? script.innerHTML : script.text))
         {script.MathJax.state = jax.STATE.PROCESSED} else
         {jax.outputJax.Remove(jax); script.MathJax.state = jax.STATE.UPDATE}
     },
@@ -1839,10 +1849,7 @@ MathJax.Hub.Startup = {
     
     Text: function (text,callback) {
       var script = this.SourceElement();
-      if (script.firstChild) {
-        if (script.firstChild.nodeName !== "#text") {script.text = text}
-          else {script.firstChild.nodeValue = text}
-      } else {try {script.innerHTML = text} catch(err) {script.text = text}}
+      BASE.HTML.setScript(script,text);
       script.MathJax.state = this.STATE.UPDATE;
       return HUB.Update(script,callback);
     },
@@ -2001,7 +2008,11 @@ MathJax.Hub.Startup = {
         else if (date >= "20061024") {browser.version = "2.0"}
       }
     },
-    Opera: function (browser) {browser.version = opera.version()}
+    Opera: function (browser) {browser.version = opera.version()},
+    MSIE: function (browser) {
+      browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
+      MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
+    }
   });
   HUB.Browser.Select(MathJax.Message.browsers);
 

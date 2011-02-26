@@ -24,7 +24,7 @@
 
 MathJax.OutputJax.NativeMML = MathJax.OutputJax({
   id: "NativeMML",
-  version: "1.0.5",
+  version: "1.0.6",
   directory: MathJax.OutputJax.directory + "/NativeMML",
   extensionDir: MathJax.OutputJax.extensionDir + "/NativeMML",
   

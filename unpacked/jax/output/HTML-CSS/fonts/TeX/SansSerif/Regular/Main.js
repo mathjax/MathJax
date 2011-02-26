@@ -30,6 +30,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_SansSerif'] = {
 
 };
 
-MathJax.OutputJax["HTML-CSS"].initFont("MathJax_SansSerif");
-
-MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/SansSerif/Regular/Main.js");
+MathJax.Callback.Queue(
+  ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_SansSerif"],
+  ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/SansSerif/Regular/Main.js"]
+);
