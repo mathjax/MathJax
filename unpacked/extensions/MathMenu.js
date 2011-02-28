@@ -8,7 +8,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010 Design Science, Inc.
+ *  Copyright (c) 2010-11 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.0.4";
+  var VERSION = "1.0.5";
   
   MathJax.Extension.MathMenu = {version: VERSION};
 
