@@ -542,7 +542,7 @@
   };
   MENU.About.GetJax = function (jax,JAX,type,noTypeCheck) {
     for (var id in JAX) {if (JAX.hasOwnProperty(id) && JAX[id]) {
-      if (noTypeCheck || (JAX[id].isa && JAX[id].isa(JAX)))
+      if ((noTypeCheck && JAX[id].version) || (JAX[id].isa && JAX[id].isa(JAX)))
         {jax.push((JAX[id].id||id)+" "+type+" v"+JAX[id].version,["br"])}
     }}
     return jax;
