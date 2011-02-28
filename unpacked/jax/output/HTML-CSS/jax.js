@@ -574,7 +574,7 @@
       if (length === "infinity")      {return HTMLCSS.BIGDIMEN}
       var factor = this.FONTDATA.TeX_factor;
       if (length.match(/mathspace$/)) {return HTMLCSS.MATHSPACE[length]*factor}
-      var match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|in|mm|cm|%)?/);
+      var match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
       var m = parseFloat(match[1]||"1"), unit = match[2];
       if (size == null) {size = 1}
       if (unit === "em") {return m * factor}
@@ -582,10 +582,10 @@
       if (unit === "%")  {return m / 100 * size}
       if (unit === "px") {return m / HTMLCSS.em}
       if (unit === "pt") {return m / 10 * factor}                        // 10 pt to an em
+      if (unit === "pc") {return m * 1.2 * factor}                       // 12 pt to a pc
       if (unit === "in") {return m * this.pxPerInch / HTMLCSS.em}
       if (unit === "cm") {return m * this.pxPerInch / HTMLCSS.em / 2.54} // 2.54 cm to an inch
       if (unit === "mm") {return m * this.pxPerInch / HTMLCSS.em / 25.4} // 10 mm to a cm
-      if (unit === "pc") {return m * this.pxPerInch / HTMLCSS.em / 12}   // 12 pc to an inch
       if (unit === "mu") {return m / 18 * factor} // FIXME:  needs to include scale
       return m*factor*size;  // relative to given size (or 1em as default)
     },
