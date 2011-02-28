@@ -184,8 +184,6 @@
 
   HTMLCSS.Augment({
     config: {
-      useOldImageData: true, // for now
-
       styles: {
         ".MathJax": {
           "display":         "inline",

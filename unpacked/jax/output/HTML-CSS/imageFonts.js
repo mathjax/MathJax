@@ -30,7 +30,7 @@
       allowWebFonts: false,
       
       imgDir: HTMLCSS.webfontDir+"/png",
-      imgPacked: (MathJax.isPacked || HTMLCSS.config.useOldImageData ? "" : "/unpacked"),
+      imgPacked: (MathJax.isPacked ? "" : "/unpacked"),
       imgSize: ['050','060','071','085',100,120,141,168,200,238,283,336,400,476],
       imgBaseIndex: 4,      // set by initImg()
       imgSizeForEm: {},     // cache of indexes by em-size
@@ -184,7 +184,6 @@
     };
     
     var IMGDIR = HTMLCSS.imgDir + HTMLCSS.imgPacked;
-    if (HTMLCSS.config.useOldImageData) IMGDIR = HTMLCSS.webfontDir;
     
     MathJax.Callback.Queue(
       ["Require",AJAX,IMGDIR+"/imagedata.js"],
