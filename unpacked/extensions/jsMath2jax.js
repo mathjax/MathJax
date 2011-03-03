@@ -15,7 +15,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010 Design Science, Inc.
+ *  Copyright (c) 2010-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@
  */
 
 MathJax.Extension.jsMath2jax = {
-  version: "1.0.3",
+  version: "1.1",
   
   config: {
     element: null,    // The ID of the element to be processed

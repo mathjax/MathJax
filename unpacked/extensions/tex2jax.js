@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.0.4",
+  version: "1.1",
   config: {
     element: null,             // The ID of the element to be processed
                                //   (defaults to full document)

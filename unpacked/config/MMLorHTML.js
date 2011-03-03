@@ -31,7 +31,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010 Design Science, Inc.
+ *  Copyright (c) 2010-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@
  */
 
 (function (HUB) {
-  var VERSION = "1.0.2";
+  var VERSION = "1.1";
   
   var CONFIG = MathJax.Hub.CombineConfig("MMLorHTML",{
     prefer: {MSIE:"MML", Firefox:"MML", Opera:"HTML", other:"HTML"}
