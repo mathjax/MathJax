@@ -2208,7 +2208,7 @@
           safariVerticalAlignBug: !v3p1,
           safariTextNodeBug: !v3p0,
           safariWebFontSerif: ["serif"],
-          allowWebFonts: (v3p1 && !forceImages ? (browser.isPC ? "svg" : "otf") : false)
+          allowWebFonts: (v3p1 && !forceImages ? "otf" : false)
         });
         if (forceImages) {
           //  Force image mode for iOS prior to 4.2 and Droid prior to 2.2
@@ -2225,7 +2225,7 @@
           rfuzz: .05,
           AccentBug: true,
           AdjustSurd: true,
-          allowWebFonts: "svg",
+          allowWebFonts: (browser.versionAtLeast("4.0") ? "otf" : "svg"),
           safariNegativeSpaceBug: true,
           safariWebFontSerif: [""]
         });
