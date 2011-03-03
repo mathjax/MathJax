@@ -6,7 +6,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009 Design Science, Inc.
+ *  Copyright (c) 2009-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 (function (HUB,HTMLCSS,AJAX) {
-  var VERSION = "1.0";
+  var VERSION = "1.0.1";
   
   HUB.Register.LoadHook(HTMLCSS.fontDir + "/fontdata.js",function () {
 
@@ -30,7 +30,7 @@
       allowWebFonts: false,
       
       imgDir: HTMLCSS.webfontDir+"/png",
-      imgPacked: (MathJax.isPacked || HTMLCSS.config.useOldImageData ? "" : "/unpacked"),
+      imgPacked: (MathJax.isPacked ? "" : "/unpacked"),
       imgSize: ['050','060','071','085',100,120,141,168,200,238,283,336,400,476],
       imgBaseIndex: 4,      // set by initImg()
       imgSizeForEm: {},     // cache of indexes by em-size
@@ -184,7 +184,6 @@
     };
     
     var IMGDIR = HTMLCSS.imgDir + HTMLCSS.imgPacked;
-    if (HTMLCSS.config.useOldImageData) IMGDIR = HTMLCSS.webfontDir;
     
     MathJax.Callback.Queue(
       ["Require",AJAX,IMGDIR+"/imagedata.js"],
