@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.0.14";
+MathJax.version = "1.0.15";
 
 /**********************************************************/
 
@@ -1994,7 +1994,9 @@ MathJax.Hub.Startup = {
   HUB.Browser.Select({
     Safari: function (browser) {
       var v = parseInt((String(browser.version).split("."))[0]);
-      if      (v >= 526) {browser.version = "4.0"}
+      if (v > 85) {browser.webkit = browser.version}
+      if      (v >= 533) {browser.version = "5.0"}
+      else if (v >= 526) {browser.version = "4.0"}
       else if (v >= 525) {browser.version = "3.1"}
       else if (v >  500) {browser.version = "3.0"}
       else if (v >  400) {browser.version = "2.0"}

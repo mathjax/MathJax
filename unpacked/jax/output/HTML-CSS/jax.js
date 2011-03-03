@@ -2187,7 +2187,7 @@
         browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
         var android = (navigator.appVersion.match(/ Android (\d+)\.(\d+)/));
         var forceImages = (v3p1 && browser.isMobile && (
-          (navigator.platform.match(/iPad|iPod|iPhone/) && !browser.versionAtLeast("5.0.2")) ||
+          (navigator.platform.match(/iPad|iPod|iPhone/) && !browser.versionAtLeast("5.0")) ||
           (android != null && (android[1] < 2 || (android[1] == 2 && android[2] < 2)))
         ));
         HTMLCSS.Augment({
