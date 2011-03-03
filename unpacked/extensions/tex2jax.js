@@ -8,7 +8,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009 Design Science, Inc.
+ *  Copyright (c) 2009-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.0.3",
+  version: "1.0.4",
   config: {
     element: null,             // The ID of the element to be processed
                                //   (defaults to full document)
 
     inlineMath: [              // The start/stop pairs for in-line math
-      ['$','$'],               //  (comment out any you don't want, or add your own, but
+//    ['$','$'],               //  (comment out any you don't want, or add your own, but
       ['\\(','\\)']            //  be sure that you don't have an extra comma at the end)
     ],
 
