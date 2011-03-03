@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  MathJax/config/MathJax.js
+ *  MathJax/config/default.js
  *
  *  This configuration file is loaded when there is no explicit
  *  configuration script in the <script> tag that loads MathJax.js
@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-10 Design Science, Inc.
+ *  Copyright (c) 2009-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -599,4 +599,4 @@ MathJax.Hub.Config({
   }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/config/MathJax.js");
+MathJax.Ajax.loadComplete("[MathJax]/config/default.js");
