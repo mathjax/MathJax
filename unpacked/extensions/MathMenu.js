@@ -8,7 +8,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010 Design Science, Inc.
+ *  Copyright (c) 2010-11 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,8 +24,10 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.0.4";
+  var VERSION = "1.0.5";
   
+  MathJax.Extension.MathMenu = {version: VERSION};
+
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE;
   var ROUND = (isPC ? null : "5px");
   
@@ -501,17 +503,23 @@
   MENU.About = function () {
     var HTMLCSS = MathJax.OutputJax["HTML-CSS"] || {fontInUse: ""};
     var local = (HTMLCSS.webFonts ? "" : "local "), web = (HTMLCSS.webFonts ? " web" : "");
-    var font = (HTMLCSS.imgFonts ? "Image" : local+HTMLCSS.fontInUse+web);
+    var font = (HTMLCSS.imgFonts ? "Image" : local+HTMLCSS.fontInUse+web) + " fonts";
     var jax = [];
-    MENU.About.GetJax(jax,MathJax.InputJax,"Input");
-    MENU.About.GetJax(jax,MathJax.OutputJax,"Output");
-    MENU.About.GetJax(jax,MathJax.ElementJax,"Element");
+    MENU.About.GetJax(jax,MathJax.InputJax,"Input Jax");
+    MENU.About.GetJax(jax,MathJax.OutputJax,"Output Jax");
+    MENU.About.GetJax(jax,MathJax.ElementJax,"Element Jax");
+    jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
+    MENU.About.GetJax(jax,MathJax.Extension,"Extension",true);
+    jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}],["center",{},[
+      HUB.Browser + " v"+HUB.Browser.version +
+      (HTMLCSS.webFonts ? " \u2014 "+HTMLCSS.allowWebFonts+" fonts" : "")
+    ]]);
     MENU.About.div = MENU.Background(MENU.About);
     var about = MathJax.HTML.addElement(MENU.About.div,"div",{
       id: "MathJax_About", onclick: MENU.About.Remove
     },[
       ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
-      "using "+font+" fonts",["br"],["br"],
+      "using "+font,["br"],["br"],
       ["span",{style:{
         display:"inline-block", "text-align":"left", "font-size":"80%",
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
@@ -532,13 +540,14 @@
   MENU.About.Remove = function (event) {
     if (MENU.About.div) {document.body.removeChild(MENU.About.div); delete MENU.About.div}
   };
-  MENU.About.GetJax = function (jax,JAX,type) {
-    for (var id in JAX) {if (JAX.hasOwnProperty(id)) {
-      if (JAX[id].isa && JAX[id].isa(JAX))
-        {jax.push(JAX[id].id+" "+type+" Jax v"+JAX[id].version,["br"])}
+  MENU.About.GetJax = function (jax,JAX,type,noTypeCheck) {
+    for (var id in JAX) {if (JAX.hasOwnProperty(id) && JAX[id]) {
+      if ((noTypeCheck && JAX[id].version) || (JAX[id].isa && JAX[id].isa(JAX)))
+        {jax.push((JAX[id].id||id)+" "+type+" v"+JAX[id].version,["br"])}
     }}
     return jax;
   };
+
   
   /*
    *  Handle the MathJax HELP menu
