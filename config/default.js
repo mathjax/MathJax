@@ -2,8 +2,8 @@
  *
  *  MathJax/config/default.js
  *
- *  This configuration file is loaded when there is no explicit
- *  configuration script in the <script> tag that loads MathJax.js
+ *  This configuration file is loaded when you load MathJax
+ *  via <script src="MathJax.js?config=default"></script>
  *
  *  Use it to customize the MathJax settings.  See comments below.
  *
