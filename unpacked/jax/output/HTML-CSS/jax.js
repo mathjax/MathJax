@@ -163,16 +163,18 @@
 
     fontFace: function (name) {
       var type = HTMLCSS.allowWebFonts;
+      var FONT = HTMLCSS.FONTDATA.FONTS[name];
+      if (HTMLCSS.msieFontCSSBug && !FONT.family.match(/-Web$/)) {FONT.family += "-Web"}
       var dir = AJAX.fileURL(HTMLCSS.webfontDir+"/"+type);
       var fullname = name.replace(/-b/,"-B").replace(/-i/,"-I").replace(/-Bold-/,"-Bold");
       if (!fullname.match(/-/)) {fullname += "-Regular"}
       if (type === "svg") {fullname += ".svg#"+fullname} else {fullname += "."+type}
       var def = {
-        "font-family": HTMLCSS.FONTDATA.FONTS[name].family,
+        "font-family": FONT.family,
         src: "url('"+dir+"/"+fullname+"')"
       };
       if (type === "svg") def.src += " format('svg')";
-      if (!(HTMLCSS.FontFaceBug && HTMLCSS.FONTDATA.FONTS[name].isWebFont)) {
+      if (!(HTMLCSS.FontFaceBug && FONT.isWebFont)) {
         if (name.match(/-bold/)) {def["font-weight"] = "bold"}
         if (name.match(/-italic/)) {def["font-style"] = "italic"}
       }
@@ -256,9 +258,10 @@
     LEFTBUTTON: (HUB.Browser.isMSIE ? 1 : 0),  // the event.button value for left button
     MENUKEY: "altKey",                         // the event value for alternate context menu
 
-    Font: FONTTEST(),
+    Font: null,  // created by Config() below
 
     Config: function () {
+      this.Font = FONTTEST();
       this.SUPER(arguments).Config.call(this); var settings = this.settings;
       if (this.adjustAvailableFonts) {this.adjustAvailableFonts(this.config.availableFonts)}
       if (settings.scale) {this.config.scale = settings.scale}
@@ -411,6 +414,7 @@
     ContextMenu: function (event,force) {
       if (HTMLCSS.config.showMathMenu && (HTMLCSS.settings.context === "MathJax" || force)) {
         if (HTMLCSS.safariContextMenuBug) {setTimeout('window.getSelection().empty()',0)}
+        if (!event || HTMLCSS.msieEventBug) {event = window.event}
         var MENU = MathJax.Menu;
         if (MENU) {
           var math = (this.parentNode.className === "MathJax_Display" ? this.parentNode : this)
@@ -421,7 +425,6 @@
         } else {
           if (!AJAX.loadingMathMenu) {
             AJAX.loadingMathMenu = true;
-            if (!event) {event = window.event}
             var EVENT = {pageX:event.pageX, pageY:event.pageY, clientX:event.clientX, clientY:event.clientY};
             MathJax.Callback.Queue(
               AJAX.Require("[MathJax]/extensions/MathMenu.js"),
@@ -465,7 +468,10 @@
         {FONTS[name].available = true; return null}
       if (!this.allowWebFonts) {return null}
       FONTS[name].isWebFont = true;
-      if (HTMLCSS.FontFaceBug) {FONTS[name].family = name}
+      if (HTMLCSS.FontFaceBug) {
+        FONTS[name].family = name;
+        if (HTMLCSS.msieFontCSSBug) {FONTS[name].family += "-Web"}
+      }
       return AJAX.Styles({"@font-face":this.Font.fontFace(name)});
     },
 
@@ -1067,7 +1073,10 @@
 
     loadWebFont: function (font) {
       font.available = font.isWebFont = true;
-      if (HTMLCSS.FontFaceBug) {font.family = font.name}
+      if (HTMLCSS.FontFaceBug) {
+        font.family = font.name;
+        if (HTMLCSS.msieFontCSSBug) {font.family += "-Web"}
+      }
       HUB.RestartAfter(this.Font.loadWebFont(font));
     },
     loadWebFontError: function (font,done) {
@@ -2116,144 +2125,150 @@
     });
   });
 
-  //
-  //  Handle browser-specific setup
-  //
-  HUB.Browser.Select({
-    MSIE: function (browser) {
-      var isIE7 = browser.versionAtLeast("7.0");
-      var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
-      var quirks = (document.compatMode === "BackCompat");
-      // IE doesn't do mouse events on trasparent objects,
-      //   so give a background color, but opacity makes it transparent
-      HTMLCSS.config.styles[".MathJax .MathJax_HitBox"]["background-color"] = "white";
-      HTMLCSS.config.styles[".MathJax .MathJax_HitBox"].opacity = 0
-      HTMLCSS.config.styles[".MathJax .MathJax_HitBox"].filter = "alpha(opacity=0)";
-      // FIXME:  work out tests for these?
-      HTMLCSS.Augment({
-        getMarginScale: HTMLCSS.getMSIEmarginScale,
-        PaddingWidthBug: true,
-        msieAccentBug: true,
-        msieColorBug: true,
-        msieRelativeWidthBug: quirks,
-        msieMarginWidthBug: true,
-        msiePaddingWidthBug: true,
-        msieCharPaddingWidthBug: (isIE8 && !quirks),
-        msieBorderWidthBug: quirks,
-        msieInlineBlockAlignBug: (!isIE8 || quirks),
-        msieVerticalAlignBug: (isIE8 && !quirks),
-        msiePlaceBoxBug: (isIE8 && !quirks),
-        msieClipRectBug: !isIE8,
-        msieNegativeSpaceBug: quirks,
-        negativeSkipBug: true,
-        msieIE6: !isIE7,
-        msieItalicWidthBug: true,
-        zeroWidthBug: true,
-        FontFaceBug: true,
-        allowWebFonts: "eot"
-      });
-    },
+  HUB.Register.StartupHook("End Config",function () {
+    //
+    //  Handle browser-specific setup
+    //
+    HUB.Browser.Select({
+      MSIE: function (browser) {
+        var isIE7 = browser.versionAtLeast("7.0");
+        var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
+        var quirks = (document.compatMode === "BackCompat");
+        // IE doesn't do mouse events on trasparent objects,
+        //   so give a background color, but opacity makes it transparent
+        HTMLCSS.config.styles[".MathJax .MathJax_HitBox"]["background-color"] = "white";
+        HTMLCSS.config.styles[".MathJax .MathJax_HitBox"].opacity = 0
+        HTMLCSS.config.styles[".MathJax .MathJax_HitBox"].filter = "alpha(opacity=0)";
+        // FIXME:  work out tests for these?
+        HTMLCSS.Augment({
+          getMarginScale: HTMLCSS.getMSIEmarginScale,
+          PaddingWidthBug: true,
+          msieEventBug: browser.isIE9,
+          msieAccentBug: true,
+          msieColorBug: true,
+          msieRelativeWidthBug: quirks,
+          msieMarginWidthBug: true,
+          msiePaddingWidthBug: true,
+          msieCharPaddingWidthBug: (isIE8 && !quirks),
+          msieBorderWidthBug: quirks,
+          msieInlineBlockAlignBug: (!isIE8 || quirks),
+          msieVerticalAlignBug: (isIE8 && !quirks),
+          msiePlaceBoxBug: (isIE8 && !quirks),
+          msieClipRectBug: !isIE8,
+          msieNegativeSpaceBug: quirks,
+          negativeSkipBug: true,
+          msieIE6: !isIE7,
+          msieItalicWidthBug: true,
+          zeroWidthBug: true,
+          FontFaceBug: true,
+          msieFontCSSBug: browser.isIE9,
+          allowWebFonts: "eot"
+        });
+      },
 
-    Firefox: function (browser) {
-      var webFonts = false;
-      if (browser.versionAtLeast("3.5")) {
-        var root = String(document.location).replace(/[^\/]*$/,"");
-        if (document.location.protocol !== "file:" ||
-            (HUB.config.root+"/").substr(0,root.length) === root) {webFonts = "otf"}
-      }
-      HTMLCSS.Augment({
-        useProcessingFrame: true,
-        ffVerticalAlignBug: true,
-        AccentBug: true,
-        allowWebFonts: webFonts
-      });
-    },
-
-    Safari: function (browser) {
-      var v3p0 = browser.versionAtLeast("3.0");
-      var v3p1 = browser.versionAtLeast("3.1");
-      browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
-      var android = (navigator.appVersion.match(/ Android (\d+)\.(\d+)/));
-      var forceImages = (v3p1 && browser.isMobile && (
-        (navigator.platform.match(/iPad|iPod|iPhone/) && !browser.versionAtLeast("5.0.2")) ||
-        (android != null && (android[1] < 2 || (android[1] == 2 && android[2] < 2)))
-      ));
-      HTMLCSS.Augment({
-        config: {
-          styles: {
-            ".MathJax img, .MathJax nobr, .MathJax a": {
-               // "none" seems to work like "0px" when width is initially 0
-              "max-width": "5000em", "max-height": "5000em"
-            }
-          }
-        },
-        useProcessingFrame: true,
-        rfuzz: .05,
-        AccentBug: true,
-        AdjustSurd: true,
-        safariContextMenuBug: true,
-        safariNegativeSpaceBug: true,
-        safariVerticalAlignBug: !v3p1,
-        safariTextNodeBug: !v3p0,
-        safariWebFontSerif: ["serif"],
-        allowWebFonts: (v3p1 && !forceImages ? (browser.isPC ? "svg" : "otf") : false)
-      });
-      if (forceImages) {
-        //  Force image mode for iOS prior to 4.2 and Droid prior to 2.2
-        //  (iPhone should do SVG web fonts, but crashes with MathJax)
-	var config = MathJax.Hub.config["HTML-CSS"];
-        if (config) {config.availableFonts = []; config.preferredFont = null}
-          else {MathJax.Hub.config["HTML-CSS"] = {availableFonts: [], preferredFont: null}}
-      }
-    },
-
-    Chrome: function (browser) {
-      HTMLCSS.Augment({
-        useProcessingFrame: true,
-        rfuzz: .05,
-        AccentBug: true,
-        AdjustSurd: true,
-        allowWebFonts: "svg",
-        safariNegativeSpaceBug: true,
-        safariWebFontSerif: [""]
-      });
-    },
-
-    Opera: function (browser) {
-      browser.isMini = (navigator.appVersion.match("Opera Mini") != null);
-      HTMLCSS.config.styles[".MathJax .merror"]["vertical-align"] = null;
-      HTMLCSS.Augment({
-        useProcessingFrame: true,
-        operaHeightBug: true,
-        operaVerticalAlignBug: true,
-        operaFontSizeBug: browser.versionAtLeast("10.61"),
-        negativeSkipBug: true,
-        zeroWidthBug: true,
-        FontFaceBug: true,
-        PaddingWidthBug: true,
-        allowWebFonts: (browser.versionAtLeast("10.0") && !browser.isMini ? "otf" : false),
-        //
-        //  Opera doesn't display many STIX characters, so remove it
-        //  from the availableFonts array, if it is there.
-        //
-        adjustAvailableFonts: function (fonts) {
-          for (var i = 0, m = fonts.length; i < m; i++) {
-            if (fonts[i] === "STIX") {fonts.splice(i,1); m--; i--;}
-          }
-          if (this.config.preferredFont === "STIX") {this.config.preferredFont = fonts[0]}
+      Firefox: function (browser) {
+        var webFonts = false;
+        if (browser.versionAtLeast("3.5")) {
+          var root = String(document.location).replace(/[^\/]*$/,"");
+          if (document.location.protocol !== "file:" ||
+              (HUB.config.root+"/").substr(0,root.length) === root) {webFonts = "otf"}
         }
-      });
-    },
+        HTMLCSS.Augment({
+          useProcessingFrame: true,
+          ffVerticalAlignBug: true,
+          AccentBug: true,
+          allowWebFonts: webFonts
+        });
+      },
 
-    Konqueror: function (browser) {
-      HTMLCSS.Augment({
-        konquerorVerticalAlignBug: true,
-        noContextMenuBug: true
-      });
-    }
-  });
+      Safari: function (browser) {
+        var v3p0 = browser.versionAtLeast("3.0");
+        var v3p1 = browser.versionAtLeast("3.1");
+        browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
+        var android = (navigator.appVersion.match(/ Android (\d+)\.(\d+)/));
+        var forceImages = (v3p1 && browser.isMobile && (
+          (navigator.platform.match(/iPad|iPod|iPhone/) && !browser.versionAtLeast("5.0.2")) ||
+          (android != null && (android[1] < 2 || (android[1] == 2 && android[2] < 2)))
+        ));
+        HTMLCSS.Augment({
+          config: {
+            styles: {
+              ".MathJax img, .MathJax nobr, .MathJax a": {
+                // "none" seems to work like "0px" when width is initially 0
+                "max-width": "5000em", "max-height": "5000em"
+              }
+            }
+          },
+          useProcessingFrame: true,
+          rfuzz: .05,
+          AccentBug: true,
+          AdjustSurd: true,
+          safariContextMenuBug: true,
+          safariNegativeSpaceBug: true,
+          safariVerticalAlignBug: !v3p1,
+          safariTextNodeBug: !v3p0,
+          safariWebFontSerif: ["serif"],
+          allowWebFonts: (v3p1 && !forceImages ? (browser.isPC ? "svg" : "otf") : false)
+        });
+        if (forceImages) {
+          //  Force image mode for iOS prior to 4.2 and Droid prior to 2.2
+          //  (iPhone should do SVG web fonts, but crashes with MathJax)
+          var config = HUB.config["HTML-CSS"];
+          if (config) {config.availableFonts = []; config.preferredFont = null}
+            else {HUB.config["HTML-CSS"] = {availableFonts: [], preferredFont: null}}
+        }
+      },
+
+      Chrome: function (browser) {
+        HTMLCSS.Augment({
+          useProcessingFrame: true,
+          rfuzz: .05,
+          AccentBug: true,
+          AdjustSurd: true,
+          allowWebFonts: "svg",
+          safariNegativeSpaceBug: true,
+          safariWebFontSerif: [""]
+        });
+      },
+
+      Opera: function (browser) {
+        browser.isMini = (navigator.appVersion.match("Opera Mini") != null);
+        HTMLCSS.config.styles[".MathJax .merror"]["vertical-align"] = null;
+        HTMLCSS.Augment({
+          useProcessingFrame: true,
+          operaHeightBug: true,
+          operaVerticalAlignBug: true,
+          operaFontSizeBug: browser.versionAtLeast("10.61"),
+          negativeSkipBug: true,
+          zeroWidthBug: true,
+          FontFaceBug: true,
+          PaddingWidthBug: true,
+          allowWebFonts: (browser.versionAtLeast("10.0") && !browser.isMini ? "otf" : false),
+          //
+          //  Opera doesn't display many STIX characters, so remove it
+          //  from the availableFonts array, if it is there.
+          //
+          adjustAvailableFonts: function (fonts) {
+            for (var i = 0, m = fonts.length; i < m; i++)
+              {if (fonts[i] === "STIX") {fonts.splice(i,1); m--; i--;}}
+            if (this.config.preferredFont === "STIX") {this.config.preferredFont = fonts[0]}
+          }
+        });
+      },
+
+      Konqueror: function (browser) {
+        HTMLCSS.Augment({
+          konquerorVerticalAlignBug: true,
+          noContextMenuBug: true
+        });
+      }
+    });
   
-  if (HUB.config.menuSettings.zoom !== "None")
-    {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
+  });
+
+  MathJax.Hub.Register.StartupHook("End Cookie", function () {  
+    if (HUB.config.menuSettings.zoom !== "None")
+      {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
+  });
     
 })(MathJax.Ajax, MathJax.Hub, MathJax.OutputJax["HTML-CSS"]);

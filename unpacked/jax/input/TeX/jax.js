@@ -231,7 +231,7 @@
       this.SUPER(arguments).Init.apply(this,arguments);
     },
     checkItem: function (item) {
-      if (item.isClose) {
+      if (item.isClose && item.type !== "over") {
         if (item.isEntry) {this.EndEntry(); this.clearEnv(); return FALSE}
         if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return FALSE}
         this.EndTable(); this.clearEnv();
@@ -1274,7 +1274,7 @@
       var h = this.GetDimen(name);
       var item = STACKITEM.position().With({name: name, move: 'vertical'});
       if (h.charAt(0) === '-') {h = h.slice(1); name = {raise: "\\lower", lower: "\\raise"}[name.substr(1)]}
-      if (name === "\\lower") {item.dh = '-'+h; item.dd = h} else {item.dh = h; item.dd = '-'+h}
+      if (name === "\\lower") {item.dh = '-'+h; item.dd = '+'+h} else {item.dh = '+'+h; item.dd = '-'+h}
       this.Push(item);
     },
     

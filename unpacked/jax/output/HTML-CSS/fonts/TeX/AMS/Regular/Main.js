@@ -46,6 +46,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_AMS'] = {
 
 };
 
-MathJax.OutputJax["HTML-CSS"].initFont("MathJax_AMS");
-
-MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/AMS/Regular/Main.js");
+MathJax.Callback.Queue(
+  ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_AMS"],
+  ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/AMS/Regular/Main.js"]
+);

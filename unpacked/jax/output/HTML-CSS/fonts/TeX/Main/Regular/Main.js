@@ -299,6 +299,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Main'] = {
   0x2AB0: [636,138,778,83,694]       // SUCCEEDS ABOVE SINGLE-LINE EQUALS SIGN
 };
 
-MathJax.OutputJax["HTML-CSS"].initFont("MathJax_Main");
-
-MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/Main/Regular/Main.js");
+MathJax.Callback.Queue(
+  ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Main"],
+  ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Regular/Main.js"]
+);

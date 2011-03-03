@@ -72,6 +72,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Size4'] = {
   0xE154: [120,0,400,-10,410]        // MJ-TeX: horizontal brace, extender
 };
 
-MathJax.OutputJax["HTML-CSS"].initFont("MathJax_Size4");
-
-MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/Size4/Regular/Main.js");
+MathJax.Callback.Queue(
+  ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Size4"],
+  ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Size4/Regular/Main.js"]
+);

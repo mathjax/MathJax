@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.0.1",
+  version: "1.0.3",
   config: {
     element: null,             // The ID of the element to be processed
                                //   (defaults to full document)
@@ -67,7 +67,7 @@ MathJax.Extension.tex2jax = {
   
   PreProcess: function (element) {
     if (!this.configured) {
-      MathJax.Hub.Insert(this.config,(MathJax.Hub.config.tex2jax||{}));
+      this.config = MathJax.Hub.CombineConfig("tex2jax",this.config);
       if (this.config.Augment) {MathJax.Hub.Insert(this,this.config.Augment)}
       if (typeof(this.config.previewTeX) !== "undefined" && !this.config.previewTeX)
         {this.config.preview = "none"} // backward compatibility for previewTeX parameter
@@ -246,8 +246,7 @@ MathJax.Extension.tex2jax = {
   createMathTag: function (mode,tex) {
     var script = document.createElement("script");
     script.type = "math/tex" + mode;
-    if (MathJax.Hub.Browser.isMSIE) {script.text = tex}
-      else {script.appendChild(document.createTextNode(tex))}
+    MathJax.HTML.setScript(script,tex);
     this.insertNode(script);
     return script;
   },

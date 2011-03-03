@@ -45,6 +45,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Size3'] = {
   0x27E9: [1450,950,750,94,623]      // MATHEMATICAL RIGHT ANGLE BRACKET
 };
 
-MathJax.OutputJax["HTML-CSS"].initFont("MathJax_Size3");
-
-MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/Size3/Regular/Main.js");
+MathJax.Callback.Queue(
+  ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Size3"],
+  ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Size3/Regular/Main.js"]
+);

@@ -30,6 +30,7 @@
     MENUKEY: "altKey",                         // the event value for alternate context menu
     noContextMenuBug: HUB.Browser.isKonequeror,
     msieQuirks: (isMSIE && !(document.compatMode === "BackCompat")),
+    msieEventBug: HUB.Browser.isIE9,
     
     //
     //  User can configure styles
@@ -39,6 +40,18 @@
     Config: function () {
       this.SUPER(arguments).Config.call(this);
       if (this.settings.scale) {this.config.scale = this.settings.scale}
+      //
+      //  Insert styling to take account of displayAlign and displayIndent
+      //
+      if (HUB.config.displayAlign !== "center") {
+        var align = HUB.config.displayAlign, indent = HUB.config.displayIndent;
+        var def = {"text-align": align+"!important"}; def["margin-"+align] = indent+"!important";
+        MathJax.Hub.Insert(this.config.styles,{
+          "div.MathJax_MathML": def,
+          "div.MathJax_MathML math": {"text-align": align},
+          "div.MathJax_MathContainer > span": {"text-align": align+"!important"}
+        });
+      }
     },
     
     //
@@ -53,7 +66,7 @@
       var type = (math.Get("display") === "block" ? "div" : "span");
       var span = document.createElement(type), container = span;
       span.className = "MathJax_MathML"; span.style.fontSize = this.config.scale+"%";
-      if (isMSIE) {
+      if (isMSIE && this.config.showMathMenuMSIE) {
         container = MathJax.HTML.addElement(span,"span",{
           className:"MathJax_MathContainer",
           style:{display:"inline-block",position:"relative"}
@@ -149,6 +162,7 @@
     ContextMenu: function (event,force) {
       if (nMML.config.showMathMenu && (nMML.settings.context === "MathJax" || force)) {
         if (nMML.safariContextMenuBug) {setTimeout('window.getSelection().empty()',0)}
+        if (!event || nMML.msieEventBug) {event = window.event}
         var MENU = MathJax.Menu;
         if (MENU) {
           if (document.selection) {setTimeout("document.selection.empty()",0)}
@@ -161,7 +175,6 @@
         } else {
           if (!AJAX.loadingMathMenu) {
             AJAX.loadingMathMenu = true;
-            if (!event) {event = window.event}
             var EVENT = {pageX:event.pageX, pageY:event.pageY, clientX:event.clientX, clientY:event.clientY};
             MathJax.Callback.Queue(
               AJAX.Require("[MathJax]/extensions/MathMenu.js"),
@@ -208,7 +221,7 @@
     }
   });
 
-  MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
+  HUB.Register.StartupHook("mml Jax Ready",function () {
 
     MML = MathJax.ElementJax.mml;
 
@@ -266,7 +279,7 @@
 	  function (type) {return document.createElementNS(nMML.MMLnamespace,type)}
       )
     });
-
+    
     MML.mrow.Augment({
       //
       //  Make inferred rows not include an mrow tag
@@ -430,7 +443,7 @@
       }
     });
 
-    MathJax.Hub.Register.StartupHook("TeX mathchoice Ready",function () {
+    HUB.Register.StartupHook("TeX mathchoice Ready",function () {
       MML.TeXmathchoice.Augment({
 	//
 	//  Get the MathML for the selected choice
@@ -447,8 +460,10 @@
     //
     setTimeout(MathJax.Callback(["loadComplete",nMML,"jax.js"]),0);
   });
-  
-  if (HUB.config.menuSettings.zoom !== "None")
-    {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
+
+  HUB.Register.StartupHook("End Cookie",function () {
+    if (HUB.config.menuSettings.zoom !== "None")
+      {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
+  });
 
 })(MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax);

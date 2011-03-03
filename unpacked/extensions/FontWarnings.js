@@ -83,9 +83,9 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "1.0";
+  var VERSION = "1.0.2";
   
-  var CONFIG = HUB.Insert({
+  var CONFIG = HUB.CombineConfig("FontWarnings",{
     //
     // The CSS for the message window
     //
@@ -94,12 +94,12 @@
       border: "3px solid #880000", "background-color": "#E0E0E0",
       padding: "1em", "font-size":"small", "white-space":"normal",
       
-      "border-radius": ".75em",                     // Opera 10.5
+      "border-radius": ".75em",                     // Opera 10.5 and IE9
       "-webkit-border-radius": ".75em",             // Safari and Chrome
       "-moz-border-radius": ".75em",                // Firefox
       "-khtml-border-radius": ".75em",              // Konqueror
 
-      "box-shadow": "4px 4px 10px #AAAAAA",         // Opera 10.5
+      "box-shadow": "4px 4px 10px #AAAAAA",         // Opera 10.5 and IE9
       "-webkit-box-shadow": "4px 4px 10px #AAAAAA", // Safari 3 and Chrome
       "-moz-box-shadow": "4px 4px 10px #AAAAAA",    // Forefox 3.5
       "-khtml-box-shadow": "4px 4px 10px #AAAAAA",  // Konqueror
@@ -204,7 +204,9 @@
     fadeoutSteps: 10,      // fade-out steps
     fadeoutTime: 1.5*1000  // fadeout over this amount of time (in ms)
 
-  },(HUB.config.FontWarnings||{}));
+  });
+  if (MathJax.Hub.Browser.isIE9 && document.documentMode >= 9)
+    {delete CONFIG.messageStyle.filter}
 
   //
   //  Data for the window
@@ -223,7 +225,7 @@
     if (HUB.Browser.isMSIE) {
       if (CONFIG.messageStyle.position === "fixed") {
         MathJax.Message.Init();  // make sure MathJax_MSIE_frame exists
-        frame = document.getElementById("MathJax_MSIE_frame");
+        frame = document.getElementById("MathJax_MSIE_Frame");
         CONFIG.messageStyle.position = "absolute";
       }
     } else {delete CONFIG.messageStyle.filter}

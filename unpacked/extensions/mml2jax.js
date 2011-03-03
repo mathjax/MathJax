@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  varsion: "1.0.4",
+  varsion: "1.0.7",
   config: {
     element: null,          // The ID of the element to be processed
                             //   (defaults to full document)
@@ -39,7 +39,7 @@ MathJax.Extension.mml2jax = {
   
   PreProcess: function (element) {
     if (!this.configured) {
-      MathJax.Hub.Insert(this.config,(MathJax.Hub.config.mml2jax||{}));
+      this.config = MathJax.Hub.CombineConfig("mml2jax",this.config);
       if (this.config.Augment) {MathJax.Hub.Insert(this,this.config.Augment)}
       this.InitBrowser();
       this.configured = true;
@@ -90,11 +90,11 @@ MathJax.Extension.mml2jax = {
     if (this.msieScriptBug) {
       var html = this.msieOuterHTML(math);
       html = html.replace(/<\?import .*?>/i,"").replace(/<\?xml:namespace .*?\/>/i,"");
-      script.text = html.replace(/&nbsp;/g,"&#xA0;");
+      MathJax.HTML.setScript(script,html.replace(/&nbsp;/g,"&#xA0;"));
       parent.removeChild(math);
     } else {
       var span = MathJax.HTML.Element("span"); span.appendChild(math);
-      MathJax.HTML.addText(script,span.innerHTML);
+      MathJax.HTML.setScript(script,span.innerHTML);
     }
     if (this.config.preview !== "none") {this.createPreview(math,script)}
   },
@@ -116,8 +116,11 @@ MathJax.Extension.mml2jax = {
   },
   msieNodeHTML: function (node) {
     var html, i, m;
-    if (node.nodeName === "#text" || node.nodeName === "#comment")
-      {html = node.nodeValue.replace(/&/g,"&#x26;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+    if (node.nodeName === "#text") {
+      html = node.nodeValue.replace(/&/g,"&#x26;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    } else if (node.nodeName === "#comment") {
+      html = "<!--" + node.nodeValue + "-->"
+    }
     else if (this.msieAttributeBug) {
       // In IE, outerHTML doesn't properly quote attributes, so quote them by hand
       html = "<"+node.nodeName.toLowerCase();
