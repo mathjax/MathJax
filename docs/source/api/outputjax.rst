@@ -36,7 +36,7 @@ that class.
 Properties
 ==========
 
-.. describe:: name
+.. describe:: id
 
     The name of the jax.
 
@@ -57,16 +57,13 @@ Methods
 
     This is the main routine called by MathJax when an element jax is
     to be converted to output.  The default :meth:`Translate()`
-    method simply loads the ``jax.js`` file and returns that callback
-    for that load function so that MathJax will know when to try
-    the :meth:`Translate()` action again.  When the ``jax.js`` file
-    loads, it should override the default :meth:`Translate()` with its
-    own version that does the actual translation; that way, when the
-    second Translate call is made, it will be to the actual
-    translation routine rather than the default loader.
+    method throws an error indicating that :meth:`Translate()` hasn't been
+    redefined, so when the ``jax.js`` file loads, it should override the
+    default :meth:`Translate()` with its own version that does the actual
+    translation.
 
     You should use ``MathJax.Hub.getJaxFor(script)`` to obtain the
-    element jax for the given script.  The translation process may add
+    element jax for the given script.  The translation process may 
     modify the element jax (e.g., if it has data that needs to be
     stored with the jax), and may insert DOM elements into the
     document near the jax's ``<script>`` tag.

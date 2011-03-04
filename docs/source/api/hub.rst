@@ -106,6 +106,15 @@ Methods
         - **options** --- object containing options to be set
     :Returns: ``null``
 
+.. describe:: Configured()
+
+    When ``delayStartupUntil`` is specified in the configuration file or
+    in the script that loads ``MathJax.js``, MathJax's startup sequence is 
+    delayed until this routine is called.  See :ref:`Configuring MathJax 
+    <configuration>` for details on how this is used.
+
+    :Returns: ``null``
+
 .. describe:: Register.PreProcessor(callback)
 
     Used by preprocessors to register themselves with MathJax so that

@@ -35,7 +35,7 @@ that class.
 Properties
 ==========
 
-.. describe:: name
+.. describe:: id
 
     The name of the jax.
 
@@ -54,15 +54,12 @@ Methods
 .. Method:: Translate(script)
     :noindex:
 
-    This is the main routine called by MathJax when a ``<script>`` of
-    the appropriate type is found.  The default :meth:`Translate()`
-    method simply loads the ``jax.js`` file and returns that callback
-    for that load function so that MathJax will know when to try
-    the :meth:`Translate()` action again.  When the ``jax.js`` file
-    loads, it should override the default :meth:`Translate()` with its
-    own version that does the actual translation; that way, when the
-    second Translate call is made, it will be to the actual
-    translation routine rather than the default loader.
+    This is the main routine called by MathJax when a ``<script>`` of the
+    appropriate type is found.  The default :meth:`Translate()` method
+    throws an error indicating that :meth:`Translate()` hasn't been
+    redefined, so when the ``jax.js`` file loads, it should override the
+    default :meth:`Translate()` with its own version that does the actual
+    translation. 
 
     The translation process should include the creation of an
     :ref:`Element Jax <api-element-jax>` that stores the data needed
@@ -84,3 +81,4 @@ Methods
     :Parameters:
         - **mimetype** --- the MIME-type of the input this jax processes
     :Returns: ``null``
+

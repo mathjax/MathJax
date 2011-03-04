@@ -24,7 +24,7 @@ that class.
 Class Properties
 ================
 
-.. describe:: name
+.. describe:: id
 
     The name of the jax.
 
@@ -42,11 +42,13 @@ Instance Properties
 
 .. describe:: inputJax
 
-    A reference to the input jax that created the element.
+    A reference to the input jax that created the element.  (In the 
+    future, this will be changed to the name of the input jax.)
  
 .. describe:: outputJax
 
-    A reference to the output jax that has processed this element.
+    A reference to the output jax that has processed this element.  (In 
+    the future, this will be changed to the name of the output jax.)
  
 .. describe:: inputID
 
@@ -61,7 +63,8 @@ Instance Properties
 .. describe:: originalText
 
     A string indicating the original input text that was processed for
-    this element.
+    this element.  (In the future, this may be managed by the input jax 
+    rather than ``MathJax.Hub``.)
 
 .. describe:: mimeType
 

@@ -15,7 +15,7 @@ Unlike most MathJax.Object classes, calling the class object creates a
 .. code-block:: javascript
 
     MathJax.InputJax.MyInputJax = MathJax.InputJax({
-      name: "MyInputJax",
+      id: "MyInputJax",
       version: "1.0",
       ...
     });
@@ -40,7 +40,7 @@ Class Properties
 Instance Properties
 ===================
 
-.. describe:: name
+.. describe:: id
 
     The name of the jax.
 
@@ -67,35 +67,40 @@ Instance Properties
 Methods
 =======
 
-.. Method:: Translate(script)
+.. Method:: Process(script)
 
-    This is the method that the ``MathJax.Hub`` calls when it needs
-    the input or output jax to process the given math ``<script>``
-    call.  Its default action is to start loading the jax's ``jax.js``
-    file, and redefine the :meth:`Translate()` method to be the
-    :meth:`noTranslate()` method below.  The ``jax.js`` file should
-    redefine the :meth:`Translate()` method to perform the translation
-    operation for the specific jax.  For an input jax, it should
-    return the `ElementJax` object that it created.
+    This is the method that the ``MathJax.Hub`` calls when it needs the 
+    input or output jax to process the given math ``<script>``.  Its 
+    default action is to start loading the jax's ``jax.js`` file, and 
+    redefine itself to simplu return the callback for the laod operation 
+    (so that further calls to it will cause the processing to wait for the 
+    callback).  Once the ``jax.js`` file has loaded, this method is 
+    replaced by the jax's :meth:`Translate()` method, so that subsequent calls 
+    to :meth:`Process()` will perform the appropriate translation.
 
     :Parameters:
         - **script** --- reference to the DOM ``<script>`` object for
                          the mathematics to be translated
     :Returns: an `ElementJax` object, or ``null``
 
-.. Method:: noTranslate(script)
+.. Method:: Translate(script)
 
-    This is a temporary routine that is used while the ``jax.js`` file
-    is loading.  It throws an error indicating the the
-    :meth:`Translate()` method hasn't been redefined.  That way, if
-    the ``jax.js`` file failes to load for some reason, you will
-    receive an error trying to process mathematics with this input
-    jax.
+    This is a stub for a routine that should be defined by the jax's
+    ``jax.js`` file when it is loaded.  It should perform the translation
+    action for the specific jax.  For an input jax, it should return the
+    `ElementJax` object that it created.  The :meth:`Translate()` mehtod is
+    never called directly by MathJax; during the :meth:`loadComplete()`
+    call, this funciton is copied to the :meth:`Process()` method, and is
+    called via that name.  The default :meth:`Translate()` method throws an
+    error indicating that the :meth:`Translate()` meth was not been
+    redefined.  That way, if the ``jax.js`` file fails to load for some
+    reason, you will receive an error trying to process mathematics with
+    this jax.
 
     :Parameters:
         - **script** --- reference to the DOM ``<script>`` object for
                          the mathematics to be translated
-    :Returns: ``null``
+    :Returns: an `ElementJax` object, or ``null``
 
 .. Method:: Register(mimetype)
 
@@ -136,13 +141,16 @@ Methods
        1. Post the "[name] Jax Config" message to the startup signal.
        2. Perform the jax's :meth:`Config()` method.
        3. Post the "[name] Jax Require" message to the startup signal.
-       4. Load the files from the jax's ``require`` array (which may
-          have been modified during the configuration process).
+       4. Load the files from the jax's ``require`` and 
+          ``config.extensions`` arrays.
        5. Post the "[name] Jax Startup" message to the startup signal.
        6. Perform the jax's :meth:`Startup()` method.
        7. Post the "[name] Jax Ready" message to the startup signal.
        8. perform the :meth:`MathJax.Ajax.loadComplete()` call for the
           ``jax.js`` file.
 
-
+    Note that the configuration process (the :meth:`Config()` call) can 
+    modify the ``require`` or ``config.extensions`` arrays to add more 
+    files that need to be loaded, and that the :meth:`Startup()` method 
+    isn't called until those files are completely loaded.
 

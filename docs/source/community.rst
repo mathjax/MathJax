@@ -40,7 +40,7 @@ Issue tracking
 ==============
 
 Found a bug or want to suggest an improvement? Post it to our `issue tracker
-<http://github.com/mathjax/mathjax/issues>`_. We monitor the tracker closely,
+<http://github.com/mathjax/MathJax/issues>`_. We monitor the tracker closely,
 and work hard to respond to problems quickly.
 
 Before you create a new issue, however, please search the issues to see if it
