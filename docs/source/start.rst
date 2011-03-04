@@ -5,8 +5,63 @@ Getting Started
 ***************
 
 MathJax allows you to include mathematics in your web pages, either
-using TeX and LaTeX notation, or as MathML.  To use MathJax, you will
-need to do the following things:
+using TeX and LaTeX notation, or as MathML, and you can even use both
+in the same document.
+
+There are two ways to access MathJax: the easiest way is to use the
+copy of MathJax available from our distributed network service at
+``cdn.mathjax.org``, but you can also download and install a copy of
+MathJax on your own server, or for use locally on your own hard disk
+(with no need for network access).  Both of these are described below,
+with links to more detailed explanations.  This page gives the
+quickest and easiest ways to get MathJax up and running on your web
+site, but you may want to read the details in order to customize the
+setup for your pages.
+
+.. _mathjax-CDN:
+
+Using the MathJax Content Delivery Network (CDN)
+================================================
+
+To use MathJax from our server, you need to do two things:
+
+1.  Link MathJax into the web pages that are to include mathematics.
+
+2.  Put mathematics into your web pages so that MathJax can display
+    it.
+
+You accomplish the first step by putting 
+
+.. code-block:: html
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+into the ``<head>`` block of your document.  (It can also go in the
+``<body>`` if necessary, but the head is to be preferred.)  This will
+load the latest version of MathJax from the distributed server, and
+configure it to recognize mathematics in both TeX and MathML notation,
+and ask it to generate its output using MathML if the browser supports
+that, and otherwise use HTML-with-CSS to display the mathematics.
+This is the most general configuration, and should suffice for most
+people's needs.  Other configurations are available, however, and you
+can also provide additional configuration parameters to taylor one of
+the confiogurations to your needs.  More details can be found in the
+:ref:`Loading and Configuring MathJax <installation>` instructions.
+
+The use of ``cdn.mathjax.org`` is governed by its `terms of service
+<http://www.mathjax.org/>`_, so be sure to read that before linked to
+the MathJax CDN server.
+
+To see how to enter mathematics in your web pages, see `Putting
+mathematics in a web page`_ below.
+
+
+Installing Your Own Copy of MathJax
+===================================
+
+We recommend using the CDN service if you can, but you can also install
+MathJax on your own server, or locally on your own hard disk.  To do
+so you will need to do the following things:
 
 1.  Obtain a copy of MathJax and make it available on your server.
 
@@ -17,23 +72,18 @@ need to do the following things:
 4.  Put mathematics into your web pages so that MathJax can display
     it.
 
-Each of these steps is described briefly below, with links to more
-detailed explanations.  This page gives the quickest and easiest ways
-to get MathJax up and running on your web site, but you may want to
-read the details in order to customize the setup for your pages.
-
 
 Obtaining and Installing MathJax
-================================
+--------------------------------
 
 The easiest way to set up MathJax is to obtain the v1.1 archive from
 the `MathJax download page <http://www.mathjax.org/download/>`_ (you
-should obtain a file names something like
-``mathjax-MathJax-v1.0-X-XXXXXXXX.zip``, where the X's are
+should obtain a file named something like
+``mathjax-MathJax-v1.1-X-XXXXXXXX.zip``, where the X's are
 random-looking letters and numbers).  This archive includes both the
 MathJax code and the MathJax webfonts, so it is the only file you
-need.  (This is different from the beta releases, which had the fonts
-separate from the rest of the code).
+need.  Note that this is different from earlier releases, which had
+the fonts separate from the rest of the code.
 
 Unpack the archive and place the resulting MathJax folder onto your
 web server at a convenient location where you can include it into your
@@ -44,56 +94,61 @@ from within any page on your server.
 
 Note: While this is the easiest way to set up MathJax initially, there
 is a better way to do it if you want to be able to keep your copy of
-MathJax up-to-date easily. That uses the `Git <http://git-scm.com/>`_
-version control system, and is described in the :ref:`Installing
-MathJax <getting-mathjax-git>` document. If you prefer using
-`Subversion <http://subversion.apache.org/>`_, you can also use that
-to get a copy of MathJax (see :ref:`Installing MathJax via SVN
+MathJax up-to-date. That uses the `Git <http://git-scm.com/>`_ version
+control system, and is described in the :ref:`Installing MathJax
+<getting-mathjax-git>` document. If you prefer using `Subversion
+<http://subversion.apache.org/>`_, you can also use that to get a copy
+of MathJax (see :ref:`Installing MathJax via SVN
 <getting-mathjax-svn>`).
 
 Once you have MathJax set up on your server, you can test it using the
 files in the ``MathJax/test`` directory.  Load them in your browser
 using its web address rather than opening them locally (i.e., use an
 ``http://`` URL rather than a ``file://`` URL).  When you view the
-``index.html`` file, after a few moments you should see a message that
-MathJax appears to be working.  If not, check that the files have been
-transferred to the server completely and that the permissions allow
-the server to access the files and folders that are part of the
-MathJax directory.  (Be sure to verify the MathJax folder's permissions
-as well.)  Check the server log files for any errors that pertain to
-the MathJax installation; this may help locate problems in the
-permission or locations of files.
+``index.html`` file, after a few moments you should see a message
+indicating that MathJax appears to be working.  If not, check that the
+files have been transferred to the server completely and that the
+permissions allow the server to access the files and folders that are
+part of the MathJax directory.  (Be sure to verify the MathJax
+folder's permissions as well.)  Check the server log files for any
+errors that pertain to the MathJax installation; this may help locate
+problems in the permission or locations of files.
 
 
-Configuring MathJax
-===================
+Configuring your copy of MathJax
+--------------------------------
 
 When you include MathJax into your web pages as described below, it
-will load the file ``config/MathJax.js`` (i.e., the file named
-``MathJax.js`` in the ``config`` folder of the main ``MathJax``
-folder).  This file contains the configuration parameters that
-control how MathJax operates.  There are comments in it that
-explain each of the parameters, and you can edit the file to suit
-your needs.
+will load the file ``config/TeX-AMS-MML_HTMLorMML.js`` (i.e., the file
+named ``TeX-AMS-MML_HTMLorMML.js`` in the ``config`` folder of the
+main ``MathJax`` folder).  This file preloads all the most comply-used
+components of MathJax, allowing it to process mathematics that is in
+the TeX or LaTeX format, or in MathML notation.  It will produce
+output in MathML form if the user's browser supports that, and will use
+HTML-with-CSS to render the mathematics otherwise.
 
-The default settings are appropriate for pages that use TeX as the
-input language, but you might still want to adjust some settings; for
-example, you might want to include some additional extensions such as
-the ``AMSmath`` and ``AMSsymbols`` extensions.  The comments in the
-file should help you do this, but more detailed instructions are
-included in the :ref:`Configuring MathJax <configuration>` document.
-There are also ways to configure MathJax other than by using the
-``config/MathJax.js`` file; these are descibed on that page as well.
+There are a number of other prebuilt configuration files that you can
+choose from as well, or you could use the ``config/default.js`` file
+and customize the settings yourself.  The combined configuration files
+are described more fully in :ref:`Installing and Configuring MathJax
+<installation>`, and the configuration options are described in
+:ref:`Configuration Options <configuration>`.
+
+Note:  The configuration process has changed in MathJax v1.1, so if you have
+existing pages that use MathJax, you may need to modify the tag that
+loads MathJax so that is conforms with the new configuration process.
+See :ref:`Installing and Configuring MathJax <installation>` for more
+details.
 
 
-Linking MathJax into a web page
-===============================
+Linking your copy of MathJax into a web page
+--------------------------------------------
 
 You can include MathJax in your web page by putting
 
 .. code-block:: html
 
-    <script type="text/javascript" src="path-to-MathJax/MathJax.js"></script>
+    <script type="text/javascript" src="path-to-MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 in your document's ``<head>`` block.  Here, ``path-to-MathJax`` should
 be replaced by the URL for the main MathJax directory, so if you have
@@ -102,7 +157,7 @@ site, you could use
 
 .. code-block:: html
 
-    <script type="text/javascript" src="/MathJax/MathJax.js"></script>
+    <script type="text/javascript" src="/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 to load MathJax in your page.  For example, your page could look like
 
@@ -111,32 +166,31 @@ to load MathJax in your page.  For example, your page could look like
     <html>
         <head>
             ...
-            <script type="text/javascript" src="/MathJax/MathJax.js"></script>
+            <script type="text/javascript" src="/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
         </head>
         <body>
             ...
         </body>
     </html>
 
-Although it is possible to load MathJax from a site other than your
-own web server, there are issues involved in doing so that you need to
-take into consideration.  See the :ref:`Notes About Shared Servers
-<cross-domain-linking>` for more details.  Please do **not** link to
-the copy of MathJax at ``www.mathjax.org``, as we do not have the
-resources to act as a web service for all the sites on the web that
-would like to display mathematics.  If you are able to run MathJax
-from your own server, please do so (this will probably give you better
-response time in any case).
+If you have installed MathJax on a server that is in a different
+domain from the one serving the page that loads MathJax, be sure to
+read the :ref:`Notes About Shared Servers <cross-domain-linking>` for
+more details.  In that case, you may wish to consider using the
+:ref:`MathJax CDN <mathjax-cdn>` rather than installing your own copy
+of MathJax.
 
 
 Putting mathematics in a web page
 =================================
 
-To put mathematics in your web page, you can use either TeX and LaTeX
-notation, or MathML notation (or both); the configuration file tells
-MathJax which you want to use, and how you plan to indicate the
-mathematics when you are using TeX notation.  The following sections
-tell you how to use each of these formats.
+To put mathematics in your web page, you can use either :term:`TeX`
+and :term:`LaTeX` notation or :term:`MathML` notation or both within
+the same page; the MathJax configuration tells MathJax which you want
+to use, and how you plan to indicate the mathematics when you are
+using TeX notation. The configuration file used in the examples above
+tells MathJax to look for both TeX and MathML notation within your
+pages.  These two formats are described in more detail below.
 
 
 .. _tex-and-latex-input:
@@ -144,21 +198,18 @@ tell you how to use each of these formats.
 TeX and LaTeX input
 -------------------
 
-To process mathematics that is written in :term:`TeX` or :term:`LaTeX`
-format, include ``"input/TeX"`` in your configuration's `jax` array,
-and add ``"tex2jax.js"`` to the `extensions` array so that MathJax
-will look for TeX-style math delimiters to identify the mathematics on
-the page.
+Mathematics that is written in :term:`TeX` or :term:`LaTeX` format is
+indicated using *math delimiters* that surround the mathematics,
+telling MathJax what part of your page represents mathematics and what
+is normal text.  There are two types of equations: ones that occur
+within a paragraph (in-line mathematics), and larger equations that
+appear separated from the rest of the text on lines by themselves
+(displayed mathematics).
 
-.. code-block:: javascript
-
-    extensions: ["tex2math.js"],
-    jax: ["input/TeX", "output/HTML-CSS"]
-
-Note that the default math delimiters are ``$$...$$`` and ``\[...\]``
-for displayed mathematics, and ``\(...\)`` for in-line mathematics.
-In particular, the ``$...$`` in-line delimiters are **not** used by
-default.  That is because dollar signs appear too often in
+The default math delimiters are ``$$...$$`` and ``\[...\]`` for
+displayed mathematics, and ``\(...\)`` for in-line mathematics.  Note
+in particular that the ``$...$`` in-line delimiters are **not** used
+by default.  That is because dollar signs appear too often in
 non-mathematical settings, which could cause some text to be treated
 as mathematics unexpectedly.  For example, with single-dollar
 delimiters, "... the cost is $2.50 for the first one, and $2.00 for
@@ -169,21 +220,30 @@ math mode, you must enable that explicitly in your configuration:
 
 .. code-block:: javascript
 
-    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+    });
+    </script>
+    <script type="text/javascipt" src="path-to-mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-See the ``config/MathJax.js`` file, or the :ref:`tex2jax configuration
+See the ``config/default.js`` file, or the :ref:`tex2jax configuration
 options <configure-tex2jax>` page, for additional configuration
-parameters that you can specify for the ``tex2jax`` preprocessor.
+parameters that you can specify for the ``tex2jax`` preprocessor,
+which is the component of MathJax that identifies TeX notation within
+the page).
 
-Here is a complete sample page containing TeX mathematics (which
-assumes that ``config/MathJax.js`` is configured as described above):
+Here is a complete sample page containing TeX mathematics:
 
 .. code-block:: html
 
+    <!DOCTYPE html>
     <html>
     <head>
     <title>MathJax TeX Test Page</title>
-    <script type="text/javascript" src="/MathJax/MathJax.js"></script>
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
     </head>
     <body>
     When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
@@ -191,14 +251,22 @@ assumes that ``config/MathJax.js`` is configured as described above):
     </body>
     </html>
 
-There are a number of extensions for the TeX input processor that you
-might want to add to the `extensions` array.  These include:
+Since the TeX notation is part of the text of the page, there are some
+caveats that you must keep in mind when you enter your mathematics.
+In particular, you need to be careful about the use of less-than
+signs, since those are what the browser uses to indicate the start of
+a tag in HTML.  Putting a space on both sides of the less-than sign
+should be sufficient, but see :ref:`TeX and LaTeX support
+<TeX-support>` for details.
+
+There are a number of extensions for the TeX input processor that are
+loaded by the ``TeX-AMS-MML_HTMLorMML`` configuration.  These include:
 
 - `TeX/AMSmath.js`, which defines the AMS math environments and
   macros,
 
 - `TeX/AMSsymbols.js`, which defines the macros for the symbols in
-  the msam10 and msbm10 fonts,
+  the `msam10` and `msbm10` fonts,
 
 - `TeX/noErrors.js`, which shows the original TeX code rather than
   an error message when there is a problem processing the TeX, and
@@ -206,34 +274,16 @@ might want to add to the `extensions` array.  These include:
 - `TeX/noUndefined.js`, which prevents undefined macros from
   producing an error message, and instead shows the macro name in red.
 
-For example,
-
-.. code-block:: javascript
-
-    extensions: ["tex2math.js","TeX/noErrors.js","TeX/noUndefined.js",
-                 "TeX/AMSmath.js","TeX/AMSsymbols.js"]
-
-loads all four extensions, in addition to the ``tex2math``
-preprocessor.
+Other extensions may be loaded automatically when needed.
 
 
 MathML input
 ------------
 
-To process mathematics written in :term:`MathML`, include
-``"input/MathML"`` in your configuration's `jax` array, and add
-``"mml2jax.js"`` to the `extensions` array so that MathJax will
-locate the ``<math>`` elements in the page automatically.
-
-.. code-block:: javascript
-
-    extensions: ["mml2jax.js"],
-    jax: ["input/MathML", "output/HTML-CSS"]
-
-With this configuration, you would mark your mathematics using
-standard ``<math>`` tags, where ``<math display="block">`` represents
-displayed mathematics and ``<math display="inline">`` or just
-``<math>`` represents in-line mathematics.
+For mathematics written in :term:`MathML` notation, you mark your
+mathematics using standard ``<math>`` tags, where ``<math
+display="block">`` represents displayed mathematics and ``<math
+display="inline">`` or just ``<math>`` represents in-line mathematics.
 
 Note that this will work in HTML files, not just XHTML files (MathJax
 works with both), and that the web page need not be served with any
@@ -242,15 +292,17 @@ than HTML, you should not include a namespace prefix for your
 ``<math>`` tags; for example, you should not use ``<m:math>`` except
 in a file where you have tied the ``m`` namespace to the MathML DTD.
 
-Here is a complete sample page containing MathML mathematics (which
-assumes that ``config/MathJax.js`` is configured as described above):
+Here is a complete sample page containing MathML mathematics:
 
 .. code-block:: html
 
+    <!DOCTYPE html>
     <html>
     <head>
     <title>MathJax MathML Test Page</title>
-    <script type="text/javascript" src="/MathJax/MathJax.js"></script>
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
     </head>
     <body>
 
@@ -283,8 +335,31 @@ assumes that ``config/MathJax.js`` is configured as described above):
     </body>
     </html>
 
-The ``mml2jax`` has only a few configuration options; see the
-``config/MathJax.js`` file or the :ref:`mml2jax configuration options
+When entering MathML notation in an HTML page (rather than an XHTML
+page), you should **not** use self-closing tags, but should use explicit
+open and close tags for all your math elements.  For example, you
+should use 
+
+.. code-block:: html
+
+    <mspace width="5pt"></mspace>
+
+rather than
+
+.. code-block:: html
+
+    <mspace width="5pt" />
+
+in an HTML document.  If you use the self-closing form, some browsers
+will not build the math tree properly, and MathJax will receive a
+damaged math structure, which will not be rendered as the original
+notation would have been.  Unfortunately, there is nothing MathJax can
+do about that, since the browser has incorrectly interpreted the tags
+long before MathJax has a chance to work with them.
+
+The component of MathJax that recognizes MathML notation is called the
+``mml2jax`` extension, and it has only a few configuration options; see the
+``config/default.js`` file or the :ref:`mml2jax configuration options
 <configure-mml2jax>` page for more details.
 
 
