@@ -1,4 +1,8 @@
-*
-!.gitignore
-!source
-!html
+.doctrees
+html-mathjax-site
+dirhtml
+singlehtml
+epub
+latex
+text
+man
