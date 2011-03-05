@@ -1761,20 +1761,25 @@ MathJax.Hub.Startup = {
         return AJAX.loadComplete(this.directory+"/"+file);
       } else {
         var queue = CALLBACK.Queue();
-        queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Config"]);
-        queue.Push(["Config",this]);
-        queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Require"]);
+        queue.Push(
+          HUB.Register.StartupHook("End Config",{}), // wait until config complete
+          ["Post",HUB.Startup.signal,this.id+" Jax Config"],
+          ["Config",this],
+          ["Post",HUB.Startup.signal,this.id+" Jax Require"]
+        );
         if (this.require) {
           var require = this.require; if (!(require instanceof Array)) {require = [require]}
           for (var i = 0, m = require.length; i < m; i++) {queue.Push(AJAX.Require(require[i]))}
         }
-        // Config may set the extensions, so use a function to delay making the reference
-        queue.Push([function (config,id) {return MathJax.Hub.Startup.loadArray(config.extensions,"extensions/"+id)},this.config||{},this.id]);
-        queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Startup"]);
-        queue.Push(["Startup",this]);
-        queue.Push(["Post",HUB.Startup.signal,this.id+" Jax Ready"]);
-        queue.Push([function (THIS) {THIS.Process = THIS.Translate},this.constructor.prototype]);
-        return queue.Push(["loadComplete",AJAX,this.directory+"/"+file]);
+        return queue.Push(
+          // Config may set the extensions, so use a function to delay making the reference
+          [function (config,id) {return MathJax.Hub.Startup.loadArray(config.extensions,"extensions/"+id)},this.config||{},this.id],
+          ["Post",HUB.Startup.signal,this.id+" Jax Startup"],
+          ["Startup",this],
+          ["Post",HUB.Startup.signal,this.id+" Jax Ready"],
+          [function (THIS) {THIS.Process = THIS.Translate},this.constructor.prototype],
+          ["loadComplete",AJAX,this.directory+"/"+file]
+        );
       }
     }
   },{
