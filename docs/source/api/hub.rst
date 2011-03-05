@@ -28,7 +28,7 @@ Properties
     options and their default values are given in the :ref:`Core
     Options <configure-hub>` reference page.
 
-.. describe:: processUpdateTime: 500
+.. describe:: processUpdateTime: 250
 
     The minimum time (in milliseconds) between updates of the
     "Processing Math" message.
@@ -37,6 +37,11 @@ Properties
 
     The hub processing signal (tied to the
     :meth:`MathJax.Hub.Register.MessageHook()` method).
+
+.. describe:: queue
+
+    MathJax's main processing queue.  Use :meth:`MathJax.Hub.Queue()` to push 
+    callbacks onto this queue.
 
 .. describe:: Browser
 

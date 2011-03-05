@@ -68,6 +68,7 @@ Methods
 =======
 
 .. Method:: Process(script)
+    :noindex:
 
     This is the method that the ``MathJax.Hub`` calls when it needs the 
     input or output jax to process the given math ``<script>``.  Its 
