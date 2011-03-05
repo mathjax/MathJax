@@ -1577,17 +1577,19 @@ MathJax.Hub.Startup = {
     return this.queue.Push(
       ["Post",this.signal,"Begin Cookie"],
       ["Get",MathJax.HTML.Cookie,"menu",MathJax.Hub.config.menuSettings],
-      [function (settings,jax) {
-        if (settings.renderer) {
-          var name = "output/"+settings.renderer;
-          for (var i = 0, m = jax.length, other = 0; i < m; i++)
-          {
-            if (jax[i] === name) {jax.splice(i,1); other = 0; break}
-            if (jax[i].substr(0,7) === "output/") {other = (other ? 0 : i+1)}
+      [function (config) {
+        var renderer = config.menuSettings.renderer, jax = config.jax;
+        if (renderer) {
+          var name = "output/"+renderer; jax.sort();
+          for (var i = 0, m = jax.length; i < m; i++) {
+            if (jax[i].substr(0,7) === "output/") break;
           }
-          jax.unshift(name); if (other) {jax.splice(other,1)}
+          if (i == m-1) {jax.pop()} else {
+            while (i < m) {if (jax[i] === name) {jax.splice(i,1); break}; i++}
+          }
+          jax.unshift(name);
         }
-      },MathJax.Hub.config.menuSettings,MathJax.Hub.config.jax],
+      },MathJax.Hub.config],
       ["Post",this.signal,"End Cookie"]
     );
   },
@@ -1636,11 +1638,14 @@ MathJax.Hub.Startup = {
   //  (this must come after the jax are loaded)
   //
   Menu: function () {
-    var menu = MathJax.Hub.config.menuSettings, jax = MathJax.Hub.config.outputJax;
-    if (!menu.renderer) {
-      for (var id in jax) {if (jax.hasOwnProperty(id)) {
-        if (jax[id].length) {menu.renderer = jax[id][0].id; return}
-      }}
+    var menu = MathJax.Hub.config.menuSettings, jax = MathJax.Hub.config.outputJax, registered;
+    for (var id in jax) {if (jax.hasOwnProperty(id)) {
+      if (jax[id].length) {registered = jax[id]; break}
+    }}
+    if (registered && registered.length) {
+      if (menu.renderer && menu.renderer !== registered[0].id)
+        {registered.unshift(MathJax.OutputJax[menu.renderer])}
+      menu.renderer = registered[0].id;
     }
   },
   
@@ -1774,7 +1779,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "unknown",
-    version: "1.0.2",
+    version: "1.1",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -1807,7 +1812,7 @@ MathJax.Hub.Startup = {
       HUB.config.inputJax[mimetype] = this;
     }
   },{
-    version: "1.0.1",
+    version: "1.1",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -1829,7 +1834,7 @@ MathJax.Hub.Startup = {
     },
     Remove: function (jax) {}
   },{
-    version: "1.0.2",
+    version: "1.1",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts"
@@ -1896,7 +1901,7 @@ MathJax.Hub.Startup = {
       }
     }
   },{
-    version: "1.0",
+    version: "1.1",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
