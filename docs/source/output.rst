@@ -10,9 +10,18 @@ Currently, MathJax can render math in two ways:
 - Using a browser's native MathML support.
 
 These are implemented by the `HTML-CSS` and `NativeMML` output
-processors.  You select which one you want to use by including either
-``"output/HTML-CSS"`` or ``"output/NativeMML"`` in the `jax` array of
-your MathJax configuration.  For example
+processors.
+
+If you are using one of the combined configuration files, then this will 
+select one of these output processors for you.  If the config file ends in 
+``_HTML``, then it is the HTML-CSS output processor, and if it ends in 
+``_HTMLorMML``, then the NativeMML output processor will be chosen if the 
+browser supports it, otherwise HTML-CSS output will be used.
+
+If you are performing your own in-line or file-based configuration, you
+select which one you want to use by including either ``"output/HTML-CSS"``
+or ``"output/NativeMML"`` in the `jax` array of your MathJax configuration.
+For example
 
 .. code-block:: javascript
 
@@ -25,7 +34,7 @@ The HTML-CSS output processor produces high-quality output in all
 major browsers, with results that are consistent across browsers and
 operating systems.  This is MathJax's primary output mode.  It's major
 advantage is its quality and consistency; it's drawback is that it is
-slower that the NativeMML mode at rendering the mathematics.  (The
+slower than the NativeMML mode at rendering the mathematics.  (The
 HTML-CSS processor has not yet been optimized for speed, so you can
 expect some improvement in the future.  Note that IE8 in "IE8
 standards mode" is an order of magnitude slower than any other browser
@@ -41,20 +50,19 @@ MathML.  Opera has some built-in support for MathML that works well
 with simple equations, but fails with more complex formulas, so we
 don't recommend using the NativeMML output processor with Opera.  Safari,
 Chrome, Konqueror, and most other browsers don't support MathML
-natively.
+natively, but may in the future, since MathML is part of the HTML5 
+specification.
 
-The advantage of the NativeMML output Processor is its speed, since
-native MathML support is much faster than using complicated HTML and
-CSS to lay out mathematics via an interpreted language like JavaScript
-(as the HTML-CSS output processor does).  The disadvantage is that you
-are dependent on the browser's MathML implementation for your
+The advantage of the NativeMML output Processor is its speed, since native
+MathML support is much faster than using complicated HTML and CSS to lay
+out mathematics, as the HTML-CSS output processor does.  The disadvantage
+is that you are dependent on the browser's MathML implementation for your
 rendering, and these vary in quality of output and completeness of
-implementation.  MathJax may rely on features that are not available
-in some renderers (for example, Firefox's MathML support does not
-implement some of the named widths, such as
-``negativethinmathspace``).  The results using the NativeMML output
-processor may have spacing or other rendering problems that are
-outside of MathJax's control.
+implementation.  MathJax may rely on features that are not available in
+some renderers (for example, Firefox's MathML support does not implement
+some of the named widths, such as ``negativethinmathspace``).  The results
+using the NativeMML output processor may have spacing or other rendering
+problems that are outside of MathJax's control.
 
 Automatic Selection of the Output Processor
 ===========================================
@@ -62,11 +70,16 @@ Automatic Selection of the Output Processor
 Since not all browsers support MathML natively, it would be unwise to
 choose the NativeMML output processor unless you are sure of your
 audience's browser capabilities.  MathJax can help with that, however,
-since there is a special configuration file that will choose between
-NativeMML and HTML-CSS depending on the browser in use.  To invoke it,
-add ``"MMLorHTML.js"`` to your configurations `config` array, and **do
-not** include an output processor in your `jax` array; MathJax will
-fill that in for you based on the abilities of your user's browser.
+since a number of its combined configuration files will select NativeMML 
+output when the browser supports it, and HTML-CSS output otherwise.  These 
+are the configuration files that end in ``_HTMLorMML``.
+
+If you are doing your own configuration, there is a special configuration
+file that you can include that will choose between NativeMML and HTML-CSS
+depending on the browser in use.  To invoke it, add ``"MMLorHTML.js"`` to
+your configurations `config` array, and **do not** include an output
+processor in your `jax` array; MathJax will fill that in for you based on
+the abilities of your user's browser.
 
 .. code-block:: javascript
 
@@ -74,8 +87,8 @@ fill that in for you based on the abilities of your user's browser.
    jax: ["input/TeX"]
 
 You can customize which choice to make on a browser-by-browser basis
-or a global basis.  See the ``config/MathJax.js`` file or the
-:ref:`Configuring MathJax <configuration>` section for futher
+or a global basis.  See the ``config/default.js`` file or the
+:ref:`Configuring MMLorHTML <configure-MMLorHTML>` section for futher
 details.
 
 MathJax produces MathML that models the underlying mathematics as best
@@ -84,7 +97,7 @@ particular MathML implementation.  When you make the choice to use the
 NativeMML output processor, you are making a trade-off: gaining speed
 at the expense of quality and reliability, a decision that should not
 be taken lightly.  Note, however, that a user can employ the MathJax
-contectual menu to select the other other renderer if he or she
+contectual menu to select the other renderer if he or she
 wishes.
 
 
@@ -94,7 +107,7 @@ HTML-CSS with IE8
 =================
 
 Internet Explorer 8 has at least eight different rendering modes in
-which can operate, and that are triggered by the `DOCTYPE` of the
+which it can operate, and that are triggered by the `DOCTYPE` of the
 document being viewed.  Its "quirks" mode is its fastest mode, and its
 "IE8 standards" mode is its slowest.  This is the mode triggered by
 strict HTML document types, and since most modern content management
@@ -124,3 +137,7 @@ described above to select NativeMML output when possible, and request
 that your users install the `MathPlayer plugin
 <http://www.dessci.com/en/products/mathplayer/>`_, which will render
 the mathematics much more quickly.
+
+It appears that IE9 in IE9 standards mode may perform faster than IE8, but 
+since IE9 is still in beta testing as of this writing, we have yet to see 
+exactly what the performance of MathJax in IE9 will be like.

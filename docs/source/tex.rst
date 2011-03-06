@@ -4,13 +4,13 @@
 MathJax TeX and LaTeX Support
 *****************************
 
-The support for TeX and LaTeX in MathJax consists of two parts:  the
-`tex2jax` preprocessor, and the TeX input processor.  The first of
-these looks for mathematics within your web page (indicated by math
-delimiters like ``$$...$$``) and marks the mathematics for later
-processing by MathJax.  The TeX input processor is what converts the
-TeX notation into MathJax's internal format, where one of MathJax's
-output processors then displays it in the web page.
+The support for :term:`TeX` and :term:`LaTeX` in MathJax consists of two
+parts: the `tex2jax` preprocessor, and the `TeX` input processor.  The
+first of these looks for mathematics within your web page (indicated by
+math delimiters like ``$$...$$``) and marks the mathematics for later
+processing by MathJax.  The TeX input processor is what converts the TeX
+notation into MathJax's internal format, where one of MathJax's output
+processors then displays it in the web page.
 
 The `tex2jax` preprocessor can be configured to look for whatever
 markers you want to use for your math delimiters.  See the
@@ -97,40 +97,61 @@ TeX and LaTeX extensions
 ========================
 
 While MathJax includes nearly all of the Plain TeX math macros, and
-many of the LaTeX macros and environments, note everything is
+many of the LaTeX macros and environments, not everything is
 implemented in the core TeX input processor.  Some less-used commands
 are defined in extensions to the TeX processor.  MathJax will load
 some extensions automatically when you first use the commands they
 implement (for example, the ``\def`` and ``\newcommand`` macros are
-implemented in the ``TeX/newcommand.js`` extension, but MathJax loads
+implemented in the ``newcommand.js`` extension, but MathJax loads
 this extension itself when you use those macros).  Not all extensions
 are set up to load automatically, however, so you may need to request
 some extensions explicitly yourself.
 
 To enable any of the TeX extensions, simply add the appropriate string
-(e.g., `"TeX/AMSmath.js"`) to your config's `extensions` array.  The
-main extensions are described below.
+(e.g., ``"AMSmath.js"``) to the `extensions` array in the ``TeX`` block
+of your configuration.  If you use one of the combined configuration files,
+like ``TeX-AMS_HTML``, this will already include several of the extensions
+automatically, but you can include others using a mathjax configuration 
+script prior to loading MathJax.  For example
 
+.. code-block:: html
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({ TeX: { extensions: ["autobold.js"] }});
+    </script>
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+    </script>
+
+will load the `autobold` TeX extension in addition to those already 
+included in the ``TeX-AMS_HTML`` configuration file.
+
+The main extensions are described below.  
 
 AMSmath and AMSsymbol
 ---------------------
 
-The `AMSmath` extension implements AMS math environments and macros,
-and the `AMSsymbol` extension implements macros for accessing the AMS
-symbol fonts.  To use these extensions, add them to your `extensions` array.
+The `AMSmath` extension implements AMS math environments and macros, and
+the `AMSsymbol` extension implements macros for accessing the AMS symbol
+fonts.  These are already included in the combined configuration files that
+load the TeX input processor.  To use these extensions in your own
+configurations, add them to the `extensions` array in the TeX block.
 
 .. code-block:: javascript
 
-    extensions: ["TeX/AMSmath.js", "TeX/AMSsymbol.js", ...]
+    TeX: {
+      extensions: ["AMSmath.js", "AMSsymbol.js", ...]
+    }
 
-See the list of commands at the end of this document for details about
-what commands are implemented in these extensions.
+See the list of control sequences at the end of this document for details
+about what commands are implemented in these extensions.
 
-The `AMSmath` extension will be loaded automatically when you first
-use one of the math environments it defines, but you will have to load
-it explicitly if you want to use the other macros that it defines.
-The `AMSsymbols` extension is not loaded automatically, so you must
-include it explicitly if you want to use the macros it defines.
+If you are not using one of the combined configuration files, the `AMSmath`
+extension will be loaded automatically when you first use one of the math
+environments it defines, but you will have to load it explicitly if you
+want to use the other macros that it defines.  The `AMSsymbols` extension
+is not loaded automatically, so you must include it explicitly if you want
+to use the macros it defines.
 
 
 Autobold
@@ -141,7 +162,11 @@ appears in a section of an HTML page that is in bold.
 
 .. code-block:: javascript
 
-    extensions: ["TeX/autobold.js"]
+    TeX: {
+      extensions: ["autobold.js"]
+    }
+
+This extension is **not** loaded by the combined configuration files.
 
 
 noErrors
@@ -153,24 +178,27 @@ whether the dollar signs are shown or not for in-line math, and
 whether to put all the TeX on one line or use multiple lines (if the
 original text contained line breaks).
 
-To enable the `noErrors` extension and configure it, use
+This extension is loaded by all the combined configuration files that
+include the TeX input processor.  To enable the `noErrors` extension in
+your own configuration, or to modify its parameters, add something like the
+following to your :meth:`MathJax.Hub.Config()` call:
 
 .. code-block:: javascript
  
-    extensions: ["TeX/noErrors.js", ...],
     TeX: {
-        noErrors: {
-            inlineDelimiters: ["",""],   // or ["$","$"] or ["\\(","\\)"]
-            multiLine: true,             // false for TeX on all one line
-            style: {
-                "font-family": "serif",
-                "font-size":   "80%",
-                "color":       "black",
-                "border":      "1px solid" 
-                // add any additional CSS styles that you want
-                //  (be sure there is no extra comma at the end of the last item)
-            }
+      extensions: ["noErrors.js"],
+      noErrors: {
+        inlineDelimiters: ["",""],   // or ["$","$"] or ["\\(","\\)"]
+        multiLine: true,             // false for TeX on all one line
+        style: {
+          "font-family": "serif",
+          "font-size":   "80%",
+          "color":       "black",
+          "border":      "1px solid" 
+          // add any additional CSS styles that you want
+          //  (be sure there is no extra comma at the end of the last item)
         }
+      }
     }
  
 Display-style math is always shown in multi-line format, and without
@@ -184,14 +212,14 @@ the paragraph, use
 .. code-block:: javascript
 
     TeX: {
-        noErrors: {
-            inlineDelimiters: ["$","$"],   // or ["",""] or ["\\(","\\)"]
-            multiLine: false,
-            style: {
-                "font-size": "normal",
-                "border": ""
-            }
+      noErrors: {
+        inlineDelimiters: ["$","$"],   // or ["",""] or ["\\(","\\)"]
+        multiLine: false,
+        style: {
+          "font-size": "normal",
+          "border": ""
         }
+      }
     }
   
 You may also wish to set the font family, as the default is "serif"
@@ -201,28 +229,31 @@ noUndefined
 -----------
 
 The `noUndefined` extension causes undefined control sequences to be
-shown as their macro names rather than produce an error message. So
+shown as their macro names rather than generating error messages. So
 ``$X_{\xxx}$`` would display as an "X" with a subscript consiting of the
 text ``\xxx`` in red.
 
-To enable and configure this extension, use for example
+This extension is loaded by all the combined configuration files that
+include the TeX input processor.  To enable the `noUndefined` extension 
+in your own configuration, or to modify its parameters, add something like 
+the following ro your :meth:`MathJax.Hub.Config()` call:
 
 .. code-block:: javascript
 
-    extensions: ["TeX/noUndefined.js", ...],
     TeX: {
-        noUndefined: {
-            attributes: {
-                mathcolor: "red",
-                mathbackground: "#FFEEEE",
-                mathsize: "90%"
-            }
+      extensions: ["noUndefined.js"],
+      noUndefined: {
+        attributes: {
+          mathcolor: "red",
+          mathbackground: "#FFEEEE",
+          mathsize: "90%"
         }
-     }
+      }
+    }
 
 The ``attributes`` setting specifies attributes to apply to the
 ``mtext`` element that encodes the name of the undefined macro.  The
-default settings set ``mathcolor`` to ``"red"``, but do not set any
+default values set ``mathcolor`` to ``"red"``, but do not set any
 other attributes.  This example sets the background to a light pink,
 and reduces the font size slightly.
 
@@ -272,9 +303,9 @@ array.  You can configure the extension as follows:
 .. code-block:: javascript
 
     TeX: {
-        unicode: {
-            fonts: "STIXGeneral, 'Arial Unicode MS'"
-        }
+      unicode: {
+        fonts: "STIXGeneral, 'Arial Unicode MS'"
+      }
     }
 
 
@@ -949,6 +980,7 @@ the macro name.
     \subset
     \subseteq
     \subseteqq AMSsymbols
+    \subsetneq AMSsymbols
     \substack AMSmath
     \succ
     \succapprox AMSsymbols
@@ -964,6 +996,7 @@ the macro name.
     \supset
     \supseteq
     \supseteqq AMSsymbols
+    \supsetneq AMSsymbols
     \surd
     \swarrow
     
