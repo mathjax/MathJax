@@ -45,7 +45,7 @@ and work hard to respond to problems quickly.
 
 Before you create a new issue, however, please search the issues to see if it
 has already been reported. You could also be using an outdated version of
-MathJax, so be sure to :ref:`upgrade your copy <getting-mathjax-svn>` to verify
+MathJax, so be sure to :ref:`upgrade your copy <getting-mathjax-git>` to verify
 that the problem persists in the lastest version.
 
 
