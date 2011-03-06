@@ -1948,7 +1948,7 @@ MathJax.Hub.Startup = {
           if (KV) {STARTUP.params[unescape(KV[1])] = unescape(KV[2])}
         }
       }
-      CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*$/,'');
+      CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'');
       break;
     }
   }
