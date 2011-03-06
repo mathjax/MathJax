@@ -4,8 +4,9 @@
 Installing MathJax in WordPress
 ===============================
 
-These instructions assume you already have placed the MathJax files on
-your server (see :ref:`Installing MathJax <installation>`).
+Note that there is a `WordPress plugin for MathJax
+<http://wordpress.org/extend/plugins/mathjax-latex/>`_, so that may be a
+better choice than editing the theme directly.
 
 1. Open the WordPress admin interface.
 
@@ -28,15 +29,14 @@ your server (see :ref:`Installing MathJax <installation>`).
 
    .. code-block:: html
 
-       <script type="text/javascript" src="path-to-MathJax/MathJax.js"></script>
+       <script type="text/javascript" 
+          src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+       </script>
 
    just before that.  Otherwise, insert the same code at the very
-   bottom of the file.  Here, ``path-to-MathJax`` should be replaced
-   by the web-address of the main MathJax directory on your server,
-   e.g., ``src="/mathjax/MathJax.js"``.
+   bottom of the file.
  
-4. Save the file.  This should enable MathJax, so you should be able to
-   start adding mathematical content to your pages.  Use the
-   ``config/MathJas.js`` file in the MathJax directory to configure
-   MathJax to your needs (see :ref:`Configuring MathJax
-   <configuration>` for details).
+4. Save the file.  This will enable MathJax with both TeX and MathML
+   input, so you should be able to start adding mathematical content to
+   your pages.  If you need to adjust the configuraiton, see
+   :ref:`Configuring MathJax <loading>` for more details.

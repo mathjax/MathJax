@@ -4,6 +4,20 @@
 Using MathJax in popular web platforms
 ======================================
 
+MathJax plugins are available for a growing number of wikis, blogs, and 
+other content-management systems.  These include WordPress, Blogger, 
+Sphinx, TiddlyWiki, and MathEL-Wiki.  A list of these is available in the 
+`web applications and integrations 
+<http://www.mathjax.org/community/mathjax-in-use/#web-apps>`_ list of the 
+`MathJax web site <http://www.mathjax.org>`_.
+
+If the program you are using is not one of these, you may still be able to 
+use MathJax by modifying the theme or template for your wiki or blog.
+
+
+Using MathJax in a Theme File
+=============================
+
 Most web-based content-management systems include a theme or template
 layer that determines how the pages look, and that loads information
 common to all pages.  Such theme files provide one popular way to
@@ -16,12 +30,11 @@ you.
 
 To enable MathJax in your web platform, add the line::
 
-    <script type="text/javascript" src="path-to-MathJax/MathJax.js"></script>
+    <script type="text/javascript" 
+       src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-(where ``path-to-MathJax`` is the web-address of the main MathJax
-directory for your server) either just before the ``</head>`` tag in
-your theme file, or at the end of the file if it contains no
-``</head>``.
+either just before the ``</head>`` tag in your theme file, or at the end of
+the file if it contains no ``</head>``.
 
 The theme files for various popular platforms are:
 
