@@ -21,11 +21,13 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
-    <link rel="next" title="Describing HTML snippets" href="HTML-snippets.html" />
-    <link rel="prev" title="The MathJax Object-Oriented Programming Model" href="api/object.html" /> 
+    <link rel="next" title="The MathJax Processing Model" href="model.html" />
+    <link rel="prev" title="Migrating from MathJax v1.0 to v1.1" href="upgrade.html" /> 
   </head>
   <body>
+    
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -33,10 +35,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="HTML-snippets.html" title="Describing HTML snippets"
+          <a href="model.html" title="The MathJax Processing Model"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="api/object.html" title="The MathJax Object-Oriented Programming Model"
+          <a href="upgrade.html" title="Migrating from MathJax v1.0 to v1.1"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
       </ul>
@@ -55,20 +57,36 @@ processing the mathematics within the webpage once it has been loaded
 in the browser by a user viewing your web pages.  If you are using
 jsMath with its <tt class="docutils literal"><span class="pre">tex2math</span></tt> preprocessor, then switching to MathJax
 should be easy, and is simply a matter of configuring MathJax
-appropriately.  See the section on <a class="reference internal" href="configuration.html#configuration"><em>Configuring MathJax</em></a> for details about loading and configuring MathJax.</p>
+appropriately.  See the section on <a class="reference internal" href="configuration.html#loading"><em>Loading and Configuring MathJax</em></a> for details.</p>
 <p>On the other hand, if you are using jsMath&#8217;s <tt class="docutils literal"><span class="pre">&lt;span</span>
 <span class="pre">class=&quot;math&quot;&gt;...&lt;/span&gt;</span></tt> and <tt class="docutils literal"><span class="pre">&lt;div</span> <span class="pre">class=&quot;math&quot;&gt;...&lt;/div&gt;</span></tt> tags to
 mark the mathematics in your document, then you should use MathJax&#8217;s
 <tt class="docutils literal"><span class="pre">jsMath2jax</span></tt> preprocessor when you switch to MathJax.  To do this,
 include <tt class="docutils literal"><span class="pre">&quot;jsMath2jax.js&quot;</span></tt> in the <cite>extensions</cite> array of your
-configuration, with the <cite>jax</cite> array set to include <tt class="docutils literal"><span class="pre">&quot;input/TeX&quot;</span></tt>.</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;jsMath2jax.js&quot;</span><span class="p">],</span>
-<span class="nx">jax</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;input/TeX&quot;</span><span class="p">,</span> <span class="p">...]</span>
+configuration, with the <cite>jax</cite> array set to include <tt class="docutils literal"><span class="pre">&quot;input/TeX&quot;</span></tt>.  For
+example,</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
+   <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
+    <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;jsMath2jax.js&quot;</span><span class="p">]</span>
+  <span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script</span>
+<span class="nt">  </span><span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
 </pre></div>
 </div>
+<p>would load the <tt class="docutils literal"><span class="pre">jsMath2jax</span></tt> preprocessor, along with a configuration
+file that processes TeX input and produces HTML-with-CSS output.</p>
 <p>There are a few configuration options for <tt class="docutils literal"><span class="pre">jsMath2jax</span></tt>, which you
-can find in the <tt class="docutils literal"><span class="pre">config/MathJax.js</span></tt> file, or in the <a class="reference internal" href="options/jsMath2jax.html#configure-jsmath2jax"><em>jsMath
+can find in the <tt class="docutils literal"><span class="pre">config/default.js</span></tt> file, or in the <a class="reference internal" href="options/jsMath2jax.html#configure-jsmath2jax"><em>jsMath
 configuration options</em></a> section.</p>
+<p>If you are generating your jsMath documents programmatically, it would be
+better to convert from generating the jsMath <tt class="docutils literal"><span class="pre">&lt;span&gt;</span></tt> and <tt class="docutils literal"><span class="pre">&lt;div&gt;</span></tt> tags
+to producing the corresponding MathJax <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tags.  You would use
+<tt class="docutils literal"><span class="pre">&lt;script</span> <span class="pre">type=&quot;math/tex&quot;&gt;</span></tt> in place of <tt class="docutils literal"><span class="pre">&lt;span</span> <span class="pre">class=&quot;math&quot;&gt;</span></tt> and
+<tt class="docutils literal"><span class="pre">&lt;script</span> <span class="pre">type=&quot;math/tex;</span> <span class="pre">mode=display&quot;&gt;</span></tt> in place of <tt class="docutils literal"><span class="pre">&lt;div</span>
+<span class="pre">class=&quot;math&quot;&gt;</span></tt>.  See the section on <a class="reference internal" href="model.html#mathjax-script-tags"><em>How mathematics is stored in the
+page</em></a> for more details.</p>
 </div>
 
 
@@ -78,16 +96,11 @@ configuration options</em></a> section.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="api/object.html"
-                        title="previous chapter">The MathJax Object-Oriented Programming Model</a></p>
+  <p class="topless"><a href="upgrade.html"
+                        title="previous chapter">Migrating from MathJax v1.0 to v1.1</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="HTML-snippets.html"
-                        title="next chapter">Describing HTML snippets</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/jsMath.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
+  <p class="topless"><a href="model.html"
+                        title="next chapter">The MathJax Processing Model</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -112,17 +125,18 @@ configuration options</em></a> section.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="HTML-snippets.html" title="Describing HTML snippets"
+          <a href="model.html" title="The MathJax Processing Model"
              >next</a> |</li>
         <li class="right" >
-          <a href="api/object.html" title="The MathJax Object-Oriented Programming Model"
+          <a href="upgrade.html" title="Migrating from MathJax v1.0 to v1.1"
              >previous</a> |</li>
         <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2010 Design Science.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+        &copy; Copyright 2011 Design Science.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
+    
   </body>
 </html>

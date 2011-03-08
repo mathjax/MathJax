@@ -21,12 +21,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The MathJax.Ajax Object" href="ajax.html" />
     <link rel="prev" title="The MathJax variable" href="variable.html" /> 
   </head>
   <body>
+    
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -75,7 +77,7 @@ Options</em></a> reference page.</p>
 
 <dl class="describe">
 <dt>
-<tt class="descname">processUpdateTime: 500</tt></dt>
+<tt class="descname">processUpdateTime: 250</tt></dt>
 <dd><p>The minimum time (in milliseconds) between updates of the
 &#8220;Processing Math&#8221; message.</p>
 </dd></dl>
@@ -85,6 +87,13 @@ Options</em></a> reference page.</p>
 <tt class="descname">signal</tt></dt>
 <dd><p>The hub processing signal (tied to the
 <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Register.MessageHook()</span></tt> method).</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">queue</tt></dt>
+<dd><p>MathJax&#8217;s main processing queue.  Use <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Queue()</span></tt> to push
+callbacks onto this queue.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -160,7 +169,7 @@ need to do special processing.  For example:</p>
 <tt class="descname">Config</tt><big>(</big><em>options</em><big>)</big><a class="headerlink" href="#Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the configuration options (stored in <tt class="docutils literal"><span class="pre">MathJax.Hub.config</span></tt>)
 to the values stored in the <cite>options</cite> object.  See
-<a class="reference internal" href="../configuration.html#configuration"><em>Configuring MathJax</em></a> for details on how this
+<a class="reference internal" href="../options/index.html#configuration"><em>Configuring MathJax</em></a> for details on how this
 is used and the options that you can set.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -173,6 +182,22 @@ is used and the options that you can set.</p>
 </tr>
 <tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">null</span></tt></p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">Configured()</tt></dt>
+<dd><p>When <tt class="docutils literal"><span class="pre">delayStartupUntil</span></tt> is specified in the configuration file or
+in the script that loads <tt class="docutils literal"><span class="pre">MathJax.js</span></tt>, MathJax&#8217;s startup sequence is
+delayed until this routine is called.  See <a class="reference internal" href="../options/index.html#configuration"><em>Configuring MathJax</em></a> for details on how this is used.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><tt class="docutils literal"><span class="pre">null</span></tt></td>
 </tr>
 </tbody>
 </table>
@@ -628,11 +653,6 @@ error on the page.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="ajax.html"
                         title="next chapter">The MathJax.Ajax Object</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/hub.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -667,8 +687,9 @@ error on the page.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2010 Design Science.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+        &copy; Copyright 2011 Design Science.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
+    
   </body>
 </html>

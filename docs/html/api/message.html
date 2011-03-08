@@ -21,12 +21,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The MathJax.HTML Object" href="html.html" />
     <link rel="prev" title="The MathJax.Ajax Object" href="ajax.html" /> 
   </head>
   <body>
+    
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -111,7 +113,7 @@ removed automatically; you must call the
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the message id nuber for this message.</p>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the message id number for this message.</p>
 </td>
 </tr>
 </tbody>
@@ -134,6 +136,69 @@ removed automatically; you must call the
 </td>
 </tr>
 <tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">null</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Remove">
+<tt class="descname">Remove</tt><big>(</big><big>)</big><a class="headerlink" href="#Remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>This removes the message frame from the window (it will reappear when
+future messages are set, however).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><tt class="docutils literal"><span class="pre">null</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="File">
+<tt class="descname">File</tt><big>(</big><em>file</em><big>)</big><a class="headerlink" href="#File" title="Permalink to this definition">¶</a></dt>
+<dd><p>This sets the message area to a &#8220;Loading <em>file</em>&#8221; message, where <em>file</em>
+is the name of the file (with <tt class="docutils literal"><span class="pre">[MathJax]</span></tt> representing the root
+directory).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>file</strong> &#8212; the name of the file being loaded.</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the message id number for the message created.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="filterText">
+<tt class="descname">filterText</tt><big>(</big><em>text</em>, <em>n</em><big>)</big><a class="headerlink" href="#filterText" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called on each message before it is displayed.  It can
+be used to modify (e.g., shorten) the various messages before they are
+displayed.  The default action is to check of the <tt class="docutils literal"><span class="pre">messageStyle</span></tt>
+configuration parameter is <tt class="docutils literal"><span class="pre">simple</span></tt>, and if so, convert loading and
+processing messages to a simpler form.  This method can be overridden
+to perform other sanitization of the message strings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> &#8212; the text of the message to be posted</li>
+<li><strong>n</strong> &#8212; the id number of the message to be posted</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the modified message text</p>
 </td>
 </tr>
 </tbody>
@@ -178,11 +243,6 @@ newlines.  This is used in debugging MathJax operations.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="html.html"
                         title="next chapter">The MathJax.HTML Object</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/message.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -217,8 +277,9 @@ newlines.  This is used in debugging MathJax operations.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2010 Design Science.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+        &copy; Copyright 2011 Design Science.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
+    
   </body>
 </html>

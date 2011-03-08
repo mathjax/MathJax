@@ -21,12 +21,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
-    <link rel="up" title="Loading and Configuring MathJax" href="../configuration.html" />
+    <link rel="up" title="Configuration Objects" href="index.html" />
     <link rel="next" title="The mml2jax Preprocessor" href="mml2jax.html" />
     <link rel="prev" title="The Core Configuration Options" href="hub.html" /> 
   </head>
   <body>
+    
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -40,7 +42,7 @@
           <a href="hub.html" title="The Core Configuration Options"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
-          <li><a href="../configuration.html" accesskey="U">Loading and Configuring MathJax</a> &raquo;</li> 
+          <li><a href="index.html" accesskey="U">Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -74,7 +76,7 @@ The default is the whole document.</p>
 
 <dl class="describe">
 <dt>
-<tt class="descname">inlineMath: [['\\(','\\)']]</tt></dt>
+<tt class="descname">inlineMath: [['\(','\)']]</tt></dt>
 <dd><p>Array of pairs of strings that are to be used as in-line math
 delimters.  The first in each pair is the initial delimiter and
 the second is the terminal delimiter.  You can have as many pairs
@@ -95,7 +97,7 @@ include text, not tags, as your math delimiters.</p>
 
 <dl class="describe">
 <dt>
-<tt class="descname">displayMath: [ ['$$','$$'], ['\\[','\\]'] ]</tt></dt>
+<tt class="descname">displayMath: [ ['$$','$$'], ['\[','\]'] ]</tt></dt>
 <dd><p>Array of pairs of strings that are to be used as delimters for
 displayed equations.  The first in each pair is the initial
 delimiter and the second is the terminal delimiter.  You can have
@@ -203,11 +205,6 @@ been marked as ignored above.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="mml2jax.html"
                         title="next chapter">The mml2jax Preprocessor</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/options/tex2jax.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -238,12 +235,13 @@ been marked as ignored above.</p>
           <a href="hub.html" title="The Core Configuration Options"
              >previous</a> |</li>
         <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
-          <li><a href="../configuration.html" >Loading and Configuring MathJax</a> &raquo;</li> 
+          <li><a href="index.html" >Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2010 Design Science.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+        &copy; Copyright 2011 Design Science.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
+    
   </body>
 </html>

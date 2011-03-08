@@ -1,12 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en-US">
-<HEAD>
-<TITLE>MathJax Test Page</TITLE>
-<!-- Copyright (c) 2009 Design Science, Inc. -->
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
-<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=EmulateIE7" >
+<!DOCTYPE html>
+<html>
+<head>
+<title>MathJax Test Page</title>
+<!-- Copyright (c) 2009-2011 Design Science, Inc. -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
-<SCRIPT SRC="../MathJax.js">
+<script type="text/x-mathjax-config">
 //
 //  Do NOT use this page as a template for your own pages.  It includes 
 //  code that is needed for testing your site's installation of MathJax,
@@ -36,68 +36,103 @@
   };
   
   if (!HUB.Browser.versionAtLeast(MINVERSION[HUB.Browser]||0.0)) {
-    HUB.config.jax = [];          // don't load any Jax
-    HUB.config.extensions = [];   // don't load any extensions
-    alert("The browser you are using does not support MathJax, so we can't test if if is working.  Please try a different browser.");
+    HUB.Config({
+      jax: [],                   // don't load any Jax
+      extensions: [],            // don't load any extensions
+      "v1.0-compatible": false   // skip warning message due to no jax
+    });
+    setTimeout('document.getElementById("badBrowser").style.display = ""',0);
   }
 
   if (HUB.Browser.isMSIE && !HUB.Browser.versionAtLeast("7.0")) {
-    alert("Internet Explorer 6 does not display images with alpha-channel transparency very\n" +
-          "well, so this test will not look good.  But in practice, IE6 will use web-based\n" +
-          "fonts rather than image fonts (unless the page forces images, as this one does)\n" +
-          "so the poor quality rendering on this test page does not indicate a problem\n" +
-          "with MathJax.");
+    setTimeout('document.getElementById("MSIE6").style.display = ""');
   }
   
 })(MathJax.Hub);
 
-</SCRIPT>
-</HEAD>
-<BODY>
+</script>
+<script type="text/javascript" src="../MathJax.js"></script>
 
-<NOSCRIPT>
-<DIV STYLE="color:#CC0000; text-align:center">
-<B>Warning: <A HREF="http://www.mathjax.org/">MathJax</A>
-requires JavaScript to process the mathematics on this page.<BR>
-If your browser supports JavaScript, be sure it is enabled.<B>
-</DIV>
-<HR>
-</NOSCRIPT>
+<style>
+.warning {
+  color: #800020;
+  background-color: #FFF8F8;
+  border: 2px solid red;
+  margin: 1em 5em;
+  padding: 1em;
+}
+</style>
+</head>
+<body>
 
-<BLOCKQUOTE>
+<noscript>
+<div style="color:#CC0000; text-align:center">
+<b>Warning: <a href="http://www.mathjax.org/">MathJax</a>
+requires JavaScript to process the mathematics on this page.<br />
+If your browser supports JavaScript, be sure it is enabled.</b>
+</div>
+<hr>
+</noscript>
 
-<H1>MathJax Test Page</H1>
+<blockquote>
 
+<h1>MathJax Test Page</h1>
+
+<p>
 If you see typeset mathematics below, then MathJax is working.  If you see
 TeX code instead, MathJax is not working for you.
-<p>
+</p>
 <!------------------------------------------------------------------------>
-<HR>
+<hr>
 
-
+<p>
 \[
 \frac{-b\pm\sqrt{b^2-4ac}}{2a}
 \]
-<p>
+</p>
 
-<DIV STYLE="color:green">
-<DIV STYLE="text-align:center; color:red; font-size:120%" CLASS="MathJax_Preview">
+<div style="color:green">
+<div style="text-align:center; color:red; font-size:120%" class="MathJax_Preview">
 MathJax is not working!
-</DIV><SCRIPT TYPE="math/tex; mode=display">
+</div><script type="math/tex; mode=display">
 \bf MathJax\ Image\ Fonts\ Appear\ to\ be\ Working!
-</SCRIPT>
-</DIV>
+</script>
+</div>
+
+<hr>
 
 <!------------------------------------------------------------------------>
-<HR>
-<p>
+
+<div id="badBrowser" style="display:none">
+<div class="warning">
+<b>WARNING</b>: The browser you are using does not appear to support
+MathJax, so we can't test if MathJax is working.  Please try a different
+browser, or a newer version of your browser in order to test MathJax.
+</div>
+<hr>
+</div>
+
+<!------------------------------------------------------------------------>
+
+<div id="MSIE6" style="display:none">
+<div class="warning">
+<b>WARNING</b>: Internet Explorer 6 does not display images with
+alpha-channel transparency very well, so this test will not look good.
+But in practice, IE6 will use web-based fonts rather than image fonts
+(unless the page forces images, as this one does) so the poor quality
+rendering on this test page does not indicate a problem with MathJax.
+</div>
+<hr>
+</div>
+
+<!------------------------------------------------------------------------>
 
 If the mathematics does not show up properly, you may not have not
 installed the MathJax web fonts correctly.  Follow the steps in the 
-<A HREF="../docs/html/installation.html">installation instructions</A>.
+<a href="../docs/html/installation.html">installation instructions</a>.
 <p>
 
-</BLOCKQUOTE>
+</blockquote>
 
-</BODY>
-</HTML>
+</body>
+</html>

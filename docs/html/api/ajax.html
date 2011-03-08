@@ -21,12 +21,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The MathJax.Message Object" href="message.html" />
     <link rel="prev" title="The MathJax.Hub Object" href="hub.html" /> 
   </head>
   <body>
+    
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -78,7 +80,7 @@ documentation for details on how to do this properly.</p>
 <tt class="descname">timeout</tt></dt>
 <dd><p>Number of milliseconds to wait for a file to load before
 it is considered to have failed to load.</p>
-<p><em>Default:</em> 20 seconds</p>
+<p><em>Default:</em> 15 seconds</p>
 </dd></dl>
 
 <dl class="describe">
@@ -110,6 +112,14 @@ the <tt class="docutils literal"><span class="pre">MathJax.Ajax.STATUS</span></t
 <dd><p>An object containing the files that are currently loading, the
 callbacks that are to be run when they load or timeout, and
 additional internal data.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">loadHooks</tt></dt>
+<dd><p>An object containing the load hooks for the various files, set up by
+the <a class="reference internal" href="#loadHook" title="loadHook"><tt class="xref py py-meth docutils literal"><span class="pre">loadHook()</span></tt></a> method, or by the
+<tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Register.LoadHook()</span></tt> method.</p>
 </dd></dl>
 
 </div>
@@ -181,9 +191,9 @@ already has been loaded, or where it is to be found.</p>
 file has been completely loaded and initialized.  The <cite>file</cite>
 parameter is the name of the file that has been loaded.  This
 routine will cause any callback functions registered for the file
-or included in the :meth:<tt class="docutils literal"><span class="pre">MathJax.Ajax.Require()</span></tt> calls to be
+or included in the <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Ajax.Require()</span></tt> calls to be
 executed, passing them the status or the load
-(<cite>MathJax.Ajax.STATUS.OK`</cite> or <tt class="docutils literal"><span class="pre">MathJax.Ajax.STATUS.ERROR</span></tt>) as
+(<tt class="docutils literal"><span class="pre">MathJax.Ajax.STATUS.OK</span></tt> or <tt class="docutils literal"><span class="pre">MathJax.Ajax.STATUS.ERROR</span></tt>) as
 their last parameter.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -264,6 +274,30 @@ that may be loaded in the future.</p>
 </td>
 </tr>
 <tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the callback object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Preloading">
+<tt class="descname">Preloading</tt><big>(</big><em>file1</em><span class="optional">[</span>, <em>file2...</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Preloading" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used withing combined configuration files to indicate what files are
+in the configuration file.  Marks the files are loading (since there
+will never be an explicit <a class="reference internal" href="#Load" title="Load"><tt class="xref py py-meth docutils literal"><span class="pre">Load()</span></tt></a> or <a class="reference internal" href="#Require" title="Require"><tt class="xref py py-meth docutils literal"><span class="pre">Require()</span></tt></a> call for
+then), so that load-hooks and other load-related events can be
+properly processed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>file1, file2, ...</strong> &#8212; the names of the files in the combined file</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">null</span></tt></p>
 </td>
 </tr>
 </tbody>
@@ -360,11 +394,6 @@ actual root URL location).</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="message.html"
                         title="next chapter">The MathJax.Message Object</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/ajax.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -399,8 +428,9 @@ actual root URL location).</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2010 Design Science.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+        &copy; Copyright 2011 Design Science.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
+    
   </body>
 </html>

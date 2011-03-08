@@ -21,11 +21,13 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
     <link rel="next" title="The MathJax API" href="api/index.html" />
     <link rel="prev" title="Loading MathJax Dynamically" href="dynamic.html" /> 
   </head>
   <body>
+    
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -144,7 +146,7 @@ able to do so.  Any additional actions the rely on the equation
 queue so that they will not occur before the math is typeset.</p>
 <p>The actions you can perform on an element jax include:</p>
 <blockquote>
-<dl class="describe">
+<div><dl class="describe">
 <dt>
 <tt class="descname">Text(newmath)</tt></dt>
 <dd><p>to set the math text of the element to <cite>newmath</cite> and typeset.</p>
@@ -172,7 +174,7 @@ the original <tt class="docutils literal"><span class="pre">&lt;script&gt;</span
 <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> object that is assocaited with this element jax.</p>
 </dd></dl>
 
-</blockquote>
+</div></blockquote>
 <p>Note that once you have located an element jax, you can keep using it
 and don&#8217;t have to look it up again.  So for the example above, if the
 student is going to be able to type several different answers that you
@@ -196,17 +198,21 @@ queue.  If your startup code performs the commands</p>
 </div>
 <p>to change the student&#8217;s answer to be the typeset version of whatever
 is in the <tt class="docutils literal"><span class="pre">studentAnswer</span></tt> variable.</p>
-<p>Here is a complete example that illustrates this approach</p>
+<p>Here is a complete example that illustrates this approach (available in a
+more full-featured version as <tt class="docutils literal"><span class="pre">test/sample-dynamic.html</span></tt>):</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
 <span class="nt">&lt;head&gt;</span>
 <span class="nt">&lt;title&gt;</span>MathJax Dynamic Math Test Page<span class="nt">&lt;/title&gt;</span>
 
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/MathJax/MathJax.js&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
   <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
-    <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;tex2jax.js&quot;</span><span class="p">],</span>
-    <span class="nx">jax</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;input/TeX&quot;</span><span class="p">,</span><span class="s2">&quot;output/HTML-CSS&quot;</span><span class="p">],</span>
-    <span class="nx">tex2jax</span><span class="o">:</span> <span class="p">{</span><span class="nx">inlineMath</span><span class="o">:</span> <span class="p">[[</span><span class="s2">&quot;$&quot;</span><span class="p">,</span><span class="s2">&quot;$&quot;</span><span class="p">],[</span><span class="s2">&quot;\\(&quot;</span><span class="p">,</span><span class="s2">&quot;\\)&quot;</span><span class="p">]]}</span>
+    <span class="nx">tex2jax</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">inlineMath</span><span class="o">:</span> <span class="p">[[</span><span class="s2">&quot;$&quot;</span><span class="p">,</span><span class="s2">&quot;$&quot;</span><span class="p">],[</span><span class="s2">&quot;\\(&quot;</span><span class="p">,</span><span class="s2">&quot;\\)&quot;</span><span class="p">]]</span>
+    <span class="p">}</span>
   <span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
+  <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full&quot;</span><span class="nt">&gt;</span>
 <span class="nt">&lt;/script&gt;</span>
 
 <span class="nt">&lt;/head&gt;</span>
@@ -273,11 +279,6 @@ You typed: ${}$
   <h4>Next topic</h4>
   <p class="topless"><a href="api/index.html"
                         title="next chapter">The MathJax API</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/typeset.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -311,8 +312,9 @@ You typed: ${}$
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2010 Design Science.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+        &copy; Copyright 2011 Design Science.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
+    
   </body>
 </html>

@@ -21,12 +21,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The MathJax.Callback.Queue Class" href="queue.html" />
     <link rel="prev" title="The MathJax.HTML Object" href="html.html" /> 
   </head>
   <body>
+    
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -72,7 +74,7 @@ use the <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.C
 specification into a Callback object if needed.</p>
 <p>A callback specification is any one of the following:</p>
 <blockquote>
-<dl class="describe">
+<div><dl class="describe">
 <dt>
 <tt class="descname">fn</tt></dt>
 <dd><p>A function that is to be called when the callback is executed.
@@ -123,7 +125,7 @@ the function as well.</p>
 
 <p>..describe:: [&#8220;method&#8221;, object]</p>
 <blockquote>
-<p>Here, <cite>object</cite> is an object that has a method called <cite>method</cite>, and
+<div><p>Here, <cite>object</cite> is an object that has a method called <cite>method</cite>, and
 the callback will execute that method (with the object as
 <cite>this</cite>) when it is called.  For example,</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
@@ -131,7 +133,7 @@ the callback will execute that method (with the object as
 </div>
 <p>would call the <cite>length</cite> method on the array <tt class="docutils literal"><span class="pre">[1,2,3,4]</span></tt> when
 the callback is called, returning <tt class="docutils literal"><span class="pre">4</span></tt>.</p>
-</blockquote>
+</div></blockquote>
 <dl class="describe">
 <dt>
 <tt class="descname">[&quot;method&quot;, object, data...]</tt></dt>
@@ -167,7 +169,7 @@ part of the global namespace.  The return value is the value of
 the last statement executed in the string.</p>
 </dd></dl>
 
-</blockquote>
+</div></blockquote>
 <div class="section" id="executing-a-callback-object">
 <h3>Executing a Callback Object<a class="headerlink" href="#executing-a-callback-object" title="Permalink to this headline">¶</a></h3>
 <p>The <cite>Callback</cite> object is itself a function, and calling that function
@@ -389,11 +391,6 @@ and returns the signal object.  See
   <h4>Next topic</h4>
   <p class="topless"><a href="queue.html"
                         title="next chapter">The MathJax.Callback.Queue Class</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/callback.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -428,8 +425,9 @@ and returns the signal object.  See
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2010 Design Science.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+        &copy; Copyright 2011 Design Science.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
+    
   </body>
 </html>
