@@ -36,6 +36,45 @@ you need a LaTeX-to-HTML converter, you should consider `other options
 <http://www.google.com/search?q=latex+to+html+converter>`_.
 
 
+TeX and LaTeX math delimiters
+=============================
+
+By default, the `tex2jax` preprocesor defines the LaTeX math delimiters, 
+which are ``\(...\)`` for in-line math, and ``\[...\]`` for displayed 
+equations.  It also defines the TeX delimiters ``$$...$$`` for displayed 
+equations, but it does **not** define ``$...$`` as in-line math 
+delimiters.  That is because dollar signs appear too often in
+non-mathematical settings, which could cause some text to be treated
+as mathematics unexpectedly.  For example, with single-dollar
+delimiters, "... the cost is $2.50 for the first one, and $2.00 for
+each additional one ..." would cause the phrase "2.50 for the first
+one, and" to be treated as mathematics since it falls between dollar
+signs.  For this reason, if you want to use single-dollars for in-line
+math mode, you must enable that explicitly in your configuration:
+
+.. code-block:: javascript
+
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+
+Note that if you do this, you may want to also set ``processEscapes`` to
+``true``, as in the example above, so that you can use ``\$`` to prevent a
+dollar sign from being treated as a math delimiter within the text of your
+web page.  (Note that within TeX mathematics, ``\$`` always has this
+meaning; ``processEscapes`` only affects the treatment of the *opening*
+math delimiter.)
+
+See the ``config/default.js`` file, or the :ref:`tex2jax configuration
+options <configure-tex2jax>` page, for additional configuration
+parameters that you can specify for the `tex2jax` preprocessor,
+which is the component of MathJax that identifies TeX notation within
+the page).
+
+
 TeX and LaTeX in HTML documents
 ===============================
 
