@@ -232,3 +232,28 @@ configuration file.  For example
 will load the pre-defined ``TeX-AMS_HTML`` configuration, but will modify 
 the settings to allow ``$...$`` delimiters, and to process ``\$`` to 
 produce dollar signs within the text of the page.
+
+
+New Distribution Location
+=========================
+
+Version 1.0 of MathJax was distributed through `SourceForge`, but the
+development of MathJax has switched to `GitHub
+<https://github.com/mathjax/MathJax/>`_, which is now the primary location
+for MathJax source code and distributions.  The SourceForge repository will
+no longer be avtively maintained (and hasn't been since November 2010), and
+so you will not be able to obtain updates through ``svn`` if you checked
+out MathJax from there.
+
+You may be able to switch to using the MathJax CDN (see above) rather than 
+hosting your own copy of MathJax, and avoid the problem of updates all 
+together.  If you must install your own copy, however, you should follow 
+the instructions at :ref:`Installing and Testing MathJax <installation>`, 
+using either ``git`` or ``svn`` as described to obtain your copy from 
+GitHub.  This will allow you to keep your copy of MathJax up to date as 
+development continues.
+
+We apologize for the inconvenience of having to switch distributions, but 
+the git-to-svn bridge we tried to implement to keep both copies in synch 
+turned out to be unreliable, and so the SourceForge disrtibution was 
+retired in favor of the GitHub site.
