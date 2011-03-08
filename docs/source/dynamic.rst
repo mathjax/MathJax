@@ -20,9 +20,7 @@ handler yourself, to let it know that it is OK to typeset the
 mathematics on the page.  You accomplish this by calling the
 :meth:`MathJax.Hub.Startup.onload()` method as part of your MathJax
 startup script.  To do this, you will need to give MathJax an in-line
-configuration, so you will not be able to use the
-``config/MathJax.js`` file (though you can add it to your in-line
-configuration's `config` array).
+configuration.
 
 Here is an example of how to load and configure MathJax dynamically:
 
@@ -31,7 +29,7 @@ Here is an example of how to load and configure MathJax dynamically:
     (function () {
       var script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = "/MathJax/MathJax.js";   // use the location of your MathJax
+      script.src  = "http://cdn.mathjax.org/mathjax/latest/MathJax.js";
 
       var config = 'MathJax.Hub.Config({' +
                      'extensions: ["tex2jax.js"],' +
@@ -45,13 +43,12 @@ Here is an example of how to load and configure MathJax dynamically:
       document.getElementsByTagName("head")[0].appendChild(script);
     })();
 
-Be sure to set the ``src`` to the correct URL for your copy of
-MathJax.  You can adjust the ``config`` variable to your needs, but be
-careful to get the commas right.  The ``window.opera`` test is because
+You can adjust the ``config`` variable to your needs, but be careful to get
+the commas right.  The ``window.opera`` test is because some versions of
 Opera doesn't handle setting ``script.text`` properly, while Internet
 Explorer doesn't handle setting the ``innerHTML`` of a script tag.
 
-Here is a version that uses the ``config/MathJax.js`` file to
+Here is a version that uses the ``config=filename`` method to
 configure MathJax:
 
 .. code-block:: javascript
@@ -59,10 +56,9 @@ configure MathJax:
     (function () {
       var script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = "/MathJax/MathJax.js";   // use the location of your MathJax
+      script.src  = "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full";
 
-      var config = 'MathJax.Hub.Config({ config: "MathJax.js" }); ' +
-                   'MathJax.Hub.Startup.onload();';
+      var config = 'MathJax.Hub.Startup.onload();';
 
       if (window.opera) {script.innerHTML = config}
                    else {script.text = config}
@@ -71,13 +67,12 @@ configure MathJax:
     })();
 
 Note that the **only** reliable way to configure MathJax is to use an
-in-line configuration of the type discussed above.  You should **not**
-call :meth:`MathJax.Hub.Config()` directly in your code, as it will
-not run at the correct time --- it will either run too soon, in which
-case ``MathJax`` may not be defined and the function will throw an
-error, or it will run too late, after MathJax has already finished its
-configuration process, so your changes will not have the desired
-effect.
+in-line configuration block of the type discussed above.  You should
+**not** call :meth:`MathJax.Hub.Config()` directly in your code, as it will
+not run at the correct time --- it will either run too soon, in which case
+``MathJax`` may not be defined and the function will throw an error, or it
+will run too late, after MathJax has already finished its configuration
+process, so your changes will not have the desired effect.
 
 
 MathJax and GreaseMonkey
@@ -97,8 +92,7 @@ Note, however, that most browsers don't allow you to insert a script
 that loads a ``file://`` URL into a page that comes from the web (for
 security reasons).  That means that you can't have your GreaseMonkey
 script load a local copy of MathJax, so you have to refer to a
-server-based copy.  In the scripts below, you need to insert the URL
-of a copy of MathJax from your own server.
+server-based copy.  The MathJax CDN works nicely for this.
 
 ----
 
@@ -122,12 +116,8 @@ IE+MathPlayer.
           (document.getElementsByTagNameNS == null ? false : 
           (document.getElementsByTagNameNS("http://www.w3.org/1998/Math/MathML","math").length > 0))) {
         var script = document.createElement("script");
-        script.src = "http://www.yoursite.edu/MathJax/MathJax.js";  // put your URL here
-        var config = 'MathJax.Hub.Config({' +
-                       'extensions:["mml2jax.js"],' +
-                       'jax:["input/MathML","output/HTML-CSS"]' +
-                     '});' +
-                     'MathJax.Hub.Startup.onload()';
+        script.src = "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full";
+        var config = 'MathJax.Hub.Startup.onload()';
         if (window.opera) {script.innerHTML = config} else {script.text = config}
         document.getElementsByTagName("head")[0].appendChild(script);
       }
@@ -153,29 +143,25 @@ converting the math images to their original TeX code.
       //
       //  Replace the images with MathJax scripts of type math/tex
       //
-      var images = document.getElementsByTagName('img');
+      var images = document.getElementsByTagName('img'), count = 0;
       for (var i = images.length - 1; i >= 0; i--) {
         var img = images[i];
         if (img.className === "tex") {
           var script = document.createElement("script"); script.type = "math/tex";
           if (window.opera) {script.innerHTML = img.alt} else {script.text = img.alt}
-          img.parentNode.replaceChild(script,img);
+          img.parentNode.replaceChild(script,img); count++;
         }
       }
-      //
-      //  Load MathJax and have it process the page
-      //
-      var script = document.createElement("script");
-      script.src = "http://www.yoursite.edu/MathJax/MathJax.js";  // put your URL here
-      var config = 'MathJax.Hub.Config({' +
-                     'config: ["MMLorHTML.js"],' +
-                     'extensions:["TeX/noErrors.js","TeX/noUndefined.js",' +
-                                 '"TeX/AMSmath.js","TeX/AMSsymbols.js"],' +
-                     'jax:["input/TeX"]' +
-                   '});' +
-                   'MathJax.Hub.Startup.onload()';
-      if (window.opera) {script.innerHTML = config} else {script.text = config}
-      document.getElementsByTagName("head")[0].appendChild(script);
+      if (count) {
+        //
+        //  Load MathJax and have it process the page
+        //
+        var script = document.createElement("script");
+        script.src = "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full";
+        var config = 'MathJax.Hub.Startup.onload()';
+        if (window.opera) {script.innerHTML = config} else {script.text = config}
+        document.getElementsByTagName("head")[0].appendChild(script);
+      }
     }
 
 **Source**: `mathjax_wikipedia.user.js <_static/mathjax_wikipedia.user.js>`_
