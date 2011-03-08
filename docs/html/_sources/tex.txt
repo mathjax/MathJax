@@ -355,28 +355,44 @@ Supported LaTeX commands
 
 This is a long list of the TeX macros supported by MathJax.  If the
 macro is defined in an extension, the name of the extension follows
-the macro name.
+the macro name.  If the extension is in brackets, the extension will
+be loaded automatically when the macro or environment is first used.
 
-.. code-block:: latex
+Symbols
+-------
     
+.. code-block:: latex
+
     #
-    ( )
-    .
-    /
-    [ ]
+    %
+    &
+    ^
+    _
+    {
+    }
+    ~
+
+    \   (backslash-space)
     \!
     \#
     \$
     \%
-    \&    
+    \&
+    \,
     \:
     \;
+    \>
     \\
     \_
-    \{ \}
+    \{
     \|
+    \}
+   
+A
+-
+
+.. code-block:: latex
     
-    A
     \above
     \abovewithdelims
     \acute
@@ -386,7 +402,7 @@ the macro name.
     \And
     \angle
     \approx
-    \approxeq AMSsymbols
+    \approxeq               AMSsymbols
     \arccos
     \arcsin
     \arctan
@@ -399,49 +415,26 @@ the macro name.
     \atop
     \atopwithdelims
 
-    B
-    \backepsilon AMSsymbols
-    \backprime AMSsymbols
-    \backsim AMSsymbols
-    \backsimeq AMSsymbols
+B
+-
+
+.. code-block:: latex
+    
+    \backepsilon            AMSsymbols
+    \backprime              AMSsymbols
+    \backsim                AMSsymbols
+    \backsimeq              AMSsymbols
     \backslash
     \backslash
     \bar
-    \barwedge AMSsymbols
+    \barwedge               AMSsymbols
     \Bbb
-    \Bbbk AMSsymbols
-    \bbFont
-    \because AMSsymbols
-    \begin ... \end
-    \begin{align*} ... \end{align*}
-    \begin{alignat*} ... \end{alignat*}
-    \begin{alignat} ... \end{alignat}
-    \begin{alignedat} ... \end{alignedat}
-    \begin{aligned} ... \end{aligned}
-    \begin{align} ... \end{align}
-    \begin{array} ... \end{array}
-    \begin{Bmatrix} ... \end{Bmatrix}
-    \begin{bmatrix} ... \end{bmatrix}
-    \begin{cases} ... \end{cases}
-    \begin{eqnarray*} ... \end{eqnarray*}
-    \begin{eqnarray} ... \end{eqnarray}
-    \begin{equation*} ... \end{equation*}
-    \begin{equation} ... \end{equation}
-    \begin{gather*} ... \end{gather*}
-    \begin{gathered} ... \end{gathered}
-    \begin{gather} ... \end{gather}
-    \begin{matrix} ... \end{matrix}
-    \begin{multline*} ... \end{multline*}
-    \begin{multline} ... \end{multline}
-    \begin{pmatrix} ... \end{pmatrix}
-    \begin{smallmatrix} ... \end{smallmatrix} AMSmath
-    \begin{split} ... \end{split}
-    \begin{subarray} ... \end{subarray} AMSmath
-    \begin{Vmatrix} ... \end{Vmatrix}
-    \begin{vmatrix} ... \end{vmatrix}
+    \Bbbk                   AMSsymbols
+    \because                AMSsymbols
+    \begin
     \beta
-    \beth AMSsymbols
-    \between AMSsymbols
+    \beth                   AMSsymbols
+    \between                AMSsymbols
     \bf
     \Big
     \big
@@ -466,65 +459,70 @@ the macro name.
     \Bigr
     \bigr
     \bigsqcup
-    \bigstar AMSsymbols
+    \bigstar                AMSsymbols
     \bigtriangledown
     \bigtriangleup
     \biguplus
     \bigvee
     \bigwedge
-    \binom AMSmath
-    \blacklozenge AMSsymbols
-    \blacksquare AMSsymbols
-    \blacktriangle AMSsymbols
-    \blacktriangledown AMSsymbols
-    \blacktriangleleft AMSsymbols
-    \blacktriangleright AMSsymbols
+    \binom                  AMSmath
+    \blacklozenge           AMSsymbols
+    \blacksquare            AMSsymbols
+    \blacktriangle          AMSsymbols
+    \blacktriangledown      AMSsymbols
+    \blacktriangleleft      AMSsymbols
+    \blacktriangleright     AMSsymbols
     \bmod
-    \boldsymbol
+    \boldsymbol            [boldsymbol]
     \bot
     \bowtie
-    \Box AMSsymbols
-    \boxdot AMSsymbols
-    \boxed AMSmath
-    \boxminus AMSsymbols
-    \boxplus AMSsymbols
-    \boxtimes AMSsymbols
+    \Box                    AMSsymbols
+    \boxdot                 AMSsymbols
+    \boxed                  AMSmath
+    \boxminus               AMSsymbols
+    \boxplus                AMSsymbols
+    \boxtimes               AMSsymbols
     \brace
     \bracevert
     \brack
     \breve
     \buildrel
     \bullet
-    \Bumpeq AMSsymbols
-    \bumpeq AMSsymbols
+    \Bumpeq                 AMSsymbols
+    \bumpeq                 AMSsymbols
+
+C
+-
+
+.. code-block:: latex
     
-    C
     \cal
-    \Cap AMSsymbols
     \cap
+    \Cap                    AMSsymbols
     \cases
     \cdot
     \cdotp
     \cdots
-    \centerdot AMSsymbols
-    \cfrac AMSmath
+    \centerdot              AMSsymbols
+    \cfrac                  AMSmath
     \check
-    \checkmark AMSsymbols
+    \checkmark              AMSsymbols
     \chi
     \choose
     \circ
-    \circeq AMSsymbols
-    \circlearrowleft AMSsymbols
-    \circlearrowright AMSsymbols
-    \circledast AMSsymbols
-    \circledcirc AMSsymbols
-    \circleddash AMSsymbols
-    \circledR AMSsymbols
-    \circledS AMSsymbols
+    \circeq                 AMSsymbols
+    \circlearrowleft        AMSsymbols
+    \circlearrowright       AMSsymbols
+    \circledast             AMSsymbols
+    \circledcirc            AMSsymbols
+    \circleddash            AMSsymbols
+    \circledR               AMSsymbols
+    \circledS               AMSsymbols
+    \class                 [HTML]           non-standard
     \clubsuit
     \colon
     \color
-    \complement AMSsymbols
+    \complement             AMSsymbols
     \cong
     \coprod
     \cos
@@ -533,169 +531,209 @@ the macro name.
     \coth
     \cr
     \csc
-    \Cup AMSsymbols
-    \cup	
-    \curlyeqprec AMSsymbols
-    \curlyeqsucc AMSsymbols
-    \curlyvee AMSsymbols
-    \curlywedge AMSsymbols
-    \curvearrowleft	AMSsymbols
-    \curvearrowright AMSsymbols
+    \cssId                 [HTML]           non-standard
+    \cup
+    \Cup                    AMSsymbols
+    \curlyeqprec            AMSsymbols
+    \curlyeqsucc            AMSsymbols
+    \curlyvee               AMSsymbols
+    \curlywedge             AMSsymbols
+    \curvearrowleft         AMSsymbols
+    \curvearrowright        AMSsymbols
+
+D
+-
+
+.. code-block:: latex
     
-    D
     \dagger
-    \daleth AMSsymbols
-    \dashleftarrow AMSsymbols
-    \dashrightarrow AMSsymbols
+    \daleth                 AMSsymbols
+    \dashleftarrow          AMSsymbols
+    \dashrightarrow         AMSsymbols
     \dashv
-    \dbinom AMSmath
+    \dbinom                 AMSmath
     \ddagger
-    \ddddot AMSmath
-    \dddot AMSmath
+    \ddddot                 AMSmath
+    \dddot                  AMSmath
     \ddot
     \ddots
-    \DeclareMathOperator AMSmath
-    \def
+    \DeclareMathOperator    AMSmath
+    \def                   [newcommand]
     \deg
     \Delta
     \delta
     \det
-    \dfrac AMSmath
-    \diagdown AMSsymbols
-    \diagup AMSsymbols
-    \Diamond AMSsymbols
+    \dfrac                  AMSmath
+    \diagdown               AMSsymbols
+    \diagup                 AMSsymbols
     \diamond
+    \Diamond                AMSsymbols
     \diamondsuit
-    \digamma AMSsymbols
+    \digamma                AMSsymbols
     \dim
     \displaylines
     \displaystyle
     \div
-    \divideontimes AMSsymbols
+    \divideontimes          AMSsymbols
     \dot
-    \Doteq AMSsymbols
     \doteq
-    \doteqdot AMSsymbols
-    \dotplus AMSsymbols
+    \Doteq                  AMSsymbols
+    \doteqdot               AMSsymbols
+    \dotplus                AMSsymbols
     \dots
     \dotsb
     \dotsc
     \dotsi
     \dotsm
     \dotso
-    \doublebarwedge AMSsymbols
-    \doublecap AMSsymbols
-    \doublecup AMSsymbols
+    \doublebarwedge         AMSsymbols
+    \doublecap              AMSsymbols
+    \doublecup              AMSsymbols
     \Downarrow
     \downarrow
-    \downdownarrows AMSsymbols
-    \downharpoonleft AMSsymbols
-    \downharpoonright AMSsymbols
+    \downdownarrows         AMSsymbols
+    \downharpoonleft        AMSsymbols
+    \downharpoonright       AMSsymbols
+
+E
+-
+
+.. code-block:: latex
     
-    E
     \ell
     \emptyset
+    \end
     \enspace
     \epsilon
     \eqalign
     \eqalignno
-    \eqcirc AMSsymbols
-    \eqsim AMSsymbols
-    \eqslantgtr AMSsymbols
-    \eqslantless AMSsymbols
+    \eqcirc                 AMSsymbols
+    \eqsim                  AMSsymbols
+    \eqslantgtr             AMSsymbols
+    \eqslantless            AMSsymbols
     \equiv
     \eta
-    \eth AMSsymbols
+    \eth                    AMSsymbols
     \exists
     \exp
+
+F
+-
+
+.. code-block:: latex
     
-    F
-    \fallingdotseq AMSsymbols
+    \fallingdotseq          AMSsymbols
     \fbox
-    \Finv AMSsymbols
+    \Finv                   AMSsymbols
     \flat
     \forall
     \frac
-    \frac AMSmath
+    \frac                   AMSmath
     \frak
     \frown
+
+G
+-
+
+.. code-block:: latex
     
-    G
-    \Game AMSsymbols
+    \Game                   AMSsymbols
     \Gamma
     \gamma
     \gcd
     \ge
-    \genfrac AMSmath
+    \genfrac                AMSmath
     \geq
-    \geqq AMSsymbols
-    \geqslant AMSsymbols
+    \geqq                   AMSsymbols
+    \geqslant               AMSsymbols
     \gets
     \gg
-    \ggg AMSsymbols
-    \gggtr AMSsymbols
-    \gimel AMSsymbols
-    \gnapprox AMSsymbols
-    \gneq AMSsymbols
-    \gneqq AMSsymbols
-    \gnsim AMSsymbols
+    \ggg                    AMSsymbols
+    \gggtr                  AMSsymbols
+    \gimel                  AMSsymbols
+    \gnapprox               AMSsymbols
+    \gneq                   AMSsymbols
+    \gneqq                  AMSsymbols
+    \gnsim                  AMSsymbols
     \grave
     \gt
     \gt
-    \gtrapprox AMSsymbols
-    \gtrdot AMSsymbols
-    \gtreqless AMSsymbols
-    \gtreqqless AMSsymbols
-    \gtrless AMSsymbols
-    \gtrsim AMSsymbols
-    \gvertneqq AMSsymbols
+    \gtrapprox              AMSsymbols
+    \gtrdot                 AMSsymbols
+    \gtreqless              AMSsymbols
+    \gtreqqless             AMSsymbols
+    \gtrless                AMSsymbols
+    \gtrsim                 AMSsymbols
+    \gvertneqq              AMSsymbols
+
+H
+-
+
+.. code-block:: latex
     
-    H
     \hat
     \hbar
     \hbox
+    \hdashline
     \heartsuit
+    \hline
     \hom
     \hookleftarrow
     \hookrightarrow
     \hphantom
+    \href                  [HTML]
     \hskip
-    \hslash AMSsymbols
+    \hslash                 AMSsymbols
     \hspace
     \Huge
     \huge
+    \idotsint               AMSmath
+
+I
+-
+
+.. code-block:: latex
     
-    I
-    \idotsint AMSmath
     \iff
-    \iiiint AMSmath
+    \iiiint                 AMSmath
     \iiint
     \iint
     \Im
     \imath
-    \impliedby AMSsymbols
-    \implies AMSsymbols
+    \impliedby              AMSsymbols
+    \implies                AMSsymbols
     \in
     \inf
     \infty
-    \injlim AMSmath
+    \injlim                 AMSmath
     \int
-    \intercal AMSsymbols
+    \intercal               AMSsymbols
     \intop
     \iota
     \it
+
+J
+-
+
+.. code-block:: latex
     
-    J    
     \jmath
-    \Join AMSsymbols
+    \Join                   AMSsymbols
+
+K
+-
+
+.. code-block:: latex
     
-    K
     \kappa
     \ker
     \kern
+
+L
+-
+
+.. code-block:: latex
     
-    L
-    \label
     \Lambda
     \lambda
     \land
@@ -710,52 +748,52 @@ the macro name.
     \ldotp
     \ldots
     \le
-    \leadsto AMSsymbols
+    \leadsto                AMSsymbols
     \left
     \Leftarrow
     \leftarrow
-    \leftarrowtail AMSsymbols
+    \leftarrowtail          AMSsymbols
     \leftharpoondown
     \leftharpoonup
-    \leftleftarrows AMSsymbols
+    \leftleftarrows         AMSsymbols
     \Leftrightarrow
     \leftrightarrow
-    \leftrightarrows AMSsymbols
-    \leftrightharpoons AMSsymbols
-    \leftrightsquigarrow AMSsymbols
+    \leftrightarrows        AMSsymbols
+    \leftrightharpoons      AMSsymbols
+    \leftrightsquigarrow    AMSsymbols
     \leftroot
-    \leftthreetimes AMSsymbols
+    \leftthreetimes         AMSsymbols
     \leq
     \leqalignno
-    \leqq AMSsymbols
-    \leqslant AMSsymbols
-    \lessapprox AMSsymbols
-    \lessdot AMSsymbols
-    \lesseqgtr AMSsymbols
-    \lesseqqgtr AMSsymbols
-    \lessgtr AMSsymbols
-    \lesssim AMSsymbols
+    \leqq                   AMSsymbols
+    \leqslant               AMSsymbols
+    \lessapprox             AMSsymbols
+    \lessdot                AMSsymbols
+    \lesseqgtr              AMSsymbols
+    \lesseqqgtr             AMSsymbols
+    \lessgtr                AMSsymbols
+    \lesssim                AMSsymbols
     \lfloor
     \lg
     \lgroup
-    \lhd AMSsymbols
+    \lhd                    AMSsymbols
     \lim
     \liminf
     \limits
     \limsup
     \ll
     \llap
-    \llcorner AMSsymbols
-    \Lleftarrow AMSsymbols
-    \lll AMSsymbols
-    \llless AMSsymbols
+    \llcorner               AMSsymbols
+    \Lleftarrow             AMSsymbols
+    \lll                    AMSsymbols
+    \llless                 AMSsymbols
     \lmoustache
     \ln
-    \lnapprox AMSsymbols
-    \lneq AMSsymbols
-    \lneqq AMSsymbols
+    \lnapprox               AMSsymbols
+    \lneq                   AMSsymbols
+    \lneqq                  AMSsymbols
     \lnot
-    \lnsim AMSsymbols
+    \lnsim                  AMSsymbols
     \log
     \Longleftarrow
     \longleftarrow
@@ -764,27 +802,32 @@ the macro name.
     \longmapsto
     \Longrightarrow
     \longrightarrow
-    \looparrowleft AMSsymbols
-    \looparrowright AMSsymbols
+    \looparrowleft          AMSsymbols
+    \looparrowright         AMSsymbols
     \lor
     \lower
-    \lozenge AMSsymbols
-    \lrcorner AMSsymbols
-    \Lsh AMSsymbols
+    \lozenge                AMSsymbols
+    \lrcorner               AMSsymbols
+    \Lsh                    AMSsymbols
     \lt
-    \ltimes AMSsymbols
-    \lVert AMSmath
-    \lvert AMSmath
-    \lvertneqq AMSsymbols
+    \lt
+    \ltimes                 AMSsymbols
+    \lVert                  AMSmath
+    \lvert                  AMSmath
+    \lvertneqq              AMSsymbols
+
+M
+-
+
+.. code-block:: latex
     
-    M
-    \maltese AMSsymbols
+    \maltese                AMSsymbols
     \mapsto
     \mathbb
     \mathbf
     \mathbin
     \mathcal
-    \mathchoice
+    \mathchoice            [mathchoice]
     \mathclose
     \mathfrak
     \mathinner
@@ -794,7 +837,7 @@ the macro name.
     \mathord
     \mathpunct
     \mathrel
-    \mathring AMSmath
+    \mathring               AMSmath
     \mathrm
     \mathscr
     \mathsf
@@ -803,8 +846,8 @@ the macro name.
     \matrix
     \max
     \mbox
-    \measuredangle AMSsymbols
-    \mho AMSsymbols
+    \measuredangle          AMSsymbols
+    \mho                    AMSsymbols
     \mid
     \min
     \mit
@@ -817,66 +860,78 @@ the macro name.
     \mskip
     \mspace
     \mu
-    \multimap AMSsymbols 
+    \multimap               AMSsymbols
+
+N
+-
+
+.. code-block:: latex
     
-    N
     \nabla
     \natural
-    \ncong AMSsymbols
+    \ncong                  AMSsymbols
     \ne
     \nearrow
     \neg
-    \negmedspace AMSmath
-    \negthickspace AMSmath
+    \negmedspace            AMSmath
+    \negthickspace          AMSmath
     \negthinspace
     \neq
-    \newcommand
-    \newenvironment
+    \newcommand            [newcommand]
+    \newenvironment        [newcommand]
     \newline
-    \nexists AMSsymbols
-    \ngeq AMSsymbols
-    \ngeqq AMSsymbols
-    \ngeqslant AMSsymbols
-    \ngtr AMSsymbols
+    \nexists                AMSsymbols
+    \ngeq                   AMSsymbols
+    \ngeqq                  AMSsymbols
+    \ngeqslant              AMSsymbols
+    \ngtr                   AMSsymbols
     \ni
-    \nLeftarrow AMSsymbols
-    \nleftarrow AMSsymbols
-    \nLeftrightarrow AMSsymbols
-    \nleftrightarrow AMSsymbols
-    \nleq AMSsymbols
-    \nleqq AMSsymbols
-    \nleqslant AMSsymbols
-    \nless AMSsymbols
-    \nmid AMSsymbols
-    \nobreakspace AMSmath
+    \nLeftarrow             AMSsymbols
+    \nleftarrow             AMSsymbols
+    \nLeftrightarrow        AMSsymbols
+    \nleftrightarrow        AMSsymbols
+    \nleq                   AMSsymbols
+    \nleqq                  AMSsymbols
+    \nleqslant              AMSsymbols
+    \nless                  AMSsymbols
+    \nmid                   AMSsymbols
+    \nobreakspace           AMSmath
     \nolimits
-    \nonumber
     \normalsize
     \not
-    \notag
+    \notag                  AMSmath
+    \notag                 [AMSmath]
     \notin
-    \nparallel AMSsymbols
-    \nprec AMSsymbols
-    \npreceq AMSsymbols
-    \nRightarrow AMSsymbols
-    \nrightarrow AMSsymbols
-    \nshortmid AMSsymbols
-    \nshortparallel AMSsymbols
-    \nsim AMSsymbols
-    \nsucc AMSsymbols
-    \nsucceq AMSsymbols
-    \ntriangleleft AMSsymbols
-    \ntrianglelefteq AMSsymbols
-    \ntriangleright AMSsymbols
-    \ntrianglerighteq AMSsymbols
+    \nparallel              AMSsymbols
+    \nprec                  AMSsymbols
+    \npreceq                AMSsymbols
+    \nRightarrow            AMSsymbols
+    \nrightarrow            AMSsymbols
+    \nshortmid              AMSsymbols
+    \nshortparallel         AMSsymbols
+    \nsim                   AMSsymbols
+    \nsubseteq              AMSsymbols
+    \nsubseteqq             AMSsymbols
+    \nsucc                  AMSsymbols
+    \nsucceq                AMSsymbols
+    \nsupseteq              AMSsymbols
+    \nsupseteqq             AMSsymbols
+    \ntriangleleft          AMSsymbols
+    \ntrianglelefteq        AMSsymbols
+    \ntriangleright         AMSsymbols
+    \ntrianglerighteq       AMSsymbols
     \nu
-    \nVDash AMSsymbols
-    \nVdash AMSsymbols
-    \nvDash AMSsymbols
-    \nvdash AMSsymbols
+    \nVDash                 AMSsymbols
+    \nVdash                 AMSsymbols
+    \nvDash                 AMSsymbols
+    \nvdash                 AMSsymbols
     \nwarrow
+
+O
+-
+
+.. code-block:: latex
     
-    O
     \odot
     \oint
     \oldstyle
@@ -884,7 +939,7 @@ the macro name.
     \omega
     \omicron
     \ominus
-    \operatorname AMSmath
+    \operatorname           AMSmath
     \oplus
     \oslash
     \otimes
@@ -897,8 +952,12 @@ the macro name.
     \overset
     \overwithdelims
     \owns
+
+P
+-
+
+.. code-block:: latex
     
-    P
     \parallel
     \partial
     \perp
@@ -907,7 +966,7 @@ the macro name.
     \phi
     \Pi
     \pi
-    \pitchfork AMSsymbols
+    \pitchfork              AMSsymbols
     \pm
     \pmatrix
     \pmb
@@ -915,62 +974,75 @@ the macro name.
     \pod
     \Pr
     \prec
-    \precapprox AMSsymbols
-    \preccurlyeq AMSsymbols
+    \precapprox             AMSsymbols
+    \preccurlyeq            AMSsymbols
     \preceq
-    \precnapprox AMSsymbols
-    \precneqq AMSsymbols
-    \precnsim AMSsymbols
-    \precsim AMSsymbols
+    \precnapprox            AMSsymbols
+    \precneqq               AMSsymbols
+    \precnsim               AMSsymbols
+    \precsim                AMSsymbols
     \prime
     \prod
-    \projlim AMSmath
+    \projlim                AMSmath
     \propto
     \Psi
     \psi
+
+Q
+-
+
+.. code-block:: latex
     
-    Q
     \qquad
     \quad
+
+R
+-
+
+.. code-block:: latex
     
-    R
     \raise
     \rangle
     \rbrace
     \rbrack
     \rceil
     \Re
-    \require
-    \restriction AMSsymbols
+    \renewcommand          [newcommand]
+    \require                               non-standard
+    \restriction            AMSsymbols
     \rfloor
     \rgroup
-    \rhd AMSsymbols
+    \rhd                    AMSsymbols
     \rho
     \right
     \Rightarrow
     \rightarrow
-    \rightarrowtail AMSsymbols
+    \rightarrowtail         AMSsymbols
     \rightharpoondown
     \rightharpoonup
-    \rightleftarrows AMSsymbols
+    \rightleftarrows        AMSsymbols
     \rightleftharpoons
-    \rightleftharpoons AMSsymbols
-    \rightrightarrows AMSsymbols
-    \rightsquigarrow AMSsymbols
-    \rightthreetimes AMSsymbols
-    \risingdotseq AMSsymbols
+    \rightleftharpoons      AMSsymbols
+    \rightrightarrows       AMSsymbols
+    \rightsquigarrow        AMSsymbols
+    \rightthreetimes        AMSsymbols
+    \risingdotseq           AMSsymbols
     \rlap
     \rm
     \rmoustache
     \root
-    \Rrightarrow AMSsymbols
-    \Rsh AMSsymbols
-    \rtimes AMSsymbols
-    \Rule
-    \rVert AMSmath
-    \rvert AMSmath
-        
-    S
+    \Rrightarrow            AMSsymbols
+    \Rsh                    AMSsymbols
+    \rtimes                 AMSsymbols
+    \Rule                                  non-standard
+    \rVert                  AMSmath
+    \rvert                  AMSmath
+
+S
+-
+
+.. code-block:: latex
+    
     \S
     \scr
     \scriptscriptstyle
@@ -981,11 +1053,11 @@ the macro name.
     \setminus
     \sf
     \sharp
-    \shortmid AMSsymbols
-    \shortparallel AMSsymbols
-    \shoveleft AMSmath
-    \shoveright AMSmath
-    \sideset AMSmath
+    \shortmid               AMSsymbols
+    \shortparallel          AMSsymbols
+    \shoveleft              AMSmath
+    \shoveright             AMSmath
+    \sideset                AMSmath
     \Sigma
     \sigma
     \sim
@@ -994,169 +1066,248 @@ the macro name.
     \sinh
     \skew
     \small
-    \smallfrown AMSsymbols
+    \smallfrown             AMSsymbols
     \smallint
-    \smallsetminus AMSsymbols
-    \smallsmile AMSsymbols
+    \smallsetminus          AMSsymbols
+    \smallsmile             AMSsymbols
     \smash
     \smile
     \Space
     \space
     \spadesuit
-    \sphericalangle AMSsymbols
+    \sphericalangle         AMSsymbols
     \sqcap
     \sqcup
     \sqrt
-    \sqsubset AMSsymbols
+    \sqsubset               AMSsymbols
     \sqsubseteq
-    \sqsupset AMSsymbols
+    \sqsupset               AMSsymbols
     \sqsupseteq
-    \square AMSsymbols
+    \square                 AMSsymbols
     \stackrel
     \star
     \strut
-    \Subset AMSsymbols
+    \style                 [HTML]          non-stanard
     \subset
+    \Subset                 AMSsymbols
     \subseteq
-    \subseteqq AMSsymbols
-    \subsetneq AMSsymbols
-    \substack AMSmath
+    \subseteqq              AMSsymbols
+    \subsetneq              AMSsymbols
+    \subsetneqq             AMSsymbols
+    \substack               AMSmath
     \succ
-    \succapprox AMSsymbols
-    \succcurlyeq AMSsymbols
+    \succapprox             AMSsymbols
+    \succcurlyeq            AMSsymbols
     \succeq
-    \succnapprox AMSsymbols
-    \succneqq AMSsymbols
-    \succnsim AMSsymbols
-    \succsim AMSsymbols
+    \succnapprox            AMSsymbols
+    \succneqq               AMSsymbols
+    \succnsim               AMSsymbols
+    \succsim                AMSsymbols
     \sum
     \sup
-    \Supset AMSsymbols
     \supset
+    \Supset                 AMSsymbols
     \supseteq
-    \supseteqq AMSsymbols
-    \supsetneq AMSsymbols
+    \supseteqq              AMSsymbols
+    \supsetneq              AMSsymbols
+    \supsetneqq             AMSsymbols
     \surd
     \swarrow
+
+T
+-
+
+.. code-block:: latex
     
-    T
-    \tag
+    \tag                    AMSmath
+    \tag                   [AMSmath]
     \tan
     \tanh
     \tau
-    \tbinom AMSmath
+    \tbinom                 AMSmath
     \TeX
     \text
     \textbf
     \textit
     \textrm
     \textstyle
-    \tfrac AMSmath
-    \therefore AMSsymbols
+    \tfrac                  AMSmath
+    \therefore              AMSsymbols
     \Theta
     \theta
-    \thickapprox AMSsymbols
-    \thicksim AMSsymbols
+    \thickapprox            AMSsymbols
+    \thicksim               AMSsymbols
     \thinspace
     \tilde
     \times
-    \Tiny
     \tiny
+    \Tiny                                  non-standard
     \to
     \top
     \triangle
-    \triangledown AMSsymbols
+    \triangledown           AMSsymbols
     \triangleleft
-    \trianglelefteq AMSsymbols
-    \triangleq AMSsymbols
+    \trianglelefteq         AMSsymbols
+    \triangleq              AMSsymbols
     \triangleright
-    \trianglerighteq AMSsymbols
+    \trianglerighteq        AMSsymbols
     \tt
-    \twoheadleftarrow AMSsymbols
-    \twoheadrightarrow AMSsymbols
-        
-    U
-    \ulcorner AMSsymbols
+    \twoheadleftarrow       AMSsymbols
+    \twoheadrightarrow      AMSsymbols
+
+U
+-
+
+.. code-block:: latex
+    
+    \ulcorner               AMSsymbols
     \underbrace
     \underleftarrow
     \underleftrightarrow
     \underline
     \underrightarrow
     \underset
-    \unicode
-    \unlhd AMSsymbols
-    \unrhd AMSsymbols
+    \unicode               [unicode]       non-standard
+    \unlhd                  AMSsymbols
+    \unrhd                  AMSsymbols
     \Uparrow
     \uparrow
     \Updownarrow
     \updownarrow
-    \upharpoonleft AMSsymbols
-    \upharpoonright AMSsymbols
+    \upharpoonleft          AMSsymbols
+    \upharpoonright         AMSsymbols
     \uplus
     \uproot
     \Upsilon
     \upsilon
-    \upuparrows AMSsymbols
-    \urcorner AMSsymbols
+    \upuparrows             AMSsymbols
+    \urcorner               AMSsymbols
+
+V
+-
+
+.. code-block:: latex
     
-    V
-    \varDelta AMSsymbols
+    \varDelta               AMSsymbols
     \varepsilon
-    \varGamma AMSsymbols
-    \varinjlim AMSmath
-    \varkappa AMSsymbols
-    \varLambda AMSsymbols
-    \varliminf AMSmath
-    \varlimsup AMSmath
-    \varnothing AMSsymbols
-    \varOmega AMSsymbols
-    \varPhi AMSsymbols
+    \varGamma               AMSsymbols
+    \varinjlim              AMSmath
+    \varkappa               AMSsymbols
+    \varLambda              AMSsymbols
+    \varliminf              AMSmath
+    \varlimsup              AMSmath
+    \varnothing             AMSsymbols
+    \varOmega               AMSsymbols
     \varphi
-    \varPi AMSsymbols
+    \varPhi                 AMSsymbols
     \varpi
-    \varprojlim AMSmath
-    \varpropto AMSsymbols
-    \varPsi AMSsymbols
+    \varPi                  AMSsymbols
+    \varprojlim             AMSmath
+    \varpropto              AMSsymbols
+    \varPsi                 AMSsymbols
     \varrho
-    \varSigma AMSsymbols
     \varsigma
-    \varTheta AMSsymbols
+    \varSigma               AMSsymbols
+    \varsubsetneq           AMSsymbols
+    \varsubsetneqq          AMSsymbols
+    \varsupsetneq           AMSsymbols
+    \varsupsetneqq          AMSsymbols
     \vartheta
-    \vartriangle AMSsymbols
-    \vartriangleleft AMSsymbols
-    \vartriangleright AMSsymbols
-    \varUpsilon AMSsymbols
-    \varXi AMSsymbols
+    \varTheta               AMSsymbols
+    \vartriangle            AMSsymbols
+    \vartriangleleft        AMSsymbols
+    \vartriangleright       AMSsymbols
+    \varUpsilon             AMSsymbols
+    \varXi                  AMSsymbols
     \vcenter
-    \Vdash AMSsymbols
-    \vDash AMSsymbols
     \vdash
+    \Vdash                  AMSsymbols
+    \vDash                  AMSsymbols
     \vdots
     \vec
     \vee
-    \veebar AMSsymbols
-    \verb
+    \veebar                 AMSsymbols
+    \verb                  [verb]
     \Vert
     \vert
     \vphantom
-    \Vvdash AMSsymbols
+    \Vvdash                 AMSsymbols
+
+W
+-
+
+.. code-block:: latex
     
-    W
     \wedge
     \widehat
     \widetilde
     \wp
     \wr
+
+X
+-
+
+.. code-block:: latex
     
-    X
     \Xi
     \xi
-    \xleftarrow AMSmath
-    \xrightarrow AMSmath
+    \xleftarrow             AMSmath
+    \xrightarrow            AMSmath
+
+Y
+-
+
+.. code-block:: latex
     
-    Y
-    \yen AMSsymbols
+    \yen                    AMSsymbols
+
+Z
+-
+
+.. code-block:: latex
     
-    Z
     \zeta
 
+
+Environments
+------------
+
+LaTeX environments of the form ``\begin{XXX} ... \end{XXX}`` are
+preovided where ``XXX`` is one of the following:
+
+.. code-block:: latex
+
+    align		   [AMSmath]
+    align*		   [AMSmath]
+    alignat		   [AMSmath]
+    alignat*		   [AMSmath]
+    aligned		   [AMSmath]
+    alignedat		   [AMSmath]
+    array
+
+    Bmatrix
+    bmatrix
+
+    cases
+
+    eqnarray
+    eqnarray*
+    equation
+    equation*
+
+    gather		   [AMSmath]
+    gather*		   [AMSmath]
+    gathered		   [AMSmath]
+
+    matrix
+    multline		   [AMSmath]
+    multline*		   [AMSmath]
+
+    pmatrix
+
+    smallmatrix		    AMSmath
+    split		   [AMSmath]
+    subarray		    AMSmath
+
+    Vmatrix
+    vmatrix

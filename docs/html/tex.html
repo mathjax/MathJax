@@ -338,26 +338,40 @@ array.  You can configure the extension as follows:</p>
 <span id="tex-commands"></span><h2>Supported LaTeX commands<a class="headerlink" href="#supported-latex-commands" title="Permalink to this headline">¶</a></h2>
 <p>This is a long list of the TeX macros supported by MathJax.  If the
 macro is defined in an extension, the name of the extension follows
-the macro name.</p>
+the macro name.  If the extension is in brackets, the extension will
+be loaded automatically when the macro or environment is first used.</p>
+<div class="section" id="symbols">
+<h3>Symbols<a class="headerlink" href="#symbols" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-latex"><div class="highlight"><pre>#
-( )
-.
-/
-[ ]
+<span class="c">%</span>
+<span class="nb">&amp;</span>
+<span class="nb">^</span>
+<span class="nb">_</span>
+<span class="nb">{</span>
+<span class="nb">}</span>
+~
+
+<span class="k">\ </span>  (backslash-space)
 <span class="k">\!</span>
 <span class="k">\#</span>
 <span class="k">\$</span>
 <span class="k">\%</span>
 <span class="k">\&amp;</span>
+<span class="k">\,</span>
 <span class="k">\:</span>
 <span class="k">\;</span>
+<span class="k">\&gt;</span>
 <span class="k">\\</span>
 <span class="k">\_</span>
-<span class="k">\{</span> <span class="k">\}</span>
+<span class="k">\{</span>
 <span class="k">\|</span>
-
-A
-<span class="k">\above</span>
+<span class="k">\}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a">
+<h3>A<a class="headerlink" href="#a" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\above</span>
 <span class="k">\abovewithdelims</span>
 <span class="k">\acute</span>
 <span class="k">\aleph</span>
@@ -366,7 +380,7 @@ A
 <span class="k">\And</span>
 <span class="k">\angle</span>
 <span class="k">\approx</span>
-<span class="k">\approxeq</span> AMSsymbols
+<span class="k">\approxeq</span>               AMSsymbols
 <span class="k">\arccos</span>
 <span class="k">\arcsin</span>
 <span class="k">\arctan</span>
@@ -378,50 +392,26 @@ A
 <span class="k">\asymp</span>
 <span class="k">\atop</span>
 <span class="k">\atopwithdelims</span>
-
-B
-<span class="k">\backepsilon</span> AMSsymbols
-<span class="k">\backprime</span> AMSsymbols
-<span class="k">\backsim</span> AMSsymbols
-<span class="k">\backsimeq</span> AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="b">
+<h3>B<a class="headerlink" href="#b" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\backepsilon</span>            AMSsymbols
+<span class="k">\backprime</span>              AMSsymbols
+<span class="k">\backsim</span>                AMSsymbols
+<span class="k">\backsimeq</span>              AMSsymbols
 <span class="k">\backslash</span>
 <span class="k">\backslash</span>
 <span class="k">\bar</span>
-<span class="k">\barwedge</span> AMSsymbols
+<span class="k">\barwedge</span>               AMSsymbols
 <span class="k">\Bbb</span>
-<span class="k">\Bbbk</span> AMSsymbols
-<span class="k">\bbFont</span>
-<span class="k">\because</span> AMSsymbols
-<span class="k">\begin</span> ... <span class="k">\end</span>
-<span class="k">\begin</span><span class="nb">{</span>align*<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>align*<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>alignat*<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>alignat*<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>alignat<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>alignat<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>alignedat<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>alignedat<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>aligned<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>aligned<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>align<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>align<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>array<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>array<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>Bmatrix<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>Bmatrix<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>bmatrix<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>bmatrix<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>cases<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>cases<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>eqnarray*<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>eqnarray*<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>eqnarray<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>eqnarray<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>equation*<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>equation*<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>equation<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>equation<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>gather*<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>gather*<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>gathered<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>gathered<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>gather<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>gather<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>matrix<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>matrix<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>multline*<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>multline*<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>multline<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>multline<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>pmatrix<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>pmatrix<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>smallmatrix<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>smallmatrix<span class="nb">}</span> AMSmath
-<span class="k">\begin</span><span class="nb">{</span>split<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>split<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>subarray<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>subarray<span class="nb">}</span> AMSmath
-<span class="k">\begin</span><span class="nb">{</span>Vmatrix<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>Vmatrix<span class="nb">}</span>
-<span class="k">\begin</span><span class="nb">{</span>vmatrix<span class="nb">}</span> ... <span class="k">\end</span><span class="nb">{</span>vmatrix<span class="nb">}</span>
+<span class="k">\Bbbk</span>                   AMSsymbols
+<span class="k">\because</span>                AMSsymbols
+<span class="k">\begin</span>
 <span class="k">\beta</span>
-<span class="k">\beth</span> AMSsymbols
-<span class="k">\between</span> AMSsymbols
+<span class="k">\beth</span>                   AMSsymbols
+<span class="k">\between</span>                AMSsymbols
 <span class="k">\bf</span>
 <span class="k">\Big</span>
 <span class="k">\big</span>
@@ -446,65 +436,69 @@ B
 <span class="k">\Bigr</span>
 <span class="k">\bigr</span>
 <span class="k">\bigsqcup</span>
-<span class="k">\bigstar</span> AMSsymbols
+<span class="k">\bigstar</span>                AMSsymbols
 <span class="k">\bigtriangledown</span>
 <span class="k">\bigtriangleup</span>
 <span class="k">\biguplus</span>
 <span class="k">\bigvee</span>
 <span class="k">\bigwedge</span>
-<span class="k">\binom</span> AMSmath
-<span class="k">\blacklozenge</span> AMSsymbols
-<span class="k">\blacksquare</span> AMSsymbols
-<span class="k">\blacktriangle</span> AMSsymbols
-<span class="k">\blacktriangledown</span> AMSsymbols
-<span class="k">\blacktriangleleft</span> AMSsymbols
-<span class="k">\blacktriangleright</span> AMSsymbols
+<span class="k">\binom</span>                  AMSmath
+<span class="k">\blacklozenge</span>           AMSsymbols
+<span class="k">\blacksquare</span>            AMSsymbols
+<span class="k">\blacktriangle</span>          AMSsymbols
+<span class="k">\blacktriangledown</span>      AMSsymbols
+<span class="k">\blacktriangleleft</span>      AMSsymbols
+<span class="k">\blacktriangleright</span>     AMSsymbols
 <span class="k">\bmod</span>
-<span class="k">\boldsymbol</span>
+<span class="k">\boldsymbol</span>            [boldsymbol]
 <span class="k">\bot</span>
 <span class="k">\bowtie</span>
-<span class="k">\Box</span> AMSsymbols
-<span class="k">\boxdot</span> AMSsymbols
-<span class="k">\boxed</span> AMSmath
-<span class="k">\boxminus</span> AMSsymbols
-<span class="k">\boxplus</span> AMSsymbols
-<span class="k">\boxtimes</span> AMSsymbols
+<span class="k">\Box</span>                    AMSsymbols
+<span class="k">\boxdot</span>                 AMSsymbols
+<span class="k">\boxed</span>                  AMSmath
+<span class="k">\boxminus</span>               AMSsymbols
+<span class="k">\boxplus</span>                AMSsymbols
+<span class="k">\boxtimes</span>               AMSsymbols
 <span class="k">\brace</span>
 <span class="k">\bracevert</span>
 <span class="k">\brack</span>
 <span class="k">\breve</span>
 <span class="k">\buildrel</span>
 <span class="k">\bullet</span>
-<span class="k">\Bumpeq</span> AMSsymbols
-<span class="k">\bumpeq</span> AMSsymbols
-
-C
-<span class="k">\cal</span>
-<span class="k">\Cap</span> AMSsymbols
+<span class="k">\Bumpeq</span>                 AMSsymbols
+<span class="k">\bumpeq</span>                 AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="c">
+<h3>C<a class="headerlink" href="#c" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\cal</span>
 <span class="k">\cap</span>
+<span class="k">\Cap</span>                    AMSsymbols
 <span class="k">\cases</span>
 <span class="k">\cdot</span>
 <span class="k">\cdotp</span>
 <span class="k">\cdots</span>
-<span class="k">\centerdot</span> AMSsymbols
-<span class="k">\cfrac</span> AMSmath
+<span class="k">\centerdot</span>              AMSsymbols
+<span class="k">\cfrac</span>                  AMSmath
 <span class="k">\check</span>
-<span class="k">\checkmark</span> AMSsymbols
+<span class="k">\checkmark</span>              AMSsymbols
 <span class="k">\chi</span>
 <span class="k">\choose</span>
 <span class="k">\circ</span>
-<span class="k">\circeq</span> AMSsymbols
-<span class="k">\circlearrowleft</span> AMSsymbols
-<span class="k">\circlearrowright</span> AMSsymbols
-<span class="k">\circledast</span> AMSsymbols
-<span class="k">\circledcirc</span> AMSsymbols
-<span class="k">\circleddash</span> AMSsymbols
-<span class="k">\circledR</span> AMSsymbols
-<span class="k">\circledS</span> AMSsymbols
+<span class="k">\circeq</span>                 AMSsymbols
+<span class="k">\circlearrowleft</span>        AMSsymbols
+<span class="k">\circlearrowright</span>       AMSsymbols
+<span class="k">\circledast</span>             AMSsymbols
+<span class="k">\circledcirc</span>            AMSsymbols
+<span class="k">\circleddash</span>            AMSsymbols
+<span class="k">\circledR</span>               AMSsymbols
+<span class="k">\circledS</span>               AMSsymbols
+<span class="k">\class</span>                 [HTML]           non-standard
 <span class="k">\clubsuit</span>
 <span class="k">\colon</span>
 <span class="k">\color</span>
-<span class="k">\complement</span> AMSsymbols
+<span class="k">\complement</span>             AMSsymbols
 <span class="k">\cong</span>
 <span class="k">\coprod</span>
 <span class="k">\cos</span>
@@ -513,170 +507,201 @@ C
 <span class="k">\coth</span>
 <span class="k">\cr</span>
 <span class="k">\csc</span>
-<span class="k">\Cup</span> AMSsymbols
+<span class="k">\cssId</span>                 [HTML]           non-standard
 <span class="k">\cup</span>
-<span class="k">\curlyeqprec</span> AMSsymbols
-<span class="k">\curlyeqsucc</span> AMSsymbols
-<span class="k">\curlyvee</span> AMSsymbols
-<span class="k">\curlywedge</span> AMSsymbols
-<span class="k">\curvearrowleft</span>     AMSsymbols
-<span class="k">\curvearrowright</span> AMSsymbols
-
-D
-<span class="k">\dagger</span>
-<span class="k">\daleth</span> AMSsymbols
-<span class="k">\dashleftarrow</span> AMSsymbols
-<span class="k">\dashrightarrow</span> AMSsymbols
+<span class="k">\Cup</span>                    AMSsymbols
+<span class="k">\curlyeqprec</span>            AMSsymbols
+<span class="k">\curlyeqsucc</span>            AMSsymbols
+<span class="k">\curlyvee</span>               AMSsymbols
+<span class="k">\curlywedge</span>             AMSsymbols
+<span class="k">\curvearrowleft</span>         AMSsymbols
+<span class="k">\curvearrowright</span>        AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="d">
+<h3>D<a class="headerlink" href="#d" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\dagger</span>
+<span class="k">\daleth</span>                 AMSsymbols
+<span class="k">\dashleftarrow</span>          AMSsymbols
+<span class="k">\dashrightarrow</span>         AMSsymbols
 <span class="k">\dashv</span>
-<span class="k">\dbinom</span> AMSmath
+<span class="k">\dbinom</span>                 AMSmath
 <span class="k">\ddagger</span>
-<span class="k">\ddddot</span> AMSmath
-<span class="k">\dddot</span> AMSmath
+<span class="k">\ddddot</span>                 AMSmath
+<span class="k">\dddot</span>                  AMSmath
 <span class="k">\ddot</span>
 <span class="k">\ddots</span>
-<span class="k">\DeclareMathOperator</span> AMSmath
-<span class="k">\def</span>
+<span class="k">\DeclareMathOperator</span>    AMSmath
+<span class="k">\def</span>                   [newcommand]
 <span class="k">\deg</span>
 <span class="k">\Delta</span>
 <span class="k">\delta</span>
 <span class="k">\det</span>
-<span class="k">\dfrac</span> AMSmath
-<span class="k">\diagdown</span> AMSsymbols
-<span class="k">\diagup</span> AMSsymbols
-<span class="k">\Diamond</span> AMSsymbols
+<span class="k">\dfrac</span>                  AMSmath
+<span class="k">\diagdown</span>               AMSsymbols
+<span class="k">\diagup</span>                 AMSsymbols
 <span class="k">\diamond</span>
+<span class="k">\Diamond</span>                AMSsymbols
 <span class="k">\diamondsuit</span>
-<span class="k">\digamma</span> AMSsymbols
+<span class="k">\digamma</span>                AMSsymbols
 <span class="k">\dim</span>
 <span class="k">\displaylines</span>
 <span class="k">\displaystyle</span>
 <span class="k">\div</span>
-<span class="k">\divideontimes</span> AMSsymbols
+<span class="k">\divideontimes</span>          AMSsymbols
 <span class="k">\dot</span>
-<span class="k">\Doteq</span> AMSsymbols
 <span class="k">\doteq</span>
-<span class="k">\doteqdot</span> AMSsymbols
-<span class="k">\dotplus</span> AMSsymbols
+<span class="k">\Doteq</span>                  AMSsymbols
+<span class="k">\doteqdot</span>               AMSsymbols
+<span class="k">\dotplus</span>                AMSsymbols
 <span class="k">\dots</span>
 <span class="k">\dotsb</span>
 <span class="k">\dotsc</span>
 <span class="k">\dotsi</span>
 <span class="k">\dotsm</span>
 <span class="k">\dotso</span>
-<span class="k">\doublebarwedge</span> AMSsymbols
-<span class="k">\doublecap</span> AMSsymbols
-<span class="k">\doublecup</span> AMSsymbols
+<span class="k">\doublebarwedge</span>         AMSsymbols
+<span class="k">\doublecap</span>              AMSsymbols
+<span class="k">\doublecup</span>              AMSsymbols
 <span class="k">\Downarrow</span>
 <span class="k">\downarrow</span>
-<span class="k">\downdownarrows</span> AMSsymbols
-<span class="k">\downharpoonleft</span> AMSsymbols
-<span class="k">\downharpoonright</span> AMSsymbols
-
-E
-<span class="k">\ell</span>
+<span class="k">\downdownarrows</span>         AMSsymbols
+<span class="k">\downharpoonleft</span>        AMSsymbols
+<span class="k">\downharpoonright</span>       AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="e">
+<h3>E<a class="headerlink" href="#e" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\ell</span>
 <span class="k">\emptyset</span>
+<span class="k">\end</span>
 <span class="k">\enspace</span>
 <span class="k">\epsilon</span>
 <span class="k">\eqalign</span>
 <span class="k">\eqalignno</span>
-<span class="k">\eqcirc</span> AMSsymbols
-<span class="k">\eqsim</span> AMSsymbols
-<span class="k">\eqslantgtr</span> AMSsymbols
-<span class="k">\eqslantless</span> AMSsymbols
+<span class="k">\eqcirc</span>                 AMSsymbols
+<span class="k">\eqsim</span>                  AMSsymbols
+<span class="k">\eqslantgtr</span>             AMSsymbols
+<span class="k">\eqslantless</span>            AMSsymbols
 <span class="k">\equiv</span>
 <span class="k">\eta</span>
-<span class="k">\eth</span> AMSsymbols
+<span class="k">\eth</span>                    AMSsymbols
 <span class="k">\exists</span>
 <span class="k">\exp</span>
-
-F
-<span class="k">\fallingdotseq</span> AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="f">
+<h3>F<a class="headerlink" href="#f" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\fallingdotseq</span>          AMSsymbols
 <span class="k">\fbox</span>
-<span class="k">\Finv</span> AMSsymbols
+<span class="k">\Finv</span>                   AMSsymbols
 <span class="k">\flat</span>
 <span class="k">\forall</span>
 <span class="k">\frac</span>
-<span class="k">\frac</span> AMSmath
+<span class="k">\frac</span>                   AMSmath
 <span class="k">\frak</span>
 <span class="k">\frown</span>
-
-G
-<span class="k">\Game</span> AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="g">
+<h3>G<a class="headerlink" href="#g" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\Game</span>                   AMSsymbols
 <span class="k">\Gamma</span>
 <span class="k">\gamma</span>
 <span class="k">\gcd</span>
 <span class="k">\ge</span>
-<span class="k">\genfrac</span> AMSmath
+<span class="k">\genfrac</span>                AMSmath
 <span class="k">\geq</span>
-<span class="k">\geqq</span> AMSsymbols
-<span class="k">\geqslant</span> AMSsymbols
+<span class="k">\geqq</span>                   AMSsymbols
+<span class="k">\geqslant</span>               AMSsymbols
 <span class="k">\gets</span>
 <span class="k">\gg</span>
-<span class="k">\ggg</span> AMSsymbols
-<span class="k">\gggtr</span> AMSsymbols
-<span class="k">\gimel</span> AMSsymbols
-<span class="k">\gnapprox</span> AMSsymbols
-<span class="k">\gneq</span> AMSsymbols
-<span class="k">\gneqq</span> AMSsymbols
-<span class="k">\gnsim</span> AMSsymbols
+<span class="k">\ggg</span>                    AMSsymbols
+<span class="k">\gggtr</span>                  AMSsymbols
+<span class="k">\gimel</span>                  AMSsymbols
+<span class="k">\gnapprox</span>               AMSsymbols
+<span class="k">\gneq</span>                   AMSsymbols
+<span class="k">\gneqq</span>                  AMSsymbols
+<span class="k">\gnsim</span>                  AMSsymbols
 <span class="k">\grave</span>
 <span class="k">\gt</span>
 <span class="k">\gt</span>
-<span class="k">\gtrapprox</span> AMSsymbols
-<span class="k">\gtrdot</span> AMSsymbols
-<span class="k">\gtreqless</span> AMSsymbols
-<span class="k">\gtreqqless</span> AMSsymbols
-<span class="k">\gtrless</span> AMSsymbols
-<span class="k">\gtrsim</span> AMSsymbols
-<span class="k">\gvertneqq</span> AMSsymbols
-
-H
-<span class="k">\hat</span>
+<span class="k">\gtrapprox</span>              AMSsymbols
+<span class="k">\gtrdot</span>                 AMSsymbols
+<span class="k">\gtreqless</span>              AMSsymbols
+<span class="k">\gtreqqless</span>             AMSsymbols
+<span class="k">\gtrless</span>                AMSsymbols
+<span class="k">\gtrsim</span>                 AMSsymbols
+<span class="k">\gvertneqq</span>              AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="h">
+<h3>H<a class="headerlink" href="#h" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\hat</span>
 <span class="k">\hbar</span>
 <span class="k">\hbox</span>
+<span class="k">\hdashline</span>
 <span class="k">\heartsuit</span>
+<span class="k">\hline</span>
 <span class="k">\hom</span>
 <span class="k">\hookleftarrow</span>
 <span class="k">\hookrightarrow</span>
 <span class="k">\hphantom</span>
+<span class="k">\href</span>                  [HTML]
 <span class="k">\hskip</span>
-<span class="k">\hslash</span> AMSsymbols
+<span class="k">\hslash</span>                 AMSsymbols
 <span class="k">\hspace</span>
 <span class="k">\Huge</span>
 <span class="k">\huge</span>
-
-I
-<span class="k">\idotsint</span> AMSmath
-<span class="k">\iff</span>
-<span class="k">\iiiint</span> AMSmath
+<span class="k">\idotsint</span>               AMSmath
+</pre></div>
+</div>
+</div>
+<div class="section" id="i">
+<h3>I<a class="headerlink" href="#i" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\iff</span>
+<span class="k">\iiiint</span>                 AMSmath
 <span class="k">\iiint</span>
 <span class="k">\iint</span>
 <span class="k">\Im</span>
 <span class="k">\imath</span>
-<span class="k">\impliedby</span> AMSsymbols
-<span class="k">\implies</span> AMSsymbols
+<span class="k">\impliedby</span>              AMSsymbols
+<span class="k">\implies</span>                AMSsymbols
 <span class="k">\in</span>
 <span class="k">\inf</span>
 <span class="k">\infty</span>
-<span class="k">\injlim</span> AMSmath
+<span class="k">\injlim</span>                 AMSmath
 <span class="k">\int</span>
-<span class="k">\intercal</span> AMSsymbols
+<span class="k">\intercal</span>               AMSsymbols
 <span class="k">\intop</span>
 <span class="k">\iota</span>
 <span class="k">\it</span>
-
-J
-<span class="k">\jmath</span>
-<span class="k">\Join</span> AMSsymbols
-
-K
-<span class="k">\kappa</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="j">
+<h3>J<a class="headerlink" href="#j" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\jmath</span>
+<span class="k">\Join</span>                   AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="k">
+<h3>K<a class="headerlink" href="#k" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\kappa</span>
 <span class="k">\ker</span>
 <span class="k">\kern</span>
-
-L
-<span class="k">\label</span>
-<span class="k">\Lambda</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="l">
+<h3>L<a class="headerlink" href="#l" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\Lambda</span>
 <span class="k">\lambda</span>
 <span class="k">\land</span>
 <span class="k">\langle</span>
@@ -690,52 +715,52 @@ L
 <span class="k">\ldotp</span>
 <span class="k">\ldots</span>
 <span class="k">\le</span>
-<span class="k">\leadsto</span> AMSsymbols
+<span class="k">\leadsto</span>                AMSsymbols
 <span class="k">\left</span>
 <span class="k">\Leftarrow</span>
 <span class="k">\leftarrow</span>
-<span class="k">\leftarrowtail</span> AMSsymbols
+<span class="k">\leftarrowtail</span>          AMSsymbols
 <span class="k">\leftharpoondown</span>
 <span class="k">\leftharpoonup</span>
-<span class="k">\leftleftarrows</span> AMSsymbols
+<span class="k">\leftleftarrows</span>         AMSsymbols
 <span class="k">\Leftrightarrow</span>
 <span class="k">\leftrightarrow</span>
-<span class="k">\leftrightarrows</span> AMSsymbols
-<span class="k">\leftrightharpoons</span> AMSsymbols
-<span class="k">\leftrightsquigarrow</span> AMSsymbols
+<span class="k">\leftrightarrows</span>        AMSsymbols
+<span class="k">\leftrightharpoons</span>      AMSsymbols
+<span class="k">\leftrightsquigarrow</span>    AMSsymbols
 <span class="k">\leftroot</span>
-<span class="k">\leftthreetimes</span> AMSsymbols
+<span class="k">\leftthreetimes</span>         AMSsymbols
 <span class="k">\leq</span>
 <span class="k">\leqalignno</span>
-<span class="k">\leqq</span> AMSsymbols
-<span class="k">\leqslant</span> AMSsymbols
-<span class="k">\lessapprox</span> AMSsymbols
-<span class="k">\lessdot</span> AMSsymbols
-<span class="k">\lesseqgtr</span> AMSsymbols
-<span class="k">\lesseqqgtr</span> AMSsymbols
-<span class="k">\lessgtr</span> AMSsymbols
-<span class="k">\lesssim</span> AMSsymbols
+<span class="k">\leqq</span>                   AMSsymbols
+<span class="k">\leqslant</span>               AMSsymbols
+<span class="k">\lessapprox</span>             AMSsymbols
+<span class="k">\lessdot</span>                AMSsymbols
+<span class="k">\lesseqgtr</span>              AMSsymbols
+<span class="k">\lesseqqgtr</span>             AMSsymbols
+<span class="k">\lessgtr</span>                AMSsymbols
+<span class="k">\lesssim</span>                AMSsymbols
 <span class="k">\lfloor</span>
 <span class="k">\lg</span>
 <span class="k">\lgroup</span>
-<span class="k">\lhd</span> AMSsymbols
+<span class="k">\lhd</span>                    AMSsymbols
 <span class="k">\lim</span>
 <span class="k">\liminf</span>
 <span class="k">\limits</span>
 <span class="k">\limsup</span>
 <span class="k">\ll</span>
 <span class="k">\llap</span>
-<span class="k">\llcorner</span> AMSsymbols
-<span class="k">\Lleftarrow</span> AMSsymbols
-<span class="k">\lll</span> AMSsymbols
-<span class="k">\llless</span> AMSsymbols
+<span class="k">\llcorner</span>               AMSsymbols
+<span class="k">\Lleftarrow</span>             AMSsymbols
+<span class="k">\lll</span>                    AMSsymbols
+<span class="k">\llless</span>                 AMSsymbols
 <span class="k">\lmoustache</span>
 <span class="k">\ln</span>
-<span class="k">\lnapprox</span> AMSsymbols
-<span class="k">\lneq</span> AMSsymbols
-<span class="k">\lneqq</span> AMSsymbols
+<span class="k">\lnapprox</span>               AMSsymbols
+<span class="k">\lneq</span>                   AMSsymbols
+<span class="k">\lneqq</span>                  AMSsymbols
 <span class="k">\lnot</span>
-<span class="k">\lnsim</span> AMSsymbols
+<span class="k">\lnsim</span>                  AMSsymbols
 <span class="k">\log</span>
 <span class="k">\Longleftarrow</span>
 <span class="k">\longleftarrow</span>
@@ -744,27 +769,31 @@ L
 <span class="k">\longmapsto</span>
 <span class="k">\Longrightarrow</span>
 <span class="k">\longrightarrow</span>
-<span class="k">\looparrowleft</span> AMSsymbols
-<span class="k">\looparrowright</span> AMSsymbols
+<span class="k">\looparrowleft</span>          AMSsymbols
+<span class="k">\looparrowright</span>         AMSsymbols
 <span class="k">\lor</span>
 <span class="k">\lower</span>
-<span class="k">\lozenge</span> AMSsymbols
-<span class="k">\lrcorner</span> AMSsymbols
-<span class="k">\Lsh</span> AMSsymbols
+<span class="k">\lozenge</span>                AMSsymbols
+<span class="k">\lrcorner</span>               AMSsymbols
+<span class="k">\Lsh</span>                    AMSsymbols
 <span class="k">\lt</span>
-<span class="k">\ltimes</span> AMSsymbols
-<span class="k">\lVert</span> AMSmath
-<span class="k">\lvert</span> AMSmath
-<span class="k">\lvertneqq</span> AMSsymbols
-
-M
-<span class="k">\maltese</span> AMSsymbols
+<span class="k">\lt</span>
+<span class="k">\ltimes</span>                 AMSsymbols
+<span class="k">\lVert</span>                  AMSmath
+<span class="k">\lvert</span>                  AMSmath
+<span class="k">\lvertneqq</span>              AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="m">
+<h3>M<a class="headerlink" href="#m" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\maltese</span>                AMSsymbols
 <span class="k">\mapsto</span>
 <span class="k">\mathbb</span>
 <span class="k">\mathbf</span>
 <span class="k">\mathbin</span>
 <span class="k">\mathcal</span>
-<span class="k">\mathchoice</span>
+<span class="k">\mathchoice</span>            [mathchoice]
 <span class="k">\mathclose</span>
 <span class="k">\mathfrak</span>
 <span class="k">\mathinner</span>
@@ -774,7 +803,7 @@ M
 <span class="k">\mathord</span>
 <span class="k">\mathpunct</span>
 <span class="k">\mathrel</span>
-<span class="k">\mathring</span> AMSmath
+<span class="k">\mathring</span>               AMSmath
 <span class="k">\mathrm</span>
 <span class="k">\mathscr</span>
 <span class="k">\mathsf</span>
@@ -783,8 +812,8 @@ M
 <span class="k">\matrix</span>
 <span class="k">\max</span>
 <span class="k">\mbox</span>
-<span class="k">\measuredangle</span> AMSsymbols
-<span class="k">\mho</span> AMSsymbols
+<span class="k">\measuredangle</span>          AMSsymbols
+<span class="k">\mho</span>                    AMSsymbols
 <span class="k">\mid</span>
 <span class="k">\min</span>
 <span class="k">\mit</span>
@@ -797,74 +826,84 @@ M
 <span class="k">\mskip</span>
 <span class="k">\mspace</span>
 <span class="k">\mu</span>
-<span class="k">\multimap</span> AMSsymbols
-
-N
-<span class="k">\nabla</span>
+<span class="k">\multimap</span>               AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="n">
+<h3>N<a class="headerlink" href="#n" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\nabla</span>
 <span class="k">\natural</span>
-<span class="k">\ncong</span> AMSsymbols
+<span class="k">\ncong</span>                  AMSsymbols
 <span class="k">\ne</span>
 <span class="k">\nearrow</span>
 <span class="k">\neg</span>
-<span class="k">\negmedspace</span> AMSmath
-<span class="k">\negthickspace</span> AMSmath
+<span class="k">\negmedspace</span>            AMSmath
+<span class="k">\negthickspace</span>          AMSmath
 <span class="k">\negthinspace</span>
 <span class="k">\neq</span>
-<span class="k">\newcommand</span>
-<span class="k">\newenvironment</span>
+<span class="k">\newcommand</span>            [newcommand]
+<span class="k">\newenvironment</span>        [newcommand]
 <span class="k">\newline</span>
-<span class="k">\nexists</span> AMSsymbols
-<span class="k">\ngeq</span> AMSsymbols
-<span class="k">\ngeqq</span> AMSsymbols
-<span class="k">\ngeqslant</span> AMSsymbols
-<span class="k">\ngtr</span> AMSsymbols
+<span class="k">\nexists</span>                AMSsymbols
+<span class="k">\ngeq</span>                   AMSsymbols
+<span class="k">\ngeqq</span>                  AMSsymbols
+<span class="k">\ngeqslant</span>              AMSsymbols
+<span class="k">\ngtr</span>                   AMSsymbols
 <span class="k">\ni</span>
-<span class="k">\nLeftarrow</span> AMSsymbols
-<span class="k">\nleftarrow</span> AMSsymbols
-<span class="k">\nLeftrightarrow</span> AMSsymbols
-<span class="k">\nleftrightarrow</span> AMSsymbols
-<span class="k">\nleq</span> AMSsymbols
-<span class="k">\nleqq</span> AMSsymbols
-<span class="k">\nleqslant</span> AMSsymbols
-<span class="k">\nless</span> AMSsymbols
-<span class="k">\nmid</span> AMSsymbols
-<span class="k">\nobreakspace</span> AMSmath
+<span class="k">\nLeftarrow</span>             AMSsymbols
+<span class="k">\nleftarrow</span>             AMSsymbols
+<span class="k">\nLeftrightarrow</span>        AMSsymbols
+<span class="k">\nleftrightarrow</span>        AMSsymbols
+<span class="k">\nleq</span>                   AMSsymbols
+<span class="k">\nleqq</span>                  AMSsymbols
+<span class="k">\nleqslant</span>              AMSsymbols
+<span class="k">\nless</span>                  AMSsymbols
+<span class="k">\nmid</span>                   AMSsymbols
+<span class="k">\nobreakspace</span>           AMSmath
 <span class="k">\nolimits</span>
-<span class="k">\nonumber</span>
 <span class="k">\normalsize</span>
 <span class="k">\not</span>
-<span class="k">\notag</span>
+<span class="k">\notag</span>                  AMSmath
+<span class="k">\notag</span>                 [AMSmath]
 <span class="k">\notin</span>
-<span class="k">\nparallel</span> AMSsymbols
-<span class="k">\nprec</span> AMSsymbols
-<span class="k">\npreceq</span> AMSsymbols
-<span class="k">\nRightarrow</span> AMSsymbols
-<span class="k">\nrightarrow</span> AMSsymbols
-<span class="k">\nshortmid</span> AMSsymbols
-<span class="k">\nshortparallel</span> AMSsymbols
-<span class="k">\nsim</span> AMSsymbols
-<span class="k">\nsucc</span> AMSsymbols
-<span class="k">\nsucceq</span> AMSsymbols
-<span class="k">\ntriangleleft</span> AMSsymbols
-<span class="k">\ntrianglelefteq</span> AMSsymbols
-<span class="k">\ntriangleright</span> AMSsymbols
-<span class="k">\ntrianglerighteq</span> AMSsymbols
+<span class="k">\nparallel</span>              AMSsymbols
+<span class="k">\nprec</span>                  AMSsymbols
+<span class="k">\npreceq</span>                AMSsymbols
+<span class="k">\nRightarrow</span>            AMSsymbols
+<span class="k">\nrightarrow</span>            AMSsymbols
+<span class="k">\nshortmid</span>              AMSsymbols
+<span class="k">\nshortparallel</span>         AMSsymbols
+<span class="k">\nsim</span>                   AMSsymbols
+<span class="k">\nsubseteq</span>              AMSsymbols
+<span class="k">\nsubseteqq</span>             AMSsymbols
+<span class="k">\nsucc</span>                  AMSsymbols
+<span class="k">\nsucceq</span>                AMSsymbols
+<span class="k">\nsupseteq</span>              AMSsymbols
+<span class="k">\nsupseteqq</span>             AMSsymbols
+<span class="k">\ntriangleleft</span>          AMSsymbols
+<span class="k">\ntrianglelefteq</span>        AMSsymbols
+<span class="k">\ntriangleright</span>         AMSsymbols
+<span class="k">\ntrianglerighteq</span>       AMSsymbols
 <span class="k">\nu</span>
-<span class="k">\nVDash</span> AMSsymbols
-<span class="k">\nVdash</span> AMSsymbols
-<span class="k">\nvDash</span> AMSsymbols
-<span class="k">\nvdash</span> AMSsymbols
+<span class="k">\nVDash</span>                 AMSsymbols
+<span class="k">\nVdash</span>                 AMSsymbols
+<span class="k">\nvDash</span>                 AMSsymbols
+<span class="k">\nvdash</span>                 AMSsymbols
 <span class="k">\nwarrow</span>
-
-O
-<span class="k">\odot</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="o">
+<h3>O<a class="headerlink" href="#o" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\odot</span>
 <span class="k">\oint</span>
 <span class="k">\oldstyle</span>
 <span class="k">\Omega</span>
 <span class="k">\omega</span>
 <span class="k">\omicron</span>
 <span class="k">\ominus</span>
-<span class="k">\operatorname</span> AMSmath
+<span class="k">\operatorname</span>           AMSmath
 <span class="k">\oplus</span>
 <span class="k">\oslash</span>
 <span class="k">\otimes</span>
@@ -877,9 +916,12 @@ O
 <span class="k">\overset</span>
 <span class="k">\overwithdelims</span>
 <span class="k">\owns</span>
-
-P
-<span class="k">\parallel</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="p">
+<h3>P<a class="headerlink" href="#p" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\parallel</span>
 <span class="k">\partial</span>
 <span class="k">\perp</span>
 <span class="k">\phantom</span>
@@ -887,7 +929,7 @@ P
 <span class="k">\phi</span>
 <span class="k">\Pi</span>
 <span class="k">\pi</span>
-<span class="k">\pitchfork</span> AMSsymbols
+<span class="k">\pitchfork</span>              AMSsymbols
 <span class="k">\pm</span>
 <span class="k">\pmatrix</span>
 <span class="k">\pmb</span>
@@ -895,63 +937,73 @@ P
 <span class="k">\pod</span>
 <span class="k">\Pr</span>
 <span class="k">\prec</span>
-<span class="k">\precapprox</span> AMSsymbols
-<span class="k">\preccurlyeq</span> AMSsymbols
+<span class="k">\precapprox</span>             AMSsymbols
+<span class="k">\preccurlyeq</span>            AMSsymbols
 <span class="k">\preceq</span>
-<span class="k">\precnapprox</span> AMSsymbols
-<span class="k">\precneqq</span> AMSsymbols
-<span class="k">\precnsim</span> AMSsymbols
-<span class="k">\precsim</span> AMSsymbols
+<span class="k">\precnapprox</span>            AMSsymbols
+<span class="k">\precneqq</span>               AMSsymbols
+<span class="k">\precnsim</span>               AMSsymbols
+<span class="k">\precsim</span>                AMSsymbols
 <span class="k">\prime</span>
 <span class="k">\prod</span>
-<span class="k">\projlim</span> AMSmath
+<span class="k">\projlim</span>                AMSmath
 <span class="k">\propto</span>
 <span class="k">\Psi</span>
 <span class="k">\psi</span>
-
-Q
-<span class="k">\qquad</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="q">
+<h3>Q<a class="headerlink" href="#q" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\qquad</span>
 <span class="k">\quad</span>
-
-R
-<span class="k">\raise</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="r">
+<h3>R<a class="headerlink" href="#r" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\raise</span>
 <span class="k">\rangle</span>
 <span class="k">\rbrace</span>
 <span class="k">\rbrack</span>
 <span class="k">\rceil</span>
 <span class="k">\Re</span>
-<span class="k">\require</span>
-<span class="k">\restriction</span> AMSsymbols
+<span class="k">\renewcommand</span>          [newcommand]
+<span class="k">\require</span>                               non-standard
+<span class="k">\restriction</span>            AMSsymbols
 <span class="k">\rfloor</span>
 <span class="k">\rgroup</span>
-<span class="k">\rhd</span> AMSsymbols
+<span class="k">\rhd</span>                    AMSsymbols
 <span class="k">\rho</span>
 <span class="k">\right</span>
 <span class="k">\Rightarrow</span>
 <span class="k">\rightarrow</span>
-<span class="k">\rightarrowtail</span> AMSsymbols
+<span class="k">\rightarrowtail</span>         AMSsymbols
 <span class="k">\rightharpoondown</span>
 <span class="k">\rightharpoonup</span>
-<span class="k">\rightleftarrows</span> AMSsymbols
+<span class="k">\rightleftarrows</span>        AMSsymbols
 <span class="k">\rightleftharpoons</span>
-<span class="k">\rightleftharpoons</span> AMSsymbols
-<span class="k">\rightrightarrows</span> AMSsymbols
-<span class="k">\rightsquigarrow</span> AMSsymbols
-<span class="k">\rightthreetimes</span> AMSsymbols
-<span class="k">\risingdotseq</span> AMSsymbols
+<span class="k">\rightleftharpoons</span>      AMSsymbols
+<span class="k">\rightrightarrows</span>       AMSsymbols
+<span class="k">\rightsquigarrow</span>        AMSsymbols
+<span class="k">\rightthreetimes</span>        AMSsymbols
+<span class="k">\risingdotseq</span>           AMSsymbols
 <span class="k">\rlap</span>
 <span class="k">\rm</span>
 <span class="k">\rmoustache</span>
 <span class="k">\root</span>
-<span class="k">\Rrightarrow</span> AMSsymbols
-<span class="k">\Rsh</span> AMSsymbols
-<span class="k">\rtimes</span> AMSsymbols
-<span class="k">\Rule</span>
-<span class="k">\rVert</span> AMSmath
-<span class="k">\rvert</span> AMSmath
-
-S
-<span class="k">\S</span>
+<span class="k">\Rrightarrow</span>            AMSsymbols
+<span class="k">\Rsh</span>                    AMSsymbols
+<span class="k">\rtimes</span>                 AMSsymbols
+<span class="k">\Rule</span>                                  non-standard
+<span class="k">\rVert</span>                  AMSmath
+<span class="k">\rvert</span>                  AMSmath
+</pre></div>
+</div>
+</div>
+<div class="section" id="s">
+<h3>S<a class="headerlink" href="#s" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\S</span>
 <span class="k">\scr</span>
 <span class="k">\scriptscriptstyle</span>
 <span class="k">\scriptsize</span>
@@ -961,11 +1013,11 @@ S
 <span class="k">\setminus</span>
 <span class="k">\sf</span>
 <span class="k">\sharp</span>
-<span class="k">\shortmid</span> AMSsymbols
-<span class="k">\shortparallel</span> AMSsymbols
-<span class="k">\shoveleft</span> AMSmath
-<span class="k">\shoveright</span> AMSmath
-<span class="k">\sideset</span> AMSmath
+<span class="k">\shortmid</span>               AMSsymbols
+<span class="k">\shortparallel</span>          AMSsymbols
+<span class="k">\shoveleft</span>              AMSmath
+<span class="k">\shoveright</span>             AMSmath
+<span class="k">\sideset</span>                AMSmath
 <span class="k">\Sigma</span>
 <span class="k">\sigma</span>
 <span class="k">\sim</span>
@@ -974,172 +1026,243 @@ S
 <span class="k">\sinh</span>
 <span class="k">\skew</span>
 <span class="k">\small</span>
-<span class="k">\smallfrown</span> AMSsymbols
+<span class="k">\smallfrown</span>             AMSsymbols
 <span class="k">\smallint</span>
-<span class="k">\smallsetminus</span> AMSsymbols
-<span class="k">\smallsmile</span> AMSsymbols
+<span class="k">\smallsetminus</span>          AMSsymbols
+<span class="k">\smallsmile</span>             AMSsymbols
 <span class="k">\smash</span>
 <span class="k">\smile</span>
 <span class="k">\Space</span>
 <span class="k">\space</span>
 <span class="k">\spadesuit</span>
-<span class="k">\sphericalangle</span> AMSsymbols
+<span class="k">\sphericalangle</span>         AMSsymbols
 <span class="k">\sqcap</span>
 <span class="k">\sqcup</span>
 <span class="k">\sqrt</span>
-<span class="k">\sqsubset</span> AMSsymbols
+<span class="k">\sqsubset</span>               AMSsymbols
 <span class="k">\sqsubseteq</span>
-<span class="k">\sqsupset</span> AMSsymbols
+<span class="k">\sqsupset</span>               AMSsymbols
 <span class="k">\sqsupseteq</span>
-<span class="k">\square</span> AMSsymbols
+<span class="k">\square</span>                 AMSsymbols
 <span class="k">\stackrel</span>
 <span class="k">\star</span>
 <span class="k">\strut</span>
-<span class="k">\Subset</span> AMSsymbols
+<span class="k">\style</span>                 [HTML]          non-stanard
 <span class="k">\subset</span>
+<span class="k">\Subset</span>                 AMSsymbols
 <span class="k">\subseteq</span>
-<span class="k">\subseteqq</span> AMSsymbols
-<span class="k">\subsetneq</span> AMSsymbols
-<span class="k">\substack</span> AMSmath
+<span class="k">\subseteqq</span>              AMSsymbols
+<span class="k">\subsetneq</span>              AMSsymbols
+<span class="k">\subsetneqq</span>             AMSsymbols
+<span class="k">\substack</span>               AMSmath
 <span class="k">\succ</span>
-<span class="k">\succapprox</span> AMSsymbols
-<span class="k">\succcurlyeq</span> AMSsymbols
+<span class="k">\succapprox</span>             AMSsymbols
+<span class="k">\succcurlyeq</span>            AMSsymbols
 <span class="k">\succeq</span>
-<span class="k">\succnapprox</span> AMSsymbols
-<span class="k">\succneqq</span> AMSsymbols
-<span class="k">\succnsim</span> AMSsymbols
-<span class="k">\succsim</span> AMSsymbols
+<span class="k">\succnapprox</span>            AMSsymbols
+<span class="k">\succneqq</span>               AMSsymbols
+<span class="k">\succnsim</span>               AMSsymbols
+<span class="k">\succsim</span>                AMSsymbols
 <span class="k">\sum</span>
 <span class="k">\sup</span>
-<span class="k">\Supset</span> AMSsymbols
 <span class="k">\supset</span>
+<span class="k">\Supset</span>                 AMSsymbols
 <span class="k">\supseteq</span>
-<span class="k">\supseteqq</span> AMSsymbols
-<span class="k">\supsetneq</span> AMSsymbols
+<span class="k">\supseteqq</span>              AMSsymbols
+<span class="k">\supsetneq</span>              AMSsymbols
+<span class="k">\supsetneqq</span>             AMSsymbols
 <span class="k">\surd</span>
 <span class="k">\swarrow</span>
-
-T
-<span class="k">\tag</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="t">
+<h3>T<a class="headerlink" href="#t" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\tag</span>                    AMSmath
+<span class="k">\tag</span>                   [AMSmath]
 <span class="k">\tan</span>
 <span class="k">\tanh</span>
 <span class="k">\tau</span>
-<span class="k">\tbinom</span> AMSmath
+<span class="k">\tbinom</span>                 AMSmath
 <span class="k">\TeX</span>
 <span class="k">\text</span>
 <span class="k">\textbf</span>
 <span class="k">\textit</span>
 <span class="k">\textrm</span>
 <span class="k">\textstyle</span>
-<span class="k">\tfrac</span> AMSmath
-<span class="k">\therefore</span> AMSsymbols
+<span class="k">\tfrac</span>                  AMSmath
+<span class="k">\therefore</span>              AMSsymbols
 <span class="k">\Theta</span>
 <span class="k">\theta</span>
-<span class="k">\thickapprox</span> AMSsymbols
-<span class="k">\thicksim</span> AMSsymbols
+<span class="k">\thickapprox</span>            AMSsymbols
+<span class="k">\thicksim</span>               AMSsymbols
 <span class="k">\thinspace</span>
 <span class="k">\tilde</span>
 <span class="k">\times</span>
-<span class="k">\Tiny</span>
 <span class="k">\tiny</span>
+<span class="k">\Tiny</span>                                  non-standard
 <span class="k">\to</span>
 <span class="k">\top</span>
 <span class="k">\triangle</span>
-<span class="k">\triangledown</span> AMSsymbols
+<span class="k">\triangledown</span>           AMSsymbols
 <span class="k">\triangleleft</span>
-<span class="k">\trianglelefteq</span> AMSsymbols
-<span class="k">\triangleq</span> AMSsymbols
+<span class="k">\trianglelefteq</span>         AMSsymbols
+<span class="k">\triangleq</span>              AMSsymbols
 <span class="k">\triangleright</span>
-<span class="k">\trianglerighteq</span> AMSsymbols
+<span class="k">\trianglerighteq</span>        AMSsymbols
 <span class="k">\tt</span>
-<span class="k">\twoheadleftarrow</span> AMSsymbols
-<span class="k">\twoheadrightarrow</span> AMSsymbols
-
-U
-<span class="k">\ulcorner</span> AMSsymbols
+<span class="k">\twoheadleftarrow</span>       AMSsymbols
+<span class="k">\twoheadrightarrow</span>      AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="u">
+<h3>U<a class="headerlink" href="#u" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\ulcorner</span>               AMSsymbols
 <span class="k">\underbrace</span>
 <span class="k">\underleftarrow</span>
 <span class="k">\underleftrightarrow</span>
 <span class="k">\underline</span>
 <span class="k">\underrightarrow</span>
 <span class="k">\underset</span>
-<span class="k">\unicode</span>
-<span class="k">\unlhd</span> AMSsymbols
-<span class="k">\unrhd</span> AMSsymbols
+<span class="k">\unicode</span>               [unicode]       non-standard
+<span class="k">\unlhd</span>                  AMSsymbols
+<span class="k">\unrhd</span>                  AMSsymbols
 <span class="k">\Uparrow</span>
 <span class="k">\uparrow</span>
 <span class="k">\Updownarrow</span>
 <span class="k">\updownarrow</span>
-<span class="k">\upharpoonleft</span> AMSsymbols
-<span class="k">\upharpoonright</span> AMSsymbols
+<span class="k">\upharpoonleft</span>          AMSsymbols
+<span class="k">\upharpoonright</span>         AMSsymbols
 <span class="k">\uplus</span>
 <span class="k">\uproot</span>
 <span class="k">\Upsilon</span>
 <span class="k">\upsilon</span>
-<span class="k">\upuparrows</span> AMSsymbols
-<span class="k">\urcorner</span> AMSsymbols
-
-V
-<span class="k">\varDelta</span> AMSsymbols
+<span class="k">\upuparrows</span>             AMSsymbols
+<span class="k">\urcorner</span>               AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="v">
+<h3>V<a class="headerlink" href="#v" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\varDelta</span>               AMSsymbols
 <span class="k">\varepsilon</span>
-<span class="k">\varGamma</span> AMSsymbols
-<span class="k">\varinjlim</span> AMSmath
-<span class="k">\varkappa</span> AMSsymbols
-<span class="k">\varLambda</span> AMSsymbols
-<span class="k">\varliminf</span> AMSmath
-<span class="k">\varlimsup</span> AMSmath
-<span class="k">\varnothing</span> AMSsymbols
-<span class="k">\varOmega</span> AMSsymbols
-<span class="k">\varPhi</span> AMSsymbols
+<span class="k">\varGamma</span>               AMSsymbols
+<span class="k">\varinjlim</span>              AMSmath
+<span class="k">\varkappa</span>               AMSsymbols
+<span class="k">\varLambda</span>              AMSsymbols
+<span class="k">\varliminf</span>              AMSmath
+<span class="k">\varlimsup</span>              AMSmath
+<span class="k">\varnothing</span>             AMSsymbols
+<span class="k">\varOmega</span>               AMSsymbols
 <span class="k">\varphi</span>
-<span class="k">\varPi</span> AMSsymbols
+<span class="k">\varPhi</span>                 AMSsymbols
 <span class="k">\varpi</span>
-<span class="k">\varprojlim</span> AMSmath
-<span class="k">\varpropto</span> AMSsymbols
-<span class="k">\varPsi</span> AMSsymbols
+<span class="k">\varPi</span>                  AMSsymbols
+<span class="k">\varprojlim</span>             AMSmath
+<span class="k">\varpropto</span>              AMSsymbols
+<span class="k">\varPsi</span>                 AMSsymbols
 <span class="k">\varrho</span>
-<span class="k">\varSigma</span> AMSsymbols
 <span class="k">\varsigma</span>
-<span class="k">\varTheta</span> AMSsymbols
+<span class="k">\varSigma</span>               AMSsymbols
+<span class="k">\varsubsetneq</span>           AMSsymbols
+<span class="k">\varsubsetneqq</span>          AMSsymbols
+<span class="k">\varsupsetneq</span>           AMSsymbols
+<span class="k">\varsupsetneqq</span>          AMSsymbols
 <span class="k">\vartheta</span>
-<span class="k">\vartriangle</span> AMSsymbols
-<span class="k">\vartriangleleft</span> AMSsymbols
-<span class="k">\vartriangleright</span> AMSsymbols
-<span class="k">\varUpsilon</span> AMSsymbols
-<span class="k">\varXi</span> AMSsymbols
+<span class="k">\varTheta</span>               AMSsymbols
+<span class="k">\vartriangle</span>            AMSsymbols
+<span class="k">\vartriangleleft</span>        AMSsymbols
+<span class="k">\vartriangleright</span>       AMSsymbols
+<span class="k">\varUpsilon</span>             AMSsymbols
+<span class="k">\varXi</span>                  AMSsymbols
 <span class="k">\vcenter</span>
-<span class="k">\Vdash</span> AMSsymbols
-<span class="k">\vDash</span> AMSsymbols
 <span class="k">\vdash</span>
+<span class="k">\Vdash</span>                  AMSsymbols
+<span class="k">\vDash</span>                  AMSsymbols
 <span class="k">\vdots</span>
 <span class="k">\vec</span>
 <span class="k">\vee</span>
-<span class="k">\veebar</span> AMSsymbols
-<span class="k">\verb</span>
+<span class="k">\veebar</span>                 AMSsymbols
+<span class="k">\verb</span>                  [verb]
 <span class="k">\Vert</span>
 <span class="k">\vert</span>
 <span class="k">\vphantom</span>
-<span class="k">\Vvdash</span> AMSsymbols
-
-W
-<span class="k">\wedge</span>
+<span class="k">\Vvdash</span>                 AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="w">
+<h3>W<a class="headerlink" href="#w" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\wedge</span>
 <span class="k">\widehat</span>
 <span class="k">\widetilde</span>
 <span class="k">\wp</span>
 <span class="k">\wr</span>
-
-X
-<span class="k">\Xi</span>
-<span class="k">\xi</span>
-<span class="k">\xleftarrow</span> AMSmath
-<span class="k">\xrightarrow</span> AMSmath
-
-Y
-<span class="k">\yen</span> AMSsymbols
-
-Z
-<span class="k">\zeta</span>
 </pre></div>
+</div>
+</div>
+<div class="section" id="x">
+<h3>X<a class="headerlink" href="#x" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\Xi</span>
+<span class="k">\xi</span>
+<span class="k">\xleftarrow</span>             AMSmath
+<span class="k">\xrightarrow</span>            AMSmath
+</pre></div>
+</div>
+</div>
+<div class="section" id="y">
+<h3>Y<a class="headerlink" href="#y" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\yen</span>                    AMSsymbols
+</pre></div>
+</div>
+</div>
+<div class="section" id="z">
+<h3>Z<a class="headerlink" href="#z" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\zeta</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="environments">
+<h3>Environments<a class="headerlink" href="#environments" title="Permalink to this headline">¶</a></h3>
+<p>LaTeX environments of the form <tt class="docutils literal"><span class="pre">\begin{XXX}</span> <span class="pre">...</span> <span class="pre">\end{XXX}</span></tt> are
+preovided where <tt class="docutils literal"><span class="pre">XXX</span></tt> is one of the following:</p>
+<div class="highlight-latex"><div class="highlight"><pre>align                  [AMSmath]
+align*                 [AMSmath]
+alignat                [AMSmath]
+alignat*               [AMSmath]
+aligned                [AMSmath]
+alignedat              [AMSmath]
+array
+
+Bmatrix
+bmatrix
+
+cases
+
+eqnarray
+eqnarray*
+equation
+equation*
+
+gather                 [AMSmath]
+gather*                [AMSmath]
+gathered               [AMSmath]
+
+matrix
+multline               [AMSmath]
+multline*              [AMSmath]
+
+pmatrix
+
+smallmatrix             AMSmath
+split                  [AMSmath]
+subarray                AMSmath
+
+Vmatrix
+vmatrix
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -1163,7 +1286,37 @@ Z
 <li><a class="reference internal" href="#unicode-support">Unicode support</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#supported-latex-commands">Supported LaTeX commands</a></li>
+<li><a class="reference internal" href="#supported-latex-commands">Supported LaTeX commands</a><ul>
+<li><a class="reference internal" href="#symbols">Symbols</a></li>
+<li><a class="reference internal" href="#a">A</a></li>
+<li><a class="reference internal" href="#b">B</a></li>
+<li><a class="reference internal" href="#c">C</a></li>
+<li><a class="reference internal" href="#d">D</a></li>
+<li><a class="reference internal" href="#e">E</a></li>
+<li><a class="reference internal" href="#f">F</a></li>
+<li><a class="reference internal" href="#g">G</a></li>
+<li><a class="reference internal" href="#h">H</a></li>
+<li><a class="reference internal" href="#i">I</a></li>
+<li><a class="reference internal" href="#j">J</a></li>
+<li><a class="reference internal" href="#k">K</a></li>
+<li><a class="reference internal" href="#l">L</a></li>
+<li><a class="reference internal" href="#m">M</a></li>
+<li><a class="reference internal" href="#n">N</a></li>
+<li><a class="reference internal" href="#o">O</a></li>
+<li><a class="reference internal" href="#p">P</a></li>
+<li><a class="reference internal" href="#q">Q</a></li>
+<li><a class="reference internal" href="#r">R</a></li>
+<li><a class="reference internal" href="#s">S</a></li>
+<li><a class="reference internal" href="#t">T</a></li>
+<li><a class="reference internal" href="#u">U</a></li>
+<li><a class="reference internal" href="#v">V</a></li>
+<li><a class="reference internal" href="#w">W</a></li>
+<li><a class="reference internal" href="#x">X</a></li>
+<li><a class="reference internal" href="#y">Y</a></li>
+<li><a class="reference internal" href="#z">Z</a></li>
+<li><a class="reference internal" href="#environments">Environments</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
