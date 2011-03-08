@@ -30,6 +30,12 @@ would set the ``preferredFont`` option to the :term:`STIX` fonts.
     factor.  The user can also adjust this value using the contextual
     menu item associated with the typeset mathematics.
 
+.. describe:: minScaleAdjust: 50
+
+   This gives a minimum scale (as a percent) for the scaling used my 
+   MathJax to match the equation to the surrounding text.  This will 
+   prevent MathJax from making the mathematics too small.
+
 .. describe:: availableFonts: ["STIX","TeX"]
 
     This is a list of the fonts to look for on a user's computer in

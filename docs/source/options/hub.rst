@@ -132,7 +132,11 @@ behavior of MathJax.  They are given with their default values.
     configuration, styles, jax, and so on) as soon as it can.  If you
     expect to be doing additional configuration on the page, however,
     you may want to have it wait until the page's onload hander is
-    called.  If so, set this to ``"onload"``.
+    called.  If so, set this to ``"onload"``.  You can also set this to
+    ``"configured"``, in which case, MathJax will delay its startup until 
+    you explicitly call :meth:`MathJax.Hub.Configured()`.  See  
+    :ref:`Configuring MathJax after it is loaded <delayStartupUntil>` for more 
+    details.
 
 .. describe:: skipStartupTypeset: false
 
@@ -207,3 +211,10 @@ behavior of MathJax.  They are given with their default values.
         on :ref:`CSS style objects <css-style-objects>` for details on
         how these are specified in JavaScript.
 
+.. describe:: v1.0-compatible: true
+
+    This controls whether MathJax issues the warning about not having an 
+    explicit configuration in the event that the `jax` array is empty 
+    after configuration is complete.  If you really intend that array to 
+    be empty, set this flag to ``false``.  Note that setting this to false 
+    does **not** cause a default configuration file to be loaded.
