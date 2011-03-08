@@ -81,6 +81,17 @@ Methods
         - **text** --- the text for the new node
     :Returns: the new text node
 
+.. method:: setText(script,text)
+
+    Sets the contents of the ``script`` element to be the given 
+    ``text``, properly taking into account the browser limitations and 
+    bugs.
+
+    :Parameters:
+        - **script** --- the script whose content is to be set
+        - **text** --- the text that is to be the script's new content
+    :Returns: ``null``
+
 .. describe:: Cookie.Set(name,data)
 
     Creates a MathJax cookie using the ``MathJax.HTML.Cookie.prefix``
@@ -91,7 +102,7 @@ Methods
 
         MathJax.HTML.Cookie.Set("test",{x:42, y:"It Works!"});
 
-    will create a cookie named "mjx:test" that stores the values of
+    will create a cookie named "mjx.test" that stores the values of
     ``x`` and ``y`` provided in the `data` object.  This data can be
     retrieved using the :meth:`MathJax.HTML.Cookie.Get()` method
     discussed below.

@@ -21,7 +21,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
     <link rel="next" title="MathJax Output Formats" href="output.html" />
     <link rel="prev" title="MathJax TeX and LaTeX Support" href="tex.html" /> 
@@ -52,7 +52,7 @@
   <div class="section" id="mathjax-mathml-support">
 <span id="mathml-support"></span><h1>MathJax MathML Support<a class="headerlink" href="#mathjax-mathml-support" title="Permalink to this headline">¶</a></h1>
 <p>The support for <a class="reference internal" href="glossary.html#term-mathml"><em class="xref std std-term">MathML</em></a> in MathJax consists of three parts:  the
-<cite>mml2jax</cite> preprocessor, the MathML input processor, and the NativeMML
+<cite>mml2jax</cite> preprocessor, the <cite>MathML</cite> input processor, and the <cite>NativeMML</cite>
 output processor.  The first of these looks for <tt class="docutils literal"><span class="pre">&lt;math&gt;</span></tt> tags within
 your document and marks them for later processing by MathJax.  The
 second converts the MathML to the internal format used by MathJax, and
@@ -67,7 +67,7 @@ MathML input processor with the HTML-CSS output processor to make
 MathML available in browsers that don&#8217;t have native MathML support.
 It is also possible to have MathJax select the output processor for
 you so that MathML is used in those browsers that support it, while
-HTML-CSS is used for those that don&#8217;t.  See the <a class="reference internal" href="configuration.html#common-configurations"><em>common
+HTML-CSS is used for those that don&#8217;t.  See the <a class="reference internal" href="config-files.html#common-configurations"><em>common
 configurations</em></a> section for details and
 examples.</p>
 <p>Of course it is also possible to use all three components together.
@@ -79,9 +79,9 @@ any of the other setup issues that make using native MathML
 difficult.  MathJax handles the setup and properly marks the
 mathematics so that the browser will render it as MathML.  In
 addition, MathJax provides its contextual menu for the MathML, which
-lets the user zoom the mathematics for easier reading, get the copy
+lets the user zoom the mathematics for easier reading, get and copy
 the source markup, and so on, so there is added value to using MathJax
-even whith a pure MathML workflow.</p>
+even with a pure MathML workflow.</p>
 <div class="section" id="mathml-in-html-pages">
 <h2>MathML in HTML pages<a class="headerlink" href="#mathml-in-html-pages" title="Permalink to this headline">¶</a></h2>
 <p>For MathML that is handled via the pre-processor, you should not use
@@ -151,11 +151,6 @@ children of <tt class="docutils literal"><span class="pre">mrow</span></tt> or i
   <h4>Next topic</h4>
   <p class="topless"><a href="output.html"
                         title="next chapter">MathJax Output Formats</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/mathml.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">

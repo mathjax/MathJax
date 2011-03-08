@@ -21,7 +21,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
     <link rel="next" title="Synchronizing your code with MathJax" href="synchronize.html" />
     <link rel="prev" title="The MathJax Processing Model" href="model.html" /> 
@@ -103,11 +103,10 @@ pushed into the queue:</p>
 <ol class="arabic simple" start="2">
 <li>Perform the configuration actions:<ul>
 <li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">Config</span></tt> startup signal</li>
-<li>Execute the content of the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> that loaded MathJax,
-or load the <tt class="docutils literal"><span class="pre">config/MathJax.js</span></tt> file if the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt>
-is empty</li>
-<li>If the <tt class="docutils literal"><span class="pre">MathJax.Hub.config.delayStartupUntil</span></tt> value is set,
-wait until its condition is met</li>
+<li>Load any configuration files specified via <tt class="docutils literal"><span class="pre">config=</span></tt> as a script parameter</li>
+<li>Execute the content of the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> that loaded MathJax, if it is not empty</li>
+<li>Wait for the <tt class="docutils literal"><span class="pre">delayStartupUntil</span></tt> condition to be met, if one was specified</li>
+<li>Execute any <tt class="docutils literal"><span class="pre">text/x-mathjax-config</span></tt> script blocks</li>
 <li>load the files listed in the <tt class="docutils literal"><span class="pre">MathJax.Hub.config.config</span></tt> array</li>
 <li>Post the <tt class="docutils literal"><span class="pre">End</span> <span class="pre">Config</span></tt> startup signal</li>
 </ul>
@@ -156,12 +155,16 @@ the name of the extension)</li>
 </li>
 </ol>
 <ol class="arabic simple" start="7">
-<li>Wait for the onload handler to fire</li>
+<li>Set the MathJax menu&#8217;s renderer value based on the jax that have been
+loaded</li>
 </ol>
 <ol class="arabic simple" start="8">
-<li>Set <tt class="docutils literal"><span class="pre">MathJax.isReady</span></tt> to <tt class="docutils literal"><span class="pre">true</span></tt></li>
+<li>Wait for the onload handler to fire</li>
 </ol>
 <ol class="arabic simple" start="9">
+<li>Set <tt class="docutils literal"><span class="pre">MathJax.isReady</span></tt> to <tt class="docutils literal"><span class="pre">true</span></tt></li>
+</ol>
+<ol class="arabic simple" start="10">
 <li>Perform the typesetting pass (preprocessors and processors)<ul>
 <li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">Typeset</span></tt> startup signal</li>
 <li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">PreProcess</span></tt> hub signal</li>
@@ -179,9 +182,18 @@ with the math element&#8217;s ID</li>
 </ul>
 </li>
 </ol>
-<ol class="arabic simple" start="10">
+<ol class="arabic simple" start="11">
 <li>Post the <tt class="docutils literal"><span class="pre">End</span></tt> startup signal</li>
 </ol>
+<p>The loading of the jax and extensions in steps 5 and 6 are now done in
+parallel, rather than sequentially.  That is, all the jax and extensions
+are requested simultaneously, so they load concurrently.  That means they
+can load in any order, and that the begin and end signals for the jax and
+extensions can be intermixed.  (In general, you will get <cite>Begin Jax</cite>
+followed by <cite>Begin Extensions</cite>, but the order of <cite>End Jax</cite> and <cite>End
+Extensions</cite> will depend on the file sbeing loaded.)  Both 5 and 6 must
+complete, however, before 7 will be performed.</p>
+<p>See the <tt class="docutils literal"><span class="pre">test/sample-signals.html</span></tt> file to see the signals in action.</p>
 </div>
 
 
@@ -196,11 +208,6 @@ with the math element&#8217;s ID</li>
   <h4>Next topic</h4>
   <p class="topless"><a href="synchronize.html"
                         title="next chapter">Synchronizing your code with MathJax</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/startup.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">

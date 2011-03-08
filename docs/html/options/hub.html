@@ -21,11 +21,11 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
-    <link rel="up" title="Loading and Configuring MathJax" href="../configuration.html" />
+    <link rel="up" title="Configuration Objects" href="index.html" />
     <link rel="next" title="The tex2jax Preprocessor" href="tex2jax.html" />
-    <link rel="prev" title="Loading and Configuring MathJax" href="../configuration.html" /> 
+    <link rel="prev" title="Configuration Objects" href="index.html" /> 
   </head>
   <body>
     
@@ -39,10 +39,10 @@
           <a href="tex2jax.html" title="The tex2jax Preprocessor"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../configuration.html" title="Loading and Configuring MathJax"
+          <a href="index.html" title="Configuration Objects"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
-          <li><a href="../configuration.html" accesskey="U">Loading and Configuring MathJax</a> &raquo;</li> 
+          <li><a href="index.html" accesskey="U">Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -192,7 +192,11 @@ displayed equations.</p>
 configuration, styles, jax, and so on) as soon as it can.  If you
 expect to be doing additional configuration on the page, however,
 you may want to have it wait until the page&#8217;s onload hander is
-called.  If so, set this to <tt class="docutils literal"><span class="pre">&quot;onload&quot;</span></tt>.</p>
+called.  If so, set this to <tt class="docutils literal"><span class="pre">&quot;onload&quot;</span></tt>.  You can also set this to
+<tt class="docutils literal"><span class="pre">&quot;configured&quot;</span></tt>, in which case, MathJax will delay its startup until
+you explicitly call <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Configured()</span></tt>.  See
+<a class="reference internal" href="../configuration.html#delaystartupuntil"><em>Configuring MathJax after it is loaded</em></a> for more
+details.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -284,6 +288,16 @@ how these are specified in JavaScript.</p>
 
 </dd></dl>
 
+<dl class="describe">
+<dt>
+<tt class="descname">v1.0-compatible: true</tt></dt>
+<dd><p>This controls whether MathJax issues the warning about not having an
+explicit configuration in the event that the <cite>jax</cite> array is empty
+after configuration is complete.  If you really intend that array to
+be empty, set this flag to <tt class="docutils literal"><span class="pre">false</span></tt>.  Note that setting this to false
+does <strong>not</strong> cause a default configuration file to be loaded.</p>
+</dd></dl>
+
 </div>
 
 
@@ -293,16 +307,11 @@ how these are specified in JavaScript.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../configuration.html"
-                        title="previous chapter">Loading and Configuring MathJax</a></p>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Configuration Objects</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="tex2jax.html"
                         title="next chapter">The tex2jax Preprocessor</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/options/hub.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -330,10 +339,10 @@ how these are specified in JavaScript.</p>
           <a href="tex2jax.html" title="The tex2jax Preprocessor"
              >next</a> |</li>
         <li class="right" >
-          <a href="../configuration.html" title="Loading and Configuring MathJax"
+          <a href="index.html" title="Configuration Objects"
              >previous</a> |</li>
         <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
-          <li><a href="../configuration.html" >Loading and Configuring MathJax</a> &raquo;</li> 
+          <li><a href="index.html" >Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

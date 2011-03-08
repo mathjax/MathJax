@@ -21,7 +21,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
     <link rel="next" title="MathJax MathML Support" href="mathml.html" />
     <link rel="prev" title="Using MathJax in Movable Type" href="platforms/movable-type.html" /> 
@@ -51,13 +51,13 @@
             
   <div class="section" id="mathjax-tex-and-latex-support">
 <span id="tex-support"></span><h1>MathJax TeX and LaTeX Support<a class="headerlink" href="#mathjax-tex-and-latex-support" title="Permalink to this headline">¶</a></h1>
-<p>The support for TeX and LaTeX in MathJax consists of two parts:  the
-<cite>tex2jax</cite> preprocessor, and the TeX input processor.  The first of
-these looks for mathematics within your web page (indicated by math
-delimiters like <tt class="docutils literal"><span class="pre">$$...$$</span></tt>) and marks the mathematics for later
-processing by MathJax.  The TeX input processor is what converts the
-TeX notation into MathJax&#8217;s internal format, where one of MathJax&#8217;s
-output processors then displays it in the web page.</p>
+<p>The support for <a class="reference internal" href="glossary.html#term-tex"><em class="xref std std-term">TeX</em></a> and <a class="reference internal" href="glossary.html#term-latex"><em class="xref std std-term">LaTeX</em></a> in MathJax consists of two
+parts: the <cite>tex2jax</cite> preprocessor, and the <cite>TeX</cite> input processor.  The
+first of these looks for mathematics within your web page (indicated by
+math delimiters like <tt class="docutils literal"><span class="pre">$$...$$</span></tt>) and marks the mathematics for later
+processing by MathJax.  The TeX input processor is what converts the TeX
+notation into MathJax&#8217;s internal format, where one of MathJax&#8217;s output
+processors then displays it in the web page.</p>
 <p>The <cite>tex2jax</cite> preprocessor can be configured to look for whatever
 markers you want to use for your math delimiters.  See the
 <a class="reference internal" href="options/tex2jax.html#configure-tex2jax"><em>tex2jax configuration options</em></a> section for
@@ -76,6 +76,40 @@ does not implement <tt class="docutils literal"><span class="pre">\emph</span></
 <tt class="docutils literal"><span class="pre">\begin{enumerate}...\end{enumerate}</span></tt> or other text-mode macros or
 environments.  You must use HTML to handle such formatting tasks.  If
 you need a LaTeX-to-HTML converter, you should consider <a class="reference external" href="http://www.google.com/search?q=latex+to+html+converter">other options</a>.</p>
+<div class="section" id="tex-and-latex-math-delimiters">
+<h2>TeX and LaTeX math delimiters<a class="headerlink" href="#tex-and-latex-math-delimiters" title="Permalink to this headline">¶</a></h2>
+<p>By default, the <cite>tex2jax</cite> preprocesor defines the LaTeX math delimiters,
+which are <tt class="docutils literal"><span class="pre">\(...\)</span></tt> for in-line math, and <tt class="docutils literal"><span class="pre">\[...\]</span></tt> for displayed
+equations.  It also defines the TeX delimiters <tt class="docutils literal"><span class="pre">$$...$$</span></tt> for displayed
+equations, but it does <strong>not</strong> define <tt class="docutils literal"><span class="pre">$...$</span></tt> as in-line math
+delimiters.  That is because dollar signs appear too often in
+non-mathematical settings, which could cause some text to be treated
+as mathematics unexpectedly.  For example, with single-dollar
+delimiters, &#8221;... the cost is $2.50 for the first one, and $2.00 for
+each additional one ...&#8221; would cause the phrase &#8220;2.50 for the first
+one, and&#8221; to be treated as mathematics since it falls between dollar
+signs.  For this reason, if you want to use single-dollars for in-line
+math mode, you must enable that explicitly in your configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
+  <span class="nx">tex2jax</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">inlineMath</span><span class="o">:</span> <span class="p">[[</span><span class="s1">&#39;$&#39;</span><span class="p">,</span><span class="s1">&#39;$&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;\\(&#39;</span><span class="p">,</span><span class="s1">&#39;\\)&#39;</span><span class="p">]],</span>
+    <span class="nx">processEscapes</span><span class="o">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Note that if you do this, you may want to also set <tt class="docutils literal"><span class="pre">processEscapes</span></tt> to
+<tt class="docutils literal"><span class="pre">true</span></tt>, as in the example above, so that you can use <tt class="docutils literal"><span class="pre">\$</span></tt> to prevent a
+dollar sign from being treated as a math delimiter within the text of your
+web page.  (Note that within TeX mathematics, <tt class="docutils literal"><span class="pre">\$</span></tt> always has this
+meaning; <tt class="docutils literal"><span class="pre">processEscapes</span></tt> only affects the treatment of the <em>opening</em>
+math delimiter.)</p>
+<p>See the <tt class="docutils literal"><span class="pre">config/default.js</span></tt> file, or the <a class="reference internal" href="options/tex2jax.html#configure-tex2jax"><em>tex2jax configuration
+options</em></a> page, for additional configuration
+parameters that you can specify for the <cite>tex2jax</cite> preprocessor,
+which is the component of MathJax that identifies TeX notation within
+the page).</p>
+</div>
 <div class="section" id="tex-and-latex-in-html-documents">
 <h2>TeX and LaTeX in HTML documents<a class="headerlink" href="#tex-and-latex-in-html-documents" title="Permalink to this headline">¶</a></h2>
 <p>Keep in mind that your mathematics is part of an HTML document, so you
@@ -123,41 +157,63 @@ does.</p>
 <div class="section" id="tex-and-latex-extensions">
 <span id="tex-extensions"></span><h2>TeX and LaTeX extensions<a class="headerlink" href="#tex-and-latex-extensions" title="Permalink to this headline">¶</a></h2>
 <p>While MathJax includes nearly all of the Plain TeX math macros, and
-many of the LaTeX macros and environments, note everything is
+many of the LaTeX macros and environments, not everything is
 implemented in the core TeX input processor.  Some less-used commands
 are defined in extensions to the TeX processor.  MathJax will load
 some extensions automatically when you first use the commands they
 implement (for example, the <tt class="docutils literal"><span class="pre">\def</span></tt> and <tt class="docutils literal"><span class="pre">\newcommand</span></tt> macros are
-implemented in the <tt class="docutils literal"><span class="pre">TeX/newcommand.js</span></tt> extension, but MathJax loads
+implemented in the <tt class="docutils literal"><span class="pre">newcommand.js</span></tt> extension, but MathJax loads
 this extension itself when you use those macros).  Not all extensions
 are set up to load automatically, however, so you may need to request
 some extensions explicitly yourself.</p>
 <p>To enable any of the TeX extensions, simply add the appropriate string
-(e.g., <cite>&#8220;TeX/AMSmath.js&#8221;</cite>) to your config&#8217;s <cite>extensions</cite> array.  The
-main extensions are described below.</p>
-<div class="section" id="amsmath-and-amssymbol">
-<h3>AMSmath and AMSsymbol<a class="headerlink" href="#amsmath-and-amssymbol" title="Permalink to this headline">¶</a></h3>
-<p>The <cite>AMSmath</cite> extension implements AMS math environments and macros,
-and the <cite>AMSsymbol</cite> extension implements macros for accessing the AMS
-symbol fonts.  To use these extensions, add them to your <cite>extensions</cite> array.</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;TeX/AMSmath.js&quot;</span><span class="p">,</span> <span class="s2">&quot;TeX/AMSsymbol.js&quot;</span><span class="p">,</span> <span class="p">...]</span>
+(e.g., <tt class="docutils literal"><span class="pre">&quot;AMSmath.js&quot;</span></tt>) to the <cite>extensions</cite> array in the <tt class="docutils literal"><span class="pre">TeX</span></tt> block
+of your configuration.  If you use one of the combined configuration files,
+like <tt class="docutils literal"><span class="pre">TeX-AMS_HTML</span></tt>, this will already include several of the extensions
+automatically, but you can include others using a mathjax configuration
+script prior to loading MathJax.  For example</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
+  <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span> <span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span> <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;autobold.js&quot;</span><span class="p">]</span> <span class="p">}});</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
+    <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
 </pre></div>
 </div>
-<p>See the list of commands at the end of this document for details about
-what commands are implemented in these extensions.</p>
-<p>The <cite>AMSmath</cite> extension will be loaded automatically when you first
-use one of the math environments it defines, but you will have to load
-it explicitly if you want to use the other macros that it defines.
-The <cite>AMSsymbols</cite> extension is not loaded automatically, so you must
-include it explicitly if you want to use the macros it defines.</p>
+<p>will load the <cite>autobold</cite> TeX extension in addition to those already
+included in the <tt class="docutils literal"><span class="pre">TeX-AMS_HTML</span></tt> configuration file.</p>
+<p>The main extensions are described below.</p>
+<div class="section" id="amsmath-and-amssymbol">
+<h3>AMSmath and AMSsymbol<a class="headerlink" href="#amsmath-and-amssymbol" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>AMSmath</cite> extension implements AMS math environments and macros, and
+the <cite>AMSsymbol</cite> extension implements macros for accessing the AMS symbol
+fonts.  These are already included in the combined configuration files that
+load the TeX input processor.  To use these extensions in your own
+configurations, add them to the <cite>extensions</cite> array in the TeX block.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
+  <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;AMSmath.js&quot;</span><span class="p">,</span> <span class="s2">&quot;AMSsymbol.js&quot;</span><span class="p">,</span> <span class="p">...]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>See the list of control sequences at the end of this document for details
+about what commands are implemented in these extensions.</p>
+<p>If you are not using one of the combined configuration files, the <cite>AMSmath</cite>
+extension will be loaded automatically when you first use one of the math
+environments it defines, but you will have to load it explicitly if you
+want to use the other macros that it defines.  The <cite>AMSsymbols</cite> extension
+is not loaded automatically, so you must include it explicitly if you want
+to use the macros it defines.</p>
 </div>
 <div class="section" id="autobold">
 <h3>Autobold<a class="headerlink" href="#autobold" title="Permalink to this headline">¶</a></h3>
 <p>The <cite>autobold</cite> extension adds <tt class="docutils literal"><span class="pre">\boldsymbol{...}</span></tt> around mathematics that
 appears in a section of an HTML page that is in bold.</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;TeX/autobold.js&quot;</span><span class="p">]</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
+  <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;autobold.js&quot;</span><span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
+<p>This extension is <strong>not</strong> loaded by the combined configuration files.</p>
 </div>
 <div class="section" id="noerrors">
 <h3>noErrors<a class="headerlink" href="#noerrors" title="Permalink to this headline">¶</a></h3>
@@ -166,21 +222,24 @@ displayed and shows the original TeX code instead.  You can configure
 whether the dollar signs are shown or not for in-line math, and
 whether to put all the TeX on one line or use multiple lines (if the
 original text contained line breaks).</p>
-<p>To enable the <cite>noErrors</cite> extension and configure it, use</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;TeX/noErrors.js&quot;</span><span class="p">,</span> <span class="p">...],</span>
-<span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">noErrors</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">inlineDelimiters</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">],</span>   <span class="c1">// or [&quot;$&quot;,&quot;$&quot;] or [&quot;\\(&quot;,&quot;\\)&quot;]</span>
-        <span class="nx">multiLine</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>             <span class="c1">// false for TeX on all one line</span>
-        <span class="nx">style</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;font-family&quot;</span><span class="o">:</span> <span class="s2">&quot;serif&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;font-size&quot;</span><span class="o">:</span>   <span class="s2">&quot;80%&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;color&quot;</span><span class="o">:</span>       <span class="s2">&quot;black&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;border&quot;</span><span class="o">:</span>      <span class="s2">&quot;1px solid&quot;</span>
-            <span class="c1">// add any additional CSS styles that you want</span>
-            <span class="c1">//  (be sure there is no extra comma at the end of the last item)</span>
-        <span class="p">}</span>
+<p>This extension is loaded by all the combined configuration files that
+include the TeX input processor.  To enable the <cite>noErrors</cite> extension in
+your own configuration, or to modify its parameters, add something like the
+following to your <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
+  <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;noErrors.js&quot;</span><span class="p">],</span>
+  <span class="nx">noErrors</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">inlineDelimiters</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">],</span>   <span class="c1">// or [&quot;$&quot;,&quot;$&quot;] or [&quot;\\(&quot;,&quot;\\)&quot;]</span>
+    <span class="nx">multiLine</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>             <span class="c1">// false for TeX on all one line</span>
+    <span class="nx">style</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;font-family&quot;</span><span class="o">:</span> <span class="s2">&quot;serif&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;font-size&quot;</span><span class="o">:</span>   <span class="s2">&quot;80%&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;color&quot;</span><span class="o">:</span>       <span class="s2">&quot;black&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;border&quot;</span><span class="o">:</span>      <span class="s2">&quot;1px solid&quot;</span>
+      <span class="c1">// add any additional CSS styles that you want</span>
+      <span class="c1">//  (be sure there is no extra comma at the end of the last item)</span>
     <span class="p">}</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -191,14 +250,14 @@ paragraph, like standard display mathematics.</p>
 black border. If you want it to look as though the TeX is just part of
 the paragraph, use</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">noErrors</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">inlineDelimiters</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;$&quot;</span><span class="p">,</span><span class="s2">&quot;$&quot;</span><span class="p">],</span>   <span class="c1">// or [&quot;&quot;,&quot;&quot;] or [&quot;\\(&quot;,&quot;\\)&quot;]</span>
-        <span class="nx">multiLine</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-        <span class="nx">style</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;font-size&quot;</span><span class="o">:</span> <span class="s2">&quot;normal&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;border&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
-        <span class="p">}</span>
+  <span class="nx">noErrors</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">inlineDelimiters</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;$&quot;</span><span class="p">,</span><span class="s2">&quot;$&quot;</span><span class="p">],</span>   <span class="c1">// or [&quot;&quot;,&quot;&quot;] or [&quot;\\(&quot;,&quot;\\)&quot;]</span>
+    <span class="nx">multiLine</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">style</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;font-size&quot;</span><span class="o">:</span> <span class="s2">&quot;normal&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;border&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
     <span class="p">}</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -207,25 +266,28 @@ the paragraph, use</p>
 <div class="section" id="noundefined">
 <h3>noUndefined<a class="headerlink" href="#noundefined" title="Permalink to this headline">¶</a></h3>
 <p>The <cite>noUndefined</cite> extension causes undefined control sequences to be
-shown as their macro names rather than produce an error message. So
+shown as their macro names rather than generating error messages. So
 <tt class="docutils literal"><span class="pre">$X_{\xxx}$</span></tt> would display as an &#8220;X&#8221; with a subscript consiting of the
 text <tt class="docutils literal"><span class="pre">\xxx</span></tt> in red.</p>
-<p>To enable and configure this extension, use for example</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;TeX/noUndefined.js&quot;</span><span class="p">,</span> <span class="p">...],</span>
-<span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">noUndefined</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">attributes</span><span class="o">:</span> <span class="p">{</span>
-            <span class="nx">mathcolor</span><span class="o">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
-            <span class="nx">mathbackground</span><span class="o">:</span> <span class="s2">&quot;#FFEEEE&quot;</span><span class="p">,</span>
-            <span class="nx">mathsize</span><span class="o">:</span> <span class="s2">&quot;90%&quot;</span>
-        <span class="p">}</span>
+<p>This extension is loaded by all the combined configuration files that
+include the TeX input processor.  To enable the <cite>noUndefined</cite> extension
+in your own configuration, or to modify its parameters, add something like
+the following ro your <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
+  <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;noUndefined.js&quot;</span><span class="p">],</span>
+  <span class="nx">noUndefined</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">attributes</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">mathcolor</span><span class="o">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+      <span class="nx">mathbackground</span><span class="o">:</span> <span class="s2">&quot;#FFEEEE&quot;</span><span class="p">,</span>
+      <span class="nx">mathsize</span><span class="o">:</span> <span class="s2">&quot;90%&quot;</span>
     <span class="p">}</span>
- <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>The <tt class="docutils literal"><span class="pre">attributes</span></tt> setting specifies attributes to apply to the
 <tt class="docutils literal"><span class="pre">mtext</span></tt> element that encodes the name of the undefined macro.  The
-default settings set <tt class="docutils literal"><span class="pre">mathcolor</span></tt> to <tt class="docutils literal"><span class="pre">&quot;red&quot;</span></tt>, but do not set any
+default values set <tt class="docutils literal"><span class="pre">mathcolor</span></tt> to <tt class="docutils literal"><span class="pre">&quot;red&quot;</span></tt>, but do not set any
 other attributes.  This example sets the background to a light pink,
 and reduces the font size slightly.</p>
 </div>
@@ -264,9 +326,9 @@ in <cite>STIXGeneral</cite>), otherwise MathJax tries <cite>Arial Unicode MS</ci
 <tt class="docutils literal"><span class="pre">\unicode{}</span></tt> macro, so you do not need to add it to the <cite>extensions</cite>
 array.  You can configure the extension as follows:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">unicode</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">fonts</span><span class="o">:</span> <span class="s2">&quot;STIXGeneral, &#39;Arial Unicode MS&#39;&quot;</span>
-    <span class="p">}</span>
+  <span class="nx">unicode</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">fonts</span><span class="o">:</span> <span class="s2">&quot;STIXGeneral, &#39;Arial Unicode MS&#39;&quot;</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -937,6 +999,7 @@ S
 <span class="k">\subset</span>
 <span class="k">\subseteq</span>
 <span class="k">\subseteqq</span> AMSsymbols
+<span class="k">\subsetneq</span> AMSsymbols
 <span class="k">\substack</span> AMSmath
 <span class="k">\succ</span>
 <span class="k">\succapprox</span> AMSsymbols
@@ -952,6 +1015,7 @@ S
 <span class="k">\supset</span>
 <span class="k">\supseteq</span>
 <span class="k">\supseteqq</span> AMSsymbols
+<span class="k">\supsetneq</span> AMSsymbols
 <span class="k">\surd</span>
 <span class="k">\swarrow</span>
 
@@ -1089,6 +1153,7 @@ Z
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">MathJax TeX and LaTeX Support</a><ul>
+<li><a class="reference internal" href="#tex-and-latex-math-delimiters">TeX and LaTeX math delimiters</a></li>
 <li><a class="reference internal" href="#tex-and-latex-in-html-documents">TeX and LaTeX in HTML documents</a></li>
 <li><a class="reference internal" href="#tex-and-latex-extensions">TeX and LaTeX extensions</a><ul>
 <li><a class="reference internal" href="#amsmath-and-amssymbol">AMSmath and AMSsymbol</a></li>
@@ -1109,11 +1174,6 @@ Z
   <h4>Next topic</h4>
   <p class="topless"><a href="mathml.html"
                         title="next chapter">MathJax MathML Support</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/tex.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">

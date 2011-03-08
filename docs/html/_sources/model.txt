@@ -50,6 +50,8 @@ and it also avoids the conflict between the use of the less-than sign,
 an HTML tag).
 
 
+.. _mathjax-script-tags:
+
 How mathematics is stored in the page
 =====================================
 

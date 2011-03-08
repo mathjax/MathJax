@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The MathJax.OutputJax Class" href="outputjax.html" />
@@ -79,7 +79,7 @@ that class.</p>
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <dl class="describe">
 <dt>
-<tt class="descname">name</tt></dt>
+<tt class="descname">id</tt></dt>
 <dd><p>The name of the jax.</p>
 </dd></dl>
 
@@ -95,21 +95,25 @@ that class.</p>
 <dd><p>The directory where the jax files are stored (e.g., <tt class="docutils literal"><span class="pre">&quot;[MathJax]/jax/input/TeX&quot;</span></tt>);</p>
 </dd></dl>
 
+<dl class="describe">
+<dt>
+<tt class="descname">elementJax</tt></dt>
+<dd><p>The name of the ElementJax class that this input jax will produce
+(typically <tt class="docutils literal"><span class="pre">mml</span></tt>, as that is the only ElementJax at the moment).</p>
+</dd></dl>
+
 </div>
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
 <dt>
 <tt class="descname">Translate</tt><big>(</big><em>script</em><big>)</big></dt>
-<dd><p>This is the main routine called by MathJax when a <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> of
-the appropriate type is found.  The default <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a>
-method simply loads the <tt class="docutils literal"><span class="pre">jax.js</span></tt> file and returns that callback
-for that load function so that MathJax will know when to try
-the <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> action again.  When the <tt class="docutils literal"><span class="pre">jax.js</span></tt> file
-loads, it should override the default <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> with its
-own version that does the actual translation; that way, when the
-second Translate call is made, it will be to the actual
-translation routine rather than the default loader.</p>
+<dd><p>This is the main routine called by MathJax when a <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> of the
+appropriate type is found.  The default <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> method
+throws an error indicating that <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> hasn&#8217;t been
+redefined, so when the <tt class="docutils literal"><span class="pre">jax.js</span></tt> file loads, it should override the
+default <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> with its own version that does the actual
+translation.</p>
 <p>The translation process should include the creation of an
 <a class="reference internal" href="elementjax.html#api-element-jax"><em>Element Jax</em></a> that stores the data needed
 for this element.</p>
@@ -177,11 +181,6 @@ of the various types from one another.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="outputjax.html"
                         title="next chapter">The MathJax.OutputJax Class</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/inputjax.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

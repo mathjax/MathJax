@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
     <link rel="up" title="Using MathJax in popular web platforms" href="index.html" />
     <link rel="next" title="Using MathJax in Movable Type" href="movable-type.html" />
@@ -53,8 +53,8 @@
             
   <div class="section" id="installing-mathjax-in-wordpress">
 <span id="platform-wordpress"></span><h1>Installing MathJax in WordPress<a class="headerlink" href="#installing-mathjax-in-wordpress" title="Permalink to this headline">¶</a></h1>
-<p>These instructions assume you already have placed the MathJax files on
-your server (see <a class="reference internal" href="../installation.html#installation"><em>Installing MathJax</em></a>).</p>
+<p>Note that there is a <a class="reference external" href="http://wordpress.org/extend/plugins/mathjax-latex/">WordPress plugin for MathJax</a>, so that may be a
+better choice than editing the theme directly.</p>
 <ol class="arabic">
 <li><p class="first">Open the WordPress admin interface.</p>
 </li>
@@ -74,18 +74,18 @@ header file (it should be <tt class="docutils literal"><span class="pre">header.
 <p>This part depends slightly on how your current theme is written.
 In the <tt class="docutils literal"><span class="pre">header.php</span></tt> file, look for the end-of-head tag,
 <tt class="docutils literal"><span class="pre">&lt;/head&gt;</span></tt>. If you find it, insert</p>
-<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;path-to-MathJax/MathJax.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
+   <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
 </pre></div>
 </div>
 <p>just before that.  Otherwise, insert the same code at the very
-bottom of the file.  Here, <tt class="docutils literal"><span class="pre">path-to-MathJax</span></tt> should be replaced
-by the web-address of the main MathJax directory on your server,
-e.g., <tt class="docutils literal"><span class="pre">src=&quot;/mathjax/MathJax.js&quot;</span></tt>.</p>
+bottom of the file.</p>
 </li>
-<li><p class="first">Save the file.  This should enable MathJax, so you should be able to
-start adding mathematical content to your pages.  Use the
-<tt class="docutils literal"><span class="pre">config/MathJas.js</span></tt> file in the MathJax directory to configure
-MathJax to your needs (see <a class="reference internal" href="../configuration.html#configuration"><em>Configuring MathJax</em></a> for details).</p>
+<li><p class="first">Save the file.  This will enable MathJax with both TeX and MathML
+input, so you should be able to start adding mathematical content to
+your pages.  If you need to adjust the configuraiton, see
+<a class="reference internal" href="../configuration.html#loading"><em>Configuring MathJax</em></a> for more details.</p>
 </li>
 </ol>
 </div>
@@ -102,11 +102,6 @@ MathJax to your needs (see <a class="reference internal" href="../configuration.
   <h4>Next topic</h4>
   <p class="topless"><a href="movable-type.html"
                         title="next chapter">Using MathJax in Movable Type</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/platforms/wordpress.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

@@ -65,3 +65,17 @@ to be defined within the TeX input processor.
    would ask the TeX processor to define two new macros:  ``\RR``,
    which produces a bold-face "R", and ``\bold{...}``, which takes one
    parameter and set it in the bold-face font.
+
+.. describe:: MAXMACROS: 10000
+
+   Because a definition of the form ``\def\x{\x} \x`` would cause MathJax 
+   to loop infinitely, the `MAXMACROS` constant will limit the nuber of 
+   macro substitutions allowed in any expression processed by MathJax.  
+
+.. describe:: MAXBUFFER: 5*1024
+
+   Because a definition of the form ``\def\x{\x aaa} \x`` would loop 
+   infinitely, and at the same time stack up lots of a's in MathJax's 
+   equation buffer, the `MAXBUFFER` constant is used to limit the size of 
+   the string being processed by MathJax.  It is set to 5KB, which should 
+   be sufficient for any reasonable equation.

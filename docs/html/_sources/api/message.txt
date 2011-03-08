@@ -66,7 +66,7 @@ Methods
         - **message** --- the text to display in the message area
         - **n** --- the message id number
         - **delay** --- amout of time to display the message
-    :Returns: the message id nuber for this message.
+    :Returns: the message id number for this message.
 
 .. method:: Clear(n[,delay])
 
@@ -78,9 +78,42 @@ Methods
         - **delay** --- the delay before removing the message
     :Returns: ``null``
 
+.. method:: Remove()
+
+    This removes the message frame from the window (it will reappear when 
+    future messages are set, however).
+
+    :Returns: ``null``
+
+.. method:: File(file)
+
+    This sets the message area to a "Loading *file*" message, where *file* 
+    is the name of the file (with ``[MathJax]`` representing the root 
+    directory).
+
+    :Parameters:
+        - **file** --- the name of the file being loaded.
+    :Returns: the message id number for the message created.
+
+.. method:: filterText(text,n)
+
+    This method is called on each message before it is displayed.  It can 
+    be used to modify (e.g., shorten) the various messages before they are 
+    displayed.  The default action is to check of the ``messageStyle`` 
+    configuration parameter is ``simple``, and if so, convert loading and 
+    processing messages to a simpler form.  This method can be overridden 
+    to perform other sanitization of the message strings.
+
+    :Parameters:
+        - **text** --- the text of the message to be posted
+        - **n** --- the id number of the message to be posted
+    :Returns: the modified message text
+
 .. method:: Log()
 
     Returns a string of all the messages issued so far, separated by
     newlines.  This is used in debugging MathJax operations.
 
     :Returns: string of all messages so far
+
+

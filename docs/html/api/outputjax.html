@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The MathJax.ElementJax Class" href="elementjax.html" />
@@ -80,7 +80,7 @@ that class.</p>
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <dl class="describe">
 <dt>
-<tt class="descname">name</tt></dt>
+<tt class="descname">id</tt></dt>
 <dd><p>The name of the jax.</p>
 </dd></dl>
 
@@ -104,15 +104,12 @@ that class.</p>
 <tt class="descname">Translate</tt><big>(</big><em>script</em><big>)</big></dt>
 <dd><p>This is the main routine called by MathJax when an element jax is
 to be converted to output.  The default <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a>
-method simply loads the <tt class="docutils literal"><span class="pre">jax.js</span></tt> file and returns that callback
-for that load function so that MathJax will know when to try
-the <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> action again.  When the <tt class="docutils literal"><span class="pre">jax.js</span></tt> file
-loads, it should override the default <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> with its
-own version that does the actual translation; that way, when the
-second Translate call is made, it will be to the actual
-translation routine rather than the default loader.</p>
+method throws an error indicating that <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> hasn&#8217;t been
+redefined, so when the <tt class="docutils literal"><span class="pre">jax.js</span></tt> file loads, it should override the
+default <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> with its own version that does the actual
+translation.</p>
 <p>You should use <tt class="docutils literal"><span class="pre">MathJax.Hub.getJaxFor(script)</span></tt> to obtain the
-element jax for the given script.  The translation process may add
+element jax for the given script.  The translation process may
 modify the element jax (e.g., if it has data that needs to be
 stored with the jax), and may insert DOM elements into the
 document near the jax&#8217;s <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag.</p>
@@ -202,11 +199,6 @@ tag associated with the element jax.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="elementjax.html"
                         title="next chapter">The MathJax.ElementJax Class</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/outputjax.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

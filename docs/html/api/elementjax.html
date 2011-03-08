@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The Base Jax Class" href="jax.html" />
@@ -69,7 +69,7 @@ that class.</p>
 <h2>Class Properties<a class="headerlink" href="#class-properties" title="Permalink to this headline">¶</a></h2>
 <dl class="describe">
 <dt>
-<tt class="descname">name</tt></dt>
+<tt class="descname">id</tt></dt>
 <dd><p>The name of the jax.</p>
 </dd></dl>
 
@@ -91,13 +91,15 @@ that class.</p>
 <dl class="describe">
 <dt>
 <tt class="descname">inputJax</tt></dt>
-<dd><p>A reference to the input jax that created the element.</p>
+<dd><p>A reference to the input jax that created the element.  (In the
+future, this will be changed to the name of the input jax.)</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">outputJax</tt></dt>
-<dd><p>A reference to the output jax that has processed this element.</p>
+<dd><p>A reference to the output jax that has processed this element.  (In
+the future, this will be changed to the name of the output jax.)</p>
 </dd></dl>
 
 <dl class="describe">
@@ -116,7 +118,8 @@ collection, thus causing a memory leak.</p>
 <dt>
 <tt class="descname">originalText</tt></dt>
 <dd><p>A string indicating the original input text that was processed for
-this element.</p>
+this element.  (In the future, this may be managed by the input jax
+rather than <tt class="docutils literal"><span class="pre">MathJax.Hub</span></tt>.)</p>
 </dd></dl>
 
 <dl class="describe">
@@ -239,11 +242,6 @@ contextual menu.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="jax.html"
                         title="next chapter">The Base Jax Class</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/elementjax.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

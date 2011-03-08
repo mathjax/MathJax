@@ -139,8 +139,8 @@ div.body h6 {
     background-color: #f2f2f2;
     font-weight: normal;
     color: #20435c;
-    border-top: 1px solid #cccccc;
-    border-bottom: 2px solid #cccccc;
+    border-top: 2px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
     margin: 30px -20px 20px -20px;
     padding: 3px 0 3px 10px;
 }

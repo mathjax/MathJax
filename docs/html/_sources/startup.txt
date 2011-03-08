@@ -63,11 +63,10 @@ pushed into the queue:
 2.  Perform the configuration actions:
 
     - Post the ``Begin Config`` startup signal
-    - Execute the content of the ``<script>`` that loaded MathJax,
-      or load the ``config/MathJax.js`` file if the ``<script>``
-      is empty
-    - If the ``MathJax.Hub.config.delayStartupUntil`` value is set,
-      wait until its condition is met
+    - Load any configuration files specified via ``config=`` as a script parameter
+    - Execute the content of the ``<script>`` that loaded MathJax, if it is not empty
+    - Wait for the ``delayStartupUntil`` condition to be met, if one was specified
+    - Execute any ``text/x-mathjax-config`` script blocks
     - load the files listed in the ``MathJax.Hub.config.config`` array
     - Post the ``End Config`` startup signal
 
@@ -115,15 +114,20 @@ pushed into the queue:
 
 ..
 
-7.  Wait for the onload handler to fire
+7.  Set the MathJax menu's renderer value based on the jax that have been 
+    loaded
 
 ..
 
-8.  Set ``MathJax.isReady`` to ``true``
+8.  Wait for the onload handler to fire
 
 ..
 
-9.  Perform the typesetting pass (preprocessors and processors)
+9.  Set ``MathJax.isReady`` to ``true``
+
+..
+
+10. Perform the typesetting pass (preprocessors and processors)
 
     - Post the ``Begin Typeset`` startup signal
     - Post the ``Begin PreProcess`` hub signal
@@ -141,12 +145,16 @@ pushed into the queue:
 
 ..
 
-10. Post the ``End`` startup signal
+11. Post the ``End`` startup signal
 
 
+The loading of the jax and extensions in steps 5 and 6 are now done in 
+parallel, rather than sequentially.  That is, all the jax and extensions 
+are requested simultaneously, so they load concurrently.  That means they 
+can load in any order, and that the begin and end signals for the jax and 
+extensions can be intermixed.  (In general, you will get `Begin Jax` 
+followed by `Begin Extensions`, but the order of `End Jax` and `End 
+Extensions` will depend on the file sbeing loaded.)  Both 5 and 6 must 
+complete, however, before 7 will be performed.
 
-
-
-
-
-
+See the ``test/sample-signals.html`` file to see the signals in action.

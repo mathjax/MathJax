@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The MathJax.Callback Class" href="callback.html" />
@@ -176,6 +176,29 @@ provided.  It is equivalent to</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="setText">
+<tt class="descname">setText</tt><big>(</big><em>script</em>, <em>text</em><big>)</big><a class="headerlink" href="#setText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the contents of the <tt class="docutils literal"><span class="pre">script</span></tt> element to be the given
+<tt class="docutils literal"><span class="pre">text</span></tt>, properly taking into account the browser limitations and
+bugs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>script</strong> &#8212; the script whose content is to be set</li>
+<li><strong>text</strong> &#8212; the text that is to be the script&#8217;s new content</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">null</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="describe">
 <dt>
 <tt class="descname">Cookie.Set(name,data)</tt></dt>
@@ -185,7 +208,7 @@ the <cite>data</cite> object as the data for the cookie.  For example,</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">HTML</span><span class="p">.</span><span class="nx">Cookie</span><span class="p">.</span><span class="nx">Set</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">,{</span><span class="nx">x</span><span class="o">:</span><span class="mi">42</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span><span class="s2">&quot;It Works!&quot;</span><span class="p">});</span>
 </pre></div>
 </div>
-<p>will create a cookie named &#8220;mjx:test&#8221; that stores the values of
+<p>will create a cookie named &#8220;mjx.test&#8221; that stores the values of
 <tt class="docutils literal"><span class="pre">x</span></tt> and <tt class="docutils literal"><span class="pre">y</span></tt> provided in the <cite>data</cite> object.  This data can be
 retrieved using the <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.HTML.Cookie.Get()</span></tt> method
 discussed below.</p>
@@ -248,11 +271,6 @@ above,</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="callback.html"
                         title="next chapter">The MathJax.Callback Class</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/html.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

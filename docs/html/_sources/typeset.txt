@@ -172,7 +172,8 @@ then you can use
 to change the student's answer to be the typeset version of whatever
 is in the ``studentAnswer`` variable.
 
-Here is a complete example that illustrates this approach
+Here is a complete example that illustrates this approach (available in a 
+more full-featured version as ``test/sample-dynamic.html``):
 
 .. code-block:: html
 
@@ -180,12 +181,15 @@ Here is a complete example that illustrates this approach
     <head>
     <title>MathJax Dynamic Math Test Page</title>
 
-    <script src="/MathJax/MathJax.js">
+    <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
-        extensions: ["tex2jax.js"],
-        jax: ["input/TeX","output/HTML-CSS"],
-        tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+        tex2jax: {
+          inlineMath: [["$","$"],["\\(","\\)"]]
+        }
       });
+    </script>
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
     </script>
 
     </head>

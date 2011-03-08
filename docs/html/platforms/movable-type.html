@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
     <link rel="up" title="Using MathJax in popular web platforms" href="index.html" />
     <link rel="next" title="MathJax TeX and LaTeX Support" href="../tex.html" />
@@ -53,8 +53,6 @@
             
   <div class="section" id="using-mathjax-in-movable-type">
 <span id="platform-movable-type"></span><h1>Using MathJax in Movable Type<a class="headerlink" href="#using-mathjax-in-movable-type" title="Permalink to this headline">¶</a></h1>
-<p>These instructions assume you already have placed the MathJax files on
-your server (see <a class="reference internal" href="../installation.html#installation"><em>Installing and Testing MathJax</em></a>).</p>
 <ol class="arabic">
 <li><p class="first">Open Moveable Type Admin interface for the site on which you want to enable
 MathJax.</p>
@@ -72,19 +70,20 @@ and open the <cite>HTML Head</cite> template.</p>
 </div></blockquote>
 </li>
 <li><p class="first">At the end of the file, insert</p>
-<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>  <span class="na">src=</span><span class="s">&quot;path-to-MathJax/MathJax.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
+  <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
 </pre></div>
 </div>
-<p>where <tt class="docutils literal"><span class="pre">path-to-MathJax</span></tt> is replaced by the web-address of the
-main MathJax dorectory on your server.</p>
+<p>to load MathJax from our distributed netowrk service.</p>
 <blockquote>
 <div><img alt="../_images/mt_head.png" src="../_images/mt_head.png" />
 </div></blockquote>
 </li>
-<li><p class="first">Save the file.  This should enable MathJax, so you should be able
-to start adding mathematical content to your pages.  Use the
-<tt class="docutils literal"><span class="pre">config/MathJas.js</span></tt> file in the MathJax directory to configure
-MathJax to your needs (see <a class="reference internal" href="../configuration.html#configuration"><em>Configuring MathJax</em></a> for details).</p>
+<li><p class="first">Save the file.  This will enable MathJax with both TeX and MathML
+input, so you should be able to start adding mathematical content to
+your pages.  If you need to adjust the configuraiton, see
+<a class="reference internal" href="../configuration.html#loading"><em>Configuring MathJax</em></a> for more details.</p>
 </li>
 </ol>
 </div>
@@ -101,11 +100,6 @@ MathJax to your needs (see <a class="reference internal" href="../configuration.
   <h4>Next topic</h4>
   <p class="topless"><a href="../tex.html"
                         title="next chapter">MathJax TeX and LaTeX Support</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/platforms/movable-type.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

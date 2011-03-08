@@ -20,7 +20,7 @@ options, include a ``MathMenu`` section in your
 
 would set the ``delay`` option to 600 milliseconds.
 
-.. describe:: delay: 400
+.. describe:: delay: 150
 
     This is the hover delay for the display (in milliseconds) for
     submenus in the contextual menu:  when the mouse is over a submenu

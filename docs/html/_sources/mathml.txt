@@ -5,7 +5,7 @@ MathJax MathML Support
 **********************
 
 The support for :term:`MathML` in MathJax consists of three parts:  the
-`mml2jax` preprocessor, the MathML input processor, and the NativeMML
+`mml2jax` preprocessor, the `MathML` input processor, and the `NativeMML`
 output processor.  The first of these looks for ``<math>`` tags within
 your document and marks them for later processing by MathJax.  The
 second converts the MathML to the internal format used by MathJax, and
@@ -34,9 +34,9 @@ any of the other setup issues that make using native MathML
 difficult.  MathJax handles the setup and properly marks the
 mathematics so that the browser will render it as MathML.  In
 addition, MathJax provides its contextual menu for the MathML, which
-lets the user zoom the mathematics for easier reading, get the copy
+lets the user zoom the mathematics for easier reading, get and copy
 the source markup, and so on, so there is added value to using MathJax
-even whith a pure MathML workflow.
+even with a pure MathML workflow.
 
 
 MathML in HTML pages
