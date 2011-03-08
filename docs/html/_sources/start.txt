@@ -34,7 +34,9 @@ You accomplish the first step by putting
 
 .. code-block:: html
 
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
 
 into the ``<head>`` block of your document.  (It can also go in the
 ``<body>`` if necessary, but the head is to be preferred.)  This will
