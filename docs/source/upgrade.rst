@@ -124,7 +124,7 @@ combination.  For example,
 
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
-        TeX: {
+        tex2jax: {
           inlineMath: [ ['$','$'], ['\\(','\\)'] ],
           processEscapes: true
         }
