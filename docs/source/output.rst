@@ -89,16 +89,32 @@ the abilities of your user's browser.
 You can customize which choice to make on a browser-by-browser basis
 or a global basis.  See the ``config/default.js`` file or the
 :ref:`Configuring MMLorHTML <configure-MMLorHTML>` section for futher
-details.
+details.  As an example, this configuration tells MathJax to use HTML-CSS 
+output rather than native MathML support for Firefox:
+
+.. code-block:: html
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        MMLorHTML: { prefer: { Firefox: "HTML" } }
+      });
+    </script>
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+With this configuration, MathML output will be used only for IE with the
+MathPlayer plugin (Firefox is the only other browser to have native MathML
+support that is sufficient for use with MathJax).  Note, however, that a
+user can employ the MathJax contectual menu to select the other renderer if
+he or she wishes.
 
 MathJax produces MathML that models the underlying mathematics as best
 it can, rather than using complicated hacks to improve output for a
 particular MathML implementation.  When you make the choice to use the
 NativeMML output processor, you are making a trade-off: gaining speed
 at the expense of quality and reliability, a decision that should not
-be taken lightly.  Note, however, that a user can employ the MathJax
-contectual menu to select the other renderer if he or she
-wishes.
+be taken lightly.
 
 
 .. _html-css-with-ie8:
@@ -106,16 +122,16 @@ wishes.
 HTML-CSS with IE8
 =================
 
-Internet Explorer 8 has at least eight different rendering modes in
-which it can operate, and that are triggered by the `DOCTYPE` of the
-document being viewed.  Its "quirks" mode is its fastest mode, and its
-"IE8 standards" mode is its slowest.  This is the mode triggered by
-strict HTML document types, and since most modern content management
-systems now include a `DOCTYPE` that activates "standards" mode, IE8
-will operate in its slowest manner.  This is particularly apparent
-when MathJax is used, since IE8 in standards mode runs 20 to 30 times
-slower than it does in its IE7 emulation mode, and 60 times slower
-than in quirks mode.
+Internet Explorer 8 has at least eight different rendering modes in which
+it can operate, and that are triggered by the `DOCTYPE` of the document
+being viewed.  Its "quirks" mode is its fastest mode, and its "IE8
+standards" mode is its slowest.  This is the mode triggered by strict HTML
+document types, and since most modern content management systems now
+include a `DOCTYPE` that activates "standards" mode, IE8 will operate in
+its slowest manner.  This is particularly apparent when MathJax is used,
+since IE8 in standards mode runs 20 to 30 times slower than it does in its
+IE7 emulation mode, and 60 times slower than in quirks mode, on the sample
+equations page in ``test/sample.html``.
 
 Most users find this speed reduction unacceptable when there is much
 mathematics on the page.  To overcome this problem, you may wish to
@@ -138,6 +154,6 @@ that your users install the `MathPlayer plugin
 <http://www.dessci.com/en/products/mathplayer/>`_, which will render
 the mathematics much more quickly.
 
-It appears that IE9 in IE9 standards mode may perform faster than IE8, but 
+It appears that IE9 in IE9 standards mode may perform better than IE8, but 
 since IE9 is still in beta testing as of this writing, we have yet to see 
 exactly what the performance of MathJax in IE9 will be like.
