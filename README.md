@@ -45,7 +45,7 @@ distributed on GitHub at <http://github.com/mathjax/MathJax>.  A user forum
 for asking questions and getting assistance is hosted at Google, and the
 bug tracker is hosted at GitHub:
 
-Bug tracker:         <https://github.com/mathjax/MathJax/issues>
+Bug tracker:         <https://github.com/mathjax/MathJax/issues>  
 MathJax-Users Group: <http://groups.google.com/group/mathjax-users>
 
 Before reporting a bug, please check that it has not already been reported.
