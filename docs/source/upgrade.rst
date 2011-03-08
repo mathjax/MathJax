@@ -241,7 +241,7 @@ Version 1.0 of MathJax was distributed through `SourceForge`, but the
 development of MathJax has switched to `GitHub
 <https://github.com/mathjax/MathJax/>`_, which is now the primary location
 for MathJax source code and distributions.  The SourceForge repository will
-no longer be avtively maintained (and hasn't been since November 2010), and
+no longer be actively maintained (and hasn't been since November 2010), and
 so you will not be able to obtain updates through ``svn`` if you checked
 out MathJax from there.
 
