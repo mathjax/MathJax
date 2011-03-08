@@ -1,12 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en-US">
-<HEAD>
-<TITLE>MathJax Test Page</TITLE>
-<!-- Copyright (c) 2009-2010 Design Science, Inc. -->
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
-<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=EmulateIE7" >
+<!DOCTYPE html>
+<html>
+<head>
+<title>MathJax Test Page</title>
+<!-- Copyright (c) 2009-2011 Design Science, Inc. -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
-<SCRIPT SRC="../MathJax.js">
+<script type="text/x-mathjax-config">
 //
 //  Do NOT use this page as a template for your own pages.  It includes 
 //  code that is needed for testing your site's installation of MathJax,
@@ -47,97 +47,133 @@
   };
   
   if (!HUB.Browser.versionAtLeast(MINVERSION[HUB.Browser]||0.0)) {
-    HUB.config.jax = [];          // don't load any Jax
-    HUB.config.extensions = [];   // don't load any extensions
-    alert("The browser you are using does not support MathJax, " +
-          "so we can't test if MathJax is working.\n\n"+
-          "Please try a different browser, or a newer version of your browser.");
+    HUB.Config({
+      jax: [],                   // don't load any Jax
+      extensions: [],            // don't load any extensions
+      "v1.0-compatible": false   // skip warning message due to no jax
+    });
+    setTimeout('document.getElementById("badBrowser").style.display = ""',0);
   }
   
 })(MathJax.Hub);
 
 MathJax.Hub.Register.StartupHook("End",function () {
   var HTMLCSS = MathJax.OutputJax["HTML-CSS"];
-  if (HTMLCSS.imgFonts) {
-    alert("The browser you are using does not seem to support web-based " +
-          "fonts, so we can't test the MathJax web fonts with this browser " +
-          "(image fonts have been used instead)\n\n" +
-          "Please try a different browser, or a newer version of your browser.");
-  }
+  if (HTMLCSS && HTMLCSS.imgFonts) {document.getElementById("imageFonts").style.display = ""}
 });
-</SCRIPT>
-</HEAD>
-<BODY>
 
-<NOSCRIPT>
-<DIV STYLE="color:#CC0000; text-align:center">
-<B>Warning: <A HREF="http://www.mathjax.org/">MathJax</A>
-requires JavaScript to process the mathematics on this page.<BR>
-If your browser supports JavaScript, be sure it is enabled.<B>
-</DIV>
-<HR>
-</NOSCRIPT>
+</script>
+<script type="text/javascript" src="../MathJax.js"></script>
 
-<BLOCKQUOTE>
+<style>
+.warning {
+  color: #800020;
+  background-color: #FFF8F8;
+  border: 2px solid red;
+  margin: 1em 5em;
+  padding: 1em;
+}
+</style>
+</head>
+<body>
 
-<H1>MathJax Test Page</H1>
+<noscript>
+<div style="color:#CC0000; text-align:center">
+<b>Warning: <a href="http://www.mathjax.org/">MathJax</a>
+requires JavaScript to process the mathematics on this page.<br />
+If your browser supports JavaScript, be sure it is enabled.</b>
+</div>
+<hr>
+</noscript>
 
+<blockquote>
+
+<h1>MathJax Test Page</h1>
+
+<p>
 If you see typeset mathematics below, then MathJax is working.  If you see
 TeX code instead, MathJax is not working for you.
-<p>
+</p>
 <!------------------------------------------------------------------------>
-<HR>
+<hr>
 
 
+<p>
 \[
 \frac{-b\pm\sqrt{b^2-4ac}}{2a}
 \]
-<p>
+</p>
 
-<DIV STYLE="color:green">
-<DIV STYLE="text-align:center; color:red; font-size:120%" CLASS="MathJax_Preview">
+<div style="color:green">
+<div style="text-align:center; color:red; font-size:120%" class="MathJax_Preview">
 MathJax is not working!
-</DIV><SCRIPT TYPE="math/tex; mode=display">
+</div><script type="math/tex; mode=display">
 \bf MathJax\ Appears\ to\ be\ Working!
-</SCRIPT>
-</DIV>
+</script>
+</div>
+
+<hr>
 
 <!------------------------------------------------------------------------>
-<HR>
-<p>
 
-<DIV ID="noWebFont" STYLE="display:none; color:red">
-<B>WARNING</B>: The web fonts don't seem to be available.  Be sure you have
-the <code>MathJax/fonts</code> in place before continuing.
+<div id="badBrowser" style="display:none">
+<div class="warning">
+<b>WARNING</b>: The browser you are using does not appear to support
+MathJax, so we can't test if MathJax is working.  Please try a different
+browser, or a newer version of your browser in order to test MathJax.
+</div>
+<hr>
+</div>
+
+<!------------------------------------------------------------------------>
+
+<div id="imageFonts" style="display:none">
+<div class="warning">
+<b>WARNING</b>: The browser you are using does not seem to support web-based
+fonts, so we can't test the MathJax web fonts with this browser (image fonts
+have been used instead). Please try a different browser, or a newer version
+of your browser in order to test MathJax's web-based fonts.
+</div>
+<hr>
+</div>
+
+<!------------------------------------------------------------------------>
+
+<div id="noWebFont" style="display:none">
+<div class="warning">
+<b>WARNING</b>: MathJax's web fonts don't seem to be available.  Be sure you have
+the <code>MathJax/fonts</code> directory in place before continuing.
 If you fail to install these fonts, MathJax will not 
 work properly with some browsers.  If you can't install the image fonts, 
-be sure to set the noImageFonts parameter in your MathJax configuration 
+be sure to set the <code>noImageFonts</code> parameter in your MathJax configuration 
 (either <code>MathJax/config/MathJax.js</code>, or the 
 <code>MathJax.Hub.Config()</code> call in your web page).
-<p>
-<HR>
-</DIV>
-<p>
+</div>
+<hr>
+</div>
 
 <!------------------------------------------------------------------------>
 
-<DIV ID="webfonts" STYLE="display:none; color:red">
-<B>WARNING</B>: You are trying to load MathJax from a remote site where the
+<div id="ffWebFont" style="display:none">
+<div class="warning">
+<b>WARNING</b>: You are trying to load MathJax from a remote site where the
 web-based fonts are not set up to be shipped to Firefox properly.  See the
-<A HREF="../docs/html/installation.html#notes-about-shared-installations">discussion
-of Firefox's same-origin policy</A> in the MathJax documentation.
-<p>
-<HR>
-</DIV>
-<p>
+<a href="../docs/html/installation.html#notes-about-shared-installations">discussion
+of Firefox's same-origin policy</a> in the MathJax documentation for more 
+details.
+</div>
+<hr>
+</div>
 
 <!------------------------------------------------------------------------>
 
-Once you have MathJax working properly, view the <A
-HREF="index-images.html">image mode test page</A> to make sure that the
+<p>
+Once you have MathJax working properly, view the <a
+href="index-images.html">image mode test page</a> to make sure that the
 image fallback mode is working as well.
+</p>
 
-</BLOCKQUOTE>
+</blockquote>
 
-</BODY>
-</HTML>
+</body>
+</html>

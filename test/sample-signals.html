@@ -1,9 +1,10 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title>MathJax Signals Test Page</title>
-<!-- Copyright (c) 2010 Design Science, Inc. -->
+<!-- Copyright (c) 2010-2011 Design Science, Inc. -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" >
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
 <!--
  | This example shows how to use MathJax's signal mechanism to find out 
@@ -11,16 +12,27 @@
  | occur.
 -->
 
-<script src="../MathJax.js">
+<script type="text/x-mathjax-config">
 
   //
   //  Configure MathJax
   //
   MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
+    extensions: ["tex2jax.js","TeX/noUndefined.js"],
     jax: ["input/TeX","output/HTML-CSS"],
-    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {extensions: ["AMSmath.js","AMSsymbols.js"]}
   });
+  //
+  //  Display messages when these files are loaded
+  //  (Note the difference between extensions and TeX.extensions,
+  //   and the difference between when noUndefind is loaded compared
+  //   to when it signals that it is ready)
+  //
+  MathJax.Hub.Register.LoadHook("[MathJax]/extensions/TeX/noUndefined.js",
+    function () {MathJax.Hub.Startup.signal.Post("*** noUndefined Loaded ***")});
+  MathJax.Hub.Register.LoadHook("[MathJax]/extensions/TeX/AMSmath.js",
+    function () {MathJax.Hub.Startup.signal.Post("*** AMSmath Loaded ***")});
 
   //
   //  Display a message that we are in the configuration code
@@ -52,6 +64,7 @@
   MathJax.Hub.Queue(function () {Message("*** MathJax is done ***")});
 
 </script>
+<script type="text/javascript" src="../MathJax.js"></script>
 
 <style>
   .output {
@@ -61,19 +74,26 @@
     padding: 3px 1em;
   }
 </style>
+
 </head>
 <body>
 
+<p>
 When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
 $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+</p>
 
+<p>
 Messages about mathematics:
 <pre id="MathMessages" class="output">
 </pre>
+</p>
 
+<p>
 All Messages:
 <pre id="AllMessages" class="output">
 </pre>
+</p>
 
 <script>
 (function () {

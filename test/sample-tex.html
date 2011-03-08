@@ -1,22 +1,25 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title>MathJax TeX Test Page</title>
-<!-- Copyright (c) 2010 Design Science, Inc. -->
+<!-- Copyright (c) 2010-2011 Design Science, Inc. -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" >
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
-<script src="../MathJax.js">
+<script type="text/x-mathjax-config">
   MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
     tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
   });
 </script>
+<script type="text/javascript" src="../MathJax.js?config=TeX-AMS_HTML-full"></script>
+
 </head>
 <body>
 
-When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+<p>
+When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
 $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+</p>
 
 </body>
 </html>

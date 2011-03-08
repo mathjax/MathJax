@@ -1,19 +1,17 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title>MathJax MathML Test Page</title>
-<!-- Copyright (c) 2010 Design Science, Inc. -->
+<!-- Copyright (c) 2010-2011 Design Science, Inc. -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" >
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
-<script src="../MathJax.js">
-  MathJax.Hub.Config({
-    extensions: ["mml2jax.js"],
-    jax: ["input/MathML","output/HTML-CSS"]
-  });
-</script>
+<script type="text/javascript" src="../MathJax.js?config=MML_HTMLorMML-full"></script>
+
 </head>
 <body>
 
+<p>
 When <math><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>,
 there are two solutions to <math>
   <mi>a</mi><msup><mi>x</mi><mn>2</mn></msup>
@@ -39,6 +37,7 @@ there are two solutions to <math>
   </mrow>
   <mtext>.</mtext>
 </math>
+</p>
 
 </body>
 </html>
