@@ -11,8 +11,8 @@ processing the mathematics within the webpage once it has been loaded
 in the browser by a user viewing your web pages.  If you are using
 jsMath with its ``tex2math`` preprocessor, then switching to MathJax
 should be easy, and is simply a matter of configuring MathJax
-appropriately.  See the section on :ref:`Configuring MathJax
-<configuration>` for details about loading and configuring MathJax.
+appropriately.  See the section on :ref:`Loading and Configuring MathJax
+<loading>` for details.
 
 On the other hand, if you are using jsMath's ``<span
 class="math">...</span>`` and ``<div class="math">...</div>`` tags to

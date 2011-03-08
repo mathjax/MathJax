@@ -37,20 +37,19 @@ queues for actions that need to be synchronized with each other, but
 not to MathJax as a whole.  See the :ref:`Queue Object <api-queue>`
 reference page for more details.
 
-**Signals** are another means of synchronizing your own code with
-MathJax.  Many of the important actions that MathJax takes (like
-typesetting new math on the page, or loading an external component)
-are "announced" by posting a message to a special object called a
-`Signal`.  Your code can register an interest in receiving one or more
-of these signals by providing a callback to be called when the signal
-is posted.  When the signal arrives, MathJax will call your code.
-This works somewhat like an event handler, except that many different
-types of events can go through the same signal, and the signals have a
-"memory", meaning that if you register an interest in a particular
-type of signal and that signal has already occurred, you will be told
-about the past occurrances as well as any future ones.  See the
-:ref:`Signal Object <api-signal>` reference page for more details.
-See also the ``test/sample-signals.html`` file in the MathJax ``test``
+**Signals** are another means of synchronizing your own code with MathJax.
+Many of the important actions that MathJax takes (like typesetting new math
+on the page, or loading an external component) are "announced" by posting a
+message to a special object called a `Signal`.  Your code can register an
+interest in receiving one or more of these signals by providing a callback
+to be called when the signal is posted.  When the signal arrives, MathJax
+will call your code.  This works somewhat like an event handler, except
+that many different types of events can go through the same signal, and the
+signals have a "memory", meaning that if you register an interest in a
+particular type of signal and that signal has already occurred, you will be
+told about the past occurrances as well as any future ones.  See the
+:ref:`Signal Object <api-signal>` reference page for more details.  See
+also the ``test/sample-signals.html`` file in the MathJax ``test``
 directory for a working example of using signals.
 
 Each of these is explained in more detail in the links below:
