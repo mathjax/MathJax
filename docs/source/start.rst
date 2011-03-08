@@ -46,11 +46,11 @@ This is the most general configuration, and should suffice for most
 people's needs.  Other configurations are available, however, and you
 can also provide additional configuration parameters to taylor one of
 the confiogurations to your needs.  More details can be found in the
-:ref:`Loading and Configuring MathJax <installation>` instructions.
+:ref:`Loading and Configuring MathJax <loading>` instructions.
 
 The use of ``cdn.mathjax.org`` is governed by its `terms of service
-<http://www.mathjax.org/>`_, so be sure to read that before linked to
-the MathJax CDN server.
+<http://www.mathjax.org/download/mathjax-cdn-terms-of-service/>`_, so be
+sure to read that before linked to the MathJax CDN server.
 
 To see how to enter mathematics in your web pages, see `Putting
 mathematics in a web page`_ below.
@@ -128,10 +128,10 @@ output in MathML form if the user's browser supports that, and will use
 HTML-with-CSS to render the mathematics otherwise.
 
 There are a number of other prebuilt configuration files that you can
-choose from as well, or you could use the ``config/default.js`` file
-and customize the settings yourself.  The combined configuration files
-are described more fully in :ref:`Installing and Configuring MathJax
-<installation>`, and the configuration options are described in
+choose from as well, or you could use the ``config/default.js`` file and
+customize the settings yourself.  The combined configuration files are
+described more fully in :ref:`Common Configurations
+<common-configurations>`, and the configuration options are described in
 :ref:`Configuration Options <configuration>`.
 
 Note:  The configuration process has changed in MathJax v1.1, so if you have
@@ -218,7 +218,7 @@ one, and" to be treated as mathematics since it falls between dollar
 signs.  For this reason, if you want to use single-dollars for in-line
 math mode, you must enable that explicitly in your configuration:
 
-.. code-block:: javascript
+.. code-block:: html
 
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -229,11 +229,13 @@ math mode, you must enable that explicitly in your configuration:
 
 See the ``config/default.js`` file, or the :ref:`tex2jax configuration
 options <configure-tex2jax>` page, for additional configuration
-parameters that you can specify for the ``tex2jax`` preprocessor,
+parameters that you can specify for the `tex2jax` preprocessor,
 which is the component of MathJax that identifies TeX notation within
-the page).
+the page).  See the :ref:`TeX and LaTeX <TeX-support>` page for 
+more on MathJax's support for TeX.
 
-Here is a complete sample page containing TeX mathematics:
+Here is a complete sample page containing TeX mathematics (also available 
+in the ``test/sample-tex.html`` file):
 
 .. code-block:: html
 
@@ -241,12 +243,15 @@ Here is a complete sample page containing TeX mathematics:
     <html>
     <head>
     <title>MathJax TeX Test Page</title>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
     <script type="text/javascript"
-        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
     </script>
     </head>
     <body>
-    When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+    When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
     $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
     </body>
     </html>
@@ -292,7 +297,8 @@ than HTML, you should not include a namespace prefix for your
 ``<math>`` tags; for example, you should not use ``<m:math>`` except
 in a file where you have tied the ``m`` namespace to the MathML DTD.
 
-Here is a complete sample page containing MathML mathematics:
+Here is a complete sample page containing MathML mathematics (also 
+available in the ``test/sample-mml.html`` file):
 
 .. code-block:: html
 
@@ -301,7 +307,7 @@ Here is a complete sample page containing MathML mathematics:
     <head>
     <title>MathJax MathML Test Page</title>
     <script type="text/javascript"
-        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
     </script>
     </head>
     <body>
@@ -342,25 +348,20 @@ should use
 
 .. code-block:: html
 
-    <mspace width="5pt"></mspace>
+    <mspace width="thinmathspace"></mspace>
 
-rather than
-
-.. code-block:: html
-
-    <mspace width="5pt" />
-
-in an HTML document.  If you use the self-closing form, some browsers
-will not build the math tree properly, and MathJax will receive a
-damaged math structure, which will not be rendered as the original
-notation would have been.  Unfortunately, there is nothing MathJax can
-do about that, since the browser has incorrectly interpreted the tags
-long before MathJax has a chance to work with them.
+rather than ``<mspace width="5pt" />`` in an HTML document.  If you use the
+self-closing form, some browsers will not build the math tree properly, and
+MathJax will receive a damaged math structure, which will not be rendered
+as the original notation would have been.  Unfortunately, there is nothing
+MathJax can do about that, since the browser has incorrectly interpreted
+the tags long before MathJax has a chance to work with them.
 
 The component of MathJax that recognizes MathML notation is called the
-``mml2jax`` extension, and it has only a few configuration options; see the
+`mml2jax` extension, and it has only a few configuration options; see the
 ``config/default.js`` file or the :ref:`mml2jax configuration options
-<configure-mml2jax>` page for more details.
+<configure-mml2jax>` page for more details.  See the :ref:`MathML
+<MathML-support>` page for more on MathJax's MathML support.
 
 
 Where to go from here?
@@ -372,7 +373,7 @@ able to use it to write web pages that include mathematics.  At this
 point, you can start making pages that contain mathematical content!
 
 You could also read more about the details of how to :ref:`customize
-MathJax <configuration>`.
+MathJax <loading>`.
 
 If you are trying to use MathJax in blog or wiki software or in some
 other content-management system, you might want to read about :ref:`using

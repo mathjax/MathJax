@@ -4,6 +4,12 @@
 Installing and Testing MathJax
 ******************************
 
+The easiest way to use MathJax is to link directly to the MathJax
+distributed network service (see :ref:`Using the MathJax CDN
+<mathjax-CDN>`).  In that case, there is no need to install MathJax
+yourself, and you can begin using MathJax right away; skip this document on
+installation and go directly to :ref:`Configuring MathJax <loading>`.
+
 MathJax can be loaded from a public web server or privately from your hard drive
 or other local media. To use MathJax in either way, you will need to obtain a
 copy of MathJax and its font package. There are three ways to do this: via
@@ -18,11 +24,11 @@ Obtaining MathJax via Git
 
 The easiest way to get MathJax and keep it up to date is to use the `Git
 <http://git-scm.com/>`_ version control system to access our `GitHub repository
-<http://github.com/mathjax/mathjax>`_. Use the commands
+<http://github.com/mathjax/mathjax>`_. Use the command
 
 .. code-block:: sh
 
-    git clone git://github.com/mathjax/MathJax.git mathjax
+    git clone git://github.com/mathjax/MathJax.git MathJax
 
 to obtain and set up a copy of MathJax.  Note that there is no longer
 a ``fonts.zip`` file, and that the ``fonts`` directory is now part of
@@ -32,7 +38,7 @@ Whenever you want to update MathJax, you can now use
 
 .. code-block:: sh
 
-    cd mathjax
+    cd MathJax
     git remote show origin
 
 to check if there are updates to MathJax (this will print several
@@ -41,21 +47,22 @@ date or out of date). If MathJax needs updating, use
 
 .. code-block:: sh
 
-    cd mathjax
+    cd MathJax
     git pull origin
 
 to udpate your copy of MathJax to the current release version.  If you
 keep MathJax updated in this way, you will be sure that you have the
 latest bug fixes and new features as they become available.
 
-This gets you the current development copy of MathJax, which is the
-"bleeding-edge" version that contains all the latest changes to
-MathJax. At times, however, these may be less stable than the
-"release" version. If you prefer to use the most stable version (that
-may not include all the latest patches and features), use ``git tag
--l`` to see all versions and use ``git checkout <tag_name>`` to
-checkout that version of MathJax. When you want to upgrade to a new
-release, you will need to repeat this for the latest release tag.
+This gets you the current development copy of MathJax, which is the version
+that contains all the latest changes to MathJax.  Although we try to make
+sure this version is a stable and usable version of MathJax, it is under
+active development, and at times it may be less stable than the "release"
+version.  If you prefer to use the most stable version (that may not
+include all the latest patches and features), use ``git tag -l`` to see all
+versions and use ``git checkout <tag_name>`` to checkout that version of
+MathJax.  When you want to upgrade to a new release, you will need to
+repeat this for the latest release tag.
 
 
 .. _getting-mathjax-svn:
@@ -66,11 +73,11 @@ Obtaining MathJax via SVN
 If you are more comfortable with the `subversion
 <http://subversion.apache.org/>`_ source control system, you may want
 to use GitHub's ``svn`` service to obtain MathJax.  If you want to get the
-latest revision using ``svn``, use the commands
+latest revision using ``svn``, use the command
 
 .. code-block:: sh
 
-    svn checkout http://svn.github.com/mathjax/MathJax.git mathjax
+    svn checkout http://svn.github.com/mathjax/MathJax.git MathJax
 
 to obtain and set up a copy of MathJax.  Note that there is no longer
 a ``fonts.zip`` file, and that the ``fonts`` directory is now part of
@@ -80,7 +87,7 @@ Whenever you want to update MathJax, you can now use
 
 .. code-block:: sh
 
-    cd mathjax
+    cd MathJax
     svn status -u
 
 to check if there are updates to MathJax.  If MathJax needs updating,
@@ -88,19 +95,20 @@ use
 
 .. code-block:: sh
 
-    cd mathjax
+    cd MathJax
     svn update
 
 to udpate your copy of MathJax to the current release version.  If you
 keep MathJax updated in this way, you will be sure that you have the
 latest bug fixes and new features as they become available.
 
-This gets you the current development copy of MathJax, which is the
-"bleeding-edge" version that contains all the latest changes to
-MathJax.  At times, however, these may be less stable than the
-"release" version.  If you prefer to use one of the tagged releases
-instead, then either use ``git`` as described above, or one of the
-archive files as described below.  You can use
+This gets you the current development copy of MathJax, which is the version
+that contains all the latest changes to MathJax.  Although we try to make
+sure this version is a stable and usable version of MathJax, it is under
+active development, and at times it may be less stable than the "release"
+version.  If you prefer to use one of the tagged releases instead, then
+either use ``git`` as described above, or one of the archive files as
+described below.  You can use
 
 .. code-block:: sh
 
@@ -134,10 +142,19 @@ let you refer to the main MathJax file as ``/MathJax/MathJax.js`` from
 within any page on your server.
 
 From the `MathJax GitHub download link
-<http://github.com/mathjax/mathjax/>`_ (the big download button at the
+<http://github.com/mathjax/mathjax/>`_ (the download button at the
 right), you can also select the ``Download .tar.gz`` or ``Download
-.zip`` buttons to get a copy of the current "bleeding-edge" version of
-MathJax that contains all the latest changes and bug-fixes.
+.zip`` buttons to get a copy of the current development version of
+MathJax that contains all the latest changes and bug-fixes. 
+
+If a packaged release recevies any important updates, then those updates
+will be part of the `branch` for that version.  The link to the ``.zip``
+file in the download list will be the original release version, not the
+patched version.  To obtain the patched version, use the `Branches` drop
+down menu (at the far left of the menus within the page) to select the the
+release branch, and then use the downlaod button and the ``Downlaod
+.tar.gz`` or ``Download .zip`` button to get the latest patched version of
+that release.
 
 
 Testing your installation
@@ -156,8 +173,7 @@ properly.  If you have installed MathJax on a server, use the web
 address for those files rather than opening them locally.  When you
 view the ``index.html`` file, you should see (after a few moments) a
 message that MathJax appears to be working.  If not, you should check
-that the files have been transferred to the server completely, that
-the fonts archive has been unpacked in the correct location, and that
+that the files have been transferred to the server completely, and that
 the permissions allow the server to access the files and folders that
 are part of the MathJax directory (be sure to verify the MathJax
 folder's permissions as well).  Checking the server logs may help
@@ -177,29 +193,27 @@ a different site.  For example, a departmental server at
 installation at ``www.yourcollege.edu`` rather than installing a
 separate copy on the departmental machine.  MathJax can certainly
 be loaded from another server, but there is one imporant caveat ---
-Firefox's same-origin security policy for cross-domain scripting.
+Firefox's and IE9's same-origin security policy for cross-domain scripting.
 
-Firefox’s interpretation of the same-origin policy is more strict than
-most other browsers, and it affects how fonts are loaded with the
-`@font-face` CSS directive.  MathJax uses this directive to load
-web-based math fonts into a page when the user doesn't have them
-installed locally on their own computer.  Firefox's security policy,
-however, only allows this when the fonts come from the same server as
-the web page itself, so if you load MathJax (and hence its web fonts)
-from a different server, Firefox won't be able to access those web
-fonts.  In this case, MathJax will pause while waiting for the font to
-download (which will never happen) and will time out after about 15
-seconds for each font it tries to access.  Typically that is three or
-four fonts, so your Firefox users will experience a minute or so
-delay before mathematics is displayed, and then it will probably
-display incorrectly because the browser doesn't have access to the
-correct fonts.
+Firefox's interpretation of the same-origin policy is more strict than most
+other browsers, and it affects how fonts are loaded with the `@font-face`
+CSS directive.  MathJax uses this directive to load web-based math fonts
+into a page when the user doesn't have them installed locally on their own
+computer.  Firefox's security policy, however, only allows this when the
+fonts come from the same server as the web page itself, so if you load
+MathJax (and hence its web fonts) from a different server, Firefox won't be
+able to access those web fonts.  In this case, MathJax will pause while
+waiting for the font to download (which will never happen); it will time
+out after about 5 seconds and switch to image fonts as a fallback.  
+Similarly, IE9 has a similar same-origin policy in its `IE9 standards 
+mode`, so it exhibits this same behavior.
 
 There is a solution to this, however, if you manage the server where
 MathJax is installed, and if that server is running the `Apache web
 server <http://www.apache.org/>`_.  In the remote server's
 ``MathJax/fonts/HTML-CSS/TeX/otf`` folder, create a file called
-``.htaccess`` that contains the following lines: ::
+``.htaccess`` that contains the following lines:
+::
 
    <FilesMatch "\.(ttf|otf|eot)$">
    <IfModule mod_headers.c>
@@ -207,18 +221,17 @@ server <http://www.apache.org/>`_.  In the remote server's
    </IfModule>
    </FilesMatch>
 
-and make sure the permissions allow the server to read this file.
-(The file's name starts with a period, which causes it to be an
-"invisible" file on unix-based operating systems.  Some systems,
-particularly graphic user interfaces, may not allow you to create such
-files, so you might need to use the command-line interface to
-accomplish this.)
+and make sure the permissions allow the server to read this file.  (The
+file's name starts with a period, which causes it to be an "invisible" file
+on unix-based operating systems.  Some systems, particularly those with
+graphical user interfaces, may not allow you to create such files, so you
+might need to use the command-line interface to accomplish this.)
 
-This file should make it possible for pages at other sites to load
-MathJax from this server in such a way that Firefox will be able to
-download the web-based fonts.  If you want to restrict the sites that
-can access the web fonts, change the ``Access-Control-Allow-Origin``
-line to something like::
+This file should make it possible for pages at other sites to load MathJax
+from this server in such a way that Firefox and IE9 will be able to
+download the web-based fonts.  If you want to restrict the sites that can
+access the web fonts, change the ``Access-Control-Allow-Origin`` line to
+something like::
 
    Header set Access-Control-Allow-Origin "http://www.math.yourcollege.edu"
 
@@ -231,7 +244,7 @@ for more details.
 
 .. _ff-local-fonts:
 
-Forefox and Local Fonts
+Firefox and local fonts
 =======================
 
 Firefox's same-origin security policy affects its ability to load
@@ -252,3 +265,28 @@ containing the page that uses MathJax.  This is an unfortunate
 restriction, but it is a limitiation imposed by Firefox's security
 model that MathJax can not circumvent.  Currently, this is not a
 problem for other browsers.
+
+One solution to this problem is to install the MathJax fonts locally, so
+that Firefox will not have to use web-based fonts in the first place.  To
+do that, either install the `STIX fonts <http://stixfonts.org>`_, or copy
+the fonts from ``MathJax/fonts/HTML-CSS/TeX/otf`` into your systems fonts
+directory and restart your browser (see the `MathJax fonts help page 
+<http://www.mathjax.org/help/fonts>`_ for details).
+
+
+IE9 and remote fonts
+====================
+
+IE9's same-origin policy affects its ability to load web-based fonts, as
+described above.  This has implications not ony to cross-domain loading of
+MathJax, but also to the case where you view a local page (with a
+``file://`` URL) that accesses MathJax from a remote site, like the MathJax
+CDN service.  In this case, IE9 does **not** honor the
+``Access-Control-Allow-Origin`` setting of the remote server (as it would
+if the web page came from an ``http://`` URL), and so it **never** allows the
+font to be accessed.
+
+One solution to this problem is to install the MathJax fonts locally so
+that MathJax doesn't have to use web-based fonts in the first place.  Your
+best bet is to install the `STIX fonts`_ on your system (see the `MathJax
+fonts help page`_ for details).
