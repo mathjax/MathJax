@@ -47,6 +47,11 @@ Properties
 
     The directory where the jax files are stored (e.g., ``"[MathJax]/jax/input/TeX"``);
 
+.. describe:: elementJax
+
+    The name of the ElementJax class that this input jax will produce 
+    (typically ``mml``, as that is the only ElementJax at the moment).
+
 
 Methods
 =======
