@@ -64,6 +64,26 @@ versions and use ``git checkout <tag_name>`` to checkout that version of
 MathJax.  When you want to upgrade to a new release, you will need to
 repeat this for the latest release tag.
 
+Each of the tagged releases also has a branch in which critical updates 
+are applied (we try hard not to patch the stable releases, but sometimes 
+there is a crucial change that needs to be made).  If you want to use the 
+patched version of a release, then check out the branch rather than the 
+tag.  The branch name is the same as the tag, but with ``-latest`` 
+appended; so for the ``v1.1`` tag, the branch would be ``v1.1-latest``.  
+To get this release, use
+
+.. code-block:: sh
+
+    cd MathJax
+    git checkout v1.1-latest
+
+and to update it when changes occur, use
+
+.. code-block:: sh
+
+    cd MathJax
+    git pull origin v1.1-latest
+
 
 .. _getting-mathjax-svn:
 
