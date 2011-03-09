@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  varsion: "1.1",
+  version: "1.1",
   config: {
     element: null,          // The ID of the element to be processed
                             //   (defaults to full document)
