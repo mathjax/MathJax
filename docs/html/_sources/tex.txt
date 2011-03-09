@@ -167,11 +167,11 @@ included in the ``TeX-AMS_HTML`` configuration file.
 
 The main extensions are described below.  
 
-AMSmath and AMSsymbol
----------------------
+AMSmath and AMSsymbols
+----------------------
 
 The `AMSmath` extension implements AMS math environments and macros, and
-the `AMSsymbol` extension implements macros for accessing the AMS symbol
+the `AMSsymbols` extension implements macros for accessing the AMS symbol
 fonts.  These are already included in the combined configuration files that
 load the TeX input processor.  To use these extensions in your own
 configurations, add them to the `extensions` array in the TeX block.
@@ -179,7 +179,7 @@ configurations, add them to the `extensions` array in the TeX block.
 .. code-block:: javascript
 
     TeX: {
-      extensions: ["AMSmath.js", "AMSsymbol.js", ...]
+      extensions: ["AMSmath.js", "AMSsymbols.js", ...]
     }
 
 See the list of control sequences at the end of this document for details
