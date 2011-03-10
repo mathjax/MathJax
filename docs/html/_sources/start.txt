@@ -52,7 +52,7 @@ the confiogurations to your needs.  More details can be found in the
 
 The use of ``cdn.mathjax.org`` is governed by its `terms of service
 <http://www.mathjax.org/download/mathjax-cdn-terms-of-service/>`_, so be
-sure to read that before linked to the MathJax CDN server.
+sure to read that before linking to the MathJax CDN server.
 
 To see how to enter mathematics in your web pages, see `Putting
 mathematics in a web page`_ below.

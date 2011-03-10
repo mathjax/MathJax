@@ -83,7 +83,7 @@ Loading MathJax from the CDN
 MathJax is now available as a web service from ``cdn.mathjax.org``, so you 
 can obtain MathJax from there without needing to install it on your own 
 server.  The CDN is part of a distributed "cloud" network, so it is 
-handled by servers around the world.  That means that you should get acces 
+handled by servers around the world.  That means that you should get access 
 to a server geographically near you, for a fast, reliable connection.
 
 The CDN hosts the most current version of MathJax, as well as older 
@@ -130,13 +130,13 @@ versions, while
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 
 will always be the most current stable release, so it will go from v1.1 to 
-v1.2 autmatically when that is released.  Note that all the versions 
+v1.2 automatically when that is released.  Note that all the versions 
 available on the CDN are stable versions; the development version is not 
 hosted on the CDN.
 
 The use of ``cdn.mathjax.org`` is governed by its `terms of service
 <http://www.mathjax.org/download/mathjax-cdn-terms-of-service/>`_, so be
-sure to read that before linked to the MathJax CDN server.
+sure to read that before linking to the MathJax CDN server.
 
 
 Configuring MathJax
