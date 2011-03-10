@@ -7,127 +7,133 @@
 
 {% if for_site %}
 
-/* style copied over from http://mathjax.org/ for the header */
+/******************************************
+ *  CSS configuration from www.mathjax.org
+ ******************************************/
 
-body {
-    background: #D2D3D3 !important;
+/*
+ *  Culled from twentyten style.css
+ */
+ *
+#access .menu-header,
+#branding,
+#wrapper {
+	margin: 0 auto;
+	width: 940px;
 }
 #wrapper {
-    background: white;
-    padding: 0;
-    margin: 20px auto;
-    width: 980px;
+	margin-top: 20px;
+	background: #fff;
+	padding: 0 20px;
 }
 
-/* deal with sphinx css not reseting anything */
-
-.widget_search fieldset {
-    border: 0;
-    margin: 0;
-    padding: 0;
+#site-info {
+	float: left;
+	width: 700px;
+	font-weight: bold;
+	font-size: 14px;
 }
-.icon-list {
-    margin: 0; padding: 0;
+body {
+	background: #D2D3D3 ! important;
 }
 
-/* from wp twentyten */
+
+#header {
+	padding: 30px 0 0 0;
+}
+#site-title {
+	float: left;
+	margin: 0 0 18px 0;
+	width: 700px;
+	font-size: 30px;
+	line-height: 36px;
+}
+#site-title a {
+	color: #000;
+	font-weight: bold;
+	text-decoration: none;
+}
+#site-description {
+	clear: right;
+	float: right;
+	font-style: italic;
+	margin: 14px 0 18px 0;
+	width: 220px;
+}
 
 #branding img {
-    display: block;
+	clear: both;
+	border-top: 4px solid #000;
+	display: block;
+	border-bottom: 1px solid #000;
 }
 
-.widget_search label {
-    display: none;
-}
-.screen-reader-text {
-    left: -9000px;
-    position: absolute;
-}
-.widget_search input {
-    color: #666;
-    font-size: 12px;
-    line-height: 18px;
-}
-
-.widget_search input[type="text"] {
-    -webkit-box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 1px inset;
-    -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) inset;
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) inset;
-    background: #F9F9F9;
-    border: 1px solid #CCC;
-    padding: 2px;
-}
 
 #access {
-    font-family: 'Helvetica Neue', Arial, Helvetica, 'Nimbus Sans L', sans-serif;
-    background: #000;
-    margin: 20px auto 0;
-    width: 940px;
-    display:block;
-    float:left;
+	background: #000;
+	margin: 0 auto;
+	width: 940px;
+	display:block;
+	float:left;
 }
-#access .menu-header,
-div.menu {
-    font-size: 13px;
-    margin-left: 12px;
+#access .menu-header {
+	font-size: 13px;
+	margin-left: 12px;
 }
-#access .menu-header ul,
-div.menu ul {
-    list-style: none;
-    margin: 0;
+#access .menu-header ul {
+	list-style: none;
+	margin: 0;
 }
-#access .menu-header li,
-div.menu li {
-    float:left;
-    position: relative;
+#access .menu-header li {
+	float:left;
+	position: relative;
 }
 #access a {
-    display:block;
-    text-decoration:none;
-    color: #DDD;
-    font-weight: bold;
-    padding:0 10px;
-    line-height:38px;
+	display:block;
+	text-decoration:none;
+	color:#aaa;
+	padding:0 10px;
+	line-height:38px;
 }
 #access ul ul {
-    display:none;
-    position:absolute;
-    top:38px;
-    left:0;
-    float:left;
-    box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
-    -moz-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
-    -webkit-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
-    width: 180px;
-    z-index: 99999;
+	display:none;
+	position:absolute;
+	top:38px;
+	left:0;
+	float:left;
+	box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+	width: 180px;
+	z-index: 99999;
 }
 #access ul ul li {
-    min-width: 180px;   
+	min-width: 180px;	
 }
 #access ul ul ul {
-    left:100%;
-    top:0;
+	left:100%;
+	top:0;
 }
 #access ul ul a {
-    background:#333;
-    height:auto;
-    line-height:1em;
-    padding:10px;
-    width: 160px;
+	background:#333;
+	height:auto;
+	line-height:1em;
+	padding:10px;
+	width: 160px;
 }
 #access li:hover > a,
 #access ul ul :hover > a {
-    color:#fff;
-    background:#333;
+	color:#fff;
+	background:#333;
 }
 #access ul li:hover > ul {
-    display:block;
+	display:block;
 }
 #access ul li.current_page_item > a,
 #access ul li.current-menu-ancestor > a,
 #access ul li.current-menu-item > a,
 #access ul li.current-menu-parent > a {
-    color: #fff;
+	color: #fff;
 }
 
 * html #access ul li.current_page_item a,
@@ -135,29 +141,113 @@ div.menu li {
 * html #access ul li.current-menu-item a,
 * html #access ul li.current-menu-parent a,
 * html #access ul li a:hover {
-    color:#fff;
+	color:#fff;
+}
+
+.navigation {
+	font-size:  12px;
+	line-height: 18px;
+	overflow: hidden;
+	color: #888;
+}
+.navigation a:link,
+.navigation a:visited {
+	color: #888;
+	text-decoration: none;
+}
+.navigation a:active,
+.navigation a:hover {
+	color: #FF4B33;
+}
+
+.widget_search #s { /* This keeps the search inputs in line */
+	width: 60%;
+}
+.widget_search label {
+	display:none;
+}
+.widget-container {
+	margin: 0 0 18px 0;
+}
+
+#site-info {
+	font-weight: bold;
+}
+#site-info a {
+	color: #000;
+	text-decoration: none;
+}
+
+#access,
+.navigation {
+	-webkit-text-size-adjust: 120%;
+}
+#site-description {
+	-webkit-text-size-adjust: none;
+}
+
+
+@media print {
+	body {
+		background:none !important;
+	}
+	#wrapper {
+		float: none !important;
+		clear: both !important;
+		display: block !important;
+		position: relative !important;
+	}
+	#header {
+		border-bottom: 2pt solid #000;
+		padding-bottom: 18pt;
+	}
+	#site-title,
+	#site-description {
+		float: none;
+		margin: 0;
+		padding:0;
+		line-height: 1.4em;
+	}
+	#access,
+	#branding img,
+	#respond,
+	.navigation {
+		display: none !important;
+	}
+	#header {
+		width: 100%;
+		margin: 0;
+	}
+	#site-info {
+		float: none;
+		width: auto;
+	}
+}
+
+/*
+ *  from mathjax style.css
+ */
+
+.clear {
+    clear: both;
 }
 
 /* HEADER */
-
 #header {
-    background: #ffffff;
-    padding: 20px;
-    height: 95px;
-}
-#branding {
+	padding: 20px 0 0;
 }
 #site-title {
-    float: left;
     margin: 0;
     width: 300px;
 }
+
 #branding img {
-    border: 0;
+	border: 0;
 }
+
 #site-description {
     margin: 36px 0 0;
-    font-size: 18px; line-height: 18px;
+    font-size: 18px;
     float: left;
     width: auto;
     font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;
@@ -191,13 +281,13 @@ div.menu li {
     height: 16px;
     float: left;
 }
-.widget_search input[type="text"] {
+input[type="text"], textarea {
     border: 2px solid #b5bfb8;
     background-color: #eaeaea;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
 }
-.widget_search input[type="text"]:focus {
+input[type="text"]:focus, textarea:focus{
     outline-width: 0;
     border-color: #169538;
 }
@@ -210,9 +300,8 @@ div.menu li {
 /* NAVIGATION */
 
 #access {
-    margin: 20px 0px 0px;
+    margin: 20px 0 10px;
 }
-#access ul { padding: 0; }
 #access li { min-width: 20px; }
 #access a { color: #dddddd; font-weight: bold; }
 #access a:hover, #access ul li.current_page_item > a, #access ul li.current-menu-ancestor > a,
@@ -221,14 +310,15 @@ div.menu li {
     font-weight: bold;
 }
 #access li:hover > a, #access ul ul :hover > a {
-    color:#fff;
-    background:#444;
+	color:#fff;
+	background:#444;
 }
 #access ul ul a {
-    background:#444;
+	background:#444;
 }
 
 #menu-item-1167 {
+    margin-right: 12px;
     float: right !important;
     background: #E18B16 !important;
 }
@@ -239,14 +329,73 @@ div.menu li {
     color: #ffffff !important;
 }
 
-/* modify layout to match mathjax site */
 
-.related, .document { 
-    width: 940px !important;
-    margin: 0 auto;
+
+/*
+ *  Adjustementst to www.mathjax.org settings to work with
+ *  to match the global settings from www.mathjax.org
+ */
+
+#access {
+  margin-bottom: 1px;
 }
 
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+#header {
+ font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;
+ line-height:18px;
+}
+
+#header-box-right {
+  line-height: 18px;
+  font-size: 12px;
+  border: 0;
+  padding: 0;
+}
+#header-box-right ul, #header-box-right form {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+#header-box-right .icon-list {
+  margin-left: 93px
+}
+
+#header input {
+  font-family: Georgia, "Bitstream Charter", serif;
+}
+#header input[type="text"] {
+  padding: 2px;
+  background-color: #eaeaea;
+  border: 2px solid #b5bfb8;
+  box-shadow: inset 1px 1px 1px rgba(0,0,0,0.1);
+  -moz-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.1);
+  -webkit-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.1);
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+#header input[type="text"]:focus {
+    outline-width: 0;
+    border-color: #169538;
+}
+
+.menu-header ul, .menu-header li {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/***************************************
+ *  End of site-specific configuration
+ ***************************************/
+
 {% endif %}
+
 
 /* -- page layout ----------------------------------------------------------- */
 
