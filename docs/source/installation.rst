@@ -24,7 +24,7 @@ Obtaining MathJax via Git
 
 The easiest way to get MathJax and keep it up to date is to use the `Git
 <http://git-scm.com/>`_ version control system to access our `GitHub repository
-<http://github.com/mathjax/mathjax>`_. Use the command
+<http://github.com/mathjax/MathJax>`_. Use the command
 
 .. code-block:: sh
 
@@ -59,18 +59,44 @@ that contains all the latest changes to MathJax.  Although we try to make
 sure this version is a stable and usable version of MathJax, it is under
 active development, and at times it may be less stable than the "release"
 version.  If you prefer to use the most stable version (that may not
-include all the latest patches and features), use ``git tag -l`` to see all
-versions and use ``git checkout <tag_name>`` to checkout that version of
-MathJax.  When you want to upgrade to a new release, you will need to
-repeat this for the latest release tag.
+include all the latest patches and features), you will want to get one
+of the tagged releases.  Use 
 
-Each of the tagged releases also has a branch in which critical updates 
+.. code-block:: sh
+
+    cd MathJax
+    git tag -l
+
+to see all tagged versions, and use
+
+
+.. code-block:: sh
+
+    cd MathJax
+    git checkout <tag_name>
+
+to checkout the indicated version of MathJax, where ``<tag_name>`` is
+the name of the tagged version you want to use.  When you want to
+upgrade to a new release, you will need to repeat this for the latest
+release tag.
+
+Each of the main releases also has a branch in which critical updates 
 are applied (we try hard not to patch the stable releases, but sometimes 
 there is a crucial change that needs to be made).  If you want to use the 
 patched version of a release, then check out the branch rather than the 
-tag.  The branch name is the same as the tag, but with ``-latest`` 
-appended; so for the ``v1.1`` tag, the branch would be ``v1.1-latest``.  
-To get this release, use
+tag.  Use 
+
+.. code-block::sh
+
+    cd MathJax
+    git branch
+
+to get a list of the available branches.  There be separate branches
+for the main releases, but with ``-latest`` appended.  These contain
+all the patches for that particular release.  You can check out one of
+the branchs just as you would a tagged copy.  For example, the branch
+for the ``v1.1`` tagged release is ``v1.1-latest``.  To get this
+release, use
 
 .. code-block:: sh
 
@@ -165,16 +191,18 @@ From the `MathJax GitHub download link
 <http://github.com/mathjax/mathjax/>`_ (the download button at the
 right), you can also select the ``Download .tar.gz`` or ``Download
 .zip`` buttons to get a copy of the current development version of
-MathJax that contains all the latest changes and bug-fixes. 
+MathJax that contains all the latest changes and bug-fixes.  You can
+also get older tagged versions (if there are any).
 
-If a packaged release recevies any important updates, then those updates
-will be part of the `branch` for that version.  The link to the ``.zip``
-file in the download list will be the original release version, not the
-patched version.  To obtain the patched version, use the `Branches` drop
-down menu (at the far left of the menus within the page) to select the the
-release branch, and then use the downlaod button and the ``Downlaod
-.tar.gz`` or ``Download .zip`` button to get the latest patched version of
-that release.
+If a packaged release recevies any important updates, then those
+updates will be part of the `branch` for that version.  The link to
+the ``.zip`` file in the download list will be the original release
+version, not the patched version.  To obtain the patched version, use
+the `Branches` drop down menu (at the far left of the menus within the
+page) to select the release branch that you want (for example
+``v1.1-latest``), and then use the downlaod button and the ``Downlaod
+.tar.gz`` or ``Download .zip`` button to get the latest patched
+version of that release.
 
 
 Testing your installation

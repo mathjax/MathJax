@@ -62,7 +62,7 @@ copy of MathJax and its font package. There are three ways to do this: via
 is easier to keep your installation up to date with these tools.</p>
 <div class="section" id="obtaining-mathjax-via-git">
 <span id="getting-mathjax-git"></span><h2>Obtaining MathJax via Git<a class="headerlink" href="#obtaining-mathjax-via-git" title="Permalink to this headline">¶</a></h2>
-<p>The easiest way to get MathJax and keep it up to date is to use the <a class="reference external" href="http://git-scm.com/">Git</a> version control system to access our <a class="reference external" href="http://github.com/mathjax/mathjax">GitHub repository</a>. Use the command</p>
+<p>The easiest way to get MathJax and keep it up to date is to use the <a class="reference external" href="http://git-scm.com/">Git</a> version control system to access our <a class="reference external" href="http://github.com/mathjax/MathJax">GitHub repository</a>. Use the command</p>
 <div class="highlight-sh"><div class="highlight"><pre>git clone git://github.com/mathjax/MathJax.git MathJax
 </pre></div>
 </div>
@@ -89,17 +89,32 @@ that contains all the latest changes to MathJax.  Although we try to make
 sure this version is a stable and usable version of MathJax, it is under
 active development, and at times it may be less stable than the &#8220;release&#8221;
 version.  If you prefer to use the most stable version (that may not
-include all the latest patches and features), use <tt class="docutils literal"><span class="pre">git</span> <span class="pre">tag</span> <span class="pre">-l</span></tt> to see all
-versions and use <tt class="docutils literal"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">&lt;tag_name&gt;</span></tt> to checkout that version of
-MathJax.  When you want to upgrade to a new release, you will need to
-repeat this for the latest release tag.</p>
-<p>Each of the tagged releases also has a branch in which critical updates
+include all the latest patches and features), you will want to get one
+of the tagged releases.  Use</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>MathJax
+git tag -l
+</pre></div>
+</div>
+<p>to see all tagged versions, and use</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>MathJax
+git checkout &lt;tag_name&gt;
+</pre></div>
+</div>
+<p>to checkout the indicated version of MathJax, where <tt class="docutils literal"><span class="pre">&lt;tag_name&gt;</span></tt> is
+the name of the tagged version you want to use.  When you want to
+upgrade to a new release, you will need to repeat this for the latest
+release tag.</p>
+<p>Each of the main releases also has a branch in which critical updates
 are applied (we try hard not to patch the stable releases, but sometimes
 there is a crucial change that needs to be made).  If you want to use the
 patched version of a release, then check out the branch rather than the
-tag.  The branch name is the same as the tag, but with <tt class="docutils literal"><span class="pre">-latest</span></tt>
-appended; so for the <tt class="docutils literal"><span class="pre">v1.1</span></tt> tag, the branch would be <tt class="docutils literal"><span class="pre">v1.1-latest</span></tt>.
-To get this release, use</p>
+tag.  Use</p>
+<p>to get a list of the available branches.  There be separate branches
+for the main releases, but with <tt class="docutils literal"><span class="pre">-latest</span></tt> appended.  These contain
+all the patches for that particular release.  You can check out one of
+the branchs just as you would a tagged copy.  For example, the branch
+for the <tt class="docutils literal"><span class="pre">v1.1</span></tt> tagged release is <tt class="docutils literal"><span class="pre">v1.1-latest</span></tt>.  To get this
+release, use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>MathJax
 git checkout v1.1-latest
 </pre></div>
@@ -169,15 +184,17 @@ within any page on your server.</p>
 <p>From the <a class="reference external" href="http://github.com/mathjax/mathjax/">MathJax GitHub download link</a> (the download button at the
 right), you can also select the <tt class="docutils literal"><span class="pre">Download</span> <span class="pre">.tar.gz</span></tt> or <tt class="docutils literal"><span class="pre">Download</span>
 <span class="pre">.zip</span></tt> buttons to get a copy of the current development version of
-MathJax that contains all the latest changes and bug-fixes.</p>
-<p>If a packaged release recevies any important updates, then those updates
-will be part of the <cite>branch</cite> for that version.  The link to the <tt class="docutils literal"><span class="pre">.zip</span></tt>
-file in the download list will be the original release version, not the
-patched version.  To obtain the patched version, use the <cite>Branches</cite> drop
-down menu (at the far left of the menus within the page) to select the the
-release branch, and then use the downlaod button and the <tt class="docutils literal"><span class="pre">Downlaod</span>
-<span class="pre">.tar.gz</span></tt> or <tt class="docutils literal"><span class="pre">Download</span> <span class="pre">.zip</span></tt> button to get the latest patched version of
-that release.</p>
+MathJax that contains all the latest changes and bug-fixes.  You can
+also get older tagged versions (if there are any).</p>
+<p>If a packaged release recevies any important updates, then those
+updates will be part of the <cite>branch</cite> for that version.  The link to
+the <tt class="docutils literal"><span class="pre">.zip</span></tt> file in the download list will be the original release
+version, not the patched version.  To obtain the patched version, use
+the <cite>Branches</cite> drop down menu (at the far left of the menus within the
+page) to select the release branch that you want (for example
+<tt class="docutils literal"><span class="pre">v1.1-latest</span></tt>), and then use the downlaod button and the <tt class="docutils literal"><span class="pre">Downlaod</span>
+<span class="pre">.tar.gz</span></tt> or <tt class="docutils literal"><span class="pre">Download</span> <span class="pre">.zip</span></tt> button to get the latest patched
+version of that release.</p>
 </div>
 <div class="section" id="testing-your-installation">
 <h2>Testing your installation<a class="headerlink" href="#testing-your-installation" title="Permalink to this headline">¶</a></h2>
