@@ -258,10 +258,18 @@ can use
 .. code-block:: html
 
     <script type="text/javascript" 
-       src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML,local/local.js">
+       src="path-to-MathJax/MathJax.js?config=TeX-AMS_HTML,local/local">
     </script>
 
-to first load the main configuraiton, then the local modifications.
+to first load the main configuraiton, then the local modifications.  You 
+can also load MathJax from the CDN and a local configuration from your own 
+server:
+
+.. code-block:: html
+
+    <script type="text/javascript" 
+       src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML,http://myserver.com/MathJax/config/local/local.js">
+    </script>
 
 
 Using in-line configuration options

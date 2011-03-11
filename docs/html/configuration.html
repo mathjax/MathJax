@@ -266,11 +266,18 @@ called <tt class="docutils literal"><span class="pre">MathJax/config/local/local
 <tt class="docutils literal"><span class="pre">TeX-AMS_HML</span></tt> configuration, defines some new TeX macros, and so on, you
 can use</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
-   <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML,local/local.js&quot;</span><span class="nt">&gt;</span>
+   <span class="na">src=</span><span class="s">&quot;path-to-MathJax/MathJax.js?config=TeX-AMS_HTML,local/local&quot;</span><span class="nt">&gt;</span>
 <span class="nt">&lt;/script&gt;</span>
 </pre></div>
 </div>
-<p>to first load the main configuraiton, then the local modifications.</p>
+<p>to first load the main configuraiton, then the local modifications.  You
+can also load MathJax from the CDN and a local configuration from your own
+server:</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
+   <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML,http://myserver.com/MathJax/config/local/local.js&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="using-in-line-configuration-options">
 <h2>Using in-line configuration options<a class="headerlink" href="#using-in-line-configuration-options" title="Permalink to this headline">¶</a></h2>
