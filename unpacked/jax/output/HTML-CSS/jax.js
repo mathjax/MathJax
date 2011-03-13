@@ -1333,6 +1333,7 @@
 	    }),lW,span.bbox.h+dd);
 	  }
 	  span.parentNode.insertBefore(frame,span);
+          if (HTMLCSS.msieColorPositionBug) {span.style.position = "relative"}
 	  return frame;
 	}
 	return null;
@@ -2144,6 +2145,7 @@
           msieEventBug: browser.isIE9,
           msieAccentBug: true,
           msieColorBug: true,
+          msieColorPositionBug: true,    // needs position:relative to put color behind text
           msieRelativeWidthBug: quirks,
           msieMarginWidthBug: true,
           msiePaddingWidthBug: true,
