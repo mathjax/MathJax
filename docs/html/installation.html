@@ -109,10 +109,14 @@ are applied (we try hard not to patch the stable releases, but sometimes
 there is a crucial change that needs to be made).  If you want to use the
 patched version of a release, then check out the branch rather than the
 tag.  Use</p>
-<p>to get a list of the available branches.  There be separate branches
+<div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>MathJax
+git branch
+</pre></div>
+</div>
+<p>to get a list of the available branches.  There are separate branches
 for the main releases, but with <tt class="docutils literal"><span class="pre">-latest</span></tt> appended.  These contain
 all the patches for that particular release.  You can check out one of
-the branchs just as you would a tagged copy.  For example, the branch
+the branches just as you would a tagged copy.  For example, the branch
 for the <tt class="docutils literal"><span class="pre">v1.1</span></tt> tagged release is <tt class="docutils literal"><span class="pre">v1.1-latest</span></tt>.  To get this
 release, use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>MathJax

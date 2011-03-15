@@ -86,15 +86,15 @@ there is a crucial change that needs to be made).  If you want to use the
 patched version of a release, then check out the branch rather than the 
 tag.  Use 
 
-.. code-block::sh
+.. code-block:: sh
 
     cd MathJax
     git branch
 
-to get a list of the available branches.  There be separate branches
+to get a list of the available branches.  There are separate branches
 for the main releases, but with ``-latest`` appended.  These contain
 all the patches for that particular release.  You can check out one of
-the branchs just as you would a tagged copy.  For example, the branch
+the branches just as you would a tagged copy.  For example, the branch
 for the ``v1.1`` tagged release is ``v1.1-latest``.  To get this
 release, use
 
