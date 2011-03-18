@@ -24,11 +24,8 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "1.1",
+  version: "1.1.1",
   config: {
-    element: null,          // The ID of the element to be processed
-                            //   (defaults to full document)
-
     preview: "alttext"      // Use the <math> element's alttext as the 
                             //   preview.  Set to "none" for no preview,
                             //   or set to an array specifying an HTML snippet
@@ -45,7 +42,7 @@ MathJax.Extension.mml2jax = {
       this.configured = true;
     }
     if (typeof(element) === "string") {element = document.getElementById(element)}
-    if (!element) {element = this.config.element || document.body}
+    if (!element) {element = document.body}
     //
     //  Handle all math tags with no namespaces
     //

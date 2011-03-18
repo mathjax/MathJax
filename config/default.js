@@ -174,6 +174,16 @@ MathJax.Hub.Config({
   //
   skipStartupTypeset: false,
   
+  //
+  //  A list of element ID's that are the ones to process for mathematics
+  //  when any of the Hub typesetting calls (Typeset, Process, Update, etc)
+  //  are called with no element specified.  This lets you restrict the
+  //  processing to particular containers rather than scanning the entire
+  //  document for mathematics.  If none are supplied, the entire document
+  //  is processed.
+  //
+  elements: [],
+  
   //============================================================================
   //
   //  These parameters control the tex2jax preprocessor (when you have included

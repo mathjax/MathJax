@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.1";
+MathJax.version = "1.1.1";
 
 /**********************************************************/
 
@@ -1178,7 +1178,8 @@ MathJax.Hub = {
                                   // set to a Callback to wait for before continuing with the startup
     skipStartupTypeset: false,    // set to true to skip PreProcess and Process during startup
     "v1.0-compatible": true,  // set to false to prevent loading of default configuration file
-    
+    elements: [],    // array of elements to process when none is given explicitly
+     
     preProcessors: [], // list of callbacks for preprocessing (initialized by extensions)
     inputJax: {},      // mime-type mapped to input jax (by registration)
     outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
@@ -1281,20 +1282,32 @@ MathJax.Hub = {
   Typeset: function (element,callback) {
     if (!MathJax.isReady) return null;
     var ec = this.elementCallback(element,callback);
-    return MathJax.Callback.Queue(
-      ["PreProcess",this,ec.element],
-      ["Process",this,ec.element]
-    ).Push(ec.callback);
+    var queue = MathJax.Callback.Queue();
+    for (var i = 0, m = ec.elements.length; i < m; i++) {
+      if (ec.elements[i]) {
+        queue.Push(
+          ["PreProcess",this,ec.elements[i]],
+          ["Process",this,ec.elements[i]]
+        );
+      }
+    }
+    return queue.Push(ec.callback);
   },
   
   PreProcess: function (element,callback) {
     var ec = this.elementCallback(element,callback);
-    return MathJax.Callback.Queue(
-      ["Post",this.signal,"Begin PreProcess"],
-      ["ExecuteHooks",MathJax.Callback,
-        (arguments.callee.disabled ? [] : this.config.preProcessors), ec.element, true],
-      ["Post",this.signal,"End PreProcess"]
-    ).Push(ec.callback);
+    var queue = MathJax.Callback.Queue();
+    for (var i = 0, m = ec.elements.length; i < m; i++) {
+      if (ec.elements[i]) {
+        queue.Push(
+          ["Post",this.signal,["Begin PreProcess",ec.elements[i]]],
+          ["ExecuteHooks",MathJax.Callback,
+            (arguments.callee.disabled ? [] : this.config.preProcessors), ec.elements[i], true],
+          ["Post",this.signal,["End PreProcess",ec.elements[i]]]
+        );
+      }
+    }
+    return queue.Push(ec.callback);
   },
 
   Process:   function (element,callback) {return this.takeAction("Process",element,callback)},
@@ -1303,14 +1316,19 @@ MathJax.Hub = {
   
   takeAction: function (action,element,callback) {
     var ec = this.elementCallback(element,callback);
-    var scripts = []; // filled in by prepareScripts
-    return MathJax.Callback.Queue(
-      ["Clear",this.signal],
-      ["Post",this.signal,["Begin "+action,ec.element]],
-      ["prepareScripts",this,action,ec.element,scripts],
-      ["processScripts",this,scripts],
-      ["Post",this.signal,["End "+action,ec.element]]
-    ).Push(ec.callback);
+    var queue = MathJax.Callback.Queue(["Clear",this.signal]);
+    for (var i = 0, m = ec.elements.length; i < m; i++) {
+      if (ec.elements[i]) {
+        var scripts = []; // filled in by prepareScripts
+        queue.Push(
+          ["Post",this.signal,["Begin "+action,ec.elements[i]]],
+          ["prepareScripts",this,action,ec.elements[i],scripts],
+          ["processScripts",this,scripts],
+          ["Post",this.signal,["End "+action,ec.elements[i]]]
+        );
+      }
+    }
+    return queue.Push(ec.callback);
   },
   
   scriptAction: {
@@ -1385,11 +1403,11 @@ MathJax.Hub = {
       if (!start) {start = new Date().getTime()}
       var i = 0, script, prev;
       while (i < scripts.length) {
-        script = scripts[i]; if (!script) continue;
+        script = scripts[i]; if (!script) {i++; continue}
         prev = script.previousSibling;
         if (prev && prev.className === "MathJax_Error") {prev.parentNode.removeChild(prev)}
         var type = script.type.replace(/ *;(.|\s)*/,"");
-        if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) continue;
+        if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) {i++; continue};
         if (!script.MathJax.elementJax || script.MathJax.state === STATE.UPDATE) {
           this.checkScriptSiblings(script);
           result = inputJax[type].Process(script);
@@ -1444,12 +1462,15 @@ MathJax.Hub = {
   
   elementCallback: function (element,callback) {
     if (callback == null && (element instanceof Array || typeof element === 'function'))
-      {callback = element; element = document.body}
-    else if (element == null) {element = document.body}
-    else if (typeof(element) === 'string') {element = document.getElementById(element)}
-    if (!element) {throw Error("No such element")}
+      {try {MathJax.Callback(element); callback = element; element = null} catch(e) {}}
+    if (element == null) {element = this.config.elements || []}
+    if (!(element instanceof Array)) {element = [element]}
+    element = [].concat(element); // make a copy so the original isn't changed
+    for (var i = 0, m = element.length; i < m; i++)
+      {if (typeof(element[i]) === 'string') {element[i] = document.getElementById(element[i])}}
+    if (element.length == 0) {element.push(document.body)}
     if (!callback) {callback = {}}
-    return {element: element, callback: callback};
+    return {elements: element, callback: callback};
   },
   
   elementScripts: function (element) {
