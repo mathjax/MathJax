@@ -187,24 +187,26 @@ Methods
 
 .. Method:: Typeset([element[,callback]])
 
-    Calls the preprocessors on the given element, and then typesets
-    any math elements within the element.  If no `element` is
-    provided, the whole document is processed.  The `element` is
-    either the DOM `id` of the element, or a reference to the DOM
-    element itself.  The `callback` is called when the process is
-    complete.  See the :ref:`Modifying Math <typeset-math>` section
-    for details of how to use this method properly.
+    Calls the preprocessors on the given element (or elements if it is an
+    array of elements), and then typesets any math elements within the
+    element.  If no `element` is provided, the whole document is processed.
+    The `element` is either the DOM `id` of the element, a reference to
+    the DOM element itself, or an array of id's or refereneces.  The
+    `callback` is called when the process is complete.  See the
+    :ref:`Modifying Math <typeset-math>` section for details of how to use
+    this method properly.
 
     :Parameters:
-        - **element** --- the element whose math is to be typeset
+        - **element** --- the element(s) whose math is to be typeset
         - **callback** --- the callback specification
     :Returns: the callback object
 
 .. method:: PreProcess([element[,callback]])
 
-    Calls the loaded preprocessors on the entire document, or on the
-    given DOM element.  The `element` is either the DOM `id` of the
-    element, or a reference to the DOM element itself.  The `callback`
+    Calls the loaded preprocessors on the entire document, or on the given
+    DOM element (or elements, if it is an array of elements).  The
+    `element` is either the DOM `id` of the element, a reference to the
+    DOM element itself, or an array of id's or references.  The `callback`
     is called when the processing is complete.
         
     :Parameters:
@@ -214,43 +216,44 @@ Methods
 
 .. method:: Process([element[,callback]])
 
-    Scans either the entire document or a given DOM `element` for
-    MathJax ``<script>`` tags and processes the math those tags
-    contain.  The `element` is either the DOM `id` of the element to
-    scan, or a reference to the DOM element itself.  The `callback` is
-    called when the processing is complete.
+    Scans either the entire document or a given DOM `element` (or array of
+    elements) for MathJax ``<script>`` tags and processes the math those
+    tags contain.  The `element` is either the DOM `id` of the element to
+    scan, a reference to the DOM element itself, or an array of id's or
+    references.  The `callback` is called when the processing is complete.
         
     :Parameters:
-        - **element** --- the element to be processed
+        - **element** --- the element(s) to be processed
         - **callback** --- the callback specification
     :Returns: the callback object
 
 .. method:: Update([element[,callback]])
 
-    Scans either the entire document or a given DOM element for
-    mathematics that has changed since the last time it was processed,
-    or is new, and typesets the mathematics they contain.  The
-    `element` is either the DOM `id` of the element to scan, or a
-    reference to the DOM element itself.  The `callback` is called
-    when the processing is complete.
+    Scans either the entire document or a given DOM element (or elements if
+    it is an array of elements) for mathematics that has changed since the
+    last time it was processed, or is new, and typesets the mathematics
+    they contain.  The `element` is either the DOM `id` of the element to
+    scan, a reference to the DOM element itself, or an array of id's or
+    references.  The `callback` is called when the processing is complete.
         
     :Parameters:
-        - **element** --- the element to be updated
+        - **element** --- the element(s) to be updated
         - **callback** --- the callback specification
     :Returns: the callback object
 
 .. method:: Reprocess([element[,callback]])
 
-    Removes any typeset mathematics from the document or DOM
-    element, and then processes the mathematics again,
-    re-typesetting everything.  This may be necessary, for example, if
-    the CSS styles have changed and those changes would affect the
-    mathematics.  The `element` is either the DOM `id` of the element
-    to scan, or a reference to the DOM element itself.  The `callback`
-    is called when the processing is complete.
+    Removes any typeset mathematics from the document or DOM element (or
+    elements if it is an array of elements), and then processes the
+    mathematics again, re-typesetting everything.  This may be necessary,
+    for example, if the CSS styles have changed and those changes would
+    affect the mathematics.  The `element` is either the DOM `id` of the
+    element to scan, a reference to the DOM element itself, or an array of
+    id's or references.  The `callback` is called when the processing is
+    complete.
         
     :Parameters:
-        - **element** --- the element to be reprocessed
+        - **element** --- the element(s) to be reprocessed
         - **callback** --- the callback specification
     :Returns: the callback object
 

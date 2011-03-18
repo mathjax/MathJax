@@ -330,19 +330,20 @@ supply as many <cite>callback</cite> specifications in one call to the
 <dl class="method">
 <dt id="Typeset">
 <tt class="descname">Typeset</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Typeset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the preprocessors on the given element, and then typesets
-any math elements within the element.  If no <cite>element</cite> is
-provided, the whole document is processed.  The <cite>element</cite> is
-either the DOM <cite>id</cite> of the element, or a reference to the DOM
-element itself.  The <cite>callback</cite> is called when the process is
-complete.  See the <a class="reference internal" href="../typeset.html#typeset-math"><em>Modifying Math</em></a> section
-for details of how to use this method properly.</p>
+<dd><p>Calls the preprocessors on the given element (or elements if it is an
+array of elements), and then typesets any math elements within the
+element.  If no <cite>element</cite> is provided, the whole document is processed.
+The <cite>element</cite> is either the DOM <cite>id</cite> of the element, a reference to
+the DOM element itself, or an array of id&#8217;s or refereneces.  The
+<cite>callback</cite> is called when the process is complete.  See the
+<a class="reference internal" href="../typeset.html#typeset-math"><em>Modifying Math</em></a> section for details of how to use
+this method properly.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>element</strong> &#8212; the element whose math is to be typeset</li>
+<li><strong>element</strong> &#8212; the element(s) whose math is to be typeset</li>
 <li><strong>callback</strong> &#8212; the callback specification</li>
 </ul>
 </td>
@@ -357,9 +358,10 @@ for details of how to use this method properly.</p>
 <dl class="method">
 <dt id="PreProcess">
 <tt class="descname">PreProcess</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#PreProcess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the loaded preprocessors on the entire document, or on the
-given DOM element.  The <cite>element</cite> is either the DOM <cite>id</cite> of the
-element, or a reference to the DOM element itself.  The <cite>callback</cite>
+<dd><p>Calls the loaded preprocessors on the entire document, or on the given
+DOM element (or elements, if it is an array of elements).  The
+<cite>element</cite> is either the DOM <cite>id</cite> of the element, a reference to the
+DOM element itself, or an array of id&#8217;s or references.  The <cite>callback</cite>
 is called when the processing is complete.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -381,17 +383,17 @@ is called when the processing is complete.</p>
 <dl class="method">
 <dt id="Process">
 <tt class="descname">Process</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Scans either the entire document or a given DOM <cite>element</cite> for
-MathJax <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tags and processes the math those tags
-contain.  The <cite>element</cite> is either the DOM <cite>id</cite> of the element to
-scan, or a reference to the DOM element itself.  The <cite>callback</cite> is
-called when the processing is complete.</p>
+<dd><p>Scans either the entire document or a given DOM <cite>element</cite> (or array of
+elements) for MathJax <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tags and processes the math those
+tags contain.  The <cite>element</cite> is either the DOM <cite>id</cite> of the element to
+scan, a reference to the DOM element itself, or an array of id&#8217;s or
+references.  The <cite>callback</cite> is called when the processing is complete.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>element</strong> &#8212; the element to be processed</li>
+<li><strong>element</strong> &#8212; the element(s) to be processed</li>
 <li><strong>callback</strong> &#8212; the callback specification</li>
 </ul>
 </td>
@@ -406,18 +408,18 @@ called when the processing is complete.</p>
 <dl class="method">
 <dt id="Update">
 <tt class="descname">Update</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Scans either the entire document or a given DOM element for
-mathematics that has changed since the last time it was processed,
-or is new, and typesets the mathematics they contain.  The
-<cite>element</cite> is either the DOM <cite>id</cite> of the element to scan, or a
-reference to the DOM element itself.  The <cite>callback</cite> is called
-when the processing is complete.</p>
+<dd><p>Scans either the entire document or a given DOM element (or elements if
+it is an array of elements) for mathematics that has changed since the
+last time it was processed, or is new, and typesets the mathematics
+they contain.  The <cite>element</cite> is either the DOM <cite>id</cite> of the element to
+scan, a reference to the DOM element itself, or an array of id&#8217;s or
+references.  The <cite>callback</cite> is called when the processing is complete.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>element</strong> &#8212; the element to be updated</li>
+<li><strong>element</strong> &#8212; the element(s) to be updated</li>
 <li><strong>callback</strong> &#8212; the callback specification</li>
 </ul>
 </td>
@@ -432,19 +434,20 @@ when the processing is complete.</p>
 <dl class="method">
 <dt id="Reprocess">
 <tt class="descname">Reprocess</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Reprocess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes any typeset mathematics from the document or DOM
-element, and then processes the mathematics again,
-re-typesetting everything.  This may be necessary, for example, if
-the CSS styles have changed and those changes would affect the
-mathematics.  The <cite>element</cite> is either the DOM <cite>id</cite> of the element
-to scan, or a reference to the DOM element itself.  The <cite>callback</cite>
-is called when the processing is complete.</p>
+<dd><p>Removes any typeset mathematics from the document or DOM element (or
+elements if it is an array of elements), and then processes the
+mathematics again, re-typesetting everything.  This may be necessary,
+for example, if the CSS styles have changed and those changes would
+affect the mathematics.  The <cite>element</cite> is either the DOM <cite>id</cite> of the
+element to scan, a reference to the DOM element itself, or an array of
+id&#8217;s or references.  The <cite>callback</cite> is called when the processing is
+complete.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>element</strong> &#8212; the element to be reprocessed</li>
+<li><strong>element</strong> &#8212; the element(s) to be reprocessed</li>
 <li><strong>callback</strong> &#8212; the callback specification</li>
 </ul>
 </td>

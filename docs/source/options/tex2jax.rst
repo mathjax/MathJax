@@ -22,11 +22,6 @@ would set the ``inlineMath`` delimiters for the `tex2jax`
 preprocessor.
 
 
-.. describe:: element: null
-
-    The id name of the element that should be processed by `tex2jax`.
-    The default is the whole document.
-
 .. describe:: inlineMath: [['\\\(','\\\)']]
 
     Array of pairs of strings that are to be used as in-line math
