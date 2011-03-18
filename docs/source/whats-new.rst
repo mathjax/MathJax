@@ -43,7 +43,7 @@ Optimization
   the style for mathematics.
 
 * Improved rendering speed for most browsers by isolating the mathematics
-  from page during typesetting (avoids full page reflows).
+  from the page during typesetting (avoids full page reflows).
 
 
 Enhancements
@@ -93,7 +93,7 @@ MathML Support
 * Better support for MathML namespaces.
 * Properly handle comments within MathML in IE.
 * Properly consider ``<mspace>`` and ``<mtext>`` as space-like.
-* Improved support for ``<maction>`` with embelished operators.
+* Improved support for ``<maction>`` with embellished operators.
 
 
 Other Bug Fixes
