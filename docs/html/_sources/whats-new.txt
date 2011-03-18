@@ -6,7 +6,7 @@ What's New in MathJax v1.1
 
 MathJax version 1.1 includes a number of important improvements and
 enhancements over version 1.0.  We have worked hard to fix bugs, improve
-support for browsers and mobile devices, supprot TeX and MathML better, and
+support for browsers and mobile devices, process TeX and MathML better, and
 increase MathJax's performance.
 
 In addition to these changes, MathJax.org now offers MathJax as a network
@@ -20,9 +20,9 @@ The following sections outline the changes in v1.1:
 Optimization
 ============
 
-* Combined configuraiton files that load all the needed files in one piece 
+* Combined configuration files that load all the needed files in one piece 
   rather than loading them individually.  This simplifies configuration 
-  and speeds up typsetting of the mathematics on the page.
+  and speeds up typesetting of the mathematics on the page.
 
 * Improved responsiveness to mouse events during typesetting.
 
@@ -36,13 +36,13 @@ Optimization
   to wait for *every* font to fail.
 
 * The MathJax files are now packed only with `yuicompressor` rather than a 
-  custom compressor.  The CDN serves gzipped versions, which compressed 
-  better than the gzipped custom-packed files.
+  custom compressor.  The CDN serves gzipped versions, which end up being
+  smaller than the gzipped custom-packed files.
 
 * Improved rendering speed in IE by removing ``position:relative`` from 
   the style for mathematics.
 
-* Improve rendering speed for most browsers by isolating the mathematics
+* Improved rendering speed for most browsers by isolating the mathematics
   from page during typesetting (avoids full page reflows).
 
 
@@ -65,7 +65,7 @@ Enhancements
 
 * Improved About box.
 
-* add a minimum scaling factor (so math won't get too small)
+* Added a minimum scaling factor (so math won't get too small).
 
 
 TeX Support
@@ -102,7 +102,7 @@ Other Bug Fixes
 * Fixed CSS bleed through with zoom and other situations.
 * Fixed problems with ``showMathMenuMSIE`` when set to ``false``.
 * Replaced illegal prefix characters in cookie name.
-* Improve placement of surd for square roots and n-th roots.
+* Improved placement of surd for square roots and n-th roots.
 * Fixed layer obscuring math from MathPlayer for screen readers.
 * Newlines in CDATA comments are now handled properly.
 * Resolved conflict between `jsMath2jax` and `tex2jax` both processing the 
@@ -135,7 +135,7 @@ Browser Support
 * Added Firefox 4 detection and configuration.
 * Fix for extra line-break bug when displayed equations are in 
   preformatted text.
-* Update fonts so that FF 3.6.13 and above can read them.
+* Updated fonts so that FF 3.6.13 and above can read them.
 
 
 **Internet Explorer**
@@ -148,7 +148,7 @@ Browser Support
 
 **iPhone/iPad**
 
-* Add support for OTF web fonts in iOS4.2.
+* Added support for OTF web fonts in iOS4.2.
 
 **Nokia**
 
@@ -158,7 +158,7 @@ Browser Support
 
 * Prevent Opera from using STIX fonts unless explicitly requested via the 
   font menu (since Opera can't display many of the characters).
-* Fix for bad em-size detection in 10.61.
+* Fixed bad em-size detection in 10.61.
 * Fixed a problem with the About dialog in Opera 11.
 
 
