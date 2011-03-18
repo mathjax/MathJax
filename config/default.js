@@ -192,11 +192,6 @@ MathJax.Hub.Config({
   tex2jax: {
 
     //
-    //  The Id of the element to be processed (defaults to full document)
-    //
-    element: null,
-
-    //
     //  The delimiters that surround in-line math expressions.  The first in each
     //  pair is the initial delimiter and the second is the terminal delimiter.
     //  Comment out any that you don't want, but be sure there is no extra
@@ -293,11 +288,6 @@ MathJax.Hub.Config({
   mml2jax: {
     
     //
-    //  The Id of the element to be processed (defaults to full document)
-    //
-    element: null,
-
-    //
     //  Controls whether mml2jax inserts MathJax_Preview spans to make a
     //  preview available, and what preview to use, whrn it locates
     //  mathematics on the page.  The default is "alttext", which means use
@@ -323,11 +313,6 @@ MathJax.Hub.Config({
   //
   jsMath2jax: {
     
-    //
-    //  The Id of the element to be processed (defaults to full document)
-    //
-    element: null,
-
     //
     //  Controls whether jsMath2jax inserts MathJax_Preview spans to make a
     //  preview available, and what preview to use, when it locates
