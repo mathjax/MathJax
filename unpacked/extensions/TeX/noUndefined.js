@@ -41,7 +41,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/noUndefined"] = {
-  version: "1.0.1",
+  version: "1.1",
   config: MathJax.Hub.CombineConfig("TeX.noUndefined",{
     attributes: {
       mathcolor: "red"

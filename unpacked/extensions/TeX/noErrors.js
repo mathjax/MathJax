@@ -67,7 +67,7 @@
  */
 
 (function () {
-  var VERSION = "1.0.1";
+  var VERSION = "1.1";
   
   var CONFIG = MathJax.Hub.CombineConfig("TeX.noErrors",{
     multiLine: true,
