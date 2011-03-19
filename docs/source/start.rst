@@ -47,7 +47,7 @@ that, and otherwise use HTML-with-CSS to display the mathematics.
 This is the most general configuration, and should suffice for most
 people's needs.  Other configurations are available, however, and you
 can also provide additional configuration parameters to taylor one of
-the confiogurations to your needs.  More details can be found in the
+the configurations to your needs.  More details can be found in the
 :ref:`Loading and Configuring MathJax <loading>` instructions.
 
 The use of ``cdn.mathjax.org`` is governed by its `terms of service
@@ -123,7 +123,7 @@ Configuring your copy of MathJax
 When you include MathJax into your web pages as described below, it
 will load the file ``config/TeX-AMS-MML_HTMLorMML.js`` (i.e., the file
 named ``TeX-AMS-MML_HTMLorMML.js`` in the ``config`` folder of the
-main ``MathJax`` folder).  This file preloads all the most comply-used
+main ``MathJax`` folder).  This file preloads all the most commonly-used
 components of MathJax, allowing it to process mathematics that is in
 the TeX or LaTeX format, or in MathML notation.  It will produce
 output in MathML form if the user's browser supports that, and will use
@@ -138,7 +138,7 @@ described more fully in :ref:`Common Configurations
 
 Note:  The configuration process has changed in MathJax v1.1, so if you have
 existing pages that use MathJax, you may need to modify the tag that
-loads MathJax so that is conforms with the new configuration process.
+loads MathJax so that it conforms with the new configuration process.
 See :ref:`Installing and Configuring MathJax <installation>` for more
 details.
 
@@ -233,7 +233,7 @@ See the ``config/default.js`` file, or the :ref:`tex2jax configuration
 options <configure-tex2jax>` page, for additional configuration
 parameters that you can specify for the `tex2jax` preprocessor,
 which is the component of MathJax that identifies TeX notation within
-the page).  See the :ref:`TeX and LaTeX <TeX-support>` page for 
+the page.  See the :ref:`TeX and LaTeX <TeX-support>` page for 
 more on MathJax's support for TeX.
 
 Here is a complete sample page containing TeX mathematics (also available 

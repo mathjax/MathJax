@@ -22,10 +22,10 @@ image-based, and so it is available for search engines, meaning that
 your equations can be searchable, just like the text of your pages.
 MathJax allows page authors to write formulas using TeX and LaTeX
 notation, or `MathML <http://www.w3.org/TR/MathML3>`_, a World Wide
-Web Constortium standard for representing mathematics in XML format.
+Web Consortium standard for representing mathematics in XML format.
 MathJax will even convert TeX notation into MathML, so that it can be
 rendered more quickly by those browsers that support MathML natively,
-or so that you can copy and past it into other programs.
+or so that you can copy and paste it into other programs.
 
 MathJax is modular, so it loads components only when necessary, and
 can be extended to include new capabilities as needed.  MathJax is

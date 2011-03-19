@@ -88,8 +88,8 @@ to a server geographically near you, for a fast, reliable connection.
 
 The CDN hosts the most current version of MathJax, as well as older 
 versions, so you can either link to a version that stays up-to-date as 
-Mathjax is improved, or you can stay with one of the release versions so 
-that you pages always use the same version of MathJax.
+MathJax is improved, or you can stay with one of the release versions so 
+that your pages always use the same version of MathJax.
 
 The URL that you use to obtain MathJax determines the version that you 
 get.  The CDN has the following directory structure:
@@ -112,7 +112,7 @@ with patches that would correspond to releases that might be numbers 1.1a,
 distribution (they likely won't be).
 
 We may occasionally introduce directories for betas, as indicated above,
-but they will be temprorary, and will be removed after the official
+but they will be temporary, and will be removed after the official
 release.
 
 To load from a particular release, use the directory for that release.  
@@ -143,7 +143,7 @@ Configuring MathJax
 ===================
 
 There are two ways to configure MathJax:  via a configuration file, or by 
-including configuration commands wthin the web page itself.  These can be 
+including configuration commands within the web page itself.  These can be 
 used independently, or in combination.  For example, you can load a main 
 pre-defined configuration file, but include in-line commands to 
 adjust the configuration to your needs.
@@ -178,7 +178,7 @@ stored in the ``MathJax/config`` directory.  Among these are the following
 
 .. describe:: TeX-AMS_HTML.js
 
-    Allows math to be specified in TeX or LaTeX notation (with the 
+    Allows math to be specified in TeX or LaTeX notation, with the 
     `AMSmath` and `AMSsymbols` packages included, and produces output 
     using the HTML-CSS output processor.
 
@@ -208,7 +208,7 @@ component will require a separate file to be loaded, and that can cause
 delays before the mathematics is displayed.  The combined configuration
 files load the majority of the needed files all as one large file, reducing
 the number of network requests that are needed.  That means you will
-probably be getting the componets that MathJax needs faster than you would
+probably be getting the components that MathJax needs faster than you would
 without the combined file, but you may be loading components that are never
 actually used; that is the trade off.
 
@@ -219,7 +219,7 @@ output processors.  For example, with ``TeX-AMS_HTML.js`` and
 ``TeX-AMS_HTML-full.js``, the latter includes the complete HTML-CSS output 
 processor.  The "full" configuration files are substantially larger (on 
 the order of 70KB), so you need to decide whether it is worth loading the 
-full configuraiton for your pages.
+full configuration for your pages.
 
 If most of your pages include mathematics, then it is to your advantage to
 load the full version, but if you are including MathJax in a theme file for
@@ -261,7 +261,7 @@ can use
        src="path-to-MathJax/MathJax.js?config=TeX-AMS_HTML,local/local">
     </script>
 
-to first load the main configuraiton, then the local modifications.  You 
+to first load the main configuration, then the local modifications.  You 
 can also load MathJax from the CDN and a local configuration from your own 
 server:
 
@@ -315,7 +315,7 @@ For instance,
 This example includes the `tex2jax` preprocessor and configures it to use
 both the standard :term:`TeX` and :term:`LaTeX` math delimiters.  It uses
 the `TeX` input processor and the `HTML-CSS` output processor, and forces the
-HTML-CSS processor to use the TeX fonts rather that other locally installed
+HTML-CSS processor to use the TeX fonts rather than other locally installed
 fonts (e.g., :term:`STIX` fonts).  See the :ref:`configuration options
 <configuration>` section (or the comments in the ``config/default.js``
 file) for more information about the configuration options that you can
@@ -323,9 +323,9 @@ include in the :meth:`MathJax.Hub.Config()` call.  Note that this
 configuration does **not** load any pre-defined configuration file.
 
 Note that you can combine in-line configuration with file-based 
-configuration, simply include ``text/x-mathjax-config`` scripts as above, 
+configuration; simply include ``text/x-mathjax-config`` scripts as above, 
 but also include ``config=filename`` when you load the ``MathJax.js`` 
-file.  For example, the `tex2jax` preprocessor does **not** the TeX 
+file.  For example, the `tex2jax` preprocessor does **not** enable the TeX 
 single-dollar in-line math delimiters by default.  You can load one of the 
 pre-defined configuration files that include the TeX preprocessor, and use 
 an in-line configuration block to enable the single-dollar signs:
@@ -376,11 +376,12 @@ used a combined configuration file, however, it already includes all the
 main files that MathJax needs, so there is not much loss in delaying the 
 startup.)
 
-You can set ``delayStartupUntil=configured`` in order to delay the startup 
-configuration until the :meth:`MathJax.Hub.Configured()` method is 
-called.  This allows you to delay startup until later on the page, but 
-then restart MathJax configuration process as soon as possible rather than 
-waiting for the entire page to load.  For example, you could use
+You can set ``delayStartupUntil=configured`` in order to delay the
+startup configuration until the :meth:`MathJax.Hub.Configured()`
+method is called.  This allows you to delay startup until later on the
+page, but then restart the MathJax configuration process as soon as
+possible rather than waiting for the entire page to load.  For
+example, you could use
 
 .. code-block:: html
 
@@ -398,7 +399,7 @@ in your theme's header file, and
 
 in its footer, so that MathJax will delay setting up until the footer is 
 reached, but will not have to wait until images and other files are 
-laoded.  If you have ``text/x-mathjax-config`` script tags within the main 
+loaded.  If you have ``text/x-mathjax-config`` script tags within the main 
 body of the document, MathJax will read and process those before 
 continuing its startup.  In this way you can use a default configuration 
 that can be modified on a page-by-page basis.
