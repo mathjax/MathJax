@@ -79,9 +79,10 @@ web server&#8217;s directory hierarchy, you might use</p>
 one containing the page that will load MathJax, then there are issues
 involved in doing so that you need to take into consideration.  See the
 <a class="reference internal" href="installation.html#cross-domain-linking"><em>Notes About Shared Servers</em></a> for more details.</p>
-<p>When you load MathJax, it is common to include additional parameters for
-MathJax as part of the URL. These control MathJax&#8217;s configuration, and are
-discussed in the <a class="reference internal" href="options/index.html#configuration"><em>Configuration Objects</em></a> section.  A
+<p>When you load MathJax, it is common to request a specific
+configuration file as discussed in the section on <a class="reference internal" href="#config-files"><em>Using a
+Configuration File</em></a> below, and in more detail in the
+<a class="reference internal" href="config-files.html#common-configurations"><em>Common Configurations</em></a> section.  A
 typical invocation of MathJax would be</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
    <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span><span class="nt">&gt;</span>
@@ -94,7 +95,8 @@ notation, and produces output using MathML if the browser supports that,
 or HTML-with-CSS otherwise.  If you <strong>don&#8217;t</strong> load an explicit
 configuration file, you will need to include an in-line configuration
 block in order to tell MathJax how to read and display the mathematics on
-your pages.  See the section below for details.</p>
+your pages.  See the section below on <a class="reference internal" href="#inline-config"><em>Using In-line Configuration
+Options</em></a> for details.</p>
 <p>It is best to load MathJax in the document&#8217;s <tt class="docutils literal"><span class="pre">&lt;head&gt;</span></tt> block, but it
 is also possible to load MathJax into the <tt class="docutils literal"><span class="pre">&lt;body&gt;</span></tt> section, if
 needed.  If you do this, load it as early as possible, as
@@ -151,9 +153,14 @@ versions, while</p>
 <p>will always be the most current stable release, so it will go from v1.1 to
 v1.2 automatically when that is released.  Note that all the versions
 available on the CDN are stable versions; the development version is not
-hosted on the CDN.</p>
+hosted on the CDN.  (If you wish to use the development version of
+MathJax, you will need to install your own copy; see <a class="reference internal" href="installation.html#installation"><em>Installing
+and Testing MathJax</em></a> for information on how to do that.)</p>
 <p>The use of <tt class="docutils literal"><span class="pre">cdn.mathjax.org</span></tt> is governed by its <a class="reference external" href="http://www.mathjax.org/download/mathjax-cdn-terms-of-service/">terms of service</a>, so be
 sure to read that before linking to the MathJax CDN server.</p>
+<p>If you wish to use the MathJax CDN but use your own configuration file
+rather than one of the pre-defined ones, see the information at the end
+of the <a class="reference internal" href="#config-files"><em>Using a configuration file</em></a> section below.</p>
 </div>
 <div class="section" id="configuring-mathjax">
 <h2>Configuring MathJax<a class="headerlink" href="#configuring-mathjax" title="Permalink to this headline">¶</a></h2>
@@ -270,17 +277,30 @@ can use</p>
 <span class="nt">&lt;/script&gt;</span>
 </pre></div>
 </div>
-<p>to first load the main configuration, then the local modifications.  You
-can also load MathJax from the CDN and a local configuration from your own
-server:</p>
+<p>to first load the main configuration, then the local modifications.</p>
+<p>You can also load MathJax from the MathJax CDN server but use a configuration from
+your own local server:</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
    <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML,http://myserver.com/MathJax/config/local/local.js&quot;</span><span class="nt">&gt;</span>
 <span class="nt">&lt;/script&gt;</span>
 </pre></div>
 </div>
+<p>Because the <tt class="docutils literal"><span class="pre">local.js</span></tt> file is not on the CDN server, you must give
+the complete URL to the local configuration file.  Note that you also
+have to edit the <a class="reference internal" href="api/ajax.html#loadComplete" title="loadComplete"><tt class="xref py py-meth docutils literal"><span class="pre">loadComplete()</span></tt></a> call that is at the bottom of
+the configuration file to change it from
+<tt class="docutils literal"><span class="pre">[MathJax]/config/local/local.js</span></tt> to the complete URL as you give it
+in the <tt class="docutils literal"><span class="pre">config</span></tt> parameter:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">loadComplete</span><span class="p">(</span><span class="s2">&quot;http://myserver.com/MathJax/config/local/local.js&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>That is because the <tt class="docutils literal"><span class="pre">[MathJax]</span></tt> in the original URL refers to the
+root directory where <tt class="docutils literal"><span class="pre">MathJax.js</span></tt> was loaded, which is on the CDN,
+not your local server, and so you need to tell MathJax the actual
+location of your configuration file.</p>
 </div>
 <div class="section" id="using-in-line-configuration-options">
-<h2>Using in-line configuration options<a class="headerlink" href="#using-in-line-configuration-options" title="Permalink to this headline">¶</a></h2>
+<span id="inline-config"></span><h2>Using in-line configuration options<a class="headerlink" href="#using-in-line-configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The second way to configure MathJax is through <cite>in-line configuration</cite>,
 that puts the configuration options within the web page itself.  This
 process has changed in version 1.1 to make it compatible with HTML5.

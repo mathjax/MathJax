@@ -40,9 +40,10 @@ one containing the page that will load MathJax, then there are issues
 involved in doing so that you need to take into consideration.  See the
 :ref:`Notes About Shared Servers <cross-domain-linking>` for more details.
 
-When you load MathJax, it is common to include additional parameters for
-MathJax as part of the URL. These control MathJax's configuration, and are
-discussed in the :ref:`Configuration Objects <configuration>` section.  A
+When you load MathJax, it is common to request a specific
+configuration file as discussed in the section on :ref:`Using a
+Configuration File <config-files>` below, and in more detail in the
+:ref:`Common Configurations <common-configurations>` section.  A
 typical invocation of MathJax would be
 
 .. code-block:: html
@@ -57,7 +58,8 @@ notation, and produces output using MathML if the browser supports that,
 or HTML-with-CSS otherwise.  If you **don't** load an explicit 
 configuration file, you will need to include an in-line configuration 
 block in order to tell MathJax how to read and display the mathematics on 
-your pages.  See the section below for details.
+your pages.  See the section below on :ref:`Using In-line Configuration
+Options <inline-config>` for details.
 
 It is best to load MathJax in the document's ``<head>`` block, but it
 is also possible to load MathJax into the ``<body>`` section, if
@@ -132,11 +134,17 @@ versions, while
 will always be the most current stable release, so it will go from v1.1 to 
 v1.2 automatically when that is released.  Note that all the versions 
 available on the CDN are stable versions; the development version is not 
-hosted on the CDN.
+hosted on the CDN.  (If you wish to use the development version of
+MathJax, you will need to install your own copy; see :ref:`Installing
+and Testing MathJax <installation>` for information on how to do that.)
 
 The use of ``cdn.mathjax.org`` is governed by its `terms of service
 <http://www.mathjax.org/download/mathjax-cdn-terms-of-service/>`_, so be
 sure to read that before linking to the MathJax CDN server.
+
+If you wish to use the MathJax CDN but use your own configuration file
+rather than one of the pre-defined ones, see the information at the end
+of the :ref:`Using a configuration file <config-files>` section below.
 
 
 Configuring MathJax
@@ -261,9 +269,10 @@ can use
        src="path-to-MathJax/MathJax.js?config=TeX-AMS_HTML,local/local">
     </script>
 
-to first load the main configuration, then the local modifications.  You 
-can also load MathJax from the CDN and a local configuration from your own 
-server:
+to first load the main configuration, then the local modifications.
+
+You can also load MathJax from the MathJax CDN server but use a configuration from
+your own local server:
 
 .. code-block:: html
 
@@ -271,6 +280,24 @@ server:
        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML,http://myserver.com/MathJax/config/local/local.js">
     </script>
 
+Because the ``local.js`` file is not on the CDN server, you must give
+the complete URL to the local configuration file.  Note that you also
+have to edit the :meth:`loadComplete()` call that is at the bottom of
+the configuration file to change it from
+``[MathJax]/config/local/local.js`` to the complete URL as you give it
+in the ``config`` parameter:
+
+.. code-block:: javascript
+
+    MathJax.Ajax.loadComplete("http://myserver.com/MathJax/config/local/local.js");
+
+That is because the ``[MathJax]`` in the original URL refers to the
+root directory where ``MathJax.js`` was loaded, which is on the CDN,
+not your local server, and so you need to tell MathJax the actual
+location of your configuration file.
+
+
+.. _inline-config:
 
 Using in-line configuration options
 ===================================
