@@ -47,7 +47,7 @@ to be defined within the TeX input processor.
    This lists macros to define before the TeX input processor begins.
    These are name:value pairs where the `name` gives the name of the TeX
    macro to be defined, and `value` gives the replacement text for the
-   macro.  The `value` canbe an array of the form `[value,n]`, where
+   macro.  The `value` can be an array of the form `[value,n]`, where
    `value` is the replacement text and `n` is the number of parameters
    for the macro.  Note that since the `value` is a javascript string,
    backslashes in the replacement text must be doubled to prevent them
@@ -64,12 +64,12 @@ to be defined within the TeX input processor.
 
    would ask the TeX processor to define two new macros:  ``\RR``,
    which produces a bold-face "R", and ``\bold{...}``, which takes one
-   parameter and set it in the bold-face font.
+   parameter and sets it in the bold-face font.
 
 .. describe:: MAXMACROS: 10000
 
    Because a definition of the form ``\def\x{\x} \x`` would cause MathJax 
-   to loop infinitely, the `MAXMACROS` constant will limit the nuber of 
+   to loop infinitely, the `MAXMACROS` constant will limit the number of 
    macro substitutions allowed in any expression processed by MathJax.  
 
 .. describe:: MAXBUFFER: 5*1024

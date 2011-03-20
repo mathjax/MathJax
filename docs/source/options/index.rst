@@ -42,7 +42,7 @@ For example,
     });
 
 is a configuration that includes two settings for the MathJax Hub (one
-for `showProcessingMessages` and one of the `jax` array), and a
+for `showProcessingMessages` and one for the `jax` array), and a
 configuration object for the TeX input processor.  The latter includes
 a setting for the TeX input processor's `TagSide` option (to set tags
 on the left rather than the right) and a setting for `Macros`, which

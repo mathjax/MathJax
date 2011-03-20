@@ -160,8 +160,8 @@ The ``Accessible`` configuration file
 ================================================
 
 This configuration file is essentially the same as 
-``TeX-AMS-MML_HTMLorMML`` except that it includes configuration that is 
-designed for assitive technology, particularly for those with visual 
+``TeX-AMS-MML_HTMLorMML`` except that it includes options that are 
+designed for assistive technology, particularly for those with visual 
 challenges.  It is equivalent to the following configuration:
 
 .. code-block:: javascript
@@ -178,7 +178,7 @@ challenges.  It is equivalent to the following configuration:
       errorSettings: { message: ["[Math Error]"] }
     });
 
-This turns off the MathJax contextual Message for Internet Explorer, since 
+This turns off the MathJax contextual menu for Internet Explorer, since 
 it can interfere with some screen readers.  It also sets the zoom trigger 
 to double-click, so that readers can see a larger version of the 
 mathematics but double-clicking on any equation.

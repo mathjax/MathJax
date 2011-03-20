@@ -52,11 +52,11 @@ behavior of MathJax.  They are given with their default values.
     are not using one of the preprocessors, you need to insert
     something extra into your HTML file in order to avoid a bug in
     Internet Explorer.  IE removes spaces from the DOM that it thinks
-    are redundent, and since a ``<script>`` tag usually doesn't add
+    are redundant, and since a ``<script>`` tag usually doesn't add
     content to the page, if there is a space before and after a
     MathJax ``<script>`` tag, IE will remove the first space.  When
     MathJax inserts the typeset mathematics, this means there will be
-    no space before it and the preceeding text.  In order to avoid
+    no space before it and the preceding text.  In order to avoid
     this, you should include some "guard characters" before or after
     the math SCRIPT tag; define the patterns you want to use below.
     Note that these are used as regular expressions, so you will need
@@ -81,14 +81,14 @@ behavior of MathJax.  They are given with their default values.
 
 .. describe:: preRemoveClass: "MathJax_Preview"
 
-    The CSS class for a math preview to be removed preceeding a
-    MathJax SCRIPT tag.  If the tag just before the MathJax
-    ``<script>`` tag is of this class, its contents are removed when
-    MathJax processes the ``<script>`` tag.  This allows you to
-    include a math preview in a form that will be displayed prior to
-    MathJax performing its typesetting.  It also avoids the Internet
-    Explorer space-removal bug, and can be used in place of ``preJax``
-    and ``postJax`` if that is more convenient.
+    This is the CSS class name for math previews that will be removed
+    preceding a MathJax SCRIPT tag.  If the tag just before the
+    MathJax ``<script>`` tag is of this class, its contents are
+    removed when MathJax processes the ``<script>`` tag.  This allows
+    you to include a math preview in a form that will be displayed
+    prior to MathJax performing its typesetting.  It also avoids the
+    Internet Explorer space-removal bug, and can be used in place of
+    ``preJax`` and ``postJax`` if that is more convenient.
 
     For example
 
@@ -103,7 +103,7 @@ behavior of MathJax.  They are given with their default values.
 
 .. describe:: showProcessingMessages: true
 
-    This value controls whether the `Processing Math: nn%` message are
+    This value controls whether the `Processing Math: nn%` messages are
     displayed in the lower left-hand corner. Set to ``false`` to
     prevent those messages (though file loading and other messages
     will still be shown).
@@ -128,10 +128,10 @@ behavior of MathJax.  They are given with their default values.
 
 .. describe:: delayStartupUntil: "none"
 
-    Normally MathJax will perform its starup commands (loading of
+    Normally MathJax will perform its startup commands (loading of
     configuration, styles, jax, and so on) as soon as it can.  If you
     expect to be doing additional configuration on the page, however,
-    you may want to have it wait until the page's onload hander is
+    you may want to have it wait until the page's onload handler is
     called.  If so, set this to ``"onload"``.  You can also set this to
     ``"configured"``, in which case, MathJax will delay its startup until 
     you explicitly call :meth:`MathJax.Hub.Configured()`.  See  
@@ -195,7 +195,7 @@ behavior of MathJax.  They are given with their default values.
     than simply crash, MathJax can report an error and go on.  The
     options you can set include:
 
-    .. describe:: message: ["[Math Processing Error"]]
+    .. describe:: message: ["[Math Processing Error]"]
 
         This is an HTML snippet that will be inserted at the location
         of the mathematics for any formula that causes MathJax to

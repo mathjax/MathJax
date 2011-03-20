@@ -20,7 +20,7 @@ in your :meth:`MathJax.Hub.Config()` call.  For example
       }
     });
 
-would set the ``prefer`` option so that Opera browser would prefer
+would set the ``prefer`` option so that the Opera browser would prefer
 MathML to HTML-CSS output (while leaving the settings for other
 browsers unchanged).
 

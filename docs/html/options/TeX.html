@@ -100,7 +100,7 @@ the value to leave sufficient margin for tags.</p>
 <dd><p>This lists macros to define before the TeX input processor begins.
 These are name:value pairs where the <cite>name</cite> gives the name of the TeX
 macro to be defined, and <cite>value</cite> gives the replacement text for the
-macro.  The <cite>value</cite> canbe an array of the form <cite>[value,n]</cite>, where
+macro.  The <cite>value</cite> can be an array of the form <cite>[value,n]</cite>, where
 <cite>value</cite> is the replacement text and <cite>n</cite> is the number of parameters
 for the macro.  Note that since the <cite>value</cite> is a javascript string,
 backslashes in the replacement text must be doubled to prevent them
@@ -114,14 +114,14 @@ from acting as javascript escape characters.</p>
 </div>
 <p>would ask the TeX processor to define two new macros:  <tt class="docutils literal"><span class="pre">\RR</span></tt>,
 which produces a bold-face &#8220;R&#8221;, and <tt class="docutils literal"><span class="pre">\bold{...}</span></tt>, which takes one
-parameter and set it in the bold-face font.</p>
+parameter and sets it in the bold-face font.</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">MAXMACROS: 10000</tt></dt>
 <dd><p>Because a definition of the form <tt class="docutils literal"><span class="pre">\def\x{\x}</span> <span class="pre">\x</span></tt> would cause MathJax
-to loop infinitely, the <cite>MAXMACROS</cite> constant will limit the nuber of
+to loop infinitely, the <cite>MAXMACROS</cite> constant will limit the number of
 macro substitutions allowed in any expression processed by MathJax.</p>
 </dd></dl>
 
