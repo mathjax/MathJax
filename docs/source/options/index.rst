@@ -50,7 +50,7 @@ defines new TeX macros (in this case, two macros, one called ``\RR``
 that produces a bold "R", and one called ``\bold`` that puts is
 argument in bold face).
 
-The ``config/MathJax.js`` file is another example that shows nearly
+The ``config/default.js`` file is another example that shows nearly
 all the configuration options for all of MathJax's components.
 
 

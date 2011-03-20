@@ -163,7 +163,7 @@ Methods
     completely loaded and processed.  (The callback is called when the
     file makes its :meth:`MathJax.Ajax.loadComplete()` call.) The
     `file` should be the complete file name, e.g.,
-    ``"[MathJax]/config/MathJax.js"``.
+    ``"[MathJax]/config/default.js"``.
 
     :Parameters:
         - **file** --- the name of the file to wait for
