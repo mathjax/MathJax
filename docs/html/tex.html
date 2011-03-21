@@ -78,7 +78,7 @@ environments.  You must use HTML to handle such formatting tasks.  If
 you need a LaTeX-to-HTML converter, you should consider <a class="reference external" href="http://www.google.com/search?q=latex+to+html+converter">other options</a>.</p>
 <div class="section" id="tex-and-latex-math-delimiters">
 <h2>TeX and LaTeX math delimiters<a class="headerlink" href="#tex-and-latex-math-delimiters" title="Permalink to this headline">¶</a></h2>
-<p>By default, the <cite>tex2jax</cite> preprocesor defines the LaTeX math delimiters,
+<p>By default, the <cite>tex2jax</cite> preprocessor defines the LaTeX math delimiters,
 which are <tt class="docutils literal"><span class="pre">\(...\)</span></tt> for in-line math, and <tt class="docutils literal"><span class="pre">\[...\]</span></tt> for displayed
 equations.  It also defines the TeX delimiters <tt class="docutils literal"><span class="pre">$$...$$</span></tt> for displayed
 equations, but it does <strong>not</strong> define <tt class="docutils literal"><span class="pre">$...$</span></tt> as in-line math
@@ -108,7 +108,7 @@ math delimiter.)</p>
 options</em></a> page, for additional configuration
 parameters that you can specify for the <cite>tex2jax</cite> preprocessor,
 which is the component of MathJax that identifies TeX notation within
-the page).</p>
+the page.</p>
 </div>
 <div class="section" id="tex-and-latex-in-html-documents">
 <h2>TeX and LaTeX in HTML documents<a class="headerlink" href="#tex-and-latex-in-html-documents" title="Permalink to this headline">¶</a></h2>
@@ -120,7 +120,7 @@ Also, since the mathematics is initially given as text on the page,
 you need to be careful that your mathematics doesn&#8217;t look like HTML
 tags to the browser (which parses the page before MathJax gets to see
 it).  In particular, that means that you have to be careful about
-things like less-than and greater-than signs (<tt class="docutils literal"><span class="pre">&lt;``and</span> <span class="pre">``&gt;</span></tt>), and
+things like less-than and greater-than signs (<tt class="docutils literal"><span class="pre">&lt;</span></tt> and <tt class="docutils literal"><span class="pre">&gt;</span></tt>), and
 ampersands (<tt class="docutils literal"><span class="pre">&amp;</span></tt>), which have special meaning to the browsers.  For
 example,</p>
 <div class="highlight-latex"><div class="highlight"><pre>... when <span class="s">$</span><span class="nb">x&lt;y</span><span class="s">$</span> we have ...
@@ -131,10 +131,10 @@ beginning of a tag named <tt class="docutils literal"><span class="pre">y</span>
 HTML).  When this happens, the browser will think the tag continues up
 to the next <tt class="docutils literal"><span class="pre">&gt;</span></tt> in the document (typically the end of the next
 actual tag in the HTML file), and you may notice that you are missing
-part of the text of the document.  In the example above, the `` we
-have ...`` will not be displayed because the browser thinks it is
+part of the text of the document.  In the example above, the &#8220;<tt class="docutils literal"><span class="pre">we</span>
+<span class="pre">have</span> <span class="pre">...</span></tt>&#8221; will not be displayed because the browser thinks it is
 part of the tag starting at <tt class="docutils literal"><span class="pre">&lt;y</span></tt>.  This is one indication you can
-use to spot this prooblem; it is a common error and should be avoided.</p>
+use to spot this problem; it is a common error and should be avoided.</p>
 <p>Usually, it is sufficient to simply put spaces around these symbols to
 cause the browser to avoid them, so</p>
 <div class="highlight-latex"><div class="highlight"><pre>... when <span class="s">$</span><span class="nb">x &lt; y</span><span class="s">$</span> we have ...
@@ -261,18 +261,18 @@ the paragraph, use</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>You may also wish to set the font family, as the default is &#8220;serif&#8221;</p>
+<p>You may also wish to set the font family, as the default is &#8220;serif&#8221;.</p>
 </div>
 <div class="section" id="noundefined">
 <h3>noUndefined<a class="headerlink" href="#noundefined" title="Permalink to this headline">¶</a></h3>
 <p>The <cite>noUndefined</cite> extension causes undefined control sequences to be
 shown as their macro names rather than generating error messages. So
-<tt class="docutils literal"><span class="pre">$X_{\xxx}$</span></tt> would display as an &#8220;X&#8221; with a subscript consiting of the
+<tt class="docutils literal"><span class="pre">$X_{\xxx}$</span></tt> would display as an &#8220;X&#8221; with a subscript consisting of the
 text <tt class="docutils literal"><span class="pre">\xxx</span></tt> in red.</p>
 <p>This extension is loaded by all the combined configuration files that
 include the TeX input processor.  To enable the <cite>noUndefined</cite> extension
 in your own configuration, or to modify its parameters, add something like
-the following ro your <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call:</p>
+the following to your <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
   <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;noUndefined.js&quot;</span><span class="p">],</span>
   <span class="nx">noUndefined</span><span class="o">:</span> <span class="p">{</span>
@@ -864,7 +864,6 @@ be loaded automatically when the macro or environment is first used.</p>
 <span class="k">\nolimits</span>
 <span class="k">\normalsize</span>
 <span class="k">\not</span>
-<span class="k">\notag</span>                  AMSmath
 <span class="k">\notag</span>                 [AMSmath]
 <span class="k">\notin</span>
 <span class="k">\nparallel</span>              AMSsymbols
@@ -1078,8 +1077,7 @@ be loaded automatically when the macro or environment is first used.</p>
 </div>
 <div class="section" id="t">
 <h3>T<a class="headerlink" href="#t" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-latex"><div class="highlight"><pre><span class="k">\tag</span>                    AMSmath
-<span class="k">\tag</span>                   [AMSmath]
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\tag</span>                   [AMSmath]
 <span class="k">\tan</span>
 <span class="k">\tanh</span>
 <span class="k">\tau</span>
@@ -1226,7 +1224,7 @@ be loaded automatically when the macro or environment is first used.</p>
 <div class="section" id="environments">
 <h3>Environments<a class="headerlink" href="#environments" title="Permalink to this headline">¶</a></h3>
 <p>LaTeX environments of the form <tt class="docutils literal"><span class="pre">\begin{XXX}</span> <span class="pre">...</span> <span class="pre">\end{XXX}</span></tt> are
-preovided where <tt class="docutils literal"><span class="pre">XXX</span></tt> is one of the following:</p>
+provided where <tt class="docutils literal"><span class="pre">XXX</span></tt> is one of the following:</p>
 <div class="highlight-latex"><div class="highlight"><pre>align                  [AMSmath]
 align*                 [AMSmath]
 alignat                [AMSmath]

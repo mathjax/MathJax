@@ -59,7 +59,7 @@ details.
 If your page simply loads ``MathJax.js`` and relies on
 ``config/MathJax.js``, then you will need to modify your ``<script>`` tag
 in order to use MathJax v1.1.  This is because MathJax no longer loads a
-default configuration file; you are required to explicity specify the
+default configuration file; you are required to explicitly specify the
 configuration file if you use one.  Furthermore, the name of the
 ``config/MathJax.js`` file was a source of confusion, so it has been 
 renamed ``config/default.js`` instead.  Thus, if you used
@@ -163,7 +163,7 @@ Of course, you can load any configuration file that you wish, or use a
 
 The use of ``cdn.mathjax.org`` is governed by its `terms of service
 <http://www.mathjax.org/download/mathjax-cdn-terms-of-service/>`_, so be
-sure to read that before linked to the MathJax CDN server.
+sure to read that before linking to the MathJax CDN server.
 
 
 Change in default TeX delimiters
@@ -255,5 +255,5 @@ development continues.
 
 We apologize for the inconvenience of having to switch distributions, but 
 the git-to-svn bridge we tried to implement to keep both copies in synch 
-turned out to be unreliable, and so the SourceForge disrtibution was 
+turned out to be unreliable, and so the SourceForge distribution was 
 retired in favor of the GitHub site.

@@ -74,8 +74,8 @@ For example</p>
 in your document.</p>
 <p>The HTML-CSS output processor produces high-quality output in all
 major browsers, with results that are consistent across browsers and
-operating systems.  This is MathJax&#8217;s primary output mode.  It&#8217;s major
-advantage is its quality and consistency; it&#8217;s drawback is that it is
+operating systems.  This is MathJax&#8217;s primary output mode.  Its major
+advantage is its quality and consistency; its drawback is that it is
 slower than the NativeMML mode at rendering the mathematics.  (The
 HTML-CSS processor has not yet been optimized for speed, so you can
 expect some improvement in the future.  Note that IE8 in &#8220;IE8
@@ -113,7 +113,7 @@ are the configuration files that end in <tt class="docutils literal"><span class
 <p>If you are doing your own configuration, there is a special configuration
 file that you can include that will choose between NativeMML and HTML-CSS
 depending on the browser in use.  To invoke it, add <tt class="docutils literal"><span class="pre">&quot;MMLorHTML.js&quot;</span></tt> to
-your configurations <cite>config</cite> array, and <strong>do not</strong> include an output
+your configuration&#8217;s <cite>config</cite> array, and <strong>do not</strong> include an output
 processor in your <cite>jax</cite> array; MathJax will fill that in for you based on
 the abilities of your user&#8217;s browser.</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">config</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;MMLorHTML.js&quot;</span><span class="p">],</span>
@@ -122,7 +122,7 @@ the abilities of your user&#8217;s browser.</p>
 </div>
 <p>You can customize which choice to make on a browser-by-browser basis
 or a global basis.  See the <tt class="docutils literal"><span class="pre">config/default.js</span></tt> file or the
-<a class="reference internal" href="options/MMLorHTML.html#configure-mmlorhtml"><em>Configuring MMLorHTML</em></a> section for futher
+<a class="reference internal" href="options/MMLorHTML.html#configure-mmlorhtml"><em>Configuring MMLorHTML</em></a> section for further
 details.  As an example, this configuration tells MathJax to use HTML-CSS
 output rather than native MathML support for Firefox:</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
@@ -138,7 +138,7 @@ output rather than native MathML support for Firefox:</p>
 <p>With this configuration, MathML output will be used only for IE with the
 MathPlayer plugin (Firefox is the only other browser to have native MathML
 support that is sufficient for use with MathJax).  Note, however, that a
-user can employ the MathJax contectual menu to select the other renderer if
+user can employ the MathJax contextual menu to select the other renderer if
 he or she wishes.</p>
 <p>MathJax produces MathML that models the underlying mathematics as best
 it can, rather than using complicated hacks to improve output for a
@@ -168,10 +168,10 @@ mode.  You can accomplish this by including the line</p>
 </div>
 <p>at the top of the <tt class="docutils literal"><span class="pre">&lt;head&gt;</span></tt> section of your HTML documents.  This
 lets you keep the strict <cite>DOCTYPE</cite> for validation purposes, while
-still managing to get reasonable perforance from Internet Explorer
+still managing to get reasonable performance from Internet Explorer
 8.  Note that this line must come at the beginning of the <tt class="docutils literal"><span class="pre">&lt;head&gt;</span></tt>,
 before any stylesheets or other content are loaded.</p>
-<p>Altertnatively, you can use the <cite>MMLorHTML</cite> configuration file
+<p>Alternatively, you can use the <cite>MMLorHTML</cite> configuration file
 described above to select NativeMML output when possible, and request
 that your users install the <a class="reference external" href="http://www.dessci.com/en/products/mathplayer/">MathPlayer plugin</a>, which will render
 the mathematics much more quickly.</p>

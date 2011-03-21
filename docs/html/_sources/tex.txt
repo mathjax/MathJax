@@ -39,7 +39,7 @@ you need a LaTeX-to-HTML converter, you should consider `other options
 TeX and LaTeX math delimiters
 =============================
 
-By default, the `tex2jax` preprocesor defines the LaTeX math delimiters, 
+By default, the `tex2jax` preprocessor defines the LaTeX math delimiters, 
 which are ``\(...\)`` for in-line math, and ``\[...\]`` for displayed 
 equations.  It also defines the TeX delimiters ``$$...$$`` for displayed 
 equations, but it does **not** define ``$...$`` as in-line math 
@@ -72,7 +72,7 @@ See the ``config/default.js`` file, or the :ref:`tex2jax configuration
 options <configure-tex2jax>` page, for additional configuration
 parameters that you can specify for the `tex2jax` preprocessor,
 which is the component of MathJax that identifies TeX notation within
-the page).
+the page.
 
 
 TeX and LaTeX in HTML documents
@@ -86,7 +86,7 @@ Also, since the mathematics is initially given as text on the page,
 you need to be careful that your mathematics doesn't look like HTML
 tags to the browser (which parses the page before MathJax gets to see
 it).  In particular, that means that you have to be careful about
-things like less-than and greater-than signs (``<``and ``>``), and
+things like less-than and greater-than signs (``<`` and ``>``), and
 ampersands (``&``), which have special meaning to the browsers.  For
 example,
 
@@ -99,10 +99,10 @@ beginning of a tag named ``y`` (even though there is no such tag in
 HTML).  When this happens, the browser will think the tag continues up
 to the next ``>`` in the document (typically the end of the next
 actual tag in the HTML file), and you may notice that you are missing
-part of the text of the document.  In the example above, the `` we
-have ...`` will not be displayed because the browser thinks it is
+part of the text of the document.  In the example above, the "``we
+have ...``" will not be displayed because the browser thinks it is
 part of the tag starting at ``<y``.  This is one indication you can
-use to spot this prooblem; it is a common error and should be avoided.
+use to spot this problem; it is a common error and should be avoided.
 
 Usually, it is sufficient to simply put spaces around these symbols to
 cause the browser to avoid them, so
@@ -261,7 +261,7 @@ the paragraph, use
       }
     }
   
-You may also wish to set the font family, as the default is "serif"
+You may also wish to set the font family, as the default is "serif".
 
 
 noUndefined
@@ -269,13 +269,13 @@ noUndefined
 
 The `noUndefined` extension causes undefined control sequences to be
 shown as their macro names rather than generating error messages. So
-``$X_{\xxx}$`` would display as an "X" with a subscript consiting of the
+``$X_{\xxx}$`` would display as an "X" with a subscript consisting of the
 text ``\xxx`` in red.
 
 This extension is loaded by all the combined configuration files that
 include the TeX input processor.  To enable the `noUndefined` extension 
 in your own configuration, or to modify its parameters, add something like 
-the following ro your :meth:`MathJax.Hub.Config()` call:
+the following to your :meth:`MathJax.Hub.Config()` call:
 
 .. code-block:: javascript
 
@@ -899,7 +899,6 @@ N
     \nolimits
     \normalsize
     \not
-    \notag                  AMSmath
     \notag                 [AMSmath]
     \notin
     \nparallel              AMSsymbols
@@ -1119,7 +1118,6 @@ T
 
 .. code-block:: latex
     
-    \tag                    AMSmath
     \tag                   [AMSmath]
     \tan
     \tanh
@@ -1273,7 +1271,7 @@ Environments
 ------------
 
 LaTeX environments of the form ``\begin{XXX} ... \end{XXX}`` are
-preovided where ``XXX`` is one of the following:
+provided where ``XXX`` is one of the following:
 
 .. code-block:: latex
 

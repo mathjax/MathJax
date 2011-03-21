@@ -16,7 +16,7 @@ Because of MathJax's modular design, you do not need to use all three
 of these components.  For example, you could use the `tex2jax`
 preprocessor and the TeX input processor, but the NativeMML output
 processor, so that your mathematics is entered in TeX format, but
-displayed as MathML.  Or you could use the `mml2jax` reprocessor and
+displayed as MathML.  Or you could use the `mml2jax` preprocessor and
 MathML input processor with the HTML-CSS output processor to make
 MathML available in browsers that don't have native MathML support.
 It is also possible to have MathJax select the output processor for
@@ -42,7 +42,7 @@ even with a pure MathML workflow.
 MathML in HTML pages
 ====================
 
-For MathML that is handled via the pre-processor, you should not use
+For MathML that is handled via the preprocessor, you should not use
 the named MathML entities, but rather use the numeric entities like
 ``&#x221A;`` or unicode characters embedded in the page itself.  The
 reason is that entities are replaced by the browser before MathJax
@@ -87,7 +87,7 @@ The deficiencies include:
   ``msgroup``, ``msrow``, ``mscarries``, and ``mscarry``.
 
 - Limited support for line breaking (they are only allowed in direct
-  children of ``mrow`` or implied ``mrow`` elements.
+  children of ``mrow`` or implied ``mrow`` elements).
 
 - No support for alignment groups in table.
 

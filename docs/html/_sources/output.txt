@@ -32,8 +32,8 @@ in your document.
 
 The HTML-CSS output processor produces high-quality output in all
 major browsers, with results that are consistent across browsers and
-operating systems.  This is MathJax's primary output mode.  It's major
-advantage is its quality and consistency; it's drawback is that it is
+operating systems.  This is MathJax's primary output mode.  Its major
+advantage is its quality and consistency; its drawback is that it is
 slower than the NativeMML mode at rendering the mathematics.  (The
 HTML-CSS processor has not yet been optimized for speed, so you can
 expect some improvement in the future.  Note that IE8 in "IE8
@@ -77,7 +77,7 @@ are the configuration files that end in ``_HTMLorMML``.
 If you are doing your own configuration, there is a special configuration
 file that you can include that will choose between NativeMML and HTML-CSS
 depending on the browser in use.  To invoke it, add ``"MMLorHTML.js"`` to
-your configurations `config` array, and **do not** include an output
+your configuration's `config` array, and **do not** include an output
 processor in your `jax` array; MathJax will fill that in for you based on
 the abilities of your user's browser.
 
@@ -88,7 +88,7 @@ the abilities of your user's browser.
 
 You can customize which choice to make on a browser-by-browser basis
 or a global basis.  See the ``config/default.js`` file or the
-:ref:`Configuring MMLorHTML <configure-MMLorHTML>` section for futher
+:ref:`Configuring MMLorHTML <configure-MMLorHTML>` section for further
 details.  As an example, this configuration tells MathJax to use HTML-CSS 
 output rather than native MathML support for Firefox:
 
@@ -106,7 +106,7 @@ output rather than native MathML support for Firefox:
 With this configuration, MathML output will be used only for IE with the
 MathPlayer plugin (Firefox is the only other browser to have native MathML
 support that is sufficient for use with MathJax).  Note, however, that a
-user can employ the MathJax contectual menu to select the other renderer if
+user can employ the MathJax contextual menu to select the other renderer if
 he or she wishes.
 
 MathJax produces MathML that models the underlying mathematics as best
@@ -144,11 +144,11 @@ mode.  You can accomplish this by including the line
 
 at the top of the ``<head>`` section of your HTML documents.  This
 lets you keep the strict `DOCTYPE` for validation purposes, while
-still managing to get reasonable perforance from Internet Explorer
+still managing to get reasonable performance from Internet Explorer
 8.  Note that this line must come at the beginning of the ``<head>``,
 before any stylesheets or other content are loaded.
 
-Altertnatively, you can use the `MMLorHTML` configuration file
+Alternatively, you can use the `MMLorHTML` configuration file
 described above to select NativeMML output when possible, and request
 that your users install the `MathPlayer plugin
 <http://www.dessci.com/en/products/mathplayer/>`_, which will render
