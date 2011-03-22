@@ -64,7 +64,7 @@ MathJax operates asynchonously (see <a class="reference internal" href="synchron
 your call to <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Typeset()</span></tt> is synchronized with the
 other actions that MathJax is taking.  For example, it may already be
 typesetting portions of the page, or it may be waiting for an output
-jax to load, etc., and so you need to queue to typeset action to be
+jax to load, etc., and so you need to queue the typeset action to be
 performed after MathJax has finished whatever else it may be doing.
 That may be immediately, but it may not, and there is no way to tell.</p>
 <p>To queue the typeset action, use the command</p>
@@ -74,12 +74,12 @@ That may be immediately, but it may not, and there is no way to tell.</p>
 <p>This will cause MathJax to typeset the page when it is next able to do
 so.  It guarantees that the typesetting will synchronize properly
 with the loading of jax, extensions, fonts, stylesheets, and other
-asynchornous activity, and is the only truely safe way to ask MathJax
+asynchronous activity, and is the only truly safe way to ask MathJax
 to process additional material.</p>
 <p>The <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Typeset()</span></tt> command also accepts a parameter
-that is a DOM element whose contents is to be typeset.  That could be
+that is a DOM element whose content is to be typeset.  That could be
 a paragraph, or a <tt class="docutils literal"><span class="pre">&lt;div&gt;</span></tt> element, or even a MathJax math
-<tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag.  It could also be a the DOM <cite>id</cite> of such an object, in
+<tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag.  It could also be the DOM <cite>id</cite> of such an object, in
 which case, MathJax will look up the DOM element for you.  So</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Queue</span><span class="p">([</span><span class="s2">&quot;Typeset&quot;</span><span class="p">,</span><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">,</span><span class="s2">&quot;MathExample&quot;</span><span class="p">]);</span>
 </pre></div>
@@ -96,7 +96,7 @@ typeset.</p>
 immediately, regardless of whether the typesetting has taken place or
 not, so you can not assume that the mathematics is visible after you
 make this call.  That means that things like the size of the container
-for the mathematics may not yet reflect the size of the typeet
+for the mathematics may not yet reflect the size of the typeset
 mathematics.  If you need to perform actions that depend on the
 mathematics being typeset, you should push <em>those</em> actions onto the
 <tt class="docutils literal"><span class="pre">MathJax.Hub.queue</span></tt> as well.</p>
@@ -110,7 +110,7 @@ of calling the functions that do what you want.</p>
 <p>If you are not changing a complete DOM structure, but simply want to
 update the contents of a single mathematical equation, you do not need
 to use <tt class="docutils literal"><span class="pre">innerHTML</span></tt> and <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Typeset()</span></tt> to preprocess
-and process an elements new content.  Instead, you can ask MathJax to
+and process an element&#8217;s new content.  Instead, you can ask MathJax to
 find the <cite>element jax</cite> for the math element on the page, and use its
 methods to modify and update the mathematics that it displays.</p>
 <p>For example, suppose you have the following HTML in your document</p>
@@ -124,7 +124,7 @@ within dollar signs (it will be blank).  A student has typed
 something elsewhere on the page, and you want to typeset their answer
 in the location of the mathematics that is already there.  You could
 replace the entire contents of the <cite>MathDiv</cite> element and call
-<tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Typeset()</span></tt> as described above, but there is more
+<tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Typeset()</span></tt> as described above, but there is a more
 efficient approach, which is to ask MathJax for the element jax for
 the mathematics, and call its method for replacing the formula shown
 by that element.  For example:</p>
@@ -132,18 +132,20 @@ by that element.  For example:</p>
 <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Queue</span><span class="p">([</span><span class="s2">&quot;Text&quot;</span><span class="p">,</span><span class="nx">math</span><span class="p">,</span><span class="s2">&quot;x+1&quot;</span><span class="p">]);</span>
 </pre></div>
 </div>
-<p>This looks up the list of math elements in <cite>MathDiv</cite> element (there is
-only one) and takes the first one (element 0) and stores it in
-<tt class="docutils literal"><span class="pre">math</span></tt>.  This is an <cite>element jax</cite> object (see the <a class="reference internal" href="api/elementjax.html#api-element-jax"><em>Element Jax</em></a> specification for details), which has a
+<p>This looks up the list of math elements in the <cite>MathDiv</cite> element
+(there is only one) and takes the first one (element 0) and stores it
+in <tt class="docutils literal"><span class="pre">math</span></tt>.  This is an <cite>element jax</cite> object (see the <a class="reference internal" href="api/elementjax.html#api-element-jax"><em>Element
+Jax</em></a> specification for details), which has a
 <a class="reference internal" href="api/elementjax.html#Text" title="Text"><tt class="xref py py-meth docutils literal"><span class="pre">Text()</span></tt></a> method that can be used to set the input text of the
 math element, and retypeset it.</p>
 <p>Again, since the typesetting should be synchronized with other actions
-of MathJax, the call should be pushed onto the <tt class="docutils literal"><span class="pre">MathJax.Hub.queue</span></tt>,
-as shown above, rather than called directly.  The example above
-performs the equivalent of <tt class="docutils literal"><span class="pre">math.Text(&quot;x+1&quot;)</span></tt> as soon as MathJax is
-able to do so.  Any additional actions the rely on the equation
-<tt class="docutils literal"><span class="pre">x+1</span></tt> actually showing on screen should also be pushed onto the
-queue so that they will not occur before the math is typeset.</p>
+of MathJax, the call should be pushed onto the MathJax processing
+queue using <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Queue()</span></tt>, as shown above, rather than
+called directly.  The example above performs the equivalent of
+<tt class="docutils literal"><span class="pre">math.Text(&quot;x+1&quot;)</span></tt> as soon as MathJax is able to do so.  Any
+additional actions that rely on the expression <tt class="docutils literal"><span class="pre">x+1</span></tt> actually
+showing on screen should also be pushed onto the queue so that they
+will not occur before the math is typeset.</p>
 <p>The actions you can perform on an element jax include:</p>
 <blockquote>
 <div><dl class="describe">
@@ -171,7 +173,7 @@ the original <tt class="docutils literal"><span class="pre">&lt;script&gt;</span
 <dt>
 <tt class="descname">SourceElement()</tt></dt>
 <dd><p>to obtain a reference to the original
-<tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> object that is assocaited with this element jax.</p>
+<tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> object that is associated with this element jax.</p>
 </dd></dl>
 
 </div></blockquote>
@@ -184,7 +186,7 @@ then use that result each time you adjust the mathematics to be
 displayed.</p>
 <p>To get the element jax the first time, you need to be sure that you
 ask MathJax for it <strong>after</strong> MathJax has processed the page the first
-time.  This is another sitaution where you want to use the MathJax
+time.  This is another situation where you want to use the MathJax
 queue.  If your startup code performs the commands</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">studentDisplay</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Queue</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>

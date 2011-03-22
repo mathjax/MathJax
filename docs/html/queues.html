@@ -57,7 +57,7 @@
 its actions, both internally, and with external programs, like
 javascript code that you may write as part of dynamic web pages.
 Because many actions in MathJax (like loading files) operate
-asynchornously, MathJax needs a way to coordinate those actions so
+asynchronously, MathJax needs a way to coordinate those actions so
 that they occur in the right order.  The
 <cite>MathJax.Callback.Queue</cite> object provides that mechanism.</p>
 <p>A <cite>callback queue</cite> is a list of commands that will be performed one at
@@ -109,11 +109,11 @@ that could operate asynchronously.  For example:</p>
 <span class="p">);</span>
 </pre></div>
 </div>
-<p>Here, the command <tt class="docutils literal"><span class="pre">MathJax.Ajax.require(&quot;extensions/AMSmath.js&quot;)</span></tt> is
-queued between two calls to <tt class="docutils literal"><span class="pre">f</span></tt>.  The first call to <tt class="docutils literal"><span class="pre">f(1)</span></tt> will be
-made immediately, then the <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Ajax.Require()</span></tt> statement will
-be performed.  Since the <tt class="docutils literal"><span class="pre">Require</span></tt> method loads a file, it operates
-asynchronously, and its return value is a <cite>MathJax.Callback</cite>
+<p>Here, the command <tt class="docutils literal"><span class="pre">MathJax.Ajax.Require(&quot;[MathJax]/extensions/AMSmath.js&quot;)</span></tt>
+is queued between two calls to <tt class="docutils literal"><span class="pre">f</span></tt>.  The first call to <tt class="docutils literal"><span class="pre">f(1)</span></tt> will
+be made immediately, then the <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Ajax.Require()</span></tt> statement
+will be performed.  Since the <tt class="docutils literal"><span class="pre">Require</span></tt> method loads a file, it
+operates asynchronously, and its return value is a <cite>MathJax.Callback</cite>
 object that will be called when the file is loaded.  The call to
 <tt class="docutils literal"><span class="pre">f(2)</span></tt> will not be made until that callback is performed,
 effectively synchronizing the second call to <tt class="docutils literal"><span class="pre">f</span></tt> with the completion
@@ -218,12 +218,12 @@ instead are defined in extensions that are loaded automatically when
 needed.  The typesetting of an expression containing one of these TeX
 commands can cause the typesetting process to be suspended while the
 file is loaded, and then restarted when the extension has become
-evailable.</p>
+available.</p>
 <p>As a result, any call to <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Typeset()</span></tt> (or
 <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Process()</span></tt>, or <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Update()</span></tt>, etc.)
 could return long before the mathematics is actually typeset, and the
 rest of your code may run before the mathematics is available.  If you
-have code that relys on the mathematics being visible on screen, you
+have code that relies on the mathematics being visible on screen, you
 will need to break that out into a separate operation that is
 synchronized with the typesetting via the MathJax queue.</p>
 <p>Furthermore, your own typesetting calls may need to wait for file loading
