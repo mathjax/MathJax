@@ -227,7 +227,7 @@ math mode, you must enable that explicitly in your configuration:
       tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
     });
     </script>
-    <script type="text/javascipt" src="path-to-mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="path-to-mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 See the ``config/default.js`` file, or the :ref:`tex2jax configuration
 options <configure-tex2jax>` page, for additional configuration

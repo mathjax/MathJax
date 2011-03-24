@@ -34,7 +34,7 @@ Class Properties
 
 .. describe:: directory
 
-    The directory where the jax files are stored (e.g., ``"[MathJax]/jax/element/mml"``);
+    The directory where the jax files are stored (e.g., ``"[MathJax]/jax/element/mml"``).
 
 
 Instance Properties
@@ -80,19 +80,19 @@ Methods
 .. Method:: Text(text[,callback])
 
     Sets the input text for this element to the given text and
-    reprocesses the mathematics.  (I.e., update the equation to the
+    reprocesses the mathematics.  (I.e., updates the equation to the
     new one given by `text`).  When the processing is complete, the
     `callback`, if any, is called.
 
     :Parameters:
-        - **text** --- the new mathematic source string for the element
+        - **text** --- the new mathematics source string for the element
 	- **callback** --- the callback specification
     :Returns: the callback object
  
 .. Method:: Reprocess([callback])
     :noindex:
 
-    Remove the output and produce it again.  This may be necessary if
+    Removes the output and produces it again.  This may be necessary if
     there are changes to the CSS styles that would affect the layout
     of the mathematics, for example.  The `callback`, if any, is
     called when the process completes.

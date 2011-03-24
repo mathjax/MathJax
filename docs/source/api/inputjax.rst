@@ -45,7 +45,7 @@ Properties
 
 .. describe:: directory
 
-    The directory where the jax files are stored (e.g., ``"[MathJax]/jax/input/TeX"``);
+    The directory where the jax files are stored (e.g., ``"[MathJax]/jax/input/TeX"``).
 
 .. describe:: elementJax
 

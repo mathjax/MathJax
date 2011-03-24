@@ -35,7 +35,7 @@ A callback specification is any one of the following:
     .. describe:: fn
 
         A function that is to be called when the callback is executed.
-        No additional data is passed to it (other that what it is
+        No additional data is passed to it (other than what it is
         called with at the time the callback is executed), and `this`
         will be the window object.
 
@@ -145,7 +145,7 @@ of a file), or in response to a user action.  For example:
     function f(x) {alert("x contains "+x)};
     function DelayedX(time) {
         var x = "hi";
-        setTimeout(MathJax.Callback([f, x], time);
+        setTimeout(MathJax.Callback([f, x], time));
     }
 
 The ``DelayedX`` function arranges for the function ``f`` to be called at
@@ -174,7 +174,7 @@ Callback Object Properties
 .. describe:: called
 
     Set to ``true`` after the callback has been called, and undefined
-    otherwise.  A callback will not be exectued a second time unless
+    otherwise.  A callback will not be executed a second time unless
     the callback's :meth:`reset()` method is called first, or its
     ``autoReset`` property is set to ``true``.
 
@@ -224,7 +224,7 @@ MathJax.Callback Methods
 
     Calls each callback in the `hooks` array (or the single hook if it
     is not an array), passing it the arguments stored in the data
-    array.  It `reset` is ``true``, then the callback's
+    array.  If `reset` is ``true``, then the callback's
     :meth:`reset()` method will be called before each hook is
     executed.  If any of the hooks returns a `Callback` object, then
     it collects those callbacks and returns a new callback that will

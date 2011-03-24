@@ -55,7 +55,7 @@
 <span id="api-queue"></span><h1>The MathJax.Callback.Queue Class<a class="headerlink" href="#the-mathjax-callback-queue-class" title="Permalink to this headline">¶</a></h1>
 <p>The <tt class="docutils literal"><span class="pre">MathJax.Callback.Queue</span></tt> object is one of the key mechanisms
 used by MathJax to synchronize its actions with those that occur
-asynchronously, like loading files and stylesheets.  A <cite>Queue</cite> obejct
+asynchronously, like loading files and stylesheets.  A <cite>Queue</cite> object
 is used to coordinate a sequence of actions so that they are performed
 one after another, even when one action has to wait for an
 asynchronous process to complete.  This guarantees that operations are
@@ -120,17 +120,16 @@ synchronization, say as an entry in some other queue).</p>
 <dl class="method">
 <dt>
 <tt class="descname">Process</tt><big>(</big><big>)</big></dt>
-<dd><blockquote>
-<div>Process the commands in the queue, provided the queue is not
+<dd><p>Process the commands in the queue, provided the queue is not
 waiting for another command to complete.  This method is used
-internally; you should not need to call it yourself.</div></blockquote>
+internally; you should not need to call it yourself.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="Suspend">
 <tt class="descname">Suspend</tt><big>(</big><big>)</big><a class="headerlink" href="#Suspend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increments the <cite>running</cite> property, indicating that any commands that
-are added the queue should not be executed immediately, but should
+are added to the queue should not be executed immediately, but should
 be queued for later execution (when its <a class="reference internal" href="#Resume" title="Resume"><tt class="xref py py-meth docutils literal"><span class="pre">Resume()</span></tt></a> is
 called).  This method is used internally; you should not need to
 call it yourself.</p>
@@ -154,7 +153,7 @@ rather than a callback specification.  A callback to this function
 (passing it the original callback) is queued instead, and it
 simply returns the callback it was passed. Since the queue will
 wait for a callback if it is the return value of one of the
-commands it executes, this effectively make the queue wait for the
+commands it executes, this effectively makes the queue wait for the
 original callback at that point in the command queue.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

@@ -14,7 +14,7 @@ loading is asynchronous, a number of the methods below may return
 before their actions are completed.  For this reason, they include
 callback functions that are called when the action completes.  These
 can be used to synchronize actions that require the mathematics to be
-completed before those action occur. See the :ref:`Using Callbacks
+completed before those actions occur. See the :ref:`Using Callbacks
 <using-callbacks>` documentation for more details.
 
 
@@ -58,9 +58,9 @@ Properties
 
         These are boolean values that indicate whether the browser is
         running on a Macintosh computer or a Windows computer.  They
-        will both be ``false`` for a Linux computer
+        will both be ``false`` for a Linux computer.
 
-    .. describe:: isForefox, isSafari, isChrome, isOpera, isMSIE, isKonqueror
+    .. describe:: isFirefox, isSafari, isChrome, isOpera, isMSIE, isKonqueror
 
         These are ``true`` when the browser is the indicated one, and
         ``false`` otherwise.
@@ -80,7 +80,7 @@ Properties
         browsers and whose values are the functions to be performed.
         Each function is passed one parameter, which is the
         ``MathJax.Hub.Browser`` object.  You do not need to include
-        every browser as one of your choices (only those for which you
+        every browser as one of your choices --- only those for which you
         need to do special processing.  For example:
 
 	.. code-block:: javascript
@@ -148,8 +148,8 @@ Methods
     Registers a listener for a particular message being sent to the
     startup signal (where initialization and component startup
     messages are sent).  When the message equals the `type`, the
-    `callback will be called with the message as its parameter.
-    See the :ref:`Using Signals <using-signals>` dcocumentation for
+    `callback` will be called with the message as its parameter.
+    See the :ref:`Using Signals <using-signals>` documentation for
     more details.
 
     :Parameters:
@@ -304,8 +304,8 @@ Methods
 
     Returns ``0`` if the element is not a ``<script>`` that can be
     processed by MathJax or the result of an output jax, returns ``-1``
-    if element is an unprocessed ``<script>`` tag that could be
-    handled by MathJax, and returns ``1`` if element is a processed
+    if the element is an unprocessed ``<script>`` tag that could be
+    handled by MathJax, and returns ``1`` if the element is a processed
     ``<script>`` tag or an element that is the result of an output jax.
         
     :Parameters:
@@ -316,7 +316,7 @@ Methods
 
     Inserts data from the `src` object into the `dst` object.  The
     `key:value` pairs in `src` are (recursively) copied into `dst`, so
-    that if `value` is itself an object, its contents is copied into
+    that if `value` is itself an object, its content is copied into
     the corresponding object in `dst`.  That is, objects within `src`
     are merged into the corresponding objects in `dst` (they don't
     replace them).
@@ -333,7 +333,7 @@ Methods
     The `script` is a reference to the ``<script>`` tag where the
     error occurred, and `error` is the ``Error`` object for the error.
     The default action is to insert an HTML snippet at the location of
-    the script, but this routine can be overriden durring MathJax
+    the script, but this routine can be overriden during MathJax
     configuration in order to perform some other action.
     ``MathJax.Hub.lastError`` holds the ``error`` value of the last
     error on the page.
