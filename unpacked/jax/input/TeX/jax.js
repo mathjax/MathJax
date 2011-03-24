@@ -1195,7 +1195,8 @@
     
     Accent: function (name,accent,stretchy) {
       var c = this.ParseArg(name);
-      var mml = this.mmlToken(MML.mo(MML.entity("#x"+accent)).With({accent: TRUE}));
+      var def = {accent: true}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
+      var mml = this.mmlToken(MML.mo(MML.entity("#x"+accent)).With(def));
       mml.stretchy = (stretchy ? TRUE : FALSE);
       this.Push(MML.munderover(c,null,mml).With({accent: TRUE}));
     },
