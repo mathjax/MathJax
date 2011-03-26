@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.1",
+  version: "1.1.1",
   config: {
     element: null,             // The ID of the element to be processed
                                //   (defaults to full document)
@@ -216,7 +216,11 @@ MathJax.Extension.tex2jax = {
         } else {
           math.nodeValue += math.nextSibling.nodeValue;
         }
-      } else {math.nodeValue += ' '}
+      } else if (this.msieNewlineBug) {
+        math.nodeValue += (math.nextSibling.nodeName.toLowerCase() === "br" ? "\n" : " ");
+      } else {
+        math.nodeValue += " ";
+      }
       math.parentNode.removeChild(math.nextSibling);
     }
     var TeX = math.nodeValue.substr(search.olen,math.nodeValue.length-search.olen-search.clen);
@@ -251,7 +255,9 @@ MathJax.Extension.tex2jax = {
     return script;
   },
   
-  filterTeX: function (tex) {return tex}
+  filterTeX: function (tex) {return tex},
+  
+  msieNewlineBug: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9)
   
 };
 
