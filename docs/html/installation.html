@@ -246,7 +246,7 @@ mode</cite>, so it exhibits this same behavior.</p>
 <p>There is a solution to this, however, if you manage the server where
 MathJax is installed, and if that server is running the <a class="reference external" href="http://www.apache.org/">Apache web
 server</a>.  In the remote server&#8217;s
-<tt class="docutils literal"><span class="pre">MathJax/fonts/HTML-CSS/TeX/otf</span></tt> folder, create a file called
+<tt class="docutils literal"><span class="pre">MathJax/fonts/</span></tt> folder, create a file called
 <tt class="docutils literal"><span class="pre">.htaccess</span></tt> that contains the following lines:</p>
 <div class="highlight-python"><pre>&lt;FilesMatch "\.(ttf|otf|eot)$"&gt;
 &lt;IfModule mod_headers.c&gt;

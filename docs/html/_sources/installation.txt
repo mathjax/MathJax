@@ -259,7 +259,7 @@ mode`, so it exhibits this same behavior.
 There is a solution to this, however, if you manage the server where
 MathJax is installed, and if that server is running the `Apache web
 server <http://www.apache.org/>`_.  In the remote server's
-``MathJax/fonts/HTML-CSS/TeX/otf`` folder, create a file called
+``MathJax/fonts/`` folder, create a file called
 ``.htaccess`` that contains the following lines:
 ::
 
