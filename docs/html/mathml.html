@@ -62,7 +62,7 @@ that it can be displayed by the browser&#8217;s native MathML support.</p>
 of these components.  For example, you could use the <cite>tex2jax</cite>
 preprocessor and the TeX input processor, but the NativeMML output
 processor, so that your mathematics is entered in TeX format, but
-displayed as MathML.  Or you could use the <cite>mml2jax</cite> reprocessor and
+displayed as MathML.  Or you could use the <cite>mml2jax</cite> preprocessor and
 MathML input processor with the HTML-CSS output processor to make
 MathML available in browsers that don&#8217;t have native MathML support.
 It is also possible to have MathJax select the output processor for
@@ -84,7 +84,7 @@ the source markup, and so on, so there is added value to using MathJax
 even with a pure MathML workflow.</p>
 <div class="section" id="mathml-in-html-pages">
 <h2>MathML in HTML pages<a class="headerlink" href="#mathml-in-html-pages" title="Permalink to this headline">¶</a></h2>
-<p>For MathML that is handled via the pre-processor, you should not use
+<p>For MathML that is handled via the preprocessor, you should not use
 the named MathML entities, but rather use the numeric entities like
 <tt class="docutils literal"><span class="pre">&amp;#x221A;</span></tt> or unicode characters embedded in the page itself.  The
 reason is that entities are replaced by the browser before MathJax
@@ -122,7 +122,7 @@ coming.</p>
 <li>No support for the elementary math tags: <tt class="docutils literal"><span class="pre">mstack</span></tt>, <tt class="docutils literal"><span class="pre">mlongdiv</span></tt>,
 <tt class="docutils literal"><span class="pre">msgroup</span></tt>, <tt class="docutils literal"><span class="pre">msrow</span></tt>, <tt class="docutils literal"><span class="pre">mscarries</span></tt>, and <tt class="docutils literal"><span class="pre">mscarry</span></tt>.</li>
 <li>Limited support for line breaking (they are only allowed in direct
-children of <tt class="docutils literal"><span class="pre">mrow</span></tt> or implied <tt class="docutils literal"><span class="pre">mrow</span></tt> elements.</li>
+children of <tt class="docutils literal"><span class="pre">mrow</span></tt> or implied <tt class="docutils literal"><span class="pre">mrow</span></tt> elements).</li>
 <li>No support for alignment groups in table.</li>
 <li>No support for right-to-left rendering.</li>
 </ul>

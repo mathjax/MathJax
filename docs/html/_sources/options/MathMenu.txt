@@ -35,7 +35,7 @@ would set the ``delay`` option to 600 milliseconds.
 .. describe:: showRenderer: true
 
    This controls whether the "Math Renderer" item will be displayed in
-   the the "Settings" submenu of the mathematics contextual menu.  It
+   the "Settings" submenu of the mathematics contextual menu.  It
    allows the user to change between the `HTML-CSS` and `NativeMML`
    output processors for the mathematics on the page.  Set to
    ``false`` to prevent this menu item from showing.
@@ -43,9 +43,9 @@ would set the ``delay`` option to 600 milliseconds.
 .. describe:: showContext: false
 
    This controls whether the "Contextual Menu" item will be displayed
-   in the the "Settings" submenu of the mathematics contextual menu.
+   in the "Settings" submenu of the mathematics contextual menu.
    It allows the user to decide whether the MathJax menu or the
-   browser's default contextual manu will be shown when the context
+   browser's default contextual menu will be shown when the context
    menu click occurs over mathematics typeset by MathJax.  (The main
    reason to allow pass-through to the browser's menu is to gain
    access to the MathPlayer contextual menu when the NativeMML output
@@ -56,7 +56,7 @@ would set the ``delay`` option to 600 milliseconds.
 .. describe:: showFontMenu: false
 
    This controls whether the "Font Preference" item will be displayed
-   in the the "Settings" submenu of the mathematics contextual menu.
+   in the "Settings" submenu of the mathematics contextual menu.
    This submenu lets the user select what font to use in the
    mathematics produced by the `HTML-CSS` output processor.  Note that
    changing the selection in the font menu will cause the page to

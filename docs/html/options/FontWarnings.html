@@ -119,32 +119,32 @@ messages).  These are defined below in the <tt class="docutils literal"><span cl
 referenced using <tt class="docutils literal"><span class="pre">[&quot;name&quot;]</span></tt> within the snippet, where <cite>name</cite> is
 the name of one of the snippets defined in the <tt class="docutils literal"><span class="pre">HTML</span></tt>
 configuration block.  For example</p>
-<div class="highlight-javascript"><pre>   Message: {
-     noFonts: [
-       ["closeBox"],
-       "MathJax is unable to locate a font to use to display ",
-       "its mathematics, and image fonts are not available, so it ",
-       "is falling back on generic unicode characters in hopes that ",
-       "your browser will be able to display them.  Some characters ",
-       "may not show up properly, or possibly not at all.",
-       ["fonts"],
-       ["webfonts"]
-     ]
-   }
-
-refers to the ``closeBox``, ``fonts`` and ``webfonts`` snippets in
-declared in the ``HTML`` section.</pre>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Message</span><span class="o">:</span> <span class="p">{</span>
+  <span class="nx">noFonts</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s2">&quot;closeBox&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;MathJax is unable to locate a font to use to display &quot;</span><span class="p">,</span>
+    <span class="s2">&quot;its mathematics, and image fonts are not available, so it &quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is falling back on generic unicode characters in hopes that &quot;</span><span class="p">,</span>
+    <span class="s2">&quot;your browser will be able to display them.  Some characters &quot;</span><span class="p">,</span>
+    <span class="s2">&quot;may not show up properly, or possibly not at all.&quot;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">&quot;fonts&quot;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;webfonts&quot;</span><span class="p">]</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
 </div>
+<p>refers to the <tt class="docutils literal"><span class="pre">closeBox</span></tt>, <tt class="docutils literal"><span class="pre">fonts</span></tt> and <tt class="docutils literal"><span class="pre">webfonts</span></tt> snippets
+declared in the <tt class="docutils literal"><span class="pre">HTML</span></tt> section.</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">HTML: { ... }</tt></dt>
 <dd><p>This object defines HTML snippets that are common to more than one
-message in the <tt class="docutils literal"><span class="pre">Message</span></tt> section above.  They can be called in
-by using <tt class="docutils literal"><span class="pre">[&quot;name&quot;]</span></tt> in an HTML snippet, where <cite>name</cite> refers to
-the name of the snippet in the <tt class="docutils literal"><span class="pre">HTML</span></tt> block.  The pre-defined
-snippets are:</p>
+message in the <tt class="docutils literal"><span class="pre">Message</span></tt> section above.  They can be included in
+other HTML snippets by by using <tt class="docutils literal"><span class="pre">[&quot;name&quot;]</span></tt> in an HTML snippet,
+where <cite>name</cite> refers to the name of the snippet in the <tt class="docutils literal"><span class="pre">HTML</span></tt>
+block.  The pre-defined snippets are:</p>
 <dl class="describe">
 <dt>
 <tt class="descname">closeBox</tt></dt>

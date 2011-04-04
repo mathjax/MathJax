@@ -6,7 +6,7 @@ The MathJax.Callback.Queue Class
 
 The ``MathJax.Callback.Queue`` object is one of the key mechanisms
 used by MathJax to synchronize its actions with those that occur
-asynchronously, like loading files and stylesheets.  A `Queue` obejct
+asynchronously, like loading files and stylesheets.  A `Queue` object
 is used to coordinate a sequence of actions so that they are performed
 one after another, even when one action has to wait for an
 asynchronous process to complete.  This guarantees that operations are
@@ -57,7 +57,7 @@ Methods
     :Returns: the last callback object added to the queue
 
 .. method:: Process()
-   :noindex:
+    :noindex:
 
     Process the commands in the queue, provided the queue is not
     waiting for another command to complete.  This method is used
@@ -66,7 +66,7 @@ Methods
 .. method:: Suspend()
 
     Increments the `running` property, indicating that any commands that
-    are added the queue should not be executed immediately, but should
+    are added to the queue should not be executed immediately, but should
     be queued for later execution (when its :meth:`Resume()` is
     called).  This method is used internally; you should not need to
     call it yourself.
@@ -86,7 +86,7 @@ Methods
     (passing it the original callback) is queued instead, and it
     simply returns the callback it was passed. Since the queue will
     wait for a callback if it is the return value of one of the
-    commands it executes, this effectively make the queue wait for the
+    commands it executes, this effectively makes the queue wait for the
     original callback at that point in the command queue.
 
     :Parameters:

@@ -50,7 +50,7 @@ date or out of date). If MathJax needs updating, use
     cd MathJax
     git pull origin
 
-to udpate your copy of MathJax to the current release version.  If you
+to update your copy of MathJax to the current release version.  If you
 keep MathJax updated in this way, you will be sure that you have the
 latest bug fixes and new features as they become available.
 
@@ -86,15 +86,15 @@ there is a crucial change that needs to be made).  If you want to use the
 patched version of a release, then check out the branch rather than the 
 tag.  Use 
 
-.. code-block::sh
+.. code-block:: sh
 
     cd MathJax
     git branch
 
-to get a list of the available branches.  There be separate branches
+to get a list of the available branches.  There are separate branches
 for the main releases, but with ``-latest`` appended.  These contain
 all the patches for that particular release.  You can check out one of
-the branchs just as you would a tagged copy.  For example, the branch
+the branches just as you would a tagged copy.  For example, the branch
 for the ``v1.1`` tagged release is ``v1.1-latest``.  To get this
 release, use
 
@@ -144,7 +144,7 @@ use
     cd MathJax
     svn update
 
-to udpate your copy of MathJax to the current release version.  If you
+to update your copy of MathJax to the current release version.  If you
 keep MathJax updated in this way, you will be sure that you have the
 latest bug fixes and new features as they become available.
 
@@ -162,7 +162,7 @@ described below.  You can use
 
 to check out revision number `nnn`, but it is not easy to tell what
 svn revision number is associated with a particular release.  GitHub's
-``svn`` service doesn't appear to allow you to sepecify a particular
+``svn`` service doesn't appear to allow you to specify a particular
 tagged version.
 
 
@@ -194,13 +194,13 @@ right), you can also select the ``Download .tar.gz`` or ``Download
 MathJax that contains all the latest changes and bug-fixes.  You can
 also get older tagged versions (if there are any).
 
-If a packaged release recevies any important updates, then those
+If a packaged release receives any important updates, then those
 updates will be part of the `branch` for that version.  The link to
 the ``.zip`` file in the download list will be the original release
 version, not the patched version.  To obtain the patched version, use
 the `Branches` drop down menu (at the far left of the menus within the
 page) to select the release branch that you want (for example
-``v1.1-latest``), and then use the downlaod button and the ``Downlaod
+``v1.1-latest``), and then use the download button and the ``Download
 .tar.gz`` or ``Download .zip`` button to get the latest patched
 version of that release.
 
@@ -240,7 +240,7 @@ a different site.  For example, a departmental server at
 ``www.math.yourcollege.edu`` might like to use a college-wide
 installation at ``www.yourcollege.edu`` rather than installing a
 separate copy on the departmental machine.  MathJax can certainly
-be loaded from another server, but there is one imporant caveat ---
+be loaded from another server, but there is one important caveat ---
 Firefox's and IE9's same-origin security policy for cross-domain scripting.
 
 Firefox's interpretation of the same-origin policy is more strict than most
@@ -259,7 +259,7 @@ mode`, so it exhibits this same behavior.
 There is a solution to this, however, if you manage the server where
 MathJax is installed, and if that server is running the `Apache web
 server <http://www.apache.org/>`_.  In the remote server's
-``MathJax/fonts/HTML-CSS/TeX/otf`` folder, create a file called
+``MathJax/fonts/`` folder, create a file called
 ``.htaccess`` that contains the following lines:
 ::
 
@@ -302,7 +302,7 @@ from your hard disk.  Firefox's interpretation of the same-origin
 policy for local files is that the "same domain" for a page is the
 directory where that page exists, or any of its subdirectories.  So if
 you use MathJax in a page with a ``file://`` URL, and if MathJax is
-loaded from a diretory other than the one containing the original
+loaded from a directory other than the one containing the original
 page, then MathJax will not be able to access the web-based fonts in
 Firefox.  In that case, MathJax will fall back on image fonts to
 display the mathematics.

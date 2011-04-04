@@ -53,7 +53,7 @@
 <span id="whats-new"></span><h1>What&#8217;s New in MathJax v1.1<a class="headerlink" href="#what-s-new-in-mathjax-v1-1" title="Permalink to this headline">¶</a></h1>
 <p>MathJax version 1.1 includes a number of important improvements and
 enhancements over version 1.0.  We have worked hard to fix bugs, improve
-support for browsers and mobile devices, supprot TeX and MathML better, and
+support for browsers and mobile devices, process TeX and MathML better, and
 increase MathJax&#8217;s performance.</p>
 <p>In addition to these changes, MathJax.org now offers MathJax as a network
 service.  Instead of having to install MathJax on your own server, you can
@@ -64,9 +64,9 @@ the CDN</em></a> for more details.</p>
 <div class="section" id="optimization">
 <h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Combined configuraiton files that load all the needed files in one piece
+<li>Combined configuration files that load all the needed files in one piece
 rather than loading them individually.  This simplifies configuration
-and speeds up typsetting of the mathematics on the page.</li>
+and speeds up typesetting of the mathematics on the page.</li>
 <li>Improved responsiveness to mouse events during typesetting.</li>
 <li>Parallel downloading of files needed by MathJax, for faster startup
 times.</li>
@@ -75,12 +75,12 @@ have to wait so long.</li>
 <li>Rollover to image fonts if a web font fails to load (so you don&#8217;t have
 to wait for <em>every</em> font to fail.</li>
 <li>The MathJax files are now packed only with <cite>yuicompressor</cite> rather than a
-custom compressor.  The CDN serves gzipped versions, which compressed
-better than the gzipped custom-packed files.</li>
+custom compressor.  The CDN serves gzipped versions, which end up being
+smaller than the gzipped custom-packed files.</li>
 <li>Improved rendering speed in IE by removing <tt class="docutils literal"><span class="pre">position:relative</span></tt> from
 the style for mathematics.</li>
-<li>Improve rendering speed for most browsers by isolating the mathematics
-from page during typesetting (avoids full page reflows).</li>
+<li>Improved rendering speed for most browsers by isolating the mathematics
+from the page during typesetting (avoids full page reflows).</li>
 </ul>
 </div>
 <div class="section" id="enhancements">
@@ -96,7 +96,7 @@ mathematics, for example).</li>
 <li>Switch the Git repository from storing the fonts in <cite>fonts.zip</cite> to
 storing the <cite>fonts/</cite> directory directly.</li>
 <li>Improved About box.</li>
-<li>add a minimum scaling factor (so math won&#8217;t get too small)</li>
+<li>Added a minimum scaling factor (so math won&#8217;t get too small).</li>
 </ul>
 </div>
 <div class="section" id="tex-support">
@@ -124,7 +124,7 @@ storing the <cite>fonts/</cite> directory directly.</li>
 <li>Better support for MathML namespaces.</li>
 <li>Properly handle comments within MathML in IE.</li>
 <li>Properly consider <tt class="docutils literal"><span class="pre">&lt;mspace&gt;</span></tt> and <tt class="docutils literal"><span class="pre">&lt;mtext&gt;</span></tt> as space-like.</li>
-<li>Improved support for <tt class="docutils literal"><span class="pre">&lt;maction&gt;</span></tt> with embelished operators.</li>
+<li>Improved support for <tt class="docutils literal"><span class="pre">&lt;maction&gt;</span></tt> with embellished operators.</li>
 </ul>
 </div>
 <div class="section" id="other-bug-fixes">
@@ -133,7 +133,7 @@ storing the <cite>fonts/</cite> directory directly.</li>
 <li>Fixed CSS bleed through with zoom and other situations.</li>
 <li>Fixed problems with <tt class="docutils literal"><span class="pre">showMathMenuMSIE</span></tt> when set to <tt class="docutils literal"><span class="pre">false</span></tt>.</li>
 <li>Replaced illegal prefix characters in cookie name.</li>
-<li>Improve placement of surd for square roots and n-th roots.</li>
+<li>Improved placement of surd for square roots and n-th roots.</li>
 <li>Fixed layer obscuring math from MathPlayer for screen readers.</li>
 <li>Newlines in CDATA comments are now handled properly.</li>
 <li>Resolved conflict between <cite>jsMath2jax</cite> and <cite>tex2jax</cite> both processing the
@@ -162,7 +162,7 @@ sibling elements.</li>
 <li>Added Firefox 4 detection and configuration.</li>
 <li>Fix for extra line-break bug when displayed equations are in
 preformatted text.</li>
-<li>Update fonts so that FF 3.6.13 and above can read them.</li>
+<li>Updated fonts so that FF 3.6.13 and above can read them.</li>
 </ul>
 <p><strong>Internet Explorer</strong></p>
 <ul class="simple">
@@ -174,7 +174,7 @@ preformatted text.</li>
 </ul>
 <p><strong>iPhone/iPad</strong></p>
 <ul class="simple">
-<li>Add support for OTF web fonts in iOS4.2.</li>
+<li>Added support for OTF web fonts in iOS4.2.</li>
 </ul>
 <p><strong>Nokia</strong></p>
 <ul class="simple">
@@ -184,7 +184,7 @@ preformatted text.</li>
 <ul class="simple">
 <li>Prevent Opera from using STIX fonts unless explicitly requested via the
 font menu (since Opera can&#8217;t display many of the characters).</li>
-<li>Fix for bad em-size detection in 10.61.</li>
+<li>Fixed bad em-size detection in 10.61.</li>
 <li>Fixed a problem with the About dialog in Opera 11.</li>
 </ul>
 <p><strong>Safari</strong></p>

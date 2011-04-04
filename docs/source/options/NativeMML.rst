@@ -18,13 +18,13 @@ in your :meth:`MathJax.Hub.Config()` call.  For example
       }
     });
 
-would set the ``sale`` option to 105 percent.
+would set the ``scale`` option to 105 percent.
 
 .. describe:: scale: 100
 
     The scaling factor (as a percentage) of math with respect to the
     surrounding text.  Since the `NativeMML` output relies on the
-    browser's natiove MathML support, MathJax does not control the
+    browser's native MathML support, MathJax does not control the
     font size used in the mathematics.  You may need to set this value
     to compensate for the size selected by the browser.  The user can
     also adjust this value using the contextual menu item associated
@@ -49,7 +49,7 @@ would set the ``sale`` option to 105 percent.
 
     There is a separate menu setting for MSIE since the code to handle
     that is a bit delicate; if it turns out to have unexpected
-    consequences, you can turn it off without turing off other the
+    consequences, you can turn it off without turning off the
     menu support in other browsers.
    
 .. describe:: styles: {}

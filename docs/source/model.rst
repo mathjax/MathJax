@@ -38,7 +38,7 @@ preprocessors for :ref:`TeX notation <TeX-support>`, :ref:`MathML
 notation <MathML-support>`, and the :ref:`jsMath notation
 <jsMath-support>` that uses `span` and `div` tags.
 
-For pages that are constructed programatically, such as HTML
+For pages that are constructed programmatically, such as HTML
 pages that result from running a processor on text in some other
 format (e.g., pages produced from Markdown documents, or via programs
 like `tex4ht`), it would be best to use MathJax's special tags
@@ -46,7 +46,7 @@ directly, as described below, rather than having MathJax run
 another preprocessor.  This will speed up the final display of the
 mathematics, since the extra preprocessing step would not be needed,
 and it also avoids the conflict between the use of the less-than sign,
-``<``, in mathematics and asn an HTML special character (that starts
+``<``, in mathematics and as an HTML special character (that starts
 an HTML tag).
 
 
@@ -192,21 +192,21 @@ by MathJax (called an `element jax`).  This internal format is
 essentially MathML (represented as JavaScript objects), so an input
 jax acts as a translator into MathML.
 
-**Output jax** convert that internal element jax format into a specific
-output format.  For example, the NativeMML output jax inserts MathML
-tags into the page to represent the mathematics, while the HTML-CSS
-output jax uses HTML with CSS styling to lay out the mathematics so
-that it can be displayed even in browsers that dont understand
-MathML.  Output jax could be produced that render the mathematics
-using SVG, for example, or that speak an equation for the blind
-users.  The MathJax contextual menu can be used to switch between the
-output jax that are available.
+**Output jax** convert that internal element jax format into a
+specific output format.  For example, the NativeMML output jax inserts
+MathML tags into the page to represent the mathematics, while the
+HTML-CSS output jax uses HTML with CSS styling to lay out the
+mathematics so that it can be displayed even in browsers that don't
+understand MathML.  Output jax could be produced that render the
+mathematics using SVG, for example, or that speak an equation for
+blind users.  The MathJax contextual menu can be used to switch
+between the output jax that are available.
 
 Each input and output jax has a small configuration file that is
 loaded when that input jax is included in the `jax` array in the
 MathJax configuration, and a larger file that implements the core
 functionality of that particular jax.  The latter file is loaded
-when the first time the jax is needed by MathJax to process some
+the first time the jax is needed by MathJax to process some
 mathematics.
 
 The **MathJax Hub** keeps track of the internal representations of the

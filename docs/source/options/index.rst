@@ -42,7 +42,7 @@ For example,
     });
 
 is a configuration that includes two settings for the MathJax Hub (one
-for `showProcessingMessages` and one of the `jax` array), and a
+for `showProcessingMessages` and one for the `jax` array), and a
 configuration object for the TeX input processor.  The latter includes
 a setting for the TeX input processor's `TagSide` option (to set tags
 on the left rather than the right) and a setting for `Macros`, which
@@ -50,7 +50,7 @@ defines new TeX macros (in this case, two macros, one called ``\RR``
 that produces a bold "R", and one called ``\bold`` that puts is
 argument in bold face).
 
-The ``config/MathJax.js`` file is another example that shows nearly
+The ``config/default.js`` file is another example that shows nearly
 all the configuration options for all of MathJax's components.
 
 

@@ -26,13 +26,13 @@ Using MathJax in Movable Type
          src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
        </script>
 
-   to load MathJax from our distributed netowrk service.
+   to load MathJax from our distributed network service.
  
      .. image:: ../images/mt_head.png
 
 5. Save the file.  This will enable MathJax with both TeX and MathML
    input, so you should be able to start adding mathematical content to
-   your pages.  If you need to adjust the configuraiton, see
+   your pages.  If you need to adjust the configuration, see
    :ref:`Configuring MathJax <loading>` for more details.
 
 

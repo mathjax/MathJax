@@ -5,7 +5,7 @@ The MathJax.HTML Object
 ***********************
 
 The ``MathJax.HTML`` object provides routines for creating HTML
-elements and adding them to the page, and int particular, it contains
+elements and adding them to the page, and in particular, it contains
 the code that processes MathJax's :ref:`HTML snippets <html-snippets>`
 and turns them into actual DOM objects.  It also implements the
 methods used to manage the cookies used by MathJax.
@@ -108,7 +108,7 @@ Methods
     discussed below.
 
     :Parameters:
-        - **name** --- the name that identifies the coookie
+        - **name** --- the name that identifies the cookie
         - **data** --- object containing the data to store in the cookie
     :Returns: ``null``
 

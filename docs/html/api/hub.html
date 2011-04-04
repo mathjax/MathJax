@@ -63,7 +63,7 @@ loading is asynchronous, a number of the methods below may return
 before their actions are completed.  For this reason, they include
 callback functions that are called when the action completes.  These
 can be used to synchronize actions that require the mathematics to be
-completed before those action occur. See the <a class="reference internal" href="../callbacks.html#using-callbacks"><em>Using Callbacks</em></a> documentation for more details.</p>
+completed before those actions occur. See the <a class="reference internal" href="../callbacks.html#using-callbacks"><em>Using Callbacks</em></a> documentation for more details.</p>
 <div class="section" id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <dl class="describe">
@@ -114,12 +114,12 @@ additional properties and methods concerning the browser:</p>
 <tt class="descname">isMac and isPC</tt></dt>
 <dd><p>These are boolean values that indicate whether the browser is
 running on a Macintosh computer or a Windows computer.  They
-will both be <tt class="docutils literal"><span class="pre">false</span></tt> for a Linux computer</p>
+will both be <tt class="docutils literal"><span class="pre">false</span></tt> for a Linux computer.</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
-<tt class="descname">isForefox, isSafari, isChrome, isOpera, isMSIE, isKonqueror</tt></dt>
+<tt class="descname">isFirefox, isSafari, isChrome, isOpera, isMSIE, isKonqueror</tt></dt>
 <dd><p>These are <tt class="docutils literal"><span class="pre">true</span></tt> when the browser is the indicated one, and
 <tt class="docutils literal"><span class="pre">false</span></tt> otherwise.</p>
 </dd></dl>
@@ -142,7 +142,7 @@ for instance.</p>
 browsers and whose values are the functions to be performed.
 Each function is passed one parameter, which is the
 <tt class="docutils literal"><span class="pre">MathJax.Hub.Browser</span></tt> object.  You do not need to include
-every browser as one of your choices (only those for which you
+every browser as one of your choices &#8212; only those for which you
 need to do special processing.  For example:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Browser</span><span class="p">.</span><span class="nx">Select</span><span class="p">(</span>
   <span class="nx">MSIE</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">browser</span><span class="p">)</span> <span class="p">{</span>
@@ -256,8 +256,8 @@ parameter.</p>
 <dd><p>Registers a listener for a particular message being sent to the
 startup signal (where initialization and component startup
 messages are sent).  When the message equals the <cite>type</cite>, the
-<cite>callback will be called with the message as its parameter.
-See the :ref:`Using Signals &lt;using-signals&gt;</cite> dcocumentation for
+<cite>callback</cite> will be called with the message as its parameter.
+See the <a class="reference internal" href="../signals.html#using-signals"><em>Using Signals</em></a> documentation for
 more details.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -283,7 +283,7 @@ more details.</p>
 completely loaded and processed.  (The callback is called when the
 file makes its <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Ajax.loadComplete()</span></tt> call.) The
 <cite>file</cite> should be the complete file name, e.g.,
-<tt class="docutils literal"><span class="pre">&quot;[MathJax]/config/MathJax.js&quot;</span></tt>.</p>
+<tt class="docutils literal"><span class="pre">&quot;[MathJax]/config/default.js&quot;</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -555,8 +555,8 @@ element, or a reference to the DOM element itself.</p>
 <tt class="descname">isJax</tt><big>(</big><em>element</em><big>)</big><a class="headerlink" href="#isJax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <tt class="docutils literal"><span class="pre">0</span></tt> if the element is not a <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> that can be
 processed by MathJax or the result of an output jax, returns <tt class="docutils literal"><span class="pre">-1</span></tt>
-if element is an unprocessed <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag that could be
-handled by MathJax, and returns <tt class="docutils literal"><span class="pre">1</span></tt> if element is a processed
+if the element is an unprocessed <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag that could be
+handled by MathJax, and returns <tt class="docutils literal"><span class="pre">1</span></tt> if the element is a processed
 <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag or an element that is the result of an output jax.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -579,7 +579,7 @@ handled by MathJax, and returns <tt class="docutils literal"><span class="pre">1
 <tt class="descname">Insert</tt><big>(</big><em>dst</em>, <em>src</em><big>)</big><a class="headerlink" href="#Insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inserts data from the <cite>src</cite> object into the <cite>dst</cite> object.  The
 <cite>key:value</cite> pairs in <cite>src</cite> are (recursively) copied into <cite>dst</cite>, so
-that if <cite>value</cite> is itself an object, its contents is copied into
+that if <cite>value</cite> is itself an object, its content is copied into
 the corresponding object in <cite>dst</cite>.  That is, objects within <cite>src</cite>
 are merged into the corresponding objects in <cite>dst</cite> (they don&#8217;t
 replace them).</p>
@@ -608,7 +608,7 @@ of a math element (i.e., an error in the MathJax code itself).
 The <cite>script</cite> is a reference to the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag where the
 error occurred, and <cite>error</cite> is the <tt class="docutils literal"><span class="pre">Error</span></tt> object for the error.
 The default action is to insert an HTML snippet at the location of
-the script, but this routine can be overriden durring MathJax
+the script, but this routine can be overriden during MathJax
 configuration in order to perform some other action.
 <tt class="docutils literal"><span class="pre">MathJax.Hub.lastError</span></tt> holds the <tt class="docutils literal"><span class="pre">error</span></tt> value of the last
 error on the page.</p>

@@ -18,7 +18,7 @@ rather than just ``ul li``.
 The value used to define the CSS style can either be a string
 containing the CSS definition, or a javascript object that is itself a
 collection of `name:value` pairs, where the `name` is the attribute
-being defined and `value` is the value that attibute should be given.
+being defined and `value` is the value that attribute should be given.
 Note that, since this is a JavaScript object, the pairs are separated
 by commas (not semi-colons) and the values are enclosed in quotation
 marks.  If the name contains dashes, it should be enclosed in

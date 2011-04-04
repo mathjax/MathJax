@@ -56,9 +56,9 @@
 <p>The <tt class="docutils literal"><span class="pre">MathJax.Callback.Signal</span></tt> object is one of the key mechanisms
 used by MathJax to synchronize its actions with those that occur
 asynchronously, like loading files and stylesheets.  A <cite>Signal</cite> object
-is used to pulicise the fact that MathJax has performed certain
-actions, giving other code running the the web page the chance to
-react to those actions.  See <a class="reference internal" href="../synchronize.html#synchronization"><em>Synchronizing with MathJax</em></a> for more details, and <a class="reference internal" href="../signals.html#using-signals"><em>Using Signals</em></a> in particular for examples of how to specify and use
+is used to publicize the fact that MathJax has performed certain
+actions, giving other code running the web page the chance to react to
+those actions.  See <a class="reference internal" href="../synchronize.html#synchronization"><em>Synchronizing with MathJax</em></a> for more details, and <a class="reference internal" href="../signals.html#using-signals"><em>Using Signals</em></a> in particular for examples of how to specify and use
 MathJax <cite>Signal</cite> objects.</p>
 <p>The <cite>Callback Signal</cite> object is a subclass of the <a class="reference internal" href="queue.html#api-queue"><em>Callback Queue</em></a> object.</p>
 <div class="section" id="properties">
@@ -75,7 +75,7 @@ the signal return references to the same object.</p>
 <dl class="describe">
 <dt>
 <tt class="descname">posted</tt></dt>
-<dd><p>Array used internally to stored the post history so that when new
+<dd><p>Array used internally to store the post history so that when new
 listeners express interests in this signal, they can be informed
 of the signals that have been posted so far.  This can be cleared
 using the signal&#8217;s <a class="reference internal" href="message.html#Clear" title="Clear"><tt class="xref py py-meth docutils literal"><span class="pre">Clear()</span></tt></a> method.</p>
@@ -86,7 +86,7 @@ using the signal&#8217;s <a class="reference internal" href="message.html#Clear"
 <tt class="descname">listeners</tt></dt>
 <dd><p>Array of callbacks to the listeners who have expressed interest in
 hearing about posts to this signal.  When a post occurs, the
-listeners are called in each turn, passing them the message that
+listeners are called, each in turn, passing them the message that
 was posted.</p>
 </dd></dl>
 
@@ -99,7 +99,7 @@ was posted.</p>
 <dd><p>Posts a message to all the listeners for the signal.  The listener
 callbacks are called in turn (with the message as an argument),
 and if any return a <cite>Callback</cite> object, the posting will be
-suspended until the callback is exectured.  In this way, the
+suspended until the callback is executed.  In this way, the
 <a class="reference internal" href="#Post" title="Post"><tt class="xref py py-meth docutils literal"><span class="pre">Post()</span></tt></a> call can operate asynchronously, and so the
 <cite>callback</cite> parameter is used to synchronize with its operation;
 the <cite>callback</cite> will be called when all the listeners have responded
@@ -224,7 +224,7 @@ the given message.  This is a little easier than having to write a
 function that must check the message each time it is called.
 Although the <cite>message</cite> here is a string, if a message posted to the
 signal is an array, then only the first element of that array is
-used to match against message.  That way, if a message contains an
+used to match against the message.  That way, if a message contains an
 identifier plus arguments, the hook will match the identifier and
 still get called with the complete set of arguments.</p>
 <p>Returns the <cite>Callback</cite> object that was produced.</p>

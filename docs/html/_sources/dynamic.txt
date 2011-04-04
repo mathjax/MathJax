@@ -45,7 +45,7 @@ Here is an example of how to load and configure MathJax dynamically:
 
 You can adjust the ``config`` variable to your needs, but be careful to get
 the commas right.  The ``window.opera`` test is because some versions of
-Opera doesn't handle setting ``script.text`` properly, while Internet
+Opera don't handle setting ``script.text`` properly, while Internet
 Explorer doesn't handle setting the ``innerHTML`` of a script tag.
 
 Here is a version that uses the ``config=filename`` method to
@@ -97,9 +97,9 @@ server-based copy.  The MathJax CDN works nicely for this.
 ----
 
 Here is a script that runs MathJax in any document that contains
-MathML (whether its includes MathJax or not).  That allows 
+MathML (whether it includes MathJax or not).  That allows 
 browsers that don't have native MathML support to view any web pages
-with MathML, even if they say it only works in Forefox and
+with MathML, even if they say it only works in Firefox and
 IE+MathPlayer.
 
 .. code-block:: javascript
