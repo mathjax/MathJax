@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   MathJax.Extension.MathMenu = {version: VERSION};
 
@@ -524,7 +524,7 @@
         display:"inline-block", "text-align":"left", "font-size":"80%",
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
       }},jax],["br"],["br"],
-      ["a",{href:"http://www.mathjax.org/"},["wwww.mathjax.org"]]
+      ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]]
     ]);
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;
