@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.1.1";
+MathJax.version = "1.1.2";
 
 /**********************************************************/
 
@@ -1979,8 +1979,8 @@ MathJax.Hub.Startup = {
     isMac:       (navigator.platform.substr(0,3) === "Mac"),
     isPC:        (navigator.platform.substr(0,3) === "Win"),
     isMSIE:      (window.ActiveXObject != null && window.clipboardData != null),
-    isFirefox:   (window.netscape != null && document.ATTRIBUTE_NODE != null && window.opera == null),
-    isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null && window.chrome == null),
+    isFirefox:   (window.netscape != null && document.ATTRIBUTE_NODE != null && !window.opera),
+    isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null && !window.chrome),
     isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
     isOpera:     (window.opera != null && window.opera.version != null),
     isKonqueror: (window.hasOwnProperty && window.hasOwnProperty("konqueror") && navigator.vendor == "KDE"),
