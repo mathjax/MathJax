@@ -210,6 +210,18 @@ yourself by hand, set this value to <tt class="docutils literal"><span class="pr
 
 <dl class="describe">
 <dt>
+<tt class="descname">elements: []</tt></dt>
+<dd><p>This is a list of DOM element ID&#8217;s that are the ones to process for
+mathematics when any of the Hub typesetting calls (Typeset, Process,
+Update, etc.) are called with no element specified, and during
+MathJax&#8217;s initial typesetting run when it starts up.  This lets you
+restrict the processing to particular containers rather than scanning
+the entire document for mathematics.  If none are supplied, the complete
+document is processed.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">menuSettings: { ... }</tt></dt>
 <dd><p>This block contains settings for the mathematics contextual menu
 that act as the defaults for the user&#8217;s settings in that menu.

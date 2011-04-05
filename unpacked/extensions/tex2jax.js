@@ -24,11 +24,8 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.1.1",
+  version: "1.1.2",
   config: {
-    element: null,             // The ID of the element to be processed
-                               //   (defaults to full document)
-
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
       ['\\(','\\)']            //  be sure that you don't have an extra comma at the end)
@@ -74,7 +71,7 @@ MathJax.Extension.tex2jax = {
       this.configured = true;
     }
     if (typeof(element) === "string") {element = document.getElementById(element)}
-    if (!element) {element = this.config.element || document.body}
+    if (!element) {element = document.body}
     this.createPatterns();
     this.scanElement(element,element.nextSibling);
   },

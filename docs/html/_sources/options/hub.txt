@@ -145,6 +145,16 @@ behavior of MathJax.  They are given with their default values.
     which case you will need to call :meth:`MathJax.Hub.Typeset()`
     yourself by hand, set this value to ``true``.
 
+.. describe:: elements: []
+
+    This is a list of DOM element ID's that are the ones to process for
+    mathematics when any of the Hub typesetting calls (Typeset, Process,
+    Update, etc.) are called with no element specified, and during
+    MathJax's initial typesetting run when it starts up.  This lets you
+    restrict the processing to particular containers rather than scanning
+    the entire document for mathematics.  If none are supplied, the complete
+    document is processed.
+
 .. describe:: menuSettings: { ... }
 
     This block contains settings for the mathematics contextual menu
