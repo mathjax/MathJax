@@ -277,10 +277,14 @@
   STACKITEM.mml = STACKITEM.Subclass({
     type: "mml", isNotStack: TRUE,
     Push: function () {
-      // embellished are type ORD in TeX (but not MML) so wrap them in TeXAtom
+      // Embellished are type ORD in TeX (but not MML) so wrap them in TeXAtom.
+      // Make sure large ops are type OP.
       for (var i = 0, m = arguments.length; i < m; i++) {
-        if (arguments[i].type !== "mo" && arguments[i].isEmbellished())
-          {arguments[i] = MML.TeXAtom(arguments[i]).With({isEmbellishedWrapper: TRUE})}
+        if (arguments[i].type !== "mo" && arguments[i].isEmbellished()) {
+          arguments[i] = MML.TeXAtom(arguments[i]).With({isEmbellishedWrapper: TRUE});
+          if (arguments[i].data[0].CoreMO().texClass === MML.TEXCLASS.OP)
+            {arguments[i].texClass = MML.TEXCLASS.OP}
+        }
       }
       this.data.push.apply(this.data,arguments);
     },
