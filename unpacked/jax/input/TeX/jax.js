@@ -713,7 +713,7 @@
         moveright:          'MoveLeftRight',
 
         ',':               ['Spacer',MML.LENGTH.THINMATHSPACE],
-        ':':               ['Spacer',MML.LENGTH.THINMATHSPACE],  // for LaTeX
+        ':':               ['Spacer',MML.LENGTH.MEDIUMMATHSPACE],  // for LaTeX
         '>':               ['Spacer',MML.LENGTH.MEDIUMMATHSPACE],
         ';':               ['Spacer',MML.LENGTH.THICKMATHSPACE],
         '!':               ['Spacer',MML.LENGTH.NEGATIVETHINMATHSPACE],
