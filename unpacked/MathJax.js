@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.1.2";
+MathJax.version = "1.1.3";
 
 /**********************************************************/
 
@@ -1000,6 +1000,7 @@ MathJax.HTML = {
 /**********************************************************/
 
 MathJax.Message = {
+  ready: false,  // used to tell when the styles are available
   log: [{}], current: null,
   textNodeBug: (navigator.vendor === "Apple Computer, Inc." &&
                 typeof navigator.vendorSub === "undefined") ||
@@ -1032,8 +1033,9 @@ MathJax.Message = {
     }
   },
   
-  Init: function() {
-    if (!document.body) {return false}
+  Init: function (styles) {
+    if (styles) {this.ready = true}
+    if (!document.body || !this.ready) {return false}
     //
     //  ASCIIMathML replaces the entire page with a copy of itself (@#!#%@!!)
     //  so check that this.div is still part of the page, otherwise look up
@@ -1655,6 +1657,13 @@ MathJax.Hub.Startup = {
   },
   
   //
+  //  Initialize the Message system
+  //
+  Message: function () {
+    MathJax.Message.Init(true);
+  },
+  
+  //
   //  Set the math menu renderer, if it isn't already
   //  (this must come after the jax are loaded)
   //
@@ -2055,6 +2064,7 @@ MathJax.Hub.Startup = {
     ["Config",STARTUP],
     ["Cookie",STARTUP],
     ["Styles",STARTUP],
+    ["Message",STARTUP],
     function () {
       // Do Jax and Extensions in parallel, but wait for them all to complete
       var queue = BASE.Callback.Queue(
