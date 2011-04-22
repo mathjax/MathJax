@@ -141,7 +141,11 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (!event) {event = window.event}
       if (clear) {clearTimeout(clear); clear = null}
       if (hover) {clearTimeout(hover)}
-      var x = event.clientX; var y = event.clientY;
+      var x = event.pageX; var y = event.pageY;
+      if (x == null) {
+        x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+      }
       var callback = MathJax.Callback(["HTMLtooltipPost",this,x+CONFIG.offsetX,y+CONFIG.offsetY])
       hover = setTimeout(callback,CONFIG.delayPost);
     },
