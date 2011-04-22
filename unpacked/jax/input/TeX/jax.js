@@ -276,18 +276,6 @@
 
   STACKITEM.mml = STACKITEM.Subclass({
     type: "mml", isNotStack: TRUE,
-    Push: function () {
-      // Embellished are type ORD in TeX (but not MML) so wrap them in TeXAtom.
-      // Make sure large ops are type OP.
-      for (var i = 0, m = arguments.length; i < m; i++) {
-        if (arguments[i].type !== "mo" && arguments[i].isEmbellished()) {
-          arguments[i] = MML.TeXAtom(arguments[i]).With({isEmbellishedWrapper: TRUE});
-          if (arguments[i].data[0].CoreMO().texClass === MML.TEXCLASS.OP)
-            {arguments[i].texClass = MML.TEXCLASS.OP}
-        }
-      }
-      this.data.push.apply(this.data,arguments);
-    },
     Add: function () {this.data.push.apply(this.data,arguments); return this}
   });
   
@@ -1061,7 +1049,7 @@
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
       sup = this.mmlToken(MML.mo(MML.chars(sup)).With({isPrime: TRUE, variantForm: TEX.isSTIX}));
-      this.Push(MML.msubsup(base,null,sup));
+      this.Push(MML.msup(base,sup));
     },
     
     /*
@@ -1202,7 +1190,7 @@
       var def = {accent: true}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       var mml = this.mmlToken(MML.mo(MML.entity("#x"+accent)).With(def));
       mml.stretchy = (stretchy ? TRUE : FALSE);
-      this.Push(MML.munderover(c,null,mml).With({accent: TRUE}));
+      this.Push(MML.TeXAtom(MML.munderover(c,null,mml).With({accent: TRUE})));
     },
     
     UnderOver: function (name,c,stack) {
@@ -1213,16 +1201,16 @@
       if (stack) {mml.movesupsub = TRUE}
       mml.data[mml[pos]] = 
         this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy: TRUE, accent: (pos == "under")}));
-      this.Push(mml);
+      this.Push(MML.TeXAtom(mml));
     },
     
     Overset: function (name) {
       var top = this.ParseArg(name), base = this.ParseArg(name);
-      this.Push(MML.munderover(base,null,top));
+      this.Push(MML.mover(base,top));
     },
     Underset: function (name) {
       var bot = this.ParseArg(name), base = this.ParseArg(name);
-      this.Push(MML.munderover(base,bot,null));
+      this.Push(MML.munder(base,bot));
     },
     
     TeXAtom: function (name,mclass) {
@@ -1249,7 +1237,7 @@
     },
     
     Phantom: function (name,v,h) {
-      var box = MML.mphantom(this.ParseArg(name));
+      var box = MML.TeXAtom(MML.mphantom(this.ParseArg(name)));
       if (v || h) {
         box = MML.mpadded(box);
         if (h) {box.height = box.depth = 0}
@@ -1260,7 +1248,7 @@
     
     Smash: function (name) {
       var bt = this.trimSpaces(this.GetBrackets(name));
-      var smash = MML.mpadded(this.ParseArg(name));
+      var smash = MML.TeXAtom(MML.mpadded(this.ParseArg(name)));
       switch (bt) {
         case "b": smash.depth = 0; break;
         case "t": smash.height = 0; break;
@@ -1270,7 +1258,7 @@
     },
     
     Lap: function (name) {
-      var mml = MML.mpadded(this.ParseArg(name)).With({width: 0});
+      var mml = MML.TeXAtom(MML.mpadded(this.ParseArg(name)).With({width: 0}));
       if (name === "\\llap") {mml.lspace = "-1 width"}
       this.Push(mml);
     },
@@ -1306,9 +1294,9 @@
           d = this.GetDimen(name);
       var mml, def = {width:w, height:h, depth:d};
       if (style !== 'blank') {
-        mml = MML.mpadded(MML.mrow()).With(def);
         if (parseFloat(w) && parseFloat(h)+parseFloat(d))
-          {mml = MML.mstyle(mml).With({mathbackground:(this.stack.env.color || "black")})}
+          {def.mathbackground = (this.stack.env.color || "black")}
+        mml = MML.mpadded(MML.mrow()).With(def);
       } else {
         mml = MML.mspace().With(def);
       }
