@@ -1154,7 +1154,9 @@
     },
 
     Sqrt: function (name) {
-      var n = this.GetBrackets(name), mml = this.ParseArg(name);
+      var n = this.GetBrackets(name), arg = this.GetArgument(name);
+      if (arg === "\\frac") {arg += "{"+this.GetArgument(arg)+"}{"+this.GetArgument(arg)+"}"}
+      var mml = TEX.Parse(arg,this.stack.env).mml();
       if (n == "") {mml = MML.msqrt.apply(MML,mml.array())}
               else {mml = MML.mroot(mml,this.parseRoot(n))}
       this.Push(mml);
