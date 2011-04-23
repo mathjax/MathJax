@@ -279,6 +279,17 @@
     Add: function () {this.data.push.apply(this.data,arguments); return this}
   });
   
+  STACKITEM.fn = STACKITEM.Subclass({
+    type: "fn",
+    checkItem: function (item) {
+      if (this.data[0]) {
+        if (item.type !== "mml") {return [this.data[0],item]}
+        return [this.data[0],MML.mo(MML.entity("#x2061")).With({texClass:MML.TEXCLASS.NONE}),item];
+      }
+      return this.SUPER(arguments).checkItem.apply(this,arguments);
+    }
+  });
+  
 
   var TEXDEF = {};
   var STARTUP = function () {
@@ -627,38 +638,38 @@
         huge:              ['SetSize',2.07],
         Huge:              ['SetSize',2.49],
         
-        arcsin:            ['NamedOp',0],
-        arccos:            ['NamedOp',0],
-        arctan:            ['NamedOp',0],
-        arg:               ['NamedOp',0],
-        cos:               ['NamedOp',0],
-        cosh:              ['NamedOp',0],
-        cot:               ['NamedOp',0],
-        coth:              ['NamedOp',0],
-        csc:               ['NamedOp',0],
-        deg:               ['NamedOp',0],
+        arcsin:            ['NamedFn'],
+        arccos:            ['NamedFn'],
+        arctan:            ['NamedFn'],
+        arg:               ['NamedFn'],
+        cos:               ['NamedFn'],
+        cosh:              ['NamedFn'],
+        cot:               ['NamedFn'],
+        coth:              ['NamedFn'],
+        csc:               ['NamedFn'],
+        deg:               ['NamedFn'],
         det:                'NamedOp',
-        dim:               ['NamedOp',0],
-        exp:               ['NamedOp',0],
+        dim:               ['NamedFn'],
+        exp:               ['NamedFn'],
         gcd:                'NamedOp',
-        hom:               ['NamedOp',0],
+        hom:               ['NamedFn'],
         inf:                'NamedOp',
-        ker:               ['NamedOp',0],
-        lg:                ['NamedOp',0],
+        ker:               ['NamedFn'],
+        lg:                ['NamedFn'],
         lim:                'NamedOp',
-        liminf:            ['NamedOp',null,'lim&thinsp;inf'],
-        limsup:            ['NamedOp',null,'lim&thinsp;sup'],
-        ln:                ['NamedOp',0],
-        log:               ['NamedOp',0],
+        liminf:            ['NamedOp','lim&thinsp;inf'],
+        limsup:            ['NamedOp','lim&thinsp;sup'],
+        ln:                ['NamedFn'],
+        log:               ['NamedFn'],
         max:                'NamedOp',
         min:                'NamedOp',
         Pr:                 'NamedOp',
-        sec:               ['NamedOp',0],
-        sin:               ['NamedOp',0],
-        sinh:              ['NamedOp',0],
+        sec:               ['NamedFn'],
+        sin:               ['NamedFn'],
+        sinh:              ['NamedFn'],
         sup:                'NamedOp',
-        tan:               ['NamedOp',0],
-        tanh:              ['NamedOp',0],
+        tan:               ['NamedFn'],
+        tanh:              ['NamedFn'],
         
         limits:            ['Limits',1],
         nolimits:          ['Limits',0],
@@ -1114,13 +1125,17 @@
       this.Push(STACKITEM[name.substr(1)]().With({delim: this.GetDelimiter(name)}));
     },
     
-    NamedOp: function (name,limits,id) {
-      var underover = (limits != null && limits === 0 ? FALSE : TRUE);
-      if (!id) {id = name.substr(1)}; limits = ((limits || limits == null) ? TRUE : FALSE);
+    NamedFn: function (name,id) {
+      if (!id) {id = name.substr(1)};
+      var mml = MML.mi(id).With({texClass: MML.TEXCLASS.OP});
+      this.Push(STACKITEM.fn(this.mmlToken(mml)));
+    },
+    NamedOp: function (name,id) {
+      if (!id) {id = name.substr(1)};
       id = id.replace(/&thinsp;/,String.fromCharCode(0x2006));
       var mml = MML.mo(id).With({
-        movablelimits: limits,
-        movesupsub: underover,
+        movablelimits: TRUE,
+        movesupsub: TRUE,
         form: MML.FORM.PREFIX,
         texClass: MML.TEXCLASS.OP
       });
