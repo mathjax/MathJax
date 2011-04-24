@@ -2200,7 +2200,7 @@
             }
           },
           useProcessingFrame: true,
-          rfuzz: .05,
+          rfuzz: .025,
           AccentBug: true,
           AdjustSurd: true,
           safariContextMenuBug: true,
@@ -2222,7 +2222,7 @@
       Chrome: function (browser) {
         HTMLCSS.Augment({
           useProcessingFrame: true,
-          rfuzz: .05,
+          rfuzz: .025,
           AccentBug: true,
           AdjustSurd: true,
           allowWebFonts: (browser.versionAtLeast("4.0") ? "otf" : "svg"),
