@@ -1237,13 +1237,8 @@
         var arg = this.GetArgument(name);
         var match = arg.match(/^\s*\\rm\s+([a-zA-Z0-9 ]+)$/);
         if (match) {
-          mml = this.mmlToken(MML.mo(match[1]).With({
-            movablelimits: TRUE,  movesupsub: TRUE,
-            mathvariant: MML.VARIANT.NORMAL,
-            form: MML.FORM.PREFIX,
-            texClass: MML.TEXCLASS.OP
-          }));
-          mml.useMMLspacing &= ~mml.SPACE_ATTR.form;  // don't count this explicit form setting
+          def.mathvariant = MML.VARIANT.NORMAL;
+          mml = STACKITEM.fn(this.mmlToken(MML.mi(match[1]).With(def)));
         } else {mml = MML.TeXAtom(TEX.Parse(arg,this.stack.env).mml()).With(def)}
       } else {mml = MML.TeXAtom(this.ParseArg(name)).With(def)}
       this.Push(mml);
