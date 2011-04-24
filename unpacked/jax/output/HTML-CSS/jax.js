@@ -1787,9 +1787,10 @@
 	  HTMLCSS.createDelimiter(rule,HTMLCSS.FONTDATA.RULECHAR,W,scale);
 	}
 	H = base.bbox.h + q + t;
+        q = H*HTMLCSS.rfuzz; if (surd.isMultiChar) {q = HTMLCSS.rfuzz}
 	x = this.HTMLaddRoot(sqrt,surd,x,surd.bbox.h+surd.bbox.d-H,scale);
 	HTMLCSS.placeBox(surd,x,H-surd.bbox.h);
-	HTMLCSS.placeBox(rule,x+surd.bbox.w,H-rule.bbox.h+HTMLCSS.rfuzz);
+	HTMLCSS.placeBox(rule,x+surd.bbox.w,H-rule.bbox.h+q);
 	HTMLCSS.placeBox(base,x+surd.bbox.w,0);
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
@@ -2200,7 +2201,7 @@
             }
           },
           useProcessingFrame: true,
-          rfuzz: .025,
+          rfuzz: .011,
           AccentBug: true,
           AdjustSurd: true,
           safariContextMenuBug: true,
@@ -2222,7 +2223,7 @@
       Chrome: function (browser) {
         HTMLCSS.Augment({
           useProcessingFrame: true,
-          rfuzz: .025,
+          rfuzz: .011,
           AccentBug: true,
           AdjustSurd: true,
           allowWebFonts: (browser.versionAtLeast("4.0") ? "otf" : "svg"),
