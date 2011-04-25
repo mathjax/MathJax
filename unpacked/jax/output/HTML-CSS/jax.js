@@ -594,6 +594,36 @@
       if (length === MML.LINETHICKNESS.THICK) {return 1.67*thick}
       return this.length2em(length,thick);
     },
+    
+    getPadding: function (span) {
+      var padding = {top:0, right:0, bottom:0, left:0}, has = false;
+      for (var id in padding) {if (padding.hasOwnProperty(id)) {
+        var pad = span.style["padding"+id.charAt(0).toUpperCase()+id.substr(1)];
+        if (pad) {padding[id] = this.length2em(pad); has = true;}
+      }}
+      return (has ? padding : false);
+    },
+    getBorders: function (span) {
+      var border = {top:0, right:0, bottom:0, left:0}, css = {}, has = false;
+      for (var id in border) {if (border.hasOwnProperty(id)) {
+        var ID = "border"+id.charAt(0).toUpperCase()+id.substr(1);
+        var style = span.style[ID+"Style"];
+        if (style) {
+          has = true;
+          border[id] = this.length2em(span.style[ID+"Width"]);
+          css[ID] = [span.style[ID+"Width"],span.style[ID+"Style"],span.style[ID+"Color"]].join(" ");
+        }
+      }}
+      border.css = css;
+      return (has ? border : false);
+    },
+    setBorders: function (span,borders) {
+      if (borders) {
+        for (var id in borders.css) {if (borders.css.hasOwnProperty(id)) {
+          span.style[id] = borders.css[id];
+        }}
+      }
+    },
 
     createStrut: function (span,h,before) {
       var strut = this.Element("span",{
@@ -1270,13 +1300,16 @@
 	span = HTMLCSS.addElement(span,"span",{className: this.type});
 	if (HTMLCSS.imgHeightBug) {span.style.display = "inline-block"}
 	if (this["class"] != null) {span.className += " "+this["class"]}
+	this.spanID = HTMLCSS.GetID();
+	span.id = (this.id || "MathJax-Span-"+this.spanID) + HTMLCSS.idPostfix;
+	span.bbox = {w:0, h:0, d:0, lw:0, lr:0}; this.styles = {};
 	if (this.style) {
 	  span.style.cssText = this.style;
 	  if (span.style.fontSize) {this.mathsize = span.style.fontSize; span.style.fontSize = ""}
+          this.styles = {border:HTMLCSS.getBorders(span), padding:HTMLCSS.getPadding(span)}
+          if (this.styles.border) {span.style.border = ""} // IE needs "0px none"?
+          if (this.styles.padding) {span.style.padding = ""}
 	}
-	this.spanID = HTMLCSS.GetID();
-	span.id = (this.id || "MathJax-Span-"+this.spanID) + HTMLCSS.idPostfix;
-	span.bbox = {w:0, h:0, d:0, lw:0, lr:0};
 	if (this.href) {span.parentNode.bbox = span.bbox}
 	return span;
       },
@@ -1299,38 +1332,58 @@
 	var values = this.getValues("mathcolor","color");
 	if (this.mathbackground) {values.mathbackground = this.mathbackground}
 	if (this.background) {values.background = this.background}
-	// @@@ FIXME:  handle border as well?
-	if (this.style && span.style.backgroundColor) {
-	  values.mathbackground = span.style.backgroundColor;
-	  span.style.backgroundColor = "transparent";
-	}
+        if (this.style && span.style.backgroundColor) {
+          values.mathbackground = span.style.backgroundColor;
+          span.style.backgroundColor = "transparent";
+        }
+        var borders = this.styles.border, padding = this.styles.padding;
 	if (values.color && !this.mathcolor) {values.mathcolor = values.color}
 	if (values.background && !this.mathbackground) {values.mathbackground = values.background}
 	if (values.mathcolor) {span.style.color = values.mathcolor}
-	if (values.mathbackground && values.mathbackground !== MML.COLOR.TRANSPARENT) {
-	  var dd = 1/HTMLCSS.em, lW = 0, rW = 0;
+	if ((values.mathbackground && values.mathbackground !== MML.COLOR.TRANSPARENT) || 
+             borders || padding) {
+	  var dd = 1/HTMLCSS.em, lW = 0, rW = 0,
+              lpad = span.style.paddingLeft, rpad = span.style.paddingRight;
 	  if (this.isToken) {lW = span.bbox.lw; rW = span.bbox.rw - span.bbox.w}
-	  if (span.style.paddingLeft  !== "") {lW += parseFloat(span.style.paddingLeft)*(span.scale||1)}
-	  if (span.style.paddingRight !== "") {rW -= parseFloat(span.style.paddingRight)*(span.scale||1)}
+	  if (lpad !== "") {lW += parseFloat(lpad)*(span.scale||1)}
+	  if (rpad !== "") {rW -= parseFloat(rpad)*(span.scale||1)}
 	  var W = Math.max(0,HTMLCSS.getW(span) + (HTMLCSS.PaddingWidthBug ? 0 : rW - lW));
-	  if (HTMLCSS.msieCharPaddingWidthBug && span.style.paddingLeft !== "")
-	    {W += parseFloat(span.style.paddingLeft)*(span.scale||1)}
-	  var H = span.bbox.h + span.bbox.d, D = -span.bbox.d;
+	  var H = span.bbox.h + span.bbox.d, D = -span.bbox.d, lp = 0; rp = 0;
 	  if (W > 0) {W += 2*dd; lW -= dd}; if (H > 0) {H += 2*dd; D -= dd}; rW = -W-lW;
+          if (borders) {
+            rW -= borders.right; D -= borders.bottom; lp += borders.left; rp += borders.right;
+            span.bbox.h += borders.top; span.bbox.d += borders.bottom;
+            span.bbox.w += borders.left + borders.right;
+            span.bbox.lw -= borders.left; span.bbox.rw += borders.right;
+          }
+          if (padding) {
+            H += padding.top + padding.bottom; W += padding.left + padding.right;
+            rW -= padding.right; D -= padding.bottom; lp += padding.left; rp += padding.right;
+            span.bbox.h += padding.top; span.bbox.d += padding.bottom;
+            span.bbox.w += padding.left + padding.right;
+            span.bbox.lw -= padding.left; span.bbox.rw += padding.right;
+          }
+          if (rp) {span.style.paddingRight = HTMLCSS.Em(rp)}
 	  var frame = HTMLCSS.Element("span",{id:"MathJax-Color-"+this.spanID+HTMLCSS.idPostfix,
 	    style:{display:"inline-block", backgroundColor:values.mathbackground,
 		   width: HTMLCSS.Em(W), height:HTMLCSS.Em(H), verticalAlign: HTMLCSS.Em(D),
 		   marginLeft: HTMLCSS.Em(lW), marginRight: HTMLCSS.Em(rW)}
 	  });
+          HTMLCSS.setBorders(frame,borders);
 	  if (HTMLCSS.msieInlineBlockAlignBug) {
 	    frame.style.position = "relative"; frame.style.width = frame.style.height = 0;
 	    frame.style.verticalAlign = frame.style.marginLeft = frame.style.marginRight = "";
+            frame.style.border = frame.style.padding = "";
+            if (borders && HTMLCSS.msieBorderWidthBug)
+              {H += borders.top + borders.bottom; W += borders.left + borders.right}
+            frame.style.width = HTMLCSS.Em(lp+dd);
 	    HTMLCSS.placeBox(HTMLCSS.addElement(frame,"span",{
 	      noAdjust: true,
 	      style: {display:"inline-block", position:"absolute", overflow:"hidden",
-		      width: HTMLCSS.Em(W), height: HTMLCSS.Em(H),
-		      background: values.mathbackground}
+		      background:values.mathbackground, 
+                      width: HTMLCSS.Em(W), height: HTMLCSS.Em(H)}
 	    }),lW,span.bbox.h+dd);
+            HTMLCSS.setBorders(frame.firstChild,borders);
 	  }
 	  span.parentNode.insertBefore(frame,span);
           if (HTMLCSS.msieColorPositionBug) {span.style.position = "relative"}
@@ -2149,7 +2202,6 @@
           msieRelativeWidthBug: quirks,
           msieMarginWidthBug: true,
           msiePaddingWidthBug: true,
-          msieCharPaddingWidthBug: (isIE8 && !quirks),
           msieBorderWidthBug: quirks,
           msieInlineBlockAlignBug: (!isIE8 || quirks),
           msieVerticalAlignBug: (isIE8 && !quirks),
