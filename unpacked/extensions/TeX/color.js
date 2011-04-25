@@ -29,6 +29,11 @@
 MathJax.Extension["TeX/color"] = {
   version: "1.1",
 
+  config: MathJax.Hub.CombineConfig("TeX.color",{
+    padding: "5px",
+    border: "2px"
+  }),
+
   colors: {
     Apricot:        "#FBB982",
     Aquamarine:     "#00B5BE",
@@ -143,6 +148,13 @@ MathJax.Extension["TeX/color"] = {
   get_named: function (name) {
     if (this.colors[name]) {return this.colors[name]}
     return name;
+  },
+  
+  padding: function () {
+    var pad = "+"+this.config.padding;
+    var unit = this.config.padding.replace(/^.*?([a-z]*)$/,"$1");
+    var pad2 = "+"+(2*parseFloat(pad))+unit;
+    return {width:pad2, height:pad, depth:pad, lspace:this.config.padding};
   }
 
 };
@@ -191,8 +203,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           arg = this.InternalMath(this.GetArgument(name));
       this.Push(MML.mpadded.apply(MML,arg).With({
         mathbackground:COLOR.getColor("named",cname),
-        width: "+10px", height: "+5px", depth: "+5px", lspace: "5px"
-      }));
+      }).With(COLOR.padding()));
     },
     
     //
@@ -202,16 +213,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var fname = this.GetArgument(name),
           cname = this.GetArgument(name),
           arg = this.InternalMath(this.GetArgument(name));
-      var mml = MML.mpadded.apply(MML,arg).With({
+      this.Push(MML.mpadded.apply(MML,arg).With({
         mathbackground: COLOR.getColor("named",cname),
-        width: "+10px", height: "+5px", depth: "+5px", lspace: "5px"
-      });
-      //  *** FIXME:  this should really be a style with border,
-      //              but that doesn't work well in HTML-CSS at the moment
-      this.Push(MML.mpadded(mml).With({
-        mathbackground: COLOR.getColor("named",fname),
-        width: "+4px", height: "+2px", depth: "+2px", lspace: "2px"
-      }));
+        style: "border: "+COLOR.config.border+" solid "+COLOR.getColor("named",fname)
+      }).With(COLOR.padding()));
     }
 
   });
