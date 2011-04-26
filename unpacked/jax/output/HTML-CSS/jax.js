@@ -1336,7 +1336,7 @@
           values.mathbackground = span.style.backgroundColor;
           span.style.backgroundColor = "transparent";
         }
-        var borders = this.styles.border, padding = this.styles.padding;
+        var borders = (this.styles||{}).border, padding = (this.styles||{}).padding;
 	if (values.color && !this.mathcolor) {values.mathcolor = values.color}
 	if (values.background && !this.mathbackground) {values.mathbackground = values.background}
 	if (values.mathcolor) {span.style.color = values.mathcolor}
@@ -1348,7 +1348,7 @@
 	  if (lpad !== "") {lW += parseFloat(lpad)*(span.scale||1)}
 	  if (rpad !== "") {rW -= parseFloat(rpad)*(span.scale||1)}
 	  var W = Math.max(0,HTMLCSS.getW(span) + (HTMLCSS.PaddingWidthBug ? 0 : rW - lW));
-	  var H = span.bbox.h + span.bbox.d, D = -span.bbox.d, lp = 0; rp = 0;
+	  var H = span.bbox.h + span.bbox.d, D = -span.bbox.d, lp = 0, rp = 0;
 	  if (W > 0) {W += 2*dd; lW -= dd}; if (H > 0) {H += 2*dd; D -= dd}; rW = -W-lW;
           if (borders) {
             rW -= borders.right; D -= borders.bottom; lp += borders.left; rp += borders.right;
@@ -1380,7 +1380,7 @@
 	    HTMLCSS.placeBox(HTMLCSS.addElement(frame,"span",{
 	      noAdjust: true,
 	      style: {display:"inline-block", position:"absolute", overflow:"hidden",
-		      background:values.mathbackground, 
+		      background:(values.mathbackground||"transparent"), 
                       width: HTMLCSS.Em(W), height: HTMLCSS.Em(H)}
 	    }),lW,span.bbox.h+dd);
             HTMLCSS.setBorders(frame.firstChild,borders);
@@ -1744,15 +1744,21 @@
     MML.mstyle.Augment({
       toHTML: function (span) {
 	if (this.data[0] != null) {
-	  span = this.data[0].toHTML(span);
-	  this.spanID = this.data[0].spanID;
+          if (this.style) {
+            span = this.HTMLcreateSpan(span);
+            span.bbox = this.data[0].toHTML(span).bbox;
+          } else {
+            span = this.data[0].toHTML(span);
+	    this.spanID = this.data[0].spanID;
+          }
 	  this.HTMLhandleSpace(span);
 	  this.HTMLhandleColor(span);
 	}
 	return span;
       },
       HTMLspanElement: function () {
-	return (this.data[0] != null ? this.data[0].HTMLspanElement() : null);
+        if (this.style) {return this.SUPER(arguments).HTMLspanElement.call(this)}
+        return (this.data[0] != null ? this.data[0].HTMLspanElement() : null);
       },
       HTMLstretchH: function (box,w) {
 	return (this.data[0] != null ? this.data[0].HTMLstretchH(box,w) : box);
