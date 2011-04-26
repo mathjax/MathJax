@@ -857,7 +857,7 @@
         'class':           ['Extension','HTML'],
         style:             ['Extension','HTML'],
         cssId:             ['Extension','HTML'],
-//      bbox:              ['Extension','bbox'],
+        bbox:              ['Extension','bbox'],
     
         require:            'Require'
 
