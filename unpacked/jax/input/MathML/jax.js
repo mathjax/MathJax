@@ -62,12 +62,15 @@
       var type = node.nodeName.toLowerCase().replace(/^[a-z]+:/,"");
       if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase)))
         {return MML.merror("Unknown node type: "+type)}
-      var mml = MML[type](), i, m, value;
+      var mml = MML[type](), i, m, name, value;
       for (i = 0, m = node.attributes.length; i < m; i++) {
+        name = node.attributes[i].name;
+        if (name == "xlink:href") {name = "href"}
+        if (name.match(/:/)) continue;
         value = node.attributes[i].value;
         if (value.toLowerCase() === "true") {value = true}
           else if (value.toLowerCase() === "false") {value = false}
-        mml[node.attributes[i].name] = value;
+        mml[name] = value;
       }
       for (i = 0, m = node.childNodes.length; i < m; i++) {
         var child = node.childNodes[i];
