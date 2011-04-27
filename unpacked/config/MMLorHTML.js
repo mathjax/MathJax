@@ -82,9 +82,11 @@
       if (canUseMML && (prefer === "MML" || !canUseHTML)) {
         if (MathJax.OutputJax.NativeMML) {MathJax.OutputJax.NativeMML.Register("jax/mml")}
           else {HUB.config.jax.unshift("output/NativeMML")}
+        HUB.Startup.signal.Post("NativeMML output selected");
       } else {
         if (MathJax.OutputJax["HTML-CSS"]) {MathJax.OutputJax["HTML-CSS"].Register("jax/mml")}
           else {HUB.config.jax.unshift("output/HTML-CSS")}
+        HUB.Startup.signal.Post("HTML-CSS output selected");
       }
     } else {
       HUB.PreProcess.disabled = true;
