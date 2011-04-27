@@ -47,7 +47,7 @@
  */
 
 (function (HUB) {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var CONFIG = MathJax.Hub.CombineConfig("MMLorHTML",{
     prefer: {MSIE:"MML", Firefox:"MML", Opera:"HTML", other:"HTML"}

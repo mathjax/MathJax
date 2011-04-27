@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.1.1";
+  var VERSION = "1.1.2";
   
   MathJax.Extension.MathMenu = {version: VERSION};
 
@@ -648,6 +648,7 @@
     if (jax[0] !== CONFIG.settings.renderer) {
       MathJax.Callback.Queue(
         ["Require",AJAX,"[MathJax]/jax/output/"+CONFIG.settings.renderer+"/config.js"],
+        ["Post",HUB.Startup.signal,CONFIG.settings.renderer+" output selected"],
         [function () {
           var JAX = MathJax.OutputJax[CONFIG.settings.renderer];
           for (var i = 0, m = jax.length; i < m; i++)
