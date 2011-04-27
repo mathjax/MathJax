@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -110,11 +110,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       this.selection++;
       if (this.selection > this.data.length) {this.selection = 1}
       var obj = this; while (obj.type !== "math") {obj = obj.inherit}
-      var nobr = obj.HTMLspanElement();
-      while (nobr.nodeName.toLowerCase() !== "nobr") {nobr = nobr.parentNode}
-      var span = nobr.parentNode; span.removeChild(nobr);
-      var div = span; if (span.parentNode.className === "MathJax_Display") {div = span.parentNode}
-      obj.toHTML(span,div);
+      var span = obj.HTMLspanElement();
+      while (span.nodeName.toLowerCase() !== "nobr") {span = span.parentNode}
+      span = span.parentNode; if (span.parentNode.className === "MathJax_Display") {span = span.parentNode}
+      var script = span.nextSibling;
+      span.parentNode.removeChild(span);
+      script.MathJax.state = MathJax.ElementJax.STATE.PENDING;
+      MathJax.Hub.Process(script);
       if (!event) {event = window.event}
       if (event.preventDefault) {event.preventDefault()}
       if (event.stopPropagation) {event.stopPropagation()}
