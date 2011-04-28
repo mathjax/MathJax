@@ -47,20 +47,17 @@ if (!MathJax.Hub.config.delayJaxRegistration)
 
 (function (browser) {
   if (browser.isMSIE) {
-    var INIT = function () {
-      MathJax.Hub.Register.StartupHook("onLoad",function () {
-        //
-        //  Insert data needed to use MathPlayer for MathML output
-        //
-        var mathplayer = document.createElement("object");
-        mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
-        document.getElementsByTagName("head")[0].appendChild(mathplayer);
-        document.namespaces.add("mjx","http://www.w3.org/1998/Math/MathML");
-        document.namespaces.mjx.doImport("#mathplayer");
-      });
-    };
-    if (!MathJax.Hub.config.delayJaxRegistration) {INIT()}
-      else {MathJax.Hub.Register.StartupHook("NativeMML output selected",INIT)}
+    //
+    //  Insert data needed to use MathPlayer for MathML output
+    //    (but wait for onload, since adding the namespace can fail if done too early)
+    //
+    MathJax.Hub.Register.StartupHook("onLoad",function () {
+      var mathplayer = document.createElement("object");
+      mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
+      document.getElementsByTagName("head")[0].appendChild(mathplayer);
+      document.namespaces.add("mjx","http://www.w3.org/1998/Math/MathML");
+      document.namespaces.mjx.doImport("#mathplayer");
+    });
   }
 })(MathJax.Hub.Browser);
 
