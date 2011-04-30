@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.1.2";
+MathJax.version = "1.1.3";
 
 /**********************************************************/
 
@@ -1322,8 +1322,10 @@ MathJax.Hub = {
         var scripts = []; // filled in by prepareScripts
         queue.Push(
           ["Post",this.signal,["Begin "+action,ec.elements[i]]],
+          ["Post",this.signal,["Begin Math",ec.elements[i]]],
           ["prepareScripts",this,action,ec.elements[i],scripts],
           ["processScripts",this,scripts],
+          ["Post",this.signal,["End Math",ec.elements[i]]],
           ["Post",this.signal,["End "+action,ec.elements[i]]]
         );
       }
