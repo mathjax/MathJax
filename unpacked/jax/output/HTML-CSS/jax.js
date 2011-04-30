@@ -1919,9 +1919,7 @@
 	if (D == null && HW != null) {W = HW} else if (W == -HTMLCSS.BIGDIMEN) {W = WW}
         for (i = WW = 0, m = this.data.length; i < m; i++) {if (this.data[i]) {
           box = boxes[i];
-debug([this.data[i],this.data[i].HTMLspanElement().scale]);
           if (stretch[i]) {box.bbox = this.data[i].HTMLstretchH(box,W).bbox}
-debug([this.data[i],this.data[i].HTMLspanElement().scale]);
           if (box.bbox.w > WW) {WW = box.bbox.w}
         }}
 	var t = HTMLCSS.TeX.rule_thickness, factor = HTMLCSS.FONTDATA.TeX_factor;
