@@ -1416,6 +1416,7 @@ MathJax.Hub = {
             this.RestartAfter(result);
           }
           result.Attach(script,inputJax[type]);
+          script.MathJax.state = STATE.OUTPUT;
         }
         var jax = script.MathJax.elementJax;
         if (!outputJax[jax.mimeType]) {
@@ -1425,7 +1426,6 @@ MathJax.Hub = {
         jax.outputJax = outputJax[jax.mimeType][0];
         result = jax.outputJax.Process(script);
         if (typeof result === 'function') {
-          script.MathJax.state = STATE.UPDATE;
           if (result.called) continue; // go back and call Process() again
           this.RestartAfter(result);
         }
@@ -1934,7 +1934,8 @@ MathJax.Hub.Startup = {
     STATE: {
       PENDING: 1,      // script is identified as math but not yet processed
       PROCESSED: 2,    // script has been processed
-      UPDATE: 3        // elementJax should be updated
+      UPDATE: 3,       // elementJax should be updated
+      OUTPUT: 4        // output should be updated (input is OK)
     },
     
     GetID: function () {this.ID++; return "MathJax-Element-"+this.ID},
