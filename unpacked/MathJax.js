@@ -1915,6 +1915,7 @@ MathJax.Hub.Startup = {
       }
       jax.originalText = (script.text == "" ? script.innerHTML : script.text);
       jax.inputJax = inputJax;
+      if (jax.root) {jax.root.inputID = jax.inputID}
     },
     Detach: function () {
       var script = this.SourceElement(); if (!script) return;
