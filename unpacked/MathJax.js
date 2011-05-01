@@ -1358,15 +1358,12 @@ MathJax.Hub = {
     Process: function (script) {},
     Update: function (script) {
       var jax = script.MathJax.elementJax;
-      //  FIXME:  Have intputJax determine if things have changed?
-      if (jax && jax.originalText === (script.text == "" ? script.innerHTML : script.text))
-        {script.MathJax.state = jax.STATE.PROCESSED} else
-        {MathJax.OutputJax[jax.outputJax].Remove(jax); script.MathJax.state = jax.STATE.UPDATE}
+      if (jax && jax.needsUpdate()) {jax.Remove(true); script.MathJax.state = jax.STATE.UPDATE}
+        else {script.MathJax.state = jax.STATE.PROCESSED}
     },
     Reprocess: function (script) {
       var jax = script.MathJax.elementJax;
-      if (jax)
-        {MathJax.OutputJax[jax.outputJax].Remove(jax); script.MathJax.state = jax.STATE.UPDATE}
+      if (jax) {jax.Remove(true); script.MathJax.state = jax.STATE.UPDATE}
     }
   },
   
@@ -1856,6 +1853,10 @@ MathJax.Hub.Startup = {
       if (jax) {queue.Push(AJAX.Require(jax[0].directory+"/"+this.JAXFILE))}
       return queue.Push({});
     },
+    needsUpdate: function (jax) {
+      var script = jax.SourceElement();
+      return (jax.originalText !== (script.text == "" ? script.innerHTML : script.text));
+    },
     Register: function (mimetype) {
       if (!HUB.inputJax) {HUB.inputJax = {}}
       HUB.inputJax[mimetype] = this;
@@ -1917,10 +1918,15 @@ MathJax.Hub.Startup = {
       script.MathJax.state = this.STATE.OUTPUT;
       return HUB.Process(script,callback);
     },
-    Remove: function () {
-      MathJax.OutputJax[this.outputJax].Remove(this);
-      HUB.signal.Post(["Remove Math",this.inputID]); // wait for this to finish?
-      this.Detach();
+    Remove: function (keep) {
+      BASE.OutputJax[this.outputJax].Remove(this);
+      if (!keep) {
+        HUB.signal.Post(["Remove Math",this.inputID]); // wait for this to finish?
+        this.Detach();
+      }
+    },
+    needsUpdate: function () {
+      return BASE.InputJax[this.inputJax].needsUpdate(this);
     },
 
     SourceElement: function () {return document.getElementById(this.inputID)},
