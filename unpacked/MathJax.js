@@ -1891,6 +1891,11 @@ MathJax.Hub.Startup = {
       script.MathJax.state = this.STATE.UPDATE;
       return HUB.Reprocess(script,callback);
     },
+    Update: function (callback) {
+      var script = this.SourceElement();
+      script.MathJax.state = this.STATE.OUTPUT;
+      return HUB.Process(script,callback);
+    },
     Remove: function () {
       this.outputJax.Remove(this);
       HUB.signal.Post(["Remove Math",this.inputID]); // wait for this to finish?
