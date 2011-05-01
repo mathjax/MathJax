@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.1.3";
+MathJax.version = "1.1.4";
 
 /**********************************************************/
 
@@ -365,25 +365,52 @@ MathJax.version = "1.1.3";
   };
 
   //
-  //  Run an array of callbacks passing them the given data.
-  //  If any return callbacks, return a callback that will be 
-  //  executed when they all have completed.
+  //  An array or priorities hooks that are executed sequentially
+  //  with a given set of data.
   //
-  var HOOKS = function (hooks,data,reset) {
-    if (!hooks) {return null}
-    if (!(hooks instanceof Array)) {hooks = [hooks]}
-    if (!(data instanceof Array))  {data = (data == null ? [] : [data])}
-    var callbacks = [{}];
-    for (var i = 0, m = hooks.length; i < m; i++) {
-      if (reset) {hooks[i].reset()}
-      var result = hooks[i].apply(window,data);
-      if (ISCALLBACK(result) && !result.called) {callbacks.push(result)}
+  var HOOKS = MathJax.Object.Subclass({
+    //
+    //  Initialize the array and the auto-reset status
+    //
+    Init: function (reset) {
+      this.hooks = [];
+      this.reset = reset;
+    },
+    //
+    //  Add a callback to the list, in priority order (default priority is 10)
+    //
+    Add: function (hook,priority) {
+      if (priority == null) {priority = 10}
+      if (!ISCALLBACK(hook)) {hook = USING(hook)}
+      hook.priority = priority;
+      var i = this.hooks.length;
+      while (i > 0 && priority < this.hooks[i-1].priority) {i--}
+      this.hooks.splice(i,0,hook);
+      return hook;
+    },
+    Remove: function (hook) {
+      for (var i = 0, m = this.hooks.length; i < m; i++) {
+        if (this.hooks[i] === hook) {this.hooks.splice(i,1); return}
+      }
+    },
+    //
+    //  Execute the list of callbacks, resetting them if requested.
+    //  If any return callbacks, return a callback that will be 
+    //  executed when they all have completed.
+    //
+    Execute: function () {
+      var callbacks = [{}];
+      for (var i = 0, m = this.hooks.length; i < m; i++) {
+        if (this.reset) {this.hooks[i].reset()}
+        var result = this.hooks[i].apply(window,arguments);
+        if (ISCALLBACK(result) && !result.called) {callbacks.push(result)}
+      }
+      if (callbacks.length === 1) {return null}
+      if (callbacks.length === 2) {return callbacks[1]}
+      return AFTER.apply({},callbacks);
     }
-    if (callbacks.length === 1) {return null}
-    if (callbacks.length === 2) {return callbacks[1]}
-    return AFTER.apply({},callbacks);
-  };
-  
+  });
+   
   //
   //  Command queue that performs commands in order, waiting when
   //  necessary for commands to complete asynchronousely
@@ -446,8 +473,8 @@ MathJax.version = "1.1.3";
     Init: function (name) {
       QUEUE.prototype.Init.call(this);
       this.name = name;
-      this.posted = [];     // the messages posted so far
-      this.listeners = [];  // those with interest in this signal
+      this.posted = [];              // the messages posted so far
+      this.listeners = HOOKS(true);  // those with interest in this signal
     },
     //
     // Post a message to the signal listeners, with callback for when complete
@@ -459,12 +486,9 @@ MathJax.version = "1.1.3";
       } else {
         this.callback = callback; callback.reset();
         if (!forget) {this.posted.push(message)}
-        this.Suspend(); this.posting = 1;
-        for (var i = 0, m = this.listeners.length; i < m; i++) {
-          this.listeners[i].reset();
-          var result = (this.listeners[i])(message);
-          if (ISCALLBACK(result) && !result.called) {WAITFOR(result,this)}
-        }
+        this.Suspend(); this.posting = true;
+        var result = this.listeners.Execute(message);
+        if (ISCALLBACK(result) && !result.called) {WAITFOR(result,this)}
         this.Resume(); delete this.posting;
         if (!this.pending) {this.call()}
       }
@@ -490,11 +514,11 @@ MathJax.version = "1.1.3";
     
     //
     //  A listener calls this to register intrest in the signal (so it will be called
-    //  when posts occur).  If ignorePast is 1, it will not be sent the post history.
+    //  when posts occur).  If ignorePast is true, it will not be sent the post history.
     //
-    Interest: function (callback,ignorePast) {
+    Interest: function (callback,ignorePast,priority) {
       callback = USING(callback);
-      this.listeners[this.listeners.length] = callback;
+      this.listeners.Add(callback,priority);
       if (!ignorePast) {
         for (var i = 0, m = this.posted.length; i < m; i++) {
           callback.reset();
@@ -508,19 +532,17 @@ MathJax.version = "1.1.3";
     //  A listener calls this to remove itself from a signal
     //
     NoInterest: function (callback) {
-      for (var i = 0, m = this.listeners.length; i < m; i++) {
-        if (this.listeners[i] === callback) {this.listeners.splice(i,1); return}
-      }
+      this.listeners.Remove(callback);
     },
     
     //
     //  Hook a callback to a particular message on this signal
     //
-    MessageHook: function (msg,callback) {
+    MessageHook: function (msg,callback,priority) {
       callback = USING(callback);
       if (!this.hooks) {this.hooks = {}; this.Interest(["ExecuteHooks",this])}
-      if (!this.hooks[msg]) {this.hooks[msg] = []}
-      this.hooks[msg].push(callback);
+      if (!this.hooks[msg]) {this.hooks[msg] = HOOKS(true)}
+      this.hooks[msg].Add(callback,priority);
       for (var i = 0, m = this.posted.length; i < m; i++)
         {if (this.posted[i] == msg) {callback.reset(); callback(this.posted[i])}}
       return callback;
@@ -530,7 +552,8 @@ MathJax.version = "1.1.3";
     //
     ExecuteHooks: function (msg,more) {
       var type = ((msg instanceof Array) ? msg[0] : msg);
-      return HOOKS(this.hooks[type],[msg],true);
+      if (!this.hooks[type]) {return null}
+      return this.hooks[type].Execute(msg);
     }
     
   },{
@@ -549,7 +572,7 @@ MathJax.version = "1.1.3";
   BASE.Callback.After = AFTER;
   BASE.Callback.Queue = QUEUE;
   BASE.Callback.Signal = SIGNAL.find;
-  BASE.Callback.ExecuteHooks = HOOKS;
+  BASE.Callback.Hooks = HOOKS;
 })("MathJax");
 
 /**********************************************************/
@@ -634,8 +657,7 @@ MathJax.version = "1.1.3";
         else {type = file.split(/\./).pop().toUpperCase()}
       file = this.fileURL(file);
       if (this.loading[file]) {
-        if (!this.loadHooks[file]) {this.loadHooks[file] = []}
-        this.loadHooks[file].push(callback);
+        this.addHook(file,callback);
       } else {
         this.head = HEAD(this.head);
         if (this.loader[type]) {this.loader[type].call(this,file,callback)}
@@ -648,17 +670,17 @@ MathJax.version = "1.1.3";
     //  Register a load hook for a particular file (it will be called when
     //  loadComplete() is called for that file)
     //
-    LoadHook: function (file,callback) {
+    LoadHook: function (file,callback,priority) {
       callback = BASE.Callback(callback);
       if (file instanceof Object) {for (var i in file) {file = file[i]}}
       file = this.fileURL(file);
-      if (this.loaded[file]) {
-        callback(this.loaded[file]);
-      } else {
-        if (!this.loadHooks[file]) {this.loadHooks[file] = []}
-        this.loadHooks[file].push(callback);
-      }
+      if (this.loaded[file]) {callback(this.loaded[file])}
+        else {this.addHook(file,callback,priority)}
       return callback;
+    },
+    addHook: function (file,callback,priority) {
+      if (!this.loadHooks[file]) {this.loadHooks[file] = MathJax.Callback.Hooks()}
+      this.loadHooks[file].Add(callback,priority);
     },
     
     //
@@ -817,13 +839,13 @@ MathJax.version = "1.1.3";
 	  SCRIPTS.push(loading.script);
 	}
         this.loaded[file] = loading.status; delete this.loading[file];
-        if (!this.loadHooks[file]) {this.loadHooks[file] = []}
-        this.loadHooks[file].push(loading.callback);
+        this.addHook(file,loading.callback);
       } else {
         this.loaded[file] = this.STATUS.OK;
         loading = {status: this.STATUS.OK}
       }
-      BASE.Callback.ExecuteHooks(this.loadHooks[file],loading.status);
+      if (!this.loadHooks[file]) {return null}
+      return this.loadHooks[file].Execute(loading.status);
     },
     
     //
@@ -1180,8 +1202,8 @@ MathJax.Hub = {
     "v1.0-compatible": true,  // set to false to prevent loading of default configuration file
     elements: [],    // array of elements to process when none is given explicitly
      
-    preProcessors: [], // list of callbacks for preprocessing (initialized by extensions)
-    inputJax: {},      // mime-type mapped to input jax (by registration)
+    preProcessors: MathJax.Callback.Hooks(true), // list of callbacks for preprocessing (initialized by extensions)
+    inputJax: {},          // mime-type mapped to input jax (by registration)
     outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
 
     menuSettings: {
@@ -1222,7 +1244,7 @@ MathJax.Hub = {
   },
   
   Register: {
-    PreProcessor: function (callback) {MathJax.Hub.config.preProcessors.push(MathJax.Callback(callback))},
+    PreProcessor: function () {MathJax.Hub.config.preProcessors.Add.apply(MathJax.Hub.config.preProcessors,arguments)},
     MessageHook: function () {return MathJax.Hub.signal.MessageHook.apply(MathJax.Hub.signal,arguments)},
     StartupHook: function () {return MathJax.Hub.Startup.signal.MessageHook.apply(MathJax.Hub.Startup.signal,arguments)},
     LoadHook: function () {return MathJax.Ajax.LoadHook.apply(MathJax.Ajax,arguments)}
@@ -1301,8 +1323,7 @@ MathJax.Hub = {
       if (ec.elements[i]) {
         queue.Push(
           ["Post",this.signal,["Begin PreProcess",ec.elements[i]]],
-          ["ExecuteHooks",MathJax.Callback,
-            (arguments.callee.disabled ? [] : this.config.preProcessors), ec.elements[i], true],
+          (arguments.callee.disabled? {} : ["Execute",this.config.preProcessors,ec.elements[i]]),
           ["Post",this.signal,["End PreProcess",ec.elements[i]]]
         );
       }
