@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.1.4";
+MathJax.version = "1.1.5";
 
 /**********************************************************/
 
@@ -1110,6 +1110,9 @@ MathJax.Message = {
       } else if (text.match(/^Processing /)) {
         if (!this.processing) {this.processing = "Processing "}
         text = this.processing; this.processing += ".";
+      } else if (text.match(/^Typesetting /)) {
+        if (!this.typesetting) {this.typesetting = "Typesetting "}
+        text = this.typesetting; this.typesetting += ".";
       }
     }
     return text;
@@ -1345,7 +1348,12 @@ MathJax.Hub = {
           ["Post",this.signal,["Begin "+action,ec.elements[i]]],
           ["Post",this.signal,["Begin Math",ec.elements[i]]],
           ["prepareScripts",this,action,ec.elements[i],scripts],
-          ["processScripts",this,scripts],
+          ["Post",this.signal,["Begin Math Input",ec.elements[i]]],
+          ["processInput",this,scripts],
+          ["Post",this.signal,["End Math Input",ec.elements[i]]],
+          ["Post",this.signal,["Begin Math Output",ec.elements[i]]],
+          ["processOutput",this,scripts],
+          ["Post",this.signal,["End Math Output",ec.elements[i]]],
           ["Post",this.signal,["End Math",ec.elements[i]]],
           ["Post",this.signal,["End "+action,ec.elements[i]]]
         );
@@ -1416,12 +1424,12 @@ MathJax.Hub = {
     if (script.MathJax) {script.MathJax.checked = 1}
   },
   
-  processScripts: function (scripts,start,n) {
+  processInput: function (scripts,start,n) {
     if (arguments.callee.disabled) {return null}
+    if (!start) {start = new Date().getTime()}
     var result, STATE = MathJax.ElementJax.STATE;
+    var i = 0, script, prev;
     try {
-      if (!start) {start = new Date().getTime()}
-      var i = 0, script, prev;
       while (i < scripts.length) {
         script = scripts[i]; if (!script) {i++; continue}
         prev = script.previousSibling;
@@ -1438,7 +1446,25 @@ MathJax.Hub = {
           result.Attach(script,this.inputJax[type].id);
           script.MathJax.state = STATE.OUTPUT;
         }
-        var jax = script.MathJax.elementJax;
+        i++;
+        if (new Date().getTime() - start > this.processUpdateTime && i < scripts.length)
+          {start = 0; this.RestartAfter(MathJax.Callback.Delay(1))}
+      }
+    } catch (err) {return this.processError(err,scripts,i,n,start,"Input")}
+    if ((n || scripts.length) && this.config.showProcessingMessages)
+      {MathJax.Message.Set("Processing math: 100%",0)}
+    return null;
+  },
+
+  processOutput: function (scripts,start,n) {
+    if (arguments.callee.disabled) {return null}
+    if (!start) {start = new Date().getTime()}
+    var result, STATE = MathJax.ElementJax.STATE;
+    var i = 0, script;
+    try {
+      while (i < scripts.length) {
+        script = scripts[i]; if (!script || !script.MathJax) {i++; continue}
+        var jax = script.MathJax.elementJax; if (!jax) {i++; continue}
         if (!this.outputJax[jax.mimeType]) {
           script.MathJax.state = STATE.UPDATE;
           throw Error("No output jax registered for "+jax.mimeType);
@@ -1450,27 +1476,30 @@ MathJax.Hub = {
           if (result.called) continue; // go back and call Process() again
           this.RestartAfter(result);
         }
-        script.MathJax.state = STATE.PROCESSED;
+        script.MathJax.state = STATE.PROCESSED; i++;
         this.signal.Post(["New Math",jax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
-        i++;
         if (new Date().getTime() - start > this.processUpdateTime && i < scripts.length)
           {start = 0; this.RestartAfter(MathJax.Callback.Delay(1))}
       }
-    } catch (err) {
-      if (!err.restart) {
-        if (!this.config.errorSettings.message) {throw err}
-        this.formatError(script,err); i++;
-      }
-      if (!n) {n = 0}; var m = Math.floor((n+i)/(n+scripts.length)*100); n += i;
-      if (this.config.showProcessingMessages) {MathJax.Message.Set("Processing math: "+m+"%",0)}
-      return MathJax.Callback.After(["processScripts",this,scripts.slice(i),start,n],err.restart);
-    }
+    } catch (err) {return this.processError(err,scripts,i,n,start,"Output")}
     if ((n || scripts.length) && this.config.showProcessingMessages) {
-      MathJax.Message.Set("Processing Math: 100%",0);
+      MathJax.Message.Set("Typesetting math: 100%",0);
       MathJax.Message.Clear(0);
     }
     return null;
   },
+
+  processError: function (err,scripts,i,n,start,type) {
+    if (!err.restart) {
+      if (!this.config.errorSettings.message) {throw err}
+      this.formatError(scripts[i],err); i++;
+    }
+    if (!n) {n = 0}; var m = Math.floor((n+i)/(n+scripts.length)*100); n += i;
+    var message = (type === "Output" ? "Typesetting" : "Processing");
+    if (this.config.showProcessingMessages) {MathJax.Message.Set(message+" math: "+m+"%",0)}
+    return MathJax.Callback.After(["process"+type,this,scripts.slice(i),start,n],err.restart);
+  },
+  
   formatError: function (script,err) {
     var error = MathJax.HTML.Element("span",{className:"MathJax_Error"},this.config.errorSettings.message);
     script.parentNode.insertBefore(error,script);
