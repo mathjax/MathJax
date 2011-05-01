@@ -1202,10 +1202,6 @@ MathJax.Hub = {
     "v1.0-compatible": true,  // set to false to prevent loading of default configuration file
     elements: [],    // array of elements to process when none is given explicitly
      
-    preProcessors: MathJax.Callback.Hooks(true), // list of callbacks for preprocessing (initialized by extensions)
-    inputJax: {},          // mime-type mapped to input jax (by registration)
-    outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
-
     menuSettings: {
       //format: "MathML",  //  the Show Source format (set in MathMenu.js)
       zoom: "None",        //  when to do MathZoom
@@ -1225,6 +1221,10 @@ MathJax.Hub = {
     }
   },
   
+  preProcessors: MathJax.Callback.Hooks(true), // list of callbacks for preprocessing (initialized by extensions)
+  inputJax: {},          // mime-type mapped to input jax (by registration)
+  outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
+
   processUpdateTime: 250, // time between screen updates when processing math (milliseconds)
 
   signal: MathJax.Callback.Signal("Hub"), // Signal used for Hub events
@@ -1244,7 +1244,7 @@ MathJax.Hub = {
   },
   
   Register: {
-    PreProcessor: function () {MathJax.Hub.config.preProcessors.Add.apply(MathJax.Hub.config.preProcessors,arguments)},
+    PreProcessor: function () {MathJax.Hub.preProcessors.Add.apply(MathJax.Hub.preProcessors,arguments)},
     MessageHook: function () {return MathJax.Hub.signal.MessageHook.apply(MathJax.Hub.signal,arguments)},
     StartupHook: function () {return MathJax.Hub.Startup.signal.MessageHook.apply(MathJax.Hub.Startup.signal,arguments)},
     LoadHook: function () {return MathJax.Ajax.LoadHook.apply(MathJax.Ajax,arguments)}
@@ -1291,7 +1291,7 @@ MathJax.Hub = {
     if (element.tagName != null && element.tagName.toLowerCase() === 'script') {
       if (element.MathJax) 
         {return (element.MathJax.state === MathJax.ElementJax.STATE.PROCESSED ? 1 : -1)}
-      if (element.type && this.config.inputJax[element.type.replace(/ *;(.|\s)*/,"")]) {return -1}
+      if (element.type && this.inputJax[element.type.replace(/ *;(.|\s)*/,"")]) {return -1}
     }
     // FIXME: check for results of outputJax
     return 0;
@@ -1323,7 +1323,7 @@ MathJax.Hub = {
       if (ec.elements[i]) {
         queue.Push(
           ["Post",this.signal,["Begin PreProcess",ec.elements[i]]],
-          (arguments.callee.disabled? {} : ["Execute",this.config.preProcessors,ec.elements[i]]),
+          (arguments.callee.disabled? {} : ["Execute",this.preProcessors,ec.elements[i]]),
           ["Post",this.signal,["End PreProcess",ec.elements[i]]]
         );
       }
@@ -1375,7 +1375,7 @@ MathJax.Hub = {
     var STATE = MathJax.ElementJax.STATE;
     for (var i = 0, m = scripts.length; i < m; i++) {
       var script = scripts[i];
-      if (script.type && this.config.inputJax[script.type.replace(/ *;(.|\n)*/,"")]) {
+      if (script.type && this.inputJax[script.type.replace(/ *;(.|\n)*/,"")]) {
         if (script.MathJax && script.MathJax.state !== STATE.PENDING)
           {this.scriptAction[action](script)}
         if (!script.MathJax) {script.MathJax = {state: STATE.PENDING}}
@@ -1421,7 +1421,7 @@ MathJax.Hub = {
   processScripts: function (scripts,start,n) {
     if (arguments.callee.disabled) {return null}
     var result, STATE = MathJax.ElementJax.STATE;
-    var inputJax = this.config.inputJax, outputJax = this.config.outputJax;
+    var inputJax = this.inputJax, outputJax = this.outputJax;
     try {
       if (!start) {start = new Date().getTime()}
       var i = 0, script, prev;
@@ -1652,11 +1652,11 @@ MathJax.Hub.Startup = {
   //  Load the input and output jax
   //
   Jax: function () {
-    var config = MathJax.Hub.config;
+    var config = MathJax.Hub.config, jax = MathJax.Hub.outputJax;
     //  Save the order of the output jax since they are loading asynchronously
     for (var i = 0, m = config.jax.length, k = 0; i < m; i++) {
       if (config.jax[i].substr(0,7) === "output/") 
-        {config.outputJax.order[config.jax[i].substr(7)] = k; k++}
+        {jax.order[config.jax[i].substr(7)] = k; k++}
     }
     var queue = MathJax.Callback.Queue();
     return queue.Push(
@@ -1682,7 +1682,7 @@ MathJax.Hub.Startup = {
   //  (this must come after the jax are loaded)
   //
   Menu: function () {
-    var menu = MathJax.Hub.config.menuSettings, jax = MathJax.Hub.config.outputJax, registered;
+    var menu = MathJax.Hub.config.menuSettings, jax = MathJax.Hub.outputJax, registered;
     for (var id in jax) {if (jax.hasOwnProperty(id)) {
       if (jax[id].length) {registered = jax[id]; break}
     }}
@@ -1852,13 +1852,13 @@ MathJax.Hub.Startup = {
       var load = queue.Push(AJAX.Require(this.directory+"/"+this.JAXFILE));
       if (!load.called) {this.constructor.prototype.Process = function () {return load}}
       // Load the associated output jax
-      jax = HUB.config.outputJax["jax/"+jax[0]];
+      jax = HUB.outputJax["jax/"+jax[0]];
       if (jax) {queue.Push(AJAX.Require(jax[0].directory+"/"+this.JAXFILE))}
       return queue.Push({});
     },
     Register: function (mimetype) {
-      if (!HUB.config.inputJax) {HUB.config.inputJax = {}}
-      HUB.config.inputJax[mimetype] = this;
+      if (!HUB.inputJax) {HUB.inputJax = {}}
+      HUB.inputJax[mimetype] = this;
     }
   },{
     version: "1.1",
@@ -1870,7 +1870,7 @@ MathJax.Hub.Startup = {
 
   BASE.OutputJax = JAX.Subclass({
     Register: function (mimetype) {
-      var jax = HUB.config.outputJax;
+      var jax = HUB.outputJax;
       if (!jax[mimetype]) {jax[mimetype] = []}
       //  If the output jax is earlier in the original configuration list, put it first here
       if (jax[mimetype].length && (this.id === HUB.config.menuSettings.renderer ||
