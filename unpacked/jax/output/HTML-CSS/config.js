@@ -24,7 +24,7 @@
 
 MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   id: "HTML-CSS",
-  version: "1.1",
+  version: "1.1.1",
   directory: MathJax.OutputJax.directory + "/HTML-CSS",
   extensionDir: MathJax.OutputJax.extensionDir + "/HTML-CSS",
   autoloadDir: MathJax.OutputJax.directory + "/HTML-CSS/autoload",
@@ -108,7 +108,7 @@ MathJax.Hub.Register.StartupHook("End Config",[function (HUB,HTMLCSS) {
     minBrowserTranslate: function (script) {
       var MJ = HUB.getJaxFor(script), text = ["[Math]"], delim;
       var span = document.createElement("span",{className: "MathJax_Preview"});
-      if (MJ.inputJax.id === "TeX") {
+      if (MJ.inputJax === "TeX") {
         if (MJ.root.Get("displaystyle")) {
           delim = CONFIG.displayMathDelimiters;
           text = [delim[0]+MJ.originalText+delim[1]];

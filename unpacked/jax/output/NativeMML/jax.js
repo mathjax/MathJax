@@ -169,7 +169,7 @@
           var script = (isMSIE ? this.parentNode.parentNode.nextSibling : this.parentNode.nextSibling);
           MENU.jax = HUB.getJaxFor(script);
           MENU.menu.items[1].menu.items[1].name = 
-            (MENU.jax.inputJax.id === "MathML" ? "Original" : MENU.jax.inputJax.id);
+            (MENU.jax.inputJax === "MathML" ? "Original" : MENU.jax.inputJax);
           delete nMML.trapClick; delete nMML.trapUp;
           return MENU.menu.Post(event);
         } else {

@@ -1361,11 +1361,12 @@ MathJax.Hub = {
       //  FIXME:  Have intputJax determine if things have changed?
       if (jax && jax.originalText === (script.text == "" ? script.innerHTML : script.text))
         {script.MathJax.state = jax.STATE.PROCESSED} else
-        {jax.outputJax.Remove(jax); script.MathJax.state = jax.STATE.UPDATE}
+        {MathJax.OutputJax[jax.outputJax].Remove(jax); script.MathJax.state = jax.STATE.UPDATE}
     },
     Reprocess: function (script) {
       var jax = script.MathJax.elementJax;
-      if (jax) {jax.outputJax.Remove(jax); script.MathJax.state = jax.STATE.UPDATE}
+      if (jax)
+        {MathJax.OutputJax[jax.outputJax].Remove(jax); script.MathJax.state = jax.STATE.UPDATE}
     }
   },
   
@@ -1421,7 +1422,6 @@ MathJax.Hub = {
   processScripts: function (scripts,start,n) {
     if (arguments.callee.disabled) {return null}
     var result, STATE = MathJax.ElementJax.STATE;
-    var inputJax = this.inputJax, outputJax = this.outputJax;
     try {
       if (!start) {start = new Date().getTime()}
       var i = 0, script, prev;
@@ -1433,21 +1433,22 @@ MathJax.Hub = {
         if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) {i++; continue};
         if (!script.MathJax.elementJax || script.MathJax.state === STATE.UPDATE) {
           this.checkScriptSiblings(script);
-          result = inputJax[type].Process(script);
+          result = this.inputJax[type].Process(script);
           if (typeof result === 'function') {
             if (result.called) continue; // go back and call Process() again
             this.RestartAfter(result);
           }
-          result.Attach(script,inputJax[type]);
+          result.Attach(script,this.inputJax[type].id);
           script.MathJax.state = STATE.OUTPUT;
         }
         var jax = script.MathJax.elementJax;
-        if (!outputJax[jax.mimeType]) {
+        if (!this.outputJax[jax.mimeType]) {
           script.MathJax.state = STATE.UPDATE;
           throw Error("No output jax registered for "+jax.mimeType);
         }
-        jax.outputJax = outputJax[jax.mimeType][0];
-        result = jax.outputJax.Process(script);
+        var outputJax = this.outputJax[jax.mimeType][0];
+        jax.outputJax = outputJax.id;
+        result = outputJax.Process(script);
         if (typeof result === 'function') {
           if (result.called) continue; // go back and call Process() again
           this.RestartAfter(result);
@@ -1520,8 +1521,7 @@ MathJax.Hub.Insert(MathJax.Hub.config.styles,MathJax.Message.styles);
 MathJax.Hub.Insert(MathJax.Hub.config.styles,{".MathJax_Error":MathJax.Hub.config.errorSettings.style});
 
 //
-//  Storage area for preprocessors and extensions
-//  (should these be classes?)
+//  Storage area for extensions and preprocessors
 //
 MathJax.Extension = {};
 
@@ -1918,7 +1918,7 @@ MathJax.Hub.Startup = {
       return HUB.Process(script,callback);
     },
     Remove: function () {
-      this.outputJax.Remove(this);
+      MathJax.OutputJax[this.outputJax].Remove(this);
       HUB.signal.Post(["Remove Math",this.inputID]); // wait for this to finish?
       this.Detach();
     },

@@ -418,7 +418,7 @@
           var math = (this.parentNode.className === "MathJax_Display" ? this.parentNode : this)
           MENU.jax = HUB.getJaxFor(math.nextSibling);
           MENU.menu.items[1].menu.items[1].name = 
-            (MENU.jax.inputJax.id === "MathML" ? "Original" : MENU.jax.inputJax.id);
+            (MENU.jax.inputJax === "MathML" ? "Original" : MENU.jax.inputJax);
           return MENU.menu.Post(event);
         } else {
           if (!AJAX.loadingMathMenu) {
