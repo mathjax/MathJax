@@ -27,9 +27,9 @@
   var TRUE = true, FALSE = false, MML, NBSP = String.fromCharCode(0xA0); 
   
   var STACK = MathJax.Object.Subclass({
-    Init: function (env) {
-      this.global = {};
-      this.data = [STACKITEM.start().With({global: this.global})];
+    Init: function (env,inner) {
+      this.global = {isInner: inner};
+      this.data = [STACKITEM.start(this.global)];
       if (env) {this.data[0].env = env}
       this.env = this.data[0].env;
     },
@@ -102,6 +102,10 @@
 
   STACKITEM.start = STACKITEM.Subclass({
     type: "start", isOpen: TRUE,
+    Init: function (global) {
+      this.SUPER(arguments).Init.call(this);
+      this.global = global;
+    },
     checkItem: function (item) {
       if (item.type === "stop") {return STACKITEM.mml(this.mmlData())}
       return this.SUPER(arguments).checkItem.call(this,item);
@@ -917,9 +921,8 @@
     Init: function (string,env) {
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
-      this.stack = TEX.Stack(ENV);
-      this.Parse();
-      this.Push(STACKITEM.stop());
+      this.stack = TEX.Stack(ENV,!!env);
+      this.Parse(); this.Push(STACKITEM.stop());
     },
     Parse: function () {
       var c;
@@ -1631,7 +1634,7 @@
         c = text.charAt(i++);
         if (c === '$') {
           if (match === '$') {
-            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1)).mml().With(def)));
+            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1),{}).mml().With(def)));
             match = ''; k = i;
           } else if (match === '') {
             if (k < i-1) {mml.push(this.InternalText(text.slice(k,i-1),def))}
@@ -1643,7 +1646,7 @@
             if (k < i-2) {mml.push(this.InternalText(text.slice(k,i-2),def))}
             match = ')'; k = i;
           } else if (c === ')' && match === ')') {
-            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2)).mml().With(def)));
+            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml().With(def)));
             match = ''; k = i;
           }
         }
