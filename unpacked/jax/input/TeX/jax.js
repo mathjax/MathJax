@@ -850,8 +850,10 @@
         
         tag:               ['Extension','AMSmath'],
         notag:             ['Extension','AMSmath'],
-        label:             ['Macro','',1],           // not implemented yet
-        nonumber:          ['Macro',''],             // not implemented yet
+        label:             ['Extension','AMSmath'],
+        ref:               ['Extension','AMSmath'],
+        eqref:             ['Extension','AMSmath'],
+        nonumber:          ['Macro','\\notag'],
 
         //  Extensions to TeX
         unicode:           ['Extension','unicode'],
@@ -1627,7 +1629,7 @@
     InternalMath: function (text,level) {
       var def = {displaystyle: FALSE}; if (level != null) {def.scriptlevel = level}
       if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      if (!text.match(/\$|\\\(/)) {return [this.InternalText(text,def)]}
+      if (!text.match(/\$|\\\(|\\(eq)?ref\s*\{/)) {return [this.InternalText(text,def)]}
       var i = 0, k = 0, c, match = '';
       var mml = [];
       while (i < text.length) {
@@ -1640,14 +1642,22 @@
             if (k < i-1) {mml.push(this.InternalText(text.slice(k,i-1),def))}
             match = '$'; k = i;
           }
+        } else if (c === '}' && match === '}') {
+          mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i),{}).mml().With(def)));
+          match = ''; k = i+1;
         } else if (c === '\\') {
-          c = text.charAt(i++);
-          if (c === '(' && match === '') {
-            if (k < i-2) {mml.push(this.InternalText(text.slice(k,i-2),def))}
-            match = ')'; k = i;
-          } else if (c === ')' && match === ')') {
-            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml().With(def)));
-            match = ''; k = i;
+          if (match === '' && text.substr(i).match(/^(eq)?ref\s*\{/)) {
+            if (k < i-1) {mml.push(this.InternalText(text.slice(k,i-1),def))}
+            match = '}'; k = i-1;
+          } else {
+            c = text.charAt(i++);
+            if (c === '(' && match === '') {
+              if (k < i-2) {mml.push(this.InternalText(text.slice(k,i-2),def))}
+              match = ')'; k = i;
+            } else if (c === ')' && match === ')') {
+              mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml().With(def)));
+              match = ''; k = i;
+            }
           }
         }
       }

@@ -263,6 +263,13 @@ MathJax.Hub.Config({
     processEnvironments: true,
 
     //
+    //  Conteols whether tex2jax processes \ref{...} commands outside
+    //  of math mode.  Set to "false" to prevent processing of \ref
+    //  except within math mode.
+    //  
+    processRefs: true,
+
+    //
     //  Controls whether tex2jax inserts MathJax_Preview spans to make a
     //  preview available, and what preview to use, when it locates in-line
     //  and display mathetics on the page.  The default is "TeX", which
@@ -368,7 +375,19 @@ MathJax.Hub.Config({
     //        bold: ['{\\bf #1}', 1]
     //      }
     //
-    Macros: {}
+    Macros: {},
+    
+    //
+    //  Equation numbering parameters
+    //
+    equationNumbers: {
+      autoNumber: "none",   // "AMS" for standard AMS environment numbering,
+                            //  or "all" to number all displayed equations
+//    formatNumber: function (n) {return n},            // format for equation number n
+//    formatTag:    function (n) {return '('+n+')'},    // format for \tag and \eqref
+//    formatID:     function (n) {return 'mjx-eqn-'+n}, // element ID to use for reference
+//    formatURL:    function (n) {return '#mjx-eqn-'+escape(n)},  // URL to use for references
+    }
     
   },
 
