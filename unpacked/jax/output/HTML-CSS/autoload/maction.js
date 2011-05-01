@@ -109,14 +109,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     HTMLclick: function (event) {
       this.selection++;
       if (this.selection > this.data.length) {this.selection = 1}
-      var obj = this; while (obj.type !== "math") {obj = obj.inherit}
-      var span = obj.HTMLspanElement();
-      while (span.nodeName.toLowerCase() !== "nobr") {span = span.parentNode}
-      span = span.parentNode; if (span.parentNode.className === "MathJax_Display") {span = span.parentNode}
-      var script = span.nextSibling;
-      span.parentNode.removeChild(span);
-      script.MathJax.state = MathJax.ElementJax.STATE.PENDING;
-      MathJax.Hub.Process(script);
+      var math = this; while (math.type !== "math") {math = math.inherit}
+      MathJax.Hub.getJaxFor(math.inputID).Update();
       if (!event) {event = window.event}
       if (event.preventDefault) {event.preventDefault()}
       if (event.stopPropagation) {event.stopPropagation()}
