@@ -1701,33 +1701,38 @@
       MAXBUFFER: 5*1024    // maximum size of TeX string to process
     },
     
+    prefilterHooks: MathJax.Callback.Hooks(true),
+    postfilterHooks: MathJax.Callback.Hooks(true),
+    
     Translate: function (script) {
       var mml, math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
-      if (MathJax.Hub.Browser.isKonqueror)
-        {math = math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
-      var displaystyle = 
+      var display = 
         (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
-      math = TEX.prefilterMath(math,displaystyle,script);
+      var data = {math:math, display:display, script:script};
+      this.prefilterHooks.Execute(data); math = data.math;
       try {
         mml = TEX.Parse(math).mml();
 //        mml = MML.semantics(mml,MML.annotation(math).With({encoding:"application:x-tex"}));
       } catch(err) {
         if (!err.texError) {throw err}
-        mml = this.formatError(err,math,displaystyle,script);
+        mml = this.formatError(err,math,display,script);
       }
       if (mml.inferred) {mml = MML.apply(MathJax.ElementJax,mml.data)} else {mml = MML(mml)}
-      if (displaystyle) {mml.root.display = "block"}
-      return this.postfilterMath(mml,displaystyle,script);
+      if (display) {mml.root.display = "block"}
+      data.math = mml; this.postfilterHooks.Execute(data);
+      return data.math;
     },
-    prefilterMath: function (math,displaystyle,script) {
+    prefilterMath: function (data) {
+      // Konqueror incorrectly quotes these characters in script.innerHTML 
+      if (MathJax.Hub.Browser.isKonqueror)
+        {data.math = data.math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
       // avoid parsing super- and subscript numbers as a unit
-      return math.replace(/([_^]\s*\d)([0-9.,])/g,"$1 $2");
+      data.math = data.math.replace(/([_^]\s*\d)([0-9.,])/g,"$1 $2");
     },
-    postfilterMath: function (math,displaystyle,script) {
-      this.combineRelations(math.root);
-      return math;
+    postfilterMath: function (data) {
+      this.combineRelations(data.math.root);
     },
-    formatError: function (err,math,displaystyle,script) {
+    formatError: function (err,math,display,script) {
       return MML.merror(err.message.replace(/\n.*/,""));
     },
     Error: function (message) {
@@ -1754,6 +1759,9 @@
       }
     }
   });
+
+  TEX.prefilterHooks.Add(["prefilterMath",TEX]);
+  TEX.postfilterHooks.Add(["postfilterMath",TEX]);
 
   TEX.loadComplete("jax.js");
   
