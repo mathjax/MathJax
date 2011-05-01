@@ -1708,7 +1708,8 @@
     postfilterHooks: MathJax.Callback.Hooks(true),
     
     Translate: function (script) {
-      var mml, math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
+      var mml, isError = false;
+      var math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
       var display = 
         (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
       var data = {math:math, display:display, script:script};
@@ -1719,9 +1720,11 @@
       } catch(err) {
         if (!err.texError) {throw err}
         mml = this.formatError(err,math,display,script);
+        isError = true;
       }
       if (mml.inferred) {mml = MML.apply(MathJax.ElementJax,mml.data)} else {mml = MML(mml)}
       if (display) {mml.root.display = "block"}
+      if (isError) {mml.texError = true}
       data.math = mml; this.postfilterHooks.Execute(data);
       return data.math;
     },
