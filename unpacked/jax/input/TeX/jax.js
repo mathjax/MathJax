@@ -1718,6 +1718,18 @@
     postfilterHooks: MathJax.Callback.Hooks(true),   // hooks to run after processing TeX
     
     //
+    //  Check if AMSmath extension must be loaded and push
+    //    it on the extensions array, if needed
+    //
+    Config: function () {
+      this.SUPER(arguments).Config.apply(this,arguments);
+      if (this.config.equationNumbers.autoNumber !== "none") {
+        if (!this.config.extensions) {this.config.extensions = []}
+        this.config.extensions.push("AMSmath.js");
+      }
+    },
+
+    //
     //  Convert TeX to ElementJax
     //
     Translate: function (script) {
