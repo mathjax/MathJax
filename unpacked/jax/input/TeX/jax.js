@@ -23,7 +23,7 @@
  *  limitations under the License.
  */
 
-(function (TEX) {
+(function (TEX,HUB,AJAX) {
   var TRUE = true, FALSE = false, MML, NBSP = String.fromCharCode(0xA0); 
   
   var STACK = MathJax.Object.Subclass({
@@ -295,7 +295,7 @@
   var TEXDEF = {};
   var STARTUP = function () {
     MML = MathJax.ElementJax.mml;
-    MathJax.Hub.Insert(TEXDEF,{
+    HUB.Insert(TEXDEF,{
   
       // patterns for letters and numbers
       letter:  /[a-z]/i,
@@ -1349,9 +1349,9 @@
       if (name && !typeof(name) === "string") {name = name.name}
       file = TEX.extensionDir+"/"+file;
       if (!file.match(/\.js$/)) {file += ".js"}
-      if (!MathJax.Ajax.loaded[MathJax.Ajax.fileURL(file)]) {
+      if (!AJAX.loaded[AJAX.fileURL(file)]) {
         if (name != null) {delete TEXDEF[array || 'macros'][name.replace(/^\\/,"")]}
-        MathJax.Hub.RestartAfter(MathJax.Ajax.Require(file));
+        HUB.RestartAfter(AJAX.Require(file));
       }
     },
     
@@ -1714,14 +1714,15 @@
       MAXBUFFER: 5*1024    // maximum size of TeX string to process
     },
     
-    prefilterHooks: MathJax.Callback.Hooks(true),
-    postfilterHooks: MathJax.Callback.Hooks(true),
+    prefilterHooks: MathJax.Callback.Hooks(true),    // hooks to run before processing TeX
+    postfilterHooks: MathJax.Callback.Hooks(true),   // hooks to run after processing TeX
     
+    //
+    //  Convert TeX to ElementJax
+    //
     Translate: function (script) {
-      var mml, isError = false;
-      var math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
-      var display = 
-        (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
+      var mml, isError = false, math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
+      var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
       var data = {math:math, display:display, script:script};
       this.prefilterHooks.Execute(data); math = data.math;
       try {
@@ -1740,7 +1741,7 @@
     },
     prefilterMath: function (data) {
       // Konqueror incorrectly quotes these characters in script.innerHTML 
-      if (MathJax.Hub.Browser.isKonqueror)
+      if (HUB.Browser.isKonqueror)
         {data.math = data.math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
       // avoid parsing super- and subscript numbers as a unit
       data.math = data.math.replace(/([_^]\s*\d)([0-9.,])/g,"$1 $2");
@@ -1751,13 +1752,25 @@
     formatError: function (err,math,display,script) {
       return MML.merror(err.message.replace(/\n.*/,""));
     },
+
+    //
+    //  Produce an error and stop processing this equation
+    //
     Error: function (message) {
-      throw MathJax.Hub.Insert(Error(message),{texError: TRUE});
+      throw HUB.Insert(Error(message),{texError: TRUE});
     },
+    
+    //
+    //  Add a user-defined macro to the macro list
+    //
     Macro: function (name,def,argn) {
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
     },
     
+    //
+    //  Combine adjacent <mo> elements that are relations
+    //    (since MathML treats the spacing very differently)
+    //
     combineRelations: function (mml) {
       for (var i = 0, m = mml.data.length; i < m; i++) {
         if (mml.data[i]) {
@@ -1776,9 +1789,12 @@
     }
   });
 
+  //
+  //  Add the default filters
+  //
   TEX.prefilterHooks.Add(["prefilterMath",TEX]);
   TEX.postfilterHooks.Add(["postfilterMath",TEX]);
 
   TEX.loadComplete("jax.js");
   
-})(MathJax.InputJax.TeX);
+})(MathJax.InputJax.TeX,MathJax.Hub,MathJax.Ajax);
