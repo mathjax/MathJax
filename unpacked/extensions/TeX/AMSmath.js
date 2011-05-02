@@ -520,7 +520,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     data.script.MathJax.startNumber = AMS.startNumber;
     AMS.startNumber = AMS.number;                // equation numbers for next equation
     MathJax.Hub.Insert(AMS.labels,AMS.eqlabels); // save labels from this equation
-    if (AMS.badref && !data.math.isError) {AMS.refs.push(data.script)}  // reprocess later
+    if (AMS.badref && !data.math.texError) {AMS.refs.push(data.script)}  // reprocess later
   });
   
   MathJax.Hub.Register.MessageHook("Begin Math Input",function () {
