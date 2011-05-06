@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "1.1.1",
+  version: "1.1.2",
   config: {
     preview: "alttext"      // Use the <math> element's alttext as the 
                             //   preview.  Set to "none" for no preview,
@@ -101,7 +101,7 @@ MathJax.Extension.mml2jax = {
     var script = document.createElement("script");
     script.type = "math/mml";
     parent.insertBefore(script,math);
-    var mml = "", node;
+    var mml = "", node, MATH = math;
     while (math && math.nodeName !== "/MATH") {
       node = math; math = math.nextSibling;
       mml += this.msieNodeHTML(node);
@@ -109,7 +109,7 @@ MathJax.Extension.mml2jax = {
     }
     if (math && math.nodeName === "/MATH") {math.parentNode.removeChild(math)}
     script.text = mml + "</math>";
-    if (this.config.preview !== "none") {this.createPreview(math,script)}
+    if (this.config.preview !== "none") {this.createPreview(MATH,script)}
   },
   msieNodeHTML: function (node) {
     var html, i, m;
@@ -128,6 +128,12 @@ MathJax.Extension.mml2jax = {
         }
       }
       html += ">";
+      // Handle internal HTML (possibly due to <semantics> annotation or missing </math>)
+      if (node.outerHTML != null && node.outerHTML.match(/(.<\/[A-Z]+>|\/>)$/)) {
+        for (i = 0, m = node.childNodes.length; i < m; i++)
+          {html += this.msieOuterHTML(node.childNodes[i])}
+        html += "</"+node.nodeName.toLowerCase()+">";
+      }
     } else {
       html = this.toLowerCase(node.outerHTML)
       var parts = html.split(/\"/);
