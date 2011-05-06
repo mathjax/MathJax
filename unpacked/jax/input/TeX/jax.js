@@ -1644,7 +1644,7 @@
           }
         } else if (c === '}' && match === '}') {
           mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i),{}).mml().With(def)));
-          match = ''; k = i+1;
+          match = ''; k = i;
         } else if (c === '\\') {
           if (match === '' && text.substr(i).match(/^(eq)?ref\s*\{/)) {
             if (k < i-1) {mml.push(this.InternalText(text.slice(k,i-1),def))}
