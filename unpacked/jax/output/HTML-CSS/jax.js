@@ -201,6 +201,7 @@
           "word-wrap":       "normal",
           "white-space":     "nowrap",
           "float":           "none",
+          "direction":       "ltr",
           border: 0, padding: 0, margin: 0
         },
 
