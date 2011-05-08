@@ -7,7 +7,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009 Design Science, Inc.
+ *  Copyright (c) 2009-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,17 +23,19 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var TEX = MathJax.InputJax.TeX;
   var TEXDEF = TEX.Definitions;
   
   MathJax.Hub.Insert(TEXDEF,{
     macros: {
-      newcommand:     'NewCommand',
-      renewcommand:   'NewCommand',
-      newenvironment: 'NewEnvironment',
-      def:            'MacroDef'
+      newcommand:       'NewCommand',
+      renewcommand:     'NewCommand',
+      newenvironment:   'NewEnvironment',
+      renewenvironment: 'NewEnvironment',
+      def:              'MacroDef',
+      let:              'Let'
     }
   })
 
@@ -50,7 +52,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (cs.charAt(0) === "\\") {cs = cs.substr(1)}
       if (!cs.match(/^(.|[a-z]+)$/i)) {TEX.Error("Illegal control sequence name for "+name)}
       if (n != null && !n.match(/^[0-9]+$/)) {TEX.Error("Illegal number of parameters specified in "+name)}
-      TEXDEF.macros[cs] = ['Macro',def,n];
+      this.setDef(cs,['Macro',def,n]);
     },
     
     /*
@@ -63,7 +65,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           edef = this.GetArgument(name);
       if (n === '') {n = null}
       if (n != null && !n.match(/^[0-9]+$/)) {TEX.Error("Illegal number of parameters specified in "+name)}
-      TEXDEF.environment[env] = ['BeginEnv','EndEnv',bdef,edef,n];
+      this.setEnv(env,['BeginEnv','EndEnv',bdef,edef,n]);
     },
     
     /*
@@ -73,9 +75,45 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var cs     = this.GetCSname(name),
           params = this.GetTemplate(name,"\\"+cs),
           def    = this.GetArgument(name);
-      if (!(params instanceof Array)) {TEXDEF.macros[cs] = ['Macro',def,params]}
-        else {TEXDEF.macros[cs] = ['MacroWithTemplate',def,params[0],params[1]]}
+      if (!(params instanceof Array)) {this.setDef(cs,['Macro',def,params])}
+        else {this.setDef(cs,['MacroWithTemplate',def].concat(params))}
     },
+    
+    /*
+     *  Implements the \let command
+     */
+    Let: function (name) {
+      var cs = this.GetCSname(name), macro;
+      var c = this.GetNext(); if (c === "=") {this.i++; c = this.GetNext()}
+      //
+      //  All \let commands create entries in the macros array, but we
+      //  have to look in the various mathchar and delimiter arrays if
+      //  the source isn't a macro already, and attach the data to a
+      //  macro with the proper routine to process it.
+      //
+      //  A command of the form \let\cs=char produces a macro equivalent
+      //  to \def\cs{char}, which is as close as MathJax can get for this.
+      //  So \let\bgroup={ is possible, but doesn't work as it does in TeX.
+      //
+      if (c === "\\") {
+        name = this.GetCSname(name);
+        macro = this.csFindMacro(name);
+        if (!macro) {
+          if (TEXDEF.mathchar0mi[name])            {macro = ["csMathchar0mi",TEXDEF.mathchar0mi[name]]} else
+          if (TEXDEF.mathchar0mo[name])            {macro = ["csMathchar0mo",TEXDEF.mathchar0mo[name]]} else
+          if (TEXDEF.mathchar7[name])              {macro = ["csMathchar7",TEXDEF.mathchar7[name]]}     else 
+          if (TEXDEF.delimiter["\\"+name] != null) {macro = ["csDelimiter",TEXDEF.delimiter["\\"+name]]}
+        }
+      } else {macro = ["Macro",c]; this.i++}
+      this.setDef(cs,macro);
+    },
+    
+    /*
+     *  Routines to set the macro and environment definitions
+     *  (overridden by begingroup to make localized versions)
+     */
+    setDef: function (name,value) {TEXDEF.macros[name] = value},
+    setEnv: function (name,value) {TEXDEF.environment[name] = value},
     
     /*
      *  Get a CS name or give an error
