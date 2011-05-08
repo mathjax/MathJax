@@ -20,6 +20,7 @@
 
 (function (MATHML) {
   MathJax.Hub.Insert(MATHML.Parse.Entity,{
+    'QUOT': '\u0022',
     'qint': '\u2A0C',
     'qprime': '\u2057',
     'quaternions': '\u210D',
