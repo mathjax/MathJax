@@ -24,8 +24,8 @@
 
   MathJax.Hub.Insert(MML.mo.prototype,{
     OPTABLE: {
-      prefix: {
-        '\u03C3': MO.ORD11     // greek small letter sigma
+      infix: {
+        '\u03F6': MO.REL       // greek reversed lunate epsilon symbol
       }
     }
   });
