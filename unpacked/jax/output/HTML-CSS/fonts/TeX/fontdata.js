@@ -67,10 +67,9 @@
       },
       
       VARIANT: {
-        "normal": {fonts:[MAIN,SIZE1,AMS]},
-        "bold":   {fonts:[BOLD,SIZE1,AMS]},
-        "italic": {fonts:[ITALIC,"MathJax_Main-italic",MAIN,SIZE1,AMS],
-                   offsetN: 0x30, variantN: "normal"},
+        "normal": {fonts:[MAIN,SIZE1,AMS], offsetG: 0x0391, variantG: "italic"},
+        "bold":   {fonts:[BOLD,SIZE1,AMS], offsetG: 0x0391, variantG: "bold-italic"},
+        "italic": {fonts:[ITALIC,"MathJax_Main-italic",MAIN,SIZE1,AMS]},
         "bold-italic": {fonts:["MathJax_Math-bold-italic",BOLD,SIZE1,AMS]},
         "double-struck": {fonts:[AMS, MAIN]},
         "fraktur": {fonts:["MathJax_Fraktur",MAIN,SIZE1,AMS]},
@@ -90,7 +89,8 @@
       
       RANGES: [
         {name: "alpha", low: 0x61, high: 0x7A, offset: "A", add: 32},
-        {name: "number", low: 0x30, high: 0x39, offset: "N"}
+        {name: "number", low: 0x30, high: 0x39, offset: "N"},
+        {name: "Greek", low: 0x0391, high: 0x03F6, offset: "G"},
       ],
       
       RULECHAR: 0x2212,
