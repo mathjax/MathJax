@@ -64,8 +64,6 @@
         "STIXIntegralsD":             "IntegralsD/Regular/All.js"
       },
       
-      DEFAULTFAMILY: GENERAL, DEFAULTWEIGHT: "normal", DEFAULTSTYLE: "normal",
-
       VARIANT: {
         "normal": {fonts: [GENERAL,NONUNI,SIZE1]},
         "bold":   {fonts: [BOLD,"STIXNonUnicode-bold","STIXSizeOneSym-bold"]},

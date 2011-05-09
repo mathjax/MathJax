@@ -66,8 +66,6 @@
         "MathJax_Typewriter":       "Typewriter/Regular/Main.js"
       },
       
-      DEFAULTFAMILY: MAIN,  DEFAULTWEIGHT: "normal", DEFAULTSTYLE: "normal",
-
       VARIANT: {
         "normal": {fonts:[MAIN,SIZE1,AMS]},
         "bold":   {fonts:[BOLD,SIZE1,AMS]},

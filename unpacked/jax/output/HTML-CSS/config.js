@@ -37,6 +37,8 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
     preferredFont: "TeX",
     webFont: "TeX",
     imageFont: "TeX",
+    undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",
+    
     showMathMenu: true,
     
     styles: {
