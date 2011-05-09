@@ -1239,7 +1239,9 @@
         if (match) {
           def.mathvariant = MML.VARIANT.NORMAL;
           mml = STACKITEM.fn(this.mmlToken(MML.mi(match[1]).With(def)));
-        } else {mml = MML.TeXAtom(TEX.Parse(arg,this.stack.env).mml()).With(def)}
+        } else {
+          mml = STACKITEM.fn(MML.TeXAtom(TEX.Parse(arg,this.stack.env).mml()).With(def));
+        }
       } else {mml = MML.TeXAtom(this.ParseArg(name)).With(def)}
       this.Push(mml);
     },
