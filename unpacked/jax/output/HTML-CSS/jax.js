@@ -783,6 +783,7 @@
         code = delim.alias; delim = this.FONTDATA.DELIMITERS[code];
         if (!delim) {delim = {HW: [0,this.FONTDATA.VARIANT[MML.VARIANT.NORMAL]]}}
       }
+      if (delim.load) {HUB.RestartAfter(AJAX.Require(this.fontDir+"/fontdata-"+delim.load+".js"))}
       for (var i = 0, m = delim.HW.length; i < m; i++) {
         if (delim.HW[i][0]*scale >= HW-.01 || (i == m-1 && !delim.stretch)) {
           if (delim.HW[i][2]) {scale *= delim.HW[i][2]}
@@ -856,7 +857,8 @@
       }
       if (W > w) {
         var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
-        N = n = Math.ceil((W-w)/(k*rw)); rw = (W-w)/(k*n);
+        N = n = Math.ceil((W-w)/(k*rw));
+        if (!delim.fillExtenders) {rw = (W-w)/(k*n)}
         var dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
           while (n-- > 0) {this.placeBox(this.addBox(stack,rep.cloneNode(true)),x,0,true); x += rw}
@@ -885,12 +887,19 @@
       if (data[0] instanceof Array) {
         for (var i = 0, m = data[0].length; i < m; i++) {text += String.fromCharCode(data[0][i])}
       } else {text = String.fromCharCode(data[0])}
-      if (scale !== 1) {
+      if (data[4]) {scale *= data[4]}
+      if (scale !== 1 || data[3]) {
         SPAN = this.addElement(span,"span",{style:{fontSize: this.Percent(scale)}, scale:scale});
         this.handleVariant(SPAN,variant,text);
         span.bbox = SPAN.bbox;
       } else {this.handleVariant(span,variant,text)}
-      if (data[2]) {span.style.marginLeft = this.Em(data[2])}
+      if (data[2]) {span.style.marginLeft = this.Em(data[2])}     // x offset
+      if (data[3]) {                                              // y offset
+        span.firstChild.style.verticalAlign = this.Em(data[3]);
+        span.bbox.h += data[3]; if (span.bbox.h < 0) {span.bbox.h = 0}
+      }
+      if (data[5]) {span.bbox.h += data[5]}  // extra height
+      if (data[6]) {span.bbox.d += data[6]}  // extra depth
       if (this.AccentBug && span.bbox.w === 0) {
         //  Handle combining characters by adding a non-breaking space and removing that width
         SPAN.firstChild.nodeValue += this.NBSP;

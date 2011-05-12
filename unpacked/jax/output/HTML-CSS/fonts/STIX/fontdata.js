@@ -7,7 +7,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2011 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
  */
 
 (function (HTMLCSS) {
-  var VERSION = "1.0";
+  var VERSION = "1.1.1";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -36,7 +36,7 @@
       SIZE3   = "STIXSizeThreeSym",
       SIZE4   = "STIXSizeFourSym",
       SIZE5   = "STIXSizeFiveSym";
-  var H = "H", V = "V";
+  var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
 
   HTMLCSS.Augment({
     FONTDATA: {
@@ -331,22 +331,117 @@
         0x005E: {alias: 0x02D6, dir:H}, // wide hat
         0x005F: {alias: 0x23AF, dir:H}, // low line
         0x007E: {alias: 0x02DC, dir:H}, // wide tilde
-        0x00AF: {alias: 0x23AF, dir:H}, // over line
+        0x00AF: {alias: 0x02C9, dir:H}, // macron
         0x0302: {alias: 0x02C6, dir:H}, // wide hat
         0x0303: {alias: 0x02DC, dir:H}, // wide tilde
         0x030C: {alias: 0x02C7, dir:H}, // wide caron
         0x0332: {alias: 0x23AF, dir:H}, // combining low line
         0x2015: {alias: 0x23AF, dir:H}, // horizontal line
         0x2017: {alias: 0x23AF, dir:H}, // horizontal line
+        0x203E: {alias: 0x00AF, dir:H}, // overline
         0x2212: {alias: 0x23AF, dir:H}, // minus
+        0x2215: {alias: 0x002F, dir:V}, // division slash
         0x2329: {alias: 0x27E8, dir:V}, // langle
         0x232A: {alias: 0x27E9, dir:V}, // rangle
+        0x23AF: {alias: 0x2212, dir:H}, // horizontal line extension
         0x2500: {alias: 0x2212, dir:H}, // horizontal line
         0x2758: {alias: 0x2223, dir:V}, // vertical separator
         0x3008: {alias: 0x27E8, dir:V}, // langle
         0x3009: {alias: 0x27E9, dir:V}, // rangle
         0xFE37: {alias: 0x23DE, dir:H}, // horizontal brace down
-        0xFE38: {alias: 0x23DF, dir:H}  // horizontal brace up
+        0xFE38: {alias: 0x23DF, dir:H}, // horizontal brace up
+
+        0x219E: EXTRAH, // left two-headed arrow
+        0x21A0: EXTRAH, // right two-headed arrow
+        0x21A4: EXTRAH, // left arrow from bar
+        0x21A5: EXTRAV, // up arrow from bar
+        0x21A6: EXTRAH, // right arrow from bar
+        0x21A7: EXTRAV, // down arrow from bar
+        0x21B0: EXTRAV, // up arrow with top leftwards
+        0x21B1: EXTRAV, // up arrow with top right
+        0x21BC: EXTRAH, // left harpoon with barb up
+        0x21BD: EXTRAH, // left harpoon with barb down
+        0x21BE: EXTRAV, // up harpoon with barb right
+        0x21BF: EXTRAV, // up harpoon with barb left
+        0x21C0: EXTRAH, // right harpoon with barb up
+        0x21C1: EXTRAH, // right harpoon with barb down
+        0x21C2: EXTRAV, // down harpoon with barb right
+        0x21C3: EXTRAV, // down harpoon with barb left
+        0x21DA: EXTRAH, // left triple arrow
+        0x21DB: EXTRAH, // right triple arrow
+        0x23B4: EXTRAH, // top square bracket
+        0x23B5: EXTRAH, // bottom square bracket
+        0x23DC: EXTRAH, // top paren
+        0x23DD: EXTRAH, // bottom paren
+        0x23E0: EXTRAH, // top tortoise shell
+        0x23E1: EXTRAH, // bottom tortoise shell
+        0x2906: EXTRAH, // leftwards double arrow from bar
+        0x2907: EXTRAH, // rightwards double arrow from bar
+        0x294E: EXTRAH, // left barb up right barb up harpoon
+        0x294F: EXTRAV, // up barb right down barb right harpoon
+        0x2950: EXTRAH, // left barb dow right barb down harpoon
+        0x2951: EXTRAV, // up barb left down barb left harpoon
+        0x295A: EXTRAH, // leftwards harpoon with barb up from bar
+        0x295B: EXTRAH, // rightwards harpoon with barb up from bar
+        0x295C: EXTRAV, // up harpoon with barb right from bar
+        0x295D: EXTRAV, // down harpoon with barb right from bar
+        0x295E: EXTRAH, // leftwards harpoon with barb down from bar
+        0x295F: EXTRAH, // rightwards harpoon with barb down from bar
+        0x2960: EXTRAV, // up harpoon with barb left from bar
+        0x2961: EXTRAV, // down harpoon with barb left from bar
+        0x27F5: {alias: 0x2190, dir:H}, // long left arrow
+        0x27F6: {alias: 0x2192, dir:H}, // long right arrow
+        0x27F7: {alias: 0x2194, dir:H}, // long left-right arrow
+        0x27F8: {alias: 0x21D0, dir:H}, // long left double arrow
+        0x27F9: {alias: 0x21D2, dir:H}, // long right double arrow
+        0x27FA: {alias: 0x21D4, dir:H}, // long left-right double arrow
+        0x27FB: {alias: 0x21A4, dir:H}, // long left arrow from bar
+        0x27FC: {alias: 0x21A6, dir:H}, // long right arrow from bar
+        0x27FD: {alias: 0x2906, dir:H}, // long left double arrow from bar
+        0x27FE: {alias: 0x2907, dir:H}, // long right double arrow from bar
+
+        0x02C7: EXTRAH, // caron
+        0x02CD: EXTRAH, // low macron
+        0x02F7: EXTRAH, // low tilde
+        0x219F: EXTRAV, // upwards two headed arrow
+        0x21A1: EXTRAV, // downwards two headed arrow
+        0x21A8: EXTRAV, // up down arrow with base
+        0x21A9: EXTRAH, // left hook arrow
+        0x21AA: EXTRAH, // right hook arrow
+        0x21B2: EXTRAV, // down arrow with tip left
+        0x21B3: EXTRAV, // down arrow with tip right
+        0x21B4: EXTRAH, // right arrow with corner down
+        0x21B5: EXTRAV, // down arrow with corner left
+        0x21CB: EXTRAH, // left harpoon over right harpoon
+        0x21CC: EXTRAH, // right harpoon over left harpoon
+        0x21E0: EXTRAH, // left dashed arrow
+        0x21E1: EXTRAV, // up dashed arrow
+        0x21E2: EXTRAH, // right dashed arrow
+        0x21E3: EXTRAV, // down dahsed arrow
+        0x21E4: EXTRAH, // left arrow to bar
+        0x21E5: EXTRAH, // right arrow to bar
+        0x21FD: EXTRAH, // left open-headed arrow
+        0x21FE: EXTRAH, // right open-headed arrow
+        0x21FF: EXTRAH, // left right open-headed arrow
+        0x27E6: EXTRAV, // left white square bracket
+        0x27E7: EXTRAV, // right white square bracket
+        0x27EA: EXTRAV, // left double angle bracket
+        0x27EB: EXTRAV, // right double angle bracket
+        0x290A: EXTRAV, // up triple arrow
+        0x290B: EXTRAV, // down triple arrow
+        0x2912: EXTRAV, // up arrow to bar
+        0x2913: EXTRAV, // down arrow to bar
+        0x2952: EXTRAH, // left harpoon with barb up to bar
+        0x2953: EXTRAH, // right harpoon with barb up to bar
+        0x2954: EXTRAV, // up harpoon with barb right to bar
+        0x2955: EXTRAV, // down harpoon with barb right to bar
+        0x2956: EXTRAH, // left harpoon with barb down to bar
+        0x2957: EXTRAH, // right harpoon with barb down to bar
+        0x2958: EXTRAV, // up harpoon with barb left to bar
+        0x2959: EXTRAV, // down harpoon with barb left to bar
+        0x2980: EXTRAV, // triple vertical bar
+        0x2997: EXTRAV, // left balck tortoise shell
+        0x2998: EXTRAV  // right balck tortoise shell
       }
     }
   });
@@ -1383,6 +1478,8 @@
 
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x22EE][0] += 400;  // adjust height for \vdots
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x22F1][0] += 500;  // adjust height for \ddots
+  HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x2212][1] += 100;  // adjust depth for minus (arrow extender)
+  HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x003D][1] += 100;  // adjust depth for = (double arrow extender)
   HTMLCSS.FONTDATA.FONTS['STIXNonUnicode'][0xE14A][0] += 200;  // adjust height for brace extender
   HTMLCSS.FONTDATA.FONTS['STIXNonUnicode'][0xE14A][1] += 200;  // adjust depth for brace extender
   HTMLCSS.FONTDATA.FONTS['STIXNonUnicode'][0xE14B][0] += 200;  // adjust height for brace extender
