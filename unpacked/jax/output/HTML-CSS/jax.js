@@ -803,7 +803,7 @@
       var top = this.createBox(stack), bot = this.createBox(stack);
       this.createChar(top,(delim.top||delim.ext),scale,font);
       this.createChar(bot,(delim.bot||delim.ext),scale,font);
-      var ext = {bbox:{w:0,lw:0,rw:0}}, mid = ext;
+      var ext = {bbox:{w:0,lw:0,rw:0}}, mid = ext, EXT;
       var h = top.bbox.h + top.bbox.d + bot.bbox.h + bot.bbox.d;
       var y = -top.bbox.h; this.placeBox(top,0,y,true); y -= top.bbox.d;
       if (delim.mid) {
@@ -817,7 +817,11 @@
         if (!delim.fullExtenders) {eh = (H-h)/(k*n)}
         var dy = (n/(n+1))*(eH - eh); eh = eH - dy; y += dy + eh - ext.bbox.h;
         while (k-- > 0) {
-          while (n-- > 0) {y -= eh; this.placeBox(this.addBox(stack,ext.cloneNode(true)),0,y,true)}
+          while (n-- > 0) {
+            if (!this.msieCloneNodeBug) {EXT = ext.cloneNode(true)}
+              else {EXT = this.Element("span"); this.createChar(EXT,delim.ext,scale,font)}
+            y -= eh; this.placeBox(this.addBox(stack,EXT),0,y,true);
+          }
           y += dy - ext.bbox.d;
           if (delim.mid && k) {
             this.placeBox(mid,0,y-mid.bbox.h,true); n = N;
@@ -847,7 +851,7 @@
       this.createChar(left,(delim.left||delim.rep),scale,font);
       this.createChar(right,(delim.right||delim.rep),scale,font);
       var rep = this.Element("span"); this.createChar(rep,delim.rep,scale,font);
-      var mid = {bbox: {h:-this.BIGDIMEN, d:-this.BIGDIMEN}};
+      var mid = {bbox: {h:-this.BIGDIMEN, d:-this.BIGDIMEN}}, REP;
       this.placeBox(left,-left.bbox.lw,0,true);
       var w = (left.bbox.rw - left.bbox.lw) + (right.bbox.rw - right.bbox.lw) - .05,
           x = left.bbox.rw - left.bbox.lw - .025;
@@ -860,7 +864,11 @@
         N = n = Math.ceil((W-w)/(k*rw)); rw = (W-w)/(k*n);
         var dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
-          while (n-- > 0) {this.placeBox(this.addBox(stack,rep.cloneNode(true)),x,0,true); x += rw}
+          while (n-- > 0) {
+            if (!this.msieCloneNodeBug) {REP = rep.cloneNode(true)}
+              else {REP = this.Element("span"); this.createChar(REP,delim.rep,scale,font)}
+            this.placeBox(this.addBox(stack,REP),x,0,true); x += rw;
+          }
           if (delim.mid && k) {this.placeBox(mid,x,0,true); x += mid.bbox.w - dx; n = N}
         }
       } else {
@@ -2156,6 +2164,7 @@
           msiePlaceBoxBug: (isIE8 && !quirks),
           msieClipRectBug: !isIE8,
           msieNegativeSpaceBug: quirks,
+          msieCloneNodeBug: (isIE8 && browser.version === "8.0"),
           negativeSkipBug: true,
           msieIE6: !isIE7,
           msieItalicWidthBug: true,
