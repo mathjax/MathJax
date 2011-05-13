@@ -232,6 +232,10 @@
           "white-space": "nowrap"
         },
         
+        ".MathJax img": {
+          display: "inline ! important"
+        },
+
         ".MathJax_Processing": {
           visibility: "hidden", position:"fixed",
           width: 0, height: 0, overflow:"hidden"
