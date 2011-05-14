@@ -82,6 +82,8 @@
           } else if (child.nodeValue.match(/\S/)) {
             MATHML.Error("Unexpected text node: '"+child.nodeValue+"'");
           }
+        } else if (mml.type === "annotation-xml") {
+          mml.Append(MML.xml(child));
         } else {
           var cmml = this.MakeMML(child); mml.Append(cmml);
           if (cmml.mmlSelfClosing && cmml.data.length)

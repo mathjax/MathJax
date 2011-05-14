@@ -442,6 +442,16 @@
 	parent.appendChild(document.createTextNode(this.toString()));
       }
     });
+    
+    MML.xml.Augment({
+      //
+      //  Insert the XML verbatim
+      //
+      toNativeMML: function (parent) {
+        for (var i = 0, m = this.data.length; i < m; i++)
+          {parent.appendChild(this.data[i].cloneNode(true))}
+      }
+    });
 
     HUB.Register.StartupHook("TeX mathchoice Ready",function () {
       MML.TeXmathchoice.Augment({
