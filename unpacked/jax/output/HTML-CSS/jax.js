@@ -1459,15 +1459,6 @@
 	this.HTMLhandleVariant(span,variant,this.toString().replace(/[\u2061-\u2064]/g,"")); // remove invisibles
       }
     });
-    MML.xml.Augment({
-      toHTML: function (span,variant) {
-        for (var i = 0, m = this.data.length; i < m; i++)
-          {span.appendChild(this.data[i].cloneNode(true))}
-        span.bbox.w = HTMLCSS.getW(span); span.bbox.rw = span.bbox.w;
-        var HD = HTMLCSS.getHD(span);
-        span.bbox.h = HD.h; span.bbox.d = HD.d;
-      }
-    });
 
     MML.mi.Augment({
       toHTML: function (span) {
@@ -2042,7 +2033,9 @@
     MML.mmultiscripts.Augment({toHTML: MML.mbase.HTMLautoload});
 
     MML.mtable.Augment({toHTML: MML.mbase.HTMLautoload});
-
+    
+    MML["annotation-xml"].Augment({toHTML: MML.mbase.HTMLautoload});
+    
     MML.math.Augment({
       toHTML: function (span,node) {
 	var alttext = this.Get("alttext"); if (alttext) {node.setAttribute("aria-label",alttext)}
