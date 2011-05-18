@@ -35,6 +35,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       this.HTMLhandleSpace(span);
       this.HTMLhandleColor(span);
       return span;
+    },
+    HTMLgetScale: function () {
+      return this.SUPER(arguments).HTMLgetScale.call(this) * (100/HTMLCSS.scale)
     }
   });
   
