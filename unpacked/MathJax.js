@@ -1098,7 +1098,7 @@ MathJax.Message = {
   Set: function (text,n,clearDelay) {
     if (this.timer) {clearTimeout(this.timer); delete this.timeout}
     if (n == null) {n = this.log.length; this.log[n] = {}}
-    this.log[n].text = text; text = this.filterText(text,n);
+    this.log[n].text = text; this.log[n].filteredText = text = this.filterText(text,n);
     if (typeof(this.log[n].next) === "undefined") {
       this.log[n].next = this.current;
       if (this.current != null) {this.log[this.current].prev = n}
@@ -1128,14 +1128,17 @@ MathJax.Message = {
         if (this.current == null) {
           if (this.timer) {clearTimeout(this.timer)}
           this.timer = setTimeout(MathJax.Callback(["Remove",this]),(delay||600));
-        } else if (this.textNodeBug) {this.div.innerHTML = this.log[this.current].text}
-                                else {this.text.nodeValue = this.log[this.current].text}
+        } else if (MathJax.Hub.config.messageStyle !== "none") {
+          if (this.textNodeBug) {this.div.innerHTML = this.log[this.current].filteredText}
+                           else {this.text.nodeValue = this.log[this.current].filteredText}
+        }
         if (this.status) {window.status = ""; delete this.status}
       } else if (this.status) {
         window.status = (this.current == null ? "" : this.log[this.current].text);
       }
     }
     delete this.log[n].next; delete this.log[n].prev;
+    delete this.log[n].filteredText;
   },
   
   Remove: function () {
