@@ -103,7 +103,7 @@ MathJax.Extension.mml2jax = {
     var script = document.createElement("script");
     script.type = "math/mml";
     parent.insertBefore(script,math);
-    var mml = "", node;
+    var mml = "", node, MATH = math;
     while (math && math.nodeName !== "/MATH") {
       node = math; math = math.nextSibling;
       mml += this.NodeHTML(node);
@@ -111,7 +111,7 @@ MathJax.Extension.mml2jax = {
     }
     if (math && math.nodeName === "/MATH") {math.parentNode.removeChild(math)}
     script.text = mml + "</math>";
-    if (this.config.preview !== "none") {this.createPreview(math,script)}
+    if (this.config.preview !== "none") {this.createPreview(MATH,script)}
   },
   
   NodeHTML: function (node) {
@@ -134,6 +134,12 @@ MathJax.Extension.mml2jax = {
         }
       }
       html += ">";
+      // Handle internal HTML (possibly due to <semantics> annotation or missing </math>)
+      if (node.outerHTML != null && node.outerHTML.match(/(.<\/[A-Z]+>|\/>)$/)) {
+        for (i = 0, m = node.childNodes.length; i < m; i++)
+          {html += this.OuterHTML(node.childNodes[i])}
+        html += "</"+node.nodeName.toLowerCase()+">";
+      }
     }
     return html;
   },
