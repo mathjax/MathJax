@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.1.2";
+  var VERSION = "1.1.3";
   
   MathJax.Extension.MathMenu = {version: VERSION};
 
@@ -48,7 +48,7 @@
     styles: {
       "#MathJax_About": {
         position:"fixed", left:"50%", width:"auto", "text-align":"center",
-        border:"3px outset", padding:"1em 2em", "background-color":"#DDDDDD",
+        border:"3px outset", padding:"1em 2em", "background-color":"#DDDDDD", color:"black",
         cursor: "default", "font-family":"message-box", "font-size":"120%",
         "font-style":"normal", "text-indent":0, "text-transform":"none",
         "line-height":"normal", "letter-spacing":"normal", "word-spacing":"normal",
@@ -504,7 +504,8 @@
     var HTMLCSS = MathJax.OutputJax["HTML-CSS"] || {fontInUse: ""};
     var local = (HTMLCSS.webFonts ? "" : "local "), web = (HTMLCSS.webFonts ? " web" : "");
     var font = (HTMLCSS.imgFonts ? "Image" : local+HTMLCSS.fontInUse+web) + " fonts";
-    var jax = [];
+    var jax = ["MathJax.js v"+MathJax.fileversion,["br"]];
+    jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
     MENU.About.GetJax(jax,MathJax.InputJax,"Input Jax");
     MENU.About.GetJax(jax,MathJax.OutputJax,"Output Jax");
     MENU.About.GetJax(jax,MathJax.ElementJax,"Element Jax");

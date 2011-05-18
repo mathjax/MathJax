@@ -29,7 +29,8 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.1.6";
+MathJax.version = "1.1a";
+MathJax.fileversion = "1.1.6";
 
 /**********************************************************/
 
