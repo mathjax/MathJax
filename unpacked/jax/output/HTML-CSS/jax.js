@@ -854,7 +854,7 @@
       var mid = {bbox: {h:-this.BIGDIMEN, d:-this.BIGDIMEN}}, REP;
       this.placeBox(left,-left.bbox.lw,0,true);
       var w = (left.bbox.rw - left.bbox.lw) + (right.bbox.rw - right.bbox.lw) - .05,
-          x = left.bbox.rw - left.bbox.lw - .025;
+          x = left.bbox.rw - left.bbox.lw - .025, dx;
       if (delim.mid) {
         mid = this.createBox(stack); this.createChar(mid,delim.mid,scale,font);
         w += mid.bbox.w;
@@ -862,7 +862,7 @@
       if (W > w) {
         var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
         N = n = Math.ceil((W-w)/(k*rw)); rw = (W-w)/(k*n);
-        var dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
+        dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
           while (n-- > 0) {
             if (!this.msieCloneNodeBug) {REP = rep.cloneNode(true)}
@@ -872,9 +872,8 @@
           if (delim.mid && k) {this.placeBox(mid,x,0,true); x += mid.bbox.w - dx; n = N}
         }
       } else {
-        x -= (w - W)/2;
-        if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w}
-        x -= (w - W)/2;
+        dx = Math.min(w - W,left.bbox.w/2);
+        x -= dx/2; if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w}; x -= dx/2;
       }
       this.placeBox(right,x,0,true);
       span.bbox = {
@@ -1007,6 +1006,14 @@
     handleChar: function (span,font,c,n,text) {
       var C = c[5];
       if (C.img) {return this.handleImg(span,font,c,n,text)}
+      if (C.isUnknown && this.FONTDATA.DELIMITERS[n]) {
+        var scale = span.scale;
+        HTMLCSS.createDelimiter(span,n,0,1,font);
+        span.scale = scale;
+        c[0] = span.bbox.h*1000; c[1] = span.bbox.d*1000;
+        c[2] = span.bbox.w*1000; c[3] = span.bbox.lw*1000; c[4] = span.bbox.rw*1000;
+        return "";
+      }
       if (C.c == null) {
         if (n <= 0xFFFF) {C.c = String.fromCharCode(n)}
                     else {C.c = this.PLANE1 + String.fromCharCode(n-0x1D400+0xDC00)}
@@ -1917,15 +1924,18 @@
 	    if (!stretch[i] && WW > W) {W = WW}
 	  }
 	}
-	if (W == -HTMLCSS.BIGDIMEN) {W = WW}
-	if (D == null && HW != null) {W = WW = HW}
+	if (D == null && HW != null) {W = HW} else if (W == -HTMLCSS.BIGDIMEN) {W = WW}
+        for (i = WW = 0, m = this.data.length; i < m; i++) {if (this.data[i]) {
+          box = boxes[i];
+          if (stretch[i]) {box.bbox = this.data[i].HTMLstretchH(box,W).bbox}
+          if (box.bbox.w > WW) {WW = box.bbox.w}
+        }}
 	var t = HTMLCSS.TeX.rule_thickness, factor = HTMLCSS.FONTDATA.TeX_factor;
 	var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()}, delta = (base.bbox.ic || 0);
 	var x, y, z1, z2, z3, dw, k;
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
 	    box = boxes[i];
-	    if (stretch[i]) {box.bbox = this.data[i].HTMLstretchH(box,W).bbox}
 	    z3 = HTMLCSS.TeX.big_op_spacing5 * scale;
 	    var accent = (i != this.base && values[this.ACCENTS[i]]);
 	    if (accent && box.bbox.w <= 1/HTMLCSS.em+.0001) { // images can get the width off by 1px
@@ -1934,7 +1944,7 @@
 		{box.insertBefore(HTMLCSS.createSpace(box.parentNode,0,0,-box.bbox.lw),box.firstChild)}
 	      HTMLCSS.createBlank(box,0,0,box.bbox.rw+.1);
 	    }
-	    dw = {left:0, center:(W-box.bbox.w)/2, right:W-box.bbox.w}[values.align];
+	    dw = {left:0, center:(WW-box.bbox.w)/2, right:WW-box.bbox.w}[values.align];
 	    x = dw; y = 0;
 	    if (i == this.over) {
 	      if (accent) {
