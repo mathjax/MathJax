@@ -1175,6 +1175,22 @@ MathJax.ElementJax.mml.Augment({
     }
   });
   
+  MML.xml = MML.mbase.Subclass({
+    type: "xml",
+    Init: function () {
+      this.div = document.createElement("div");
+      return this.SUPER(arguments).Init.apply(this,arguments);
+    },
+    Append: function () {
+      for (var i = 0, m = arguments.length; i < m; i++) {
+        this.data.push(arguments[i]);
+        this.div.appendChild(document.importNode(arguments[i],true));
+      }
+    },
+    value: function () {return this.div},
+    toString: function () {return this.div.innerHTML}
+  });
+  
   MML.TeXAtom = MML.mbase.Subclass({
     type: "texatom",
     inferRow: TRUE,

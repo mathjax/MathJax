@@ -487,12 +487,12 @@
       this.HDMspan.className = "MathJax"; this.HDMspan.id = "MathJax_getScales";
       this.HDMimg.style.width = "60em";
       var em = this.outerEm = this.HDMspan.offsetWidth/60;
-      var scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
-      span.style.fontSize = this.HDMspan.style.fontSize = scale+"%";
+      this.scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
+      span.style.fontSize = this.HDMspan.style.fontSize = this.scale+"%";
       this.em = MML.mbase.prototype.em = this.HDMspan.offsetWidth/60;
-      if (this.operaFontSizeBug && em === this.em && scale !== 100) {
+      if (this.operaFontSizeBug && em === this.em && this.scale !== 100) {
         // Opera 10.61 doesn't seem to process the fontSize setting above, so adjust manually
-        this.em = MML.mbase.prototype.em = em * scale/100;
+        this.em = MML.mbase.prototype.em = em * this.scale/100;
       }
       span.parentNode.removeChild(this.HDMspan);
       this.msieMarginScale = this.getMarginScale(span);
@@ -2033,7 +2033,9 @@
     MML.mmultiscripts.Augment({toHTML: MML.mbase.HTMLautoload});
 
     MML.mtable.Augment({toHTML: MML.mbase.HTMLautoload});
-
+    
+    MML["annotation-xml"].Augment({toHTML: MML.mbase.HTMLautoload});
+    
     MML.math.Augment({
       toHTML: function (span,node) {
 	var alttext = this.Get("alttext"); if (alttext) {node.setAttribute("aria-label",alttext)}

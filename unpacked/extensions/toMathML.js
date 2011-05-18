@@ -132,6 +132,10 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
     toMathML: function (space) {return (space||"") + "&"+this.data[0]+";<!-- "+this.toString()+" -->"}
   });
   
+  MML.xml.Augment({
+   toMathML: function (space) {return (space||"") + this.toString()}
+  });
+  
   MathJax.Hub.Register.StartupHook("TeX mathchoice Ready",function () {
     MML.TeXmathchoice.Augment({
       toMathML: function (space) {return this.Core().toMathML(space)}
