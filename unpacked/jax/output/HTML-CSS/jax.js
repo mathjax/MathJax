@@ -287,7 +287,6 @@
         this.FONTDATA = {
           TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
           FONTS: {}, VARIANT: {normal: {fonts:[]}}, RANGES: [],
-          DEFAULTFAMILY: "serif", DEFAULTWEIGHT: "normal", DEFAULTSTYLE: "normal",
           DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
         };
         if (MathJax.InputJax.TeX && MathJax.InputJax.TeX.Definitions) {
@@ -996,8 +995,7 @@
     handleFont: function (span,font,force) {
       span.style.fontFamily = font.family;
       if (!(HTMLCSS.FontFaceBug && font.isWebFont)) {
-        var style  = font.style  || this.FONTDATA.DEFAULTSTYLE,
-            weight = font.weight || this.FONTDATA.DEFAULTWEIGHT;
+        var style  = font.style  || "normal", weight = font.weight || "normal";
         if (style !== "normal"  || force) {span.style.fontStyle  = style}
         if (weight !== "normal" || force) {span.style.fontWeight = weight}
       }
@@ -1054,7 +1052,8 @@
             {this.loadWebFont(font)} else {return font}
         } else {this.findBlock(font,n)}
       }
-      var unknown = (variant.defaultFont || {family:HTMLCSS.FONTDATA.DEFAULTFAMILY+",serif"});
+      var unknown = (variant.defaultFont || {family:HTMLCSS.config.undefinedFamily});
+      if (variant.bold) {unknown.weight = "bold"}; if (variant.italic) {unknown.style = "italic"}
       unknown[n] = [800,200,500,0,500,{isUnknown:true}]; // [h,d,w,lw,rw,{data}]
       return unknown;
     },
