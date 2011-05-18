@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.1.3";
+MathJax.version = "1.1.4";
 
 /**********************************************************/
 
@@ -1327,8 +1327,10 @@ MathJax.Hub = {
         var scripts = []; // filled in by prepareScripts
         queue.Push(
           ["Post",this.signal,["Begin "+action,ec.elements[i]]],
+          ["Post",this.signal,["Begin Math",ec.elements[i]]],
           ["prepareScripts",this,action,ec.elements[i],scripts],
           ["processScripts",this,scripts],
+          ["Post",this.signal,["End Math",ec.elements[i]]],
           ["Post",this.signal,["End "+action,ec.elements[i]]]
         );
       }
@@ -1421,6 +1423,7 @@ MathJax.Hub = {
             this.RestartAfter(result);
           }
           result.Attach(script,inputJax[type]);
+          script.MathJax.state = STATE.OUTPUT;
         }
         var jax = script.MathJax.elementJax;
         if (!outputJax[jax.mimeType]) {
@@ -1430,7 +1433,6 @@ MathJax.Hub = {
         jax.outputJax = outputJax[jax.mimeType][0];
         result = jax.outputJax.Process(script);
         if (typeof result === 'function') {
-          script.MathJax.state = STATE.UPDATE;
           if (result.called) continue; // go back and call Process() again
           this.RestartAfter(result);
         }
@@ -1901,6 +1903,11 @@ MathJax.Hub.Startup = {
       script.MathJax.state = this.STATE.UPDATE;
       return HUB.Reprocess(script,callback);
     },
+    Update: function (callback) {
+      var script = this.SourceElement();
+      script.MathJax.state = this.STATE.OUTPUT;
+      return HUB.Process(script,callback);
+    },
     Remove: function () {
       this.outputJax.Remove(this);
       HUB.signal.Post(["Remove Math",this.inputID]); // wait for this to finish?
@@ -1920,6 +1927,7 @@ MathJax.Hub.Startup = {
       }
       jax.originalText = (script.text == "" ? script.innerHTML : script.text);
       jax.inputJax = inputJax;
+      if (jax.root) {jax.root.inputID = jax.inputID}
     },
     Detach: function () {
       var script = this.SourceElement(); if (!script) return;
@@ -1946,7 +1954,8 @@ MathJax.Hub.Startup = {
     STATE: {
       PENDING: 1,      // script is identified as math but not yet processed
       PROCESSED: 2,    // script has been processed
-      UPDATE: 3        // elementJax should be updated
+      UPDATE: 3,       // elementJax should be updated
+      OUTPUT: 4        // output should be updated (input is OK)
     },
     
     GetID: function () {this.ID++; return "MathJax-Element-"+this.ID},
