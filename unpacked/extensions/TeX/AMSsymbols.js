@@ -6,7 +6,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009 Design Science, Inc.
+ *  Copyright (c) 2009-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var MML = MathJax.ElementJax.mml;
   
@@ -336,10 +336,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     }
   });
 
-  if (MathJax.Hub.Browser.isMSIE) {
-    MathJax.InputJax.TeX.Definitions.mathchar0mi.digamma  = ['03DC',{variantForm: true}];
-    MathJax.InputJax.TeX.Definitions.mathchar0mi.varkappa = ['03F0',{variantForm: true}];
-  }
+//  if (MathJax.Hub.Browser.isMSIE) {
+//    MathJax.InputJax.TeX.Definitions.mathchar0mi.digamma  = ['03DD',{variantForm: true}];
+//    MathJax.InputJax.TeX.Definitions.mathchar0mi.varkappa = ['03F0',{variantForm: true}];
+//  }
 });
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
