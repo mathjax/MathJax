@@ -1010,6 +1010,7 @@
       var C = c[5];
       if (C.img) {return this.handleImg(span,font,c,n,text)}
       if (C.isUnknown && this.FONTDATA.DELIMITERS[n]) {
+        if (text.length) {this.addText(span,text)}
         var scale = span.scale;
         HTMLCSS.createDelimiter(span,n,0,1,font);
         span.scale = scale;
