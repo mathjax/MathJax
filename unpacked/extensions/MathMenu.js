@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.1.3";
+  var VERSION = "1.1.4";
   
   MathJax.Extension.MathMenu = {version: VERSION};
 
@@ -562,14 +562,18 @@
    */
   MENU.ShowSource = function (event) {
     if (!event) {event = window.event}
+    var EVENT = {screenX:event.screenX, screenY:event.screenY};
     if (!MENU.jax) return;
     if (CONFIG.settings.format === "MathML") {
       var MML = MathJax.ElementJax.mml;
       if (MML && typeof(MML.mbase.prototype.toMathML) !== "undefined") {
-        MENU.ShowSource.Text(MENU.jax.root.toMathML(),event);
+        // toMathML() can call MathJax.Hub.RestartAfter, so trap errors and check
+        try {MENU.ShowSource.Text(MENU.jax.root.toMathML(),event)} catch (err) {
+          if (!err.restart) {throw err}
+          MathJax.Callback.After([this,arguments.callee,EVENT]);
+        }
       } else if (!AJAX.loadingToMathML) {
         AJAX.loadingToMathML = true;
-        var EVENT = {screenX:event.screenX, screenY:event.screenY};
         MENU.ShowSource.Window(event); // WeBKit needs to open window on click event
         MathJax.Callback.Queue(
           AJAX.Require("[MathJax]/extensions/toMathML.js"),
