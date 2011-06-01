@@ -39,7 +39,7 @@
         if (math.match(/^<[a-z]+:/i) && !math.match(/^<[^<>]* xmlns:/))
           {math = math.replace(/^<([a-z]+)(:math)/i,'<$1$2 xmlns:$1="http://www.w3.org/1998/Math/MathML"')}
         math = math.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/,"$2");
-        math = math.replace(/&([a-z]+);/ig,this.replaceEntity);
+        math = math.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
         doc = MATHML.ParseXML(math); if (doc == null) {MATHML.Error("Error parsing MathML")}
       }
       var err = doc.getElementsByTagName("parsererror")[0];
@@ -80,7 +80,7 @@
             var text = this.trimSpace(child.nodeValue);
             if (mml.isa(MML.mo) && text.length === 1 && this.Remap[text.charAt(0)])
               {text = this.Remap[text.charAt(0)]}
-            text = text.replace(/&([a-z]+);/ig,this.replaceEntity);
+            text = text.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
             mml.Append(MML.chars(text));
           } else if (child.nodeValue.match(/\S/)) {
             MATHML.Error("Unexpected text node: '"+child.nodeValue+"'");
@@ -104,7 +104,7 @@
     },
     
     replaceEntity: function (match,entity) {
-      if (entity === "lt" || entity === "amp") {return match}
+      if (entity.match(/^(lt|amp|quot)$/)) {return match} // these mess up attribute parsing
       if (MATHML.Parse.Entity[entity]) {return MATHML.Parse.Entity[entity]}
       var file = entity.charAt(0).toLowerCase();
       var font = entity.match(/^[a-zA-Z](fr|scr|opf)$/);
