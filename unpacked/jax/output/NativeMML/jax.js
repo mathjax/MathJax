@@ -53,12 +53,40 @@
         });
       }
     },
+    //
+    //  Set up MathPlayer for IE on the first time through.
+    //
+    InitializeMML: function () {
+      this.initialized = true;
+      if (MathJax.Hub.Browser.isMSIE) {
+        try {
+          //
+          //  Insert data needed to use MathPlayer for MathML output
+          //
+          var mathplayer = document.createElement("object");
+          mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
+          document.getElementsByTagName("head")[0].appendChild(mathplayer);
+          document.namespaces.add("mjx","http://www.w3.org/1998/Math/MathML");
+          document.namespaces.mjx.doImport("#mathplayer");
+        } catch (err) {
+          //
+          //  If that fails, give an alert about security settings
+          //
+          alert("MathJax was not able to setup MathPlayer.  It may be that your\n"+
+                "security settings are preventing ActiveX controls from running.\n"+
+                "Use the Internet Options item under the Tools menu, and select the\n"+
+                "Security tab.  Then press the Custom Level button and check that the\n"+
+                "setting for 'Run ActiveX Controls' is enabled.");
+        }
+      }
+    },
     
     //
     //  Add a SPAN to use as a container, and render the math into it
     //  
     Translate: function (script) {
       if (!script.parentNode) return;
+      if (!this.initialized) {this.InitializeMML()}
       var prev = script.previousSibling;
       if (prev && String(prev.className).match(/^MathJax(_MathML|_Display)?$/))
         {prev.parentNode.removeChild(prev)}

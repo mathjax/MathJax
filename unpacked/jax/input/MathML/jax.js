@@ -129,6 +129,7 @@
 
   MATHML.Augment({
     Translate: function (script) {
+      if (!this.ParseXML) {this.ParseXML = this.createParser()}
       var mml, math;
       if (script.firstChild &&
           script.firstChild.nodeName.toLowerCase().replace(/^[a-z]+:/,"") === "math") {
@@ -165,6 +166,39 @@
       this.div.innerHTML = string.replace(/<([a-z]+)([^>]*)\/>/g,"<$1$2></$1>");
       return this.div;
     },
+    parseError: function (string) {return null},
+    //
+    //  Create the parser using a DOMParser, or other fallback method
+    //
+    createParser: function () {
+      if (window.DOMParser) {
+        this.parser = new DOMParser();
+        return(this.parseDOM);
+      } else if (window.ActiveXObject) {
+        var xml = ["MSXML2.DOMDocument.6.0","MSXML2.DOMDocument.5.0","MSXML2.DOMDocument.4.0",
+                   "MSXML2.DOMDocument.3.0","MSXML2.DOMDocument.2.0","Microsoft.XMLDOM"];
+        for (var i = 0, m = xml.length; i < m && !this.parser; i++)
+          {try {this.parser = new ActiveXObject(xml[i])} catch (err) {}}
+        if (!this.parser) {
+          alert("MathJax can't create an XML parser for MathML.  Check that\n"+
+                "the 'Script ActiveX controls marked safe for scripting' security\n"+
+                "setting is enabled (use the Internet Options item in the Tools\n"+
+                "menu, and select the Security panel, then press the Custom Level\n"+
+                "button to check this).\n\n"+
+                "MathML equations will not be able to be processed by MathJax.");
+          return(this.parseError);
+        }
+        this.parser.async = false;
+        return(this.parseMS);
+      }
+      this.div = MathJax.Hub.Insert(document.createElement("div"),{
+           style:{visibility:"hidden", overflow:"hidden", height:"1px",
+                  position:"absolute", top:0}
+      });
+      if (!document.body.firstChild) {document.body.appendChild(this.div)}
+        else {document.body.insertBefore(this.div,document.body.firstChild)}
+      return(this.parseDIV);
+    },
     //
     //  Initialize the parser object (whichever type is used)
     //
@@ -173,26 +207,6 @@
       MML.mspace.Augment({mmlSelfClosing: true});
       MML.none.Augment({mmlSelfClosing: true});
       MML.mprescripts.Augment({mmlSelfClossing:true});
-      if (window.DOMParser) {
-        this.parser = new DOMParser();
-        this.ParseXML = this.parseDOM;
-      } else if (window.ActiveXObject) {
-        var xml = ["MSXML2.DOMDocument.6.0","MSXML2.DOMDocument.5.0","MSXML2.DOMDocument.4.0",
-                   "MSXML2.DOMDocument.3.0","MSXML2.DOMDocument.2.0","Microsoft.XMLDOM"];
-        for (var i = 0, m = xml.length; i < m && !this.parser; i++)
-          {try {this.parser = new ActiveXObject(xml[i])} catch (err) {}}
-        if (!this.parser) MATHML.Error("Can't create XML parser for MathML");
-        this.parser.async = false;
-        this.ParseXML = this.parseMS;
-      } else {
-        this.div = MathJax.Hub.Insert(document.createElement("div"),{
-             style:{visibility:"hidden", overflow:"hidden", height:"1px",
-                    position:"absolute", top:0}
-        });
-        if (!document.body.firstChild) {document.body.appendChild(this.div)}
-          else {document.body.insertBefore(this.div,document.body.firstChild)}
-        this.ParseXML = this.parseDIV;
-      }
     }
   });
   
