@@ -72,11 +72,16 @@
           //
           //  If that fails, give an alert about security settings
           //
-          alert("MathJax was not able to setup MathPlayer.  It may be that your\n"+
-                "security settings are preventing ActiveX controls from running.\n"+
-                "Use the Internet Options item under the Tools menu, and select the\n"+
-                "Security tab.  Then press the Custom Level button and check that the\n"+
-                "setting for 'Run ActiveX Controls' is enabled.");
+          alert("MathJax was not able to set up MathPlayer.\n\n"+
+                "If MathPlayer is not installed, you need to install it first.\n"+
+                "Otherwise, your security settings may be preventing ActiveX     \n"+
+                "controls from running.  Use the Internet Options item under\n"+
+                "the Tools menu and select the Security tab, then press the\n"+
+                "Custom Level button. Check that the settings for\n"+
+                "'Run ActiveX Controls', and 'Binary and script behaviors'\n"+
+                "are enabled.\n\n"+
+                "Currently you will see error messages rather than\n"+
+                "typeset mathematics.");
         }
       }
     },
