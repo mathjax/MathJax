@@ -505,7 +505,7 @@
     getMSIEmarginScale: function (span) {
       span.appendChild(this.marginCheck);
       var W = this.marginCheck.offsetWidth, w = this.marginMove.offsetWidth;
-      var scale = w/(2*w - W);
+      var scale = (2*w - W ? w/(2*w - W) : 1);
       span.removeChild(this.marginCheck);
       return scale;
     },
