@@ -124,13 +124,14 @@ MathJax.Extension.mml2jax = {
       // In IE, outerHTML doesn't properly quote attributes, so quote them by hand
       // In Opera, HTML special characters aren't quoted in attributes, so quote them
       html = "<"+node.nodeName.toLowerCase();
-      var attributes = node.attributes;
-      for (i = 0, m = attributes.length; i < m; i++) {
-        if (attributes[i].specified) {
-          // Opera 11.5 beta turns xmlns into xmlns:xmlns, so put it back
-          // *** FIXME:  Similar problems may occur for other attributes?
-          html += " "+attributes[i].nodeName.toLowerCase().replace(/xmlns:xmlns/,"xmlns")+"=";
-          html += '"'+this.quoteHTML(attributes[i].nodeValue)+'"';
+      for (i = 0, m = node.attributes.length; i < m; i++) {
+        var attribute = node.attributes[i];
+        if (attribute.specified) {
+          // Opera 11.5 beta turns xmlns into xmlns:xmlns, so put it back (*** check after 11.5 is out ***)
+          html += " "+attribute.nodeName.toLowerCase().replace(/xmlns:xmlns/,"xmlns")+"=";
+          var value = attribute.nodeValue; // IE < 8 doesn't properly set style by setAttributes
+          if (value == null && attribute.nodeName === "style" && node.style) {value = node.style.cssText}
+          html += '"'+this.quoteHTML(value)+'"';
         }
       }
       html += ">";
@@ -153,6 +154,7 @@ MathJax.Extension.mml2jax = {
     return html;
   },
   quoteHTML: function (string) {
+    if (string == null) {string = ""}
     return string.replace(/&/g,"&#x26;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   },
   
