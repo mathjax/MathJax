@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.6";
+MathJax.fileversion = "1.1.7";
 
 /**********************************************************/
 
@@ -1794,21 +1794,17 @@ MathJax.Hub.Startup = {
     Startup: function () {},
     loadComplete: function (file) {
       if (file === "config.js") {
-        return AJAX.loadComplete(this.directory+"/"+file);
+        AJAX.loadComplete(this.directory+"/"+file);
       } else {
         var queue = CALLBACK.Queue();
         queue.Push(
           HUB.Register.StartupHook("End Config",{}), // wait until config complete
           ["Post",HUB.Startup.signal,this.id+" Jax Config"],
           ["Config",this],
-          ["Post",HUB.Startup.signal,this.id+" Jax Require"]
-        );
-        if (this.require) {
-          var require = this.require; if (!(require instanceof Array)) {require = [require]}
-          for (var i = 0, m = require.length; i < m; i++) {queue.Push(AJAX.Require(require[i]))}
-        }
-        return queue.Push(
-          // Config may set the extensions, so use a function to delay making the reference
+          ["Post",HUB.Startup.signal,this.id+" Jax Require"],
+          // Config may set the required and extensions array,
+          //  so use functions to delay making the reference until needed
+          [function (THIS) {return MathJax.Hub.Startup.loadArray(THIS.require,this.directory)},this],
           [function (config,id) {return MathJax.Hub.Startup.loadArray(config.extensions,"extensions/"+id)},this.config||{},this.id],
           ["Post",HUB.Startup.signal,this.id+" Jax Startup"],
           ["Startup",this],
