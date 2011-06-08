@@ -78,7 +78,7 @@ specification into a Callback object if needed.</p>
 <dt>
 <tt class="descname">fn</tt></dt>
 <dd><p>A function that is to be called when the callback is executed.
-No additional data is passed to it (other that what it is
+No additional data is passed to it (other than what it is
 called with at the time the callback is executed), and <cite>this</cite>
 will be the window object.</p>
 </dd></dl>
@@ -189,7 +189,7 @@ of a file), or in response to a user action.  For example:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">f</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;x contains &quot;</span><span class="o">+</span><span class="nx">x</span><span class="p">)};</span>
 <span class="kd">function</span> <span class="nx">DelayedX</span><span class="p">(</span><span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="s2">&quot;hi&quot;</span><span class="p">;</span>
-    <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Callback</span><span class="p">([</span><span class="nx">f</span><span class="p">,</span> <span class="nx">x</span><span class="p">],</span> <span class="nx">time</span><span class="p">);</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Callback</span><span class="p">([</span><span class="nx">f</span><span class="p">,</span> <span class="nx">x</span><span class="p">],</span> <span class="nx">time</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -225,7 +225,7 @@ function.</p>
 <dt>
 <tt class="descname">called</tt></dt>
 <dd><p>Set to <tt class="docutils literal"><span class="pre">true</span></tt> after the callback has been called, and undefined
-otherwise.  A callback will not be exectued a second time unless
+otherwise.  A callback will not be executed a second time unless
 the callback&#8217;s <a class="reference internal" href="#reset" title="reset"><tt class="xref py py-meth docutils literal"><span class="pre">reset()</span></tt></a> method is called first, or its
 <tt class="docutils literal"><span class="pre">autoReset</span></tt> property is set to <tt class="docutils literal"><span class="pre">true</span></tt>.</p>
 </dd></dl>
@@ -293,7 +293,7 @@ commands.</p>
 <tt class="descname">executeHooks</tt><big>(</big><em>hooks</em><span class="optional">[</span>, <em>data</em><span class="optional">[</span>, <em>reset</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#executeHooks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls each callback in the <cite>hooks</cite> array (or the single hook if it
 is not an array), passing it the arguments stored in the data
-array.  It <cite>reset</cite> is <tt class="docutils literal"><span class="pre">true</span></tt>, then the callback&#8217;s
+array.  If <cite>reset</cite> is <tt class="docutils literal"><span class="pre">true</span></tt>, then the callback&#8217;s
 <a class="reference internal" href="#reset" title="reset"><tt class="xref py py-meth docutils literal"><span class="pre">reset()</span></tt></a> method will be called before each hook is
 executed.  If any of the hooks returns a <cite>Callback</cite> object, then
 it collects those callbacks and returns a new callback that will

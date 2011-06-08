@@ -24,7 +24,7 @@ Main MathJax Components
 
 .. describe:: MathJax.Message
 
-   Contains the code to handle the intermittant message window that
+   Contains the code to handle the intermittent message window that
    periodically appears in the lower left-hand corner of the window.
 
 .. describe:: MathJax.HTML
@@ -65,7 +65,7 @@ Main MathJax Components
 .. describe:: MathJax.ElementJax
 
     The base class for all element `jax` objects.  Subclasses for
-    specific element jax are creates as sub-objects of
+    specific element jax are created as sub-objects of
     ``MathJax.ElementJax``.  For example, the mml element jax loads
     itself as ``MathJax.ElementJax.mml``.
 

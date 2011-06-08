@@ -20,11 +20,6 @@ set any of these options, include a ``mml2jax`` section in your
 
 would set the ``preview`` parameter to ``"none"``.
 
-.. describe:: element: null
-
-    The id name of the element that should be processed by `mml2jax`.
-    The default is the whole document.
-
 .. describe:: preview: "alttext"
 
     This controls whether `mml2jax` inserts ``MathJax_Preview`` spans

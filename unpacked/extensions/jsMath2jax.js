@@ -31,12 +31,9 @@
  */
 
 MathJax.Extension.jsMath2jax = {
-  version: "1.1",
+  version: "1.1.1",
   
   config: {
-    element: null,    // The ID of the element to be processed
-                      //   (defaults to full document)
-
     preview: "TeX"    // Set to "none" to prevent preview strings from being inserted
                       //   or to an array that specifies an HTML snippet to use for
                       //   the preview.
@@ -52,7 +49,7 @@ MathJax.Extension.jsMath2jax = {
       this.configured = true;
     }
     if (typeof(element) === "string") {element = document.getElementById(element)}
-    if (!element) {element = this.config.element || document.body}
+    if (!element) {element = document.body}
     var span = element.getElementsByTagName("span"), i;
     for (i = span.length-1; i >= 0; i--)
       {if (String(span[i].className).match(/(^| )math( |$)/)) {this.ConvertMath(span[i],"")}}

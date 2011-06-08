@@ -6,7 +6,7 @@ Describing HTML snippets
 
 A number of MathJax configuration options allow you to specify an HTML
 snippet using a JavaScript object.  This lets you include HTML in your
-configutation files even though they are not HTML files themselves.
+configuration files even though they are not HTML files themselves.
 The format is fairly simple, but flexible enough to let you represent
 complicated HTML trees.
 

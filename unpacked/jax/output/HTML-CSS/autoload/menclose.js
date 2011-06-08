@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -61,10 +61,15 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           case MML.NOTATION.ROUNDEDBOX:
             if (HTMLCSS.useVML) {
               if (!vml) {vml = this.HTMLvml(stack,H,D,W,t,values.mathcolor)}
-              this.HTMLvmlElement(vml,"roundrect",{
+              // roundrect.arcsize can't be set in IE8 standards mode, so use a path
+              var r = Math.floor(1000*Math.min(W,H+D)-2*t);
+              var w = Math.floor(4000*(W-2*t)), h = Math.floor(4000*(H+D-2*t));
+              this.HTMLvmlElement(vml,"shape",{
                 style: {width:this.HTMLpx(W-2*t),height:this.HTMLpx(H+D-2*t),
-                        left:this.HTMLpx(t)+.5,top:this.HTMLpx(t)+.5},
-                arcsize: ".25"
+                        left:this.HTMLpx(t,.5),top:this.HTMLpx(t,.5)},
+                path: "m "+r+",0 qx 0,"+r+" l 0,"+(h-r)+" qy "+r+","+h+" "+
+                      "l "+(w-r)+","+h+" qx "+w+","+(h-r)+" l "+w+","+r+" qy "+(w-r)+",0 x e",
+                coordsize: w+","+h
               });
             } else {
               if (!svg) {svg = this.HTMLsvg(stack,H,D,W,t,values.mathcolor)}
@@ -80,7 +85,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
               if (!vml) {vml = this.HTMLvml(stack,H,D,W,t,values.mathcolor)}
               this.HTMLvmlElement(vml,"oval",{
                 style: {width:this.HTMLpx(W-2*t),height:this.HTMLpx(H+D-2*t),
-                        left:this.HTMLpx(t)+.5,top:this.HTMLpx(t)+.5}
+                        left:this.HTMLpx(t,.5),top:this.HTMLpx(t,.5)}
               });
             } else {
               if (!svg) {svg = this.HTMLsvg(stack,H,D,W,t,values.mathcolor)}
@@ -151,9 +156,11 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           case MML.NOTATION.RADICAL:
             if (HTMLCSS.useVML) {
               if (!vml) {vml = this.HTMLvml(stack,H,D,W,t,values.mathcolor)}
-              this.HTMLvmlElement(vml,"polyline",{
-                points: this.HTMLpx(t/2)+","+this.HTMLpx(.6*(H+D))+" "+this.HTMLpx(p)+","+this.HTMLpx(H+D-t)+
-                  " "+this.HTMLpx(2*p)+","+this.HTMLpx(t/2)+" "+this.HTMLpx(W)+","+this.HTMLpx(t/2)
+              this.HTMLvmlElement(vml,"shape",{
+                style: {width:this.HTMLpx(W), height:this.HTMLpx(H+D)},
+                path: "m "+this.HTMLpt(t/2,.6*(H+D))+" l "+this.HTMLpt(p,H+D-t)+" "+
+                           this.HTMLpt(2*p,t/2)+" "+this.HTMLpt(W,t/2)+" e",
+                coordsize: this.HTMLpt(W,H+D)
               });
               dx = p;
             } else {
@@ -199,6 +206,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     },
     
     HTMLpx: function (n) {return (n*HTMLCSS.em)},
+    HTMLpt: function (x,y) {return Math.floor(1000*x)+','+Math.floor(1000*y)},
     
     HTMLhandleColor: function (span) {
       var frame = document.getElementById("MathJax-frame-"+this.spanID);
@@ -233,7 +241,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       return vml;
     },
     HTMLvmlElement: function (vml,type,def) {
-      var obj = HTMLCSS.addElement(vml,vmlns+":"+type,def);
+      var obj = HTMLCSS.addElement(vml,vmlns+":"+type);
+      obj.style.position = "absolute"; obj.style.left = obj.style.top = 0;
+      MathJax.Hub.Insert(obj,def); // IE8 needs to do this after obj is added to the page
       if (!def.fillcolor) {obj.fillcolor = "none"}
       if (!def.strokecolor) {obj.strokecolor = this.constructor.VMLcolor}
       if (!def.strokeweight) {obj.strokeweight =this.constructor.VMLthickness}
@@ -242,11 +252,15 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
   
   MathJax.Hub.Browser.Select({
     MSIE: function (browser) {
+      MML.menclose.Augment({HTMLpx: function (n,d) {return (n*HTMLCSS.em+(d||0))+"px"}});
       HTMLCSS.useVML = true;
       if (!document.namespaces[vmlns]) {
-        document.namespaces.add(vmlns,VMLNS);
-        var sheet = document.createStyleSheet();
-        sheet.addRule(vmlns+"\\:*","{behavior: url(#default#VML); position:absolute; top:0; left:0}");
+        if (document.documentMode && document.documentMode >= 8) {
+          document.namespaces.add(vmlns,VMLNS,"#default#VML");
+        } else {
+          document.namespaces.add(vmlns,VMLNS);
+          document.createStyleSheet().addRule(vmlns+"\\: *","{behavior: url(#default#VML)}");
+        }
       }
     }
   });

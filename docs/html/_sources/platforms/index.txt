@@ -21,7 +21,7 @@ Using MathJax in a Theme File
 Most web-based content-management systems include a theme or template
 layer that determines how the pages look, and that loads information
 common to all pages.  Such theme files provide one popular way to
-include MathJax in your web templates in the absense of
+include MathJax in your web templates in the absence of
 MathJax-specific plugins for the system you are using.  To take
 advantage of this approach, you will need access to your theme files,
 which probably means you need to be an administrator for the site; if
@@ -64,8 +64,8 @@ theme/template only.  If you change themes or update your theme, you
 will have to repeat these steps.
 
 
-Insructions for Specific Platforms
-==================================
+Instructions for Specific Platforms
+===================================
 
 Some programs, such as WordPress and Moveable Type, allow you to edit
 template files from inside their administrator interfaces.  Specific

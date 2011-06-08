@@ -28,7 +28,7 @@ Class Properties
 
 .. describe:: directory
 
-    The name of the jax directory (usually ``"[MathJax]/jax").
+    The name of the jax directory (usually ``"[MathJax]/jax"``).
     Overridden in the subclass to be the specific directory for the
     class, e.g. ``"[MathJax]/jax/input"``.
 
@@ -73,7 +73,7 @@ Methods
     This is the method that the ``MathJax.Hub`` calls when it needs the 
     input or output jax to process the given math ``<script>``.  Its 
     default action is to start loading the jax's ``jax.js`` file, and 
-    redefine itself to simplu return the callback for the laod operation 
+    redefine itself to simply return the callback for the load operation 
     (so that further calls to it will cause the processing to wait for the 
     callback).  Once the ``jax.js`` file has loaded, this method is 
     replaced by the jax's :meth:`Translate()` method, so that subsequent calls 
@@ -89,11 +89,11 @@ Methods
     This is a stub for a routine that should be defined by the jax's
     ``jax.js`` file when it is loaded.  It should perform the translation
     action for the specific jax.  For an input jax, it should return the
-    `ElementJax` object that it created.  The :meth:`Translate()` mehtod is
+    `ElementJax` object that it created.  The :meth:`Translate()` method is
     never called directly by MathJax; during the :meth:`loadComplete()`
-    call, this funciton is copied to the :meth:`Process()` method, and is
+    call, this function is copied to the :meth:`Process()` method, and is
     called via that name.  The default :meth:`Translate()` method throws an
-    error indicating that the :meth:`Translate()` meth was not been
+    error indicating that the :meth:`Translate()` method was not
     redefined.  That way, if the ``jax.js`` file fails to load for some
     reason, you will receive an error trying to process mathematics with
     this jax.
@@ -147,7 +147,7 @@ Methods
        5. Post the "[name] Jax Startup" message to the startup signal.
        6. Perform the jax's :meth:`Startup()` method.
        7. Post the "[name] Jax Ready" message to the startup signal.
-       8. perform the :meth:`MathJax.Ajax.loadComplete()` call for the
+       8. Perform the :meth:`MathJax.Ajax.loadComplete()` call for the
           ``jax.js`` file.
 
     Note that the configuration process (the :meth:`Config()` call) can 

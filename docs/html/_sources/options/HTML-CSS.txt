@@ -32,7 +32,7 @@ would set the ``preferredFont`` option to the :term:`STIX` fonts.
 
 .. describe:: minScaleAdjust: 50
 
-   This gives a minimum scale (as a percent) for the scaling used my 
+   This gives a minimum scale (as a percent) for the scaling used by 
    MathJax to match the equation to the surrounding text.  This will 
    prevent MathJax from making the mathematics too small.
 
@@ -57,7 +57,7 @@ would set the ``preferredFont`` option to the :term:`STIX` fonts.
     This is the web-based font to use when none of the fonts listed
     above are available on the user's computer.  Note that currently
     only the `TeX` font is available in a web-based form (they are
-    stored in the ``fonts/HTML-CSS`` folder in the MathJax directory.
+    stored in the ``fonts/HTML-CSS`` folder in the MathJax directory).
     Set this to ``null`` to disable web fonts.
     
 .. describe:: imageFont: "TeX"
@@ -65,7 +65,7 @@ would set the ``preferredFont`` option to the :term:`STIX` fonts.
     This is the font to use for image fallback mode (when none of the
     fonts listed above are available and the browser doesn't support
     web-fonts via the ``@font-face`` CSS directive).  Note that currently
-    only the TeX font is available as an image font (they are stores
+    only the TeX font is available as an image font (they are stored
     in the ``fonts/HTML-CSS`` directory).
 
     Set this to ``null`` if you want to prevent the use of image fonts
@@ -76,6 +76,15 @@ would set the ``preferredFont`` option to the :term:`STIX` fonts.
     include: IE6 and later, Chrome, Safari3.1 and above, Firefox3.5
     and later, and Opera10 and later.  Note that Firefox3.0 is **not**
     on this list.
+
+.. describe:: undefinedFamily: "STIXGeneral, 'Arial Unicode MS', serif"
+
+    This is the font-family CSS value used for characters that are not
+    in the selected font (e.g., for web-based fonts, this is where to
+    look for characters not included in the MathJax web fonts).  IE
+    will stop looking after the first font that exists on the system
+    (even if it doesn't contain the needed character), so order these
+    carefully.
 
 .. describe:: styles: {}
 

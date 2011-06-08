@@ -113,7 +113,7 @@ Methods
     parameter is the name of the file that has been loaded.  This
     routine will cause any callback functions registered for the file
     or included in the :meth:`MathJax.Ajax.Require()` calls to be
-    executed, passing them the status or the load
+    executed, passing them the status of the load
     (``MathJax.Ajax.STATUS.OK`` or ``MathJax.Ajax.STATUS.ERROR``) as
     their last parameter.
 
@@ -145,7 +145,7 @@ Methods
 .. method:: loadHook(file,callback)
 
     Registers a callback to be executed when the given file is
-    loaded.  The file load operation need to be started when this
+    loaded.  The file load operation needs to be started when this
     method is called, so it can be used to register a hook for a file
     that may be loaded in the future.
 
@@ -156,11 +156,11 @@ Methods
 
 .. method:: Preloading(file1[,file2...])
 
-    Used withing combined configuration files to indicate what files are 
-    in the configuration file.  Marks the files are loading (since there 
+    Used with combined configuration files to indicate what files are 
+    in the configuration file.  Marks the files as loading (since there 
     will never be an explicit :meth:`Load()` or :meth:`Require()` call for 
-    then), so that load-hooks and other load-related events can be 
-    properly processed.
+    them), so that load-hooks and other load-related events can be 
+    properly processed when the :meth:`loadComplete()` occurs.
 
     :Parameters:
         - **file1, file2, ...** --- the names of the files in the combined file

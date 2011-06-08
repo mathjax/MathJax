@@ -54,7 +54,7 @@
   <div class="section" id="using-signals">
 <span id="id1"></span><h1>Using Signals<a class="headerlink" href="#using-signals" title="Permalink to this headline">¶</a></h1>
 <p>Because much of MathJax operates asynchronously, it is important for
-MathJax to be able to indicated to other components operating on the
+MathJax to be able to indicate to other components operating on the
 page that certain actions have been taken.  For example, as MathJax is
 starting up, it loads external files such as its configuration files
 and the various input and output <a class="reference internal" href="glossary.html#term-jax"><em class="xref std std-term">jax</em></a> that are used on the
@@ -105,7 +105,7 @@ have the listener perform the configuration when the message arrives.
 But even if the extension <em>has</em> already been loaded, this will still
 work, because the listener will receive the ready signal even if it
 has already been posted.  In this way, listening for signals is a
-robust method of synchonizing code components no matter when they are
+robust method of synchronizing code components no matter when they are
 loaded and run.</p>
 <p>In some cases, it may be inappropriate for a new listener to receive
 past messages that were sent to a signal object. There are two ways to
@@ -145,7 +145,7 @@ details of the messages sent during startup.  See also the
 <tt class="docutils literal"><span class="pre">test/sample-signals.html</span></tt> file (and its source) for examples of
 using signals.  This example lists all the signals that occur while
 MathJax is processing that page, so it gives useful information about
-the details of the signals produced by variuous components.</p>
+the details of the signals produced by various components.</p>
 <p>In this example, the listener starts loading an extra configuration
 file (from the same directory as the web page).  Since it returns
 the callback from that request, the signal processing will wait until

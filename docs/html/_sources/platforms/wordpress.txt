@@ -38,5 +38,5 @@ better choice than editing the theme directly.
  
 4. Save the file.  This will enable MathJax with both TeX and MathML
    input, so you should be able to start adding mathematical content to
-   your pages.  If you need to adjust the configuraiton, see
+   your pages.  If you need to adjust the configuration, see
    :ref:`Configuring MathJax <loading>` for more details.

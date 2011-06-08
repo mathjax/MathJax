@@ -21,7 +21,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.0";
+  var VERSION = "1.1";
   
   var TEX = MathJax.InputJax.TeX;
   var oldPrefilter = TEX.prefilterMath;

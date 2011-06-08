@@ -154,7 +154,7 @@ are requested simultaneously, so they load concurrently.  That means they
 can load in any order, and that the begin and end signals for the jax and 
 extensions can be intermixed.  (In general, you will get `Begin Jax` 
 followed by `Begin Extensions`, but the order of `End Jax` and `End 
-Extensions` will depend on the file sbeing loaded.)  Both 5 and 6 must 
+Extensions` will depend on the files being loaded.)  Both 5 and 6 must 
 complete, however, before 7 will be performed.
 
 See the ``test/sample-signals.html`` file to see the signals in action.

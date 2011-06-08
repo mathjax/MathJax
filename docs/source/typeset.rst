@@ -19,7 +19,7 @@ MathJax operates asynchonously (see :ref:`Synchronizing with MathJax
 your call to :meth:`MathJax.Hub.Typeset()` is synchronized with the
 other actions that MathJax is taking.  For example, it may already be
 typesetting portions of the page, or it may be waiting for an output
-jax to load, etc., and so you need to queue to typeset action to be
+jax to load, etc., and so you need to queue the typeset action to be
 performed after MathJax has finished whatever else it may be doing.
 That may be immediately, but it may not, and there is no way to tell.
 
@@ -32,13 +32,13 @@ To queue the typeset action, use the command
 This will cause MathJax to typeset the page when it is next able to do
 so.  It guarantees that the typesetting will synchronize properly
 with the loading of jax, extensions, fonts, stylesheets, and other
-asynchornous activity, and is the only truely safe way to ask MathJax
+asynchronous activity, and is the only truly safe way to ask MathJax
 to process additional material.
 
 The :meth:`MathJax.Hub.Typeset()` command also accepts a parameter
-that is a DOM element whose contents is to be typeset.  That could be
+that is a DOM element whose content is to be typeset.  That could be
 a paragraph, or a ``<div>`` element, or even a MathJax math
-``<script>`` tag.  It could also be a the DOM `id` of such an object, in
+``<script>`` tag.  It could also be the DOM `id` of such an object, in
 which case, MathJax will look up the DOM element for you.  So
 
 .. code-block:: javascript
@@ -60,7 +60,7 @@ Note that the :meth:`MathJax.Hub.Queue()` method will return
 immediately, regardless of whether the typesetting has taken place or
 not, so you can not assume that the mathematics is visible after you
 make this call.  That means that things like the size of the container
-for the mathematics may not yet reflect the size of the typeet
+for the mathematics may not yet reflect the size of the typeset
 mathematics.  If you need to perform actions that depend on the
 mathematics being typeset, you should push *those* actions onto the
 ``MathJax.Hub.queue`` as well.  
@@ -78,7 +78,7 @@ Manipulating Individual Math Elements
 If you are not changing a complete DOM structure, but simply want to
 update the contents of a single mathematical equation, you do not need
 to use ``innerHTML`` and :meth:`MathJax.Hub.Typeset()` to preprocess
-and process an elements new content.  Instead, you can ask MathJax to
+and process an element's new content.  Instead, you can ask MathJax to
 find the `element jax` for the math element on the page, and use its
 methods to modify and update the mathematics that it displays.
 
@@ -95,7 +95,7 @@ within dollar signs (it will be blank).  A student has typed
 something elsewhere on the page, and you want to typeset their answer
 in the location of the mathematics that is already there.  You could
 replace the entire contents of the `MathDiv` element and call
-:meth:`MathJax.Hub.Typeset()` as described above, but there is more
+:meth:`MathJax.Hub.Typeset()` as described above, but there is a more
 efficient approach, which is to ask MathJax for the element jax for
 the mathematics, and call its method for replacing the formula shown
 by that element.  For example:
@@ -105,20 +105,21 @@ by that element.  For example:
     var math = MathJax.Hub.getAllJax("MathDiv")[0];
     MathJax.Hub.Queue(["Text",math,"x+1"]);
 
-This looks up the list of math elements in `MathDiv` element (there is
-only one) and takes the first one (element 0) and stores it in
-``math``.  This is an `element jax` object (see the :ref:`Element Jax
-<api-element-jax>` specification for details), which has a
+This looks up the list of math elements in the `MathDiv` element
+(there is only one) and takes the first one (element 0) and stores it
+in ``math``.  This is an `element jax` object (see the :ref:`Element
+Jax <api-element-jax>` specification for details), which has a
 :meth:`Text()` method that can be used to set the input text of the
 math element, and retypeset it.
 
 Again, since the typesetting should be synchronized with other actions
-of MathJax, the call should be pushed onto the ``MathJax.Hub.queue``,
-as shown above, rather than called directly.  The example above
-performs the equivalent of ``math.Text("x+1")`` as soon as MathJax is
-able to do so.  Any additional actions the rely on the equation
-``x+1`` actually showing on screen should also be pushed onto the
-queue so that they will not occur before the math is typeset.
+of MathJax, the call should be pushed onto the MathJax processing
+queue using :meth:`MathJax.Hub.Queue()`, as shown above, rather than
+called directly.  The example above performs the equivalent of
+``math.Text("x+1")`` as soon as MathJax is able to do so.  Any
+additional actions that rely on the expression ``x+1`` actually
+showing on screen should also be pushed onto the queue so that they
+will not occur before the math is typeset.
 
 The actions you can perform on an element jax include:
 
@@ -140,7 +141,7 @@ The actions you can perform on an element jax include:
     .. describe:: SourceElement()
 
         to obtain a reference to the original
-        ``<script>`` object that is assocaited with this element jax.
+        ``<script>`` object that is associated with this element jax.
 
 
 Note that once you have located an element jax, you can keep using it
@@ -153,7 +154,7 @@ displayed.
 
 To get the element jax the first time, you need to be sure that you
 ask MathJax for it **after** MathJax has processed the page the first
-time.  This is another sitaution where you want to use the MathJax
+time.  This is another situation where you want to use the MathJax
 queue.  If your startup code performs the commands
 
 .. code-block:: javascript

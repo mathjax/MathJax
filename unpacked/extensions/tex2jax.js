@@ -24,11 +24,8 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.1",
+  version: "1.1.3",
   config: {
-    element: null,             // The ID of the element to be processed
-                               //   (defaults to full document)
-
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
       ['\\(','\\)']            //  be sure that you don't have an extra comma at the end)
@@ -74,7 +71,7 @@ MathJax.Extension.tex2jax = {
       this.configured = true;
     }
     if (typeof(element) === "string") {element = document.getElementById(element)}
-    if (!element) {element = this.config.element || document.body}
+    if (!element) {element = document.body}
     this.createPatterns();
     this.scanElement(element,element.nextSibling);
   },
@@ -176,10 +173,17 @@ MathJax.Extension.tex2jax = {
       };
       this.switchPattern(this.endPattern(this.search.end));
     } else {                                         // escaped dollar signs
-      var dollar = match[0].replace(/\\(.)/g,'$1');
-      element.nodeValue = element.nodeValue.substr(0,match.index) + dollar +
-                          element.nodeValue.substr(match.index + match[0].length);
-      this.pattern.lastIndex -= match[0].length - dollar.length;
+      // put $ in a span so it doesn't get processed again
+      // split off backslashes so they don't get removed later
+      var slashes = match[0].substr(0,match[0].length-1), n, span;
+      if (slashes.length % 2 === 0) {span = [slashes.replace(/\\\\/g,"\\")]; n = 1}
+        else {span = [slashes.substr(1).replace(/\\\\/g,"\\"),"$"]; n = 0}
+      span = MathJax.HTML.Element("span",null,span);
+      var text = MathJax.HTML.TextNode(element.nodeValue.substr(0,match.index));
+      element.nodeValue = element.nodeValue.substr(match.index + match[0].length - n);
+      element.parentNode.insertBefore(span,element);
+      element.parentNode.insertBefore(text,span);
+      this.pattern.lastIndex = n;
     }
     return element;
   },
@@ -216,7 +220,11 @@ MathJax.Extension.tex2jax = {
         } else {
           math.nodeValue += math.nextSibling.nodeValue;
         }
-      } else {math.nodeValue += ' '}
+      } else if (this.msieNewlineBug) {
+        math.nodeValue += (math.nextSibling.nodeName.toLowerCase() === "br" ? "\n" : " ");
+      } else {
+        math.nodeValue += " ";
+      }
       math.parentNode.removeChild(math.nextSibling);
     }
     var TeX = math.nodeValue.substr(search.olen,math.nodeValue.length-search.olen-search.clen);
@@ -251,7 +259,9 @@ MathJax.Extension.tex2jax = {
     return script;
   },
   
-  filterTeX: function (tex) {return tex}
+  filterTeX: function (tex) {return tex},
+  
+  msieNewlineBug: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9)
   
 };
 

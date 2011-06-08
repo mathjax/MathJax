@@ -20,12 +20,6 @@ section in your :meth:`MathJax.Hub.Config()` call.  For example
 
 would set the ``preview`` parameter to ``"none"``.
 
-
-.. describe:: element: null
-
-    The id name of the element that should be processed by `jsMath2jax`.
-    The default is the whole document.
-
 .. describe:: preview: "TeX"
 
     This controls whether `jsMath2jax` inserts ``MathJax_Preview`` spans

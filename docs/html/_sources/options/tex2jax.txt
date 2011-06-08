@@ -22,15 +22,10 @@ would set the ``inlineMath`` delimiters for the `tex2jax`
 preprocessor.
 
 
-.. describe:: element: null
-
-    The id name of the element that should be processed by `tex2jax`.
-    The default is the whole document.
-
 .. describe:: inlineMath: [['\\\(','\\\)']]
 
     Array of pairs of strings that are to be used as in-line math
-    delimters.  The first in each pair is the initial delimiter and
+    delimiters.  The first in each pair is the initial delimiter and
     the second is the terminal delimiter.  You can have as many pairs
     as you want.  For example,
 
@@ -51,7 +46,7 @@ preprocessor.
 
 .. describe:: displayMath: [ ['$$','$$'], ['\\\[','\\\]'] ]
 
-    Array of pairs of strings that are to be used as delimters for
+    Array of pairs of strings that are to be used as delimiters for
     displayed equations.  The first in each pair is the initial
     delimiter and the second is the terminal delimiter.  You can have
     as many pairs as you want.
@@ -74,7 +69,7 @@ preprocessor.
 .. describe:: processEnvironments: true
 
     When ``true``, `tex2jax` looks not only for the in-line and
-    display math delimters, but also for LaTeX environments 
+    display math delimiters, but also for LaTeX environments 
     (``\begin{something}...\end{something}``) and marks them for
     processing by MathJax.  When ``false``, LaTeX environments will
     not be processed outside of math mode.

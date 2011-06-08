@@ -71,7 +71,7 @@ set via</p>
 </pre></div>
 </div>
 <p>Because of a bug in Internet Explorer, in order to change the side of
-the screen where the the message occurs, you must also set the side
+the screen where the message occurs, you must also set the side
 for <tt class="docutils literal"><span class="pre">#MathJax_MSIE_Frame</span></tt>, as in</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
   <span class="nx">styles</span><span class="o">:</span> <span class="p">{</span>
@@ -87,7 +87,7 @@ displayed on screen, it gets an id number that is used when you want
 to remove or change that message.  That way, when a message is
 removed, the previous message (if any) can be redisplayed if it hasn&#8217;t
 been removed.  This allows for intermittent messages (like file
-loading messages) to obscure longer-term message (like &#8220;Processing
+loading messages) to obscure longer-term messages (like &#8220;Processing
 Math&#8221; messages) temporarily.</p>
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
@@ -168,11 +168,11 @@ directory).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>file</strong> &#8212; the name of the file being loaded.</li>
+<li><strong>file</strong> &#8212; the name of the file being loaded</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the message id number for the message created.</p>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the message id number for the message created</p>
 </td>
 </tr>
 </tbody>
@@ -184,7 +184,7 @@ directory).</p>
 <tt class="descname">filterText</tt><big>(</big><em>text</em>, <em>n</em><big>)</big><a class="headerlink" href="#filterText" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method is called on each message before it is displayed.  It can
 be used to modify (e.g., shorten) the various messages before they are
-displayed.  The default action is to check of the <tt class="docutils literal"><span class="pre">messageStyle</span></tt>
+displayed.  The default action is to check if the <tt class="docutils literal"><span class="pre">messageStyle</span></tt>
 configuration parameter is <tt class="docutils literal"><span class="pre">simple</span></tt>, and if so, convert loading and
 processing messages to a simpler form.  This method can be overridden
 to perform other sanitization of the message strings.</p>

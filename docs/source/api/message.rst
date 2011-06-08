@@ -25,7 +25,7 @@ set via
     });
 
 Because of a bug in Internet Explorer, in order to change the side of
-the screen where the the message occurs, you must also set the side
+the screen where the message occurs, you must also set the side
 for ``#MathJax_MSIE_Frame``, as in
 
 .. code-block:: javascript
@@ -44,7 +44,7 @@ displayed on screen, it gets an id number that is used when you want
 to remove or change that message.  That way, when a message is
 removed, the previous message (if any) can be redisplayed if it hasn't
 been removed.  This allows for intermittent messages (like file
-loading messages) to obscure longer-term message (like "Processing
+loading messages) to obscure longer-term messages (like "Processing
 Math" messages) temporarily.
 
 
@@ -92,14 +92,14 @@ Methods
     directory).
 
     :Parameters:
-        - **file** --- the name of the file being loaded.
-    :Returns: the message id number for the message created.
+        - **file** --- the name of the file being loaded
+    :Returns: the message id number for the message created
 
 .. method:: filterText(text,n)
 
     This method is called on each message before it is displayed.  It can 
     be used to modify (e.g., shorten) the various messages before they are 
-    displayed.  The default action is to check of the ``messageStyle`` 
+    displayed.  The default action is to check if the ``messageStyle`` 
     configuration parameter is ``simple``, and if so, convert loading and 
     processing messages to a simpler form.  This method can be overridden 
     to perform other sanitization of the message strings.

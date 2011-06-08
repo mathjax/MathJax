@@ -7,9 +7,9 @@ The MathJax.Callback.Signal Class
 The ``MathJax.Callback.Signal`` object is one of the key mechanisms
 used by MathJax to synchronize its actions with those that occur
 asynchronously, like loading files and stylesheets.  A `Signal` object
-is used to pulicise the fact that MathJax has performed certain
-actions, giving other code running the the web page the chance to
-react to those actions.  See :ref:`Synchronizing with MathJax
+is used to publicize the fact that MathJax has performed certain
+actions, giving other code running the web page the chance to react to
+those actions.  See :ref:`Synchronizing with MathJax
 <synchronization>` for more details, and :ref:`Using Signals
 <using-signals>` in particular for examples of how to specify and use
 MathJax `Signal` objects.
@@ -30,7 +30,7 @@ Properties
 
 .. describe:: posted
 
-    Array used internally to stored the post history so that when new
+    Array used internally to store the post history so that when new
     listeners express interests in this signal, they can be informed
     of the signals that have been posted so far.  This can be cleared
     using the signal's :meth:`Clear()` method.
@@ -39,7 +39,7 @@ Properties
 
     Array of callbacks to the listeners who have expressed interest in
     hearing about posts to this signal.  When a post occurs, the
-    listeners are called in each turn, passing them the message that
+    listeners are called, each in turn, passing them the message that
     was posted.
 
 
@@ -51,7 +51,7 @@ Methods
     Posts a message to all the listeners for the signal.  The listener
     callbacks are called in turn (with the message as an argument),
     and if any return a `Callback` object, the posting will be
-    suspended until the callback is exectured.  In this way, the
+    suspended until the callback is executed.  In this way, the
     :meth:`Post()` call can operate asynchronously, and so the
     `callback` parameter is used to synchronize with its operation;
     the `callback` will be called when all the listeners have responded
@@ -133,7 +133,7 @@ Methods
     function that must check the message each time it is called.
     Although the `message` here is a string, if a message posted to the
     signal is an array, then only the first element of that array is
-    used to match against message.  That way, if a message contains an
+    used to match against the message.  That way, if a message contains an
     identifier plus arguments, the hook will match the identifier and
     still get called with the complete set of arguments.
         

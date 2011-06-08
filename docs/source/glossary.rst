@@ -29,7 +29,7 @@ Glossary
         particular message is sent along the signal channel.
     
     HTML-CSS
-        MathJax output form that employs only on HTML and CSS 2.1,
+        MathJax output form that relys only on HTML and CSS 2.1,
         allowing MathJax to remain compatible across all browsers.
     
     jax

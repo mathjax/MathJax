@@ -174,17 +174,22 @@ MathJax.Hub.Config({
   //
   skipStartupTypeset: false,
   
+  //
+  //  A list of element ID's that are the ones to process for mathematics
+  //  when any of the Hub typesetting calls (Typeset, Process, Update, etc)
+  //  are called with no element specified.  This lets you restrict the
+  //  processing to particular containers rather than scanning the entire
+  //  document for mathematics.  If none are supplied, the entire document
+  //  is processed.
+  //
+  elements: [],
+  
   //============================================================================
   //
   //  These parameters control the tex2jax preprocessor (when you have included
   //  "tex2jax.js" in the extensions list above).
   //
   tex2jax: {
-
-    //
-    //  The Id of the element to be processed (defaults to full document)
-    //
-    element: null,
 
     //
     //  The delimiters that surround in-line math expressions.  The first in each
@@ -283,11 +288,6 @@ MathJax.Hub.Config({
   mml2jax: {
     
     //
-    //  The Id of the element to be processed (defaults to full document)
-    //
-    element: null,
-
-    //
     //  Controls whether mml2jax inserts MathJax_Preview spans to make a
     //  preview available, and what preview to use, whrn it locates
     //  mathematics on the page.  The default is "alttext", which means use
@@ -313,11 +313,6 @@ MathJax.Hub.Config({
   //
   jsMath2jax: {
     
-    //
-    //  The Id of the element to be processed (defaults to full document)
-    //
-    element: null,
-
     //
     //  Controls whether jsMath2jax inserts MathJax_Preview spans to make a
     //  preview available, and what preview to use, when it locates
@@ -448,6 +443,15 @@ MathJax.Hub.Config({
     //  MathJax TeX fonts.
     //
     imageFont: "TeX",
+    
+    //
+    //  This is the font-family CSS value used for characters that are not
+    //  in the selected font (e.g., for web-based fonts, this is where to
+    //  look for characters not included in the MathJax_* fonts).  IE will
+    //  stop looking after the first font that exists on the system (even
+    //  if it doesn't contain the needed character), so order these carefully.
+    //  
+    undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",
     
     //
     //  This controls whether the MathJax contextual menu will be available

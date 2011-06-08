@@ -81,7 +81,7 @@ menu item associated with the typeset mathematics.</p>
 <dl class="describe">
 <dt>
 <tt class="descname">minScaleAdjust: 50</tt></dt>
-<dd><p>This gives a minimum scale (as a percent) for the scaling used my
+<dd><p>This gives a minimum scale (as a percent) for the scaling used by
 MathJax to match the equation to the surrounding text.  This will
 prevent MathJax from making the mathematics too small.</p>
 </dd></dl>
@@ -112,7 +112,7 @@ than one is available on the user&#8217;s computer.</p>
 <dd><p>This is the web-based font to use when none of the fonts listed
 above are available on the user&#8217;s computer.  Note that currently
 only the <cite>TeX</cite> font is available in a web-based form (they are
-stored in the <tt class="docutils literal"><span class="pre">fonts/HTML-CSS</span></tt> folder in the MathJax directory.
+stored in the <tt class="docutils literal"><span class="pre">fonts/HTML-CSS</span></tt> folder in the MathJax directory).
 Set this to <tt class="docutils literal"><span class="pre">null</span></tt> to disable web fonts.</p>
 </dd></dl>
 
@@ -122,7 +122,7 @@ Set this to <tt class="docutils literal"><span class="pre">null</span></tt> to d
 <dd><p>This is the font to use for image fallback mode (when none of the
 fonts listed above are available and the browser doesn&#8217;t support
 web-fonts via the <tt class="docutils literal"><span class="pre">&#64;font-face</span></tt> CSS directive).  Note that currently
-only the TeX font is available as an image font (they are stores
+only the TeX font is available as an image font (they are stored
 in the <tt class="docutils literal"><span class="pre">fonts/HTML-CSS</span></tt> directory).</p>
 <p>Set this to <tt class="docutils literal"><span class="pre">null</span></tt> if you want to prevent the use of image fonts
 (e.g., you have deleted or not installed the image fonts on your
@@ -132,6 +132,17 @@ on the client computer.  The browsers that support web-based fonts
 include: IE6 and later, Chrome, Safari3.1 and above, Firefox3.5
 and later, and Opera10 and later.  Note that Firefox3.0 is <strong>not</strong>
 on this list.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">undefinedFamily: &quot;STIXGeneral, 'Arial Unicode MS', serif&quot;</tt></dt>
+<dd><p>This is the font-family CSS value used for characters that are not
+in the selected font (e.g., for web-based fonts, this is where to
+look for characters not included in the MathJax web fonts).  IE
+will stop looking after the first font that exists on the system
+(even if it doesn&#8217;t contain the needed character), so order these
+carefully.</p>
 </dd></dl>
 
 <dl class="describe">

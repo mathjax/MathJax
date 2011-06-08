@@ -192,7 +192,7 @@ file has been completely loaded and initialized.  The <cite>file</cite>
 parameter is the name of the file that has been loaded.  This
 routine will cause any callback functions registered for the file
 or included in the <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Ajax.Require()</span></tt> calls to be
-executed, passing them the status or the load
+executed, passing them the status of the load
 (<tt class="docutils literal"><span class="pre">MathJax.Ajax.STATUS.OK</span></tt> or <tt class="docutils literal"><span class="pre">MathJax.Ajax.STATUS.ERROR</span></tt>) as
 their last parameter.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -260,7 +260,7 @@ puts a warning message into the MathJax message box on screen.</p>
 <dt id="loadHook">
 <tt class="descname">loadHook</tt><big>(</big><em>file</em>, <em>callback</em><big>)</big><a class="headerlink" href="#loadHook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registers a callback to be executed when the given file is
-loaded.  The file load operation need to be started when this
+loaded.  The file load operation needs to be started when this
 method is called, so it can be used to register a hook for a file
 that may be loaded in the future.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -283,11 +283,11 @@ that may be loaded in the future.</p>
 <dl class="method">
 <dt id="Preloading">
 <tt class="descname">Preloading</tt><big>(</big><em>file1</em><span class="optional">[</span>, <em>file2...</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Preloading" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used withing combined configuration files to indicate what files are
-in the configuration file.  Marks the files are loading (since there
+<dd><p>Used with combined configuration files to indicate what files are
+in the configuration file.  Marks the files as loading (since there
 will never be an explicit <a class="reference internal" href="#Load" title="Load"><tt class="xref py py-meth docutils literal"><span class="pre">Load()</span></tt></a> or <a class="reference internal" href="#Require" title="Require"><tt class="xref py py-meth docutils literal"><span class="pre">Require()</span></tt></a> call for
-then), so that load-hooks and other load-related events can be
-properly processed.</p>
+them), so that load-hooks and other load-related events can be
+properly processed when the <a class="reference internal" href="#loadComplete" title="loadComplete"><tt class="xref py py-meth docutils literal"><span class="pre">loadComplete()</span></tt></a> occurs.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

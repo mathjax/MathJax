@@ -63,7 +63,7 @@ loading is asynchronous, a number of the methods below may return
 before their actions are completed.  For this reason, they include
 callback functions that are called when the action completes.  These
 can be used to synchronize actions that require the mathematics to be
-completed before those action occur. See the <a class="reference internal" href="../callbacks.html#using-callbacks"><em>Using Callbacks</em></a> documentation for more details.</p>
+completed before those actions occur. See the <a class="reference internal" href="../callbacks.html#using-callbacks"><em>Using Callbacks</em></a> documentation for more details.</p>
 <div class="section" id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <dl class="describe">
@@ -114,12 +114,12 @@ additional properties and methods concerning the browser:</p>
 <tt class="descname">isMac and isPC</tt></dt>
 <dd><p>These are boolean values that indicate whether the browser is
 running on a Macintosh computer or a Windows computer.  They
-will both be <tt class="docutils literal"><span class="pre">false</span></tt> for a Linux computer</p>
+will both be <tt class="docutils literal"><span class="pre">false</span></tt> for a Linux computer.</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
-<tt class="descname">isForefox, isSafari, isChrome, isOpera, isMSIE, isKonqueror</tt></dt>
+<tt class="descname">isFirefox, isSafari, isChrome, isOpera, isMSIE, isKonqueror</tt></dt>
 <dd><p>These are <tt class="docutils literal"><span class="pre">true</span></tt> when the browser is the indicated one, and
 <tt class="docutils literal"><span class="pre">false</span></tt> otherwise.</p>
 </dd></dl>
@@ -142,7 +142,7 @@ for instance.</p>
 browsers and whose values are the functions to be performed.
 Each function is passed one parameter, which is the
 <tt class="docutils literal"><span class="pre">MathJax.Hub.Browser</span></tt> object.  You do not need to include
-every browser as one of your choices (only those for which you
+every browser as one of your choices &#8212; only those for which you
 need to do special processing.  For example:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Browser</span><span class="p">.</span><span class="nx">Select</span><span class="p">(</span>
   <span class="nx">MSIE</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">browser</span><span class="p">)</span> <span class="p">{</span>
@@ -256,8 +256,8 @@ parameter.</p>
 <dd><p>Registers a listener for a particular message being sent to the
 startup signal (where initialization and component startup
 messages are sent).  When the message equals the <cite>type</cite>, the
-<cite>callback will be called with the message as its parameter.
-See the :ref:`Using Signals &lt;using-signals&gt;</cite> dcocumentation for
+<cite>callback</cite> will be called with the message as its parameter.
+See the <a class="reference internal" href="../signals.html#using-signals"><em>Using Signals</em></a> documentation for
 more details.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -283,7 +283,7 @@ more details.</p>
 completely loaded and processed.  (The callback is called when the
 file makes its <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Ajax.loadComplete()</span></tt> call.) The
 <cite>file</cite> should be the complete file name, e.g.,
-<tt class="docutils literal"><span class="pre">&quot;[MathJax]/config/MathJax.js&quot;</span></tt>.</p>
+<tt class="docutils literal"><span class="pre">&quot;[MathJax]/config/default.js&quot;</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -330,19 +330,20 @@ supply as many <cite>callback</cite> specifications in one call to the
 <dl class="method">
 <dt id="Typeset">
 <tt class="descname">Typeset</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Typeset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the preprocessors on the given element, and then typesets
-any math elements within the element.  If no <cite>element</cite> is
-provided, the whole document is processed.  The <cite>element</cite> is
-either the DOM <cite>id</cite> of the element, or a reference to the DOM
-element itself.  The <cite>callback</cite> is called when the process is
-complete.  See the <a class="reference internal" href="../typeset.html#typeset-math"><em>Modifying Math</em></a> section
-for details of how to use this method properly.</p>
+<dd><p>Calls the preprocessors on the given element (or elements if it is an
+array of elements), and then typesets any math elements within the
+element.  If no <cite>element</cite> is provided, the whole document is processed.
+The <cite>element</cite> is either the DOM <cite>id</cite> of the element, a reference to
+the DOM element itself, or an array of id&#8217;s or refereneces.  The
+<cite>callback</cite> is called when the process is complete.  See the
+<a class="reference internal" href="../typeset.html#typeset-math"><em>Modifying Math</em></a> section for details of how to use
+this method properly.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>element</strong> &#8212; the element whose math is to be typeset</li>
+<li><strong>element</strong> &#8212; the element(s) whose math is to be typeset</li>
 <li><strong>callback</strong> &#8212; the callback specification</li>
 </ul>
 </td>
@@ -357,9 +358,10 @@ for details of how to use this method properly.</p>
 <dl class="method">
 <dt id="PreProcess">
 <tt class="descname">PreProcess</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#PreProcess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the loaded preprocessors on the entire document, or on the
-given DOM element.  The <cite>element</cite> is either the DOM <cite>id</cite> of the
-element, or a reference to the DOM element itself.  The <cite>callback</cite>
+<dd><p>Calls the loaded preprocessors on the entire document, or on the given
+DOM element (or elements, if it is an array of elements).  The
+<cite>element</cite> is either the DOM <cite>id</cite> of the element, a reference to the
+DOM element itself, or an array of id&#8217;s or references.  The <cite>callback</cite>
 is called when the processing is complete.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -381,17 +383,17 @@ is called when the processing is complete.</p>
 <dl class="method">
 <dt id="Process">
 <tt class="descname">Process</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Scans either the entire document or a given DOM <cite>element</cite> for
-MathJax <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tags and processes the math those tags
-contain.  The <cite>element</cite> is either the DOM <cite>id</cite> of the element to
-scan, or a reference to the DOM element itself.  The <cite>callback</cite> is
-called when the processing is complete.</p>
+<dd><p>Scans either the entire document or a given DOM <cite>element</cite> (or array of
+elements) for MathJax <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tags and processes the math those
+tags contain.  The <cite>element</cite> is either the DOM <cite>id</cite> of the element to
+scan, a reference to the DOM element itself, or an array of id&#8217;s or
+references.  The <cite>callback</cite> is called when the processing is complete.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>element</strong> &#8212; the element to be processed</li>
+<li><strong>element</strong> &#8212; the element(s) to be processed</li>
 <li><strong>callback</strong> &#8212; the callback specification</li>
 </ul>
 </td>
@@ -406,18 +408,18 @@ called when the processing is complete.</p>
 <dl class="method">
 <dt id="Update">
 <tt class="descname">Update</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Scans either the entire document or a given DOM element for
-mathematics that has changed since the last time it was processed,
-or is new, and typesets the mathematics they contain.  The
-<cite>element</cite> is either the DOM <cite>id</cite> of the element to scan, or a
-reference to the DOM element itself.  The <cite>callback</cite> is called
-when the processing is complete.</p>
+<dd><p>Scans either the entire document or a given DOM element (or elements if
+it is an array of elements) for mathematics that has changed since the
+last time it was processed, or is new, and typesets the mathematics
+they contain.  The <cite>element</cite> is either the DOM <cite>id</cite> of the element to
+scan, a reference to the DOM element itself, or an array of id&#8217;s or
+references.  The <cite>callback</cite> is called when the processing is complete.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>element</strong> &#8212; the element to be updated</li>
+<li><strong>element</strong> &#8212; the element(s) to be updated</li>
 <li><strong>callback</strong> &#8212; the callback specification</li>
 </ul>
 </td>
@@ -432,19 +434,20 @@ when the processing is complete.</p>
 <dl class="method">
 <dt id="Reprocess">
 <tt class="descname">Reprocess</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Reprocess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes any typeset mathematics from the document or DOM
-element, and then processes the mathematics again,
-re-typesetting everything.  This may be necessary, for example, if
-the CSS styles have changed and those changes would affect the
-mathematics.  The <cite>element</cite> is either the DOM <cite>id</cite> of the element
-to scan, or a reference to the DOM element itself.  The <cite>callback</cite>
-is called when the processing is complete.</p>
+<dd><p>Removes any typeset mathematics from the document or DOM element (or
+elements if it is an array of elements), and then processes the
+mathematics again, re-typesetting everything.  This may be necessary,
+for example, if the CSS styles have changed and those changes would
+affect the mathematics.  The <cite>element</cite> is either the DOM <cite>id</cite> of the
+element to scan, a reference to the DOM element itself, or an array of
+id&#8217;s or references.  The <cite>callback</cite> is called when the processing is
+complete.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>element</strong> &#8212; the element to be reprocessed</li>
+<li><strong>element</strong> &#8212; the element(s) to be reprocessed</li>
 <li><strong>callback</strong> &#8212; the callback specification</li>
 </ul>
 </td>
@@ -555,8 +558,8 @@ element, or a reference to the DOM element itself.</p>
 <tt class="descname">isJax</tt><big>(</big><em>element</em><big>)</big><a class="headerlink" href="#isJax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <tt class="docutils literal"><span class="pre">0</span></tt> if the element is not a <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> that can be
 processed by MathJax or the result of an output jax, returns <tt class="docutils literal"><span class="pre">-1</span></tt>
-if element is an unprocessed <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag that could be
-handled by MathJax, and returns <tt class="docutils literal"><span class="pre">1</span></tt> if element is a processed
+if the element is an unprocessed <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag that could be
+handled by MathJax, and returns <tt class="docutils literal"><span class="pre">1</span></tt> if the element is a processed
 <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag or an element that is the result of an output jax.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -579,7 +582,7 @@ handled by MathJax, and returns <tt class="docutils literal"><span class="pre">1
 <tt class="descname">Insert</tt><big>(</big><em>dst</em>, <em>src</em><big>)</big><a class="headerlink" href="#Insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inserts data from the <cite>src</cite> object into the <cite>dst</cite> object.  The
 <cite>key:value</cite> pairs in <cite>src</cite> are (recursively) copied into <cite>dst</cite>, so
-that if <cite>value</cite> is itself an object, its contents is copied into
+that if <cite>value</cite> is itself an object, its content is copied into
 the corresponding object in <cite>dst</cite>.  That is, objects within <cite>src</cite>
 are merged into the corresponding objects in <cite>dst</cite> (they don&#8217;t
 replace them).</p>
@@ -608,7 +611,7 @@ of a math element (i.e., an error in the MathJax code itself).
 The <cite>script</cite> is a reference to the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag where the
 error occurred, and <cite>error</cite> is the <tt class="docutils literal"><span class="pre">Error</span></tt> object for the error.
 The default action is to insert an HTML snippet at the location of
-the script, but this routine can be overriden durring MathJax
+the script, but this routine can be overriden during MathJax
 configuration in order to perform some other action.
 <tt class="docutils literal"><span class="pre">MathJax.Hub.lastError</span></tt> holds the <tt class="docutils literal"><span class="pre">error</span></tt> value of the last
 error on the page.</p>

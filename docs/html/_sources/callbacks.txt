@@ -25,9 +25,9 @@ callback specifications as arguments and return callback structures.
 These routines always will return a callback even when none was
 specified in the arguments, and in that case, the callback is a "do
 nothing" callback.  The reason for this is so that the resulting
-callback can be used can be used in a `MathJax.Callback.Queue` for
-synchronization purposes, so that the actions following it in the
-queue will not be performed until after the callback has been fired.
+callback can be used in a `MathJax.Callback.Queue` for synchronization
+purposes, so that the actions following it in the queue will not be
+performed until after the callback has been fired.
 
 For example, the :meth:`MathJax.Ajax.Require()` method can be used to
 load external files, and it returns a callback that is called when the
@@ -36,7 +36,7 @@ and wait for them all to be loaded before performing some action, you
 can create a `Queue` into which you push the results of the
 :meth:`MathJax.Ajax.Require()` calls, and then push a callback for the
 action.  The final action will not be performed until all the
-file-load callbacks (which preceed it int he queue) have been called;
+file-load callbacks (which precede it in the queue) have been called;
 i.e., the action will not occur until all the files are loaded.
 
 
@@ -124,7 +124,7 @@ For example,
 
 creates an object that contains three items, a `firstname`, and
 `lastname`, and a method that shows the person's full name in an
-alert.  So ``aPerson.fullName()`` would cause an alert with the text
+alert.  So ``aPerson.showName()`` would cause an alert with the text
 ``John Smith`` to appear.  Note, however that this only works if the
 method is called as ``aPerson.showName()``; if instead you did
 
@@ -182,7 +182,7 @@ well by including them in the array that specifies the callback:
 
     MathJax.Ajax.Require("filename",["method",object,arg1,arg2,...]);
 
-This approach is useful when you are pushing a callback for one one
+This approach is useful when you are pushing a callback for one of
 MathJax's Hub routines into the MathJax processing queue.  For example,
 
 .. code-block:: javascript
@@ -221,7 +221,7 @@ you.  For example,
 
 .. code-block:: javascript
 
-    function myTimer (x) {alert("x = "+x)}
+    function f(x) {alert("x = "+x)}
     setTimeout(MathJax.Callback([f,"Hello World!"]),500);
 
 would create a callback that calls ``f("Hello World!")``, and

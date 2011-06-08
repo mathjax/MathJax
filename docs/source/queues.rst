@@ -8,7 +8,7 @@ The `callback queue` is one of MathJax's main tools for synchronizing
 its actions, both internally, and with external programs, like
 javascript code that you may write as part of dynamic web pages.
 Because many actions in MathJax (like loading files) operate
-asynchornously, MathJax needs a way to coordinate those actions so
+asynchronously, MathJax needs a way to coordinate those actions so
 that they occur in the right order.  The
 `MathJax.Callback.Queue` object provides that mechanism.
 
@@ -69,11 +69,11 @@ that could operate asynchronously.  For example:
       [f, 2]
     );
 
-Here, the command ``MathJax.Ajax.require("extensions/AMSmath.js")`` is
-queued between two calls to ``f``.  The first call to ``f(1)`` will be
-made immediately, then the :meth:`MathJax.Ajax.Require` statement will
-be performed.  Since the ``Require`` method loads a file, it operates
-asynchronously, and its return value is a `MathJax.Callback`
+Here, the command ``MathJax.Ajax.Require("[MathJax]/extensions/AMSmath.js")``
+is queued between two calls to ``f``.  The first call to ``f(1)`` will
+be made immediately, then the :meth:`MathJax.Ajax.Require` statement
+will be performed.  Since the ``Require`` method loads a file, it
+operates asynchronously, and its return value is a `MathJax.Callback`
 object that will be called when the file is loaded.  The call to
 ``f(2)`` will not be made until that callback is performed,
 effectively synchronizing the second call to ``f`` with the completion
@@ -197,13 +197,13 @@ instead are defined in extensions that are loaded automatically when
 needed.  The typesetting of an expression containing one of these TeX
 commands can cause the typesetting process to be suspended while the
 file is loaded, and then restarted when the extension has become
-evailable.
+available.
 
 As a result, any call to :meth:`MathJax.Hub.Typeset()` (or
 :meth:`MathJax.Hub.Process()`, or :meth:`MathJax.Hub.Update()`, etc.)
 could return long before the mathematics is actually typeset, and the
 rest of your code may run before the mathematics is available.  If you
-have code that relys on the mathematics being visible on screen, you
+have code that relies on the mathematics being visible on screen, you
 will need to break that out into a separate operation that is
 synchronized with the typesetting via the MathJax queue.
 
