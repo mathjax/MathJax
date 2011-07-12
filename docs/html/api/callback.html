@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The MathJax.Callback Class &mdash; MathJax v1.1 documentation</title>
+    <title>The MathJax.Callback Class &mdash; MathJax v1.1a documentation</title>
     <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '1.1a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
+    <link rel="top" title="MathJax v1.1a documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The MathJax.Callback.Queue Class" href="queue.html" />
     <link rel="prev" title="The MathJax.HTML Object" href="html.html" /> 
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="html.html" title="The MathJax.HTML Object"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v1.1a documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">The MathJax API</a> &raquo;</li> 
       </ul>
     </div>  
@@ -128,11 +128,11 @@ the function as well.</p>
 <div><p>Here, <cite>object</cite> is an object that has a method called <cite>method</cite>, and
 the callback will execute that method (with the object as
 <cite>this</cite>) when it is called.  For example,</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">[</span><span class="s2">&quot;toString&quot;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>would call the <cite>length</cite> method on the array <tt class="docutils literal"><span class="pre">[1,2,3,4]</span></tt> when
-the callback is called, returning <tt class="docutils literal"><span class="pre">4</span></tt>.</p>
+<p>would call the <cite>toString</cite> method on the array <tt class="docutils literal"><span class="pre">[1,2,3,4]</span></tt> when
+the callback is called, returning <tt class="docutils literal"><span class="pre">1,2,3,4</span></tt>.</p>
 </div></blockquote>
 <dl class="describe">
 <dt>
@@ -289,8 +289,8 @@ commands.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="executeHooks">
-<tt class="descname">executeHooks</tt><big>(</big><em>hooks</em><span class="optional">[</span>, <em>data</em><span class="optional">[</span>, <em>reset</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#executeHooks" title="Permalink to this definition">¶</a></dt>
+<dt id="ExecuteHooks">
+<tt class="descname">ExecuteHooks</tt><big>(</big><em>hooks</em><span class="optional">[</span>, <em>data</em><span class="optional">[</span>, <em>reset</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#ExecuteHooks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls each callback in the <cite>hooks</cite> array (or the single hook if it
 is not an array), passing it the arguments stored in the data
 array.  If <cite>reset</cite> is <tt class="docutils literal"><span class="pre">true</span></tt>, then the callback&#8217;s
@@ -298,7 +298,7 @@ array.  If <cite>reset</cite> is <tt class="docutils literal"><span class="pre">
 executed.  If any of the hooks returns a <cite>Callback</cite> object, then
 it collects those callbacks and returns a new callback that will
 execute when all the ones returned by the hooks have been
-completed.  Otherwise, <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Callback.executeHooks()</span></tt>
+completed.  Otherwise, <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Callback.ExecuteHooks()</span></tt>
 returns <tt class="docutils literal"><span class="pre">null</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -420,7 +420,7 @@ and returns the signal object.  See
         <li class="right" >
           <a href="html.html" title="The MathJax.HTML Object"
              >previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v1.1a documentation</a> &raquo;</li>
           <li><a href="index.html" >The MathJax API</a> &raquo;</li> 
       </ul>
     </div>

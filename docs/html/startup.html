@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The MathJax Startup Sequence &mdash; MathJax v1.1 documentation</title>
+    <title>The MathJax Startup Sequence &mdash; MathJax v1.1a documentation</title>
     <link rel="stylesheet" href="_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.1',
+        VERSION:     '1.1a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
+    <link rel="top" title="MathJax v1.1a documentation" href="index.html" />
     <link rel="next" title="Synchronizing your code with MathJax" href="synchronize.html" />
     <link rel="prev" title="The MathJax Processing Model" href="model.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="model.html" title="The MathJax Processing Model"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v1.1a documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -143,14 +143,14 @@ pushed into the queue:</p>
 </ol>
 <ol class="arabic simple" start="6">
 <li>Load the extension files:<ul>
-<li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">Extension</span></tt> startup signal</li>
+<li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">Extensions</span></tt> startup signal</li>
 <li>Load the files from the <tt class="docutils literal"><span class="pre">MathJax.Hub.config.extensions</span></tt> array<ul>
-<li>Most extensions will post a <tt class="docutils literal"><span class="pre">Extension</span> <span class="pre">[name]</span> <span class="pre">Ready</span></tt>
-startup message when they are loaded (where <tt class="docutils literal"><span class="pre">[name]</span></tt> is
-the name of the extension)</li>
+<li>Most extensions will post a <tt class="docutils literal"><span class="pre">[name]</span> <span class="pre">Ready</span></tt> or <tt class="docutils literal"><span class="pre">Extension</span>
+<span class="pre">[name]</span> <span class="pre">Ready</span></tt> startup message when they are loaded (where
+<tt class="docutils literal"><span class="pre">[name]</span></tt> is the name of the extension)</li>
 </ul>
 </li>
-<li>Post the <tt class="docutils literal"><span class="pre">End</span> <span class="pre">Extension</span></tt> startup signal</li>
+<li>Post the <tt class="docutils literal"><span class="pre">End</span> <span class="pre">Extensions</span></tt> startup signal</li>
 </ul>
 </li>
 </ol>
@@ -237,7 +237,7 @@ complete, however, before 7 will be performed.</p>
         <li class="right" >
           <a href="model.html" title="The MathJax Processing Model"
              >previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v1.1a documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

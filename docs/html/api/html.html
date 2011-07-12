@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The MathJax.HTML Object &mdash; MathJax v1.1 documentation</title>
+    <title>The MathJax.HTML Object &mdash; MathJax v1.1a documentation</title>
     <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '1.1a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
+    <link rel="top" title="MathJax v1.1a documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The MathJax.Callback Class" href="callback.html" />
     <link rel="prev" title="The MathJax.Message Object" href="message.html" /> 
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="message.html" title="The MathJax.Message Object"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v1.1a documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">The MathJax API</a> &raquo;</li> 
       </ul>
     </div>  
@@ -86,7 +86,7 @@ describes the contents to create for the element.  For example</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">div</span> <span class="o">=</span> <span class="nx">MathJax</span><span class="p">.</span><span class="nx">HTML</span><span class="p">.</span><span class="nx">Element</span><span class="p">(</span>
   <span class="s2">&quot;div&quot;</span><span class="p">,</span>
   <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;MathDiv&quot;</span><span class="p">,</span> <span class="nx">style</span><span class="o">:</span><span class="p">{</span><span class="nx">border</span><span class="o">:</span><span class="s2">&quot;1px solid&quot;</span><span class="p">,</span> <span class="nx">padding</span><span class="o">:</span><span class="s2">&quot;5px&quot;</span><span class="p">}},</span>
-  <span class="p">[</span><span class="s2">&quot;Here is math: $x+1$&quot;</span><span class="p">,[</span><span class="s2">&quot;br&quot;</span><span class="p">],</span><span class="s2">&quot;and a display $$x+1\\over x-1$$&quot;</span><span class="p">]</span>
+  <span class="p">[</span><span class="s2">&quot;Here is math: \\(x+1\\)&quot;</span><span class="p">,[</span><span class="s2">&quot;br&quot;</span><span class="p">],</span><span class="s2">&quot;and a display $$x+1\\over x-1$$&quot;</span><span class="p">]</span>
 <span class="p">);</span>
 </pre></div>
 </div>
@@ -177,8 +177,8 @@ provided.  It is equivalent to</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="setText">
-<tt class="descname">setText</tt><big>(</big><em>script</em>, <em>text</em><big>)</big><a class="headerlink" href="#setText" title="Permalink to this definition">¶</a></dt>
+<dt id="setScript">
+<tt class="descname">setScript</tt><big>(</big><em>script</em>, <em>text</em><big>)</big><a class="headerlink" href="#setScript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the contents of the <tt class="docutils literal"><span class="pre">script</span></tt> element to be the given
 <tt class="docutils literal"><span class="pre">text</span></tt>, properly taking into account the browser limitations and
 bugs.</p>
@@ -300,7 +300,7 @@ above,</p>
         <li class="right" >
           <a href="message.html" title="The MathJax.Message Object"
              >previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v1.1a documentation</a> &raquo;</li>
           <li><a href="index.html" >The MathJax API</a> &raquo;</li> 
       </ul>
     </div>
