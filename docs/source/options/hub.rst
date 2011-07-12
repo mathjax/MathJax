@@ -151,7 +151,7 @@ behavior of MathJax.  They are given with their default values.
     that act as the defaults for the user's settings in that menu.
     The possible values are:
 
-    .. describe:: zoom: "none"
+    .. describe:: zoom: "None"
 
         This indicates when typeset mathematics should be zoomed.  It
         can be set to ``"None"``, ``"Hover"``, ``"Click"``, or
