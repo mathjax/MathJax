@@ -92,6 +92,26 @@ the configurations to your needs.  More details can be found in the
 sure to read that before linking to the MathJax CDN server.</p>
 <p>To see how to enter mathematics in your web pages, see <a class="reference internal" href="#putting-mathematics-in-a-web-page">Putting
 mathematics in a web page</a> below.</p>
+<div class="section" id="secure-access-to-the-cdn">
+<h3>Secure Access to the CDN<a class="headerlink" href="#secure-access-to-the-cdn" title="Permalink to this headline">¶</a></h3>
+<p>When the the MathJax CDN is accessed via the address
+<tt class="docutils literal"><span class="pre">http://cdn.mathjax.org</span></tt>, data is downloaded over a regular, insecure
+HTTP connection.  This introduces a security risk, since it is
+possible a hostile 3rd party could intercept the MathJax program data,
+and replace it.  This is sometimes called a
+<a class="reference external" href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">man-in-the-middle</a> attack.</p>
+<p>To prevent such attacks, it is necessary to access the MathJax CDN
+over a secure HTTPS connection.  This can be easily done by using the
+following <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag instead of the one listed above:</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
+  <span class="na">src=</span><span class="s">&quot;https://d3eoax9i5htok0.cloudfront.net/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+</div>
+<p>Currently, the Amazon Cloudfront service used by the MathJax CDN does
+not support the use of a human-friendly name like cdn.mathjax.org for
+secure connections. However, this address is stable and safe to use.</p>
+</div>
 </div>
 <div class="section" id="installing-your-own-copy-of-mathjax">
 <h2>Installing Your Own Copy of MathJax<a class="headerlink" href="#installing-your-own-copy-of-mathjax" title="Permalink to this headline">¶</a></h2>
@@ -380,7 +400,10 @@ MathJax, you could visit the <a class="reference internal" href="community.html#
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Getting Started</a><ul>
-<li><a class="reference internal" href="#using-the-mathjax-content-delivery-network-cdn">Using the MathJax Content Delivery Network (CDN)</a></li>
+<li><a class="reference internal" href="#using-the-mathjax-content-delivery-network-cdn">Using the MathJax Content Delivery Network (CDN)</a><ul>
+<li><a class="reference internal" href="#secure-access-to-the-cdn">Secure Access to the CDN</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#installing-your-own-copy-of-mathjax">Installing Your Own Copy of MathJax</a><ul>
 <li><a class="reference internal" href="#obtaining-and-installing-mathjax">Obtaining and Installing MathJax</a></li>
 <li><a class="reference internal" href="#configuring-your-copy-of-mathjax">Configuring your copy of MathJax</a></li>
