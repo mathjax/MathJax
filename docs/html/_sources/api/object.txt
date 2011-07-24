@@ -16,7 +16,7 @@ For example:
 .. code-block:: javascript
 
       MathJax.Object.Foo = MathJax.Object.Subclass({
-        Init: function (x) {this.SetX(x)},
+        Init: function (x) {this.setX(x)},
         getX: function () {return this.x},
         setX: function (x) {this.x = x}
       });

@@ -143,14 +143,14 @@ pushed into the queue:</p>
 </ol>
 <ol class="arabic simple" start="6">
 <li>Load the extension files:<ul>
-<li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">Extension</span></tt> startup signal</li>
+<li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">Extensions</span></tt> startup signal</li>
 <li>Load the files from the <tt class="docutils literal"><span class="pre">MathJax.Hub.config.extensions</span></tt> array<ul>
-<li>Most extensions will post a <tt class="docutils literal"><span class="pre">Extension</span> <span class="pre">[name]</span> <span class="pre">Ready</span></tt>
-startup message when they are loaded (where <tt class="docutils literal"><span class="pre">[name]</span></tt> is
-the name of the extension)</li>
+<li>Most extensions will post a <tt class="docutils literal"><span class="pre">[name]</span> <span class="pre">Ready</span></tt> or <tt class="docutils literal"><span class="pre">Extension</span>
+<span class="pre">[name]</span> <span class="pre">Ready</span></tt> startup message when they are loaded (where
+<tt class="docutils literal"><span class="pre">[name]</span></tt> is the name of the extension)</li>
 </ul>
 </li>
-<li>Post the <tt class="docutils literal"><span class="pre">End</span> <span class="pre">Extension</span></tt> startup signal</li>
+<li>Post the <tt class="docutils literal"><span class="pre">End</span> <span class="pre">Extensions</span></tt> startup signal</li>
 </ul>
 </li>
 </ol>

@@ -83,10 +83,10 @@ A callback specification is any one of the following:
 
 	.. code-block:: javascript
 
-	    ["length",[1,2,3,4]]
+	    ["toString",[1,2,3,4]]
 
-        would call the `length` method on the array ``[1,2,3,4]`` when
-        the callback is called, returning ``4``.
+        would call the `toString` method on the array ``[1,2,3,4]`` when
+        the callback is called, returning ``1,2,3,4``.
 
     .. describe:: ["method", object, data...]
 
@@ -220,7 +220,7 @@ MathJax.Callback Methods
         - **callback** --- the callback specification
     :Returns: the callback object
 
-.. method:: executeHooks(hooks[, data[,reset]])
+.. method:: ExecuteHooks(hooks[, data[,reset]])
 
     Calls each callback in the `hooks` array (or the single hook if it
     is not an array), passing it the arguments stored in the data
@@ -229,7 +229,7 @@ MathJax.Callback Methods
     executed.  If any of the hooks returns a `Callback` object, then
     it collects those callbacks and returns a new callback that will
     execute when all the ones returned by the hooks have been
-    completed.  Otherwise, :meth:`MathJax.Callback.executeHooks()`
+    completed.  Otherwise, :meth:`MathJax.Callback.ExecuteHooks()`
     returns ``null``.
         
     :Parameters:

@@ -7,7 +7,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2011 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
  */
 
 (function (HTMLCSS) {
-  var VERSION = "1.0";
+  var VERSION = "1.1";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -64,28 +64,26 @@
         "STIXIntegralsD":             "IntegralsD/Regular/All.js"
       },
       
-      DEFAULTFAMILY: GENERAL, DEFAULTWEIGHT: "normal", DEFAULTSTYLE: "normal",
-
       VARIANT: {
         "normal": {fonts: [GENERAL,NONUNI,SIZE1]},
-        "bold":   {fonts: [BOLD,"STIXNonUnicode-bold","STIXSizeOneSym-bold"]},
-        "italic": {fonts: [ITALIC,"STIXNonUnicode-italic",GENERAL,NONUNI,SIZE1]},
-        "bold-italic": {fonts: ["STIXGeneral-bold-italic","STIXNonUnicode-bold-italic"]},
+        "bold":   {fonts: [BOLD,"STIXNonUnicode-bold","STIXSizeOneSym-bold"], bold:true},
+        "italic": {fonts: [ITALIC,"STIXNonUnicode-italic",GENERAL,NONUNI,SIZE1], italic:true},
+        "bold-italic": {fonts: ["STIXGeneral-bold-italic","STIXNonUnicode-bold-italic"], bold:true, italic:true},
         "double-struck": {offsetA: 0x1D538, offsetN: 0x1D7D8,
                            remap: {0x1D53A: 0x2102, 0x1D53F: 0x210D, 0x1D545: 0x2115, 0x1D547: 0x2119,
                                    0x1D548: 0x211A, 0x1D549: 0x211D, 0x1D551: 0x2124}},
         "fraktur": {offsetA: 0x1D504,
                     remap: {0x1D506: 0x212D, 0x1D50B: 0x210C, 0x1D50C: 0x2111, 0x1D515: 0x211C, 0x1D51D: 0x2128}},
-        "bold-fraktur": {fonts: [BOLD], offsetA: 0x1D56C},
+        "bold-fraktur": {fonts: [BOLD], offsetA: 0x1D56C, bold:true},
         "script": {fonts: [ITALIC], offsetA: 0x1D49C,
                    remap: {0x1D49D: 0x212C, 0x1D4A0: 0x2130, 0x1D4A1: 0x2131, 0x1D4A3: 0x210B,
                            0x1D4A4: 0x2110, 0x1D4A7: 0x2112, 0x1D4A8: 0x2133, 0x1D4AD: 0x211B,
                            0x1D4BA: 0x212F, 0x1D4BC: 0x210A, 0x1D4C4: 0x2134}},
-        "bold-script": {fonts: [ITALIC], offsetA: 0x1D4D0},
+        "bold-script": {fonts: [ITALIC], offsetA: 0x1D4D0, bold:true},
         "sans-serif": {offsetA: 0x1D5A0, offsetN: 0x1D7E2, offsetG: 0xE17D},
-        "bold-sans-serif": {offsetA: 0x1D5D4, offsetG: 0x1D756, offsetN: 0x1D7EC},
-        "sans-serif-italic": {fonts: [ITALIC], offsetA: 0x1D608, offsetN: 0xE1B4, offsetG: 0xE1BF},
-        "sans-serif-bold-italic": {fonts: ["STIXGeneral-bold-italic"], offsetA: 0x1D63C, offsetN: 0xE1F6, offsetG: 0x1D790},
+        "bold-sans-serif": {offsetA: 0x1D5D4, offsetG: 0x1D756, offsetN: 0x1D7EC, bold:true},
+        "sans-serif-italic": {fonts: [ITALIC], offsetA: 0x1D608, offsetN: 0xE1B4, offsetG: 0xE1BF, italic:true},
+        "sans-serif-bold-italic": {fonts: ["STIXGeneral-bold-italic"], offsetA: 0x1D63C, offsetN: 0xE1F6, offsetG: 0x1D790, bold:true, italic:true},
         "monospace": {offsetA: 0x1D670, offsetN: 0x1D7F6},
         "-STIX-variant": {fonts:["STIXVariants",NONUNI,GENERAL]},
         "-tex-caligraphic": {fonts: [ITALIC,"STIXNonUnicode-italic",NONUNI,SIZE1], offsetA: 0xE22D, noLowerCase: 1},

@@ -29,7 +29,8 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.1.5";
+MathJax.version = "1.1a";
+MathJax.fileversion = "1.1.8";
 
 /**********************************************************/
 
@@ -1022,6 +1023,7 @@ MathJax.HTML = {
 /**********************************************************/
 
 MathJax.Message = {
+  ready: false,  // used to tell when the styles are available
   log: [{}], current: null,
   textNodeBug: (navigator.vendor === "Apple Computer, Inc." &&
                 typeof navigator.vendorSub === "undefined") ||
@@ -1054,8 +1056,9 @@ MathJax.Message = {
     }
   },
   
-  Init: function() {
-    if (!document.body) {return false}
+  Init: function (styles) {
+    if (styles) {this.ready = true}
+    if (!document.body || !this.ready) {return false}
     //
     //  ASCIIMathML replaces the entire page with a copy of itself (@#!#%@!!)
     //  so check that this.div is still part of the page, otherwise look up
@@ -1068,7 +1071,7 @@ MathJax.Message = {
     if (!this.div) {
       var frame = document.body;
       if (MathJax.Hub.Browser.isMSIE) {
-        frame = this.frame = this.addDiv(document.body);
+	  frame = this.frame = this.addDiv(document.body); frame.removeAttribute("id");
         frame.style.position = "absolute";
         frame.style.border = frame.style.margin = frame.style.padding = "0px";
         frame.style.zIndex = "101"; frame.style.height = "0px";
@@ -1121,7 +1124,7 @@ MathJax.Message = {
   Set: function (text,n,clearDelay) {
     if (this.timer) {clearTimeout(this.timer); delete this.timeout}
     if (n == null) {n = this.log.length; this.log[n] = {}}
-    this.log[n].text = text; text = this.filterText(text,n);
+    this.log[n].text = text; this.log[n].filteredText = text = this.filterText(text,n);
     if (typeof(this.log[n].next) === "undefined") {
       this.log[n].next = this.current;
       if (this.current != null) {this.log[this.current].prev = n}
@@ -1151,14 +1154,17 @@ MathJax.Message = {
         if (this.current == null) {
           if (this.timer) {clearTimeout(this.timer)}
           this.timer = setTimeout(MathJax.Callback(["Remove",this]),(delay||600));
-        } else if (this.textNodeBug) {this.div.innerHTML = this.log[this.current].text}
-                                else {this.text.nodeValue = this.log[this.current].text}
+        } else if (MathJax.Hub.config.messageStyle !== "none") {
+          if (this.textNodeBug) {this.div.innerHTML = this.log[this.current].filteredText}
+                           else {this.text.nodeValue = this.log[this.current].filteredText}
+        }
         if (this.status) {window.status = ""; delete this.status}
       } else if (this.status) {
         window.status = (this.current == null ? "" : this.log[this.current].text);
       }
     }
     delete this.log[n].next; delete this.log[n].prev;
+    delete this.log[n].filteredText;
   },
   
   Remove: function () {
@@ -1284,14 +1290,14 @@ MathJax.Hub = {
   
   getJaxFor: function (element) {
     if (typeof(element) === 'string') {element = document.getElementById(element)}
-    if (element.MathJax) {return element.MathJax.elementJax}
+    if (element && element.MathJax) {return element.MathJax.elementJax}
     // FIXME: also check for results of outputJax
     return null;
   },
   
   isJax: function (element) {
     if (typeof(element) === 'string') {element = document.getElementById(element)}
-    if (element.tagName != null && element.tagName.toLowerCase() === 'script') {
+    if (element && element.tagName != null && element.tagName.toLowerCase() === 'script') {
       if (element.MathJax) 
         {return (element.MathJax.state === MathJax.ElementJax.STATE.PROCESSED ? 1 : -1)}
       if (element.type && this.inputJax[element.type.replace(/ *;(.|\s)*/,"")]) {return -1}
@@ -1704,6 +1710,13 @@ MathJax.Hub.Startup = {
   },
   
   //
+  //  Initialize the Message system
+  //
+  Message: function () {
+    MathJax.Message.Init(true);
+  },
+  
+  //
   //  Set the math menu renderer, if it isn't already
   //  (this must come after the jax are loaded)
   //
@@ -1828,21 +1841,17 @@ MathJax.Hub.Startup = {
     Startup: function () {},
     loadComplete: function (file) {
       if (file === "config.js") {
-        return AJAX.loadComplete(this.directory+"/"+file);
+        AJAX.loadComplete(this.directory+"/"+file);
       } else {
         var queue = CALLBACK.Queue();
         queue.Push(
           HUB.Register.StartupHook("End Config",{}), // wait until config complete
           ["Post",HUB.Startup.signal,this.id+" Jax Config"],
           ["Config",this],
-          ["Post",HUB.Startup.signal,this.id+" Jax Require"]
-        );
-        if (this.require) {
-          var require = this.require; if (!(require instanceof Array)) {require = [require]}
-          for (var i = 0, m = require.length; i < m; i++) {queue.Push(AJAX.Require(require[i]))}
-        }
-        return queue.Push(
-          // Config may set the extensions, so use a function to delay making the reference
+          ["Post",HUB.Startup.signal,this.id+" Jax Require"],
+          // Config may set the required and extensions array,
+          //  so use functions to delay making the reference until needed
+          [function (THIS) {return MathJax.Hub.Startup.loadArray(THIS.require,this.directory)},this],
           [function (config,id) {return MathJax.Hub.Startup.loadArray(config.extensions,"extensions/"+id)},this.config||{},this.id],
           ["Post",HUB.Startup.signal,this.id+" Jax Startup"],
           ["Startup",this],
@@ -2120,6 +2129,7 @@ MathJax.Hub.Startup = {
     ["Config",STARTUP],
     ["Cookie",STARTUP],
     ["Styles",STARTUP],
+    ["Message",STARTUP],
     function () {
       // Do Jax and Extensions in parallel, but wait for them all to complete
       var queue = BASE.Callback.Queue(
