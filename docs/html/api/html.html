@@ -86,7 +86,7 @@ describes the contents to create for the element.  For example</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">div</span> <span class="o">=</span> <span class="nx">MathJax</span><span class="p">.</span><span class="nx">HTML</span><span class="p">.</span><span class="nx">Element</span><span class="p">(</span>
   <span class="s2">&quot;div&quot;</span><span class="p">,</span>
   <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;MathDiv&quot;</span><span class="p">,</span> <span class="nx">style</span><span class="o">:</span><span class="p">{</span><span class="nx">border</span><span class="o">:</span><span class="s2">&quot;1px solid&quot;</span><span class="p">,</span> <span class="nx">padding</span><span class="o">:</span><span class="s2">&quot;5px&quot;</span><span class="p">}},</span>
-  <span class="p">[</span><span class="s2">&quot;Here is math: $x+1$&quot;</span><span class="p">,[</span><span class="s2">&quot;br&quot;</span><span class="p">],</span><span class="s2">&quot;and a display $$x+1\\over x-1$$&quot;</span><span class="p">]</span>
+  <span class="p">[</span><span class="s2">&quot;Here is math: \\(x+1\\)&quot;</span><span class="p">,[</span><span class="s2">&quot;br&quot;</span><span class="p">],</span><span class="s2">&quot;and a display $$x+1\\over x-1$$&quot;</span><span class="p">]</span>
 <span class="p">);</span>
 </pre></div>
 </div>
@@ -177,8 +177,8 @@ provided.  It is equivalent to</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="setText">
-<tt class="descname">setText</tt><big>(</big><em>script</em>, <em>text</em><big>)</big><a class="headerlink" href="#setText" title="Permalink to this definition">¶</a></dt>
+<dt id="setScript">
+<tt class="descname">setScript</tt><big>(</big><em>script</em>, <em>text</em><big>)</big><a class="headerlink" href="#setScript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the contents of the <tt class="docutils literal"><span class="pre">script</span></tt> element to be the given
 <tt class="docutils literal"><span class="pre">text</span></tt>, properly taking into account the browser limitations and
 bugs.</p>

@@ -24,7 +24,7 @@
 
 MathJax.OutputJax.NativeMML = MathJax.OutputJax({
   id: "NativeMML",
-  version: "1.1",
+  version: "1.1.4",
   directory: MathJax.OutputJax.directory + "/NativeMML",
   extensionDir: MathJax.OutputJax.extensionDir + "/NativeMML",
   
@@ -44,18 +44,5 @@ MathJax.OutputJax.NativeMML = MathJax.OutputJax({
 
 if (!MathJax.Hub.config.delayJaxRegistration)
   MathJax.OutputJax.NativeMML.Register("jax/mml");
-
-(function (browser) {
-  if (browser.isMSIE) {
-    //
-    //  Insert data needed to use MathPlayer for MathML output
-    //
-    var mathplayer = document.createElement("object");
-    mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
-    document.getElementsByTagName("head")[0].appendChild(mathplayer);
-    document.namespaces.add("mjx","http://www.w3.org/1998/Math/MathML");
-    document.namespaces.mjx.doImport("#mathplayer");
-  }
-})(MathJax.Hub.Browser);
 
 MathJax.OutputJax.NativeMML.loadComplete("config.js");

@@ -63,7 +63,7 @@ Properties
 .. describe:: loadHooks
 
     An object containing the load hooks for the various files, set up by
-    the :meth:`loadHook()` method, or by the
+    the :meth:`LoadHook()` method, or by the
     :meth:`MathJax.Hub.Register.LoadHook()` method.
 
 
@@ -142,7 +142,7 @@ Methods
         - **file** --- the name of the file that failed to load
     :Returns: ``null``
 
-.. method:: loadHook(file,callback)
+.. method:: LoadHook(file,callback)
 
     Registers a callback to be executed when the given file is
     loaded.  The file load operation needs to be started when this

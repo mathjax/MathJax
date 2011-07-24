@@ -52,7 +52,7 @@
     var frame = document.body;
     if (HUB.Browser.isMSIE) {
       MathJax.Message.Init();  // make sure MathJax_MSIE_frame exists
-      frame = document.getElementById("MathJax_MSIE_frame");
+      frame = document.getElementById("MathJax_MSIE_frame") || frame; // in IE8 and 9 it may not anyway
       CONFIG.style.position = "absolute";
     } else {delete CONFIG.style.filter}
     CONFIG.style.maxWidth = (document.body.clientWidth-75) + "px";

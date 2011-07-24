@@ -371,6 +371,7 @@ Symbols
     {
     }
     ~
+    '
 
     \   (backslash-space)
     \!

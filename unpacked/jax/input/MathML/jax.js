@@ -39,7 +39,7 @@
         if (math.match(/^<[a-z]+:/i) && !math.match(/^<[^<>]* xmlns:/))
           {math = math.replace(/^<([a-z]+)(:math)/i,'<$1$2 xmlns:$1="http://www.w3.org/1998/Math/MathML"')}
         math = math.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/,"$2");
-        math = math.replace(/&([a-z]+);/ig,this.replaceEntity);
+        math = math.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
         doc = MATHML.ParseXML(math); if (doc == null) {MATHML.Error("Error parsing MathML")}
       }
       var err = doc.getElementsByTagName("parsererror")[0];
@@ -62,12 +62,15 @@
       var type = node.nodeName.toLowerCase().replace(/^[a-z]+:/,"");
       if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase)))
         {return MML.merror("Unknown node type: "+type)}
-      var mml = MML[type](), i, m, value;
+      var mml = MML[type](), i, m, name, value;
       for (i = 0, m = node.attributes.length; i < m; i++) {
+        name = node.attributes[i].name;
+        if (name == "xlink:href") {name = "href"}
+        if (name.match(/:/)) continue;
         value = node.attributes[i].value;
         if (value.toLowerCase() === "true") {value = true}
           else if (value.toLowerCase() === "false") {value = false}
-        mml[node.attributes[i].name] = value;
+        mml[name] = value;
       }
       for (i = 0, m = node.childNodes.length; i < m; i++) {
         var child = node.childNodes[i];
@@ -77,11 +80,13 @@
             var text = this.trimSpace(child.nodeValue);
             if (mml.isa(MML.mo) && text.length === 1 && this.Remap[text.charAt(0)])
               {text = this.Remap[text.charAt(0)]}
-            text = text.replace(/&([a-z]+);/ig,this.replaceEntity);
+            text = text.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
             mml.Append(MML.chars(text));
           } else if (child.nodeValue.match(/\S/)) {
             MATHML.Error("Unexpected text node: '"+child.nodeValue+"'");
           }
+        } else if (mml.type === "annotation-xml") {
+          mml.Append(MML.xml(child));
         } else {
           var cmml = this.MakeMML(child); mml.Append(cmml);
           if (cmml.mmlSelfClosing && cmml.data.length)
@@ -99,7 +104,7 @@
     },
     
     replaceEntity: function (match,entity) {
-      if (entity === "lt" || entity === "amp") {return match}
+      if (entity.match(/^(lt|amp|quot)$/)) {return match} // these mess up attribute parsing
       if (MATHML.Parse.Entity[entity]) {return MATHML.Parse.Entity[entity]}
       var file = entity.charAt(0).toLowerCase();
       var font = entity.match(/^[a-zA-Z](fr|scr|opf)$/);
@@ -124,6 +129,7 @@
 
   MATHML.Augment({
     Translate: function (script) {
+      if (!this.ParseXML) {this.ParseXML = this.createParser()}
       var mml, math;
       if (script.firstChild &&
           script.firstChild.nodeName.toLowerCase().replace(/^[a-z]+:/,"") === "math") {
@@ -160,6 +166,39 @@
       this.div.innerHTML = string.replace(/<([a-z]+)([^>]*)\/>/g,"<$1$2></$1>");
       return this.div;
     },
+    parseError: function (string) {return null},
+    //
+    //  Create the parser using a DOMParser, or other fallback method
+    //
+    createParser: function () {
+      if (window.DOMParser) {
+        this.parser = new DOMParser();
+        return(this.parseDOM);
+      } else if (window.ActiveXObject) {
+        var xml = ["MSXML2.DOMDocument.6.0","MSXML2.DOMDocument.5.0","MSXML2.DOMDocument.4.0",
+                   "MSXML2.DOMDocument.3.0","MSXML2.DOMDocument.2.0","Microsoft.XMLDOM"];
+        for (var i = 0, m = xml.length; i < m && !this.parser; i++)
+          {try {this.parser = new ActiveXObject(xml[i])} catch (err) {}}
+        if (!this.parser) {
+          alert("MathJax can't create an XML parser for MathML.  Check that\n"+
+                "the 'Script ActiveX controls marked safe for scripting' security\n"+
+                "setting is enabled (use the Internet Options item in the Tools\n"+
+                "menu, and select the Security panel, then press the Custom Level\n"+
+                "button to check this).\n\n"+
+                "MathML equations will not be able to be processed by MathJax.");
+          return(this.parseError);
+        }
+        this.parser.async = false;
+        return(this.parseMS);
+      }
+      this.div = MathJax.Hub.Insert(document.createElement("div"),{
+           style:{visibility:"hidden", overflow:"hidden", height:"1px",
+                  position:"absolute", top:0}
+      });
+      if (!document.body.firstChild) {document.body.appendChild(this.div)}
+        else {document.body.insertBefore(this.div,document.body.firstChild)}
+      return(this.parseDIV);
+    },
     //
     //  Initialize the parser object (whichever type is used)
     //
@@ -168,26 +207,6 @@
       MML.mspace.Augment({mmlSelfClosing: true});
       MML.none.Augment({mmlSelfClosing: true});
       MML.mprescripts.Augment({mmlSelfClossing:true});
-      if (window.DOMParser) {
-        this.parser = new DOMParser();
-        this.ParseXML = this.parseDOM;
-      } else if (window.ActiveXObject) {
-        var xml = ["MSXML2.DOMDocument.6.0","MSXML2.DOMDocument.5.0","MSXML2.DOMDocument.4.0",
-                   "MSXML2.DOMDocument.3.0","MSXML2.DOMDocument.2.0","Microsoft.XMLDOM"];
-        for (var i = 0, m = xml.length; i < m && !this.parser; i++)
-          {try {this.parser = new ActiveXObject(xml[i])} catch (err) {}}
-        if (!this.parser) MATHML.Error("Can't create XML parser for MathML");
-        this.parser.async = false;
-        this.ParseXML = this.parseMS;
-      } else {
-        this.div = MathJax.Hub.Insert(document.createElement("div"),{
-             style:{visibility:"hidden", overflow:"hidden", height:"1px",
-                    position:"absolute", top:0}
-        });
-        if (!document.body.firstChild) {document.body.appendChild(this.div)}
-          else {document.body.insertBefore(this.div,document.body.firstChild)}
-        this.ParseXML = this.parseDIV;
-      }
     }
   });
   

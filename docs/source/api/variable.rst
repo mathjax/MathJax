@@ -37,11 +37,11 @@ Main MathJax Components
     Contains the code for managing MathJax callbacks, queues and
     signals.
 
-.. describe:: MathJax.Extensions
+.. describe:: MathJax.Extension
 
     Initially empty, this is where extensions can load their code.
     For example, the `tex2jax` preprocessor creates
-    ``MathJax.Extensions.tex2jax`` for its code and variables.
+    ``MathJax.Extension.tex2jax`` for its code and variables.
 
 .. describe:: MathJax.Object
 

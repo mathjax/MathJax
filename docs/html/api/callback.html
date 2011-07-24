@@ -128,11 +128,11 @@ the function as well.</p>
 <div><p>Here, <cite>object</cite> is an object that has a method called <cite>method</cite>, and
 the callback will execute that method (with the object as
 <cite>this</cite>) when it is called.  For example,</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">[</span><span class="s2">&quot;toString&quot;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>would call the <cite>length</cite> method on the array <tt class="docutils literal"><span class="pre">[1,2,3,4]</span></tt> when
-the callback is called, returning <tt class="docutils literal"><span class="pre">4</span></tt>.</p>
+<p>would call the <cite>toString</cite> method on the array <tt class="docutils literal"><span class="pre">[1,2,3,4]</span></tt> when
+the callback is called, returning <tt class="docutils literal"><span class="pre">1,2,3,4</span></tt>.</p>
 </div></blockquote>
 <dl class="describe">
 <dt>
@@ -289,8 +289,8 @@ commands.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="executeHooks">
-<tt class="descname">executeHooks</tt><big>(</big><em>hooks</em><span class="optional">[</span>, <em>data</em><span class="optional">[</span>, <em>reset</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#executeHooks" title="Permalink to this definition">¶</a></dt>
+<dt id="ExecuteHooks">
+<tt class="descname">ExecuteHooks</tt><big>(</big><em>hooks</em><span class="optional">[</span>, <em>data</em><span class="optional">[</span>, <em>reset</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#ExecuteHooks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls each callback in the <cite>hooks</cite> array (or the single hook if it
 is not an array), passing it the arguments stored in the data
 array.  If <cite>reset</cite> is <tt class="docutils literal"><span class="pre">true</span></tt>, then the callback&#8217;s
@@ -298,7 +298,7 @@ array.  If <cite>reset</cite> is <tt class="docutils literal"><span class="pre">
 executed.  If any of the hooks returns a <cite>Callback</cite> object, then
 it collects those callbacks and returns a new callback that will
 execute when all the ones returned by the hooks have been
-completed.  Otherwise, <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Callback.executeHooks()</span></tt>
+completed.  Otherwise, <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Callback.ExecuteHooks()</span></tt>
 returns <tt class="docutils literal"><span class="pre">null</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
