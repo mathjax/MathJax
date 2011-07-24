@@ -23,7 +23,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.0";
+  var VERSION = "1.1.1";
   
   var TEX = MathJax.InputJax.TeX,
       MACROS = TEX.Definitions.macros;
@@ -67,7 +67,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       '#': "Pound",
       '$': "Math",
       '\\': "Macro",
-      ' ': "Space",
+      ' ': "Space"
     },
     //
     //  Basic arrow names for reactions
@@ -144,8 +144,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         this.FinishAtom();
         var match = this.Match(/^\/\d+/);
         if (match) {
-          this.tex += "\\frac{"+n+"}{"+match.substr(1)+"}";
-          this.i += match.length;
+          var frac = "\\frac{"+n+"}{"+match.substr(1)+"}";
+          this.tex += "\\mathchoice{\\textstyle"+frac+"}{"+frac+"}{"+frac+"}{"+frac+"}";
         } else {
           this.tex += n;
           if (this.i < this.string.length) {this.tex += "\\,"}
@@ -157,7 +157,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //  Make a superscript minus, or an arrow, or a single bond.
     //
     ParseMinus: function (c) {
-      if (this.atom && this.i === this.string.length-1) {this.sup += c} else {
+      if (this.atom && (this.i === this.string.length-1 || this.string.charAt(this.i+1) === " ")) {
+        this.sup += c;
+      } else {
         this.FinishAtom();
         if (this.string.substr(this.i,2) === "->") {this.i += 2; this.AddArrow("->"); return}
         else {this.tex += "{-}"}
@@ -379,6 +381,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   //
   MACROS.tripledash = ["Macro","\\raise3mu{\\tiny\\text{-}\\kern2mu\\text{-}\\kern2mu\\text{-}}"];
   TEX.Definitions.environment.CEstack = ['Array',null,null,null,'r',null,"0.001em",'T',1]
+
+  //
+  //  Add \hyphen used in some mhchem examples
+  //  
+  MACROS.hyphen = ["Macro","\\text{-}"];
 
   TEX.Parse.Augment({
 
