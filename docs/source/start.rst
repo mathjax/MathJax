@@ -57,6 +57,30 @@ sure to read that before linking to the MathJax CDN server.
 To see how to enter mathematics in your web pages, see `Putting
 mathematics in a web page`_ below.
 
+Secure Access to the CDN
+------------------------
+
+When the the MathJax CDN is accessed via the address
+``http://cdn.mathjax.org``, data is downloaded over a regular, insecure
+HTTP connection.  This introduces a security risk, since it is
+possible a hostile 3rd party could intercept the MathJax program data,
+and replace it.  This is sometimes called a
+`man-in-the-middle <http://en.wikipedia.org/wiki/Man-in-the-middle_attack>`_ attack.
+
+To prevent such attacks, it is necessary to access the MathJax CDN
+over a secure HTTPS connection.  This can be easily done by using the
+following ``<script>`` tag instead of the one listed above:
+
+.. code-block:: html
+
+    <script type="text/javascript"
+      src="https://d3eoax9i5htok0.cloudfront.net/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+Currently, the Amazon Cloudfront service used by the MathJax CDN does
+not support the use of a human-friendly name like cdn.mathjax.org for
+secure connections. However, this address is stable and safe to use.
+
 
 Installing Your Own Copy of MathJax
 ===================================

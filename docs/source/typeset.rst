@@ -87,14 +87,14 @@ For example, suppose you have the following HTML in your document
 .. code-block:: html
 
     <div id="MathDiv">
-      The answer you provided is: ${}$.
+      The answer you provided is: \({}\).
     </div>
 
 and MathJax has already preprocessed and typeset the mathematics
-within dollar signs (it will be blank).  A student has typed
-something elsewhere on the page, and you want to typeset their answer
-in the location of the mathematics that is already there.  You could
-replace the entire contents of the `MathDiv` element and call
+within the div.  A student has typed something elsewhere on the page,
+and you want to typeset their answer in the location of the
+mathematics that is already there.  You could replace the entire
+contents of the `MathDiv` element and call
 :meth:`MathJax.Hub.Typeset()` as described above, but there is a more
 efficient approach, which is to ask MathJax for the element jax for
 the mathematics, and call its method for replacing the formula shown

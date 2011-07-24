@@ -1175,6 +1175,50 @@ MathJax.ElementJax.mml.Augment({
     }
   });
   
+  MML.xml = MML.mbase.Subclass({
+    type: "xml",
+    Init: function () {
+      this.div = document.createElement("div");
+      return this.SUPER(arguments).Init.apply(this,arguments);
+    },
+    Append: function () {
+      for (var i = 0, m = arguments.length; i < m; i++) {
+        var node = this.Import(arguments[i]);
+        this.data.push(node);
+        this.div.appendChild(node);
+      }
+    },
+    Import: function (node) {
+      if (document.importNode) {return document.importNode(node,true)}
+      //
+      //  IE < 9 doesn't have importNode, so fake it.
+      //
+      var nNode, i, m;
+      if (node.nodeType === 1) { // ELEMENT_NODE
+        nNode = document.createElement(node.nodeName);
+        if (node.className) {nNode.className=iNode.className}
+        for (i = 0, m = node.attributes.length; i < m; i++) {
+          var attribute = node.attributes[i];
+          if (attribute.specified && attribute.nodeValue != null && attribute.nodeValue != '')
+            {nNode.setAttribute(attribute.nodeName,attribute.nodeValue)}
+          if (attribute.nodeName === "style") {nNode.style.cssText = attribute.nodeValue}
+        }
+        if (node.className) {nNode.className = node.className}
+      } else if (node.nodeType === 3 || node.nodeType === 4) { // TEXT_NODE or CDATA_SECTION_NODE
+        nNode = document.createTextNode(node.nodeValue);
+      } else if (node.nodeType === 8) { // COMMENT_NODE
+        nNode = document.createComment(node.nodeValue);
+      } else {
+        return document.createTextNode('');
+      }
+      for (i = 0, m = node.childNodes.length; i < m; i++)
+        {nNode.appendChild(this.Import(node.childNodes[i]))}
+      return nNode;
+    },
+    value: function () {return this.div},
+    toString: function () {return this.div.innerHTML}
+  });
+  
   MML.TeXAtom = MML.mbase.Subclass({
     type: "texatom",
     inferRow: TRUE,
