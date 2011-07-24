@@ -118,7 +118,7 @@ additional internal data.</p>
 <dt>
 <tt class="descname">loadHooks</tt></dt>
 <dd><p>An object containing the load hooks for the various files, set up by
-the <a class="reference internal" href="#loadHook" title="loadHook"><tt class="xref py py-meth docutils literal"><span class="pre">loadHook()</span></tt></a> method, or by the
+the <a class="reference internal" href="#LoadHook" title="LoadHook"><tt class="xref py py-meth docutils literal"><span class="pre">LoadHook()</span></tt></a> method, or by the
 <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Register.LoadHook()</span></tt> method.</p>
 </dd></dl>
 
@@ -257,8 +257,8 @@ puts a warning message into the MathJax message box on screen.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="loadHook">
-<tt class="descname">loadHook</tt><big>(</big><em>file</em>, <em>callback</em><big>)</big><a class="headerlink" href="#loadHook" title="Permalink to this definition">¶</a></dt>
+<dt id="LoadHook">
+<tt class="descname">LoadHook</tt><big>(</big><em>file</em>, <em>callback</em><big>)</big><a class="headerlink" href="#LoadHook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registers a callback to be executed when the given file is
 loaded.  The file load operation needs to be started when this
 method is called, so it can be used to register a hook for a file

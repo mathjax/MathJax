@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.1.2",
+  version: "1.1.3",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
@@ -173,10 +173,17 @@ MathJax.Extension.tex2jax = {
       };
       this.switchPattern(this.endPattern(this.search.end));
     } else {                                         // escaped dollar signs
-      var dollar = match[0].replace(/\\(.)/g,'$1');
-      element.nodeValue = element.nodeValue.substr(0,match.index) + dollar +
-                          element.nodeValue.substr(match.index + match[0].length);
-      this.pattern.lastIndex -= match[0].length - dollar.length;
+      // put $ in a span so it doesn't get processed again
+      // split off backslashes so they don't get removed later
+      var slashes = match[0].substr(0,match[0].length-1), n, span;
+      if (slashes.length % 2 === 0) {span = [slashes.replace(/\\\\/g,"\\")]; n = 1}
+        else {span = [slashes.substr(1).replace(/\\\\/g,"\\"),"$"]; n = 0}
+      span = MathJax.HTML.Element("span",null,span);
+      var text = MathJax.HTML.TextNode(element.nodeValue.substr(0,match.index));
+      element.nodeValue = element.nodeValue.substr(match.index + match[0].length - n);
+      element.parentNode.insertBefore(span,element);
+      element.parentNode.insertBefore(text,span);
+      this.pattern.lastIndex = n;
     }
     return element;
   },

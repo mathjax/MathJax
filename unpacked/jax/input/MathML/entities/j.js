@@ -26,7 +26,6 @@
     'Jukcy': '\u0404',
     'jcirc': '\u0135',
     'jcy': '\u0439',
-    'jmath': '\u006A',
     'jsercy': '\u0458',
     'jukcy': '\u0454'
   });
