@@ -7,7 +7,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009 Design Science, Inc.
+ *  Copyright (c) 2009-2011 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "1.0.1";
+  var VERSION = "1.1.1";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -66,23 +66,34 @@
         "MathJax_Typewriter":       "Typewriter/Regular/Main.js"
       },
       
-      DEFAULTFAMILY: MAIN,  DEFAULTWEIGHT: "normal", DEFAULTSTYLE: "normal",
-
       VARIANT: {
-        "normal": {fonts:[MAIN,SIZE1,AMS]},
-        "bold":   {fonts:[BOLD,SIZE1,AMS]},
-        "italic": {fonts:[ITALIC,"MathJax_Main-italic",MAIN,SIZE1,AMS],
-                   offsetN: 0x30, variantN: "normal"},
-        "bold-italic": {fonts:["MathJax_Math-bold-italic",BOLD,SIZE1,AMS]},
+        "normal": {fonts:[MAIN,SIZE1,AMS],
+                   offsetG: 0x03B1, variantG: "italic",
+                   remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
+                           0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
+        "bold":   {fonts:[BOLD,SIZE1,AMS], bold:true,
+                   offsetG: 0x03B1, variantG: "bold-italic",
+                   remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
+                           0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
+        "italic": {fonts:[ITALIC,"MathJax_Main-italic",MAIN,SIZE1,AMS], italic:true,
+                   remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
+                           0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
+        "bold-italic": {fonts:["MathJax_Math-bold-italic",BOLD,SIZE1,AMS], bold:true, italic:true,
+                   remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
+                           0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
         "double-struck": {fonts:[AMS, MAIN]},
         "fraktur": {fonts:["MathJax_Fraktur",MAIN,SIZE1,AMS]},
-        "bold-fraktur": {fonts:["MathJax_Fraktur-bold",BOLD,SIZE1,AMS]},
+        "bold-fraktur": {fonts:["MathJax_Fraktur-bold",BOLD,SIZE1,AMS], bold:true},
         "script": {fonts:["MathJax_Script",MAIN,SIZE1,AMS]},
-        "bold-script": {fonts:["MathJax_Script",BOLD,SIZE1,AMS]},
+        "bold-script": {fonts:["MathJax_Script",BOLD,SIZE1,AMS], bold:true},
         "sans-serif": {fonts:["MathJax_SansSerif",MAIN,SIZE1,AMS]},
-        "bold-sans-serif": {fonts:["MathJax_SansSerif-bold",BOLD,SIZE1,AMS]},
-        "sans-serif-italic": {fonts:["MathJax_SansSerif-italic","MathJax_Main-italic",SIZE1,AMS]},
-        "sans-serif-bold-italic": {fonts:["MathJax_SansSerif-italic","MathJax_Main-italic",SIZE1,AMS]},
+        "bold-sans-serif": {fonts:["MathJax_SansSerif-bold",BOLD,SIZE1,AMS], bold:true},
+        "sans-serif-italic": {fonts:["MathJax_SansSerif-italic","MathJax_Main-italic",SIZE1,AMS], italic:true},
+        "sans-serif-bold-italic": {fonts:["MathJax_SansSerif-italic","MathJax_Main-italic",SIZE1,AMS], bold:true, italic:true},
         "monospace": {fonts:["MathJax_Typewriter",MAIN,SIZE1,AMS]},
         "-tex-caligraphic": {fonts:["MathJax_Caligraphic",MAIN], offsetA: 0x41, variantA: "italic"},
         "-tex-oldstyle": {fonts:["MathJax_Caligraphic",MAIN]},
@@ -92,7 +103,8 @@
       
       RANGES: [
         {name: "alpha", low: 0x61, high: 0x7A, offset: "A", add: 32},
-        {name: "number", low: 0x30, high: 0x39, offset: "N"}
+        {name: "number", low: 0x30, high: 0x39, offset: "N"},
+        {name: "greek", low: 0x03B1, high: 0x03F6, offset: "G"}
       ],
       
       RULECHAR: 0x2212,
@@ -1399,7 +1411,7 @@
     MathJax.Hub.Browser.Select({
       MSIE: function (browser) {
         
-        if (!HTMLCSS.imgFonts && HTMLCSS.config.availableFonts && HTMLCSS.config.availableFonts.length) {
+        if (HTMLCSS.config.availableFonts && HTMLCSS.config.availableFonts.length) {
           
           HTMLCSS.FONTDATA.REMAP[0x2C9] = 0xAF; // macron
           HTMLCSS.FONTDATA.REMAP[0x2CA] = 0xB4; // acute
@@ -1409,18 +1421,18 @@
           var testString = HTMLCSS.msieCheckGreek =
             String.fromCharCode(0x393)+" "+String.fromCharCode(0x3A5)+" "+String.fromCharCode(0x39B);
 
-          HTMLCSS.FONTDATA.RANGES.push({name: "greek", low: 0x03B1, high: 0x03C9, offset: "G", add: 32});
-          HTMLCSS.FONTDATA.RANGES.push({name: "Greek", low: 0x0391, high: 0x03F6, offset: "G"});
+          HTMLCSS.FONTDATA.RANGES.push({name: "IEgreek", low: 0x03B1, high: 0x03C9, offset: "IEG", add: 32});
+          HTMLCSS.FONTDATA.RANGES.push({name: "IEGreek", low: 0x0391, high: 0x03F6, offset: "IEG"});
           
           if (HTMLCSS.Font.testFont({family:"MathJax_Greek", testString: testString})) {
             HTMLCSS.Augment({
               FONTDATA: {
                 VARIANT: {
-                  normal:             {offsetG: 0x391, variantG: "-Greek"},
-                  "fraktur":          {offsetG: 0x391, variantG: "-Greek"},
-                  "script":           {offsetG: 0x391, variantG: "-Greek"},
-                  "-tex-caligraphic": {offsetG: 0x391, variantG: "-Greek"},
-                  "-tex-oldstyle":    {offsetG: 0x391, variantG: "-Greek"},
+                  normal:             {offsetIEG: 0x391, variantIEG: "-Greek"},
+                  "fraktur":          {offsetIEG: 0x391, variantIEG: "-Greek"},
+                  "script":           {offsetIEG: 0x391, variantIEG: "-Greek"},
+                  "-tex-caligraphic": {offsetIEG: 0x391, variantIEG: "-Greek"},
+                  "-tex-oldstyle":    {offsetIEG: 0x391, variantIEG: "-Greek"},
                   "-Greek":           {fonts:["MathJax_Greek"]}
                 }
               }
@@ -1451,9 +1463,9 @@
             HTMLCSS.Augment({
               FONTDATA: {
                 VARIANT: {
-                  bold:               {offsetG: 0x391, variantG: "-Greek-Bold"},
-                  "bold-fraktur":     {offsetG: 0x391, variantG: "-Greek-Bold"},
-                  "bold-script":      {offsetG: 0x391, variantG: "-Greek-Bold"},
+                  bold:               {offsetIEG: 0x391, variantIEG: "-Greek-Bold"},
+                  "bold-fraktur":     {offsetIEG: 0x391, variantIEG: "-Greek-Bold"},
+                  "bold-script":      {offsetIEG: 0x391, variantIEG: "-Greek-Bold"},
                   "-Greek-Bold":      {fonts:["MathJax_Greek-bold"]}
                 }
               }
@@ -1485,7 +1497,7 @@
             HTMLCSS.Augment({
               FONTDATA: {
                 VARIANT: {
-                  italic:  {offsetG: 0x391, variantG: "-Greek-Italic"},
+                  italic:  {offsetIEG: 0x391, variantIEG: "-Greek-Italic"},
                   "-Greek-Italic": {fonts:["MathJax_Greek-italic"]}
                 }
               }
@@ -1579,7 +1591,7 @@
             
           }
         }
-          
+
         if (HTMLCSS.msieIE6) {
           
           var WinIE6 = "MathJax_WinIE6";

@@ -464,6 +464,15 @@ MathJax.Hub.Config({
     imageFont: "TeX",
     
     //
+    //  This is the font-family CSS value used for characters that are not
+    //  in the selected font (e.g., for web-based fonts, this is where to
+    //  look for characters not included in the MathJax_* fonts).  IE will
+    //  stop looking after the first font that exists on the system (even
+    //  if it doesn't contain the needed character), so order these carefully.
+    //  
+    undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",
+    
+    //
     //  This controls whether the MathJax contextual menu will be available
     //  on the mathematics in the page.  If true, then right-clicking (on
     //  the PC) or control-clicking (on the Mac) will produce a MathJax
