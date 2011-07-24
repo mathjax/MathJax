@@ -53,12 +53,45 @@
         });
       }
     },
+    //
+    //  Set up MathPlayer for IE on the first time through.
+    //
+    InitializeMML: function () {
+      this.initialized = true;
+      if (MathJax.Hub.Browser.isMSIE) {
+        try {
+          //
+          //  Insert data needed to use MathPlayer for MathML output
+          //
+          var mathplayer = document.createElement("object");
+          mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
+          document.getElementsByTagName("head")[0].appendChild(mathplayer);
+          document.namespaces.add("mjx","http://www.w3.org/1998/Math/MathML");
+          document.namespaces.mjx.doImport("#mathplayer");
+        } catch (err) {
+          //
+          //  If that fails, give an alert about security settings
+          //
+          alert("MathJax was not able to set up MathPlayer.\n\n"+
+                "If MathPlayer is not installed, you need to install it first.\n"+
+                "Otherwise, your security settings may be preventing ActiveX     \n"+
+                "controls from running.  Use the Internet Options item under\n"+
+                "the Tools menu and select the Security tab, then press the\n"+
+                "Custom Level button. Check that the settings for\n"+
+                "'Run ActiveX Controls', and 'Binary and script behaviors'\n"+
+                "are enabled.\n\n"+
+                "Currently you will see error messages rather than\n"+
+                "typeset mathematics.");
+        }
+      }
+    },
     
     //
     //  Add a SPAN to use as a container, and render the math into it
     //  
     Translate: function (script) {
       if (!script.parentNode) return;
+      if (!this.initialized) {this.InitializeMML()}
       var prev = script.previousSibling;
       if (prev && String(prev.className).match(/^MathJax(_MathML|_Display)?$/))
         {prev.parentNode.removeChild(prev)}
@@ -440,6 +473,16 @@
       //
       toNativeMML: function (parent) {
 	parent.appendChild(document.createTextNode(this.toString()));
+      }
+    });
+    
+    MML.xml.Augment({
+      //
+      //  Insert the XML verbatim
+      //
+      toNativeMML: function (parent) {
+        for (var i = 0, m = this.data.length; i < m; i++)
+          {parent.appendChild(this.data[i].cloneNode(true))}
       }
     });
 

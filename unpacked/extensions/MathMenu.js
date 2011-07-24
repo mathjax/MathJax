@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.1.1";
+  var VERSION = "1.1.4";
   
   MathJax.Extension.MathMenu = {version: VERSION};
 
@@ -48,7 +48,7 @@
     styles: {
       "#MathJax_About": {
         position:"fixed", left:"50%", width:"auto", "text-align":"center",
-        border:"3px outset", padding:"1em 2em", "background-color":"#DDDDDD",
+        border:"3px outset", padding:"1em 2em", "background-color":"#DDDDDD", color:"black",
         cursor: "default", "font-family":"message-box", "font-size":"120%",
         "font-style":"normal", "text-indent":0, "text-transform":"none",
         "line-height":"normal", "letter-spacing":"normal", "word-spacing":"normal",
@@ -504,7 +504,8 @@
     var HTMLCSS = MathJax.OutputJax["HTML-CSS"] || {fontInUse: ""};
     var local = (HTMLCSS.webFonts ? "" : "local "), web = (HTMLCSS.webFonts ? " web" : "");
     var font = (HTMLCSS.imgFonts ? "Image" : local+HTMLCSS.fontInUse+web) + " fonts";
-    var jax = [];
+    var jax = ["MathJax.js v"+MathJax.fileversion,["br"]];
+    jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
     MENU.About.GetJax(jax,MathJax.InputJax,"Input Jax");
     MENU.About.GetJax(jax,MathJax.OutputJax,"Output Jax");
     MENU.About.GetJax(jax,MathJax.ElementJax,"Element Jax");
@@ -561,14 +562,18 @@
    */
   MENU.ShowSource = function (event) {
     if (!event) {event = window.event}
+    var EVENT = {screenX:event.screenX, screenY:event.screenY};
     if (!MENU.jax) return;
     if (CONFIG.settings.format === "MathML") {
       var MML = MathJax.ElementJax.mml;
       if (MML && typeof(MML.mbase.prototype.toMathML) !== "undefined") {
-        MENU.ShowSource.Text(MENU.jax.root.toMathML(),event);
+        // toMathML() can call MathJax.Hub.RestartAfter, so trap errors and check
+        try {MENU.ShowSource.Text(MENU.jax.root.toMathML(),event)} catch (err) {
+          if (!err.restart) {throw err}
+          MathJax.Callback.After([this,arguments.callee,EVENT]);
+        }
       } else if (!AJAX.loadingToMathML) {
         AJAX.loadingToMathML = true;
-        var EVENT = {screenX:event.screenX, screenY:event.screenY};
         MENU.ShowSource.Window(event); // WeBKit needs to open window on click event
         MathJax.Callback.Queue(
           AJAX.Require("[MathJax]/extensions/toMathML.js"),
@@ -648,6 +653,7 @@
     if (jax[0] !== CONFIG.settings.renderer) {
       MathJax.Callback.Queue(
         ["Require",AJAX,"[MathJax]/jax/output/"+CONFIG.settings.renderer+"/config.js"],
+        ["Post",HUB.Startup.signal,CONFIG.settings.renderer+" output selected"],
         [function () {
           var JAX = MathJax.OutputJax[CONFIG.settings.renderer];
           for (var i = 0, m = jax.length; i < m; i++)

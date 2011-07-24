@@ -201,6 +201,7 @@
           "word-wrap":       "normal",
           "white-space":     "nowrap",
           "float":           "none",
+          "direction":       "ltr",
           border: 0, padding: 0, margin: 0
         },
 
@@ -231,6 +232,10 @@
           "white-space": "nowrap"
         },
         
+        ".MathJax img": {
+          display: "inline ! important"
+        },
+
         ".MathJax_Processing": {
           visibility: "hidden", position:"fixed",
           width: 0, height: 0, overflow:"hidden"
@@ -287,7 +292,6 @@
         this.FONTDATA = {
           TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
           FONTS: {}, VARIANT: {normal: {fonts:[]}}, RANGES: [],
-          DEFAULTFAMILY: "serif", DEFAULTWEIGHT: "normal", DEFAULTSTYLE: "normal",
           DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
         };
         if (MathJax.InputJax.TeX && MathJax.InputJax.TeX.Definitions) {
@@ -487,12 +491,12 @@
       this.HDMspan.className = "MathJax"; this.HDMspan.id = "MathJax_getScales";
       this.HDMimg.style.width = "60em";
       var em = this.outerEm = this.HDMspan.offsetWidth/60;
-      var scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
-      span.style.fontSize = this.HDMspan.style.fontSize = scale+"%";
+      this.scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
+      span.style.fontSize = this.HDMspan.style.fontSize = this.scale+"%";
       this.em = MML.mbase.prototype.em = this.HDMspan.offsetWidth/60;
-      if (this.operaFontSizeBug && em === this.em && scale !== 100) {
+      if (this.operaFontSizeBug && em === this.em && this.scale !== 100) {
         // Opera 10.61 doesn't seem to process the fontSize setting above, so adjust manually
-        this.em = MML.mbase.prototype.em = em * scale/100;
+        this.em = MML.mbase.prototype.em = em * this.scale/100;
       }
       span.parentNode.removeChild(this.HDMspan);
       this.msieMarginScale = this.getMarginScale(span);
@@ -501,7 +505,7 @@
     getMSIEmarginScale: function (span) {
       span.appendChild(this.marginCheck);
       var W = this.marginCheck.offsetWidth, w = this.marginMove.offsetWidth;
-      var scale = w/(2*w - W);
+      var scale = (2*w - W ? w/(2*w - W) : 1);
       span.removeChild(this.marginCheck);
       return scale;
     },
@@ -833,7 +837,7 @@
       var top = this.createBox(stack), bot = this.createBox(stack);
       this.createChar(top,(delim.top||delim.ext),scale,font);
       this.createChar(bot,(delim.bot||delim.ext),scale,font);
-      var ext = {bbox:{w:0,lw:0,rw:0}}, mid = ext;
+      var ext = {bbox:{w:0,lw:0,rw:0}}, mid = ext, EXT;
       var h = top.bbox.h + top.bbox.d + bot.bbox.h + bot.bbox.d;
       var y = -top.bbox.h; this.placeBox(top,0,y,true); y -= top.bbox.d;
       if (delim.mid) {
@@ -847,7 +851,11 @@
         if (!delim.fullExtenders) {eh = (H-h)/(k*n)}
         var dy = (n/(n+1))*(eH - eh); eh = eH - dy; y += dy + eh - ext.bbox.h;
         while (k-- > 0) {
-          while (n-- > 0) {y -= eh; this.placeBox(this.addBox(stack,ext.cloneNode(true)),0,y,true)}
+          while (n-- > 0) {
+            if (!this.msieCloneNodeBug) {EXT = ext.cloneNode(true)}
+              else {EXT = this.Element("span"); this.createChar(EXT,delim.ext,scale,font)}
+            y -= eh; this.placeBox(this.addBox(stack,EXT),0,y,true);
+          }
           y += dy - ext.bbox.d;
           if (delim.mid && k) {
             this.placeBox(mid,0,y-mid.bbox.h,true); n = N;
@@ -877,10 +885,10 @@
       this.createChar(left,(delim.left||delim.rep),scale,font);
       this.createChar(right,(delim.right||delim.rep),scale,font);
       var rep = this.Element("span"); this.createChar(rep,delim.rep,scale,font);
-      var mid = {bbox: {h:-this.BIGDIMEN, d:-this.BIGDIMEN}};
+      var mid = {bbox: {h:-this.BIGDIMEN, d:-this.BIGDIMEN}}, REP;
       this.placeBox(left,-left.bbox.lw,0,true);
       var w = (left.bbox.rw - left.bbox.lw) + (right.bbox.rw - right.bbox.lw) - .05,
-          x = left.bbox.rw - left.bbox.lw - .025;
+          x = left.bbox.rw - left.bbox.lw - .025, dx;
       if (delim.mid) {
         mid = this.createBox(stack); this.createChar(mid,delim.mid,scale,font);
         w += mid.bbox.w;
@@ -888,15 +896,18 @@
       if (W > w) {
         var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
         N = n = Math.ceil((W-w)/(k*rw)); rw = (W-w)/(k*n);
-        var dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
+        dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
-          while (n-- > 0) {this.placeBox(this.addBox(stack,rep.cloneNode(true)),x,0,true); x += rw}
+          while (n-- > 0) {
+            if (!this.msieCloneNodeBug) {REP = rep.cloneNode(true)}
+              else {REP = this.Element("span"); this.createChar(REP,delim.rep,scale,font)}
+            this.placeBox(this.addBox(stack,REP),x,0,true); x += rw;
+          }
           if (delim.mid && k) {this.placeBox(mid,x,0,true); x += mid.bbox.w - dx; n = N}
         }
       } else {
-        x -= (w - W)/2;
-        if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w}
-        x -= (w - W)/2;
+        dx = Math.min(w - W,left.bbox.w/2);
+        x -= dx/2; if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w}; x -= dx/2;
       }
       this.placeBox(right,x,0,true);
       span.bbox = {
@@ -1019,8 +1030,7 @@
     handleFont: function (span,font,force) {
       span.style.fontFamily = font.family;
       if (!(HTMLCSS.FontFaceBug && font.isWebFont)) {
-        var style  = font.style  || this.FONTDATA.DEFAULTSTYLE,
-            weight = font.weight || this.FONTDATA.DEFAULTWEIGHT;
+        var style  = font.style  || "normal", weight = font.weight || "normal";
         if (style !== "normal"  || force) {span.style.fontStyle  = style}
         if (weight !== "normal" || force) {span.style.fontWeight = weight}
       }
@@ -1029,6 +1039,15 @@
     handleChar: function (span,font,c,n,text) {
       var C = c[5];
       if (C.img) {return this.handleImg(span,font,c,n,text)}
+      if (C.isUnknown && this.FONTDATA.DELIMITERS[n]) {
+        if (text.length) {this.addText(span,text)}
+        var scale = span.scale;
+        HTMLCSS.createDelimiter(span,n,0,1,font);
+        span.scale = scale;
+        c[0] = span.bbox.h*1000; c[1] = span.bbox.d*1000;
+        c[2] = span.bbox.w*1000; c[3] = span.bbox.lw*1000; c[4] = span.bbox.rw*1000;
+        return "";
+      }
       if (C.c == null) {
         if (n <= 0xFFFF) {C.c = String.fromCharCode(n)}
                     else {C.c = this.PLANE1 + String.fromCharCode(n-0x1D400+0xDC00)}
@@ -1069,7 +1088,8 @@
             {this.loadWebFont(font)} else {return font}
         } else {this.findBlock(font,n)}
       }
-      var unknown = (variant.defaultFont || {family:HTMLCSS.FONTDATA.DEFAULTFAMILY+",serif"});
+      var unknown = (variant.defaultFont || {family:HTMLCSS.config.undefinedFamily});
+      if (variant.bold) {unknown.weight = "bold"}; if (variant.italic) {unknown.style = "italic"}
       unknown[n] = [800,200,500,0,500,{isUnknown:true}]; // [h,d,w,lw,rw,{data}]
       return unknown;
     },
@@ -1968,15 +1988,18 @@
 	    if (!stretch[i] && WW > W) {W = WW}
 	  }
 	}
-	if (W == -HTMLCSS.BIGDIMEN) {W = WW}
-	if (D == null && HW != null) {W = WW = HW}
+	if (D == null && HW != null) {W = HW} else if (W == -HTMLCSS.BIGDIMEN) {W = WW}
+        for (i = WW = 0, m = this.data.length; i < m; i++) {if (this.data[i]) {
+          box = boxes[i];
+          if (stretch[i]) {box.bbox = this.data[i].HTMLstretchH(box,W).bbox}
+          if (box.bbox.w > WW) {WW = box.bbox.w}
+        }}
 	var t = HTMLCSS.TeX.rule_thickness, factor = HTMLCSS.FONTDATA.TeX_factor;
 	var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()}, delta = (base.bbox.ic || 0);
 	var x, y, z1, z2, z3, dw, k;
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
 	    box = boxes[i];
-	    if (stretch[i]) {box.bbox = this.data[i].HTMLstretchH(box,W).bbox}
 	    z3 = HTMLCSS.TeX.big_op_spacing5 * scale;
 	    var accent = (i != this.base && values[this.ACCENTS[i]]);
 	    if (accent && box.bbox.w <= 1/HTMLCSS.em+.0001) { // images can get the width off by 1px
@@ -1985,7 +2008,7 @@
 		{box.insertBefore(HTMLCSS.createSpace(box.parentNode,0,0,-box.bbox.lw),box.firstChild)}
 	      HTMLCSS.createBlank(box,0,0,box.bbox.rw+.1);
 	    }
-	    dw = {left:0, center:(W-box.bbox.w)/2, right:W-box.bbox.w}[values.align];
+	    dw = {left:0, center:(WW-box.bbox.w)/2, right:WW-box.bbox.w}[values.align];
 	    x = dw; y = 0;
 	    if (i == this.over) {
 	      if (accent) {
@@ -2092,7 +2115,9 @@
     MML.mmultiscripts.Augment({toHTML: MML.mbase.HTMLautoload});
 
     MML.mtable.Augment({toHTML: MML.mbase.HTMLautoload});
-
+    
+    MML["annotation-xml"].Augment({toHTML: MML.mbase.HTMLautoload});
+    
     MML.math.Augment({
       toHTML: function (span,node) {
 	var alttext = this.Get("alttext"); if (alttext) {node.setAttribute("aria-label",alttext)}
@@ -2214,6 +2239,7 @@
           msiePlaceBoxBug: (isIE8 && !quirks),
           msieClipRectBug: !isIE8,
           msieNegativeSpaceBug: quirks,
+          msieCloneNodeBug: (isIE8 && browser.version === "8.0"),
           negativeSkipBug: true,
           msieIE6: !isIE7,
           msieItalicWidthBug: true,

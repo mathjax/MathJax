@@ -21,6 +21,7 @@
 (function (MATHML) {
   MathJax.Hub.Insert(MATHML.Parse.Entity,{
     'GJcy': '\u0403',
+    'GT': '\u003E',
     'Gammad': '\u03DC',
     'Gbreve': '\u011E',
     'Gcedil': '\u0122',

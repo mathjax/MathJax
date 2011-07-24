@@ -6,7 +6,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009 Design Science, Inc.
+ *  Copyright (c) 2009-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.2";
   
   var MML = MathJax.ElementJax.mml;
   
@@ -336,15 +336,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     }
   });
 
-  if (MathJax.Hub.Browser.isMSIE) {
-    MathJax.InputJax.TeX.Definitions.mathchar0mi.digamma  = ['03DC',{variantForm: true}];
-    MathJax.InputJax.TeX.Definitions.mathchar0mi.varkappa = ['03F0',{variantForm: true}];
-  }
+//  if (MathJax.Hub.Browser.isMSIE) {
+//    MathJax.InputJax.TeX.Definitions.mathchar0mi.digamma  = ['03DD',{variantForm: true}];
+//    MathJax.InputJax.TeX.Definitions.mathchar0mi.varkappa = ['03F0',{variantForm: true}];
+//  }
 });
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
   var HTMLCSS = MathJax.OutputJax["HTML-CSS"];
-  var TEXDEF = MathJax.InputJax.TeX.Definitions;
   var VARIANT = HTMLCSS.FONTDATA.VARIANT;
   if (HTMLCSS.fontInUse === "TeX") {
     VARIANT["-TeX-variant"] = {
@@ -363,20 +362,23 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     }
   }
   if (HTMLCSS.fontInUse === "STIX") {
-    TEXDEF.mathchar0mi.varnothing = '2205';
-    TEXDEF.mathchar0mi.hslash = '210F';
-    TEXDEF.mathchar0mi.blacktriangle = '25B4';
-    TEXDEF.mathchar0mi.blacktriangledown = '25BE';
-    TEXDEF.mathchar0mi.square = '25FB';
-    TEXDEF.mathchar0mi.blacksquare = '25FC';
-    TEXDEF.mathchar0mi.vartriangle = ['25B3',{mathsize:"71%"}];
-    TEXDEF.mathchar0mi.triangledown = ['25BD',{mathsize:"71%"}];
-    TEXDEF.mathchar0mo.blacktriangleleft = '25C2';
-    TEXDEF.mathchar0mo.blacktriangleright = '25B8';
-    TEXDEF.mathchar0mo.smallsetminus = '2216';
-    MathJax.Hub.Insert(VARIANT["-STIX-variant"],{
-      remap: {0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2270: 0xE011, 0x2271: 0xE00E,
-              0x22E0: 0xE04B, 0x22E1: 0xE04F, 0x2288: 0xE016, 0x2289: 0xE018}
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      var TEXDEF = MathJax.InputJax.TeX.Definitions;
+      TEXDEF.mathchar0mi.varnothing = '2205';
+      TEXDEF.mathchar0mi.hslash = '210F';
+      TEXDEF.mathchar0mi.blacktriangle = '25B4';
+      TEXDEF.mathchar0mi.blacktriangledown = '25BE';
+      TEXDEF.mathchar0mi.square = '25FB';
+      TEXDEF.mathchar0mi.blacksquare = '25FC';
+      TEXDEF.mathchar0mi.vartriangle = ['25B3',{mathsize:"71%"}];
+      TEXDEF.mathchar0mi.triangledown = ['25BD',{mathsize:"71%"}];
+      TEXDEF.mathchar0mo.blacktriangleleft = '25C2';
+      TEXDEF.mathchar0mo.blacktriangleright = '25B8';
+      TEXDEF.mathchar0mo.smallsetminus = '2216';
+      MathJax.Hub.Insert(VARIANT["-STIX-variant"],{
+        remap: {0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2270: 0xE011, 0x2271: 0xE00E,
+                0x22E0: 0xE04B, 0x22E1: 0xE04F, 0x2288: 0xE016, 0x2289: 0xE018}
+      });
     });
   }
   

@@ -39,7 +39,7 @@ Methods
         var div = MathJax.HTML.Element(
 	  "div",
 	  {id: "MathDiv", style:{border:"1px solid", padding:"5px"}},
-	  ["Here is math: $x+1$",["br"],"and a display $$x+1\\over x-1$$"]
+	  ["Here is math: \\(x+1\\)",["br"],"and a display $$x+1\\over x-1$$"]
 	);
 
     :Parameters:
@@ -81,7 +81,7 @@ Methods
         - **text** --- the text for the new node
     :Returns: the new text node
 
-.. method:: setText(script,text)
+.. method:: setScript(script,text)
 
     Sets the contents of the ``script`` element to be the given 
     ``text``, properly taking into account the browser limitations and 
