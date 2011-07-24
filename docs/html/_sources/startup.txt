@@ -103,14 +103,14 @@ pushed into the queue:
 
 6.  Load the extension files:
 
-    - Post the ``Begin Extension`` startup signal
+    - Post the ``Begin Extensions`` startup signal
     - Load the files from the ``MathJax.Hub.config.extensions`` array
 
-      - Most extensions will post a ``Extension [name] Ready``
-        startup message when they are loaded (where ``[name]`` is
-        the name of the extension)
+      - Most extensions will post a ``[name] Ready`` or ``Extension
+        [name] Ready`` startup message when they are loaded (where
+        ``[name]`` is the name of the extension)
 
-    - Post the ``End Extension`` startup signal
+    - Post the ``End Extensions`` startup signal
 
 ..
 

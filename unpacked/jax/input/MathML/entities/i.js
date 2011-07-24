@@ -32,6 +32,7 @@
     'Implies': '\u21D2',
     'Int': '\u222C',
     'Iogon': '\u012E',
+    'Iota': '\u0399',
     'Itilde': '\u0128',
     'Iukcy': '\u0406',
     'Iuml': '\u00CF',

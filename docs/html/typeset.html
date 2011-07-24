@@ -115,15 +115,15 @@ find the <cite>element jax</cite> for the math element on the page, and use its
 methods to modify and update the mathematics that it displays.</p>
 <p>For example, suppose you have the following HTML in your document</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;MathDiv&quot;</span><span class="nt">&gt;</span>
-  The answer you provided is: ${}$.
+  The answer you provided is: \({}\).
 <span class="nt">&lt;/div&gt;</span>
 </pre></div>
 </div>
 <p>and MathJax has already preprocessed and typeset the mathematics
-within dollar signs (it will be blank).  A student has typed
-something elsewhere on the page, and you want to typeset their answer
-in the location of the mathematics that is already there.  You could
-replace the entire contents of the <cite>MathDiv</cite> element and call
+within the div.  A student has typed something elsewhere on the page,
+and you want to typeset their answer in the location of the
+mathematics that is already there.  You could replace the entire
+contents of the <cite>MathDiv</cite> element and call
 <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Typeset()</span></tt> as described above, but there is a more
 efficient approach, which is to ask MathJax for the element jax for
 the mathematics, and call its method for replacing the formula shown

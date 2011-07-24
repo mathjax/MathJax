@@ -77,6 +77,15 @@ would set the ``preferredFont`` option to the :term:`STIX` fonts.
     and later, and Opera10 and later.  Note that Firefox3.0 is **not**
     on this list.
 
+.. describe:: undefinedFamily: "STIXGeneral, 'Arial Unicode MS', serif"
+
+    This is the font-family CSS value used for characters that are not
+    in the selected font (e.g., for web-based fonts, this is where to
+    look for characters not included in the MathJax web fonts).  IE
+    will stop looking after the first font that exists on the system
+    (even if it doesn't contain the needed character), so order these
+    carefully.
+
 .. describe:: styles: {}
 
     This is a list of CSS declarations for styling the HTML-CSS
