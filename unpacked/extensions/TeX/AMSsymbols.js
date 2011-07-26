@@ -148,7 +148,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       backsim:                '223D',
       thicksim:               ['223C',{variantForm: true}],
       backsimeq:              '22CD',
-      thickapprox:            '2248',
+      thickapprox:            ['2248',{variantForm: true}],
       subseteqq:              '2AC5',
       supseteqq:              '2AC6',
       Subset:                 '22D0',
