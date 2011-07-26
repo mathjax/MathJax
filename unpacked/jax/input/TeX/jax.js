@@ -1744,14 +1744,17 @@
     },
     
     combineRelations: function (mml) {
-      for (var i = 0, m = mml.data.length; i < m; i++) {
+      var i, m, m1, m2;
+      for (i = 0, m = mml.data.length; i < m; i++) {
         if (mml.data[i]) {
           if (mml.isa(MML.mrow)) {
-            while (i+1 < m && mml.data[i+1] &&
-                   mml.data[i].isa(MML.mo) && mml.data[i+1].isa(MML.mo) &&
-                   mml.data[i].Get("texClass") === MML.TEXCLASS.REL &&
-                   mml.data[i+1].Get("texClass") === MML.TEXCLASS.REL) {
-              mml.data[i].Append.apply(mml.data[i],mml.data[i+1].data);
+            while (i+1 < m && (m1 = mml.data[i]) && (m2 = mml.data[i+1]) &&
+                   m1.isa(MML.mo) && m2.isa(MML.mo) &&
+                   m1.Get("texClass") === MML.TEXCLASS.REL &&
+                   m2.Get("texClass") === MML.TEXCLASS.REL &&
+                   m1.style == m2.style && m1.className == m2.className &&
+                   m1.variantForm == m2.variantForm) {
+              m1.Append.apply(m1,m2.data);
               mml.data.splice(i+1,1); m--;
             }
           }
