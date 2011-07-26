@@ -1751,11 +1751,13 @@
             while (i+1 < m && (m1 = mml.data[i]) && (m2 = mml.data[i+1]) &&
                    m1.isa(MML.mo) && m2.isa(MML.mo) &&
                    m1.Get("texClass") === MML.TEXCLASS.REL &&
-                   m2.Get("texClass") === MML.TEXCLASS.REL &&
-                   m1.style == m2.style && m1.className == m2.className &&
-                   m1.variantForm == m2.variantForm) {
-              m1.Append.apply(m1,m2.data);
-              mml.data.splice(i+1,1); m--;
+                   m2.Get("texClass") === MML.TEXCLASS.REL) {
+              if (m1.variantForm == m2.variantForm) {
+                m1.Append.apply(m1,m2.data);
+                mml.data.splice(i+1,1); m--;
+              } else {
+                m1.rspace = m2.lspace = "0pt"; i++;
+              }
             }
           }
           if (!mml.data[i].isToken) {this.combineRelations(mml.data[i])}
