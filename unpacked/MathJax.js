@@ -1597,7 +1597,7 @@ MathJax.Hub.Startup = {
   //
   ConfigDefault: function () {
     var CONFIG = MathJax.Hub.config;
-    if (CONFIG["v1.0-compatible"] && CONFIG.jax.length === 0)
+    if (CONFIG["v1.0-compatible"] && CONFIG.jax.length === 0 && !this.params.config)
       {return MathJax.Ajax.Require(this.URL("extensions","v1.0-warning.js"))}
   },
 
