@@ -264,6 +264,11 @@
           this.arraydef.rowlines += " none";
         }
       }
+      if (this.rowspacing) {
+        var rows = this.arraydef.rowspacing.split(/ /);
+        while (rows.length < this.table.length) {rows.push(this.rowspacing)}
+        this.arraydef.rowspacing = rows.join(' ');
+      }
     },
     clearEnv: function () {
       for (var id in this.env) {if (this.env.hasOwnProperty(id)) {delete this.env[id]}}
@@ -798,7 +803,7 @@
         eqalign:           ['Matrix',null,null,"right left",MML.LENGTH.THICKMATHSPACE,".5em",'D'],
         displaylines:      ['Matrix',null,null,"center",null,".5em",'D'],
         cr:                 'Cr',
-        '\\':               'Cr',
+        '\\':               'CrLaTeX',
         newline:            'Cr',
         hline:             ['HLine','solid'],
         hdashline:         ['HLine','dashed'],
@@ -1409,10 +1414,43 @@
       this.Push(STACKITEM.cell().With({isCR: TRUE, name: name}));
     },
     
+    CrLaTeX: function (name) {
+      var n = this.GetBrackets(name).replace(/ /g,"");
+      if (n && !n.match(/^(((\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/))
+        {TEX.Error("Bracket argument to "+name+" must be a dimension")}
+      this.Push(STACKITEM.cell().With({isCR: TRUE, name: name}));
+      var top = this.stack.Top();
+      if (top.isa(STACKITEM.array)) {
+        if (n && top.arraydef.rowspacing) {
+          var rows = top.arraydef.rowspacing.split(/ /);
+          if (!top.rowspacing) {top.rowspacing = this.dimen2em(rows[0])}
+          while (rows.length < top.table.length) {rows.push(top.rowspacing)}
+          rows[top.table.length-1] = (top.rowspacing+this.dimen2em(n)) + "em";
+          top.arraydef.rowspacing = rows.join(' ');
+        }
+      } else {
+        // force line break
+      }
+    },
+    emPerInch: 7.2,
+    dimen2em: function (dim) {
+      var match = dim.match(/^((?:\.\d+|\d+(?:\.\d*)?))(pt|em|ex|mu|pc|in|mm|cm)/);
+      var m = parseFloat(match[1]||"1"), unit = match[2];
+      if (unit === "em") {return m}
+      if (unit === "ex") {return m * .43}
+      if (unit === "pt") {return m / 10}                    // 10 pt to an em
+      if (unit === "pc") {return m * 1.2}                   // 12 pt to a pc
+      if (unit === "in") {return m * this.emPerInch}
+      if (unit === "cm") {return m * this.emPerInch / 2.54} // 2.54 cm to an inch
+      if (unit === "mm") {return m * this.emPerInch / 25.4} // 10 mm to a cm
+      if (unit === "mu") {return m / 18}
+      return 0;
+    },
+    
     HLine: function (name,style) {
       if (style == null) {style = "solid"}
       var top = this.stack.Top();
-      if (top.type !== "array" || top.data.length) {TEX.Error("Misplaced "+name)}
+      if (!top.isa(STACKITEM.array) || top.data.length) {TEX.Error("Misplaced "+name)}
       if (top.table.length == 0) {
         top.arraydef.frame = style;
       } else {
