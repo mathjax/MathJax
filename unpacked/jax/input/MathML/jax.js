@@ -104,9 +104,10 @@
     },
     
     trimSpace: function (string) {
-      return string.replace(/^[ \t\n\r]+/,"")              // initial whitespace
-                   .replace(/[ \t\n\r]+$/,"")              // trailing whitespace
-                   .replace(/[ \t\n\r][ \t\n\r]+/g," ");   // internal multiple whitespace
+      return string.replace(/[\t\n\r]/g," ")    // whitespace to spaces
+                   .replace(/^ +/,"")           // initial whitespace
+                   .replace(/ +$/,"")           // trailing whitespace
+                   .replace(/  +/g," ");        // internal multiple whitespace
     },
     
     replaceEntity: function (match,entity) {
