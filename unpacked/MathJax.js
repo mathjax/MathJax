@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.7";
+MathJax.fileversion = "1.1.8";
 
 /**********************************************************/
 
@@ -1116,6 +1116,7 @@ MathJax.Message = {
       }
     }
     if (clearDelay) {setTimeout(MathJax.Callback(["Clear",this,n]),clearDelay)}
+    else if (clearDelay == 0) {this.Clear(n,0)}
     return n;
   },
   
@@ -1128,7 +1129,9 @@ MathJax.Message = {
         if (this.div.parentNode == null) {this.Init()} // see ASCIIMathML comments above
         if (this.current == null) {
           if (this.timer) {clearTimeout(this.timer)}
-          this.timer = setTimeout(MathJax.Callback(["Remove",this]),(delay||600));
+          if (delay == null) {delay = 600}
+          if (delay === 0) {this.Remove()}
+            else {this.timer = setTimeout(MathJax.Callback(["Remove",this]),(delay||600))}
         } else if (MathJax.Hub.config.messageStyle !== "none") {
           if (this.textNodeBug) {this.div.innerHTML = this.log[this.current].filteredText}
                            else {this.text.nodeValue = this.log[this.current].filteredText}
