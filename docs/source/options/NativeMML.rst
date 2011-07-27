@@ -54,7 +54,7 @@ would set the ``scale`` option to 105 percent.
    
 .. describe:: styles: {}
 
-    This is a list of CSS declarations for styling the HTML-CSS
+    This is a list of CSS declarations for styling the NativeMML
     output.  See the definitions in ``jax/output/NativeMML/config.js``
     for some examples of what are defined by default.  See :ref:`CSS
     Style Objects <css-style-objects>` for details on how to specify

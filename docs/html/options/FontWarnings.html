@@ -189,14 +189,17 @@ override the ones that are there with your own text.</p>
 <dt>
 <tt class="descname">removeAfter: 12*1000</tt></dt>
 <dd><p>This is the amount of time to show the FontWarning message, in
-milliseconds.  The default is 12 seconds.</p>
+milliseconds.  The default is 12 seconds.  Setting this value
+to zero means that the message will not fade out (the user must
+close it manually).</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">fadeoutSteps: 10</tt></dt>
 <dd><p>This is the number of steps to take while fading out the
-FontWarning message.  More steps make for a smoother fade-out.</p>
+FontWarning message.  More steps make for a smoother fade-out.
+Set to zero to cause the message to be removed without fading.</p>
 </dd></dl>
 
 <dl class="describe">

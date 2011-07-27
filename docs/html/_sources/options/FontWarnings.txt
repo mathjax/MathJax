@@ -126,12 +126,15 @@ would set the ``fadeoutTime`` option to 2000 milliseconds (2 seconds).
 .. describe:: removeAfter: 12*1000
 
     This is the amount of time to show the FontWarning message, in
-    milliseconds.  The default is 12 seconds.
+    milliseconds.  The default is 12 seconds.  Setting this value
+    to zero means that the message will not fade out (the user must
+    close it manually).
 
 .. describe:: fadeoutSteps: 10
 
     This is the number of steps to take while fading out the
     FontWarning message.  More steps make for a smoother fade-out.
+    Set to zero to cause the message to be removed without fading.
 
 .. describe:: fadeoutTime: 1.5*1000
 
