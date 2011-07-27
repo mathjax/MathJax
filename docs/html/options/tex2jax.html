@@ -163,11 +163,14 @@ contexts.</p>
 not be processed by tex2jax (other than to look for the
 <tt class="docutils literal"><span class="pre">processClass</span></tt> pattern below).  Note that this is a regular
 expression, and so you need to be sure to quote any <cite>regexp</cite>
-special characters.  The pattern is automatically preceeded by
-<tt class="docutils literal"><span class="pre">'(^|</span> <span class="pre">)('</span></tt> and followed by <tt class="docutils literal"><span class="pre">')(</span> <span class="pre">|$)'</span></tt>, so your pattern will
-have to match full words in the class name.  Assigning an element
-this class name will prevent <cite>tex2jax</cite> from processing its
-contents.</p>
+special characters.  The pattern is inserted into one that
+requires your pattern to match a complete word, so setting
+<tt class="docutils literal"><span class="pre">ignoreClass:</span> <span class="pre">&quot;class2&quot;</span></tt> would cause it to match an element with
+<tt class="docutils literal"><span class="pre">class=&quot;class1</span> <span class="pre">class2</span> <span class="pre">class3&quot;</span></tt>.  Note that you can assign
+several classes by separating them by the vertical line character
+(<tt class="docutils literal"><span class="pre">|</span></tt>).  For instance, with <tt class="docutils literal"><span class="pre">ignoreClass:</span> <span class="pre">&quot;class1|class2&quot;</span></tt>
+any element assigned a class of either <tt class="docutils literal"><span class="pre">class1</span></tt> or <tt class="docutils literal"><span class="pre">class2</span></tt>
+will be skipped.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -178,10 +181,13 @@ contents.</p>
 processing within tags that have been marked as ignored or skipped
 above.  Note that this is a regular expression, and so you need to
 be sure to quote any <cite>regexp</cite> special characters.  The pattern is
-automatically preceeded by <tt class="docutils literal"><span class="pre">'(^|</span> <span class="pre">)('</span></tt> and followed by <tt class="docutils literal"><span class="pre">')(</span>
-<span class="pre">|$)'</span></tt>, so your pattern will have to match full words in the class
-name.  Use this to restart processing within an element that has
-been marked as ignored above.</p>
+inserted into one that requires your pattern to match a complete
+word, so setting <tt class="docutils literal"><span class="pre">processClass:</span> <span class="pre">&quot;class2&quot;</span></tt> would cause it to
+match an element with <tt class="docutils literal"><span class="pre">class=&quot;class1</span> <span class="pre">class2</span> <span class="pre">class3&quot;</span></tt>.  Note that
+you can assign several classes by separating them by the vertical
+line character (<tt class="docutils literal"><span class="pre">|</span></tt>).  For instance, with <tt class="docutils literal"><span class="pre">processClass:</span>
+<span class="pre">&quot;class1|class2&quot;</span></tt> any element assigned a class of either
+<tt class="docutils literal"><span class="pre">class1</span></tt> or <tt class="docutils literal"><span class="pre">class2</span></tt> will have its contents processed.</p>
 </dd></dl>
 
 </div>

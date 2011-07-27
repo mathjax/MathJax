@@ -59,22 +59,23 @@ behavior of MathJax.  They are given with their default values.
     no space before it and the preceding text.  In order to avoid
     this, you should include some "guard characters" before or after
     the math SCRIPT tag; define the patterns you want to use below.
-    Note that these are used as regular expressions, so you will need
-    to quote special characters.  Furthermore, since they are
-    javascript strings, you must quote javascript special characters
-    as well.  So to obtain a backslash, you must use ``\\`` (doubled
-    for javascript).  For example, ``"\\["`` represents the pattern
-    ``\[`` in the regular expression.  That means that if you want an
-    actual backslash in your guard characters, you need to use
-    ``"\\\\"`` in order to get ``\\`` in the regular expression, and
-    ``\`` in the actual text.  If both preJax and postJax are defined,
-    both must be present in order to be removed.
+    Note that these are used as part of a regular expression, so you
+    will need to quote special characters.  Furthermore, since they
+    are javascript strings, you must quote javascript special
+    characters as well.  So to obtain a backslash, you must use ``\\``
+    (doubled for javascript).  For example, ``"\\["`` represents the
+    pattern ``\[`` in the regular expression, or ``[`` in the text of
+    the web page.  That means that if you want an actual backslash in
+    your guard characters, you need to use ``"\\\\"`` in order to get
+    ``\\`` in the regular expression, and ``\`` in the actual text.
+    If both ``preJax`` and ``postJax`` are defined, both must be
+    present in order to be removed.
 
     See also the ``preRemoveClass`` comments below.
 
     Examples:
 
-        ``preJax: "\\\\\\\\\"`` makes a double backslash the preJax text
+        ``preJax: "\\\\\\\\\"`` makes a double backslash the ``preJax`` text
 
 	``preJax: "\\[\\[", postJax: "\\]\\]"`` makes it so jax
 	scripts must be enclosed in double brackets.

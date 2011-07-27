@@ -113,11 +113,14 @@ preprocessor.
     not be processed by tex2jax (other than to look for the
     ``processClass`` pattern below).  Note that this is a regular
     expression, and so you need to be sure to quote any `regexp`
-    special characters.  The pattern is automatically preceeded by
-    ``'(^| )('`` and followed by ``')( |$)'``, so your pattern will
-    have to match full words in the class name.  Assigning an element
-    this class name will prevent `tex2jax` from processing its
-    contents.
+    special characters.  The pattern is inserted into one that
+    requires your pattern to match a complete word, so setting
+    ``ignoreClass: "class2"`` would cause it to match an element with
+    ``class="class1 class2 class3"``.  Note that you can assign
+    several classes by separating them by the vertical line character
+    (``|``).  For instance, with ``ignoreClass: "class1|class2"``
+    any element assigned a class of either ``class1`` or ``class2``
+    will be skipped.
 
 .. describe:: processClass: "tex2jax_process"
 
@@ -126,7 +129,10 @@ preprocessor.
     processing within tags that have been marked as ignored or skipped
     above.  Note that this is a regular expression, and so you need to
     be sure to quote any `regexp` special characters.  The pattern is
-    automatically preceeded by ``'(^| )('`` and followed by ``')(
-    |$)'``, so your pattern will have to match full words in the class
-    name.  Use this to restart processing within an element that has
-    been marked as ignored above.
+    inserted into one that requires your pattern to match a complete
+    word, so setting ``processClass: "class2"`` would cause it to
+    match an element with ``class="class1 class2 class3"``.  Note that
+    you can assign several classes by separating them by the vertical
+    line character (``|``).  For instance, with ``processClass:
+    "class1|class2"`` any element assigned a class of either
+    ``class1`` or ``class2`` will have its contents processed.

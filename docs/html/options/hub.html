@@ -116,20 +116,21 @@ MathJax inserts the typeset mathematics, this means there will be
 no space before it and the preceding text.  In order to avoid
 this, you should include some &#8220;guard characters&#8221; before or after
 the math SCRIPT tag; define the patterns you want to use below.
-Note that these are used as regular expressions, so you will need
-to quote special characters.  Furthermore, since they are
-javascript strings, you must quote javascript special characters
-as well.  So to obtain a backslash, you must use <tt class="docutils literal"><span class="pre">\\</span></tt> (doubled
-for javascript).  For example, <tt class="docutils literal"><span class="pre">&quot;\\[&quot;</span></tt> represents the pattern
-<tt class="docutils literal"><span class="pre">\[</span></tt> in the regular expression.  That means that if you want an
-actual backslash in your guard characters, you need to use
-<tt class="docutils literal"><span class="pre">&quot;\\\\&quot;</span></tt> in order to get <tt class="docutils literal"><span class="pre">\\</span></tt> in the regular expression, and
-<tt class="docutils literal"><span class="pre">\</span></tt> in the actual text.  If both preJax and postJax are defined,
-both must be present in order to be removed.</p>
+Note that these are used as part of a regular expression, so you
+will need to quote special characters.  Furthermore, since they
+are javascript strings, you must quote javascript special
+characters as well.  So to obtain a backslash, you must use <tt class="docutils literal"><span class="pre">\\</span></tt>
+(doubled for javascript).  For example, <tt class="docutils literal"><span class="pre">&quot;\\[&quot;</span></tt> represents the
+pattern <tt class="docutils literal"><span class="pre">\[</span></tt> in the regular expression, or <tt class="docutils literal"><span class="pre">[</span></tt> in the text of
+the web page.  That means that if you want an actual backslash in
+your guard characters, you need to use <tt class="docutils literal"><span class="pre">&quot;\\\\&quot;</span></tt> in order to get
+<tt class="docutils literal"><span class="pre">\\</span></tt> in the regular expression, and <tt class="docutils literal"><span class="pre">\</span></tt> in the actual text.
+If both <tt class="docutils literal"><span class="pre">preJax</span></tt> and <tt class="docutils literal"><span class="pre">postJax</span></tt> are defined, both must be
+present in order to be removed.</p>
 <p>See also the <tt class="docutils literal"><span class="pre">preRemoveClass</span></tt> comments below.</p>
 <p>Examples:</p>
 <blockquote>
-<div><p><tt class="docutils literal"><span class="pre">preJax:</span> <span class="pre">&quot;\\\\\\\\\&quot;</span></tt> makes a double backslash the preJax text</p>
+<div><p><tt class="docutils literal"><span class="pre">preJax:</span> <span class="pre">&quot;\\\\\\\\\&quot;</span></tt> makes a double backslash the <tt class="docutils literal"><span class="pre">preJax</span></tt> text</p>
 <p><tt class="docutils literal"><span class="pre">preJax:</span> <span class="pre">&quot;\\[\\[&quot;,</span> <span class="pre">postJax:</span> <span class="pre">&quot;\\]\\]&quot;</span></tt> makes it so jax
 scripts must be enclosed in double brackets.</p>
 </div></blockquote>
