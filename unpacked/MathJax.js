@@ -124,10 +124,10 @@ MathJax.fileversion = "1.1.8";
       define: function (src) {
 	var dst = {};
 	if (src != null) {
-          for (var id in src) {if (src.hasOwnProperty(id)) {this.protoFunction(id,src[id])}}
+          for (var id in src) {if (src.hasOwnProperty(id)) {dst[id] = this.wrap(id,src[id])}}
 	  // MSIE doesn't list toString even if it is not native so handle it separately
           if (src.toString !== this.prototype.toString && src.toString !== {}.toString)
-            {this.protoFunction('toString',src.toString)}
+            {dst.toString = this.wrap('toString',src.toString)}
 	}
 	return dst;
       },
