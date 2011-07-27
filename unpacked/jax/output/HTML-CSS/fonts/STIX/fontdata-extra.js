@@ -1,9 +1,8 @@
 /*************************************************************
  *
- *  MathJax/jax/output/HTML-CSS/fonts/TeX/fontdata-extra.js
+ *  MathJax/jax/output/HTML-CSS/fonts/STIX/fontdata-extra.js
  *  
- *  Initializes the HTML-CSS OutputJax to use the MathJax TeX fonts
- *  for displaying mathematics.
+ *  Adds extra stretchy characters to the STIX data.
  *
  *  ---------------------------------------------------------------------
  *  
