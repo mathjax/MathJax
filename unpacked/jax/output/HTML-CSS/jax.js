@@ -366,6 +366,17 @@
       // Set up styles and preload web fonts
       return AJAX.Styles(this.config.styles,["PreloadWebFonts",this]);
     },
+    
+    removeSTIXfonts: function (fonts) {
+      //
+      //  Opera doesn't display large chunks of the STIX fonts, and
+      //  Safari/Windows doesn't display Plane1,
+      //  so disable STIX for these browsers.
+      //
+      for (var i = 0, m = fonts.length; i < m; i++)
+        {if (fonts[i] === "STIX") {fonts.splice(i,1); m--; i--;}}
+      if (this.config.preferredFont === "STIX") {this.config.preferredFont = fonts[0]}
+    },
 
     PreloadWebFonts: function () {
       if (!HTMLCSS.allowWebFonts || !HTMLCSS.config.preloadWebFonts) return;
@@ -2245,6 +2256,11 @@
           safariWebFontSerif: ["serif"],
           allowWebFonts: (v3p1 && !forceImages ? "otf" : false)
         });
+        if (browser.isPC) {
+          HTMLCSS.Augment({
+            adjustAvailableFonts: HTMLCSS.removeSTIXfonts
+          });
+        }
         if (forceImages) {
           //  Force image mode for iOS prior to 4.2 and Droid prior to 2.2
           //  (iPhone should do SVG web fonts, but crashes with MathJax)
@@ -2279,15 +2295,7 @@
           FontFaceBug: true,
           PaddingWidthBug: true,
           allowWebFonts: (browser.versionAtLeast("10.0") && !browser.isMini ? "otf" : false),
-          //
-          //  Opera doesn't display many STIX characters, so remove it
-          //  from the availableFonts array, if it is there.
-          //
-          adjustAvailableFonts: function (fonts) {
-            for (var i = 0, m = fonts.length; i < m; i++)
-              {if (fonts[i] === "STIX") {fonts.splice(i,1); m--; i--;}}
-            if (this.config.preferredFont === "STIX") {this.config.preferredFont = fonts[0]}
-          }
+          adjustAvailableFonts: HTMLCSS.removeSTIXfonts
         });
       },
 
