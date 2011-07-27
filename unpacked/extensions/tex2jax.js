@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.1.3",
+  version: "1.1.4",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
@@ -117,7 +117,7 @@ MathJax.Extension.tex2jax = {
   },
   
   scanElement: function (element,stop,ignore) {
-    var cname, tname, ignoreChild;
+    var cname, tname, ignoreChild, process;
     while (element && element != stop) {
       if (element.nodeName.toLowerCase() === '#text') {
         if (!ignore) {element = this.scanText(element)}
@@ -125,8 +125,10 @@ MathJax.Extension.tex2jax = {
         cname = (typeof(element.className) === "undefined" ? "" : element.className);
         tname = (typeof(element.tagName)   === "undefined" ? "" : element.tagName);
         if (typeof(cname) !== "string") {cname = String(cname)} // jsxgraph uses non-string class names!
-        if (element.firstChild && !cname.match(/(^| )MathJax/) && !this.skipTags.exec(tname)) {
-          ignoreChild = (ignore || this.ignoreClass.exec(cname)) && !this.processClass.exec(cname);
+        process = this.processClass.exec(cname);
+        if (element.firstChild && !cname.match(/(^| )MathJax/) &&
+             (process || !this.skipTags.exec(tname))) {
+          ignoreChild = (ignore || this.ignoreClass.exec(cname)) && !process;
           this.scanElement(element.firstChild,stop,ignoreChild);
         }
       }
