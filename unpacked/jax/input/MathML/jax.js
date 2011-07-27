@@ -38,6 +38,12 @@
       if (typeof math !== "string") {doc = math.parentNode} else {
         if (math.match(/^<[a-z]+:/i) && !math.match(/^<[^<>]* xmlns:/))
           {math = math.replace(/^<([a-z]+)(:math)/i,'<$1$2 xmlns:$1="http://www.w3.org/1998/Math/MathML"')}
+        // HTML5 removes xmlns: namespaces, so put them back for XML
+        var match = math.match(/^(<math( ('[^']*'|"[^"]"|[^>])+)>)/i);
+        if (match && match[2].replace(/ xmlns=".*?"/,"").match(/ [a-z]+=\"http:/i)) {
+	  math = match[1].replace(/ ([a-z]+)=("http:.*?")/ig,this.replaceXMLNS) +
+	         math.substr(match[0].length);
+        }
         math = math.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/,"$2");
         math = math.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
         doc = MATHML.ParseXML(math); if (doc == null) {MATHML.Error("Error parsing MathML")}
@@ -103,6 +109,11 @@
                    .replace(/[ \t\n\r][ \t\n\r]+/g," ");   // internal multiple whitespace
     },
     
+    replaceXMLNS: function (match,name,value) {
+      if (name === "xmlns") {return " " + name + "=" + value}
+      return " xmlns:"+name+"="+value + " " + name+"="+value;
+    },
+
     replaceEntity: function (match,entity) {
       if (entity.match(/^(lt|amp|quot)$/)) {return match} // these mess up attribute parsing
       if (MATHML.Parse.Entity[entity]) {return MATHML.Parse.Entity[entity]}
