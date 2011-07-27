@@ -125,14 +125,16 @@ preprocessor.
 .. describe:: processClass: "tex2jax_process"
 
     This is the class name used to mark elements whose contents
-    *should* be processed by `tex2jax`.  This is used to turn on
-    processing within tags that have been marked as ignored or skipped
-    above.  Note that this is a regular expression, and so you need to
-    be sure to quote any `regexp` special characters.  The pattern is
-    inserted into one that requires your pattern to match a complete
-    word, so setting ``processClass: "class2"`` would cause it to
-    match an element with ``class="class1 class2 class3"``.  Note that
-    you can assign several classes by separating them by the vertical
-    line character (``|``).  For instance, with ``processClass:
-    "class1|class2"`` any element assigned a class of either
-    ``class1`` or ``class2`` will have its contents processed.
+    *should* be processed by `tex2jax`.  This is used to restart
+    processing within tags that have been marked as ignored via the
+    ``ignoreClass`` or to cause a tag that appears in the ``skipTags``
+    list to be processed rather than skipped.  Note that this is a
+    regular expression, and so you need to be sure to quote any
+    `regexp` special characters.  The pattern is inserted into one
+    that requires your pattern to match a complete word, so setting
+    ``processClass: "class2"`` would cause it to match an element with
+    ``class="class1 class2 class3"``.  Note that you can assign
+    several classes by separating them by the vertical line character
+    (``|``).  For instance, with ``processClass: "class1|class2"`` any
+    element assigned a class of either ``class1`` or ``class2`` will
+    have its contents processed.
