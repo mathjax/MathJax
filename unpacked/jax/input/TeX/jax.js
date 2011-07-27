@@ -807,9 +807,9 @@
         leqalignno:        ['Matrix',null,null,"right left right",MML.LENGTH.THICKMATHSPACE+" 3em",".5em",'D'],
 
         //  TeX substitution macros
-        bmod:              ['Macro','\\mathbin{\\rm mod}'],
-        pmod:              ['Macro','\\pod{{\\rm mod}\\kern 6mu #1}',1],
-        mod:               ['Macro','\\mathchoice{\\kern18mu}{\\kern12mu}{\\kern12mu}{\\kern12mu}{\\rm mod}\\,\\,#1',1],
+        bmod:              ['Macro','\\mathbin{\\mmlToken{mo}{mod}}'],
+        pmod:              ['Macro','\\pod{\\mmlToken{mi}{mod}\\kern 6mu #1}',1],
+        mod:               ['Macro','\\mathchoice{\\kern18mu}{\\kern12mu}{\\kern12mu}{\\kern12mu}\\mmlToken{mi}{mod}\\,\\,#1',1],
         pod:               ['Macro','\\mathchoice{\\kern18mu}{\\kern8mu}{\\kern8mu}{\\kern8mu}(#1)',1],
         iff:               ['Macro','\\;\\Longleftrightarrow\\;'],
         skew:              ['Macro','{{#2{#3\\mkern#1mu}\\mkern-#1mu}{}}',3],
@@ -862,6 +862,8 @@
         cssId:             ['Extension','HTML'],
 //      bbox:              ['Extension','bbox'],
     
+        mmlToken:           'MmlToken',
+
         require:            'Require'
 
       },
@@ -1244,6 +1246,21 @@
         }
       } else {mml = MML.TeXAtom(this.ParseArg(name)).With(def)}
       this.Push(mml);
+    },
+    
+    MmlToken: function (name) {
+      var type = this.GetArgument(name),
+          attr = this.GetBrackets(name).replace(/^\s+/,""),
+          data = this.GetArgument(name),
+          def = {}, match;
+      if (!MML[type] || !MML[type].prototype.isToken) {TEX.Error(type+" is not a token element")}
+      while (attr !== "") {
+        match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ]*)\s*/i);
+        if (!match) {TEX.Error("Invalid MathML attribute: "+attr)}
+        def[match[1]] = match[2].replace(/^(['"])(.*)\1$/,"$2");
+        attr = attr.substr(match[0].length);
+      }
+      this.Push(this.mmlToken(MML[type](data).With(def)));
     },
     
     Strut: function (name) {
