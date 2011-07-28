@@ -298,9 +298,10 @@
       NativeMMLattribute: function (id,value) {
 	value = String(value);
 	if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaes
-	else if (value.match(/^\s*([-+]?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/)) {value = ((1/18)*RegExp.$1)+"em"} // FIXME:  should take scriptlevel into account
-	else if (value === "-tex-caligraphic") {value = "script"}
-	else if (value === "-tex-oldstyle") {value = "normal"}
+	else if (value.match(/^\s*(([-+])?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/))
+          {value = (RegExp.$2+(1/18)*RegExp.$1).replace(/(\.\d\d\d).*/,"$1")+"em"} // FIXME:  should take scriptlevel into account
+	else if (value === "-tex-caligraphic") {value = "script"} // FIXME: add a class?
+	else if (value === "-tex-oldstyle") {value = "normal"}    // FIXME: add a class?
 	return value;
       },
       //
