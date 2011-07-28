@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.8";
+MathJax.fileversion = "1.1.9";
 
 /**********************************************************/
 
@@ -1818,7 +1818,7 @@ MathJax.Hub.Startup = {
       }
     }
   },{
-    id: "unknown",
+    id: "Jax",
     version: "1.1",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
@@ -1852,6 +1852,7 @@ MathJax.Hub.Startup = {
       HUB.config.inputJax[mimetype] = this;
     }
   },{
+    id: "InputJax",
     version: "1.1",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
@@ -1874,6 +1875,7 @@ MathJax.Hub.Startup = {
     },
     Remove: function (jax) {}
   },{
+    id: "OutputJax",
     version: "1.1",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
@@ -1947,6 +1949,7 @@ MathJax.Hub.Startup = {
       }
     }
   },{
+    id: "ElementJax",
     version: "1.1",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
