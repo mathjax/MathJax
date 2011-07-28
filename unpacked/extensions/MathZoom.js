@@ -23,7 +23,7 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var CONFIG = HUB.CombineConfig("MathZoom",{
     delay: 400,   // mouse must be still this long (milliseconds)
@@ -248,10 +248,12 @@
       return {w:bbox.w*HTMLCSS.em, Y:-top, W:W};
     },
     ZoomMathML: function (root,span,math) {
-      root.toNativeMML(span,span); var top;
-      span.appendChild(this.topImg); top = this.topImg.offsetTop; span.removeChild(this.topImg);
-      var W = (this.ffMMLwidthBug ? math.parentNode : math).offsetWidth;
-      return {w:span.offsetWidth, Y:-top, W:W}
+      root.toNativeMML(span,span); 
+      if (!this.msiePositionBug) {math.previousSibling.style.display = "inline"}
+      var node = (this.ffMMLwidthBug ? math.parentNode : math);
+      var h = (math.parentNode.nodeName.toLowerCase() === "div" ? span : span.parentNode).offsetHeight;
+      var W = node.offsetWidth, H = node.offsetHeight;
+      return {w:span.offsetWidth, Y:Math.floor((H-h)/2), W:W}
     },
     
     //
