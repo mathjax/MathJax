@@ -23,7 +23,7 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
-  var VERSION = "1.1.1";
+  var VERSION = "1.1.2";
   
   var CONFIG = HUB.CombineConfig("MathZoom",{
     delay: 400,   // mouse must be still this long (milliseconds)
@@ -216,7 +216,6 @@
       else if (window.attachEvent) {attachEvent("onresize",this.Resize)}
       else {this.onresize = window.onresize; window.onresize = this.Resize}
       
-
       //
       //  Canel further actions
       //
@@ -233,7 +232,7 @@
       root.toHTML(span,span);
       var bbox = root.HTMLspanElement().bbox;
       HTMLCSS.idPostfix = "";
-      if (bbox.width && bbox.width !== "100%") {
+      if (bbox.width) {
         //  Handle full-width displayed equations
         //  FIXME: this is a hack for now
         var Mw = Math.floor(.85*document.body.clientWidth);
@@ -308,9 +307,9 @@
           var overlay = HTML.addElement(document.body,"div",{
             style:{position:"fixed", left:0, top:0, width:"100%", height:"100%",
                    backgroundColor:"white", opacity:0},
-           id: "MathJax_OperaDiv"
-         });
-         document.body.removeChild(overlay);
+            id: "MathJax_OperaDiv"
+          });
+          document.body.removeChild(overlay);
         }
         if (window.removeEventListener) {removeEventListener("resize",ZOOM.Resize,false)}
         else if (window.detachEvent) {detachEvent("onresize",ZOOM.Resize)}
