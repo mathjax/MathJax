@@ -403,6 +403,7 @@
   /*************************************************************/
 
   MathJax.Callback.Queue(
+    ["StartupHook",MathJax.Hub.Register,"Begin Styles",{}],
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathZoom Ready"],
     ["loadComplete",AJAX,"[MathJax]/extensions/MathZoom.js"]

@@ -786,6 +786,7 @@
   /*************************************************************/
 
   MathJax.Callback.Queue(
+    ["StartupHook",MathJax.Hub.Register,"Begin Styles",{}],
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathMenu Ready"],
     ["loadComplete",AJAX,"[MathJax]/extensions/MathMenu.js"]
