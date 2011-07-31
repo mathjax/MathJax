@@ -23,7 +23,7 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
-  var VERSION = "1.1.2";
+  var VERSION = "1.1.3";
   
   var CONFIG = HUB.CombineConfig("MathZoom",{
     delay: 400,   // mouse must be still this long (milliseconds)
@@ -181,30 +181,30 @@
       if (this.msieZIndexBug) {
         //  MSIE doesn't do z-index properly, so move the div to the document.body,
         //  and use an empty span as a tracker for the usual position
-        var tracker = HTML.Element("img",{
-          src:"about:blank", id:"MathJax_ZoomTracker",
+        var tracker = HTML.addElement(document.body,"img",{
+          src:"about:blank", id:"MathJax_ZoomTracker", width: 0, height: 0,
           style:{width:0, height:0, position:"relative"}
         });
-        document.body.appendChild(div);
-        div.style.position = "absolute";
+        div.style.position = "relative";
         div.style.zIndex = CONFIG.styles["#MathJax_ZoomOverlay"]["z-index"];
         div = tracker;
       }
-      var bbox = (this["Zoom"+JAX])(root,span,math);
+
+      var bbox = (this["Zoom"+JAX])(root,span,math,Mw,Mh);
+      
+      //
+      //  Fix up size and position for browsers with bugs (IE)
+      //
       if (this.msiePositionBug) {
-        if (this.msieIE8Bug) {
-          // IE8 gets height completely wrong
-          span.style.position = "absolute"; zoom.style.height = span.offsetHeight; span.style.position = "";
-          if (zoom.offsetHeight <= Mh && zoom.offsetWidth <= Mw) {zoom.style.overflow = "visible"}
-        }
-        if (this.msieWidthBug) {zoom.style.width = Math.min(Mw,bbox.w)}
-          else if (bbox.w > Mw) {zoom.style.width = Mw}
-        if (zoom.offsetHeight > Mh) {zoom.style.Height = Mh+"px"}  // IE doesn't do max-height?
+        if (this.msieSizeBug) 
+          {zoom.style.height = bbox.zH+"px"; zoom.style.width = bbox.zW+"px"} // IE8 gets the dimensions completely wrong
+        if (zoom.offsetHeight > Mh) {zoom.style.height = Mh+"px"}  // IE doesn't do max-height?
+        if (zoom.offsetWidth  > Mw) {zoom.style.width  = Mw+"px"}
         if (math.nextSibling) {math.parentNode.insertBefore(div,math.nextSibling)}
           else {parent.appendChild(div)}                           // needs to be after to be above?
-      } else if (this.operaPositionBug) {
-        zoom.style.width = Math.min(Mw,span.offsetWidth)+"px";     // gets width as 0?
       }
+      if (this.operaPositionBug) {zoom.style.width = Math.min(Mw,bbox.zW)+"px"}  // Opera gets width as 0?
+      if (zoom.offsetWidth <= Mw && zoom.offsetHeight <= Mh) {zoom.style.overflow = "visible"}
       this.Position(zoom,bbox,(JAX === "MathML" && parent.nodeName.toLowerCase() === "div"));
       zoom.style.visibility = "";
 
@@ -225,7 +225,10 @@
     //
     //  Handle the jax-specific output
     //
-    ZoomHTMLCSS: function (root,span,math) {
+    ZoomHTMLCSS: function (root,span,math,Mw,Mh) {
+      //
+      //  Re-render at larger size
+      //
       span.className = "MathJax";
       HTMLCSS.idPostfix = "-zoom";
       HTMLCSS.getScales(span,span);
@@ -235,35 +238,85 @@
       if (bbox.width) {
         //  Handle full-width displayed equations
         //  FIXME: this is a hack for now
-        var Mw = Math.floor(.85*document.body.clientWidth);
-        span.style.width = Mw+"px"; span.style.display="inline-block";
+        span.style.width = Math.floor(Mw-1.5*HTMLCSS.em)+"px"; span.style.display="inline-block";
         var id = (root.id||"MathJax-Span-"+root.spanID)+"-zoom";
         var child = document.getElementById(id).firstChild;
         while (child && child.style.width !== bbox.width) {child = child.nextSibling}
         if (child) {child.style.width = "100%"}
       }
-      span.appendChild(this.topImg); var top = this.topImg.offsetTop; span.removeChild(this.topImg);
-      var W = (this.msieWidthBug ? HTMLCSS.getW(math)*HTMLCSS.em : math.offsetWidth);
-      return {w:bbox.w*HTMLCSS.em, Y:-top, W:W};
+      //
+      //  Get height and width of zoomed math and original math
+      //
+      span.style.position = math.style.position = "absolute";
+      var zW = span.offsetWidth, zH = span.offsetHeight,
+          mH = math.offsetHeight, mW = math.offsetWidth;
+      span.style.position = math.style.position = "";
+      if (mW === 0) {mW = math.offseWidth || math.parentNode.offsetWidth}; // IE7 gets mW == 0?
+      //
+      return {Y:-this.getTop(root,span,math,this.msieTopBug,this.msieBorderBug,false),
+              mW:mW, mH:mH, zW:zW, zH:zH};
     },
     ZoomMathML: function (root,span,math) {
-      root.toNativeMML(span,span); 
-      if (!this.msiePositionBug) {math.previousSibling.style.display = "inline"}
-      var node = (this.ffMMLwidthBug ? math.parentNode : math);
-      var h = (math.parentNode.nodeName.toLowerCase() === "div" ? span : span.parentNode).offsetHeight;
-      var W = node.offsetWidth, H = node.offsetHeight;
-      return {w:span.offsetWidth, Y:Math.floor((H-h)/2), W:W}
+      root.toNativeMML(span,span);
+      var top = this.getTop(root,span,math,this.msieTopMMLBug,false,this.ffMMLdisplayBug);
+      var mW = math.offsetWidth  || math.scrollWidth,
+          mH = math.offsetHeight || math.scrollHeight;
+      if (this.msieIE8HeightBug) {span.style.position = "absolute"}
+      var zW = span.offsetWidth, zH = span.offsetHeight;
+      if (this.msieIE8HeightBug) {span.style.position = ""}
+      if (this.ffMMLdisplayBug) {
+        // Force width in FF, since it gets the math element width wrong
+        span.style.display="inline-block";
+        span.style.width = zW+"px";
+      }
+      return {Y:-top, mW:mW, mH:mH, zW:zW, zH:zH}
+    },
+    
+    //
+    //  Get top offset from baseline
+    //
+    getTop: function (root,span,math,topBug,borderBug,mmlBug) {
+      span.appendChild(this.topImg);
+      if (mmlBug && math.getAttribute("display") === "block") {
+        // FF breaks between the display math and the image, so 
+        // convert display to inline with displaystyle true
+        math.setAttribute("display","inline"); math.MJinline = true;
+        var mstyle = root.NativeMMLelement("mstyle");
+        while (math.firstChild) {mstyle.appendChild(math.firstChild)}
+        math.appendChild(mstyle); mstyle.setAttribute("displaystyle","true");
+      }
+      if (math.MJinline) {
+        // FF breaks between the display math and the image, so 
+        // convert display to inline with displaystyle true
+        span.insertBefore(this.topImg,span.firstChild);
+        var zmath = span.childNodes[1], zstyle = root.NativeMMLelement("mstyle");
+        zmath.setAttribute("display","inline");
+        while (zmath.firstChild) {zstyle.appendChild(zmath.firstChild)}
+        zmath.appendChild(zstyle); zstyle.setAttribute("displaystyle","true");
+        zstyle.setAttribute("displaystyle","true");
+      }
+      var top = this.topImg.offsetTop;
+      if (topBug) {
+        // For IE, frame is not at the baseline, so remove extra height
+        var wrap = math.parentNode.style.whiteSpace;
+        math.parentNode.style.whiteSpace = "nowrap";
+        math.parentNode.insertBefore(this.topImg,math);
+        top -= this.topImg.offsetTop - span.parentNode.parentNode.offsetTop;
+        math.parentNode.style.whiteSpace = wrap;
+      }
+      if (borderBug) {top += Math.floor(.5*HTMLCSS.em)} // adjust for zoom box padding
+      this.topImg.parentNode.removeChild(this.topImg);
+      return top;
     },
     
     //
     //  Set the position of the zoom box and overlay
     //
     Position: function (zoom,bbox,MMLdisplay) {
-      var XY = this.Resize(), x = XY.x, y = XY.y, W = bbox.W;
-      if (this.msiePositionBug) {W = -W}
-      if (MMLdisplay && this.ffMMLcenterBug) {W = 0}
+      var XY = this.Resize(), x = XY.x, y = XY.y, W = bbox.mW;
+      if (this.msieIE8Bug) {W = -W}
       var dx = -Math.floor((zoom.offsetWidth-W)/2), dy = bbox.Y;
-      zoom.style.left = Math.max(dx,20-x)+"px"; zoom.style.top = Math.max(dy,20-y)+"px";
+      zoom.style.left = Math.max(dx,10-x)+"px"; zoom.style.top = Math.max(dy,10-y)+"px";
     },
     
     //
@@ -272,15 +325,13 @@
     Resize: function (event) {
       if (ZOOM.onresize) {ZOOM.onresize(event)}
       var x = 0, y = 0,
-          div = document.getElementById("MathJax_ZoomFrame"),
+          div = document.getElementById("MathJax_ZoomFrame"), obj = div,
           overlay = document.getElementById("MathJax_ZoomOverlay");
-      var obj = (ZOOM.msieZIndexBug ? document.getElementById("MathJax_ZoomTracker") : div);
       if (ZOOM.operaPositionBug) {div.style.border = "1px solid"}  // to get vertical position right
       if (obj.offsetParent) {
         do {x += obj.offsetLeft; y += obj.offsetTop} while (obj = obj.offsetParent);
       }
       if (ZOOM.operaPositionBug) {div.style.border = ""}
-      if (ZOOM.msieZIndexBug) {div.style.left = x+"px"; div.style.top = y+"px"}
       overlay.style.left = (-x)+"px"; overlay.style.top = (-y)+"px";
       if (ZOOM.msiePositionBug) {setTimeout(ZOOM.SetWH,0)} else {ZOOM.SetWH()}
       return {x:x, y:y};
@@ -374,10 +425,16 @@
     MSIE: function (browser) {
       var quirks = (document.compatMode === "BackCompat");
       var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
-      ZOOM.msiePositionBug = true;
-      ZOOM.msieWidthBug = !quirks;
-      ZOOM.msieIE8Bug = isIE8;
+      var isIE9 = document.documentMode >= 9;
+      ZOOM.msiePositionBug = !isIE9;
+      ZOOM.msieSizeBug = browser.versionAtLeast("7.0") &&
+        (!document.documentMode || document.documentMode === 7 || document.documentMode === 8);
+      ZOOM.msieIE8Bug = isIE8 && (document.documentMode === 8);
+      ZOOM.msieIE8HeightBug = (document.documentMode === 8);
       ZOOM.msieZIndexBug = !isIE8;
+      ZOOM.msieTopBug = (!browser.versionAtLeast("8.0") || document.documentMode === 7);
+      ZOOM.msieTopMMLBug = ZOOM.msieTopBug || (!isIE8 || document.documentMode >= 9);
+      ZOOM.msieBorderBug = quirks && browser.versionAtLeast("8.0");
       ZOOM.msieInlineBlockAlignBug = (!isIE8 || quirks);
       if (document.documentMode >= 9) {delete CONFIG.styles["#MathJax_Zoom"].filter}
     },
@@ -388,16 +445,15 @@
     },
     
     Firefox: function (browser) {
-      ZOOM.ffMMLwidthBug = true;
-      ZOOM.ffMMLcenterBug = true;
+      ZOOM.ffMMLdisplayBug = true;
     }
   });
   
   ZOOM.topImg = (ZOOM.msieInlineBlockAlignBug ?
-    HTML.Element("img",{style:{width:0,height:0},src:"about:blank"}) :
+    HTML.Element("img",{style:{width:0,height:0,position:"relative"},src:"about:blank"}) :
     HTML.Element("span",{style:{width:0,height:0,display:"inline-block"}})
   );
-  if (ZOOM.operaPositionBug) {ZOOM.topImg.style.border="1px solid"}
+  if (ZOOM.operaPositionBug || ZOOM.msieTopBug) {ZOOM.topImg.style.border="1px solid"}
 
   /*************************************************************/
 
