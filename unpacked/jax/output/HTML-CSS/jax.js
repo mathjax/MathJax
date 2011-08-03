@@ -2081,7 +2081,7 @@
 	//
 	//  Adjust bbox to match outer em-size
 	// 
-	var f = HTMLCSS.em / HTMLCSS.outerEm; HTMLCSS.em /= f;
+        var p = 1/HTMLCSS.em, f = HTMLCSS.em / HTMLCSS.outerEm; HTMLCSS.em /= f;
 	span.bbox.h *= f; span.bbox.d *= f; span.bbox.w *= f;
 	span.bbox.lw *= f; span.bbox.rw *= f;
 	if (math && math.bbox.width != null) {
@@ -2095,7 +2095,7 @@
 	//
 	//  Make math span be the correct height and depth
 	//
-	if (math) {HTMLCSS.createRule(span,math.bbox.h*f,math.bbox.d*f,0)}
+	if (math) {HTMLCSS.createRule(span,(math.bbox.h+p)*f,(math.bbox.d+p)*f,0)}
 	//
 	//  Handle indentalign and indentshift for single-line display equations
 	//
