@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.9";
+MathJax.fileversion = "1.1.10";
 
 /**********************************************************/
 
@@ -1782,8 +1782,12 @@ MathJax.Hub.Startup = {
       return this;
     },
     Process: function (element) {
-      var load = AJAX.Require(this.directory+"/"+this.JAXFILE);
-      if (!load.called) {this.constructor.prototype.Process = function (element) {return load}}
+      var load, file = this.directory+"/"+this.JAXFILE;
+      this.constructor.prototype.Process = function (element) {
+        if (!load.called) {return load}
+        throw Error(file+" failed to load properly");
+      };
+      load = AJAX.Require(file);
       return load;
     },
     Translate: function (element) {
