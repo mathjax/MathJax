@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -99,6 +99,16 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           RCALIGN[i] = row.columnalign.split(/ /);
           while (RCALIGN[i].length <= J) {RCALIGN[i].push(RCALIGN[i][RCALIGN[i].length-1])}
         }
+      }
+
+      //
+      //  Handle equal heights
+      //
+      if (values.equalrows) {
+        // FIXME:  should really be based on row align (below is for baseline)
+        var Hm = Math.max.apply(Math,H), Dm = Math.max.apply(Math,D);
+        for (i = 0, m = A.length; i < m; i++)
+          {s = ((Hm + Dm) - (H[i] + D[i])) / 2;  H[i] += s; D[i] += s}
       }
 
       //  FIXME:  do background colors for entire cell (include half the intercolumn space?)
@@ -208,15 +218,6 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           }
         }
       }
-      //
-      //  Handle equal heights
-      //
-      if (values.equalrows) {
-        // FIXME:  should really be based on row align (below is for baseline)
-        var Hm = Math.max.apply(Math,H), Dm = Math.max.apply(Math,D);
-        for (i = 0, m = A.length; i < m; i++)
-          {s = ((Hm + Dm) - (H[i] + D[i])) / 2;  H[i] += s; D[i] += s}
-      }
       
       //
       //  Lay out array columns
@@ -240,6 +241,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
                    bottom: A[i][j].bbox.d - D[i],
                    center: ((H[i]-D[i]) - (A[i][j].bbox.h-A[i][j].bbox.d))/2,
                    baseline: 0, axis: 0})[align]; // FIXME:  handle axis better?
+alert([align,y,dy,H[i],D[i],A[i][j].bbox.h,A[i][j].bbox.d]);
             align = (cell.columnalign||RCALIGN[i][j]||CALIGN[j])
             HTMLCSS.alignBox(A[i][j],align,y+dy);
           }
