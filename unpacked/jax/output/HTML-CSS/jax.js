@@ -1328,7 +1328,7 @@
 	if (values.background && !this.mathbackground) {values.mathbackground = values.background}
 	if (values.mathcolor) {span.style.color = values.mathcolor}
 	if (values.mathbackground && values.mathbackground !== MML.COLOR.TRANSPARENT) {
-	  var dd = 1/HTMLCSS.em, lW = 0, rW = 0;
+	  var dd = (span.bbox.exact ? 0 : 1/HTMLCSS.em), lW = 0, rW = 0;
 	  if (this.isToken) {lW = span.bbox.lw; rW = span.bbox.rw - span.bbox.w}
 	  if (span.style.paddingLeft  !== "") {lW += parseFloat(span.style.paddingLeft)*(span.scale||1)}
 	  if (span.style.paddingRight !== "") {rW -= parseFloat(span.style.paddingRight)*(span.scale||1)}
@@ -1671,6 +1671,9 @@
 	  if (values.width  !== "") {span.bbox.w = this.HTMLlength2em(box,values.width,"w",0)}
 	  if (span.bbox.H <= span.bbox.h) {delete span.bbox.H}
 	  if (span.bbox.D <= span.bbox.d) {delete span.bbox.D}
+          var dimen = /^\s*(\d+(\.\d*)?|\.\d+)\s*(pt|em|ex|mu|px|pc|in|mm|cm)\s*$/
+          span.bbox.exact = (this.data[0] && this.data[0].data.length == 0) ||
+             dimen.exec(values.height) || dimen.exec(values.width) || dimen.exec(values.depth);
 	  HTMLCSS.setStackWidth(stack,span.bbox.w);
 	}
 	this.HTMLhandleSpace(span);
