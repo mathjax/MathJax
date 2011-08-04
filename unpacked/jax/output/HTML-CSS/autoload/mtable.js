@@ -241,7 +241,6 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
                    bottom: A[i][j].bbox.d - D[i],
                    center: ((H[i]-D[i]) - (A[i][j].bbox.h-A[i][j].bbox.d))/2,
                    baseline: 0, axis: 0})[align]; // FIXME:  handle axis better?
-alert([align,y,dy,H[i],D[i],A[i][j].bbox.h,A[i][j].bbox.d]);
             align = (cell.columnalign||RCALIGN[i][j]||CALIGN[j])
             HTMLCSS.alignBox(A[i][j],align,y+dy);
           }
