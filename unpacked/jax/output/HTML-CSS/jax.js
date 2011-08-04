@@ -640,7 +640,10 @@
         if (HTMLCSS.safariNegativeSpaceBug && span.parentNode.firstChild == span)
           {this.createBlank(span,0,true)}
       }
-      if (color && color !== MML.COLOR.TRANSPARENT) {span.style.backgroundColor = color}
+      if (color && color !== MML.COLOR.TRANSPARENT) {
+        span.style.backgroundColor = color;
+        span.style.position = "relative"; // make sure it covers earlier items
+      }
       return span;
     },
     createRule: function (span,h,d,w,color) {
