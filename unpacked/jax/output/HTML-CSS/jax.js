@@ -524,7 +524,7 @@
     },
     getW: function (span) {
       var W = span.offsetWidth, w = (span.bbox ? span.bbox.w: -1), start = span;
-      if ((w < 0 || this.negativeSkipBug) && W >= 0) {
+      if ((w < 0 || this.negativeSkipBug) && W >= 0 && !span.style.width) {
         // IE can't deal with a space at the beginning, so put something else first
         if (this.negativeSkipBug) {
           var position = span.style.position; span.style.position = "absolute";
