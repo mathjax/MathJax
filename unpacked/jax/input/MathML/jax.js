@@ -213,7 +213,7 @@
       MML = MathJax.ElementJax.mml;
       MML.mspace.Augment({mmlSelfClosing: true});
       MML.none.Augment({mmlSelfClosing: true});
-      MML.mprescripts.Augment({mmlSelfClossing:true});
+      MML.mprescripts.Augment({mmlSelfClosing:true});
     }
   });
   
