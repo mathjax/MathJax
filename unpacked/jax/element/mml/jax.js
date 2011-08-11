@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "1.1.1",
+  version: "1.1.2",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -215,6 +215,7 @@ MathJax.ElementJax.mml.Augment({
       mathcolor: MML.INHERIT
     },
     noInherit: {},
+    linebreakContainer: FALSE,
     
     Init: function () {
       this.data = [];
@@ -343,16 +344,23 @@ MathJax.ElementJax.mml.Augment({
     isEmbellished: function () {return FALSE},
     Core: function () {return this},
     CoreMO: function () {return this},
-    lineBreak: function () {
+    lineBreak: function () {  // FIXME:  should be removed (and from elements below) when SVG is converted to new linebreak style
       if (this.isEmbellished()) {return this.CoreMO().lineBreak()} else {return "none"}
+    },
+    hasNewline: function () {
+      if (this.isEmbellished()) {return this.CoreMO().hasNewline()}
+      if (this.isToken || this.linebreakContainer) {return FALSE}
+      for (var i = 0, m = this.data.length; i < m; i++) {
+        if (this.data[i] && this.data[i].hasNewline()) {return TRUE}
+      }
+      return FALSE;
     },
     array: function () {if (this.inferred) {return this.data} else {return [this]}},
     toString: function () {return this.type+"("+this.data.join(",")+")"}
   },{
     childrenSpacelike: function () {
-      for (var i = 0; i < this.data.length; i++) {
-        if (!this.data[i].isSpacelike()) {return FALSE}
-      }
+      for (var i = 0, m = this.data.length; i < m; i++)
+        {if (!this.data[i].isSpacelike()) {return FALSE}}
       return TRUE;
     },
     childEmbellished: function () {
@@ -533,6 +541,7 @@ MathJax.ElementJax.mml.Augment({
       return MML.FORM.INFIX;
     },
     isEmbellished: function () {return TRUE},
+    hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)},
     lineBreak: function () {
       var values = this.getValues("linebreak","linebreakstyle");
       if (values.linebreak === MML.LINEBREAK.NEWLINE) {
@@ -589,6 +598,7 @@ MathJax.ElementJax.mml.Augment({
       depth: "0ex",
       linebreak: MML.LINEBREAK.AUTO
     },
+    hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)},
     lineBreak: function () {
       return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE ?
                 MML.LINEBREAKSTYLE.AFTER : "none");
@@ -675,6 +685,7 @@ MathJax.ElementJax.mml.Augment({
 
   MML.mfrac = MML.mbase.Subclass({
     type: "mfrac", num: 0, den: 1,
+    linebreakContainer: TRUE,
     texClass: MML.TEXCLASS.INNER,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
@@ -703,6 +714,7 @@ MathJax.ElementJax.mml.Augment({
   MML.msqrt = MML.mbase.Subclass({
     type: "msqrt",
     inferRow: TRUE,
+    linebreakContainer: TRUE,
     texClass: MML.TEXCLASS.ORD,
     setTeXclass: MML.mbase.setSeparateTeXclasses,
     adjustChild_texprimestyle: function (n) {return TRUE}
@@ -710,6 +722,7 @@ MathJax.ElementJax.mml.Augment({
 
   MML.mroot = MML.mbase.Subclass({
     type: "mroot",
+    linebreakContainer: TRUE,
     texClass: MML.TEXCLASS.ORD,
     adjustChild_displaystyle: function (n) {
       if (n === 1) {return FALSE}
@@ -767,6 +780,7 @@ MathJax.ElementJax.mml.Augment({
   MML.merror = MML.mbase.Subclass({
     type: "merror",
     inferRow: TRUE,
+    linebreakContainer: TRUE,
     texClass: MML.TEXCLASS.ORD
   });
 
@@ -852,6 +866,7 @@ MathJax.ElementJax.mml.Augment({
   MML.menclose = MML.mbase.Subclass({
     type: "menclose",
     inferRow: TRUE,
+    linebreakContainer: TRUE,
     defaults: {
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
@@ -863,6 +878,7 @@ MathJax.ElementJax.mml.Augment({
 
   MML.msubsup = MML.mbase.Subclass({
     type: "msubsup", base: 0, sub: 1, sup: 2,
+    linebreakContainer: TRUE,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -910,6 +926,7 @@ MathJax.ElementJax.mml.Augment({
     type: "munderover",
     base: 0, under: 1, over: 2, sub: 1, sup: 2,
     ACCENTS: ["", "accentunder", "accent"],
+    linebreakContainer: TRUE,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -989,6 +1006,7 @@ MathJax.ElementJax.mml.Augment({
         side: TRUE, minlabelspacing: TRUE, texClass: TRUE, useHeight: 1
       }
     },
+    linebreakContainer: TRUE,
     Append: function () {
       for (var i = 0, m = arguments.length; i < m; i++) {
         if (!((arguments[i] instanceof MML.mtr) ||
@@ -1013,6 +1031,7 @@ MathJax.ElementJax.mml.Augment({
       mrow: {rowalign: TRUE, columnalign: TRUE, groupalign: TRUE},
       mtable: {rowalign: TRUE, columnalign: TRUE, groupalign: TRUE}
     },
+    linebreakContainer: TRUE,
     Append: function () {
       for (var i = 0, m = arguments.length; i < m; i++) {
         if (!(arguments[i] instanceof MML.mtd)) {arguments[i] = MML.mtd(arguments[i])}
@@ -1025,6 +1044,7 @@ MathJax.ElementJax.mml.Augment({
   MML.mtd = MML.mbase.Subclass({
     type: "mtd",
     inferRow: TRUE,
+    linebreakContainer: TRUE,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -1098,6 +1118,7 @@ MathJax.ElementJax.mml.Augment({
   });
   MML.annotation = MML.mbase.Subclass({
     type: "annotation", isToken: TRUE,
+    linebreakContainer: TRUE,
     defaults: {
       definitionURL: null,
       encoding: null,
@@ -1143,6 +1164,8 @@ MathJax.ElementJax.mml.Augment({
       indentalign: MML.INDENTALIGN.AUTO,
       indentalignfirst: MML.INDENTALIGN.INDENTALIGN,
       indentshiftfirst: MML.INDENTSHIFT.INDENTSHIFT,
+      indentalignlast:  MML.INDENTALIGN.INDENTALIGN,
+      indentshiftlast:  MML.INDENTSHIFT.INDENTSHIFT,
       decimalseparator: ".",
       texprimestyle: FALSE     // is it in TeX's C' style?
     },
@@ -1150,6 +1173,7 @@ MathJax.ElementJax.mml.Augment({
       if (name === "displaystyle") {return this.Get("display") === "block"}
       return "";
     },
+    linebreakContainer: TRUE,
     setTeXclass: MML.mbase.setChildTeXclass
   });
   
@@ -1369,6 +1393,7 @@ MathJax.ElementJax.mml.Augment({
         '~': MO.WIDEACCENT     // tilde
       },
       infix: {
+        '': MO.ORD,            // empty <mo>
         '%': [3,3,TEXCLASS.ORD], // percent sign
         '\u2022': MO.BIN4,     // bullet
         '\u2026': MO.INNER,    // horizontal ellipsis
