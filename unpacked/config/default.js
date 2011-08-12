@@ -380,17 +380,14 @@ MathJax.Hub.Config({
     //
     //  Equation numbering parameters.
     //  
-    //  If you uncomment any of the format parameters, be sure to add
-    //  a comma after autoNumber, and be sure you don't have a comma
-    //  after the last uncommented format.
-    //
     equationNumbers: {
-      autoNumber: "none"   // "AMS" for standard AMS environment numbering,
-                           //  or "all" to number all displayed equations
 //    formatNumber: function (n) {return n},            // format for equation number n
 //    formatTag:    function (n) {return '('+n+')'},    // format for \tag and \eqref
 //    formatID:     function (n) {return 'mjx-eqn-'+n}, // element ID to use for reference
-//    formatURL:    function (n) {return '#mjx-eqn-'+escape(n)}   // URL to use for references
+//    formatURL:    function (n) {return '#mjx-eqn-'+escape(n)},   // URL to use for references
+
+      autoNumber: "none"   // "AMS" for standard AMS environment numbering,
+                           //  or "all" to number all displayed equations
     }
     
   },
