@@ -202,7 +202,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var cname = this.GetArgument(name),
           arg = this.InternalMath(this.GetArgument(name));
       this.Push(MML.mpadded.apply(MML,arg).With({
-        mathbackground:COLOR.getColor("named",cname),
+        mathbackground:COLOR.getColor("named",cname)
       }).With(COLOR.padding()));
     },
     
