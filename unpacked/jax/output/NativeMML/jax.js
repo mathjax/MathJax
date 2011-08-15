@@ -215,7 +215,6 @@
               [this,arguments.callee,EVENT,force]  // call this function again
             );
           }
-          if (!event) {event = window.event}
           if (event.preventDefault) {event.preventDefault()}
           if (event.stopPropagation) {event.stopPropagation()}
           event.cancelBubble = true;

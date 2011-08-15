@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.7";
+MathJax.fileversion = "1.1.8";
 
 /**********************************************************/
 
@@ -2050,6 +2050,8 @@ MathJax.Hub.Startup = {
       else if (v >  500) {browser.version = "3.0"}
       else if (v >  400) {browser.version = "2.0"}
       else if (v >   85) {browser.version = "1.0"}
+      browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
+      browser.noContextMenu = browser.isMobile;
     },
     Firefox: function (browser) {
       if (browser.version === "0.0" && navigator.product === "Gecko" && navigator.productSub) {
@@ -2058,6 +2060,8 @@ MathJax.Hub.Startup = {
         else if (date >= "20080617") {browser.version = "3.0"}
         else if (date >= "20061024") {browser.version = "2.0"}
       }
+      browser.isMobile = (navigator.appVersion.match(/Android/i) != null ||
+                          navigator.userAgent.match(/ Fennec\//) != null);
     },
     Opera: function (browser) {browser.version = opera.version()},
     MSIE: function (browser) {

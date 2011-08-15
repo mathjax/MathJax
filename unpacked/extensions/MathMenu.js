@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.1.4";
+  var VERSION = "1.1.5";
   
   MathJax.Extension.MathMenu = {version: VERSION};
 
@@ -148,7 +148,7 @@
     }
     return false;
   };
-
+  
   /*************************************************************/
   /*
    *  The main menu class
@@ -170,7 +170,11 @@
       if (!event) {event = window.event};
       var title = (!this.title ? null : [["div",{className: "MathJax_MenuTitle"},[this.title]]]);
       var div = document.getElementById("MathJax_MenuFrame");
-      if (!div) {div = MENU.Background(this)}
+      if (!div) {
+        div = MENU.Background(this);
+        delete ITEM.lastItem; delete ITEM.lastMenu;
+        delete MENU.skipUp;
+      }
       var menu = HTML.addElement(div,"div",{
         onmouseup: MENU.Mouseup, ondblclick: this.False,
         ondragstart: this.False, onselectstart: this.False, oncontextmenu: this.False,
@@ -189,15 +193,16 @@
       if (!parent) {
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
            {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
+        if (MENU.isMobile) {x -= menu.offsetWidth / 2; y -= 20}
         MENU.skipUp = true;
       } else {
         var side = "left", mw = parent.offsetWidth;
-        x = parent.offsetWidth - 2; y = 0;
+        x = (MENU.isMobile ? 30 : mw - 2); y = 0;
         while (parent && parent !== div) {
           x += parent.offsetLeft; y += parent.offsetTop;
           parent = parent.parentNode;
         }
-        if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
+        if (x + menu.offsetWidth > document.body.offsetWidth - this.margin && !MENU.isMobile)
           {side = "right"; x = Math.max(this.margin,x - mw - menu.offsetWidth + 6)}
         if (!isPC) {
           // in case these ever get implemented
@@ -228,22 +233,46 @@
       if (MENU.skipUp) {delete MENU.skipUp} else {this.Remove(event,menu)}
     },
 
-    False: FALSE
+    False: FALSE,
+    
+    /*
+     *  Find a named item in a menu (or submenu).
+     *  A lsit of names means descend into submenus.
+     */
+    Find: function (name) {
+      var names = [].slice.call(arguments,1);
+      for (var i = 0, m = this.items.length; i < m; i++) {
+        if (this.items[i].name === name) {
+          if (names.length) {
+            if (!this.items[i].menu) {return null}
+            return this.items[i].menu.Find.apply(this.items[i].menu,names);
+          }
+          return this.items[i];
+        }
+      }
+      return null;
+    }
+    
   },{
+    
     config: CONFIG,
 
     div: null,     // the DOM elements for the menu and submenus
 
-    Remove:    function (event) {MENU.Event(event,this,"Remove")},
-    Mouseover: function (event) {MENU.Event(event,this,"Mouseover")},
-    Mouseout:  function (event) {MENU.Event(event,this,"Mouseout")},
-    Mousedown: function (event) {MENU.Event(event,this,"Mousedown")},
-    Mouseup:   function (event) {MENU.Event(event,this,"Mouseup")},
-    Mousemove: function (event) {MENU.Event(event,this,"Mousemove")},
+    Remove:     function (event) {return MENU.Event(event,this,"Remove")},
+    Mouseover:  function (event) {return MENU.Event(event,this,"Mouseover")},
+    Mouseout:   function (event) {return MENU.Event(event,this,"Mouseout")},
+    Mousedown:  function (event) {return MENU.Event(event,this,"Mousedown")},
+    Mouseup:    function (event) {return MENU.Event(event,this,"Mouseup")},
+    Touchstart: function (event) {return MENU.Event(event,this,"Touchstart")},
+    Touchend:   function (event) {return MENU.Event(event,this,"Touchend")},
     Event: function (event,menu,type) {
       if (!event) {event = window.event}
       var item = menu.menuItem;
+//debug(type+" "+(item||{}).name);
+//try {
       if (item && item[type]) {return item[type](event,menu)}
+//} catch (err) {debug(err.message)}
       return null;
     },
 
@@ -300,8 +329,9 @@
       if (!this.hidden) {
         var def = {
           onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
-          onmouseup: MENU.Mouseup, onmousedown: this.False,
+          onmouseup: MENU.Mouseup, onmousedown: MENU.Mousedown,
           ondragstart: this.False, onselectstart: this.False, onselectend: this.False,
+          ontouchstart: MENU.Touchstart, ontouchend: MENU.Touchend,
           className: "MathJax_MenuItem", menuItem: this
         };
         if (this.disabled) {def.className += " MathJax_MenuDisabled"}
@@ -332,7 +362,20 @@
       if (this.timer) {clearTimeout(this.timer); delete this.timer}
     },
     Mouseup: function (event,menu) {return this.Remove(event,menu)},
-
+    
+    Touchstart: function (event,menu) {return this.TouchEvent(event,menu,"Mousedown")},
+    Touchend: function (event,menu)   {return this.TouchEvent(event,menu,"Mouseup")},
+    TouchEvent: function (event,menu,type) {
+      if (this !== ITEM.lastItem) {
+        if (ITEM.lastMenu) {MENU.Event(event,ITEM.lastMenu,"Mouseout")}
+        MENU.Event(event,menu,"Mouseover");
+        ITEM.lastItem = this; ITEM.lastMenu = menu;
+      }
+      if (this.nativeTouch) {return null}
+      MENU.Event(event,menu,type);
+      return false;
+    },
+    
     Remove: function (event,menu) {
       menu = menu.parentNode.menuItem;
       return menu.Remove(event,menu);
@@ -356,9 +399,10 @@
       this.name = name; this.action = action;
       this.With(def);
     },
+    
     Label: function (def,menu) {return [this.name]},
     Mouseup: function (event,menu) {
-      if (!this.disabled) {this.Remove(event,menu); this.action.call(this,event)}
+      if (!this.disabled) {this.Remove(event,menu); this.action.call(this,event);}
       return this.False(event);
     }
   });
@@ -377,13 +421,27 @@
       this.menu = MENU.apply(MENU,[].slice.call(arguments,i));
     },
     Label: function (def,menu) {
-      def.onmousemove = MENU.Mousemove; this.menu.posted = false;
+      this.menu.posted = false;
       return [this.name+" ",["span",{className:"MathJax_MenuArrow"},[this.marker]]];
     },
     Timer: function (event,menu) {
       if (this.timer) {clearTimeout(this.timer)}
       event = {clientX: event.clientX, clientY: event.clientY}; // MSIE can't pass the event below
       this.timer = setTimeout(MathJax.Callback(["Mouseup",this,event,menu]),CONFIG.delay);
+    },
+    Touchstart: function (event,menu) {
+      this.skipUp = !this.menu.posted;
+      return this.SUPER(arguments).Touchstart.apply(this,arguments);
+    },
+    Touchend: function (event,menu) {
+      var result = false;
+      if (!this.skipUp) {
+        var forceout = this.menu.posted;
+        result = this.SUPER(arguments).Touchend.apply(this,arguments);
+        if (forceout) {this.Deactivate(menu); delete ITEM.lastItem; delete ITEM.lastMenu}
+      }
+      delete this.skipUp;
+      return result;
     },
     Mouseup: function (event,menu) {
       if (!this.disabled) {
@@ -599,19 +657,29 @@
     var w = MENU.ShowSource.Window(event);
     text = text.replace(/^\s*/,"").replace(/\s*$/,"");
     text = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-    w.document.open();
-    w.document.write("<html><head><title>MathJax Equation Source</title></head><body style='font-size:85%'>");
-    w.document.write("<table><tr><td><pre>"+text+"</pre></td></tr></table>");
-    w.document.write("</body></html>"); w.document.close();
-    var table = w.document.body.firstChild;
-    var H = (w.outerHeight-w.innerHeight)||30, W = (w.outerWidth-w.innerWidth)||30;
-    W = Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25);
-    H = Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25);
-    w.resizeTo(W,H);
-    if (event && event.screenX != null) {
-      var x = Math.max(0,Math.min(event.screenX-Math.floor(W/2), screen.width-W-20)),
-          y = Math.max(0,Math.min(event.screenY-Math.floor(H/2), screen.height-H-20));
-      w.moveTo(x,y);
+    if (MENU.isMobile) {
+      w.document.open();
+      w.document.write("<html><head><meta name='viewport' content='width=device-width, initial-scale=1.0' /><title>MathJax Equation Source</title></head><body style='font-size:85%'>");
+      w.document.write("<pre>"+text+"</pre>");
+      w.document.write("<hr><input type='button' value='Close' onclick='window.close()' />");
+      w.document.write("</body></html>");
+      w.document.close();
+    } else {
+      w.document.open();
+      w.document.write("<html><head><title>MathJax Equation Source</title></head><body style='font-size:85%'>");
+      w.document.write("<table><tr><td><pre>"+text+"</pre></td></tr></table>");
+      w.document.write("</body></html>");
+      w.document.close();
+      var table = w.document.body.firstChild;
+      var H = (w.outerHeight-w.innerHeight)||30, W = (w.outerWidth-w.innerWidth)||30;
+      W = Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25);
+      H = Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25);
+      w.resizeTo(W,H);
+      if (event && event.screenX != null) {
+        var x = Math.max(0,Math.min(event.screenX-Math.floor(W/2), screen.width-W-20)),
+            y = Math.max(0,Math.min(event.screenY-Math.floor(H/2), screen.height-H-20));
+        w.moveTo(x,y);
+      }
     }
     delete MENU.ShowSource.w;
   };
@@ -691,6 +759,8 @@
       }
     }
   });
+  MENU.isMobile = MathJax.Hub.Browser.isMobile;
+  MENU.noContextMenu = MathJax.Hub.Browser.noContextMenu;
 
   /*************************************************************/
 
@@ -713,7 +783,7 @@
      *  The main menu
      */
     MENU.menu = MENU(
-      ITEM.COMMAND("Show Source",MENU.ShowSource),
+      ITEM.COMMAND("Show Source",MENU.ShowSource,{nativeTouch: true}),
       ITEM.SUBMENU("Format",
         ITEM.RADIO("MathML",   "format"),
         ITEM.RADIO("Original", "format", {value: "Original"})
@@ -772,16 +842,30 @@
 
   MENU.showRenderer = function (show) {
     MENU.cookie.showRenderer = CONFIG.showRenderer = show; MENU.saveCookie();
-    MENU.menu.items[3].menu.item[3].hidden = !show;
+    MENU.menu.Find("Settings","Math Renderer").hidden = !show;
   };
   MENU.showFontMenu = function (show) {
     MENU.cookie.showFontMenu = CONFIG.showFontMenu = show; MENU.saveCookie();
-    MENU.menu.items[3].menu.items[4].hidden = !show
+    MENU.menu.Find("Settings","Font Preference").hidden = !show;
   };
   MENU.showContext = function (show) {
     MENU.cookie.showContext = CONFIG.showContext = show; MENU.saveCookie();
-    MENU.menu.items[3].menu.items[5].hidden = !show
+    MENU.menu.Find("Settings","Contextual Menu").hidden = !show;
   };
+  
+  if (MENU.isMobile) {
+    (function () {
+      var settings = MathJax.Hub.config.menuSettings;
+      var trigger = MENU.menu.Find("Settings","Zoom Trigger").menu;
+      trigger.items[0].disabled = trigger.items[1].disabled = true;
+      if (settings.zoom === "Hover" || settings.zoom == "Click") {settings.zoom = "None"}
+      trigger.items = trigger.items.slice(0,4);
+    
+      if (navigator.appVersion.match(/ Android /)) {
+        MathJax.Menu.ITEM.SUBMENU.Augment({marker: "\u00BB"});
+      }
+    })();
+  }
 
   /*************************************************************/
 

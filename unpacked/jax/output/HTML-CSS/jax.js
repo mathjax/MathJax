@@ -181,6 +181,57 @@
       return def;
     }
   });
+  
+  //
+  //  Handle touch events.  
+  //
+  //  Use double-tap and hold as a replacement for context menu event.
+  //  Use double-tap as a replacement for double click.
+  //
+  var TOUCH = {
+    last: 0,          // time of last tap event
+    delay: 500,       // delay time for double-click
+
+    //
+    //  Check if this is a double-tap, and if so, start the timer
+    //  for the double-tap and hold (to trigger the contextual menu)
+    //
+    start: function (event) {
+      var now = new Date().getTime();
+      var dblTap = (now - TOUCH.last < TOUCH.delay);
+      TOUCH.last = now;
+      if (dblTap) {
+        TOUCH.timeout = setTimeout(TOUCH.menu,TOUCH.delay,this,event);
+        event.preventDefault();
+      }
+    },
+          
+    //
+    //  Check if there is a timeout pending, i.e., we have a 
+    //  double-tap and were waiting to see if it is held long
+    //  enough for the menu.  Since we got the end before the
+    //  timeout, it is a double-click, not a double-tap-and-hold.
+    //  Prevent the default action and issue a double click.
+    //
+    end: function (event) {
+      if (TOUCH.timeout) {
+        clearTimeout(TOUCH.timeout);
+        delete TOUCH.timeout; TOUCH.last = 0;
+        event.preventDefault();
+        HTMLCSS.DblClick.call(this,event.touches[0]||event.touch);
+      }
+    },
+        
+    //
+    //  If the timeout passes without an end event, we issue
+    //  the contextual menu event.
+    //
+    menu: function (math,event) {
+      delete TOUCH.timeout; TOUCH.last = 0;
+      HTMLCSS.ContextMenu.call(math,event.touches[0]||even.touch);
+    }
+  };
+
 
   HTMLCSS.Augment({
     config: {
@@ -261,6 +312,7 @@
     LEFTBUTTON: (HUB.Browser.isMSIE ? 1 : 0),  // the event.button value for left button
     MENUKEY: "altKey",                         // the event value for alternate context menu
 
+    Touch: TOUCH, // Touch event handling
     Font: null,  // created by Config() below
 
     Config: function () {
@@ -385,6 +437,10 @@
         className:"MathJax", oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
         onmouseover:this.Mouseover, onclick:this.Click, ondblclick:this.DblClick
       });
+      if (MathJax.Hub.Browser.noContextMenu) {
+        span.ontouchstart = this.Touch.start;
+        span.ontouchend = this.Touch.end;
+      }
       var blockMode = (math.Get("display") === "block");
       if (blockMode) {
         div = frame = this.Element("div",{className:"MathJax_Display", style:{width:"100%", position:"relative"}});
@@ -434,7 +490,6 @@
               [this,arguments.callee,EVENT,force]  // call this function again
             );
           }
-          if (!event) {event = window.event}
           if (event.preventDefault) {event.preventDefault()}
           if (event.stopPropagation) {event.stopPropagation()}
           event.cancelBubble = true;
@@ -2210,7 +2265,6 @@
       Safari: function (browser) {
         var v3p0 = browser.versionAtLeast("3.0");
         var v3p1 = browser.versionAtLeast("3.1");
-        browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
         var android = (navigator.appVersion.match(/ Android (\d+)\.(\d+)/));
         var forceImages = (v3p1 && browser.isMobile && (
           (navigator.platform.match(/iPad|iPod|iPhone/) && !browser.versionAtLeast("5.0")) ||
