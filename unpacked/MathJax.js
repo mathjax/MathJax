@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.8";
+MathJax.fileversion = "1.1.9";
 
 /**********************************************************/
 
@@ -1871,10 +1871,11 @@ MathJax.Hub.Startup = {
     },
     Remove: function (jax) {}
   },{
-    version: "1.1",
+    version: "1.1.1",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
-    fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts"
+    fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
+    imageDir: ROOT+(BASE.isPacked?"":"/..")+"/images"
   });
   
   /***********************************/

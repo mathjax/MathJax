@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX) {
-  var VERSION = "1.1.5";
+  var VERSION = "1.1.6";
   
   MathJax.Extension.MathMenu = {version: VERSION};
 
@@ -180,8 +180,16 @@
         ondragstart: this.False, onselectstart: this.False, oncontextmenu: this.False,
         menuItem: this, className: "MathJax_Menu"
       },title);
-      
+
       for (var i = 0, m = this.items.length; i < m; i++) {this.items[i].Create(menu)}
+      if (MENU.isMobile) {
+        HTML.addElement(menu,"img",{
+          src: MathJax.Ajax.fileURL(MathJax.OutputJax.imageDir+"/CloseX-31.png"),
+          width: 31, height: 31,
+          style: {position:"absolute", top:"-15px", left:"-15px"},
+          ontouchstart: MENU.Close, ontouchend: this.False, menu: parent
+        });
+      }
       this.posted = true;
       
       menu.style.width = (menu.offsetWidth+2) + "px";
@@ -193,7 +201,7 @@
       if (!parent) {
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
            {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
-        if (MENU.isMobile) {x -= menu.offsetWidth / 2; y -= 20}
+        if (MENU.isMobile) {x = Math.max(5,x-Math.floor(menu.offsetWidth/2)); y -= 20}
         MENU.skipUp = true;
       } else {
         var side = "left", mw = parent.offsetWidth;
@@ -229,9 +237,6 @@
         if (this.msieBackgroundBug) {detachEvent("onresize",MENU.Resize)}
       }
     },
-    Mouseup: function (event,menu) {
-      if (MENU.skipUp) {delete MENU.skipUp} else {this.Remove(event,menu)}
-    },
 
     False: FALSE,
     
@@ -259,6 +264,8 @@
 
     div: null,     // the DOM elements for the menu and submenus
 
+    Close:      function (event)
+      {return MENU.Event(event,this.menu||this.parentNode,(this.menu?"Touchend":"Remove"))},
     Remove:     function (event) {return MENU.Event(event,this,"Remove")},
     Mouseover:  function (event) {return MENU.Event(event,this,"Mouseover")},
     Mouseout:   function (event) {return MENU.Event(event,this,"Mouseout")},
@@ -266,13 +273,15 @@
     Mouseup:    function (event) {return MENU.Event(event,this,"Mouseup")},
     Touchstart: function (event) {return MENU.Event(event,this,"Touchstart")},
     Touchend:   function (event) {return MENU.Event(event,this,"Touchend")},
-    Event: function (event,menu,type) {
+    Event: function (event,menu,type,force) {
+      if (MENU.isMobile && type === "Mouseover" && !force) {return FALSE(event)}
+      if (MENU.skipUp) {
+        if (type.match(/Mouseup|Touchend/)) {delete MENU.skipUp; return FALSE(event)}
+        if (type.match(/Touchstart/)) {delete MENU.skipUp}
+      }
       if (!event) {event = window.event}
       var item = menu.menuItem;
-//debug(type+" "+(item||{}).name);
-//try {
       if (item && item[type]) {return item[type](event,menu)}
-//} catch (err) {debug(err.message)}
       return null;
     },
 
@@ -314,7 +323,17 @@
     },
     
     saveCookie: function () {HTML.Cookie.Set("menu",this.cookie)},
-    getCookie: function () {this.cookie = HTML.Cookie.Get("menu")}
+    getCookie: function () {this.cookie = HTML.Cookie.Get("menu")},
+    
+    //
+    //  Preload images so they show up with the menu
+    //
+    getImages: function () {
+      if (MENU.isMobile) {
+        var close = new Image();
+        close.src = MathJax.Ajax.fileURL(MathJax.OutputJax.imageDir+"/CloseX-31.png");
+      }
+    }
 
   });
 
@@ -354,7 +373,7 @@
           menus[m].parentNode.removeChild(menus[m]);
           m--;
         }
-        if (this.Timer) {this.Timer(event,menu)}
+        if (this.Timer && !MENU.isMobile) {this.Timer(event,menu)}
       }
     },
     Mouseout: function (event,menu) {
@@ -368,7 +387,7 @@
     TouchEvent: function (event,menu,type) {
       if (this !== ITEM.lastItem) {
         if (ITEM.lastMenu) {MENU.Event(event,ITEM.lastMenu,"Mouseout")}
-        MENU.Event(event,menu,"Mouseover");
+        MENU.Event(event,menu,"Mouseover",true);
         ITEM.lastItem = this; ITEM.lastMenu = menu;
       }
       if (this.nativeTouch) {return null}
@@ -429,18 +448,10 @@
       event = {clientX: event.clientX, clientY: event.clientY}; // MSIE can't pass the event below
       this.timer = setTimeout(MathJax.Callback(["Mouseup",this,event,menu]),CONFIG.delay);
     },
-    Touchstart: function (event,menu) {
-      this.skipUp = !this.menu.posted;
-      return this.SUPER(arguments).Touchstart.apply(this,arguments);
-    },
     Touchend: function (event,menu) {
-      var result = false;
-      if (!this.skipUp) {
-        var forceout = this.menu.posted;
-        result = this.SUPER(arguments).Touchend.apply(this,arguments);
-        if (forceout) {this.Deactivate(menu); delete ITEM.lastItem; delete ITEM.lastMenu}
-      }
-      delete this.skipUp;
+      var forceout = this.menu.posted;
+      var result = this.SUPER(arguments).Touchend.apply(this,arguments);
+      if (forceout) {this.Deactivate(menu); delete ITEM.lastItem; delete ITEM.lastMenu}
       return result;
     },
     Mouseup: function (event,menu) {
@@ -861,7 +872,7 @@
       if (settings.zoom === "Hover" || settings.zoom == "Click") {settings.zoom = "None"}
       trigger.items = trigger.items.slice(0,4);
     
-      if (navigator.appVersion.match(/ Android /)) {
+      if (navigator.appVersion.match(/[ (]Android[) ]/)) {
         MathJax.Menu.ITEM.SUBMENU.Augment({marker: "\u00BB"});
       }
     })();
@@ -871,6 +882,7 @@
 
   MathJax.Callback.Queue(
     ["Styles",AJAX,CONFIG.styles],
+    ["getImages",MENU],
     ["Post",HUB.Startup.signal,"MathMenu Ready"],
     ["loadComplete",AJAX,"[MathJax]/extensions/MathMenu.js"]
   );
