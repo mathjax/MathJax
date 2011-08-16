@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1.2";
+  var VERSION = "1.1.3";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -50,7 +50,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         else if (HW != null) {HTMLCSS.Remeasured(selected.HTMLstretchH(span,HW),span)}
         if (HTMLCSS.msieHitBoxBug) {
           // margin-left doesn't work on inline-block elements in IE, so put it in a SPAN
-          var box = HTMLCSS.addElement(span,"span");
+          var box = HTMLCSS.addElement(span,"span",{isMathJax:true});
           frame = HTMLCSS.createFrame(box,span.bbox.h,span.bbox.d,span.bbox.w,0,"none");
           span.insertBefore(box,span.firstChild); // move below the content
           box.style.marginRight = HTMLCSS.Em(-span.bbox.w);

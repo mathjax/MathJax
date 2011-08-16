@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1.1";
+  var VERSION = "1.1.2";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -229,7 +229,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       return svg;
     },
     HTMLsvgElement: function (svg,type,def) {
-      var obj = document.createElementNS(SVGNS,type);
+      var obj = document.createElementNS(SVGNS,type); obj.isMathJax = true;
       if (def) {for (var id in def) {if (def.hasOwnProperty(id)) {obj.setAttributeNS(null,id,def[id].toString())}}}
       svg.appendChild(obj);
       return obj;
@@ -241,7 +241,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       return vml;
     },
     HTMLvmlElement: function (vml,type,def) {
-      var obj = HTMLCSS.addElement(vml,vmlns+":"+type);
+      var obj = HTMLCSS.addElement(vml,vmlns+":"+type,{isMathJax:true});
       obj.style.position = "absolute"; obj.style.left = obj.style.top = 0;
       MathJax.Hub.Insert(obj,def); // IE8 needs to do this after obj is added to the page
       if (!def.fillcolor) {obj.fillcolor = "none"}

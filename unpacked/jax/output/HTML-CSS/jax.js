@@ -434,7 +434,8 @@
         {prev.parentNode.removeChild(prev)}
       var math = script.MathJax.elementJax.root, span, div, frame;
       span = div = frame = this.Element("span",{
-        className:"MathJax", oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
+        className:"MathJax", isMathJax: true,
+        oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
         onmouseover:this.Mouseover, onclick:this.Click, ondblclick:this.DblClick
       });
       if (MathJax.Hub.Browser.noContextMenu) {
@@ -656,6 +657,7 @@
 
     createStrut: function (span,h,before) {
       var strut = this.Element("span",{
+        isMathJax: true,
         style:{display:"inline-block", overflow:"hidden", height:h+"px",
                width:"1px", marginRight:"-1px"}
       });
@@ -664,13 +666,14 @@
     },
     createBlank: function (span,w,before) {
       var blank = this.Element("span",{
+        isMathJax: true,
         style: {display:"inline-block", overflow:"hidden", height:"1px", width:this.Em(w)}
       });
       if (before) {span.insertBefore(blank,span.firstChild)} else {span.appendChild(blank)}
       return blank;
     },
     createShift: function (span,w,before) {
-      var space = this.Element("span",{style:{marginLeft:this.Em(w)}});
+      var space = this.Element("span",{style:{marginLeft:this.Em(w)}, isMathJax:true});
       if (before) {span.insertBefore(space,span.firstChild)} else {span.appendChild(space)}
       return space;
     },
@@ -684,7 +687,7 @@
         };
         span.style.height = H; span.style.verticalAlign = D;
       } else {
-        span = this.addElement(span,"span",{style: {height:H, verticalAlign:D}});
+        span = this.addElement(span,"span",{style: {height:H, verticalAlign:D}, isMathJax:true});
       }
       if (w >= 0) {
         span.style.width = this.Em(w);
@@ -709,7 +712,7 @@
       var rule = this.addElement(span,"span",{
         style: {borderLeft: color, display: "inline-block", overflow:"hidden",
                 width:0, height:H, verticalAlign:D},
-        bbox: {h:h, d:d, w:w, rw:w, lw:0}, noAdjust: true
+        bbox: {h:h, d:d, w:w, rw:w, lw:0}, noAdjust: true, isMathJax: true
       });
       if (w > 0 && rule.offsetWidth == 0) {rule.style.width = this.Em(w)}
       if (span.isBox || span.className == "mspace") {span.bbox = rule.bbox}
@@ -721,7 +724,7 @@
       var B = this.Em(t)+" "+style;
       var frame = this.addElement(span,"span",{
         style: {border: B, display:"inline-block", overflow:"hidden", width:W, height:H},
-        bbox: {h:h, d:d, w:w, rw:w, lw:0}, noAdjust: true
+        bbox: {h:h, d:d, w:w, rw:w, lw:0}, noAdjust: true, isMathJax: true
       });
       if (D) {frame.style.verticalAlign = D}
       return frame;
@@ -732,7 +735,7 @@
       var relativeW = String(w).match(/%$/);
       var W = (!relativeW && w != null ? w : 0);
       span = this.addElement(span,"span",{
-        noAdjust: true,
+        noAdjust: true, isMathJax: true,
         style: {display:"inline-block", position:"relative",
                 width:(relativeW ? "100%" : this.Em(W)), height:0}
       });
@@ -746,7 +749,7 @@
       return span;
     },
     createBox: function (span,w) {
-      var box = this.addElement(span,"span",{style:{position:"absolute"}, isBox: true});
+      var box = this.addElement(span,"span",{style:{position:"absolute"}, isBox: true, isMathJax:true});
       if (w != null) {box.style.width = w}
       return box;
     },
@@ -755,6 +758,7 @@
       return span.appendChild(box);
     },
     placeBox: function (span,x,y,noclip) {
+      span.isMathJax = true;
       var parent = span.parentNode, bbox = span.bbox, BBOX = parent.bbox;
       if (this.msiePlaceBoxBug) {this.addText(span,this.NBSP)}
       if (this.imgSpaceBug) {this.addText(span,this.imgSpace)}
@@ -762,9 +766,14 @@
       var HH = span.offsetHeight/this.em + 1, dx = 0;
       if (span.noAdjust) {HH -= 1} else {
         if (this.msieInlineBlockAlignBug) {
-          this.addElement(span,"img",{className:"MathJax_strut",border:0,src:"about:blank",style:{width:0,height:this.Em(HH)}});
+          this.addElement(span,"img",{
+            className:"MathJax_strut", border:0, src:"about:blank", isMathJax:true,
+            style:{width:0,height:this.Em(HH)}
+          });
         } else {
-          this.addElement(span,"span",{style:{display:"inline-block",width:0,height:this.Em(HH)}});
+          this.addElement(span,"span",{
+            isMathJax: true, style:{display:"inline-block",width:0,height:this.Em(HH)}
+          });
         }
       }
       span.style.top = this.Em(-y-HH);
@@ -946,6 +955,7 @@
       this.setStackWidth(stack,span.bbox.w);
     },
     createChar: function (span,data,scale,font) {
+      span.isMathJax = true;
       var SPAN = span, text = "", variant = {fonts: [data[1]], noRemap:true};
       if (font && font === MML.VARIANT.BOLD) {variant.fonts = [data[1]+"-bold",data[1]]}
       if (typeof(data[1]) !== "string") {variant = data[1]}
@@ -953,7 +963,9 @@
         for (var i = 0, m = data[0].length; i < m; i++) {text += String.fromCharCode(data[0][i])}
       } else {text = String.fromCharCode(data[0])}
       if (scale !== 1) {
-        SPAN = this.addElement(span,"span",{style:{fontSize: this.Percent(scale)}, scale:scale});
+        SPAN = this.addElement(span,"span",{
+          style:{fontSize: this.Percent(scale)}, scale:scale, isMathJax: true
+        });
         this.handleVariant(SPAN,variant,text);
         span.bbox = SPAN.bbox;
       } else {this.handleVariant(span,variant,text)}
@@ -1033,7 +1045,7 @@
           if (newtext.length) {this.addText(SPAN,newtext); newtext = ""}
           SPAN = span; SPANV = spanv;
           if (variant !== SPANV) 
-            {if (SPANV) {SPAN = this.addElement(span,"span")} else {spanv = variant}}
+            {if (SPANV) {SPAN = this.addElement(span,"span",{isMathJax:true})} else {spanv = variant}}
           this.handleFont(SPAN,font,SPAN !== span);
           SPANV = variant;
         }
@@ -1341,8 +1353,8 @@
 	    return SPAN;
 	  }
 	}
-	if (this.href) {span = HTMLCSS.addElement(span,"a",{href:this.href})}
-	span = HTMLCSS.addElement(span,"span",{className: this.type});
+	if (this.href) {span = HTMLCSS.addElement(span,"a",{href:this.href, isMathJax:true})}
+	span = HTMLCSS.addElement(span,"span",{className: this.type, isMathJax:true});
 	if (HTMLCSS.imgHeightBug) {span.style.display = "inline-block"}
 	if (this["class"] != null) {span.className += " "+this["class"]}
 	if (this.style) {
@@ -1393,6 +1405,7 @@
 	  var H = span.bbox.h + span.bbox.d, D = -span.bbox.d;
 	  if (W > 0) {W += 2*dd; lW -= dd}; if (H > 0) {H += 2*dd; D -= dd}; rW = -W-lW;
 	  var frame = HTMLCSS.Element("span",{id:"MathJax-Color-"+this.spanID+HTMLCSS.idPostfix,
+          isMathJax: true,
 	    style:{display:"inline-block", backgroundColor:values.mathbackground,
 		   width: HTMLCSS.Em(W), height:HTMLCSS.Em(H), verticalAlign: HTMLCSS.Em(D),
 		   marginLeft: HTMLCSS.Em(lW), marginRight: HTMLCSS.Em(rW)}
@@ -1401,7 +1414,7 @@
 	    frame.style.position = "relative"; frame.style.width = frame.style.height = 0;
 	    frame.style.verticalAlign = frame.style.marginLeft = frame.style.marginRight = "";
 	    HTMLCSS.placeBox(HTMLCSS.addElement(frame,"span",{
-	      noAdjust: true,
+	      noAdjust: true, isMathJax: true,
 	      style: {display:"inline-block", position:"absolute", overflow:"hidden",
 		      width: HTMLCSS.Em(W), height: HTMLCSS.Em(H),
 		      background: values.mathbackground}
@@ -2117,7 +2130,7 @@
     MML.math.Augment({
       toHTML: function (span,node) {
 	var alttext = this.Get("alttext"); if (alttext) {node.setAttribute("aria-label",alttext)}
-	var nobr = HTMLCSS.addElement(span,"nobr");
+	var nobr = HTMLCSS.addElement(span,"nobr",{isMathJax: true});
 	span = this.HTMLcreateSpan(nobr);
 	var stack = HTMLCSS.createStack(span), box = HTMLCSS.createBox(stack), math;
 	// Move font-size from outer span to stack to avoid line separation 
