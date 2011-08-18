@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.9";
+MathJax.fileversion = "1.1.10";
 
 /**********************************************************/
 
@@ -900,103 +900,235 @@ MathJax.fileversion = "1.1.9";
 
 /**********************************************************/
 
-MathJax.HTML = {
-  //
-  //  Create an HTML element with given attributes and content.
-  //  The def parameter is an (optional) object containing key:value pairs
-  //  of the attributes and their values, and contents is an (optional)
-  //  array of strings to be inserted as text, or arrays of the form
-  //  [type,def,contents] that describes an HTML element to be inserted
-  //  into the current element.  Thus the contents can describe a complete
-  //  HTML snippet of arbitrary complexity.  E.g.:
-  //  
-  //    MathJax.HTML.Element("span",{id:"mySpan",style{"font-style":"italic"}},[
-  //        "(See the ",["a",{href:"http://www.mathjax.org"},["MathJax home page"]],
-  //        " for more details.)"]);
-  // 
-  Element: function (type,def,contents) {
-    var obj = document.createElement(type);
-    if (def) {
-      if (def.style) {
-        var style = def.style; def.style = {};
-        for (var id in style) {if (style.hasOwnProperty(id))
-          {def.style[id.replace(/-([a-z])/g,this.ucMatch)] = style[id]}}
-      }
-      MathJax.Hub.Insert(obj,def);
-    }
-    if (contents) {
-      for (var i = 0; i < contents.length; i++) {
-        if (contents[i] instanceof Array) {
-          obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
-        } else {
-          obj.appendChild(document.createTextNode(contents[i]));
-        }
-      }
-    }
-    return obj;
-  },
-  ucMatch: function (match,c) {return c.toUpperCase()},
-  addElement: function (span,type,def,contents) {return span.appendChild(this.Element(type,def,contents))},
-  TextNode: function (text) {return document.createTextNode(text)},
-  addText: function (span,text) {return span.appendChild(this.TextNode(text))},
+(function (BASENAME) {
+  var BASE = window[BASENAME];
+  if (!BASE) {BASE = window[BASENAME] = {}}
+  var AJAX = BASE.Ajax, CALLBACK = BASE.Callback;
 
-  //
-  //  Set the text of a script
-  //
-  setScript: function (script,text) {
-    if (this.setScriptBug) {script.text = text} else {
-      while (script.firstChild) {script.removeChild(script.firstChild)}
-      this.addText(script,text);
-    }
-  },
-
-  //
-  //  Manage cookies
-  //
-  Cookie: {
-    prefix: "mjx",
-    expires: 365,
+  BASE.HTML = {
     
     //
-    //  Save an object as a named cookie
-    //
-    Set: function (name,def) {
-      var keys = [];
+    //  Create an HTML element with given attributes and content.
+    //  The def parameter is an (optional) object containing key:value pairs
+    //  of the attributes and their values, and contents is an (optional)
+    //  array of strings to be inserted as text, or arrays of the form
+    //  [type,def,contents] that describes an HTML element to be inserted
+    //  into the current element.  Thus the contents can describe a complete
+    //  HTML snippet of arbitrary complexity.  E.g.:
+    //  
+    //    MathJax.HTML.Element("span",{id:"mySpan",style{"font-style":"italic"}},[
+    //        "(See the ",["a",{href:"http://www.mathjax.org"},["MathJax home page"]],
+    //        " for more details.)"]);
+    // 
+    Element: function (type,def,contents) {
+      var obj = document.createElement(type);
       if (def) {
-        for (var id in def) {if (def.hasOwnProperty(id)) {
-          keys.push(id+":"+def[id].toString().replace(/&/g,"&&"));
-        }}
+        if (def.style) {
+          var style = def.style; def.style = {};
+          for (var id in style) {if (style.hasOwnProperty(id))
+            {def.style[id.replace(/-([a-z])/g,this.ucMatch)] = style[id]}}
+        }
+        BASE.Hub.Insert(obj,def);
       }
-      var cookie = this.prefix+"."+name+"="+escape(keys.join('&;'));
-      if (this.expires) {
-        var time = new Date(); time.setDate(time.getDate() + this.expires);
-        cookie += '; expires='+time.toGMTString();
-      }
-      document.cookie = cookie+"; path=/";
-    },
-    
-    //
-    //  Get the contents of a named cookie and incorporate
-    //  it into the given object (or return a fresh one)
-    //
-    Get: function (name,obj) {
-      if (!obj) {obj = {}}
-      var pattern = new RegExp("(?:^|;\\s*)"+this.prefix+"\\."+name+"=([^;]*)(?:;|$)");
-      var match = pattern.exec(document.cookie);
-      if (match && match[1] !== "") {
-        var keys = unescape(match[1]).split('&;');
-        for (var i = 0, m = keys.length; i < m; i++) {
-          match = keys[i].match(/([^:]+):(.*)/);
-          var value = match[2].replace(/&&/g,'&');
-          if (value === "true") {value = true} else if (value === "false") {value = false}
-          else if (value.match(/^-?(\d+(\.\d+)?|\.\d+)$/)) {value = parseFloat(value)}
-          obj[match[1]] = value;
+      if (contents) {
+        for (var i = 0; i < contents.length; i++) {
+          if (contents[i] instanceof Array) {
+            obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
+          } else {
+            obj.appendChild(document.createTextNode(contents[i]));
+          }
         }
       }
       return obj;
+    },
+    ucMatch: function (match,c) {return c.toUpperCase()},
+    addElement: function (span,type,def,contents) {return span.appendChild(this.Element(type,def,contents))},
+    TextNode: function (text) {return document.createTextNode(text)},
+    addText: function (span,text) {return span.appendChild(this.TextNode(text))},
+
+    //
+    //  Set the text of a script
+    //
+    setScript: function (script,text) {
+      if (this.setScriptBug) {script.text = text} else {
+        while (script.firstChild) {script.removeChild(script.firstChild)}
+        this.addText(script,text);
+      }
+    },
+
+    //
+    //  Manage cookies
+    //
+    Cookie: {
+      prefix: "mjx",
+      expires: 365,
+    
+      //
+      //  Save an object as a named cookie
+      //
+      Set: function (name,def) {
+        var keys = [];
+        if (def) {
+          for (var id in def) {if (def.hasOwnProperty(id)) {
+            keys.push(id+":"+def[id].toString().replace(/&/g,"&&"));
+          }}
+        }
+        var cookie = this.prefix+"."+name+"="+escape(keys.join('&;'));
+        if (this.expires) {
+          var time = new Date(); time.setDate(time.getDate() + this.expires);
+          cookie += '; expires='+time.toGMTString();
+        }
+        document.cookie = cookie+"; path=/";
+      },
+    
+      //
+      //  Get the contents of a named cookie and incorporate
+      //  it into the given object (or return a fresh one)
+      //
+      Get: function (name,obj) {
+        if (!obj) {obj = {}}
+        var pattern = new RegExp("(?:^|;\\s*)"+this.prefix+"\\."+name+"=([^;]*)(?:;|$)");
+        var match = pattern.exec(document.cookie);
+        if (match && match[1] !== "") {
+          var keys = unescape(match[1]).split('&;');
+          for (var i = 0, m = keys.length; i < m; i++) {
+            match = keys[i].match(/([^:]+):(.*)/);
+            var value = match[2].replace(/&&/g,'&');
+            if (value === "true") {value = true} else if (value === "false") {value = false}
+              else if (value.match(/^-?(\d+(\.\d+)?|\.\d+)$/)) {value = parseFloat(value)}
+            obj[match[1]] = value;
+          }
+        }
+        return obj;
+      }
     }
-  }
-};
+    
+  };
+  
+  //
+  //  Common event-handling code
+  //
+  var EVENT = BASE.HTML.Event = {
+    Mousedown: function (event) {return EVENT.Handler(event,"Mousedown",this)},
+    Mouseup:   function (event) {return EVENT.Handler(event,"Mouseup",this)},
+    Mousemove: function (event) {return EVENT.Handler(event,"Mousemove",this)},
+    Mouseover: function (event) {return EVENT.Handler(event,"Mouseover",this)},
+    Mouseout:  function (event) {return EVENT.Handler(event,"Mouseout",this)},
+    Click:     function (event) {return EVENT.Handler(event,"Click",this)},
+    DblClick:  function (event) {return EVENT.Handler(event,"DblClick",this)},
+    Menu:      function (event) {return EVENT.Handler(event,"ContextMenu",this)},
+    
+    //
+    //  Call the output jax's event handler
+    //
+    Handler: function (event,type,math) {
+      if (AJAX.loadingMathMenu) {return False(event)}
+      var jax = BASE.OutputJax[math.jaxID];
+      if (!event) {event = window.event}
+      return jax.HandleEvent(event,type,math);
+    },
+    //
+    //  For use in the handler
+    //
+    HandleEvent: function (event,type,math) {
+      if (this[type]) {return this[type].call(this,event,math)}
+      if (MathJax.Extension.MathZoom)
+        {return MathJax.Extension.MathZoom.HandleEvent(event,type,math)}
+    },
+
+    
+    //
+    //  Try to cancel the event in every way we can
+    //
+    False: function (event) {
+      if (!event) {event = window.event}
+      if (event) {
+        if (event.preventDefault) {event.preventDefault()}
+        if (event.stopPropagation) {event.stopPropagation()}
+        event.cancelBubble = true;
+        event.returnValue = false;
+      }
+      return false;
+    },
+
+    //
+    //  Load the contextual menu code, if needed, and post the menu
+    //
+    ContextMenu: function (event,math) {
+      var MENU = BASE.Menu;
+      if (MENU) {
+        MENU.jax = BASE.Hub.getJaxFor(math.nextSibling);
+        MENU.menu.items[1].menu.items[1].name = 
+          (MENU.jax.inputJax.id === "MathML" ? "Original" : MENU.jax.inputJax.id);
+        return MENU.menu.Post(event);
+      } else {
+        if (!AJAX.loadingMathMenu) {
+          AJAX.loadingMathMenu = true;
+          var ev = {pageX:event.pageX, pageY:event.pageY, clientX:event.clientX, clientY:event.clientY};
+          CALLBACK.Queue(
+            AJAX.Require("[MathJax]/extensions/MathMenu.js"),
+            function () {delete AJAX.loadingMathMenu; if (!BASE.Menu) {BASE.Menu = {}}},
+            ["ContextMenu",this,ev,math]  // call this function again
+          );
+        }
+        return this.False(event);
+      }
+    }
+  };
+  
+  var TOUCH = BASE.HTML.Touch = {
+    
+    //  Handle touch events.  
+    //
+    //  Use double-tap-and-hold as a replacement for context menu event.
+    //  Use double-tap as a replacement for double click.
+    //
+    last: 0,          // time of last tap event
+    delay: 500,       // delay time for double-click
+    
+    //
+    //  Check if this is a double-tap, and if so, start the timer
+    //  for the double-tap and hold (to trigger the contextual menu)
+    //
+    start: function (event) {
+      var now = new Date().getTime();
+      var dblTap = (now - TOUCH.last < TOUCH.delay);
+      TOUCH.last = now;
+      if (dblTap) {
+        TOUCH.timeout = setTimeout(TOUCH.menu,TOUCH.delay,event,this);
+        event.preventDefault();
+      }
+    },
+          
+    //
+    //  Check if there is a timeout pending, i.e., we have a 
+    //  double-tap and were waiting to see if it is held long
+    //  enough for the menu.  Since we got the end before the
+    //  timeout, it is a double-click, not a double-tap-and-hold.
+    //  Prevent the default action and issue a double click.
+    //
+    end: function (event) {
+      if (TOUCH.timeout) {
+        clearTimeout(TOUCH.timeout);
+        delete TOUCH.timeout; TOUCH.last = 0;
+        event.preventDefault();
+        return EVENT.Handler((event.touches[0]||event.touch),"DblClick",this);
+      }
+    },
+        
+    //
+    //  If the timeout passes without an end event, we issue
+    //  the contextual menu event.
+    //
+    menu: function (event,math) {
+      delete TOUCH.timeout; TOUCH.last = 0;
+      return EVENT.Handler((event.touches[0]||event.touch),"ContextMenu",math);
+    }
+    
+  };
+  
+})("MathJax");
+
 
 /**********************************************************/
 
@@ -2068,6 +2200,7 @@ MathJax.Hub.Startup = {
     MSIE: function (browser) {
       browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
+      MathJax.HTML.Event.msieButtonBug = (document.documentMode||0) >= 9;
     }
   });
   HUB.Browser.Select(MathJax.Message.browsers);

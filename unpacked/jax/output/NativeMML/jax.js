@@ -22,12 +22,12 @@
  *  limitations under the License.
  */
 
-(function (nMML,HUB,AJAX) {
+(function (nMML,HUB,AJAX,HTML,EVENT) {
   var MML, isMSIE = HUB.Browser.isMSIE;
   
   nMML.Augment({
     LEFTBUTTON: (isMSIE ? 1 : 0),  // the event.button value for left button
-    MENUKEY: "altKey",                         // the event value for alternate context menu
+    MENUKEY: "altKey",             // the event value for alternate context menu
     noContextMenuBug: HUB.Browser.isKonequeror,
     msieQuirks: (isMSIE && !(document.compatMode === "BackCompat")),
     msieEventBug: HUB.Browser.isIE9,
@@ -36,7 +36,7 @@
     //  User can configure styles
     //
     config: {styles: {}}, settings: HUB.config.menuSettings,
-    Startup: function () {return MathJax.Ajax.Styles(this.config.styles)},
+    Startup: function () {return AJAX.Styles(this.config.styles)},
     Config: function () {
       this.SUPER(arguments).Config.call(this);
       if (this.settings.scale) {this.config.scale = this.settings.scale}
@@ -58,7 +58,7 @@
     //
     InitializeMML: function () {
       this.initialized = true;
-      if (MathJax.Hub.Browser.isMSIE) {
+      if (HUB.Browser.isMSIE) {
         try {
           //
           //  Insert data needed to use MathPlayer for MathML output
@@ -100,7 +100,7 @@
       var span = document.createElement(type), container = span;
       span.className = "MathJax_MathML"; span.style.fontSize = this.config.scale+"%";
       if (isMSIE && this.config.showMathMenuMSIE) {
-        container = MathJax.HTML.addElement(span,"span",{
+        container = HTML.addElement(span,"span",{
           className:"MathJax_MathContainer",
           style:{display:"inline-block",position:"relative"}
         });
@@ -110,12 +110,13 @@
       if (isMSIE) {
         if (this.config.showMathMenuMSIE) {this.MSIEoverlay(span)}
       } else {
-        math = span.firstChild;
-        math.oncontextmenu = this.ContextMenu;
-        math.onmouseover   = this.Mouseover;
-        math.onmousedown   = this.Mousedown;
-        math.onclick       = this.Click;
-        math.ondblclick    = this.DblClick;
+        math = span.firstChild; math.jaxID = "NativeMML";
+        math.oncontextmenu = EVENT.Menu;
+        math.onmouseover   = EVENT.Mouseover;
+        math.onmousout     = EVENT.Mouseout;
+        math.onmousedown   = EVENT.Mousedown;
+        math.onclick       = EVENT.Click;
+        math.ondblclick    = EVENT.DblClick;
       }
     },
     //
@@ -141,19 +142,19 @@
       var math = span.firstChild;
       span.style.position = "absolute"; // so we can measure height/depth
       var HD = span.scrollHeight, W = span.offsetWidth;
-      var tmp = MathJax.HTML.addElement(span,"img",{src:"about:blank",style:{width:0,height:HD+"px"}});
+      var tmp = HTML.addElement(span,"img",{src:"about:blank",style:{width:0,height:HD+"px"}});
       var D = span.scrollHeight - HD; span.removeChild(tmp);
       span.style.position = "";        // back to normal
       var top, left, isDisplay = (span.parentNode.nodeName.toLowerCase() === "div");
       if (isDisplay && this.quirks) {top = -HD; left = Math.floor(-W/2)} else {top = D-HD, left = -W}
-      MathJax.HTML.addElement(span,"span",{
+      HTML.addElement(span,"span",{
         style:{display:"inline-block", width:0, height:0, position:"relative"}
       },[["span",{
         style:{display:"inline-block", position:"absolute", left:left+"px", top:top+"px",
         width:math.offsetWidth+"px", height:HD+"px", cursor:"pointer",
         "background-color":"white", filter:"alpha(opacity=0)"},
         onmousedown: this.MSIEevent, oncontextmenu: this.MSIEevent, onclick: this.MSIEevent,
-        /*onmouseup: this.MSIEevent,*/ onmousemove: this.MSIEevent, ondblclick: this.MSIEevent,
+        onmouseup: this.MSIEevent, onmousemove: this.MSIEevent, ondblclick: this.MSIEevent,
         onmouseover: this.MSIEevent, onmouseout: this.MSIEevent
       }]]);
     },
@@ -167,13 +168,13 @@
       var event = window.event;
       var action = nMML["MSIE"+event.type];
       if (action && action.call(nMML,event,math,this)) {return false}
-      math.fireEvent("on"+event.type,event);
+      if (math.fireEvent) {math.fireEvent("on"+event.type,event)}
       return false;
     },
     MSIEmousedown: function (event,math,span) {
       if (event[this.MENUKEY] && event.button === this.LEFTBUTTON && this.settings.context !== "MathJax") {
         this.trapUp = this.trapClick = true;
-        this.ContextMenu.call(span,event,true);
+        this.ContextMenu(event,span,true);
         return true;
       }
       if (this.MSIEzoomKeys && this.MSIEzoomKeys(event)) {this.trapUp = true; return true}
@@ -182,65 +183,33 @@
     MSIEcontextmenu: function (event,math,span) {
       if (this.settings.context === "MathJax") {
         this.trapUp = this.trapClick = true;
-        this.ContextMenu.call(span,event,true);
+        this.ContextMenu(event,span);
         return true;
       }
       return false;
     },
-    // Other event handlers are in MathZoom.js
+    // Other IE event handlers are in MathZoom.js
 
-    //
-    //  Autoload the MathMenu code, when needed
-    //
-    ContextMenu: function (event,force) {
-      if (nMML.config.showMathMenu && (nMML.settings.context === "MathJax" || force)) {
-        if (nMML.safariContextMenuBug) {setTimeout('window.getSelection().empty()',0)}
-        if (!event || nMML.msieEventBug) {event = window.event}
-        var MENU = MathJax.Menu;
-        if (MENU) {
-          if (document.selection) {setTimeout("document.selection.empty()",0)}
-          var script = (isMSIE ? this.parentNode.parentNode.nextSibling : this.parentNode.nextSibling);
-          MENU.jax = HUB.getJaxFor(script);
-          MENU.menu.items[1].menu.items[1].name = 
-            (MENU.jax.inputJax.id === "MathML" ? "Original" : MENU.jax.inputJax.id);
-          delete nMML.trapClick; delete nMML.trapUp;
-          return MENU.menu.Post(event);
-        } else {
-          if (!AJAX.loadingMathMenu) {
-            AJAX.loadingMathMenu = true;
-            var EVENT = {pageX:event.pageX, pageY:event.pageY, clientX:event.clientX, clientY:event.clientY};
-            MathJax.Callback.Queue(
-              AJAX.Require("[MathJax]/extensions/MathMenu.js"),
-              function () {delete AJAX.loadingMathMenu},
-              [this,arguments.callee,EVENT,force]  // call this function again
-            );
-          }
-          if (event.preventDefault) {event.preventDefault()}
-          if (event.stopPropagation) {event.stopPropagation()}
-          event.cancelBubble = true;
-          event.returnValue = false;
-          return false;
-        }
+    HandleEvent: EVENT.HandleEvent,
+    ContextMenu: function (event,math,force) {
+      if (this.config.showMathMenu && (this.settings.context === "MathJax" || force)) {
+        if (document.selection) {setTimeout("document.selection.empty()",0)}
+        if (this.msieEventBug) {event = window.event}
+        math = math.parentNode; if (isMSIE) {math = math.parentNode}
+        delete this.trapClick; delete this.trapUp;
+        return EVENT.ContextMenu(event,math);
       }
     },
-    Mousedown: function (event) {
-      if (nMML.config.showMathMenu) {
-        if (!event) {event = window.event}
-        if (nMML.settings.context === "MathJax") {
-          if (!nMML.noContextMenuBug || event.button !== 2) return
+    Mousedown: function (event,math) {
+      if (this.config.showMathMenu) {
+        if (this.settings.context === "MathJax") {
+          if (!this.noContextMenuBug || event.button !== 2) return
         } else {
           if (!event[nMML.MENUKEY] || event.button !== nMML.LEFTBUTTON) return
         }
-        return nMML.ContextMenu.call(this,event,true);
+        return this.ContextMenu(event,math,true);
       }
     },
-    /*
-     *  Used for zooming, when that is enabled by the MathMenu
-     */
-    Mouseover: function (event) {nMML.HandleEvent(event,"Mouseover",this)},
-    Click: function (event) {nMML.HandleEvent(event,"Click",this)},
-    DblClick: function (event) {nMML.HandleEvent(event,"DblClick",this)},
-    HandleEvent: function (event,type,math) {},
 
     NAMEDSPACE: {
       negativeveryverythinmathspace:  "-.0556em",
@@ -364,7 +333,7 @@
       }
     });
 
-    if (MathJax.Hub.Browser.isFirefox) {
+    if (HUB.Browser.isFirefox) {
       MML.mtable.Augment({
 	toNativeMML: function (parent) {
 	  //
@@ -508,4 +477,4 @@
       {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
   });
 
-})(MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax);
+})(MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax, MathJax.HTML, MathJax.HTML.Event);

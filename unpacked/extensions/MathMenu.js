@@ -138,16 +138,7 @@
   /*
    *  Cancel event's default action (try everything we can)
    */
-  var FALSE = function (event) {
-    if (!event) {event = window.event}
-    if (event) {
-      if (event.preventDefault) {event.preventDefault()}
-      if (event.stopPropagation) {event.stopPropagation()}
-      event.cancelBubble = true;
-      event.returnValue = false;
-    }
-    return false;
-  };
+  var FALSE = MathJax.HTML.Event.False;
   
   /*************************************************************/
   /*

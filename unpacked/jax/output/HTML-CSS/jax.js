@@ -82,9 +82,9 @@
       return false;
     },
 
-    styleChar:   String.fromCharCode(0xEFFD), // width encodes style
-    versionChar: String.fromCharCode(0xEFFE), // width encodes version
-    compChar:    String.fromCharCode(0xEFFF), // "standard" width to compare to
+    styleChar:   "\uEFFD", // width encodes style
+    versionChar: "\uEFFE", // width encodes version
+    compChar:    "\uEFFF", // "standard" width to compare to
 
     testStyleChar: function (font,size) {
       var n = 3 + (font.weight ? 2 : 0) + (font.style ? 4 : 0);
@@ -182,57 +182,10 @@
     }
   });
   
-  //
-  //  Handle touch events.  
-  //
-  //  Use double-tap and hold as a replacement for context menu event.
-  //  Use double-tap as a replacement for double click.
-  //
-  var TOUCH = {
-    last: 0,          // time of last tap event
-    delay: 500,       // delay time for double-click
+  var EVENT = MathJax.HTML.Event;
+  var TOUCH = MathJax.HTML.Touch;  
 
-    //
-    //  Check if this is a double-tap, and if so, start the timer
-    //  for the double-tap and hold (to trigger the contextual menu)
-    //
-    start: function (event) {
-      var now = new Date().getTime();
-      var dblTap = (now - TOUCH.last < TOUCH.delay);
-      TOUCH.last = now;
-      if (dblTap) {
-        TOUCH.timeout = setTimeout(TOUCH.menu,TOUCH.delay,this,event);
-        event.preventDefault();
-      }
-    },
-          
-    //
-    //  Check if there is a timeout pending, i.e., we have a 
-    //  double-tap and were waiting to see if it is held long
-    //  enough for the menu.  Since we got the end before the
-    //  timeout, it is a double-click, not a double-tap-and-hold.
-    //  Prevent the default action and issue a double click.
-    //
-    end: function (event) {
-      if (TOUCH.timeout) {
-        clearTimeout(TOUCH.timeout);
-        delete TOUCH.timeout; TOUCH.last = 0;
-        event.preventDefault();
-        HTMLCSS.DblClick.call(this,event.touches[0]||event.touch);
-      }
-    },
-        
-    //
-    //  If the timeout passes without an end event, we issue
-    //  the contextual menu event.
-    //
-    menu: function (math,event) {
-      delete TOUCH.timeout; TOUCH.last = 0;
-      HTMLCSS.ContextMenu.call(math,event.touches[0]||even.touch);
-    }
-  };
-
-
+  
   HTMLCSS.Augment({
     config: {
       styles: {
@@ -312,7 +265,6 @@
     LEFTBUTTON: (HUB.Browser.isMSIE ? 1 : 0),  // the event.button value for left button
     MENUKEY: "altKey",                         // the event value for alternate context menu
 
-    Touch: TOUCH, // Touch event handling
     Font: null,  // created by Config() below
 
     Config: function () {
@@ -434,13 +386,14 @@
         {prev.parentNode.removeChild(prev)}
       var math = script.MathJax.elementJax.root, span, div, frame;
       span = div = frame = this.Element("span",{
-        className:"MathJax", isMathJax: true,
-        oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
-        onmouseover:this.Mouseover, onclick:this.Click, ondblclick:this.DblClick
+        className:"MathJax", isMathJax:true, jaxID:"HTML-CSS",
+        oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
+        onmouseover:EVENT.Mouseover, onmouseout: EVENT.Mouseout, onmousemove: EVENT.Mousemove,
+        onclick:EVENT.Click, ondblclick:EVENT.DblClick
       });
       if (MathJax.Hub.Browser.noContextMenu) {
-        span.ontouchstart = this.Touch.start;
-        span.ontouchend = this.Touch.end;
+        span.ontouchstart = TOUCH.start;
+        span.ontouchend = TOUCH.end;
       }
       var blockMode = (math.Get("display") === "block");
       if (blockMode) {
@@ -467,56 +420,26 @@
       if (this.useProcessingFrame) frame.parentNode.replaceChild(div,frame);
     },
 
-    /*
-     *  Autoload the MathMenu code, when needed
-     */
-    ContextMenu: function (event,force) {
-      if (HTMLCSS.config.showMathMenu && (HTMLCSS.settings.context === "MathJax" || force)) {
-        if (HTMLCSS.safariContextMenuBug) {setTimeout('window.getSelection().empty()',0)}
-        if (!event || HTMLCSS.msieEventBug) {event = window.event}
-        var MENU = MathJax.Menu;
-        if (MENU) {
-          var math = (this.parentNode.className === "MathJax_Display" ? this.parentNode : this)
-          MENU.jax = HUB.getJaxFor(math.nextSibling);
-          MENU.menu.items[1].menu.items[1].name = 
-            (MENU.jax.inputJax.id === "MathML" ? "Original" : MENU.jax.inputJax.id);
-          return MENU.menu.Post(event);
-        } else {
-          if (!AJAX.loadingMathMenu) {
-            AJAX.loadingMathMenu = true;
-            var EVENT = {pageX:event.pageX, pageY:event.pageY, clientX:event.clientX, clientY:event.clientY};
-            MathJax.Callback.Queue(
-              AJAX.Require("[MathJax]/extensions/MathMenu.js"),
-              function () {delete AJAX.loadingMathMenu},
-              [this,arguments.callee,EVENT,force]  // call this function again
-            );
-          }
-          if (event.preventDefault) {event.preventDefault()}
-          if (event.stopPropagation) {event.stopPropagation()}
-          event.cancelBubble = true;
-          event.returnValue = false;
-          return false;
-        }
+    HandleEvent: EVENT.HandleEvent,
+    ContextMenu: function (event,math,force) {
+      if (this.config.showMathMenu && (this.settings.context === "MathJax" || force)) {
+        if (this.safariContextMenuBug) {setTimeout("window.getSelection().empty()",0)}
+        if (this.msieEventBug) {event = window.event}
+        if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
+        return EVENT.ContextMenu(event,math);
       }
     },
-    Mousedown: function (event) {
-      if (HTMLCSS.config.showMathMenu) {
-        if (!event) {event = window.event}
-        if (HTMLCSS.settings.context === "MathJax") {
-          if (!HTMLCSS.noContextMenuBug || event.button !== 2) return
+    Mousedown: function (event,math) {
+      if (this.config.showMathMenu) {
+        if (this.settings.context === "MathJax") {
+          if (!this.noContextMenuBug || event.button !== 2) return
         } else {
-          if (!event[HTMLCSS.MENUKEY] || event.button !== HTMLCSS.LEFTBUTTON) return
+          var BUTTON = (EVENT.msieButtonBug ? event.buttons & 1 : event.button);
+          if (!event[HTMLCSS.MENUKEY] || BUTTON !== HTMLCSS.LEFTBUTTON) return
         }
-        return HTMLCSS.ContextMenu.call(this,event,true);
+        return this.ContextMenu(event,math,true);
       }
     },
-    /*
-     *  Used for zooming, when that is enabled by the MathMenu
-     */
-    Mouseover: function (event) {HTMLCSS.HandleEvent(event,"Mouseover",this)},
-    Click: function (event) {HTMLCSS.HandleEvent(event,"Click",this)},
-    DblClick: function (event) {HTMLCSS.HandleEvent(event,"DblClick",this)},
-    HandleEvent: function (event,type,math) {},
 
     initImg: function (span) {},
     initHTML: function (math,span) {},

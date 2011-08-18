@@ -61,16 +61,7 @@
   /*
    *  Cancel event's default action (try everything we can)
    */
-  var FALSE = function (event) {
-    if (!event) {event = window.event}
-    if (event) {
-      if (event.preventDefault) {event.preventDefault()}
-      if (event.stopPropagation) {event.stopPropagation()}
-      event.cancelBubble = true;
-      event.returnValue = false;
-    }
-    return false;
-  };
+  var FALSE = MathJax.HTML.Event.False;
 
   /*************************************************************/
 
@@ -79,10 +70,9 @@
     settings: HUB.config.menuSettings,
 
     //
-    //  Used to override HTMLCSS or nMML method of the same name
+    //  Process events passed from output jax
     //
     HandleEvent: function (event,type,math) {
-      if (!event) {event = window.event}
       if (ZOOM.settings.CTRL  && !event.ctrlKey)  return true;
       if (ZOOM.settings.ALT   && !event.altKey)   return true;
       if (ZOOM.settings.CMD   && !event.metaKey)  return true;
@@ -216,7 +206,6 @@
       else if (window.attachEvent) {attachEvent("onresize",this.Resize)}
       else {this.onresize = window.onresize; window.onresize = this.Resize}
       
-
       //
       //  Canel further actions
       //
@@ -320,16 +309,11 @@
   };
   
   //
-  //  Hook into the HTML-CSS and NativeMML event handling
+  //  Handle IE events for NativeMML
   //
-  HUB.Register.StartupHook("HTML-CSS Jax Ready",function () {
-    HTMLCSS = MathJax.OutputJax["HTML-CSS"];
-    HTMLCSS.Augment({HandleEvent: ZOOM.HandleEvent});
-  });
   HUB.Register.StartupHook("NativeMML Jax Ready", function () {
     nMML = MathJax.OutputJax.NativeMML;
     nMML.Augment({
-      HandleEvent: ZOOM.HandleEvent,
       MSIEmouseup: function (event,math,span) {
         if (this.trapUp) {delete this.trapUp; return true}
         if (this.MSIEzoomKeys(event)) {return true}
