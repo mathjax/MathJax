@@ -1009,6 +1009,34 @@ MathJax.fileversion = "1.1.11";
   //  Common event-handling code
   //
   var EVENT = BASE.HTML.Event = {
+    
+    LEFTBUTTON: 0,           // the event.button value for left button
+    MENUKEY: "altKey",       // the event value for alternate context menu
+
+    styles: {
+      ".MathJax_Hover_Frame": {
+        "border-radius": ".25em",                   // Opera 10.5 and IE9
+        "-webkit-border-radius": ".25em",           // Safari and Chrome
+        "-moz-border-radius": ".25em",              // Firefox
+        "-khtml-border-radius": ".25em",            // Konqueror
+
+        "box-shadow": "0px 0px 15px #83A",          // Opera 10.5 and IE9
+        "-webkit-box-shadow": "0px 0px 15px #83A",  // Safari and Chrome
+        "-moz-box-shadow": "0px 0px 15px #83A",     // Forefox 3.5
+        "-khtml-box-shadow": "0px 0px 15px #83A",   // Konqueror
+
+        border: ".1em solid #A6D ! important",
+        display: "inline-block", position:"absolute"
+      },
+
+      ".MathJax_Hover_Arrow": {
+        position:"absolute",
+        top:"-5px", right:"-9px",
+        width:"15px", height:"11px",
+        cursor:"pointer"
+      }
+    },
+
     Mousedown: function (event) {return EVENT.Handler(event,"Mousedown",this)},
     Mouseup:   function (event) {return EVENT.Handler(event,"Mouseup",this)},
     Mousemove: function (event) {return EVENT.Handler(event,"Mousemove",this)},
@@ -1029,7 +1057,7 @@ MathJax.fileversion = "1.1.11";
       return jax.HandleEvent(event,type,math);
     },
     //
-    //  For use in the handler
+    //  For use in the output jax (this will be the output jax)
     //
     HandleEvent: function (event,type,math) {
       if (this[type]) {return this[type].call(this,event,math)}
@@ -1084,13 +1112,122 @@ MathJax.fileversion = "1.1.11";
     }
   };
   
-  var TOUCH = BASE.HTML.Touch = {
+  //
+  //  Handle hover "discoverability"
+  //
+  var HOVER = BASE.HTML.Hover = {
+    Mouseover: function (event,math) {
+      var from = event.fromElement || event.relatedTarget,
+          to   = event.toElement   || event.target;
+      if (from && to && from.isMathJax != to.isMathJax) {
+        var jax = this.getJaxFromMath(math);
+        if (jax.hover) {HOVER.ReHover(jax)} else {HOVER.HoverTimer(jax,math)}
+        return EVENT.False(event);
+      }
+    },
+    Mouseout: function (event,math) {
+      var from = event.fromElement || event.relatedTarget,
+          to   = event.toElement   || event.target;
+      if (from && to && from.isMathJax != to.isMathJax) {
+        var jax = this.getJaxFromMath(math);
+        if (jax.hover) {HOVER.UnHover(jax)} else {HOVER.ClearHoverTimer()}
+        return EVENT.False(event);
+      }
+    },
+    Mousemove: function (event,math) {
+      var jax = this.getJaxFromMath(math); if (jax.hover) return;
+      if (HOVER.lastX == event.clientX && HOVER.lastY == event.clientY) return;
+      HOVER.lastX = event.clientX; HOVER.lastY = event.clientY;
+      HOVER.HoverTimer(jax,math);
+      return EVENT.False(event);
+    },
     
-    //  Handle touch events.  
-    //
-    //  Use double-tap-and-hold as a replacement for context menu event.
-    //  Use double-tap as a replacement for double click.
-    //
+    HoverTimer: function (jax,math) {
+      this.ClearHoverTimer();
+      var delay = BASE.Hub.config.menuSettings.hover;
+      this.hoverTimer = setTimeout(CALLBACK(["Hover",this,jax,math]),delay);
+    },
+    ClearHoverTimer: function () {
+      if (this.hoverTimer) {clearTimeout(this.hoverTimer); delete this.hoverTimer}
+    },
+    
+    Hover: function (jax,math) {
+      // check for MathZoom hover
+      var JAX = jax.outputJax, span = JAX.getHoverSpan(jax), bbox = JAX.getHoverBBox(jax,span);
+      var dx = .25, dy = .33, dd = .1;  // frame size
+      jax.hover = {opacity:0};
+      if (this.msieBorderWidthBug) {dd = 0}
+      jax.hover.id = "MathJax-Hover-"+jax.inputID.replace(/.*-(\d+)$/,"$1");
+      var frame = BASE.HTML.Element("span",{
+         id:jax.hover.id, isMathJax: true,
+         style:{display:"inline-block", "z-index":1, width:0, height:0, position:"relative"}
+        },[["span",{
+          className:"MathJax_Hover_Frame", isMathJax: true,
+          style:{
+            display:"inline-block", position:"absolute",
+            top:this.Em(-bbox.h-dy-dd), left:this.Em(-dx-dd),
+            width:this.Em(bbox.w+2*dx), height:this.Em(bbox.h+bbox.d+2*dy),
+            opacity:0, filter:"alpha(opacity=0)"
+          }},[[
+           "img",{
+             className: "MathJax_Hover_Arrow", isMathJax: true, math: math,
+             src: BASE.Ajax.fileURL(MathJax.OutputJax.imageDir+"/MenuArrow-15.png"),
+             onclick: this.HoverMenu, jax:JAX.id
+           }
+          ]]
+        ]]
+      );
+      span.parentNode.insertBefore(frame,span); span.style.position = "relative";
+      this.ReHover(jax,.2);
+    },
+    ReHover: function (jax) {
+      if (jax.hover.remove) {clearTimeout(jax.hover.remove)}
+      jax.hover.remove = setTimeout(MathJax.Callback(["UnHover",this,jax]),15*1000);
+      this.HoverFadeTimer(jax,.2);
+    },
+    UnHover: function (jax) {
+      if (!jax.hover.nofade) {this.HoverFadeTimer(jax,-.05,400)}
+    },
+    HoverFade: function (jax) {
+      delete jax.hover.timer;
+      jax.hover.opacity = Math.max(0,Math.min(1,jax.hover.opacity + jax.hover.inc));
+      jax.hover.opacity = Math.floor(1000*jax.hover.opacity)/1000;
+      var span = document.getElementById(jax.hover.id);
+      span.firstChild.style.opacity = jax.hover.opacity;
+      span.firstChild.style.filter = "alpha(opacity="+Math.floor(100*jax.hover.opacity)+")";
+      if (jax.hover.opacity === 1) {return}
+      if (jax.hover.opacity) {this.HoverFadeTimer(jax,jax.hover.inc); return}
+      var frame = document.getElementById(jax.hover.id);
+      frame.parentNode.removeChild(frame);
+      if (jax.hover.remove) {clearTimeout(jax.hover.remove)}
+      delete jax.hover;
+    },
+    HoverFadeTimer: function (jax,inc,delay) {
+      jax.hover.inc = inc;
+      if (!jax.hover.timer) {
+        jax.hover.timer = setTimeout(MathJax.Callback(["HoverFade",this,jax]),(delay||50));
+      }
+    },
+    HoverMenu: function (event) {
+      if (!event) {event = window.event}
+      BASE.OutputJax[this.jax].ContextMenu(event,this.math,true);
+    },
+    
+    Em: function (m) {
+      if (Math.abs(m) < .0006) {return "0em"}
+      return m.toFixed(3).replace(/\.?0+$/,"") + "em";
+    }
+
+  };
+  
+  //
+  //  Handle touch events.  
+  //
+  //  Use double-tap-and-hold as a replacement for context menu event.
+  //  Use double-tap as a replacement for double click.
+  //
+  var TOUCH = BASE.HTML.Touch = {
+
     last: 0,          // time of last tap event
     delay: 500,       // delay time for double-click
     
@@ -1644,6 +1781,7 @@ MathJax.Hub = {
   }
 };
 MathJax.Hub.Insert(MathJax.Hub.config.styles,MathJax.Message.styles);
+MathJax.Hub.Insert(MathJax.Hub.config.styles,MathJax.HTML.Event.styles);
 MathJax.Hub.Insert(MathJax.Hub.config.styles,{".MathJax_Error":MathJax.Hub.config.errorSettings.style});
 
 //
@@ -2211,6 +2349,8 @@ MathJax.Hub.Startup = {
       browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
       MathJax.HTML.Event.msieButtonBug = (document.documentMode||0) >= 9;
+      if ((document.documentMode||0) < 9) {MathJax.HTML.Event.LEFTBUTTON = 1}
+      MathJax.HTML.Event.msieBorderWidthBug = (document.compatMode === "BackCompat");
     }
   });
   HUB.Browser.Select(MathJax.Message.browsers);

@@ -229,7 +229,7 @@
       }
       if (MENU.jax.hover) {
         delete MENU.jax.hover.nofade;
-        MENU.jax.outputJax.UnHover(MENU.jax);
+        HTML.Hover.UnHover(MENU.jax);
       }
     },
 
@@ -327,7 +327,7 @@
     getImages: function () {
       if (MENU.isMobile) {
         var close = new Image();
-        close.src = MathJax.Ajax.fileURL(MathJax.OutputJax.imageDir+"/CloseX-31.png");
+        close.src = AJAX.fileURL(MathJax.OutputJax.imageDir+"/CloseX-31.png");
       }
     }
 
@@ -873,7 +873,7 @@
       trigger.items = trigger.items.slice(0,4);
     
       if (navigator.appVersion.match(/[ (]Android[) ]/)) {
-        MathJax.Menu.ITEM.SUBMENU.Augment({marker: "\u00BB"});
+        MENU.ITEM.SUBMENU.Augment({marker: "\u00BB"});
       }
     })();
   }
