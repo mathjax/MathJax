@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.11";
+MathJax.fileversion = "1.1.12";
 
 /**********************************************************/
 
@@ -900,379 +900,104 @@ MathJax.fileversion = "1.1.11";
 
 /**********************************************************/
 
-(function (BASENAME) {
-  var BASE = window[BASENAME];
-  if (!BASE) {BASE = window[BASENAME] = {}}
-  var AJAX = BASE.Ajax, CALLBACK = BASE.Callback;
+MathJax.HTML = {
+  //
+  //  Create an HTML element with given attributes and content.
+  //  The def parameter is an (optional) object containing key:value pairs
+  //  of the attributes and their values, and contents is an (optional)
+  //  array of strings to be inserted as text, or arrays of the form
+  //  [type,def,contents] that describes an HTML element to be inserted
+  //  into the current element.  Thus the contents can describe a complete
+  //  HTML snippet of arbitrary complexity.  E.g.:
+  //  
+  //    MathJax.HTML.Element("span",{id:"mySpan",style{"font-style":"italic"}},[
+  //        "(See the ",["a",{href:"http://www.mathjax.org"},["MathJax home page"]],
+  //        " for more details.)"]);
+  // 
+  Element: function (type,def,contents) {
+    var obj = document.createElement(type);
+    if (def) {
+      if (def.style) {
+        var style = def.style; def.style = {};
+        for (var id in style) {if (style.hasOwnProperty(id))
+          {def.style[id.replace(/-([a-z])/g,this.ucMatch)] = style[id]}}
+      }
+      MathJax.Hub.Insert(obj,def);
+    }
+    if (contents) {
+      for (var i = 0; i < contents.length; i++) {
+        if (contents[i] instanceof Array) {
+          obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
+        } else {
+          obj.appendChild(document.createTextNode(contents[i]));
+        }
+      }
+    }
+    return obj;
+  },
+  ucMatch: function (match,c) {return c.toUpperCase()},
+  addElement: function (span,type,def,contents) {return span.appendChild(this.Element(type,def,contents))},
+  TextNode: function (text) {return document.createTextNode(text)},
+  addText: function (span,text) {return span.appendChild(this.TextNode(text))},
 
-  BASE.HTML = {
+  //
+  //  Set the text of a script
+  //
+  setScript: function (script,text) {
+    if (this.setScriptBug) {script.text = text} else {
+      while (script.firstChild) {script.removeChild(script.firstChild)}
+      this.addText(script,text);
+    }
+  },
+
+  //
+  //  Manage cookies
+  //
+  Cookie: {
+    prefix: "mjx",
+    expires: 365,
     
     //
-    //  Create an HTML element with given attributes and content.
-    //  The def parameter is an (optional) object containing key:value pairs
-    //  of the attributes and their values, and contents is an (optional)
-    //  array of strings to be inserted as text, or arrays of the form
-    //  [type,def,contents] that describes an HTML element to be inserted
-    //  into the current element.  Thus the contents can describe a complete
-    //  HTML snippet of arbitrary complexity.  E.g.:
-    //  
-    //    MathJax.HTML.Element("span",{id:"mySpan",style{"font-style":"italic"}},[
-    //        "(See the ",["a",{href:"http://www.mathjax.org"},["MathJax home page"]],
-    //        " for more details.)"]);
-    // 
-    Element: function (type,def,contents) {
-      var obj = document.createElement(type);
+    //  Save an object as a named cookie
+    //
+    Set: function (name,def) {
+      var keys = [];
       if (def) {
-        if (def.style) {
-          var style = def.style; def.style = {};
-          for (var id in style) {if (style.hasOwnProperty(id))
-            {def.style[id.replace(/-([a-z])/g,this.ucMatch)] = style[id]}}
-        }
-        BASE.Hub.Insert(obj,def);
+        for (var id in def) {if (def.hasOwnProperty(id)) {
+          keys.push(id+":"+def[id].toString().replace(/&/g,"&&"));
+        }}
       }
-      if (contents) {
-        for (var i = 0; i < contents.length; i++) {
-          if (contents[i] instanceof Array) {
-            obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
-          } else {
-            obj.appendChild(document.createTextNode(contents[i]));
-          }
+      var cookie = this.prefix+"."+name+"="+escape(keys.join('&;'));
+      if (this.expires) {
+        var time = new Date(); time.setDate(time.getDate() + this.expires);
+        cookie += '; expires='+time.toGMTString();
+      }
+      document.cookie = cookie+"; path=/";
+    },
+    
+    //
+    //  Get the contents of a named cookie and incorporate
+    //  it into the given object (or return a fresh one)
+    //
+    Get: function (name,obj) {
+      if (!obj) {obj = {}}
+      var pattern = new RegExp("(?:^|;\\s*)"+this.prefix+"\\."+name+"=([^;]*)(?:;|$)");
+      var match = pattern.exec(document.cookie);
+      if (match && match[1] !== "") {
+        var keys = unescape(match[1]).split('&;');
+        for (var i = 0, m = keys.length; i < m; i++) {
+          match = keys[i].match(/([^:]+):(.*)/);
+          var value = match[2].replace(/&&/g,'&');
+          if (value === "true") {value = true} else if (value === "false") {value = false}
+            else if (value.match(/^-?(\d+(\.\d+)?|\.\d+)$/)) {value = parseFloat(value)}
+          obj[match[1]] = value;
         }
       }
       return obj;
-    },
-    ucMatch: function (match,c) {return c.toUpperCase()},
-    addElement: function (span,type,def,contents) {return span.appendChild(this.Element(type,def,contents))},
-    TextNode: function (text) {return document.createTextNode(text)},
-    addText: function (span,text) {return span.appendChild(this.TextNode(text))},
-
-    //
-    //  Set the text of a script
-    //
-    setScript: function (script,text) {
-      if (this.setScriptBug) {script.text = text} else {
-        while (script.firstChild) {script.removeChild(script.firstChild)}
-        this.addText(script,text);
-      }
-    },
-
-    //
-    //  Manage cookies
-    //
-    Cookie: {
-      prefix: "mjx",
-      expires: 365,
-    
-      //
-      //  Save an object as a named cookie
-      //
-      Set: function (name,def) {
-        var keys = [];
-        if (def) {
-          for (var id in def) {if (def.hasOwnProperty(id)) {
-            keys.push(id+":"+def[id].toString().replace(/&/g,"&&"));
-          }}
-        }
-        var cookie = this.prefix+"."+name+"="+escape(keys.join('&;'));
-        if (this.expires) {
-          var time = new Date(); time.setDate(time.getDate() + this.expires);
-          cookie += '; expires='+time.toGMTString();
-        }
-        document.cookie = cookie+"; path=/";
-      },
-    
-      //
-      //  Get the contents of a named cookie and incorporate
-      //  it into the given object (or return a fresh one)
-      //
-      Get: function (name,obj) {
-        if (!obj) {obj = {}}
-        var pattern = new RegExp("(?:^|;\\s*)"+this.prefix+"\\."+name+"=([^;]*)(?:;|$)");
-        var match = pattern.exec(document.cookie);
-        if (match && match[1] !== "") {
-          var keys = unescape(match[1]).split('&;');
-          for (var i = 0, m = keys.length; i < m; i++) {
-            match = keys[i].match(/([^:]+):(.*)/);
-            var value = match[2].replace(/&&/g,'&');
-            if (value === "true") {value = true} else if (value === "false") {value = false}
-              else if (value.match(/^-?(\d+(\.\d+)?|\.\d+)$/)) {value = parseFloat(value)}
-            obj[match[1]] = value;
-          }
-        }
-        return obj;
-      }
     }
+  }
     
-  };
-  
-  //
-  //  Common event-handling code
-  //
-  var EVENT = BASE.HTML.Event = {
-    
-    LEFTBUTTON: 0,           // the event.button value for left button
-    MENUKEY: "altKey",       // the event value for alternate context menu
-
-    styles: {
-      ".MathJax_Hover_Frame": {
-        "border-radius": ".25em",                   // Opera 10.5 and IE9
-        "-webkit-border-radius": ".25em",           // Safari and Chrome
-        "-moz-border-radius": ".25em",              // Firefox
-        "-khtml-border-radius": ".25em",            // Konqueror
-
-        "box-shadow": "0px 0px 15px #83A",          // Opera 10.5 and IE9
-        "-webkit-box-shadow": "0px 0px 15px #83A",  // Safari and Chrome
-        "-moz-box-shadow": "0px 0px 15px #83A",     // Forefox 3.5
-        "-khtml-box-shadow": "0px 0px 15px #83A",   // Konqueror
-
-        border: ".1em solid #A6D ! important",
-        display: "inline-block", position:"absolute"
-      },
-
-      ".MathJax_Hover_Arrow": {
-        position:"absolute",
-        top:"-5px", right:"-9px",
-        width:"15px", height:"11px",
-        cursor:"pointer"
-      }
-    },
-
-    Mousedown: function (event) {return EVENT.Handler(event,"Mousedown",this)},
-    Mouseup:   function (event) {return EVENT.Handler(event,"Mouseup",this)},
-    Mousemove: function (event) {return EVENT.Handler(event,"Mousemove",this)},
-    Mouseover: function (event) {return EVENT.Handler(event,"Mouseover",this)},
-    Mouseout:  function (event) {return EVENT.Handler(event,"Mouseout",this)},
-    Click:     function (event) {return EVENT.Handler(event,"Click",this)},
-    DblClick:  function (event) {return EVENT.Handler(event,"DblClick",this)},
-    Menu:      function (event) {return EVENT.Handler(event,"ContextMenu",this)},
-    
-    //
-    //  Call the output jax's event handler
-    //
-    Handler: function (event,type,math) {
-      if (AJAX.loadingMathMenu) {return False(event)}
-      var jax = BASE.OutputJax[math.jaxID];
-      if (!event) {event = window.event}
-      event.isContextMenu = (type === "ContextMenu");
-      return jax.HandleEvent(event,type,math);
-    },
-    //
-    //  For use in the output jax (this will be the output jax)
-    //
-    HandleEvent: function (event,type,math) {
-      if (this[type]) {return this[type].call(this,event,math)}
-      if (MathJax.Extension.MathZoom)
-        {return MathJax.Extension.MathZoom.HandleEvent(event,type,math)}
-    },
-
-    
-    //
-    //  Try to cancel the event in every way we can
-    //
-    False: function (event) {
-      if (!event) {event = window.event}
-      if (event) {
-        if (event.preventDefault) {event.preventDefault()}
-        if (event.stopPropagation) {event.stopPropagation()}
-        event.cancelBubble = true;
-        event.returnValue = false;
-      }
-      return false;
-    },
-
-    //
-    //  Load the contextual menu code, if needed, and post the menu
-    //
-    ContextMenu: function (event,jax) {
-      if (jax.hover) {
-        if (jax.hover.remove) {clearTimeout(jax.hover.remove); delete jax.hover.remove}
-        jax.hover.nofade = true;
-      }
-      var MENU = BASE.Menu;
-      if (MENU) {
-        MENU.jax = jax;
-        MENU.menu.Find("Format").menu.items[1].name = 
-          (MENU.jax.inputJax.id === "MathML" ? "Original" : MENU.jax.inputJax.id);
-        return MENU.menu.Post(event);
-      } else {
-        if (!AJAX.loadingMathMenu) {
-          AJAX.loadingMathMenu = true;
-          var ev = {
-            pageX:event.pageX, pageY:event.pageY,
-            clientX:event.clientX, clientY:event.clientY
-          };
-          CALLBACK.Queue(
-            AJAX.Require("[MathJax]/extensions/MathMenu.js"),
-            function () {delete AJAX.loadingMathMenu; if (!BASE.Menu) {BASE.Menu = {}}},
-            ["ContextMenu",this,ev,jax]  // call this function again
-          );
-        }
-        return this.False(event);
-      }
-    }
-  };
-  
-  //
-  //  Handle hover "discoverability"
-  //
-  var HOVER = BASE.HTML.Hover = {
-    Mouseover: function (event,math) {
-      var from = event.fromElement || event.relatedTarget,
-          to   = event.toElement   || event.target;
-      if (from && to && from.isMathJax != to.isMathJax) {
-        var jax = this.getJaxFromMath(math);
-        if (jax.hover) {HOVER.ReHover(jax)} else {HOVER.HoverTimer(jax,math)}
-        return EVENT.False(event);
-      }
-    },
-    Mouseout: function (event,math) {
-      var from = event.fromElement || event.relatedTarget,
-          to   = event.toElement   || event.target;
-      if (from && to && from.isMathJax != to.isMathJax) {
-        var jax = this.getJaxFromMath(math);
-        if (jax.hover) {HOVER.UnHover(jax)} else {HOVER.ClearHoverTimer()}
-        return EVENT.False(event);
-      }
-    },
-    Mousemove: function (event,math) {
-      var jax = this.getJaxFromMath(math); if (jax.hover) return;
-      if (HOVER.lastX == event.clientX && HOVER.lastY == event.clientY) return;
-      HOVER.lastX = event.clientX; HOVER.lastY = event.clientY;
-      HOVER.HoverTimer(jax,math);
-      return EVENT.False(event);
-    },
-    
-    HoverTimer: function (jax,math) {
-      this.ClearHoverTimer();
-      var delay = BASE.Hub.config.menuSettings.hover;
-      this.hoverTimer = setTimeout(CALLBACK(["Hover",this,jax,math]),delay);
-    },
-    ClearHoverTimer: function () {
-      if (this.hoverTimer) {clearTimeout(this.hoverTimer); delete this.hoverTimer}
-    },
-    
-    Hover: function (jax,math) {
-      // check for MathZoom hover
-      var JAX = jax.outputJax, span = JAX.getHoverSpan(jax), bbox = JAX.getHoverBBox(jax,span);
-      var dx = .25, dy = .33, dd = .1;  // frame size
-      jax.hover = {opacity:0};
-      if (this.msieBorderWidthBug) {dd = 0}
-      jax.hover.id = "MathJax-Hover-"+jax.inputID.replace(/.*-(\d+)$/,"$1");
-      var frame = BASE.HTML.Element("span",{
-         id:jax.hover.id, isMathJax: true,
-         style:{display:"inline-block", "z-index":1, width:0, height:0, position:"relative"}
-        },[["span",{
-          className:"MathJax_Hover_Frame", isMathJax: true,
-          style:{
-            display:"inline-block", position:"absolute",
-            top:this.Em(-bbox.h-dy-dd), left:this.Em(-dx-dd),
-            width:this.Em(bbox.w+2*dx), height:this.Em(bbox.h+bbox.d+2*dy),
-            opacity:0, filter:"alpha(opacity=0)"
-          }},[[
-           "img",{
-             className: "MathJax_Hover_Arrow", isMathJax: true, math: math,
-             src: BASE.Ajax.fileURL(MathJax.OutputJax.imageDir+"/MenuArrow-15.png"),
-             onclick: this.HoverMenu, jax:JAX.id
-           }
-          ]]
-        ]]
-      );
-      span.parentNode.insertBefore(frame,span); span.style.position = "relative";
-      this.ReHover(jax,.2);
-    },
-    ReHover: function (jax) {
-      if (jax.hover.remove) {clearTimeout(jax.hover.remove)}
-      jax.hover.remove = setTimeout(MathJax.Callback(["UnHover",this,jax]),15*1000);
-      this.HoverFadeTimer(jax,.2);
-    },
-    UnHover: function (jax) {
-      if (!jax.hover.nofade) {this.HoverFadeTimer(jax,-.05,400)}
-    },
-    HoverFade: function (jax) {
-      delete jax.hover.timer;
-      jax.hover.opacity = Math.max(0,Math.min(1,jax.hover.opacity + jax.hover.inc));
-      jax.hover.opacity = Math.floor(1000*jax.hover.opacity)/1000;
-      var span = document.getElementById(jax.hover.id);
-      span.firstChild.style.opacity = jax.hover.opacity;
-      span.firstChild.style.filter = "alpha(opacity="+Math.floor(100*jax.hover.opacity)+")";
-      if (jax.hover.opacity === 1) {return}
-      if (jax.hover.opacity) {this.HoverFadeTimer(jax,jax.hover.inc); return}
-      var frame = document.getElementById(jax.hover.id);
-      frame.parentNode.removeChild(frame);
-      if (jax.hover.remove) {clearTimeout(jax.hover.remove)}
-      delete jax.hover;
-    },
-    HoverFadeTimer: function (jax,inc,delay) {
-      jax.hover.inc = inc;
-      if (!jax.hover.timer) {
-        jax.hover.timer = setTimeout(MathJax.Callback(["HoverFade",this,jax]),(delay||50));
-      }
-    },
-    HoverMenu: function (event) {
-      if (!event) {event = window.event}
-      BASE.OutputJax[this.jax].ContextMenu(event,this.math,true);
-    },
-    
-    Em: function (m) {
-      if (Math.abs(m) < .0006) {return "0em"}
-      return m.toFixed(3).replace(/\.?0+$/,"") + "em";
-    }
-
-  };
-  
-  //
-  //  Handle touch events.  
-  //
-  //  Use double-tap-and-hold as a replacement for context menu event.
-  //  Use double-tap as a replacement for double click.
-  //
-  var TOUCH = BASE.HTML.Touch = {
-
-    last: 0,          // time of last tap event
-    delay: 500,       // delay time for double-click
-    
-    //
-    //  Check if this is a double-tap, and if so, start the timer
-    //  for the double-tap and hold (to trigger the contextual menu)
-    //
-    start: function (event) {
-      var now = new Date().getTime();
-      var dblTap = (now - TOUCH.last < TOUCH.delay);
-      TOUCH.last = now;
-      if (dblTap) {
-        TOUCH.timeout = setTimeout(TOUCH.menu,TOUCH.delay,event,this);
-        event.preventDefault();
-      }
-    },
-          
-    //
-    //  Check if there is a timeout pending, i.e., we have a 
-    //  double-tap and were waiting to see if it is held long
-    //  enough for the menu.  Since we got the end before the
-    //  timeout, it is a double-click, not a double-tap-and-hold.
-    //  Prevent the default action and issue a double click.
-    //
-    end: function (event) {
-      if (TOUCH.timeout) {
-        clearTimeout(TOUCH.timeout);
-        delete TOUCH.timeout; TOUCH.last = 0;
-        event.preventDefault();
-        return EVENT.Handler((event.touches[0]||event.touch),"DblClick",this);
-      }
-    },
-        
-    //
-    //  If the timeout passes without an end event, we issue
-    //  the contextual menu event.
-    //
-    menu: function (event,math) {
-      delete TOUCH.timeout; TOUCH.last = 0;
-      return EVENT.Handler((event.touches[0]||event.touch),"ContextMenu",math);
-    }
-    
-  };
-  
-})("MathJax");
+};
 
 
 /**********************************************************/
@@ -1781,7 +1506,6 @@ MathJax.Hub = {
   }
 };
 MathJax.Hub.Insert(MathJax.Hub.config.styles,MathJax.Message.styles);
-MathJax.Hub.Insert(MathJax.Hub.config.styles,MathJax.HTML.Event.styles);
 MathJax.Hub.Insert(MathJax.Hub.config.styles,{".MathJax_Error":MathJax.Hub.config.errorSettings.style});
 
 //
@@ -2348,9 +2072,6 @@ MathJax.Hub.Startup = {
     MSIE: function (browser) {
       browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
-      MathJax.HTML.Event.msieButtonBug = (document.documentMode||0) >= 9;
-      if ((document.documentMode||0) < 9) {MathJax.HTML.Event.LEFTBUTTON = 1}
-      MathJax.HTML.Event.msieBorderWidthBug = (document.compatMode === "BackCompat");
     }
   });
   HUB.Browser.Select(MathJax.Message.browsers);

@@ -182,10 +182,7 @@
     }
   });
   
-  var EVENT = MathJax.HTML.Event;
-  var TOUCH = MathJax.HTML.Touch;
-  var HOVER = MathJax.HTML.Hover;
-
+  var EVENT, TOUCH, HOVER; // filled in later
   
   HTMLCSS.Augment({
     config: {
@@ -302,9 +299,19 @@
         }
         HUB.Startup.signal.Post("HTML-CSS Jax - no valid font");
       }
+      this.require.push(MathJax.OutputJax.extensionDir+"/UIevents.js");
     },
 
     Startup: function () {
+      //  Set up event handling
+      EVENT = MathJax.Extension.UIevents.Event;
+      TOUCH = MathJax.Extension.UIevents.Touch;
+      HOVER = MathJax.Extension.UIevents.Hover;
+      this.HandleEvent = EVENT.HandleEvent;
+      this.Mouseover   = HOVER.Mouseover;
+      this.Mouseout    = HOVER.Mouseout;
+      this.Mousemove   = HOVER.Mousemove;
+
       //  Set up default fonts
       var family = [], fonts = this.FONTDATA.VARIANT.normal.fonts;
       if (!(fonts instanceof Array)) {fonts = [fonts]}
@@ -418,7 +425,6 @@
       if (this.useProcessingFrame) frame.parentNode.replaceChild(div,frame);
     },
 
-    HandleEvent: EVENT.HandleEvent,
     ContextMenu: function (event,math,force) {
       if (this.config.showMathMenu && (this.settings.context === "MathJax" || force)) {
         if (this.safariContextMenuBug) {setTimeout("window.getSelection().empty()",0)}
@@ -432,15 +438,11 @@
         if (this.settings.context === "MathJax") {
           if (!this.noContextMenuBug || event.button !== 2) return
         } else {
-          var BUTTON = (EVENT.msieButtonBug ? event.buttons & 1 : event.button);
-          if (!event[EVENT.MENUKEY] || BUTTON !== EVENT.LEFTBUTTON) return
+          if (!event[EVENT.MENUKEY] || event.button !== EVENT.LEFTBUTTON) return
         }
         return this.ContextMenu(event,math,true);
       }
     },
-    Mouseover: HOVER.Mouseover,
-    Mouseout:  HOVER.Mouseout,
-    Mousemove: HOVER.Mousemove,
     getJaxFromMath: function (math) {
       if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
       return HUB.getJaxFor(math.nextSibling);
@@ -2149,14 +2151,6 @@
   });
 
   HUB.Register.StartupHook("End Config",function () {
-    
-    /* 
-     * if (MathJax.Hub.Browser.isMobile) {
-     *   var arrow = HTMLCSS.config.styles[".MathJax_Hover_Arrow"];
-     *   arrow.width = "25px"; arrow.height = "18px";
-     *   arrow.top = "-11px"; arrow.right = "-15px";
-     * }
-     */
     
     //
     //  Handle browser-specific setup

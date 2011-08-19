@@ -134,11 +134,11 @@
     }
   });
   
-  /*************************************************************/
-  /*
-   *  Cancel event's default action (try everything we can)
-   */
-  var FALSE = MathJax.HTML.Event.False;
+  var FALSE, HOVER;
+  MathJax.Hub.Register.StartupHook("UIevents Ready",function () {
+    FALSE = MathJax.Extension.UIevents.Event.False;
+    HOVER = MathJax.Extension.UIevents.Hover;
+  });
   
   /*************************************************************/
   /*
@@ -167,8 +167,8 @@
         delete MENU.skipUp;
       }
       var menu = HTML.addElement(div,"div",{
-        onmouseup: MENU.Mouseup, ondblclick: this.False,
-        ondragstart: this.False, onselectstart: this.False, oncontextmenu: this.False,
+        onmouseup: MENU.Mouseup, ondblclick: FALSE,
+        ondragstart: FALSE, onselectstart: FALSE, oncontextmenu: FALSE,
         menuItem: this, className: "MathJax_Menu"
       },title);
 
@@ -178,7 +178,7 @@
           src: MathJax.Ajax.fileURL(MathJax.OutputJax.imageDir+"/CloseX-31.png"),
           width: 31, height: 31, menu: parent,
           style: {position:"absolute", top:"-15px", left:"-15px"},
-          ontouchstart: MENU.Close, ontouchend: this.False, onmousedown: MENU.Close
+          ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close
         });
       }
       this.posted = true;
@@ -215,7 +215,7 @@
       menu.style.left = x+"px"; menu.style.top = y+"px";
       
       if (document.selection && document.selection.empty) {document.selection.empty()}
-      return this.False(event);
+      return FALSE(event);
     },
 
     /*
@@ -229,12 +229,10 @@
       }
       if (MENU.jax.hover) {
         delete MENU.jax.hover.nofade;
-        HTML.Hover.UnHover(MENU.jax);
+        HOVER.UnHover(MENU.jax);
       }
     },
 
-    False: FALSE,
-    
     /*
      *  Find a named item in a menu (or submenu).
      *  A lsit of names means descend into submenus.
@@ -345,7 +343,7 @@
         var def = {
           onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
           onmouseup: MENU.Mouseup, onmousedown: MENU.Mousedown,
-          ondragstart: this.False, onselectstart: this.False, onselectend: this.False,
+          ondragstart: FALSE, onselectstart: FALSE, onselectend: FALSE,
           ontouchstart: MENU.Touchstart, ontouchend: MENU.Touchend,
           className: "MathJax_MenuItem", menuItem: this
         };
@@ -399,8 +397,7 @@
     Activate: function (menu) {this.Deactivate(menu); menu.className += " MathJax_MenuActive"},
     Deactivate: function (menu) {menu.className = menu.className.replace(/ MathJax_MenuActive/,"")},
 
-    With: function (def) {if (def) {HUB.Insert(this,def)}; return this},
-    False: FALSE
+    With: function (def) {if (def) {HUB.Insert(this,def)}; return this}
   });
 
   /*************************************************************/
@@ -418,7 +415,7 @@
     Label: function (def,menu) {return [this.name]},
     Mouseup: function (event,menu) {
       if (!this.disabled) {this.Remove(event,menu); this.action.call(this,event);}
-      return this.False(event);
+      return FALSE(event);
     }
   });
 
@@ -467,7 +464,7 @@
           }
         }
       }
-      return this.False(event);
+      return FALSE(event);
     }
   });
 
@@ -502,7 +499,7 @@
         if (this.action) {this.action.call(MENU)}
       }
       this.Remove(event,menu);
-      return this.False(event);
+      return FALSE(event);
     }
   });
 
@@ -530,7 +527,7 @@
         if (this.action) {this.action.call(MENU)}
       }
       this.Remove(event,menu);
-      return this.False(event);
+      return FALSE(event);
     }
   });
 
@@ -866,7 +863,7 @@
   
   if (MENU.isMobile) {
     (function () {
-      var settings = MathJax.Hub.config.menuSettings;
+      var settings = CONFIG.settings;
       var trigger = MENU.menu.Find("Settings","Zoom Trigger").menu;
       trigger.items[0].disabled = trigger.items[1].disabled = true;
       if (settings.zoom === "Hover" || settings.zoom == "Click") {settings.zoom = "None"}
