@@ -67,7 +67,7 @@
  */
 
 (function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var CONFIG = MathJax.Hub.CombineConfig("TeX.noErrors",{
     multiLine: true,
@@ -137,7 +137,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
   MML.math.Augment({
     toHTML: function (span,node) {
       if (this.data[0] && this.data[0].data[0] && this.data[0].data[0].isError) {
-        return this.data[0].data[0].toHTML(span);
+        span = this.HTMLcreateSpan(span);
+        span.bbox = this.data[0].data[0].toHTML(span).bbox;
+        return span;
       }
       return math_toHTML.call(this,span,node);
     }
