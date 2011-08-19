@@ -248,6 +248,27 @@
         ".MathJax .MathJax_HitBox": {
           cursor: "text"
         },
+        
+        ".MathJax_Hover_Frame": {
+          "border-radius": ".25em",                   // Opera 10.5 and IE9
+          "-webkit-border-radius": ".25em",           // Safari and Chrome
+          "-moz-border-radius": ".25em",              // Firefox
+          "-khtml-border-radius": ".25em",            // Konqueror
+
+          "box-shadow": "0px 0px 15px #83A",          // Opera 10.5 and IE9
+          "-webkit-box-shadow": "0px 0px 15px #83A",  // Safari and Chrome
+          "-moz-box-shadow": "0px 0px 15px #83A",     // Forefox 3.5
+          "-khtml-box-shadow": "0px 0px 15px #83A",   // Konqueror
+
+          border: ".1em solid #A6D ! important",
+          display: "inline-block", position:"absolute"
+        },
+        ".MathJax_Hover_Arrow": {
+          position:"absolute",
+          top:"-5px", right:"-9px",
+          width:"15px", height:"11px",
+          cursor:"pointer"
+        },
 
         "#MathJax_Tooltip": {
           position: "absolute", left: 0, top: 0,
@@ -425,8 +446,8 @@
       if (this.config.showMathMenu && (this.settings.context === "MathJax" || force)) {
         if (this.safariContextMenuBug) {setTimeout("window.getSelection().empty()",0)}
         if (this.msieEventBug) {event = window.event}
-        if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
-        return EVENT.ContextMenu(event,math);
+        this.ClearHoverTimer();
+        return EVENT.ContextMenu(event,this.getJaxFromMath(math));
       }
     },
     Mousedown: function (event,math) {
@@ -439,6 +460,105 @@
         }
         return this.ContextMenu(event,math,true);
       }
+    },
+    Mouseover: function (event,math) {
+      var from = event.fromElement || event.relatedTarget,
+          to   = event.toElement   || event.target;
+      if (from && to && from.isMathJax != to.isMathJax) {
+        var jax = this.getJaxFromMath(math);
+        if (jax.hover) {this.ReHover(jax)} else {this.HoverTimer(jax,math)}
+        return EVENT.False(event);
+      }
+    },
+    Mouseout: function (event,math) {
+      var from = event.fromElement || event.relatedTarget,
+          to   = event.toElement   || event.target;
+      if (from && to && from.isMathJax != to.isMathJax) {
+        var jax = this.getJaxFromMath(math);
+        if (jax.hover) {this.UnHover(jax)} else {this.ClearHoverTimer()}
+        return EVENT.False(event);
+      }
+    },
+    Mousemove: function (event,math) {
+      var jax = this.getJaxFromMath(math); if (jax.hover) return;
+      if (this.lastX == event.clientX && this.lastY == event.clientY) return;
+      this.lastX = event.clientX; this.lastY = event.clientY;
+      this.HoverTimer(jax,math);
+      return EVENT.False(event);
+    },
+    
+    HoverTimer: function (jax,math) {
+      this.ClearHoverTimer();
+      this.hoverTimer = setTimeout(MathJax.Callback(["Hover",this,jax,math]),this.settings.hover);
+    },
+    ClearHoverTimer: function () {
+      if (this.hoverTimer) {clearTimeout(this.hoverTimer); delete this.hoverTimer}
+    },
+    
+    Hover: function (jax,math) {
+      // check for MathZoom hover
+      jax.hover = {opacity:0};
+      var span = jax.root.HTMLspanElement(), bbox = span.bbox;
+      var dx = .25, dy = .33, dd = .1;  // frame size
+      if (this.msieBorderWidthBug) {dd = 0}
+      jax.hover.id = "MathJax-Hover-"+jax.inputID.replace(/.*-(\d+)$/,"$1");
+      var frame = HTMLCSS.Element("span",{
+         id:jax.hover.id, isMathJax: true,
+         style:{display:"inline-block", "z-index":1, width:0, height:0, position:"relative"}
+        },[["span",{
+          className:"MathJax_Hover_Frame", isMathJax: true,
+          style:{
+            display:"inline-block", position:"absolute",
+            top:HTMLCSS.Em(-bbox.h-dy-dd), left:HTMLCSS.Em(-dx-dd),
+            width:HTMLCSS.Em(bbox.w+2*dx), height:HTMLCSS.Em(bbox.h+bbox.d+2*dy),
+            opacity:0, filter:"alpha(opacity=0)"
+          }},[[
+           "img",{
+             className: "MathJax_Hover_Arrow", isMathJax: true, math: math,
+             src: AJAX.fileURL(MathJax.OutputJax.imageDir+"/MenuArrow-15.png"),
+             onclick: this.HoverMenu
+           }
+          ]]
+        ]]
+      );
+      span.parentNode.insertBefore(frame,span); span.style.position = "relative";
+      this.ReHover(jax,.2);
+    },
+    ReHover: function (jax) {
+      if (jax.hover.remove) {clearTimeout(jax.hover.remove)}
+      jax.hover.remove = setTimeout(MathJax.Callback(["UnHover",this,jax]),15*1000);
+      this.HoverFadeTimer(jax,.2);
+    },
+    UnHover: function (jax) {
+      if (!jax.hover.nofade) {this.HoverFadeTimer(jax,-.05,400)}
+    },
+    HoverFade: function (jax) {
+      delete jax.hover.timer;
+      jax.hover.opacity = Math.max(0,Math.min(1,jax.hover.opacity + jax.hover.inc));
+      jax.hover.opacity = Math.floor(1000*jax.hover.opacity)/1000;
+      var span = document.getElementById(jax.hover.id);
+      span.firstChild.style.opacity = jax.hover.opacity;
+      span.firstChild.style.filter = "alpha(opacity="+Math.floor(100*jax.hover.opacity)+")";
+      if (jax.hover.opacity === 1) {return}
+      if (jax.hover.opacity) {this.HoverFadeTimer(jax,jax.hover.inc); return}
+      var frame = document.getElementById(jax.hover.id);
+      frame.parentNode.removeChild(frame);
+      if (jax.hover.remove) {clearTimeout(jax.hover.remove)}
+      delete jax.hover;
+    },
+    HoverFadeTimer: function (jax,inc,delay) {
+      jax.hover.inc = inc;
+      if (!jax.hover.timer) {
+        jax.hover.timer = setTimeout(MathJax.Callback(["HoverFade",this,jax]),(delay||50));
+      }
+    },
+    HoverMenu: function (event) {
+      if (!event) {event = window.event}
+      HTMLCSS.ContextMenu(event,this.math,true);
+    },
+    getJaxFromMath: function (math) {
+      if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
+      return HUB.getJaxFor(math.nextSibling);
     },
 
     initImg: function (span) {},
@@ -1284,7 +1404,7 @@
 	  span.style.cssText = this.style;
 	  if (span.style.fontSize) {this.mathsize = span.style.fontSize; span.style.fontSize = ""}
 	}
-	this.spanID = HTMLCSS.GetID();
+	if (!this.spanID) {this.spanID = HTMLCSS.GetID()}
 	span.id = (this.id || "MathJax-Span-"+this.spanID) + HTMLCSS.idPostfix;
 	span.bbox = {w:0, h:0, d:0, lw:0, lr:0};
 	if (this.href) {span.parentNode.bbox = span.bbox}
@@ -2103,7 +2223,8 @@
 	  }
 	}
 	return span;
-      }
+      },
+      HTMLspanElement: MML.mbase.prototype.HTMLspanElement
     });
 
     MML.TeXAtom.Augment({
@@ -2141,6 +2262,13 @@
   });
 
   HUB.Register.StartupHook("End Config",function () {
+    
+    if (MathJax.Hub.Browser.isMobile) {
+      var arrow = HTMLCSS.config.styles[".MathJax_Hover_Arrow"];
+      arrow.width = "25px"; arrow.height = "18px";
+      arrow.top = "-11px"; arrow.right = "-15px";
+    }
+    
     //
     //  Handle browser-specific setup
     //

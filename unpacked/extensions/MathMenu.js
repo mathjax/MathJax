@@ -176,9 +176,9 @@
       if (MENU.isMobile) {
         HTML.addElement(menu,"img",{
           src: MathJax.Ajax.fileURL(MathJax.OutputJax.imageDir+"/CloseX-31.png"),
-          width: 31, height: 31,
+          width: 31, height: 31, menu: parent,
           style: {position:"absolute", top:"-15px", left:"-15px"},
-          ontouchstart: MENU.Close, ontouchend: this.False, menu: parent
+          ontouchstart: MENU.Close, ontouchend: this.False, onmousedown: MENU.Close
         });
       }
       this.posted = true;
@@ -193,7 +193,7 @@
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
            {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
         if (MENU.isMobile) {x = Math.max(5,x-Math.floor(menu.offsetWidth/2)); y -= 20}
-        MENU.skipUp = true;
+        MENU.skipUp = event.isContextMenu;
       } else {
         var side = "left", mw = parent.offsetWidth;
         x = (MENU.isMobile ? 30 : mw - 2); y = 0;
@@ -226,6 +226,10 @@
       if (div) {
         div.parentNode.removeChild(div);
         if (this.msieBackgroundBug) {detachEvent("onresize",MENU.Resize)}
+      }
+      if (MENU.jax.hover) {
+        delete MENU.jax.hover.nofade;
+        MENU.jax.outputJax.UnHover(MENU.jax);
       }
     },
 
@@ -265,10 +269,11 @@
     Touchstart: function (event) {return MENU.Event(event,this,"Touchstart")},
     Touchend:   function (event) {return MENU.Event(event,this,"Touchend")},
     Event: function (event,menu,type,force) {
-      if (MENU.isMobile && type === "Mouseover" && !force) {return FALSE(event)}
+      if (MENU.skipMouseover && type === "Mouseover" && !force) {return FALSE(event)}
       if (MENU.skipUp) {
         if (type.match(/Mouseup|Touchend/)) {delete MENU.skipUp; return FALSE(event)}
-        if (type.match(/Touchstart/)) {delete MENU.skipUp}
+        if (type === "Touchstart" ||
+           (type === "Mousedown" && !MENU.skipMousedown)) {delete MENU.skipUp}
       }
       if (!event) {event = window.event}
       var item = menu.menuItem;
@@ -759,9 +764,13 @@
         delete CONFIG.styles["#MathJax_About"].filter;
         delete CONFIG.styles[".MathJax_Menu"].filter;
       }
+    },
+    Firefox: function (browser) {
+      MENU.skipMouseover = browser.isMobile && browser.versionAtLeast("6.0");
+      MENU.skipMousedown = browser.isMobile;
     }
   });
-  MENU.isMobile = MathJax.Hub.Browser.isMobile;
+  MENU.isMobile      = MathJax.Hub.Browser.isMobile;
   MENU.noContextMenu = MathJax.Hub.Browser.noContextMenu;
 
   /*************************************************************/

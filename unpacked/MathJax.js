@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.10";
+MathJax.fileversion = "1.1.11";
 
 /**********************************************************/
 
@@ -1025,6 +1025,7 @@ MathJax.fileversion = "1.1.10";
       if (AJAX.loadingMathMenu) {return False(event)}
       var jax = BASE.OutputJax[math.jaxID];
       if (!event) {event = window.event}
+      event.isContextMenu = (type === "ContextMenu");
       return jax.HandleEvent(event,type,math);
     },
     //
@@ -1054,21 +1055,28 @@ MathJax.fileversion = "1.1.10";
     //
     //  Load the contextual menu code, if needed, and post the menu
     //
-    ContextMenu: function (event,math) {
+    ContextMenu: function (event,jax) {
+      if (jax.hover) {
+        if (jax.hover.remove) {clearTimeout(jax.hover.remove); delete jax.hover.remove}
+        jax.hover.nofade = true;
+      }
       var MENU = BASE.Menu;
       if (MENU) {
-        MENU.jax = BASE.Hub.getJaxFor(math.nextSibling);
-        MENU.menu.items[1].menu.items[1].name = 
+        MENU.jax = jax;
+        MENU.menu.Find("Format").menu.items[1].name = 
           (MENU.jax.inputJax.id === "MathML" ? "Original" : MENU.jax.inputJax.id);
         return MENU.menu.Post(event);
       } else {
         if (!AJAX.loadingMathMenu) {
           AJAX.loadingMathMenu = true;
-          var ev = {pageX:event.pageX, pageY:event.pageY, clientX:event.clientX, clientY:event.clientY};
+          var ev = {
+            pageX:event.pageX, pageY:event.pageY,
+            clientX:event.clientX, clientY:event.clientY
+          };
           CALLBACK.Queue(
             AJAX.Require("[MathJax]/extensions/MathMenu.js"),
             function () {delete AJAX.loadingMathMenu; if (!BASE.Menu) {BASE.Menu = {}}},
-            ["ContextMenu",this,ev,math]  // call this function again
+            ["ContextMenu",this,ev,jax]  // call this function again
           );
         }
         return this.False(event);
@@ -1329,6 +1337,8 @@ MathJax.Hub = {
       ALT: false,          //    require Alt or Option?
       CMD: false,          //    require CMD?
       Shift: false,        //    require Shift?
+      hover: 500,          //  length of time mouse must be still to count as hover
+      discoverable: true,  //  make math menu discoverable on hover?
       zscale: "200%",      //  the scaling factor for MathZoom
       renderer: "",        //  set when Jax are loaded
       font: "Auto",        //  what font HTML-CSS should use
