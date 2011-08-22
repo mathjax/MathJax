@@ -25,6 +25,8 @@
 (function (nMML,HUB,AJAX,HTML,EVENT) {
   var MML, isMSIE = HUB.Browser.isMSIE;
   
+  var EVENT, TOUCH, HOVER; // filled in later
+  
   nMML.Augment({
     LEFTBUTTON: (isMSIE ? 1 : 0),  // the event.button value for left button
     MENUKEY: "altKey",             // the event value for alternate context menu
@@ -36,7 +38,20 @@
     //  User can configure styles
     //
     config: {styles: {}}, settings: HUB.config.menuSettings,
-    Startup: function () {return AJAX.Styles(this.config.styles)},
+    Startup: function () {
+      //  Set up event handling
+      EVENT = MathJax.Extension.UIevents.Event;
+      TOUCH = MathJax.Extension.UIevents.Touch;
+      HOVER = MathJax.Extension.UIevents.Hover;
+      this.HandleEvent = EVENT.HandleEvent;
+      this.Mouseover   = HOVER.Mouseover;
+      this.Mouseout    = HOVER.Mouseout;
+      this.Mousemove   = HOVER.Mousemove;
+this.MSIEmouseover = EVENT.Mouseover;
+this.MSIEmouseout = EVENT.Mouseout;
+this.MSIEmousemove = EVENT.Mousemove;
+      return AJAX.Styles(this.config.styles);
+    },
     Config: function () {
       this.SUPER(arguments).Config.call(this);
       if (this.settings.scale) {this.config.scale = this.settings.scale}
@@ -52,6 +67,7 @@
           "div.MathJax_MathContainer > span": {"text-align": align+"!important"}
         });
       }
+      this.require.push(MathJax.OutputJax.extensionDir+"/UIevents.js");
     },
     //
     //  Set up MathPlayer for IE on the first time through.
@@ -97,26 +113,25 @@
         {prev.parentNode.removeChild(prev)}
       var math = script.MathJax.elementJax.root;
       var type = (math.Get("display") === "block" ? "div" : "span");
-      var span = document.createElement(type), container = span;
-      span.className = "MathJax_MathML"; span.style.fontSize = this.config.scale+"%";
-      if (isMSIE && this.config.showMathMenuMSIE) {
-        container = HTML.addElement(span,"span",{
-          className:"MathJax_MathContainer",
-          style:{display:"inline-block",position:"relative"}
-        });
-      }
-      math.toNativeMML(container);
+      var span = HTML.Element(type,{
+        className: "MathJax_MathML", style: {"font-size": this.config.scale+"%"}
+      },[["span",{
+          className:"MathJax_MathContainer", isMathJax: true, jaxID: "NativeMML",
+          style:{position:"relative", display:"inline-block", "white-space":"nowrap"}
+        }, [["span",{isMathJax:true, style:{display:"inline-block"}}]] // for Firefox hover and zoom
+      ]]), container = span.firstChild;
+      if (isMSIE && this.config.showMathMenuMSIE) {container.style.display = "inline-block"}
+      math.toNativeMML(container.firstChild);
       script.parentNode.insertBefore(span,script);
       if (isMSIE) {
         if (this.config.showMathMenuMSIE) {this.MSIEoverlay(span)}
       } else {
-        math = span.firstChild; math.jaxID = "NativeMML";
-        math.oncontextmenu = EVENT.Menu;
-        math.onmouseover   = EVENT.Mouseover;
-        math.onmousout     = EVENT.Mouseout;
-        math.onmousedown   = EVENT.Mousedown;
-        math.onclick       = EVENT.Click;
-        math.ondblclick    = EVENT.DblClick;
+        container.oncontextmenu = EVENT.Menu;
+        container.onmouseover   = EVENT.Mouseover;
+        container.onmouseout    = EVENT.Mouseout;
+        container.onmousedown   = EVENT.Mousedown;
+        container.onclick       = EVENT.Click;
+        container.ondblclick    = EVENT.DblClick;
       }
     },
     //
@@ -190,14 +205,12 @@
     },
     // Other IE event handlers are in MathZoom.js
 
-    HandleEvent: EVENT.HandleEvent,
     ContextMenu: function (event,math,force) {
       if (this.config.showMathMenu && (this.settings.context === "MathJax" || force)) {
         if (document.selection) {setTimeout("document.selection.empty()",0)}
         if (this.msieEventBug) {event = window.event}
-        math = math.parentNode; if (isMSIE) {math = math.parentNode}
         delete this.trapClick; delete this.trapUp;
-        return EVENT.ContextMenu(event,math);
+        return EVENT.ContextMenu(event,this.getJaxFromMath(math));
       }
     },
     Mousedown: function (event,math) {
@@ -205,11 +218,22 @@
         if (this.settings.context === "MathJax") {
           if (!this.noContextMenuBug || event.button !== 2) return
         } else {
-          if (!event[nMML.MENUKEY] || event.button !== nMML.LEFTBUTTON) return
+          if (!event[EVENT.MENUKEY] || event.button !== EVENT.LEFTBUTTON) return
         }
         return this.ContextMenu(event,math,true);
       }
     },
+    getJaxFromMath: function (math) {
+      return HUB.getJaxFor(math.parentNode.nextSibling);
+    },
+    getHoverSpan: function (jax,math) {return math.firstChild},
+    getHoverBBox: function (jax,span,math) {
+      span = span.parentNode;
+      span.appendChild(this.topImg); var h = this.topImg.offsetTop;  span.removeChild(this.topImg);
+      return {w:span.offsetWidth, h:h, d:span.offsetHeight-h, Units:this.PX, em:1}
+    },
+    PX: function (n) {return n+"px"},
+
 
     NAMEDSPACE: {
       negativeveryverythinmathspace:  "-.0556em",
@@ -274,11 +298,12 @@
       //
       //  Create a MathML element
       //
-      NativeMMLelement: (
-	isMSIE ?
-	  function (type) {return document.createElement("mjx:"+type)} :
-	  function (type) {return document.createElementNS(nMML.MMLnamespace,type)}
-      )
+      NativeMMLelement: function (type) {
+        var math = (isMSIE ? document.createElement("mjx:"+type) :
+	                     document.createElementNS(nMML.MMLnamespace,type));
+        math.isMathJax = true;
+        return math;
+      }
     });
     
     MML.mrow.Augment({
@@ -334,6 +359,26 @@
     });
 
     if (HUB.Browser.isFirefox) {
+      //
+      //  Zoom and hover don't work well with display="block",
+      //  so fake it with inline and an mstyle with displaystyle="true"
+      //
+      MML.math.Augment({
+        toNativeMML: function (parent) {
+          var tag = parent.appendChild(this.NativeMMLelement(this.type));
+          this.NativeMMLattributes(tag);
+          if (this.Get("display") === "block") {
+            tag.setAttribute("display","inline");
+            tag = tag.appendChild(this.NativeMMLelement("mstyle"));
+            tag.setAttribute("displaystyle","true");
+          }
+          for (var i = 0, m = this.data.length; i < m; i++) {
+            if (this.data[i]) {this.data[i].toNativeMML(tag)}
+              else {tag.appendChild(this.NativeMMLelement("mrow"))}
+          }
+        }
+      });
+      
       MML.mtable.Augment({
 	toNativeMML: function (parent) {
 	  //
@@ -471,6 +516,32 @@
     //
     setTimeout(MathJax.Callback(["loadComplete",nMML,"jax.js"]),0);
   });
+  
+
+  //
+  //  Determine browser characteristics
+  //
+  HUB.Browser.Select({
+    MSIE: function (browser) {
+      var quirks = (document.compatMode === "BackCompat");
+      var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
+      nMML.msieInlineBlockAlignBug = (!isIE8 || quirks);
+      nMML.msieTopBug = (!browser.versionAtLeast("8.0") || document.documentMode === 7);
+    },
+    Opera: function (browser) {
+      nMML.operaPositionBug = true;
+    }
+  });
+  
+  //
+  //  Used in measuring zoom and hover positions
+  //
+  nMML.topImg = (nMML.msieInlineBlockAlignBug ?
+    HTML.Element("img",{style:{width:0,height:0,position:"relative"},src:"about:blank"}) :
+    HTML.Element("span",{style:{width:0,height:0,display:"inline-block"}})
+  );
+  if (nMML.operaPositionBug || nMML.msieTopBug) {nMML.topImg.style.border="1px solid"}
+
 
   HUB.Register.StartupHook("End Cookie",function () {
     if (HUB.config.menuSettings.zoom !== "None")

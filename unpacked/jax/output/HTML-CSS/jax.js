@@ -448,7 +448,12 @@
       return HUB.getJaxFor(math.nextSibling);
     },
     getHoverSpan: function (jax) {return jax.root.HTMLspanElement()},
-    getHoverBBox: function (jax,span) {return span.bbox},
+    getHoverBBox: function (jax,span) {
+      var bbox = span.bbox;
+      var BBOX = {w:bbox.w, h:bbox.h, d:bbox.d, Units:HTMLCSS.Em, em:HTMLCSS.em};
+      if (bbox.width) {BBOX.width = bbox.width}
+      return BBOX;
+    },
 
     initImg: function (span) {},
     initHTML: function (math,span) {},

@@ -309,21 +309,23 @@
         if (!this.MSIEzoomKeys(event)) return false;
         return (ZOOM.DblClick(event,math) === false);
       },
-      MSIEmouseover: function (event,math,span) {
-        if (this.settings.zoom !== "Hover") {return false}
-        return !HOVER.Mouseover(event,math);
-//        ZOOM.Timer(event,math); return true;
-      },
-      MSIEmouseout: function (event,math,span) {
-        if (this.settings.zoom !== "Hover") {return false}
-        return !HOVER.Mouseout(event,math);
-//        ZOOM.ClearTimer(); return true;
-      },
-      MSIEmousemove: function (event,math,span) {
-        if (this.settings.zoom !== "Hover") {return false}
-        return !HOVER.Mousemove(event,math);
-//        ZOOM.Timer(event,math); return true;
-      },
+/* 
+ *       MSIEmouseover: function (event,math,span) {
+ *         if (this.settings.zoom !== "Hover") {return false}
+ *         return !HOVER.Mouseover(event,math);
+ * //        ZOOM.Timer(event,math); return true;
+ *       },
+ *       MSIEmouseout: function (event,math,span) {
+ *         if (this.settings.zoom !== "Hover") {return false}
+ *         return !HOVER.Mouseout(event,math);
+ * //        ZOOM.ClearTimer(); return true;
+ *       },
+ *       MSIEmousemove: function (event,math,span) {
+ *         if (this.settings.zoom !== "Hover") {return false}
+ *         return !HOVER.Mousemove(event,math);
+ * //        ZOOM.Timer(event,math); return true;
+ *       },
+ */
       MSIEzoomKeys: function (event) {
         if (this.settings.CTRL  && !event.ctrlKey)  return false;
         if (this.settings.CMD   && !event.metaKey)  return false;

@@ -43,7 +43,7 @@
         "-moz-box-shadow": "0px 0px 15px #83A",     // Forefox 3.5
         "-khtml-box-shadow": "0px 0px 15px #83A",   // Konqueror
 
-        border: ".1em solid #A6D ! important",
+        border: "1px solid #A6D ! important",
         display: "inline-block", position:"absolute"
       },
 
@@ -178,21 +178,23 @@
     },
     
     Hover: function (jax,math) {
-      if (EXTENSION.MathZoom && EXTENSION.MathZoom.Hover(event,math)) return;
-      var JAX = jax.outputJax, span = JAX.getHoverSpan(jax), bbox = JAX.getHoverBBox(jax,span);
-      var dx = .25, dy = .33, dd = .1;  // frame size
+      if (EXTENSION.MathZoom && EXTENSION.MathZoom.Hover({},math)) return;
+      var JAX = jax.outputJax,
+          span = JAX.getHoverSpan(jax,math),
+          bbox = JAX.getHoverBBox(jax,span,math);
+      var dx = 3.5/bbox.em, dy = 5/bbox.em, dd = 1/bbox.em;  // frame size
       jax.hover = {opacity:0};
-      if (this.msieBorderWidthBug) {dd = 0}
+      if (UI.msieBorderWidthBug) {dd = 0}
       jax.hover.id = "MathJax-Hover-"+jax.inputID.replace(/.*-(\d+)$/,"$1");
       var frame = HTML.Element("span",{
          id:jax.hover.id, isMathJax: true,
-         style:{display:"inline-block", "z-index":1, width:0, height:0, position:"relative"}
+         style:{display:"inline-block", /*"z-index":1,*/ width:0, height:0, position:"relative"}
         },[["span",{
           className:"MathJax_Hover_Frame", isMathJax: true,
           style:{
             display:"inline-block", position:"absolute",
-            top:this.Em(-bbox.h-dy-dd), left:this.Em(-dx-dd),
-            width:this.Em(bbox.w+2*dx), height:this.Em(bbox.h+bbox.d+2*dy),
+            top:bbox.Units(-bbox.h-dy-dd-(bbox.y||0)), left:bbox.Units(-dx-dd+(bbox.x||0)),
+            width:bbox.Units(bbox.w+2*dx), height:bbox.Units(bbox.h+bbox.d+2*dy),
             opacity:0, filter:"alpha(opacity=0)"
           }},[[
            "img",{
@@ -203,7 +205,13 @@
           ]]
         ]]
       );
-      span.parentNode.insertBefore(frame,span); span.style.position = "relative";
+      if (bbox.width) {
+        frame.style.width = bbox.width;
+        frame.style.marginRight = "-"+bbox.width;
+        frame.firstChild.style.width = bbox.width;
+      }
+      span.parentNode.insertBefore(frame,span);
+      if (span.style) {span.style.position = "relative"}
       this.ReHover(jax,.2);
     },
     ReHover: function (jax) {
@@ -314,8 +322,8 @@
   
   HUB.Browser.Select({
     MSIE: function (browser) {
+      UI.msieBorderWidthBug = (document.compatMode === "BackCompat");
       if ((document.documentMode||0) < 9) {EVENT.LEFTBUTTON = 1}
-      EVENT.msieBorderWidthBug = (document.compatMode === "BackCompat");
     }
   });
   
