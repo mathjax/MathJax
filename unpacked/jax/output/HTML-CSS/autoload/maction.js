@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1.3";
+  var VERSION = "1.1.4";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -110,13 +110,12 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       this.selection++;
       if (this.selection > this.data.length) {this.selection = 1}
       var math = this; while (math.type !== "math") {math = math.inherit}
-      MathJax.Hub.getJaxFor(math.inputID).Update();
-      if (!event) {event = window.event}
-      if (event.preventDefault) {event.preventDefault()}
-      if (event.stopPropagation) {event.stopPropagation()}
-      event.cancelBubble = true;
-      event.returnValue = false;
-      return false;
+      var jax = MathJax.Hub.getJaxFor(math.inputID), hover = !!jax.hover;
+      jax.Update(); if (hover) {
+        var span = document.getElementById(jax.inputID+"-Span");
+        MathJax.Extension.UIevents.Hover.Hover(jax,span);
+      }
+      return MathJax.Extension.UIevents.Event.False(event);
     },
     
     //

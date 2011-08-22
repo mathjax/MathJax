@@ -47,9 +47,6 @@
       this.Mouseover   = HOVER.Mouseover;
       this.Mouseout    = HOVER.Mouseout;
       this.Mousemove   = HOVER.Mousemove;
-this.MSIEmouseover = EVENT.Mouseover;
-this.MSIEmouseout = EVENT.Mouseout;
-this.MSIEmousemove = EVENT.Mousemove;
       return AJAX.Styles(this.config.styles);
     },
     Config: function () {
@@ -116,15 +113,22 @@ this.MSIEmousemove = EVENT.Mousemove;
       var span = HTML.Element(type,{
         className: "MathJax_MathML", style: {"font-size": this.config.scale+"%"}
       },[["span",{
-          className:"MathJax_MathContainer", isMathJax: true, jaxID: "NativeMML",
+          className:"MathJax_MathContainer", isMathJax: true, jaxID:this.id,
           style:{position:"relative", display:"inline-block", "white-space":"nowrap"}
         }, [["span",{isMathJax:true, style:{display:"inline-block"}}]] // for Firefox hover and zoom
       ]]), container = span.firstChild;
-      if (isMSIE && this.config.showMathMenuMSIE) {container.style.display = "inline-block"}
       math.toNativeMML(container.firstChild);
       script.parentNode.insertBefore(span,script);
       if (isMSIE) {
-        if (this.config.showMathMenuMSIE) {this.MSIEoverlay(span)}
+        if (container.addEventListener) {
+          container.addEventListener("contextmenu",EVENT.Menu,true);
+          container.addEventListener("mouseover",EVENT.Mouseover,true);
+          container.addEventListener("mouseout",EVENT.Mouseout,true);
+          container.addEventListener("mousedown",EVENT.Mousedown,true);
+          container.addEventListener("mouseup",EVENT.False,true);
+          container.addEventListener("click",EVENT.Click,true);
+          container.addEventListener("dblclick",EVENT.DblClick,true);
+        } else if (this.config.showMathMenuMSIE) {this.MSIEoverlay(container)}
       } else {
         container.oncontextmenu = EVENT.Menu;
         container.onmouseover   = EVENT.Mouseover;
@@ -155,61 +159,44 @@ this.MSIEmousemove = EVENT.Mousemove;
     //
     MSIEoverlay: function (span) {
       var math = span.firstChild;
-      span.style.position = "absolute"; // so we can measure height/depth
-      var HD = span.scrollHeight, W = span.offsetWidth;
-      var tmp = HTML.addElement(span,"img",{src:"about:blank",style:{width:0,height:HD+"px"}});
-      var D = span.scrollHeight - HD; span.removeChild(tmp);
-      span.style.position = "";        // back to normal
-      var top, left, isDisplay = (span.parentNode.nodeName.toLowerCase() === "div");
-      if (isDisplay && this.quirks) {top = -HD; left = Math.floor(-W/2)} else {top = D-HD, left = -W}
+      if (math.nodeName.toLowerCase() === "span") {math = math.firstChild}
+      var bbox = this.getHoverBBox(null,math,{});
       HTML.addElement(span,"span",{
         style:{display:"inline-block", width:0, height:0, position:"relative"}
-      },[["span",{
-        style:{display:"inline-block", position:"absolute", left:left+"px", top:top+"px",
-        width:math.offsetWidth+"px", height:HD+"px", cursor:"pointer",
-        "background-color":"white", filter:"alpha(opacity=0)"},
+      },[["span",{isMathJax: true, className: "MathJax_MathPlayer_Overlay",
+        style:{
+          display:"inline-block", position:"absolute",
+          left:bbox.Units(-bbox.w), top:bbox.Units(-bbox.h-(bbox.y||0)-1),
+          width:bbox.Units(bbox.w), height:bbox.Units(bbox.h+bbox.d), cursor:"pointer",
+          "background-color":"white", filter:"alpha(opacity=0)"
+        }
+      }]]);
+      HUB.Insert(span,{
+        msieMath: math,
         onmousedown: this.MSIEevent, oncontextmenu: this.MSIEevent, onclick: this.MSIEevent,
         onmouseup: this.MSIEevent, onmousemove: this.MSIEevent, ondblclick: this.MSIEevent,
         onmouseover: this.MSIEevent, onmouseout: this.MSIEevent
-      }]]);
+      });
     },
-    MSIEmath: function (span) {
-      // display="block" seems to produce an extra span, so need extra firstChild
-      var math = span.parentNode.previousSibling.firstChild;
-      return (math.nodeName.toLowerCase() === "span" ? math.firstChild : math);
+    MSIEevents: {
+      mousedown:"Mousedown", contextmenu:"ContextMenu", click:"Click",
+      mouseup:"Mouseup", mousemove:"Mousemove", dblclick: "DblClick",
+      mouseover:"Mouseover", mouseout:"Mouseout"
     },
     MSIEevent: function () {
-      var math = nMML.MSIEmath(this);
       var event = window.event;
-      var action = nMML["MSIE"+event.type];
-      if (action && action.call(nMML,event,math,this)) {return false}
-      if (math.fireEvent) {math.fireEvent("on"+event.type,event)}
-      return false;
+      var type = nMML.MSIEevents[event.type];
+      if (nMML[type] && nMML[type](event,this) === false) {return false}
+      if (MathJax.Extension.MathZoom && MathJax.Extension.MathZoom.HandleEvent(event,type,this) === false) {return false}
+      if (event.srcElement.className === "MathJax_MathPlayer_Overlay" && this.msieMath.fireEvent)
+        {this.msieMath.fireEvent("on"+event.type,event)}
+      return EVENT.False(event);
     },
-    MSIEmousedown: function (event,math,span) {
-      if (event[this.MENUKEY] && event.button === this.LEFTBUTTON && this.settings.context !== "MathJax") {
-        this.trapUp = this.trapClick = true;
-        this.ContextMenu(event,span,true);
-        return true;
-      }
-      if (this.MSIEzoomKeys && this.MSIEzoomKeys(event)) {this.trapUp = true; return true}
-      return false;
-    },
-    MSIEcontextmenu: function (event,math,span) {
-      if (this.settings.context === "MathJax") {
-        this.trapUp = this.trapClick = true;
-        this.ContextMenu(event,span);
-        return true;
-      }
-      return false;
-    },
-    // Other IE event handlers are in MathZoom.js
 
     ContextMenu: function (event,math,force) {
       if (this.config.showMathMenu && (this.settings.context === "MathJax" || force)) {
         if (document.selection) {setTimeout("document.selection.empty()",0)}
         if (this.msieEventBug) {event = window.event}
-        delete this.trapClick; delete this.trapUp;
         return EVENT.ContextMenu(event,this.getJaxFromMath(math));
       }
     },
@@ -224,13 +211,20 @@ this.MSIEmousemove = EVENT.Mousemove;
       }
     },
     getJaxFromMath: function (math) {
+      if (math.className === "MathJax_MSIE_Overlay") {math = math.parentNode.parentNode}
       return HUB.getJaxFor(math.parentNode.nextSibling);
     },
-    getHoverSpan: function (jax,math) {return math.firstChild},
+    getHoverSpan: function (jax,math) {
+      if (math.className === "MathJax_MSIE_Overlay") {return math.parentNode}
+      return math.firstChild;
+    },
     getHoverBBox: function (jax,span,math) {
       span = span.parentNode;
-      span.appendChild(this.topImg); var h = this.topImg.offsetTop;  span.removeChild(this.topImg);
-      return {w:span.offsetWidth, h:h, d:span.offsetHeight-h, Units:this.PX, em:1}
+      span.appendChild(this.topImg);
+      var h = this.topImg.offsetTop, d = span.offsetHeight-h, w = span.offsetWidth;
+      span.removeChild(this.topImg);
+      var x = (math.className === "MathJax_MSIE_Overlay" ? -w : 0);
+      return {w:w, h:h, d:d, x:x, Units:this.PX, em:1}
     },
     PX: function (n) {return n+"px"},
 
@@ -359,26 +353,6 @@ this.MSIEmousemove = EVENT.Mousemove;
     });
 
     if (HUB.Browser.isFirefox) {
-      //
-      //  Zoom and hover don't work well with display="block",
-      //  so fake it with inline and an mstyle with displaystyle="true"
-      //
-      MML.math.Augment({
-        toNativeMML: function (parent) {
-          var tag = parent.appendChild(this.NativeMMLelement(this.type));
-          this.NativeMMLattributes(tag);
-          if (this.Get("display") === "block") {
-            tag.setAttribute("display","inline");
-            tag = tag.appendChild(this.NativeMMLelement("mstyle"));
-            tag.setAttribute("displaystyle","true");
-          }
-          for (var i = 0, m = this.data.length; i < m; i++) {
-            if (this.data[i]) {this.data[i].toNativeMML(tag)}
-              else {tag.appendChild(this.NativeMMLelement("mrow"))}
-          }
-        }
-      });
-      
       MML.mtable.Augment({
 	toNativeMML: function (parent) {
 	  //

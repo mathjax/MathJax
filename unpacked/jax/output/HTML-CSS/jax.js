@@ -389,9 +389,9 @@
       var prev = script.previousSibling;
       if (prev && String(prev.className).match(/^MathJax(_MathML|_Display)?$/))
         {prev.parentNode.removeChild(prev)}
-      var math = script.MathJax.elementJax.root, span, div, frame;
+      var jax = script.MathJax.elementJax, math = jax.root, span, div, frame;
       span = div = frame = this.Element("span",{
-        className:"MathJax", isMathJax:true, jaxID:"HTML-CSS",
+        className:"MathJax", isMathJax:true, jaxID:this.id, id:jax.inputID+"-Span",
         oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
         onmouseover:EVENT.Mouseover, onmouseout: EVENT.Mouseout, onmousemove: EVENT.Mousemove,
         onclick:EVENT.Click, ondblclick:EVENT.DblClick

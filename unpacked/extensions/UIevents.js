@@ -49,7 +49,8 @@
 
       ".MathJax_Hover_Arrow": {
         position:"absolute",
-        top:"-5px", right:"-9px",
+//        top:"-5px", right:"-9px",
+        top:"1px", right:"-11px",
         width:"15px", height:"11px",
         cursor:"pointer"
       }
@@ -78,7 +79,7 @@
     //  Call the output jax's event handler
     //
     Handler: function (event,type,math) {
-      if (AJAX.loadingMathMenu) {return False(event)}
+      if (AJAX.loadingMathMenu || AJAX.loadMathZoom) {return False(event)}
       var jax = OUTPUT[math.jaxID];
       if (!event) {event = window.event}
       event.isContextMenu = (type === "ContextMenu");
@@ -111,6 +112,7 @@
     //  Load the contextual menu code, if needed, and post the menu
     //
     ContextMenu: function (event,jax) {
+      HOVER.ClearHoverTimer();
       if (jax.hover) {
         if (jax.hover.remove) {clearTimeout(jax.hover.remove); delete jax.hover.remove}
         jax.hover.nofade = true;
@@ -183,16 +185,16 @@
           span = JAX.getHoverSpan(jax,math),
           bbox = JAX.getHoverBBox(jax,span,math);
       var dx = 3.5/bbox.em, dy = 5/bbox.em, dd = 1/bbox.em;  // frame size
-      jax.hover = {opacity:0};
+      jax.hover = {opacity:0, clear:this.ClearHover};
       if (UI.msieBorderWidthBug) {dd = 0}
       jax.hover.id = "MathJax-Hover-"+jax.inputID.replace(/.*-(\d+)$/,"$1");
       var frame = HTML.Element("span",{
          id:jax.hover.id, isMathJax: true,
-         style:{display:"inline-block", /*"z-index":1,*/ width:0, height:0, position:"relative"}
+         style:{display:"inline-block", width:0, height:0, position:"relative"}
         },[["span",{
           className:"MathJax_Hover_Frame", isMathJax: true,
           style:{
-            display:"inline-block", position:"absolute",
+            display:"inline-block", position:"absolute", overflow:"visible",
             top:bbox.Units(-bbox.h-dy-dd-(bbox.y||0)), left:bbox.Units(-dx-dd+(bbox.x||0)),
             width:bbox.Units(bbox.w+2*dx), height:bbox.Units(bbox.h+bbox.d+2*dy),
             opacity:0, filter:"alpha(opacity=0)"
@@ -205,10 +207,12 @@
           ]]
         ]]
       );
+      if (UI.msieZIndexBug) {frame.style.zIndex = 1}
       if (bbox.width) {
         frame.style.width = bbox.width;
         frame.style.marginRight = "-"+bbox.width;
         frame.firstChild.style.width = bbox.width;
+        frame.firstChild.firstChild.style.right = "-5px";
       }
       span.parentNode.insertBefore(frame,span);
       if (span.style) {span.style.position = "relative"}
@@ -245,6 +249,12 @@
     HoverMenu: function (event) {
       if (!event) {event = window.event}
       OUTPUT[this.jax].ContextMenu(event,this.math,true);
+    },
+    ClearHover: function (jax) {
+      if (jax.hover.remove) {clearTimeout(jax.hover.remove)}
+      if (jax.hover.timer)  {clearTimeout(jax.hover.timer)}
+      HOVER.ClearHoverTimer();
+      delete jax.hover;
     },
     
     Em: function (m) {
@@ -314,16 +324,19 @@
     
   };
   
-  if (MathJax.Hub.Browser.isMobile) {
-    var arrow = CONFIG.styles[".MathJax_Hover_Arrow"];
+  var arrow = CONFIG.styles[".MathJax_Hover_Arrow"];
+  if (HUB.Browser.isMobile) {
     arrow.width = "25px"; arrow.height = "18px";
     arrow.top = "-11px"; arrow.right = "-15px";
   }
   
   HUB.Browser.Select({
     MSIE: function (browser) {
+      var mode = (document.documentMode||0);
       UI.msieBorderWidthBug = (document.compatMode === "BackCompat");
-      if ((document.documentMode||0) < 9) {EVENT.LEFTBUTTON = 1}
+      if (mode < 9) {EVENT.LEFTBUTTON = 1}
+      UI.msieZIndexBug = (mode < 8);
+      if (mode < 8 && !browser.isIE9) {arrow.top = arrow.right = "-1px"}
     }
   });
   

@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.12";
+MathJax.fileversion = "1.1.13";
 
 /**********************************************************/
 
@@ -1365,8 +1365,12 @@ MathJax.Hub = {
     for (var i = 0, m = scripts.length; i < m; i++) {
       var script = scripts[i];
       if (script.type && this.config.inputJax[script.type.replace(/ *;(.|\n)*/,"")]) {
-        if (script.MathJax && script.MathJax.state !== STATE.PENDING)
-          {this.scriptAction[action](script)}
+        if (script.MathJax) {
+          if (script.MathJax.elementJax && script.MathJax.elementJax.hover) {
+            script.MathJax.elementJax.hover.clear(script.MathJax.elementJax);
+          }
+          if (script.MathJax.state !== STATE.PENDING) {this.scriptAction[action](script)}
+        }
         if (!script.MathJax) {script.MathJax = {state: STATE.PENDING}}
         if (script.MathJax.state !== STATE.PROCESSED) {math.push(script)}
       }
@@ -1911,6 +1915,7 @@ MathJax.Hub.Startup = {
       return HUB.Process(script,callback);
     },
     Remove: function () {
+      if (this.hover) {this.hover.clear(this)}
       this.outputJax.Remove(this);
       HUB.signal.Post(["Remove Math",this.inputID]); // wait for this to finish?
       this.Detach();
@@ -1949,7 +1954,7 @@ MathJax.Hub.Startup = {
       }
     }
   },{
-    version: "1.1",
+    version: "1.1.1",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)

@@ -23,7 +23,7 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
-  var VERSION = "1.1.2";
+  var VERSION = "1.1.3";
   
   var CONFIG = HUB.CombineConfig("MathZoom",{
     delay: 400,   // mouse must be still this long (milliseconds)
@@ -77,6 +77,7 @@
       if (ZOOM.settings.ALT   && !event.altKey)   return true;
       if (ZOOM.settings.CMD   && !event.metaKey)  return true;
       if (ZOOM.settings.Shift && !event.shiftKey) return true;
+      if (!ZOOM[type]) return true;
       return ZOOM[type](event,math);
     },
     
@@ -107,7 +108,7 @@
     //  Handle the actual zooming
     //
     Zoom: function (math,event) {
-      this.Remove();
+      this.Remove(); HOVER.ClearHoverTimer();
       
       //
       //  Find the jax and its type
@@ -288,53 +289,6 @@
     
   };
   
-  //
-  //  Handle IE events for NativeMML
-  //
-  HUB.Register.StartupHook("NativeMML Jax Ready", function () {
-    nMML = MathJax.OutputJax.NativeMML;
-    nMML.Augment({
-      MSIEmouseup: function (event,math,span) {
-        if (this.trapUp) {delete this.trapUp; return true}
-        if (this.MSIEzoomKeys(event)) {return true}
-        return false;
-      },
-      MSIEclick: function (event,math,span) {
-        if (this.trapClick) {delete this.trapClick; return true}
-        if (!this.MSIEzoomKeys(event)) return false;
-        if (!this.settings.zoom.match(/Click/)) return false;
-        return (ZOOM.Click(event,math) === false);
-      },
-      MSIEdblclick: function (event,math,span) {
-        if (!this.MSIEzoomKeys(event)) return false;
-        return (ZOOM.DblClick(event,math) === false);
-      },
-/* 
- *       MSIEmouseover: function (event,math,span) {
- *         if (this.settings.zoom !== "Hover") {return false}
- *         return !HOVER.Mouseover(event,math);
- * //        ZOOM.Timer(event,math); return true;
- *       },
- *       MSIEmouseout: function (event,math,span) {
- *         if (this.settings.zoom !== "Hover") {return false}
- *         return !HOVER.Mouseout(event,math);
- * //        ZOOM.ClearTimer(); return true;
- *       },
- *       MSIEmousemove: function (event,math,span) {
- *         if (this.settings.zoom !== "Hover") {return false}
- *         return !HOVER.Mousemove(event,math);
- * //        ZOOM.Timer(event,math); return true;
- *       },
- */
-      MSIEzoomKeys: function (event) {
-        if (this.settings.CTRL  && !event.ctrlKey)  return false;
-        if (this.settings.CMD   && !event.metaKey)  return false;
-        if (this.settings.ALT   && !event.altKey)   return false;
-        if (this.settings.Shift && !event.shiftKey) return false;
-        return true;
-      }
-    });
-  });
   
   /*************************************************************/
 
