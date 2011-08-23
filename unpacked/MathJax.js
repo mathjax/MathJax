@@ -1203,7 +1203,6 @@ MathJax.Hub = {
       ALT: false,          //    require Alt or Option?
       CMD: false,          //    require CMD?
       Shift: false,        //    require Shift?
-      hover: 500,          //  length of time mouse must be still to count as hover
       discoverable: true,  //  make math menu discoverable on hover?
       zscale: "200%",      //  the scaling factor for MathZoom
       renderer: "",        //  set when Jax are loaded

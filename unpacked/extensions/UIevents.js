@@ -49,7 +49,6 @@
 
       ".MathJax_Hover_Arrow": {
         position:"absolute",
-        top:"1px", right:"-11px",
         width:"15px", height:"11px",
         cursor:"pointer"
       }
@@ -173,6 +172,18 @@
   //  Handle hover "discoverability"
   //
   var HOVER = UI.Hover = {
+    delay: 500,                                      // time required to be considered a hover
+    frame: {x: 3.5, y: 5, d: 1},                     // frame padding and thickness
+    button: {
+      x: -4, y: -3, wx: -2,                                   // menu button offsets
+      src: AJAX.fileURL(OUTPUT.imageDir+"/MenuArrow-15.png")  // button image
+    },
+    fadeinInc: .2,           // increment for fade-in
+    fadeoutInc: .05,         // increment for fade-out
+    fadeinStart: 50,         // delay before fadein after mouseover
+    fadeoutStart: 400,       // delay before fadeout after mouseout
+    fadeoutDelay: 15*1000,   // delay before automatic fade-out
+    
     //
     //  Check if we are moving from a non-MathJax element to a MathJax one
     //  and either start fading in again (if it is fading out) or start the
@@ -223,7 +234,7 @@
     //
     HoverTimer: function (jax,math) {
       this.ClearHoverTimer();
-      this.hoverTimer = setTimeout(CALLBACK(["Hover",this,jax,math]),SETTINGS.hover);
+      this.hoverTimer = setTimeout(CALLBACK(["Hover",this,jax,math]),HOVER.delay);
     },
     ClearHoverTimer: function () {
       if (this.hoverTimer) {clearTimeout(this.hoverTimer); delete this.hoverTimer}
@@ -244,7 +255,7 @@
           span = JAX.getHoverSpan(jax,math),
           bbox = JAX.getHoverBBox(jax,span,math),
           show = (JAX.config.showMathMenu != null ? JAX : HUB).config.showMathMenu;
-      var dx = 3.5, dy = 5, dd = 1;  // frame size
+      var dx = this.frame.x, dy = this.frame.y, dd = this.frame.d;  // frame size
       if (UI.msieBorderWidthBug) {dd = 0}
       jax.hover = {opacity:0, id: jax.inputID+"-Hover"};
       //
@@ -260,46 +271,53 @@
             top:this.Px(-bbox.h-dy-dd-(bbox.y||0)), left:this.Px(-dx-dd+(bbox.x||0)),
             width:this.Px(bbox.w+2*dx), height:this.Px(bbox.h+bbox.d+2*dy),
             opacity:0, filter:"alpha(opacity=0)"
-          }},[[
-           "img",{
-             className: "MathJax_Hover_Arrow", isMathJax: true, math: math,
-             src: AJAX.fileURL(OUTPUT.imageDir+"/MenuArrow-15.png"),
-             onclick: this.HoverMenu, jax:JAX.id
-           }
-          ]]
+          }}
         ]]
       );
-      if (UI.msieZIndexBug) {frame.style.zIndex = 1}
+      var button = HTML.Element("span",{
+         isMathJax: true, id:jax.hover.id+"Menu",
+         style:{display:"inline-block", "z-index": 1, width:0, height:0, position:"relative"}
+        },[["img",{
+            className: "MathJax_Hover_Arrow", isMathJax: true, math: math,
+            src: this.button.src, onclick: this.HoverMenu, jax:JAX.id,
+            style: {
+              left:this.Px(bbox.w+dx+dd+(bbox.x||0)+this.button.x),
+              top:this.Px(-bbox.h-dy-dd-(bbox.y||0)-this.button.y),
+              opacity:0, filter:"alpha(opacity=0)"
+            }
+          }]]
+      );
       if (bbox.width) {
-        frame.style.width = bbox.width;
-        frame.style.marginRight = "-"+bbox.width;
+        frame.style.width = button.style.width = bbox.width;
+        frame.style.marginRight = button.style.marginRight = "-"+bbox.width;
         frame.firstChild.style.width = bbox.width;
-        frame.firstChild.firstChild.style.right = "-5px";
+        button.firstChild.style.left = "";
+        button.firstChild.style.right = this.Px(this.button.wx);
       }
-      if (!show) {frame.firstChild.removeChild(frame.firstChild.firstChild)}
       //
-      //  Add the frame
+      //  Add the frame and button
       //
       span.parentNode.insertBefore(frame,span);
+      if (show) {span.parentNode.insertBefore(button,span)}
       if (span.style) {span.style.position = "relative"} // so math is on top of hover frame
       //
       //  Start the hover fade-in
       //
-      this.ReHover(jax,.2);
+      this.ReHover(jax);
     },
     //
     //  Restart the hover fade in and fade-out timers
     //
     ReHover: function (jax) {
       if (jax.hover.remove) {clearTimeout(jax.hover.remove)}
-      jax.hover.remove = setTimeout(CALLBACK(["UnHover",this,jax]),15*1000);
-      this.HoverFadeTimer(jax,.2);
+      jax.hover.remove = setTimeout(CALLBACK(["UnHover",this,jax]),this.fadeoutDelay);
+      this.HoverFadeTimer(jax,this.fadeinInc);
     },
     //
     //  Start the fade-out
     //
     UnHover: function (jax) {
-      if (!jax.hover.nofade) {this.HoverFadeTimer(jax,-.05,400)}
+      if (!jax.hover.nofade) {this.HoverFadeTimer(jax,-this.fadeoutInc,this.fadeoutStart)}
     },
     //
     //  Handle the fade-in and fade-out
@@ -308,13 +326,18 @@
       delete jax.hover.timer;
       jax.hover.opacity = Math.max(0,Math.min(1,jax.hover.opacity + jax.hover.inc));
       jax.hover.opacity = Math.floor(1000*jax.hover.opacity)/1000;
-      var span = document.getElementById(jax.hover.id);
-      span.firstChild.style.opacity = jax.hover.opacity;
-      span.firstChild.style.filter = "alpha(opacity="+Math.floor(100*jax.hover.opacity)+")";
+      var frame = document.getElementById(jax.hover.id),
+          button = document.getElementById(jax.hover.id+"Menu");
+      frame.firstChild.style.opacity = jax.hover.opacity;
+      frame.firstChild.style.filter = "alpha(opacity="+Math.floor(100*jax.hover.opacity)+")";
+      if (button) {
+        button.firstChild.style.opacity = jax.hover.opacity;
+        button.firstChild.style.filter = frame.style.filter;
+      }
       if (jax.hover.opacity === 1) {return}
-      if (jax.hover.opacity) {this.HoverFadeTimer(jax,jax.hover.inc); return}
-      var frame = document.getElementById(jax.hover.id);
+      if (jax.hover.opacity > 0) {this.HoverFadeTimer(jax,jax.hover.inc); return}
       frame.parentNode.removeChild(frame);
+      if (button) {button.parentNode.removeChild(button)}
       if (jax.hover.remove) {clearTimeout(jax.hover.remove)}
       delete jax.hover;
     },
@@ -324,7 +347,7 @@
     HoverFadeTimer: function (jax,inc,delay) {
       jax.hover.inc = inc;
       if (!jax.hover.timer) {
-        jax.hover.timer = setTimeout(CALLBACK(["HoverFade",this,jax]),(delay||50));
+        jax.hover.timer = setTimeout(CALLBACK(["HoverFade",this,jax]),(delay||this.fadeinStart));
       }
     },
     
@@ -333,7 +356,7 @@
     //
     HoverMenu: function (event) {
       if (!event) {event = window.event}
-      OUTPUT[this.jax].ContextMenu(event,this.math,true);
+      return OUTPUT[this.jax].ContextMenu(event,this.math,true);
     },
     
     //
@@ -359,7 +382,7 @@
     //
     getImages: function () {
       var menu = new Image();
-      menu.src = AJAX.fileURL(OUTPUT.imageDir+"/MenuArrow-15.png");
+      menu.src = this.button.src;
     }
 
   };
@@ -419,10 +442,10 @@
   //
   //  Mobile screens are small, so use larger version of arrow
   //
-  var arrow = CONFIG.styles[".MathJax_Hover_Arrow"];
   if (HUB.Browser.isMobile) {
+    var arrow = CONFIG.styles[".MathJax_Hover_Arrow"];
     arrow.width = "25px"; arrow.height = "18px";
-    arrow.top = "-11px"; arrow.right = "-15px";
+    HOVER.button.x = -6;
   }
   
   //
@@ -432,9 +455,7 @@
     MSIE: function (browser) {
       var mode = (document.documentMode||0);
       UI.msieBorderWidthBug = (document.compatMode === "BackCompat");  // borders are inside offsetWidth/Height
-      UI.msieZIndexBug = (mode < 8);    // put hover frame on top of math
-      UI.msieEventBug = browser.isIE9;  // must get event from window even though event is passes
-      if (mode < 8 && !browser.isIE9) {arrow.top = arrow.right = "-1px"}  // IE < 8 clips to frame
+      UI.msieEventBug = browser.isIE9;      // must get event from window even though event is passed
       if (mode < 9) {EVENT.LEFTBUTTON = 1}  // IE < 9 has wrong event.button values
     },
     Safari: function (browser) {
