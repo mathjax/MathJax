@@ -43,7 +43,8 @@
       EVENT = MathJax.Extension.UIevents.Event;
       TOUCH = MathJax.Extension.UIevents.Touch;
       HOVER = MathJax.Extension.UIevents.Hover;
-      this.HandleEvent = EVENT.HandleEvent;
+      this.ContextMenu = EVENT.ContextMenu;
+      this.Mousedown   = EVENT.AltContextMenu;
       this.Mouseover   = HOVER.Mouseover;
       this.Mouseout    = HOVER.Mouseout;
       this.Mousemove   = HOVER.Mousemove;
@@ -128,7 +129,10 @@
           container.addEventListener("mouseup",EVENT.False,true);
           container.addEventListener("click",EVENT.Click,true);
           container.addEventListener("dblclick",EVENT.DblClick,true);
-        } else if (this.config.showMathMenuMSIE) {this.MSIEoverlay(container)}
+        } else {
+          var config = (this.config.showMathMenuMSIE != null ? this : HUB).config;
+          if (config.showMathMenuMSIE) {this.MSIEoverlay(container)}
+        }
       } else {
         container.oncontextmenu = EVENT.Menu;
         container.onmouseover   = EVENT.Mouseover;
@@ -193,23 +197,6 @@
       return EVENT.False(event);
     },
 
-    ContextMenu: function (event,math,force) {
-      if (this.config.showMathMenu && (this.settings.context === "MathJax" || force)) {
-        if (document.selection) {setTimeout("document.selection.empty()",0)}
-        if (this.msieEventBug) {event = window.event}
-        return EVENT.ContextMenu(event,this.getJaxFromMath(math));
-      }
-    },
-    Mousedown: function (event,math) {
-      if (this.config.showMathMenu) {
-        if (this.settings.context === "MathJax") {
-          if (!this.noContextMenuBug || event.button !== 2) return
-        } else {
-          if (!event[EVENT.MENUKEY] || event.button !== EVENT.LEFTBUTTON) return
-        }
-        return this.ContextMenu(event,math,true);
-      }
-    },
     getJaxFromMath: function (math) {
       if (math.className === "MathJax_MSIE_Overlay") {math = math.parentNode.parentNode}
       return HUB.getJaxFor(math.parentNode.nextSibling);
@@ -224,9 +211,8 @@
       var h = this.topImg.offsetTop, d = span.offsetHeight-h, w = span.offsetWidth;
       span.removeChild(this.topImg);
       var x = (math.className === "MathJax_MSIE_Overlay" ? -w : 0);
-      return {w:w, h:h, d:d, x:x, Units:this.PX, em:1}
+      return {w:w, h:h, d:d, x:x}
     },
-    PX: function (n) {return n+"px"},
 
 
     NAMEDSPACE: {

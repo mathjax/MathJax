@@ -1188,6 +1188,10 @@ MathJax.Hub = {
     "v1.0-compatible": true,  // set to false to prevent loading of default configuration file
     elements: [],    // array of elements to process when none is given explicitly
      
+    showMathMenu: true,      // attach math context menu to mathml?
+    showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
+                             //  (since the code for that is a bit delicate)
+
     preProcessors: [], // list of callbacks for preprocessing (initialized by extensions)
     inputJax: {},      // mime-type mapped to input jax (by registration)
     outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
@@ -1367,7 +1371,7 @@ MathJax.Hub = {
       if (script.type && this.config.inputJax[script.type.replace(/ *;(.|\n)*/,"")]) {
         if (script.MathJax) {
           if (script.MathJax.elementJax && script.MathJax.elementJax.hover) {
-            script.MathJax.elementJax.hover.clear(script.MathJax.elementJax);
+            MathJax.Extension.UIevents.Hover.ClearHover(script.MathJax.elementJax);
           }
           if (script.MathJax.state !== STATE.PENDING) {this.scriptAction[action](script)}
         }

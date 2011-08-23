@@ -307,7 +307,8 @@
       EVENT = MathJax.Extension.UIevents.Event;
       TOUCH = MathJax.Extension.UIevents.Touch;
       HOVER = MathJax.Extension.UIevents.Hover;
-      this.HandleEvent = EVENT.HandleEvent;
+      this.ContextMenu = EVENT.ContextMenu;
+      this.Mousedown   = EVENT.AltContextMenu;
       this.Mouseover   = HOVER.Mouseover;
       this.Mouseout    = HOVER.Mouseout;
       this.Mousemove   = HOVER.Mousemove;
@@ -425,32 +426,14 @@
       if (this.useProcessingFrame) frame.parentNode.replaceChild(div,frame);
     },
 
-    ContextMenu: function (event,math,force) {
-      if (this.config.showMathMenu && (this.settings.context === "MathJax" || force)) {
-        if (this.safariContextMenuBug) {setTimeout("window.getSelection().empty()",0)}
-        if (this.msieEventBug) {event = window.event}
-        HOVER.ClearHoverTimer();
-        return EVENT.ContextMenu(event,this.getJaxFromMath(math));
-      }
-    },
-    Mousedown: function (event,math) {
-      if (this.config.showMathMenu) {
-        if (this.settings.context === "MathJax") {
-          if (!this.noContextMenuBug || event.button !== 2) return
-        } else {
-          if (!event[EVENT.MENUKEY] || event.button !== EVENT.LEFTBUTTON) return
-        }
-        return this.ContextMenu(event,math,true);
-      }
-    },
     getJaxFromMath: function (math) {
       if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
       return HUB.getJaxFor(math.nextSibling);
     },
     getHoverSpan: function (jax) {return jax.root.HTMLspanElement()},
     getHoverBBox: function (jax,span) {
-      var bbox = span.bbox;
-      var BBOX = {w:bbox.w, h:bbox.h, d:bbox.d, Units:HTMLCSS.Em, em:HTMLCSS.em};
+      var bbox = span.bbox, em = HTMLCSS.outerEm;
+      var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
       if (bbox.width) {BBOX.width = bbox.width}
       return BBOX;
     },
@@ -2174,7 +2157,6 @@
         HTMLCSS.Augment({
           getMarginScale: HTMLCSS.getMSIEmarginScale,
           PaddingWidthBug: true,
-          msieEventBug: browser.isIE9,
           msieAccentBug: true,
           msieColorBug: true,
           msieColorPositionBug: true,    // needs position:relative to put color behind text
@@ -2235,7 +2217,6 @@
           rfuzz: .05,
           AccentBug: true,
           AdjustSurd: true,
-          safariContextMenuBug: true,
           safariNegativeSpaceBug: true,
           safariVerticalAlignBug: !v3p1,
           safariTextNodeBug: !v3p0,
@@ -2290,8 +2271,7 @@
 
       Konqueror: function (browser) {
         HTMLCSS.Augment({
-          konquerorVerticalAlignBug: true,
-          noContextMenuBug: true
+          konquerorVerticalAlignBug: true
         });
       }
     });
