@@ -48,6 +48,7 @@
       this.Mouseover   = HOVER.Mouseover;
       this.Mouseout    = HOVER.Mouseout;
       this.Mousemove   = HOVER.Mousemove;
+      //  Set up styles
       return AJAX.Styles(this.config.styles);
     },
     Config: function () {
@@ -170,8 +171,8 @@
       },[["span",{isMathJax: true, className: "MathJax_MathPlayer_Overlay",
         style:{
           display:"inline-block", position:"absolute",
-          left:bbox.Units(-bbox.w), top:bbox.Units(-bbox.h-(bbox.y||0)-1),
-          width:bbox.Units(bbox.w), height:bbox.Units(bbox.h+bbox.d), cursor:"pointer",
+          left:HOVER.Px(-bbox.w), top:HOVER.Px(-bbox.h-(bbox.y||0)-1),
+          width:HOVER.Px(bbox.w), height:HOVER.Px(bbox.h+bbox.d), cursor:"pointer",
           "background-color":"white", filter:"alpha(opacity=0)"
         }
       }]]);
