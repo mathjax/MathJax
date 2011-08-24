@@ -67,7 +67,7 @@
  */
 
 (function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var CONFIG = MathJax.Hub.CombineConfig("TeX.noErrors",{
     multiLine: true,
@@ -155,7 +155,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var text = this.data[0].data[0].data.join("").split(/\n/);
       for (var i = 0, m = text.length; i < m; i++) {
         HTMLCSS.addText(span,text[i]);
-        if (i !== m-1) {HTMLCSS.addElement(span,"br")}
+        if (i !== m-1) {HTMLCSS.addElement(span,"br",{isMathJax:true})}
       }
       var HD = HTMLCSS.getHD(span.parentNode), W = HTMLCSS.getW(span.parentNode);
       if (m > 1) {

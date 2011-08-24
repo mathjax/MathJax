@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.7";
+MathJax.fileversion = "1.1.13";
 
 /**********************************************************/
 
@@ -989,14 +989,16 @@ MathJax.HTML = {
           match = keys[i].match(/([^:]+):(.*)/);
           var value = match[2].replace(/&&/g,'&');
           if (value === "true") {value = true} else if (value === "false") {value = false}
-          else if (value.match(/^-?(\d+(\.\d+)?|\.\d+)$/)) {value = parseFloat(value)}
+            else if (value.match(/^-?(\d+(\.\d+)?|\.\d+)$/)) {value = parseFloat(value)}
           obj[match[1]] = value;
         }
       }
       return obj;
     }
   }
+    
 };
+
 
 /**********************************************************/
 
@@ -1186,17 +1188,21 @@ MathJax.Hub = {
     "v1.0-compatible": true,  // set to false to prevent loading of default configuration file
     elements: [],    // array of elements to process when none is given explicitly
      
+    showMathMenu: true,      // attach math context menu to mathml?
+    showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
+                             //  (since the code for that is a bit delicate)
+
     preProcessors: [], // list of callbacks for preprocessing (initialized by extensions)
     inputJax: {},      // mime-type mapped to input jax (by registration)
     outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
 
     menuSettings: {
-      //format: "MathML",  //  the Show Source format (set in MathMenu.js)
       zoom: "None",        //  when to do MathZoom
       CTRL: false,         //    require CTRL for MathZoom?
       ALT: false,          //    require Alt or Option?
       CMD: false,          //    require CMD?
       Shift: false,        //    require Shift?
+      discoverable: true,  //  make math menu discoverable on hover?
       zscale: "200%",      //  the scaling factor for MathZoom
       renderer: "",        //  set when Jax are loaded
       font: "Auto",        //  what font HTML-CSS should use
@@ -1361,8 +1367,12 @@ MathJax.Hub = {
     for (var i = 0, m = scripts.length; i < m; i++) {
       var script = scripts[i];
       if (script.type && this.config.inputJax[script.type.replace(/ *;(.|\n)*/,"")]) {
-        if (script.MathJax && script.MathJax.state !== STATE.PENDING)
-          {this.scriptAction[action](script)}
+        if (script.MathJax) {
+          if (script.MathJax.elementJax && script.MathJax.elementJax.hover) {
+            MathJax.Extension.MathEvents.Hover.ClearHover(script.MathJax.elementJax);
+          }
+          if (script.MathJax.state !== STATE.PENDING) {this.scriptAction[action](script)}
+        }
         if (!script.MathJax) {script.MathJax = {state: STATE.PENDING}}
         if (script.MathJax.state !== STATE.PROCESSED) {math.push(script)}
       }
@@ -1871,10 +1881,11 @@ MathJax.Hub.Startup = {
     },
     Remove: function (jax) {}
   },{
-    version: "1.1",
+    version: "1.1.1",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
-    fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts"
+    fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
+    imageDir: ROOT+(BASE.isPacked?"":"/..")+"/images"
   });
   
   /***********************************/
@@ -1906,6 +1917,7 @@ MathJax.Hub.Startup = {
       return HUB.Process(script,callback);
     },
     Remove: function () {
+      if (this.hover) {this.hover.clear(this)}
       this.outputJax.Remove(this);
       HUB.signal.Post(["Remove Math",this.inputID]); // wait for this to finish?
       this.Detach();
@@ -1944,7 +1956,7 @@ MathJax.Hub.Startup = {
       }
     }
   },{
-    version: "1.1",
+    version: "1.1.1",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -2050,6 +2062,8 @@ MathJax.Hub.Startup = {
       else if (v >  500) {browser.version = "3.0"}
       else if (v >  400) {browser.version = "2.0"}
       else if (v >   85) {browser.version = "1.0"}
+      browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
+      browser.noContextMenu = browser.isMobile;
     },
     Firefox: function (browser) {
       if (browser.version === "0.0" && navigator.product === "Gecko" && navigator.productSub) {
@@ -2058,6 +2072,8 @@ MathJax.Hub.Startup = {
         else if (date >= "20080617") {browser.version = "3.0"}
         else if (date >= "20061024") {browser.version = "2.0"}
       }
+      browser.isMobile = (navigator.appVersion.match(/Android/i) != null ||
+                          navigator.userAgent.match(/ Fennec\//) != null);
     },
     Opera: function (browser) {browser.version = opera.version()},
     MSIE: function (browser) {

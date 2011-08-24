@@ -24,7 +24,7 @@
 
 MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   id: "HTML-CSS",
-  version: "1.1.5",
+  version: "1.1.12",
   directory: MathJax.OutputJax.directory + "/HTML-CSS",
   extensionDir: MathJax.OutputJax.extensionDir + "/HTML-CSS",
   autoloadDir: MathJax.OutputJax.directory + "/HTML-CSS/autoload",
@@ -38,8 +38,6 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
     webFont: "TeX",
     imageFont: "TeX",
     undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",
-    
-    showMathMenu: true,
     
     styles: {
       ".MathJax_Display": {

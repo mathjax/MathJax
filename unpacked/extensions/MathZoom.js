@@ -57,20 +57,11 @@
     }
   });
   
-  /*************************************************************/
-  /*
-   *  Cancel event's default action (try everything we can)
-   */
-  var FALSE = function (event) {
-    if (!event) {event = window.event}
-    if (event) {
-      if (event.preventDefault) {event.preventDefault()}
-      if (event.stopPropagation) {event.stopPropagation()}
-      event.cancelBubble = true;
-      event.returnValue = false;
-    }
-    return false;
-  };
+  var FALSE, HOVER;
+  MathJax.Hub.Register.StartupHook("MathEvents Ready",function () {
+    FALSE = MathJax.Extension.MathEvents.Event.False;
+    HOVER = MathJax.Extension.MathEvents.Hover;
+  });
 
   /*************************************************************/
 
@@ -79,14 +70,14 @@
     settings: HUB.config.menuSettings,
 
     //
-    //  Used to override HTMLCSS or nMML method of the same name
+    //  Process events passed from output jax
     //
     HandleEvent: function (event,type,math) {
-      if (!event) {event = window.event}
       if (ZOOM.settings.CTRL  && !event.ctrlKey)  return true;
       if (ZOOM.settings.ALT   && !event.altKey)   return true;
       if (ZOOM.settings.CMD   && !event.metaKey)  return true;
       if (ZOOM.settings.Shift && !event.shiftKey) return true;
+      if (!ZOOM[type]) return true;
       return ZOOM[type](event,math);
     },
     
@@ -105,40 +96,19 @@
     },
     
     //
-    //  Zoom on hover
+    //  Zoom on hover (called by UI.Hover)
     //
-    Mouseover: function (event,math) {
-      if (this.settings.zoom === "Hover") {
-        ZOOM.oldMouseOver = math.onmouseover;
-        math.onmouseover = null;
-        math.onmousemove = this.Mousemove;
-        math.onmouseout = this.Mouseout;
-        return ZOOM.Timer(event,math);
-      }
+    Hover: function (event,math) {
+      if (this.settings.zoom === "Hover") {this.Zoom(math,event); return true}
+      return false;
     },
-    Mouseout: function (event) {
-      this.onmouseover = ZOOM.oldMouseOver; delete ZOOM.oldMouseOver;
-      this.onmousemove = this.onmouseout = null;
-      ZOOM.ClearTimer();
-      return FALSE(event);
-    },
-    Mousemove: function (event) {
-      return ZOOM.Timer(event||window.event,this);
-    },
-    Timer: function (event,math) {
-      this.ClearTimer();
-      this.timer = setTimeout(MathJax.Callback(["Zoom",this,math,{}]),CONFIG.delay);
-      return FALSE(event);
-    },
-    ClearTimer: function () {
-      if (this.timer) {clearTimeout(this.timer); delete this.timer}
-    },
+    
     
     //
     //  Handle the actual zooming
     //
     Zoom: function (math,event) {
-      this.ClearTimer(); this.Remove();
+      this.Remove(); HOVER.ClearHoverTimer();
       
       //
       //  Find the jax and its type
@@ -151,6 +121,7 @@
       var JAX = (HTMLCSS && jax.outputJax.isa(HTMLCSS.constructor) ? "HTMLCSS" :
                 (nMML && jax.outputJax.isa(nMML.constructor) ? "MathML" : null));
       if (!JAX) return; //  FIXME:  report an error?
+      if (jax.hover) {HOVER.UnHover(jax)}
 
       //
       //  Create the DOM elements for the zoom box
@@ -371,53 +342,6 @@
     
   };
   
-  //
-  //  Hook into the HTML-CSS and NativeMML event handling
-  //
-  HUB.Register.StartupHook("HTML-CSS Jax Ready",function () {
-    HTMLCSS = MathJax.OutputJax["HTML-CSS"];
-    HTMLCSS.Augment({HandleEvent: ZOOM.HandleEvent});
-  });
-  HUB.Register.StartupHook("NativeMML Jax Ready", function () {
-    nMML = MathJax.OutputJax.NativeMML;
-    nMML.Augment({
-      HandleEvent: ZOOM.HandleEvent,
-      MSIEmouseup: function (event,math,span) {
-        if (this.trapUp) {delete this.trapUp; return true}
-        if (this.MSIEzoomKeys(event)) {return true}
-        return false;
-      },
-      MSIEclick: function (event,math,span) {
-        if (this.trapClick) {delete this.trapClick; return true}
-        if (!this.MSIEzoomKeys(event)) return false;
-        if (!this.settings.zoom.match(/Click/)) return false;
-        return (ZOOM.Click(event,math) === false);
-      },
-      MSIEdblclick: function (event,math,span) {
-        if (!this.MSIEzoomKeys(event)) return false;
-        return (ZOOM.DblClick(event,math) === false);
-      },
-      MSIEmouseover: function (event,math,span) {
-        if (this.settings.zoom !== "Hover") {return false}
-        ZOOM.Timer(event,math); return true;
-      },
-      MSIEmouseout: function (event,math,span) {
-        if (this.settings.zoom !== "Hover") {return false}
-        ZOOM.ClearTimer(); return true;
-      },
-      MSIEmousemove: function (event,math,span) {
-        if (this.settings.zoom !== "Hover") {return false}
-        ZOOM.Timer(event,math); return true;
-      },
-      MSIEzoomKeys: function (event) {
-        if (this.settings.CTRL  && !event.ctrlKey)  return false;
-        if (this.settings.CMD   && !event.metaKey)  return false;
-        if (this.settings.ALT   && !event.altKey)   return false;
-        if (this.settings.Shift && !event.shiftKey) return false;
-        return true;
-      }
-    });
-  });
   
   /*************************************************************/
 
