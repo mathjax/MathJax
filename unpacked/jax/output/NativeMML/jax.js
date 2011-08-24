@@ -40,9 +40,9 @@
     config: {styles: {}}, settings: HUB.config.menuSettings,
     Startup: function () {
       //  Set up event handling
-      EVENT = MathJax.Extension.UIevents.Event;
-      TOUCH = MathJax.Extension.UIevents.Touch;
-      HOVER = MathJax.Extension.UIevents.Hover;
+      EVENT = MathJax.Extension.MathEvents.Event;
+      TOUCH = MathJax.Extension.MathEvents.Touch;
+      HOVER = MathJax.Extension.MathEvents.Hover;
       this.ContextMenu = EVENT.ContextMenu;
       this.Mousedown   = EVENT.AltContextMenu;
       this.Mouseover   = HOVER.Mouseover;
@@ -66,7 +66,7 @@
           "div.MathJax_MathContainer > span": {"text-align": align+"!important"}
         });
       }
-      this.require.push(MathJax.OutputJax.extensionDir+"/UIevents.js");
+      this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
     },
     //
     //  Set up MathPlayer for IE on the first time through.

@@ -111,11 +111,12 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (this.selection > this.data.length) {this.selection = 1}
       var math = this; while (math.type !== "math") {math = math.inherit}
       var jax = MathJax.Hub.getJaxFor(math.inputID), hover = !!jax.hover;
-      jax.Update(); if (hover) {
+      jax.Update();
+      if (hover) {
         var span = document.getElementById(jax.inputID+"-Span");
-        MathJax.Extension.UIevents.Hover.Hover(jax,span);
+        MathJax.Extension.MathEvents.Hover.Hover(jax,span);
       }
-      return MathJax.Extension.UIevents.Event.False(event);
+      return MathJax.Extension.MathEvents.Event.False(event);
     },
     
     //

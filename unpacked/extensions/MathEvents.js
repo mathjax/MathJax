@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  MathJax/extensions/UIevents.js
+ *  MathJax/extensions/MathEvents.js
  *  
  *  Implements the event handlers needed by the output jax to perform
  *  menu, hover, and other events.
@@ -26,7 +26,7 @@
   var VERSION = "1.1";
   
   var EXTENSION = MathJax.Extension;
-  var UI = EXTENSION.UIevents = {version: VERSION};
+  var ME = EXTENSION.MathEvents = {version: VERSION};
   
   var SETTINGS = HUB.config.menuSettings;
   
@@ -59,7 +59,7 @@
   //
   //  Common event-handling code
   //
-  var EVENT = UI.Event = {
+  var EVENT = ME.Event = {
     
     LEFTBUTTON: 0,           // the event.button value for left button
     RIGHTBUTTON: 2,          // the event.button value for right button
@@ -114,8 +114,8 @@
       //
       //  Remove selections, remove hover fades
       //
-      if (UI.msieEventBug) {event = window.event}
-      if (UI.safariContextMenuBug) {setTimeout("window.getSelection().empty()",0)}
+      if (ME.msieEventBug) {event = window.event}
+      if (ME.safariContextMenuBug) {setTimeout("window.getSelection().empty()",0)}
       if (document.selection) {setTimeout("document.selection.empty()",0)}
       HOVER.ClearHoverTimer();
       if (jax.hover) {
@@ -158,7 +158,7 @@
       var show = (JAX.config.showMathMenu != null ? JAX : HUB).config.showMathMenu;
       if (show) {
         if (SETTINGS.context === "MathJax") {
-          if (!UI.noContextMenuBug || event.button !== EVENT.RIGHTBUTTON) return;
+          if (!ME.noContextMenuBug || event.button !== EVENT.RIGHTBUTTON) return;
         } else {
           if (!event[EVENT.MENUKEY] || event.button !== EVENT.LEFTBUTTON) return;
         }
@@ -171,7 +171,7 @@
   //
   //  Handle hover "discoverability"
   //
-  var HOVER = UI.Hover = {
+  var HOVER = ME.Hover = {
     delay: 500,                                      // time required to be considered a hover
     frame: {x: 3.5, y: 5, d: 1},                     // frame padding and thickness
     button: {
@@ -256,7 +256,7 @@
           bbox = JAX.getHoverBBox(jax,span,math),
           show = (JAX.config.showMathMenu != null ? JAX : HUB).config.showMathMenu;
       var dx = this.frame.x, dy = this.frame.y, dd = this.frame.d;  // frame size
-      if (UI.msieBorderWidthBug) {dd = 0}
+      if (ME.msieBorderWidthBug) {dd = 0}
       jax.hover = {opacity:0, id: jax.inputID+"-Hover"};
       //
       //  The frame and menu button
@@ -393,7 +393,7 @@
   //  Use double-tap-and-hold as a replacement for context menu event.
   //  Use double-tap as a replacement for double click.
   //
-  var TOUCH = UI.Touch = {
+  var TOUCH = ME.Touch = {
 
     last: 0,          // time of last tap event
     delay: 500,       // delay time for double-click
@@ -454,22 +454,22 @@
   HUB.Browser.Select({
     MSIE: function (browser) {
       var mode = (document.documentMode||0);
-      UI.msieBorderWidthBug = (document.compatMode === "BackCompat");  // borders are inside offsetWidth/Height
-      UI.msieEventBug = browser.isIE9;      // must get event from window even though event is passed
+      ME.msieBorderWidthBug = (document.compatMode === "BackCompat");  // borders are inside offsetWidth/Height
+      ME.msieEventBug = browser.isIE9;      // must get event from window even though event is passed
       if (mode < 9) {EVENT.LEFTBUTTON = 1}  // IE < 9 has wrong event.button values
     },
     Safari: function (browser) {
-      UI.safariContextMenuBug = true;  // selection can be started by contextmenu event
+      ME.safariContextMenuBug = true;  // selection can be started by contextmenu event
     },
     Konqueror: function (browser) {
-      UI.noContextMenuBug = true;      // doesn't produce contextmenu event
+      ME.noContextMenuBug = true;      // doesn't produce contextmenu event
     }
   });
   
   //
   //  Get configuration from user
   //
-  CONFIG = HUB.CombineConfig("UIevents",CONFIG);
+  CONFIG = HUB.CombineConfig("MathEvents",CONFIG);
   
   //
   //  Queue the events needed for startup
@@ -477,8 +477,8 @@
   CALLBACK.Queue(
     ["getImages",HOVER],
     ["Styles",AJAX,CONFIG.styles],
-    ["Post",HUB.Startup.signal,"UIevents Ready"],
-    ["loadComplete",AJAX,"[MathJax]/extensions/UIevents.js"]
+    ["Post",HUB.Startup.signal,"MathEvents Ready"],
+    ["loadComplete",AJAX,"[MathJax]/extensions/MathEvents.js"]
   );
   
 })(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.Callback,MathJax.OutputJax);

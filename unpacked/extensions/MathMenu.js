@@ -135,9 +135,9 @@
   });
   
   var FALSE, HOVER;
-  MathJax.Hub.Register.StartupHook("UIevents Ready",function () {
-    FALSE = MathJax.Extension.UIevents.Event.False;
-    HOVER = MathJax.Extension.UIevents.Hover;
+  MathJax.Hub.Register.StartupHook("MathEvents Ready",function () {
+    FALSE = MathJax.Extension.MathEvents.Event.False;
+    HOVER = MathJax.Extension.MathEvents.Hover;
   });
   
   /*************************************************************/
