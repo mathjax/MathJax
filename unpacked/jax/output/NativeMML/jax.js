@@ -22,7 +22,7 @@
  *  limitations under the License.
  */
 
-(function (nMML,HUB,AJAX,HTML,EVENT) {
+(function (nMML,HUB,AJAX,HTML) {
   var MML, isMSIE = HUB.Browser.isMSIE;
   
   var EVENT, TOUCH, HOVER; // filled in later
@@ -509,4 +509,4 @@
       {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
   });
 
-})(MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax, MathJax.HTML, MathJax.HTML.Event);
+})(MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax, MathJax.HTML);

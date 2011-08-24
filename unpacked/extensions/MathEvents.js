@@ -173,7 +173,7 @@
     //  Mousedown handler for alternate means of accessing menu
     //
     AltContextMenu: function (event,math) {
-      var JAX = OUTPUT[math.jaxID], jax = JAX.getJaxFromMath(math);
+      var JAX = OUTPUT[math.jaxID];
       var show = (JAX.config.showMathMenu != null ? JAX : HUB).config.showMathMenu;
       if (show) {
         if (SETTINGS.context === "MathJax") {
