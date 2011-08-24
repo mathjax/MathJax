@@ -31,6 +31,25 @@
   var SETTINGS = HUB.config.menuSettings;
   
   var CONFIG = {
+    hover: 500,              // time required to be considered a hover
+    frame: {
+      x: 3.5, y: 5,          // frame padding and
+      bwidth: 1,             // frame border width (in pixels)
+      bcolor: "#A6D",        // frame border color
+      hwidth: "15px",         // haze width
+      hcolor: "#83A",        // haze color
+    },       
+    button: {
+      x: -4, y: -3,          // menu button offsets
+      wx: -2,                // button offset for full-width equations
+      src: AJAX.fileURL(OUTPUT.imageDir+"/MenuArrow-15.png")  // button image
+    },
+    fadeinInc: .2,           // increment for fade-in
+    fadeoutInc: .05,         // increment for fade-out
+    fadeDelay: 50,           // delay between fade-in or fade-out steps
+    fadeoutStart: 400,       // delay before fade-out after mouseout
+    fadeoutDelay: 15*1000,   // delay before automatic fade-out
+
     styles: {
       ".MathJax_Hover_Frame": {
         "border-radius": ".25em",                   // Opera 10.5 and IE9
@@ -172,17 +191,6 @@
   //  Handle hover "discoverability"
   //
   var HOVER = ME.Hover = {
-    delay: 500,                                      // time required to be considered a hover
-    frame: {x: 3.5, y: 5, d: 1},                     // frame padding and thickness
-    button: {
-      x: -4, y: -3, wx: -2,                                   // menu button offsets
-      src: AJAX.fileURL(OUTPUT.imageDir+"/MenuArrow-15.png")  // button image
-    },
-    fadeinInc: .2,           // increment for fade-in
-    fadeoutInc: .05,         // increment for fade-out
-    fadeinStart: 50,         // delay before fadein after mouseover
-    fadeoutStart: 400,       // delay before fadeout after mouseout
-    fadeoutDelay: 15*1000,   // delay before automatic fade-out
     
     //
     //  Check if we are moving from a non-MathJax element to a MathJax one
@@ -234,7 +242,7 @@
     //
     HoverTimer: function (jax,math) {
       this.ClearHoverTimer();
-      this.hoverTimer = setTimeout(CALLBACK(["Hover",this,jax,math]),HOVER.delay);
+      this.hoverTimer = setTimeout(CALLBACK(["Hover",this,jax,math]),CONFIG.hover);
     },
     ClearHoverTimer: function () {
       if (this.hoverTimer) {clearTimeout(this.hoverTimer); delete this.hoverTimer}
@@ -255,7 +263,7 @@
           span = JAX.getHoverSpan(jax,math),
           bbox = JAX.getHoverBBox(jax,span,math),
           show = (JAX.config.showMathMenu != null ? JAX : HUB).config.showMathMenu;
-      var dx = this.frame.x, dy = this.frame.y, dd = this.frame.d;  // frame size
+      var dx = CONFIG.frame.x, dy = CONFIG.frame.y, dd = CONFIG.frame.bwidth;  // frame size
       if (ME.msieBorderWidthBug) {dd = 0}
       jax.hover = {opacity:0, id: jax.inputID+"-Hover"};
       //
@@ -279,10 +287,10 @@
          style:{display:"inline-block", "z-index": 1, width:0, height:0, position:"relative"}
         },[["img",{
             className: "MathJax_Hover_Arrow", isMathJax: true, math: math,
-            src: this.button.src, onclick: this.HoverMenu, jax:JAX.id,
+            src: CONFIG.button.src, onclick: this.HoverMenu, jax:JAX.id,
             style: {
-              left:this.Px(bbox.w+dx+dd+(bbox.x||0)+this.button.x),
-              top:this.Px(-bbox.h-dy-dd-(bbox.y||0)-this.button.y),
+              left:this.Px(bbox.w+dx+dd+(bbox.x||0)+CONFIG.button.x),
+              top:this.Px(-bbox.h-dy-dd-(bbox.y||0)-CONFIG.button.y),
               opacity:0, filter:"alpha(opacity=0)"
             }
           }]]
@@ -292,7 +300,7 @@
         frame.style.marginRight = button.style.marginRight = "-"+bbox.width;
         frame.firstChild.style.width = bbox.width;
         button.firstChild.style.left = "";
-        button.firstChild.style.right = this.Px(this.button.wx);
+        button.firstChild.style.right = this.Px(CONFIG.button.wx);
       }
       //
       //  Add the frame and button
@@ -310,14 +318,14 @@
     //
     ReHover: function (jax) {
       if (jax.hover.remove) {clearTimeout(jax.hover.remove)}
-      jax.hover.remove = setTimeout(CALLBACK(["UnHover",this,jax]),this.fadeoutDelay);
-      this.HoverFadeTimer(jax,this.fadeinInc);
+      jax.hover.remove = setTimeout(CALLBACK(["UnHover",this,jax]),CONFIG.fadeoutDelay);
+      this.HoverFadeTimer(jax,CONFIG.fadeinInc);
     },
     //
     //  Start the fade-out
     //
     UnHover: function (jax) {
-      if (!jax.hover.nofade) {this.HoverFadeTimer(jax,-this.fadeoutInc,this.fadeoutStart)}
+      if (!jax.hover.nofade) {this.HoverFadeTimer(jax,-CONFIG.fadeoutInc,CONFIG.fadeoutStart)}
     },
     //
     //  Handle the fade-in and fade-out
@@ -347,7 +355,7 @@
     HoverFadeTimer: function (jax,inc,delay) {
       jax.hover.inc = inc;
       if (!jax.hover.timer) {
-        jax.hover.timer = setTimeout(CALLBACK(["HoverFade",this,jax]),(delay||this.fadeinStart));
+        jax.hover.timer = setTimeout(CALLBACK(["HoverFade",this,jax]),(delay||CONFIG.fadeDelay));
       }
     },
     
@@ -382,7 +390,7 @@
     //
     getImages: function () {
       var menu = new Image();
-      menu.src = this.button.src;
+      menu.src = CONFIG.button.src;
     }
 
   };
@@ -445,7 +453,7 @@
   if (HUB.Browser.isMobile) {
     var arrow = CONFIG.styles[".MathJax_Hover_Arrow"];
     arrow.width = "25px"; arrow.height = "18px";
-    HOVER.button.x = -6;
+    CONFIG.button.x = -6;
   }
   
   //
@@ -469,12 +477,21 @@
   //
   //  Get configuration from user
   //
-  CONFIG = HUB.CombineConfig("MathEvents",CONFIG);
+  ME.config = CONFIG = HUB.CombineConfig("MathEvents",CONFIG);
+  var SETFRAME = function () {
+    var haze = CONFIG.styles[".MathJax_Hover_Frame"];
+    haze.border = CONFIG.frame.bwidth+"px solid "+CONFIG.frame.bcolor+" ! important";
+    haze["box-shadow"] = haze["-webkit-box-shadow"] =
+      haze["-moz-box-shadow"] = haze["-khtml-box-shadow"] =
+        "0px 0px "+CONFIG.frame.hwidth+" "+CONFIG.frame.hcolor;
+  };
   
   //
   //  Queue the events needed for startup
   //
   CALLBACK.Queue(
+    HUB.Register.StartupHook("End Config",{}), // wait until config is complete complete
+    [SETFRAME],
     ["getImages",HOVER],
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathEvents Ready"],
