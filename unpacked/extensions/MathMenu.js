@@ -882,7 +882,7 @@
   /*************************************************************/
 
   CALLBACK.Queue(
-    HUB.Register.StartupHook("End Config",{}), // wait until config is complete complete
+    HUB.Register.StartupHook("End Config",{}), // wait until config is complete
     ["getImages",MENU],
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathMenu Ready"],

@@ -490,7 +490,7 @@
   //  Queue the events needed for startup
   //
   CALLBACK.Queue(
-    HUB.Register.StartupHook("End Config",{}), // wait until config is complete complete
+    HUB.Register.StartupHook("End Config",{}), // wait until config is complete
     [SETFRAME],
     ["getImages",HOVER],
     ["Styles",AJAX,CONFIG.styles],
