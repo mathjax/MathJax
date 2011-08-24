@@ -606,10 +606,13 @@
     if (MENU.About.div) {document.body.removeChild(MENU.About.div); delete MENU.About.div}
   };
   MENU.About.GetJax = function (jax,JAX,type,noTypeCheck) {
+    var info = [];
     for (var id in JAX) {if (JAX.hasOwnProperty(id) && JAX[id]) {
       if ((noTypeCheck && JAX[id].version) || (JAX[id].isa && JAX[id].isa(JAX)))
-        {jax.push((JAX[id].id||id)+" "+type+" v"+JAX[id].version,["br"])}
+        {info.push((JAX[id].id||id)+" "+type+" v"+JAX[id].version)}
     }}
+    info.sort();
+    for (var i = 0, m = info.length; i < m; i++) {jax.push(info[i],["br"])}
     return jax;
   };
 
