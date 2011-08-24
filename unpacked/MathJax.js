@@ -1369,7 +1369,7 @@ MathJax.Hub = {
       if (script.type && this.config.inputJax[script.type.replace(/ *;(.|\n)*/,"")]) {
         if (script.MathJax) {
           if (script.MathJax.elementJax && script.MathJax.elementJax.hover) {
-            MathJax.Extension.UIevents.Hover.ClearHover(script.MathJax.elementJax);
+            MathJax.Extension.MathEvents.Hover.ClearHover(script.MathJax.elementJax);
           }
           if (script.MathJax.state !== STATE.PENDING) {this.scriptAction[action](script)}
         }
