@@ -1701,6 +1701,8 @@
       MAXBUFFER: 5*1024    // maximum size of TeX string to process
     },
     
+    sourceMenuTitle: "TeX Commands",
+
     Translate: function (script) {
       var mml, math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
       if (MathJax.Hub.Browser.isKonqueror)

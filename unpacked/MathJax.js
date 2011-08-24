@@ -1197,7 +1197,6 @@ MathJax.Hub = {
     outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
 
     menuSettings: {
-      //format: "MathML",  //  the Show Source format (set in MathMenu.js)
       zoom: "None",        //  when to do MathZoom
       CTRL: false,         //    require CTRL for MathZoom?
       ALT: false,          //    require Alt or Option?

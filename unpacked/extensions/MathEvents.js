@@ -22,7 +22,7 @@
  *  limitations under the License.
  */
 
-(function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
+(function (HUB,HTML,AJAX,CALLBACK,OUTPUT,INPUT) {
   var VERSION = "1.1";
   
   var EXTENSION = MathJax.Extension;
@@ -149,8 +149,8 @@
       var MENU = MathJax.Menu;
       if (MENU) {
         MENU.jax = jax;
-        MENU.menu.Find("Format").menu.items[1].name = 
-          (jax.inputJax.id === "MathML" ? "Original" : jax.inputJax.id);
+	MENU.menu.Find("Show Math As").menu.items[1].name =
+          (INPUT[jax.inputJax.id].sourceMenuTitle||"Original Form");
         return MENU.menu.Post(event);
       } else {
         if (!AJAX.loadingMathMenu) {
@@ -498,4 +498,4 @@
     ["loadComplete",AJAX,"[MathJax]/extensions/MathEvents.js"]
   );
   
-})(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.Callback,MathJax.OutputJax);
+})(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.Callback,MathJax.OutputJax,MathJax.InputJax);

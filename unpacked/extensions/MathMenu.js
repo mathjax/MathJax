@@ -23,8 +23,8 @@
  *  limitations under the License.
  */
 
-(function (HUB,HTML,AJAX) {
-  var VERSION = "1.1.6";
+(function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
+  var VERSION = "1.1.8";
   
   MathJax.Extension.MathMenu = {version: VERSION};
 
@@ -34,6 +34,7 @@
   var CONFIG = HUB.CombineConfig("MathMenu",{
     delay: 150,                                    // the delay for submenus
     helpURL: "http://www.mathjax.org/help/user/",  // the URL for the "MathJax Help" menu
+    closeImg: AJAX.fileURL(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
     showFontMenu: false,                           //  show the "Font Preference" menu?
@@ -130,12 +131,18 @@
       ".MathJax_MenuActive": {
         "background-color": (isPC ? "Highlight" : "#606872"),
         color: (isPC ? "HighlightText" : "white")
-      }
+      },
+      
+      ".MathJax_Menu_Close": {
+          position:"absolute",
+          width: "31px", height: "31px",
+          top:"-15px", left:"-15px"
+      },
     }
   });
   
   var FALSE, HOVER;
-  MathJax.Hub.Register.StartupHook("MathEvents Ready",function () {
+  HUB.Register.StartupHook("MathEvents Ready",function () {
     FALSE = MathJax.Extension.MathEvents.Event.False;
     HOVER = MathJax.Extension.MathEvents.Hover;
   });
@@ -175,9 +182,7 @@
       for (var i = 0, m = this.items.length; i < m; i++) {this.items[i].Create(menu)}
       if (MENU.isMobile) {
         HTML.addElement(menu,"img",{
-          src: MathJax.Ajax.fileURL(MathJax.OutputJax.imageDir+"/CloseX-31.png"),
-          width: 31, height: 31, menu: parent,
-          style: {position:"absolute", top:"-15px", left:"-15px"},
+          className: "MathJax_Menu_Close", menu: parent, src: CONFIG.closeImg,
           ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close
         });
       }
@@ -323,10 +328,7 @@
     //  Preload images so they show up with the menu
     //
     getImages: function () {
-      if (MENU.isMobile) {
-        var close = new Image();
-        close.src = AJAX.fileURL(MathJax.OutputJax.imageDir+"/CloseX-31.png");
-      }
+      if (MENU.isMobile) {var close = new Image(); close.src = CONFIG.closeImg}
     }
 
   });
@@ -439,7 +441,7 @@
     Timer: function (event,menu) {
       if (this.timer) {clearTimeout(this.timer)}
       event = {clientX: event.clientX, clientY: event.clientY}; // MSIE can't pass the event below
-      this.timer = setTimeout(MathJax.Callback(["Mouseup",this,event,menu]),CONFIG.delay);
+      this.timer = setTimeout(CALLBACK(["Mouseup",this,event,menu]),CONFIG.delay);
     },
     Touchend: function (event,menu) {
       var forceout = this.menu.posted;
@@ -563,7 +565,7 @@
    *  Handle the ABOUT box
    */
   MENU.About = function () {
-    var HTMLCSS = MathJax.OutputJax["HTML-CSS"] || {fontInUse: ""};
+    var HTMLCSS = OUTPUT["HTML-CSS"] || {fontInUse: ""};
     var local = (HTMLCSS.webFonts ? "" : "local "), web = (HTMLCSS.webFonts ? " web" : "");
     var font = (HTMLCSS.imgFonts ? "Image" : local+HTMLCSS.fontInUse+web) + " fonts";
     var jax = ["MathJax.js v"+MathJax.fileversion,["br"]];
@@ -578,7 +580,7 @@
       (HTMLCSS.webFonts ? " \u2014 "+HTMLCSS.allowWebFonts+" fonts" : "")
     ]]);
     MENU.About.div = MENU.Background(MENU.About);
-    var about = MathJax.HTML.addElement(MENU.About.div,"div",{
+    var about = HTML.addElement(MENU.About.div,"div",{
       id: "MathJax_About", onclick: MENU.About.Remove
     },[
       ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
@@ -626,21 +628,24 @@
     if (!event) {event = window.event}
     var EVENT = {screenX:event.screenX, screenY:event.screenY};
     if (!MENU.jax) return;
-    if (CONFIG.settings.format === "MathML") {
+    if (this.format === "MathML") {
       var MML = MathJax.ElementJax.mml;
       if (MML && typeof(MML.mbase.prototype.toMathML) !== "undefined") {
         // toMathML() can call MathJax.Hub.RestartAfter, so trap errors and check
         try {MENU.ShowSource.Text(MENU.jax.root.toMathML(),event)} catch (err) {
           if (!err.restart) {throw err}
-          MathJax.Callback.After([this,arguments.callee,EVENT]);
+          CALLBACK.After([this,MENU.ShowSource,EVENT]);
         }
       } else if (!AJAX.loadingToMathML) {
         AJAX.loadingToMathML = true;
         MENU.ShowSource.Window(event); // WeBKit needs to open window on click event
-        MathJax.Callback.Queue(
+        CALLBACK.Queue(
           AJAX.Require("[MathJax]/extensions/toMathML.js"),
-          function () {delete AJAX.loadingToMathML},
-          [this,arguments.callee,EVENT]  // call this function again
+          function () {
+            delete AJAX.loadingToMathML;
+            if (!MML.mbase.prototype.toMathML) {MML.mbase.prototype.toMathML = function () {}}
+          },
+          [this,MENU.ShowSource,EVENT]  // call this function again
         );
         return;
       }
@@ -692,7 +697,7 @@
    *  Handle rescaling all the math
    */
   MENU.Scale = function () {
-    var HTMLCSS = MathJax.OutputJax["HTML-CSS"], nMML = MathJax.OutputJax.NativeMML;
+    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML;
     var SCALE = (HTMLCSS ? HTMLCSS.config.scale : nMML.config.scale);
     var scale = prompt("Scale all mathematics (compared to surrounding text) by",SCALE+"%");
     if (scale) {
@@ -723,11 +728,11 @@
   MENU.Renderer = function () {
     var jax = HUB.config.outputJax["jax/mml"];
     if (jax[0] !== CONFIG.settings.renderer) {
-      MathJax.Callback.Queue(
+      CALLBACK.Queue(
         ["Require",AJAX,"[MathJax]/jax/output/"+CONFIG.settings.renderer+"/config.js"],
         ["Post",HUB.Startup.signal,CONFIG.settings.renderer+" output selected"],
         [function () {
-          var JAX = MathJax.OutputJax[CONFIG.settings.renderer];
+          var JAX = OUTPUT[CONFIG.settings.renderer];
           for (var i = 0, m = jax.length; i < m; i++)
             {if (jax[i] === JAX) {jax.splice(i,1); break}}
           jax.unshift(JAX);
@@ -741,7 +746,7 @@
    *  Handle setting the HTMLCSS fonts
    */
   MENU.Font = function () {
-    var HTMLCSS = MathJax.OutputJax["HTML-CSS"]; if (!HTMLCSS) return;
+    var HTMLCSS = OUTPUT["HTML-CSS"]; if (!HTMLCSS) return;
     document.location.reload();
   };
 
@@ -767,8 +772,8 @@
       MENU.skipMousedown = browser.isMobile;
     }
   });
-  MENU.isMobile      = MathJax.Hub.Browser.isMobile;
-  MENU.noContextMenu = MathJax.Hub.Browser.noContextMenu;
+  MENU.isMobile      = HUB.Browser.isMobile;
+  MENU.noContextMenu = HUB.Browser.noContextMenu;
 
   /*************************************************************/
 
@@ -780,8 +785,6 @@
      *  it wasn't set in the cookie.
      */
     CONFIG.settings = HUB.config.menuSettings;
-    if (!CONFIG.settings.format)
-      {CONFIG.settings.format = (MathJax.InputJax.TeX ? "Original" : "MathML")}
     if (typeof(CONFIG.settings.showRenderer) !== "undefined") {CONFIG.showRenderer = CONFIG.settings.showRenderer}
     if (typeof(CONFIG.settings.showFontMenu) !== "undefined") {CONFIG.showFontMenu = CONFIG.settings.showFontMenu}
     if (typeof(CONFIG.settings.showContext)  !== "undefined") {CONFIG.showContext  = CONFIG.settings.showContext}
@@ -791,13 +794,12 @@
      *  The main menu
      */
     MENU.menu = MENU(
-      ITEM.COMMAND("Show Source",MENU.ShowSource,{nativeTouch: true}),
-      ITEM.SUBMENU("Format",
-        ITEM.RADIO("MathML",   "format"),
-        ITEM.RADIO("Original", "format", {value: "Original"})
+      ITEM.SUBMENU("Show Math As",
+        ITEM.COMMAND("MathML Code",    MENU.ShowSource, {nativeTouch: true, format: "MathML"}),
+        ITEM.COMMAND("Original Form",  MENU.ShowSource, {nativeTouch: true})
       ),
       ITEM.RULE(),
-      ITEM.SUBMENU("Settings",
+      ITEM.SUBMENU("Math Settings",
         ITEM.SUBMENU("Zoom Trigger",
           ITEM.RADIO("Hover",         "zoom", {action: MENU.Zoom}),
           ITEM.RADIO("Click",         "zoom", {action: MENU.Zoom}),
@@ -839,7 +841,9 @@
           ITEM.RADIO("MathJax", "context"),
           ITEM.RADIO("Browser", "context")
         ),
-        ITEM.COMMAND("Scale All Math ...",MENU.Scale)
+        ITEM.COMMAND("Scale All Math ...",MENU.Scale),
+        ITEM.RULE(),
+        ITEM.CHECKBOX("Highlight on Hover", "discoverable")
       ),
       ITEM.RULE(),
       ITEM.COMMAND("About MathJax",MENU.About),
@@ -850,21 +854,21 @@
 
   MENU.showRenderer = function (show) {
     MENU.cookie.showRenderer = CONFIG.showRenderer = show; MENU.saveCookie();
-    MENU.menu.Find("Settings","Math Renderer").hidden = !show;
+    MENU.menu.Find("Math Settings","Math Renderer").hidden = !show;
   };
   MENU.showFontMenu = function (show) {
     MENU.cookie.showFontMenu = CONFIG.showFontMenu = show; MENU.saveCookie();
-    MENU.menu.Find("Settings","Font Preference").hidden = !show;
+    MENU.menu.Find("Math Settings","Font Preference").hidden = !show;
   };
   MENU.showContext = function (show) {
     MENU.cookie.showContext = CONFIG.showContext = show; MENU.saveCookie();
-    MENU.menu.Find("Settings","Contextual Menu").hidden = !show;
+    MENU.menu.Find("Math Settings","Contextual Menu").hidden = !show;
   };
   
   if (MENU.isMobile) {
     (function () {
       var settings = CONFIG.settings;
-      var trigger = MENU.menu.Find("Settings","Zoom Trigger").menu;
+      var trigger = MENU.menu.Find("Math Settings","Zoom Trigger").menu;
       trigger.items[0].disabled = trigger.items[1].disabled = true;
       if (settings.zoom === "Hover" || settings.zoom == "Click") {settings.zoom = "None"}
       trigger.items = trigger.items.slice(0,4);
@@ -877,11 +881,12 @@
 
   /*************************************************************/
 
-  MathJax.Callback.Queue(
-    ["Styles",AJAX,CONFIG.styles],
+  CALLBACK.Queue(
+    HUB.Register.StartupHook("End Config",{}), // wait until config is complete complete
     ["getImages",MENU],
+    ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathMenu Ready"],
     ["loadComplete",AJAX,"[MathJax]/extensions/MathMenu.js"]
   );
 
-})(MathJax.Hub,MathJax.HTML,MathJax.Ajax);
+})(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.CallBack,MathJax.OutputJax);

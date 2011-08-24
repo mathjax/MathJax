@@ -28,16 +28,12 @@
   var EVENT, TOUCH, HOVER; // filled in later
   
   nMML.Augment({
-    LEFTBUTTON: (isMSIE ? 1 : 0),  // the event.button value for left button
-    MENUKEY: "altKey",             // the event value for alternate context menu
-    noContextMenuBug: HUB.Browser.isKonequeror,
-    msieQuirks: (isMSIE && !(document.compatMode === "BackCompat")),
-    msieEventBug: HUB.Browser.isIE9,
-    
     //
     //  User can configure styles
     //
-    config: {styles: {}}, settings: HUB.config.menuSettings,
+    config: {styles: {}},
+    settings: HUB.config.menuSettings,
+    
     Startup: function () {
       //  Set up event handling
       EVENT = MathJax.Extension.MathEvents.Event;

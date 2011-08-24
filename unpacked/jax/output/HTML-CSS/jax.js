@@ -415,6 +415,7 @@
       script.parentNode.insertBefore(frame,script); var isHidden;
       try {this.getScales(span); isHidden = (this.em === 0 || String(this.em) === "NaN")} catch (err) {isHidden = true}
       if (isHidden) {this.hiddenDiv.appendChild(frame); this.getScales(span)}
+      jax.em = this.em; jax.outerEm = this.outerEm; jax.scale = this.scale;
       this.initImg(span);
       this.initHTML(math,span);
       math.setTeXclass();
@@ -432,7 +433,7 @@
     },
     getHoverSpan: function (jax) {return jax.root.HTMLspanElement()},
     getHoverBBox: function (jax,span) {
-      var bbox = span.bbox, em = HTMLCSS.outerEm;
+      var bbox = span.bbox, em = jax.outerEm;
       var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
       if (bbox.width) {BBOX.width = bbox.width}
       return BBOX;
