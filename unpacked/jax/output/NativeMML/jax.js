@@ -205,23 +205,19 @@
       return math.firstChild;
     },
     getHoverBBox: function (jax,span,math) {
-      span = span.parentNode;
-      span.appendChild(this.topImg);
-      var h = this.topImg.offsetTop, d = span.offsetHeight-h, w = span.offsetWidth;
-      span.removeChild(this.topImg);
-      var x = (math.className === "MathJax_MSIE_Overlay" ? -w : 0);
-      return {w:w, h:h, d:d, x:x}
+      var bbox = EVENT.getBBox(span.parentNode);
+      bbox.x = (math.className === "MathJax_MSIE_Overlay" ? -bbox.w : 0);
+      return bbox;
     },
 
-    Zoom: function (root,span,math) {
+    Zoom: function (root,span,math,Mw,Mh) {
       root.toNativeMML(span,span);
-      var top = ZOOM.getTop(root,span.parentNode,math,this.msieTopBug,false);
       if (this.msieIE8HeightBug) {span.style.position = "absolute"}
       var mW = math.offsetWidth  || math.scrollWidth,
           mH = math.offsetHeight || math.scrollHeight;
       var zW = span.offsetWidth, zH = span.offsetHeight;
       if (this.msieIE8HeightBug) {span.style.position = ""}
-      return {Y:-top, mW:mW, mH:mH, zW:zW, zH:zH}
+      return {Y:-EVENT.getBBox(span.parentNode).h, mW:mW, mH:mH, zW:zW, zH:zH}
     },
 
     NAMEDSPACE: {
@@ -492,30 +488,14 @@
   //
   HUB.Browser.Select({
     MSIE: function (browser) {
-      var quirks = (document.compatMode === "BackCompat");
       var mode = (document.documentMode || 0);
-      var isIE8 = browser.versionAtLeast("8.0");
-      nMML.Augment({
-        msieInlineBlockAlignBug: (!isIE8 || mode < 8 || quirks),
-        msieTopBug: (!isIE8 || mode === 7),
-        msieIE8HeightBug: (mode === 8),
-        msieTopBug: (!isIE8 || mode !== 8)
-      });
+      nMML.msieIE8HeightBug = (mode === 8);
     },
     Opera: function (browser) {
       nMML.operaPositionBug = true;
     }
   });
   
-  //
-  //  Used in measuring zoom and hover positions
-  //
-  nMML.topImg = (nMML.msieInlineBlockAlignBug ?
-    HTML.Element("img",{style:{width:0,height:0,position:"relative"},src:"about:blank"}) :
-    HTML.Element("span",{style:{width:0,height:0,display:"inline-block"}})
-  );
-  if (nMML.operaPositionBug || nMML.msieTopBug) {nMML.topImg.style.border="1px solid"}
-
 
   HUB.Register.StartupHook("End Cookie",function () {
     if (HUB.config.menuSettings.zoom !== "None")

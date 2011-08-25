@@ -36,8 +36,8 @@
       x: 3.5, y: 5,          // frame padding and
       bwidth: 1,             // frame border width (in pixels)
       bcolor: "#A6D",        // frame border color
-      hwidth: "15px",         // haze width
-      hcolor: "#83A",        // haze color
+      hwidth: "15px",        // haze width
+      hcolor: "#83A"         // haze color
     },       
     button: {
       x: -4, y: -3,          // menu button offsets
@@ -186,6 +186,13 @@
     ClearSelection: function () {
       if (ME.safariContextMenuBug) {setTimeout("window.getSelection().empty()",0)}
       if (document.selection) {setTimeout("document.selection.empty()",0)}
+    },
+    
+    getBBox: function (span) {
+      span.appendChild(ME.topImg);
+      var h = ME.topImg.offsetTop, d = span.offsetHeight-h, w = span.offsetWidth;
+      span.removeChild(ME.topImg);
+      return {w:w, h:h, d:d};
     }
     
   };
@@ -268,7 +275,7 @@
           show = (JAX.config.showMathMenu != null ? JAX : HUB).config.showMathMenu;
       var dx = CONFIG.frame.x, dy = CONFIG.frame.y, dd = CONFIG.frame.bwidth;  // frame size
       if (ME.msieBorderWidthBug) {dd = 0}
-      jax.hover = {opacity:0, id: jax.inputID+"-Hover"};
+      jax.hover = {opacity:0, id:jax.inputID+"-Hover"};
       //
       //  The frame and menu button
       //
@@ -464,19 +471,33 @@
   //
   HUB.Browser.Select({
     MSIE: function (browser) {
-      var mode = (document.documentMode||0);
+      var mode = (document.documentMode || 0);
+      var isIE8 = browser.versionAtLeast("8.0");
       ME.msieBorderWidthBug = (document.compatMode === "BackCompat");  // borders are inside offsetWidth/Height
-      ME.msieEventBug = browser.isIE9;      // must get event from window even though event is passed
-      if (mode < 9) {EVENT.LEFTBUTTON = 1}  // IE < 9 has wrong event.button values
+      ME.msieEventBug = browser.isIE9;           // must get event from window even though event is passed
+      ME.msieAlignBug = (!isIE8 || mode < 8);    // inline-block spans don't rest on baseline
+      if (mode < 9) {EVENT.LEFTBUTTON = 1}       // IE < 9 has wrong event.button values
     },
     Safari: function (browser) {
       ME.safariContextMenuBug = true;  // selection can be started by contextmenu event
+    },
+    Opera: function (browser) {
+      ME.operaPositionBug = true;      // position is wrong unless border is used
     },
     Konqueror: function (browser) {
       ME.noContextMenuBug = true;      // doesn't produce contextmenu event
     }
   });
   
+  //
+  //  Used in measuring zoom and hover positions
+  //
+  ME.topImg = (ME.msieAlignBug ?
+    HTML.Element("img",{style:{width:0,height:0,position:"relative"},src:"about:blank"}) :
+    HTML.Element("span",{style:{width:0,height:0,display:"inline-block"}})
+  );
+  if (1 || ME.operaPositionBug/* || ME.msieTopBug*/) {ME.topImg.style.border="1px solid"}
+
   //
   //  Get configuration from user
   //

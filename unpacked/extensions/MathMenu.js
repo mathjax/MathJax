@@ -137,7 +137,7 @@
           position:"absolute",
           width: "31px", height: "31px",
           top:"-15px", left:"-15px"
-      },
+      }
     }
   });
   

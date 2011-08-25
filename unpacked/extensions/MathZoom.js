@@ -41,7 +41,7 @@
         "-webkit-box-shadow":"5px 5px 15px #AAAAAA", // Safari 3 and Chrome
         "-moz-box-shadow":"5px 5px 15px #AAAAAA",    // Forefox 3.5
         "-khtml-box-shadow":"5px 5px 15px #AAAAAA",  // Konqueror
-        filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
+        filter: "dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
       },
       
       //
@@ -107,17 +107,14 @@
     //  Handle the actual zooming
     //
     Zoom: function (event,math) {
-      this.Remove(); HOVER.ClearHoverTimer();
-      EVENT.ClearSelection();
+      //
+      //  Remove any other zoom and clear timers
+      //
+      this.Remove(); HOVER.ClearHoverTimer(); EVENT.ClearSelection();
 
       //
-      //  Find the jax and its type
+      //  Find the jax
       //
-      /* 
-       * var parent = math.parentNode;
-       * if (parent.className === "MathJax_MathContainer") {parent = parent.parentNode}
-       * if (parent.parentNode.className === "MathJax_MathContainer") {parent = parent.parentNode.parentNode}
-       */
       var JAX = MathJax.OutputJax[math.jaxID];
       var jax = JAX.getJaxFromMath(math), root = jax.root;
       if (jax.hover) {HOVER.UnHover(jax)}
@@ -134,7 +131,7 @@
         },[
           ["span",{id:"MathJax_ZoomOverlay", onmousedown:this.Remove}],
           ["span",{
-            id:"MathJax_Zoom", onclick: this.Remove,
+            id:"MathJax_Zoom", onclick:this.Remove,
             style:{
               visibility:"hidden", fontSize:this.settings.zscale,
               "max-width":Mw+"px", "max-height":Mh+"px"
@@ -144,6 +141,7 @@
       );
       var zoom = div.lastChild, span = zoom.firstChild, overlay = div.firstChild;
       math.parentNode.insertBefore(div,math);
+      if (span.addEventListener) {span.addEventListener("mousedown",this.Remove,true)}
 
       //
       //  Display the zoomed math
@@ -168,14 +166,12 @@
       if (this.msiePositionBug) {
         if (this.msieSizeBug) 
           {zoom.style.height = bbox.zH+"px"; zoom.style.width = bbox.zW+"px"} // IE8 gets the dimensions completely wrong
-        if (zoom.offsetHeight > Mh) {zoom.style.height = Mh+"px"}  // IE doesn't do max-height?
-        if (zoom.offsetWidth  > Mw) {zoom.style.width  = Mw+"px"}
-        if (math.nextSibling) {math.parentNode.insertBefore(div,math.nextSibling)}
-          else {parent.appendChild(div)}                           // needs to be after to be above?
+        if (zoom.offsetHeight > Mh) {zoom.style.height = Mh+"px"; span.style.marginRight = "16px"}  // IE doesn't do max-height?
+        if (zoom.offsetWidth  > Mw) {zoom.style.width  = Mw+"px"; span.style.marginBottom = "16px"}
       }
       if (this.operaPositionBug) {zoom.style.width = Math.min(Mw,bbox.zW)+"px"}  // Opera gets width as 0?
-      if (zoom.offsetWidth <= Mw && zoom.offsetHeight <= Mh) {zoom.style.overflow = "visible"}
-      this.Position(zoom,bbox,(JAX.id === "MathML" && parent.nodeName.toLowerCase() === "div"));
+      if (zoom.offsetWidth < Mw && zoom.offsetHeight < Mh) {zoom.style.overflow = "visible"}
+      this.Position(zoom,bbox);
       zoom.style.visibility = "";
 
       //
@@ -193,30 +189,10 @@
     },
     
     //
-    //  Get top offset from baseline
-    //
-    getTop: function (root,span,math,topBug,borderBug) {
-      span.appendChild(this.topImg);
-      var top = this.topImg.offsetTop;
-      if (topBug) {
-        // For IE, frame is not at the baseline, so remove extra height
-        var wrap = math.parentNode.style.whiteSpace;
-        math.parentNode.style.whiteSpace = "nowrap";
-        math.parentNode.insertBefore(this.topImg,math);
-        top -= this.topImg.offsetTop - span.parentNode.parentNode.offsetTop;
-        math.parentNode.style.whiteSpace = wrap;
-      }
-      if (borderBug) {top += Math.floor(.5*HTMLCSS.em)} // adjust for zoom box padding
-      this.topImg.parentNode.removeChild(this.topImg);
-      return top;
-    },
-    
-    //
     //  Set the position of the zoom box and overlay
     //
-    Position: function (zoom,bbox,MMLdisplay) {
+    Position: function (zoom,bbox) {
       var XY = this.Resize(), x = XY.x, y = XY.y, W = bbox.mW;
-      if (this.msieIE8Bug) {W = -W}
       var dx = -Math.floor((zoom.offsetWidth-W)/2), dy = bbox.Y;
       zoom.style.left = Math.max(dx,10-x)+"px"; zoom.style.top = Math.max(dy,10-y)+"px";
     },
@@ -278,16 +254,14 @@
 
   HUB.Browser.Select({
     MSIE: function (browser) {
-      var quirks = (document.compatMode === "BackCompat");
-      var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
-      var isIE9 = document.documentMode >= 9;
+      var mode  = (document.documentMode || 0);
+      var isIE9 = (mode >= 9);
       ZOOM.msiePositionBug = !isIE9;
       ZOOM.msieSizeBug = browser.versionAtLeast("7.0") &&
-        (!document.documentMode || document.documentMode === 7 || document.documentMode === 8);
-      ZOOM.msieIE8Bug = isIE8 && (document.documentMode === 8);
-      ZOOM.msieZIndexBug = !isIE8;
-      ZOOM.msieInlineBlockAlignBug = (!isIE8 || quirks);
-      if (document.documentMode >= 9) {delete CONFIG.styles["#MathJax_Zoom"].filter}
+        (!document.documentMode || mode === 7 || mode === 8);
+      ZOOM.msieZIndexBug = (mode <= 7);
+      ZOOM.msieInlineBlockAlignBug = (mode <= 7);
+      if (isIE9) {delete CONFIG.styles["#MathJax_Zoom"].filter}
     },
     
     Opera: function (browser) {
