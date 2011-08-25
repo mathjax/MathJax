@@ -438,6 +438,39 @@
       if (bbox.width) {BBOX.width = bbox.width}
       return BBOX;
     },
+    
+    Zoom: function (root,span,math,Mw,Mh) {
+      //
+      //  Re-render at larger size
+      //
+      span.className = "MathJax";
+      this.idPostfix = "-zoom";
+      this.getScales(span,span);
+      root.toHTML(span,span);
+      var bbox = root.HTMLspanElement().bbox;
+      this.idPostfix = "";
+      if (bbox.width) {
+        //  Handle full-width displayed equations
+        //  FIXME: this is a hack for now
+        span.style.width = Math.floor(Mw-1.5*HTMLCSS.em)+"px"; span.style.display="inline-block";
+        var id = (root.id||"MathJax-Span-"+root.spanID)+"-zoom";
+        var child = document.getElementById(id).firstChild;
+        while (child && child.style.width !== bbox.width) {child = child.nextSibling}
+        if (child) {child.style.width = "100%"}
+      }
+      //
+      //  Get height and width of zoomed math and original math
+      //
+      span.style.position = math.style.position = "absolute";
+      var zW = span.offsetWidth, zH = span.offsetHeight,
+          mH = math.offsetHeight, mW = math.offsetWidth;
+      if (mW === 0) {mW = math.parentNode.offsetWidth}; // IE7 gets mW == 0?
+      span.style.position = math.style.position = "";
+      //
+      var ZOOM = MathJax.Extension.MathZoom;
+      return {Y:-ZOOM.getTop(root,span,math,ZOOM.msieTopBug,ZOOM.msieBorderBug),
+              mW:mW, mH:mH, zW:zW, zH:zH};
+    },
 
     initImg: function (span) {},
     initHTML: function (math,span) {},
@@ -2172,6 +2205,8 @@
           msieClipRectBug: !isIE8,
           msieNegativeSpaceBug: quirks,
           msieCloneNodeBug: (isIE8 && browser.version === "8.0"),
+          msieTopBug: (!browser.versionAtLeast("8.0") || document.documentMode === 7),
+          msieBorderBug: (quirks && browser.versionAtLeast("8.0")),
           negativeSkipBug: true,
           msieIE6: !isIE7,
           msieItalicWidthBug: true,

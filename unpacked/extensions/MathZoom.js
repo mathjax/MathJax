@@ -26,8 +26,6 @@
   var VERSION = "1.1.3";
   
   var CONFIG = HUB.CombineConfig("MathZoom",{
-    delay: 400,   // mouse must be still this long (milliseconds)
-
     styles: {
       //
       //  The styles for the MathZoom display box
@@ -57,8 +55,9 @@
     }
   });
   
-  var FALSE, HOVER;
+  var FALSE, HOVER, EVENT;
   MathJax.Hub.Register.StartupHook("MathEvents Ready",function () {
+    EVENT = MathJax.Extension.MathEvents.Event;
     FALSE = MathJax.Extension.MathEvents.Event.False;
     HOVER = MathJax.Extension.MathEvents.Hover;
   });
@@ -85,21 +84,21 @@
     //  Zoom on click
     //
     Click: function (event,math) {
-      if (this.settings.zoom === "Click") {return this.Zoom(math,event)}
+      if (this.settings.zoom === "Click") {return this.Zoom(event,math)}
     },
     
     //
     //  Zoom on double click
     //
     DblClick: function (event,math) {
-      if (this.settings.zoom === "Double-Click") {return this.Zoom(math,event)}
+      if (this.settings.zoom === "Double-Click") {return this.Zoom(event,math)}
     },
     
     //
     //  Zoom on hover (called by UI.Hover)
     //
     Hover: function (event,math) {
-      if (this.settings.zoom === "Hover") {this.Zoom(math,event); return true}
+      if (this.settings.zoom === "Hover") {this.Zoom(event,math); return true}
       return false;
     },
     
@@ -107,20 +106,20 @@
     //
     //  Handle the actual zooming
     //
-    Zoom: function (math,event) {
+    Zoom: function (event,math) {
       this.Remove(); HOVER.ClearHoverTimer();
-      
+      EVENT.ClearSelection();
+
       //
       //  Find the jax and its type
       //
-      var parent = math.parentNode;
-      if (parent.className === "MathJax_MathContainer") {parent = parent.parentNode}
-      if (parent.parentNode.className === "MathJax_MathContainer") {parent = parent.parentNode.parentNode}
-      var script = (String(parent.className).match(/^MathJax_(MathML|Display)$/) ? parent : math).nextSibling;
-      var jax = HUB.getJaxFor(script), root = jax.root;
-      var JAX = (HTMLCSS && jax.outputJax.isa(HTMLCSS.constructor) ? "HTMLCSS" :
-                (nMML && jax.outputJax.isa(nMML.constructor) ? "MathML" : null));
-      if (!JAX) return; //  FIXME:  report an error?
+      /* 
+       * var parent = math.parentNode;
+       * if (parent.className === "MathJax_MathContainer") {parent = parent.parentNode}
+       * if (parent.parentNode.className === "MathJax_MathContainer") {parent = parent.parentNode.parentNode}
+       */
+      var JAX = MathJax.OutputJax[math.jaxID];
+      var jax = JAX.getJaxFromMath(math), root = jax.root;
       if (jax.hover) {HOVER.UnHover(jax)}
 
       //
@@ -140,7 +139,7 @@
               visibility:"hidden", fontSize:this.settings.zscale,
               "max-width":Mw+"px", "max-height":Mh+"px"
             }
-          },[["span"]]]
+          },[["span",{style:{display:"inline-block", "white-space":"nowrap"}}]]]
         ]
       );
       var zoom = div.lastChild, span = zoom.firstChild, overlay = div.firstChild;
@@ -161,7 +160,7 @@
         div = tracker;
       }
 
-      var bbox = (this["Zoom"+JAX])(root,span,math,Mw,Mh);
+      var bbox = JAX.Zoom(root,span,math,Mw,Mh);
       
       //
       //  Fix up size and position for browsers with bugs (IE)
@@ -176,7 +175,7 @@
       }
       if (this.operaPositionBug) {zoom.style.width = Math.min(Mw,bbox.zW)+"px"}  // Opera gets width as 0?
       if (zoom.offsetWidth <= Mw && zoom.offsetHeight <= Mh) {zoom.style.overflow = "visible"}
-      this.Position(zoom,bbox,(JAX === "MathML" && parent.nodeName.toLowerCase() === "div"));
+      this.Position(zoom,bbox,(JAX.id === "MathML" && parent.nodeName.toLowerCase() === "div"));
       zoom.style.visibility = "";
 
       //
@@ -194,78 +193,10 @@
     },
     
     //
-    //  Handle the jax-specific output
-    //
-    ZoomHTMLCSS: function (root,span,math,Mw,Mh) {
-      //
-      //  Re-render at larger size
-      //
-      span.className = "MathJax";
-      HTMLCSS.idPostfix = "-zoom";
-      HTMLCSS.getScales(span,span);
-      root.toHTML(span,span);
-      var bbox = root.HTMLspanElement().bbox;
-      HTMLCSS.idPostfix = "";
-      if (bbox.width) {
-        //  Handle full-width displayed equations
-        //  FIXME: this is a hack for now
-        span.style.width = Math.floor(Mw-1.5*HTMLCSS.em)+"px"; span.style.display="inline-block";
-        var id = (root.id||"MathJax-Span-"+root.spanID)+"-zoom";
-        var child = document.getElementById(id).firstChild;
-        while (child && child.style.width !== bbox.width) {child = child.nextSibling}
-        if (child) {child.style.width = "100%"}
-      }
-      //
-      //  Get height and width of zoomed math and original math
-      //
-      span.style.position = math.style.position = "absolute";
-      var zW = span.offsetWidth, zH = span.offsetHeight,
-          mH = math.offsetHeight, mW = math.offsetWidth;
-      span.style.position = math.style.position = "";
-      if (mW === 0) {mW = math.offseWidth || math.parentNode.offsetWidth}; // IE7 gets mW == 0?
-      //
-      return {Y:-this.getTop(root,span,math,this.msieTopBug,this.msieBorderBug,false),
-              mW:mW, mH:mH, zW:zW, zH:zH};
-    },
-    ZoomMathML: function (root,span,math) {
-      root.toNativeMML(span,span);
-      var top = this.getTop(root,span,math,this.msieTopMMLBug,false,this.ffMMLdisplayBug);
-      var mW = math.offsetWidth  || math.scrollWidth,
-          mH = math.offsetHeight || math.scrollHeight;
-      if (this.msieIE8HeightBug) {span.style.position = "absolute"}
-      var zW = span.offsetWidth, zH = span.offsetHeight;
-      if (this.msieIE8HeightBug) {span.style.position = ""}
-      if (this.ffMMLdisplayBug) {
-        // Force width in FF, since it gets the math element width wrong
-        span.style.display="inline-block";
-        span.style.width = zW+"px";
-      }
-      return {Y:-top, mW:mW, mH:mH, zW:zW, zH:zH}
-    },
-    
-    //
     //  Get top offset from baseline
     //
-    getTop: function (root,span,math,topBug,borderBug,mmlBug) {
+    getTop: function (root,span,math,topBug,borderBug) {
       span.appendChild(this.topImg);
-      if (mmlBug && math.getAttribute("display") === "block") {
-        // FF breaks between the display math and the image, so 
-        // convert display to inline with displaystyle true
-        math.setAttribute("display","inline"); math.MJinline = true;
-        var mstyle = root.NativeMMLelement("mstyle");
-        while (math.firstChild) {mstyle.appendChild(math.firstChild)}
-        math.appendChild(mstyle); mstyle.setAttribute("displaystyle","true");
-      }
-      if (math.MJinline) {
-        // FF breaks between the display math and the image, so 
-        // convert display to inline with displaystyle true
-        span.insertBefore(this.topImg,span.firstChild);
-        var zmath = span.childNodes[1], zstyle = root.NativeMMLelement("mstyle");
-        zmath.setAttribute("display","inline");
-        while (zmath.firstChild) {zstyle.appendChild(zmath.firstChild)}
-        zmath.appendChild(zstyle); zstyle.setAttribute("displaystyle","true");
-        zstyle.setAttribute("displaystyle","true");
-      }
       var top = this.topImg.offsetTop;
       if (topBug) {
         // For IE, frame is not at the baseline, so remove extra height
@@ -354,11 +285,7 @@
       ZOOM.msieSizeBug = browser.versionAtLeast("7.0") &&
         (!document.documentMode || document.documentMode === 7 || document.documentMode === 8);
       ZOOM.msieIE8Bug = isIE8 && (document.documentMode === 8);
-      ZOOM.msieIE8HeightBug = (document.documentMode === 8);
       ZOOM.msieZIndexBug = !isIE8;
-      ZOOM.msieTopBug = (!browser.versionAtLeast("8.0") || document.documentMode === 7);
-      ZOOM.msieTopMMLBug = ZOOM.msieTopBug || (!isIE8 || document.documentMode >= 9);
-      ZOOM.msieBorderBug = quirks && browser.versionAtLeast("8.0");
       ZOOM.msieInlineBlockAlignBug = (!isIE8 || quirks);
       if (document.documentMode >= 9) {delete CONFIG.styles["#MathJax_Zoom"].filter}
     },
@@ -366,10 +293,6 @@
     Opera: function (browser) {
       ZOOM.operaPositionBug = true;
       ZOOM.operaRefreshBug = true;
-    },
-    
-    Firefox: function (browser) {
-      ZOOM.ffMMLdisplayBug = true;
     }
   });
   

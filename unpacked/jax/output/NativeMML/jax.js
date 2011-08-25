@@ -25,7 +25,9 @@
 (function (nMML,HUB,AJAX,HTML) {
   var MML, isMSIE = HUB.Browser.isMSIE;
   
-  var EVENT, TOUCH, HOVER; // filled in later
+  var EVENT, TOUCH, HOVER, ZOOM; // filled in later
+
+  HUB.Register.StartupHook("MathZoom Ready",function () {ZOOM = MathJax.Extension.MathZoom});
   
   nMML.Augment({
     //
@@ -188,7 +190,7 @@
       var event = window.event;
       var type = nMML.MSIEevents[event.type];
       if (nMML[type] && nMML[type](event,this) === false) {return false}
-      if (MathJax.Extension.MathZoom && MathJax.Extension.MathZoom.HandleEvent(event,type,this) === false) {return false}
+      if (ZOOM && ZOOM.HandleEvent(event,type,this) === false) {return false}
       if (event.srcElement.className === "MathJax_MathPlayer_Overlay" && this.msieMath.fireEvent)
         {this.msieMath.fireEvent("on"+event.type,event)}
       return EVENT.False(event);
@@ -211,6 +213,16 @@
       return {w:w, h:h, d:d, x:x}
     },
 
+    Zoom: function (root,span,math) {
+      root.toNativeMML(span,span);
+      var top = ZOOM.getTop(root,span.parentNode,math,this.msieTopBug,false);
+      if (this.msieIE8HeightBug) {span.style.position = "absolute"}
+      var mW = math.offsetWidth  || math.scrollWidth,
+          mH = math.offsetHeight || math.scrollHeight;
+      var zW = span.offsetWidth, zH = span.offsetHeight;
+      if (this.msieIE8HeightBug) {span.style.position = ""}
+      return {Y:-top, mW:mW, mH:mH, zW:zW, zH:zH}
+    },
 
     NAMEDSPACE: {
       negativeveryverythinmathspace:  "-.0556em",
@@ -481,9 +493,14 @@
   HUB.Browser.Select({
     MSIE: function (browser) {
       var quirks = (document.compatMode === "BackCompat");
-      var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
-      nMML.msieInlineBlockAlignBug = (!isIE8 || quirks);
-      nMML.msieTopBug = (!browser.versionAtLeast("8.0") || document.documentMode === 7);
+      var mode = (document.documentMode || 0);
+      var isIE8 = browser.versionAtLeast("8.0");
+      nMML.Augment({
+        msieInlineBlockAlignBug: (!isIE8 || mode < 8 || quirks),
+        msieTopBug: (!isIE8 || mode === 7),
+        msieIE8HeightBug: (mode === 8),
+        msieTopBug: (!isIE8 || mode !== 8)
+      });
     },
     Opera: function (browser) {
       nMML.operaPositionBug = true;

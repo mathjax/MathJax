@@ -134,9 +134,7 @@
       //  Remove selections, remove hover fades
       //
       if (ME.msieEventBug) {event = window.event}
-      if (ME.safariContextMenuBug) {setTimeout("window.getSelection().empty()",0)}
-      if (document.selection) {setTimeout("document.selection.empty()",0)}
-      HOVER.ClearHoverTimer();
+      EVENT.ClearSelection(); HOVER.ClearHoverTimer();
       if (jax.hover) {
         if (jax.hover.remove) {clearTimeout(jax.hover.remove); delete jax.hover.remove}
         jax.hover.nofade = true;
@@ -183,6 +181,11 @@
         }
         return JAX.ContextMenu(event,math,true);
       }
+    },
+    
+    ClearSelection: function () {
+      if (ME.safariContextMenuBug) {setTimeout("window.getSelection().empty()",0)}
+      if (document.selection) {setTimeout("document.selection.empty()",0)}
     }
     
   };
