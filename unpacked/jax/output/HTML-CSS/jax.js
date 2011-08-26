@@ -39,8 +39,9 @@
 
     Init: function () {
       this.div = MathJax.HTML.addElement(document.body,"div",{
+        id: "MathJax_Font_Test",
         style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
-                padding:0, border:0, margin:0,
+                padding:0, border:0, margin:0, "white-space":"nowrap",
                 textAlign:"left", textIndent:0, textTransform:"none",
                 lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
                 fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal"}
