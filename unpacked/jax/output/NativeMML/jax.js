@@ -191,24 +191,17 @@
       var type = nMML.MSIEevents[event.type];
       if (nMML[type] && nMML[type](event,this) === false) {return false}
       if (ZOOM && ZOOM.HandleEvent(event,type,this) === false) {return false}
-      if (event.srcElement.className === "MathJax_MathPlayer_Overlay" && this.msieMath.fireEvent)
-        {this.msieMath.fireEvent("on"+event.type,event)}
+      if (event.srcElement.className === "MathJax_MathPlayer_Overlay" && this.msieMath.fireEvent) {
+        // for now, ignore all other events.  This will disable MathPlayer's zoom
+        // feature, but also its <maction> support.
+        if (type === "ContextMenu") {this.msieMath.fireEvent("on"+event.type,event)}
+      }
       return EVENT.False(event);
     },
 
-    getJaxFromMath: function (math) {
-      if (math.className === "MathJax_MSIE_Overlay") {math = math.parentNode.parentNode}
-      return HUB.getJaxFor(math.parentNode.nextSibling);
-    },
-    getHoverSpan: function (jax,math) {
-      if (math.className === "MathJax_MSIE_Overlay") {return math.parentNode}
-      return math.firstChild;
-    },
-    getHoverBBox: function (jax,span,math) {
-      var bbox = EVENT.getBBox(span.parentNode);
-      bbox.x = (math.className === "MathJax_MSIE_Overlay" ? -bbox.w : 0);
-      return bbox;
-    },
+    getJaxFromMath: function (math) {return HUB.getJaxFor(math.parentNode.nextSibling)},
+    getHoverSpan: function (jax,math) {return math.firstChild},
+    getHoverBBox: function (jax,span,math) {return EVENT.getBBox(span.parentNode)},
 
     Zoom: function (root,span,math,Mw,Mh) {
       root.toNativeMML(span,span);
