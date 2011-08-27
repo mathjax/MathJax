@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.10";
+MathJax.fileversion = "1.1.11";
 
 /**********************************************************/
 
@@ -1597,7 +1597,8 @@ MathJax.Hub.Startup = {
   //
   ConfigDefault: function () {
     var CONFIG = MathJax.Hub.config;
-    if (CONFIG["v1.0-compatible"] && CONFIG.jax.length === 0 && !this.params.config)
+    if (CONFIG["v1.0-compatible"] && (CONFIG.jax||[]).length === 0 &&
+        !this.params.config && (CONFIG.config||[]).length === 0)
       {return MathJax.Ajax.Require(this.URL("extensions","v1.0-warning.js"))}
   },
 
