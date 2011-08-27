@@ -648,13 +648,13 @@
       return span;
     },
     createRule: function (span,h,d,w,color) {
-      var min = HTMLCSS.TeX.min_rule_thickness;
+      var min = HTMLCSS.TeX.min_rule_thickness, f = 1;
       // If rule is very thin, make it at least min_rule_thickness so it doesn't disappear
       if (w > 0 && w*this.em < min) {w = min/this.em}
-      if (h+d > 0 && (h+d)*this.em < min) {var f = 1/(h+d)*(min/this.em); h *= f; d *= f}
+      if (h+d > 0 && (h+d)*this.em < min) {f = 1/(h+d)*(min/this.em); h *= f; d *= f}
       if (!color) {color = "solid"} else {color = "solid "+color}
       color = this.Em(w)+" "+color;
-      var H = this.Em(h+d), D = this.Em(-d);
+      var H = (f === 1 ? this.Em(h+d) : min+"px"), D = this.Em(-d);
       var rule = this.addElement(span,"span",{
         style: {borderLeft: color, display: "inline-block", overflow:"hidden",
                 width:0, height:H, verticalAlign:D},
