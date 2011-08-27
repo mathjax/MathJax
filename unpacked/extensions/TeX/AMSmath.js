@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var MML = MathJax.ElementJax.mml;
   var TEX = MathJax.InputJax.TeX;
@@ -97,8 +97,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       'alignat*':    ['AlignAt',null,false,true],
       alignedat:     ['AlignAt',null,false,false],
 
-      aligned:       ['Array',null,null,null,'rlrlrlrlrlrl',COLS([5/18,2,5/18,2,5/18,2,5/18,2,5/18,2,5/18]),".5em",'D'],
-      gathered:      ['Array',null,null,null,'c',null,".5em",'D'],
+      aligned:       ['ArrayII',null,null,null,'rlrlrlrlrlrl',COLS([5/18,2,5/18,2,5/18,2,5/18,2,5/18,2,5/18]),".5em",'D'],
+      gathered:      ['ArrayII',null,null,null,'c',null,".5em",'D'],
 
       subarray:      ['Array',null,null,null,null,COLS([0,0,0,0]),"0.1em",'S',1],
       smallmatrix:   ['Array',null,null,null,'c',COLS([1/3]),".2em",'S',1]
@@ -202,7 +202,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         if (STYLE === "D") {frac.displaystyle = true; frac.scriptlevel = 0}
           else {frac.displaystyle = false; frac.scriptlevel = style - 1}
       }
-
       this.Push(frac);
     },
 
@@ -240,6 +239,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           minlabelspacing: TEX.config.TagIndent
         }
       });
+    },
+    
+    ArrayII: function (begin) {
+      var align = this.GetBrackets("\\begin{"+begin.name+"}");
+      var array = this.Array.apply(this,arguments);
+      if (align === "t") {array.arraydef.align = "baseline 1"}
+      else if (align === "b") {array.arraydef.align = "baseline -1"}
+      else if (align === "c") {array.arraydef.align = "center"}
+      else if (align !== "") {array.arraydef.align = align} // FIXME: should be an error?
+      return array;
     },
     
     AlignAt: function (begin,numbered,taggable) {
