@@ -41,7 +41,7 @@
         "-webkit-box-shadow":"5px 5px 15px #AAAAAA", // Safari 3 and Chrome
         "-moz-box-shadow":"5px 5px 15px #AAAAAA",    // Forefox 3.5
         "-khtml-box-shadow":"5px 5px 15px #AAAAAA",  // Konqueror
-        filter: "dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
+        filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
       },
       
       //
@@ -50,6 +50,12 @@
       "#MathJax_ZoomOverlay": {
         position:"absolute", left:0, top:0, "z-index":300, display:"inline-block",
         width:"100%", height:"100%", border:0, padding:0, margin:0,
+        "background-color":"white", opacity:0, filter:"alpha(opacity=0)"
+      },
+      
+      "#MathJax_ZoomEventTrap": {
+        position:"absolute", left:0, top:0, "z-index":302,
+        display:"inline-block", border:0, padding:0, margin:0,
         "background-color":"white", opacity:0, filter:"alpha(opacity=0)"
       }
     }
@@ -67,6 +73,7 @@
   var ZOOM = MathJax.Extension.MathZoom = {
     version: VERSION,
     settings: HUB.config.menuSettings,
+    scrollSize: 18,    // width of scrool bars
 
     //
     //  Process events passed from output jax
@@ -136,21 +143,26 @@
               visibility:"hidden", fontSize:this.settings.zscale,
               "max-width":Mw+"px", "max-height":Mh+"px"
             }
-          },[["span",{style:{display:"inline-block", "white-space":"nowrap"}}]]]
-        ]
+          },[["span",{style:{display:"inline-block", "white-space":"nowrap"}}]]
+        ]]
       );
       var zoom = div.lastChild, span = zoom.firstChild, overlay = div.firstChild;
       math.parentNode.insertBefore(div,math);
       if (span.addEventListener) {span.addEventListener("mousedown",this.Remove,true)}
+      
+      if (this.msieTrapEventBug) {
+        var trap = HTML.Element("span",{id:"MathJax_ZoomEventTrap", onmousedown:this.Remove});
+        div.insertBefore(trap,zoom);
+      }
 
       //
       //  Display the zoomed math
       //
       if (this.msieZIndexBug) {
         //  MSIE doesn't do z-index properly, so move the div to the document.body,
-        //  and use an empty span as a tracker for the usual position
+        //  and use an image as a tracker for the usual position
         var tracker = HTML.addElement(document.body,"img",{
-          src:"about:blank", id:"MathJax_ZoomTracker", width: 0, height: 0,
+          src:"about:blank", id:"MathJax_ZoomTracker", width:0, height:0,
           style:{width:0, height:0, position:"relative"}
         });
         div.style.position = "relative";
@@ -166,12 +178,17 @@
       if (this.msiePositionBug) {
         if (this.msieSizeBug) 
           {zoom.style.height = bbox.zH+"px"; zoom.style.width = bbox.zW+"px"} // IE8 gets the dimensions completely wrong
-        if (zoom.offsetHeight > Mh) {zoom.style.height = Mh+"px"; span.style.marginRight = "16px"}  // IE doesn't do max-height?
-        if (zoom.offsetWidth  > Mw) {zoom.style.width  = Mw+"px"; span.style.marginBottom = "16px"}
+        if (zoom.offsetHeight > Mh) {zoom.style.height = Mh+"px"; zoom.style.width = (bbox.zW+this.scrollSize)+"px"}  // IE doesn't do max-height?
+        if (zoom.offsetWidth  > Mw) {zoom.style.width  = Mw+"px"; zoom.style.height = (bbox.zH+this.scrollSize)+"px"}
       }
       if (this.operaPositionBug) {zoom.style.width = Math.min(Mw,bbox.zW)+"px"}  // Opera gets width as 0?
       if (zoom.offsetWidth < Mw && zoom.offsetHeight < Mh) {zoom.style.overflow = "visible"}
       this.Position(zoom,bbox);
+      if (this.msieTrapEventBug) {
+        trap.style.height = zoom.clientHeight+"px"; trap.style.width = zoom.clientWidth+"px";
+        trap.style.left = (parseFloat(zoom.style.left)+zoom.clientLeft)+"px";
+        trap.style.top = (parseFloat(zoom.style.top)+zoom.clientTop)+"px";
+      }
       zoom.style.visibility = "";
 
       //
@@ -261,6 +278,8 @@
         (!document.documentMode || mode === 7 || mode === 8);
       ZOOM.msieZIndexBug = (mode <= 7);
       ZOOM.msieInlineBlockAlignBug = (mode <= 7);
+      ZOOM.msieTrapEventBug = !window.addEventListener;
+      if (document.compatMode === "BackCompat") {ZOOM.scrollSize = 52} // don't know why this is so far off
       if (isIE9) {delete CONFIG.styles["#MathJax_Zoom"].filter}
     },
     
