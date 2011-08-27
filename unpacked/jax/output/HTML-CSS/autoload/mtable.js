@@ -131,11 +131,23 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       //  Compute alignment
       //
-      var Y, fY;
-      if (String(values.align).match(/^\d+$/)) {
-        // FIXME: do row-based alignment
-        Y = HD/2 + HTMLCSS.TeX.axis_height*scale - H[0];
-        fY = -(HD/2 + fy);
+      var Y, fY, n = "";
+      if (typeof(values.align) !== "string") {values.align = String(values.align)}
+      if (values.align.match(/(top|bottom|center|baseline|axis)( +(-?\d+))?/))
+        {n = RegExp.$3; values.align = RegExp.$1} else {values.align = "center"}
+      if (n !== "") {
+        //
+        //  Find the height of the given row
+        //
+        n = parseInt(n);
+        if (n < 0) {n = A.length + 1 + n}
+        if (n < 1) {n = 1} else if (n > A.length) {n = A.length}
+        Y = 0; fY = -(HD + fy) + H[0];
+        for (i = 0, m = n-1; i < m; i++) {
+          // FIXME:  Should handle values.align for final row
+          var dY = Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i]);
+          Y += dY; fY += dY;
+        }
       } else {
         Y = ({
           top:    -(H[0] + fy),
