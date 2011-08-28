@@ -1549,13 +1549,6 @@ MathJax.Hub = {
     return null;
   },
   
-  postOutput: function (state) {
-    for (var id in state.jax) {if (state.jax.hasOwnProperty(id)) {
-      var JAX = MathJax.OutputJax[id];
-      if (JAX.postTranslate) {JAX.preTranslate(state.jax[id])}
-    }}
-  },
-
   processMessage: function (state,type) {
     var m = Math.floor(state.i/(state.scripts.length)*100);
     var message = (type === "Output" ? "Typesetting" : "Processing");
