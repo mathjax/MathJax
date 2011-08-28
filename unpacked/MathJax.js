@@ -1137,7 +1137,7 @@ MathJax.Message = {
         this.status = true;
       }
     }
-    if (clearDelay) {setTimeout(MathJax.Callback(["Clear",this,n]),clearDelay)}
+    if (clearDelay) {setTimeout(MathJax.Callback(["Clear",this,n,0]),clearDelay)}
     return n;
   },
   
@@ -1149,8 +1149,9 @@ MathJax.Message = {
       if (this.text) {
         if (this.div.parentNode == null) {this.Init()} // see ASCIIMathML comments above
         if (this.current == null) {
-          if (this.timer) {clearTimeout(this.timer)}
-          this.timer = setTimeout(MathJax.Callback(["Remove",this]),(delay||600));
+          if (this.timer) {clearTimeout(this.timer); delete this.timer}
+          if (delay === 0) {this.Remove()}
+            else {this.timer = setTimeout(MathJax.Callback(["Remove",this]),(delay||600))}
         } else if (this.textNodeBug) {this.div.innerHTML = this.log[this.current].text}
                                 else {this.text.nodeValue = this.log[this.current].text}
         if (this.status) {window.status = ""; delete this.status}
@@ -1343,18 +1344,25 @@ MathJax.Hub = {
     var queue = MathJax.Callback.Queue(["Clear",this.signal]);
     for (var i = 0, m = ec.elements.length; i < m; i++) {
       if (ec.elements[i]) {
-        var scripts = []; // filled in by prepareScripts
+        var state = {
+          scripts: [],                  // filled in by prepareScripts
+          start: new Date().getTime(),  // timer for processing messages
+          i: 0,                         // current script
+          jax: {}                       // scripts grouped by output jax
+        };
         queue.Push(
           ["Post",this.signal,["Begin "+action,ec.elements[i]]],
-          ["Post",this.signal,["Begin Math",ec.elements[i]]],
-          ["prepareScripts",this,action,ec.elements[i],scripts],
-          ["Post",this.signal,["Begin Math Input",ec.elements[i]]],
-          ["processInput",this,scripts],
-          ["Post",this.signal,["End Math Input",ec.elements[i]]],
-          ["Post",this.signal,["Begin Math Output",ec.elements[i]]],
-          ["processOutput",this,scripts],
-          ["Post",this.signal,["End Math Output",ec.elements[i]]],
-          ["Post",this.signal,["End Math",ec.elements[i]]],
+          ["Post",this.signal,["Begin Math",ec.elements[i],action]],
+          ["prepareScripts",this,action,ec.elements[i],state],
+          ["Post",this.signal,["Begin Math Input",ec.elements[i],action]],
+          ["processInput",this,state],
+          ["Post",this.signal,["End Math Input",ec.elements[i],action]],
+          ["prepareOutput",this,state,"preTranslate"],
+          ["Post",this.signal,["Begin Math Output",ec.elements[i],action]],
+          ["processOutput",this,state],
+          ["Post",this.signal,["End Math Output",ec.elements[i],action]],
+          ["prepareOutput",this,state,"postTranslate"],
+          ["Post",this.signal,["End Math",ec.elements[i],action]],
           ["Post",this.signal,["End "+action,ec.elements[i]]]
         );
       }
@@ -1375,7 +1383,7 @@ MathJax.Hub = {
     }
   },
   
-  prepareScripts: function (action,element,math) {
+  prepareScripts: function (action,element,state) {
     if (arguments.callee.disabled) return;
     var scripts = this.elementScripts(element);
     var STATE = MathJax.ElementJax.STATE;
@@ -1385,19 +1393,17 @@ MathJax.Hub = {
         if (script.MathJax && script.MathJax.state !== STATE.PENDING)
           {this.scriptAction[action](script)}
         if (!script.MathJax) {script.MathJax = {state: STATE.PENDING}}
-        if (script.MathJax.state !== STATE.PROCESSED) {math.push(script)}
+        if (script.MathJax.state !== STATE.PROCESSED) {state.scripts.push(script)}
       }
     }
   },
   
   checkScriptSiblings: function (script) {
-    if (script.MathJax && script.MathJax.checked) return;
-    var config = this.config;
-    var pre = script.previousSibling;
-    if (pre && pre.nodeName == "#text") {
-      var preJax,postJax;
-      var post = script.nextSibling;
-      if (post && post.nodeName != "#text") {post = null}
+    if (script.MathJax.checked) return;
+    var config = this.config, pre = script.previousSibling;
+    if (pre && pre.nodeName === "#text") {
+      var preJax,postJax, post = script.nextSibling;
+      if (post && post.nodeName !== "#text") {post = null}
       if (config.preJax) {
         if (typeof(config.preJax) === "string") {config.preJax = new RegExp(config.preJax+"$")}
         preJax = pre.nodeValue.match(config.preJax);
@@ -1417,87 +1423,152 @@ MathJax.Hub = {
       }
       if (pre && !pre.nodeValue.match(/\S/)) {pre = pre.previousSibling}
     }
-    if (config.preRemoveClass && pre && pre.className == config.preRemoveClass) {
-      try {pre.innerHTML = ""} catch (err) {}
-      pre.style.display = "none";
-    }
-    if (script.MathJax) {script.MathJax.checked = 1}
+    if (config.preRemoveClass && pre && pre.className === config.preRemoveClass)
+      {script.MathJax.preview = pre}
+    script.MathJax.checked = 1;
   },
   
-  processInput: function (scripts,start,n) {
-    if (arguments.callee.disabled) {return null}
-    if (!start) {start = new Date().getTime()}
-    var result, STATE = MathJax.ElementJax.STATE;
-    var i = 0, script, prev;
+  processInput: function (state) {
+    var jax, STATE = MathJax.ElementJax.STATE;
+    var script, prev, m = state.scripts.length;
     try {
-      while (i < scripts.length) {
-        script = scripts[i]; if (!script) {i++; continue}
+      //
+      //  Loop through the scripts
+      //
+      while (state.i < m) {
+        script = state.scripts[state.i]; if (!script) {state.i++; continue}
+        //
+        //  Remove previous error marker, if any
+        //
         prev = script.previousSibling;
         if (prev && prev.className === "MathJax_Error") {prev.parentNode.removeChild(prev)}
-        var type = script.type.replace(/ *;(.|\s)*/,"");
-        if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) {i++; continue};
+        //
+        //  Check if already processed or needs processing
+        //
+        if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) {state.i++; continue};
         if (!script.MathJax.elementJax || script.MathJax.state === STATE.UPDATE) {
-          this.checkScriptSiblings(script);
-          result = this.inputJax[type].Process(script);
-          if (typeof result === 'function') {
-            if (result.called) continue; // go back and call Process() again
-            this.RestartAfter(result);
+          this.checkScriptSiblings(script);                 // remove preJax/postJax etc.
+          var type = script.type.replace(/ *;(.|\s)*/,"");  // the input jax type
+          jax = this.inputJax[type].Process(script);        // run the input jax
+          if (typeof jax === 'function') {                  // if a callback was returned
+            if (jax.called) continue;                       //   go back and call Process() again
+            this.RestartAfter(jax);                         //   wait for the callback
           }
-          result.Attach(script,this.inputJax[type].id);
-          script.MathJax.state = STATE.OUTPUT;
+          jax.Attach(script,this.inputJax[type].id);        // register the jax on the script
+          script.MathJax.state = STATE.OUTPUT;              // mark it as needing output
+          //
+          if (!this.outputJax[jax.mimeType]) {              // check for existing output jax
+            script.MathJax.state = STATE.UPDATE;
+            throw Error("No output jax registered for "+jax.mimeType);
+          }
+          //
+          //  Record the output jax
+          //  and put this script in the queue for that jax
+          //  
+          jax.outputJax = this.outputJax[jax.mimeType][0].id;
+          if (!state.jax[jax.outputJax]) {state.jax[jax.outputJax] = []}
+          state.jax[jax.outputJax].push(script);
         }
-        i++;
-        if (new Date().getTime() - start > this.processUpdateTime && i < scripts.length)
-          {start = 0; this.RestartAfter(MathJax.Callback.Delay(1))}
+        //
+        //  Go on to the next script, and check if we need to update the processing message
+        //
+        state.i++; var now = new Date().getTime();
+        if (now - state.start > this.processUpdateTime && state.i < state.scripts.length) {
+          state.start = now;
+          tihs.processMessage(state,"Input");
+          this.RestartAfter(MathJax.Callback.Delay(1));
+        }
       }
-    } catch (err) {return this.processError(err,scripts,i,n,start,"Input")}
-    if ((n || scripts.length) && this.config.showProcessingMessages)
+    } catch (err) {return this.processError(err,state,"Input")}
+    //
+    //  Put up final message, reset the state and return
+    //
+    if (state.scripts.length && this.config.showProcessingMessages)
       {MathJax.Message.Set("Processing math: 100%",0)}
+    state.start = new Date().getTime(); state.i = 0;
     return null;
   },
+  
+  //
+  //  Pre- and post-translate sscripts by jax
+  //    (to get scaling factors, hide/show output, and so on)
+  //
+  prepareOutput: function (state,method) {
+    for (var id in state.jax) {if (state.jax.hasOwnProperty(id)) {
+      var JAX = MathJax.OutputJax[id];
+      if (JAX[method]) {JAX[method](state.jax[id])}
+    }}
+  },
 
-  processOutput: function (scripts,start,n) {
-    if (arguments.callee.disabled) {return null}
-    if (!start) {start = new Date().getTime()}
-    var result, STATE = MathJax.ElementJax.STATE;
-    var i = 0, script;
+  processOutput: function (state) {
+    var result, STATE = MathJax.ElementJax.STATE, script, m = state.scripts.length;
     try {
-      while (i < scripts.length) {
-        script = scripts[i]; if (!script || !script.MathJax) {i++; continue}
-        var jax = script.MathJax.elementJax; if (!jax) {i++; continue}
-        if (!this.outputJax[jax.mimeType]) {
-          script.MathJax.state = STATE.UPDATE;
-          throw Error("No output jax registered for "+jax.mimeType);
-        }
-        var outputJax = this.outputJax[jax.mimeType][0];
-        jax.outputJax = outputJax.id;
-        result = outputJax.Process(script);
+      //
+      //  Loop through the scripts
+      //
+      while (state.i < m) {
+        //
+        //  Check that there is an element jax
+        //
+        script = state.scripts[state.i]; if (!script || !script.MathJax) {state.i++; continue}
+        var jax = script.MathJax.elementJax; if (!jax) {state.i++; continue}
+        //
+        //  Call the output Jax's Process method (which will be its Translate()
+        //  method once loaded) and if it returns a call back, restart the processing.
+        //
+        result = MathJax.OutputJax[jax.outputJax].Process(script);
         if (typeof result === 'function') {
           if (result.called) continue; // go back and call Process() again
           this.RestartAfter(result);
         }
-        script.MathJax.state = STATE.PROCESSED; i++;
+        //
+        //  Mark it as complete and remove the preview
+        //
+        script.MathJax.state = STATE.PROCESSED; state.i++;
+        if (script.MathJax.preview) {script.MathJax.preview.style.display = "none"}
+        //
+        //  Signal that new math is available
+        //
         this.signal.Post(["New Math",jax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
-        if (new Date().getTime() - start > this.processUpdateTime && i < scripts.length)
-          {start = 0; this.RestartAfter(MathJax.Callback.Delay(1))}
+        //
+        //  Update the processing message, if needed
+        //
+        var now = new Date().getTime();
+        if (now - state.start > this.processUpdateTime && state.i < state.scripts.length) {
+          state.start = now;
+          this.processMessage(state,"Output");
+          this.RestartAfter(MathJax.Callback.Delay(1));
+        }
       }
-    } catch (err) {return this.processError(err,scripts,i,n,start,"Output")}
-    if ((n || scripts.length) && this.config.showProcessingMessages) {
-      MathJax.Message.Set("Typesetting math: 100%",0);
-      MathJax.Message.Clear(0);
-    }
+    } catch (err) {return this.processError(err,state,"Output")}
+    //
+    //  Put up the typesetting-complete message
+    //
+    if (state.scripts.length && this.config.showProcessingMessages)
+      {MathJax.Message.Set("Typesetting math: 100%",0,600)}
     return null;
   },
+  
+  postOutput: function (state) {
+    for (var id in state.jax) {if (state.jax.hasOwnProperty(id)) {
+      var JAX = MathJax.OutputJax[id];
+      if (JAX.postTranslate) {JAX.preTranslate(state.jax[id])}
+    }}
+  },
 
-  processError: function (err,scripts,i,n,start,type) {
-    if (!err.restart) {
-      if (!this.config.errorSettings.message) {throw err}
-      this.formatError(scripts[i],err); i++;
-    }
-    if (!n) {n = 0}; var m = Math.floor((n+i)/(n+scripts.length)*100); n += i;
+  processMessage: function (state,type) {
+    var m = Math.floor(state.i/(state.scripts.length)*100);
     var message = (type === "Output" ? "Typesetting" : "Processing");
     if (this.config.showProcessingMessages) {MathJax.Message.Set(message+" math: "+m+"%",0)}
-    return MathJax.Callback.After(["process"+type,this,scripts.slice(i),start,n],err.restart);
+  },
+
+  processError: function (err,state,type) {
+    if (!err.restart) {
+      if (!this.config.errorSettings.message) {throw err}
+      this.formatError(state.scripts[state.i],err); state.i++;
+    }
+    this.processMessage(state,type);
+    return MathJax.Callback.After(["process"+type,this,state],err.restart);
   },
   
   formatError: function (script,err) {
