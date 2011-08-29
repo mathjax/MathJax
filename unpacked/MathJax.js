@@ -1484,11 +1484,8 @@ MathJax.Hub = {
         //  Go on to the next script, and check if we need to update the processing message
         //
         state.i++; var now = new Date().getTime();
-        if (now - state.start > this.processUpdateTime && state.i < state.scripts.length) {
-          state.start = now;
-          this.processMessage(state,"Input");
-          this.RestartAfter(MathJax.Callback.Delay(1));
-        }
+        if (now - state.start > this.processUpdateTime && state.i < state.scripts.length)
+          {state.start = now; this.RestartAfter(MathJax.Callback.Delay(1))}
       }
     } catch (err) {return this.processError(err,state,"Input")}
     //
@@ -1501,8 +1498,9 @@ MathJax.Hub = {
   },
   
   //
-  //  Pre- and post-translate sscripts by jax
+  //  Pre- and post-process scripts by jax
   //    (to get scaling factors, hide/show output, and so on)
+  //  Since this can cause the jax to load, we need to trap restarts
   //
   prepareOutput: function (state,method) {
     while (state.j < state.jaxIDs.length) {
@@ -1555,18 +1553,17 @@ MathJax.Hub = {
         //  Update the processing message, if needed
         //
         var now = new Date().getTime();
-        if (now - state.start > this.processUpdateTime && state.i < state.scripts.length) {
-          state.start = now;
-          this.processMessage(state,"Output");
-          this.RestartAfter(MathJax.Callback.Delay(1));
-        }
+        if (now - state.start > this.processUpdateTime && state.i < state.scripts.length)
+          {state.start = now; this.RestartAfter(MathJax.Callback.Delay(1))}
       }
     } catch (err) {return this.processError(err,state,"Output")}
     //
     //  Put up the typesetting-complete message
     //
-    if (state.scripts.length && this.config.showProcessingMessages)
-      {MathJax.Message.Set("Typesetting math: 100%",0,600)}
+    if (state.scripts.length && this.config.showProcessingMessages) {
+      MathJax.Message.Set("Typesetting math: 100%",0);
+      MathJax.Message.Clear(0);
+    }
     state.i = state.j = 0;
     return null;
   },

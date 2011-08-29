@@ -235,6 +235,16 @@
           visibility: "hidden", position:"fixed",
           width: 0, height: 0, overflow:"hidden"
         },
+        ".MathJax_Processed": {display:"none"},
+        
+        ".MathJax_ExBox": {
+          display:"block", overflow:"hidden",
+          height:"1px", width:"60ex"
+        },
+        ".MathJax .MathJax_EmBox": {
+          display:"block", overflow:"hidden",
+          height:"1px", width:"60em"
+        },
         
         ".MathJax .MathJax_HitBox": {
           cursor: "text"
@@ -306,8 +316,7 @@
         family[i] = this.FONTDATA.FONTS[fonts[i]].family;
         if (!family[i]) {family[i] = fonts[i]}
       }
-      this.config.styles[".MathJax .math span"] = 
-        this.config.styles["#MathJax_getScales"] = {"font-family": family.join(',')};
+      this.config.styles[".MathJax .math span"] = {"font-family": family.join(',')};
 
       // Make hidden div for when math is in a display:none block
       this.hiddenDiv = this.Element("div",{
@@ -338,26 +347,22 @@
         this.HDimg = HTMLCSS.createStrut(this.HDspan,0);
       }
 
-      // Used in getScales
-      this.HDMspan = this.Element("span",{style: {position:"absolute", "font-size-adjust":"none"}});
-      if (this.msieInlineBlockAlignBug) {
-        this.HDMimg = this.addElement(this.HDMspan,"img",{
-          style:{
-            height:"0px", width:"1px",
-            "max-width":"none", "max-height":"none",
-            border:0, padding:0, margin:0
-          }
-        });
-        try {this.HDMimg.src = "about:blank"} catch(err) {}
-      } else {
-        this.HDMimg = HTMLCSS.createStrut(this.HDMspan,0); this.HDMimg.style.marginRight = "";
+      // Used in preTranslate to get scaling factors
+      this.EmExSpan = this.Element("span",
+        {style:{position:"absolute","font-size-adjust":"none"}},
+        [
+          ["span",{className:"MathJax_ExBox"}],
+          ["span",{className:"MathJax"},
+            [["span",{className:"MathJax_EmBox"}]]
+          ]
+        ]
+      );
+      if (this.msieMarginScaleBug) {
+        this.addElement(this.EmExSpan.lastChild,"span",null,[
+          ["span",{style:{display:"inline-block",width:"5em"}}],
+          ["span",{style:{display:"inline-block",width:"5em",marginLeft:"-5em"}}]
+        ]);
       }
-
-      // Used for computing factor to fix margin width in MSIE
-      this.marginCheck = HTMLCSS.Element("span",null,
-        [["span",{style: {display:"inline-block", width:"5em"}}]]);
-      this.marginMove = HTMLCSS.addElement(this.marginCheck,"span",
-        {style: {display:"inline-block", width:"5em", marginLeft:"-5em"}});
 
       // Set up styles and preload web fonts
       return AJAX.Styles(this.config.styles,["PreloadWebFonts",this]);
@@ -372,12 +377,20 @@
     },
     
     preTranslate: function (scripts) {
-      for (var i = 0, m = scripts.length; i < m; i++) {
-        var script = scripts[i]; if (!script.parentNode) return;
-        var prev = script.previousSibling;
+      var i, m = scripts.length, script, prev, span, div, math, ex, em, scale;
+      for (i = 0; i < m; i++) {
+        script = scripts[i]; if (!script.parentNode) continue;
+        //
+        //  Remove any existing output
+        //
+        prev = script.previousSibling;
         if (prev && String(prev.className).match(/^MathJax(_Display)?$/))
           {prev.parentNode.removeChild(prev)}
-        var math = script.MathJax.elementJax, span, div;
+        //
+        //  Add the span, and a div if in display mode,
+        //  then set the role and mark it as being processed
+        //
+        math = script.MathJax.elementJax;
         math.HTMLCSS = {display: (math.root.Get("display") === "block")}
         span = div = this.Element("span",{
           className:"MathJax", id:math.inputID+"-Frame",
@@ -392,25 +405,67 @@
         div.setAttribute("role","textbox"); div.setAttribute("aria-readonly","true");
         div.className += " MathJax_Processing";
         script.parentNode.insertBefore(div,script);
-        try {
-          this.getScales(span);
-          math.HTMLCSS.isHidden = (this.em === 0 || String(this.em) === "NaN");
-        } catch (err) {
+        //
+        //  Add the test span for determining scales
+        //
+        script.parentNode.insertBefore(this.EmExSpan.cloneNode(true),script);
+      }
+      //
+      //  Determine the scaling factors for each script
+      //  (this only requires one reflow rather than a reflow for each equation)
+      //
+      for (i = 0; i < m; i++) {
+        script = scripts[i]; if (!script.parentNode) continue;
+        math = script.MathJax.elementJax; test = script.previousSibling;
+        span = test.previousSibling; if (math.HTMLCSS.display) {span = span.firstChild}
+        ex = math.HTMLCSS.ex = test.firstChild.offsetWidth/60;
+        if (ex === 0 || ex === "NaN") {
+          // can't read width, so move to hidden div for processing
+          this.hiddenDiv.appendChild(script.previousSibling);
           math.HTMLCSS.isHidden = true;
+          ex = math.HTMLCSS.ex = test.firstChild.offsetWidth/60;
         }
-        if (math.HTMLCSS.isHidden) {this.hiddenDiv.appendChild(div); this.getScales(span)}
-        math.HTMLCSS.em = this.em; math.HTMLCSS.outerEm = this.outerEm;
-        math.HTMLCSS.scale = this.msieMarginScale; math.HTMLCSS.fontSize = span.style.fontSize;
+        em = math.HTMLCSS.em = test.lastChild.firstChild.offsetWidth/60;
+        scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
+        math.HTMLCSS.scale = scale/100; math.HTMLCSS.marginScale = 1;
+        math.HTMLCSS.fontSize = scale+"%";
+      }
+      //
+      //  If we need to determine MSIE margin scaling,
+      //  set the font sizes (which is what causes the problem)
+      //  and then read the scaling factor (again only one reflow needed)
+      //
+      if (this.msieMarginScaleBug) {
+        for (i = 0; i < m; i++) {
+          script = scripts[i]; if (!script.parentNode) continue;
+          test = scripts[i].previousSibling; math = script.MathJax.elementJax;
+          test.lastChild.style.fontSize = math.HTMLCSS.fontSize;
+        }
+        for (i = 0; i < m; i++) {
+          script = scripts[i]; if (!script.parentNode) continue;
+          test = scripts[i].previousSibling; math = script.MathJax.elementJax;
+          var W = test.lastChild.lastChild.offsetWidth,
+              w = test.lastChild.lastChild.firstChild.offsetWidth;
+          math.HTMLCSS.marginScale = w/(2*w - W);
+        }
+      }
+      //
+      //  Remove the test spans used for determining scales
+      //
+      for (i = 0; i < m; i++) {
+        script = scripts[i]; if (!script.parentNode) continue;
+        test = scripts[i].previousSibling;
+        test.parentNode.removeChild(test);
       }
     },
 
     Translate: function (script) {
       if (!script.parentNode) return;
       var jax = script.MathJax.elementJax, math = jax.root,
-          span = document.getElementById(jax.inputID+"-Frame"),
-          div = (jax.HTMLCSS.display ? span.parentNode : span);
-      this.em = MML.mbase.prototype.em = jax.HTMLCSS.em; 
-      this.outerEm = jax.HTMLCSS.outerEm; this.msieMarginScale = jax.HTMLCSS.scale;
+          div = script.previousSibling,
+          span = (jax.HTMLCSS.display ? div.firstChild : div);
+      this.em = MML.mbase.prototype.em = jax.HTMLCSS.em * jax.HTMLCSS.scale; 
+      this.outerEm = jax.HTMLCSS.em; this.msieMarginScale = jax.HTMLCSS.marginScale;
       span.style.fontSize = jax.HTMLCSS.fontSize;
       this.initImg(span);
       this.initHTML(math,span);
@@ -421,6 +476,29 @@
       }
       if (jax.HTMLCSS.isHidden) {script.parentNode.insertBefore(div,script)}
       div.className = div.className.split(/ /)[0];
+      if (this.hideProcessedMath) {
+        div.className += " MathJax_Processed";
+        if (script.MathJax.preview) {
+          jax.HTMLCSS.preview = script.MathJax.preview;
+          delete script.MathJax.preview;
+        }
+      }
+    },
+
+    postTranslate: function (scripts) {
+      if (!this.hideProcessedMath) return;
+      for (var i = 0, m = scripts.length; i < m; i++) {
+        var script = scripts[i];
+        if (script) {
+          script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
+          var data = script.MathJax.elementJax.HTMLCSS;
+          if (data.preview) {
+            data.preview.style.display = "none";
+            script.MathJax.preview = data.preview;
+            delete data.preview;
+          }
+        }
+      }
     },
 
     /*
@@ -499,32 +577,6 @@
       delete jax.HTMLCSS;
     },
 
-    getScales: function (span) {
-      span.parentNode.insertBefore(this.HDMspan,span);
-      this.HDMspan.className = ""; this.HDMspan.id = ""; this.HDMspan.style.fontSize = "";
-      this.HDMimg.style.height = "1px"; this.HDMimg.style.width = "60ex";
-      var ex = this.HDMspan.offsetWidth/60;
-      this.HDMspan.className = "MathJax"; this.HDMspan.id = "MathJax_getScales";
-      this.HDMimg.style.width = "60em";
-      var em = this.outerEm = this.HDMspan.offsetWidth/60;
-      var scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
-      span.style.fontSize = this.HDMspan.style.fontSize = scale+"%";
-      this.em = MML.mbase.prototype.em = this.HDMspan.offsetWidth/60;
-      if (this.operaFontSizeBug && em === this.em && scale !== 100) {
-        // Opera 10.61 doesn't seem to process the fontSize setting above, so adjust manually
-        this.em = MML.mbase.prototype.em = em * scale/100;
-      }
-      span.parentNode.removeChild(this.HDMspan);
-      this.msieMarginScale = this.getMarginScale(span);
-    },
-    getMarginScale: function (span) {return 1},
-    getMSIEmarginScale: function (span) {
-      span.appendChild(this.marginCheck);
-      var W = this.marginCheck.offsetWidth, w = this.marginMove.offsetWidth;
-      var scale = w/(2*w - W);
-      span.removeChild(this.marginCheck);
-      return scale;
-    },
     getHD: function (span) {
       var position = span.style.position;
       span.style.position = "absolute";
@@ -2150,23 +2202,26 @@
     //
     HUB.Browser.Select({
       MSIE: function (browser) {
+        var mode = (document.documentMode || 0);
         var isIE7 = browser.versionAtLeast("7.0");
-        var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
+        var isIE8 = browser.versionAtLeast("8.0") && mode > 7;
         var quirks = (document.compatMode === "BackCompat");
-        // IE doesn't do mouse events on trasparent objects,
-        //   so give a background color, but opacity makes it transparent
-        HTMLCSS.config.styles[".MathJax .MathJax_HitBox"]["background-color"] = "white";
-        HTMLCSS.config.styles[".MathJax .MathJax_HitBox"].opacity = 0
-        HTMLCSS.config.styles[".MathJax .MathJax_HitBox"].filter = "alpha(opacity=0)";
+        if (mode < 9) {
+          // IE doesn't do mouse events on trasparent objects,
+          //   so give a background color, but opacity makes it transparent
+          HTMLCSS.config.styles[".MathJax .MathJax_HitBox"]["background-color"] = "white";
+          HTMLCSS.config.styles[".MathJax .MathJax_HitBox"].opacity = 0
+          HTMLCSS.config.styles[".MathJax .MathJax_HitBox"].filter = "alpha(opacity=0)";
+        }
         // FIXME:  work out tests for these?
         HTMLCSS.Augment({
-          getMarginScale: HTMLCSS.getMSIEmarginScale,
           PaddingWidthBug: true,
           msieEventBug: browser.isIE9,
           msieAccentBug: true,
           msieColorBug: true,
           msieColorPositionBug: true,    // needs position:relative to put color behind text
           msieRelativeWidthBug: quirks,
+          msieMarginScaleBug: (mode < 8),  // centering using margin is not correct, and needs scaling
           msieMarginWidthBug: true,
           msiePaddingWidthBug: true,
           msieCharPaddingWidthBug: (isIE8 && !quirks),
