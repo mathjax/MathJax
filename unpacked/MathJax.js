@@ -1348,7 +1348,8 @@ MathJax.Hub = {
           scripts: [],                  // filled in by prepareScripts
           start: new Date().getTime(),  // timer for processing messages
           i: 0,                         // current script
-          jax: {}                       // scripts grouped by output jax
+          jax: {},                      // scripts grouped by output jax
+          jaxIDs: []                    // id's of jax used
         };
         queue.Push(
           ["Post",this.signal,["Begin "+action,ec.elements[i]]],
@@ -1466,8 +1467,18 @@ MathJax.Hub = {
           //  and put this script in the queue for that jax
           //  
           jax.outputJax = this.outputJax[jax.mimeType][0].id;
-          if (!state.jax[jax.outputJax]) {state.jax[jax.outputJax] = []}
-          state.jax[jax.outputJax].push(script);
+          if (!state.jax[jax.outputJax]) {
+            if (state.jaxIDs.length === 0) {
+              // use original array until we know there are more (rather than two copies)
+              state.jax[jax.outputJax] = state.scripts;
+            } else {
+              if (state.jaxIDs.length === 1) // get the script so far for the existing jax
+                {state.jax[state.jaxIDs[0]] = state.scripts.slice(0,state.i)}
+              state.jax[jax.outputJax] = []; // start a new array for the new jax
+            }
+            state.jaxIDs.push(jax.outputJax); // save the ID of the jax
+          }
+          if (state.jaxIDs.length > 1) {state.jax[jax.outputJax].push(script)}
         }
         //
         //  Go on to the next script, and check if we need to update the processing message
@@ -1475,7 +1486,7 @@ MathJax.Hub = {
         state.i++; var now = new Date().getTime();
         if (now - state.start > this.processUpdateTime && state.i < state.scripts.length) {
           state.start = now;
-          tihs.processMessage(state,"Input");
+          this.processMessage(state,"Input");
           this.RestartAfter(MathJax.Callback.Delay(1));
         }
       }
@@ -1494,10 +1505,10 @@ MathJax.Hub = {
   //    (to get scaling factors, hide/show output, and so on)
   //
   prepareOutput: function (state,method) {
-    for (var id in state.jax) {if (state.jax.hasOwnProperty(id)) {
-      var JAX = MathJax.OutputJax[id];
+    for (var i = 0, m = state.jaxIDs.length; i < m; i++) {
+      var id = state.jaxIDs[i], JAX = MathJax.OutputJax[id];
       if (JAX[method]) {JAX[method](state.jax[id])}
-    }}
+    }
   },
 
   processOutput: function (state) {
@@ -2049,7 +2060,7 @@ MathJax.Hub.Startup = {
         if (typeof(jax[id]) === 'undefined' && id !== 'newID') {delete this[id]}
       }
       for (id in jax) {
-        if (!this.hasOwnProperty(id)) continue;
+        if (!jax.hasOwnProperty(id)) continue;
         if (typeof(this[id]) === 'undefined' || (this[id] !== jax[id] && id !== 'inputID'))
           {this[id] = jax[id]}
       }

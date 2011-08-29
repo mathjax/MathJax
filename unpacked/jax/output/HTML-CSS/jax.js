@@ -370,40 +370,57 @@
         if (!FONT.available) {HTMLCSS.Font.testFont(FONT)}
       }
     },
+    
+    preTranslate: function (scripts) {
+      for (var i = 0, m = scripts.length; i < m; i++) {
+        var script = scripts[i]; if (!script.parentNode) return;
+        var prev = script.previousSibling;
+        if (prev && String(prev.className).match(/^MathJax(_Display)?$/))
+          {prev.parentNode.removeChild(prev)}
+        var math = script.MathJax.elementJax, span, div;
+        math.HTMLCSS = {display: (math.root.Get("display") === "block")}
+        span = div = this.Element("span",{
+          className:"MathJax", id:math.inputID+"-Frame",
+          oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
+          onmouseover:this.Mouseover, onclick:this.Click, ondblclick:this.DblClick
+        });
+        if (math.HTMLCSS.display) {
+          div = this.Element("div",{className:"MathJax_Display", style:{width:"100%"}});
+          div.appendChild(span);
+        }
+        // (screen readers don't know about role="math" yet, so use "textbox" instead)
+        div.setAttribute("role","textbox"); div.setAttribute("aria-readonly","true");
+        div.className += " MathJax_Processing";
+        script.parentNode.insertBefore(div,script);
+        try {
+          this.getScales(span);
+          math.HTMLCSS.isHidden = (this.em === 0 || String(this.em) === "NaN");
+        } catch (err) {
+          math.HTMLCSS.isHidden = true;
+        }
+        if (math.HTMLCSS.isHidden) {this.hiddenDiv.appendChild(div); this.getScales(span)}
+        math.HTMLCSS.em = this.em; math.HTMLCSS.outerEm = this.outerEm;
+        math.HTMLCSS.scale = this.msieMarginScale; math.HTMLCSS.fontSize = span.style.fontSize;
+      }
+    },
 
     Translate: function (script) {
       if (!script.parentNode) return;
-      var prev = script.previousSibling;
-      if (prev && String(prev.className).match(/^MathJax(_MathML|_Display)?$/))
-        {prev.parentNode.removeChild(prev)}
-      var math = script.MathJax.elementJax.root, span, div, frame;
-      span = div = frame = this.Element("span",{
-        className:"MathJax", oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
-        onmouseover:this.Mouseover, onclick:this.Click, ondblclick:this.DblClick
-      });
-      var blockMode = (math.Get("display") === "block");
-      if (blockMode) {
-        div = frame = this.Element("div",{className:"MathJax_Display", style:{width:"100%", position:"relative"}});
-        div.appendChild(span);
-      }
-      // (screen readers don't know about role="math" yet, so use "textbox" instead)
-      div.setAttribute("role","textbox"); div.setAttribute("aria-readonly","true");
-      if (this.useProcessingFrame) {
-        frame = this.Element((blockMode ? "div" : "span"),{className:"MathJax_Processing"});
-        frame.appendChild(div);
-      }
-      script.parentNode.insertBefore(frame,script); var isHidden;
-      try {this.getScales(span); isHidden = (this.em === 0 || String(this.em) === "NaN")} catch (err) {isHidden = true}
-      if (isHidden) {this.hiddenDiv.appendChild(frame); this.getScales(span)}
+      var jax = script.MathJax.elementJax, math = jax.root,
+          span = document.getElementById(jax.inputID+"-Frame"),
+          div = (jax.HTMLCSS.display ? span.parentNode : span);
+      this.em = MML.mbase.prototype.em = jax.HTMLCSS.em; 
+      this.outerEm = jax.HTMLCSS.outerEm; this.msieMarginScale = jax.HTMLCSS.scale;
+      span.style.fontSize = jax.HTMLCSS.fontSize;
       this.initImg(span);
       this.initHTML(math,span);
       math.setTeXclass();
       try {math.toHTML(span,div)} catch (err) {
-        if (err.restart) {frame.parentNode.removeChild(frame)}
+        if (err.restart) {while (span.firstChild) {span.removeChild(span.firstChild)}}
         throw err;
       }
-      if (isHidden) {script.parentNode.insertBefore(frame,script)}
-      if (this.useProcessingFrame) frame.parentNode.replaceChild(div,frame);
+      if (jax.HTMLCSS.isHidden) {script.parentNode.insertBefore(div,script)}
+      div.className = div.className.split(/ /)[0];
     },
 
     /*
@@ -474,9 +491,12 @@
     },
 
     Remove: function (jax) {
-      var span = jax.SourceElement(); if (!span) return;
-      span = span.previousSibling; if (!span) return;
-      if (span.className.match(/^MathJax/)) {span.parentNode.removeChild(span)}
+      var span = document.getElementById(jax.inputID+"-Frame");
+      if (span) {
+        if (jax.HTMLCSS.display) {span = span.parentNode}
+        span.parentNode.removeChild(span);
+      }
+      delete jax.HTMLCSS;
     },
 
     getScales: function (span) {
