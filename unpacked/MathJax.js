@@ -1347,7 +1347,7 @@ MathJax.Hub = {
         var state = {
           scripts: [],                  // filled in by prepareScripts
           start: new Date().getTime(),  // timer for processing messages
-          i: 0,                         // current script
+          i: 0, j: 0,                   // current script, current jax
           jax: {},                      // scripts grouped by output jax
           jaxIDs: []                    // id's of jax used
         };
@@ -1358,11 +1358,11 @@ MathJax.Hub = {
           ["Post",this.signal,["Begin Math Input",ec.elements[i],action]],
           ["processInput",this,state],
           ["Post",this.signal,["End Math Input",ec.elements[i],action]],
-          ["prepareOutput",this,state,"preTranslate"],
+          ["prepareOutput",this,state,"preProcess"],
           ["Post",this.signal,["Begin Math Output",ec.elements[i],action]],
           ["processOutput",this,state],
           ["Post",this.signal,["End Math Output",ec.elements[i],action]],
-          ["prepareOutput",this,state,"postTranslate"],
+          ["prepareOutput",this,state,"postProcess"],
           ["Post",this.signal,["End Math",ec.elements[i],action]],
           ["Post",this.signal,["End "+action,ec.elements[i]]]
         );
@@ -1496,7 +1496,7 @@ MathJax.Hub = {
     //
     if (state.scripts.length && this.config.showProcessingMessages)
       {MathJax.Message.Set("Processing math: 100%",0)}
-    state.start = new Date().getTime(); state.i = 0;
+    state.start = new Date().getTime(); state.i = state.j = 0;
     return null;
   },
   
@@ -1505,9 +1505,19 @@ MathJax.Hub = {
   //    (to get scaling factors, hide/show output, and so on)
   //
   prepareOutput: function (state,method) {
-    for (var i = 0, m = state.jaxIDs.length; i < m; i++) {
-      var id = state.jaxIDs[i], JAX = MathJax.OutputJax[id];
-      if (JAX[method]) {JAX[method](state.jax[id])}
+    while (state.j < state.jaxIDs.length) {
+      var id = state.jaxIDs[state.j], JAX = MathJax.OutputJax[id];
+      if (JAX[method]) {
+        try {JAX[method](state.jax[id])} catch (err) {
+          if (!err.restart) {
+            MathJax.Message.Set("Error preparing "+id+" output ("+method+")",null,600);
+            MathJax.Hub.lastPrepError = err;
+            state.j++;
+          }
+          return MathJax.Callback.After(["prepareOutput",this,state,method],err.restart);
+        }
+      }
+      state.j++;
     }
   },
 
@@ -1557,6 +1567,7 @@ MathJax.Hub = {
     //
     if (state.scripts.length && this.config.showProcessingMessages)
       {MathJax.Message.Set("Typesetting math: 100%",0,600)}
+    state.i = state.j = 0;
     return null;
   },
   
@@ -1578,6 +1589,7 @@ MathJax.Hub = {
   formatError: function (script,err) {
     var error = MathJax.HTML.Element("span",{className:"MathJax_Error"},this.config.errorSettings.message);
     script.parentNode.insertBefore(error,script);
+    if (script.MathJax.preview) {script.MathJax.preview.style.display = "none"}
     this.lastError = err;
   },
   
@@ -1887,9 +1899,9 @@ MathJax.Hub.Startup = {
       cObject.Augment(null,cdef);
       return this;
     },
-    Process: function (element) {
+    preProcess: function (element) {
       var load = AJAX.Require(this.directory+"/"+this.JAXFILE);
-      if (!load.called) {this.constructor.prototype.Process = function (element) {return load}}
+      if (!load.called) {this.constructor.prototype.preOutput = function (element) {return load}}
       return load;
     },
     Translate: function (element) {
@@ -1922,7 +1934,11 @@ MathJax.Hub.Startup = {
           ["Post",HUB.Startup.signal,this.id+" Jax Startup"],
           ["Startup",this],
           ["Post",HUB.Startup.signal,this.id+" Jax Ready"],
-          [function (THIS) {THIS.Process = THIS.Translate},this.constructor.prototype],
+          [function (THIS) {
+            THIS.preProcess  = THIS.preTranslate;
+            THIS.Process     = THIS.Translate;
+            THIS.postProcess = THIS.postTranslate;
+          },this.constructor.prototype],
           ["loadComplete",AJAX,this.directory+"/"+file]
         );
       }
