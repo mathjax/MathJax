@@ -2223,7 +2223,6 @@
               (HUB.config.root+"/").substr(0,root.length) === root) {webFonts = "otf"}
         }
         HTMLCSS.Augment({
-          useProcessingFrame: true,
           ffVerticalAlignBug: true,
           AccentBug: true,
           allowWebFonts: webFonts
@@ -2248,7 +2247,6 @@
               }
             }
           },
-          useProcessingFrame: true,
           rfuzz: .05,
           AccentBug: true,
           AdjustSurd: true,
@@ -2261,7 +2259,6 @@
         });
         if (forceImages) {
           //  Force image mode for iOS prior to 4.2 and Droid prior to 2.2
-          //  (iPhone should do SVG web fonts, but crashes with MathJax)
           var config = HUB.config["HTML-CSS"];
           if (config) {config.availableFonts = []; config.preferredFont = null}
             else {HUB.config["HTML-CSS"] = {availableFonts: [], preferredFont: null}}
@@ -2270,7 +2267,6 @@
 
       Chrome: function (browser) {
         HTMLCSS.Augment({
-          useProcessingFrame: true,
           rfuzz: .05,
           AccentBug: true,
           AdjustSurd: true,
@@ -2284,7 +2280,6 @@
         browser.isMini = (navigator.appVersion.match("Opera Mini") != null);
         HTMLCSS.config.styles[".MathJax .merror"]["vertical-align"] = null;
         HTMLCSS.Augment({
-          useProcessingFrame: true,
           operaHeightBug: true,
           operaVerticalAlignBug: true,
           operaFontSizeBug: browser.versionAtLeast("10.61"),
