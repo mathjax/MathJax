@@ -187,7 +187,6 @@
       styles: {
         ".MathJax": {
           "display":         "inline",
-          "font-family":     "serif",
           "font-style":      "normal",
           "font-weight":     "normal",
           "line-height":     "normal",
@@ -309,15 +308,6 @@
     },
 
     Startup: function () {
-      //  Set up default fonts
-      var family = [], fonts = this.FONTDATA.VARIANT.normal.fonts;
-      if (!(fonts instanceof Array)) {fonts = [fonts]}
-      for (var i = 0, m = fonts.length; i < m; i++) {
-        family[i] = this.FONTDATA.FONTS[fonts[i]].family;
-        if (!family[i]) {family[i] = fonts[i]}
-      }
-      this.config.styles[".MathJax .math span"] = {"font-family": family.join(',')};
-
       // Make hidden div for when math is in a display:none block
       this.hiddenDiv = this.Element("div",{
         style:{visibility:"hidden", overflow:"hidden", position:"absolute", top:0,
@@ -377,7 +367,7 @@
     },
     
     preTranslate: function (scripts) {
-      var i, m = scripts.length, script, prev, span, div, math, ex, em, scale;
+      var i, m = scripts.length, script, prev, span, div, jax, ex, em, scale;
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         //
@@ -390,17 +380,17 @@
         //  Add the span, and a div if in display mode,
         //  then set the role and mark it as being processed
         //
-        math = script.MathJax.elementJax;
-        math.HTMLCSS = {display: (math.root.Get("display") === "block")}
+        jax = script.MathJax.elementJax;
+        jax.HTMLCSS = {display: (jax.root.Get("display") === "block")}
         span = div = this.Element("span",{
-          className:"MathJax", id:math.inputID+"-Frame",
+          className:"MathJax", id:jax.inputID+"-Frame",
           oncontextmenu:this.ContextMenu, onmousedown: this.Mousedown,
           onmouseover:this.Mouseover, onclick:this.Click, ondblclick:this.DblClick
         });
-        if (math.HTMLCSS.display) {
+        if (jax.HTMLCSS.display) {
           div = this.Element("div",{className:"MathJax_Display", style:{width:"100%"}});
           div.appendChild(span);
-        }
+        } else if (this.msieDisappearingBug) {span.style.display = "inline-block"}
         // (screen readers don't know about role="math" yet, so use "textbox" instead)
         div.setAttribute("role","textbox"); div.setAttribute("aria-readonly","true");
         div.className += " MathJax_Processing";
@@ -416,38 +406,20 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        math = script.MathJax.elementJax; test = script.previousSibling;
-        span = test.previousSibling; if (math.HTMLCSS.display) {span = span.firstChild}
-        ex = math.HTMLCSS.ex = test.firstChild.offsetWidth/60;
+        jax = script.MathJax.elementJax; test = script.previousSibling;
+        span = test.previousSibling; if (jax.HTMLCSS.display) {span = span.firstChild}
+        ex = jax.HTMLCSS.ex = test.firstChild.offsetWidth/60;
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
           this.hiddenDiv.appendChild(script.previousSibling);
-          math.HTMLCSS.isHidden = true;
-          ex = math.HTMLCSS.ex = test.firstChild.offsetWidth/60;
+          jax.HTMLCSS.isHidden = true;
+          ex = jax.HTMLCSS.ex = test.firstChild.offsetWidth/60;
         }
-        em = math.HTMLCSS.em = test.lastChild.firstChild.offsetWidth/60;
+        em = jax.HTMLCSS.em = test.lastChild.firstChild.offsetWidth/60;
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
-        math.HTMLCSS.scale = scale/100; math.HTMLCSS.marginScale = 1;
-        math.HTMLCSS.fontSize = scale+"%";
-      }
-      //
-      //  If we need to determine MSIE margin scaling,
-      //  set the font sizes (which is what causes the problem)
-      //  and then read the scaling factor (again only one reflow needed)
-      //
-      if (this.msieMarginScaleBug) {
-        for (i = 0; i < m; i++) {
-          script = scripts[i]; if (!script.parentNode) continue;
-          test = scripts[i].previousSibling; math = script.MathJax.elementJax;
-          test.lastChild.style.fontSize = math.HTMLCSS.fontSize;
-        }
-        for (i = 0; i < m; i++) {
-          script = scripts[i]; if (!script.parentNode) continue;
-          test = scripts[i].previousSibling; math = script.MathJax.elementJax;
-          var W = test.lastChild.lastChild.offsetWidth,
-              w = test.lastChild.lastChild.firstChild.offsetWidth;
-          math.HTMLCSS.marginScale = w/(2*w - W);
-        }
+        jax.HTMLCSS.scale = scale/100;
+        jax.HTMLCSS.marginScale = (this.msieMarginScaleBug ? scale/100 : 1);
+        jax.HTMLCSS.fontSize = scale+"%";
       }
       //
       //  Remove the test spans used for determining scales
@@ -609,6 +581,7 @@
           span.style.position = position;
         }
       }
+//debug([Math.round(span.bbox.w*this.em),span.offsetWidth,W,span.offsetWidth-W,span.innerText])
       return W/this.em;
     },
     Measured: function (span,parent) {
@@ -2221,7 +2194,8 @@
           msieColorBug: true,
           msieColorPositionBug: true,    // needs position:relative to put color behind text
           msieRelativeWidthBug: quirks,
-          msieMarginScaleBug: (mode < 8),  // centering using margin is not correct, and needs scaling
+          msieDisappearingBug: (mode >= 8), // inline math disappears
+          msieMarginScaleBug: (mode < 8),   // margins are not scaled properly by font-size
           msieMarginWidthBug: true,
           msiePaddingWidthBug: true,
           msieCharPaddingWidthBug: (isIE8 && !quirks),

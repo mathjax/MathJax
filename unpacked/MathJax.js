@@ -1506,7 +1506,7 @@ MathJax.Hub = {
     while (state.j < state.jaxIDs.length) {
       var id = state.jaxIDs[state.j], JAX = MathJax.OutputJax[id];
       if (JAX[method]) {
-        try {JAX[method](state.jax[id])} catch (err) {
+        try {JAX[method](state.jax[id],state)} catch (err) {
           if (!err.restart) {
             MathJax.Message.Set("Error preparing "+id+" output ("+method+")",null,600);
             MathJax.Hub.lastPrepError = err;
@@ -1517,6 +1517,7 @@ MathJax.Hub = {
       }
       state.j++;
     }
+    return null;
   },
 
   processOutput: function (state) {
