@@ -563,7 +563,8 @@
       return HD;
     },
     getW: function (span) {
-      var W, w, span;
+      var W, w, start;
+      if (span.bbox && span.bbox.exactW) {return span.bbox.w}
       if (this.negativeBBoxes) {W = span.offsetWidth}
       else {
         w = (span.bbox||{w:0}).w; start = span;
@@ -586,13 +587,14 @@
       return W/this.em;
     },
     Measured: function (span,parent) {
-      if (span.bbox.width == null && span.bbox.w && !span.bbox.isMultiline) {
+      var bbox = span.bbox;
+      if (bbox.width == null && bbox.w && !bbox.isMultiline) {
         var w = this.getW(span);
-        span.bbox.rw += w - span.bbox.w;
-        span.bbox.w = w;
+        bbox.rw += w - bbox.w;
+        bbox.w = w; bbox.exactW = true;
       }
       if (!parent) {parent = span.parentNode}
-      if (!parent.bbox) {parent.bbox = span.bbox}
+      if (!parent.bbox) {parent.bbox = bbox}
       return span;
     },
     Remeasured: function (span,parent) {
@@ -666,6 +668,7 @@
       if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode).d-d)}
       if (span.isBox || span.className == "mspace") {
         span.bbox = {
+          exactW: true,
           h: h*span.scale, d: d*span.scale,
           w: w*span.scale, rw: w*span.scale, lw: 0
         };
@@ -696,7 +699,7 @@
       var rule = this.addElement(span,"span",{
         style: {borderLeft: color, display: "inline-block", overflow:"hidden",
                 width:0, height:H, verticalAlign:D},
-        bbox: {h:h, d:d, w:w, rw:w, lw:0}, noAdjust: true
+        bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW: true}, noAdjust: true
       });
       if (w > 0 && rule.offsetWidth == 0) {rule.style.width = this.Em(w)}
       if (span.isBox || span.className == "mspace") {span.bbox = rule.bbox}
@@ -708,7 +711,7 @@
       var B = this.Em(t)+" "+style;
       var frame = this.addElement(span,"span",{
         style: {border: B, display:"inline-block", overflow:"hidden", width:W, height:H},
-        bbox: {h:h, d:d, w:w, rw:w, lw:0}, noAdjust: true
+        bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW: true}, noAdjust: true
       });
       if (D) {frame.style.verticalAlign = D}
       return frame;
@@ -725,6 +728,7 @@
       });
       if (!nobbox) {
         span.parentNode.bbox = span.bbox = {
+          exactW: true,
           h: -this.BIGDIMEN, d: -this.BIGDIMEN,
           w:W, lw: this.BIGDIMEN, rw: (!relativeW && w != null ? w : -this.BIGDIMEN)
         };
@@ -808,8 +812,8 @@
     setStackWidth: function (span,w) {
       if (typeof(w) === "number") {
         span.style.width = this.Em(Math.max(0,w));
-        if (span.bbox) {span.bbox.w = w};
-        if (span.parentNode.bbox) {span.parentNode.bbox.w = w}
+        var bbox = span.bbox; if (bbox) {bbox.w = w; bbox.exactW = true};
+        bbox = span.parentNode.bbox; if (bbox) {bbox.w = w; bbox.exactW = true};
       } else {
         span.style.width = span.parentNode.style.width = "100%";
         if (span.bbox) {span.bbox.width = w}
@@ -882,7 +886,7 @@
         w:  Math.max(top.bbox.w,ext.bbox.w,bot.bbox.w,mid.bbox.w),
         lw: Math.min(top.bbox.lw,ext.bbox.lw,bot.bbox.lw,mid.bbox.lw),
         rw: Math.max(top.bbox.rw,ext.bbox.rw,bot.bbox.rw,mid.bbox.rw),
-        h: 0, d: -y
+        h: 0, d: -y, exactW: true
       }
       span.scale = scale;
       span.offset = .55 * span.bbox.w;
@@ -921,7 +925,7 @@
         w: x+right.bbox.rw, lw: 0, rw: x+right.bbox.rw,
         H: Math.max(left.bbox.h,rep.bbox.h,right.bbox.h,mid.bbox.h),
         D: Math.max(left.bbox.d,rep.bbox.d,right.bbox.d,mid.bbox.d),
-        h: rep.bbox.h, d: rep.bbox.d
+        h: rep.bbox.h, d: rep.bbox.d, exactW: true
       }
       span.scale = scale;
       span.isMultiChar = true;
@@ -1663,7 +1667,7 @@
 	  var box = HTMLCSS.Measured(this.data[0].toHTML(span),span);
 	  if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(span,HW,D),span)}
 	  else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(span,HW),span)}
-	  span.bbox = {w: box.bbox.w, h: box.bbox.h, d: box.bbox.d, lw: 0, rw: 0};
+	  span.bbox = {w: box.bbox.w, h: box.bbox.h, d: box.bbox.d, lw: 0, rw: 0, exactW: true};
 	  for (var i = 0, m = span.childNodes.length; i < m; i++)
 	    {span.childNodes[i].style.visibility = "hidden"}
 	}
@@ -1689,7 +1693,7 @@
 	  if (values.voffset) {y = this.HTMLlength2em(box,values.voffset)}
 	  HTMLCSS.placeBox(box,x,y);
 	  span.bbox = {
-	    h: box.bbox.h, d: box.bbox.d, w: box.bbox.w,
+	    h: box.bbox.h, d: box.bbox.d, w: box.bbox.w, exactW: true,
 	    lw: Math.min(0,box.bbox.lw+x), rw: Math.max(box.bbox.w,box.bbox.rw+x),
 	    H: Math.max((box.bbox.H == null ? -HTMLCSS.BIGDIMEN : box.bbox.H),box.bbox.h+y),
 	    D: Math.max((box.bbox.D == null ? -HTMLCSS.BIGDIMEN : box.bbox.D),box.bbox.d-y)
