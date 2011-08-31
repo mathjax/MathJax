@@ -234,7 +234,7 @@
           visibility: "hidden", position:"fixed",
           width: 0, height: 0, overflow:"hidden"
         },
-        ".MathJax_Processed": {display:"none"},
+        ".MathJax_Processed": {display:"none!important"},
         
         ".MathJax_ExBox": {
           display:"block", overflow:"hidden",
@@ -563,25 +563,26 @@
       return HD;
     },
     getW: function (span) {
-      var W = span.offsetWidth, w = (span.bbox ? span.bbox.w: -1), start = span;
-      if ((w < 0 || this.negativeSkipBug) && W >= 0) {
-        // IE can't deal with a space at the beginning, so put something else first
-        if (this.negativeSkipBug) {
-          var position = span.style.position; span.style.position = "absolute";
-          start = this.startMarker;
-          if (span.firstChild) {span.insertBefore(start,span.firstChild)}
-            else {span.appendChild(start)}
-          start = this.startMarker;
-        }
-        span.appendChild(this.endMarker);
-        W = this.endMarker.offsetLeft - start.offsetLeft;
-        span.removeChild(this.endMarker);
-        if (this.negativeSkipBug) {
-          span.removeChild(start);
-          span.style.position = position;
+      var W, w, span;
+      if (this.negativeBBoxes) {W = span.offsetWidth}
+      else {
+        w = (span.bbox||{w:0}).w; start = span;
+        if (w < 0 && this.msieNegativeBBoxBug) {W = -span.offsetWidth}
+        else {
+          // IE can't deal with a space at the beginning, so put something else first
+          if (this.negativeSkipBug) {
+            var position = span.style.position; span.style.position = "absolute";
+            start = this.startMarker;
+            if (span.firstChild) {span.insertBefore(start,span.firstChild)}
+              else {span.appendChild(start)}
+            start = this.startMarker;
+          }
+          span.appendChild(this.endMarker);
+          W = this.endMarker.offsetLeft - start.offsetLeft;
+          span.removeChild(this.endMarker);
+          if (this.negativeSkipBug) {span.removeChild(start); span.style.position = position}
         }
       }
-//debug([Math.round(span.bbox.w*this.em),span.offsetWidth,W,span.offsetWidth-W,span.innerText])
       return W/this.em;
     },
     Measured: function (span,parent) {
@@ -745,8 +746,10 @@
       if (this.msiePlaceBoxBug) {this.addText(span,this.NBSP)}
       if (this.imgSpaceBug) {this.addText(span,this.imgSpace)}
       // Place the box
-      var HH = span.offsetHeight/this.em + 1, dx = 0;
-      if (span.noAdjust) {HH -= 1} else {
+      var HH, dx = 0;
+      if (bbox && this.msieNoHeightBug) {HH = Math.max(5,bbox.h+bbox.d)} else {HH = span.offsetHeight/this.em}
+      if (!span.noAdjust) {
+        HH += 1;
         if (this.msieInlineBlockAlignBug) {
           this.addElement(span,"img",{className:"MathJax_strut",border:0,src:"about:blank",style:{width:0,height:this.Em(HH)}});
         } else {
@@ -946,7 +949,7 @@
     positionDelimiter: function (span,h) {
       h -= span.bbox.h; span.bbox.d -= h; span.bbox.h += h;
       if (h) {
-        if (this.safariVerticalAlignBug || this.msieVerticalAlignBug || this.konquerorVerticalAlignBug ||
+        if (this.safariVerticalAlignBug || this.konquerorVerticalAlignBug ||
            (this.operaVerticalAlignBug && span.isMultiChar)) {
           if (span.firstChild.style.display === "" && span.style.top !== "")
             {span = span.firstChild; h -= parseFloat(span.style.top)}
@@ -2196,19 +2199,20 @@
           msieRelativeWidthBug: quirks,
           msieDisappearingBug: (mode >= 8), // inline math disappears
           msieMarginScaleBug: (mode < 8),   // margins are not scaled properly by font-size
-          msieMarginWidthBug: true,
           msiePaddingWidthBug: true,
           msieCharPaddingWidthBug: (isIE8 && !quirks),
           msieBorderWidthBug: quirks,
           msieInlineBlockAlignBug: (!isIE8 || quirks),
-          msieVerticalAlignBug: (isIE8 && !quirks),
           msiePlaceBoxBug: (isIE8 && !quirks),
           msieClipRectBug: !isIE8,
+          hideProcessedMath: true,           // use display:none until all math is processed
           msieNegativeSpaceBug: quirks,
-          negativeSkipBug: true,
+          negativeSkipBug: (mode < 8),       // confused by initial negative margin 
+          msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
+          msieNoHeightBug: true,//(mode >= 8),      // don't compute offsetHeight in placeBox
           msieIE6: !isIE7,
           msieItalicWidthBug: true,
-          zeroWidthBug: true,
+          zeroWidthBug: (mode < 8),
           FontFaceBug: true,
           msieFontCSSBug: browser.isIE9,
           allowWebFonts: "eot"
@@ -2250,6 +2254,7 @@
           rfuzz: .05,
           AccentBug: true,
           AdjustSurd: true,
+          negativeBBoxes: true,
           safariContextMenuBug: true,
           safariNegativeSpaceBug: true,
           safariVerticalAlignBug: !v3p1,
@@ -2270,6 +2275,7 @@
           rfuzz: .05,
           AccentBug: true,
           AdjustSurd: true,
+          negativeBBoxes: true,
           allowWebFonts: (browser.versionAtLeast("4.0") ? "otf" : "svg"),
           safariNegativeSpaceBug: true,
           safariWebFontSerif: [""]
