@@ -563,12 +563,13 @@
       return HD;
     },
     getW: function (span) {
-      var W, w, start;
+      var W, H, w, start;
       if (span.bbox && span.bbox.exactW) {return span.bbox.w}
-      if (this.negativeBBoxes) {W = span.offsetWidth}
+      if (this.negativeBBoxes) {W = span.offsetWidth; H = span.parentNode.offsetHeight}
       else {
         w = (span.bbox||{w:0}).w; start = span;
-        if (w < 0 && this.msieNegativeBBoxBug) {W = -span.offsetWidth}
+        if (w < 0 && this.msieNegativeBBoxBug) {W = -span.offsetWidth, H = span.parentNode.offsetHeight}
+        else if (w > 0) {W = span.offseWidth; H = span.parentNode.offsetHeight}
         else {
           // IE can't deal with a space at the beginning, so put something else first
           if (this.negativeSkipBug) {
@@ -584,6 +585,7 @@
           if (this.negativeSkipBug) {span.removeChild(start); span.style.position = position}
         }
       }
+      if (H != null) {span.parentNode.HH = H/this.em}
       return W/this.em;
     },
     Measured: function (span,parent) {
@@ -673,6 +675,7 @@
           w: w*span.scale, rw: w*span.scale, lw: 0
         };
         span.style.height = H; span.style.verticalAlign = D;
+        span.HH = (h+d)*span.scale;
       } else {
         span = this.addElement(span,"span",{style: {height:H, verticalAlign:D}});
       }
@@ -699,10 +702,10 @@
       var rule = this.addElement(span,"span",{
         style: {borderLeft: color, display: "inline-block", overflow:"hidden",
                 width:0, height:H, verticalAlign:D},
-        bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW: true}, noAdjust: true
+        bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW: true}, noAdjust: true, HH:h+d
       });
       if (w > 0 && rule.offsetWidth == 0) {rule.style.width = this.Em(w)}
-      if (span.isBox || span.className == "mspace") {span.bbox = rule.bbox}
+      if (span.isBox || span.className == "mspace") {span.bbox = rule.bbox, span.HH = h+d}
       return rule;
     },
     createFrame: function (span,h,d,w,t,style) {
@@ -711,7 +714,7 @@
       var B = this.Em(t)+" "+style;
       var frame = this.addElement(span,"span",{
         style: {border: B, display:"inline-block", overflow:"hidden", width:W, height:H},
-        bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW: true}, noAdjust: true
+        bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW: true}, noAdjust: true, HH:h+d
       });
       if (D) {frame.style.verticalAlign = D}
       return frame;
@@ -722,7 +725,7 @@
       var relativeW = String(w).match(/%$/);
       var W = (!relativeW && w != null ? w : 0);
       span = this.addElement(span,"span",{
-        noAdjust: true,
+        noAdjust: true, HH: 0,
         style: {display:"inline-block", position:"relative",
                 width:(relativeW ? "100%" : this.Em(W)), height:0}
       });
@@ -751,7 +754,9 @@
       if (this.imgSpaceBug) {this.addText(span,this.imgSpace)}
       // Place the box
       var HH, dx = 0;
-      if (bbox && this.msieNoHeightBug) {HH = Math.max(5,bbox.h+bbox.d)} else {HH = span.offsetHeight/this.em}
+      if (span.HH != null) {HH = span.HH}
+        else if (bbox) {HH = Math.max(3,bbox.h+bbox.d)}
+        else {HH = span.offsetHeight/this.em}
       if (!span.noAdjust) {
         HH += 1;
         if (this.msieInlineBlockAlignBug) {
@@ -1251,7 +1256,7 @@
       toHTMLmultiline: function (span) {MML.mbase.HTMLautoloadFile("multiline")},
       HTMLcomputeBBox: function (span,full,i,m) {
 	if (i == null) {i = 0}; if (m == null) {m = this.data.length}
-	var BBOX = span.bbox = {}, stretchy = [];
+	var BBOX = span.bbox = {exactW: true}, stretchy = [];
 	while (i < m) {
 	  var core = this.data[i]; if (!core) continue;
 	  if (!full && core.HTMLcanStretch("Vertical"))
@@ -1275,6 +1280,7 @@
 	BBOX.w += bbox.w;
 	if (child.style.paddingRight) {BBOX.w += parseFloat(child.style.paddingRight)*(child.scale||1)}
 	if (bbox.width) {BBOX.width = bbox.width}
+        if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
       },
       HTMLemptyBBox: function (BBOX) {
 	BBOX.h = BBOX.d = BBOX.H = BBOX.D = BBOX.rw = -HTMLCSS.BIGDIMEN;
@@ -2213,7 +2219,6 @@
           msieNegativeSpaceBug: quirks,
           negativeSkipBug: (mode < 8),       // confused by initial negative margin 
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
-          msieNoHeightBug: true,//(mode >= 8),      // don't compute offsetHeight in placeBox
           msieIE6: !isIE7,
           msieItalicWidthBug: true,
           zeroWidthBug: (mode < 8),
