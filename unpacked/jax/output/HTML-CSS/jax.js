@@ -569,7 +569,7 @@
       else {
         w = (span.bbox||{w:0}).w; start = span;
         if (w < 0 && this.msieNegativeBBoxBug) {W = -span.offsetWidth, H = span.parentNode.offsetHeight}
-        else if (w > 0) {W = span.offseWidth; H = span.parentNode.offsetHeight}
+        else if (w > 0) {W = span.offsetWidth; H = span.parentNode.offsetHeight}
         else {
           // IE can't deal with a space at the beginning, so put something else first
           if (this.negativeSkipBug) {
