@@ -1506,7 +1506,13 @@ MathJax.Hub = {
     while (state.j < state.jaxIDs.length) {
       var id = state.jaxIDs[state.j], JAX = MathJax.OutputJax[id];
       if (JAX[method]) {
-        try {JAX[method](state)} catch (err) {
+        try {
+          var result = JAX[method](state);
+          if (typeof result === 'function') {
+            if (result.called) continue;  // go back and try again
+            this.RestartAfter(result);
+          }
+        } catch (err) {
           if (!err.restart) {
             MathJax.Message.Set("Error preparing "+id+" output ("+method+")",null,600);
             MathJax.Hub.lastPrepError = err;
@@ -1899,7 +1905,7 @@ MathJax.Hub.Startup = {
     },
     preProcess: function (element) {
       var load = AJAX.Require(this.directory+"/"+this.JAXFILE);
-      if (!load.called) {this.constructor.prototype.preOutput = function (element) {return load}}
+      if (!load.called) {this.constructor.prototype.preProcess = function (element) {return load}}
       return load;
     },
     Translate: function (element) {
