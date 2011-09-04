@@ -1450,7 +1450,7 @@ MathJax.Hub = {
         if (!script.MathJax.elementJax || script.MathJax.state === STATE.UPDATE) {
           this.checkScriptSiblings(script);                 // remove preJax/postJax etc.
           var type = script.type.replace(/ *;(.|\s)*/,"");  // the input jax type
-          jax = this.inputJax[type].Process(script);        // run the input jax
+          jax = this.inputJax[type].Process(script,state);  // run the input jax
           if (typeof jax === 'function') {                  // if a callback was returned
             if (jax.called) continue;                       //   go back and call Process() again
             this.RestartAfter(jax);                         //   wait for the callback
@@ -1536,7 +1536,7 @@ MathJax.Hub = {
         //  Call the output Jax's Process method (which will be its Translate()
         //  method once loaded) and if it returns a call back, restart the processing.
         //
-        result = MathJax.OutputJax[jax.outputJax].Process(script);
+        result = MathJax.OutputJax[jax.outputJax].Process(script,state);
         if (typeof result === 'function') {
           if (result.called) continue; // go back and call Process() again
           this.RestartAfter(result);
