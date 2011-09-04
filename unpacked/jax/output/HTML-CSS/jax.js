@@ -366,8 +366,9 @@
       }
     },
     
-    preTranslate: function (scripts) {
-      var i, m = scripts.length, script, prev, span, div, jax, ex, em, scale;
+    preTranslate: function (state) {
+      var scripts = state.jax[this.id], i, m = scripts.length,
+          script, prev, span, div, jax, ex, em, scale;
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         //
@@ -457,7 +458,8 @@
       }
     },
 
-    postTranslate: function (scripts) {
+    postTranslate: function (state) {
+      var scripts = state.jax[this.id];
       if (!this.hideProcessedMath) return;
       for (var i = 0, m = scripts.length; i < m; i++) {
         var script = scripts[i];
