@@ -261,7 +261,9 @@
       }
     },
     settings: HUB.config.menuSettings,
-    
+
+    hideProcessedMath: true,           // use display:none until all math is processed
+
     LEFTBUTTON: (HUB.Browser.isMSIE ? 1 : 0),  // the event.button value for left button
     MENUKEY: "altKey",                         // the event value for alternate context menu
 
@@ -430,16 +432,29 @@
         test = scripts[i].previousSibling;
         test.parentNode.removeChild(test);
       }
+      //
+      //  Set state variables used for displaying equations in chunks
+      //
+      state.HTMLCSSeqn = state.HTMLCSSlast = 0;
     },
 
-    Translate: function (script) {
+    Translate: function (script,state) {
       if (!script.parentNode) return;
+      //
+      //  Get the data about the math
+      //
       var jax = script.MathJax.elementJax, math = jax.root,
           div = script.previousSibling,
           span = (jax.HTMLCSS.display ? div.firstChild : div);
+      //
+      //  Set the font metrics
+      //
       this.em = MML.mbase.prototype.em = jax.HTMLCSS.em * jax.HTMLCSS.scale; 
       this.outerEm = jax.HTMLCSS.em; this.msieMarginScale = jax.HTMLCSS.marginScale;
       span.style.fontSize = jax.HTMLCSS.fontSize;
+      //
+      //  Typeset the math
+      //
       this.initImg(span);
       this.initHTML(math,span);
       math.setTeXclass();
@@ -447,25 +462,48 @@
         if (err.restart) {while (span.firstChild) {span.removeChild(span.firstChild)}}
         throw err;
       }
+      //
+      //  Put it in place, and remove the processing marker
+      //
       if (jax.HTMLCSS.isHidden) {script.parentNode.insertBefore(div,script)}
       div.className = div.className.split(/ /)[0];
+      //
+      //  Check if we are hiding the math until more is processed
+      //
       if (this.hideProcessedMath) {
+        //
+        //  Hide the math and don't let its preview be removed
+        //
         div.className += " MathJax_Processed";
         if (script.MathJax.preview) {
           jax.HTMLCSS.preview = script.MathJax.preview;
           delete script.MathJax.preview;
         }
+        //
+        //  Check if we should show this chunk of equations
+        //
+        state.HTMLCSSeqn++;
+        if (state.HTMLCSSeqn % this.config.EqnChunk === 0) {this.postTranslate(state)}
       }
     },
 
     postTranslate: function (state) {
       var scripts = state.jax[this.id];
       if (!this.hideProcessedMath) return;
-      for (var i = 0, m = scripts.length; i < m; i++) {
+      //
+      //  Reveal this chunk of math
+      //
+      for (var i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
         var script = scripts[i];
         if (script) {
+          //
+          //  Remove the processed marker
+          //
           script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
           var data = script.MathJax.elementJax.HTMLCSS;
+          //
+          //  Remove the preview, if any
+          //
           if (data.preview) {
             data.preview.style.display = "none";
             script.MathJax.preview = data.preview;
@@ -473,6 +511,10 @@
           }
         }
       }
+      //
+      //  Save our place so we know what is revealed
+      //
+      state.HTMLCSSlast = state.HTMLCSSeqn;
     },
 
     /*
@@ -2217,7 +2259,6 @@
           msieInlineBlockAlignBug: (!isIE8 || quirks),
           msiePlaceBoxBug: (isIE8 && !quirks),
           msieClipRectBug: !isIE8,
-          hideProcessedMath: true,           // use display:none until all math is processed
           msieNegativeSpaceBug: quirks,
           negativeSkipBug: (mode < 8),       // confused by initial negative margin 
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths

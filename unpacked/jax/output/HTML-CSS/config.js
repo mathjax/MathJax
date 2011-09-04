@@ -33,11 +33,13 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   
   config: {
     scale: 100, minScaleAdjust: 50,
-    availableFonts: ["STIX","TeX"],
-    preferredFont: "TeX",
-    webFont: "TeX",
-    imageFont: "TeX",
-    showMathMenu: true,
+    availableFonts: ["STIX","TeX"], // list of local fonts to check for
+    preferredFont: "TeX",           // preferred local font (TeX or STIX)
+    webFont: "TeX",                 // web-based font to use when no local fonts found (TeX is only choice)
+    imageFont: "TeX",               // font to use for image fallback mode (TeX is only choice)
+    showMathMenu: true,             // allow MathMenu?
+
+    EqnChunk: 30,                   // number of equations to process before showing them
     
     styles: {
       ".MathJax_Display": {
