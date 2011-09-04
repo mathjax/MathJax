@@ -1540,16 +1540,9 @@ MathJax.Hub = {
         var jax = script.MathJax.elementJax; if (!jax) {state.i++; continue}
         //
         //  Call the output Jax's Process method (which will be its Translate()
-        //  method once loaded) and if it returns a call back, restart the processing.
+        //  method once loaded).  Mark it as complete and remove the preview.
         //
         result = MathJax.OutputJax[jax.outputJax].Process(script,state);
-        if (typeof result === 'function') {
-          if (result.called) continue; // go back and call Process() again
-          this.RestartAfter(result);
-        }
-        //
-        //  Mark it as complete and remove the preview
-        //
         script.MathJax.state = STATE.PROCESSED; state.i++;
         if (script.MathJax.preview) {script.MathJax.preview.style.display = "none"}
         //
