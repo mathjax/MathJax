@@ -1714,9 +1714,10 @@
       toHTML: function (span,HW,D) {
 	span = this.HTMLcreateSpan(span);
 	if (this.data[0] != null) {
-	  var box = HTMLCSS.Measured(this.data[0].toHTML(span),span);
+	  var box = this.data[0].toHTML(span);
 	  if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(span,HW,D),span)}
 	  else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(span,HW),span)}
+          else {box = HTMLCSS.Measured(box,span)}
 	  span.bbox = {w: box.bbox.w, h: box.bbox.h, d: box.bbox.d, lw: 0, rw: 0, exactW: true};
 	  for (var i = 0, m = span.childNodes.length; i < m; i++)
 	    {span.childNodes[i].style.visibility = "hidden"}
@@ -1735,9 +1736,10 @@
 	if (this.data[0] != null) {
 	  var stack = HTMLCSS.createStack(span,true);
 	  var box = HTMLCSS.createBox(stack);
-	  HTMLCSS.Measured(this.data[0].toHTML(box),box);
+          var child = this.data[0].toHTML(box);
 	  if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(box,HW,D),box)}
 	  else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(box,HW),box)}
+          else {HTMLCSS.Measured(child,box)}
 	  var values = this.getValues("height","depth","width","lspace","voffset"), x = 0, y = 0;
 	  if (values.lspace)  {x = this.HTMLlength2em(box,values.lspace)}
 	  if (values.voffset) {y = this.HTMLlength2em(box,values.voffset)}
@@ -1998,13 +2000,15 @@
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
 	    box = boxes[i] = HTMLCSS.createBox(stack);
-	    HTMLCSS.Measured(this.data[i].toHTML(box),box);
+	    var child = this.data[i].toHTML(box);
 	    if (i == this.base) {
 	      if (D != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchV(box,HW,D),box)}
 	      else if (HW != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchH(box,HW),box)}
+              else {HTMLCSS.Measured(child,box)}
 	      stretch[i] = (D == null && HW != null ? false :
 			   this.data[i].HTMLcanStretch("Horizontal"));
 	    } else {
+              HTMLCSS.Measured(child,box);
 	      stretch[i] = this.data[i].HTMLcanStretch("Horizontal");
 	    }
 	    if (box.bbox.w > WW) {WW = box.bbox.w}
@@ -2070,11 +2074,12 @@
 	span = this.HTMLcreateSpan(span); var scale = this.HTMLgetScale();
 	var stack = HTMLCSS.createStack(span), values;
 	var base = HTMLCSS.createBox(stack);
-	this.HTMLmeasureChild(this.base,base);
 	if (this.data[this.base]) {
+          var child = this.data[this.base].toHTML(base);
 	  if (D != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchV(base,HW,D),base)}
 	  else if (HW != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchH(base,HW),base)}
-	}
+          else {HTMLCSS.Measured(child,base)}
+	} else {base.bbox = this.HTMLzeroBBox()}
 	HTMLCSS.placeBox(base,0,0);
 	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
 	var x_height = HTMLCSS.TeX.x_height * scale,
