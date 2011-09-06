@@ -629,22 +629,22 @@
       return HD;
     },
     getW: function (span) {
-      var W, H, w = (span.bbox||{w:0}).w, start = span;
-      if (span.bbox && span.bbox.exactW) {return span.bbox.w}
-      if ((w > 0 && !this.negativeSkipBug) || this.negativeBBoxes) {W = span.offsetWidth; H = span.parentNode.offsetHeight}
-      else if (w < 0 && this.msieNegativeBBoxBug) {W = -span.offsetWidth, H = span.parentNode.offsetHeight}
-      else {
+      var W, H, w = (span.bbox||{}).w, start = span;
+      if (span.bbox && span.bbox.exactW) {return w}
+      if ((span.bbox && w >= 0 && !this.initialSkipBug) || this.negativeBBoxes || !span.firstChild) {
+        W = span.offsetWidth; H = span.parentNode.offsetHeight;
+      } else if (span.bbox && w < 0 && this.msieNegativeBBoxBug) {
+        W = -span.offsetWidth, H = span.parentNode.offsetHeight;
+      } else {
         // IE can't deal with a space at the beginning, so put something else first
-        if (this.negativeSkipBug) {
+        if (this.initialSkipBug) {
           var position = span.style.position; span.style.position = "absolute";
-          start = this.startMarker;
-          if (span.firstChild) {span.insertBefore(start,span.firstChild)} else {span.appendChild(start)}
-          start = this.startMarker;
+          start = this.startMarker; span.insertBefore(start,span.firstChild)
         }
         span.appendChild(this.endMarker);
         W = this.endMarker.offsetLeft - start.offsetLeft;
         span.removeChild(this.endMarker);
-        if (this.negativeSkipBug) {span.removeChild(start); span.style.position = position}
+        if (this.initialSkipBug) {span.removeChild(start); span.style.position = position}
       }
       if (H != null) {span.parentNode.HH = H/this.em}
       return W/this.em;
@@ -662,6 +662,52 @@
     },
     Remeasured: function (span,parent) {
       parent.bbox = this.Measured(span,parent).bbox;
+    },
+    MeasureSpans: function () {
+      var spans = [], span, i, m, bbox, start, end, W;
+      //
+      //  Insert the needed markers
+      // 
+      for (i = 0, m = arguments.length; i < m; i++) {
+        span = arguments[i]; bbox = span.bbox;
+        if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline) continue;
+        if (this.negativeBBoxes || !span.firstChild || (bbox.w >= 0 && !this.initialSkipBug) ||
+            (bbox.w < 0 && this.msieNegativeBBoxBug)) {
+          spans.push([span]);
+        } else if (this.initialSkipBug) {
+          start = this.startMarker.cloneNode(true); end = this.endMarker.cloneNode(true);
+          span.insertBefore(start,span.firstChild); span.appendChild(end);
+          spans.push([span,start,end,span.style.position]); span.style.position = "absolute";
+        } else {
+          end = this.endMarker.cloneNode(true);
+          span.appendChild(end); spans.push([span,null,end]);
+        }
+      }
+      //
+      //  Read the widths and heights
+      //
+      for (i = 0, m = spans.length; i < m; i++) {
+        span = spans[i][0]; bbox = span.bbox; var parent = span.parentNode;
+        if ((bbox.w >= 0 && !this.initialSkipBug) || this.negativeBBoxes || !span.firstChild) {
+          W = span.offsetWidth; parent.HH = span.parentNode.offsetHeight/this.em;
+        } else if (bbox.w < 0 && this.msieNegativeBBoxBug) {
+          W = -span.offsetWidth, parent.HH = span.parentNode.offsetHeight/this.em;
+        } else {
+          W = spans[i][2].offsetLeft - spans[i][1].offsetLeft;
+        }
+        W /= this.em;
+        bbox.rw += W - bbox.w;
+        bbox.w = W; bbox.exactW = true;
+        parent.bbox = bbox;
+      }
+      //
+      //  Remove markers
+      //
+      for (i = 0, m = spans.length; i < m; i++) {
+        span = spans[i];
+        if (span[1]) {span[1].parentNode.removeChild(span[1]), span[0].style.position = span[3]}
+        if (span[2]) {span[2].parentNode.removeChild(span[2])}
+      }
     },
 
     Em: function (m) {
@@ -830,7 +876,7 @@
       span.style.left = this.Em(x+dx);
       // Clip so that bbox doesn't include extra height and depth
       if (bbox) {
-        if (this.negativeSkipBug) {
+        if (this.initialSkipBug) {
           if (bbox.lw < 0) {dx = bbox.lw; HTMLCSS.createBlank(span,-dx,true); l = 0}
           if (bbox.rw > bbox.w) {HTMLCSS.createBlank(span,bbox.rw-bbox.w+.1)}
         }
@@ -867,7 +913,7 @@
       var bbox = span.bbox; if (bbox.isMultiline) return;
       var isRelative = bbox.width != null && !bbox.isFixed;
       var r = 0, c = -bbox.w/2, l = "50%";
-      if (this.negativeSkipBug) {r = bbox.w-bbox.rw-.1; c += bbox.lw}
+      if (this.initialSkipBug) {r = bbox.w-bbox.rw-.1; c += bbox.lw}
       c = this.Em(c*this.msieMarginScale);
       if (isRelative) {c = ""; l = (50 - parseFloat(bbox.width)/2) + "%"}
       HUB.Insert(span.style,({
@@ -1370,8 +1416,18 @@
       },
 
       HTMLmeasureChild: function (n,box) {
-	if (this.data[n] != null) {HTMLCSS.Measured(this.data[n].toHTML(box),box)}
+	if (this.data[n]) {HTMLCSS.Measured(this.data[n].toHTML(box),box)}
 	  else {box.bbox = this.HTMLzeroBBox()}
+      },
+      HTMLboxChild: function (n,box) {
+	if (this.data[n]) {
+          var span = this.data[n].toHTML(box);
+          box.bbox = span.bbox;
+          return span;
+        } else {
+          box.bbox = this.HTMLzeroBBox();
+          return null;
+        }
       },
 
       HTMLcreateSpan: function (span) {
@@ -1835,8 +1891,8 @@
 	span = this.HTMLcreateSpan(span);
 	var frac = HTMLCSS.createStack(span);
 	var num = HTMLCSS.createBox(frac), den = HTMLCSS.createBox(frac);
-	this.HTMLmeasureChild(0,num); this.HTMLmeasureChild(1,den);
-	var values = this.getValues("displaystyle","linethickness","numalign","denomalign","bevelled");
+        this.HTMLmeasureChild(0,num); this.HTMLmeasureChild(1,den);
+        var values = this.getValues("displaystyle","linethickness","numalign","denomalign","bevelled");
 	var scale = this.HTMLgetScale(), isDisplay = values.displaystyle;
 	var a = HTMLCSS.TeX.axis_height * scale;
 	if (values.bevelled) {
@@ -2282,7 +2338,7 @@
           msiePlaceBoxBug: (isIE8 && !quirks),
           msieClipRectBug: !isIE8,
           msieNegativeSpaceBug: quirks,
-          negativeSkipBug: (mode < 8),       // confused by initial negative margin 
+          initialSkipBug: (mode < 8),       // confused by initial negative margin 
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
           msieIE6: !isIE7,
           msieItalicWidthBug: true,
@@ -2363,7 +2419,7 @@
           operaHeightBug: true,
           operaVerticalAlignBug: true,
           operaFontSizeBug: browser.versionAtLeast("10.61"),
-          negativeSkipBug: true,
+          initialSkipBug: true,
           zeroWidthBug: true,
           FontFaceBug: true,
           PaddingWidthBug: true,
