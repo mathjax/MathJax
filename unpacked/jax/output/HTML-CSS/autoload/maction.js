@@ -45,12 +45,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var values = this.getValues("actiontype","selection"), frame;
       var selected = this.data[values.selection-1];
       if (selected) {
-        HTMLCSS.Measured(selected.toHTML(span),span);
+        var box = selected.toHTML(span);
         if (D != null) {HTMLCSS.Remeasured(selected.HTMLstretchV(span,HW,D),span)}
         else if (HW != null) {HTMLCSS.Remeasured(selected.HTMLstretchH(span,HW),span)}
+        else {HTMLCSS.Measured(box,span)}
         if (HTMLCSS.msieHitBoxBug) {
           // margin-left doesn't work on inline-block elements in IE, so put it in a SPAN
-          var box = HTMLCSS.addElement(span,"span");
+          box = HTMLCSS.addElement(span,"span");
           frame = HTMLCSS.createFrame(box,span.bbox.h,span.bbox.d,span.bbox.w,0,"none");
           span.insertBefore(box,span.firstChild); // move below the content
           box.style.marginRight = HTMLCSS.Em(-span.bbox.w);
@@ -159,7 +160,17 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (this === currentTip) return;
       tip.style.left = x+"px"; tip.style.top = y+"px";
       tip.innerHTML = '<span class="MathJax"><nobr></nobr></span>';
-      HTMLCSS.getScales(tip.firstChild,tip.firstChild);
+      //
+      //  get em sizes (taken from HTMLCSS.preTranslate)
+      //
+      var emex = tip.insertBefore(HTMLCSS.EmExSpan.cloneNode(true),tip.firstChild);
+      var ex = emex.firstChild.offsetWidth/60;
+      HTMLCSS.em = MML.mbase.prototype.em = emex.lastChild.firstChild.offsetWidth/60;
+      var scale = Math.floor(Math.max(HTMLCSS.config.minScaleAdjust/100,(ex/HTMLCSS.TeX.x_height)/HTMLCSS.em) * HTMLCSS.config.scale);
+      HTMLCSS.msieMarginScale = (HTMLCSS.msieMarginScaleBug ? scale/100 : 1);
+      tip.firstChild.style.fontSize = scale+"%";
+      emex.parentNode.removeChild(emex);
+
       var stack = HTMLCSS.createStack(tip.firstChild.firstChild);
       var box = HTMLCSS.createBox(stack);
       try {HTMLCSS.Measured(this.data[1].toHTML(box),box)} catch(err) {
