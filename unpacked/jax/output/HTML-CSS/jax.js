@@ -669,8 +669,12 @@
       //  Insert the needed markers
       // 
       for (i = 0, m = arguments.length; i < m; i++) {
-        span = arguments[i]; bbox = span.bbox;
-        if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline) continue;
+        span = arguments[i]; if (!span) continue;
+        bbox = span.bbox;
+        if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline) {
+          if (!span.parentNode.bbox) {span.parentNode.bbox = bbox}
+          continue;
+        }
         if (this.negativeBBoxes || !span.firstChild || (bbox.w >= 0 && !this.initialSkipBug) ||
             (bbox.w < 0 && this.msieNegativeBBoxBug)) {
           spans.push([span]);
@@ -698,7 +702,7 @@
         W /= this.em;
         bbox.rw += W - bbox.w;
         bbox.w = W; bbox.exactW = true;
-        parent.bbox = bbox;
+        if (!parent.bbox) {parent.bbox = bbox}
       }
       //
       //  Remove markers
@@ -1420,14 +1424,8 @@
 	  else {box.bbox = this.HTMLzeroBBox()}
       },
       HTMLboxChild: function (n,box) {
-	if (this.data[n]) {
-          var span = this.data[n].toHTML(box);
-          box.bbox = span.bbox;
-          return span;
-        } else {
-          box.bbox = this.HTMLzeroBBox();
-          return null;
-        }
+	if (this.data[n]) {return this.data[n].toHTML(box)}
+        return null;
       },
 
       HTMLcreateSpan: function (span) {
@@ -1891,7 +1889,7 @@
 	span = this.HTMLcreateSpan(span);
 	var frac = HTMLCSS.createStack(span);
 	var num = HTMLCSS.createBox(frac), den = HTMLCSS.createBox(frac);
-        this.HTMLmeasureChild(0,num); this.HTMLmeasureChild(1,den);
+        HTMLCSS.MeasureSpans(this.HTMLboxChild(0,num),this.HTMLboxChild(1,den));
         var values = this.getValues("displaystyle","linethickness","numalign","denomalign","bevelled");
 	var scale = this.HTMLgetScale(), isDisplay = values.displaystyle;
 	var a = HTMLCSS.TeX.axis_height * scale;
@@ -1946,14 +1944,15 @@
 	var base = HTMLCSS.createBox(sqrt),
 	    rule = HTMLCSS.createBox(sqrt),
 	    surd = HTMLCSS.createBox(sqrt);
-	this.HTMLmeasureChild(0,base);
 	var scale = this.HTMLgetScale();
 	var t = HTMLCSS.TeX.rule_thickness * scale, p,q, H, W;
 	if (this.Get("displaystyle")) {p = HTMLCSS.TeX.x_height * scale} else {p = t}
 	q = Math.max(t + p/4,1.5*HTMLCSS.TeX.min_rule_thickness/this.em); // force to be at least 1px
-	H = base.bbox.h + base.bbox.d + q + t;
-	W = base.bbox.w;
-	HTMLCSS.createDelimiter(surd,0x221A,H,scale); HTMLCSS.Measured(surd);
+	var BASE = this.HTMLboxChild(0,base);
+	H = BASE.bbox.h + BASE.bbox.d + q + t;
+        HTMLCSS.createDelimiter(surd,0x221A,H,scale);
+	HTMLCSS.MeasureSpans(BASE,surd);
+	W = BASE.bbox.w;
 	var x = 0;
 	if (surd.isMultiChar || (HTMLCSS.AdjustSurd && HTMLCSS.imgFonts)) {surd.bbox.w *= .95}
 	if (surd.bbox.h + surd.bbox.d > H) {q = ((surd.bbox.h+surd.bbox.d) - (H-t))/2}
@@ -1963,7 +1962,7 @@
 	} else {
 	  HTMLCSS.createDelimiter(rule,HTMLCSS.FONTDATA.RULECHAR,W,scale);
 	}
-	H = base.bbox.h + q + t;
+	H = BASE.bbox.h + q + t;
 	x = this.HTMLaddRoot(sqrt,surd,x,surd.bbox.h+surd.bbox.d-H,scale);
 	HTMLCSS.placeBox(surd,x,H-surd.bbox.h);
 	HTMLCSS.placeBox(rule,x+surd.bbox.w,H-rule.bbox.h+HTMLCSS.rfuzz);
@@ -2069,22 +2068,26 @@
 	      {return MML.msubsup.prototype.toHTML.call(this,span)}
 	span = this.HTMLcreateSpan(span); var scale = this.HTMLgetScale();
 	var stack = HTMLCSS.createStack(span);
-	var boxes = [], stretch = [], box, i, m, W = -HTMLCSS.BIGDIMEN, WW = W;
+	var boxes = [], children = [], stretch = [], box, i, m;
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
 	    box = boxes[i] = HTMLCSS.createBox(stack);
-	    var child = this.data[i].toHTML(box);
+	    children[i] = this.data[i].toHTML(box);
 	    if (i == this.base) {
-	      if (D != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchV(box,HW,D),box)}
-	      else if (HW != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchH(box,HW),box)}
-              else {HTMLCSS.Measured(child,box)}
+	      if (D != null) {this.data[this.base].HTMLstretchV(box,HW,D)}
+	      else if (HW != null) {this.data[this.base].HTMLstretchH(box,HW)}
 	      stretch[i] = (D == null && HW != null ? false :
 			   this.data[i].HTMLcanStretch("Horizontal"));
 	    } else {
-              HTMLCSS.Measured(child,box);
 	      stretch[i] = this.data[i].HTMLcanStretch("Horizontal");
 	    }
-	    if (box.bbox.w > WW) {WW = box.bbox.w}
+          }
+        }
+        HTMLCSS.MeasureSpans.apply(HTMLCSS,children);
+        var W = -HTMLCSS.BIGDIMEN, WW = W;
+	for (i = 0, m = this.data.length; i < m; i++) {
+	  if (this.data[i]) {
+	    if (boxes[i].bbox.w > WW) {WW = boxes[i].bbox.w}
 	    if (!stretch[i] && WW > W) {W = WW}
 	  }
 	}
@@ -2145,29 +2148,25 @@
     MML.msubsup.Augment({
       toHTML: function (span,HW,D) {
 	span = this.HTMLcreateSpan(span); var scale = this.HTMLgetScale();
-	var stack = HTMLCSS.createStack(span), values;
+	var stack = HTMLCSS.createStack(span), values, children = [];
 	var base = HTMLCSS.createBox(stack);
 	if (this.data[this.base]) {
-          var child = this.data[this.base].toHTML(base);
-	  if (D != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchV(base,HW,D),base)}
-	  else if (HW != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchH(base,HW),base)}
-          else {HTMLCSS.Measured(child,base)}
+          children.push(this.data[this.base].toHTML(base));
+	  if (D != null) {this.data[this.base].HTMLstretchV(base,HW,D)}
+	  else if (HW != null) {this.data[this.base].HTMLstretchH(base,HW)}
 	} else {base.bbox = this.HTMLzeroBBox()}
-	HTMLCSS.placeBox(base,0,0);
 	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
 	var x_height = HTMLCSS.TeX.x_height * scale,
 	    s = HTMLCSS.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?
 	var sup, sub;
-	if (this.HTMLnotEmpty(this.data[this.sup])) {
-	  sup = HTMLCSS.createBox(stack);
-	  HTMLCSS.Measured(this.data[this.sup].toHTML(sup),sup);
-	  sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw);
-	}
-	if (this.HTMLnotEmpty(this.data[this.sub])) {
-	  sub = HTMLCSS.createBox(stack);
-	  HTMLCSS.Measured(this.data[this.sub].toHTML(sub),sub);
-	  sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw);
-	}
+	if (this.HTMLnotEmpty(this.data[this.sup]))
+          {sup = HTMLCSS.createBox(stack); children.push(this.data[this.sup].toHTML(sup))}
+	if (this.HTMLnotEmpty(this.data[this.sub]))
+          {sub = HTMLCSS.createBox(stack); children.push(this.data[this.sub].toHTML(sub))}
+        HTMLCSS.MeasureSpans.apply(HTMLCSS,children);
+	if (sup) {sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw)}
+	if (sub) {sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw)}
+	HTMLCSS.placeBox(base,0,0);
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
 	if (base.bbox.ic) {delta = base.bbox.ic}
