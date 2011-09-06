@@ -436,6 +436,8 @@
       //  Set state variables used for displaying equations in chunks
       //
       state.HTMLCSSeqn = state.HTMLCSSlast = 0;
+      state.HTMLCSSchunk = this.config.EqnChunk;
+MathJax.chunks = 0;
     },
 
     Translate: function (script,state) {
@@ -483,7 +485,10 @@
         //  Check if we should show this chunk of equations
         //
         state.HTMLCSSeqn++;
-        if (state.HTMLCSSeqn % this.config.EqnChunk === 0) {this.postTranslate(state)}
+        if (state.HTMLCSSeqn >= state.HTMLCSSlast + state.HTMLCSSchunk) {
+          this.postTranslate(state);
+          state.HTMLCSSchunk = Math.floor(state.HTMLCSSchunk*this.config.EqnChunkFactor);
+        }
       }
     },
 

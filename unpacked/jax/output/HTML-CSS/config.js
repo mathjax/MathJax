@@ -40,6 +40,7 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
     showMathMenu: true,             // allow MathMenu?
 
     EqnChunk: 50,                   // number of equations to process before showing them
+    EqnChunkFactor: 1.5,            // chunk size is multiplied by this after each chunk
     
     styles: {
       ".MathJax_Display": {
