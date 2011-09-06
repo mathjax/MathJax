@@ -39,7 +39,7 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
     imageFont: "TeX",               // font to use for image fallback mode (TeX is only choice)
     showMathMenu: true,             // allow MathMenu?
 
-    EqnChunk: 500,                   // number of equations to process before showing them
+    EqnChunk: 50,                   // number of equations to process before showing them
     EqnChunkFactor: 1.5,            // chunk size is multiplied by this after each chunk
     
     styles: {

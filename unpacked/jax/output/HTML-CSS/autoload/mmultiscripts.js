@@ -29,7 +29,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
   MML.mmultiscripts.Augment({
     toHTML: function (span,HW,D) {
       span = this.HTMLcreateSpan(span); var scale = this.HTMLgetScale();
-      var stack = HTMLCSS.createStack(span), values, child;
+      var stack = HTMLCSS.createStack(span), values;
       var base = HTMLCSS.createBox(stack);
       if (this.data[this.base]) {
         var child = this.data[this.base].toHTML(base);
