@@ -611,27 +611,22 @@
       return HD;
     },
     getW: function (span) {
-      var W, H, w, start;
+      var W, H, w = (span.bbox||{w:0}).w, start = span;
       if (span.bbox && span.bbox.exactW) {return span.bbox.w}
-      if (this.negativeBBoxes) {W = span.offsetWidth; H = span.parentNode.offsetHeight}
+      if ((w > 0 && !this.negativeSkipBug) || this.negativeBBoxes) {W = span.offsetWidth; H = span.parentNode.offsetHeight}
+      else if (w < 0 && this.msieNegativeBBoxBug) {W = -span.offsetWidth, H = span.parentNode.offsetHeight}
       else {
-        w = (span.bbox||{w:0}).w; start = span;
-        if (w < 0 && this.msieNegativeBBoxBug) {W = -span.offsetWidth, H = span.parentNode.offsetHeight}
-        else if (w > 0) {W = span.offsetWidth; H = span.parentNode.offsetHeight}
-        else {
-          // IE can't deal with a space at the beginning, so put something else first
-          if (this.negativeSkipBug) {
-            var position = span.style.position; span.style.position = "absolute";
-            start = this.startMarker;
-            if (span.firstChild) {span.insertBefore(start,span.firstChild)}
-              else {span.appendChild(start)}
-            start = this.startMarker;
-          }
-          span.appendChild(this.endMarker);
-          W = this.endMarker.offsetLeft - start.offsetLeft;
-          span.removeChild(this.endMarker);
-          if (this.negativeSkipBug) {span.removeChild(start); span.style.position = position}
+        // IE can't deal with a space at the beginning, so put something else first
+        if (this.negativeSkipBug) {
+          var position = span.style.position; span.style.position = "absolute";
+          start = this.startMarker;
+          if (span.firstChild) {span.insertBefore(start,span.firstChild)} else {span.appendChild(start)}
+          start = this.startMarker;
         }
+        span.appendChild(this.endMarker);
+        W = this.endMarker.offsetLeft - start.offsetLeft;
+        span.removeChild(this.endMarker);
+        if (this.negativeSkipBug) {span.removeChild(start); span.style.position = position}
       }
       if (H != null) {span.parentNode.HH = H/this.em}
       return W/this.em;
