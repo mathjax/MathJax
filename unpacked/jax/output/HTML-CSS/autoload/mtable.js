@@ -418,9 +418,10 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     toHTML: function (span,HW,D) {
       span = this.HTMLcreateSpan(span);
       if (this.data[0]) {
-        var box = HTMLCSS.Measured(this.data[0].toHTML(span),span);
+        var box = this.data[0].toHTML(span);
         if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(span,HW,D),span)}
         else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(span,HW),span)}
+        else {HTMLCSS.Measured(box,span)}
         span.bbox = box.bbox;
       }
       this.HTMLhandleSpace(span);
