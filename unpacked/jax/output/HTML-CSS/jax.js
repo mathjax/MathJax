@@ -437,7 +437,6 @@
       //
       state.HTMLCSSeqn = state.HTMLCSSlast = 0;
       state.HTMLCSSchunk = this.config.EqnChunk;
-MathJax.chunks = 0;
     },
 
     Translate: function (script,state) {
