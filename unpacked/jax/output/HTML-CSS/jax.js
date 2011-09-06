@@ -663,13 +663,13 @@
     Remeasured: function (span,parent) {
       parent.bbox = this.Measured(span,parent).bbox;
     },
-    MeasureSpans: function () {
+    MeasureSpans: function (SPANS) {
       var spans = [], span, i, m, bbox, start, end, W;
       //
       //  Insert the needed markers
       // 
-      for (i = 0, m = arguments.length; i < m; i++) {
-        span = arguments[i]; if (!span) continue;
+      for (i = 0, m = SPANS.length; i < m; i++) {
+        span = SPANS[i]; if (!span) continue;
         bbox = span.bbox;
         if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline) {
           if (!span.parentNode.bbox) {span.parentNode.bbox = bbox}
@@ -1889,7 +1889,7 @@
 	span = this.HTMLcreateSpan(span);
 	var frac = HTMLCSS.createStack(span);
 	var num = HTMLCSS.createBox(frac), den = HTMLCSS.createBox(frac);
-        HTMLCSS.MeasureSpans(this.HTMLboxChild(0,num),this.HTMLboxChild(1,den));
+        HTMLCSS.MeasureSpans([this.HTMLboxChild(0,num),this.HTMLboxChild(1,den)]);
         var values = this.getValues("displaystyle","linethickness","numalign","denomalign","bevelled");
 	var scale = this.HTMLgetScale(), isDisplay = values.displaystyle;
 	var a = HTMLCSS.TeX.axis_height * scale;
@@ -1951,7 +1951,7 @@
 	var BASE = this.HTMLboxChild(0,base);
 	H = BASE.bbox.h + BASE.bbox.d + q + t;
         HTMLCSS.createDelimiter(surd,0x221A,H,scale);
-	HTMLCSS.MeasureSpans(BASE,surd);
+	HTMLCSS.MeasureSpans([BASE,surd]);
 	W = BASE.bbox.w;
 	var x = 0;
 	if (surd.isMultiChar || (HTMLCSS.AdjustSurd && HTMLCSS.imgFonts)) {surd.bbox.w *= .95}
@@ -2083,7 +2083,7 @@
 	    }
           }
         }
-        HTMLCSS.MeasureSpans.apply(HTMLCSS,children);
+        HTMLCSS.MeasureSpans(children);
         var W = -HTMLCSS.BIGDIMEN, WW = W;
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i]) {
@@ -2163,7 +2163,7 @@
           {sup = HTMLCSS.createBox(stack); children.push(this.data[this.sup].toHTML(sup))}
 	if (this.HTMLnotEmpty(this.data[this.sub]))
           {sub = HTMLCSS.createBox(stack); children.push(this.data[this.sub].toHTML(sub))}
-        HTMLCSS.MeasureSpans.apply(HTMLCSS,children);
+        HTMLCSS.MeasureSpans(children);
 	if (sup) {sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw)}
 	if (sub) {sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw)}
 	HTMLCSS.placeBox(base,0,0);

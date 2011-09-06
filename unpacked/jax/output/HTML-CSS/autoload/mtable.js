@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -38,7 +38,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var stack = HTMLCSS.createStack(span);
       var scale = this.HTMLgetScale(); var LABEL = -1;
 
-      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row;
+      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row, entries = [];
       var LHD = HTMLCSS.FONTDATA.baselineskip * scale * values.useHeight,
           LH = HTMLCSS.FONTDATA.lineH * scale, LD = HTMLCSS.FONTDATA.lineD * scale;
 
@@ -55,7 +55,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             W[j] = -HTMLCSS.BIGDIMEN;
           }
           A[i][j] = HTMLCSS.createBox(C[j]);
-          HTMLCSS.Measured(row.data[j-s].toHTML(A[i][j]),A[i][j]);
+          entries.push(row.data[j-s].toHTML(A[i][j]));
+        }
+      }
+      HTMLCSS.MeasureSpans(entries);
+      for (i = 0, m = this.data.length; i < m; i++) {
+        row = this.data[i]; s = (row.type === "mlabeledtr" ? LABEL : 0);
+        for (j = s, M = row.data.length + s; j < M; j++) {
           if (row.data[j-s].isMultiline) {A[i][j].style.width = "100%"}
           if (A[i][j].bbox.h > H[i]) {H[i] = A[i][j].bbox.h}
           if (A[i][j].bbox.d > D[i]) {D[i] = A[i][j].bbox.d}
@@ -419,9 +425,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       span = this.HTMLcreateSpan(span);
       if (this.data[0]) {
         var box = this.data[0].toHTML(span);
-        if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(span,HW,D),span)}
-        else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(span,HW),span)}
-        else {HTMLCSS.Measured(box,span)}
+        if (D != null) {box = this.data[0].HTMLstretchV(span,HW,D)}
+        else if (HW != null) {box = this.data[0].HTMLstretchH(span,HW)}
         span.bbox = box.bbox;
       }
       this.HTMLhandleSpace(span);
