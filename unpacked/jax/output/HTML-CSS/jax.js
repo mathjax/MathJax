@@ -420,9 +420,27 @@
         }
         em = jax.HTMLCSS.em = test.lastChild.firstChild.offsetWidth/60;
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
-        jax.HTMLCSS.scale = scale/100;
-        jax.HTMLCSS.marginScale = (this.msieMarginScaleBug ? scale/100 : 1);
-        jax.HTMLCSS.fontSize = scale+"%";
+        jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
+        jax.HTMLCSS.marginScale = 1;
+      }
+      //
+      //  If we need to determine MSIE margin scaling,
+      //  set the font sizes (which is what causes the problem)
+      //  and then read the scaling factor (again only one reflow needed)
+      //
+      if (this.msieMarginScaleBug) {
+        for (i = 0; i < m; i++) {
+          script = scripts[i]; if (!script.parentNode) continue;
+          test = scripts[i].previousSibling; math = script.MathJax.elementJax;
+          test.lastChild.style.fontSize = math.HTMLCSS.fontSize;
+        }
+        for (i = 0; i < m; i++) {
+          script = scripts[i]; if (!script.parentNode) continue;
+          test = scripts[i].previousSibling; math = script.MathJax.elementJax;
+          var W = test.lastChild.lastChild.offsetWidth,
+              w = test.lastChild.lastChild.firstChild.offsetWidth;
+          math.HTMLCSS.marginScale = (2*w - W ? w/(2*w - W) : 1);
+        }
       }
       //
       //  Remove the test spans used for determining scales
