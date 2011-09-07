@@ -1809,7 +1809,12 @@ MathJax.Hub.Startup = {
   onLoad: function (when) {
     var onload = this.onload =
       MathJax.Callback(function () {MathJax.Hub.Startup.signal.Post("onLoad")});
-    if (window.addEventListener) {window.addEventListener("load",onload,false)}
+    if (document.readyState && document.readyState !== "loading") {return [onload]}
+    if (window.addEventListener) {
+      window.addEventListener("load",onload,false);
+      if (!this.params.noDOMContentEvent)
+        {window.addEventListener("DOMContentLoaded",onload,false)}
+    }
     else if (window.attachEvent) {window.attachEvent("onload",onload)}
     else {window.onload = onload}
     return onload;
