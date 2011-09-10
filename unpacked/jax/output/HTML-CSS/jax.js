@@ -370,7 +370,7 @@
     
     preTranslate: function (state) {
       var scripts = state.jax[this.id], i, m = scripts.length,
-          script, prev, span, div, jax, ex, em, scale;
+          script, prev, span, div, test, jax, ex, em, scale;
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         //
@@ -410,11 +410,11 @@
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         jax = script.MathJax.elementJax; test = script.previousSibling;
-        span = test.previousSibling; if (jax.HTMLCSS.display) {span = span.firstChild}
         ex = jax.HTMLCSS.ex = test.firstChild.offsetWidth/60;
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
-          this.hiddenDiv.appendChild(script.previousSibling);
+          this.hiddenDiv.appendChild(test.previousSibling);
+          this.hiddenDiv.appendChild(test);
           jax.HTMLCSS.isHidden = true;
           ex = jax.HTMLCSS.ex = test.firstChild.offsetWidth/60;
         }
@@ -431,12 +431,12 @@
       if (this.msieMarginScaleBug) {
         for (i = 0; i < m; i++) {
           script = scripts[i]; if (!script.parentNode) continue;
-          test = scripts[i].previousSibling; math = script.MathJax.elementJax;
-          test.lastChild.style.fontSize = math.HTMLCSS.fontSize;
+          jax = script.MathJax.elementJax; test = this.getTestSpan(script);
+          test.lastChild.style.fontSize = jax.HTMLCSS.fontSize;
         }
         for (i = 0; i < m; i++) {
           script = scripts[i]; if (!script.parentNode) continue;
-          test = scripts[i].previousSibling; math = script.MathJax.elementJax;
+          test = this.getTestSpan(script);
           var W = test.lastChild.lastChild.offsetWidth,
               w = test.lastChild.lastChild.firstChild.offsetWidth;
           math.HTMLCSS.marginScale = (2*w - W ? w/(2*w - W) : 1);
@@ -447,7 +447,7 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        test = scripts[i].previousSibling;
+        test = this.getTestSpan(script);
         test.parentNode.removeChild(test);
       }
       //
@@ -456,6 +456,12 @@
       state.HTMLCSSeqn = state.HTMLCSSlast = 0;
       state.HTMLCSSchunk = this.config.EqnChunk;
     },
+    getTestSpan: function (script) {
+      var jax = script.MathJax.elementJax;
+      var span = document.getElementById(jax.inputID+"-Frame");
+      if (jax.HTMLCSS.display) {span = span.parentNode}
+      return span.nextSibling;
+    },
 
     Translate: function (script,state) {
       if (!script.parentNode) return;
@@ -463,8 +469,8 @@
       //  Get the data about the math
       //
       var jax = script.MathJax.elementJax, math = jax.root,
-          div = script.previousSibling,
-          span = (jax.HTMLCSS.display ? div.firstChild : div);
+          span = document.getElementById(jax.inputID+"-Frame"),
+          div = (jax.HTMLCSS.display ? span.parentNode : span);
       //
       //  Set the font metrics
       //
