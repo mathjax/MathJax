@@ -22,11 +22,12 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1.2";
+  var VERSION = "1.1.3";
   
-  var MML = MathJax.ElementJax.mml;
+  var MML = MathJax.ElementJax.mml,
+      TEXDEF = MathJax.InputJax.TeX.Definitions;
   
-  MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions,{
+  TEXDEF.Add({
 
     mathchar0mi: {
       // Lowercase Greek letters
@@ -306,7 +307,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       impliedby:  ['Macro','\\;\\Longleftarrow\\;']
     }
     
-  });
+  },null,true);
   
   var REL = MML.mo.OPTYPES.REL;
 

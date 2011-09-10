@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var MML = MathJax.ElementJax.mml;
   var TEX = MathJax.InputJax.TeX;
@@ -30,8 +30,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var STACKITEM = TEX.Stack.Item;
   
   var COLS = function (W) {return W.join("em ") + "em"};
-  
-  MathJax.Hub.Insert(TEXDEF,{
+
+  TEXDEF.Add({
     macros: {
       mathring:   ['Accent','2DA'],  // or 0x30A
       
@@ -110,7 +110,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       '\\lVert':     ['2225',{texClass:MML.TEXCLASS.OPEN}],
       '\\rVert':     ['2225',{texClass:MML.TEXCLASS.CLOSE}]
     }
-  });
+  },null,true);
     
 
   TEX.Parse.Augment({

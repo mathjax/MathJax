@@ -23,7 +23,10 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var TEX = MathJax.InputJax.TeX; var TEXDEF = TEX.Definitions;
+  var VERSION = "1.1.1";
+
+  var TEX = MathJax.InputJax.TeX,
+      TEXDEF = TEX.Definitions;
 
   /****************************************************/
 
@@ -260,10 +263,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       //  to make them go into the equation namespace stack
       //
       setDef: function (name,value) {
-        TEX.eqnStack.Def(name,value,"macros",this.stack.isGlobal);
+        value.isUser = true;
+        TEX.eqnStack.Def(name,value,"macros",this.stack.env.isGlobal);
         delete this.stack.env.isGlobal;
       },
-      setEnv: function (name,value) {TEX.eqnStack.Def(name,value,"environments")},
+      setEnv: function (name,value) {
+        value.isUser = true;
+        TEX.eqnStack.Def(name,value,"environments")
+      },
 
       //
       //  Implement \global (for \global\let, \global\def and \global\newcommand)

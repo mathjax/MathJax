@@ -292,7 +292,21 @@
   });
   
 
-  var TEXDEF = {};
+  var TEXDEF = {
+    //
+    //  Add new definitions without overriding user-defined ones
+    //
+    Add: function (src,dst,nouser) {
+      if (!dst) {dst = this}
+      for (var id in src) {if (src.hasOwnProperty(id)) {
+        if (typeof src[id] === 'object' && !(src[id] instanceof Array) &&
+           (typeof dst[id] === 'object' || typeof dst[id] === 'function')) 
+             {this.Add(src[id],dst[id],src[id],nouser)}
+          else if (!dst[id] || !dst[id].isUser || !nouser) {dst[id] = src[id]}
+      }}
+      return dst;
+    }
+  };
   var STARTUP = function () {
     MML = MathJax.ElementJax.mml;
     MathJax.Hub.Insert(TEXDEF,{
@@ -910,6 +924,7 @@
       for (var id in MACROS) {if (MACROS.hasOwnProperty(id)) {
         if (typeof(MACROS[id]) === "string") {TEXDEF.macros[id] = ['Macro',MACROS[id]]}
         else {TEXDEF.macros[id] = ["Macro"].concat(MACROS[id])}
+        TEXDEF.macros[id].isUser = true;
       }}
     }
   };
@@ -1772,6 +1787,7 @@
     },
     Macro: function (name,def,argn) {
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
+      TEXDEF.macros[name].isUser = true;
     },
     
     combineRelations: function (mml) {

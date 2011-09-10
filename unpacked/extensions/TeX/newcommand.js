@@ -23,12 +23,12 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1.1";
+  var VERSION = "1.1.2";
   
   var TEX = MathJax.InputJax.TeX;
   var TEXDEF = TEX.Definitions;
   
-  MathJax.Hub.Insert(TEXDEF,{
+  TEXDEF.Add({
     macros: {
       newcommand:       'NewCommand',
       renewcommand:     'NewCommand',
@@ -37,7 +37,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       def:              'MacroDef',
       let:              'Let'
     }
-  })
+  },null,true);
 
   TEX.Parse.Augment({
 
@@ -112,8 +112,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Routines to set the macro and environment definitions
      *  (overridden by begingroup to make localized versions)
      */
-    setDef: function (name,value) {TEXDEF.macros[name] = value},
-    setEnv: function (name,value) {TEXDEF.environment[name] = value},
+    setDef: function (name,value) {value.isUser = true; TEXDEF.macros[name] = value},
+    setEnv: function (name,value) {value.isUser = true; TEXDEF.environment[name] = value},
     
     /*
      *  Get a CS name or give an error
@@ -219,6 +219,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
   TEX.Environment = function (name) {
     TEXDEF.environment[name] = ['BeginEnv','EndEnv'].concat([].slice.call(arguments,1));
+    TEXDEF.environment[name].isUser = true;
   }
 
   MathJax.Hub.Startup.signal.Post("TeX newcommand Ready");
