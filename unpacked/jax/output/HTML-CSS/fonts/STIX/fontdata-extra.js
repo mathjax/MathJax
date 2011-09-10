@@ -37,6 +37,10 @@
   var H = "H", V = "V";
   
   var delim = {
+    0x003D: // equal sign
+    {
+      dir: H, HW: [[.685,GENERAL]], stretch: {rep:[0x003D,GENERAL]}
+    },
     0x219E: // left two-headed arrow
     {
       dir: H, HW: [[.926,GENERAL]], stretch: {left:[0x219E,GENERAL], rep:[0x2212,GENERAL]}
