@@ -22,21 +22,42 @@
  *  limitations under the License.
  */
 
-(function (nMML,HUB,AJAX) {
+(function (nMML,HUB,AJAX,HTML) {
   var MML, isMSIE = HUB.Browser.isMSIE;
   
   nMML.Augment({
     LEFTBUTTON: (isMSIE ? 1 : 0),  // the event.button value for left button
     MENUKEY: "altKey",                         // the event value for alternate context menu
     noContextMenuBug: HUB.Browser.isKonequeror,
-    msieQuirks: (isMSIE && !(document.compatMode === "BackCompat")),
     msieEventBug: HUB.Browser.isIE9,
     
     //
     //  User can configure styles
     //
-    config: {styles: {}}, settings: HUB.config.menuSettings,
-    Startup: function () {return MathJax.Ajax.Styles(this.config.styles)},
+    config: {
+      styles: {
+        ".MathJax_mmlExBox": {
+          display:"block", overflow:"hidden",
+          height:"1px", width:"60ex",
+          padding:0, border: 0, margin: 0
+        }
+      }
+    },
+    settings: HUB.config.menuSettings,
+    
+    Startup: function () {
+      // Used in preTranslate to get scaling factors
+      this.EmExSpan = HTML.Element("span",
+        {style:{position:"absolute","font-size-adjust":"none"}},
+        [
+          ["span",{className:"MathJax_mmlExBox"}],
+          ["span",{className:"MathJax_MathML"}]
+        ]
+      );
+      MML.math(MML.mspace().With({width:"60ex"})).toNativeMML(this.EmExSpan.lastChild);
+      //  Set up styles
+      return MathJax.Ajax.Styles(this.config.styles);
+    },
     Config: function () {
       this.SUPER(arguments).Config.call(this);
       if (this.settings.scale) {this.config.scale = this.settings.scale}
@@ -54,26 +75,96 @@
       }
     },
     
+    preTranslate: function (state) {
+      var scripts = state.jax[this.id], i, m = scripts.length,
+          script, prev, span, test, math, jax, ex, mex, scale;
+      for (i = 0; i < m; i++) {
+        script = scripts[i]; if (!script.parentNode) continue;
+        //
+        //  Remove any existing output
+        //
+        prev = script.previousSibling;
+        if (prev && prev.className === "MathJax_MathML") {prev.parentNode.removeChild(prev)}
+        //
+        //  Add the MathJax span
+        //
+        jax = script.MathJax.elementJax; math = jax.root; jax.NativeMML = {};
+        var type = (math.Get("display") === "block" ? "div" : "span");
+        span = HTML.Element(type,{className:"MathJax_MathML", id:jax.inputID+"-Frame"});
+        if (isMSIE && this.config.showMathMenuMSIE) {
+          HTML.addElement(span,"span",{
+            className:"MathJax_MathContainer",
+            style:{display:"inline-block",position:"relative"}
+          });
+        }
+        script.parentNode.insertBefore(span,script);
+        //
+        //  Add the test span for determining scales
+        //
+        if (!isMSIE) {script.parentNode.insertBefore(this.EmExSpan.cloneNode(true),script)}
+      }
+      //
+      //  Determine the scaling factors for each script
+      //  (this only requires one reflow rather than a reflow for each equation)
+      //
+      for (i = 0; i < m; i++) {
+        script = scripts[i]; if (!script.parentNode) continue;
+        jax = script.MathJax.elementJax;
+        if (!isMSIE) {
+          test = script.previousSibling; span = test.previousSibling;
+          ex = test.firstChild.offsetWidth/60;
+          mex = test.lastChild.offsetWidth/60;
+          if (ex === 0 || ex === "NaN") {
+            // can't read width, so move to hidden div for processing
+            this.hiddenDiv.appendChild(script.previousSibling);
+            jax.NativeMML.isHidden = true;
+            ex = test.firstChild.offsetWidth/60;
+            mex = test.lastChild.offsetWidth/60;
+          }
+          scale = (mex > 1 ? ex/mex : 1) * this.config.scale;
+          scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale));
+        } else {scale = 100}
+        jax.NativeMML.fontSize = scale+"%";
+      }
+      //
+      //  Remove the test spans used for determining scales
+      //
+      if (!isMSIE) {
+        for (i = 0; i < m; i++) {
+          script = scripts[i]; if (!script.parentNode) continue;
+          test = scripts[i].previousSibling;
+          test.parentNode.removeChild(test);
+        }
+      }
+    },
+
     //
     //  Add a SPAN to use as a container, and render the math into it
     //  
     Translate: function (script) {
       if (!script.parentNode) return;
-      var prev = script.previousSibling;
-      if (prev && String(prev.className).match(/^MathJax(_MathML|_Display)?$/))
-        {prev.parentNode.removeChild(prev)}
-      var math = script.MathJax.elementJax.root;
-      var type = (math.Get("display") === "block" ? "div" : "span");
-      var span = document.createElement(type), container = span;
-      span.className = "MathJax_MathML"; span.style.fontSize = this.config.scale+"%";
-      if (isMSIE && this.config.showMathMenuMSIE) {
-        container = MathJax.HTML.addElement(span,"span",{
-          className:"MathJax_MathContainer",
-          style:{display:"inline-block",position:"relative"}
-        });
+      //
+      //  Get the jax and the container and set the size
+      //
+      var jax = script.MathJax.elementJax, math = jax.root;
+      var span = document.getElementById(jax.inputID+"-Frame"), container = span;
+      if (span.firstChild) {container = span.firstChild}
+      span.style.fontSize = jax.NativeMML.fontSize;
+      //
+      //  Convert to MathML (if restarted, remove any partial math)
+      //
+      try {math.toNativeMML(container)} catch (err) {
+        if (err.restart)
+          {while (container.firstChild) {container.removeChild(container.firstChild)}}
+        throw err;
       }
-      math.toNativeMML(container);
-      script.parentNode.insertBefore(span,script);
+      //
+      //  Put it in place
+      //
+      if (jax.NativeMML.isHidden) {script.parentNode.insertBefore(div,script)}
+      //
+      //  Add event handlers
+      //
       if (isMSIE) {
         if (this.config.showMathMenuMSIE) {this.MSIEoverlay(span)}
       } else {
@@ -108,12 +199,12 @@
       var math = span.firstChild;
       span.style.position = "absolute"; // so we can measure height/depth
       var HD = span.scrollHeight, W = span.offsetWidth;
-      var tmp = MathJax.HTML.addElement(span,"img",{src:"about:blank",style:{width:0,height:HD+"px"}});
+      var tmp = HTML.addElement(span,"img",{src:"about:blank",style:{width:0,height:HD+"px"}});
       var D = span.scrollHeight - HD; span.removeChild(tmp);
       span.style.position = "";        // back to normal
       var top, left, isDisplay = (span.parentNode.nodeName.toLowerCase() === "div");
       if (isDisplay && this.quirks) {top = -HD; left = Math.floor(-W/2)} else {top = D-HD, left = -W}
-      MathJax.HTML.addElement(span,"span",{
+      HTML.addElement(span,"span",{
         style:{display:"inline-block", width:0, height:0, position:"relative"}
       },[["span",{
         style:{display:"inline-block", position:"absolute", left:left+"px", top:top+"px",
@@ -466,4 +557,4 @@
       {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
   });
 
-})(MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax);
+})(MathJax.OutputJax.NativeMML, MathJax.Hub, MathJax.Ajax, MathJax.HTML);
