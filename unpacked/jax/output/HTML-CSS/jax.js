@@ -132,7 +132,7 @@
       var n = MathJax.Message.File("Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
       var done = MathJax.Callback({}); // called when font is loaded
       var callback = MathJax.Callback(["loadComplete",this,font,n,done]);
-      AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],1,this.timeout);
+      AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],0,this.timeout);
       return done;
     },
     loadComplete: function (font,n,done,status) {
