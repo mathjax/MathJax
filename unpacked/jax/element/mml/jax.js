@@ -545,7 +545,7 @@ MathJax.ElementJax.mml.Augment({
     setTeXclass: function (prev) {
       this.getValues("lspace","rspace"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
-      this.texClass = this.Get("texClass");
+      this.texClass = this.Get("texClass"); if (this.texClass === MML.TEXCLASS.NONE) {return prev}
       if (prev) {this.prevClass = prev.texClass || MML.TEXCLASS.ORD; this.prevLevel = prev.Get("scriptlevel")}
         else {this.prevClass = MML.TEXCLASS.NONE}
       if (this.texClass === MML.TEXCLASS.BIN &&

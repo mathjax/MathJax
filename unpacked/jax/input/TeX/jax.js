@@ -264,6 +264,11 @@
           this.arraydef.rowlines += " none";
         }
       }
+      if (this.rowspacing) {
+        var rows = this.arraydef.rowspacing.split(/ /);
+        while (rows.length < this.table.length) {rows.push(this.rowspacing)}
+        this.arraydef.rowspacing = rows.join(' ');
+      }
     },
     clearEnv: function () {
       for (var id in this.env) {if (this.env.hasOwnProperty(id)) {delete this.env[id]}}
@@ -276,15 +281,18 @@
 
   STACKITEM.mml = STACKITEM.Subclass({
     type: "mml", isNotStack: TRUE,
-    Push: function () {
-      // embellished are type ORD in TeX (but not MML) so wrap them in TeXAtom
-      for (var i = 0, m = arguments.length; i < m; i++) {
-        if (arguments[i].type !== "mo" && arguments[i].isEmbellished())
-          {arguments[i] = MML.TeXAtom(arguments[i]).With({isEmbellishedWrapper: TRUE})}
-      }
-      this.data.push.apply(this.data,arguments);
-    },
     Add: function () {this.data.push.apply(this.data,arguments); return this}
+  });
+  
+  STACKITEM.fn = STACKITEM.Subclass({
+    type: "fn",
+    checkItem: function (item) {
+      if (this.data[0]) {
+        if (item.type !== "mml") {return [this.data[0],item]}
+        return [this.data[0],MML.mo(MML.entity("#x2061")).With({texClass:MML.TEXCLASS.NONE}),item];
+      }
+      return this.SUPER(arguments).checkItem.apply(this,arguments);
+    }
   });
   
 
@@ -635,43 +643,43 @@
         huge:              ['SetSize',2.07],
         Huge:              ['SetSize',2.49],
         
-        arcsin:            ['NamedOp',0],
-        arccos:            ['NamedOp',0],
-        arctan:            ['NamedOp',0],
-        arg:               ['NamedOp',0],
-        cos:               ['NamedOp',0],
-        cosh:              ['NamedOp',0],
-        cot:               ['NamedOp',0],
-        coth:              ['NamedOp',0],
-        csc:               ['NamedOp',0],
-        deg:               ['NamedOp',0],
+        arcsin:            ['NamedFn'],
+        arccos:            ['NamedFn'],
+        arctan:            ['NamedFn'],
+        arg:               ['NamedFn'],
+        cos:               ['NamedFn'],
+        cosh:              ['NamedFn'],
+        cot:               ['NamedFn'],
+        coth:              ['NamedFn'],
+        csc:               ['NamedFn'],
+        deg:               ['NamedFn'],
         det:                'NamedOp',
-        dim:               ['NamedOp',0],
-        exp:               ['NamedOp',0],
+        dim:               ['NamedFn'],
+        exp:               ['NamedFn'],
         gcd:                'NamedOp',
-        hom:               ['NamedOp',0],
+        hom:               ['NamedFn'],
         inf:                'NamedOp',
-        ker:               ['NamedOp',0],
-        lg:                ['NamedOp',0],
+        ker:               ['NamedFn'],
+        lg:                ['NamedFn'],
         lim:                'NamedOp',
-        liminf:            ['NamedOp',null,'lim&thinsp;inf'],
-        limsup:            ['NamedOp',null,'lim&thinsp;sup'],
-        ln:                ['NamedOp',0],
-        log:               ['NamedOp',0],
+        liminf:            ['NamedOp','lim&thinsp;inf'],
+        limsup:            ['NamedOp','lim&thinsp;sup'],
+        ln:                ['NamedFn'],
+        log:               ['NamedFn'],
         max:                'NamedOp',
         min:                'NamedOp',
         Pr:                 'NamedOp',
-        sec:               ['NamedOp',0],
-        sin:               ['NamedOp',0],
-        sinh:              ['NamedOp',0],
+        sec:               ['NamedFn'],
+        sin:               ['NamedFn'],
+        sinh:              ['NamedFn'],
         sup:                'NamedOp',
-        tan:               ['NamedOp',0],
-        tanh:              ['NamedOp',0],
+        tan:               ['NamedFn'],
+        tanh:              ['NamedFn'],
         
         limits:            ['Limits',1],
         nolimits:          ['Limits',0],
 
-        overline:            ['UnderOver','203E'],
+        overline:            ['UnderOver','00AF'],
         underline:           ['UnderOver','005F'],
         overbrace:           ['UnderOver','23DE',1],
         underbrace:          ['UnderOver','23DF',1],
@@ -713,7 +721,7 @@
         moveright:          'MoveLeftRight',
 
         ',':               ['Spacer',MML.LENGTH.THINMATHSPACE],
-        ':':               ['Spacer',MML.LENGTH.THINMATHSPACE],  // for LaTeX
+        ':':               ['Spacer',MML.LENGTH.MEDIUMMATHSPACE],  // for LaTeX
         '>':               ['Spacer',MML.LENGTH.MEDIUMMATHSPACE],
         ';':               ['Spacer',MML.LENGTH.THICKMATHSPACE],
         '!':               ['Spacer',MML.LENGTH.NEGATIVETHINMATHSPACE],
@@ -795,7 +803,7 @@
         eqalign:           ['Matrix',null,null,"right left",MML.LENGTH.THICKMATHSPACE,".5em",'D'],
         displaylines:      ['Matrix',null,null,"center",null,".5em",'D'],
         cr:                 'Cr',
-        '\\':               'Cr',
+        '\\':               'CrLaTeX',
         newline:            'Cr',
         hline:             ['HLine','solid'],
         hdashline:         ['HLine','dashed'],
@@ -804,9 +812,9 @@
         leqalignno:        ['Matrix',null,null,"right left right",MML.LENGTH.THICKMATHSPACE+" 3em",".5em",'D'],
 
         //  TeX substitution macros
-        bmod:              ['Macro','\\mathbin{\\rm mod}'],
-        pmod:              ['Macro','\\pod{{\\rm mod}\\kern 6mu #1}',1],
-        mod:               ['Macro','\\mathchoice{\\kern18mu}{\\kern12mu}{\\kern12mu}{\\kern12mu}{\\rm mod}\\,\\,#1',1],
+        bmod:              ['Macro','\\mathbin{\\mmlToken{mo}{mod}}'],
+        pmod:              ['Macro','\\pod{\\mmlToken{mi}{mod}\\kern 6mu #1}',1],
+        mod:               ['Macro','\\mathchoice{\\kern18mu}{\\kern12mu}{\\kern12mu}{\\kern12mu}\\mmlToken{mi}{mod}\\,\\,#1',1],
         pod:               ['Macro','\\mathchoice{\\kern18mu}{\\kern8mu}{\\kern8mu}{\\kern8mu}(#1)',1],
         iff:               ['Macro','\\;\\Longleftrightarrow\\;'],
         skew:              ['Macro','{{#2{#3\\mkern#1mu}\\mkern-#1mu}{}}',3],
@@ -859,6 +867,8 @@
         cssId:             ['Extension','HTML'],
 //      bbox:              ['Extension','bbox'],
     
+        mmlToken:           'MmlToken',
+
         require:            'Require'
 
       },
@@ -1057,7 +1067,7 @@
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
       sup = this.mmlToken(MML.mo(MML.chars(sup)).With({isPrime: TRUE, variantForm: TEX.isSTIX}));
-      this.Push(MML.msubsup(base,null,sup));
+      this.Push(MML.msup(base,sup));
     },
     
     /*
@@ -1122,13 +1132,17 @@
       this.Push(STACKITEM[name.substr(1)]().With({delim: this.GetDelimiter(name)}));
     },
     
-    NamedOp: function (name,limits,id) {
-      var underover = (limits != null && limits === 0 ? FALSE : TRUE);
-      if (!id) {id = name.substr(1)}; limits = ((limits || limits == null) ? TRUE : FALSE);
+    NamedFn: function (name,id) {
+      if (!id) {id = name.substr(1)};
+      var mml = MML.mi(id).With({texClass: MML.TEXCLASS.OP});
+      this.Push(STACKITEM.fn(this.mmlToken(mml)));
+    },
+    NamedOp: function (name,id) {
+      if (!id) {id = name.substr(1)};
       id = id.replace(/&thinsp;/,String.fromCharCode(0x2006));
       var mml = MML.mo(id).With({
-        movablelimits: limits,
-        movesupsub: underover,
+        movablelimits: TRUE,
+        movesupsub: TRUE,
         form: MML.FORM.PREFIX,
         texClass: MML.TEXCLASS.OP
       });
@@ -1162,7 +1176,9 @@
     },
 
     Sqrt: function (name) {
-      var n = this.GetBrackets(name), mml = this.ParseArg(name);
+      var n = this.GetBrackets(name), arg = this.GetArgument(name);
+      if (arg === "\\frac") {arg += "{"+this.GetArgument(arg)+"}{"+this.GetArgument(arg)+"}"}
+      var mml = TEX.Parse(arg,this.stack.env).mml();
       if (n == "") {mml = MML.msqrt.apply(MML,mml.array())}
               else {mml = MML.mroot(mml,this.parseRoot(n))}
       this.Push(mml);
@@ -1198,7 +1214,7 @@
       var def = {accent: true}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       var mml = this.mmlToken(MML.mo(MML.entity("#x"+accent)).With(def));
       mml.stretchy = (stretchy ? TRUE : FALSE);
-      this.Push(MML.munderover(c,null,mml).With({accent: TRUE}));
+      this.Push(MML.TeXAtom(MML.munderover(c,null,mml).With({accent: TRUE})));
     },
     
     UnderOver: function (name,c,stack) {
@@ -1209,16 +1225,16 @@
       if (stack) {mml.movesupsub = TRUE}
       mml.data[mml[pos]] = 
         this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy: TRUE, accent: (pos == "under")}));
-      this.Push(mml);
+      this.Push(MML.TeXAtom(mml));
     },
     
     Overset: function (name) {
       var top = this.ParseArg(name), base = this.ParseArg(name);
-      this.Push(MML.munderover(base,null,top));
+      this.Push(MML.mover(base,top));
     },
     Underset: function (name) {
       var bot = this.ParseArg(name), base = this.ParseArg(name);
-      this.Push(MML.munderover(base,bot,null));
+      this.Push(MML.munder(base,bot));
     },
     
     TeXAtom: function (name,mclass) {
@@ -1228,16 +1244,28 @@
         var arg = this.GetArgument(name);
         var match = arg.match(/^\s*\\rm\s+([a-zA-Z0-9 ]+)$/);
         if (match) {
-          mml = this.mmlToken(MML.mo(match[1]).With({
-            movablelimits: TRUE,  movesupsub: TRUE,
-            mathvariant: MML.VARIANT.NORMAL,
-            form: MML.FORM.PREFIX,
-            texClass: MML.TEXCLASS.OP
-          }));
-          mml.useMMLspacing &= ~mml.SPACE_ATTR.form;  // don't count this explicit form setting
-        } else {mml = MML.TeXAtom(TEX.Parse(arg,this.stack.env).mml()).With(def)}
+          def.mathvariant = MML.VARIANT.NORMAL;
+          mml = STACKITEM.fn(this.mmlToken(MML.mi(match[1]).With(def)));
+        } else {
+          mml = STACKITEM.fn(MML.TeXAtom(TEX.Parse(arg,this.stack.env).mml()).With(def));
+        }
       } else {mml = MML.TeXAtom(this.ParseArg(name)).With(def)}
       this.Push(mml);
+    },
+    
+    MmlToken: function (name) {
+      var type = this.GetArgument(name),
+          attr = this.GetBrackets(name).replace(/^\s+/,""),
+          data = this.GetArgument(name),
+          def = {}, match;
+      if (!MML[type] || !MML[type].prototype.isToken) {TEX.Error(type+" is not a token element")}
+      while (attr !== "") {
+        match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ]*)\s*/i);
+        if (!match) {TEX.Error("Invalid MathML attribute: "+attr)}
+        def[match[1]] = match[2].replace(/^(['"])(.*)\1$/,"$2");
+        attr = attr.substr(match[0].length);
+      }
+      this.Push(this.mmlToken(MML[type](data).With(def)));
     },
     
     Strut: function (name) {
@@ -1245,7 +1273,7 @@
     },
     
     Phantom: function (name,v,h) {
-      var box = MML.mphantom(this.ParseArg(name));
+      var box = MML.TeXAtom(MML.mphantom(this.ParseArg(name)));
       if (v || h) {
         box = MML.mpadded(box);
         if (h) {box.height = box.depth = 0}
@@ -1256,7 +1284,7 @@
     
     Smash: function (name) {
       var bt = this.trimSpaces(this.GetBrackets(name));
-      var smash = MML.mpadded(this.ParseArg(name));
+      var smash = MML.TeXAtom(MML.mpadded(this.ParseArg(name)));
       switch (bt) {
         case "b": smash.depth = 0; break;
         case "t": smash.height = 0; break;
@@ -1266,7 +1294,7 @@
     },
     
     Lap: function (name) {
-      var mml = MML.mpadded(this.ParseArg(name)).With({width: 0});
+      var mml = MML.TeXAtom(MML.mpadded(this.ParseArg(name)).With({width: 0}));
       if (name === "\\llap") {mml.lspace = "-1 width"}
       this.Push(mml);
     },
@@ -1302,9 +1330,9 @@
           d = this.GetDimen(name);
       var mml, def = {width:w, height:h, depth:d};
       if (style !== 'blank') {
-        mml = MML.mpadded(MML.mrow()).With(def);
         if (parseFloat(w) && parseFloat(h)+parseFloat(d))
-          {mml = MML.mstyle(mml).With({mathbackground:(this.stack.env.color || "black")})}
+          {def.mathbackground = (this.stack.env.color || "black")}
+        mml = MML.mpadded(MML.mrow()).With(def);
       } else {
         mml = MML.mspace().With(def);
       }
@@ -1386,10 +1414,43 @@
       this.Push(STACKITEM.cell().With({isCR: TRUE, name: name}));
     },
     
+    CrLaTeX: function (name) {
+      var n = this.GetBrackets(name).replace(/ /g,"");
+      if (n && !n.match(/^(((\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/))
+        {TEX.Error("Bracket argument to "+name+" must be a dimension")}
+      this.Push(STACKITEM.cell().With({isCR: TRUE, name: name}));
+      var top = this.stack.Top();
+      if (top.isa(STACKITEM.array)) {
+        if (n && top.arraydef.rowspacing) {
+          var rows = top.arraydef.rowspacing.split(/ /);
+          if (!top.rowspacing) {top.rowspacing = this.dimen2em(rows[0])}
+          while (rows.length < top.table.length) {rows.push(top.rowspacing)}
+          rows[top.table.length-1] = (top.rowspacing+this.dimen2em(n)) + "em";
+          top.arraydef.rowspacing = rows.join(' ');
+        }
+      } else {
+        // force line break
+      }
+    },
+    emPerInch: 7.2,
+    dimen2em: function (dim) {
+      var match = dim.match(/^((?:\.\d+|\d+(?:\.\d*)?))(pt|em|ex|mu|pc|in|mm|cm)/);
+      var m = parseFloat(match[1]||"1"), unit = match[2];
+      if (unit === "em") {return m}
+      if (unit === "ex") {return m * .43}
+      if (unit === "pt") {return m / 10}                    // 10 pt to an em
+      if (unit === "pc") {return m * 1.2}                   // 12 pt to a pc
+      if (unit === "in") {return m * this.emPerInch}
+      if (unit === "cm") {return m * this.emPerInch / 2.54} // 2.54 cm to an inch
+      if (unit === "mm") {return m * this.emPerInch / 25.4} // 10 mm to a cm
+      if (unit === "mu") {return m / 18}
+      return 0;
+    },
+    
     HLine: function (name,style) {
       if (style == null) {style = "solid"}
       var top = this.stack.Top();
-      if (top.type !== "array" || top.data.length) {TEX.Error("Misplaced "+name)}
+      if (!top.isa(STACKITEM.array) || top.data.length) {TEX.Error("Misplaced "+name)}
       if (top.table.length == 0) {
         top.arraydef.frame = style;
       } else {
@@ -1738,15 +1799,20 @@
     },
     
     combineRelations: function (mml) {
-      for (var i = 0, m = mml.data.length; i < m; i++) {
+      var i, m, m1, m2;
+      for (i = 0, m = mml.data.length; i < m; i++) {
         if (mml.data[i]) {
           if (mml.isa(MML.mrow)) {
-            while (i+1 < m && mml.data[i+1] &&
-                   mml.data[i].isa(MML.mo) && mml.data[i+1].isa(MML.mo) &&
-                   mml.data[i].Get("texClass") === MML.TEXCLASS.REL &&
-                   mml.data[i+1].Get("texClass") === MML.TEXCLASS.REL) {
-              mml.data[i].Append.apply(mml.data[i],mml.data[i+1].data);
-              mml.data.splice(i+1,1); m--;
+            while (i+1 < m && (m1 = mml.data[i]) && (m2 = mml.data[i+1]) &&
+                   m1.isa(MML.mo) && m2.isa(MML.mo) &&
+                   m1.Get("texClass") === MML.TEXCLASS.REL &&
+                   m2.Get("texClass") === MML.TEXCLASS.REL) {
+              if (m1.variantForm == m2.variantForm) {
+                m1.Append.apply(m1,m2.data);
+                mml.data.splice(i+1,1); m--;
+              } else {
+                m1.rspace = m2.lspace = "0pt"; i++;
+              }
             }
           }
           if (!mml.data[i].isToken) {this.combineRelations(mml.data[i])}

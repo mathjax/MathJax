@@ -83,9 +83,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     Unicode: function(name) {
       var HD = this.GetBrackets(name), font;
       if (HD) {
-        HD = HD.replace(/ /g,"");
-        if (HD.match(/^(\d+(\.\d*)?|\.\d+),(\d+(\.\d*)?|\.\d+)$/))
-          {HD = HD.split(/,/); font = this.GetBrackets(name)} else {font = HD; HD = null}
+        if (HD.replace(/ /g,"").match(/^(\d+(\.\d*)?|\.\d+),(\d+(\.\d*)?|\.\d+)$/))
+          {HD = HD.replace(/ /g,"").split(/,/); font = this.GetBrackets(name)}
+            else {font = HD; HD = null}
       }
       var n = this.trimSpaces(this.GetArgument(name)),
           N = parseInt(n.match(/^x/) ? "0"+n : n);
@@ -96,7 +96,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       }
       var variant = this.stack.env.font, def = {};
       if (font) {
-        def.fontfamily = font;
+        def.fontfamily = font.replace(/"/g,"'");
         if (variant) {
           if (variant.match(/bold/))   {def.fontweight = "bold"}
           if (variant.match(/italic/)) {def.fontstyle = "italic"}

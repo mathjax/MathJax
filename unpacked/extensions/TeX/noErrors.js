@@ -67,13 +67,12 @@
  */
 
 (function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var CONFIG = MathJax.Hub.CombineConfig("TeX.noErrors",{
     multiLine: true,
     inlineDelimiters: ["",""],     // or use ["$","$"] or ["\\(","\\)"]
     style: {
-      "font-family": "serif",
       "font-size":   "80%",
       "text-align":  "left",
       "color":       "black",
