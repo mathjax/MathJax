@@ -242,7 +242,12 @@
         },
         
         ".MathJax .MathJax_HitBox": {
-          cursor: "text"
+          cursor: "text",
+          background: "white",
+          opacity:0, filter:"alpha(opacity=0)"
+        },
+        ".MathJax .MathJax_HitBox *": {
+          filter: "none", opacity:1, background:"transparent" // for IE
         },
 
         "#MathJax_Tooltip": {
@@ -251,7 +256,7 @@
           display: "none"
         },
         "#MathJax_Tooltip *": {
-          filter: "none", background:"transparent" // for IE
+          filter: "none", opacity:1, background:"transparent" // for IE
         }
 
       }
@@ -362,6 +367,10 @@
         [["span",{style: {display:"inline-block", width:"5em"}}]]);
       this.marginMove = HTMLCSS.addElement(this.marginCheck,"span",
         {style: {display:"inline-block", width:"5em", marginLeft:"-5em"}});
+        
+      // Used in getLinebreakWidth
+      this.linebreakSpan = HTMLCSS.Element("span",null,
+        [["hr",{style: {width:"100%", size:1, padding:0, border:0, margin:0}}]]);
 
       // Set up styles and preload web fonts
       return AJAX.Styles(this.config.styles,["PreloadWebFonts",this]);
@@ -410,6 +419,7 @@
       script.parentNode.insertBefore(frame,script); var isHidden;
       try {this.getScales(span); isHidden = (this.em === 0 || String(this.em) === "NaN")} catch (err) {isHidden = true}
       if (isHidden) {this.hiddenDiv.appendChild(frame); this.getScales(span)}
+      this.getLinebreakWidth(frame);
       this.initImg(span);
       this.initHTML(math,span);
       math.setTeXclass();
@@ -492,6 +502,21 @@
       var span = jax.SourceElement(); if (!span) return;
       span = span.previousSibling; if (!span) return;
       if (span.className.match(/^MathJax/)) {span.parentNode.removeChild(span)}
+    },
+    
+    getLinebreakWidth: function (div) {
+      if (this.config.linebreaks.automatic) {
+        var width = this.config.linebreaks.width, maxwidth;
+        if (width.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/)) {
+          div.parentNode.insertBefore(this.linebreakSpan,div);
+          maxwidth = this.linebreakSpan.firstChild.offsetWidth / this.em;
+          this.linebreakSpan.parentNode.removeChild(this.linebreakSpan);
+          width = width.replace(/\s*container\s*/,"");
+        } else {maxwidth = document.body.offsetWidth / this.em}
+        this.linebreakWidth = (width === "" ? maxwidth : this.length2em(width,maxwidth));
+      } else {
+        this.linebreakWidth = 100000;  // a big width, so no implicit line breaks
+      }
     },
 
     getScales: function (span) {
@@ -1238,8 +1263,6 @@
 
     MML.mbase.Augment({
       toHTML: function (span) {
-	var split = this.HTMLlineBreaks();
-	if (split.length > 2) {return this.toHTMLmultiline(span,split)}
 	span = this.HTMLcreateSpan(span); if (this.type != "mrow") {span = this.HTMLhandleSize(span)}
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span)}}
@@ -1247,26 +1270,13 @@
 	var h = span.bbox.h, d = span.bbox.d;
 	for (i = 0, m = stretchy.length; i < m; i++) {stretchy[i].HTMLstretchV(span,h,d)}
 	if (stretchy.length) {this.HTMLcomputeBBox(span,true)}
+        if (this.HTMLlineBreaks(span)) {span = this.HTMLmultiline(span)}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
 	return span;
       },
-      HTMLlineBreaks: function () {
-	var split = [[0,this]];
-	for (var i = 0, m = this.data.length; i < m; i++) {
-	  if (this.data[i]) {
-	    var lb = this.data[i].lineBreak();
-	    if (lb !== "none") {
-	      var j = (lb === "after" ? i+1 : i);
-	      if (split.length === 0 || split[split.length-1] !== j)
-		{split.push([j,this.data[i]])} else {split[split.length-1] = [j,this.data[i]]}
-	    }
-	  }
-	}
-	split.push([this.data.length,split[split.length-1][1]]);
-	return split;
-      },
-      toHTMLmultiline: function (span) {MML.mbase.HTMLautoloadFile("multiline")},
+      HTMLlineBreaks: function () {return false},
+      HTMLmultiline: function () {MML.mbase.HTMLautoloadFile("multiline")},
       HTMLcomputeBBox: function (span,full,i,m) {
 	if (i == null) {i = 0}; if (m == null) {m = this.data.length}
 	var BBOX = span.bbox = {}, stretchy = [];
@@ -1281,7 +1291,8 @@
       },
       HTMLcombineBBoxes: function (core,BBOX) {
 	if (BBOX.w == null) {this.HTMLemptyBBox(BBOX)}
-	var child = core.HTMLspanElement(); if (!child || !child.bbox) return;
+	var child = (core.bbox ? core : core.HTMLspanElement());
+        if (!child || !child.bbox) return;
 	var bbox = child.bbox;
 	if (bbox.d > BBOX.d) {BBOX.d = bbox.d}
 	if (bbox.h > BBOX.h) {BBOX.h = bbox.h}
@@ -1410,7 +1421,9 @@
 		   marginLeft: HTMLCSS.Em(lW), marginRight: HTMLCSS.Em(rW)}
 	  });
           HTMLCSS.setBorders(frame,borders);
+          if (span.bbox.width) {frame.style.width = span.bbox.width; frame.style.marginRight = "-"+span.bbox.width}
 	  if (HTMLCSS.msieInlineBlockAlignBug) {
+            // FIXME:  handle variable width background
 	    frame.style.position = "relative"; frame.style.width = frame.style.height = 0;
 	    frame.style.verticalAlign = frame.style.marginLeft = frame.style.marginRight = "";
             frame.style.border = frame.style.padding = "";
@@ -1763,6 +1776,11 @@
     });
 
     MML.mrow.Augment({
+      HTMLlineBreaks: function (span) {
+        if (!this.parent.linebreakContainer) {return false}
+        return (HTMLCSS.config.linebreaks.automatic &&
+                span.bbox.w > HTMLCSS.linebreakWidth) || this.hasNewline();
+      },
       HTMLstretchH: function (box,w) {
 	this.HTMLremoveColor();
 	var span = this.HTMLspanElement();
@@ -1782,30 +1800,20 @@
     });
 
     MML.mstyle.Augment({
-      toHTML: function (span) {
+      toHTML: function (span,HW,D) {
+	span = this.HTMLcreateSpan(span);
 	if (this.data[0] != null) {
-          if (this.style) {
-            span = this.HTMLcreateSpan(span);
-            span.bbox = this.data[0].toHTML(span).bbox;
-          } else {
-            span = this.data[0].toHTML(span);
-	    this.spanID = this.data[0].spanID;
-          }
-	  this.HTMLhandleSpace(span);
-	  this.HTMLhandleColor(span);
+	  var SPAN = this.data[0].toHTML(span);
+	  if (D != null) {this.data[0].HTMLstretchV(span,HW,D)}
+	  else if (HW != null) {this.data[0].HTMLstretchH(span,HW)}
+          span.bbox = SPAN.bbox;
 	}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
 	return span;
       },
-      HTMLspanElement: function () {
-        if (this.style) {return this.SUPER(arguments).HTMLspanElement.call(this)}
-        return (this.data[0] != null ? this.data[0].HTMLspanElement() : null);
-      },
-      HTMLstretchH: function (box,w) {
-	return (this.data[0] != null ? this.data[0].HTMLstretchH(box,w) : box);
-      },
-      HTMLstretchV: function (box,h,d) {
-	return (this.data[0] != null ? this.data[0].HTMLstretchV(box,h,d) : box);
-      }
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
     });
 
     MML.mfrac.Augment({
@@ -2140,7 +2148,8 @@
     
     MML.math.Augment({
       toHTML: function (span,node) {
-	var alttext = this.Get("alttext"); if (alttext) {node.setAttribute("aria-label",alttext)}
+	var alttext = this.Get("alttext");
+        if (alttext && alttext !== "") {node.setAttribute("aria-label",alttext)}
 	var nobr = HTMLCSS.addElement(span,"nobr");
 	span = this.HTMLcreateSpan(nobr);
 	var stack = HTMLCSS.createStack(span), box = HTMLCSS.createBox(stack), math;

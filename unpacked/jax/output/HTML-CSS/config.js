@@ -24,7 +24,7 @@
 
 MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   id: "HTML-CSS",
-  version: "1.1.9",
+  version: "1.1.10",
   directory: MathJax.OutputJax.directory + "/HTML-CSS",
   extensionDir: MathJax.OutputJax.extensionDir + "/HTML-CSS",
   autoloadDir: MathJax.OutputJax.directory + "/HTML-CSS/autoload",
@@ -38,6 +38,16 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
     webFont: "TeX",
     imageFont: "TeX",
     undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",
+    
+    linebreaks: {
+      automatic: false,   // when false, only process linebreak="newline",
+                          // when true, insert line breaks automatically in long expressions.
+
+      width: "container" // maximum width of a line for automatic line breaks (e.g. "30em").
+                         // use "container" to compute size from containing element,
+                         // use "nn% container" for a portion of the container,
+                         // use "nn%" for a portion of the window size
+    },
     
     showMathMenu: true,
     
@@ -58,7 +68,7 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
       },
       
       ".MathJax_Preview": {color: "#888888"},
-      
+
       "#MathJax_Tooltip": {
         "background-color": "InfoBackground", color: "InfoText",
         border: "1px solid black",
