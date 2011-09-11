@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/element/mml/optable/LetterlikeSymbols.js
+ *  /MathJax/jax/element/mml/optable/MiscSymbolsAndArrows.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *
@@ -12,5 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{prefix:{"\u2145":c.ORD21,"\u2146":[2,0,b.ORD]}}});MathJax.Ajax.loadComplete(a.optableDir+"/LetterlikeSymbols.js")})(MathJax.ElementJax.mml);
+(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{infix:{"\u2B45":c.RELSTRETCH,"\u2B46":c.RELSTRETCH}}});MathJax.Ajax.loadComplete(a.optableDir+"/MiscSymbolsAndArrows.js")})(MathJax.ElementJax.mml);
 

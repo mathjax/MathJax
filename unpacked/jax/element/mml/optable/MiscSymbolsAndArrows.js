@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  MathJax/jax/output/HTML-CSS/optable/SpacingModLetters.js
+ *  MathJax/jax/output/HTML-CSS/optable/MiscSymbolsAndArrows.js
  *
  *  Copyright (c) 2010 Design Science, Inc.
  *
@@ -24,15 +24,13 @@
 
   MathJax.Hub.Insert(MML.mo.prototype,{
     OPTABLE: {
-      postfix: {
-        '\u02CD': MO.WIDEACCENT, // modifier letter low macron
-        '\u02DA': MO.ACCENT,   // ring above
-        '\u02DD': MO.ACCENT,   // double acute accent
-        '\u02F7': MO.WIDEACCENT  // modifier letter low tilde
+      infix: {
+        '\u2B45': MO.RELSTRETCH, // leftwards quadruple arrow
+        '\u2B46': MO.RELSTRETCH  // rightwards quadruple arrow
       }
     }
   });
 
-  MathJax.Ajax.loadComplete(MML.optableDir+"/SpacingModLetters.js");
+  MathJax.Ajax.loadComplete(MML.optableDir+"/MiscSymbolsAndArrows.js");
 
 })(MathJax.ElementJax.mml);

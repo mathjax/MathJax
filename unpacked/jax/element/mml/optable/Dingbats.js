@@ -24,8 +24,11 @@
 
   MathJax.Hub.Insert(MML.mo.prototype,{
     OPTABLE: {
-      infix: {
-        '\u2713': MO.WIDEACCENT  // check mark
+      prefix: {
+        '\u2772': MO.OPEN      // light left tortoise shell bracket ornament
+      },
+      postfix: {
+        '\u2773': MO.CLOSE     // light right tortoise shell bracket ornament
       }
     }
   });

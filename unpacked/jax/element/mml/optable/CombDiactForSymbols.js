@@ -25,7 +25,8 @@
   MathJax.Hub.Insert(MML.mo.prototype,{
     OPTABLE: {
       postfix: {
-        '\u20DB': MO.ACCENT    // combining three dots above
+        '\u20DB': MO.ACCENT,   // combining three dots above
+        '\u20DC': MO.ACCENT    // combining four dots above
       }
     }
   });
