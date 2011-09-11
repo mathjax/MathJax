@@ -292,7 +292,21 @@
   });
   
 
-  var TEXDEF = {};
+  var TEXDEF = {
+    //
+    //  Add new definitions without overriding user-defined ones
+    //
+    Add: function (src,dst,nouser) {
+      if (!dst) {dst = this}
+      for (var id in src) {if (src.hasOwnProperty(id)) {
+        if (typeof src[id] === 'object' && !(src[id] instanceof Array) &&
+           (typeof dst[id] === 'object' || typeof dst[id] === 'function')) 
+             {this.Add(src[id],dst[id],src[id],nouser)}
+          else if (!dst[id] || !dst[id].isUser || !nouser) {dst[id] = src[id]}
+      }}
+      return dst;
+    }
+  };
   var STARTUP = function () {
     MML = MathJax.ElementJax.mml;
     HUB.Insert(TEXDEF,{
@@ -842,7 +856,9 @@
         newcommand:        ['Extension','newcommand'],
         renewcommand:      ['Extension','newcommand'],
         newenvironment:    ['Extension','newcommand'],
+        renewenvironment:  ['Extension','newcommand'],
         def:               ['Extension','newcommand'],
+        let:               ['Extension','newcommand'],
         
         verb:              ['Extension','verb'],
         
@@ -910,6 +926,7 @@
       for (var id in MACROS) {if (MACROS.hasOwnProperty(id)) {
         if (typeof(MACROS[id]) === "string") {TEXDEF.macros[id] = ['Macro',MACROS[id]]}
         else {TEXDEF.macros[id] = ["Macro"].concat(MACROS[id])}
+        TEXDEF.macros[id].isUser = true;
       }}
     }
   };
@@ -952,34 +969,60 @@
      *  Lookup a control-sequence and process it
      */
     ControlSequence: function (c) {
-      var name = this.GetCS(), mchar, def;
-      if (TEXDEF.macros[name]) {                                  // javascript macro
-        var macro = TEXDEF.macros[name];
+      var name = this.GetCS(), macro = this.csFindMacro(name);
+      if (macro) {
         if (!(macro instanceof Array)) {macro = [macro]}
         var fn = macro[0]; if (!(fn instanceof Function)) {fn = this[fn]}
-        fn.apply(this,["\\"+name].concat(macro.slice(1)));
-      } else if (TEXDEF.mathchar0mi[name]) {                      // normal mathchar (mi)
-        mchar = TEXDEF.mathchar0mi[name]; def = {mathvariant: MML.VARIANT.ITALIC};
-        if (mchar instanceof Array) {def = mchar[1]; mchar = mchar[0]}
-        this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
-      } else if (TEXDEF.mathchar0mo[name]) {                      // normal mathchar (mo)
-        mchar = TEXDEF.mathchar0mo[name]; def = {stretchy: FALSE};
-        if (mchar instanceof Array) {def = mchar[1]; def.stretchy = FALSE; mchar = mchar[0]}
-        this.Push(this.mmlToken(MML.mo(MML.entity("#x"+mchar)).With(def)));
-      } else if (TEXDEF.mathchar7[name]) {                        // mathchar in current family
-        mchar = TEXDEF.mathchar7[name]; def = {mathvariant: MML.VARIANT.NORMAL};
-        if (mchar instanceof Array) {def = mchar[1]; mchar = mchar[0]}
-        if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-        this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
-      } else if (TEXDEF.delimiter["\\"+name] != null) {           // delimiter
-        var delim = TEXDEF.delimiter["\\"+name]; def = {};
-        if (delim instanceof Array) {def = delim[1]; delim = delim[0]}
-        if (delim.length === 4) {delim = MML.entity('#x'+delim)} else {delim = MML.chars(delim)}
-        this.Push(this.mmlToken(MML.mo(delim).With({fence: FALSE, stretchy: FALSE}).With(def)));
-      } else {                                                    // error
-        this.csUndefined("\\"+name);
-      }
+        fn.apply(this,[c+name].concat(macro.slice(1)));
+      } else if (TEXDEF.mathchar0mi[name])            {this.csMathchar0mi(name,TEXDEF.mathchar0mi[name])}
+        else if (TEXDEF.mathchar0mo[name])            {this.csMathchar0mo(name,TEXDEF.mathchar0mo[name])}
+        else if (TEXDEF.mathchar7[name])              {this.csMathchar7(name,TEXDEF.mathchar7[name])}
+        else if (TEXDEF.delimiter["\\"+name] != null) {this.csDelimiter(name,TEXDEF.delimiter["\\"+name])}
+        else                                          {this.csUndefined(c+name)}
     },
+    //
+    //  Look up a macro in the macros list
+    //  (overridden in begingroup extension)
+    //
+    csFindMacro: function (name) {return TEXDEF.macros[name]},
+    //
+    //  Handle normal mathchar (as an mi)
+    //
+    csMathchar0mi: function (name,mchar) {
+      var def = {mathvariant: MML.VARIANT.ITALIC};
+      if (mchar instanceof Array) {def = mchar[1]; mchar = mchar[0]}
+      this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
+    },
+    //
+    //  Handle normal mathchar (as an m0)
+    //
+    csMathchar0mo: function (name,mchar) {
+      var def = {stretchy: false};
+      if (mchar instanceof Array) {def = mchar[1]; def.stretchy = false; mchar = mchar[0]}
+      this.Push(this.mmlToken(MML.mo(MML.entity("#x"+mchar)).With(def)));
+    },
+    //
+    //  Handle mathchar in current family
+    //
+    csMathchar7: function (name,mchar) {
+      var def = {mathvariant: MML.VARIANT.NORMAL};
+      if (mchar instanceof Array) {def = mchar[1]; mchar = mchar[0]}
+      if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
+      this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
+    },
+    //
+    //  Handle delimiter
+    //
+    csDelimiter: function (name,delim) {
+      var def = {};
+      if (delim instanceof Array) {def = delim[1]; delim = delim[0]}
+      if (delim.length === 4) {delim = MML.entity('#x'+delim)} else {delim = MML.chars(delim)}
+      this.Push(this.mmlToken(MML.mo(delim).With({fence: false, stretchy: false}).With(def)));
+    },
+    //
+    //  Handle undefined control sequence
+    //  (overridden in noUndefined extension)
+    //
     csUndefined: function (name) {
       TEX.Error("Undefined control sequence "+name);
     },
@@ -1432,10 +1475,10 @@
     Begin: function (name) {
       var env = this.GetArgument(name);
       if (env.match(/[^a-z*]/i)) {TEX.Error('Invalid environment name "'+env+'"')}
-      if (!TEXDEF.environment[env]) {TEX.Error('Unknown environment "'+env+'"')}
+      var cmd = this.envFindName(env); if (!cmd) {TEX.Error('Unknown environment "'+env+'"')}
       if (++this.macroCount > TEX.config.MAXMACROS)
         {TEX.Error("MathJax maximum substitution count exceeded; is there a recursive latex environment?")}
-      var cmd = TEXDEF.environment[env]; if (!(cmd instanceof Array)) {cmd = [cmd]}
+      if (!(cmd instanceof Array)) {cmd = [cmd]}
       var mml = STACKITEM.begin().With({name: env, end: cmd[1], parse:this});
       if (cmd[0] && this[cmd[0]]) {mml = this[cmd[0]].apply(this,[mml].concat(cmd.slice(2)))}
       this.Push(mml);
@@ -1443,6 +1486,7 @@
     End: function (name) {
       this.Push(STACKITEM.end().With({name: this.GetArgument(name)}));
     },
+    envFindName: function (name) {return TEXDEF.environment[name]},
     
     Equation: function (begin,row) {return row},
     
@@ -1796,6 +1840,7 @@
     //
     Macro: function (name,def,argn) {
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
+      TEXDEF.macros[name].isUser = true;
     },
     
     //

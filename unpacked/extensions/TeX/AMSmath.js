@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "1.1.1",
+  version: "1.1.2",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -45,7 +45,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
   /******************************************************************************/
   
-  MathJax.Hub.Insert(TEXDEF,{
+  TEXDEF.Add({
     macros: {
       mathring:   ['Accent','2DA'],  // or 0x30A
       
@@ -130,7 +130,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       '\\lVert':     ['2225',{texClass:MML.TEXCLASS.OPEN}],
       '\\rVert':     ['2225',{texClass:MML.TEXCLASS.CLOSE}]
     }
-  });
+  },null,true);
     
 
   /******************************************************************************/
