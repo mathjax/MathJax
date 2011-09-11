@@ -1202,7 +1202,7 @@ MathJax.Hub = {
       ALT: false,          //    require Alt or Option?
       CMD: false,          //    require CMD?
       Shift: false,        //    require Shift?
-      discoverable: true,  //  make math menu discoverable on hover?
+      discoverable: false, //  make math menu discoverable on hover?
       zscale: "200%",      //  the scaling factor for MathZoom
       renderer: "",        //  set when Jax are loaded
       font: "Auto",        //  what font HTML-CSS should use

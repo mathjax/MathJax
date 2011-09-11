@@ -845,8 +845,8 @@
           ITEM.RADIO("Browser", "context")
         ),
         ITEM.COMMAND("Scale All Math ...",MENU.Scale),
-        ITEM.RULE(),
-        ITEM.CHECKBOX("Highlight on Hover", "discoverable")
+        ITEM.RULE().With({hidden: true}),
+        ITEM.CHECKBOX("Highlight on Hover", "discoverable", {hidden: true})
       ),
       ITEM.RULE(),
       ITEM.COMMAND("About MathJax",MENU.About),
