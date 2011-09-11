@@ -791,7 +791,7 @@
         matrix:             'Matrix',
         array:              'Matrix',
         pmatrix:           ['Matrix','(',')'],
-        cases:             ['Matrix','{','',"left left",null,".1em"],
+        cases:             ['Matrix','{','',"left left",null,".1em",null,true],
         eqalign:           ['Matrix',null,null,"right left",MML.LENGTH.THICKMATHSPACE,".5em",'D'],
         displaylines:      ['Matrix',null,null,"center",null,".5em",'D'],
         cr:                 'Cr',
@@ -1362,7 +1362,7 @@
         {TEX.Error("MathJax maximum macro substitution count exceeded; is there a recursive macro call?")}
     },
     
-    Matrix: function (name,open,close,align,spacing,vspacing,style) {
+    Matrix: function (name,open,close,align,spacing,vspacing,style,cases) {
       var c = this.GetNext(); if (c === "") {TEX.Error("Missing argument for "+name)}
       if (c === "{") {this.i++} else {this.string = c+"}"+this.string.slice(this.i+1); this.i = 0}
       var array = STACKITEM.array().With({
@@ -1372,6 +1372,7 @@
           columnspacing: (spacing||"1em")
         }
       });
+      if (cases)         {array.isCases = TRUE}
       if (open || close) {array.open = open; array.close = close}
       if (style === "D") {array.arraydef.displaystyle = TRUE}
       if (align != null) {array.arraydef.columnalign = align}
@@ -1380,6 +1381,24 @@
     
     Entry: function (name) {
       this.Push(STACKITEM.cell().With({isEntry: TRUE, name: name}));
+      if (this.stack.Top().isCases) {
+        var string = this.string;
+        var braces = 0, i = this.i, m = string.length;
+        while (i < m) {
+          var c = string.charAt(i);
+          if (c === "{") {braces++; i++}
+          else if (c === "}") {if (braces === 0) {m = 0} else {braces--; i++}}
+          else if (c === "&" && braces === 0) {TEX.Error("Extra alignment tab in \\cases text")}
+          else if (c === "\\") {
+            if (string.substr(i).match(/^((\\cr)[^a-zA-Z]|\\\\)/)) {m = 0} else {i += 2}
+          } else {i++}
+        }
+        var text = string.substr(this.i,i-this.i);
+        if (!text.match(/^\s*\\text[^a-zA-Z]/)) {
+          this.Push.apply(this,this.InternalMath(text));
+          this.i = i;
+        }
+      }
     },
     
     Cr: function (name) {
