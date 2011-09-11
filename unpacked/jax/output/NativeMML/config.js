@@ -24,15 +24,13 @@
 
 MathJax.OutputJax.NativeMML = MathJax.OutputJax({
   id: "NativeMML",
-  version: "1.1.6",
+  version: "1.1.9",
   directory: MathJax.OutputJax.directory + "/NativeMML",
   extensionDir: MathJax.OutputJax.extensionDir + "/NativeMML",
   
   config: {
     scale: 100,              // scaling factor for all math
-    showMathMenu: true,      // attach math context menu to mathml?
-    showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
-                             //  (since the code for that is a bit delicate)
+
     styles: {
       "DIV.MathJax_MathML": {
         "text-align": "center",

@@ -12,5 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.InputJax.MathML=MathJax.InputJax({id:"MathML",version:"1.1.7",directory:MathJax.InputJax.directory+"/MathML",extensionDir:MathJax.InputJax.extensionDir+"/MathML",entityDir:MathJax.InputJax.directory+"/MathML/entities",config:{useMathMLspacing:false}});MathJax.InputJax.MathML.Register("math/mml");MathJax.InputJax.MathML.loadComplete("config.js");
+MathJax.InputJax.MathML=MathJax.InputJax({id:"MathML",version:"1.1.8",directory:MathJax.InputJax.directory+"/MathML",extensionDir:MathJax.InputJax.extensionDir+"/MathML",entityDir:MathJax.InputJax.directory+"/MathML/entities",config:{useMathMLspacing:false}});MathJax.InputJax.MathML.Register("math/mml");MathJax.InputJax.MathML.loadComplete("config.js");
 

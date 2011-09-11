@@ -62,7 +62,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           span.bbox = err.HTMLspanElement().bbox;
         } else {
           var mu = this.HTMLgetMu(span);
-          img = HTMLCSS.addElement(span,"img",{src:values.src, alt:values.alt, title:values.alt});
+          img = HTMLCSS.addElement(span,"img",{isMathJax:true, src:values.src, alt:values.alt, title:values.alt});
           if (values.width)  {
             if (String(values.width).match(/^\s*-?\d+\s*$/)) {values.width += "px"}
             img.style.width = HTMLCSS.Em(HTMLCSS.length2em(values.width,mu,this.img.img.width/HTMLCSS.em));

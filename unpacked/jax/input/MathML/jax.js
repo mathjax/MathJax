@@ -135,6 +135,8 @@
   /************************************************************************/
 
   MATHML.Augment({
+    sourceMenuTitle: "Original MathML",
+    
     Translate: function (script) {
       if (!this.ParseXML) {this.ParseXML = this.createParser()}
       var mml, math;

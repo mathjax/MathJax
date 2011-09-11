@@ -22,7 +22,7 @@
  */
 
 (function (HUB,HTMLCSS,AJAX) {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   HUB.Register.LoadHook(HTMLCSS.fontDir + "/fontdata.js",function () {
 
@@ -61,7 +61,7 @@
             "AlphaImageLoader(src='"+AJAX.fileURL(file)+"', sizingMethod='scale')";
           file = this.directory+"/blank.gif"
         }
-        this.addElement(span,"img",{src:AJAX.fileURL(file), style:style});
+        this.addElement(span,"img",{src:AJAX.fileURL(file), style:style, isMathJax:true});
         return "";
       },
       

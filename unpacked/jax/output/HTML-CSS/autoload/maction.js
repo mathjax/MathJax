@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1.2";
+  var VERSION = "1.1.4";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -50,7 +50,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         else if (HW != null) {HTMLCSS.Remeasured(selected.HTMLstretchH(span,HW),span)}
         if (HTMLCSS.msieHitBoxBug) {
           // margin-left doesn't work on inline-block elements in IE, so put it in a SPAN
-          var box = HTMLCSS.addElement(span,"span");
+          var box = HTMLCSS.addElement(span,"span",{isMathJax:true});
           frame = HTMLCSS.createFrame(box,span.bbox.h,span.bbox.d,span.bbox.w,0,"none");
           span.insertBefore(box,span.firstChild); // move below the content
           box.style.marginRight = HTMLCSS.Em(-span.bbox.w);
@@ -110,13 +110,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       this.selection++;
       if (this.selection > this.data.length) {this.selection = 1}
       var math = this; while (math.type !== "math") {math = math.inherit}
-      MathJax.Hub.getJaxFor(math.inputID).Update();
-      if (!event) {event = window.event}
-      if (event.preventDefault) {event.preventDefault()}
-      if (event.stopPropagation) {event.stopPropagation()}
-      event.cancelBubble = true;
-      event.returnValue = false;
-      return false;
+      var jax = MathJax.Hub.getJaxFor(math.inputID), hover = !!jax.hover;
+      jax.Update();
+      if (hover) {
+        var span = document.getElementById(jax.inputID+"-Span");
+        MathJax.Extension.MathEvents.Hover.Hover(jax,span);
+      }
+      return MathJax.Extension.MathEvents.Event.False(event);
     },
     
     //
