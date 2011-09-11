@@ -23,7 +23,7 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var CONFIG = HUB.CombineConfig("MathZoom",{
     delay: 400,   // mouse must be still this long (milliseconds)
@@ -148,8 +148,8 @@
       if (parent.parentNode.className === "MathJax_MathContainer") {parent = parent.parentNode.parentNode}
       var script = (String(parent.className).match(/^MathJax_(MathML|Display)$/) ? parent : math).nextSibling;
       var jax = HUB.getJaxFor(script), root = jax.root;
-      var JAX = (HTMLCSS && jax.outputJax.isa(HTMLCSS.constructor) ? "HTMLCSS" :
-                (nMML && jax.outputJax.isa(nMML.constructor) ? "MathML" : null));
+      var JAX = (HTMLCSS && jax.outputJax === "HTML-CSS" ? "HTMLCSS" :
+                (nMML && jax.outputJax === "NativeMML" ? "MathML" : null));
       if (!JAX) return; //  FIXME:  report an error?
 
       //

@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.1.3",
+  version: "1.1.4",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
@@ -55,6 +55,8 @@ MathJax.Extension.tex2jax = {
 
     processEnvironments: true, // set to true to process \begin{xxx}...\end{xxx} outside
                                //   of math mode, false to prevent that
+
+    processRefs: true,         // set to true to process \ref{...} outside of math mode
 
     preview: "TeX"             // set to "none" to not insert MathJax_Preview spans
                                //   or set to an array specifying an HTML snippet
@@ -96,9 +98,10 @@ MathJax.Extension.tex2jax = {
       };
     }
     this.start = new RegExp(
-        starts.sort(this.sortLength).join("|") + 
-        (config.processEnvironments ? "|\\\\begin\\{([^}]*)\\}" : "") + 
-        (config.processEscapes ? "|\\\\*\\\\\\\$" : ""), "g"
+      starts.sort(this.sortLength).join("|") + 
+      (config.processEnvironments ? "|\\\\begin\\{([^}]*)\\}" : "") + 
+      (config.processEscapes ? "|\\\\*\\\\\\\$" : "") +
+      (config.processRefs ? "|\\\\(eq)?ref\\{[^}]*\\}" : ""), "g"
     );
     this.skipTags = new RegExp("^("+config.skipTags.join("|")+")$","i");
     this.ignoreClass = new RegExp("(^| )("+config.ignoreClass+")( |$)");
@@ -172,6 +175,12 @@ MathJax.Extension.tex2jax = {
         isBeginEnd: true
       };
       this.switchPattern(this.endPattern(this.search.end));
+    } else if (match[0].substr(0,4) === "\\ref" || match[0].substr(0,6) === "\\eqref") {
+      this.search = {
+        mode: "", end: "", open: element,
+        olen: 0, opos: this.pattern.lastIndex - match[0].length,
+      }
+      return this.endMatch([""],element);
     } else {                                         // escaped dollar signs
       // put $ in a span so it doesn't get processed again
       // split off backslashes so they don't get removed later

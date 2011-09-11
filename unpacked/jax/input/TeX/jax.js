@@ -23,13 +23,13 @@
  *  limitations under the License.
  */
 
-(function (TEX) {
+(function (TEX,HUB,AJAX) {
   var TRUE = true, FALSE = false, MML, NBSP = String.fromCharCode(0xA0); 
   
   var STACK = MathJax.Object.Subclass({
-    Init: function (env) {
-      this.global = {};
-      this.data = [STACKITEM.start().With({global: this.global})];
+    Init: function (env,inner) {
+      this.global = {isInner: inner};
+      this.data = [STACKITEM.start(this.global)];
       if (env) {this.data[0].env = env}
       this.env = this.data[0].env;
     },
@@ -102,6 +102,10 @@
 
   STACKITEM.start = STACKITEM.Subclass({
     type: "start", isOpen: TRUE,
+    Init: function (global) {
+      this.SUPER(arguments).Init.call(this);
+      this.global = global;
+    },
     checkItem: function (item) {
       if (item.type === "stop") {return STACKITEM.mml(this.mmlData())}
       return this.SUPER(arguments).checkItem.call(this,item);
@@ -291,7 +295,7 @@
   var TEXDEF = {};
   var STARTUP = function () {
     MML = MathJax.ElementJax.mml;
-    MathJax.Hub.Insert(TEXDEF,{
+    HUB.Insert(TEXDEF,{
   
       // patterns for letters and numbers
       letter:  /[a-z]/i,
@@ -846,8 +850,10 @@
         
         tag:               ['Extension','AMSmath'],
         notag:             ['Extension','AMSmath'],
-        label:             ['Macro','',1],           // not implemented yet
-        nonumber:          ['Macro',''],             // not implemented yet
+        label:             ['Extension','AMSmath'],
+        ref:               ['Extension','AMSmath'],
+        eqref:             ['Extension','AMSmath'],
+        nonumber:          ['Macro','\\notag'],
 
         //  Extensions to TeX
         unicode:           ['Extension','unicode'],
@@ -917,9 +923,8 @@
     Init: function (string,env) {
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
-      this.stack = TEX.Stack(ENV);
-      this.Parse();
-      this.Push(STACKITEM.stop());
+      this.stack = TEX.Stack(ENV,!!env);
+      this.Parse(); this.Push(STACKITEM.stop());
     },
     Parse: function () {
       var c;
@@ -1344,9 +1349,9 @@
       if (name && !typeof(name) === "string") {name = name.name}
       file = TEX.extensionDir+"/"+file;
       if (!file.match(/\.js$/)) {file += ".js"}
-      if (!MathJax.Ajax.loaded[MathJax.Ajax.fileURL(file)]) {
+      if (!AJAX.loaded[AJAX.fileURL(file)]) {
         if (name != null) {delete TEXDEF[array || 'macros'][name.replace(/^\\/,"")]}
-        MathJax.Hub.RestartAfter(MathJax.Ajax.Require(file));
+        HUB.RestartAfter(AJAX.Require(file));
       }
     },
     
@@ -1643,27 +1648,35 @@
     InternalMath: function (text,level) {
       var def = {displaystyle: FALSE}; if (level != null) {def.scriptlevel = level}
       if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      if (!text.match(/\$|\\\(/)) {return [this.InternalText(text,def)]}
+      if (!text.match(/\$|\\\(|\\(eq)?ref\s*\{/)) {return [this.InternalText(text,def)]}
       var i = 0, k = 0, c, match = '';
       var mml = [];
       while (i < text.length) {
         c = text.charAt(i++);
         if (c === '$') {
           if (match === '$') {
-            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1)).mml().With(def)));
+            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1),{}).mml().With(def)));
             match = ''; k = i;
           } else if (match === '') {
             if (k < i-1) {mml.push(this.InternalText(text.slice(k,i-1),def))}
             match = '$'; k = i;
           }
+        } else if (c === '}' && match === '}') {
+          mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i),{}).mml().With(def)));
+          match = ''; k = i;
         } else if (c === '\\') {
-          c = text.charAt(i++);
-          if (c === '(' && match === '') {
-            if (k < i-2) {mml.push(this.InternalText(text.slice(k,i-2),def))}
-            match = ')'; k = i;
-          } else if (c === ')' && match === ')') {
-            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2)).mml().With(def)));
-            match = ''; k = i;
+          if (match === '' && text.substr(i).match(/^(eq)?ref\s*\{/)) {
+            if (k < i-1) {mml.push(this.InternalText(text.slice(k,i-1),def))}
+            match = '}'; k = i-1;
+          } else {
+            c = text.charAt(i++);
+            if (c === '(' && match === '') {
+              if (k < i-2) {mml.push(this.InternalText(text.slice(k,i-2),def))}
+              match = ')'; k = i;
+            } else if (c === ')' && match === ')') {
+              mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml().With(def)));
+              match = ''; k = i;
+            }
           }
         }
       }
@@ -1720,42 +1733,75 @@
       MAXBUFFER: 5*1024    // maximum size of TeX string to process
     },
     
+    prefilterHooks: MathJax.Callback.Hooks(true),    // hooks to run before processing TeX
+    postfilterHooks: MathJax.Callback.Hooks(true),   // hooks to run after processing TeX
+    
+    //
+    //  Check if AMSmath extension must be loaded and push
+    //    it on the extensions array, if needed
+    //
+    Config: function () {
+      this.SUPER(arguments).Config.apply(this,arguments);
+      if (this.config.equationNumbers.autoNumber !== "none") {
+        if (!this.config.extensions) {this.config.extensions = []}
+        this.config.extensions.push("AMSmath.js");
+      }
+    },
+
+    //
+    //  Convert TeX to ElementJax
+    //
     Translate: function (script) {
-      var mml, math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
-      if (MathJax.Hub.Browser.isKonqueror)
-        {math = math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
-      var displaystyle = 
-        (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
-      math = TEX.prefilterMath(math,displaystyle,script);
+      var mml, isError = false, math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
+      var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
+      var data = {math:math, display:display, script:script};
+      this.prefilterHooks.Execute(data); math = data.math;
       try {
         mml = TEX.Parse(math).mml();
 //        mml = MML.semantics(mml,MML.annotation(math).With({encoding:"application:x-tex"}));
       } catch(err) {
         if (!err.texError) {throw err}
-        mml = this.formatError(err,math,displaystyle,script);
+        mml = this.formatError(err,math,display,script);
+        isError = true;
       }
       if (mml.inferred) {mml = MML.apply(MathJax.ElementJax,mml.data)} else {mml = MML(mml)}
-      if (displaystyle) {mml.root.display = "block"}
-      return this.postfilterMath(mml,displaystyle,script);
+      if (display) {mml.root.display = "block"}
+      if (isError) {mml.texError = true}
+      data.math = mml; this.postfilterHooks.Execute(data);
+      return data.math;
     },
-    prefilterMath: function (math,displaystyle,script) {
+    prefilterMath: function (data) {
+      // Konqueror incorrectly quotes these characters in script.innerHTML 
+      if (HUB.Browser.isKonqueror)
+        {data.math = data.math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
       // avoid parsing super- and subscript numbers as a unit
-      return math.replace(/([_^]\s*\d)([0-9.,])/g,"$1 $2");
+      data.math = data.math.replace(/([_^]\s*\d)([0-9.,])/g,"$1 $2");
     },
-    postfilterMath: function (math,displaystyle,script) {
-      this.combineRelations(math.root);
-      return math;
+    postfilterMath: function (data) {
+      this.combineRelations(data.math.root);
     },
-    formatError: function (err,math,displaystyle,script) {
+    formatError: function (err,math,display,script) {
       return MML.merror(err.message.replace(/\n.*/,""));
     },
+
+    //
+    //  Produce an error and stop processing this equation
+    //
     Error: function (message) {
-      throw MathJax.Hub.Insert(Error(message),{texError: TRUE});
+      throw HUB.Insert(Error(message),{texError: TRUE});
     },
+    
+    //
+    //  Add a user-defined macro to the macro list
+    //
     Macro: function (name,def,argn) {
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
     },
     
+    //
+    //  Combine adjacent <mo> elements that are relations
+    //    (since MathML treats the spacing very differently)
+    //
     combineRelations: function (mml) {
       for (var i = 0, m = mml.data.length; i < m; i++) {
         if (mml.data[i]) {
@@ -1774,6 +1820,12 @@
     }
   });
 
+  //
+  //  Add the default filters
+  //
+  TEX.prefilterHooks.Add(["prefilterMath",TEX]);
+  TEX.postfilterHooks.Add(["postfilterMath",TEX]);
+
   TEX.loadComplete("jax.js");
   
-})(MathJax.InputJax.TeX);
+})(MathJax.InputJax.TeX,MathJax.Hub,MathJax.Ajax);
