@@ -23,7 +23,7 @@
  */
 
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
-  var VERSION = "1.1.1";
+  var VERSION = "1.1.2";
   
   var MML = MathJax.ElementJax.mml;
   
@@ -58,7 +58,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         if (this[id] != null && (force || this[id] !== defaults[id])) {
           var value = this[id]; delete this[id];
           if (force || this.Get(id) !== value)
-            {attr.push(id+'="'+this.quoteHTML(value)+'"')}
+            {attr.push(id+'="'+this.formatAttr(value)+'"')}
           this[id] = value;
         }
       }}
@@ -73,6 +73,18 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       "id","class","href","style"
     ],
     skipAttributes: {texClass: 1, useHeight: 1, texprimestyle: 1},
+    
+    formatAttr: function (value) {
+      if (typeof(value) === "string" &&
+          value.replace(/ /g,"").match(/^(([-+])?(\d+(\.\d*)?|\.\d+))mu$/)) {
+        // FIXME:  should take scriptlevel into account
+        return (RegExp.$2+(1/18)*RegExp.$1).replace(/(\.\d\d\d).*/,"$1")+"em";
+      }
+      // FIXME:  set classes for these?
+      if (value === "-tex-caligraphic") {return "script"}
+      if (value === "-tex-oldstyle") {return "normal"}
+      return this.quoteHTML(value);
+    },
     
     quoteHTML: function (string) {
       string = String(string).split("");

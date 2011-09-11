@@ -38,6 +38,12 @@
       if (typeof math !== "string") {doc = math.parentNode} else {
         if (math.match(/^<[a-z]+:/i) && !math.match(/^<[^<>]* xmlns:/))
           {math = math.replace(/^<([a-z]+)(:math)/i,'<$1$2 xmlns:$1="http://www.w3.org/1998/Math/MathML"')}
+        // HTML5 removes xmlns: namespaces, so put them back for XML
+        var match = math.match(/^(<math( ('.*?'|".*?"|[^>])+)>)/i);
+        if (match && match[2].match(/ (?!xmlns=)[a-z]+=\"http:/i)) {
+	  math = match[1].replace(/ (?!xmlns=)([a-z]+=(['"])http:.*?\2)/ig," xmlns:$1 $1") +
+	         math.substr(match[0].length);
+        }
         math = math.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/,"$2");
         math = math.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
         doc = MATHML.ParseXML(math); if (doc == null) {MATHML.Error("Error parsing MathML")}
@@ -98,9 +104,10 @@
     },
     
     trimSpace: function (string) {
-      return string.replace(/^[ \t\n\r]+/,"")              // initial whitespace
-                   .replace(/[ \t\n\r]+$/,"")              // trailing whitespace
-                   .replace(/[ \t\n\r][ \t\n\r]+/g," ");   // internal multiple whitespace
+      return string.replace(/[\t\n\r]/g," ")    // whitespace to spaces
+                   .replace(/^ +/,"")           // initial whitespace
+                   .replace(/ +$/,"")           // trailing whitespace
+                   .replace(/  +/g," ");        // internal multiple whitespace
     },
     
     replaceEntity: function (match,entity) {
@@ -206,7 +213,7 @@
       MML = MathJax.ElementJax.mml;
       MML.mspace.Augment({mmlSelfClosing: true});
       MML.none.Augment({mmlSelfClosing: true});
-      MML.mprescripts.Augment({mmlSelfClossing:true});
+      MML.mprescripts.Augment({mmlSelfClosing:true});
     }
   });
   

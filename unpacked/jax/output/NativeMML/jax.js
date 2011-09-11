@@ -298,9 +298,10 @@
       NativeMMLattribute: function (id,value) {
 	value = String(value);
 	if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaes
-	else if (value.match(/^\s*([-+]?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/)) {value = ((1/18)*RegExp.$1)+"em"} // FIXME:  should take scriptlevel into account
-	else if (value === "-tex-caligraphic") {value = "script"}
-	else if (value === "-tex-oldstyle") {value = "normal"}
+	else if (value.match(/^\s*(([-+])?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/))
+          {value = (RegExp.$2+(1/18)*RegExp.$1).replace(/(\.\d\d\d).*/,"$1")+"em"} // FIXME:  should take scriptlevel into account
+	else if (value === "-tex-caligraphic") {value = "script"} // FIXME: add a class?
+	else if (value === "-tex-oldstyle") {value = "normal"}    // FIXME: add a class?
 	return value;
       },
       //
@@ -394,7 +395,7 @@
 	}
       });
 
-      var fontDir = MathJax.Hub.config.root + "/fonts/HTML-CSS/TeX/otf";
+      var fontDir = MathJax.OutputJax.fontDir + "/HTML-CSS/TeX/otf";
 
       /*
        *  Add fix for mathvariant issues in FF
@@ -402,44 +403,44 @@
       nMML.Augment({
 	config: {
 	  styles: {
-	    '[mathvariant="double-struck"]':          {"font-family":"MathJax_AMS"},
-	    '[mathvariant="script"]':                 {"font-family":"MathJax_Script"},
-	    '[mathvariant="fraktur"]':                {"font-family":"MathJax_Fraktur"},
-	    '[mathvariant="-tex-oldstyle"]':          {"font-family":"MathJax_Caligraphic"},
-	    '[mathvariant="-tex-oldstyle-bold"]':     {"font-family":"MathJax_Caligraphic", "font-weight":"bold"},
-	    '[mathvariant="-tex-caligraphic"]':       {"font-family":"MathJax_Caligraphic"},
-	    '[mathvariant="-tex-caligraphic-bold"]':  {"font-family":"MathJax_Caligraphic", "font-weight":"bold"},
-	    '[mathvariant="bold-script"]':            {"font-family":"MathJax_Script", "font-weight":"bold"},
-	    '[mathvariant="bold-fraktur"]':           {"font-family":"MathJax_Fraktur", "font-weight":"bold"},
+	    '[mathvariant="double-struck"]':          {"font-family":"MathJax_AMS, MathJax_AMS-WEB"},
+	    '[mathvariant="script"]':                 {"font-family":"MathJax_Script, MathJax_Script-WEB"},
+	    '[mathvariant="fraktur"]':                {"font-family":"MathJax_Fraktur, MathJax_Fraktur-WEB"},
+	    '[mathvariant="-tex-oldstyle"]':          {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB"},
+	    '[mathvariant="-tex-oldstyle-bold"]':     {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB", "font-weight":"bold"},
+	    '[mathvariant="-tex-caligraphic"]':       {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB"},
+	    '[mathvariant="-tex-caligraphic-bold"]':  {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB", "font-weight":"bold"},
+	    '[mathvariant="bold-script"]':            {"font-family":"MathJax_Script, MathJax_Caligraphic-WEB", "font-weight":"bold"},
+	    '[mathvariant="bold-fraktur"]':           {"font-family":"MathJax_Fraktur, MathJax_Fraktur-WEB", "font-weight":"bold"},
 	    '[mathvariant="monospace"]':              {"font-family":"monospace"},
-	    '[mathvariant="sans-serif"]':             {"font-family":"sansserif"},
-	    '[mathvariant="bold-sans-serif"]':        {"font-family":"sansserif", "font-weight":"bold"},
-	    '[mathvariant="sans-serif-italic"]':      {"font-family":"sansserif", "font-style":"italic"},
-	    '[mathvariant="sans-serif-bold-italic"]': {"font-family":"sansserif", "font-style":"italic", "font-weight":"bold"},
+	    '[mathvariant="sans-serif"]':             {"font-family":"sans-serif"},
+	    '[mathvariant="bold-sans-serif"]':        {"font-family":"sans-serif", "font-weight":"bold"},
+	    '[mathvariant="sans-serif-italic"]':      {"font-family":"sans-serif", "font-style":"italic"},
+	    '[mathvariant="sans-serif-bold-italic"]': {"font-family":"sans-serif", "font-style":"italic", "font-weight":"bold"},
 
 	    '@font-face /*1*/': {
-	      "font-family": "MathJax_AMS",
-	      "src": "local('MathJax_AMS'), url('"+fontDir+"/MathJax_AMS-Regular.otf')"
+	      "font-family": "MathJax_AMS-WEB",
+	      "src": "url('"+fontDir+"/MathJax_AMS-Regular.otf')*/"
 	    },
 	    '@font-face /*2*/': {
-	      "font-family": "MathJax_Script",
-	      "src": "local('MathJax_Script'), url('"+fontDir+"/MathJax_Script-Regular.otf')"
+	      "font-family": "MathJax_Script-WEB",
+	      "src": "url('"+fontDir+"/MathJax_Script-Regular.otf')"
 	    },
 	    '@font-face /*3*/': {
-	      "font-family": "MathJax_Fraktur",
-	      "src": "local('MathJax_Fraktur'), url('"+fontDir+"/MathJax_Fraktur-Regular.otf')"
+	      "font-family": "MathJax_Fraktur-WEB",
+	      "src": "url('"+fontDir+"/MathJax_Fraktur-Regular.otf')"
 	    },
 	    '@font-face /*4*/': {
-	      "font-family": "MathJax_Caligraphic",
-	      "src": "local('MathJax_Caligraphic'), url('"+fontDir+"/MathJax_Caligraphic-Regular.otf')"
+	      "font-family": "MathJax_Caligraphic-WEB",
+	      "src": "url('"+fontDir+"/MathJax_Caligraphic-Regular.otf')"
 	    },
 	    '@font-face /*5*/': {
-	      "font-family": "MathJax_Fraktur", "font-weight":"bold",
-	      "src": "local('MathJax_Fraktur-Bold'), url('"+fontDir+"/MathJax_Fraktur-Bold.otf')"
+	      "font-family": "MathJax_Fraktur-WEB", "font-weight":"bold",
+	      "src": "url('"+fontDir+"/MathJax_Fraktur-Bold.otf')"
 	    },
 	    '@font-face /*6*/': {
-	      "font-family": "MathJax_Caligraphic", "font-weight":"bold",
-	      "src": "local('MathJax_Caligraphic-Bold'), url('"+fontDir+"/MathJax_Caligraphic-Bold.otf')"
+	      "font-family": "MathJax_Caligraphic-WEB", "font-weight":"bold",
+	      "src": "url('"+fontDir+"/MathJax_Caligraphic-Bold.otf')"
 	    }
 	  }
 	}
