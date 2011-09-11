@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1.1";
+  var VERSION = "1.1.2";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -36,8 +36,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (values.color && !this.mathcolor) {values.mathcolor = values.color}
       if (values.thickness == null) {values.thickness = ".075em"}
       if (values.padding == null)   {values.padding   = ".2em"}
-      var p = HTMLCSS.length2em(values.padding);
-      var t = HTMLCSS.length2em(values.thickness);
+      var mu = this.HTMLgetMu(span);
+      var p = HTMLCSS.length2em(values.padding,mu);
+      var t = HTMLCSS.length2em(values.thickness,mu);
       var SOLID = HTMLCSS.Em(t)+" solid";
 
       span = this.HTMLcreateSpan(span);

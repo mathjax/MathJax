@@ -1125,7 +1125,7 @@
     },
     
     Spacer: function (name,space) {
-      this.Push(MML.mspace().With({width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:1}));
+      this.Push(MML.mspace().With({width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:0}));
     },
     
     LeftRight: function (name) {
@@ -1313,15 +1313,13 @@
       if (name === "\\moveleft") {var tmp = h; h = nh; nh = tmp}
       this.Push(STACKITEM.position().With({
         name: name, move: 'horizontal',
-        left:  MML.mspace().With({width: h, mathsize: MML.SIZE.NORMAL, scriptlevel:1}),
-        right: MML.mspace().With({width: nh, mathsize: MML.SIZE.NORMAL, scriptlevel:1})
+        left:  MML.mspace().With({width: h, mathsize: MML.SIZE.NORMAL}),
+        right: MML.mspace().With({width: nh, mathsize: MML.SIZE.NORMAL})
       }));
     },
     
     Hskip: function (name) {
-      this.Push(MML.mspace().With({
-        width: this.GetDimen(name), mathsize: MML.SIZE.NORMAL, scriptlevel:0
-      }));
+      this.Push(MML.mspace().With({width: this.GetDimen(name), mathsize: MML.SIZE.NORMAL}));
     },
     
     Rule: function (name,style) {

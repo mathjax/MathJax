@@ -39,8 +39,9 @@
 
     Init: function () {
       this.div = MathJax.HTML.addElement(document.body,"div",{
+        id: "MathJax_Font_Test",
         style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
-                padding:0, border:0, margin:0,
+                padding:0, border:0, margin:0, "white-space":"nowrap",
                 textAlign:"left", textIndent:0, textTransform:"none",
                 lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
                 fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal"}
@@ -132,7 +133,7 @@
       var n = MathJax.Message.File("Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
       var done = MathJax.Callback({}); // called when font is loaded
       var callback = MathJax.Callback(["loadComplete",this,font,n,done]);
-      AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],1,this.timeout);
+      AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],0,this.timeout);
       return done;
     },
     loadComplete: function (font,n,done,status) {
@@ -524,7 +525,7 @@
     },
     getW: function (span) {
       var W = span.offsetWidth, w = (span.bbox ? span.bbox.w: -1), start = span;
-      if ((w < 0 || this.negativeSkipBug) && W >= 0) {
+      if ((w < 0 || this.negativeSkipBug) && W >= 0 && !span.style.width) {
         // IE can't deal with a space at the beginning, so put something else first
         if (this.negativeSkipBug) {
           var position = span.style.position; span.style.position = "absolute";
@@ -564,10 +565,7 @@
     Percent: function (m) {
       return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
     },
-    length2percent: function (length) {
-      return this.Percent(this.length2em(length));
-    },
-    length2em: function (length,size) {
+    length2em: function (length,mu,size) {
       if (typeof(length) !== "string") {length = length.toString()}
       if (length === "") {return ""}
       if (length === MML.SIZE.NORMAL) {return 1}
@@ -578,7 +576,7 @@
       if (length.match(/mathspace$/)) {return HTMLCSS.MATHSPACE[length]*factor}
       var match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
       var m = parseFloat(match[1]||"1"), unit = match[2];
-      if (size == null) {size = 1}
+      if (size == null) {size = 1}; if (mu == null) {mu = 1}
       if (unit === "em") {return m * factor}
       if (unit === "ex") {return m * HTMLCSS.TeX.x_height * factor}
       if (unit === "%")  {return m / 100 * size}
@@ -588,15 +586,15 @@
       if (unit === "in") {return m * this.pxPerInch / HTMLCSS.em}
       if (unit === "cm") {return m * this.pxPerInch / HTMLCSS.em / 2.54} // 2.54 cm to an inch
       if (unit === "mm") {return m * this.pxPerInch / HTMLCSS.em / 25.4} // 10 mm to a cm
-      if (unit === "mu") {return m / 18 * factor} // FIXME:  needs to include scale
+      if (unit === "mu") {return m / 18 * factor * mu} // 18mu to an em for the scriptlevel
       return m*factor*size;  // relative to given size (or 1em as default)
     },
-    thickness2em: function (length) {
+    thickness2em: function (length,mu) {
       var thick = HTMLCSS.TeX.rule_thickness;
       if (length === MML.LINETHICKNESS.MEDIUM) {return thick}
       if (length === MML.LINETHICKNESS.THIN) {return .67*thick}
       if (length === MML.LINETHICKNESS.THICK) {return 1.67*thick}
-      return this.length2em(length,thick);
+      return this.length2em(length,mu,thick);
     },
 
     createStrut: function (span,h,before) {
@@ -640,17 +638,20 @@
         if (HTMLCSS.safariNegativeSpaceBug && span.parentNode.firstChild == span)
           {this.createBlank(span,0,true)}
       }
-      if (color && color !== MML.COLOR.TRANSPARENT) {span.style.backgroundColor = color}
+      if (color && color !== MML.COLOR.TRANSPARENT) {
+        span.style.backgroundColor = color;
+        span.style.position = "relative"; // make sure it covers earlier items
+      }
       return span;
     },
     createRule: function (span,h,d,w,color) {
-      var min = HTMLCSS.TeX.min_rule_thickness;
+      var min = HTMLCSS.TeX.min_rule_thickness, f = 1;
       // If rule is very thin, make it at least min_rule_thickness so it doesn't disappear
       if (w > 0 && w*this.em < min) {w = min/this.em}
-      if (h+d > 0 && (h+d)*this.em < min) {var f = 1/(h+d)*(min/this.em); h *= f; d *= f}
+      if (h+d > 0 && (h+d)*this.em < min) {f = 1/(h+d)*(min/this.em); h *= f; d *= f}
       if (!color) {color = "solid"} else {color = "solid "+color}
       color = this.Em(w)+" "+color;
-      var H = this.Em(h+d), D = this.Em(-d);
+      var H = (f === 1 ? this.Em(h+d) : min+"px"), D = this.Em(-d);
       var rule = this.addElement(span,"span",{
         style: {borderLeft: color, display: "inline-block", overflow:"hidden",
                 width:0, height:H, verticalAlign:D},
@@ -1328,7 +1329,7 @@
 	if (values.background && !this.mathbackground) {values.mathbackground = values.background}
 	if (values.mathcolor) {span.style.color = values.mathcolor}
 	if (values.mathbackground && values.mathbackground !== MML.COLOR.TRANSPARENT) {
-	  var dd = 1/HTMLCSS.em, lW = 0, rW = 0;
+	  var dd = (span.bbox.exact ? 0 : 1/HTMLCSS.em), lW = 0, rW = 0;
 	  if (this.isToken) {lW = span.bbox.lw; rW = span.bbox.rw - span.bbox.w}
 	  if (span.style.paddingLeft  !== "") {lW += parseFloat(span.style.paddingLeft)*(span.scale||1)}
 	  if (span.style.paddingRight !== "") {rW -= parseFloat(span.style.paddingRight)*(span.scale||1)}
@@ -1367,9 +1368,10 @@
 	if (this.useMMLspacing) {
 	  if (this.type !== "mo") return;
 	  var values = this.getValues("scriptlevel","lspace","rspace");
-	  if (values.scriptlevel <= 0 || this.hasValue("lspace") || this.hasValue("rspace")) {
-	    values.lspace = Math.max(0,HTMLCSS.length2em(values.lspace));
-	    values.rspace = Math.max(0,HTMLCSS.length2em(values.rspace));
+          if (values.scriptlevel <= 0 || this.hasValue("lspace") || this.hasValue("rspace")) {
+            var mu = this.HTMLgetMu(span);
+	    values.lspace = Math.max(0,HTMLCSS.length2em(values.lspace,mu));
+	    values.rspace = Math.max(0,HTMLCSS.length2em(values.rspace,mu));
 	    var core = this, parent = this.Parent();
 	    while (parent && parent.isEmbellished() && parent.Core() === core)
 	      {core = parent; parent = parent.Parent(); span = core.HTMLspanElement()}
@@ -1379,7 +1381,7 @@
 	} else {
 	  var space = this.texSpacing();
 	  if (space !== "") {
-	    space = HTMLCSS.length2em(space)/(span.scale||1);
+	    space = HTMLCSS.length2em(space,this.HTMLgetScale())/(span.scale||1);
 	    if (span.style.paddingLeft) {space += parseFloat(span.style.paddingLeft)}
 	    span.style.paddingLeft = HTMLCSS.Em(space);
 	  }
@@ -1401,6 +1403,15 @@
 	}
 	scale *= HTMLCSS.length2em(values.mathsize);
 	return scale;
+      },
+      HTMLgetMu: function (span) {
+	var mu = 1, values = this.getValues("scriptlevel","scriptsizemultiplier");
+        if (span.scale && span.scale !== 1) {mu = 1/span.scale}
+	if (values.scriptlevel !== 0) {
+	  if (values.scriptlevel > 2) {values.scriptlevel = 2}
+	  mu = Math.sqrt(Math.pow(values.scriptsizemultiplier,values.scriptlevel));
+	}
+	return mu;
       },
 
       HTMLgetVariant: function () {
@@ -1559,11 +1570,11 @@
       HTMLstretchV: function (box,h,d) {
 	this.HTMLremoveColor();
 	var values = this.getValues("symmetric","maxsize","minsize");
-	var span = this.HTMLspanElement(), H;
+	var span = this.HTMLspanElement(), mu = this.HTMLgetMu(span), H;
 	var axis = HTMLCSS.TeX.axis_height, scale = span.scale;
 	if (values.symmetric) {H = 2*Math.max(h-axis,d+axis)} else {H = h + d}
-	values.maxsize = HTMLCSS.length2em(values.maxsize,span.bbox.h+span.bbox.d);
-	values.minsize = HTMLCSS.length2em(values.minsize,span.bbox.h+span.bbox.d);
+	values.maxsize = HTMLCSS.length2em(values.maxsize,mu,span.bbox.h+span.bbox.d);
+	values.minsize = HTMLCSS.length2em(values.minsize,mu,span.bbox.h+span.bbox.d);
 	H = Math.max(values.minsize,Math.min(values.maxsize,H));
 	span = this.HTMLcreateSpan(box); // clear contents and attributes
 	HTMLCSS.createDelimiter(span,this.data.join("").charCodeAt(0),H,scale);
@@ -1578,9 +1589,9 @@
 	this.HTMLremoveColor();
 	var values = this.getValues("maxsize","minsize","mathvariant","fontweight");
 	if (values.fontweight === "bold" && !this.mathvariant) {values.mathvariant = MML.VARIANT.BOLD}
-	var span = this.HTMLspanElement(), scale = span.scale;
-	values.maxsize = HTMLCSS.length2em(values.maxsize,span.bbox.w);
-	values.minsize = HTMLCSS.length2em(values.minsize,span.bbox.w);
+	var span = this.HTMLspanElement(), mu = this.HTMLgetMu(span), scale = span.scale;
+	values.maxsize = HTMLCSS.length2em(values.maxsize,mu,span.bbox.w);
+	values.minsize = HTMLCSS.length2em(values.minsize,mu,span.bbox.w);
 	W = Math.max(values.minsize,Math.min(values.maxsize,W));
 	span = this.HTMLcreateSpan(box); // clear contents and attributes
 	HTMLCSS.createDelimiter(span,this.data.join("").charCodeAt(0),W,scale,values.mathvariant);
@@ -1619,10 +1630,12 @@
       toHTML: function (span) {
 	span = this.HTMLhandleSize(this.HTMLcreateSpan(span));
 	var values = this.getValues("height","depth","width");
+        var mu = this.HTMLgetMu(span);
 	values.mathbackground = this.mathbackground;
 	if (this.background && !this.mathbackground) {values.mathbackground = this.background}
-	var h = HTMLCSS.length2em(values.height), d = HTMLCSS.length2em(values.depth),
-	    w = HTMLCSS.length2em(values.width);
+	var h = HTMLCSS.length2em(values.height,mu) / span.scale,
+            d = HTMLCSS.length2em(values.depth,mu)  / span.scale,
+	    w = HTMLCSS.length2em(values.width,mu)  / span.scale;
        HTMLCSS.createSpace(span,h,d,w,values.mathbackground);
        return span;
       }
@@ -1656,9 +1669,10 @@
 	  HTMLCSS.Measured(this.data[0].toHTML(box),box);
 	  if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(box,HW,D),box)}
 	  else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(box,HW),box)}
-	  var values = this.getValues("height","depth","width","lspace","voffset"), x = 0, y = 0;
-	  if (values.lspace)  {x = this.HTMLlength2em(box,values.lspace)}
-	  if (values.voffset) {y = this.HTMLlength2em(box,values.voffset)}
+	  var values = this.getValues("height","depth","width","lspace","voffset"),
+              x = 0, y = 0, mu = this.HTMLgetMu(span);
+	  if (values.lspace)  {x = this.HTMLlength2em(box,values.lspace,mu)}
+	  if (values.voffset) {y = this.HTMLlength2em(box,values.voffset,mu)}
 	  HTMLCSS.placeBox(box,x,y);
 	  span.bbox = {
 	    h: box.bbox.h, d: box.bbox.d, w: box.bbox.w,
@@ -1666,22 +1680,25 @@
 	    H: Math.max((box.bbox.H == null ? -HTMLCSS.BIGDIMEN : box.bbox.H),box.bbox.h+y),
 	    D: Math.max((box.bbox.D == null ? -HTMLCSS.BIGDIMEN : box.bbox.D),box.bbox.d-y)
 	  };
-	  if (values.height !== "") {span.bbox.h = this.HTMLlength2em(box,values.height,"h",0)}
-	  if (values.depth  !== "") {span.bbox.d = this.HTMLlength2em(box,values.depth,"d",0)}
-	  if (values.width  !== "") {span.bbox.w = this.HTMLlength2em(box,values.width,"w",0)}
+	  if (values.height !== "") {span.bbox.h = this.HTMLlength2em(box,values.height,mu,"h",0)}
+	  if (values.depth  !== "") {span.bbox.d = this.HTMLlength2em(box,values.depth,mu,"d",0)}
+	  if (values.width  !== "") {span.bbox.w = this.HTMLlength2em(box,values.width,mu,"w",0)}
 	  if (span.bbox.H <= span.bbox.h) {delete span.bbox.H}
 	  if (span.bbox.D <= span.bbox.d) {delete span.bbox.D}
+          var dimen = /^\s*(\d+(\.\d*)?|\.\d+)\s*(pt|em|ex|mu|px|pc|in|mm|cm)\s*$/
+          span.bbox.exact = (this.data[0] && this.data[0].data.length == 0) ||
+             dimen.exec(values.height) || dimen.exec(values.width) || dimen.exec(values.depth);
 	  HTMLCSS.setStackWidth(stack,span.bbox.w);
 	}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
 	return span;
       },
-      HTMLlength2em: function (span,length,d,m) {
+      HTMLlength2em: function (span,length,mu,d,m) {
 	if (m == null) {m = -HTMLCSS.BIGDIMEN}
 	var match = String(length).match(/width|height|depth/);
 	var size = (match ? span.bbox[match[0].charAt(0)] : (d ? span.bbox[d] : null));
-	var v = HTMLCSS.length2em(length,size);
+	var v = HTMLCSS.length2em(length,mu,size);
 	if (d && String(length).match(/^\s*[-+]/))
 	  {return Math.max(m,span.bbox[d]+v)} else {return v}
       },
@@ -1748,7 +1765,7 @@
 	  HTMLCSS.placeBox(den,num.bbox.w+bevel.bbox.w-delta,(den.bbox.d-den.bbox.h)/2+a-delta);
 	} else {
 	  var W = Math.max(num.bbox.w,den.bbox.w);
-	  var t = HTMLCSS.thickness2em(values.linethickness), p,q, u,v;
+	  var t = HTMLCSS.thickness2em(values.linethickness,scale), p,q, u,v;
 	  var mt = HTMLCSS.TeX.min_rule_thickness/this.em;
 	  if (isDisplay) {u = HTMLCSS.TeX.num1; v = HTMLCSS.TeX.denom1}
 	    else {u = (t === 0 ? HTMLCSS.TeX.num3 : HTMLCSS.TeX.num2); v = HTMLCSS.TeX.denom2}
@@ -1989,7 +2006,8 @@
 
     MML.msubsup.Augment({
       toHTML: function (span,HW,D) {
-	span = this.HTMLcreateSpan(span); var scale = this.HTMLgetScale();
+	span = this.HTMLcreateSpan(span);
+        var scale = this.HTMLgetScale(), mu = this.HTMLgetMu(span);
 	var stack = HTMLCSS.createStack(span), values;
 	var base = HTMLCSS.createBox(stack);
 	this.HTMLmeasureChild(this.base,base);
@@ -2021,8 +2039,8 @@
 	      !this.data[this.base].Get("largeop")) {u = v = 0}
 	}
 	var min = this.getValues("subscriptshift","superscriptshift");
-	min.subscriptshift   = (min.subscriptshift === ""   ? 0 : HTMLCSS.length2em(min.subscriptshift));
-	min.superscriptshift = (min.superscriptshift === "" ? 0 : HTMLCSS.length2em(min.superscriptshift));
+	min.subscriptshift   = (min.subscriptshift === ""   ? 0 : HTMLCSS.length2em(min.subscriptshift,mu));
+	min.superscriptshift = (min.superscriptshift === "" ? 0 : HTMLCSS.length2em(min.superscriptshift,mu));
 	if (!sup) {
 	  if (sub) {
 	    v = Math.max(v,HTMLCSS.TeX.sub1*scale,sub.bbox.h-(4/5)*x_height,min.subscriptshift);
@@ -2082,7 +2100,7 @@
 	//
 	//  Adjust bbox to match outer em-size
 	// 
-	var f = HTMLCSS.em / HTMLCSS.outerEm; HTMLCSS.em /= f;
+        var p = 1/HTMLCSS.em, f = HTMLCSS.em / HTMLCSS.outerEm; HTMLCSS.em /= f;
 	span.bbox.h *= f; span.bbox.d *= f; span.bbox.w *= f;
 	span.bbox.lw *= f; span.bbox.rw *= f;
 	if (math && math.bbox.width != null) {
@@ -2096,7 +2114,7 @@
 	//
 	//  Make math span be the correct height and depth
 	//
-	if (math) {HTMLCSS.createRule(span,math.bbox.h*f,math.bbox.d*f,0)}
+	if (math) {HTMLCSS.createRule(span,(math.bbox.h+p)*f,(math.bbox.d+p)*f,0)}
 	//
 	//  Handle indentalign and indentshift for single-line display equations
 	//

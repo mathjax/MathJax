@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.2";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -36,7 +36,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
                                   "align","useHeight","width","side","minlabelspacing");
       var hasRelativeWidth = values.width.match(/%$/);
       var stack = HTMLCSS.createStack(span);
-      var scale = this.HTMLgetScale(); var LABEL = -1;
+      var scale = this.HTMLgetScale(), mu = this.HTMLgetMu(span), LABEL = -1;
 
       var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row;
       var LHD = HTMLCSS.FONTDATA.baselineskip * scale * values.useHeight,
@@ -76,8 +76,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           RLINES = values.rowlines.split(/ /),
           CWIDTH = values.columnwidth.split(/ /),
           RCALIGN = [];
-      for (i = 0, m = CSPACE.length; i < m; i++) {CSPACE[i] = HTMLCSS.length2em(CSPACE[i])}
-      for (i = 0, m = RSPACE.length; i < m; i++) {RSPACE[i] = HTMLCSS.length2em(RSPACE[i])}
+      for (i = 0, m = CSPACE.length; i < m; i++) {CSPACE[i] = HTMLCSS.length2em(CSPACE[i],mu)}
+      for (i = 0, m = RSPACE.length; i < m; i++) {RSPACE[i] = HTMLCSS.length2em(RSPACE[i],mu)}
       while (CSPACE.length <  J) {CSPACE.push(CSPACE[CSPACE.length-1])}
       while (CALIGN.length <= J) {CALIGN.push(CALIGN[CALIGN.length-1])}
       while (CLINES.length <  J) {CLINES.push(CLINES[CLINES.length-1])}
@@ -101,6 +101,16 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         }
       }
 
+      //
+      //  Handle equal heights
+      //
+      if (values.equalrows) {
+        // FIXME:  should really be based on row align (below is for baseline)
+        var Hm = Math.max.apply(Math,H), Dm = Math.max.apply(Math,D);
+        for (i = 0, m = A.length; i < m; i++)
+          {s = ((Hm + Dm) - (H[i] + D[i])) / 2;  H[i] += s; D[i] += s}
+      }
+
       //  FIXME:  do background colors for entire cell (include half the intercolumn space?)
       
       //
@@ -114,18 +124,30 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var fx = 0, fy = 0, fW, fH = HD;
       if (values.frame !== "none" ||
          (values.columnlines+values.rowlines).match(/solid|dashed/)) {
-        fx = HTMLCSS.length2em(values.framespacing.split(/[, ]+/)[0]);
-        fy = HTMLCSS.length2em(values.framespacing.split(/[, ]+/)[1]);
+        fx = HTMLCSS.length2em(values.framespacing.split(/[, ]+/)[0],mu);
+        fy = HTMLCSS.length2em(values.framespacing.split(/[, ]+/)[1],mu);
         fH = HD + 2*fy; // fW waits until stack.bbox.w is determined
       }
       //
       //  Compute alignment
       //
-      var Y, fY;
-      if (String(values.align).match(/^\d+$/)) {
-        // FIXME: do row-based alignment
-        Y = HD/2 + HTMLCSS.TeX.axis_height*scale - H[0];
-        fY = -(HD/2 + fy);
+      var Y, fY, n = "";
+      if (typeof(values.align) !== "string") {values.align = String(values.align)}
+      if (values.align.match(/(top|bottom|center|baseline|axis)( +(-?\d+))?/))
+        {n = RegExp.$3; values.align = RegExp.$1} else {values.align = "center"}
+      if (n !== "") {
+        //
+        //  Find the height of the given row
+        //
+        n = parseInt(n);
+        if (n < 0) {n = A.length + 1 + n}
+        if (n < 1) {n = 1} else if (n > A.length) {n = A.length}
+        Y = 0; fY = -(HD + fy) + H[0];
+        for (i = 0, m = n-1; i < m; i++) {
+          // FIXME:  Should handle values.align for final row
+          var dY = Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i]);
+          Y += dY; fY += dY;
+        }
       } else {
         Y = ({
           top:    -(H[0] + fy),
@@ -158,7 +180,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           for (i = 0, m = Math.min(J+1,CSPACE.length); i < m; i++) {WW += CSPACE[i]}
         } else {
           //  Get total width minus column spacing
-          WW = HTMLCSS.length2em(values.width);
+          WW = HTMLCSS.length2em(values.width,mu);
           for (i = 0, m = Math.min(J+1,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
           //  Determine individual column widths
           WW /= J+1;
@@ -174,8 +196,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           if (CWIDTH[i] === "auto") {Wt += W[i]}
           else if (CWIDTH[i] === "fit") {F[f] = i; f++; Wt += W[i]}
           else if (CWIDTH[i].match(/%$/))
-            {P[p] = i; p++; Wp += W[i]; WP += HTMLCSS.length2em(CWIDTH[i],1)}
-          else {W[i] = HTMLCSS.length2em(CWIDTH[i]); Wt += W[i]}
+            {P[p] = i; p++; Wp += W[i]; WP += HTMLCSS.length2em(CWIDTH[i],mu,1)}
+          else {W[i] = HTMLCSS.length2em(CWIDTH[i],mu); Wt += W[i]}
         }
         if (hasRelativeWidth) {
           // Get separation width and check percentages
@@ -186,12 +208,12 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           if (values.width === "auto") {
             if (WP > .98) {Wf = Wp/(Wt+Wp); WW = Wt + Wp} else {WW = Wt / (1-WP)}
           } else {
-            WW = HTMLCSS.length2em(values.width);
+            WW = HTMLCSS.length2em(values.width,mu);
             for (i = 0, m = Math.min(J+1,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
           }
           //  Determine the relative column widths
           for (i = 0, m = P.length; i < m; i++) {
-            W[P[i]] = HTMLCSS.length2em(CWIDTH[P[i]],WW*Wf); Wt += W[P[i]];
+            W[P[i]] = HTMLCSS.length2em(CWIDTH[P[i]],mu,WW*Wf); Wt += W[P[i]];
           }
           //  Stretch fit columns, if any, otherwise stretch (or shrink) everything
           if (Math.abs(WW - Wt) > .01) {
@@ -207,15 +229,6 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             for (j = 0; j <= J; j++) {W[j] = Wm}
           }
         }
-      }
-      //
-      //  Handle equal heights
-      //
-      if (values.equalrows) {
-        // FIXME:  should really be based on row align (below is for baseline)
-        var Hm = Math.max.apply(Math,H), Dm = Math.max.apply(Math,D);
-        for (i = 0, m = A.length; i < m; i++)
-          {s = ((Hm + Dm) - (H[i] + D[i])) / 2;  H[i] += s; D[i] += s}
       }
       
       //
@@ -380,14 +393,14 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         HTMLCSS.addBox(eqn,stack); HTMLCSS.alignBox(stack,indent.indentalign,0);
 	if (indent.indentshift && indent.indentalign !== MML.INDENTALIGN.CENTER) {
 	  stack.style[{left:"Left",right:"Right"}[indent.indentalign]] =
-	    HTMLCSS.Em(HTMLCSS.length2em(indent.indentshift));
+	    HTMLCSS.Em(HTMLCSS.length2em(indent.indentshift,mu));
 	}
         C[LABEL].parentNode.parentNode.removeChild(C[LABEL].parentNode);
         HTMLCSS.addBox(eqn,C[LABEL]); HTMLCSS.alignBox(C[LABEL],CALIGN[LABEL],0);
         if (HTMLCSS.msieRelativeWidthBug) {stack.style.top = C[LABEL].style.top = ""}
         if (hasRelativeWidth) {stack.style.width = values.width; span.bbox.width = "100%"}
         C[LABEL].style.marginRight = C[LABEL].style.marginLeft =
-          HTMLCSS.Em(HTMLCSS.length2em(values.minlabelspacing));
+          HTMLCSS.Em(HTMLCSS.length2em(values.minlabelspacing,mu));
       }
       //
       //  Finish the table

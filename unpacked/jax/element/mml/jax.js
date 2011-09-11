@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "1.1.1",
+  version: "1.1.3",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -215,6 +215,9 @@ MathJax.ElementJax.mml.Augment({
       mathcolor: MML.INHERIT
     },
     noInherit: {},
+    noInheritAttribute: {
+      texClass: true
+    },
     
     Init: function () {
       this.data = [];
@@ -257,7 +260,7 @@ MathJax.ElementJax.mml.Augment({
         {return (parent["adjustChild_"+name])(parent.childPosition(this))}
       var obj = this.inherit; var root = obj;
       while (obj) {
-        if (typeof(obj[name]) !== "undefined") {
+        if (typeof(obj[name]) !== "undefined" && !obj.noInheritAttribute[name]) {
           var noInherit = obj.noInherit[this.type];
           if (!(noInherit && noInherit[name])) {return obj[name]}
         }

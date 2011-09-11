@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.11";
+MathJax.fileversion = "1.1.12";
 
 /**********************************************************/
 
@@ -743,7 +743,7 @@ MathJax.fileversion = "1.1.11";
         check.execute = this.execute; check.time = this.time;
         check.STATUS = AJAX.STATUS; check.timeout = timeout || AJAX.timeout;
         check.delay = check.total = 0;
-        setTimeout(check,delay);
+        if (delay) {setTimeout(check,delay)} else {check()}
       },
       //
       //  Increment the time total, increase the delay
