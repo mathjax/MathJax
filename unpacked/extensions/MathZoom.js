@@ -123,7 +123,7 @@
       //  Find the jax
       //
       var JAX = MathJax.OutputJax[math.jaxID];
-      var jax = JAX.getJaxFromMath(math), root = jax.root;
+      var jax = JAX.getJaxFromMath(math);
       if (jax.hover) {HOVER.UnHover(jax)}
 
       //
@@ -170,7 +170,7 @@
         div = tracker;
       }
 
-      var bbox = JAX.Zoom(root,span,math,Mw,Mh);
+      var bbox = JAX.Zoom(jax,span,math,Mw,Mh);
       
       //
       //  Fix up size and position for browsers with bugs (IE)

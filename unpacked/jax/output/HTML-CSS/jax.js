@@ -421,7 +421,7 @@
         jax = script.MathJax.elementJax;
         jax.HTMLCSS = {display: (jax.root.Get("display") === "block")}
         span = div = this.Element("span",{
-	  className:"MathJax", id:jax.inputID+"-Frame", isMathJax:true,
+	  className:"MathJax", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
 	  onclick:EVENT.Click, ondblclick:EVENT.DblClick
@@ -458,10 +458,10 @@
           jax.HTMLCSS.isHidden = true;
           ex = jax.HTMLCSS.ex = test.firstChild.offsetWidth/60;
         }
-        em = jax.HTMLCSS.em = test.lastChild.firstChild.offsetWidth/60;
+        em = test.lastChild.firstChild.offsetWidth/60;
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
         jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
-        jax.HTMLCSS.marginScale = 1;
+        jax.HTMLCSS.marginScale = 1; jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em;
       }
       //
       //  If we need to determine MSIE margin scaling,
@@ -593,24 +593,33 @@
     },
     getHoverSpan: function (jax) {return jax.root.HTMLspanElement()},
     getHoverBBox: function (jax,span) {
-      var bbox = span.bbox, em = jax.outerEm;
+      var bbox = span.bbox, em = jax.HTMLCSS.outerEm;
       var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
       if (bbox.width) {BBOX.width = bbox.width}
       return BBOX;
     },
     
-    Zoom: function (root,span,math,Mw,Mh) {
+    Zoom: function (jax,span,math,Mw,Mh) {
       //
       //  Re-render at larger size
       //
-      span.className = "MathJax"; this.getScales(span,span);
-      this.idPostfix = "-zoom"; root.toHTML(span,span); this.idPostfix = "";
-      var width = root.HTMLspanElement().bbox.width;
+      span.className = "MathJax"; //this.getScales(span,span);
+
+      //
+      //  get em sizes (taken from HTMLCSS.preTranslate)
+      //
+      var emex = span.appendChild(this.EmExSpan.cloneNode(true));
+      var em = emex.lastChild.firstChild.offsetWidth/60;
+      this.msieMarginScale = 1; this.em = MML.mbase.prototype.em = em; this.outerEm = em;
+      emex.parentNode.removeChild(emex);
+
+      this.idPostfix = "-zoom"; jax.root.toHTML(span,span); this.idPostfix = "";
+      var width = jax.root.HTMLspanElement().bbox.width;
       if (width) {
         //  Handle full-width displayed equations
         //  FIXME: this is a hack for now
         span.style.width = Math.floor(Mw-1.5*HTMLCSS.em)+"px"; span.style.display="inline-block";
-        var id = (root.id||"MathJax-Span-"+root.spanID)+"-zoom";
+        var id = (jax.root.id||"MathJax-Span-"+jax.root.spanID)+"-zoom";
         var child = document.getElementById(id).firstChild;
         while (child && child.style.width !== width) {child = child.nextSibling}
         if (child) {child.style.width = "100%"}

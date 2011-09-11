@@ -24,13 +24,14 @@
 
 MathJax.OutputJax.NativeMML = MathJax.OutputJax({
   id: "NativeMML",
-  version: "1.1.10",
+  version: "1.1.11",
   directory: MathJax.OutputJax.directory + "/NativeMML",
   extensionDir: MathJax.OutputJax.extensionDir + "/NativeMML",
   
   config: {
     scale: 100,              // scaling factor for all math
-
+    minScaleAdjust: 50,      // minimum scaling to adjust to surrounding text
+                             //  (since the code for that is a bit delicate)
     styles: {
       "DIV.MathJax_MathML": {
         "text-align": "center",

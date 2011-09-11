@@ -97,7 +97,7 @@
     //  Call the output jax's event handler or the zoom handler
     //
     Handler: function (event,type,math) {
-      if (AJAX.loadingMathMenu) {return False(event)}
+      if (AJAX.loadingMathMenu) {return EVENT.False(event)}
       var jax = OUTPUT[math.jaxID];
       if (!event) {event = window.event}
       event.isContextMenu = (type === "ContextMenu");
