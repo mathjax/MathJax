@@ -31,11 +31,12 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       span = this.HTMLcreateSpan(span); var scale = this.HTMLgetScale();
       var stack = HTMLCSS.createStack(span), values;
       var base = HTMLCSS.createBox(stack);
-      this.HTMLmeasureChild(this.base,base);
       if (this.data[this.base]) {
-        if (D != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchV(base,HW,D),base)}
-        else if (HW != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchH(base,HW),base)}
-      }
+        var child = this.data[this.base].toHTML(base);
+        if (D != null) {this.data[this.base].HTMLstretchV(base,HW,D)}
+        else if (HW != null) {this.data[this.base].HTMLstretchH(base,HW)}
+        HTMLCSS.Measured(child,base);
+      } else {base.bbox = this.HTMLzeroBBox()}
       var x_height = HTMLCSS.TeX.x_height * scale,
           s = HTMLCSS.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?
 

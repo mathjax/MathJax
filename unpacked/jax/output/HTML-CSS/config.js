@@ -32,13 +32,16 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   webfontDir: MathJax.OutputJax.fontDir + "/HTML-CSS",      // font name added later
   
   config: {
-    scale: 100, minScaleAdjust: 50,
-    availableFonts: ["STIX","TeX"],
-    preferredFont: "TeX",
-    webFont: "TeX",
-    imageFont: "TeX",
-    undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",
-    
+    scale: 100, minScaleAdjust: 50, // global math scaling factor, and minimum adjusted scale factor
+    availableFonts: ["STIX","TeX"], // list of local fonts to check for
+    preferredFont: "TeX",           // preferred local font (TeX or STIX)
+    webFont: "TeX",                 // web-based font to use when no local fonts found (TeX is only choice)
+    imageFont: "TeX",               // font to use for image fallback mode (TeX is only choice)
+    undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif", // fonts to use for unknown unicode characters
+
+    EqnChunk: 50,                   // number of equations to process before showing them
+    EqnChunkFactor: 1.5,            // chunk size is multiplied by this after each chunk
+
     linebreaks: {
       automatic: false,   // when false, only process linebreak="newline",
                           // when true, insert line breaks automatically in long expressions.
