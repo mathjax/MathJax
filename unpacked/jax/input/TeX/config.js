@@ -24,14 +24,23 @@
 
 MathJax.InputJax.TeX = MathJax.InputJax({
   id: "TeX",
-  version: "1.1.9",
+  version: "1.1.10",
   directory: MathJax.InputJax.directory + "/TeX",
   extensionDir: MathJax.InputJax.extensionDir + "/TeX",
   
   config: {
     TagSide:       "right",
     TagIndent:     "0.8em",
-    MultLineWidth: "85%"
+    MultLineWidth: "85%",
+    
+    equationNumbers: {
+      autoNumber: "none",  // "AMS" for standard AMS numbering,
+                           //  or "all" for all displayed equations
+      formatNumber: function (n) {return n},
+      formatTag:    function (n) {return '('+n+')'},
+      formatID:     function (n) {return 'mjx-eqn-'+n},
+      formatURL:    function (n) {return '#mjx-eqn-'+escape(n)}
+    }
   }
 });
 MathJax.InputJax.TeX.Register("math/tex");

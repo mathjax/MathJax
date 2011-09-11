@@ -148,7 +148,7 @@
       if (MENU) {
         MENU.jax = jax;
 	MENU.menu.Find("Show Math As").menu.items[1].name =
-          (INPUT[jax.inputJax.id].sourceMenuTitle||"Original Form");
+          (INPUT[jax.inputJax].sourceMenuTitle||"Original Form");
         return MENU.menu.Post(event);
       } else {
         if (!AJAX.loadingMathMenu) {
@@ -208,7 +208,7 @@
     //  timer for the hover
     //
     Mouseover: function (event,math) {
-      if (SETTINGS.discoverable) {
+      if (SETTINGS.discoverable || SETTINGS.zoom === "Hover") {
         var from = event.fromElement || event.relatedTarget,
             to   = event.toElement   || event.target;
         if (from && to && from.isMathJax != to.isMathJax) {
@@ -224,7 +224,7 @@
     //  hovered yet
     //
     Mouseout: function (event,math) {
-      if (SETTINGS.discoverable) {
+      if (SETTINGS.discoverable || SETTINGS.zoom === "Hover") {
         var from = event.fromElement || event.relatedTarget,
             to   = event.toElement   || event.target;
         if (from && to && from.isMathJax != to.isMathJax) {
@@ -238,7 +238,7 @@
     //  Restart hover timer if the mouse moves
     //
     Mousemove: function (event,math) {
-      if (SETTINGS.discoverable) {
+      if (SETTINGS.discoverable || SETTINGS.zoom === "Hover") {
         var jax = this.getJaxFromMath(math); if (jax.hover) return;
         if (HOVER.lastX == event.clientX && HOVER.lastY == event.clientY) return;
         HOVER.lastX = event.clientX; HOVER.lastY = event.clientY;
@@ -269,7 +269,7 @@
       //
       //  Get the hover data
       //
-      var JAX = jax.outputJax,
+      var JAX = OUTPUT[jax.outputJax],
           span = JAX.getHoverSpan(jax,math),
           bbox = JAX.getHoverBBox(jax,span,math),
           show = (JAX.config.showMathMenu != null ? JAX : HUB).config.showMathMenu;

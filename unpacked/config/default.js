@@ -263,6 +263,13 @@ MathJax.Hub.Config({
     processEnvironments: true,
 
     //
+    //  Controls whether tex2jax processes \ref{...} commands outside
+    //  of math mode.  Set to "false" to prevent processing of \ref
+    //  except within math mode.
+    //  
+    processRefs: true,
+
+    //
     //  Controls whether tex2jax inserts MathJax_Preview spans to make a
     //  preview available, and what preview to use, when it locates in-line
     //  and display mathetics on the page.  The default is "TeX", which
@@ -368,7 +375,20 @@ MathJax.Hub.Config({
     //        bold: ['{\\bf #1}', 1]
     //      }
     //
-    Macros: {}
+    Macros: {},
+    
+    //
+    //  Equation numbering parameters.
+    //  
+    equationNumbers: {
+//    formatNumber: function (n) {return n},            // format for equation number n
+//    formatTag:    function (n) {return '('+n+')'},    // format for \tag and \eqref
+//    formatID:     function (n) {return 'mjx-eqn-'+n}, // element ID to use for reference
+//    formatURL:    function (n) {return '#mjx-eqn-'+escape(n)},   // URL to use for references
+
+      autoNumber: "none"   // "AMS" for standard AMS environment numbering,
+                           //  or "all" to number all displayed equations
+    }
     
   },
 
@@ -452,6 +472,42 @@ MathJax.Hub.Config({
     //  if it doesn't contain the needed character), so order these carefully.
     //  
     undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",
+
+    //
+    //  These settings control automatic line breaking.  It is off by
+    //  default, so only explicit line breaks are performed (via
+    //  linebreak="newline" attributes on <mo> and <mspace> elements).  To
+    //  perform automatic line breaking on line expressions, set
+    //  'automatic' to 'true' below.  The line breaks will be applied via a
+    //  penalty-based heuristic, which does well, but isn't perfect.  You
+    //  might need to use linebreak="goodbreak" or linebreak="badbreak" by
+    //  hand in order to get better effects.  It is also possible to modify
+    //  the penalty values; contact the MathJax user's forum for details.
+    //  
+    linebreaks: {
+      
+      //
+      //  This controls the automatic breaking of expressions:
+      //    when false, only process linebreak="newline",
+      //    when true, line breaks are inserted automatically in long expressions.
+      //
+      automatic: false,
+
+      //
+      //  This controls how wide the lines of mathematics can be
+      //  
+      //  Use an explicit with like "30em" for a fixed width.
+      //  Use "container" to compute size from containing element.
+      //  Use "nn% container" for a portion of the container.
+      //  Use "nn%" for a portion of the window size.
+      //  
+      //  The container-based widths may be slower, and may not produce the
+      //  expected results if the layout width changes due to the removal
+      //  of previews or inclusion of mathematics during typesetting.
+      //  
+      width: "container"
+    },
+
     
     //
     //  This controls whether the MathJax contextual menu will be available

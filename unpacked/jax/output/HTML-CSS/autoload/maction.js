@@ -42,34 +42,37 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     
     toHTML: function (span,HW,D) {
       span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
-      var values = this.getValues("actiontype","selection"), frame;
-      var selected = this.data[values.selection-1];
+      var selected = this.selected();
       if (selected) {
         HTMLCSS.Measured(selected.toHTML(span),span);
         if (D != null) {HTMLCSS.Remeasured(selected.HTMLstretchV(span,HW,D),span)}
         else if (HW != null) {HTMLCSS.Remeasured(selected.HTMLstretchH(span,HW),span)}
-        if (HTMLCSS.msieHitBoxBug) {
-          // margin-left doesn't work on inline-block elements in IE, so put it in a SPAN
-          var box = HTMLCSS.addElement(span,"span",{isMathJax:true});
-          frame = HTMLCSS.createFrame(box,span.bbox.h,span.bbox.d,span.bbox.w,0,"none");
-          span.insertBefore(box,span.firstChild); // move below the content
-          box.style.marginRight = HTMLCSS.Em(-span.bbox.w);
-          if (HTMLCSS.msieInlineBlockAlignBug)
-            {frame.style.verticalAlign = HTMLCSS.Em(HTMLCSS.getHD(span).d-span.bbox.d)}
-        } else {
-          frame = HTMLCSS.createFrame(span,span.bbox.h,span.bbox.d,span.bbox.w,0,"none");
-          span.insertBefore(frame,span.firstChild); // move below the content
-          frame.style.marginRight = HTMLCSS.Em(-span.bbox.w);
-        }
-        frame.className = "MathJax_HitBox";
-        frame.id = "MathJax-HitBox-"+this.spanID;
-      
-        if (this.HTMLaction[values.actiontype])
-          {this.HTMLaction[values.actiontype].call(this,span,frame,values.selection)}
+        this.HTMLhandleHitBox(span);
       }
       this.HTMLhandleSpace(span);
       this.HTMLhandleColor(span);
       return span;
+    },
+    HTMLhandleHitBox: function (span,postfix) {
+      var frame;
+      if (HTMLCSS.msieHitBoxBug) {
+        // margin-left doesn't work on inline-block elements in IE, so put it in a SPAN
+	  var box = HTMLCSS.addElement(span,"span",{isMathJax:true});
+        frame = HTMLCSS.createFrame(box,span.bbox.h,span.bbox.d,span.bbox.w,0,"none");
+        span.insertBefore(box,span.firstChild); // move below the content
+        box.style.marginRight = HTMLCSS.Em(-span.bbox.w);
+        if (HTMLCSS.msieInlineBlockAlignBug)
+          {frame.style.verticalAlign = HTMLCSS.Em(HTMLCSS.getHD(span).d-span.bbox.d)}
+      } else {
+        frame = HTMLCSS.createFrame(span,span.bbox.h,span.bbox.d,span.bbox.w,0,"none");
+        span.insertBefore(frame,span.firstChild); // move below the content
+        frame.style.marginRight = HTMLCSS.Em(-span.bbox.w);
+      }
+      frame.className = "MathJax_HitBox";
+      frame.id = "MathJax-HitBox-" + this.spanID + (postfix||"") + HTMLCSS.idPostfix;
+      
+      var type = this.Get("actiontype");
+      if (this.HTMLaction[type]) {this.HTMLaction[type].call(this,span,frame,this.Get("selection"))}
     },
     HTMLstretchH: MML.mbase.HTMLstretchH,
     HTMLstretchV: MML.mbase.HTMLstretchV,

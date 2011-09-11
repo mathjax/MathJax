@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "1.1.3",
+  version: "1.1.4",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -218,6 +218,7 @@ MathJax.ElementJax.mml.Augment({
     noInheritAttribute: {
       texClass: true
     },
+    linebreakContainer: FALSE,
     
     Init: function () {
       this.data = [];
@@ -346,16 +347,23 @@ MathJax.ElementJax.mml.Augment({
     isEmbellished: function () {return FALSE},
     Core: function () {return this},
     CoreMO: function () {return this},
-    lineBreak: function () {
+    lineBreak: function () {  // FIXME:  should be removed (and from elements below) when SVG is converted to new linebreak style
       if (this.isEmbellished()) {return this.CoreMO().lineBreak()} else {return "none"}
+    },
+    hasNewline: function () {
+      if (this.isEmbellished()) {return this.CoreMO().hasNewline()}
+      if (this.isToken || this.linebreakContainer) {return FALSE}
+      for (var i = 0, m = this.data.length; i < m; i++) {
+        if (this.data[i] && this.data[i].hasNewline()) {return TRUE}
+      }
+      return FALSE;
     },
     array: function () {if (this.inferred) {return this.data} else {return [this]}},
     toString: function () {return this.type+"("+this.data.join(",")+")"}
   },{
     childrenSpacelike: function () {
-      for (var i = 0; i < this.data.length; i++) {
-        if (!this.data[i].isSpacelike()) {return FALSE}
-      }
+      for (var i = 0, m = this.data.length; i < m; i++)
+        {if (!this.data[i].isSpacelike()) {return FALSE}}
       return TRUE;
     },
     childEmbellished: function () {
@@ -536,6 +544,7 @@ MathJax.ElementJax.mml.Augment({
       return MML.FORM.INFIX;
     },
     isEmbellished: function () {return TRUE},
+    hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)},
     lineBreak: function () {
       var values = this.getValues("linebreak","linebreakstyle");
       if (values.linebreak === MML.LINEBREAK.NEWLINE) {
@@ -592,6 +601,7 @@ MathJax.ElementJax.mml.Augment({
       depth: "0ex",
       linebreak: MML.LINEBREAK.AUTO
     },
+    hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)},
     lineBreak: function () {
       return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE ?
                 MML.LINEBREAKSTYLE.AFTER : "none");
@@ -678,6 +688,7 @@ MathJax.ElementJax.mml.Augment({
 
   MML.mfrac = MML.mbase.Subclass({
     type: "mfrac", num: 0, den: 1,
+    linebreakContainer: TRUE,
     texClass: MML.TEXCLASS.INNER,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
@@ -706,6 +717,7 @@ MathJax.ElementJax.mml.Augment({
   MML.msqrt = MML.mbase.Subclass({
     type: "msqrt",
     inferRow: TRUE,
+    linebreakContainer: TRUE,
     texClass: MML.TEXCLASS.ORD,
     setTeXclass: MML.mbase.setSeparateTeXclasses,
     adjustChild_texprimestyle: function (n) {return TRUE}
@@ -713,6 +725,7 @@ MathJax.ElementJax.mml.Augment({
 
   MML.mroot = MML.mbase.Subclass({
     type: "mroot",
+    linebreakContainer: TRUE,
     texClass: MML.TEXCLASS.ORD,
     adjustChild_displaystyle: function (n) {
       if (n === 1) {return FALSE}
@@ -770,6 +783,7 @@ MathJax.ElementJax.mml.Augment({
   MML.merror = MML.mbase.Subclass({
     type: "merror",
     inferRow: TRUE,
+    linebreakContainer: TRUE,
     texClass: MML.TEXCLASS.ORD
   });
 
@@ -855,6 +869,7 @@ MathJax.ElementJax.mml.Augment({
   MML.menclose = MML.mbase.Subclass({
     type: "menclose",
     inferRow: TRUE,
+    linebreakContainer: TRUE,
     defaults: {
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
@@ -866,6 +881,7 @@ MathJax.ElementJax.mml.Augment({
 
   MML.msubsup = MML.mbase.Subclass({
     type: "msubsup", base: 0, sub: 1, sup: 2,
+    linebreakContainer: TRUE,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -913,6 +929,7 @@ MathJax.ElementJax.mml.Augment({
     type: "munderover",
     base: 0, under: 1, over: 2, sub: 1, sup: 2,
     ACCENTS: ["", "accentunder", "accent"],
+    linebreakContainer: TRUE,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -992,6 +1009,7 @@ MathJax.ElementJax.mml.Augment({
         side: TRUE, minlabelspacing: TRUE, texClass: TRUE, useHeight: 1
       }
     },
+    linebreakContainer: TRUE,
     Append: function () {
       for (var i = 0, m = arguments.length; i < m; i++) {
         if (!((arguments[i] instanceof MML.mtr) ||
@@ -1016,6 +1034,7 @@ MathJax.ElementJax.mml.Augment({
       mrow: {rowalign: TRUE, columnalign: TRUE, groupalign: TRUE},
       mtable: {rowalign: TRUE, columnalign: TRUE, groupalign: TRUE}
     },
+    linebreakContainer: TRUE,
     Append: function () {
       for (var i = 0, m = arguments.length; i < m; i++) {
         if (!(arguments[i] instanceof MML.mtd)) {arguments[i] = MML.mtd(arguments[i])}
@@ -1028,6 +1047,7 @@ MathJax.ElementJax.mml.Augment({
   MML.mtd = MML.mbase.Subclass({
     type: "mtd",
     inferRow: TRUE,
+    linebreakContainer: TRUE,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -1101,6 +1121,7 @@ MathJax.ElementJax.mml.Augment({
   });
   MML.annotation = MML.mbase.Subclass({
     type: "annotation", isToken: TRUE,
+    linebreakContainer: TRUE,
     defaults: {
       definitionURL: null,
       encoding: null,
@@ -1146,6 +1167,8 @@ MathJax.ElementJax.mml.Augment({
       indentalign: MML.INDENTALIGN.AUTO,
       indentalignfirst: MML.INDENTALIGN.INDENTALIGN,
       indentshiftfirst: MML.INDENTSHIFT.INDENTSHIFT,
+      indentalignlast:  MML.INDENTALIGN.INDENTALIGN,
+      indentshiftlast:  MML.INDENTSHIFT.INDENTSHIFT,
       decimalseparator: ".",
       texprimestyle: FALSE     // is it in TeX's C' style?
     },
@@ -1153,6 +1176,7 @@ MathJax.ElementJax.mml.Augment({
       if (name === "displaystyle") {return this.Get("display") === "block"}
       return "";
     },
+    linebreakContainer: TRUE,
     setTeXclass: MML.mbase.setChildTeXclass
   });
   
@@ -1250,13 +1274,15 @@ MathJax.ElementJax.mml.Augment({
     BIN3:       [3,3,TEXCLASS.BIN],
     BIN4:       [4,4,TEXCLASS.BIN],
     BIN01:      [0,1,TEXCLASS.BIN],
+    BIN5:       [5,5,TEXCLASS.BIN],
     TALLBIN:    [4,4,TEXCLASS.BIN,{stretchy: true}],
     BINOP:      [4,4,TEXCLASS.BIN,{largeop: true, movablelimits: true}],
     REL:        [5,5,TEXCLASS.REL],
     REL1:       [1,1,TEXCLASS.REL,{stretchy: true}],
     REL4:       [4,4,TEXCLASS.REL],
-    WIDEREL:    [5,5,TEXCLASS.REL,{stretchy: true}],
-    RELACCENT:  [5,5,TEXCLASS.REL,{accent: true, stretchy: true}],
+    RELSTRETCH: [5,5,TEXCLASS.REL,{stretchy: true}],
+    RELACCENT:  [5,5,TEXCLASS.REL,{accent: true}],
+    WIDEREL:    [5,5,TEXCLASS.REL,{accent: true, stretchy: true}],
     OPEN:       [0,0,TEXCLASS.OPEN,{fence: true, stretchy: true, symmetric: true}],
     CLOSE:      [0,0,TEXCLASS.CLOSE,{fence: true, stretchy: true, symmetric: true}],
     INNER:      [0,0,TEXCLASS.INNER],
@@ -1296,17 +1322,15 @@ MathJax.ElementJax.mml.Augment({
       [0x25A0,0x25FF,TEXCLASS.ORD,"GeometricShapes"],
       [0x2700,0x27BF,TEXCLASS.ORD,"Dingbats"],
       [0x27C0,0x27EF,TEXCLASS.ORD,"MiscMathSymbolsA"],
+      [0x27F0,0x27FF,TEXCLASS.REL,"SupplementalArrowsA"],
       [0x2900,0x297F,TEXCLASS.REL,"SupplementalArrowsB"],
       [0x2980,0x29FF,TEXCLASS.ORD,"MiscMathSymbolsB"],
       [0x2A00,0x2AFF,TEXCLASS.BIN,"SuppMathOperators"],
-      [0x2B00,0x2BFF,TEXCLASS.ORD],
+      [0x2B00,0x2BFF,TEXCLASS.ORD,"MiscSymbolsAndArrows"],
       [0x1D400,0x1D7FF,TEXCLASS.ORD]
     ],
     OPTABLE: {
       prefix: {
-        '\u2111': MO.ORD11,    // black-letter capital i
-        '\u2113': MO.ORD11,    // script small l
-        '\u211C': MO.ORD11,    // black-letter capital r
         '\u2200': MO.ORD21,    // for all
         '\u2202': MO.ORD21,    // partial differential
         '\u2203': MO.ORD21,    // there exists
@@ -1327,6 +1351,7 @@ MathJax.ElementJax.mml.Augment({
         '\u2308': MO.OPEN,     // left ceiling
         '\u230A': MO.OPEN,     // left floor
         '\u27E8': MO.OPEN,     // mathematical left angle bracket
+        '\u27EE': MO.OPEN,     // mathematical left flattened parenthesis
         '\u2A00': MO.OP,       // n-ary circled dot operator
         '\u2A01': MO.OP,       // n-ary circled plus operator
         '\u2A02': MO.OP,       // n-ary circled times operator
@@ -1354,12 +1379,16 @@ MathJax.ElementJax.mml.Augment({
         '\u266E': MO.ORD02,    // music natural sign
         '\u266F': MO.ORD02,    // music sharp sign
         '\u27E9': MO.CLOSE,    // mathematical right angle bracket
+        '\u27EF': MO.CLOSE,    // mathematical right flattened parenthesis
         '\u02C6': MO.WIDEACCENT, // modifier letter circumflex accent
         '\u02C7': MO.WIDEACCENT, // caron
+        '\u02C9': MO.WIDEACCENT, // modifier letter macron
+        '\u02CA': MO.ACCENT,   // modifier letter acute accent
+        '\u02CB': MO.ACCENT,   // modifier letter grave accent
         '\u02D8': MO.ACCENT,   // breve
         '\u02D9': MO.ACCENT,   // dot above
         '\u02DC': MO.WIDEACCENT, // small tilde
-        '\u0302': MO.ACCENT,   // combining circumflex accent
+        '\u0302': MO.WIDEACCENT, // combining circumflex accent
         '\u00A8': MO.ACCENT,   // diaeresis
         '\u00AF': MO.WIDEACCENT, // macron
         ')': MO.CLOSE,         // right parenthesis
@@ -1372,38 +1401,39 @@ MathJax.ElementJax.mml.Augment({
         '~': MO.WIDEACCENT     // tilde
       },
       infix: {
+        '': MO.ORD,            // empty <mo>
         '%': [3,3,TEXCLASS.ORD], // percent sign
         '\u2022': MO.BIN4,     // bullet
         '\u2026': MO.INNER,    // horizontal ellipsis
         '\u2044': MO.TALLBIN,  // fraction slash
         '\u2061': MO.ORD,      // function application
         '\u2062': MO.ORD,      // invisible times
-        '\u2063': [0,0,TEXCLASS.ORD,{separator: true}], // invisible separator
+        '\u2063': [0,0,TEXCLASS.ORD,{linebreakstyle:"after", separator: true}], // invisible separator
         '\u2064': MO.ORD,      // invisible plus
-        '\u2190': MO.RELACCENT, // leftwards arrow
-        '\u2191': MO.WIDEREL,  // upwards arrow
-        '\u2192': MO.RELACCENT, // rightwards arrow
-        '\u2193': MO.WIDEREL,  // downwards arrow
-        '\u2194': MO.RELACCENT, // left right arrow
-        '\u2195': MO.WIDEREL,  // up down arrow
-        '\u2196': MO.WIDEREL,  // north west arrow
-        '\u2197': MO.WIDEREL,  // north east arrow
-        '\u2198': MO.WIDEREL,  // south east arrow
-        '\u2199': MO.WIDEREL,  // south west arrow
+        '\u2190': MO.WIDEREL,  // leftwards arrow
+        '\u2191': MO.RELSTRETCH, // upwards arrow
+        '\u2192': MO.WIDEREL,  // rightwards arrow
+        '\u2193': MO.RELSTRETCH, // downwards arrow
+        '\u2194': MO.WIDEREL,  // left right arrow
+        '\u2195': MO.RELSTRETCH, // up down arrow
+        '\u2196': MO.RELSTRETCH, // north west arrow
+        '\u2197': MO.RELSTRETCH, // north east arrow
+        '\u2198': MO.RELSTRETCH, // south east arrow
+        '\u2199': MO.RELSTRETCH, // south west arrow
         '\u21A6': MO.WIDEREL,  // rightwards arrow from bar
         '\u21A9': MO.WIDEREL,  // leftwards arrow with hook
         '\u21AA': MO.WIDEREL,  // rightwards arrow with hook
-        '\u21BC': MO.RELACCENT, // leftwards harpoon with barb upwards
+        '\u21BC': MO.WIDEREL,  // leftwards harpoon with barb upwards
         '\u21BD': MO.WIDEREL,  // leftwards harpoon with barb downwards
-        '\u21C0': MO.RELACCENT, // rightwards harpoon with barb upwards
+        '\u21C0': MO.WIDEREL,  // rightwards harpoon with barb upwards
         '\u21C1': MO.WIDEREL,  // rightwards harpoon with barb downwards
         '\u21CC': MO.WIDEREL,  // rightwards harpoon over leftwards harpoon
         '\u21D0': MO.WIDEREL,  // leftwards double arrow
-        '\u21D1': MO.WIDEREL,  // upwards double arrow
+        '\u21D1': MO.RELSTRETCH, // upwards double arrow
         '\u21D2': MO.WIDEREL,  // rightwards double arrow
-        '\u21D3': MO.WIDEREL,  // downwards double arrow
+        '\u21D3': MO.RELSTRETCH, // downwards double arrow
         '\u21D4': MO.WIDEREL,  // left right double arrow
-        '\u21D5': MO.WIDEREL,  // up down double arrow
+        '\u21D5': MO.RELSTRETCH, // up down double arrow
         '\u2208': MO.REL,      // element of
         '\u2209': MO.REL,      // not an element of
         '\u220B': MO.REL,      // contains as member
@@ -1462,20 +1492,20 @@ MathJax.ElementJax.mml.Augment({
         '\u22EE': MO.ORD55,    // vertical ellipsis
         '\u22EF': MO.INNER,    // midline horizontal ellipsis
         '\u22F1': [5,5,TEXCLASS.INNER], // down right diagonal ellipsis
-        '\u2500': [0,0,TEXCLASS.ORD,{stretchy: true}], // box drawings light horizontal
         '\u25B3': MO.BIN4,     // white up-pointing triangle
         '\u25B5': MO.BIN4,     // white up-pointing small triangle
         '\u25B9': MO.BIN4,     // white right-pointing small triangle
         '\u25BD': MO.BIN4,     // white down-pointing triangle
         '\u25BF': MO.BIN4,     // white down-pointing small triangle
         '\u25C3': MO.BIN4,     // white left-pointing small triangle
-        '\u2758': [4,4,TEXCLASS.REL,{fence: true, stretchy: true, symmetric: true}], // light vertical bar
-        '\u27F5': MO.REL1,     // long leftwards arrow
-        '\u27F6': MO.REL1,     // long rightwards arrow
-        '\u27F7': MO.REL1,     // long left right arrow
-        '\u27F8': MO.REL1,     // long leftwards double arrow
-        '\u27F9': MO.REL1,     // long rightwards double arrow
-        '\u27FA': MO.REL1,     // long left right double arrow
+        '\u2758': MO.REL,      // light vertical bar
+        '\u27F5': MO.WIDEREL,  // long leftwards arrow
+        '\u27F6': MO.WIDEREL,  // long rightwards arrow
+        '\u27F7': MO.WIDEREL,  // long left right arrow
+        '\u27F8': MO.WIDEREL,  // long leftwards double arrow
+        '\u27F9': MO.WIDEREL,  // long rightwards double arrow
+        '\u27FA': MO.WIDEREL,  // long left right double arrow
+        '\u27FC': MO.WIDEREL,  // long rightwards arrow from bar
         '\u2A2F': MO.BIN4,     // vector or cross product
         '\u2A3F': MO.BIN4,     // amalgamation or coproduct
         '\u2AAF': MO.REL,      // precedes above single-line equals sign
@@ -1486,26 +1516,24 @@ MathJax.ElementJax.mml.Augment({
         '\u00F7': MO.BIN4,     // division sign
         '*': MO.BIN3,          // asterisk
         '+': MO.BIN4,          // plus sign
-        ',': [0,3,TEXCLASS.PUNCT,{separator: true}], // comma
+        ',': [0,3,TEXCLASS.PUNCT,{linebreakstyle:"after", separator: true}], // comma
         '-': MO.BIN4,          // hyphen-minus
         '.': [3,3,TEXCLASS.ORD], // full stop
         '/': MO.ORD11,         // solidus
         ':': [1,2,TEXCLASS.REL], // colon
-        ';': [0,3,TEXCLASS.PUNCT,{separator: true}], // semicolon
+        ';': [0,3,TEXCLASS.PUNCT,{linebreakstyle:"after", separator: true}], // semicolon
         '<': MO.REL,           // less-than sign
         '=': MO.REL,           // equals sign
         '>': MO.REL,           // greater-than sign
         '?': [1,1,TEXCLASS.CLOSE], // question mark
         '\\': MO.ORD,          // reverse solidus
+        '^': MO.ORD11,         // circumflex accent
         '_': MO.ORD11,         // low line
         '|': [2,2,TEXCLASS.ORD,{fence: true, stretchy: true, symmetric: true}], // vertical line
         '#': MO.ORD,           // #
         '$': MO.ORD,           // $
         '\u002E': [0,3,TEXCLASS.PUNCT,{separator: true}], // \ldotp
         '\u02B9': MO.ORD,      // prime
-        '\u02C9': MO.ACCENT,   // \bar
-        '\u02CA': MO.ACCENT,   // \acute
-        '\u02CB': MO.ACCENT,   // \grave
         '\u0300': MO.ACCENT,   // \grave
         '\u0301': MO.ACCENT,   // \acute
         '\u0303': MO.WIDEACCENT, // \tilde
@@ -1521,7 +1549,10 @@ MathJax.ElementJax.mml.Augment({
         '\u2020': MO.BIN3,     // \dagger
         '\u2021': MO.BIN3,     // \ddagger
         '\u20D7': MO.ACCENT,   // \vec
+        '\u2111': MO.ORD,      // \Im
+        '\u2113': MO.ORD,      // \ell
         '\u2118': MO.ORD,      // \wp
+        '\u211C': MO.ORD,      // \Re
         '\u2205': MO.ORD,      // \emptyset
         '\u221E': MO.ORD,      // \infty
         '\u2305': MO.BIN3,     // barwedge
@@ -1534,14 +1565,12 @@ MathJax.ElementJax.mml.Augment({
         '\u23AF': [0,0,TEXCLASS.ORD,{stretchy: true}], // \underline
         '\u23B0': MO.OPEN,     // \lmoustache
         '\u23B1': MO.CLOSE,    // \rmoustache
+        '\u2500': MO.ORD,      // horizontal line
         '\u25EF': MO.BIN3,     // \bigcirc
         '\u2660': MO.ORD,      // \spadesuit
         '\u2661': MO.ORD,      // \heartsuit
         '\u2662': MO.ORD,      // \diamondsuit
         '\u2663': MO.ORD,      // \clubsuit
-        '\u27EE': MO.OPEN,     // \lgroup
-        '\u27EF': MO.CLOSE,    // \rgroup
-        '\u27FC': MO.REL4,     // \longmapsto
         '\u3008': MO.OPEN,     // langle
         '\u3009': MO.CLOSE,    // rangle
         '\uFE37': MO.WIDEACCENT, // horizontal brace down
