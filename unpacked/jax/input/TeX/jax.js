@@ -1272,8 +1272,8 @@
       var mml = MML.munderover(base,null,null);
       if (stack) {mml.movesupsub = TRUE}
       mml.data[mml[pos]] = 
-        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy: TRUE, accent: (pos == "under")}));
-      this.Push(MML.TeXAtom(mml));
+        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:TRUE, accent:(pos == "under")}));
+      this.Push(mml);
     },
     
     Overset: function (name) {
