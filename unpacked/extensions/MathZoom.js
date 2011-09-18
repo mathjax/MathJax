@@ -33,8 +33,8 @@
       "#MathJax_Zoom": {
         position:"absolute", "background-color":"#F0F0F0", overflow:"auto",
         display:"block", "z-index":301, padding:".5em", border:"1px solid black", margin:0,
-        "font-family":"serif", "font-size":"85%", "font-weight":"normal",
-        "font-style":"normal", "text-align":"left", "text-indent":0, "text-transform":"none",
+        "font-weight":"normal", "font-style":"normal",
+        "text-align":"left", "text-indent":0, "text-transform":"none",
         "line-height":"normal", "letter-spacing":"normal", "word-spacing":"normal",
         "word-wrap":"normal", "white-space":"nowrap", "float":"none",
         "box-shadow":"5px 5px 15px #AAAAAA",         // Opera 10.5 and IE9

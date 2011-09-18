@@ -603,14 +603,16 @@
       //
       //  Re-render at larger size
       //
-      span.className = "MathJax"; //this.getScales(span,span);
+      span.className = "MathJax";
+      span.style.fontSize = jax.HTMLCSS.fontSize;
 
       //
       //  get em sizes (taken from HTMLCSS.preTranslate)
       //
       var emex = span.appendChild(this.EmExSpan.cloneNode(true));
       var em = emex.lastChild.firstChild.offsetWidth/60;
-      this.msieMarginScale = 1; this.em = MML.mbase.prototype.em = em; this.outerEm = em;
+      this.msieMarginScale = 1; this.em = MML.mbase.prototype.em = em;
+      this.outerEm = em / jax.HTMLCSS.scale;
       emex.parentNode.removeChild(emex);
 
       this.idPostfix = "-zoom"; jax.root.toHTML(span,span); this.idPostfix = "";
