@@ -331,7 +331,8 @@
         0x005E: {alias: 0x02D6, dir:H}, // wide hat
         0x005F: {alias: 0x23AF, dir:H}, // low line
         0x007E: {alias: 0x02DC, dir:H}, // wide tilde
-        0x00AF: {alias: 0x02C9, dir:H}, // macron
+        0x00AF: {alias: 0x23AF, dir:H}, // macron
+        0x02C9: {alias: 0x23AF, dir:H}, // macron
         0x0302: {alias: 0x02C6, dir:H}, // wide hat
         0x0303: {alias: 0x02DC, dir:H}, // wide tilde
         0x030C: {alias: 0x02C7, dir:H}, // wide caron
@@ -342,7 +343,6 @@
         0x2215: {alias: 0x002F, dir:V}, // division slash
         0x2329: {alias: 0x27E8, dir:V}, // langle
         0x232A: {alias: 0x27E9, dir:V}, // rangle
-        0x23AF: {alias: 0x2212, dir:H}, // horizontal line extension
         0x2500: {alias: 0x2212, dir:H}, // horizontal line
         0x2758: {alias: 0x2223, dir:V}, // vertical separator
         0x3008: {alias: 0x27E8, dir:V}, // langle
