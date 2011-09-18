@@ -729,7 +729,7 @@
    *  Handle changing the renderer
    */
   MENU.Renderer = function () {
-    var jax = HUB.config.outputJax["jax/mml"];
+    var jax = HUB.outputJax["jax/mml"];
     if (jax[0] !== CONFIG.settings.renderer) {
       CALLBACK.Queue(
         ["Require",AJAX,"[MathJax]/jax/output/"+CONFIG.settings.renderer+"/config.js"],

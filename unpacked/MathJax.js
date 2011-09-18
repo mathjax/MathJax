@@ -1473,8 +1473,6 @@ MathJax.Hub = {
             if (jax.called) continue;                       //   go back and call Process() again
             this.RestartAfter(jax);                         //   wait for the callback
           }
-          jax.Attach(script,this.inputJax[type].id);        // register the jax on the script
-          script.MathJax.state = STATE.OUTPUT;              // mark it as needing output
           //
           if (!this.outputJax[jax.mimeType]) {              // check for existing output jax
             script.MathJax.state = STATE.UPDATE;
@@ -1497,6 +1495,9 @@ MathJax.Hub = {
             state.jaxIDs.push(jax.outputJax); // save the ID of the jax
           }
           if (state.jaxIDs.length > 1) {state.jax[jax.outputJax].push(script)}
+          //
+          jax.Attach(script,this.inputJax[type].id);        // register the jax on the script
+          script.MathJax.state = STATE.OUTPUT;              // mark it as needing output
         }
         //
         //  Go on to the next script, and check if we need to update the processing message
@@ -2095,6 +2096,7 @@ MathJax.Hub.Startup = {
       jax.originalText = (script.text == "" ? script.innerHTML : script.text);
       jax.inputJax = inputJax;
       if (jax.root) {jax.root.inputID = jax.inputID}
+      return jax;
     },
     Detach: function () {
       var script = this.SourceElement(); if (!script) return;
@@ -2115,7 +2117,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "1.1.1",
+    version: "1.1.2",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
