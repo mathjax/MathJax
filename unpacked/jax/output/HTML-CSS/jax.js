@@ -479,7 +479,7 @@
           test = this.getTestSpan(script);
           var W = test.lastChild.lastChild.offsetWidth,
               w = test.lastChild.lastChild.firstChild.offsetWidth;
-          math.HTMLCSS.marginScale = (2*w - W ? w/(2*w - W) : 1);
+          jax.HTMLCSS.marginScale = (2*w - W ? w/(2*w - W) : 1);
         }
       }
       //

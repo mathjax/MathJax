@@ -1836,7 +1836,7 @@ MathJax.Hub.Startup = {
   onLoad: function (when) {
     var onload = this.onload =
       MathJax.Callback(function () {MathJax.Hub.Startup.signal.Post("onLoad")});
-    if (document.readyState && document.readyState !== "loading") {return [onload]}
+    if (document.body && document.readyState && document.readyState !== "loading") {return [onload]}
     if (window.addEventListener) {
       window.addEventListener("load",onload,false);
       if (!this.params.noDOMContentEvent)

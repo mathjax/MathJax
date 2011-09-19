@@ -180,7 +180,7 @@ MathJax.Extension.tex2jax = {
     } else if (match[0].substr(0,4) === "\\ref" || match[0].substr(0,6) === "\\eqref") {
       this.search = {
         mode: "", end: "", open: element,
-        olen: 0, opos: this.pattern.lastIndex - match[0].length,
+        olen: 0, opos: this.pattern.lastIndex - match[0].length
       }
       return this.endMatch([""],element);
     } else {                                         // escaped dollar signs
