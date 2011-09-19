@@ -1948,7 +1948,7 @@ MathJax.Hub.Startup = {
     Startup: function () {},
     loadComplete: function (file) {
       if (file === "config.js") {
-        AJAX.loadComplete(this.directory+"/"+file);
+        return AJAX.loadComplete(this.directory+"/"+file);
       } else {
         var queue = CALLBACK.Queue();
         queue.Push(
@@ -1967,9 +1967,9 @@ MathJax.Hub.Startup = {
             THIS.preProcess  = THIS.preTranslate;
             THIS.Process     = THIS.Translate;
             THIS.postProcess = THIS.postTranslate;
-          },this.constructor.prototype],
-          ["loadComplete",AJAX,this.directory+"/"+file]
+          },this.constructor.prototype]
         );
+        return queue.Push(["loadComplete",AJAX,this.directory+"/"+file]);
       }
     }
   },{
