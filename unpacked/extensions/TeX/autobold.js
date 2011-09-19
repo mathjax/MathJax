@@ -21,22 +21,20 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   
   var TEX = MathJax.InputJax.TeX;
-  var oldPrefilter = TEX.prefilterMath;
   
-  TEX.prefilterMath = function (math,displaystyle,script) {
-    var span = script.parentNode.insertBefore(document.createElement("span"),script);
+  TEX.prefilterHooks.Add(function (data) {
+    var span = data.script.parentNode.insertBefore(document.createElement("span"),data.script);
     span.visibility = "hidden";
     span.style.fontFamily = "Times, serif";
     span.appendChild(document.createTextNode("ABCXYZabcxyz"));
     var W = span.offsetWidth;
     span.style.fontWeight = "bold";
-    if (span.offsetWidth == W) {math = "\\bf {"+math+"}"}
+    if (span.offsetWidth === W) {data.math = "\\boldsymbol{"+data.math+"}"}
     span.parentNode.removeChild(span);
-    return oldPrefilter.call(TEX,math,displaystyle,script);
-  };
+  });
   
   MathJax.Hub.Startup.signal.Post("TeX autobold Ready");
 

@@ -12,5 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Hub.Register.StartupHook("TeX Jax Ready",function(){var b="1.1";var c=MathJax.InputJax.TeX;var a=c.prefilterMath;c.prefilterMath=function(g,h,e){var f=e.parentNode.insertBefore(document.createElement("span"),e);f.visibility="hidden";f.style.fontFamily="Times, serif";f.appendChild(document.createTextNode("ABCXYZabcxyz"));var d=f.offsetWidth;f.style.fontWeight="bold";if(f.offsetWidth==d){g="\\bf {"+g+"}"}f.parentNode.removeChild(f);return a.call(c,g,h,e)};MathJax.Hub.Startup.signal.Post("TeX autobold Ready")});MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/autobold.js");
+MathJax.Hub.Register.StartupHook("TeX Jax Ready",function(){var a="1.1.1";var b=MathJax.InputJax.TeX;b.prefilterHooks.Add(function(e){var d=e.script.parentNode.insertBefore(document.createElement("span"),e.script);d.visibility="hidden";d.style.fontFamily="Times, serif";d.appendChild(document.createTextNode("ABCXYZabcxyz"));var c=d.offsetWidth;d.style.fontWeight="bold";if(d.offsetWidth===c){e.math="\\boldsymbol{"+e.math+"}"}d.parentNode.removeChild(d)});MathJax.Hub.Startup.signal.Post("TeX autobold Ready")});MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/autobold.js");
 
