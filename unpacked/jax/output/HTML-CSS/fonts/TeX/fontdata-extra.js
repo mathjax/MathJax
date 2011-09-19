@@ -57,7 +57,7 @@
     },
     0x21A6: // right arrow from bar
     {
-      dir: H, HW: [[1,AMS]],
+      dir: H, HW: [[1,MAIN]],
       stretch: {left:[0x2223,SIZE1,-.09,-.05,.9], rep:[0x2212,MAIN], right:[0x2192,MAIN]}
     },
     0x21A7: // down arrow from bar

@@ -419,6 +419,7 @@
         0xFE37: {alias: 0x23DE, dir:H}, // horizontal brace down
         0xFE38: {alias: 0x23DF, dir:H}, // horizontal brace up
 
+        0x003D: EXTRAH, // equal sign
         0x219E: EXTRAH, // left two-headed arrow
         0x21A0: EXTRAH, // right two-headed arrow
         0x21A4: EXTRAH, // left arrow from bar
