@@ -871,13 +871,14 @@
       var H = this.Em(Math.max(0,h+d)), D = this.Em(-d);
       if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode).d-d)}
       if (span.isBox || span.className == "mspace") {
+        var scale = (span.scale == null ? 1 : span.scale);
         span.bbox = {
           exactW: true,
-          h: h*span.scale, d: d*span.scale,
-          w: w*span.scale, rw: w*span.scale, lw: 0
+          h: h*scale, d: d*scale,
+          w: w*scale, rw: w*scale, lw: 0
         };
         span.style.height = H; span.style.verticalAlign = D;
-        span.HH = (h+d)*span.scale;
+        span.HH = (h+d)*scale;
       } else {
         span = this.addElement(span,"span",{style: {height:H, verticalAlign:D}, isMathJax:true});
       }
@@ -1177,11 +1178,8 @@
       }
       if (data[5]) {span.bbox.h += data[5]}  // extra height
       if (data[6]) {span.bbox.d += data[6]}  // extra depth
-      if (this.AccentBug && span.bbox.w === 0) {
-        //  Handle combining characters by adding a non-breaking space and removing that width
-        SPAN.firstChild.nodeValue += this.NBSP;
-        HTMLCSS.createSpace(span,0,0,-span.offsetWidth/HTMLCSS.em);
-      }
+      //  Handle combining characters by adding a non-breaking space so it shows up
+      if (this.AccentBug && span.bbox.w === 0) {SPAN.firstChild.nodeValue += this.NBSP}
     },
     positionDelimiter: function (span,h) {
       h -= span.bbox.h; span.bbox.d -= h; span.bbox.h += h;

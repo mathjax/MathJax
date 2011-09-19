@@ -62,7 +62,7 @@
     0x21A6: // right arrow from bar
     {
       dir: H, HW: [[1,GENERAL]],
-      stretch: {left:[0x22A2,BOLD,0,0.1,.6], rep:[0x2212,GENERAL], right:[0x2192,GENERAL]}
+      stretch: {left:[0xE0B6,NONUNI], rep:[0x2212,GENERAL], right:[0x2192,GENERAL]}
     },
     0x21A7: // down arrow from bar
     {
@@ -185,7 +185,7 @@
     0x295B: // rightwards harpoon with barb up from bar
     {
       dir: H, HW: [[.926,GENERAL]],
-      stretch: {left:[0x22A2,BOLD,0,0.1,.6], rep:[0x2212,GENERAL], right:[0x21C0,GENERAL]}
+      stretch: {left:[0xE0B6,NONUNI], rep:[0x2212,GENERAL], right:[0x21C0,GENERAL]}
     },
     0x295C: // up harpoon with barb right from bar
     {
@@ -205,7 +205,7 @@
     0x295F: // rightwards harpoon with barb down from bar
     {
       dir: H, HW: [[.926,GENERAL]],
-      stretch: {left:[0x22A2,BOLD,0,0.1,.6], rep:[0x2212,GENERAL], right:[0x21C1,GENERAL]}
+      stretch: {left:[0xE0B6,NONUNI], rep:[0x2212,GENERAL], right:[0x21C1,GENERAL]}
     },
     0x2960: // up harpoon with barb left from bar
     {
