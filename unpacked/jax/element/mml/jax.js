@@ -1132,6 +1132,7 @@ MathJax.ElementJax.mml.Augment({
   });
   MML["annotation-xml"] = MML.mbase.Subclass({
     type: "annotation-xml",
+    linebreakContainer: true,
     defaults: {
       definitionURL: null,
       encoding: null,
