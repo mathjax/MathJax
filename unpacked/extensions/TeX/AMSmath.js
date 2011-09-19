@@ -542,7 +542,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       AMS.refUpdate = true;
       for (var i = 0, m = AMS.refs.length; i < m; i++)
         {AMS.refs[i].MathJax.state = MathJax.ElementJax.STATE.UPDATE}
-      return MathJax.Hub.processInput(AMS.refs);
+      return MathJax.Hub.processInput({
+        scripts:AMS.refs,
+        start: new Date().getTime(),
+        i:0, j:0, jax:{}, jaxIDs:[]
+      });
     }
     return null;
   });
