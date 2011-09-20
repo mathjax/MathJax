@@ -212,6 +212,7 @@
       var XY = this.Resize(), x = XY.x, y = XY.y, W = bbox.mW;
       var dx = -Math.floor((zoom.offsetWidth-W)/2), dy = bbox.Y;
       zoom.style.left = Math.max(dx,10-x)+"px"; zoom.style.top = Math.max(dy,10-y)+"px";
+      if (!ZOOM.msiePositionBug) {ZOOM.SetWH()} // refigure overlay width/height
     },
     
     //
@@ -219,13 +220,12 @@
     //
     Resize: function (event) {
       if (ZOOM.onresize) {ZOOM.onresize(event)}
-      var x = 0, y = 0,
-          div = document.getElementById("MathJax_ZoomFrame"), obj = div,
+      var x = 0, y = 0, obj,
+          div = document.getElementById("MathJax_ZoomFrame"),
           overlay = document.getElementById("MathJax_ZoomOverlay");
+      obj = div; while (obj.offsetParent) {x += obj.offsetLeft; obj = obj.offsetParent}
       if (ZOOM.operaPositionBug) {div.style.border = "1px solid"}  // to get vertical position right
-      if (obj.offsetParent) {
-        do {x += obj.offsetLeft; y += obj.offsetTop} while (obj = obj.offsetParent);
-      }
+      obj = div; while (obj.offsetParent) {y += obj.offsetTop; obj = obj.offsetParent}
       if (ZOOM.operaPositionBug) {div.style.border = ""}
       overlay.style.left = (-x)+"px"; overlay.style.top = (-y)+"px";
       if (ZOOM.msiePositionBug) {setTimeout(ZOOM.SetWH,0)} else {ZOOM.SetWH()}
@@ -234,8 +234,9 @@
     SetWH: function () {
       var overlay = document.getElementById("MathJax_ZoomOverlay");
       overlay.style.width = overlay.style.height = "1px"; // so scrollWidth/Height will be right below
-      overlay.style.width = document.body.scrollWidth + "px";
-      overlay.style.height = document.body.scrollHeight + "px";
+      var doc = document.documentElement || document.body;
+      overlay.style.width = doc.scrollWidth + "px";
+      overlay.style.height = Math.max(doc.clientHeight,doc.scrollHeight) + "px";
     },
     
     //
