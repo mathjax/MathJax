@@ -369,12 +369,6 @@
           ]
         ]
       );
-      if (this.msieMarginScaleBug) {
-        this.addElement(this.EmExSpan.lastChild,"span",null,[
-          ["span",{style:{display:"inline-block",width:"5em"}}],
-          ["span",{style:{display:"inline-block",width:"5em",marginLeft:"-5em"}}]
-        ]);
-      }
 
       // Used in getLinebreakWidth
       this.linebreakSpan = HTMLCSS.Element("span",null,
@@ -475,26 +469,7 @@
         }
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
         jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
-        jax.HTMLCSS.marginScale = 1; jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em;
-      }
-      //
-      //  If we need to determine MSIE margin scaling,
-      //  set the font sizes (which is what causes the problem)
-      //  and then read the scaling factor (again only one reflow needed)
-      //
-      if (this.msieMarginScaleBug) {
-        for (i = 0; i < m; i++) {
-          script = scripts[i]; if (!script.parentNode) continue;
-          jax = script.MathJax.elementJax; test = this.getTestSpan(script);
-          test.lastChild.style.fontSize = jax.HTMLCSS.fontSize;
-        }
-        for (i = 0; i < m; i++) {
-          script = scripts[i]; if (!script.parentNode) continue;
-          test = this.getTestSpan(script);
-          var W = test.lastChild.lastChild.offsetWidth,
-              w = test.lastChild.lastChild.firstChild.offsetWidth;
-          jax.HTMLCSS.marginScale = (2*w - W ? w/(2*w - W) : 1);
-        }
+        jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em;
       }
       //
       //  Remove the test spans used for determining scales
@@ -530,7 +505,7 @@
       //  Set the font metrics
       //
       this.em = MML.mbase.prototype.em = jax.HTMLCSS.em * jax.HTMLCSS.scale; 
-      this.outerEm = jax.HTMLCSS.em; this.msieMarginScale = jax.HTMLCSS.marginScale;
+      this.outerEm = jax.HTMLCSS.em;
       span.style.fontSize = jax.HTMLCSS.fontSize;
       this.getLinebreakWidth(div);
       //
@@ -625,7 +600,7 @@
       //
       var emex = span.appendChild(this.EmExSpan.cloneNode(true));
       var em = emex.lastChild.firstChild.offsetWidth/60;
-      this.msieMarginScale = 1; this.em = MML.mbase.prototype.em = em;
+      this.em = MML.mbase.prototype.em = em;
       this.outerEm = em / jax.HTMLCSS.scale;
       emex.parentNode.removeChild(emex);
 
@@ -1033,7 +1008,7 @@
       var isRelative = bbox.width != null && !bbox.isFixed;
       var r = 0, c = -bbox.w/2, l = "50%";
       if (this.initialSkipBug) {r = bbox.w-bbox.rw-.1; c += bbox.lw}
-      c = this.Em(c*this.msieMarginScale);
+      if (this.msieMarginScaleBug) {c = (c*this.em) + "px"} else {c = this.Em(c)}
       if (isRelative) {c = ""; l = (50 - parseFloat(bbox.width)/2) + "%"}
       HUB.Insert(span.style,({
         right:  {left:"", right: this.Em(r)},
@@ -2505,7 +2480,7 @@
           msieColorPositionBug: true,    // needs position:relative to put color behind text
           msieRelativeWidthBug: quirks,
           msieDisappearingBug: (mode >= 8), // inline math disappears
-          msieMarginScaleBug: (mode < 8),   // margins are not scaled properly by font-size
+          msieMarginScaleBug: (mode < 8),   // relative margins are not scaled properly by font-size
           msiePaddingWidthBug: true,
           msieBorderWidthBug: quirks,
           msieInlineBlockAlignBug: (!isIE8 || quirks),
