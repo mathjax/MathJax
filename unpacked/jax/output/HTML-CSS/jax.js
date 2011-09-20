@@ -2503,7 +2503,7 @@
         var webFonts = false;
         if (browser.versionAtLeast("3.5")) {
           var root = String(document.location).replace(/[^\/]*$/,"");
-          if (document.location.protocol !== "file:" ||
+          if (document.location.protocol !== "file:" || HUB.config.root.match(/^https?:\/\//) ||
               (HUB.config.root+"/").substr(0,root.length) === root) {webFonts = "otf"}
         }
         HTMLCSS.Augment({
