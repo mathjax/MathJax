@@ -381,7 +381,7 @@
         [["hr",{style: {width:"100%", size:1, padding:0, border:0, margin:0}}]]);
 
       // Set up styles and preload web fonts
-      return AJAX.Styles(this.config.styles,["PreloadWebFonts",this]);
+      return AJAX.Styles(this.config.styles,["InitializeHTML",this]);
     },
     
     removeSTIXfonts: function (fonts) {
@@ -401,6 +401,20 @@
         var FONT = HTMLCSS.FONTDATA.FONTS[HTMLCSS.config.preloadWebFonts[i]];
         if (!FONT.available) {HTMLCSS.Font.testFont(FONT)}
       }
+    },
+    
+    //
+    //  Handle initialization that requires styles to be set up
+    //
+    InitializeHTML: function () {
+      this.PreloadWebFonts();
+      //
+      //  Get the default sizes (need styles in place to do this)
+      //
+      document.body.appendChild(this.EmExSpan);
+      this.defaultEx  = this.EmExSpan.firstChild.offsetWidth/60;
+      this.defaultEm  = this.EmExSpan.lastChild.firstChild.offsetWidth/60;
+      document.body.removeChild(this.EmExSpan);
     },
     
     preTranslate: function (state) {
@@ -451,14 +465,14 @@
         script = scripts[i]; if (!script.parentNode) continue;
         jax = script.MathJax.elementJax; test = script.previousSibling;
         ex = jax.HTMLCSS.ex = test.firstChild.offsetWidth/60;
+        em = test.lastChild.firstChild.offsetWidth/60;
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
+          // (this will cause a reflow for each math element that is hidden)
           this.hiddenDiv.appendChild(test.previousSibling);
-          this.hiddenDiv.appendChild(test);
           jax.HTMLCSS.isHidden = true;
-          ex = jax.HTMLCSS.ex = test.firstChild.offsetWidth/60;
+          ex = jax.HTMLCSS.ex = this.defaultEx; em = this.defaultEm;
         }
-        em = test.lastChild.firstChild.offsetWidth/60;
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
         jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
         jax.HTMLCSS.marginScale = 1; jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em;
@@ -487,7 +501,7 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        test = this.getTestSpan(script);
+        test = scripts[i].previousSibling;
         test.parentNode.removeChild(test);
       }
       //
