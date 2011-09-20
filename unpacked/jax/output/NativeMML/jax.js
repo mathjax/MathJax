@@ -44,30 +44,6 @@
     },
     settings: HUB.config.menuSettings,
     
-    Startup: function () {
-      //  Set up event handling
-      EVENT = MathJax.Extension.MathEvents.Event;
-      TOUCH = MathJax.Extension.MathEvents.Touch;
-      HOVER = MathJax.Extension.MathEvents.Hover;
-      this.ContextMenu = EVENT.ContextMenu;
-      this.Mousedown   = EVENT.AltContextMenu;
-      this.Mouseover   = HOVER.Mouseover;
-      this.Mouseout    = HOVER.Mouseout;
-      this.Mousemove   = HOVER.Mousemove;
-
-      // Used in preTranslate to get scaling factors
-      this.EmExSpan = HTML.Element("span",
-        {style:{position:"absolute","font-size-adjust":"none"}},
-        [
-          ["span",{className:"MathJax_mmlExBox"}],
-          ["span",{className:"MathJax_MathML"}]
-        ]
-      );
-      MML.math(MML.mspace().With({width:"60ex"})).toNativeMML(this.EmExSpan.lastChild);
-
-      //  Set up styles
-      return AJAX.Styles(this.config.styles);
-    },
     Config: function () {
       this.SUPER(arguments).Config.call(this);
       if (this.settings.scale) {this.config.scale = this.settings.scale}
@@ -85,12 +61,38 @@
       }
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
     },
+    Startup: function () {
+      //  Set up event handling
+      EVENT = MathJax.Extension.MathEvents.Event;
+      TOUCH = MathJax.Extension.MathEvents.Touch;
+      HOVER = MathJax.Extension.MathEvents.Hover;
+      this.ContextMenu = EVENT.ContextMenu;
+      this.Mousedown   = EVENT.AltContextMenu;
+      this.Mouseover   = HOVER.Mouseover;
+      this.Mouseout    = HOVER.Mouseout;
+      this.Mousemove   = HOVER.Mousemove;
+
+      if (!isMSIE) {
+        // Used in preTranslate to get scaling factors
+        this.EmExSpan = HTML.Element("span",
+          {style:{position:"absolute","font-size-adjust":"none"}},
+          [
+            ["div",{className:"MathJax_mmlExBox"}],
+            ["span",{className:"MathJax_MathML"}]
+          ]
+        );
+        MML.math(MML.mspace().With({width:"60ex"})).toNativeMML(this.EmExSpan.lastChild);
+      }
+
+      //  Set up styles
+      return AJAX.Styles(this.config.styles);
+    },
     //
     //  Set up MathPlayer for IE on the first time through.
     //
     InitializeMML: function () {
       this.initialized = true;
-      if (HUB.Browser.isMSIE) {
+      if (isMSIE) {
         try {
           //
           //  Insert data needed to use MathPlayer for MathML output
@@ -115,6 +117,14 @@
                 "Currently you will see error messages rather than\n"+
                 "typeset mathematics.");
         }
+      } else {
+        //
+        //  Get the default sizes (need styles in place to do this)
+        //
+        document.body.appendChild(this.EmExSpan);
+        this.defaultEx  = this.EmExSpan.firstChild.offsetWidth/60;
+        this.defaultMEx = this.EmExSpan.lastChild.offsetWidth/60;
+        document.body.removeChild(this.EmExSpan);
       }
     },
     
@@ -159,13 +169,7 @@
           test = script.previousSibling; span = test.previousSibling;
           ex = test.firstChild.offsetWidth/60;
           mex = test.lastChild.offsetWidth/60;
-          if (ex === 0 || ex === "NaN") {
-            // can't read width, so move to hidden div for processing
-            this.hiddenDiv.appendChild(script.previousSibling);
-            jax.NativeMML.isHidden = true;
-            ex = test.firstChild.offsetWidth/60;
-            mex = test.lastChild.offsetWidth/60;
-          }
+          if (ex === 0 || ex === "NaN") {ex = this.defaultEx; mex = this.defaultMEx}
           scale = (mex > 1 ? ex/mex : 1) * this.config.scale;
           scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale));
         } else {scale = 100}
@@ -202,10 +206,6 @@
         if (err.restart) {while (mspan.firstChild) {mspan.removeChild(mspan.firstChild)}}
         throw err;
       }
-      //
-      //  If it was hidden, put it in its proper place
-      //
-      if (jax.NativeMML.isHidden) {script.parentNode.insertBefore(div,script)}
       //
       //  Add event handlers
       //
