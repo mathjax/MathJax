@@ -1641,6 +1641,11 @@ MathJax.Hub = {
   
   formatError: function (script,err) {
     var error = MathJax.HTML.Element("span",{className:"MathJax_Error"},this.config.errorSettings.message);
+    if (MathJax.Extension.MathEvents) {
+      error.jaxID = "Error";
+      error.oncontextmenu = MathJax.Extension.MathEvents.Event.Menu;
+      error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
+    }
     script.parentNode.insertBefore(error,script);
     if (script.MathJax.preview) {script.MathJax.preview.style.display = "none"}
     this.lastError = err;
@@ -2174,6 +2179,20 @@ MathJax.Hub.Startup = {
     }
   });
   BASE.ElementJax.prototype.STATE = BASE.ElementJax.STATE;
+
+  //
+  //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
+  //
+  BASE.OutputJax.Error = {
+    id: "Error", version: "1.1", config: {},
+    ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
+    Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
+    getJaxFromMath: function () {return {inputJax:"Error", outputJax:"Error", originalText:"Math Processing Error"}}
+  };
+  BASE.InputJax.Error = {
+    id: "Error", version: "1.1", config: {},
+    sourceMenuTitle: "Error Message"
+  };
   
 })("MathJax");
 
