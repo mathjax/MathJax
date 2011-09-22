@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.15";
+MathJax.fileversion = "1.1.16";
 
 /**********************************************************/
 
@@ -1300,18 +1300,21 @@ MathJax.Hub = {
   getJaxFor: function (element) {
     if (typeof(element) === 'string') {element = document.getElementById(element)}
     if (element && element.MathJax) {return element.MathJax.elementJax}
-    // FIXME: also check for results of outputJax
+    if (element && element.isMathJax) {
+      while (element && !element.jaxID) {element = element.parentNode}
+      if (element) {return MathJax.OutputJax[element.jaxID].getJaxFromMath(element)}
+    }
     return null;
   },
   
   isJax: function (element) {
     if (typeof(element) === 'string') {element = document.getElementById(element)}
+    if (element && element.isMathJax) {return 1}
     if (element && element.tagName != null && element.tagName.toLowerCase() === 'script') {
       if (element.MathJax) 
         {return (element.MathJax.state === MathJax.ElementJax.STATE.PROCESSED ? 1 : -1)}
       if (element.type && this.inputJax[element.type.replace(/ *;(.|\s)*/,"")]) {return -1}
     }
-    // FIXME: check for results of outputJax
     return 0;
   },
   
