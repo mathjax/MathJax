@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "1.1.8";
+  var VERSION = "1.1.9";
   
   MathJax.Extension.MathMenu = {version: VERSION};
 
@@ -731,16 +731,9 @@
   MENU.Renderer = function () {
     var jax = HUB.outputJax["jax/mml"];
     if (jax[0] !== CONFIG.settings.renderer) {
-      CALLBACK.Queue(
-        ["Require",AJAX,"[MathJax]/jax/output/"+CONFIG.settings.renderer+"/config.js"],
-        ["Post",HUB.Startup.signal,CONFIG.settings.renderer+" output selected"],
-        [function () {
-          var JAX = OUTPUT[CONFIG.settings.renderer];
-          for (var i = 0, m = jax.length; i < m; i++)
-            {if (jax[i] === JAX) {jax.splice(i,1); break}}
-          jax.unshift(JAX);
-        }],
-        ["Reprocess",HUB]
+      HUB.Queue(
+        ["setRenderer",HUB,CONFIG.settings.renderer,"jax/mml"],
+        ["Rerender",HUB]
       );
     }
   };

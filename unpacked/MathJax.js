@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.14";
+MathJax.fileversion = "1.1.15";
 
 /**********************************************************/
 
@@ -1315,6 +1315,26 @@ MathJax.Hub = {
     return 0;
   },
   
+  setRenderer: function (renderer,type) {
+    if (!renderer) return;
+    if (!MathJax.OutputJax[renderer]) {
+      this.config.menuSettings.renderer = "";
+      var file = "[MathJax]/jax/output/"+renderer+"/config.js";
+      return MathJax.Ajax.Require(file,["setRenderer",this,renderer,type]);
+    } else {
+      this.config.menuSettings.renderer = renderer;
+      if (type == null) {type = "jax/mml"}
+      var jax = this.outputJax;
+      if (jax[type] && jax[type].length) {
+        if (renderer !== jax[type][0].id) {
+          jax[type].unshift(MathJax.OutputJax[renderer]);
+          return this.signal.Post(["Renderer Selected",renderer]);
+        }
+      }
+      return null;
+    }
+  },
+
   Queue: function () {
     return this.queue.Push.apply(this.queue,arguments);
   },
@@ -1352,6 +1372,7 @@ MathJax.Hub = {
   Process:   function (element,callback) {return this.takeAction("Process",element,callback)},
   Update:    function (element,callback) {return this.takeAction("Update",element,callback)},
   Reprocess: function (element,callback) {return this.takeAction("Reprocess",element,callback)},
+  Rerender:  function (element,callback) {return this.takeAction("Rerender",element,callback)},
   
   takeAction: function (action,element,callback) {
     var ec = this.elementCallback(element,callback);
@@ -1395,6 +1416,10 @@ MathJax.Hub = {
     Reprocess: function (script) {
       var jax = script.MathJax.elementJax;
       if (jax) {jax.Remove(true); script.MathJax.state = jax.STATE.UPDATE}
+    },
+    Rerender: function (script) {
+      var jax = script.MathJax.elementJax;
+      if (jax) {jax.Remove(true); script.MathJax.state = jax.STATE.OUTPUT}
     }
   },
   
@@ -1473,31 +1498,10 @@ MathJax.Hub = {
             if (jax.called) continue;                       //   go back and call Process() again
             this.RestartAfter(jax);                         //   wait for the callback
           }
-          //
-          if (!this.outputJax[jax.mimeType]) {              // check for existing output jax
-            script.MathJax.state = STATE.UPDATE;
-            throw Error("No output jax registered for "+jax.mimeType);
-          }
-          //
-          //  Record the output jax
-          //  and put this script in the queue for that jax
-          //  
-          jax.outputJax = this.outputJax[jax.mimeType][0].id;
-          if (!state.jax[jax.outputJax]) {
-            if (state.jaxIDs.length === 0) {
-              // use original array until we know there are more (rather than two copies)
-              state.jax[jax.outputJax] = state.scripts;
-            } else {
-              if (state.jaxIDs.length === 1) // get the script so far for the existing jax
-                {state.jax[state.jaxIDs[0]] = state.scripts.slice(0,state.i)}
-              state.jax[jax.outputJax] = []; // start a new array for the new jax
-            }
-            state.jaxIDs.push(jax.outputJax); // save the ID of the jax
-          }
-          if (state.jaxIDs.length > 1) {state.jax[jax.outputJax].push(script)}
-          //
+          this.saveScript(jax,state,script,STATE);          // add script to state
           jax.Attach(script,this.inputJax[type].id);        // register the jax on the script
-          script.MathJax.state = STATE.OUTPUT;              // mark it as needing output
+        } else if (script.MathJax.state === STATE.OUTPUT) {
+          this.saveScript(script.MathJax.elementJax,state,script,STATE); // add script to state
         }
         //
         //  Go on to the next script, and check if we need to update the processing message
@@ -1514,6 +1518,36 @@ MathJax.Hub = {
       {MathJax.Message.Set("Processing math: 100%",0)}
     state.start = new Date().getTime(); state.i = state.j = 0;
     return null;
+  },
+  saveScript: function (jax,state,script,STATE) {
+    //
+    //  Check that output jax exists
+    //
+    if (!this.outputJax[jax.mimeType]) {
+      script.MathJax.state = STATE.UPDATE;
+      throw Error("No output jax registered for "+jax.mimeType);
+    }
+    //
+    //  Record the output jax
+    //  and put this script in the queue for that jax
+    //
+    jax.outputJax = this.outputJax[jax.mimeType][0].id;
+    if (!state.jax[jax.outputJax]) {
+      if (state.jaxIDs.length === 0) {
+        // use original array until we know there are more (rather than two copies)
+        state.jax[jax.outputJax] = state.scripts;
+      } else {
+        if (state.jaxIDs.length === 1) // get the script so far for the existing jax
+          {state.jax[state.jaxIDs[0]] = state.scripts.slice(0,state.i)}
+        state.jax[jax.outputJax] = []; // start a new array for the new jax
+      }
+      state.jaxIDs.push(jax.outputJax); // save the ID of the jax
+    }
+    if (state.jaxIDs.length > 1) {state.jax[jax.outputJax].push(script)}
+    //
+    //  Mark script as needing output
+    //
+    script.MathJax.state = STATE.OUTPUT;
   },
   
   //
@@ -2065,7 +2099,8 @@ MathJax.Hub.Startup = {
       script.MathJax.state = this.STATE.UPDATE;
       return HUB.Reprocess(script,callback);
     },
-    Update: function (callback) {
+    Update: function (callback) {return this.Rerender(callback)},
+    Rerender: function (callback) {
       var script = this.SourceElement();
       script.MathJax.state = this.STATE.OUTPUT;
       return HUB.Process(script,callback);
