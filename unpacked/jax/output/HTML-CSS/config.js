@@ -63,7 +63,6 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
         color:   "#CC0000",
         border:  "1px solid #CC0000",
         padding: "1px 3px",
-        "font-family": "serif",
         "font-style": "normal",
         "font-size":  "90%"
       },
