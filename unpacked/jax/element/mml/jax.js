@@ -956,8 +956,10 @@ MathJax.ElementJax.mml.Augment({
     },
     adjustChild_scriptlevel: function (n) {
       var level = this.Get("scriptlevel");
-      if (n == this.under && !this.Get("accentunder")) {level++}
-      if (n == this.over  && !this.Get("accent")) {level++}
+      var force = (this.data[this.base] && !this.Get("displaystyle") &&
+                   this.data[this.base].CoreMO().Get("movablelimits"));
+      if (n == this.under && (force || !this.Get("accentunder"))) {level++}
+      if (n == this.over  && (force || !this.Get("accent"))) {level++}
       return level;
     },
     adjustChild_texprimestyle: function (n) {

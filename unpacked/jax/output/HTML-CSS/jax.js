@@ -2207,7 +2207,7 @@
       toHTML: function (span,HW,D) {
 	var values = this.getValues("displaystyle","accent","accentunder","align");
 	if (!values.displaystyle && this.data[this.base] != null &&
-	    this.data[this.base].Get("movablelimits"))
+	    this.data[this.base].CoreMO().Get("movablelimits"))
 	      {return MML.msubsup.prototype.toHTML.call(this,span)}
 	span = this.HTMLcreateSpan(span); var scale = this.HTMLgetScale();
 	var stack = HTMLCSS.createStack(span);
