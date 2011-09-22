@@ -481,7 +481,7 @@
 
 	    '@font-face /*1*/': {
 	      "font-family": "MathJax_AMS-WEB",
-	      "src": "url('"+fontDir+"/MathJax_AMS-Regular.otf')*/"
+	      "src": "url('"+fontDir+"/MathJax_AMS-Regular.otf')"
 	    },
 	    '@font-face /*2*/': {
 	      "font-family": "MathJax_Script-WEB",
