@@ -505,7 +505,7 @@
       //  Set the font metrics
       //
       this.em = MML.mbase.prototype.em = jax.HTMLCSS.em * jax.HTMLCSS.scale; 
-      this.outerEm = jax.HTMLCSS.em;
+      this.outerEm = jax.HTMLCSS.em; this.scale = jax.HTMLCSS.scale;
       span.style.fontSize = jax.HTMLCSS.fontSize;
       this.getLinebreakWidth(div);
       //
@@ -1759,12 +1759,28 @@
 
     MML.chars.Augment({
       toHTML: function (span,variant) {
-	this.HTMLhandleVariant(span,variant,this.data.join("").replace(/[\u2061-\u2064]/g,"")); // remove invisibles
+        var text = this.data.join("").replace(/[\u2061-\u2064]/g,""); // remove invisibles
+        if (!variant) {
+          var scale = Math.floor(100/HTMLCSS.scale+.5) + "%";
+          HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
+          var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
+          span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
+        } else {
+          this.HTMLhandleVariant(span,variant,text);
+        }
       }
     });
     MML.entity.Augment({
       toHTML: function (span,variant) {
-	this.HTMLhandleVariant(span,variant,this.toString().replace(/[\u2061-\u2064]/g,"")); // remove invisibles
+        var text = this.toString().replace(/[\u2061-\u2064]/g,""); // remove invisibles
+        if (!variant) {
+          var scale = Math.floor(100/HTMLCSS.scale+.5) + "%";
+          HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
+          var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
+          span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
+        } else {
+          this.HTMLhandleVariant(span,variant,text);
+        }
       }
     });
 
@@ -1880,22 +1896,17 @@
 
     MML.mtext.Augment({
       toHTML: function (span) {
-	span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
-	if (this.Parent().type === "merror") {
-	  //  Avoid setting the font style for error text
-	  HTMLCSS.addText(span,this.data.join(""));
-	  var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
-	  span.bbox = {h: HD.h, d: HD.d, w: W, lw: 0, rw: W};
-	} else {
-	  var variant = this.HTMLgetVariant();
-	  for (var i = 0, m = this.data.length; i < m; i++)
-	    {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
-	  if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
-	  if (this.data.join("").length !== 1) {delete span.bbox.skew}
-	}
-	this.HTMLhandleSpace(span);
-	this.HTMLhandleColor(span);
-	return span;
+        span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); 
+        var variant = this.HTMLgetVariant();
+        //  Avoid setting the font style for error text or if mtextFontInherit is set
+        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror") {variant = null}
+        for (var i = 0, m = this.data.length; i < m; i++)
+          {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
+        if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+        if (this.data.join("").length !== 1) {delete span.bbox.skew}
+        this.HTMLhandleSpace(span);
+        this.HTMLhandleColor(span);
+        return span;
       }
     });
 
