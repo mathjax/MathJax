@@ -144,7 +144,6 @@
         //
         jax = script.MathJax.elementJax; math = jax.root; jax.NativeMML = {};
         var type = (math.Get("display") === "block" ? "div" : "span");
-        span = HTML.Element(type,{className:"MathJax_MathML", id:jax.inputID+"-Frame"});
 	span = HTML.Element(type,{
 	  className: "MathJax_MathML", id:jax.inputID+"-Frame"
 	},[["span",{
