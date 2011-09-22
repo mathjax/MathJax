@@ -1917,7 +1917,9 @@
                    m1.isa(MML.mo) && m2.isa(MML.mo) &&
                    m1.Get("texClass") === MML.TEXCLASS.REL &&
                    m2.Get("texClass") === MML.TEXCLASS.REL) {
-              if (m1.variantForm == m2.variantForm) {
+              if (m1.variantForm == m2.variantForm &&
+                  m1.Get("mathvariant") == m2.Get("mathvariant") && m1.style == m2.style &&
+                  m1["class"] == m2["class"] && !m1.id && !m2.id) {
                 m1.Append.apply(m1,m2.data);
                 mml.data.splice(i+1,1); m--;
               } else {
