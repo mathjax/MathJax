@@ -1501,8 +1501,8 @@ MathJax.Hub = {
             if (jax.called) continue;                       //   go back and call Process() again
             this.RestartAfter(jax);                         //   wait for the callback
           }
-          this.saveScript(jax,state,script,STATE);          // add script to state
           jax.Attach(script,this.inputJax[type].id);        // register the jax on the script
+          this.saveScript(jax,state,script,STATE);          // add script to state
         } else if (script.MathJax.state === STATE.OUTPUT) {
           this.saveScript(script.MathJax.elementJax,state,script,STATE); // add script to state
         }
