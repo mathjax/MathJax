@@ -1878,7 +1878,7 @@ MathJax.Hub.Startup = {
   //
   Hash: function () {
     if (MathJax.Hub.config.positionToHash && document.location.hash)
-      {document.location = document.location.hash}
+      {setTimeout("document.location = document.location.hash",1)}
   },
   
   //
