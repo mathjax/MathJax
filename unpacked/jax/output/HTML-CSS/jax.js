@@ -1544,7 +1544,7 @@
 	if (this["class"] != null) {span.className += " "+this["class"]}
 	if (!this.spanID) {this.spanID = HTMLCSS.GetID()}
 	span.id = (this.id || "MathJax-Span-"+this.spanID) + HTMLCSS.idPostfix;
-	span.bbox = {w:0, h:0, d:0, lw:0, lr:0}; this.styles = {};
+	span.bbox = {w:0, h:0, d:0, lw:0, rw:0}; this.styles = {};
 	if (this.style) {
 	  span.style.cssText = this.style;
 	  if (span.style.fontSize) {this.mathsize = span.style.fontSize; span.style.fontSize = ""}
