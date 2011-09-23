@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.16";
+MathJax.fileversion = "1.1.17";
 
 /**********************************************************/
 
@@ -1213,8 +1213,9 @@ MathJax.Hub = {
                                   // set to "configured" to delay startup until MathJax.Hub.Configured() is called
                                   // set to a Callback to wait for before continuing with the startup
     skipStartupTypeset: false,    // set to true to skip PreProcess and Process during startup
-    "v1.0-compatible": true,  // set to false to prevent loading of default configuration file
-    elements: [],    // array of elements to process when none is given explicitly
+    "v1.0-compatible": true,  // set to false to prevent message about configuration change
+    elements: [],             // array of elements to process when none is given explicitly
+    positionToHash: true,     // after initial typeset pass, position to #hash location?
      
     showMathMenu: true,      // attach math context menu to mathml?
     showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
@@ -1873,6 +1874,14 @@ MathJax.Hub.Startup = {
   },
   
   //
+  //  Set the location to the designated hash position
+  //
+  Hash: function () {
+    if (MathJax.Hub.config.positionToHash && document.location.hash)
+      {document.location = document.location.hash}
+  },
+  
+  //
   //  Setup the onload callback
   //
   onLoad: function (when) {
@@ -2320,6 +2329,7 @@ MathJax.Hub.Startup = {
     STARTUP.onLoad(),
     function () {MathJax.isReady = true}, // indicates that MathJax is ready to process math
     ["Typeset",STARTUP],
+    ["Hash",STARTUP],
     ["Post",STARTUP.signal,"End"]
   );
   
