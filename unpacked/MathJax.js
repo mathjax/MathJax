@@ -1245,6 +1245,7 @@ MathJax.Hub = {
   outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
 
   processUpdateTime: 250, // time between screen updates when processing math (milliseconds)
+  processUpdateDelay: 10, // pause between screen updates to allow other processing (milliseconds)
 
   signal: MathJax.Callback.Signal("Hub"), // Signal used for Hub events
 
@@ -1611,7 +1612,7 @@ MathJax.Hub = {
         //
         var now = new Date().getTime();
         if (now - state.start > this.processUpdateTime && state.i < state.scripts.length)
-          {state.start = now; this.RestartAfter(MathJax.Callback.Delay(1))}
+          {state.start = now; this.RestartAfter(MathJax.Callback.Delay(this.processUpdateDelay))}
       }
     } catch (err) {return this.processError(err,state,"Output")}
     //
