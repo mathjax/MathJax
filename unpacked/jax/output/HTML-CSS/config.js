@@ -42,6 +42,8 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
 
     EqnChunk: 50,                   // number of equations to process before showing them
     EqnChunkFactor: 1.5,            // chunk size is multiplied by this after each chunk
+    EqChunkDelay: 100,              // milliseconds to delay between chunks (to let browser
+                                    //   respond to other events)
 
     linebreaks: {
       automatic: false,   // when false, only process linebreak="newline",
