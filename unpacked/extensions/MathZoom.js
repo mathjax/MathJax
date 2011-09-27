@@ -130,7 +130,7 @@
       //  Create the DOM elements for the zoom box
       //
       var Mw = Math.floor(.85*document.body.clientWidth),
-          Mh = Math.floor(.85*document.body.clientHeight);
+          Mh = Math.floor(.85*Math.max(document.body.clientHeight,document.documentElement.clientHeight));
       var div = HTML.Element(
         "span",{
             style: {position:"relative", display:"inline-block", height:0, width:0},
