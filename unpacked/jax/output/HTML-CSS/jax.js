@@ -370,7 +370,7 @@
         ]
       );
 
-      // Used in getLinebreakWidth
+      // Used in preTranslate to get linebreak width
       this.linebreakSpan = HTMLCSS.Element("span",null,
         [["hr",{style: {width:"100%", size:1, padding:0, border:0, margin:0}}]]);
 
@@ -406,14 +406,27 @@
       //  Get the default sizes (need styles in place to do this)
       //
       document.body.appendChild(this.EmExSpan);
-      this.defaultEx  = this.EmExSpan.firstChild.offsetWidth/60;
-      this.defaultEm  = this.EmExSpan.lastChild.firstChild.offsetWidth/60;
+      document.body.appendChild(this.linebreakSpan);
+      this.defaultEx    = this.EmExSpan.firstChild.offsetWidth/60;
+      this.defaultEm    = this.EmExSpan.lastChild.firstChild.offsetWidth/60;
+      this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
+      document.body.removeChild(this.linebreakSpan);
       document.body.removeChild(this.EmExSpan);
     },
     
     preTranslate: function (state) {
       var scripts = state.jax[this.id], i, m = scripts.length,
-          script, prev, span, div, test, jax, ex, em, scale;
+          script, prev, span, div, test, jax, ex, em, scale, maxwidth, relwidth = false,
+          linebreak = this.config.linebreaks.automatic, width = this.config.linebreaks.width;
+      if (linebreak) {
+        relwidth = (width.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/) != null);
+        if (relwidth) {width = width.replace(/\s*container\s*/,"")}
+          else {maxwidth = this.defaultWidth}
+        if (width === "") {width = "100%"}
+      } else {maxwidth = 100000} // a big width, so no implicit line breaks
+      //
+      //  Loop through the scripts
+      //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         //
@@ -447,9 +460,10 @@
         div.className += " MathJax_Processing";
         script.parentNode.insertBefore(div,script);
         //
-        //  Add the test span for determining scales
+        //  Add the test span for determining scales and linebreak widths
         //
         script.parentNode.insertBefore(this.EmExSpan.cloneNode(true),script);
+        if (relwidth) {div.parentNode.insertBefore(this.linebreakSpan.cloneNode(true),div)}
       }
       //
       //  Determine the scaling factors for each script
@@ -457,26 +471,35 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        jax = script.MathJax.elementJax; test = script.previousSibling;
+        test = script.previousSibling; div = test.previousSibling;
+        jax = script.MathJax.elementJax;
         ex = jax.HTMLCSS.ex = test.firstChild.offsetWidth/60;
         em = test.lastChild.firstChild.offsetWidth/60;
+        if (relwidth) {maxwidth = div.previousSibling.firstChild.offsetWidth}
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
           // (this will cause a reflow for each math element that is hidden)
-          this.hiddenDiv.appendChild(test.previousSibling);
+          this.hiddenDiv.appendChild(div);
           jax.HTMLCSS.isHidden = true;
           ex = jax.HTMLCSS.ex = this.defaultEx; em = this.defaultEm;
+          if (relwidth) {maxwidth = this.defaultWidth}
         }
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
         jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
-        jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em;
+        jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em; this.em = em * scale/100;
+        jax.HTMLCSS.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/this.em) : 1000000);
       }
       //
-      //  Remove the test spans used for determining scales
+      //  Remove the test spans used for determining scales and linebreak widths
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        test = scripts[i].previousSibling;
+        test = scripts[i].previousSibling; jax = scripts[i].MathJax.elementJax;
+        if (relwidth) {
+          span = test.previousSibling;
+          if (!jax.HTMLCSS.isHidden) {span = span.previousSibling}
+          span.parentNode.removeChild(span);
+        }
         test.parentNode.removeChild(test);
       }
       //
@@ -484,12 +507,6 @@
       //
       state.HTMLCSSeqn = state.HTMLCSSlast = 0;
       state.HTMLCSSchunk = this.config.EqnChunk;
-    },
-    getTestSpan: function (script) {
-      var jax = script.MathJax.elementJax;
-      var span = document.getElementById(jax.inputID+"-Frame");
-      if (jax.HTMLCSS.display) {span = span.parentNode}
-      return span.nextSibling;
     },
 
     Translate: function (script,state) {
@@ -506,8 +523,8 @@
       //
       this.em = MML.mbase.prototype.em = jax.HTMLCSS.em * jax.HTMLCSS.scale; 
       this.outerEm = jax.HTMLCSS.em; this.scale = jax.HTMLCSS.scale;
+      this.linebreakWidth = jax.HTMLCSS.lineWidth;
       span.style.fontSize = jax.HTMLCSS.fontSize;
-      this.getLinebreakWidth(div);
       //
       //  Typeset the math
       //
@@ -651,21 +668,6 @@
       delete jax.HTMLCSS;
     },
     
-    getLinebreakWidth: function (div) {
-      if (this.config.linebreaks.automatic) {
-        var width = this.config.linebreaks.width, maxwidth;
-        if (width.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/)) {
-          div.parentNode.insertBefore(this.linebreakSpan,div);
-          maxwidth = this.linebreakSpan.firstChild.offsetWidth / this.em;
-          this.linebreakSpan.parentNode.removeChild(this.linebreakSpan);
-          width = width.replace(/\s*container\s*/,"");
-        } else {maxwidth = document.body.offsetWidth / this.em}
-        this.linebreakWidth = (width === "" ? maxwidth : this.length2em(width,maxwidth));
-      } else {
-        this.linebreakWidth = 100000;  // a big width, so no implicit line breaks
-      }
-    },
-
     getHD: function (span) {
       var position = span.style.position;
       span.style.position = "absolute";
