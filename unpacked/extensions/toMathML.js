@@ -23,7 +23,7 @@
  */
 
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
-  var VERSION = "1.1.2";
+  var VERSION = "1.1.3";
   
   var MML = MathJax.ElementJax.mml;
   
@@ -48,20 +48,21 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
 
     MathMLattributes: function () {
       var attr = [], defaults = this.defaults;
-      var copy = this.copyAttributes,
+      var copy = (this.mmlAttributes||this.copyAttributes),
           skip = this.skipAttributes;
 
       if (this.type === "math") {attr.push('xmlns="http://www.w3.org/1998/Math/MathML"')}
-      if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
-      for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
-        var force = (id === "open" || id === "close");
-        if (this[id] != null && (force || this[id] !== defaults[id])) {
-          var value = this[id]; delete this[id];
-          if (force || this.Get(id) !== value)
-            {attr.push(id+'="'+this.formatAttr(value)+'"')}
-          this[id] = value;
-        }
-      }}
+      if (!this.mmlAttributes) {
+        if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
+        for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
+          var force = (id === "open" || id === "close");
+          if (this[id] != null && (force || this[id] !== defaults[id])) {
+            var value = this[id]; delete this[id];
+            if (force || this.Get(id) !== value) {attr.push(id+'="'+this.formatAttr(value)+'"')}
+            this[id] = value;
+          }
+        }}
+      }
       for (var i = 0, m = copy.length; i < m; i++) {
         if (this[copy[i]] != null) {attr.push(copy[i]+'="'+this.quoteHTML(this[copy[i]])+'"')}
       }

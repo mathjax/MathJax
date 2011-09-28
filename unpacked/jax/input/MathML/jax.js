@@ -69,6 +69,7 @@
       if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase)))
         {return MML.merror("Unknown node type: "+type)}
       var mml = MML[type](), i, m, name, value;
+      mml.mmlAttributes = [];
       for (i = 0, m = node.attributes.length; i < m; i++) {
         name = node.attributes[i].name;
         if (name == "xlink:href") {name = "href"}
@@ -76,7 +77,7 @@
         value = node.attributes[i].value;
         if (value.toLowerCase() === "true") {value = true}
           else if (value.toLowerCase() === "false") {value = false}
-        mml[name] = value;
+        mml[name] = value; mml.mmlAttributes.push(name);
       }
       for (i = 0, m = node.childNodes.length; i < m; i++) {
         var child = node.childNodes[i];

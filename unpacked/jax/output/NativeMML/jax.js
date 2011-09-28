@@ -337,12 +337,14 @@
       //
       NativeMMLattributes: function (tag) {
 	var defaults = this.defaults;
-	var copy = this.NativeMMLcopyAttributes,
+	var copy = (this.mmlAttributes||this.NativeMMLcopyAttributes),
 	    skip = this.NativeMMLskipAttributes;
-	if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
-	for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
-	  if (this[id] != null) {tag.setAttribute(id,this.NativeMMLattribute(id,this[id]))}
-	}}
+        if (!this.mmlAttributes) {
+          if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
+          for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
+	    if (this[id] != null) {tag.setAttribute(id,this.NativeMMLattribute(id,this[id]))}
+          }}
+        }
 	for (var i = 0, m = copy.length; i < m; i++) {
 	  if (this[copy[i]] != null)
 	    {tag.setAttribute(copy[i],this.NativeMMLattribute(copy[i],this[copy[i]]))}
