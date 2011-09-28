@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "1.1.1";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
 
@@ -37,7 +37,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       return span;
     },
     HTMLgetScale: function () {
-      return this.SUPER(arguments).HTMLgetScale.call(this) * (100/HTMLCSS.scale)
+      return this.SUPER(arguments).HTMLgetScale.call(this) / HTMLCSS.scale;
     }
   });
   
