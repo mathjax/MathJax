@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.1.4",
+  version: "1.1.5",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
@@ -74,12 +74,11 @@ MathJax.Extension.tex2jax = {
     }
     if (typeof(element) === "string") {element = document.getElementById(element)}
     if (!element) {element = document.body}
-    this.createPatterns();
-    this.scanElement(element,element.nextSibling);
+    if (this.createPatterns()) {this.scanElement(element,element.nextSibling)}
   },
   
   createPatterns: function () {
-    var starts = [], i, m, config = this.config;
+    var starts = [], parts = [], i, m, config = this.config;
     this.match = {};
     for (i = 0, m = config.inlineMath.length; i < m; i++) {
       starts.push(this.patternQuote(config.inlineMath[i][0]));
@@ -97,15 +96,15 @@ MathJax.Extension.tex2jax = {
         pattern: this.endPattern(config.displayMath[i][1])
       };
     }
-    this.start = new RegExp(
-      starts.sort(this.sortLength).join("|") + 
-      (config.processEnvironments ? "|\\\\begin\\{([^}]*)\\}" : "") + 
-      (config.processEscapes ? "|\\\\*\\\\\\\$" : "") +
-      (config.processRefs ? "|\\\\(eq)?ref\\{[^}]*\\}" : ""), "g"
-    );
+    if (starts.length) {parts.push(starts.sort(this.sortLEngth).join("|"))}
+    if (config.processEnvironments) {parts.push("\\\\begin\\{([^}]*)\\}")}
+    if (config.processEscapes)      {parts.push("\\\\*\\\\\\\$")}
+    if (config.processRefs)         {parts.push("\\\\(eq)?ref\\{[^}]*\\}")}
+    this.start = new RegExp(parts.join("|"),"g");
     this.skipTags = new RegExp("^("+config.skipTags.join("|")+")$","i");
     this.ignoreClass = new RegExp("(^| )("+config.ignoreClass+")( |$)");
     this.processClass = new RegExp("(^| )("+config.processClass+")( |$)");
+    return (parts.length > 0);
   },
   
   patternQuote: function (s) {return s.replace(/([\^$(){}+*?\-|\[\]\:\\])/g,'\\$1')},
