@@ -96,7 +96,7 @@ MathJax.Extension.tex2jax = {
         pattern: this.endPattern(config.displayMath[i][1])
       };
     }
-    if (starts.length) {parts.push(starts.sort(this.sortLEngth).join("|"))}
+    if (starts.length) {parts.push(starts.sort(this.sortLength).join("|"))}
     if (config.processEnvironments) {parts.push("\\\\begin\\{([^}]*)\\}")}
     if (config.processEscapes)      {parts.push("\\\\*\\\\\\\$")}
     if (config.processRefs)         {parts.push("\\\\(eq)?ref\\{[^}]*\\}")}
