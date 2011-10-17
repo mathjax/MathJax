@@ -1342,9 +1342,9 @@
     },
     
     Lap: function (name) {
-      var mml = MML.TeXAtom(MML.mpadded(this.ParseArg(name)).With({width: 0}));
+      var mml = MML.mpadded(this.ParseArg(name)).With({width: 0});
       if (name === "\\llap") {mml.lspace = "-1 width"}
-      this.Push(mml);
+      this.Push(MML.TeXAtom(mml));
     },
     
     RaiseLower: function (name) {
