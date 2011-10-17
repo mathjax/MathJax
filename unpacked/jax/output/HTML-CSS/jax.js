@@ -587,6 +587,12 @@
           }
         }
       }
+      if (this.forceReflow) {
+        //  WebKit can misplace some elements that should wrap to the next line
+        //  but gets them right ona reflow, so force reflow by toggling a stylesheet
+        var sheet = (document.styleSheets||[])[0]||{};
+        sheet.disabled = true; sheet.disabled = false;
+      }
       //
       //  Save our place so we know what is revealed
       //
@@ -2551,6 +2557,7 @@
           safariVerticalAlignBug: !v3p1,
           safariTextNodeBug: !v3p0,
           safariWebFontSerif: ["serif"],
+          forceReflow: true,
           allowWebFonts: (v3p1 && !forceImages ? "otf" : false)
         });
         if (browser.isPC) {
@@ -2572,9 +2579,10 @@
           AccentBug: true,
           AdjustSurd: true,
           negativeBBoxes: true,
-          allowWebFonts: (browser.versionAtLeast("4.0") ? "otf" : "svg"),
           safariNegativeSpaceBug: true,
-          safariWebFontSerif: [""]
+          safariWebFontSerif: [""],
+          forceReflow: true,
+          allowWebFonts: (browser.versionAtLeast("4.0") ? "otf" : "svg")
         });
       },
 
