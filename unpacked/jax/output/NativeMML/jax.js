@@ -230,6 +230,16 @@
         container.ondblclick    = EVENT.DblClick;
       }
     },
+    
+    postTranslate: function (state) {
+      if (this.forceReflow) {
+        //  Firefox messes up some mtable's when they are dynamically created
+        //  but gets them right on a reflow, so force reflow by toggling a stylesheet
+        var sheet = (document.styleSheets||[])[0]||{};
+        sheet.disabled = true; sheet.disabled = false;
+      }
+    },
+    
     //
     //  Remove MathML preceeding the script
     //
@@ -578,6 +588,9 @@
     },
     Opera: function (browser) {
       nMML.operaPositionBug = true;
+    },
+    Firefox: function (browser) {
+      nMML.forceReflow = true;
     }
   });
   
