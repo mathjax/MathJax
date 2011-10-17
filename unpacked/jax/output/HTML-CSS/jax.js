@@ -1591,7 +1591,7 @@
 	  if (this.isToken) {lW = span.bbox.lw; rW = span.bbox.rw - span.bbox.w}
 	  if (lpad !== "") {lW += parseFloat(lpad)*(span.scale||1)}
 	  if (rpad !== "") {rW -= parseFloat(rpad)*(span.scale||1)}
-	  var W = Math.max(0,HTMLCSS.getW(span) + (HTMLCSS.PaddingWidthBug ? 0 : rW - lW));
+	  var W = Math.max(0,HTMLCSS.getW(span) + (HTMLCSS.PaddingWidthBug || span.bbox.keepPadding? 0 : rW - lW));
 	  var H = span.bbox.h + span.bbox.d, D = -span.bbox.d, lp = 0, rp = 0;
 	  if (W > 0) {W += 2*dd; lW -= dd}; if (H > 0) {H += 2*dd; D -= dd}; rW = -W-lW;
           if (borders) {
