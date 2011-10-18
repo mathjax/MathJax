@@ -430,18 +430,18 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     EndTable: function () {
       this.SUPER(arguments).EndTable.call(this);
       if (this.table.length) {
-        var m = this.table.length-1, i;
+        var m = this.table.length-1, i, label = -1;
         if (!this.table[0][0].columnalign) {this.table[0][0].columnalign = MML.ALIGN.LEFT}
         if (!this.table[m][0].columnalign) {this.table[m][0].columnalign = MML.ALIGN.RIGHT}
-        var mtr = MML.mtr;
         if (!this.global.tag && this.numbered) {this.autoTag()}
         if (this.global.tag && !this.global.notags) {
-          this.table[0] = [this.getTag()].concat(this.table[0]);
-          mtr = MML.mlabeledtr;
+          label = (this.arraydef.side === "left" ? 0 : this.table.length - 1);
+          this.table[label] = [this.getTag()].concat(this.table[label]);
         }
-        this.table[0] = mtr.apply(MML,this.table[0]);
-        for (i = 1, m = this.table.length; i < m; i++)
-          {this.table[i] = MML.mtr.apply(MML,this.table[i])}
+        for (i = 0, m = this.table.length; i < m; i++) {
+          var mtr = (i === label ? MML.mlabeledtr : MML.mtr);
+          this.table[i] = mtr.apply(MML,this.table[i]);
+        }
       }
       this.global.notag  = this.save.notag;
     }
