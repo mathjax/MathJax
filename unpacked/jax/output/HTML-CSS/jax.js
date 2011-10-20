@@ -280,6 +280,7 @@
     Font: null,  // created by Config() below
 
     Config: function () {
+      if (!this.require) {this.require = []}
       this.Font = FONTTEST();
       this.SUPER(arguments).Config.call(this); var settings = this.settings;
       if (this.adjustAvailableFonts) {this.adjustAvailableFonts(this.config.availableFonts)}
@@ -297,7 +298,6 @@
       if (!font && this.config.imageFont) {font = this.config.imageFont; this.imgFonts = true}
       if (font) {
         this.fontInUse = font; this.fontDir += "/" + font; this.webfontDir += "/" + font;
-        if (!this.require) {this.require = []}
         this.require.push(this.fontDir+"/fontdata.js");
         if (this.imgFonts) {
           this.require.push(this.directory+"/imageFonts.js");
@@ -346,7 +346,7 @@
       this.pxPerInch = div.offsetWidth/5; this.hiddenDiv.removeChild(div);
 
       // Markers used by getW
-      this.startMarker = HTMLCSS.createStrut(this.Element("span"),10,true);
+      this.startMarker = this.createStrut(this.Element("span"),10,true);
       this.endMarker = this.addText(this.Element("span"),"x").parentNode;
 
       // Used in getHD
@@ -356,7 +356,7 @@
         this.HDimg = this.addElement(this.HDspan,"img",{style:{height:"0px", width:"1px"}});
         try {this.HDimg.src = "about:blank"} catch(err) {}
       } else {
-        this.HDimg = HTMLCSS.createStrut(this.HDspan,0);
+        this.HDimg = this.createStrut(this.HDspan,0);
       }
 
       // Used in preTranslate to get scaling factors
@@ -371,7 +371,7 @@
       );
 
       // Used in preTranslate to get linebreak width
-      this.linebreakSpan = HTMLCSS.Element("span",null,
+      this.linebreakSpan = this.Element("span",null,
         [["hr",{style: {width:"100%", size:1, padding:0, border:0, margin:0}}]]);
 
       // Set up styles and preload web fonts
@@ -452,10 +452,13 @@
 	  span.ontouchend = TOUCH.end;
 	}
         if (jax.HTMLCSS.display) {
-          div = this.Element("div",{className:"MathJax_Display", style:{width:"100%"}});
+          div = this.Element("div",{className:"MathJax_Display"});
           div.appendChild(span);
         } else if (this.msieDisappearingBug) {span.style.display = "inline-block"}
-        // (screen readers don't know about role="math" yet, so use "textbox" instead)
+        //
+        //  Mark math for screen readers
+        //    (screen readers don't know about role="math" yet, so use "textbox" instead)
+        //
         div.setAttribute("role","textbox"); div.setAttribute("aria-readonly","true");
         div.className += " MathJax_Processing";
         script.parentNode.insertBefore(div,script);
@@ -603,8 +606,8 @@
       if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
       return HUB.getJaxFor(math.nextSibling);
     },
-    getHoverSpan: function (jax) {return jax.root.HTMLspanElement()},
-    getHoverBBox: function (jax,span) {
+    getHoverSpan: function (jax,math) {return jax.root.HTMLspanElement()},
+    getHoverBBox: function (jax,span,math) {
       var bbox = span.bbox, em = jax.HTMLCSS.outerEm;
       var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
       if (bbox.width) {BBOX.width = bbox.width}
@@ -1674,7 +1677,7 @@
       },
 
       HTMLgetScale: function () {
-	var scale = 1, values = this.getValues("mathsize","scriptlevel","fontsize","scriptminsize");
+	var scale = 1, values = this.getValues("mathsize","scriptlevel","fontsize");
 	if (this.style) {
 	  var span = this.HTMLspanElement();
 	  if (span.style.fontSize != "") {values.fontsize = span.style.fontSize}
@@ -1683,7 +1686,7 @@
 	if (values.scriptlevel !== 0) {
 	  if (values.scriptlevel > 2) {values.scriptlevel = 2}
 	  scale = Math.pow(this.Get("scriptsizemultiplier"),values.scriptlevel);
-	  values.scriptminsize = HTMLCSS.length2em(values.scriptminsize);
+	  values.scriptminsize = HTMLCSS.length2em(this.Get("scriptminsize"));
 	  if (scale < values.scriptminsize) {scale = values.scriptminsize}
 	}
 	scale *= HTMLCSS.length2em(values.mathsize);

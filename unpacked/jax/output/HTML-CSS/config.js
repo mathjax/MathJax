@@ -38,7 +38,7 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
     webFont: "TeX",                 // web-based font to use when no local fonts found (TeX is only choice)
     imageFont: "TeX",               // font to use for image fallback mode (TeX is only choice)
     undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif", // fonts to use for unknown unicode characters
-    mtextFontInherit: false,        // to to make <mtext> be in page font rather than MathJax font
+    mtextFontInherit: false,        // to make <mtext> be in page font rather than MathJax font
 
     EqnChunk: 50,                   // number of equations to process before showing them
     EqnChunkFactor: 1.5,            // chunk size is multiplied by this after each chunk
