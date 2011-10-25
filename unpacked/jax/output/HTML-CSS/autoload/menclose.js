@@ -214,7 +214,10 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (frame) {
         // mathcolor is handled in toHTML above
         var values = this.getValues("mathbackground","background");
-        if (this.style && span.style.backgroundColor) {values.mathbackground = span.style.backgroundColor}
+        if (this.style && span.style.backgroundColor) {
+          values.mathbackground = span.style.backgroundColor;
+          span.style.backgroundColor = "";
+        }
         if (values.background && !this.mathbackground) {values.mathbackground = values.background}
         if (values.mathbackground && values.mathbackground !== MML.COLOR.TRANSPARENT)
           {frame.style.backgroundColor = values.mathbackground}
