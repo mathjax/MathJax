@@ -354,11 +354,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           }
         }
       }
-      
+      stack.bbox.d = -fY; stack.bbox.h = fH+fY;
+      HTMLCSS.setStackWidth(stack,stack.bbox.w + fx);
+
       //
       //  Add frame
       //
-      fW = stack.bbox.w + fx; var frame;
+      fW = stack.bbox.w; var frame;
       if (values.frame !== "none") {
         frame = HTMLCSS.createFrame(stack,fH,0,fW,1.25/HTMLCSS.em,values.frame);
         HTMLCSS.addBox(stack,frame); HTMLCSS.placeBox(frame,0,fY,true);
@@ -431,6 +433,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     HTMLhandleSpace: function (span) {
       span.bbox.keepPadding = true; span.bbox.exact = true;
       if (!this.hasFrame) {span.style.paddingLeft = span.style.paddingRight = ".1667em"}
+      this.SUPER(arguments).HTMLhandleSpace.call(this,span);
     }
   });
   
