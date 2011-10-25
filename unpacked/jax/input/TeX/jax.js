@@ -1148,12 +1148,12 @@
       if (TEXDEF.remap[c]) {
         c = TEXDEF.remap[c];
         if (c instanceof Array) {def = c[1]; c = c[0]}
-        mo = MML.mo(MML.entity('#x'+c));
+        mo = MML.mo(MML.entity('#x'+c)).With(def);
       } else {
-        mo = MML.mo(c);
+        mo = MML.mo(c).With(def);
       }
       if (mo.autoDefault("texClass",true) == "") {mo = MML.TeXAtom(mo)}
-      this.Push(this.mmlToken(mo.With(def)));
+      this.Push(this.mmlToken(mo));
     },
     
     /************************************************************************/
@@ -1328,24 +1328,24 @@
     },
     
     Phantom: function (name,v,h) {
-      var box = MML.TeXAtom(MML.mphantom(this.ParseArg(name)));
+      var box = MML.mphantom(this.ParseArg(name));
       if (v || h) {
         box = MML.mpadded(box);
         if (h) {box.height = box.depth = 0}
         if (v) {box.width = 0}
       }
-      this.Push(box);
+      this.Push(MML.TeXAtom(box));
     },
     
     Smash: function (name) {
       var bt = this.trimSpaces(this.GetBrackets(name));
-      var smash = MML.TeXAtom(MML.mpadded(this.ParseArg(name)));
+      var smash = MML.mpadded(this.ParseArg(name));
       switch (bt) {
         case "b": smash.depth = 0; break;
         case "t": smash.height = 0; break;
         default: smash.height = smash.depth = 0;
       }
-      this.Push(smash);
+      this.Push(MML.TeXAtom(smash));
     },
     
     Lap: function (name) {
