@@ -430,7 +430,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     },
     HTMLhandleSpace: function (span) {
       span.bbox.keepPadding = true; span.bbox.exact = true;
-      span.style.paddingLeft = span.style.paddingRight = ".1667em";
+      if (!this.hasFrame) {span.style.paddingLeft = span.style.paddingRight = ".1667em"}
     }
   });
   

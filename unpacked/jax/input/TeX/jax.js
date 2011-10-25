@@ -231,7 +231,7 @@
   STACKITEM.array = STACKITEM.Subclass({
     type: "array", isOpen: TRUE, arraydef: {},
     Init: function () {
-      this.table = []; this.row = []; this.env = {};
+      this.table = []; this.row = []; this.env = {}; this.frame = []
       this.SUPER(arguments).Init.apply(this,arguments);
     },
     checkItem: function (item) {
@@ -240,6 +240,11 @@
         if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return FALSE}
         this.EndTable(); this.clearEnv();
         var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
+        if (this.frame.length === 4) {mml.frame = "solid"; mml.framespacing = ".5em .5ex"}
+        else if (this.frame.length) {
+          mml.hasFrame = true;
+          mml = MML.menclose(mml).With({notation: this.frame.join(" "), isFrame: true});
+        }
         if (this.open || this.close) {
           mml = MML.mfenced(mml).With({open: this.open, close: this.close});
         }
@@ -262,9 +267,9 @@
       if (this.arraydef.rowlines) {
         var lines = this.arraydef.rowlines.split(/ /);
         if (lines.length === this.table.length) {
-          this.arraydef.frame = lines.pop();
+          this.frame.push("bottom"); lines.pop();
           this.arraydef.rowlines = lines.join(' ');
-        } else if (lines.length < this.table.length -1) {
+        } else if (lines.length < this.table.length-1) {
           this.arraydef.rowlines += " none";
         }
       }
@@ -1517,7 +1522,7 @@
       var top = this.stack.Top();
       if (!top.isa(STACKITEM.array) || top.data.length) {TEX.Error("Misplaced "+name)}
       if (top.table.length == 0) {
-        top.arraydef.frame = style;
+        top.frame.push("top");
       } else {
         var lines = (top.arraydef.rowlines ? top.arraydef.rowlines.split(/ /) : []);
         while (lines.length < top.table.length) {lines.push("none")}
@@ -1564,11 +1569,8 @@
         }
       });
       if (lines.match(/[|:]/)) {
-        var frame = (lines.charAt(0)+lines.charAt(lines.length-1)).replace(/[^|:]/g,"");
-        if (frame !== "") {
-          array.arraydef.frame = {'|':'solid', ':':'dashed'}[frame.charAt(0)];
-          array.arraydef.framespacing = ".5em .5ex"
-        }
+        if (lines.charAt(0).match(/[|:]/)) {array.frame.push("left")}
+        if (lines.charAt(lines.length-1).match(/[|:]/)) {array.frame.push("right")}
         lines = lines.substr(1,lines.length-2);
         array.arraydef.columnlines =
           lines.split('').join(' ').replace(/[^|: ]/g,'none').replace(/\|/g,'solid').replace(/:/g,'dashed');
