@@ -244,10 +244,10 @@
           mml.frame = (this.frame.dashed ? "dashed" : "solid");
         } else if (this.frame.length) {
           mml.hasFrame = true;
-          this.arraydef.rowlines = this.arraydef.rowlines.replace(/none( none)+$/,"none");
+          if (this.arraydef.rowlines) {this.arraydef.rowlines = this.arraydef.rowlines.replace(/none( none)+$/,"none")}
           mml = MML.menclose(mml).With({notation: this.frame.join(" "), isFrame: true});
-          if (this.arraydef.columnlines != "none" ||
-              this.arraydef.rowlines != "none") {mml.padding = 0} // HTML-CSS jax implements this
+          if ((this.arraydef.columnlines||"none") != "none" ||
+              (this.arraydef.rowlines||"none") != "none") {mml.padding = 0} // HTML-CSS jax implements this
         }
         if (this.open || this.close) {
           mml = MML.mfenced(mml).With({open: this.open, close: this.close});
