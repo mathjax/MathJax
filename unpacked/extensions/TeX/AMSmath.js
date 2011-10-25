@@ -114,8 +114,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       'alignat*':    ['AlignAt',null,false,true],
       alignedat:     ['AlignAt',null,false,false],
 
-      aligned:       ['ArrayII',null,null,null,'rlrlrlrlrlrl',COLS([5/18,2,5/18,2,5/18,2,5/18,2,5/18,2,5/18]),".5em",'D'],
-      gathered:      ['ArrayII',null,null,null,'c',null,".5em",'D'],
+      aligned:       ['AlignedArray',null,null,null,'rlrlrlrlrlrl',COLS([5/18,2,5/18,2,5/18,2,5/18,2,5/18,2,5/18]),".5em",'D'],
+      gathered:      ['AlignedArray',null,null,null,'c',null,".5em",'D'],
 
       subarray:      ['Array',null,null,null,null,COLS([0,0,0,0]),"0.1em",'S',1],
       smallmatrix:   ['Array',null,null,null,'c',COLS([1/3]),".2em",'S',1],
@@ -283,27 +283,19 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       });
     },
     
-    ArrayII: function (begin) {
-      var align = this.GetBrackets("\\begin{"+begin.name+"}");
-      var array = this.Array.apply(this,arguments);
-      if (align === "t") {array.arraydef.align = "baseline 1"}
-      else if (align === "b") {array.arraydef.align = "baseline -1"}
-      else if (align === "c") {array.arraydef.align = "center"}
-      else if (align !== "") {array.arraydef.align = align} // FIXME: should be an error?
-      return array;
-    },
-    
     /*
      *  Handle alignat environments
      */
     AlignAt: function (begin,numbered,taggable) {
-      var n = this.GetArgument("\\begin{"+begin.name+"}");
+      var n, valign, align = "", spacing = [];
+      if (!taggable) {valign = this.GetBrackets("\\begin{"+begin.name+"}")}
+      n = this.GetArgument("\\begin{"+begin.name+"}");
       if (n.match(/[^0-9]/)) {TEX.Error("Argument to \\begin{"+begin.name+"} must me a positive integer")}
-      align = ""; spacing = [];
       while (n > 0) {align += "rl"; spacing.push("0em 0em"); n--}
       spacing = spacing.join(" ");
       if (taggable) {return this.AMSarray(begin,numbered,taggable,align,spacing)}
-      return this.Array(begin,null,null,align,spacing,".5em",'D');
+      var array = this.Array.call(this,begin,null,null,align,spacing,".5em",'D');
+      return this.setArrayAlign(array,valign);
     },
     
     /*

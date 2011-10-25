@@ -905,7 +905,7 @@
       },
       
       environment: {
-        array:        ['Array'],
+        array:        ['AlignedArray'],
         matrix:       ['Array',null,null,null,'c'],
         pmatrix:      ['Array',null,'(',')','c'],
         bmatrix:      ['Array',null,'[',']','c'],
@@ -1585,6 +1585,18 @@
       if (style === "S") {array.arraydef.scriptlevel = 1} // FIXME: should use mstyle?
       if (raggedHeight)  {array.arraydef.useHeight = FALSE}
       this.Push(begin);
+      return array;
+    },
+    
+    AlignedArray: function (begin) {
+      var align = this.GetBrackets("\\begin{"+begin.name+"}");
+      return this.setArrayAlign(this.Array.apply(this,arguments),align);
+    },
+    setArrayAlign: function (array,align) {
+      if (align === "t") {array.arraydef.align = "baseline 1"}
+      else if (align === "b") {array.arraydef.align = "baseline -1"}
+      else if (align === "c") {array.arraydef.align = "center"}
+      else if (align !== "") {array.arraydef.align = align} // FIXME: should be an error?
       return array;
     },
     
