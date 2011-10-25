@@ -36,9 +36,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (values.color && !this.mathcolor) {values.mathcolor = values.color}
       if (values.thickness == null) {values.thickness = ".075em"}
       if (values.padding == null)   {values.padding   = ".2em"}
-      var mu = this.HTMLgetMu(span);
-      var p = HTMLCSS.length2em(values.padding,mu);
-      var t = HTMLCSS.length2em(values.thickness,mu);
+      var mu = this.HTMLgetMu(span), scale = this.HTMLgetScale();
+      var p = HTMLCSS.length2em(values.padding,mu) * scale;
+      var t = HTMLCSS.length2em(values.thickness,mu) * scale;
       var SOLID = HTMLCSS.Em(t)+" solid";
 
       span = this.HTMLcreateSpan(span);
@@ -51,6 +51,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       HTMLCSS.addBox(stack,frame); stack.insertBefore(frame,base); // move base to above background
       var notation = values.notation.split(/ /);
       var T = 0, B = 0, R = 0, L = 0, dx = 0, dy = 0; var svg, vml;
+      var w, h, r;
       if (!values.mathcolor) {values.mathcolor = "black"} else {span.style.color = values.mathcolor}
       
       for (var i = 0, m = notation.length; i < m; i++) {
@@ -63,8 +64,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             if (HTMLCSS.useVML) {
               if (!vml) {vml = this.HTMLvml(stack,H,D,W,t,values.mathcolor)}
               // roundrect.arcsize can't be set in IE8 standards mode, so use a path
-              var r = Math.floor(1000*Math.min(W,H+D)-2*t);
-              var w = Math.floor(4000*(W-2*t)), h = Math.floor(4000*(H+D-2*t));
+              r = Math.floor(1000*Math.min(W,H+D)-2*t);
+              w = Math.floor(4000*(W-2*t)), h = Math.floor(4000*(H+D-2*t));
               this.HTMLvmlElement(vml,"shape",{
                 style: {width:this.HTMLpx(W-2*t),height:this.HTMLpx(H+D-2*t),
                         left:this.HTMLpx(t,.5),top:this.HTMLpx(t,.5)},
@@ -128,12 +129,33 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           case MML.NOTATION.UPDIAGONALSTRIKE:
             if (HTMLCSS.useVML) {
               if (!vml) {vml = this.HTMLvml(stack,H,D,W,t,values.mathcolor)}
-              this.HTMLvmlElement(vml,"line",{from: "0,"+this.HTMLpx(H+D-t), to: this.HTMLpx(W)+",0"});
+              var line = this.HTMLvmlElement(vml,"line",{from: "0,"+this.HTMLpx(H+D-t), to: this.HTMLpx(W)+",0"});
+              if (this.arrow) {
+                this.HTMLvmlElement(line,"stroke",{endarrow:"classic"});
+                line.to = this.HTMLpx(W)+","+this.HTMLpx(t);
+              }
             } else {
               if (!svg) {svg = this.HTMLsvg(stack,H,D,W,t,values.mathcolor)}
-              this.HTMLsvgElement(svg.firstChild,"line",{
-                x1:1, y1:this.HTMLpx(H+D-t), x2:this.HTMLpx(W-t), y2:this.HTMLpx(t)
-              });
+              if (this.arrow) {
+                var l = Math.sqrt(W*W + (H+D)*(H+D));
+                w = W/l * 10*scale/HTMLCSS.em, h = (H+D)/l * 10*scale/HTMLCSS.em;
+                var x = W - t/2, y = t/2; if (y+h-.4*w < 0) {y = .4*w-h}
+                this.HTMLsvgElement(svg.firstChild,"line",{
+                  x1:1, y1:this.HTMLpx(H+D-t), x2:this.HTMLpx(x-.7*w), y2:this.HTMLpx(y+.7*h)
+                });
+                this.HTMLsvgElement(svg.firstChild,"polygon",{
+                  points: this.HTMLpx(x)+","+this.HTMLpx(y)+" "
+                         +this.HTMLpx(x-w-.4*h)+","+this.HTMLpx(y+h-.4*w)+" "
+                         +this.HTMLpx(x-.7*w)+","+this.HTMLpx(y+.7*h)+" "
+                         +this.HTMLpx(x-w+.4*h)+","+this.HTMLpx(y+h+.4*w)+" "
+                         +this.HTMLpx(x)+","+this.HTMLpx(y),
+                   fill:values.mathcolor, stroke:"none"
+                });
+              } else {
+                this.HTMLsvgElement(svg.firstChild,"line",{
+                  x1:1, y1:this.HTMLpx(H+D-t), x2:this.HTMLpx(W-t), y2:this.HTMLpx(t)
+                });
+              }
             }
             break;
 
@@ -251,6 +273,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (!def.fillcolor) {obj.fillcolor = "none"}
       if (!def.strokecolor) {obj.strokecolor = this.constructor.VMLcolor}
       if (!def.strokeweight) {obj.strokeweight =this.constructor.VMLthickness}
+      return obj;
     }
   });
   
