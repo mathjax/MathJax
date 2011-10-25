@@ -22,8 +22,11 @@
  *  limitations under the License.
  */
 
+MathJax.Extension["TeX/newcommand"] = {
+  version: "1.1.2",
+};
+
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1.2";
   
   var TEX = MathJax.InputJax.TeX;
   var TEXDEF = TEX.Definitions;

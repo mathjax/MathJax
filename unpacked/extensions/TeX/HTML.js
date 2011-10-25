@@ -6,7 +6,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010 Design Science, Inc.
+ *  Copyright (c) 2010-2011 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,8 +21,11 @@
  *  limitations under the License.
  */
 
+MathJax.Extension["TeX/HTML"] = {
+  version: "1.1.1",
+};
+
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1.1";
 
   var TEX = MathJax.InputJax.TeX;
   var TEXDEF = TEX.Definitions;

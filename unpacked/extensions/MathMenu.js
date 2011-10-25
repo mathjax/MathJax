@@ -587,6 +587,7 @@
       "using "+font,["br"],["br"],
       ["span",{style:{
         display:"inline-block", "text-align":"left", "font-size":"80%",
+        "max-height":"20em", overflow:"auto", 
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
       }},jax],["br"],["br"],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]]

@@ -21,9 +21,11 @@
  *  limitations under the License.
  */
 
+MathJax.Extension["TeX/AMSsymbols"] = {
+  version: "1.1.3",
+};
+
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1.3";
-  
   var MML = MathJax.ElementJax.mml,
       TEXDEF = MathJax.InputJax.TeX.Definitions;
   
