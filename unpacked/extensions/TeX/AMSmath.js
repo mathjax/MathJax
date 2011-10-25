@@ -141,8 +141,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Add the tag to the environment (to be added to the table row later)
      */
     HandleTag: function (name) {
+      var star = this.GetStar();
       var arg = this.trimSpaces(this.GetArgument(name)), tag = arg;
-      if (arg === "*") {tag = arg = this.GetArgument(name)} else {arg = CONFIG.formatTag(arg)}
+      if (!star) {arg = CONFIG.formatTag(arg)}
       var global = this.stack.global; global.tagID = tag;
       if (global.notags) {TEX.Error(name+" not allowed in "+global.notags+" environment")}
       if (global.tag) {TEX.Error("Multiple "+name)}
@@ -183,12 +184,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle \DeclareMathOperator
      */
     HandleDeclareOp: function (name) {
-      var limits = "";
+      var limits = (this.GetStar() ? "\\limits" : "");
       var cs = this.trimSpaces(this.GetArgument(name));
-      if (cs == "*") {
-        limits = "\\limits";
-        cs = this.trimSpaces(this.GetArgument(name));
-      }
       if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
       var op = this.GetArgument(name);
       op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
@@ -196,12 +193,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     HandleOperatorName: function (name) {
-      var limits = "\\nolimits";
+      var limits = (this.GetStar() ? "\\limits" : "\\nolimits");
       var op = this.trimSpaces(this.GetArgument(name));
-      if (op == "*") {
-        limits = "\\limits";
-        op = this.trimSpaces(this.GetArgument(name));
-      }
       op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
       this.string = '\\mathop{\\rm '+op+'}'+limits+" "+this.string.slice(this.i);
       this.i = 0;
@@ -377,7 +370,17 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (c == "") {return null}
       if (!TEXDEF.delimiter[c]) {TEX.Error("Missing or unrecognized delimiter for "+name)}
       return this.convertDelimiter(c);
+    },
+    
+    /*
+     *  Get a star following a control sequence name, if any
+     */
+    GetStar: function () {
+      var star = (this.GetNext() === "*");
+      if (star) {this.i++}
+      return star;
     }
+    
   });
   
   /******************************************************************************/
