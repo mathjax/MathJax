@@ -240,8 +240,10 @@
         if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return FALSE}
         this.EndTable(); this.clearEnv();
         var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
-        if (this.frame.length === 4) {mml.frame = "solid"; mml.framespacing = ".5em .5ex"}
-        else if (this.frame.length) {
+        if (this.frame.length === 4) {
+          mml.frame = (this.frame.dashed ? "dashed" : "solid");
+          mml.framespacing = ".5em .5ex";
+        } else if (this.frame.length) {
           mml.hasFrame = true;
           mml = MML.menclose(mml).With({notation: this.frame.join(" "), isFrame: true});
         }
@@ -1569,7 +1571,7 @@
         }
       });
       if (lines.match(/[|:]/)) {
-        if (lines.charAt(0).match(/[|:]/)) {array.frame.push("left")}
+        if (lines.charAt(0).match(/[|:]/)) {array.frame.push("left"); array.frame.dashed = lines.charAt(0) === ":"}
         if (lines.charAt(lines.length-1).match(/[|:]/)) {array.frame.push("right")}
         lines = lines.substr(1,lines.length-2);
         array.arraydef.columnlines =
