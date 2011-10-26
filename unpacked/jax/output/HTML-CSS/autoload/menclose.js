@@ -37,8 +37,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (values.thickness == null) {values.thickness = ".075em"}
       if (values.padding == null)   {values.padding   = ".2em"}
       var mu = this.HTMLgetMu(span), scale = this.HTMLgetScale();
-      var p = HTMLCSS.length2em(values.padding,mu) * scale;
-      var t = HTMLCSS.length2em(values.thickness,mu) * scale;
+      var p = HTMLCSS.length2em(values.padding,mu,1/HTMLCSS.em) * scale;
+      var t = HTMLCSS.length2em(values.thickness,mu,1/HTMLCSS.em) * scale;
       var SOLID = HTMLCSS.Em(t)+" solid";
 
       span = this.HTMLcreateSpan(span);
@@ -137,9 +137,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             } else {
               if (!svg) {svg = this.HTMLsvg(stack,H,D,W,t,values.mathcolor)}
               if (this.arrow) {
-                var l = Math.sqrt(W*W + (H+D)*(H+D));
-                w = W/l * 10*scale/HTMLCSS.em, h = (H+D)/l * 10*scale/HTMLCSS.em;
-                var x = W - t/2, y = t/2; if (y+h-.4*w < 0) {y = .4*w-h}
+                var l = Math.sqrt(W*W + (H+D)*(H+D)), f = 1/l * 10*scale/HTMLCSS.em * t/.075;
+                w = W * f; h = (H+D) * f; var x = W - t/2, y = t/2;
+                if (y+h-.4*w < 0) {y = .4*w-h}
                 this.HTMLsvgElement(svg.firstChild,"line",{
                   x1:1, y1:this.HTMLpx(H+D-t), x2:this.HTMLpx(x-.7*w), y2:this.HTMLpx(y+.7*h)
                 });
