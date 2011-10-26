@@ -1319,6 +1319,7 @@
       while (attr !== "") {
         match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ]*)\s*/i);
         if (!match) {TEX.Error("Invalid MathML attribute: "+attr)}
+        if (!MML[type].prototype.defaults[match[1]]) {TEX.Error(match[1]+" is not a recognized attribute for "+type)}
         def[match[1]] = match[2].replace(/^(['"])(.*)\1$/,"$2");
         attr = attr.substr(match[0].length);
       }
