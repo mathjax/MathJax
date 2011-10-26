@@ -21,7 +21,7 @@
  */
 
 MathJax.Extension["TeX/autobold"] = {
-  version: "1.1.1",
+  version: "1.1.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {

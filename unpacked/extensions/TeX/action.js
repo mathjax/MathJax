@@ -32,7 +32,7 @@
  */
 
 MathJax.Extension["TeX/action"] = {
-  version: "1.1",
+  version: "1.1"
 };
   
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {

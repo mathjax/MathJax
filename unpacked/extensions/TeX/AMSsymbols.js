@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/AMSsymbols"] = {
-  version: "1.1.3",
+  version: "1.1.3"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
