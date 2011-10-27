@@ -476,7 +476,7 @@
         script = scripts[i]; if (!script.parentNode) continue;
         test = script.previousSibling; div = test.previousSibling;
         jax = script.MathJax.elementJax;
-        ex = jax.HTMLCSS.ex = test.firstChild.offsetWidth/60;
+        ex = test.firstChild.offsetWidth/60;
         em = test.lastChild.firstChild.offsetWidth/60;
         if (relwidth) {maxwidth = div.previousSibling.firstChild.offsetWidth}
         if (ex === 0 || ex === "NaN") {
@@ -484,12 +484,12 @@
           // (this will cause a reflow for each math element that is hidden)
           this.hiddenDiv.appendChild(div);
           jax.HTMLCSS.isHidden = true;
-          ex = jax.HTMLCSS.ex = this.defaultEx; em = this.defaultEm;
+          ex = this.defaultEx; em = this.defaultEm;
           if (relwidth) {maxwidth = this.defaultWidth}
         }
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
         jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
-        jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em; this.em = em * scale/100;
+        jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em; this.em = em * scale/100; jax.HTMLCSS.ex = ex;
         jax.HTMLCSS.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/this.em) : 1000000);
       }
       //
