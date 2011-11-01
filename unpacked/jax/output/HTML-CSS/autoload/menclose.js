@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/autoload/menclose.js
  *  
- *  Implements the HTML-CSS output for <mencode> elements.
+ *  Implements the HTML-CSS output for <menclose> elements.
  *
  *  ---------------------------------------------------------------------
  *  
