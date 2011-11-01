@@ -76,7 +76,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       );
       if (VALUES.linebreakstyle === MML.LINEBREAKSTYLE.INFIXLINEBREAKSTYLE) 
         {VALUES.linebreakstyle = this.Get("infixlinebreakstyle")}
-      VALUES.lineleading = HTMLCSS.length2em(VALUES.lineleading,0.5);
+      VALUES.lineleading = HTMLCSS.length2em(VALUES.lineleading,1,0.5);
 
       //
       //  Remove old color and break the span at its best line breaks
