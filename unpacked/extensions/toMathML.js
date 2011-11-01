@@ -79,7 +79,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       if (typeof(value) === "string" &&
           value.replace(/ /g,"").match(/^(([-+])?(\d+(\.\d*)?|\.\d+))mu$/)) {
         // FIXME:  should take scriptlevel into account
-        return (RegExp.$2+(1/18)*RegExp.$1).replace(/(\.\d\d\d).*/,"$1")+"em";
+        return ((1/18)*RegExp.$1).toFixed(3).replace(/\.?0+$/,"")+"em";
       }
       // FIXME:  set classes for these?
       if (value === "-tex-caligraphic") {return "script"}
