@@ -202,7 +202,7 @@ MathJax.ElementJax.mml.Augment({
     VCENTER: 8,
     NONE:   -1
   },
-  PLANE1: String.fromCharCode(0xD835)
+  PLANE1: "\uD835"
 });
 
 (function (MML) {

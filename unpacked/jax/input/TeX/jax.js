@@ -24,7 +24,7 @@
  */
 
 (function (TEX,HUB,AJAX) {
-  var TRUE = true, FALSE = false, MML, NBSP = String.fromCharCode(0xA0); 
+  var TRUE = true, FALSE = false, MML, NBSP = "\u00A0"; 
   
   var STACK = MathJax.Object.Subclass({
     Init: function (env,inner) {
@@ -1115,7 +1115,7 @@
       }
       this.Push(STACKITEM.subsup(base).With({position: position}));
     },
-    PRIME: String.fromCharCode(0x2032), SMARTQUOTE: String.fromCharCode(0x2019),
+    PRIME: "\u2032", SMARTQUOTE: "\u2019",
     Prime: function (c) {
       var base = this.stack.Prev(); if (!base) {base = MML.mi()}
       if (base.type === "msubsup" && base.data[base.sup])
@@ -1196,7 +1196,7 @@
     },
     NamedOp: function (name,id) {
       if (!id) {id = name.substr(1)};
-      id = id.replace(/&thinsp;/,String.fromCharCode(0x2006));
+      id = id.replace(/&thinsp;/,"\u2006");
       var mml = MML.mo(id).With({
         movablelimits: TRUE,
         movesupsub: TRUE,

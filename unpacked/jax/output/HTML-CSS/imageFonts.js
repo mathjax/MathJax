@@ -120,7 +120,7 @@
 
         HTMLCSS.Augment({
           imgSpaceBug: true,
-          imgSpace: String.fromCharCode(0xA0),
+          imgSpace: "\u00A0",
           
           imgZoomLevel: (browser.isMac ?
             {50:.3, 30:.5, 22:.67, 19:.8, 16:.9, 15:1, 13:1.1, 12:1.2,
@@ -162,7 +162,7 @@
       Opera: function (browser) {
         HTMLCSS.Augment({
           imgSpaceBug: true,
-          imgSpace: String.fromCharCode(0xA0)+String.fromCharCode(0xA0),
+          imgSpace: "\u00A0\u00A0",
           
           imgDoc: (document.compatMode == "BackCompat" ? document.body :
                    document.documentElement),

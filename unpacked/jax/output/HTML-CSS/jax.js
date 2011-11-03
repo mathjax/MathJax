@@ -246,11 +246,11 @@
         
         ".MathJax_ExBox": {
           display:"block", overflow:"hidden",
-          height:"1px", width:"60ex"
+          width:"1px", height:"60ex"
         },
         ".MathJax .MathJax_EmBox": {
           display:"block", overflow:"hidden",
-          height:"1px", width:"60em"
+          width:"1px", height:"60em"
         },
         
         ".MathJax .MathJax_HitBox": {
@@ -407,8 +407,8 @@
       //
       document.body.appendChild(this.EmExSpan);
       document.body.appendChild(this.linebreakSpan);
-      this.defaultEx    = this.EmExSpan.firstChild.offsetWidth/60;
-      this.defaultEm    = this.EmExSpan.lastChild.firstChild.offsetWidth/60;
+      this.defaultEx    = this.EmExSpan.firstChild.offsetHeight/60;
+      this.defaultEm    = this.EmExSpan.lastChild.firstChild.offsetHeight/60;
       this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
       document.body.removeChild(this.linebreakSpan);
       document.body.removeChild(this.EmExSpan);
@@ -476,8 +476,8 @@
         script = scripts[i]; if (!script.parentNode) continue;
         test = script.previousSibling; div = test.previousSibling;
         jax = script.MathJax.elementJax;
-        ex = test.firstChild.offsetWidth/60;
-        em = test.lastChild.firstChild.offsetWidth/60;
+        ex = test.firstChild.offsetHeight/60;
+        em = test.lastChild.firstChild.offsetHeight/60;
         if (relwidth) {maxwidth = div.previousSibling.firstChild.offsetWidth}
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
@@ -625,7 +625,7 @@
       //  get em sizes (taken from HTMLCSS.preTranslate)
       //
       var emex = span.appendChild(this.EmExSpan.cloneNode(true));
-      var em = emex.lastChild.firstChild.offsetWidth/60;
+      var em = emex.lastChild.firstChild.offsetHeight/60;
       this.em = MML.mbase.prototype.em = em;
       this.outerEm = em / jax.HTMLCSS.scale;
       emex.parentNode.removeChild(emex);
@@ -1448,8 +1448,8 @@
       min_rule_thickness:  1.25     // in pixels
     },
 
-    PLANE1: String.fromCharCode(0xD835),
-    NBSP: String.fromCharCode(0xA0),
+    PLANE1: "\uD835",
+    NBSP: "\u00A0",
 
     rfuzz: 0         // adjustment to rule placements in roots
   });
