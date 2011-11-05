@@ -822,7 +822,8 @@
         ITEM.RULE(),
         ITEM.SUBMENU("Math Renderer",         {hidden:!CONFIG.showRenderer},
           ITEM.RADIO("HTML-CSS",  "renderer", {action: MENU.Renderer}),
-          ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"})
+          ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"}),
+          ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer})
         ),
         ITEM.SUBMENU("Font Preference",       {hidden:!CONFIG.showFontMenu},
           ITEM.LABEL("For HTML-CSS:"),
