@@ -938,6 +938,7 @@
         if (svg.X != null) {this.SVGdata.X = svg.X}
         if (this["class"]) {svg.removeable = false; SVG.Element(svg.element,{"class":this["class"]})}
         // FIXME:  if an element is split by linebreaking, the ID will be the same on both parts
+        // FIXME:  if an element has an id, its zoomed copy will have the same ID
         if (this.id) {svg.removeable = false; SVG.Element(svg.element,{"id":this.id})}
         if (this.href) {
 	  var a = SVG.Element("a");
@@ -948,6 +949,10 @@
             while (svg.element.firstChild) {a.appendChild(svg.element.firstChild)}
           } else {a.appendChild(svg.element)}
 	  svg.element = a; svg.removeable = false;
+        }
+        if (SVG.config.addMMLclasses) {
+          svg.removeable = false;
+          svg.element.setAttribute("className","mjx-svg-"+this.type);
         }
       },
       

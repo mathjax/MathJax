@@ -37,6 +37,8 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
     mtextFontInherit: false,        // to make <mtext> be in page font rather than MathJax font
     MISSINGFONT: "STIXGeneral,'Arial Unicode MS'",  // fonts to use for missing characters
 
+    addMMLclasses: false,           // keep MathML structure and use CSS classes to mark elements
+
     EqnChunk: 50,                   // number of equations to process before showing them
     EqnChunkFactor: 1.5,            // chunk size is multiplied by this after each chunk
     EqChunkDelay: 100,              // milliseconds to delay between chunks (to let browser
