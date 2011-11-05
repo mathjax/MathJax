@@ -49,8 +49,6 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       var span = SVG.textSVG.parentNode;
       SVG.mathDiv.style.width = "auto";  // Firefox returns offsetWidth = 0 without this
-      var unscale = Math.floor(100*100/SVG.scale);
-      this.div.style.fontSize = unscale+"%";
       span.insertBefore(this.div,SVG.textSVG);
       var w = this.div.offsetWidth, h = this.div.offsetHeight;
       var strut = MathJax.HTML.addElement(this.div,"span",{
@@ -59,14 +57,13 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       });
       var d = this.div.offsetHeight - h; h -= d;
       this.div.removeChild(strut);
-      span.removeChild(this.div); SVG.mathDiv.style.width = 0;
+      span.removeChild(this.div); SVG.mathDiv.style.width = "";
       //
       //  Create foreignObject element for the content
       //
-      var scale = 1000/SVG.em/(SVG.scale/100);
+      var scale = 1000/SVG.em;
       var svg = BBOX.FOREIGN({
         y:(-h)+"px", width:w+"px", height:(h+d)+"px",
-        style:"font-size:"+unscale+"%",  // font scales separately from other elements
         transform:"scale("+scale+") matrix(1 0 0 -1 0 0)"
       });
       //
@@ -78,6 +75,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Set the scale and finish up
       //
       svg.w = w*scale; svg.h = h*scale; svg.d = d*scale;
+      svg.r = svg.w; svg.l = 0;
       svg.Clean();
       this.SVGsaveData(svg);
       return svg;
