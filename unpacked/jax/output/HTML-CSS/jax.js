@@ -885,6 +885,7 @@
       if (w >= 0) {
         span.style.width = this.Em(w);
         span.style.display = "inline-block";
+        span.style.overflow = "hidden";       // for IE in quirks mode
       } else {
         if (this.msieNegativeSpaceBug) {span.style.height = ""}
         span.style.marginLeft = this.Em(w);
