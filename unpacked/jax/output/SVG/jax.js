@@ -237,7 +237,7 @@
         test = scripts[i].previousSibling; jax = scripts[i].MathJax.elementJax;
         span = test.previousSibling;
         if (!jax.SVG.isHidden) {span = span.previousSibling}
-//        span.parentNode.removeChild(span);
+        span.parentNode.removeChild(span);
         test.parentNode.removeChild(test);
       }
       //
