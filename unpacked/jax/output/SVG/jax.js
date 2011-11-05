@@ -130,7 +130,7 @@
 
       // Used in preTranslate to get linebreak width
       this.linebreakSpan = HTML.Element("span",null,
-        [["hr",{style: {width:"100%", size:1, padding:0, border:0, margin:0}}]]);
+        [["hr",{style: {width:"auto", size:1, padding:0, border:0, margin:0}}]]);
 
      // Set up styles
       return AJAX.Styles(this.config.styles,["InitializeSVG",this]);
@@ -237,7 +237,7 @@
         test = scripts[i].previousSibling; jax = scripts[i].MathJax.elementJax;
         span = test.previousSibling;
         if (!jax.SVG.isHidden) {span = span.previousSibling}
-        span.parentNode.removeChild(span);
+//        span.parentNode.removeChild(span);
         test.parentNode.removeChild(test);
       }
       //
