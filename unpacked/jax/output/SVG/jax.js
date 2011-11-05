@@ -1166,8 +1166,13 @@
 	var values = this.getValues("largeop","displaystyle");
 	if (values.largeop)
 	  {variant = SVG.FONTDATA.VARIANT[values.displaystyle ? "-largeOp" : "-smallOp"]}
-	for (var i = 0, m = this.data.length; i < m; i++)
-	  {if (this.data[i]) {svg.Add(this.data[i].toSVG(variant,scale),svg.w,0,true)}}
+	for (var i = 0, m = this.data.length; i < m; i++) {
+          if (this.data[i]) {
+            var text = this.data[i].toSVG(variant,scale), x = svg.w;
+            if (x === 0 && -text.l > 10*text.w) {x += -text.l} // initial combining character doesn't combine
+            svg.Add(text,x,0,true);
+          }
+        }
         svg.Clean();
 	if (this.data.join("").length !== 1) {delete svg.skew}
 	if (values.largeop) {
