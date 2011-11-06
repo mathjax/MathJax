@@ -181,10 +181,10 @@
 
       for (var i = 0, m = this.items.length; i < m; i++) {this.items[i].Create(menu)}
       if (MENU.isMobile) {
-        HTML.addElement(menu,"img",{
-          className: "MathJax_Menu_Close", menu: parent, src: CONFIG.closeImg,
+        HTML.addElement(menu,"span",{
+          className: "MathJax_Menu_Close", menu: parent,
           ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close
-        });
+        },[["img",{src: CONFIG.closeImg, style:{width:"100%",height:"100%"}}]]);
       }
       this.posted = true;
       
