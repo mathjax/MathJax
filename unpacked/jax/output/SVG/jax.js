@@ -450,9 +450,9 @@
       return obj;
     },
     addElement: function (parent,type,def) {return parent.appendChild(this.Element(type,def))},
-    TextNode: MathJax.HTML.TextNode,
-    addText: MathJax.HTML.addText,
-    ucMatch: MathJax.HTML.ucMatch,
+    TextNode: HTML.TextNode,
+    addText: HTML.addText,
+    ucMatch: HTML.ucMatch,
 
     HandleVariant: function (variant,scale,text) {
       var svg = BBOX.G();
@@ -712,7 +712,7 @@
       this.x = this.y = 0; this.scale = 1; this.n = 0;
       if (this.type) {this.element = SVG.Element(this.type,def)}
     },
-    With: function (def) {return MathJax.Hub.Insert(this,def)},
+    With: function (def) {return HUB.Insert(this,def)},
     Add: function (svg,dx,dy,forcew,infront) {
       if (dx) {svg.x += dx}; if (dy) {svg.y += dy};
       if (svg.element) {
@@ -905,7 +905,7 @@
     }
   });
   
-  MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
+  HUB.Register.StartupHook("mml Jax Ready",function () {
 
     MML = MathJax.ElementJax.mml;
 
@@ -958,7 +958,7 @@
       
       SVGgetStyles: function () {
         if (this.style) {
-          var span = SVG.Element("span");
+          var span = HTML.Element("span");
           span.style.cssText = this.style;
           if (span.style.fontSize) {this.mathsize = span.style.fontSize}
           if (span.style.color) {this.mathcolor = span.style.color}
@@ -1753,12 +1753,12 @@
     //  We also need to wait for the onload handler to run, since the loadComplete
     //  will call Config and Startup, which need to modify the body.
     //
-    MathJax.Hub.Register.StartupHook("onLoad",function () {
+    HUB.Register.StartupHook("onLoad",function () {
       setTimeout(MathJax.Callback(["loadComplete",SVG,"jax.js"]),0);
     });
   });
 
-  MathJax.Hub.Register.StartupHook("End Cookie", function () {
+  HUB.Register.StartupHook("End Cookie", function () {
     if (HUB.config.menuSettings.zoom !== "None")
       {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
   });
