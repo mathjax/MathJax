@@ -954,16 +954,26 @@
           svg.removeable = false;
           svg.element.setAttribute("className","mjx-svg-"+this.type);
         }
+        var style = this.Get("style");
+        if (style) {
+          svg.element.style.cssText = style;
+          svg.element.style.border = svg.element.style.padding = "";
+          if (svg.removeable) {svg.removeable = svg.element.style.cssText === ""}
+        }
       },
       
       SVGgetStyles: function () {
-        if (this.style) {
+        var style = this.Get("style");
+        if (style) {
           var span = HTML.Element("span");
-          span.style.cssText = this.style;
-          if (span.style.fontSize) {this.mathsize = span.style.fontSize}
-          if (span.style.color) {this.mathcolor = span.style.color}
-          if (span.style.backgroundColor) {this.mathbackground = span.style.backgroundColor}
+          span.style.cssText = style;
           this.styles = {border:SVG.getBorders(span), padding:SVG.getPadding(span)}
+          if (span.style.fontSize) {this.styles.fontSize = span.style.fontSize}
+          if (span.style.color) {this.styles.color = span.style.color}
+          if (span.style.backgroundColor) {this.styles.background = span.style.backgroundColor}
+          if (span.style.fontStyle)  {this.styles.fontStyle = span.style.fontStyle}
+          if (span.style.fontWeight) {this.styles.fontWeight = span.style.fontWeight}
+          if (span.style.fontFamily) {this.styles.fontFamily = span.style.fontFamily}
         }
       },
             
@@ -989,6 +999,7 @@
 
       SVGhandleColor: function (svg) {
         var values = this.getValues("mathcolor","color");
+        if (this.styles && this.styles.color && !values.color) {values.color = this.styles.color}
         if (values.color && !this.mathcolor) {values.mathcolor = values.color}
         if (values.mathcolor) {
           SVG.Element(svg.element,{fill:values.mathcolor,stroke:values.mathcolor})
@@ -996,7 +1007,8 @@
         }
         var borders = (this.styles||{}).border, padding = (this.styles||{}).padding,
             bleft = ((borders||{}).left||0), pleft = ((padding||{}).left||0), id;
-	values.background = (this.mathbackground || this.background || MML.COLOR.TRANSPARENT);
+	values.background = (this.mathbackground || this.background ||
+                             (this.styles||{}).background || MML.COLOR.TRANSPARENT);
         if (bleft + pleft) {
           //
           //  Make a box and move the contents of svg to it,
@@ -1049,7 +1061,12 @@
       SVGgetVariant: function () {
 	var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
 	var variant = values.mathvariant; if (this.variantForm) {variant = "-TeX-variant"}
-	if (values.fontfamily && !this.mathvariant) {
+        if (this.styles) {
+          if (!values.fontstyle && this.styles.fontStyle) {values.fontstyle = this.styles.fontStyle}
+          if (!values.fontweight && this.styles.fontWeight) {values.fontweight = this.styles.fontWeight}
+          if (!values.fontfamily && this.styles.fontFamily) {values.fontfamily = this.styles.fontFamily}
+        }
+        if (values.fontfamily && !this.mathvariant) {
 	  if (!values.fontweight && values.mathvariant.match(/bold/)) {values.fontweight = "bold"}
           if (!values.fontstyle && values.mathvariant.match(/italic/)) {values.fontstyle = "italic"}
           variant = {forceFamily: true, font: {"font-family":values.fontfamily}};
@@ -1091,12 +1108,7 @@
       SVGgetScale: function () {
 	var scale = 1,
             values = this.getValues("mathsize","scriptlevel","fontsize");
-	/* 
-	 * if (this.style) {
-	 *   var span = this.HTMLspanElement();
-	 *   if (span.style.fontSize != "") {values.fontsize = span.style.fontSize}
-	 * }
-	 */
+        if ((this.styles||{}).fontSize && !values.fontsize) {values.fontsize = this.styles.fontSize}
 	if (values.fontsize && !this.mathsize) {values.mathsize = values.fontsize}
 	if (values.scriptlevel !== 0) {
 	  if (values.scriptlevel > 2) {values.scriptlevel = 2}
