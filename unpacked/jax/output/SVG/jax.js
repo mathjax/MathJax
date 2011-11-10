@@ -736,7 +736,8 @@
               else {svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")")}
           } else if (svg.element.nodeName === "line" ||
                      svg.element.nodeName === "polygon" ||
-                     svg.element.nodeName === "path") {
+                     svg.element.nodeName === "path" ||
+                     svg.element.nodeName === "a") {
             svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")");
           } else {
             svg.element.setAttribute("x",Math.floor(svg.x/svg.scale));
@@ -944,11 +945,20 @@
 	  var a = SVG.Element("a");
 	  a.setAttributeNS(XLINKNS,"href",this.href);
           SVG.addElement(a,"rect",{width:svg.w, height:svg.h+svg.d, y:-svg.d,
-                                  fill:"none", "pointer-events":"all"});
-          if (svg.removeable && svg.element.nodeName === "g") {
-            while (svg.element.firstChild) {a.appendChild(svg.element.firstChild)}
-          } else {a.appendChild(svg.element)}
-	  svg.element = a; svg.removeable = false;
+                                  fill:"none", stroke:"none", "pointer-events":"all"});
+          if (svg.type === "svg") {
+            // for svg element, put <a> inside the main <g> element
+            var g = svg.element.firstChild;
+            while (g.firstChild) {a.appendChild(g.firstChild)}
+            g.appendChild(a);
+          } else {
+            // if removeable, move contents of <g> to <a>, otherise move element to <a>
+            if (svg.removeable && svg.element.nodeName === "g") {
+              while (svg.element.firstChild) {a.appendChild(svg.element.firstChild)}
+            } else {a.appendChild(svg.element)}
+            svg.element = a;
+          }
+          svg.removeable = false;
         }
         if (SVG.config.addMMLclasses) {
           svg.removeable = false;
