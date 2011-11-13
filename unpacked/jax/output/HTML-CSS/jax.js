@@ -1461,13 +1461,15 @@
 
     MML.mbase.Augment({
       toHTML: function (span) {
+        var ic;
 	span = this.HTMLcreateSpan(span); if (this.type != "mrow") {span = this.HTMLhandleSize(span)}
 	for (var i = 0, m = this.data.length; i < m; i++)
-	  {if (this.data[i]) {this.data[i].toHTML(span)}}
+	  {if (this.data[i]) {ic = this.data[i].toHTML(span).bbox.ic}}
 	var stretchy = this.HTMLcomputeBBox(span);
 	var h = span.bbox.h, d = span.bbox.d;
 	for (i = 0, m = stretchy.length; i < m; i++) {stretchy[i].HTMLstretchV(span,h,d)}
 	if (stretchy.length) {this.HTMLcomputeBBox(span,true)}
+        if (ic) {span.bbox.ic = ic} // retain italic correction from children
         if (this.HTMLlineBreaks(span)) {span = this.HTMLmultiline(span)}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
@@ -1804,6 +1806,7 @@
 	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
 	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
 	if (this.data.join("").length !== 1) {delete span.bbox.skew}
+        else if (span.bbox.rw > span.bbox.w) {span.bbox.ic = 1.3*(span.bbox.rw-span.bbox.w)+.05} // fake IC for now
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
 	return span;
@@ -1856,9 +1859,10 @@
 	  }
 	  span.bbox.h -= p; span.bbox.d += p;
 	  if (span.bbox.rw > span.bbox.w) {
-	    span.bbox.ic = span.bbox.rw-span.bbox.w;
+	    span.bbox.ic = 1.25*(span.bbox.rw-span.bbox.w);
 	    HTMLCSS.createBlank(span,span.bbox.ic);
-	    span.bbox.w = span.bbox.rw;
+	    span.bbox.w += span.bbox.ic; span.bbox.rw = span.bbox.w;
+            span.bbox.icAdded = true;
 	  }
 	}
 	this.HTMLhandleSpace(span);
@@ -2264,7 +2268,7 @@
           if (box.bbox.w > WW) {WW = box.bbox.w}
         }}
 	var t = HTMLCSS.TeX.rule_thickness, factor = HTMLCSS.FONTDATA.TeX_factor;
-	var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()}, delta = (base.bbox.ic || 0);
+        var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()}, delta = (base.bbox.ic || 0);
 	var x, y, z1, z2, z3, dw, k;
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
@@ -2289,7 +2293,7 @@
 		k = Math.max(z1,z2-Math.max(0,box.bbox.d));
 	      }
 	      k = Math.max(k,1.5/this.em); // force to be at least 1.5px
-	      x += delta; y = base.bbox.h + box.bbox.d + k;
+	      x += delta/2; y = base.bbox.h + box.bbox.d + k;
 	      box.bbox.h += z3;
 	    } else if (i == this.under) {
 	      if (accent) {
@@ -2300,7 +2304,7 @@
 		k = Math.max(z1,z2-box.bbox.h);
 	      }
 	      k = Math.max(k,1.5/this.em); // force to be at least 1.5px
-	      x -= delta; y = -(base.bbox.d + box.bbox.h + k);
+	      x -= delta/2; y = -(base.bbox.d + box.bbox.h + k);
 	      box.bbox.d += z3;
 	    }
 	    HTMLCSS.placeBox(box,x,y);
@@ -2326,8 +2330,7 @@
 	  else if (HW != null) {this.data[this.base].HTMLstretchH(base,HW)}
 	} else {base.bbox = this.HTMLzeroBBox()}
 	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
-	var x_height = HTMLCSS.TeX.x_height * scale,
-	    s = HTMLCSS.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?
+	var x_height = HTMLCSS.TeX.x_height * scale, s = HTMLCSS.TeX.scriptspace * scale;
 	var sup, sub;
 	if (this.HTMLnotEmpty(this.data[this.sup]))
           {sup = HTMLCSS.createBox(stack); children.push(this.data[this.sup].toHTML(sup))}
@@ -2339,7 +2342,10 @@
 	HTMLCSS.placeBox(base,0,0);
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
-	if (base.bbox.ic) {delta = base.bbox.ic}
+	if (base.bbox.ic) {
+          delta = base.bbox.ic;
+          if (base.bbox.icAdded) {base.bbox.w -= delta}  // if already added by <mo>, remove it
+        }
 	if (this.data[this.base] &&
 	   (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
 	  if (this.data[this.base].data.join("").length === 1 && base.bbox.scale === 1 &&
@@ -2351,14 +2357,14 @@
 	if (!sup) {
 	  if (sub) {
 	    v = Math.max(v,HTMLCSS.TeX.sub1*scale,sub.bbox.h-(4/5)*x_height,min.subscriptshift);
-	    HTMLCSS.placeBox(sub,base.bbox.w+s-delta,-v,sub.bbox);
+	    HTMLCSS.placeBox(sub,base.bbox.w,-v,sub.bbox);
 	  }
 	} else {
 	  if (!sub) {
 	    values = this.getValues("displaystyle","texprimestyle");
 	    p = HTMLCSS.TeX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
 	    u = Math.max(u,p*scale,sup.bbox.d+(1/4)*x_height,min.superscriptshift);
-	    HTMLCSS.placeBox(sup,base.bbox.w+s,u,sup.bbox);
+	    HTMLCSS.placeBox(sup,base.bbox.w+delta,u,sup.bbox);
 	  } else {
 	    v = Math.max(v,HTMLCSS.TeX.sub2*scale);
 	    var t = HTMLCSS.TeX.rule_thickness * scale;
@@ -2367,8 +2373,8 @@
 	      q = (4/5)*x_height - (u - sup.bbox.d);
 	      if (q > 0) {u += q; v -= q}
 	    }
-	    HTMLCSS.placeBox(sup,base.bbox.w+s,Math.max(u,min.superscriptshift));
-	    HTMLCSS.placeBox(sub,base.bbox.w+s-delta,-Math.max(v,min.subscriptshift));
+	    HTMLCSS.placeBox(sup,base.bbox.w+delta,Math.max(u,min.superscriptshift));
+	    HTMLCSS.placeBox(sub,base.bbox.w,-Math.max(v,min.subscriptshift));
 	  }
 	}
 	this.HTMLhandleSpace(span);
