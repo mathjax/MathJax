@@ -789,6 +789,7 @@
       if (data.SVGcanStretch("Vertical")) {svg.mml = data}
       if (svg.h > this.sh) {this.sh = svg.h}
       if (svg.d > this.sd) {this.sd = svg.d}
+      if (svg.ic) {this.ic = svg.ic} else {delete this.ic}
     },
     Stretch: function () {
       for (var i = 0, m = this.svg.length; i < m; i++)
@@ -921,6 +922,7 @@
           {if (this.data[i]) {svg.Add(this.data[i].toSVG(variant,svg.scale),svg.w,0,true)}}
         svg.Clean();
 	if (svg.skew && this.data.join("").length !== 1) {delete svg.skew}
+        else if (svg.r > svg.w) {svg.ic = 1.3*(svg.r - svg.w)+.05} // fake IC for now
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
 	return svg;
@@ -1199,7 +1201,8 @@
 	if (this.data.join("").length !== 1) {delete svg.skew}
 	if (values.largeop) {
 	  svg.y = (svg.h - svg.d)/2/scale - SVG.TeX.axis_height;
-	  if (svg.r > svg.w) {svg.ic = svg.r-svg.w; svg.w = svg.r}
+	  if (svg.r > svg.w)
+            {svg.ic = 1.25*(svg.r-svg.w); svg.w += svg.ic; svg.r = svg.w; svg.icAdded = true}
 	}
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
@@ -1591,7 +1594,7 @@
 		k = Math.max(z1,z2-Math.max(0,box.d));
 	      }
 	      k = Math.max(k,1500/SVG.em);
-	      x += delta; y = base.h + box.d + k;
+	      x += delta/2; y = base.h + box.d + k;
 	      box.h += z3; if (box.h > box.H) {box.H = box.h}
 	    } else if (i == this.under) {
 	      if (accent) {
@@ -1602,7 +1605,7 @@
 		k = Math.max(z1,z2-box.h);
 	      }
 	      k = Math.max(k,1500/SVG.em);
-	      x -= delta; y = -(base.d + box.h + k);
+	      x -= delta/2; y = -(base.d + box.h + k);
 	      box.d += z3; if (box.d > box.D) {box.D = box.d}
 	    }
 	    svg.Add(box,x,y);
@@ -1623,8 +1626,7 @@
 	var scale = svg.scale = this.SVGgetScale(), mu = this.SVGgetMu(svg);
         var base = svg.Add(this.SVGdataStretched(this.base,HW,D));
 	var sscale = (this.data[this.sup] || this.data[this.sub] || this).SVGgetScale();
-	var x_height = SVG.TeX.x_height * scale,
-	    s = SVG.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?
+	var x_height = SVG.TeX.x_height * scale, s = SVG.TeX.scriptspace * scale;
 	var sup, sub;
 	if (this.SVGnotEmpty(this.data[this.sup])) {
 	  sup = this.data[this.sup].toSVG();
@@ -1636,7 +1638,10 @@
 	}
 	var q = SVG.TeX.sup_drop * sscale, r = SVG.TeX.sub_drop * sscale;
 	var u = base.h - q, v = base.d + r, delta = 0, p;
-	if (base.ic) {delta = base.ic}
+	if (base.ic) {
+          delta = base.ic;
+          if (base.icAdded) {base.w -= delta} // if added by <mo>, remove it
+        }
 	if (this.data[this.base] &&
 	   (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
 	  if (this.data[this.base].data.join("").length === 1 && base.scale === 1 &&
@@ -1648,14 +1653,14 @@
 	if (!sup) {
 	  if (sub) {
 	    v = Math.max(v,SVG.TeX.sub1*scale,sub.h-(4/5)*x_height,min.subscriptshift);
-            svg.Add(sub,base.w+s-delta,-v);
+            svg.Add(sub,base.w,-v);
 	  }
 	} else {
 	  if (!sub) {
 	    values = this.getValues("displaystyle","texprimestyle");
 	    p = SVG.TeX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
 	    u = Math.max(u,p*scale,sup.d+(1/4)*x_height,min.superscriptshift);
-            svg.Add(sup,base.w+s,u);
+            svg.Add(sup,base.w+delta,u);
 	  } else {
 	    v = Math.max(v,SVG.TeX.sub2*scale);
 	    var t = SVG.TeX.rule_thickness * scale;
@@ -1664,8 +1669,8 @@
 	      q = (4/5)*x_height - (u - sup.d);
 	      if (q > 0) {u += q; v -= q}
 	    }
-            svg.Add(sup,base.w+s,Math.max(u,min.superscriptshift));
-	    svg.Add(sub,base.w+s-delta,-Math.max(v,min.subscriptshift));
+            svg.Add(sup,base.w+delta,Math.max(u,min.superscriptshift));
+	    svg.Add(sub,base.w,-Math.max(v,min.subscriptshift));
 	  }
 	}
         svg.Clean();
@@ -1759,6 +1764,7 @@
 	    y = SVG.TeX.axis_height - (box.h+box.d)/2 + box.d;
 	  }
           svg.Add(box,0,y);
+          svg.ic = box.ic;
 	}
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
