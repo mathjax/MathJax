@@ -789,13 +789,13 @@
       if (data.SVGcanStretch("Vertical")) {svg.mml = data}
       if (svg.h > this.sh) {this.sh = svg.h}
       if (svg.d > this.sd) {this.sd = svg.d}
-      if (svg.ic) {this.ic = svg.ic} else {delete this.ic}
     },
     Stretch: function () {
       for (var i = 0, m = this.svg.length; i < m; i++)
       {
         var svg = this.svg[i];
         if (svg.mml) {svg = svg.mml.SVGstretchV(this.sh,this.sd)}
+        if (svg.ic) {this.ic = svg.ic} else {delete this.ic}
         this.Add(svg,this.w,0,true);
       }
       delete this.svg;
@@ -920,9 +920,9 @@
         svg.scale = this.SVGgetScale(); this.SVGhandleSpace(svg);
 	for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {svg.Add(this.data[i].toSVG(variant,svg.scale),svg.w,0,true)}}
-        svg.Clean();
-	if (svg.skew && this.data.join("").length !== 1) {delete svg.skew}
-        else if (svg.r > svg.w) {svg.ic = 1.3*(svg.r - svg.w)+.05} // fake IC for now
+        svg.Clean(); var text = this.data.join("");
+	if (svg.skew && text.length !== 1) {delete svg.skew}
+        if (svg.r > svg.w && text.length === 1) {svg.ic = svg.r - svg.w; svg.w = svg.r}
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
 	return svg;
@@ -1201,8 +1201,7 @@
 	if (this.data.join("").length !== 1) {delete svg.skew}
 	if (values.largeop) {
 	  svg.y = (svg.h - svg.d)/2/scale - SVG.TeX.axis_height;
-	  if (svg.r > svg.w)
-            {svg.ic = 1.25*(svg.r-svg.w); svg.w += svg.ic; svg.r = svg.w; svg.icAdded = true}
+	  if (svg.r > svg.w) {svg.ic = svg.r - svg.w; svg.w = svg.r}
 	}
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
@@ -1384,7 +1383,8 @@
         var svg = this.SVG();
 	if (this.data[0] != null) {
           this.SVGhandleSpace(svg);
-          svg.Add(this.data[0].toSVG()); svg.Clean();
+          var math = svg.Add(this.data[0].toSVG()); svg.Clean();
+          if (math.ic) {svg.ic = math.ic}
 	  this.SVGhandleColor(svg);
 	}
         this.SVGsaveData(svg);
@@ -1552,13 +1552,13 @@
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
 	    if (i == this.base) {
-              box = boxes[i] = this.SVGdataStretched(i,HW,D);
+              boxes[i] = this.SVGdataStretched(i,HW,D);
 	      stretch[i] = (D != null || HW == null) && this.data[i].SVGcanStretch("Horizontal");
 	    } else {
-              box = boxes[i] = this.data[i].toSVG();
+              boxes[i] = this.data[i].toSVG();
 	      stretch[i] = this.data[i].SVGcanStretch("Horizontal");
 	    }
-	    if (box.w > WW) {WW = box.w}
+	    if (boxes[i].w > WW) {WW = boxes[i].w}
 	    if (!stretch[i] && WW > W) {W = WW}
 	  }
 	}
@@ -1568,9 +1568,9 @@
           if (boxes[i].w > WW) {WW = boxes[i].w}
         }}
         var t = SVG.TeX.rule_thickness;
-	var base = boxes[this.base] || {w:0, h:0, d:0, H:0, D:0, l:0, r:0, scale:scale},
-            delta = (base.ic || 0);
-	var x, y, z1, z2, z3, dw, k;
+	var base = boxes[this.base] || {w:0, h:0, d:0, H:0, D:0, l:0, r:0, scale:scale};
+	var x, y, z1, z2, z3, dw, k, delta = 0;
+        if (base.ic) {delta = 1.3*base.ic + .05} // adjust faked IC to be more in line with expeted results
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
 	    box = boxes[i];
@@ -1639,8 +1639,8 @@
 	var q = SVG.TeX.sup_drop * sscale, r = SVG.TeX.sub_drop * sscale;
 	var u = base.h - q, v = base.d + r, delta = 0, p;
 	if (base.ic) {
-          delta = base.ic;
-          if (base.icAdded) {base.w -= delta} // if added by <mo>, remove it
+          base.w -= base.ic;       // remove IC (added by mo and mi)
+          delta = 1.3*base.ic+.05; // adjust faked IC to be more in line with expeted results
         }
 	if (this.data[this.base] &&
 	   (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
