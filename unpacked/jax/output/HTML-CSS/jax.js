@@ -885,6 +885,7 @@
       if (w >= 0) {
         span.style.width = this.Em(w);
         span.style.display = "inline-block";
+        span.style.overflow = "hidden";       // for IE in quirks mode
       } else {
         if (this.msieNegativeSpaceBug) {span.style.height = ""}
         span.style.marginLeft = this.Em(w);
@@ -1501,6 +1502,7 @@
 	BBOX.w += bbox.w;
 	if (child.style.paddingRight) {BBOX.w += parseFloat(child.style.paddingRight)*(child.scale||1)}
 	if (bbox.width) {BBOX.width = bbox.width}
+        if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
         if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
       },
       HTMLemptyBBox: function (BBOX) {
@@ -1802,7 +1804,13 @@
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
 	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
-	if (this.data.join("").length !== 1) {delete span.bbox.skew}
+        var text = this.data.join(""), bbox = span.bbox;
+	if (bbox.skew && text.length !== 1) {delete bbox.skew}
+        if (bbox.rw > bbox.w && text.length === 1) {
+          bbox.ic = bbox.rw - bbox.w;
+          HTMLCSS.createBlank(span,bbox.ic);
+          bbox.w = bbox.rw;
+        }
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
 	return span;
@@ -2263,8 +2271,9 @@
           if (box.bbox.w > WW) {WW = box.bbox.w}
         }}
 	var t = HTMLCSS.TeX.rule_thickness, factor = HTMLCSS.FONTDATA.TeX_factor;
-	var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()}, delta = (base.bbox.ic || 0);
-	var x, y, z1, z2, z3, dw, k;
+	var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()};
+	var x, y, z1, z2, z3, dw, k, delta = 0;
+        if (base.bbox.ic) {delta = 1.3*base.bbox.ic + .05} // adjust faked IC to be more in line with expeted results
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
 	    box = boxes[i];
@@ -2288,7 +2297,7 @@
 		k = Math.max(z1,z2-Math.max(0,box.bbox.d));
 	      }
 	      k = Math.max(k,1.5/this.em); // force to be at least 1.5px
-	      x += delta; y = base.bbox.h + box.bbox.d + k;
+	      x += delta/2; y = base.bbox.h + box.bbox.d + k;
 	      box.bbox.h += z3;
 	    } else if (i == this.under) {
 	      if (accent) {
@@ -2299,7 +2308,7 @@
 		k = Math.max(z1,z2-box.bbox.h);
 	      }
 	      k = Math.max(k,1.5/this.em); // force to be at least 1.5px
-	      x -= delta; y = -(base.bbox.d + box.bbox.h + k);
+	      x -= delta/2; y = -(base.bbox.d + box.bbox.h + k);
 	      box.bbox.d += z3;
 	    }
 	    HTMLCSS.placeBox(box,x,y);
@@ -2338,7 +2347,10 @@
 	HTMLCSS.placeBox(base,0,0);
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
-	if (base.bbox.ic) {delta = base.bbox.ic}
+	if (base.bbox.ic) {
+          base.bbox.w -= base.bbox.ic;    // remove IC (added by mo and mi)
+          delta = 1.3*base.bbox.ic + .05; // adjust faked IC to be more in line with expected results
+        }
 	if (this.data[this.base] &&
 	   (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
 	  if (this.data[this.base].data.join("").length === 1 && base.bbox.scale === 1 &&
@@ -2350,14 +2362,14 @@
 	if (!sup) {
 	  if (sub) {
 	    v = Math.max(v,HTMLCSS.TeX.sub1*scale,sub.bbox.h-(4/5)*x_height,min.subscriptshift);
-	    HTMLCSS.placeBox(sub,base.bbox.w+s-delta,-v,sub.bbox);
+	    HTMLCSS.placeBox(sub,base.bbox.w,-v,sub.bbox);
 	  }
 	} else {
 	  if (!sub) {
 	    values = this.getValues("displaystyle","texprimestyle");
 	    p = HTMLCSS.TeX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
 	    u = Math.max(u,p*scale,sup.bbox.d+(1/4)*x_height,min.superscriptshift);
-	    HTMLCSS.placeBox(sup,base.bbox.w+s,u,sup.bbox);
+	    HTMLCSS.placeBox(sup,base.bbox.w+delta,u,sup.bbox);
 	  } else {
 	    v = Math.max(v,HTMLCSS.TeX.sub2*scale);
 	    var t = HTMLCSS.TeX.rule_thickness * scale;
@@ -2366,8 +2378,8 @@
 	      q = (4/5)*x_height - (u - sup.bbox.d);
 	      if (q > 0) {u += q; v -= q}
 	    }
-	    HTMLCSS.placeBox(sup,base.bbox.w+s,Math.max(u,min.superscriptshift));
-	    HTMLCSS.placeBox(sub,base.bbox.w+s-delta,-Math.max(v,min.subscriptshift));
+	    HTMLCSS.placeBox(sup,base.bbox.w+delta,Math.max(u,min.superscriptshift));
+	    HTMLCSS.placeBox(sub,base.bbox.w,-Math.max(v,min.subscriptshift));
 	  }
 	}
 	this.HTMLhandleSpace(span);

@@ -220,6 +220,7 @@
         } else {
           var config = (this.config.showMathMenuMSIE != null ? this : HUB).config;
           if (config.showMathMenuMSIE) {this.MSIEoverlay(container)}
+            else {container.style.position = ""}
         }
       } else {
         container.oncontextmenu = EVENT.Menu;
