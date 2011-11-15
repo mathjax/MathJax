@@ -347,9 +347,6 @@ MathJax.ElementJax.mml.Augment({
     isEmbellished: function () {return FALSE},
     Core: function () {return this},
     CoreMO: function () {return this},
-    lineBreak: function () {  // FIXME:  should be removed (and from elements below) when SVG is converted to new linebreak style
-      if (this.isEmbellished()) {return this.CoreMO().lineBreak()} else {return "none"}
-    },
     hasNewline: function () {
       if (this.isEmbellished()) {return this.CoreMO().hasNewline()}
       if (this.isToken || this.linebreakContainer) {return FALSE}
@@ -545,15 +542,6 @@ MathJax.ElementJax.mml.Augment({
     },
     isEmbellished: function () {return TRUE},
     hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)},
-    lineBreak: function () {
-      var values = this.getValues("linebreak","linebreakstyle");
-      if (values.linebreak === MML.LINEBREAK.NEWLINE) {
-        if (values.linebreakstyle === MML.LINEBREAKSTYLE.INFIXLINEBREAKSTYLE)
-          {values.linebreakstyle = this.Get("infixlinebreakstyle")}
-        return values.linebreakstyle;
-      }
-      return "none";
-    },
     setTeXclass: function (prev) {
       this.getValues("lspace","rspace"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
@@ -601,11 +589,7 @@ MathJax.ElementJax.mml.Augment({
       depth: "0ex",
       linebreak: MML.LINEBREAK.AUTO
     },
-    hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)},
-    lineBreak: function () {
-      return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE ?
-                MML.LINEBREAKSTYLE.AFTER : "none");
-    }
+    hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)}
   });
 
   MML.ms = MML.mbase.Subclass({
