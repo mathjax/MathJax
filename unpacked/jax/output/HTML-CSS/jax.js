@@ -1461,15 +1461,13 @@
 
     MML.mbase.Augment({
       toHTML: function (span) {
-        var ic;
 	span = this.HTMLcreateSpan(span); if (this.type != "mrow") {span = this.HTMLhandleSize(span)}
 	for (var i = 0, m = this.data.length; i < m; i++)
-	  {if (this.data[i]) {ic = this.data[i].toHTML(span).bbox.ic}}
+	  {if (this.data[i]) {this.data[i].toHTML(span)}}
 	var stretchy = this.HTMLcomputeBBox(span);
 	var h = span.bbox.h, d = span.bbox.d;
 	for (i = 0, m = stretchy.length; i < m; i++) {stretchy[i].HTMLstretchV(span,h,d)}
 	if (stretchy.length) {this.HTMLcomputeBBox(span,true)}
-        if (ic) {span.bbox.ic = ic} // retain italic correction from children
         if (this.HTMLlineBreaks(span)) {span = this.HTMLmultiline(span)}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
@@ -1504,6 +1502,7 @@
 	BBOX.w += bbox.w;
 	if (child.style.paddingRight) {BBOX.w += parseFloat(child.style.paddingRight)*(child.scale||1)}
 	if (bbox.width) {BBOX.width = bbox.width}
+        if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
         if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
       },
       HTMLemptyBBox: function (BBOX) {
@@ -1805,8 +1804,13 @@
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
 	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
-	if (this.data.join("").length !== 1) {delete span.bbox.skew}
-        else if (span.bbox.rw > span.bbox.w) {span.bbox.ic = 1.3*(span.bbox.rw-span.bbox.w)+.05} // fake IC for now
+        var text = this.data.join(""), bbox = span.bbox;
+	if (bbox.skew && text.length !== 1) {delete bbox.skew}
+        if (bbox.rw > bbox.w && text.length === 1) {
+          bbox.ic = bbox.rw - bbox.w;
+          HTMLCSS.createBlank(span,bbox.ic);
+          bbox.w = bbox.rw;
+        }
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
 	return span;
@@ -1859,10 +1863,9 @@
 	  }
 	  span.bbox.h -= p; span.bbox.d += p;
 	  if (span.bbox.rw > span.bbox.w) {
-	    span.bbox.ic = 1.25*(span.bbox.rw-span.bbox.w);
+	    span.bbox.ic = span.bbox.rw-span.bbox.w;
 	    HTMLCSS.createBlank(span,span.bbox.ic);
-	    span.bbox.w += span.bbox.ic; span.bbox.rw = span.bbox.w;
-            span.bbox.icAdded = true;
+	    span.bbox.w = span.bbox.rw;
 	  }
 	}
 	this.HTMLhandleSpace(span);
@@ -2268,8 +2271,9 @@
           if (box.bbox.w > WW) {WW = box.bbox.w}
         }}
 	var t = HTMLCSS.TeX.rule_thickness, factor = HTMLCSS.FONTDATA.TeX_factor;
-        var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()}, delta = (base.bbox.ic || 0);
-	var x, y, z1, z2, z3, dw, k;
+	var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()};
+	var x, y, z1, z2, z3, dw, k, delta = 0;
+        if (base.bbox.ic) {delta = 1.3*base.bbox.ic + .05} // adjust faked IC to be more in line with expeted results
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
 	    box = boxes[i];
@@ -2330,7 +2334,8 @@
 	  else if (HW != null) {this.data[this.base].HTMLstretchH(base,HW)}
 	} else {base.bbox = this.HTMLzeroBBox()}
 	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
-	var x_height = HTMLCSS.TeX.x_height * scale, s = HTMLCSS.TeX.scriptspace * scale;
+	var x_height = HTMLCSS.TeX.x_height * scale,
+	    s = HTMLCSS.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?
 	var sup, sub;
 	if (this.HTMLnotEmpty(this.data[this.sup]))
           {sup = HTMLCSS.createBox(stack); children.push(this.data[this.sup].toHTML(sup))}
@@ -2343,8 +2348,8 @@
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
 	if (base.bbox.ic) {
-          delta = base.bbox.ic;
-          if (base.bbox.icAdded) {base.bbox.w -= delta}  // if already added by <mo>, remove it
+          base.bbox.w -= base.bbox.ic;    // remove IC (added by mo and mi)
+          delta = 1.3*base.bbox.ic + .05; // adjust faked IC to be more in line with expected results
         }
 	if (this.data[this.base] &&
 	   (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
