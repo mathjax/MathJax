@@ -67,7 +67,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         span.firstChild.style.marginLeft = "";
       }
       return span;
-    }
+    },
+    toSVG: function () {return this.Core().toSVG()}
   });
   
   MathJax.Hub.Startup.signal.Post("TeX mathchoice Ready");
