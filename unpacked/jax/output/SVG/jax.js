@@ -335,8 +335,15 @@
       if (math.parentNode.className === "MathJax_SVG_Display") {math = math.parentNode}
       return HUB.getJaxFor(math.nextSibling);
     },
-    getHoverSpan: function (jax,math) {return math.firstChild}, // check this
-    getHoverBBox: function (jax,span,math) {return EVENT.getBBox(span.parentNode)}, // check this
+    getHoverSpan: function (jax,math) {
+      math.style.position = "relative"; // make sure inline containers have position set
+      return math.firstChild;
+    },
+    getHoverBBox: function (jax,span,math) {
+      var bbox = EVENT.getBBox(span.parentNode);
+      bbox.h += 2; bbox.d -= 2; // bbox seems to be a bit off, so compensate (FIXME)
+      return bbox;
+    },
     
     Zoom: function (jax,span,math,Mw,Mh) {
       //
