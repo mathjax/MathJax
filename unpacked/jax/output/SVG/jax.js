@@ -519,6 +519,7 @@
           svg.Add(c,svg.w,0);
         }
       }
+      if (text.length == 1 && font.skew && font.skew[n]) {svg.skew = font.skew[n]*1000}
       if (svg.element.childNodes.length === 1) {
         svg.element = svg.element.firstChild;
         svg.removeable = false; svg.scale = scale;
@@ -925,8 +926,12 @@
 	var variant = this.SVGgetVariant();
         var svg = this.SVG();
         svg.scale = this.SVGgetScale(); this.SVGhandleSpace(svg);
-	for (var i = 0, m = this.data.length; i < m; i++)
-          {if (this.data[i]) {svg.Add(this.data[i].toSVG(variant,svg.scale),svg.w,0,true)}}
+	for (var i = 0, m = this.data.length; i < m; i++) {
+          if (this.data[i]) {
+            var child = svg.Add(this.data[i].toSVG(variant,svg.scale),svg.w,0,true);
+            if (child.skew) {svg.skew = child.skew}
+          }
+        }
         svg.Clean(); var text = this.data.join("");
 	if (svg.skew && text.length !== 1) {delete svg.skew}
         if (svg.r > svg.w && text.length === 1) {svg.ic = svg.r - svg.w; svg.w = svg.r}
@@ -1202,6 +1207,7 @@
             var text = this.data[i].toSVG(variant,scale), x = svg.w;
             if (x === 0 && -text.l > 10*text.w) {x += -text.l} // initial combining character doesn't combine
             svg.Add(text,x,0,true);
+            if (text.skew) {svg.skew = text.skew}
           }
         }
         svg.Clean();
