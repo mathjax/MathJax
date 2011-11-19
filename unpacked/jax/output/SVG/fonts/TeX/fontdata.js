@@ -237,11 +237,11 @@
         },
         0x02C6: // wide hat
         {
-          dir: H, HW: [[267,MAIN],[567,SIZE1],[1005,SIZE2],[1447,SIZE3],[1909,SIZE4]]
+          dir: H, HW: [[267+250,MAIN],[567+250,SIZE1],[1005+330,SIZE2],[1447+330,SIZE3],[1909,SIZE4]]
         },
         0x02DC: // wide tilde
         {
-          dir: H, HW: [[333,MAIN],[555,SIZE1],[1000,SIZE2],[1443,SIZE3],[1887,SIZE4]]
+          dir: H, HW: [[333+250,MAIN],[555+250,SIZE1],[1000+330,SIZE2],[1443+330,SIZE3],[1887,SIZE4]]
         },
         0x2016: // vertical arrow extension
         {
