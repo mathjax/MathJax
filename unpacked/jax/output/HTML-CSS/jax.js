@@ -1295,6 +1295,7 @@
         if (n <= 0xFFFF) {C.c = String.fromCharCode(n)}
                     else {C.c = this.PLANE1 + String.fromCharCode(n-0x1D400+0xDC00)}
       }
+      if (C.rfix) {this.addText(span,C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
       if (c[2] || !this.msieAccentBug || text.length) {return text + C.c}
       //  Handle IE accent clipping bug
       HTMLCSS.createShift(span,c[3]/1000);
@@ -1806,7 +1807,7 @@
 	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
         var text = this.data.join(""), bbox = span.bbox;
 	if (bbox.skew && text.length !== 1) {delete bbox.skew}
-        if (bbox.rw > bbox.w && text.length === 1) {
+        if (bbox.rw > bbox.w && text.length === 1 && !variant.noIC) {
           bbox.ic = bbox.rw - bbox.w;
           HTMLCSS.createBlank(span,bbox.ic);
           bbox.w = bbox.rw;

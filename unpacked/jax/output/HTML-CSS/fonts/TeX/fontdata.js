@@ -97,6 +97,10 @@
         "monospace": {fonts:["MathJax_Typewriter",MAIN,SIZE1,AMS]},
         "-tex-caligraphic": {fonts:["MathJax_Caligraphic",MAIN], offsetA: 0x41, variantA: "italic"},
         "-tex-oldstyle": {fonts:["MathJax_Caligraphic",MAIN]},
+        "-tex-mathit": {fonts:["MathJax_Main-italic",ITALIC,MAIN,SIZE1,AMS], italic:true, noIC: true,
+                   remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
+                           0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
         "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
         "-smallOp": {fonts:[SIZE1,MAIN]}
       },
@@ -250,11 +254,11 @@
         },
         0x02C6: // wide hat
         {
-          dir: H, HW: [[.267+.05,MAIN],[.567+.05,SIZE1],[1.005+.05,SIZE2],[1.447+.1,SIZE3],[1.909+.1,SIZE4]]
+          dir: H, HW: [[.267+.25,MAIN],[.567+.25,SIZE1],[1.005+.33,SIZE2],[1.447+.33,SIZE3],[1.909,SIZE4]]
         },
         0x02DC: // wide tilde
         {
-          dir: H, HW: [[.333,MAIN],[.555+.05,SIZE1],[1+.05,SIZE2],[1.443+.1,SIZE3],[1.887+.1,SIZE4]]
+          dir: H, HW: [[.333+.25,MAIN],[.555+.25,SIZE1],[1+.33,SIZE2],[1.443+.33,SIZE3],[1.887,SIZE4]]
         },
         0x2016: // vertical arrow extension
         {
@@ -1466,6 +1470,12 @@
   HTMLCSS.FONTDATA.FONTS['MathJax_Size4'][0xE154][1] += 200;  // adjust depth for brace extender
   HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2212][1] += 100; // adjust depth of minus (used as arrow extender)
   HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x003D][1] += 100; // adjust depth of = (used as arrow extender)
+  HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2245][2] -= 222; // fix error in character's right bearing
+  HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2245][5] = {rfix:-222}; // fix error in character's right bearing
+  MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Main/Bold/MathOperators.js",function () {
+    HTMLCSS.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][2] -= 106; // fix error in character's right bearing
+    HTMLCSS.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][5] = {rfix:-106}; // fix error in character's right bearing
+  });
 
   if (!HTMLCSS.imgFonts) {
     MathJax.Hub.Browser.Select({

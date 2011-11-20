@@ -82,8 +82,9 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         return ((1/18)*RegExp.$1).toFixed(3).replace(/\.?0+$/,"")+"em";
       }
       // FIXME:  set classes for these?
-      if (value === "-tex-caligraphic") {return "script"}
-      if (value === "-tex-oldstyle") {return "normal"}
+      else if (value === "-tex-caligraphic") {return "script"}
+      else if (value === "-tex-oldstyle") {return "normal"}
+      else if (value === "-tex-mathit") {return "italic"}
       return this.quoteHTML(value);
     },
     

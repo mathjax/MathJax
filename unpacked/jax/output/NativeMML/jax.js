@@ -374,6 +374,7 @@
           {value = ((1/18)*RegExp.$1).toFixed(3).replace(/\.?0+$/,"")+"em"} // FIXME:  should take scriptlevel into account
 	else if (value === "-tex-caligraphic") {value = "script"} // FIXME: add a class?
 	else if (value === "-tex-oldstyle") {value = "normal"}    // FIXME: add a class?
+	else if (value === "-tex-mathit") {value = "italic"}    // FIXME: add a class?
 	return value;
       },
       //

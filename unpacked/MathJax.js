@@ -2294,9 +2294,15 @@ MathJax.Hub.Startup = {
       browser.noContextMenu = browser.isMobile;
     },
     Firefox: function (browser) {
-      if (browser.version === "0.0" && navigator.product === "Gecko" && navigator.productSub) {
+      if ((browser.version === "0.0" || navigator.userAgent.match(/Firefox/) == null) &&
+           navigator.product === "Gecko" && navigator.productSub) {
         var date = navigator.productSub.substr(0,8);
-        if      (date >= "20090630") {browser.version = "3.5"}
+        if      (date >= "20110927") {browser.version = "7.0"}
+        else if (date >= "20110816") {browser.version = "6.0"}
+        else if (date >= "20110621") {browser.version = "5.0"}
+        else if (date >= "20110320") {browser.version = "4.0"}
+        else if (date >= "20100121") {browser.version = "3.6"}
+        else if (date >= "20090630") {browser.version = "3.5"}
         else if (date >= "20080617") {browser.version = "3.0"}
         else if (date >= "20061024") {browser.version = "2.0"}
       }
