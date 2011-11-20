@@ -1456,6 +1456,11 @@
     SVG.FONTDATA.FONTS['MathJax_Size4'][0xE154][0] += 200;  // adjust height for brace extender
     SVG.FONTDATA.FONTS['MathJax_Size4'][0xE154][1] += 200;  // adjust depth for brace extender
   });
+  
+  SVG.FONTDATA.FONTS['MathJax_Main'][0x2245][2] -= 222; // fix incorrect right bearing in font
+  MathJax.Hub.Register.LoadHook(SVG.fontDir+"/Main/Bold/MathOperators.js",function () {
+    SVG.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][2] -= 106; // fix incorrect right bearing in font
+  });
 
   AJAX.loadComplete(SVG.fontDir + "/fontdata.js");
   
