@@ -1466,6 +1466,12 @@
   HTMLCSS.FONTDATA.FONTS['MathJax_Size4'][0xE154][1] += 200;  // adjust depth for brace extender
   HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2212][1] += 100; // adjust depth of minus (used as arrow extender)
   HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x003D][1] += 100; // adjust depth of = (used as arrow extender)
+  HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2245][2] -= 222; // fix error in character's right bearing
+  HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2245][5] = {rfix:-222}; // fix error in character's right bearing
+  MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Main/Bold/MathOperators.js",function () {
+    HTMLCSS.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][2] -= 106; // fix error in character's right bearing
+    HTMLCSS.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][5] = {rfix:-106}; // fix error in character's right bearing
+  });
 
   if (!HTMLCSS.imgFonts) {
     MathJax.Hub.Browser.Select({

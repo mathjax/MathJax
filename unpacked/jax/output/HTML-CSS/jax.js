@@ -1295,6 +1295,7 @@
         if (n <= 0xFFFF) {C.c = String.fromCharCode(n)}
                     else {C.c = this.PLANE1 + String.fromCharCode(n-0x1D400+0xDC00)}
       }
+      if (C.rfix) {this.addText(span,C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
       if (c[2] || !this.msieAccentBug || text.length) {return text + C.c}
       //  Handle IE accent clipping bug
       HTMLCSS.createShift(span,c[3]/1000);
