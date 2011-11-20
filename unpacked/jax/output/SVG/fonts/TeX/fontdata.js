@@ -84,6 +84,8 @@
         "monospace": {fonts:["MathJax_Typewriter",MAIN,SIZE1,AMS]},
         "-tex-caligraphic": {fonts:["MathJax_Caligraphic",MAIN], offsetA: 0x41, variantA: "italic"},
         "-tex-oldstyle": {fonts:["MathJax_Caligraphic",MAIN]},
+        "-tex-mathit": {fonts:["MathJax_Main-italic",ITALIC,MAIN,SIZE1,AMS], noIC:true,
+                   offsetN: 0x30, variantN: "normal"},
         "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
         "-smallOp": {fonts:[SIZE1,MAIN]}
       },

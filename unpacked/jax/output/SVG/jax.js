@@ -934,7 +934,8 @@
         }
         svg.Clean(); var text = this.data.join("");
 	if (svg.skew && text.length !== 1) {delete svg.skew}
-        if (svg.r > svg.w && text.length === 1) {svg.ic = svg.r - svg.w; svg.w = svg.r}
+        if (svg.r > svg.w && text.length === 1 && !variant.noIC)
+          {svg.ic = svg.r - svg.w; svg.w = svg.r}
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
 	return svg;
