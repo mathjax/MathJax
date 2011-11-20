@@ -1807,7 +1807,7 @@
 	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
         var text = this.data.join(""), bbox = span.bbox;
 	if (bbox.skew && text.length !== 1) {delete bbox.skew}
-        if (bbox.rw > bbox.w && text.length === 1) {
+        if (bbox.rw > bbox.w && text.length === 1 && !variant.noIC) {
           bbox.ic = bbox.rw - bbox.w;
           HTMLCSS.createBlank(span,bbox.ic);
           bbox.w = bbox.rw;

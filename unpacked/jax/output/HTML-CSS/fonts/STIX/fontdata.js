@@ -91,6 +91,7 @@
                           remap: {0xE262: 0xE265, 0xE263: 0xE269, 0xE264: 0xE26D, 0xE265: 0xE271,
                                   0xE266: 0xE275, 0xE267: 0xE279, 0xE268: 0xE27D, 0xE269: 0xE281,
                                   0xE26A: 0xE285}},
+        "-tex-mathit": {fonts: [ITALIC,"STIXNonUnicode-italic",GENERAL,NONUNI,SIZE1], italic:true, noIC:true},
         "-largeOp": {fonts:[SIZE1,"STIXIntegralsD",NONUNI,GENERAL]},
         "-smallOp": {}
       },

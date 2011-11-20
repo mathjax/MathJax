@@ -97,6 +97,10 @@
         "monospace": {fonts:["MathJax_Typewriter",MAIN,SIZE1,AMS]},
         "-tex-caligraphic": {fonts:["MathJax_Caligraphic",MAIN], offsetA: 0x41, variantA: "italic"},
         "-tex-oldstyle": {fonts:["MathJax_Caligraphic",MAIN]},
+        "-tex-mathit": {fonts:["MathJax_Main-italic",ITALIC,MAIN,SIZE1,AMS], italic:true, noIC: true,
+                   remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
+                           0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
         "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
         "-smallOp": {fonts:[SIZE1,MAIN]}
       },

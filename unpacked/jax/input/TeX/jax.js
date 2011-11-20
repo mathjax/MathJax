@@ -649,7 +649,7 @@
         mit:               ['SetFont',MML.VARIANT.ITALIC],
         oldstyle:          ['SetFont',MML.VARIANT.OLDSTYLE],
         cal:               ['SetFont',MML.VARIANT.CALIGRAPHIC],
-        it:                ['SetFont',MML.VARIANT.ITALIC], // may need special handling
+        it:                ['SetFont',"-tex-mathit"], // needs special handling
         bf:                ['SetFont',MML.VARIANT.BOLD],
         bbFont:            ['SetFont',MML.VARIANT.DOUBLESTRUCK],
         scr:               ['SetFont',MML.VARIANT.SCRIPT],
