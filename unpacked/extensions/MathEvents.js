@@ -499,7 +499,7 @@
     HTML.Element("img",{style:{width:0,height:0,position:"relative"},src:"about:blank"}) :
     HTML.Element("span",{style:{width:0,height:0,display:"inline-block"}})
   );
-  if (1 || ME.operaPositionBug/* || ME.msieTopBug*/) {ME.topImg.style.border="1px solid"}
+  if (ME.operaPositionBug) {ME.topImg.style.border="1px solid"}
 
   //
   //  Get configuration from user
