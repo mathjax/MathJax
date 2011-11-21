@@ -212,7 +212,8 @@
       if (SETTINGS.discoverable || SETTINGS.zoom === "Hover") {
         var from = event.fromElement || event.relatedTarget,
             to   = event.toElement   || event.target;
-        if (from && to && from.isMathJax != to.isMathJax) {
+        if (from && to && (from.isMathJax != to.isMathJax ||
+                           HUB.getJaxFor(from) !== HUB.getJaxFor(to))) {
           var jax = this.getJaxFromMath(math);
           if (jax.hover) {HOVER.ReHover(jax)} else {HOVER.HoverTimer(jax,math)}
           return EVENT.False(event);
@@ -228,7 +229,8 @@
       if (SETTINGS.discoverable || SETTINGS.zoom === "Hover") {
         var from = event.fromElement || event.relatedTarget,
             to   = event.toElement   || event.target;
-        if (from && to && from.isMathJax != to.isMathJax) {
+        if (from && to && (from.isMathJax != to.isMathJax ||
+                           HUB.getJaxFor(from) !== HUB.getJaxFor(to))) {
           var jax = this.getJaxFromMath(math);
           if (jax.hover) {HOVER.UnHover(jax)} else {HOVER.ClearHoverTimer()}
           return EVENT.False(event);
