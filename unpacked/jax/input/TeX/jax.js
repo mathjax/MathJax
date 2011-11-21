@@ -88,7 +88,10 @@
     },
     checkItem: function (item) {
       if (item.type === "over" && this.isOpen) {item.num = this.mmlData(FALSE); this.data = []}
-      if (item.type === "cell" && this.isOpen) {TEX.Error("Misplaced "+item.name)}
+      if (item.type === "cell" && this.isOpen) {
+        if (item.linebreak) {return FALSE}
+        TEX.Error("Misplaced "+item.name);
+      }
       if (item.isClose && this[item.type+"Error"]) {TEX.Error(this[item.type+"Error"])}
       if (!item.isNotStack) {return TRUE}
       this.Push(item.data[0]); return FALSE;
@@ -1493,7 +1496,7 @@
       var n = this.GetBrackets(name).replace(/ /g,"");
       if (n && !n.match(/^(((\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/))
         {TEX.Error("Bracket argument to "+name+" must be a dimension")}
-      this.Push(STACKITEM.cell().With({isCR: TRUE, name: name}));
+      this.Push(STACKITEM.cell().With({isCR: TRUE, name: name, linebreak: TRUE}));
       var top = this.stack.Top();
       if (top.isa(STACKITEM.array)) {
         if (n && top.arraydef.rowspacing) {
@@ -1504,7 +1507,8 @@
           top.arraydef.rowspacing = rows.join(' ');
         }
       } else {
-        // force line break
+        if (n) {this.Push(MML.mspace().With({depth:n}))}
+        this.Push(MML.mo().With({linebreak:MML.LINEBREAK.NEWLINE}));
       }
     },
     emPerInch: 7.2,
