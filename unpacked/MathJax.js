@@ -2295,8 +2295,8 @@ MathJax.Hub.Startup = {
     },
     Firefox: function (browser) {
       if ((browser.version === "0.0" || navigator.userAgent.match(/Firefox/) == null) &&
-           navigator.product === "Gecko" && navigator.productSub) {
-        var date = navigator.productSub.substr(0,8);
+           navigator.product === "Gecko") {
+        var date = (navigator.buildID||navigator.productSub||"0").substr(0,8);
         if      (date >= "20110927") {browser.version = "7.0"}
         else if (date >= "20110816") {browser.version = "6.0"}
         else if (date >= "20110621") {browser.version = "5.0"}
