@@ -212,7 +212,8 @@
       if (SETTINGS.discoverable || SETTINGS.zoom === "Hover") {
         var from = event.fromElement || event.relatedTarget,
             to   = event.toElement   || event.target;
-        if (from && to && from.isMathJax != to.isMathJax) {
+        if (from && to && (from.isMathJax != to.isMathJax ||
+                           HUB.getJaxFor(from) !== HUB.getJaxFor(to))) {
           var jax = this.getJaxFromMath(math);
           if (jax.hover) {HOVER.ReHover(jax)} else {HOVER.HoverTimer(jax,math)}
           return EVENT.False(event);
@@ -228,7 +229,8 @@
       if (SETTINGS.discoverable || SETTINGS.zoom === "Hover") {
         var from = event.fromElement || event.relatedTarget,
             to   = event.toElement   || event.target;
-        if (from && to && from.isMathJax != to.isMathJax) {
+        if (from && to && (from.isMathJax != to.isMathJax ||
+                           HUB.getJaxFor(from) !== HUB.getJaxFor(to))) {
           var jax = this.getJaxFromMath(math);
           if (jax.hover) {HOVER.UnHover(jax)} else {HOVER.ClearHoverTimer()}
           return EVENT.False(event);
@@ -497,7 +499,7 @@
     HTML.Element("img",{style:{width:0,height:0,position:"relative"},src:"about:blank"}) :
     HTML.Element("span",{style:{width:0,height:0,display:"inline-block"}})
   );
-  if (1 || ME.operaPositionBug/* || ME.msieTopBug*/) {ME.topImg.style.border="1px solid"}
+  if (ME.operaPositionBug) {ME.topImg.style.border="1px solid"}
 
   //
   //  Get configuration from user
