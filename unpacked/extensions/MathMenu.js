@@ -183,7 +183,7 @@
       if (MENU.isMobile) {
         HTML.addElement(menu,"span",{
           className: "MathJax_Menu_Close", menu: parent,
-          ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close, onmouseup: False,
+          ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close, onmouseup: FALSE,
         },[["img",{src: CONFIG.closeImg, style:{width:"100%",height:"100%"}}]]);
       }
       this.posted = true;
