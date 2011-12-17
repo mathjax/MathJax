@@ -47,7 +47,7 @@
     },
     0x21A0: // right two-headed arrow
     {
-      dir: H, HW: [[.926,GENERAL]], stretch: {right:[0x221A0,GENERAL], rep:[0x2212,GENERAL]}
+      dir: H, HW: [[.926,GENERAL]], stretch: {right:[0x21A0,GENERAL], rep:[0x2212,GENERAL]}
     },
     0x21A4: // left arrow from bar
     {
