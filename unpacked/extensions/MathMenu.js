@@ -184,7 +184,7 @@
       if (MENU.isMobile) {
         HTML.addElement(menu,"span",{
           className: "MathJax_Menu_Close", menu: parent,
-          ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close, onmouseup: FALSE,
+          ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close, onmouseup: FALSE
         },[["img",{src: CONFIG.closeImg, style:{width:"100%",height:"100%"}}]]);
       }
       this.posted = true;
@@ -231,7 +231,7 @@
       var div = document.getElementById("MathJax_MenuFrame");
       if (div) {
         div.parentNode.removeChild(div);
-        if (this.msieBackgroundBug) {detachEvent("onresize",MENU.Resize)}
+        if (this.msieFixedPositionBug) {detachEvent("onresize",MENU.Resize)}
       }
       if (MENU.jax.hover) {
         delete MENU.jax.hover.nofade;
@@ -302,6 +302,8 @@
         //  MSIE doesn't allow transparent background to be hit boxes, so
         //  fake it using opacity with solid background color
         bg.style.backgroundColor = "white"; bg.style.filter = "alpha(opacity=0)";
+      }
+      if (menu.msieFixedPositionBug) {
         //  MSIE can't do fixed position, so use a full-sized background
         //  and an onresize handler to update it (stupid, but necessary)
         div.width = div.height = 0; this.Resize();
@@ -758,7 +760,8 @@
       var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
       MENU.Augment({
         margin: 20,
-        msieBackgroundBug: (quirks || !isIE8),
+        msieBackgroundBug: true,
+        msieFixedPositionBug: (quirks || !isIE8),
         msieAboutBug: quirks
       });
       if (document.documentMode >= 9) {
