@@ -360,7 +360,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     GetDelimiterArg: function (name) {
       var c = this.trimSpaces(this.GetArgument(name));
       if (c == "") {return null}
-      if (!TEXDEF.delimiter[c]) {TEX.Error("Missing or unrecognized delimiter for "+name)}
+      if (TEXDEF.delimiter[c] == null) {TEX.Error("Missing or unrecognized delimiter for "+name)}
       return this.convertDelimiter(c);
     },
     
