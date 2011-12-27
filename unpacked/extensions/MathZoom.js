@@ -102,7 +102,7 @@
     },
     
     //
-    //  Zoom on hover (called by UI.Hover)
+    //  Zoom on hover (called by MathEvents.Hover)
     //
     Hover: function (event,math) {
       if (this.settings.zoom === "Hover") {this.Zoom(event,math); return true}
