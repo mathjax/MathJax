@@ -366,7 +366,7 @@ MathJax.fileversion = "1.1.17";
   };
 
   //
-  //  An array or priorities hooks that are executed sequentially
+  //  An array of priorities hooks that are executed sequentially
   //  with a given set of data.
   //
   var HOOKS = MathJax.Object.Subclass({
@@ -411,6 +411,19 @@ MathJax.fileversion = "1.1.17";
       return AFTER.apply({},callbacks);
     }
   });
+  
+  //
+  //  Run an array of callbacks passing them the given data.
+  //  (Legacy function, since this has been replaced by the HOOKS object).
+  //
+  var EXECUTEHOOKS = function (hooks,data,reset) {
+    if (!hooks) {return null}
+    if (!(hooks instanceof Array)) {hooks = [hooks]}
+    if (!(data instanceof Array))  {data = (data == null ? [] : [data])}
+    var handler = HOOKS(reset);
+    for (var i = 0, m = hooks.length; i < m; i++) {handler.Add(hooks[i])}
+    return handler.Execute.apply(handler,data);
+  };
    
   //
   //  Command queue that performs commands in order, waiting when
@@ -574,6 +587,7 @@ MathJax.fileversion = "1.1.17";
   BASE.Callback.Queue = QUEUE;
   BASE.Callback.Signal = SIGNAL.find;
   BASE.Callback.Hooks = HOOKS;
+  BASE.Callback.ExecuteHooks = EXECUTEHOOKS;
 })("MathJax");
 
 /**********************************************************/
