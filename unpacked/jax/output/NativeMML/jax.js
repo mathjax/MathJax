@@ -520,6 +520,18 @@
 	}
       });
     }
+    
+    if (HUB.Browser.isChrome) {
+      MML.math.Augment({
+        //
+        //  Chrome doesn't seem to add the xmlns attribute, so do it by hand.
+        //
+        toNativeMML: function (parent) {
+          this.SUPER(arguments).toNativeMML.call(this,parent);
+          parent.lastChild.setAttribute("xmlns",nMML.MMLnamespace);
+        }
+      });
+    }
 
     MML.TeXAtom.Augment({
       //
