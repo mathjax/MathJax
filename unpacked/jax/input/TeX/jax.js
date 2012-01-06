@@ -1898,15 +1898,16 @@
       data.math = mml; this.postfilterHooks.Execute(data);
       return data.math;
     },
-    prefilterMath: function (data) {
+    prefilterMath: function (math,displaystyle,script) {
       // Konqueror incorrectly quotes these characters in script.innerHTML 
       if (HUB.Browser.isKonqueror)
-        {data.math = data.math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
+        {math = math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
       // avoid parsing super- and subscript numbers as a unit
-      data.math = data.math.replace(/([_^]\s*\d)([0-9.,])/g,"$1 $2");
+      return math.replace(/([_^]\s*\d)([0-9.,])/g,"$1 $2");
     },
-    postfilterMath: function (data) {
-      this.combineRelations(data.math.root);
+    postfilterMath: function (math,displaystyle,script) {
+      this.combineRelations(math.root);
+      return math;
     },
     formatError: function (err,math,display,script) {
       return MML.merror(err.message.replace(/\n.*/,""));
@@ -1959,8 +1960,14 @@
   //
   //  Add the default filters
   //
-  TEX.prefilterHooks.Add(["prefilterMath",TEX]);
-  TEX.postfilterHooks.Add(["postfilterMath",TEX]);
+  TEX.prefilterHooks.Add(function (data) {
+    data.math = TEX.prefilterMath(data.math,data.displaystyle,data.script);
+  });
+  TEX.postfilterHooks.Add(function (data) {
+    data.math = TEX.postfilterMath(data.math,data.displaystyle,data.script);
+  });
+//  TEX.prefilterHooks.Add(["prefilterMath",TEX]);
+//  TEX.postfilterHooks.Add(["postfilterMath",TEX]);
 
   TEX.loadComplete("jax.js");
   
