@@ -151,9 +151,11 @@
     },
     loadError: function (font) {
       MathJax.Message.Set("Can't load web font "+HTMLCSS.fontInUse+"/"+font.directory,null,2000);
+      HUB.Startup.signal.Post(["HTML-CSS Jax - web font error",HTMLCSS.fontInUse+"/"+font.directory,font]);
     },
     firefoxFontError: function (font) {
       MathJax.Message.Set("Firefox can't load web fonts from a remote host",null,3000);
+      HUB.Startup.signal.Post("HTML-CSS Jax - Firefox web fonts on remote host error");
     },
 
     checkWebFont: function (check,font,callback) {

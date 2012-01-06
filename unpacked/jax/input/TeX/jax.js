@@ -1910,7 +1910,9 @@
       return math;
     },
     formatError: function (err,math,display,script) {
-      return MML.merror(err.message.replace(/\n.*/,""));
+      var message = err.message.replace(/\n.*/,"");
+      HUB.signal.Post(["TeX Jax - parse error",message,math,display,script]);
+      return MML.merror(message);
     },
 
     //

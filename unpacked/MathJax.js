@@ -877,7 +877,10 @@ MathJax.fileversion = "1.1.17";
     //
     //  The default error hook for file load failures
     //
-    loadError: function (file) {BASE.Message.Set("File failed to load: "+file,null,2000)},
+    loadError: function (file) {
+      BASE.Message.Set("File failed to load: "+file,null,2000);
+      BASE.Hub.signal.Post(["file load error",file]);
+    },
 
     //
     //  Defines a style sheet from a hash of style declarations (key:value pairs

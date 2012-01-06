@@ -39,7 +39,7 @@
 
 //
 //  The configuration defaults, augmented by the user settings
-//  
+//
 MathJax.Extension["TeX/noUndefined"] = {
   version: "1.1",
   config: MathJax.Hub.CombineConfig("TeX.noUndefined",{
@@ -55,6 +55,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
   MathJax.InputJax.TeX.Parse.Augment({
     csUndefined: function (name) {
+      MathJax.Hub.signal.Post(["TeX Jax - undefined control sequence",name]);
       this.Push(MML.mtext(name).With(CONFIG.attributes));
     }
   });
