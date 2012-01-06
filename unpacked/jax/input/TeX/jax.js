@@ -1966,8 +1966,6 @@
   TEX.postfilterHooks.Add(function (data) {
     data.math = TEX.postfilterMath(data.math,data.displaystyle,data.script);
   });
-//  TEX.prefilterHooks.Add(["prefilterMath",TEX]);
-//  TEX.postfilterHooks.Add(["postfilterMath",TEX]);
 
   TEX.loadComplete("jax.js");
   
