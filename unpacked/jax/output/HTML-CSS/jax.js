@@ -25,10 +25,10 @@
 
 
 (function (AJAX,HUB,HTMLCSS) {
-  var MML;
+  var MML, isMobile = HUB.Browser.isMobile;
    
   var FONTTEST = MathJax.Object.Subclass({
-    timeout:  5*1000,   // timeout for loading web fonts
+    timeout:  (isMobile? 15:8)*1000,   // timeout for loading web fonts
 
     FontInfo: {
       STIX: {family: "STIXSizeOneSym", testString: "() {} []"},
@@ -138,7 +138,7 @@
     },
     loadComplete: function (font,n,done,status) {
       MathJax.Message.Clear(n);
-      if (status === AJAX.STATUS.OK) {done(); return}
+      if (status === AJAX.STATUS.OK) {this.webFontLoaded = true; done(); return}
       this.loadError(font);
       if (HUB.Browser.isFirefox && HTMLCSS.allowWebFonts) {
         var host = document.location.protocol + "//" + document.location.hostname;
@@ -147,7 +147,7 @@
         if (AJAX.fileURL(HTMLCSS.webfontDir).substr(0,host.length) !== host)
           {this.firefoxFontError(font)}
       }
-      HTMLCSS.loadWebFontError(font,done);
+      if (!this.webFontLoaded) {HTMLCSS.loadWebFontError(font,done)} else {done()}
     },
     loadError: function (font) {
       MathJax.Message.Set("Can't load web font "+HTMLCSS.fontInUse+"/"+font.directory,null,2000);
