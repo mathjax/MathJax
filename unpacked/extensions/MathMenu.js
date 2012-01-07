@@ -25,8 +25,13 @@
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
   var VERSION = "1.1.9";
+
+  var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
-  MathJax.Extension.MathMenu = {version: VERSION};
+  MathJax.Extension.MathMenu = {
+    version: VERSION,
+    signal: SIGNAL
+  };
 
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE;
   var ROUND = (isPC ? null : "5px");
@@ -157,7 +162,7 @@
     posted: false,
     title: null,
     margin: 5,
-
+    
     Init: function (def) {this.items = [].slice.call(arguments,0)},
     With: function (def) {if (def) {HUB.Insert(this,def)}; return this},
 
@@ -172,6 +177,7 @@
         div = MENU.Background(this);
         delete ITEM.lastItem; delete ITEM.lastMenu;
         delete MENU.skipUp;
+        SIGNAL.Post(["post",MENU.jax]);
       }
       var menu = HTML.addElement(div,"div",{
         onmouseup: MENU.Mouseup, ondblclick: FALSE,
@@ -227,6 +233,7 @@
      *  Remove the menu from the screen
      */
     Remove: function (event,menu) {
+      SIGNAL.Post(["unpost",MENU.jax]);
       var div = document.getElementById("MathJax_MenuFrame");
       if (div) {
         div.parentNode.removeChild(div);
@@ -419,7 +426,11 @@
     
     Label: function (def,menu) {return [this.name]},
     Mouseup: function (event,menu) {
-      if (!this.disabled) {this.Remove(event,menu); this.action.call(this,event);}
+      if (!this.disabled) {
+        this.Remove(event,menu);
+        SIGNAL.Post(["command",this]);
+        this.action.call(this,event);
+      }
       return FALSE(event);
     }
   });
@@ -458,7 +469,7 @@
           if (this.timer) {clearTimeout(this.timer); delete this.timer}
           this.menu.Post(event,menu);
         } else {
-          var menus = document.getElementById("MathJax_MenuFrame").childNodes,
+         var menus = document.getElementById("MathJax_MenuFrame").childNodes,
               m = menus.length-1;
           while (m >= 0) {
             var child = menus[m];
@@ -501,6 +512,7 @@
         menu.firstChild.display = ""; 
         CONFIG.settings[this.variable] = this.value;
         MENU.cookie[this.variable] = CONFIG.settings[this.variable]; MENU.saveCookie();
+        SIGNAL.Post(["radio button",this]);
         if (this.action) {this.action.call(MENU)}
       }
       this.Remove(event,menu);
@@ -529,6 +541,7 @@
         menu.firstChild.display = (CONFIG.settings[this.variable] ? "none" : "");
         CONFIG.settings[this.variable] = !CONFIG.settings[this.variable];
         MENU.cookie[this.variable] = CONFIG.settings[this.variable]; MENU.saveCookie();
+        SIGNAL.Post(["checkbox",this]);
         if (this.action) {this.action.call(MENU)}
       }
       this.Remove(event,menu);
