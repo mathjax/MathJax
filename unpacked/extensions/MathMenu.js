@@ -248,7 +248,7 @@
 
     /*
      *  Find a named item in a menu (or submenu).
-     *  A lsit of names means descend into submenus.
+     *  A list of names means descend into submenus.
      */
     Find: function (name) {
       var names = [].slice.call(arguments,1);
@@ -261,6 +261,15 @@
           return this.items[i];
         }
       }
+      return null;
+    },
+    
+    /*
+     *  Find the index of a menu item (so we can insert before or after it)
+     */
+    IndexOf: function (name) {
+      for (var i = 0, m = this.items.length; i < m; i++)
+        {if (this.items[i].name === name) {return i}}
       return null;
     }
     
