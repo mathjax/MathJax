@@ -63,7 +63,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           attr = this.GetBrackets(name),
           math = this.ParseArg(name);
       var def = {notation: notation.replace(/,/g," ")};
-      if (attr !== "") {
+      if (attr) {
         attr = attr.replace(/ /g,"").split(/,/);
         for (var i = 0, m = attr.length; i < m; i++) {
           var keyvalue = attr[i].split(/[:=]/);

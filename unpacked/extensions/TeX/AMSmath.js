@@ -213,7 +213,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle \cfrac
      */
     CFrac: function (name) {
-      var lr  = this.trimSpaces(this.GetBrackets(name)),
+      var lr  = this.trimSpaces(this.GetBrackets(name,"")),
           num = this.GetArgument(name),
           den = this.GetArgument(name);
       var frac = MML.mfrac(TEX.Parse('\\strut\\textstyle{'+num+'}',this.stack.env).mml(),

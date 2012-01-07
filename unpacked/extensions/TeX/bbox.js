@@ -55,7 +55,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
   TEX.Parse.Augment({
     BBox: function (name) {
-      var bbox = this.GetBrackets(name),
+      var bbox = this.GetBrackets(name,""),
           math = this.ParseArg(name);
       var parts = bbox.split(/,/), def, background, style;
       for (var i in parts) {

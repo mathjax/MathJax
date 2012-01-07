@@ -1239,8 +1239,8 @@
       var n = this.GetBrackets(name), arg = this.GetArgument(name);
       if (arg === "\\frac") {arg += "{"+this.GetArgument(arg)+"}{"+this.GetArgument(arg)+"}"}
       var mml = TEX.Parse(arg,this.stack.env).mml();
-      if (n == "") {mml = MML.msqrt.apply(MML,mml.array())}
-              else {mml = MML.mroot(mml,this.parseRoot(n))}
+      if (!n) {mml = MML.msqrt.apply(MML,mml.array())}
+         else {mml = MML.mroot(mml,this.parseRoot(n))}
       this.Push(mml);
     },
     Root: function (name) {
@@ -1315,15 +1315,16 @@
     
     MmlToken: function (name) {
       var type = this.GetArgument(name),
-          attr = this.GetBrackets(name).replace(/^\s+/,""),
+          attr = this.GetBrackets(name,"").replace(/^\s+/,""),
           data = this.GetArgument(name),
-          def = {}, match;
+          def = {mmlAttributes:[]}, match;
       if (!MML[type] || !MML[type].prototype.isToken) {TEX.Error(type+" is not a token element")}
       while (attr !== "") {
         match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ]*)\s*/i);
         if (!match) {TEX.Error("Invalid MathML attribute: "+attr)}
         if (!MML[type].prototype.defaults[match[1]]) {TEX.Error(match[1]+" is not a recognized attribute for "+type)}
         def[match[1]] = match[2].replace(/^(['"])(.*)\1$/,"$2");
+        def.mmlAttributes.push(match[1]);
         attr = attr.substr(match[0].length);
       }
       this.Push(this.mmlToken(MML[type](data).With(def)));
@@ -1344,7 +1345,7 @@
     },
     
     Smash: function (name) {
-      var bt = this.trimSpaces(this.GetBrackets(name));
+      var bt = this.trimSpaces(this.GetBrackets(name,""));
       var smash = MML.mpadded(this.ParseArg(name));
       switch (bt) {
         case "b": smash.depth = 0; break;
@@ -1437,10 +1438,14 @@
       }
     },
     
-    Macro: function (name,macro,argcount) {
+    Macro: function (name,macro,argcount,def) {
       if (argcount) {
         var args = [];
-        for (var i = 0; i < argcount; i++) {args.push(this.GetArgument(name))}
+        if (def != null) {
+          var optional = this.GetBrackets(name);
+          args.push(optional == null ? def : optional);
+        }
+        for (var i = args.length; i < argcount; i++) {args.push(this.GetArgument(name))}
         macro = this.SubstituteArgs(args,macro);
       }
       this.string = this.AddArgs(macro,this.string.slice(this.i));
@@ -1493,7 +1498,7 @@
     },
     
     CrLaTeX: function (name) {
-      var n = this.GetBrackets(name).replace(/ /g,"");
+      var n = this.GetBrackets(name,"").replace(/ /g,"");
       if (n && !n.match(/^(((\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/))
         {TEX.Error("Bracket argument to "+name+" must be a dimension")}
       this.Push(STACKITEM.cell().With({isCR: TRUE, name: name, linebreak: TRUE}));
@@ -1598,10 +1603,11 @@
       return this.setArrayAlign(this.Array.apply(this,arguments),align);
     },
     setArrayAlign: function (array,align) {
+      align = this.trimSpaces(align||"");
       if (align === "t") {array.arraydef.align = "baseline 1"}
       else if (align === "b") {array.arraydef.align = "baseline -1"}
       else if (align === "c") {array.arraydef.align = "center"}
-      else if (align !== "") {array.arraydef.align = align} // FIXME: should be an error?
+      else if (align) {array.arraydef.align = align} // FIXME: should be an error?
       return array;
     },
     
@@ -1687,8 +1693,8 @@
     /*
      *  Get an optional LaTeX argument in brackets
      */
-    GetBrackets: function (name) {
-      if (this.GetNext() != '[') {return ''};
+    GetBrackets: function (name,def) {
+      if (this.GetNext() != '[') {return def};
       var j = ++this.i, parens = 0;
       while (this.i < this.string.length) {
         switch (this.string.charAt(this.i++)) {

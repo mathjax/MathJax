@@ -79,7 +79,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //            \xcancel[attributes]{math}
     //
     Cancel: function(name,notation) {
-      var attr = this.GetBrackets(name), math = this.ParseArg(name);
+      var attr = this.GetBrackets(name,""), math = this.ParseArg(name);
       var def = CANCEL.setAttributes({notation: notation},attr);
       this.Push(MML.menclose(math).With(def));
     },
@@ -89,7 +89,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     CancelTo: function(name,notation) {
       var value = this.ParseArg(name),
-          attr = this.GetBrackets(name),
+          attr = this.GetBrackets(name,""),
           math = this.ParseArg(name);
       var def = CANCEL.setAttributes({notation: MML.NOTATION.UPDIAGONALSTRIKE, arrow:true},attr);
       value = MML.mpadded(value).With({depth:"-.1em",height:"+.1em",voffset:".1em"});
