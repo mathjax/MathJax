@@ -1334,9 +1334,14 @@
             {this.loadWebFont(font)} else {return font}
         } else {this.findBlock(font,n)}
       }
+      return this.unknownChar(variant,n);
+    },
+    
+    unknownChar: function (variant,n) {
       var unknown = (variant.defaultFont || {family:HTMLCSS.config.undefinedFamily});
       if (variant.bold) {unknown.weight = "bold"}; if (variant.italic) {unknown.style = "italic"}
       unknown[n] = [800,200,500,0,500,{isUnknown:true}]; // [h,d,w,lw,rw,{data}]
+      HUB.signal.Post(["HTML-CSS Jax - unknown char",n,variant]);
       return unknown;
     },
 
