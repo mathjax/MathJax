@@ -2308,7 +2308,8 @@ MathJax.Hub.Startup = {
     Safari: function (browser) {
       var v = parseInt((String(browser.version).split("."))[0]);
       if (v > 85) {browser.webkit = browser.version}
-      if      (v >= 533) {browser.version = "5.0"}
+      if      (v >= 534) {browser.version = "5.1"}
+      else if (v >= 533) {browser.version = "5.0"}
       else if (v >= 526) {browser.version = "4.0"}
       else if (v >= 525) {browser.version = "3.1"}
       else if (v >  500) {browser.version = "3.0"}
@@ -2320,15 +2321,21 @@ MathJax.Hub.Startup = {
     Firefox: function (browser) {
       if ((browser.version === "0.0" || navigator.userAgent.match(/Firefox/) == null) &&
            navigator.product === "Gecko") {
-        var date = (navigator.buildID||navigator.productSub||"0").substr(0,8);
-        if      (date >= "20110927") {browser.version = "7.0"}
-        else if (date >= "20110816") {browser.version = "6.0"}
-        else if (date >= "20110621") {browser.version = "5.0"}
-        else if (date >= "20110320") {browser.version = "4.0"}
-        else if (date >= "20100121") {browser.version = "3.6"}
-        else if (date >= "20090630") {browser.version = "3.5"}
-        else if (date >= "20080617") {browser.version = "3.0"}
-        else if (date >= "20061024") {browser.version = "2.0"}
+        var rv = navigator.userAgent.match(/[\/ ]rv:(\d+\.\d.*?)[\) ]/);
+        if (rv) {browser.version = rv[1]}
+        else {
+          var date = (navigator.buildID||navigator.productSub||"0").substr(0,8);
+          if      (date >= "20111220") {browser.version = "9.0"}
+          else if (date >= "20111120") {browser.version = "8.0"}
+          else if (date >= "20110927") {browser.version = "7.0"}
+          else if (date >= "20110816") {browser.version = "6.0"}
+          else if (date >= "20110621") {browser.version = "5.0"}
+          else if (date >= "20110320") {browser.version = "4.0"}
+          else if (date >= "20100121") {browser.version = "3.6"}
+          else if (date >= "20090630") {browser.version = "3.5"}
+          else if (date >= "20080617") {browser.version = "3.0"}
+          else if (date >= "20061024") {browser.version = "2.0"}
+        }
       }
       browser.isMobile = (navigator.appVersion.match(/Android/i) != null ||
                           navigator.userAgent.match(/ Fennec\//) != null);
