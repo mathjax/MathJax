@@ -102,15 +102,14 @@
       //  multi-line TeX, make spaces non-breakable (to get formatting right)
       //
       formatError: function (err,math,displaystyle,script) {
-        if (CONFIG.disabled) {return FORMAT.apply(this,arguments)} else {
-          var message = err.message.replace(/\n.*/,"");
-          HUB.signal.Post(["TeX Jax - parse error",message,math,displaystyle,script]);
-          var delim = CONFIG.inlineDelimiters;
-          var multiLine = (displaystyle || CONFIG.multiLine);
-          if (!displaystyle) {math = delim[0] + math + delim[1]}
-          if (multiLine) {math = math.replace(/ /g,NBSP)} else {math = math.replace(/\n/g," ")}
-          return MathJax.ElementJax.mml.merror(math).With({isError:true, multiLine: multiLine});
-        }
+        if (CONFIG.disabled) {return FORMAT.apply(this,arguments)}
+        var message = err.message.replace(/\n.*/,"");
+        HUB.signal.Post(["TeX Jax - parse error",message,math,displaystyle,script]);
+        var delim = CONFIG.inlineDelimiters;
+        var multiLine = (displaystyle || CONFIG.multiLine);
+        if (!displaystyle) {math = delim[0] + math + delim[1]}
+        if (multiLine) {math = math.replace(/ /g,NBSP)} else {math = math.replace(/\n/g," ")}
+        return MathJax.ElementJax.mml.merror(math).With({isError:true, multiLine: multiLine});
       }
     });
   });
