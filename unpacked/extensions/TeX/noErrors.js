@@ -70,6 +70,7 @@
   var VERSION = "1.1.1";
   
   var CONFIG = HUB.CombineConfig("TeX.noErrors",{
+    disabled: false,               // set to true to return to original error messages
     multiLine: true,
     inlineDelimiters: ["",""],     // or use ["$","$"] or ["\\(","\\)"]
     style: {
@@ -92,6 +93,8 @@
   };
   
   HUB.Register.StartupHook("TeX Jax Ready",function () {
+    var FORMAT = MathJax.InputJax.TeX.formatError;
+    
     MathJax.InputJax.TeX.Augment({
       //
       //  Make error messages be the original TeX code
@@ -99,13 +102,15 @@
       //  multi-line TeX, make spaces non-breakable (to get formatting right)
       //
       formatError: function (err,math,displaystyle,script) {
-        var message = err.message.replace(/\n.*/,"");
-        HUB.signal.Post(["TeX Jax - parse error",message,math,displaystyle,script]);
-        var delim = CONFIG.inlineDelimiters;
-        var multiLine = (displaystyle || CONFIG.multiLine);
-        if (!displaystyle) {math = delim[0] + math + delim[1]}
-        if (multiLine) {math = math.replace(/ /g,NBSP)} else {math = math.replace(/\n/g," ")}
-        return MathJax.ElementJax.mml.merror(math).With({isError:true, multiLine: multiLine});
+        if (CONFIG.disabled) {return FORMAT.apply(this,arguments)} else {
+          var message = err.message.replace(/\n.*/,"");
+          HUB.signal.Post(["TeX Jax - parse error",message,math,displaystyle,script]);
+          var delim = CONFIG.inlineDelimiters;
+          var multiLine = (displaystyle || CONFIG.multiLine);
+          if (!displaystyle) {math = delim[0] + math + delim[1]}
+          if (multiLine) {math = math.replace(/ /g,NBSP)} else {math = math.replace(/\n/g," ")}
+          return MathJax.ElementJax.mml.merror(math).With({isError:true, multiLine: multiLine});
+        }
       }
     });
   });
@@ -115,19 +120,21 @@
    *   Fix HTML-CSS output
    */
 
-  HUB.Register.StartupHook("HTML-CSS Jax Config",function () {
-    HUB.Config({
-      "HTML-CSS": {
-        styles: {
-          ".MathJax .merror": HUB.Insert({
-            "font-style":       null,
-            "background-color": null,
-            "vertical-align":   (HUB.Browser.isMSIE && CONFIG.multiLine ? "-2px" : "")
-          },CONFIG.style)
-        }
-      }
-    });
-  });
+  /* 
+   * HUB.Register.StartupHook("HTML-CSS Jax Config",function () {
+   *   HUB.Config({
+   *     "HTML-CSS": {
+   *       styles: {
+   *         ".MathJax .isError": HUB.Insert({
+   *           "font-style":       null,
+   *           "background-color": null,
+   *           "vertical-align":   (HUB.Browser.isMSIE && CONFIG.multiLine ? "-2px" : "")
+   *         },CONFIG.style)
+   *       }
+   *     }
+   *   });
+   * });
+   */
 
   HUB.Register.StartupHook("HTML-CSS Jax Ready",function () {
     var MML = MathJax.ElementJax.mml;
@@ -161,7 +168,7 @@
     MML.merror.Augment({
       toHTML: function (span) {
         if (!this.isError) {return MERROR.call(this,span)}
-        span = this.HTMLcreateSpan(span);
+        span = this.HTMLcreateSpan(span); span.className += " isError"
         if (this.multiLine) {span.style.display = "inline-block"}
         var text = this.data[0].data[0].data.join("").split(/\n/);
         for (var i = 0, m = text.length; i < m; i++) {
