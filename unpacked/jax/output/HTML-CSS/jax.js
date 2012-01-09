@@ -1936,6 +1936,20 @@
         return span;
       }
     });
+    MML.merror.Augment({
+      toHTML: function (span) {
+        //
+        //  Width doesn't include padding and border, so use an extra inline block
+        //  element to capture it.
+        //  
+        var SPAN = MathJax.HTML.addElement(span,"span",{style:{display:"inline-block"}});
+        span = this.SUPER(arguments).toHTML.call(this,SPAN);
+        var HD = HTMLCSS.getHD(SPAN), W = HTMLCSS.getW(SPAN);
+        SPAN.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
+        SPAN.id = span.id; span.id = null;
+        return SPAN;
+      }
+    });
 
     MML.ms.Augment({toHTML: MML.mbase.HTMLautoload});
 
