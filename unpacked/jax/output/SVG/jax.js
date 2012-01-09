@@ -517,6 +517,7 @@
           c = BBOX.G();
           c.Add(BBOX.TEXT(scale,String.fromCharCode(n),{"font-family":SVG.config.MISSINGFONT}));
           svg.Add(c,svg.w,0);
+          HUB.signal.Post(["SVG Jax - unknown char",n,variant]);
         }
       }
       if (text.length == 1 && font.skew && font.skew[n]) {svg.skew = font.skew[n]*1000}
