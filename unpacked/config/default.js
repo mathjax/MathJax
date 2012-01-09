@@ -62,9 +62,8 @@ MathJax.Hub.Config({
   //  
   //  Example:
   //      styles: {
-  //        ".MathJax .merror": {
-  //          color: "blue",
-  //          "background-color": "green"
+  //        ".MathJax_Preview": {
+  //          color: "#888"
   //        }
   //      },
   //
@@ -528,9 +527,9 @@ MathJax.Hub.Config({
     //  
     //  Example:
     //      styles: {
-    //        ".MathJax_Preview": {
-    //          "font-size": "80%",          // preview uses a smaller font
-    //          color: "red"                 //    and is in red
+    //        ".MathJax .merror": {
+    //          color:   "#CC0000",
+    //          border:  "1px solid #CC0000"
     //        }
     //      }
     //
