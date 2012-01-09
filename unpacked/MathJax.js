@@ -1662,10 +1662,15 @@ MathJax.Hub = {
   
   formatError: function (script,err) {
     var error = MathJax.HTML.Element("span",{className:"MathJax_Error"},this.config.errorSettings.message);
+    error.jaxID = "Error";
     if (MathJax.Extension.MathEvents) {
-      error.jaxID = "Error";
       error.oncontextmenu = MathJax.Extension.MathEvents.Event.Menu;
       error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
+    } else {
+      MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js",function () {
+        error.oncontextmenu = MathJax.Extension.MathEvents.Event.Menu;
+        error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
+      });
     }
     script.parentNode.insertBefore(error,script);
     if (script.MathJax.preview) {script.MathJax.preview.style.display = "none"}
