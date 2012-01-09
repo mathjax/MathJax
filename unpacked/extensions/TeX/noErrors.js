@@ -99,6 +99,8 @@
       //  multi-line TeX, make spaces non-breakable (to get formatting right)
       //
       formatError: function (err,math,displaystyle,script) {
+        var message = err.message.replace(/\n.*/,"");
+        MathJax.Hub.signal.Post(["TeX Jax - parse error",message,math,displaystyle,script]);
         var delim = CONFIG.inlineDelimiters;
         var multiLine = (displaystyle || CONFIG.multiLine);
         if (!displaystyle) {math = delim[0] + math + delim[1]}

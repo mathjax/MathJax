@@ -36,6 +36,10 @@ MathJax.Extension.tex2jax = {
       ['\\[','\\]']            //  be sure that you don't have an extra comma at the end)
     ],
 
+    balanceBraces: true,       // determines whether tex2jax requires braces to be
+                               // balanced within math delimiters (allows for nested
+                               // dollar signs).  Set to false to get pre-v2.0 compatibility.
+
     skipTags: ["script","noscript","style","textarea","pre","code"],
                                // The names of the tags whose contents will not be
                                // scanned for math delimiters
@@ -57,6 +61,7 @@ MathJax.Extension.tex2jax = {
                                //   of math mode, false to prevent that
 
     processRefs: true,         // set to true to process \ref{...} outside of math mode
+
 
     preview: "TeX"             // set to "none" to not insert MathJax_Preview spans
                                //   or set to an array specifying an HTML snippet
@@ -110,7 +115,7 @@ MathJax.Extension.tex2jax = {
   patternQuote: function (s) {return s.replace(/([\^$(){}+*?\-|\[\]\:\\])/g,'\\$1')},
   
   endPattern: function (end) {
-    return new RegExp(this.patternQuote(end)+"|\\\\.","g");
+    return new RegExp(this.patternQuote(end)+"|\\\\.|[{}]","g");
   },
   
   sortLength: function (a,b) {
@@ -155,7 +160,8 @@ MathJax.Extension.tex2jax = {
         do {prev = element; element = element.nextSibling}
           while (element && (element.nodeName.toLowerCase() === 'br' ||
                              element.nodeName.toLowerCase() === '#comment'));
-        if (!element || element.nodeName !== '#text') {return prev}
+        if (!element || element.nodeName !== '#text')
+          {return (this.search.close ? this.prevEndMatch() : prev)}
       }
     }
     return element;
@@ -165,20 +171,20 @@ MathJax.Extension.tex2jax = {
     var delim = this.match[match[0]];
     if (delim != null) {                              // a start delimiter
       this.search = {
-        end: delim.end, mode: delim.mode,
+        end: delim.end, mode: delim.mode, pcount: 0,
         open: element, olen: match[0].length, opos: this.pattern.lastIndex - match[0].length
       };
       this.switchPattern(delim.pattern);
     } else if (match[0].substr(0,6) === "\\begin") {  // \begin{...}
       this.search = {
-        end: "\\end{"+match[1]+"}", mode: "; mode=display",
+        end: "\\end{"+match[1]+"}", mode: "; mode=display", pcount: 0,
         open: element, olen: 0, opos: this.pattern.lastIndex - match[0].length,
         isBeginEnd: true
       };
       this.switchPattern(this.endPattern(this.search.end));
     } else if (match[0].substr(0,4) === "\\ref" || match[0].substr(0,6) === "\\eqref") {
       this.search = {
-        mode: "", end: "", open: element,
+        mode: "", end: "", open: element, pcount: 0,
         olen: 0, opos: this.pattern.lastIndex - match[0].length
       }
       return this.endMatch([""],element);
@@ -199,14 +205,27 @@ MathJax.Extension.tex2jax = {
   },
   
   endMatch: function (match,element) {
-    if (match[0] == this.search.end) {
-      this.search.close = element;
-      this.search.cpos = this.pattern.lastIndex;
-      this.search.clen = (this.search.isBeginEnd ? 0 : match[0].length);
-      this.search.matched = true;
-      element = this.encloseMath(element);
-      this.switchPattern(this.start);
+    var search = this.search;
+    if (match[0] == search.end) {
+      if (!search.close || search.pcount === 0) {
+        search.close = element;
+        search.cpos = this.pattern.lastIndex;
+        search.clen = (search.isBeginEnd ? 0 : match[0].length);
+      }
+      if (search.pcount === 0) {
+        search.matched = true;
+        element = this.encloseMath(element);
+        this.switchPattern(this.start);
+      }
     }
+    else if (match[0] === "{") {search.pcount++}
+    else if (match[0] === "}" && search.pcount) {search.pcount--}
+    return element;
+  },
+  prevEndMatch: function () {
+    this.search.matched = true;
+    var element = this.encloseMath(this.search.close);
+    this.switchPattern(this.start);
     return element;
   },
   

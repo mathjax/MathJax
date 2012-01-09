@@ -102,7 +102,7 @@
     },
     
     //
-    //  Zoom on hover (called by UI.Hover)
+    //  Zoom on hover (called by MathEvents.Hover)
     //
     Hover: function (event,math) {
       if (this.settings.zoom === "Hover") {this.Zoom(event,math); return true}
@@ -200,6 +200,11 @@
       else {this.onresize = window.onresize; window.onresize = this.Resize}
       
       //
+      //  Let others know about the zoomed math
+      //
+      HUB.signal.Post(["math zoomed",jax]);
+      
+      //
       //  Canel further actions
       //
       return FALSE(event);
@@ -245,6 +250,9 @@
     Remove: function (event) {
       var div = document.getElementById("MathJax_ZoomFrame");
       if (div) {
+        var JAX = MathJax.OutputJax[div.nextSibling.jaxID];
+        var jax = JAX.getJaxFromMath(div.nextSibling);
+        HUB.signal.Post(["math unzoomed",jax]);
         div.parentNode.removeChild(div);
         div = document.getElementById("MathJax_ZoomTracker");
         if (div) {div.parentNode.removeChild(div)}

@@ -25,10 +25,10 @@
 
 
 (function (AJAX,HUB,HTMLCSS) {
-  var MML;
+  var MML, isMobile = HUB.Browser.isMobile;
    
   var FONTTEST = MathJax.Object.Subclass({
-    timeout:  5*1000,   // timeout for loading web fonts
+    timeout:  (isMobile? 15:8)*1000,   // timeout for loading web fonts
 
     FontInfo: {
       STIX: {family: "STIXSizeOneSym", testString: "() {} []"},
@@ -138,7 +138,7 @@
     },
     loadComplete: function (font,n,done,status) {
       MathJax.Message.Clear(n);
-      if (status === AJAX.STATUS.OK) {done(); return}
+      if (status === AJAX.STATUS.OK) {this.webFontLoaded = true; done(); return}
       this.loadError(font);
       if (HUB.Browser.isFirefox && HTMLCSS.allowWebFonts) {
         var host = document.location.protocol + "//" + document.location.hostname;
@@ -147,13 +147,15 @@
         if (AJAX.fileURL(HTMLCSS.webfontDir).substr(0,host.length) !== host)
           {this.firefoxFontError(font)}
       }
-      HTMLCSS.loadWebFontError(font,done);
+      if (!this.webFontLoaded) {HTMLCSS.loadWebFontError(font,done)} else {done()}
     },
     loadError: function (font) {
       MathJax.Message.Set("Can't load web font "+HTMLCSS.fontInUse+"/"+font.directory,null,2000);
+      HUB.Startup.signal.Post(["HTML-CSS Jax - web font error",HTMLCSS.fontInUse+"/"+font.directory,font]);
     },
     firefoxFontError: function (font) {
       MathJax.Message.Set("Firefox can't load web fonts from a remote host",null,3000);
+      HUB.Startup.signal.Post("HTML-CSS Jax - Firefox web fonts on remote host error");
     },
 
     checkWebFont: function (check,font,callback) {
@@ -1332,9 +1334,14 @@
             {this.loadWebFont(font)} else {return font}
         } else {this.findBlock(font,n)}
       }
+      return this.unknownChar(variant,n);
+    },
+    
+    unknownChar: function (variant,n) {
       var unknown = (variant.defaultFont || {family:HTMLCSS.config.undefinedFamily});
       if (variant.bold) {unknown.weight = "bold"}; if (variant.italic) {unknown.style = "italic"}
       unknown[n] = [800,200,500,0,500,{isUnknown:true}]; // [h,d,w,lw,rw,{data}]
+      HUB.signal.Post(["HTML-CSS Jax - unknown char",n,variant]);
       return unknown;
     },
 
@@ -1927,6 +1934,20 @@
         this.HTMLhandleSpace(span);
         this.HTMLhandleColor(span);
         return span;
+      }
+    });
+    MML.merror.Augment({
+      toHTML: function (span) {
+        //
+        //  Width doesn't include padding and border, so use an extra inline block
+        //  element to capture it.
+        //  
+        var SPAN = MathJax.HTML.addElement(span,"span",{style:{display:"inline-block"}});
+        span = this.SUPER(arguments).toHTML.call(this,SPAN);
+        var HD = HTMLCSS.getHD(SPAN), W = HTMLCSS.getW(SPAN);
+        SPAN.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
+        SPAN.id = span.id; span.id = null;
+        return SPAN;
       }
     });
 

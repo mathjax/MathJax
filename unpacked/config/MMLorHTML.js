@@ -70,6 +70,7 @@
 
   var canUseMML = (HUB.Browser.isFirefox && HUB.Browser.versionAtLeast("1.5")) ||
                   (HUB.Browser.isMSIE && MathPlayer) ||
+                  (HUB.Browser.isSafari && HUB.Browser.versionAtLeast("5.0")) ||
                   (HUB.Browser.isOpera && HUB.Browser.versionAtLeast("9.52"));
 
   HUB.Register.StartupHook("End Config",function () {

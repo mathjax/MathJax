@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  MathJax/extension/v1.0-warning.js
+ *  MathJax/extensions/v1.0-warning.js
  *
  *  This extension file is loaded when no jax are configured
  *  as a backward-compatible measure to help people convert to the

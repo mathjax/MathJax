@@ -70,8 +70,6 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
         "font-size":  "90%"
       },
       
-      ".MathJax_Preview": {color: "#888888"},
-
       "#MathJax_Tooltip": {
         "background-color": "InfoBackground", color: "InfoText",
         border: "1px solid black",

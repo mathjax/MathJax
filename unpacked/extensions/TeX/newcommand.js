@@ -49,25 +49,30 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     NewCommand: function (name) {
       var cs = this.trimSpaces(this.GetArgument(name)),
-          n  = this.trimSpaces(this.GetBrackets(name)),
+          n  = this.GetBrackets(name),
+          opt = this.GetBrackets(name),
           def = this.GetArgument(name);
-      if (n === '') {n = null}
       if (cs.charAt(0) === "\\") {cs = cs.substr(1)}
       if (!cs.match(/^(.|[a-z]+)$/i)) {TEX.Error("Illegal control sequence name for "+name)}
-      if (n != null && !n.match(/^[0-9]+$/)) {TEX.Error("Illegal number of parameters specified in "+name)}
-      this.setDef(cs,['Macro',def,n]);
+      if (n) {
+        n = this.trimSpaces(n);
+        if (!n.match(/^[0-9]+$/)) {TEX.Error("Illegal number of parameters specified in "+name)}
+      }
+      this.setDef(cs,['Macro',def,n,opt]);
     },
     
     /*
-     *  Implement \newenvironment{name}[n]{begincmd}{endcmd}
+     *  Implement \newenvironment{name}[n][default]{begincmd}{endcmd}
      */
     NewEnvironment: function (name) {
       var env  = this.trimSpaces(this.GetArgument(name)),
-          n    = this.trimSpaces(this.GetBrackets(name)),
+          n    = this.GetBrackets(name),
           bdef = this.GetArgument(name),
           edef = this.GetArgument(name);
-      if (n === '') {n = null}
-      if (n != null && !n.match(/^[0-9]+$/)) {TEX.Error("Illegal number of parameters specified in "+name)}
+      if (n) {
+        n = this.trimSpaces(n);
+        if (!n.match(/^[0-9]+$/)) {TEX.Error("Illegal number of parameters specified in "+name)}
+      }
       this.setEnv(env,['BeginEnv','EndEnv',bdef,edef,n]);
     },
     

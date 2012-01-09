@@ -66,8 +66,10 @@
     //
     MakeMML: function (node) {
       var type = node.nodeName.toLowerCase().replace(/^[a-z]+:/,"");
-      if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase)))
-        {return MML.merror("Unknown node type: "+type)}
+      if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase))) {
+        MathJax.Hub.signal.Post(["MathML Jax - unknown node type",type]);
+        return MML.merror("Unknown node type: "+type);
+      }
       var mml = MML[type](), i, m, name, value;
       mml.mmlAttributes = [];
       for (i = 0, m = node.attributes.length; i < m; i++) {
@@ -162,7 +164,9 @@
     prefilterMath: function (math,script) {return math},
     prefilterMathML: function (math) {return math},
     formatError: function (err,math,script) {
-      return MML.merror(err.message.replace(/\n.*/,""));
+      var message = err.message.replace(/\n.*/,"");
+      MathJax.Hub.signal.Post(["MathML Jax - parse error",message,math,script]);
+      return MML.merror(message);
     },
     Error: function (message) {
       throw MathJax.Hub.Insert(Error(message),{mathmlError: true});

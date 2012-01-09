@@ -366,7 +366,7 @@ MathJax.fileversion = "1.1.17";
   };
 
   //
-  //  An array or priorities hooks that are executed sequentially
+  //  An array of priorities hooks that are executed sequentially
   //  with a given set of data.
   //
   var HOOKS = MathJax.Object.Subclass({
@@ -411,6 +411,19 @@ MathJax.fileversion = "1.1.17";
       return AFTER.apply({},callbacks);
     }
   });
+  
+  //
+  //  Run an array of callbacks passing them the given data.
+  //  (Legacy function, since this has been replaced by the HOOKS object).
+  //
+  var EXECUTEHOOKS = function (hooks,data,reset) {
+    if (!hooks) {return null}
+    if (!(hooks instanceof Array)) {hooks = [hooks]}
+    if (!(data instanceof Array))  {data = (data == null ? [] : [data])}
+    var handler = HOOKS(reset);
+    for (var i = 0, m = hooks.length; i < m; i++) {handler.Add(hooks[i])}
+    return handler.Execute.apply(handler,data);
+  };
    
   //
   //  Command queue that performs commands in order, waiting when
@@ -574,6 +587,7 @@ MathJax.fileversion = "1.1.17";
   BASE.Callback.Queue = QUEUE;
   BASE.Callback.Signal = SIGNAL.find;
   BASE.Callback.Hooks = HOOKS;
+  BASE.Callback.ExecuteHooks = EXECUTEHOOKS;
 })("MathJax");
 
 /**********************************************************/
@@ -863,7 +877,10 @@ MathJax.fileversion = "1.1.17";
     //
     //  The default error hook for file load failures
     //
-    loadError: function (file) {BASE.Message.Set("File failed to load: "+file,null,2000)},
+    loadError: function (file) {
+      BASE.Message.Set("File failed to load: "+file,null,2000);
+      BASE.Hub.signal.Post(["file load error",file]);
+    },
 
     //
     //  Defines a style sheet from a hash of style declarations (key:value pairs
@@ -1199,7 +1216,9 @@ MathJax.Hub = {
     root: "",
     config: [],      // list of configuration files to load
     styleSheets: [], // list of CSS files to load
-    styles: {},      // styles to generate in-line
+    styles: {        // styles to generate in-line
+      ".MathJax_Preview": {color: "#888"},
+    },
     jax: [],         // list of input and output jax to load
     extensions: [],  // list of extensions to load
     preJax: null,    // pattern to remove from before math script tag
@@ -1643,10 +1662,15 @@ MathJax.Hub = {
   
   formatError: function (script,err) {
     var error = MathJax.HTML.Element("span",{className:"MathJax_Error"},this.config.errorSettings.message);
+    error.jaxID = "Error";
     if (MathJax.Extension.MathEvents) {
-      error.jaxID = "Error";
       error.oncontextmenu = MathJax.Extension.MathEvents.Event.Menu;
       error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
+    } else {
+      MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js",function () {
+        error.oncontextmenu = MathJax.Extension.MathEvents.Event.Menu;
+        error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
+      });
     }
     script.parentNode.insertBefore(error,script);
     if (script.MathJax.preview) {script.MathJax.preview.style.display = "none"}
@@ -2284,7 +2308,8 @@ MathJax.Hub.Startup = {
     Safari: function (browser) {
       var v = parseInt((String(browser.version).split("."))[0]);
       if (v > 85) {browser.webkit = browser.version}
-      if      (v >= 533) {browser.version = "5.0"}
+      if      (v >= 534) {browser.version = "5.1"}
+      else if (v >= 533) {browser.version = "5.0"}
       else if (v >= 526) {browser.version = "4.0"}
       else if (v >= 525) {browser.version = "3.1"}
       else if (v >  500) {browser.version = "3.0"}
@@ -2296,15 +2321,21 @@ MathJax.Hub.Startup = {
     Firefox: function (browser) {
       if ((browser.version === "0.0" || navigator.userAgent.match(/Firefox/) == null) &&
            navigator.product === "Gecko") {
-        var date = (navigator.buildID||navigator.productSub||"0").substr(0,8);
-        if      (date >= "20110927") {browser.version = "7.0"}
-        else if (date >= "20110816") {browser.version = "6.0"}
-        else if (date >= "20110621") {browser.version = "5.0"}
-        else if (date >= "20110320") {browser.version = "4.0"}
-        else if (date >= "20100121") {browser.version = "3.6"}
-        else if (date >= "20090630") {browser.version = "3.5"}
-        else if (date >= "20080617") {browser.version = "3.0"}
-        else if (date >= "20061024") {browser.version = "2.0"}
+        var rv = navigator.userAgent.match(/[\/ ]rv:(\d+\.\d.*?)[\) ]/);
+        if (rv) {browser.version = rv[1]}
+        else {
+          var date = (navigator.buildID||navigator.productSub||"0").substr(0,8);
+          if      (date >= "20111220") {browser.version = "9.0"}
+          else if (date >= "20111120") {browser.version = "8.0"}
+          else if (date >= "20110927") {browser.version = "7.0"}
+          else if (date >= "20110816") {browser.version = "6.0"}
+          else if (date >= "20110621") {browser.version = "5.0"}
+          else if (date >= "20110320") {browser.version = "4.0"}
+          else if (date >= "20100121") {browser.version = "3.6"}
+          else if (date >= "20090630") {browser.version = "3.5"}
+          else if (date >= "20080617") {browser.version = "3.0"}
+          else if (date >= "20061024") {browser.version = "2.0"}
+        }
       }
       browser.isMobile = (navigator.appVersion.match(/Android/i) != null ||
                           navigator.userAgent.match(/ Fennec\//) != null);
