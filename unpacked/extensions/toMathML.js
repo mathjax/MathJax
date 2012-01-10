@@ -65,10 +65,20 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         }}
       }
       for (var i = 0, m = copy.length; i < m; i++) {
+        if (copy[i] === "class") continue;  // this is handled separately below
         value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
         if (value != null) {attr.push(copy[i]+'="'+this.toMathMLquote(value)+'"')}
       }
+      this.toMathMLclass(attr);
       if (attr.length) {return " "+attr.join(" ")} else {return ""}
+    },
+    toMathMLclass: function (attr) {
+      var CLASS = []; if (this["class"]) {CLASS.push(this["class"])}
+      if (this.mathvariant && this.toMathMLvariants[this.mathvariant])
+        {CLASS.push("MJX"+this.mathvariant)}
+      if (this.arrow) {CLASS.push("MJX-arrow")}
+      if (this.variantForm) {CLASS.push("MJX-variant")}
+      if (CLASS.length) {attr.unshift('class="'+CLASS.join(" ")+'"')}
     },
     toMathMLcopyAttributes: [
       "fontfamily","fontsize","fontweight","fontstyle",
@@ -84,10 +94,15 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         return ((1/18)*RegExp.$1).toFixed(3).replace(/\.?0+$/,"")+"em";
       }
       // FIXME:  set classes for these?
-      else if (value === "-tex-caligraphic") {return "script"}
-      else if (value === "-tex-oldstyle") {return "normal"}
-      else if (value === "-tex-mathit") {return "italic"}
+      else if (this.toMathMLvariants[value]) {return this.toMathMLvariants[value]}
       return this.toMathMLquote(value);
+    },
+    toMathMLvariants: {
+      "-tex-caligraphic":      MML.VARIANT.SCRIPT,
+      "-tex-caligraphic-bold": MML.VARIANT.BOLDSCRIPT,
+      "-tex-oldstyle":         MML.VARIANT.NORMAL,
+      "-tex-oldstyle-bold":    MML.VARIANT.BOLD,
+      "-tex-mathit":           MML.VARIANT.ITALIC
     },
     
     toMathMLquote: function (string) {

@@ -353,13 +353,22 @@
         if (!this.attrNames) {
           if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
           for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
-	    if (this[id] != null) {tag.setAttribute(id,this.NativeMMLattribute(id,this[id]))}
+	    if (this[id] != null) {tag.setAttribute(id,this.NativeMMLattribute(this[id]))}
           }}
         }
 	for (var i = 0, m = copy.length; i < m; i++) {
-        var value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
+          var value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
 	  if (value != null) {tag.setAttribute(copy[i],this.NativeMMLattribute(value))}
 	}
+        this.NativeMMLclass(tag);
+      },
+      NativeMMLclass: function (tag) {
+        var CLASS = []; if (this["class"]) {CLASS.push(this["class"])}
+        if (this.mathvariant && this.NativeMMLvariants[this.mathvariant])
+          {CLASS.push("MJX"+this.mathvariant)}
+        if (this.arrow) {CLASS.push("MJX-arrow")}
+        if (this.variantForm) {CLASS.push("MJX-variant")}
+        if (CLASS.length) {tag.setAttribute("class",CLASS.join(" "))}
       },
       NativeMMLcopyAttributes: [
 	"fontfamily","fontsize","fontweight","fontstyle",
@@ -372,10 +381,15 @@
 	if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaces
 	else if (value.match(/^\s*(([-+])?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/))
           {value = ((1/18)*RegExp.$1).toFixed(3).replace(/\.?0+$/,"")+"em"} // FIXME:  should take scriptlevel into account
-	else if (value === "-tex-caligraphic") {value = "script"} // FIXME: add a class?
-	else if (value === "-tex-oldstyle") {value = "normal"}    // FIXME: add a class?
-	else if (value === "-tex-mathit") {value = "italic"}    // FIXME: add a class?
+	else if (this.NativeMMLvariants[value]) {value = this.NativeMMLvariants[value]}
 	return value;
+      },
+      NativeMMLvariants: {
+        "-tex-caligraphic":      MML.VARIANT.SCRIPT,
+        "-tex-caligraphic-bold": MML.VARIANT.BOLDSCRIPT,
+        "-tex-oldstyle":         MML.VARIANT.NORMAL,
+        "-tex-oldstyle-bold":    MML.VARIANT.BOLD,
+        "-tex-mathit":           MML.VARIANT.ITALIC
       },
       //
       //  Create a MathML element
@@ -482,10 +496,6 @@
 	    '[mathvariant="double-struck"]':          {"font-family":"MathJax_AMS, MathJax_AMS-WEB"},
 	    '[mathvariant="script"]':                 {"font-family":"MathJax_Script, MathJax_Script-WEB"},
 	    '[mathvariant="fraktur"]':                {"font-family":"MathJax_Fraktur, MathJax_Fraktur-WEB"},
-	    '[mathvariant="-tex-oldstyle"]':          {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB"},
-	    '[mathvariant="-tex-oldstyle-bold"]':     {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB", "font-weight":"bold"},
-	    '[mathvariant="-tex-caligraphic"]':       {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB"},
-	    '[mathvariant="-tex-caligraphic-bold"]':  {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB", "font-weight":"bold"},
 	    '[mathvariant="bold-script"]':            {"font-family":"MathJax_Script, MathJax_Caligraphic-WEB", "font-weight":"bold"},
 	    '[mathvariant="bold-fraktur"]':           {"font-family":"MathJax_Fraktur, MathJax_Fraktur-WEB", "font-weight":"bold"},
 	    '[mathvariant="monospace"]':              {"font-family":"monospace"},
@@ -493,6 +503,10 @@
 	    '[mathvariant="bold-sans-serif"]':        {"font-family":"sans-serif", "font-weight":"bold"},
 	    '[mathvariant="sans-serif-italic"]':      {"font-family":"sans-serif", "font-style":"italic"},
 	    '[mathvariant="sans-serif-bold-italic"]': {"font-family":"sans-serif", "font-style":"italic", "font-weight":"bold"},
+	    '[class="MJX-tex-oldstyle"]':             {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB"},
+	    '[class="MJX-tex-oldstyle-bold"]':        {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB", "font-weight":"bold"},
+	    '[class="MJX-tex-caligraphic"]':          {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB"},
+	    '[class="MJX-tex-caligraphic-bold"]':     {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB", "font-weight":"bold"},
 
 	    '@font-face /*1*/': {
 	      "font-family": "MathJax_AMS-WEB",
