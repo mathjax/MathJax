@@ -70,18 +70,28 @@
         MathJax.Hub.signal.Post(["MathML Jax - unknown node type",type]);
         return MML.merror("Unknown node type: "+type);
       }
-      var mml = MML[type](), i, m, name, value;
+      var mml = MML[type]();
+      this.AddAttributes(mml,node);
+      this.AddChildren(mml,node);
+      if (MATHML.config.useMathMLspacing) {mml.useMMLspacing = 0x08}
+      return mml;
+    },
+    
+    AddAttributes: function (mml,node) {
       mml.mmlAttributes = [];
-      for (i = 0, m = node.attributes.length; i < m; i++) {
-        name = node.attributes[i].name;
+      for (var i = 0, m = node.attributes.length; i < m; i++) {
+        var name = node.attributes[i].name;
         if (name == "xlink:href") {name = "href"}
         if (name.match(/:/)) continue;
-        value = node.attributes[i].value;
+        var value = node.attributes[i].value;
         if (value.toLowerCase() === "true") {value = true}
           else if (value.toLowerCase() === "false") {value = false}
         mml[name] = value; mml.mmlAttributes.push(name);
       }
-      for (i = 0, m = node.childNodes.length; i < m; i++) {
+    },
+    
+    AddChildren: function (mml,node) {
+      for (var i = 0, m = node.childNodes.length; i < m; i++) {
         var child = node.childNodes[i];
         if (child.nodeName === "#comment") continue;
         if (child.nodeName === "#text") {
@@ -102,8 +112,6 @@
             {mml.Append.apply(mml,cmml.data); cmml.data = []}
         }
       }
-      if (MATHML.config.useMathMLspacing) {mml.useMMLspacing = 0x08}
-      return mml;
     },
     
     trimSpace: function (string) {
