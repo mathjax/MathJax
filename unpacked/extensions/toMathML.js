@@ -32,7 +32,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
     toMathML: function (space) {
       var inferred = (this.inferred && this.parent.inferRow);
       if (space == null) {space = ""}
-      var tag = this.type, attr = this.MathMLattributes();
+      var tag = this.type, attr = this.toMathMLattributes();
       if (tag === "mspace") {return space + "<"+tag+attr+" />"}
       var data = []; var SPACE = (this.isToken ? "" : space+(inferred ? "" : "  "));
       for (var i = 0, m = this.data.length; i < m; i++) {
@@ -46,36 +46,38 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       return space + "<"+tag+attr+">\n"+data.join("\n")+"\n"+ space +"</"+tag+">";
     },
 
-    MathMLattributes: function () {
+    toMathMLattributes: function () {
       var attr = [], defaults = this.defaults;
-      var copy = (this.mmlAttributes||this.copyAttributes),
-          skip = this.skipAttributes;
+      var copy = (this.attrNames||this.toMathMLcopyAttributes),
+          skip = this.toMathMLskipAttributes;
 
       if (this.type === "math") {attr.push('xmlns="http://www.w3.org/1998/Math/MathML"')}
-      if (!this.mmlAttributes) {
+      if (!this.attrNames) {
         if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
         for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
           var force = (id === "open" || id === "close");
           if (this[id] != null && (force || this[id] !== defaults[id])) {
             var value = this[id]; delete this[id];
-            if (force || this.Get(id) !== value) {attr.push(id+'="'+this.formatAttr(value)+'"')}
+            if (force || this.Get(id) !== value)
+              {attr.push(id+'="'+this.toMathMLattribute(value)+'"')}
             this[id] = value;
           }
         }}
       }
       for (var i = 0, m = copy.length; i < m; i++) {
-        if (this[copy[i]] != null) {attr.push(copy[i]+'="'+this.quoteHTML(this[copy[i]])+'"')}
+        value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
+        if (value != null) {attr.push(copy[i]+'="'+this.toMathMLquote(value)+'"')}
       }
       if (attr.length) {return " "+attr.join(" ")} else {return ""}
     },
-    copyAttributes: [
+    toMathMLcopyAttributes: [
       "fontfamily","fontsize","fontweight","fontstyle",
       "color","background",
       "id","class","href","style"
     ],
-    skipAttributes: {texClass: 1, useHeight: 1, texprimestyle: 1},
+    toMathMLskipAttributes: {texClass: 1, useHeight: 1, texprimestyle: 1},
     
-    formatAttr: function (value) {
+    toMathMLattribute: function (value) {
       if (typeof(value) === "string" &&
           value.replace(/ /g,"").match(/^(([-+])?(\d+(\.\d*)?|\.\d+))mu$/)) {
         // FIXME:  should take scriptlevel into account
@@ -85,10 +87,10 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       else if (value === "-tex-caligraphic") {return "script"}
       else if (value === "-tex-oldstyle") {return "normal"}
       else if (value === "-tex-mathit") {return "italic"}
-      return this.quoteHTML(value);
+      return this.toMathMLquote(value);
     },
     
-    quoteHTML: function (string) {
+    toMathMLquote: function (string) {
       string = String(string).split("");
       for (var i = 0, m = string.length; i < m; i++) {
         var n = string[i].charCodeAt(0);
@@ -108,7 +110,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       var tag = this.type;
       if (this.data[this.sup] == null) {tag = "msub"}
       if (this.data[this.sub] == null) {tag = "msup"}
-      var attr = this.MathMLattributes();
+      var attr = this.toMathMLattributes();
       delete this.data[0].inferred;
       var data = [];
       for (var i = 0, m = this.data.length; i < m; i++)
@@ -122,7 +124,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       var tag = this.type;
       if (this.data[this.under] == null) {tag = "mover"}
       if (this.data[this.over] == null)  {tag = "munder"}
-      var attr = this.MathMLattributes();
+      var attr = this.toMathMLattributes();
       delete this.data[0].inferred;
       var data = [];
       for (var i = 0, m = this.data.length; i < m; i++)
@@ -139,7 +141,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
   });
   
   MML.chars.Augment({
-    toMathML: function (space) {return (space||"") + this.quoteHTML(this.toString())}
+    toMathML: function (space) {return (space||"") + this.toMathMLquote(this.toString())}
   });
   
   MML.entity.Augment({

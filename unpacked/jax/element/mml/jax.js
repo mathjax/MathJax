@@ -253,7 +253,8 @@ MathJax.ElementJax.mml.Augment({
       return parent;
     },
     Get: function (name,nodefault) {
-      if (typeof(this[name]) !== "undefined") {return this[name]}
+      if (this[name] != null) {return this[name]}
+      if (this.attr && this.attr[name] != null) {return this.attr[name]}
       // FIXME: should cache these values and get from cache
       // (clear cache when appended to a new object?)
       var parent = this.Parent();
@@ -261,9 +262,10 @@ MathJax.ElementJax.mml.Augment({
         {return (parent["adjustChild_"+name])(parent.childPosition(this))}
       var obj = this.inherit; var root = obj;
       while (obj) {
-        if (typeof(obj[name]) !== "undefined" && !obj.noInheritAttribute[name]) {
+        var value = obj[name]; if (value == null && obj.attr) {value = obj.attr[name]}
+        if (value != null && !obj.noInheritAttribute[name]) {
           var noInherit = obj.noInherit[this.type];
-          if (!(noInherit && noInherit[name])) {return obj[name]}
+          if (!(noInherit && noInherit[name])) {return value}
         }
         root = obj; obj = obj.inherit;
       }

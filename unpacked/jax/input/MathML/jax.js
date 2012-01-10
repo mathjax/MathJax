@@ -26,6 +26,12 @@
 (function (MATHML,BROWSER) {
   var MML;
   
+  var copyAttributes = {
+    fontfamily:1, fontsize:1, fontweight:1, fontstyle:1,
+    color:1, background:1,
+    id:1, "class":1, href:1, style:1
+  };
+
   MATHML.Parse = MathJax.Object.Subclass({
 
     Init: function (string) {this.Parse(string)},
@@ -77,8 +83,11 @@
       return mml;
     },
     
+    //
+    //  Add the attributes to the mml node
+    //
     AddAttributes: function (mml,node) {
-      mml.mmlAttributes = [];
+      mml.attr = {}; mml.attrNames = [];
       for (var i = 0, m = node.attributes.length; i < m; i++) {
         var name = node.attributes[i].name;
         if (name == "xlink:href") {name = "href"}
@@ -86,10 +95,19 @@
         var value = node.attributes[i].value;
         if (value.toLowerCase() === "true") {value = true}
           else if (value.toLowerCase() === "false") {value = false}
-        mml[name] = value; mml.mmlAttributes.push(name);
+        if (mml.defaults[name] != null || this.copyAttributes[name])
+          {mml[name] = value} else {mml.attr[name] = value}
+        mml.attrNames.push(name);
       }
     },
+    //
+    //  The non-MathML attributes to store outside of the attr property
+    //
+    copyAttributes: copyAttributes,
     
+    //
+    //  Create the children for the mml node
+    //
     AddChildren: function (mml,node) {
       for (var i = 0, m = node.childNodes.length; i < m; i++) {
         var child = node.childNodes[i];
@@ -114,6 +132,9 @@
       }
     },
     
+    //
+    //  Remove attribute whitespace
+    //
     trimSpace: function (string) {
       return string.replace(/[\t\n\r]/g," ")    // whitespace to spaces
                    .replace(/^ +/,"")           // initial whitespace
@@ -121,6 +142,10 @@
                    .replace(/  +/g," ");        // internal multiple whitespace
     },
     
+    //
+    //  Replace a named entity by its value
+    //  (look up from external files if necessary)
+    //
     replaceEntity: function (match,entity) {
       if (entity.match(/^(lt|amp|quot)$/)) {return match} // these mess up attribute parsing
       if (MATHML.Parse.Entity[entity]) {return MATHML.Parse.Entity[entity]}
@@ -133,14 +158,18 @@
       }
       return match;
     },
-    
+
+    //
+    //  Characters to remap to better unicode values when they are
+    //  single-character <mo> elements
+    //
     Remap: {
       '\u0027': '\u2032', // '
       '\u002A': '\u2217', // *
       '\u002D': '\u2212'  // -
     }
   }, {
-    loaded: []
+    loaded: []    // the entity files that are loaded
   });
   
   /************************************************************************/

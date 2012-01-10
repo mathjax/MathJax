@@ -7,7 +7,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2011 Design Science, Inc.
+ *  Copyright (c) 2010-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -348,17 +348,17 @@
       //
       NativeMMLattributes: function (tag) {
 	var defaults = this.defaults;
-	var copy = (this.mmlAttributes||this.NativeMMLcopyAttributes),
+	var copy = (this.attrNames||this.NativeMMLcopyAttributes),
 	    skip = this.NativeMMLskipAttributes;
-        if (!this.mmlAttributes) {
+        if (!this.attrNames) {
           if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
           for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
 	    if (this[id] != null) {tag.setAttribute(id,this.NativeMMLattribute(id,this[id]))}
           }}
         }
 	for (var i = 0, m = copy.length; i < m; i++) {
-	  if (this[copy[i]] != null)
-	    {tag.setAttribute(copy[i],this.NativeMMLattribute(copy[i],this[copy[i]]))}
+        var value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
+	  if (value != null) {tag.setAttribute(copy[i],this.NativeMMLattribute(value))}
 	}
       },
       NativeMMLcopyAttributes: [
@@ -367,9 +367,9 @@
 	"id","class","href","style"
       ],
       NativeMMLskipAttributes: {texClass: 1, useHeight: 1, texprimestyle: 1},
-      NativeMMLattribute: function (id,value) {
+      NativeMMLattribute: function (value) {
 	value = String(value);
-	if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaes
+	if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaces
 	else if (value.match(/^\s*(([-+])?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/))
           {value = ((1/18)*RegExp.$1).toFixed(3).replace(/\.?0+$/,"")+"em"} // FIXME:  should take scriptlevel into account
 	else if (value === "-tex-caligraphic") {value = "script"} // FIXME: add a class?
@@ -454,20 +454,22 @@
 	  this.SUPER(arguments).toNativeMML.call(this,parent);
 	}
       });
-      MML.mlabeledtr.Augment({
-	toNativeMML: function (parent) {
-	  //
-	  //  FF doesn't handle mlabeledtr, so remove the label
-	  //
-	  var tag = this.NativeMMLelement("mtr");
-	  this.NativeMMLattributes(tag);
-	  for (var i = 1, m = this.data.length; i < m; i++) {
-	    if (this.data[i]) {this.data[i].toNativeMML(tag)}
-	    else {tag.appendChild(this.NativeMMLelement("mrow"))}
-	  }
-	  parent.appendChild(tag);
-	}
-      });
+      if (!HUB.Browser.versionAtLeast("9.0")) {
+        MML.mlabeledtr.Augment({
+	  toNativeMML: function (parent) {
+            //
+            //  FF doesn't handle mlabeledtr, so remove the label
+            //
+            var tag = this.NativeMMLelement("mtr");
+            this.NativeMMLattributes(tag);
+            for (var i = 1, m = this.data.length; i < m; i++) {
+              if (this.data[i]) {this.data[i].toNativeMML(tag)}
+              else {tag.appendChild(this.NativeMMLelement("mrow"))}
+            }
+            parent.appendChild(tag);
+          }
+        });
+      }
 
       var fontDir = MathJax.OutputJax.fontDir + "/HTML-CSS/TeX/otf";
 

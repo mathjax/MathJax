@@ -8,7 +8,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -1317,17 +1317,23 @@
       var type = this.GetArgument(name),
           attr = this.GetBrackets(name,"").replace(/^\s+/,""),
           data = this.GetArgument(name),
-          def = {mmlAttributes:[]}, match;
+          def = {attrNames:[]}, match;
       if (!MML[type] || !MML[type].prototype.isToken) {TEX.Error(type+" is not a token element")}
       while (attr !== "") {
         match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ]*)\s*/i);
         if (!match) {TEX.Error("Invalid MathML attribute: "+attr)}
-        if (!MML[type].prototype.defaults[match[1]]) {TEX.Error(match[1]+" is not a recognized attribute for "+type)}
+        if (!MML[type].prototype.defaults[match[1]] && !this.MmlTokenAllow[match[1]])
+          {TEX.Error(match[1]+" is not a recognized attribute for "+type)}
         def[match[1]] = match[2].replace(/^(['"])(.*)\1$/,"$2");
-        def.mmlAttributes.push(match[1]);
+        def.attrNames.push(match[1]);
         attr = attr.substr(match[0].length);
       }
       this.Push(this.mmlToken(MML[type](data).With(def)));
+    },
+    MmlTokenAllow: {
+      fontfamily:1, fontsize:1, fontweight:1, fontstyle:1,
+      color:1, background:1,
+      id:1, "class":1, href:1, style:1
     },
     
     Strut: function (name) {
