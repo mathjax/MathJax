@@ -364,6 +364,10 @@
       },
       NativeMMLclass: function (tag) {
         var CLASS = []; if (this["class"]) {CLASS.push(this["class"])}
+        if (this.isa(MML.TeXAtom)) {
+          var TEXCLASS = ["ORD","OP","BIN","REL","OPEN","CLOSE","PUNCT","INNER","VCENTER"][this.texClass];
+          if (TEXCLASS) {CLASS.push("MJX-TeXatom-"+TEXCLASS)}
+        }
         if (this.mathvariant && this.NativeMMLvariants[this.mathvariant])
           {CLASS.push("MJX"+this.mathvariant)}
         if (this.arrow) {CLASS.push("MJX-arrow")}
@@ -556,6 +560,7 @@
       toNativeMML: function (parent) {
 	// FIXME:  Handle spacing using mpadded?
 	var tag = this.NativeMMLelement("mrow");
+	this.NativeMMLattributes(tag);
 	this.data[0].toNativeMML(tag);
 	parent.appendChild(tag);
       }

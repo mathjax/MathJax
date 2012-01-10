@@ -74,6 +74,10 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
     },
     toMathMLclass: function (attr) {
       var CLASS = []; if (this["class"]) {CLASS.push(this["class"])}
+      if (this.isa(MML.TeXAtom)) {
+        var TEXCLASS = ["ORD","OP","BIN","REL","OPEN","CLOSE","PUNCT","INNER","VCENTER"][this.texClass];
+        if (TEXCLASS) {CLASS.push("MJX-TeXatom-"+TEXCLASS)}
+      }
       if (this.mathvariant && this.toMathMLvariants[this.mathvariant])
         {CLASS.push("MJX"+this.mathvariant)}
       if (this.arrow) {CLASS.push("MJX-arrow")}
@@ -151,7 +155,8 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
   MML.TeXAtom.Augment({
     toMathML: function (space) {
       // FIXME:  Handle spacing using mpadded?
-      return space+"<mrow>\n"+this.data[0].toMathML(space+"  ")+"\n"+space+"</mrow>";
+      var attr = this.toMathMLattributes();
+      return space+"<mrow"+attr+">\n" + this.data[0].toMathML(space+"  ")+"\n"+space+"</mrow>";
     }
   });
   
