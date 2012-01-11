@@ -24,7 +24,7 @@
  */
 
 (function (TEX,HUB,AJAX) {
-  var TRUE = true, FALSE = false, MML, NBSP = "\u00A0"; 
+  var MML, NBSP = "\u00A0"; 
   
   var STACK = MathJax.Object.Subclass({
     Init: function (env,inner) {
@@ -39,7 +39,7 @@
         item = arguments[i];
         if (item instanceof MML.mbase) {item = STACKITEM.mml(item)}
         item.global = this.global;
-        top = (this.data.length ? this.Top().checkItem(item) : TRUE);
+        top = (this.data.length ? this.Top().checkItem(item) : true);
         if (top instanceof Array) {this.Pop(); this.Push.apply(this,top)}
         else if (top instanceof STACKITEM) {this.Pop(); this.Push(top)}
         else if (top) {
@@ -82,19 +82,19 @@
     Push: function () {this.data.push.apply(this.data,arguments)},
     Pop: function () {return this.data.pop()},
     mmlData: function (inferred,forceRow) {
-      if (inferred == null) {inferred = TRUE}
+      if (inferred == null) {inferred = true}
       if (this.data.length === 1 && !forceRow) {return this.data[0]}
-      return MML.mrow.apply(MML,this.data).With((inferred ? {inferred: TRUE}: {}));
+      return MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
     },
     checkItem: function (item) {
-      if (item.type === "over" && this.isOpen) {item.num = this.mmlData(FALSE); this.data = []}
+      if (item.type === "over" && this.isOpen) {item.num = this.mmlData(false); this.data = []}
       if (item.type === "cell" && this.isOpen) {
-        if (item.linebreak) {return FALSE}
+        if (item.linebreak) {return false}
         TEX.Error("Misplaced "+item.name);
       }
       if (item.isClose && this[item.type+"Error"]) {TEX.Error(this[item.type+"Error"])}
-      if (!item.isNotStack) {return TRUE}
-      this.Push(item.data[0]); return FALSE;
+      if (!item.isNotStack) {return true}
+      this.Push(item.data[0]); return false;
     },
     With: function (def) {
       for (var id in def) {if (def.hasOwnProperty(id)) {this[id] = def[id]}}
@@ -104,7 +104,7 @@
   });
 
   STACKITEM.start = STACKITEM.Subclass({
-    type: "start", isOpen: TRUE,
+    type: "start", isOpen: true,
     Init: function (global) {
       this.SUPER(arguments).Init.call(this);
       this.global = global;
@@ -116,15 +116,15 @@
   });
 
   STACKITEM.stop = STACKITEM.Subclass({
-    type: "stop", isClose: TRUE
+    type: "stop", isClose: true
   });
 
   STACKITEM.open = STACKITEM.Subclass({
-    type: "open", isOpen: TRUE,
+    type: "open", isOpen: true,
     stopError: "Extra open brace or missing close brace",
     checkItem: function (item) {
       if (item.type === "close") {
-        var mml = this.mmlData(); // this.mmlData(TRUE,TRUE); // force row
+        var mml = this.mmlData(); // this.mmlData(true,true); // force row
         return STACKITEM.mml(MML.TeXAtom(mml)); // TeXAtom make it an ORD to prevent spacing (FIXME: should be another way)
       }
       return this.SUPER(arguments).checkItem.call(this,item);
@@ -132,7 +132,7 @@
   });
 
   STACKITEM.close = STACKITEM.Subclass({
-    type: "close", isClose: TRUE
+    type: "close", isClose: true
   });
 
   STACKITEM.subsup = STACKITEM.Subclass({
@@ -140,7 +140,7 @@
     stopError: "Missing superscript or subscript argument",
     checkItem: function (item) {
       var script = ["","subscript","superscript"][this.position];
-      if (item.type === "open" || item.type === "left") {return TRUE}
+      if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml") {
         this.data[0].SetData(this.position,item.data[0]);
         return STACKITEM.mml(this.data[0]);
@@ -152,15 +152,15 @@
   });
 
   STACKITEM.over = STACKITEM.Subclass({
-    type: "over", isClose: TRUE, name: "\\over",
+    type: "over", isClose: true, name: "\\over",
     checkItem: function (item,stack) {
       if (item.type === "over") {TEX.Error("Ambiguous use of "+item.name)}
       if (item.isClose) {
-        var mml = MML.mfrac(this.num,this.mmlData(FALSE));
+        var mml = MML.mfrac(this.num,this.mmlData(false));
         if (this.thickness != null) {mml.linethickness = this.thickness}
         if (this.open || this.close) {
           mml.texClass = MML.TEXCLASS.INNER;
-          mml.texWithDelims = TRUE;
+          mml.texWithDelims = true;
           mml = MML.mfenced(mml).With({open: this.open, close: this.close});
         }
         return [STACKITEM.mml(mml), item];
@@ -171,7 +171,7 @@
   });
 
   STACKITEM.left = STACKITEM.Subclass({
-    type: "left", isOpen: TRUE, delim: '(',
+    type: "left", isOpen: true, delim: '(',
     stopError: "Extra \\left or missing \\right",
     checkItem: function (item) {
       if (item.type === "right") {
@@ -183,11 +183,11 @@
   });
 
   STACKITEM.right = STACKITEM.Subclass({
-    type: "right", isClose: TRUE, delim: ')'
+    type: "right", isClose: true, delim: ')'
   });
 
   STACKITEM.begin = STACKITEM.Subclass({
-    type: "begin", isOpen: TRUE,
+    type: "begin", isOpen: true,
     checkItem: function (item) {
       if (item.type === "end") {
         if (item.name !== this.name)
@@ -201,7 +201,7 @@
   });
   
   STACKITEM.end = STACKITEM.Subclass({
-    type: "end", isClose: TRUE
+    type: "end", isClose: true
   });
 
   STACKITEM.style = STACKITEM.Subclass({
@@ -232,15 +232,15 @@
   });
   
   STACKITEM.array = STACKITEM.Subclass({
-    type: "array", isOpen: TRUE, arraydef: {},
+    type: "array", isOpen: true, arraydef: {},
     Init: function () {
       this.table = []; this.row = []; this.env = {}; this.frame = []
       this.SUPER(arguments).Init.apply(this,arguments);
     },
     checkItem: function (item) {
       if (item.isClose && item.type !== "over") {
-        if (item.isEntry) {this.EndEntry(); this.clearEnv(); return FALSE}
-        if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return FALSE}
+        if (item.isEntry) {this.EndEntry(); this.clearEnv(); return false}
+        if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return false}
         this.EndTable(); this.clearEnv();
         var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
         if (this.frame.length === 4) {
@@ -292,11 +292,11 @@
   });
   
   STACKITEM.cell = STACKITEM.Subclass({
-    type: "cell", isClose: TRUE
+    type: "cell", isClose: true
   });
 
   STACKITEM.mml = STACKITEM.Subclass({
-    type: "mml", isNotStack: TRUE,
+    type: "mml", isNotStack: true,
     Add: function () {this.data.push.apply(this.data,arguments); return this}
   });
   
@@ -429,24 +429,24 @@
         surd:         '221A',
 
         // big ops
-        coprod:       ['2210',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
-        bigvee:       ['22C1',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
-        bigwedge:     ['22C0',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
-        biguplus:     ['2A04',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
-        bigcap:       ['22C2',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
-        bigcup:       ['22C3',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
+        coprod:       ['2210',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
+        bigvee:       ['22C1',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
+        bigwedge:     ['22C0',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
+        biguplus:     ['2A04',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
+        bigcap:       ['22C2',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
+        bigcup:       ['22C3',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
         'int':        ['222B',{texClass: MML.TEXCLASS.OP}],
-        intop:        ['222B',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE, movablelimits:TRUE}],
+        intop:        ['222B',{texClass: MML.TEXCLASS.OP, movesupsub:true, movablelimits:true}],
         iint:         ['222C',{texClass: MML.TEXCLASS.OP}],
         iiint:        ['222D',{texClass: MML.TEXCLASS.OP}],
-        prod:         ['220F',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
-        sum:          ['2211',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
-        bigotimes:    ['2A02',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
-        bigoplus:     ['2A01',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
-        bigodot:      ['2A00',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
+        prod:         ['220F',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
+        sum:          ['2211',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
+        bigotimes:    ['2A02',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
+        bigoplus:     ['2A01',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
+        bigodot:      ['2A00',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
         oint:         ['222E',{texClass: MML.TEXCLASS.OP}],
-        bigsqcup:     ['2A06',{texClass: MML.TEXCLASS.OP, movesupsub:TRUE}],
-        smallint:     ['222B',{largeop:FALSE}],
+        bigsqcup:     ['2A06',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
+        smallint:     ['222B',{largeop:false}],
         
         // binary operations
         triangleleft:      '25C3',
@@ -469,11 +469,11 @@
         bullet:       '2219',
         wr:           '2240',
         div:          '00F7',
-        odot:         ['2299',{largeop: FALSE}],
-        oslash:       ['2298',{largeop: FALSE}],
-        otimes:       ['2297',{largeop: FALSE}],
-        ominus:       ['2296',{largeop: FALSE}],
-        oplus:        ['2295',{largeop: FALSE}],
+        odot:         ['2299',{largeop: false}],
+        oslash:       ['2298',{largeop: false}],
+        otimes:       ['2297',{largeop: false}],
+        ominus:       ['2296',{largeop: false}],
+        oplus:        ['2295',{largeop: false}],
         mp:           '2213',
         pm:           '00B1',
         circ:         '2218',
@@ -643,10 +643,10 @@
       },
       
       macros: {
-        displaystyle:      ['SetStyle','D',TRUE,0],
-        textstyle:         ['SetStyle','T',FALSE,0],
-        scriptstyle:       ['SetStyle','S',FALSE,1],
-        scriptscriptstyle: ['SetStyle','SS',FALSE,2],
+        displaystyle:      ['SetStyle','D',true,0],
+        textstyle:         ['SetStyle','T',false,0],
+        scriptstyle:       ['SetStyle','S',false,1],
+        scriptscriptstyle: ['SetStyle','SS',false,2],
         
         rm:                ['SetFont',MML.VARIANT.NORMAL],
         mit:               ['SetFont',MML.VARIANT.ITALIC],
@@ -1094,7 +1094,7 @@
         position = base.sup;
       } else if (base.movesupsub) {
         if (base.type !== "munderover" || base.data[base.over])
-          {base = MML.munderover(base,null,null).With({movesupsub:TRUE})}
+          {base = MML.munderover(base,null,null).With({movesupsub:true})}
         position = base.over;
       } else {
         base = MML.msubsup(base,null,null);
@@ -1110,7 +1110,7 @@
         position = base.sub;
       } else if (base.movesupsub) {
         if (base.type !== "munderover" || base.data[base.under])
-          {base = MML.munderover(base,null,null).With({movesupsub:TRUE})}
+          {base = MML.munderover(base,null,null).With({movesupsub:true})}
         position = base.under;
       } else {
         base = MML.msubsup(base,null,null);
@@ -1126,7 +1126,7 @@
       var sup = ""; this.i--;
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
-      sup = this.mmlToken(MML.mo(MML.chars(sup)).With({isPrime: TRUE, variantForm: TEX.isSTIX}));
+      sup = this.mmlToken(MML.mo(MML.chars(sup)).With({isPrime: true, variantForm: TEX.isSTIX}));
       this.Push(MML.msup(base,sup));
     },
     
@@ -1201,8 +1201,8 @@
       if (!id) {id = name.substr(1)};
       id = id.replace(/&thinsp;/,"\u2006");
       var mml = MML.mo(id).With({
-        movablelimits: TRUE,
-        movesupsub: TRUE,
+        movablelimits: true,
+        movesupsub: true,
         form: MML.FORM.PREFIX,
         texClass: MML.TEXCLASS.OP
       });
@@ -1212,8 +1212,8 @@
     Limits: function (name,limits) {
       var op = this.stack.Prev("nopop");
       if (op.texClass !== MML.TEXCLASS.OP) {TEX.Error(name+" is allowed only on operators")}
-      op.movesupsub = (limits ? TRUE : FALSE);
-      op.movablelimits = FALSE;
+      op.movesupsub = (limits ? true : false);
+      op.movablelimits = false;
     },
     
     Over: function (name,open,close) {
@@ -1273,8 +1273,8 @@
       var c = this.ParseArg(name);
       var def = {accent: true}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       var mml = this.mmlToken(MML.mo(MML.entity("#x"+accent)).With(def));
-      mml.stretchy = (stretchy ? TRUE : FALSE);
-      this.Push(MML.TeXAtom(MML.munderover(c,null,mml).With({accent: TRUE})));
+      mml.stretchy = (stretchy ? true : false);
+      this.Push(MML.TeXAtom(MML.munderover(c,null,mml).With({accent: true})));
     },
     
     UnderOver: function (name,c,stack) {
@@ -1282,9 +1282,9 @@
       var base = this.ParseArg(name);
       if (base.Get("movablelimits")) {base.movablelimits = false}
       var mml = MML.munderover(base,null,null);
-      if (stack) {mml.movesupsub = TRUE}
+      if (stack) {mml.movesupsub = true}
       mml.data[mml[pos]] = 
-        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:TRUE, accent:(pos == "under")}));
+        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:(pos == "under")}));
       this.Push(mml);
     },
     
@@ -1300,7 +1300,7 @@
     TeXAtom: function (name,mclass) {
       var def = {texClass: mclass}, mml;
       if (mclass == MML.TEXCLASS.OP) {
-        def.movesupsub = def.movablelimits = TRUE;
+        def.movesupsub = def.movablelimits = true;
         var arg = this.GetArgument(name);
         var match = arg.match(/^\s*\\rm\s+([a-zA-Z0-9 ]+)$/);
         if (match) {
@@ -1411,7 +1411,7 @@
       var delim = this.GetDelimiter(name);
       this.Push(MML.TeXAtom(MML.mo(delim).With({
         minsize: size, maxsize: size, scriptlevel: 0,
-        fence: TRUE, stretchy: TRUE, symmetric: TRUE
+        fence: true, stretchy: true, symmetric: true
       })).With({texClass: mclass}));
     },
     
@@ -1464,21 +1464,21 @@
       var c = this.GetNext(); if (c === "") {TEX.Error("Missing argument for "+name)}
       if (c === "{") {this.i++} else {this.string = c+"}"+this.string.slice(this.i+1); this.i = 0}
       var array = STACKITEM.array().With({
-        requireClose: TRUE,
+        requireClose: true,
         arraydef: {
           rowspacing: (vspacing||"4pt"),
           columnspacing: (spacing||"1em")
         }
       });
-      if (cases)         {array.isCases = TRUE}
+      if (cases)         {array.isCases = true}
       if (open || close) {array.open = open; array.close = close}
-      if (style === "D") {array.arraydef.displaystyle = TRUE}
+      if (style === "D") {array.arraydef.displaystyle = true}
       if (align != null) {array.arraydef.columnalign = align}
       this.Push(array);
     },
     
     Entry: function (name) {
-      this.Push(STACKITEM.cell().With({isEntry: TRUE, name: name}));
+      this.Push(STACKITEM.cell().With({isEntry: true, name: name}));
       if (this.stack.Top().isCases) {
         var string = this.string;
         var braces = 0, i = this.i, m = string.length;
@@ -1500,14 +1500,14 @@
     },
     
     Cr: function (name) {
-      this.Push(STACKITEM.cell().With({isCR: TRUE, name: name}));
+      this.Push(STACKITEM.cell().With({isCR: true, name: name}));
     },
     
     CrLaTeX: function (name) {
       var n = this.GetBrackets(name,"").replace(/ /g,"");
       if (n && !n.match(/^(((\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/))
         {TEX.Error("Bracket argument to "+name+" must be a dimension")}
-      this.Push(STACKITEM.cell().With({isCR: TRUE, name: name, linebreak: TRUE}));
+      this.Push(STACKITEM.cell().With({isCR: true, name: name, linebreak: true}));
       var top = this.stack.Top();
       if (top.isa(STACKITEM.array)) {
         if (n && top.arraydef.rowspacing) {
@@ -1597,9 +1597,9 @@
       }
       if (open)  {array.open  = this.convertDelimiter(open)}
       if (close) {array.close = this.convertDelimiter(close)}
-      if (style === "D") {array.arraydef.displaystyle = TRUE}
+      if (style === "D") {array.arraydef.displaystyle = true}
       if (style === "S") {array.arraydef.scriptlevel = 1} // FIXME: should use mstyle?
-      if (raggedHeight)  {array.arraydef.useHeight = FALSE}
+      if (raggedHeight)  {array.arraydef.useHeight = false}
       this.Push(begin);
       return array;
     },
@@ -1784,7 +1784,7 @@
      *  @@@ FIXME:  pass environment to TEX.Parse? @@@
      */
     InternalMath: function (text,level) {
-      var def = {displaystyle: FALSE}; if (level != null) {def.scriptlevel = level}
+      var def = {displaystyle: false}; if (level != null) {def.scriptlevel = level}
       if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       if (!text.match(/\$|\\\(|\\(eq)?ref\s*\{/)) {return [this.InternalText(text,def)]}
       var i = 0, k = 0, c, match = '';
@@ -1931,7 +1931,7 @@
     //  Produce an error and stop processing this equation
     //
     Error: function (message) {
-      throw HUB.Insert(Error(message),{texError: TRUE});
+      throw HUB.Insert(Error(message),{texError: true});
     },
     
     //
