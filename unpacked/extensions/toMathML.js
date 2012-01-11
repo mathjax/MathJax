@@ -48,8 +48,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
 
     toMathMLattributes: function () {
       var attr = [], defaults = this.defaults;
-      var copy = (this.attrNames||this.toMathMLcopyAttributes),
-          skip = this.toMathMLskipAttributes;
+      var copy = (this.attrNames||MML.copyAttributeNames), skip = MML.skipAttributes;
 
       if (this.type === "math") {attr.push('xmlns="http://www.w3.org/1998/Math/MathML"')}
       if (!this.attrNames) {
@@ -84,13 +83,6 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       if (this.variantForm) {CLASS.push("MJX-variant")}
       if (CLASS.length) {attr.unshift('class="'+CLASS.join(" ")+'"')}
     },
-    toMathMLcopyAttributes: [
-      "fontfamily","fontsize","fontweight","fontstyle",
-      "color","background",
-      "id","class","href","style"
-    ],
-    toMathMLskipAttributes: {texClass: 1, useHeight: 1, texprimestyle: 1},
-    
     toMathMLattribute: function (value) {
       if (typeof(value) === "string" &&
           value.replace(/ /g,"").match(/^(([-+])?(\d+(\.\d*)?|\.\d+))mu$/)) {

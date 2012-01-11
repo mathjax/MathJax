@@ -202,6 +202,18 @@ MathJax.ElementJax.mml.Augment({
     VCENTER: 8,
     NONE:   -1
   },
+  TEXCLASSNAMES: ["ORD", "OP", "BIN", "REL", "OPEN", "CLOSE", "PUNCT", "INNER", "VCENTER"],
+  copyAttributes: {
+    fontfamily:true, fontsize:true, fontweight:true, fontstyle:true,
+    color:true, background:true,
+    id:true, "class":true, href:true, style:true
+  },
+  skipAttributes: {texClass: true, useHeight: true, texprimestyle: true},
+  copyAttributeNames: [
+    "fontfamily", "fontsize", "fontweight", "fontstyle",
+    "color", "background",
+    "id", "class", "href", "style"
+  ],
   PLANE1: "\uD835"
 });
 

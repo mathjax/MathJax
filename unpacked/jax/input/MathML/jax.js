@@ -26,12 +26,6 @@
 (function (MATHML,BROWSER) {
   var MML;
   
-  var copyAttributes = {
-    fontfamily:1, fontsize:1, fontweight:1, fontstyle:1,
-    color:1, background:1,
-    id:1, "class":1, href:1, style:1
-  };
-
   MATHML.Parse = MathJax.Object.Subclass({
 
     Init: function (string) {this.Parse(string)},
@@ -116,15 +110,11 @@
         var value = node.attributes[i].value;
         if (value.toLowerCase() === "true") {value = true}
           else if (value.toLowerCase() === "false") {value = false}
-        if (mml.defaults[name] != null || this.copyAttributes[name])
+        if (mml.defaults[name] != null || MML.copyAttributes[name])
           {mml[name] = value} else {mml.attr[name] = value}
         mml.attrNames.push(name);
       }
     },
-    //
-    //  The non-MathML attributes to store outside of the attr property
-    //
-    copyAttributes: copyAttributes,
     
     //
     //  Create the children for the mml node

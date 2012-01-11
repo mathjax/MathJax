@@ -348,8 +348,7 @@
       //
       NativeMMLattributes: function (tag) {
 	var defaults = this.defaults;
-	var copy = (this.attrNames||this.NativeMMLcopyAttributes),
-	    skip = this.NativeMMLskipAttributes;
+	var copy = (this.attrNames||MML.copyAttributeNames), skip = MML.skipAttributes;
         if (!this.attrNames) {
           if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
           for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
@@ -374,12 +373,6 @@
         if (this.variantForm) {CLASS.push("MJX-variant")}
         if (CLASS.length) {tag.setAttribute("class",CLASS.join(" "))}
       },
-      NativeMMLcopyAttributes: [
-	"fontfamily","fontsize","fontweight","fontstyle",
-	"color","background",
-	"id","class","href","style"
-      ],
-      NativeMMLskipAttributes: {texClass: 1, useHeight: 1, texprimestyle: 1},
       NativeMMLattribute: function (value) {
 	value = String(value);
 	if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaces
