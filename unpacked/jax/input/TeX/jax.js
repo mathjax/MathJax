@@ -1093,8 +1093,10 @@
         }
         position = base.sup;
       } else if (base.movesupsub) {
-        if (base.type !== "munderover" || base.data[base.over])
-          {base = MML.munderover(base,null,null).With({movesupsub:true})}
+        if (base.type !== "munderover" || base.data[base.over]) {
+          if (base.movablelimits && base.isa(MML.mi)) {base = this.mi2mo(base)}
+          base = MML.munderover(base,null,null).With({movesupsub:true})
+        }
         position = base.over;
       } else {
         base = MML.msubsup(base,null,null);
@@ -1109,8 +1111,10 @@
         if (base.data[base.sub]) {TEX.Error("Double subscripts: use braces to clarify")}
         position = base.sub;
       } else if (base.movesupsub) {
-        if (base.type !== "munderover" || base.data[base.under])
-          {base = MML.munderover(base,null,null).With({movesupsub:true})}
+        if (base.type !== "munderover" || base.data[base.under]) {
+          if (base.movablelimits && base.isa(MML.mi)) {base = this.mi2mo(base)}
+          base = MML.munderover(base,null,null).With({movesupsub:true})
+        }
         position = base.under;
       } else {
         base = MML.msubsup(base,null,null);
@@ -1128,6 +1132,14 @@
         while (c === "'" || c === this.SMARTQUOTE);
       sup = this.mmlToken(MML.mo(MML.chars(sup)).With({isPrime: true, variantForm: TEX.isSTIX}));
       this.Push(MML.msup(base,sup));
+    },
+    mi2mo: function (mi) {
+      var mo = MML.mo();  mo.Append.apply(mo,mi.data); var id;
+      for (id in mo.defaults)
+        {if (mo.defaults.hasOwnProperty(id) && mi[id] != null) {mo[id] = mi[id]}}
+      for (id in MML.copyAttributes)
+        {if (MML.copyAttributes.hasOwnProperty(id) && mi[id] != null) {mo[id] = mi[id]}}
+      return mo;
     },
     
     /*
