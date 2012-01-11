@@ -339,7 +339,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     }
   });
 
-  aMathJax.Hub.Startup.signal.Post("TeX AMSsymbols Ready");
+  MathJax.Hub.Startup.signal.Post("TeX AMSsymbols Ready");
 
 });
 
