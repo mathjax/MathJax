@@ -8,7 +8,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2011 Design Science, Inc.
+ *  Copyright (c) 2010-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -71,16 +71,37 @@
     //  Convert the MathML structure to the MathJax Element jax structure
     //
     MakeMML: function (node) {
-      var type = node.nodeName.toLowerCase().replace(/^[a-z]+:/,"");
-      if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase))) {
+      var CLASS = String(node.getAttribute("class")); // make sure class is a string
+      var mml, type = node.nodeName.toLowerCase().replace(/^[a-z]+:/,"");
+      var match = (CLASS.match(/(^| )MJX-TeXAtom-([^ ]*)/));
+      if (match) {
+        mml = this.TeXAtom(match[2]);
+      } else if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase))) {
         MathJax.Hub.signal.Post(["MathML Jax - unknown node type",type]);
         return MML.merror("Unknown node type: "+type);
+      } else {
+        mml = MML[type]();
       }
-      var mml = MML[type]();
-      this.AddAttributes(mml,node);
+      this.AddAttributes(mml,node); this.CheckClass(mml,CLASS);
       this.AddChildren(mml,node);
       if (MATHML.config.useMathMLspacing) {mml.useMMLspacing = 0x08}
       return mml;
+    },
+    TeXAtom: function (mclass) {
+      var mml = MML.TeXAtom().With({texClass:MML.TEXCLASS[mclass]});
+      if (mml.texClass === MML.TEXCLASS.OP) {mml.movesupsub = mml.movablelimits = true}
+      return mml;
+    },
+    CheckClass: function (mml,CLASS) {
+      CLASS = CLASS.split(/ /); var NCLASS = [];
+      for (var i = 0, m = CLASS.length; i < m; i++) {
+        if (CLASS[i].substr(0,4) === "MJX-") {
+          if (CLASS[i] === "MJX-arrow") {mml.arrow = true}
+          else if (CLASS[i] === "MJX-variant") {mml.variantForm = "true"}
+          else if (CLASS[i].substr(0,11) !== "MJX-TeXAtom") {mml.mathvariant = CLASS[i].substr(3)}
+        } else {NCLASS.push(CLASS[i])}
+      }
+      if (NCLASS.length) {mml["class"] = NCLASS.join(" ")} else {delete mml["class"]}
     },
     
     //
