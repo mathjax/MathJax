@@ -188,18 +188,22 @@
   MATHML.Augment({
     sourceMenuTitle: "Original MathML",
     
+    prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run before processing MathML
+    postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run after processing MathML
+
     Translate: function (script) {
       if (!this.ParseXML) {this.ParseXML = this.createParser()}
-      var mml, math;
+      var mml, math, data = {script:script};
       if (script.firstChild &&
           script.firstChild.nodeName.toLowerCase().replace(/^[a-z]+:/,"") === "math") {
-        math = this.prefilterMathML(script.firstChild);
+        data.math = script.firstChild;
+        this.prefilterHooks.Execute(data); math = data.math;
       } else {
         math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
         if (BROWSER.isMSIE) {math = math.replace(/(&nbsp;)+$/,"")}
         else if (BROWSER.isKonqueror)
           {math = math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
-        math = this.prefilterMath(math,script);
+        data.math = math; this.prefilterHooks.Execute(data); math = data.math;
       }
       try {
         mml = MATHML.Parse(math).mml;
@@ -207,10 +211,11 @@
         if (!err.mathmlError) {throw err}
         mml = this.formatError(err,math,script);
       }
-      return MML(mml);
+      data.math = MML(mml); this.postfilterHooks.Execute(data);
+      return data.math;
     },
     prefilterMath: function (math,script) {return math},
-    prefilterMathML: function (math) {return math},
+    prefilterMathML: function (math,script) {return math},
     formatError: function (err,math,script) {
       var message = err.message.replace(/\n.*/,"");
       MathJax.Hub.signal.Post(["MathML Jax - parse error",message,math,script]);
@@ -272,6 +277,15 @@
     }
   });
   
+  //
+  //  Add the default pre-filter (for backward compatibility)
+  //
+  MATHML.prefilterHooks.Add(function (data) {
+    data.math = (typeof(data.math) === "string" ?
+      MATHML.prefilterMath(data.math,data.script) :
+      MATHML.prefilterMathML(data.math,data.script));
+  });
+
   MATHML.Parse.Entity = {
     ApplyFunction: '\u2061',
     Backslash: '\u2216',
