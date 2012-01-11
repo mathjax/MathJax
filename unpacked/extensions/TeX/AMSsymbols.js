@@ -339,10 +339,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     }
   });
 
-//  if (MathJax.Hub.Browser.isMSIE) {
-//    MathJax.InputJax.TeX.Definitions.mathchar0mi.digamma  = ['03DD',{variantForm: true}];
-//    MathJax.InputJax.TeX.Definitions.mathchar0mi.varkappa = ['03F0',{variantForm: true}];
-//  }
+  aMathJax.Hub.Startup.signal.Post("TeX AMSsymbols Ready");
+
 });
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
@@ -385,9 +383,6 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     });
   }
   
-  MathJax.Hub.Startup.signal.Post("TeX AMSsymbols Ready");
-  
 });
-
-
+  
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");

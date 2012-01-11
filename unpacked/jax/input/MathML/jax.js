@@ -90,9 +90,28 @@
       CLASS = CLASS.split(/ /); var NCLASS = [];
       for (var i = 0, m = CLASS.length; i < m; i++) {
         if (CLASS[i].substr(0,4) === "MJX-") {
-          if (CLASS[i] === "MJX-arrow") {mml.arrow = true}
-          else if (CLASS[i] === "MJX-variant") {mml.variantForm = "true"}
-          else if (CLASS[i].substr(0,11) !== "MJX-TeXAtom") {mml.mathvariant = CLASS[i].substr(3)}
+          if (CLASS[i] === "MJX-arrow") {
+            mml.arrow = true;
+          } else if (CLASS[i] === "MJX-variant") {
+            mml.variantForm = true;
+            //
+            //  Variant forms come from AMSsymbols, and it sets up the
+            //  character mappings, so load that if needed.
+            //
+            if (!MathJax.Extension["TeX/AMSsymbols"])
+              {MathJax.Hub.RestartAfter(MathJax.Ajax.Require("[MathJax]/extensions/TeX/AMSsymbols.js"))}
+          } else if (CLASS[i].substr(0,11) !== "MJX-TeXAtom") {
+            mml.mathvariant = CLASS[i].substr(3);
+            //
+            //  Caligraphic and oldstyle bold are set up in the boldsymbol
+            //  extension, so load it if it isn't already loaded.
+            //  
+            if (mml.mathvariant === "-tex-caligraphic-bold" ||
+                mml.mathvariant === "-tex-oldstyle-bold") {
+              if (!MathJax.Extension["TeX/boldsymbol"])
+                {MathJax.Hub.RestartAfter(MathJax.Ajax.Require("[MathJax]/extensions/TeX/boldsymbol.js"))}
+            }
+          }
         } else {NCLASS.push(CLASS[i])}
       }
       if (NCLASS.length) {mml["class"] = NCLASS.join(" ")} else {delete mml["class"]}
