@@ -466,8 +466,9 @@
       var n, c, font, VARIANT, i, m, id, M, RANGES;
       if (!variant) {variant = this.FONTDATA.VARIANT[MML.VARIANT.NORMAL]}
       if (variant.forceFamily) {
-        svg.Add(BBOX.TEXT(scale,text,variant.font));
-        text = "";
+        text = BBOX.TEXT(scale,text,variant.font);
+        if (variant.h != null) {text.h = variant.h}; if (variant.d != null) {text.d = variant.d}
+        svg.Add(text); text = "";
       }
       VARIANT = variant;
       for (i = 0, m = text.length; i < m; i++) {
@@ -514,9 +515,13 @@
         } else if (this.FONTDATA.DELIMITERS[n]) {
           svg.Add(this.createDelimiter(n,0,1,font),svg.w,0);
         } else {
-          c = BBOX.G();
-          c.Add(BBOX.TEXT(scale,String.fromCharCode(n),{"font-family":SVG.config.MISSINGFONT}));
-          svg.Add(c,svg.w,0);
+          text = BBOX.TEXT(scale,String.fromCharCode(n),{
+            "font-family":variant.defaultFamily||SVG.config.MISSINGFONT,
+            "font-style":(variant.italic?"italic":""),
+            "font-weight":(variant.bold?"bold":"")
+          })
+          if (variant.h != null) {text.h = variant.h}; if (variant.d != null) {text.d = variant.d}
+          c = BBOX.G(); c.Add(text); svg.Add(c,svg.w,0); text = "";
           HUB.signal.Post(["SVG Jax - unknown char",n,variant]);
         }
       }

@@ -1274,6 +1274,7 @@
 
     handleFont: function (span,font,force) {
       span.style.fontFamily = font.family;
+      if (!font.directory) {span.style.fontSize = Math.floor(100/HTMLCSS.scale+.5) + "%"}
       if (!(HTMLCSS.FontFaceBug && font.isWebFont)) {
         var style  = font.style  || "normal", weight = font.weight || "normal";
         if (style !== "normal"  || force) {span.style.fontStyle  = style}
@@ -1340,7 +1341,7 @@
     unknownChar: function (variant,n) {
       var unknown = (variant.defaultFont || {family:HTMLCSS.config.undefinedFamily});
       if (variant.bold) {unknown.weight = "bold"}; if (variant.italic) {unknown.style = "italic"}
-      unknown[n] = [800,200,500,0,500,{isUnknown:true}]; // [h,d,w,lw,rw,{data}]
+      if (!unknown[n]) {unknown[n] = [800,200,500,0,500,{isUnknown:true}]} // [h,d,w,lw,rw,{data}]
       HUB.signal.Post(["HTML-CSS Jax - unknown char",n,variant]);
       return unknown;
     },
