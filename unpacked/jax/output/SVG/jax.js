@@ -1105,34 +1105,36 @@
           if (values.fontweight) {variant.font["font-weight"] = values.fontweight}
 	  return variant;
 	}
-	if (values.fontweight === "bold") {
-	  variant = {
-	    normal:MML.VARIANT.BOLD, italic:MML.VARIANT.BOLDITALIC,
-	    fraktur:MML.VARIANT.BOLDFRAKTUR, script:MML.VARIANT.BOLDSCRIPT,
-	    "sans-serif":MML.VARIANT.BOLDSANSSERIF,
-	    "sans-serif-italic":MML.VARIANT.SANSSERIFBOLDITALIC
-	  }[variant]||variant;
-	} else if (values.fontweight === "normal") {
-	  variant = {
-	    bold:MML.VARIANT.normal, "bold-italic":MML.VARIANT.ITALIC,
-	    "bold-fraktur":MML.VARIANT.FRAKTUR, "bold-script":MML.VARIANT.SCRIPT,
-	    "bold-sans-serif":MML.VARIANT.SANSSERIF,
-	    "sans-serif-bold-italic":MML.VARIANT.SANSSERIFITALIC
-	  }[variant]||variant;
-	}
-	if (values.fontstyle === "italic") {
-	  variant = {
-	    normal:MML.VARIANT.ITALIC, bold:MML.VARIANT.BOLDITALIC,
-	    "sans-serif":MML.VARIANT.SANSSERIFITALIC,
-	    "bold-sans-serif":MML.VARIANT.SANSSERIFBOLDITALIC
-	  }[variant]||variant;
-	} else if (values.fontstyle === "normal") {
-	  variant = {
-	    italic:MML.VARIANT.NORMAL, "bold-italic":MML.VARIANT.BOLD,
-	    "sans-serif-italic":MML.VARIANT.SANSSERIF,
-	    "sans-serif-bold-italic":MML.VARIANT.BOLDSANSSERIF
-	  }[variant]||variant;
-	}
+        if (!this.mathvariant) {
+          if (values.fontweight === "bold") {
+            variant = {
+              normal:MML.VARIANT.BOLD, italic:MML.VARIANT.BOLDITALIC,
+              fraktur:MML.VARIANT.BOLDFRAKTUR, script:MML.VARIANT.BOLDSCRIPT,
+              "sans-serif":MML.VARIANT.BOLDSANSSERIF,
+              "sans-serif-italic":MML.VARIANT.SANSSERIFBOLDITALIC
+            }[variant]||variant;
+          } else if (values.fontweight === "normal") {
+            variant = {
+              bold:MML.VARIANT.normal, "bold-italic":MML.VARIANT.ITALIC,
+              "bold-fraktur":MML.VARIANT.FRAKTUR, "bold-script":MML.VARIANT.SCRIPT,
+              "bold-sans-serif":MML.VARIANT.SANSSERIF,
+              "sans-serif-bold-italic":MML.VARIANT.SANSSERIFITALIC
+            }[variant]||variant;
+          }
+          if (values.fontstyle === "italic") {
+            variant = {
+              normal:MML.VARIANT.ITALIC, bold:MML.VARIANT.BOLDITALIC,
+              "sans-serif":MML.VARIANT.SANSSERIFITALIC,
+              "bold-sans-serif":MML.VARIANT.SANSSERIFBOLDITALIC
+            }[variant]||variant;
+          } else if (values.fontstyle === "normal") {
+            variant = {
+              italic:MML.VARIANT.NORMAL, "bold-italic":MML.VARIANT.BOLD,
+              "sans-serif-italic":MML.VARIANT.SANSSERIF,
+              "sans-serif-bold-italic":MML.VARIANT.BOLDSANSSERIF
+            }[variant]||variant;
+          }
+        }
 	return SVG.FONTDATA.VARIANT[variant];
       },
       
