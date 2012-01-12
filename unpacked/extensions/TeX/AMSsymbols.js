@@ -384,5 +384,18 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
   }
   
 });
+
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+  var SVG = MathJax.OutputJax.SVG;
+  var VARIANT = SVG.FONTDATA.VARIANT;
+
+  VARIANT["-TeX-variant"] = {
+    fonts: ["MathJax_AMS","MathJax_Main","MathJax_Size1"],
+    remap: {0x2268: 0xE00C, 0x2269: 0xE00D, 0x2270: 0xE011, 0x2271: 0xE00E,
+            0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2224: 0xE006, 0x2226: 0xE007,
+            0x2288: 0xE016, 0x2289: 0xE018, 0x228A: 0xE01A, 0x228B: 0xE01B,
+            0x2ACB: 0xE017, 0x2ACC: 0xE019, 0x03DC: 0xE008, 0x03F0: 0xE009}
+  };
+});
   
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");

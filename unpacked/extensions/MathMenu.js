@@ -44,6 +44,7 @@
     showRenderer: true,                            //  show the "Math Renderer" menu?
     showFontMenu: false,                           //  show the "Font Preference" menu?
     showContext:  false,                           //  show the "Context Menu" menu?
+    showDiscoverable: false,                       //  show the "Discoverable" menu?
 
     windowSettings: {                              // for source window
       status: "no", toolbar: "no", locationbar: "no", menubar: "no",
@@ -848,7 +849,8 @@
         ITEM.RULE(),
         ITEM.SUBMENU("Math Renderer",         {hidden:!CONFIG.showRenderer},
           ITEM.RADIO("HTML-CSS",  "renderer", {action: MENU.Renderer}),
-          ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"})
+          ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"}),
+          ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer})
         ),
         ITEM.SUBMENU("Font Preference",       {hidden:!CONFIG.showFontMenu},
           ITEM.LABEL("For HTML-CSS:"),
@@ -865,8 +867,8 @@
           ITEM.RADIO("Browser", "context")
         ),
         ITEM.COMMAND("Scale All Math ...",MENU.Scale),
-        ITEM.RULE().With({hidden: true}),
-        ITEM.CHECKBOX("Highlight on Hover", "discoverable", {hidden: true})
+        ITEM.RULE().With({hidden: CONFIG.showDiscoverable, name:"discover_rule"}),
+        ITEM.CHECKBOX("Highlight on Hover", "discoverable", {hidden: CONFIG.showDiscoverable})
       ),
       ITEM.RULE(),
       ITEM.COMMAND("About MathJax",MENU.About),
@@ -886,6 +888,11 @@
   MENU.showContext = function (show) {
     MENU.cookie.showContext = CONFIG.showContext = show; MENU.saveCookie();
     MENU.menu.Find("Math Settings","Contextual Menu").hidden = !show;
+  };
+  MENU.showDiscoverable = function (show) {
+    MENU.cookie.showContext = CONFIG.showContext = show; MENU.saveCookie();
+    MENU.menu.Find("Math Settings","Highlight on Hover").hidden = !show;
+    MENU.menu.Find("Math Settings","discover_rule").hidden = !show;
   };
   
   if (MENU.isMobile) {
