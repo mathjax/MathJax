@@ -463,7 +463,7 @@
 
     HandleVariant: function (variant,scale,text) {
       var svg = BBOX.G();
-      var n, c, font, VARIANT, i, m, id, M, RANGES;
+      var n, N, c, font, VARIANT, i, m, id, M, RANGES;
       if (!variant) {variant = this.FONTDATA.VARIANT[MML.VARIANT.NORMAL]}
       if (variant.forceFamily) {
         text = BBOX.TEXT(scale,text,variant.font);
@@ -474,8 +474,8 @@
       for (i = 0, m = text.length; i < m; i++) {
         variant = VARIANT;
         n = text.charCodeAt(i); c = text.charAt(i);
-        if (c === this.PLANE1) {
-          i++; n = text.charCodeAt(i) + 0x1D400 - 0xDC00;
+        if (n >= 0xD800 && n < 0xDBFF) {
+          i++; n = (((n-0xD800)<<10)+(text.charCodeAt(i)-0xDC00))+0x10000;
           if (this.FONTDATA.RemapPlane1) {
             var nv = this.FONTDATA.RemapPlane1(n,variant);
             n = nv.n; variant = nv.variant;
@@ -484,7 +484,7 @@
           RANGES = this.FONTDATA.RANGES;
           for (id = 0, M = RANGES.length; id < M; id++) {
             if (RANGES[id].name === "alpha" && variant.noLowerCase) continue;
-            var N = variant["offset"+RANGES[id].offset];
+            N = variant["offset"+RANGES[id].offset];
             if (N && n >= RANGES[id].low && n <= RANGES[id].high) {
               if (RANGES[id].remap && RANGES[id].remap[n]) {
                 n = N + RANGES[id].remap[n];
@@ -515,7 +515,12 @@
         } else if (this.FONTDATA.DELIMITERS[n]) {
           svg.Add(this.createDelimiter(n,0,1,font),svg.w,0);
         } else {
-          text = BBOX.TEXT(scale,String.fromCharCode(n),{
+          if (n <= 0xFFFF) {c = String.fromCharCode(n)} else {
+            N = n - 0x10000;
+            c = String.fromCharCode((N>>10)+0xD800)
+              + String.fromCharCode((N&0x3FF)+0xDC00);
+          }
+          text = BBOX.TEXT(scale,c,{
             "font-family":variant.defaultFamily||SVG.config.MISSINGFONT,
             "font-style":(variant.italic?"italic":""),
             "font-weight":(variant.bold?"bold":"")
@@ -714,7 +719,6 @@
     },
 
     BIGDIMEN: 10000000,
-    PLANE1: "\uD835",
     NBSP:   "\u00A0"
   });
   

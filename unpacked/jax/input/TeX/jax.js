@@ -966,9 +966,10 @@
       this.Parse(); this.Push(STACKITEM.stop());
     },
     Parse: function () {
-      var c;
+      var c, n;
       while (this.i < this.string.length) {
-        c = this.string.charAt(this.i++);
+        c = this.string.charAt(this.i++); n = c.charCodeAt(0);
+        if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
         if (TEXDEF.special[c]) {this[TEXDEF.special[c]](c)}
         else if (TEXDEF.letter.test(c)) {this.Variable(c)}
         else if (TEXDEF.digit.test(c)) {this.Number(c)}

@@ -1214,8 +1214,8 @@
       for (var i = 0, m = text.length; i < m; i++) {
         variant = VARIANT;
         n = text.charCodeAt(i); c = text.charAt(i);
-        if (c === this.PLANE1) {
-          i++; n = text.charCodeAt(i) + 0x1D400 - 0xDC00;
+        if (n >= 0xD800 && n < 0xDBFF) {
+          i++; n = (((n-0xD800)<<10)+(text.charCodeAt(i)-0xDC00))+0x10000;
           if (this.FONTDATA.RemapPlane1) {
             var nv = this.FONTDATA.RemapPlane1(n,variant);
             n = nv.n; variant = nv.variant;
@@ -1295,8 +1295,11 @@
         return "";
       }
       if (C.c == null) {
-        if (n <= 0xFFFF) {C.c = String.fromCharCode(n)}
-                    else {C.c = this.PLANE1 + String.fromCharCode(n-0x1D400+0xDC00)}
+        if (n <= 0xFFFF) {C.c = String.fromCharCode(n)} else {
+          var N = n - 0x10000;
+          C.c = String.fromCharCode((N>>10)+0xD800)
+              + String.fromCharCode((N&0x3FF)+0xDC00);
+        }
       }
       if (C.rfix) {this.addText(span,C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
       if (c[2] || !this.msieAccentBug || text.length) {return text + C.c}
@@ -1458,7 +1461,6 @@
       min_rule_thickness:  1.25     // in pixels
     },
 
-    PLANE1: "\uD835",
     NBSP: "\u00A0",
 
     rfuzz: 0         // adjustment to rule placements in roots

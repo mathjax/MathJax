@@ -213,8 +213,7 @@ MathJax.ElementJax.mml.Augment({
     "fontfamily", "fontsize", "fontweight", "fontstyle",
     "color", "background",
     "id", "class", "href", "style"
-  ],
-  PLANE1: "\uD835"
+  ]
 });
 
 (function (MML) {
@@ -419,7 +418,8 @@ MathJax.ElementJax.mml.Augment({
     autoDefault: function (name) {
       if (name === "mathvariant") {
         var mi = (this.data[0]||"").toString();
-        return (mi.length === 1 || (mi.length === 2 && mi.charCodeAt(0) === this.PLANE1) ?
+        return (mi.length === 1 ||
+               (mi.length === 2 && mi.charCodeAt(0) >= 0xD800 && mi.charCodeAt(0) < 0xDC00) ?
                   MML.VARIANT.ITALIC : MML.VARIANT.NORMAL);
       }
       return "";
@@ -520,7 +520,7 @@ MathJax.ElementJax.mml.Augment({
     },
     CheckRange: function (mo) {
       var n = mo.charCodeAt(0);
-      if (mo.charAt(0) === MML.PLANE1) {n = mo.charCodeAt(1) + 0x1D400 - 0xDC00}
+      if (n >= 0xD800 && n < 0xDC00) {n = (((n-0xD800)<<10)+(mo.charCodeAt(1)-0xDC00))+0x10000}
       for (var i = 0, m = this.RANGES.length; i < m && this.RANGES[i][0] <= n; i++) {
         if (n <= this.RANGES[i][1]) {
           if (this.RANGES[i][3]) {
@@ -528,7 +528,7 @@ MathJax.ElementJax.mml.Augment({
             this.RANGES[i][3] = null;
             MathJax.Hub.RestartAfter(MathJax.Ajax.Require(file));
           }
-          var data = (["ORD","OP","BIN","REL","OPEN","CLOSE","PUNCT","INNER"])[this.RANGES[i][2]];
+          var data = MML.TEXCLASSNAMES[this.RANGES[i][2]];
           data = this.OPTABLE.infix[mo] = MML.mo.OPTYPES[data === "BIN" ? "BIN3" : data];
           return this.makeDef(data);
         }
@@ -1198,7 +1198,9 @@ MathJax.ElementJax.mml.Augment({
     toString: function () {
       var n = this.value();
       if (n <= 0xFFFF) {return String.fromCharCode(n)}
-      return this.PLANE1 + String.fromCharCode(n-0x1D400+0xDC00);
+      n -= 0x10000;
+      return String.fromCharCode((n>>10)+0xD800)
+           + String.fromCharCode((n&0x3FF)+0xDC00);
     }
   });
   
