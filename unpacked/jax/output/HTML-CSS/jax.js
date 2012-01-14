@@ -1247,7 +1247,14 @@
             if (variant.remap.variant) {variant = this.FONTDATA.VARIANT[variant.remap.variant]}
           }
         }
-        if (this.FONTDATA.REMAP[n] && !variant.noRemap) {n = this.FONTDATA.REMAP[n]}
+        if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
+          n = this.FONTDATA.REMAP[n];
+          if (typeof(n) === "string") {
+            text = n+text.substr(i+1);
+            i = 0; m = text.length;
+            n = n.charCodeAt(0);
+          }
+        }
         font = this.lookupChar(variant,n); c = font[n]; SPAN = span;
         if ((variant !== SPANV || font.family !== span.style.fontFamily) && !c[5].img) {
           if (newtext.length) {this.addText(span,newtext); newtext = ""}

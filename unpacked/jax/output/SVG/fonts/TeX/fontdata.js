@@ -69,7 +69,7 @@
                    offsetG: 0x03B1, variantG: "italic",
                    remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                            0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
-                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58, 0x29F8:[0x002F,"italic"]}},
         "bold":   {fonts:[BOLD,SIZE1,AMS], bold:true,
                    offsetG: 0x03B1, variantG: "bold-italic",
                    remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
@@ -133,7 +133,32 @@
         0x2329: 0x27E8, 0x232A: 0x27E9, // langle, rangle
         0x3008: 0x27E8, 0x3009: 0x27E9, // langle, rangle
         0x2758: 0x2223,                 // VerticalSeparator
-        0x2A2F: 0xD7                    // cross product
+        0x2A2F: 0xD7,                   // cross product
+
+        0x2247: 0x2246,                 // wrong placement of this character
+
+        //
+        //  compound symbols not in these fonts
+        //  
+        0x2204: "\u2203\u0338",    // \not\exists
+        0x220C: "\u220B\u0338",    // \not\ni
+        0x2244: "\u2243\u0338",    // \not\cong
+        0x2249: "\u2248\u0338",    // \not\approx
+        0x2262: "\u2261\u0338",    // \not\equiv
+        0x2274: "\u2272\u0338",    // \not\lesssim
+        0x2275: "\u2273\u0338",    // \not\gtrsim
+        0x2278: "\u2276\u0338",    // \not\lessgtr
+        0x2279: "\u2277\u0338",    // \not\gtrless
+        0x2284: "\u2282\u0338",    // \not\subset
+        0x2285: "\u2283\u0338",    // \not\supset
+        0x22E2: "\u2291\u0338",    // \not\sqsubseteq
+        0x22E3: "\u2292\u0338",    // \not\sqsupseteq
+
+        0x2033: "\u2032\u2032",        // double prime
+        0x2034: "\u2032\u2032\u2032",  // triple prime
+        0x2036: "\u2035\u2035",        // double back prime
+        0x2037: "\u2035\u2035\u2035",  // trile back prime
+        0x2057: "\u2032\u2032\u2032\u2032"  // quadruple prime
       },
       
       PLANE1MAP: [
@@ -477,12 +502,6 @@
     TEX.Definitions.mathchar0mi.ell  = ['2113',{mathvariant: MML.VARIANT.NORMAL}];
     TEX.Definitions.mathchar0mi.hbar = ['210F',{mathvariant: MML.VARIANT.NORMAL}];
     TEX.Definitions.mathchar0mi.S    = ['00A7',{mathvariant: MML.VARIANT.SCRIPT}];
-    if (MathJax.Hub.Browser.isOpera) {
-      TEX.Definitions.macros.not = ['Macro','\\mathrel{\\rlap{\\hphantom{\\mathrel{\\subset}}\\notChar}}'];
-    } else {
-      TEX.Definitions.mathchar0mo.notChar = ['002F',{mathvariant: MML.VARIANT.ITALIC}];
-      TEX.Definitions.macros.not = ['Macro','\\mathrel{\\rlap{\\notChar}}'];
-    }
   });
   
   SVG.FONTDATA.FONTS['MathJax_Main'] = {

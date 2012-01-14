@@ -311,6 +311,39 @@
     }
   });
   
+  STACKITEM.not = STACKITEM.Subclass({
+    type: "not",
+    checkItem: function (item) {
+      var mml, c;
+      if (item.type === "open" || item.type === "left") {return true}
+      if (item.type === "mml" && item.data[0].type.match(/^(mo|mi|mtext)$/)) {
+        mml = item.data[0].CoreMO(), c = mml.data.join("");
+        if (c.length === 1 && !mml.movesupsub) {
+          c = STACKITEM.not.remap[c.charCodeAt(0)];
+          if (c) {mml.SetData(0,MML.chars(String.fromCharCode(c)))}
+            else {mml.Append(MML.chars("\u0338"))}
+          return item;
+        }
+      }
+      //  \mathrel{\rlap{\notChar}}
+      mml = MML.mpadded(MML.mtext("\u29F8")).With({width:0});
+      mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.REL});
+      return [mml,item];
+    }
+  });
+  STACKITEM.not.remap = {
+    0x2208:0x2209, 0x220B:0x220C, 0x2223:0x2224, 0x2225:0x2226,
+    0x223C:0x2241, 0x007E:0x2241, 0x2243:0x2244, 0x2245:0x2247,
+    0x2248:0x2249, 0x003D:0x2260, 0x2261:0x2262,
+    0x003C:0x226E, 0x003E:0x226F, 0x2264:0x2270, 0x2265:0x2271,
+    0x2272:0x2274, 0x2273:0x2275, 0x2276:0x2278, 0x2277:0x2279,
+    0x227A:0x2280, 0x227B:0x2281, 0x2282:0x2284, 0x2283:0x2285,
+    0x2286:0x2288, 0x2287:0x2289, 0x22A2:0x22AC, 0x22A8:0x22AD,
+    0x22A9:0x22AE, 0x22AB:0x22AF, 0x227C:0x22E0, 0x227D:0x22E1,
+    0x2291:0x22E2, 0x2292:0x22E3, 0x22B2:0x22EA, 0x22B3:0x22EB,
+    0x22B4:0x22EC, 0x22B5:0x22ED, 0x2203:0x2204
+  };
+  
 
   var TEXDEF = {
     //
@@ -527,7 +560,7 @@
         bowtie:       '22C8',
         models:       '22A8',
         
-        notChar:      '0338',
+        notChar:      '29F8',
         
         
         // Arrows
@@ -864,8 +897,10 @@
         pmb:               ['Macro','\\rlap{#1}\\kern1px{#1}',1],
         TeX:               ['Macro','T\\kern-.14em\\lower.5ex{E}\\kern-.115em X'],
         LaTeX:             ['Macro','L\\kern-.325em\\raise.21em{\\scriptstyle{A}}\\kern-.17em\\TeX'],
-        not:               ['Macro','\\mathrel{\\rlap{\\kern.5em\\notChar}}'],
         ' ':               ['Macro','\\text{ }'],
+
+        //  Specially handled
+        not:                'Not',
         space:              'Tilde',
         
 
@@ -1440,6 +1475,10 @@
     
     FBox: function (name) {
       this.Push(MML.menclose.apply(MML,this.InternalMath(this.GetArgument(name))).With({notation:"box"}));
+    },
+    
+    Not: function (name) {
+      this.Push(STACKITEM.not());
     },
     
     Require: function (name) {
