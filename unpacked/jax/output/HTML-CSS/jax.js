@@ -1201,7 +1201,7 @@
     },
 
     handleVariant: function (span,variant,text) {
-      var newtext = "", n, c, font, NAME, VARIANT, SPAN;
+      var newtext = "", n, c, font, VARIANT, SPAN, SPANV;
       if (text.length === 0) return;
       if (!span.bbox) {
         span.bbox = {
@@ -1249,11 +1249,10 @@
         }
         if (this.FONTDATA.REMAP[n] && !variant.noRemap) {n = this.FONTDATA.REMAP[n]}
         font = this.lookupChar(variant,n); c = font[n]; SPAN = span;
-        if (font.name !== NAME && !c[5].img) {
+        if ((variant !== SPANV || font.family !== span.style.fontFamily) && !c[5].img) {
           if (newtext.length) {this.addText(span,newtext); newtext = ""}
-          if (NAME) {SPAN = this.addElement(span,"span",{isMathJax:true})}
-          this.handleFont(SPAN,font,SPAN !== span);
-          NAME = font.name;
+          if (span.style.fontFamily) {SPAN = this.addElement(span,"span",{isMathJax:true})}
+          this.handleFont(SPAN,font,SPAN !== span); SPANV = variant;
         }
         newtext = this.handleChar(SPAN,font,c,n,newtext);
         if (c[0]/1000 > span.bbox.h) {span.bbox.h = c[0]/1000}
