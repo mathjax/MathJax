@@ -1203,8 +1203,10 @@
     });
 
     MML.chars.Augment({
-      toSVG: function (variant,scale) {
-	return this.SVGhandleVariant(variant,scale,this.data.join("").replace(/[\u2061-\u2064]/g,"")); // remove invisibles
+      toSVG: function (variant,scale,remap,chars) {
+        var text = this.data.join("").replace(/[\u2061-\u2064]/g,""); // remove invisibles
+        if (remap) {text = remap(text,chars)}
+	return this.SVGhandleVariant(variant,scale,text);
       }
     });
     MML.entity.Augment({
@@ -1224,7 +1226,7 @@
 	  {variant = SVG.FONTDATA.VARIANT[values.displaystyle ? "-largeOp" : "-smallOp"]}
 	for (var i = 0, m = this.data.length; i < m; i++) {
           if (this.data[i]) {
-            var text = this.data[i].toSVG(variant,scale), x = svg.w;
+            var text = this.data[i].toSVG(variant,scale,this.SVGremap,this.SVGremapChars), x = svg.w;
             if (x === 0 && -text.l > 10*text.w) {x += -text.l} // initial combining character doesn't combine
             svg.Add(text,x,0,true);
             if (text.skew) {svg.skew = text.skew}
@@ -1239,6 +1241,16 @@
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
 	return svg;
+      },
+      SVGremapChars: {
+        '-':"\u2212",
+        '*':"\u2217",
+        '"':"\u2033"
+      },
+      SVGremap: function (text,map) {
+        text = text.replace(/'/g,"\u2032");
+        if (text.length === 1) {text = map[text]||text}
+        return text;
       },
       SVGcanStretch: function (direction) {
 	if (!this.Get("stretchy")) {return false}

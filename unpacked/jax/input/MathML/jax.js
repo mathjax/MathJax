@@ -145,8 +145,6 @@
         if (child.nodeName === "#text") {
           if (mml.isToken && !mml.mmlSelfClosing) {
             var text = this.trimSpace(child.nodeValue);
-            if (mml.isa(MML.mo) && text.length === 1 && this.Remap[text.charAt(0)])
-              {text = this.Remap[text.charAt(0)]}
             text = text.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
             mml.Append(MML.chars(text));
           } else if (child.nodeValue.match(/\S/)) {
@@ -187,16 +185,6 @@
         MathJax.Hub.RestartAfter(MathJax.Ajax.Require(MATHML.entityDir+"/"+file+".js"));
       }
       return match;
-    },
-
-    //
-    //  Characters to remap to better unicode values when they are
-    //  single-character <mo> elements
-    //
-    Remap: {
-      '\u0027': '\u2032', // '
-      '\u002A': '\u2217', // *
-      '\u002D': '\u2212'  // -
     }
   }, {
     loaded: []    // the entity files that are loaded
