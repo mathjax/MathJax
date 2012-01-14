@@ -1482,7 +1482,9 @@
     },
     
     Require: function (name) {
-      var file = this.GetArgument(name); // @@@ FIXME: check for OK URL
+      var file = this.GetArgument(name)
+        .replace(/.*\//,"")            // remove any leading path
+        .replace(/[^a-z0-9_.-]/ig,""); // remove illegal characters
       this.Extension(null,file);
     },
     
