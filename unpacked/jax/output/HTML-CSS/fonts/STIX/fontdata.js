@@ -114,6 +114,12 @@
         0x2758: 0x2223                  // VerticalSeparator
       },
       
+      REMAPACCENT: {
+        "\u2192": "\u20D7"
+      },
+      REMAPACCENTUNDER: {
+      },
+      
       DELIMITERS: {
         0x0028: // (
         {

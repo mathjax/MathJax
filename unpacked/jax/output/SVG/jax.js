@@ -1220,13 +1220,28 @@
         this.SVGgetStyles();
         var svg = this.svg = this.SVG(); this.SVGhandleSpace(svg);
         if (this.data.length == 0) {svg.Clean(); this.SVGsaveData(svg); return svg}
+        //
+        //  Get the variant, and check for operator size
+        //
         var scale = this.SVGgetScale(), variant = this.SVGgetVariant();
 	var values = this.getValues("largeop","displaystyle");
 	if (values.largeop)
 	  {variant = SVG.FONTDATA.VARIANT[values.displaystyle ? "-largeOp" : "-smallOp"]}
-        var parent = this.Parent(),
-            isScript = (parent.isa(MML.msubsup) && this !== parent.data[0]),
+        //
+        //  Get character translation for superscript and accents
+        //
+        var parent = this.CoreParent(),
+            isScript = (parent && parent.isa(MML.msubsup) && this !== parent.data[0]),
             mapchars = (isScript?this.SVGremapChars:null);
+        if (this.data.join("").length === 1 && parent && parent.isa(MML.munderover) &&
+            this.CoreText(parent.data[parent.base]).length === 1) {
+          var over = parent.data[parent.over], under = parent.data[parent.under];
+          if (over && this === over.CoreMO() && parent.Get("accent")) {mapchars = SVG.FONTDATA.REMAPACCENT}
+          else if (under && this === under.CoreMO() && parent.Get("accentunder")) {mapchars = SVG.FONTDATA.REMAPACCENTUNDER}
+        }
+        //
+        //  Typeset contents
+        //
 	for (var i = 0, m = this.data.length; i < m; i++) {
           if (this.data[i]) {
             var text = this.data[i].toSVG(variant,scale,this.SVGremap,mapchars), x = svg.w;
@@ -1237,13 +1252,32 @@
         }
         svg.Clean();
 	if (this.data.join("").length !== 1) {delete svg.skew}
+        //
+        //  Handle large operator centering
+        //
 	if (values.largeop) {
 	  svg.y = (svg.h - svg.d)/2/scale - SVG.TeX.axis_height;
 	  if (svg.r > svg.w) {svg.ic = svg.r - svg.w; svg.w = svg.r}
 	}
+        //
+        //  Finish up
+        //
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
 	return svg;
+      },
+      CoreParent: function () {
+        var parent = this;
+        while (parent && parent.isEmbellished() &&
+               parent.CoreMO() === this && !parent.isa(MML.math))  {parent = parent.Parent()}
+        return parent;
+      },
+      CoreText: function (parent) {
+        if (!parent) {return ""}
+        if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
+        while (parent.isa(MML.mrow) && parent.data.length === 1 && parent.data[0])
+          {parent = parent.data[0]}
+        if (!parent.isToken) {return ""} else {return parent.data.join("")}
       },
       SVGremapChars: {
         '*':"\u2217",
@@ -1266,6 +1300,13 @@
 	if (!this.Get("stretchy")) {return false}
 	var c = this.data.join("");
 	if (c.length > 1) {return false}
+        var parent = this.CoreParent();
+        if (parent && parent.isa(MML.munderover) && 
+            this.CoreText(parent.data[parent.base]).length === 1) {
+          var over = parent.data[parent.over], under = parent.data[parent.under];
+          if (over && this === over.CoreMO() && parent.Get("accent")) {c = SVG.FONTDATA.REMAPACCENT[c]||c}
+          else if (under && this === under.CoreMO() && parent.Get("accentunder")) {c = SVG.FONTDATA.REMAPACCENTUNDER[c]||c}
+        }
 	c = SVG.FONTDATA.DELIMITERS[c.charCodeAt(0)];
         var can = (c && c.dir == direction.substr(0,1));
         if (!can) {delete this.svg}

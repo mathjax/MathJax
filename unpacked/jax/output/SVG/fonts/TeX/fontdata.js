@@ -161,6 +161,12 @@
         0x2057: "\u2032\u2032\u2032\u2032"  // quadruple prime
       },
       
+      REMAPACCENT: {
+        "\u2192":"\u20D7"
+      },
+      REMAPACCENTUNDER: {
+      },
+      
       PLANE1MAP: [
         [0x1D400,0x1D419, 0x41, MML.VARIANT.BOLD],
         [0x1D41A,0x1D433, 0x61, MML.VARIANT.BOLD],

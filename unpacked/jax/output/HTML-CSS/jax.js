@@ -1854,24 +1854,47 @@
 	span = this.HTMLhandleSize(this.HTMLcreateSpan(span));
 	if (this.data.length == 0) {return span} else {span.bbox = null}
 	var text = this.data.join("");
+        //
+        //  Get the variant, and check for operator size
+        //
 	var variant = this.HTMLgetVariant();
 	var values = this.getValues("largeop","displaystyle");
 	if (values.largeop)
 	  {variant = HTMLCSS.FONTDATA.VARIANT[values.displaystyle ? "-largeOp" : "-smallOp"]}
-        var parent = this.Parent(),
-            isScript = (parent.isa(MML.msubsup) && this !== parent.data[0]),
+        //
+        //  Get character translation for superscript and accents
+        //
+        var parent = this.CoreParent(),
+            isScript = (parent && parent.isa(MML.msubsup) && this !== parent.data[parent.base]),
             mapchars = (isScript?this.HTMLremapChars:null);
+        if (text.length === 1 && parent && parent.isa(MML.munderover) &&
+            this.CoreText(parent.data[parent.base]).length === 1) {
+          var over = parent.data[parent.over], under = parent.data[parent.under];
+          if (over && this === over.CoreMO() && parent.Get("accent")) {mapchars = HTMLCSS.FONTDATA.REMAPACCENT}
+          else if (under && this === under.CoreMO() && parent.Get("accentunder")) {mapchars = HTMLCSS.FONTDATA.REMAPACCENTUNDER}
+        }
+        //
+        //  STIX fonts need quotes from variant font
+        //
         if (isScript && HTMLCSS.fontInUse === "STIX" && text.match(/['`"\u00B4]/))
           {variant = HTMLCSS.FONTDATA.VARIANT["-STIX-variant"]}
+        //
+        //  Typeset contents
+        //
 	for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant,this.HTMLremap,mapchars)}}
 	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
 	if (text.length !== 1) {delete span.bbox.skew}
+        //
+        //  Handle combining characters by adding a non-breaking space and removing that width
+        //
 	if (HTMLCSS.AccentBug && span.bbox.w === 0 && text.length === 1 && span.firstChild) {
-	  //  Handle combining characters by adding a non-breaking space and removing that width
 	  span.firstChild.nodeValue += HTMLCSS.NBSP;
 	  HTMLCSS.createSpace(span,0,0,-span.offsetWidth/HTMLCSS.em);
 	}
+        //
+        //  Handle large operator centering
+        //
 	if (values.largeop) {
 	  var p = (span.bbox.h - span.bbox.d)/2 - HTMLCSS.TeX.axis_height*span.scale;
 	  if (HTMLCSS.safariVerticalAlignBug && span.lastChild.nodeName === "IMG") {
@@ -1891,9 +1914,25 @@
 	    span.bbox.w = span.bbox.rw;
 	  }
 	}
+        //
+        //  Finish up
+        //
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
 	return span;
+      },
+      CoreParent: function () {
+        var parent = this;
+        while (parent && parent.isEmbellished() &&
+               parent.CoreMO() === this && !parent.isa(MML.math))  {parent = parent.Parent()}
+        return parent;
+      },
+      CoreText: function (parent) {
+        if (!parent) {return ""}
+        if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
+        while (parent.isa(MML.mrow) && parent.data.length === 1 && parent.data[0])
+          {parent = parent.data[0]}
+        if (!parent.isToken) {return ""} else {return parent.data.join("")}
       },
       HTMLremapChars: {
         '*':"\u2217",
@@ -1916,6 +1955,13 @@
 	if (!this.Get("stretchy")) {return false}
 	var c = this.data.join("");
 	if (c.length > 1) {return false}
+        var parent = this.CoreParent();
+        if (parent && parent.isa(MML.munderover) && 
+            this.CoreText(parent.data[parent.base]).length === 1) {
+          var over = parent.data[parent.over], under = parent.data[parent.under];
+          if (over && this === over.CoreMO() && parent.Get("accent")) {c = HTMLCSS.FONTDATA.REMAPACCENT[c]||c}
+          else if (under && this === under.CoreMO() && parent.Get("accentunder")) {c = HTMLCSS.FONTDATA.REMAPACCENTUNDER[c]||c}
+        }
 	c = HTMLCSS.FONTDATA.DELIMITERS[c.charCodeAt(0)];
 	return (c && c.dir == direction.substr(0,1));
       },
