@@ -1858,8 +1858,13 @@
 	var values = this.getValues("largeop","displaystyle");
 	if (values.largeop)
 	  {variant = HTMLCSS.FONTDATA.VARIANT[values.displaystyle ? "-largeOp" : "-smallOp"]}
+        var parent = this.Parent(),
+            isScript = (parent.isa(MML.msubsup) && this !== parent.data[0]),
+            mapchars = (isScript?this.HTMLremapChars:null);
+        if (isScript && HTMLCSS.fontInUse === "STIX" && text.match(/['`"\u00B4]/))
+          {variant = HTMLCSS.FONTDATA.VARIANT["-STIX-variant"]}
 	for (var i = 0, m = this.data.length; i < m; i++)
-	  {if (this.data[i]) {this.data[i].toHTML(span,variant,this.HTMLremap,this.HTMLremapChars)}}
+          {if (this.data[i]) {this.data[i].toHTML(span,variant,this.HTMLremap,mapchars)}}
 	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
 	if (text.length !== 1) {delete span.bbox.skew}
 	if (HTMLCSS.AccentBug && span.bbox.w === 0 && text.length === 1 && span.firstChild) {
@@ -1891,13 +1896,20 @@
 	return span;
       },
       HTMLremapChars: {
-        '-':"\u2212",
         '*':"\u2217",
-        '"':"\u2033"
+        '"':"\u2033",
+        "\u00B0":"\u2218",
+        "\u00B2":"2",
+        "\u00B3":"3",
+        "\u00B4":"\u2032",
+        "\u00B9":"1"
       },
       HTMLremap: function (text,map) {
-        text = text.replace(/'/g,"\u2032");
-        if (text.length === 1) {text = map[text]||text}
+        text = text.replace(/-/g,"\u2212");
+        if (map) {
+          text = text.replace(/'/g,"\u2032").replace(/`/g,"\u2035");
+          if (text.length === 1) {text = map[text]||text}
+        }
         return text;
       },
       HTMLcanStretch: function (direction) {

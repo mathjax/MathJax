@@ -1224,9 +1224,12 @@
 	var values = this.getValues("largeop","displaystyle");
 	if (values.largeop)
 	  {variant = SVG.FONTDATA.VARIANT[values.displaystyle ? "-largeOp" : "-smallOp"]}
+        var parent = this.Parent(),
+            isScript = (parent.isa(MML.msubsup) && this !== parent.data[0]),
+            mapchars = (isScript?this.SVGremapChars:null);
 	for (var i = 0, m = this.data.length; i < m; i++) {
           if (this.data[i]) {
-            var text = this.data[i].toSVG(variant,scale,this.SVGremap,this.SVGremapChars), x = svg.w;
+            var text = this.data[i].toSVG(variant,scale,this.SVGremap,mapchars), x = svg.w;
             if (x === 0 && -text.l > 10*text.w) {x += -text.l} // initial combining character doesn't combine
             svg.Add(text,x,0,true);
             if (text.skew) {svg.skew = text.skew}
@@ -1243,13 +1246,20 @@
 	return svg;
       },
       SVGremapChars: {
-        '-':"\u2212",
         '*':"\u2217",
-        '"':"\u2033"
+        '"':"\u2033",
+        "\u00B0":"\u2218",
+        "\u00B2":"2",
+        "\u00B3":"3",
+        "\u00B4":"\u2032",
+        "\u00B9":"1"
       },
       SVGremap: function (text,map) {
-        text = text.replace(/'/g,"\u2032");
-        if (text.length === 1) {text = map[text]||text}
+        text = text.replace(/-/g,"\u2212");
+        if (map) {
+          text = text.replace(/'/g,"\u2032").replace(/`/g,"\u2035");
+          if (text.length === 1) {text = map[text]||text}
+        }
         return text;
       },
       SVGcanStretch: function (direction) {
