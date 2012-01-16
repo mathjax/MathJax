@@ -136,6 +136,35 @@
         0x2758: 0x2223,                 // VerticalSeparator
         0x2A2F: 0xD7,                   // cross product
 
+        //
+        //  Letter-like symbols (that appear elsewhere)
+        //
+        0x2102: [0x0043,MML.VARIANT.DOUBLESTRUCK],
+//      0x210A: [0x0067,MML.VARIANT.SCRIPT],
+        0x210B: [0x0048,MML.VARIANT.SCRIPT],
+        0x210C: [0x0048,MML.VARIANT.FRAKTUR],
+        0x210D: [0x0048,MML.VARIANT.DOUBLESTRUCK],
+        0x210E: [0x0068,MML.VARIANT.ITALIC],
+        0x2110: [0x004A,MML.VARIANT.SCRIPT],
+        0x2111: [0x004A,MML.VARIANT.FRAKTUR],
+        0x2112: [0x004C,MML.VARIANT.SCRIPT],
+        0x2115: [0x004E,MML.VARIANT.DOUBLESTRUCK],
+        0x2119: [0x0050,MML.VARIANT.DOUBLESTRUCK],
+        0x211A: [0x0051,MML.VARIANT.DOUBLESTRUCK],
+        0x211B: [0x0052,MML.VARIANT.SCRIPT],
+        0x211C: [0x0052,MML.VARIANT.FRAKTUR],
+        0x211D: [0x0052,MML.VARIANT.DOUBLESTRUCK],
+        0x2124: [0x005A,MML.VARIANT.DOUBLESTRUCK],
+        0x2126: [0x03A9,MML.VARIANT.NORMAL],
+        0x2128: [0x005A,MML.VARIANT.FRAKTUR],
+        0x212C: [0x0042,MML.VARIANT.SCRIPT],
+        0x212D: [0x0043,MML.VARIANT.FRAKTUR],
+//      0x212F: [0x0065,MML.VARIANT.SCRIPT],
+        0x2130: [0x0045,MML.VARIANT.SCRIPT],
+        0x2131: [0x0046,MML.VARIANT.SCRIPT],
+        0x2133: [0x004D,MML.VARIANT.SCRIPT],
+//      0x2134: [0x006F,MML.VARIANT.SCRIPT],
+
         0x2247: 0x2246,                 // wrong placement of this character
 
         //

@@ -509,6 +509,7 @@
         }
         if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
           n = this.FONTDATA.REMAP[n];
+          if (n instanceof Array) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]}
           if (typeof(n) === "string") {
             text = n+text.substr(i+1);
             i = 0; m = text.length;
