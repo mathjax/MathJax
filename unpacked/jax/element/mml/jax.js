@@ -541,6 +541,9 @@ MathJax.ElementJax.mml.Augment({
       var def = MathJax.Hub.Insert({},data[3]);
       def.lspace = this.SPACE[data[0]]; def.rspace = this.SPACE[data[1]];
       def.texClass = data[2];
+      if (def.texClass === MML.TEXCLASS.REL &&
+         (this.movablelimits || this.data.join("").match(/^[a-z]+$/i)))
+             {def.texClass = MML.TEXCLASS.OP} // mark named operators as OP
       return def;
     },
     getForm: function () {
@@ -1582,6 +1585,13 @@ MathJax.ElementJax.mml.Augment({
   },{
     OPTYPES: MO
   });
+  
+  //
+  //  These are not in the W3C table, but FF works this way,
+  //  and it makes sense, so add it here
+  //
+  MML.mo.prototype.OPTABLE.infix["^"] = MO.WIDEREL;
+  MML.mo.prototype.OPTABLE.infix["_"] = MO.WIDEREL;
   
 })(MathJax.ElementJax.mml);
 
