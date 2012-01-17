@@ -1141,6 +1141,8 @@ mathcolor = "";
   for (var i = 0, m = AMsymbols.length; i < m; i++) {
     if (AMsymbols[i].codes) {delete AMsymbols[i].codes}
     if (AMsymbols[i].func) {AMsymbols[i].tag = "mi"}
+    if (AMsymbols[i].atname === "fontfamily" || AMsymbols[i].atname === "fontweight")
+      {AMsymbols[i].atname = "mathvariant"}
   }
 })();
 
