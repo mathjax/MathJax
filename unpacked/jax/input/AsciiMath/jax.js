@@ -77,7 +77,8 @@
       this.childNodes[i] = node; node.nextSibling = old.nextSibling;
       old.nextSibling = old.parent = null;
       return old;
-    }
+    },
+    toString: function () {return "{"+this.childNodes.join("")+"}"}
   });
   
   var INITASCIIMATH = function () {
@@ -101,7 +102,12 @@
       },
       appendChild: function (node) {
         if (node.parent) {node.parent.removeChild(node)}
-        var nodes = arguments; if (node.isa(DOCFRAG)) {nodes = node.childNodes}
+        var nodes = arguments;
+        if (node.isa(DOCFRAG)) {
+          nodes = node.childNodes;
+          node.data = node.childNodes = [];
+          node.firstChild = node.lastChild = null;
+        }
         for (var i = 0, m = nodes.length; i < m; i++) {
           node = nodes[i];
           if (this.lastChild) {this.lastChild.nextSibling = node}
