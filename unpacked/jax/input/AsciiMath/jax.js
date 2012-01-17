@@ -1244,7 +1244,7 @@ junk = null;
   var MML;
   
   ASCIIMATH.Augment({
-    sourceMenuTitle: "AsciiMath input",
+    sourceMenuTitle: "AsciiMath Input",
 
     prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run before processing AsciiMath
     postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run after processing AsciiMath
