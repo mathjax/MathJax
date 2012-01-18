@@ -1509,8 +1509,24 @@
 	FONTDATA.VARIANT["italic"].offsetGG = 0x1D6FC; FONTDATA.VARIANT["italic"].offsetG = 0x1D6E2;
         FONTDATA.VARIANT["bold-italic"].offsetGG = 0x1D736; FONTDATA.VARIANT["bold-italic"].offsetG = 0x1D71C;
       }
+    },
+    Safari: function (browser) {
+      browser.STIXfontBug = browser.versionAtLeast("5.1") && browser.isMac;
+    },
+    Chrome: function (browser) {
+      var match = navigator.appVersion.match(/AppleWebKit\/(\d+)/);
+      if (match && parseInt(match[1]) > 534) {browser.STIXfontBug = true}
     }
   });
+  
+  //
+  //  Fix WebKit problem with STIX fonts in OS X Lion
+  //
+  if (MathJax.Hub.Browser.STIXfontBug) {
+    HTMLCSS.FONTDATA.FONTS["STIXGeneral"].family = "STIXGeneral-Regular";
+    HTMLCSS.FONTDATA.FONTS["STIXGeneral-italic"].family = "STIXGeneral-Italic";
+    delete HTMLCSS.FONTDATA.FONTS["STIXGeneral-italic"].style;
+  }
   
   //
   //  Check for Beta version versus release version of fonts
