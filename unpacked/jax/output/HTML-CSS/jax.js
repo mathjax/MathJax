@@ -1242,6 +1242,9 @@
           if (variant.remap[n] instanceof Array) {
             var remap = variant.remap[n];
             n = remap[0]; variant = this.FONTDATA.VARIANT[remap[1]];
+          } else if (typeof(variant.remap[n]) === "string") {
+            text = variant.remap[n]+text.substr(i+1);
+            i = 0; m = text.length; n = text.charCodeAt(0);
           } else {
             n = variant.remap[n];
             if (variant.remap.variant) {variant = this.FONTDATA.VARIANT[variant.remap.variant]}
@@ -1252,8 +1255,7 @@
           if (n instanceof Array) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]}
           if (typeof(n) === "string") {
             text = n+text.substr(i+1);
-            i = 0; m = text.length;
-            n = n.charCodeAt(0);
+            i = 0; m = text.length; n = n.charCodeAt(0);
           }
         }
         font = this.lookupChar(variant,n); c = font[n]; SPAN = span;
