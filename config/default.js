@@ -301,6 +301,71 @@ MathJax.Hub.Config({
   
   //============================================================================
   //
+  //  These parameters control the asciimath2jax preprocessor (when you have included
+  //  "asciimath2jax.js" in the extensions list above).
+  //
+  asciimath2jax: {
+
+    //
+    //  The delimiters that surround asciimath expressions.  The first in each
+    //  pair is the initial delimiter and the second is the terminal delimiter.
+    //
+    delimiters: [
+      ['`','`']
+    ],
+
+    //
+    //  This array lists the names of the tags whose contents should not be
+    //  processed by asciimath2jax (other than to look for ignore/process classes
+    //  as listed below).  You can add to (or remove from) this list to prevent
+    //  MathJax from processing mathematics in specific contexts.
+    //
+    skipTags: ["script","noscript","style","textarea","pre","code"],
+
+    //
+    //  This is the class name used to mark elements whose contents should
+    //  not be processed by asciimath2jax (other than to look for the
+    //  processClass pattern below).  Note that this is a regular
+    //  expression, and so you need to be sure to quote any regexp special
+    //  characters.  The pattern is automatically preceeded by '(^| )(' and
+    //  followed by ')( |$)', so your pattern will have to match full words
+    //  in the class name.  Assigning an element this class name will
+    //  prevent `asciimath2jax` from processing its contents.
+    //
+    ignoreClass: "asciimath2jax_ignore",
+
+    //
+    //  This is the class name used to mark elements whose contents SHOULD
+    //  be processed by asciimath2jax.  This is used to turn on processing
+    //  within tags that have been marked as ignored or skipped above.
+    //  Note that this is a regular expression, and so you need to be sure
+    //  to quote any regexp special characters.  The pattern is
+    //  automatically preceeded by '(^| )(' and followed by ')( |$)', so
+    //  your pattern will have to match full words in the class name.  Use
+    //  this to restart processing within an element that has been marked
+    //  as ignored above.
+    //
+    processClass: "asciimath2jax_process",
+    
+    //  Controls whether asciimath2jax inserts MathJax_Preview spans to make a
+    //  preview available, and what preview to use, when it locates in-line
+    //  and display mathetics on the page.  The default is "AsciiMath", which
+    //  means use the AsciiMath code as the preview (until it is processed by
+    //  MathJax).  Set to "none" to prevent the previews from being
+    //  inserted (the math will simply disappear until it is typeset).  Set
+    //  to an array containing the description of an HTML snippet in order
+    //  to use the same preview for all equations on the page (e.g., you
+    //  could have it say "[math]" or load an image).
+    //  
+    //  E.g.,     preview: ["[math]"],
+    //  or        preview: [["img",{src: "http://myserver.com/images/mypic.jpg"}]]
+    //  
+    preview: "AsciiMath"
+    
+  },
+  
+  //============================================================================
+  //
   //  These parameters control the mml2jax preprocessor (when you have included
   //  "mml2jax.js" in the extensions list above).
   //
@@ -404,6 +469,27 @@ MathJax.Hub.Config({
     
   },
 
+  //============================================================================
+  //
+  //  These parameters control the AsciiMath inupt jax.
+  //
+  AasciiMath: {
+    //
+    //  Determines whether limits are placed above and below operators,
+    //  or next to them.  (AsciiMath doesn't have separate in-line and
+    //  display modes like TeX and MathML do, so this is the only control
+    //  you have over its output)
+    //
+    displaystyle: true,
+    
+    //
+    //  The character to use for decimal places when scanning for a number.
+    //  If you change it to ,, beware of things like "(1,2)" which would need
+    //  to be changed to "(1, 2)" to be parsed correctly.
+    // 
+    decimal: "."
+  },
+  
   //============================================================================
   //
   //  These parameters control the MathML inupt jax.

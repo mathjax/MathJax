@@ -29,7 +29,7 @@
 MathJax.Extension.asciimath2jax = {
   version: "1.0",
   config: {
-    delimiters: ['`'],          // The delimiter(s) for asciimath code
+    delimiters: [['`','`']],   // The star/stop delimiter pairs for asciimath code
 
     skipTags: ["script","noscript","style","textarea","pre","code"],
                                // The names of the tags whose contents will not be
@@ -66,11 +66,11 @@ MathJax.Extension.asciimath2jax = {
     var starts = [], i, m, config = this.config; this.match = {};
     if (config.delimiters.length === 0) {return false}
     for (i = 0, m = config.delimiters.length; i < m; i++) {
-      starts.push(this.patternQuote(config.delimiters[i]));
-      this.match[config.delimiters[i]] = {
+      starts.push(this.patternQuote(config.delimiters[i][0]));
+      this.match[config.delimiters[i][0]] = {
         mode: "",
-        end: config.delimiters[i],
-        pattern: this.endPattern(config.delimiters[i])
+        end: config.delimiters[i][1],
+        pattern: this.endPattern(config.delimiters[i][1])
       };
     }
     this.start = new RegExp(starts.sort(this.sortLength).join("|"),"g");
@@ -186,10 +186,10 @@ MathJax.Extension.asciimath2jax = {
       }
       math.parentNode.removeChild(math.nextSibling);
     }
-    var TeX = math.nodeValue.substr(search.olen,math.nodeValue.length-search.olen-search.clen);
+    var AM = math.nodeValue.substr(search.olen,math.nodeValue.length-search.olen-search.clen);
     math.parentNode.removeChild(math);
-    if (this.config.preview !== "none") {this.createPreview(search.mode,TeX)}
-    math = this.createMathTag(search.mode,TeX);
+    if (this.config.preview !== "none") {this.createPreview(search.mode,AM)}
+    math = this.createMathTag(search.mode,AM);
     this.search = {}; this.pattern.lastIndex = 0;
     if (CLOSE) {CLOSE.parentNode.removeChild(CLOSE)}
     return math;
