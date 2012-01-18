@@ -761,7 +761,7 @@
         } else if (bbox.w < 0 && this.msieNegativeBBoxBug) {
           W = -span.offsetWidth, parent.HH = span.parentNode.offsetHeight/this.em;
         } else {
-          W = spans[i][2].offsetLeft - spans[i][1].offsetLeft;
+          W = spans[i][2].offsetLeft - ((spans[i][1]||{}).offsetLeft||0);
         }
         W /= this.em;
         bbox.rw += W - bbox.w;
