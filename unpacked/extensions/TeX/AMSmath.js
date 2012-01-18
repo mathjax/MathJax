@@ -175,8 +175,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var ref = AMS.labels[label] || AMS.eqlabels[label];
       if (!ref) {ref = "??"; AMS.badref = !AMS.refUpdate}
       var tag = ref; if (eqref) {tag = CONFIG.formatTag(tag)}
+      if (CONFIG.useLabelIds) {ref = label}
       this.Push(MML.mrow.apply(MML,this.InternalMath(tag)).With({
-        href:CONFIG.formatURL(ref), "class":"MathJax_ref"
+        href:CONFIG.formatURL(CONFIG.formatID(ref)), "class":"MathJax_ref"
       }));
     },
     
@@ -395,7 +396,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     getTag: function () {
       var global = this.global, tag = global.tag; global.tagged = true;
-      if (global.label) {AMS.eqlabels[global.label] = global.tagID}
+      if (global.label) {
+        AMS.eqlabels[global.label] = global.tagID;
+        if (CONFIG.useLabelIds) {tag.id = CONFIG.formatID(global.label)}
+      }
       delete global.tag; delete global.tagID; delete global.label;
       return tag;
     }
