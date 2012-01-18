@@ -272,7 +272,7 @@ MathJax.Extension.tex2jax = {
   
   createPreview: function (mode,tex) {
     var preview;
-    if (this.config.preview === "TeX") {preview = [this.filterTeX(tex)]}
+    if (this.config.preview === "TeX") {preview = [this.filterPreview(tex)]}
     else if (this.config.preview instanceof Array) {preview = this.config.preview}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
@@ -288,7 +288,7 @@ MathJax.Extension.tex2jax = {
     return script;
   },
   
-  filterTeX: function (tex) {return tex},
+  filterPreview: function (tex) {return tex},
   
   msieNewlineBug: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9)
   

@@ -71,7 +71,7 @@ MathJax.Extension.jsMath2jax = {
   
   createPreview: function (node) {
     var preview;
-    if (this.config.preview === "TeX") {preview = [this.filterTeX(node.innerHTML)]}
+    if (this.config.preview === "TeX") {preview = [this.filterPreview(node.innerHTML)]}
     else if (this.config.preview instanceof Array) {preview = this.config.preview}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className: MathJax.Hub.config.preRemoveClass},preview);
@@ -87,7 +87,7 @@ MathJax.Extension.jsMath2jax = {
     return script;
   },
   
-  filterTeX: function (tex) {return tex}
+  filterPreview: function (tex) {return tex}
   
 };
 

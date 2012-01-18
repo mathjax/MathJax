@@ -202,7 +202,7 @@ MathJax.Extension.asciimath2jax = {
   
   createPreview: function (mode,asciimath) {
     var preview;
-    if (this.config.preview === "AsciiMath") {preview = [this.filterAM(asciimath)]}
+    if (this.config.preview === "AsciiMath") {preview = [this.filterPreview(asciimath)]}
     else if (this.config.preview instanceof Array) {preview = this.config.preview}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
@@ -218,7 +218,7 @@ MathJax.Extension.asciimath2jax = {
     return script;
   },
   
-  filterAM: function (asciimath) {return asciimath},
+  filterPreview: function (asciimath) {return asciimath},
   
   msieNewlineBug: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 9)
   

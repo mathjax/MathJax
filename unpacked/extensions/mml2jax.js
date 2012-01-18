@@ -162,7 +162,7 @@ MathJax.Extension.mml2jax = {
     var preview;
     if (this.config.preview === "alttext") {
       var text = math.getAttribute("alttext");
-      if (text != null) {preview = [this.filterText(text)]}
+      if (text != null) {preview = [this.filterPreview(text)]}
     } else if (this.config.preview instanceof Array) {preview = this.config.preview}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
@@ -170,7 +170,7 @@ MathJax.Extension.mml2jax = {
     }
   },
   
-  filterText: function (text) {return text},
+  filterPreview: function (text) {return text},
   
   InitBrowser: function () {
     var test = MathJax.HTML.Element("span",{id:"<", className: "mathjax", innerHTML: "<math><mi>x</mi><mspace /></math>"});
