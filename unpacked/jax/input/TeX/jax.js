@@ -317,7 +317,7 @@
       var mml, c;
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml" && item.data[0].type.match(/^(mo|mi|mtext)$/)) {
-        mml = item.data[0].CoreMO(), c = mml.data.join("");
+        mml = item.data[0], c = mml.data.join("");
         if (c.length === 1 && !mml.movesupsub) {
           c = STACKITEM.not.remap[c.charCodeAt(0)];
           if (c) {mml.SetData(0,MML.chars(String.fromCharCode(c)))}
@@ -343,6 +343,19 @@
     0x2291:0x22E2, 0x2292:0x22E3, 0x22B2:0x22EA, 0x22B3:0x22EB,
     0x22B4:0x22EC, 0x22B5:0x22ED, 0x2203:0x2204
   };
+  
+  STACKITEM.dots = STACKITEM.Subclass({
+    type: "dots",
+    checkItem: function (item) {
+      if (item.type === "open" || item.type === "left") {return true}
+      var dots = this.ldots;
+      if (item.type === "mml" && item.data[0].isEmbellished()) {
+        var tclass = item.data[0].CoreMO().Get("texClass");
+        if (tclass === MML.TEXCLASS.BIN || tclass === MML.TEXCLASS.REL) {dots = this.cdots}
+      }
+      return [dots,item];
+    }
+  });
   
 
   var TEXDEF = {
@@ -598,7 +611,6 @@
         cdots:            '22EF',
         vdots:            '22EE',
         ddots:            '22F1',
-        dots:             '2026',  // should be more complex than this
         dotsc:            '2026',  // dots with commas
         dotsb:            '22EF',  // dots with binary ops and relations
         dotsm:            '22EF',  // dots with multiplication
@@ -901,6 +913,7 @@
 
         //  Specially handled
         not:                'Not',
+        dots:               'Dots',
         space:              'Tilde',
         
 
@@ -1479,6 +1492,13 @@
     
     Not: function (name) {
       this.Push(STACKITEM.not());
+    },
+    
+    Dots: function (name) {
+      this.Push(STACKITEM.dots().With({
+        ldots: this.mmlToken(MML.mo(MML.entity("#x2026"))),
+        cdots: this.mmlToken(MML.mo(MML.entity("#x22EF")))
+      }));
     },
     
     Require: function (name) {
