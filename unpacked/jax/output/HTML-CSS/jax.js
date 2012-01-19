@@ -8,7 +8,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -176,7 +176,11 @@
         "font-family": FONT.family,
         src: "url('"+dir+"/"+fullname+"')"
       };
-      if (type === "svg") def.src += " format('svg')";
+      if (type === "otf") {
+        def.src += " format('opentype')";
+        dir = AJAX.fileURL(HTMLCSS.webfontDir+"/woff");  // add woff fonts as well
+        def.src = "url('"+dir+"/"+fullname.replace(/otf$/,"woff")+"') format('woff'), "+def.src;
+      } else if (type !== "eot") {def.src += " format('"+type+"')"}
       if (!(HTMLCSS.FontFaceBug && FONT.isWebFont)) {
         if (name.match(/-bold/)) {def["font-weight"] = "bold"}
         if (name.match(/-italic/)) {def["font-style"] = "italic"}
@@ -2632,7 +2636,7 @@
           zeroWidthBug: (mode < 8),
           FontFaceBug: true,
           msieFontCSSBug: browser.isIE9,
-          allowWebFonts: "eot"
+          allowWebFonts: (mode >= 9 ? "woff" : "eot")
         });
       },
 

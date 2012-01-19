@@ -603,7 +603,7 @@
     MENU.About.GetJax(jax,MathJax.Extension,"Extension",true);
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}],["center",{},[
       HUB.Browser + " v"+HUB.Browser.version +
-      (HTMLCSS.webFonts ? " \u2014 "+HTMLCSS.allowWebFonts+" fonts" : "")
+      (HTMLCSS.webFonts && !HTMLCSS.imgFonts ? " \u2014 "+HTMLCSS.allowWebFonts+" fonts" : "")
     ]]);
     MENU.About.div = MENU.Background(MENU.About);
     var about = HTML.addElement(MENU.About.div,"div",{
