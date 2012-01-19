@@ -41,7 +41,7 @@
       this.div = MathJax.HTML.addElement(document.body,"div",{
         id: "MathJax_Font_Test",
         style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
-                padding:0, border:0, margin:0, "white-space":"nowrap",
+                padding:0, border:0, margin:0, whiteSpace:"nowrap",
                 textAlign:"left", textIndent:0, textTransform:"none",
                 lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
                 fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal"}
@@ -117,10 +117,8 @@
         else {this.text.nodeValue = string}
       this.div.style.fontFamily = this.comparisonFont[0];
       var W = this.div.offsetWidth, sW = -1;
-      if (HTMLCSS.safariWebFontSerif) {
-        this.div.style.fontFamily = HTMLCSS.safariWebFontSerif[0];
+        this.div.style.fontFamily = HTMLCSS.webFontDefault;
         sW = this.div.offsetWidth;
-      }
       for (var i = 1, m = this.comparisonFont.length; i < m; i++) {
         this.div.style.fontFamily = this.comparisonFont[i];
         if (this.div.offsetWidth != W) {return [W,this.div.offsetWidth,i,sW]}
@@ -275,6 +273,15 @@
         },
         "#MathJax_Tooltip *": {
           filter: "none", opacity:1, background:"transparent" // for IE
+        },
+        
+        //
+        //  Used for testing web fonts against the default font used while
+        //  web fonts are loading
+        //
+        "@font-face": {
+          "font-family": "MathJax_Blank",
+          "src": "url('about:blank')"
         }
 
       }
@@ -284,6 +291,7 @@
     hideProcessedMath: true,           // use display:none until all math is processed
 
     Font: null,  // created by Config() below
+    webFontDefault: "MathJax_Blank",
 
     Config: function () {
       if (!this.require) {this.require = []}
@@ -2657,6 +2665,9 @@
       Safari: function (browser) {
         var v3p0 = browser.versionAtLeast("3.0");
         var v3p1 = browser.versionAtLeast("3.1");
+        var trueSafari = navigator.appVersion.match(/ Safari\/\d/) &&
+                         navigator.appVersion.match(/ Version\/\d/) &&
+                         navigator.vendor.match(/Apple/);
         var android = (navigator.appVersion.match(/ Android (\d+)\.(\d+)/));
         var forceImages = (v3p1 && browser.isMobile && (
           (navigator.platform.match(/iPad|iPod|iPhone/) && !browser.versionAtLeast("5.0")) ||
@@ -2678,13 +2689,18 @@
           safariNegativeSpaceBug: true,
           safariVerticalAlignBug: !v3p1,
           safariTextNodeBug: !v3p0,
-          safariWebFontSerif: ["serif"],
           forceReflow: true,
           allowWebFonts: (v3p1 && !forceImages ? "otf" : false)
         });
+        if (trueSafari) {
+          HTMLCSS.Augment({
+            webFontDefault: (browser.isMobile ? "sans-serif" : "serif")
+          });
+        }
         if (browser.isPC) {
           HTMLCSS.Augment({
-            adjustAvailableFonts: HTMLCSS.removeSTIXfonts
+            adjustAvailableFonts: HTMLCSS.removeSTIXfonts,  // can't access plane1
+            checkWebFontsTwice: true  // bug in Safari/Win that doesn't update font test div properly
           });
         }
         if (forceImages) {
