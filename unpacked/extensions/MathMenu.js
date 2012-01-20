@@ -875,6 +875,20 @@
       ITEM.COMMAND("MathJax Help",MENU.Help)
     );
 
+    if (MENU.isMobile) {
+      (function () {
+        var settings = CONFIG.settings;
+        var trigger = MENU.menu.Find("Math Settings","Zoom Trigger").menu;
+        trigger.items[0].disabled = trigger.items[1].disabled = true;
+        if (settings.zoom === "Hover" || settings.zoom == "Click") {settings.zoom = "None"}
+        trigger.items = trigger.items.slice(0,4);
+    
+        if (navigator.appVersion.match(/[ (]Android[) ]/)) {
+          MENU.ITEM.SUBMENU.Augment({marker: "\u00BB"});
+        }
+      })();
+    }
+
   });
 
   MENU.showRenderer = function (show) {
@@ -895,20 +909,6 @@
     MENU.menu.Find("Math Settings","discover_rule").hidden = !show;
   };
   
-  if (MENU.isMobile) {
-    (function () {
-      var settings = CONFIG.settings;
-      var trigger = MENU.menu.Find("Math Settings","Zoom Trigger").menu;
-      trigger.items[0].disabled = trigger.items[1].disabled = true;
-      if (settings.zoom === "Hover" || settings.zoom == "Click") {settings.zoom = "None"}
-      trigger.items = trigger.items.slice(0,4);
-    
-      if (navigator.appVersion.match(/[ (]Android[) ]/)) {
-        MENU.ITEM.SUBMENU.Augment({marker: "\u00BB"});
-      }
-    })();
-  }
-
   /*************************************************************/
 
   CALLBACK.Queue(
