@@ -2262,7 +2262,8 @@ MathJax.Hub.Startup = {
     isPC:        (navigator.platform.substr(0,3) === "Win"),
     isMSIE:      (window.ActiveXObject != null && window.clipboardData != null),
     isFirefox:   (window.netscape != null && document.ATTRIBUTE_NODE != null && !window.opera),
-    isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null && !window.chrome),
+    isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null &&
+                     (!window.chrome || window.chrome.loadTimes == null)),
     isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
     isOpera:     (window.opera != null && window.opera.version != null),
     isKonqueror: (window.hasOwnProperty && window.hasOwnProperty("konqueror") && navigator.vendor == "KDE"),
