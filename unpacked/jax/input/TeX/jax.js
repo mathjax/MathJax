@@ -2049,10 +2049,10 @@
   //  Add the default filters
   //
   TEX.prefilterHooks.Add(function (data) {
-    data.math = TEX.prefilterMath(data.math,data.displaystyle,data.script);
+    data.math = TEX.prefilterMath(data.math,data.display,data.script);
   });
   TEX.postfilterHooks.Add(function (data) {
-    data.math = TEX.postfilterMath(data.math,data.displaystyle,data.script);
+    data.math = TEX.postfilterMath(data.math,data.display,data.script);
   });
 
   TEX.loadComplete("jax.js");
