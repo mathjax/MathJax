@@ -65,7 +65,7 @@
     //  Convert the MathML structure to the MathJax Element jax structure
     //
     MakeMML: function (node) {
-      var CLASS = String(node.getAttribute("class")); // make sure class is a string
+      var CLASS = String(node.getAttribute("class")||""); // make sure CLASS is a string
       var mml, type = node.nodeName.toLowerCase().replace(/^[a-z]+:/,"");
       var match = (CLASS.match(/(^| )MJX-TeXAtom-([^ ]*)/));
       if (match) {
