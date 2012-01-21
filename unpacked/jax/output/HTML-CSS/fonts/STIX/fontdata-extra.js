@@ -129,22 +129,22 @@
     },
     0x23DC: // top paren
     {
-      dir: H, HW: [[.556,GENERAL],[.926,SIZE1],[1.460,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.237,SIZE5]],
+      dir: H, HW: [[.926,SIZE1],[1,GENERAL],[1.460,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.237,SIZE5]],
       stretch: {left:[0xE13B,NONUNI], right:[0xE13C,NONUNI], rep:[0xE14A,NONUNI]}
     },
     0x23DD: // bottom paren
     {
-      dir: H, HW: [[.556,GENERAL],[.926,SIZE1],[1.460,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.237,SIZE5]],
+      dir: H, HW: [[.926,SIZE1],[1,GENERAL],[1.460,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.237,SIZE5]],
       stretch: {left:[0xE13D,NONUNI], right:[0xE13E,NONUNI], rep:[0xE14B,NONUNI]}
     },
     0x23E0: // top tortoise shell
     {
-      dir: H, HW: [[.926,GENERAL],[1.460,SIZE1],[1.886,SIZE2],[2.312,SIZE3],[2.738,SIZE4],[3.164,SIZE5]],
+      dir: H, HW: [[1,GENERAL],[1.460,SIZE1],[1.886,SIZE2],[2.312,SIZE3],[2.738,SIZE4],[3.164,SIZE5]],
       stretch: {left:[0xE10D,NONUNI,-.1,-.1], rep:[0x2212,GENERAL,0,.05], right:[0xE10C,NONUNI,0,-.1], fullExtenders:true}
     },
     0x23E1: // bottom tortoise shell
     {
-      dir: H, HW: [[.926,GENERAL],[1.460,SIZE1],[1.886,SIZE2],[2.312,SIZE3],[2.738,SIZE4],[3.164,SIZE5]],
+      dir: H, HW: [[1,GENERAL],[1.460,SIZE1],[1.886,SIZE2],[2.312,SIZE3],[2.738,SIZE4],[3.164,SIZE5]],
       stretch: {left:[0xE10C,NONUNI,-.1,.1], rep:[0x2212,GENERAL,0,-.1,0,.1], right:[0xE10D,NONUNI,0,.1], fullExtenders:true}
     },
     0x2906: // leftwards double arrow from bar

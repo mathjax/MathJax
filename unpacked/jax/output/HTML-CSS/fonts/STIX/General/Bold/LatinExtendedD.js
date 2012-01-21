@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  MathJax/jax/output/HTML-CSS/fonts/STIX/General/Regular/LatinExtendedD.js
+ *  MathJax/jax/output/HTML-CSS/fonts/STIX/General/Bold/LatinExtendedD.js
  *
  *  Copyright (c) 2009-2010 Design Science, Inc.
  *
@@ -19,11 +19,10 @@
  */
 
 MathJax.Hub.Insert(
-  MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['STIXGeneral'],
+  MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['STIXGeneral-bold'],
   {
-    0xA727: [683,233,481,9,427],       // stix-heng (phonetic symbol)
-    0xA792: [676,14,734,18,700]        // ??
+    0xA792: [691,19,769,27,734]        // ??
   }
 );
 
-MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/General/Regular/LatinExtendedD.js");
+MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir + "/General/Bold/LatinExtendedD.js");

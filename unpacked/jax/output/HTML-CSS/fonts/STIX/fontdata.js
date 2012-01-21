@@ -22,7 +22,7 @@
  *  limitations under the License.
  */
 
-(function (HTMLCSS) {
+(function (HTMLCSS,HTML) {
   var VERSION = "1.1.1";
   
   HTMLCSS.allowWebFonts = false;
@@ -306,12 +306,12 @@
         },
         0x23DE: // horizontal brace down
         {
-          dir: H, HW: [[.556,GENERAL],[.926,SIZE1],[1.46,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.238,SIZE5]],
+          dir: H, HW: [[.926,SIZE1],[1,GENERAL],[1.46,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.238,SIZE5]],
           stretch: {left:[0xE13B,NONUNI], mid:[0xE140,NONUNI], right:[0xE13C,NONUNI], rep:[0xE14A,NONUNI]}
         },
         0x23DF: // horizontal brace up
         {
-          dir: H, HW: [[.556,GENERAL],[.926,SIZE1],[1.46,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.238,SIZE5]],
+          dir: H, HW: [[.926,SIZE1],[1,GENERAL],[1.46,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.238,SIZE5]],
           stretch: {left:[0xE13D,NONUNI], mid:[0xE141,NONUNI], right:[0xE13E,NONUNI], rep:[0xE14B,NONUNI]}
         },
         0x27E8: // \langle
@@ -855,8 +855,10 @@
       [0x27C0,0x27EF,"MiscMathSymbolsA"],
       [0x2980,0x29FF,"MiscMathSymbolsB"],
       [0x2A00,0x2AFF,"SuppMathOperators"],
+      [0xA720,0xA7FF,"LatinExtendedD"],
       [0xFB00,0xFB4F,"AlphaPresentForms"],
       [0x1D400,0x1D433,"MathBold"],
+      [0x1D538,0x1D56B,"BBBold"],
       [0x1D56C,0x1D59F,"BoldFraktur"],
       [0x1D5D4,0x1D607,"MathSSBold"],
       [0x1D6A8,0x1D6E1,"GreekBold"],
@@ -1529,19 +1531,38 @@
   }
   
   //
-  //  Check for Beta version versus release version of fonts
+  //  Check for STIX font version
   //
-  if (HTMLCSS.Font.testFont({family:"STIXSizeOneSym",testString:String.fromCharCode(0x2C6)})) {
-    //  Release version -- all OK
-    MathJax.Ajax.loadComplete(HTMLCSS.fontDir + "/fontdata.js");
-  } else {
-    //  Beta version, so load patch file and don't say fontdata is complete until it loads
-    MathJax.Callback.Queue(
-      ["Require",MathJax.Ajax,HTMLCSS.fontDir + "/fontdata-beta.js"],
-      ["loadComplete",MathJax.Ajax,HTMLCSS.fontDir + "/fontdata.js"]
-    );
-  }
+  var QUEUE = [];
   
+  //
+  //  Test for v1.1 rather than v1.0 (double-struck alphabet was moved from
+  //  user-defined area in STIXNonUnicode to STIXGeneral math alphabet)
+  //
+  var DIV = HTMLCSS.Font.div;
+  HTML.addElement(DIV,"span",
+    {style:{display:"inline-block","font-family":"STIXNonUnicode","font-weight":"bold"}},
+    ["\uE38C\uE38C\uE38C\uE38C\uE38C"]
+  );
+  HTML.addElement(DIV,"span",
+    {style:{display:"inline-block","font-family":"STIXNonUnicode","font-weight":"bold"}},
+    ["\uE39A\uE39A\uE39A\uE39A\uE39A"]
+  );
+  if (DIV.lastChild.previousSibling.offsetWidth < DIV.lastChild.offsetWidth)
+    {QUEUE.push(["Require",MathJax.Ajax,HTMLCSS.fontDir+"/fontdata-1.0.js"])}
+  DIV.removeChild(DIV.lastChild); DIV.removeChild(DIV.lastChild);
 
-})(MathJax.OutputJax["HTML-CSS"]);
+  //
+  //  Text for 1.0-beta version (U+02C56 was added in 1.0)
+  //
+  if (!HTMLCSS.Font.testFont({family:"STIXSizeOneSym",testString:"\u02C6"}))
+    {QUEUE.push(["Require",MathJax.Ajax,HTMLCSS.fontDir + "/fontdata-beta.js"])}
+  
+  //
+  //  Load any patch files and then call loadComplete()
+  //
+  QUEUE.push(["loadComplete",MathJax.Ajax,HTMLCSS.fontDir + "/fontdata.js"]);
+  MathJax.Callback.Queue.apply(MathJax.Callback,QUEUE);
+
+})(MathJax.OutputJax["HTML-CSS"],MathJax.HTML);
 

@@ -67,7 +67,8 @@ MathJax.Hub.Insert(
     0x26AA: [583,79,762,50,712],       // MEDIUM WHITE CIRCLE
     0x26AB: [583,79,762,50,712],       // MEDIUM BLACK CIRCLE
     0x26AC: [487,-14,565,46,519],      // MEDIUM SMALL WHITE CIRCLE
-    0x26B2: [638,135,603,65,538]       // NEUTER
+    0x26B2: [638,135,603,65,538],      // NEUTER
+    0x26E2: [773,80,700,94,606]        // ??
   }
 );
 
