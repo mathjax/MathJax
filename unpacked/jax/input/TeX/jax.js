@@ -787,6 +787,7 @@
         
         left:               'LeftRight',
         right:              'LeftRight',
+        middle:             'Middle',
 
         llap:               'Lap',
         rlap:               'Lap',
@@ -1251,6 +1252,12 @@
     
     LeftRight: function (name) {
       this.Push(STACKITEM[name.substr(1)]().With({delim: this.GetDelimiter(name)}));
+    },
+    
+    Middle: function (name) {
+      var delim = this.GetDelimiter(name);
+      if (this.stack.Top().type !== "left") {TEX.Error(name+" must be within \\left and \\right")}
+      this.Push(MML.mo(delim).With({stretchy:true}));
     },
     
     NamedFn: function (name,id) {
