@@ -29,8 +29,8 @@
     name = name.replace(/-B/,'-b').replace(/-I/,'-i').replace(/-boldItalic/,'-bold-italic');
     HUB.Register.LoadHook(HTMLCSS.fontDir+"/"+file+".js",function () {
       var FONT = HTMLCSS.FONTDATA.FONTS[name];
-      for (var id in add) {if (add.hasOwnProperty(id)) {FONT[id] = add[id]; debug("adding "+id)}}
-      if (remove) {for (var i = 0, m = remove.length; i < m; i++) {delete FONT[remove[i]]; debug("removing "+remove[i])}}
+      for (var id in add) {if (add.hasOwnProperty(id)) {FONT[id] = add[id]}}
+      if (remove) {for (var i = 0, m = remove.length; i < m; i++) {delete FONT[remove[i]]}}
     });
   };
   

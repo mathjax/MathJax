@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Regular/LatinExtendedD.js
+ *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Bold/LatinExtendedD.js
  *  
  *  Copyright (c) 2010 Design Science, Inc.
  *
@@ -12,5 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.STIXGeneral,{42791:[683,233,481,9,427],42898:[676,14,734,18,700]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/Regular/LatinExtendedD.js");
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXGeneral-bold"],{42898:[691,19,769,27,734]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/Bold/LatinExtendedD.js");
 
