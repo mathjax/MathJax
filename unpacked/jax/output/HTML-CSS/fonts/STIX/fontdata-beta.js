@@ -25,10 +25,12 @@
 
 (function (HTMLCSS,TEX) {
   
+  HTMLCSS.FONTDATA.STIXversion = "1.0-beta";
+  
   var GENERAL = "STIXGeneral",
       BOLD    = "STIXGeneral-bold",
       ITALIC  = "STIXGeneral-italic",
-      NONUNI  = "STIXNonUnicode",
+//    NONUNI  = "STIXNonUnicode",
       SIZE1   = "STIXSizeOneSym",
       SIZE2   = "STIXSizeTwoSym",
       SIZE3   = "STIXSizeThreeSym",

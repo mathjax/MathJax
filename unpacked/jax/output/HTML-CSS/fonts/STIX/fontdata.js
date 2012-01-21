@@ -41,6 +41,7 @@
   HTMLCSS.Augment({
     FONTDATA: {
       version: VERSION,
+      STIXversion: "1.1",
       
       TeX_factor: 1.125,    // TeX em's to STIX em's seem to need this
       baselineskip: 1.2,
