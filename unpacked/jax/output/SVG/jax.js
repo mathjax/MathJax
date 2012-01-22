@@ -320,6 +320,7 @@
           //
           if (data.preview) {
             data.preview.style.display = "none";
+            data.preview.style.visibility = "hidden"; // hide from screen readers
             script.MathJax.preview = data.preview;
             delete data.preview;
           }

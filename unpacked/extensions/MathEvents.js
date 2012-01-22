@@ -133,7 +133,7 @@
       //
       //  Remove selections, remove hover fades
       //
-      if (ME.msieEventBug) {event = window.event}
+      if (ME.msieEventBug) {event = window.event || event}
       EVENT.ClearSelection(); HOVER.ClearHoverTimer();
       if (jax.hover) {
         if (jax.hover.remove) {clearTimeout(jax.hover.remove); delete jax.hover.remove}

@@ -1621,7 +1621,10 @@ MathJax.Hub = {
         //
         result = MathJax.OutputJax[jax.outputJax].Process(script,state);
         script.MathJax.state = STATE.PROCESSED; state.i++;
-        if (script.MathJax.preview) {script.MathJax.preview.style.display = "none"}
+        if (script.MathJax.preview) {
+          script.MathJax.preview.style.display = "none";
+          script.MathJax.preview.style.visibility = "hidden"; // hide from screen readers
+        }
         //
         //  Signal that new math is available
         //
@@ -1673,7 +1676,10 @@ MathJax.Hub = {
       });
     }
     script.parentNode.insertBefore(error,script);
-    if (script.MathJax.preview) {script.MathJax.preview.style.display = "none"}
+    if (script.MathJax.preview) {
+      script.MathJax.preview.style.display = "none";
+      script.MathJax.preview.style.visibility = "hidden"; // hide from screen readers
+    }
     this.lastError = err;
   },
   
@@ -2345,6 +2351,20 @@ MathJax.Hub.Startup = {
     MSIE: function (browser) {
       browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
+      var MathPlayer = false;
+      try {new ActiveXObject("MathPlayer.Factory.1"); MathPlayer = true} catch(err) {}
+      if (MathPlayer) {
+        var mathplayer = document.createElement("object");
+        mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
+        document.getElementsByTagName("head")[0].appendChild(mathplayer);
+        document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
+        browser.hasMathPlayer = true;
+        if (document.readyState && (document.readyState === "loading" ||
+                                    document.readyState === "interactive")) {
+          document.write('<?import namespace="m" implementation="#MathPlayer">');
+          browser.mpImported = true;
+        }
+      }
     }
   });
   HUB.Browser.Select(MathJax.Message.browsers);

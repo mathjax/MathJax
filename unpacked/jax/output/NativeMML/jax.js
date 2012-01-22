@@ -97,11 +97,17 @@
           //
           //  Insert data needed to use MathPlayer for MathML output
           //
-          var mathplayer = document.createElement("object");
-          mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
-          document.getElementsByTagName("head")[0].appendChild(mathplayer);
-          document.namespaces.add("mjx","http://www.w3.org/1998/Math/MathML");
-          document.namespaces.mjx.doImport("#mathplayer");
+          if (!HUB.Browser.hasMathPlayer) {
+            var mathplayer = document.createElement("object");
+            mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
+            document.getElementsByTagName("head")[0].appendChild(mathplayer);
+            document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
+            HUB.Browser.hasMathPlayer = true;
+          }
+          if (!HUB.Browser.mpImported) {
+            document.namespaces.m.doImport("#mathplayer");
+            HUB.Browser.mpImported = true;
+          }
         } catch (err) {
           //
           //  If that fails, give an alert about security settings
@@ -231,7 +237,7 @@
         container.ondblclick    = EVENT.DblClick;
       }
     },
-    
+
     postTranslate: function (state) {
       if (this.forceReflow) {
         //  Firefox messes up some mtable's when they are dynamically created
@@ -392,7 +398,7 @@
       //  Create a MathML element
       //
       NativeMMLelement: function (type) {
-        var math = (isMSIE ? document.createElement("mjx:"+type) :
+        var math = (isMSIE ? document.createElement("m:"+type) :
 	                     document.createElementNS(nMML.MMLnamespace,type));
         math.isMathJax = true;
         return math;
