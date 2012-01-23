@@ -175,7 +175,8 @@
       var JAX = OUTPUT[math.jaxID];
       var show = (JAX.config.showMathMenu != null ? JAX : HUB).config.showMathMenu;
       if (show) {
-        if (SETTINGS.context === "MathJax" && !SETTINGS.mpContext) {
+        show = (JAX.config.showMathMenuMSIE != null ? JAX : HUB).config.showMathMenuMSIE;
+        if (SETTINGS.context === "MathJax" && !SETTINGS.mpContext && show) {
           if (!ME.noContextMenuBug || event.button !== EVENT.RIGHTBUTTON) return;
         } else {
           if (!event[EVENT.MENUKEY] || event.button !== EVENT.LEFTBUTTON) return;

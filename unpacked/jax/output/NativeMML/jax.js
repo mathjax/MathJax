@@ -222,7 +222,8 @@
         } else {
           var config = (this.config.showMathMenuMSIE != null ? this : HUB).config;
           if (config.showMathMenuMSIE && !this.settings.mpContext && !this.settings.mpMouse)
-                {this.MSIEoverlay(container)} else {container.style.position = ""}
+                {this.MSIEoverlay(container)} else
+                {container.style.position = ""; mspan.firstChild.onmousedown = this.MSIEaltMenu}
         }
       } else {
         container.oncontextmenu = EVENT.Menu;
@@ -296,9 +297,15 @@
       if (event.srcElement.className === "MathJax_MathPlayer_Overlay" && this.msieMath.fireEvent) {
         // for now, ignore all other events.  This will disable MathPlayer's zoom
         // feature, but also its <maction> support.
-        if (type === "ContextMenu") {this.msieMath.fireEvent("on"+event.type,event)}
+        if (type === "ContextMenu" || type === "Mouseover" || type === "Mouseout")
+          {this.msieMath.fireEvent("on"+event.type,event)}
       }
       return EVENT.False(event);
+    },
+    MSIEaltMenu: function () {
+      var container = this.parentNode.parentNode;
+      while (!container.jaxID) {container = container.parentNode}
+      EVENT.AltContextMenu(window.event,container);
     },
 
     MSIE9events: {

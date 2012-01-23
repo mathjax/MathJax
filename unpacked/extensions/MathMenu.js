@@ -33,7 +33,7 @@
     signal: SIGNAL
   };
 
-  var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE;
+  var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE, isIE9 = ((document.documentMode||0) > 8);
   var ROUND = (isPC ? null : "5px");
   
   var CONFIG = HUB.CombineConfig("MathMenu",{
@@ -681,7 +681,7 @@
         return;
       }
     } else {
-      if (MENU.jax.originalText == null) {alert("No TeX form available"); return}
+      if (MENU.jax.originalText == null) {alert("No original form available"); return}
       MENU.ShowSource.Text(MENU.jax.originalText,event);
     }
   };
@@ -779,23 +779,23 @@
    */
   MENU.MPEvents = function (item) {
     var discoverable = CONFIG.settings.discoverable;
-    if ((document.documentMode||0) < 9) {
-      if (!confirm("This will disable the MathJax menu and MathJax Zoom features, " +
-                   "and you will have to delete the cookies for this site to " +
-                   "reactivate them.\n\n" +
-                   "Really change the MathPlayer settings?")) {
+    if (!isIE9) {
+      if (CONFIG.settings.mpMouse && !confirm(
+          "This will disable the MathJax menu and zoom features, " +
+          "but you can Alt-Click on an expression to obtain the MathJax " +
+          "menu instead.\n\nReally change the MathPlayer settings?")) {
         delete MENU.cookie.mpContext; delete CONFIG.settings.mpContext;
         delete MENU.cookie.mpMouse; delete CONFIG.settings.mpMouse;
         MENU.saveCookie();
         return;
       }
-      CONFIG.settings.mpContext = CONFIG.settings.mpMouse = true;
-      MENU.cookie.mpContext = MENU.cookie.mpMouse = true;
+      CONFIG.settings.mpContext = CONFIG.settings.mpMouse;
+      MENU.cookie.mpContext = MENU.cookie.mpMouse = CONFIG.settings.mpMouse;
       MENU.saveCookie();
       MathJax.Hub.Queue(["Rerender",MathJax.Hub])
     } else if (!discoverable && item.name === "Menu Events" && CONFIG.settings.mpContext) {
-      alert("The MathJax contextual menu will be disabled; instead " +
-            "Alt-Click on an expression to obtain the MathJax menu.");
+      alert("The MathJax contextual menu will be disabled, but you can " +
+            "Alt-Click on an expression to obtain the MathJax menu instead.");
     }
   };
 
@@ -812,7 +812,7 @@
         msieFixedPositionBug: (quirks || !isIE8),
         msieAboutBug: quirks
       });
-      if (document.documentMode >= 9) {
+      if (isIE9) {
         delete CONFIG.styles["#MathJax_About"].filter;
         delete CONFIG.styles[".MathJax_Menu"].filter;
       }
@@ -882,8 +882,9 @@
                                                       !CONFIG.showMathPlayer,
                                                disabled:!HUB.Browser.hasMathPlayer},
           ITEM.LABEL("Let MathPlayer Handle:"),
-          ITEM.CHECKBOX("Menu Events",    "mpContext", {action: MENU.MPEvents}),
-          ITEM.CHECKBOX("Mouse Events",   "mpMouse",   {action: MENU.MPEvents})
+          ITEM.CHECKBOX("Menu Events",    "mpContext", {action: MENU.MPEvents, hidden:!isIE9}),
+          ITEM.CHECKBOX("Mouse Events",   "mpMouse",   {action: MENU.MPEvents, hidden:!isIE9}),
+          ITEM.CHECKBOX("Mouse and Menu Events", "mpMouse", {action: MENU.MPEvents, hidden:isIE9})
         ),
         ITEM.SUBMENU("Font Preference",       {hidden:!CONFIG.showFontMenu},
           ITEM.LABEL("For HTML-CSS:"),
