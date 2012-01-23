@@ -8,7 +8,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2011 Design Science, Inc.
+ *  Copyright (c) 2010-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -759,10 +759,60 @@
   MENU.Renderer = function () {
     var jax = HUB.outputJax["jax/mml"];
     if (jax[0] !== CONFIG.settings.renderer) {
+      var BROWSER = HUB.Browser, message, MESSAGE = MENU.Renderer.Messages, warned;
+      //
+      //  Check that the new renderer is appropriate for the browser
+      //
+      switch (CONFIG.settings.renderer) {
+        case "NativeMML":
+          if (!CONFIG.settings.warnedMML) {
+            if (BROWSER.isChrome || (BROWSER.isSafari && !BROWSER.versionAtLeast("5.0"))) {message = MESSAGE.MML.WebKit}
+            else if (BROWSER.isMSIE) {if (!BROWSER.hasMathPlayer) {message = MESSAGE.MML.MSIE}}
+            else {message = MESSAGE.MML[BROWSER]}
+            warned = "warnedMML";
+          }
+          break;
+
+        case "SVG":
+          if (!CONFIG.settings.warnedSVG) {
+            if (BROWSER.isMSIE && !isIE9) {message = MESSAGE.SVG.MSIE}
+          }
+          break;  
+      }
+      if (message) {
+        message += "\n\nSwitch the renderer anyway?\n\n" +
+                    "(Press OK to switch, CANCEL to continue with the current renderer)";
+        MENU.cookie.renderer = jax[0].id; MENU.saveCookie(); if (!confirm(message)) {return}
+        if (warned) {MENU.cookie[warned]  = CONFIG.settings[warned] = true}
+        MENU.cookie.renderer = CONFIG.settings.renderer; MENU.saveCookie();
+      }
       HUB.Queue(
         ["setRenderer",HUB,CONFIG.settings.renderer,"jax/mml"],
         ["Rerender",HUB]
       );
+    }
+  };
+  MENU.Renderer.Messages = {
+    MML: {
+      WebKit:  "Your browser doesn't seem to support MathML natively, " +
+               "so switching to MathML output may cause the mathematics " +
+               "on the page to become unreadable.",
+
+      MSIE:    "Internet Explorer requires the MathPlayer plugin " +
+               "in order to process MathML output.",
+      
+      Opera:   "Opera's support for MathML is limited, so switching to " +
+               "MathML output may cause some expressions to render poorly.",
+
+      Firefox: "Your browser's native MathML does not implement all the features " +
+               "used by MathJax, so some expressions my render improperly."
+    },
+    
+    SVG: {
+      MSIE:    "SVG is not implemented in Internet Explorer prior to " +
+               "IE9, or when the browser is emulating IE8 or below. " +
+               "Switching to SVG output will cause the mathemtics to " +
+               "not display properly."
     }
   };
   
