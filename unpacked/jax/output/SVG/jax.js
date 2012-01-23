@@ -1891,5 +1891,21 @@
     if (HUB.config.menuSettings.zoom !== "None")
       {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
   });
-    
+  
+  if (!document.createElementNS) {
+    //
+    //  Try to handle SVG in IE8 and below, but fail
+    //  (but don't crash on loading the file, so no delay for loadComplete)
+    //
+    if (!document.namespaces.svg) {document.namespaces.add("svg",SVGNS)}
+    SVG.Augment({
+      Element: function (type,def) {
+        var obj = (typeof(type) === "string" ? document.createElement("svg:"+type) : type);
+        obj.isMathJax = true;
+        if (def) {for (var id in def) {if (def.hasOwnProperty(id)) {obj.setAttribute(id,def[id].toString())}}}
+        return obj;
+      }
+    });
+  }
+  
 })(MathJax.Ajax, MathJax.Hub, MathJax.HTML, MathJax.OutputJax.SVG);
