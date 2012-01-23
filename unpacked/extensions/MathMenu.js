@@ -42,6 +42,7 @@
     closeImg: AJAX.fileURL(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
+    showMathPlayer: true,                          //  show the "MathPlayer" menu?
     showFontMenu: false,                           //  show the "Font Preference" menu?
     showContext:  false,                           //  show the "Context Menu" menu?
     showDiscoverable: false,                       //  show the "Discoverable" menu?
@@ -523,9 +524,9 @@
         CONFIG.settings[this.variable] = this.value;
         MENU.cookie[this.variable] = CONFIG.settings[this.variable]; MENU.saveCookie();
         SIGNAL.Post(["radio button",this]);
-        if (this.action) {this.action.call(MENU)}
       }
       this.Remove(event,menu);
+      if (this.action && !this.disabled) {this.action.call(MENU,this)}
       return FALSE(event);
     }
   });
@@ -552,9 +553,9 @@
         CONFIG.settings[this.variable] = !CONFIG.settings[this.variable];
         MENU.cookie[this.variable] = CONFIG.settings[this.variable]; MENU.saveCookie();
         SIGNAL.Post(["checkbox",this]);
-        if (this.action) {this.action.call(MENU)}
       }
       this.Remove(event,menu);
+      if (this.action && !this.disabled) {this.action.call(MENU,this)}
       return FALSE(event);
     }
   });
@@ -772,6 +773,31 @@
     var HTMLCSS = OUTPUT["HTML-CSS"]; if (!HTMLCSS) return;
     document.location.reload();
   };
+  
+  /*
+   *  Handle setting MathPlayer events
+   */
+  MENU.MPEvents = function (item) {
+    var discoverable = CONFIG.settings.discoverable;
+    if ((document.documentMode||0) < 9) {
+      if (!confirm("This will disable the MathJax menu and MathJax Zoom features, " +
+                   "and you will have to delete the cookies for this site to " +
+                   "reactivate them.\n\n" +
+                   "Really change the MathPlayer settings?")) {
+        delete MENU.cookie.mpContext; delete CONFIG.settings.mpContext;
+        delete MENU.cookie.mpMouse; delete CONFIG.settings.mpMouse;
+        MENU.saveCookie();
+        return;
+      }
+      CONFIG.settings.mpContext = CONFIG.settings.mpMouse = true;
+      MENU.cookie.mpContext = MENU.cookie.mpMouse = true;
+      MENU.saveCookie();
+      MathJax.Hub.Queue(["Rerender",MathJax.Hub])
+    } else if (!discoverable && item.name === "Menu Events" && CONFIG.settings.mpContext) {
+      alert("The MathJax contextual menu will be disabled; instead " +
+            "Alt-Click on an expression to obtain the MathJax menu.");
+    }
+  };
 
   /*************************************************************/
   /*************************************************************/
@@ -852,6 +878,13 @@
           ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"}),
           ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer})
         ),
+        ITEM.SUBMENU("MathPlayer",            {hidden:!HUB.Browser.isMSIE ||
+                                                      !CONFIG.showMathPlayer,
+                                               disabled:!HUB.Browser.hasMathPlayer},
+          ITEM.LABEL("Let MathPlayer Handle:"),
+          ITEM.CHECKBOX("Menu Events",    "mpContext", {action: MENU.MPEvents}),
+          ITEM.CHECKBOX("Mouse Events",   "mpMouse",   {action: MENU.MPEvents})
+        ),
         ITEM.SUBMENU("Font Preference",       {hidden:!CONFIG.showFontMenu},
           ITEM.LABEL("For HTML-CSS:"),
           ITEM.RADIO("Auto",          "font", {action: MENU.Font}),
@@ -894,6 +927,10 @@
   MENU.showRenderer = function (show) {
     MENU.cookie.showRenderer = CONFIG.showRenderer = show; MENU.saveCookie();
     MENU.menu.Find("Math Settings","Math Renderer").hidden = !show;
+  };
+  MENU.showMathPlayer = function (show) {
+    MENU.cookie.showMathPlayer = CONFIG.showMathPlayer = show; MENU.saveCookie();
+    MENU.menu.Find("Math Settings","MathPlayer").hidden = !show;
   };
   MENU.showFontMenu = function (show) {
     MENU.cookie.showFontMenu = CONFIG.showFontMenu = show; MENU.saveCookie();

@@ -216,17 +216,13 @@
       //
       if (isMSIE) {
         if (container.addEventListener) {
-          container.addEventListener("contextmenu",EVENT.Menu,true);
-          container.addEventListener("mouseover",EVENT.Mouseover,true);
-          container.addEventListener("mouseout",EVENT.Mouseout,true);
-          container.addEventListener("mousedown",EVENT.Mousedown,true);
-          container.addEventListener("mouseup",EVENT.False,true);
-          container.addEventListener("click",EVENT.Click,true);
-          container.addEventListener("dblclick",EVENT.DblClick,true);
+          for (var id in this.MSIE9events) {if (this.MSIE9events.hasOwnProperty(id)) {
+            container.addEventListener(id,this.MSIE9event,true);
+          }}
         } else {
           var config = (this.config.showMathMenuMSIE != null ? this : HUB).config;
-          if (config.showMathMenuMSIE) {this.MSIEoverlay(container)}
-            else {container.style.position = ""}
+          if (config.showMathMenuMSIE && !this.settings.mpContext && !this.settings.mpMouse)
+                {this.MSIEoverlay(container)} else {container.style.position = ""}
         }
       } else {
         container.oncontextmenu = EVENT.Menu;
@@ -303,6 +299,19 @@
         if (type === "ContextMenu") {this.msieMath.fireEvent("on"+event.type,event)}
       }
       return EVENT.False(event);
+    },
+
+    MSIE9events: {
+      contextmenu:"Menu", click:"Click", dblclick: "DblClick",
+      mouseup:"False", mouseover:"Mouseover", mouseout:"Mouseout"
+    },
+    MSIE9event: function (event) {
+      if (event.type === "contextmenu" && nMML.settings.mpContext) {return true}
+      if (event.type === "mouseup" && nMML.settings.mpMouse) {return true}
+      if (event.type === "click" && nMML.settings.mpContext)
+        {return EVENT.AltContextMenu(event,this)}
+      var type = nMML.MSIE9events[event.type];
+      return EVENT[type].call(this,event);
     },
 
     getJaxFromMath: function (math) {return HUB.getJaxFor(math.parentNode.nextSibling)},
