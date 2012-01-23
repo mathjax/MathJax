@@ -951,8 +951,8 @@
           ITEM.RADIO("Browser", "context")
         ),
         ITEM.COMMAND("Scale All Math ...",MENU.Scale),
-        ITEM.RULE().With({hidden: CONFIG.showDiscoverable, name:"discover_rule"}),
-        ITEM.CHECKBOX("Highlight on Hover", "discoverable", {hidden: CONFIG.showDiscoverable})
+        ITEM.RULE().With({hidden:!CONFIG.showDiscoverable, name:"discover_rule"}),
+        ITEM.CHECKBOX("Highlight on Hover", "discoverable", {hidden:!CONFIG.showDiscoverable})
       ),
       ITEM.RULE(),
       ITEM.COMMAND("About MathJax",MENU.About),
