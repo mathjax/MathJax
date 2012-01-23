@@ -1913,6 +1913,27 @@ MathJax.Hub.Startup = {
   },
   
   //
+  //  Load the Menu and Zoom code, if it hasn't already been loaded.
+  //  This is called after the initial typeset, so should no longer be
+  //  competing with other page loads, but will make these available
+  //  if needed later on.
+  //
+  MenuZoom: function () {
+    if (!MathJax.Extension.MathMenu) {
+      setTimeout(
+        MathJax.Callback(["Require",MathJax.Ajax,"[MathJax]/extensions/MathMenu.js"]),
+        1000
+      );
+    }
+    if (!MathJax.Extension.MathZoom) {
+      setTimeout(MathJax.Callback(
+        ["Require",MathJax.Ajax,"[MathJax]/extensions/MathZoom.js"]),
+        2000
+      );
+    }
+  },
+  
+  //
   //  Setup the onload callback
   //
   onLoad: function (when) {
@@ -2389,6 +2410,7 @@ MathJax.Hub.Startup = {
     function () {MathJax.isReady = true}, // indicates that MathJax is ready to process math
     ["Typeset",STARTUP],
     ["Hash",STARTUP],
+    ["MenuZoom",STARTUP],
     ["Post",STARTUP.signal,"End"]
   );
   
