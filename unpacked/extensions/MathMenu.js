@@ -997,6 +997,11 @@
     MENU.menu.Find("Math Settings","discover_rule").hidden = !show;
   };
   
+  MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    if (!MathJax.OutputJax["HTML-CSS"].config.imageFont)
+      {MENU.menu.Find("Math Settings","Font Preference","TeX (image)").disabled = true}
+  });
+  
   /*************************************************************/
 
   CALLBACK.Queue(
