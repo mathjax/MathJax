@@ -6,7 +6,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/AMSsymbols"] = {
-  version: "1.1.3"
+  version: "2.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {

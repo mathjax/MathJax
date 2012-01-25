@@ -83,7 +83,7 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "1.1";
+  var VERSION = "2.0";
   
   var CONFIG = HUB.CombineConfig("FontWarnings",{
     //

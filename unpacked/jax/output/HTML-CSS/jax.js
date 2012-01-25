@@ -1650,8 +1650,8 @@
             span.bbox.lw -= padding.left; span.bbox.rw += padding.right;
           }
           if (rp) {span.style.paddingRight = HTMLCSS.Em(rp)}
-	  var frame = HTMLCSS.Element("span",{id:"MathJax-Color-"+this.spanID+HTMLCSS.idPostfix,
-          isMathJax: true,
+	  var frame = HTMLCSS.Element("span",{
+            id:"MathJax-Color-"+this.spanID+HTMLCSS.idPostfix, isMathJax: true,
 	    style:{display:"inline-block", backgroundColor:values.mathbackground,
 		   width: HTMLCSS.Em(W), height:HTMLCSS.Em(H), verticalAlign: HTMLCSS.Em(D),
 		   marginLeft: HTMLCSS.Em(lW), marginRight: HTMLCSS.Em(rW)}

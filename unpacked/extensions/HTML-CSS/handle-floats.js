@@ -32,6 +32,11 @@
  *  limitations under the License.
  */
 
+
+MathJAx.Extension["HTML-CSS/handle-floats"] = {
+  version: "2.0"
+};
+
 //
 //  Make the display DIV be a table-cell
 //  Use padding to get the separation, since table cells don't do margin

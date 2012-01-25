@@ -13,7 +13,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011 Design Science, Inc.
+ *  Copyright (c) 2011-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
  */
 
 MathJax.Extension["TeX/cancel"] = {
-  version: "1.1",
+  version: "2.0",
 
   //
   //  The attributes allowed in \enclose{notation}[attributes]{math}
