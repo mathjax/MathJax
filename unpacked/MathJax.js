@@ -1250,7 +1250,10 @@ MathJax.Hub = {
       zscale: "200%",      //  the scaling factor for MathZoom
       renderer: "",        //  set when Jax are loaded
       font: "Auto",        //  what font HTML-CSS should use
-      context: "MathJax"   //  or "Browser" for pass-through to browser menu
+      context: "MathJax",  //  or "Browser" for pass-through to browser menu
+      mpContext: false,    //  true means pass menu events to MathPlayer in IE
+      mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
+      texHints: true       //  includes class names for TeXAtom elements
     },
     
     errorSettings: {

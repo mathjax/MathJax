@@ -25,7 +25,8 @@
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
   var VERSION = "2.0";
   
-  var MML = MathJax.ElementJax.mml;
+  var MML = MathJax.ElementJax.mml
+      SETTINGS = MathJax.Hub.config.menuSettings;
   
   MML.mbase.Augment({
 
@@ -73,7 +74,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
     },
     toMathMLclass: function (attr) {
       var CLASS = []; if (this["class"]) {CLASS.push(this["class"])}
-      if (this.isa(MML.TeXAtom)) {
+      if (this.isa(MML.TeXAtom) && SETTINGS.texHints) {
         var TEXCLASS = ["ORD","OP","BIN","REL","OPEN","CLOSE","PUNCT","INNER","VCENTER"][this.texClass];
         if (TEXCLASS) {CLASS.push("MJX-TeXAtom-"+TEXCLASS)}
       }
@@ -89,7 +90,6 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         // FIXME:  should take scriptlevel into account
         return ((1/18)*RegExp.$1).toFixed(3).replace(/\.?0+$/,"")+"em";
       }
-      // FIXME:  set classes for these?
       else if (this.toMathMLvariants[value]) {return this.toMathMLvariants[value]}
       return this.toMathMLquote(value);
     },
@@ -148,6 +148,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
     toMathML: function (space) {
       // FIXME:  Handle spacing using mpadded?
       var attr = this.toMathMLattributes();
+      if (!attr && this.data[0].data.length === 1) {return space.substr(2) + this.data[0].toMathML(space)}
       return space+"<mrow"+attr+">\n" + this.data[0].toMathML(space+"  ")+"\n"+space+"</mrow>";
     }
   });

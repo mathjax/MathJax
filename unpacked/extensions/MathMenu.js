@@ -896,7 +896,9 @@
     MENU.menu = MENU(
       ITEM.SUBMENU("Show Math As",
         ITEM.COMMAND("MathML Code",    MENU.ShowSource, {nativeTouch: true, format: "MathML"}),
-        ITEM.COMMAND("Original Form",  MENU.ShowSource, {nativeTouch: true})
+        ITEM.COMMAND("Original Form",  MENU.ShowSource, {nativeTouch: true}),
+        ITEM.RULE(),
+        ITEM.CHECKBOX("Show TeX hints in MathML", "texHints")
       ),
       ITEM.RULE(),
       ITEM.SUBMENU("Math Settings",
