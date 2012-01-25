@@ -119,22 +119,18 @@
    *   Fix HTML-CSS output
    */
 
-  /* 
-   * HUB.Register.StartupHook("HTML-CSS Jax Config",function () {
-   *   HUB.Config({
-   *     "HTML-CSS": {
-   *       styles: {
-   *         ".MathJax .isError": HUB.Insert({
-   *           "font-style":       null,
-   *           "background-color": null,
-   *           "vertical-align":   (HUB.Browser.isMSIE && CONFIG.multiLine ? "-2px" : "")
-   *         },CONFIG.style)
-   *       }
-   *     }
-   *   });
-   * });
-   */
-
+  HUB.Register.StartupHook("HTML-CSS Jax Config",function () {
+    HUB.Config({
+      "HTML-CSS": {
+        styles: {
+          ".MathJax .noError": HUB.Insert({
+            "vertical-align": (HUB.Browser.isMSIE && CONFIG.multiLine ? "-2px" : "")
+          },CONFIG.style)
+        }
+      }
+    });
+  });
+    
   HUB.Register.StartupHook("HTML-CSS Jax Ready",function () {
     var MML = MathJax.ElementJax.mml;
     var HTMLCSS = MathJax.OutputJax["HTML-CSS"];
@@ -167,7 +163,7 @@
     MML.merror.Augment({
       toHTML: function (span) {
         if (!this.isError) {return MERROR.call(this,span)}
-        span = this.HTMLcreateSpan(span); span.className += " isError"
+        span = this.HTMLcreateSpan(span); span.className = "noError"
         if (this.multiLine) {span.style.display = "inline-block"}
         var text = this.data[0].data[0].data.join("").split(/\n/);
         for (var i = 0, m = text.length; i < m; i++) {
@@ -177,8 +173,6 @@
         var HD = HTMLCSS.getHD(span.parentNode), W = HTMLCSS.getW(span.parentNode);
         if (m > 1) {
           var H = (HD.h + HD.d)/2, x = HTMLCSS.TeX.x_height/2;
-          var scale = HTMLCSS.config.styles[".MathJax .merror"]["font-size"];
-          if (scale && scale.match(/%/)) {x *= parseInt(scale)/100}
           span.parentNode.style.verticalAlign = HTMLCSS.Em(HD.d+(x-H));
           HD.h = x + H; HD.d = H - x;
         }
