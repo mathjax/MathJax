@@ -828,12 +828,10 @@
    *  Handle setting MathPlayer events
    */
   MENU.MPEvents = function (item) {
-    var discoverable = CONFIG.settings.discoverable;
+    var discoverable = CONFIG.settings.discoverable,
+        MESSAGE = MENU.MPEvents.Messages;
     if (!isIE9) {
-      if (CONFIG.settings.mpMouse && !confirm(
-          "This will disable the MathJax menu and zoom features, " +
-          "but you can Alt-Click on an expression to obtain the MathJax " +
-          "menu instead.\n\nReally change the MathPlayer settings?")) {
+      if (CONFIG.settings.mpMouse && !confirm(MESSAGE.IE8warning)) {
         delete MENU.cookie.mpContext; delete CONFIG.settings.mpContext;
         delete MENU.cookie.mpMouse; delete CONFIG.settings.mpMouse;
         MENU.saveCookie();
@@ -844,9 +842,18 @@
       MENU.saveCookie();
       MathJax.Hub.Queue(["Rerender",MathJax.Hub])
     } else if (!discoverable && item.name === "Menu Events" && CONFIG.settings.mpContext) {
-      alert("The MathJax contextual menu will be disabled, but you can " +
-            "Alt-Click on an expression to obtain the MathJax menu instead.");
+      alert(MESSAGE.IE9warning);
     }
+  };
+  MENU.MPEvents.Messages = {
+    IE8warning:
+      "This will disable the MathJax menu and zoom features, " +
+      "but you can Alt-Click on an expression to obtain the MathJax " +
+      "menu instead.\n\nReally change the MathPlayer settings?",
+
+    IE9warning:
+      "The MathJax contextual menu will be disabled, but you can " +
+      "Alt-Click on an expression to obtain the MathJax menu instead."
   };
 
   /*************************************************************/
