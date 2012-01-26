@@ -1236,7 +1236,7 @@ MathJax.Hub = {
     elements: [],             // array of elements to process when none is given explicitly
     positionToHash: true,     // after initial typeset pass, position to #hash location?
      
-    showMathMenu: true,      // attach math context menu to mathml?
+    showMathMenu: true,      // attach math context menu to typeset math?
     showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
                              //  (since the code for that is a bit delicate)
 
@@ -1253,7 +1253,7 @@ MathJax.Hub = {
       context: "MathJax",  //  or "Browser" for pass-through to browser menu
       mpContext: false,    //  true means pass menu events to MathPlayer in IE
       mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
-      texHints: true       //  includes class names for TeXAtom elements
+      texHints: true       //  include class names for TeXAtom elements
     },
     
     errorSettings: {
