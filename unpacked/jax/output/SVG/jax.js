@@ -1586,7 +1586,7 @@
           var w = Math.min(root.w,root.r); // remove extra right-hand padding, if any
           x = Math.max(w,dx);
           svg.Add(root,x-w,h);
-        }
+        } else {dx = x}
 	return x - dx;
       },
       SVGrootHeight: function (d,scale,root) {
