@@ -1585,7 +1585,7 @@
 	if (this.href) {span = HTMLCSS.addElement(span,"a",{href:this.href, isMathJax:true})}
 	span = HTMLCSS.addElement(span,"span",{className: this.type, isMathJax:true});
 	if (HTMLCSS.imgHeightBug) {span.style.display = "inline-block"}
-	if (this["class"] != null) {span.className += " "+this["class"]}
+	if (this["class"]) {span.className += " "+this["class"]}
 	if (!this.spanID) {this.spanID = HTMLCSS.GetID()}
 	span.id = (this.id || "MathJax-Span-"+this.spanID) + HTMLCSS.idPostfix;
 	span.bbox = {w:0, h:0, d:0, lw:0, rw:0}; this.styles = {};
