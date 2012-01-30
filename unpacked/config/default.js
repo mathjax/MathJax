@@ -694,7 +694,7 @@ MathJax.Hub.Config({
     //
     EqnChunk: 50,
     EqnChunkFactor: 1.5,
-    EqChunkDelay: 100,
+    EqnChunkDelay: 100,
 
     //
     //  These settings control automatic line breaking.  It is off by
@@ -866,7 +866,7 @@ MathJax.Hub.Config({
     //
     EqnChunk: 50,
     EqnChunkFactor: 1.5,
-    EqChunkDelay: 100,
+    EqnChunkDelay: 100,
 
     //
     //  These settings control automatic line breaking.  It is off by
