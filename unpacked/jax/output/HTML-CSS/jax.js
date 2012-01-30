@@ -524,10 +524,19 @@
       //
       state.HTMLCSSeqn = state.HTMLCSSlast = 0;
       state.HTMLCSSchunk = this.config.EqnChunk;
+      state.HTMLCSSdelay = false;
     },
 
     Translate: function (script,state) {
       if (!script.parentNode) return;
+
+      //
+      //  If we are supposed to do a chunk delay, do it
+      //  
+      if (state.HTMLCSSdelay) {
+        state.HTMLCSSdelay = false;
+        HUB.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay));
+      }
 
       //
       //  Get the data about the math
@@ -576,6 +585,7 @@
         if (state.HTMLCSSeqn >= state.HTMLCSSlast + state.HTMLCSSchunk) {
           this.postTranslate(state);
           state.HTMLCSSchunk = Math.floor(state.HTMLCSSchunk*this.config.EqnChunkFactor);
+          state.HTMLCSSdelay = true;  // delay if there are more scripts
         }
       }
     },

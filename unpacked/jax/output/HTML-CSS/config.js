@@ -40,7 +40,8 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
     undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif", // fonts to use for unknown unicode characters
     mtextFontInherit: false,        // to make <mtext> be in page font rather than MathJax font
 
-    EqnChunk: 50,                   // number of equations to process before showing them
+    EqnChunk: (MathJax.Hub.Browser.isMobile ? 10: 50),
+                                    // number of equations to process before showing them
     EqnChunkFactor: 1.5,            // chunk size is multiplied by this after each chunk
     EqnChunkDelay: 100,             // milliseconds to delay between chunks (to let browser
                                     //   respond to other events)

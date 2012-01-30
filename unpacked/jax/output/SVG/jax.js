@@ -245,10 +245,19 @@
       //
       state.SVGeqn = state.SVGlast = 0;
       state.SVGchunk = this.config.EqnChunk;
+      state.SVGdelay = false;
     },
 
     Translate: function (script,state) {
       if (!script.parentNode) return;
+
+      //
+      //  If we are supposed to do a chunk delay, do it
+      //  
+      if (state.SVGdelay) {
+        state.SVGdelay = false;
+        HUB.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay));
+      }
 
       //
       //  Get the data about the math
@@ -297,6 +306,7 @@
         if (state.SVGeqn >= state.SVGlast + state.SVGchunk) {
           this.postTranslate(state);
           state.SVGchunk = Math.floor(state.SVGchunk*this.config.EqnChunkFactor);
+          state.SVGdelay = true;  // delay if there are more scripts
         }
       }
     },
@@ -1876,7 +1886,7 @@
     //
     //  Loading isn't complete until the element jax is modified,
     //  but can't call loadComplete within the callback for "mml Jax Ready"
-    //  (it would call HTMLCSS's Require routine, asking for the mml jax again)
+    //  (it would call SVG's Require routine, asking for the mml jax again)
     //  so wait until after the mml jax has finished processing.
     //  
     //  We also need to wait for the onload handler to run, since the loadComplete
