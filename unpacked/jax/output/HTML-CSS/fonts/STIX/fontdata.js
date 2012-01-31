@@ -459,7 +459,6 @@
     
     TEX.isSTIX = true;
     TEX.Definitions.mathchar0mi.hbar = ['210F',{variantForm: true}];
-    TEX.Definitions.mathchar0mi.prime[1].variantForm = true;
     TEX.Definitions.mathchar0mi.emptyset[1].variantForm = true;
     TEX.Definitions.mathchar0mi.backslash[1].variantForm = true;
     TEX.Definitions.mathchar0mi.triangle[1].mathsize = "71%";

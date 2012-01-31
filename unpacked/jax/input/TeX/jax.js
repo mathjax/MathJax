@@ -1183,7 +1183,7 @@
       var sup = ""; this.i--;
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
-      sup = this.mmlToken(MML.mo(MML.chars(sup)).With({isPrime: true, variantForm: TEX.isSTIX}));
+      sup = this.mmlToken(MML.mo(MML.chars(sup)).With({isPrime: true}));
       this.Push(MML.msup(base,sup));
     },
     mi2mo: function (mi) {
