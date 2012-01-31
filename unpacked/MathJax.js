@@ -856,6 +856,7 @@ MathJax.fileversion = "2.0";
         this.loaded[file] = loading.status; delete this.loading[file];
         this.addHook(file,loading.callback);
       } else {
+        if (loading) {delete this.loading[file]}
         this.loaded[file] = this.STATUS.OK;
         loading = {status: this.STATUS.OK}
       }
