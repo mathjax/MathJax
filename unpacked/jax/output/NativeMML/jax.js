@@ -481,6 +481,7 @@
 	  //
 	  if (this.width) {
 	    var styles = (this.style||"").replace(/;\s*$/,"").split(";");
+            if (styles[0] === "") {styles.shift()}
 	    styles.push("width:"+this.width);
 	    this.style = styles.join(";");
 	  }
