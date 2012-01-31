@@ -1069,7 +1069,7 @@
       this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
     },
     //
-    //  Handle normal mathchar (as an m0)
+    //  Handle normal mathchar (as an mo)
     //
     csMathchar0mo: function (name,mchar) {
       var def = {stretchy: false};
@@ -1506,8 +1506,8 @@
     
     Dots: function (name) {
       this.Push(STACKITEM.dots().With({
-        ldots: this.mmlToken(MML.mo(MML.entity("#x2026"))),
-        cdots: this.mmlToken(MML.mo(MML.entity("#x22EF")))
+        ldots: this.mmlToken(MML.mo(MML.entity("#x2026")).With({stretchy:false})),
+        cdots: this.mmlToken(MML.mo(MML.entity("#x22EF")).With({stretchy:false}))
       }));
     },
     
