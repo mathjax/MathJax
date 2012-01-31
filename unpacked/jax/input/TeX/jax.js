@@ -304,7 +304,10 @@
     type: "fn",
     checkItem: function (item) {
       if (this.data[0]) {
-        if (item.type !== "mml") {return [this.data[0],item]}
+        if (item.type !== "mml" || !item.data[0]) {return [this.data[0],item]}
+        if (item.data[0].isa(MML.mspace)) {return [this.data[0],item]}
+        var mml = item.data[0]; if (mml.isEmbellished()) {mml = mml.CoreMO()}
+        if ([0,0,1,1,0,1,1,0,0,0][mml.Get("texClass")]) {return [this.data[0],item]}
         return [this.data[0],MML.mo(MML.entity("#x2061")).With({texClass:MML.TEXCLASS.NONE}),item];
       }
       return this.SUPER(arguments).checkItem.apply(this,arguments);
