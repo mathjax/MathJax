@@ -298,10 +298,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     
     delimiter: {
       // corners
-      "\\ulcorner":           '250C',
-      "\\urcorner":           '2510',
-      "\\llcorner":           '2514',
-      "\\lrcorner":           '2518'
+      "\\ulcorner":           '231C',
+      "\\urcorner":           '231D',
+      "\\llcorner":           '231E',
+      "\\lrcorner":           '231F'
     },
     
     macros: {

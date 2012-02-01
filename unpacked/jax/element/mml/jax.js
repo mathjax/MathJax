@@ -1324,6 +1324,7 @@ MathJax.ElementJax.mml.Augment({
       [0x2200,0x22FF,TEXCLASS.BIN,"MathOperators"],
       [0x2300,0x23FF,TEXCLASS.ORD,"MiscTechnical"],
       [0x2460,0x24FF,TEXCLASS.ORD],
+      [0x2500,0x259F,TEXCLASS.ORD],
       [0x25A0,0x25FF,TEXCLASS.ORD,"GeometricShapes"],
       [0x2700,0x27BF,TEXCLASS.ORD,"Dingbats"],
       [0x27C0,0x27EF,TEXCLASS.ORD,"MiscMathSymbolsA"],
