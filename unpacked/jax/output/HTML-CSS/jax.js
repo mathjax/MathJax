@@ -1224,7 +1224,7 @@
     },
 
     handleVariant: function (span,variant,text) {
-      var newtext = "", n, c, font, VARIANT, SPAN = span;
+      var newtext = "", n, c, font, VARIANT, SPAN = {style:{fontFamily:""}};
       if (text.length === 0) return;
       if (!span.bbox) {
         span.bbox = {
