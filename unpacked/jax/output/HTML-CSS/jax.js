@@ -1224,7 +1224,7 @@
     },
 
     handleVariant: function (span,variant,text) {
-      var newtext = "", n, c, font, VARIANT, SPAN, SPANV;
+      var newtext = "", n, c, font, VARIANT, SPAN = span;
       if (text.length === 0) return;
       if (!span.bbox) {
         span.bbox = {
@@ -1281,11 +1281,13 @@
             i = 0; m = text.length; n = n.charCodeAt(0);
           }
         }
-        font = this.lookupChar(variant,n); c = font[n]; SPAN = span;
-        if ((variant !== SPANV || font.family !== span.style.fontFamily) && !c[5].img) {
-          if (newtext.length) {this.addText(span,newtext); newtext = ""}
-          if (span.style.fontFamily) {SPAN = this.addElement(span,"span",{isMathJax:true})}
-          this.handleFont(SPAN,font,SPAN !== span); SPANV = variant;
+        font = this.lookupChar(variant,n); c = font[n];
+        if (!this.checkFont(font,SPAN.style) && !c[5].img) {
+          if (newtext.length) {this.addText(SPAN,newtext); newtext = ""};
+          var addSpan = !!SPAN.style.fontFamily;
+          if (SPAN !== span) {addSpan = !this.checkFont(font,span.style); SPAN = span}
+          if (addSpan) {SPAN = this.addElement(span,"span",{isMathJax:true})}
+          this.handleFont(SPAN,font,SPAN !== span);
         }
         newtext = this.handleChar(SPAN,font,c,n,newtext);
         if (c[0]/1000 > span.bbox.h) {span.bbox.h = c[0]/1000}
@@ -1300,6 +1302,11 @@
         span.bbox.w *= span.scale; span.bbox.lw *= span.scale; span.bbox.rw *= span.scale;
       }
       if (text.length == 1 && font.skew && font.skew[n]) {span.bbox.skew = font.skew[n]}
+    },
+    checkFont: function (font,style) {
+      return (font.family.replace(/'/g,"") === style.fontFamily.replace(/'/g,"") &&
+             (font.style||"normal") === (style.fontStyle||"normal") &&
+             (font.weight||"normal") === (style.fontWeight||"normal"));
     },
 
     handleFont: function (span,font,force) {
