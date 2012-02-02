@@ -1224,7 +1224,7 @@
     },
 
     handleVariant: function (span,variant,text) {
-      var newtext = "", n, c, font, VARIANT, SPAN = {style:{fontFamily:""}};
+      var newtext = "", n, c, font, VARIANT, SPAN = span, force = !!span.style.fontFamily;
       if (text.length === 0) return;
       if (!span.bbox) {
         span.bbox = {
@@ -1282,11 +1282,11 @@
           }
         }
         font = this.lookupChar(variant,n); c = font[n];
-        if (!this.checkFont(font,SPAN.style) && !c[5].img) {
+        if (force || (!this.checkFont(font,SPAN.style) && !c[5].img)) {
           if (newtext.length) {this.addText(SPAN,newtext); newtext = ""};
-          var addSpan = !!SPAN.style.fontFamily;
+          var addSpan = !!SPAN.style.fontFamily || !font.directory || force; force = false;
           if (SPAN !== span) {addSpan = !this.checkFont(font,span.style); SPAN = span}
-          if (addSpan) {SPAN = this.addElement(span,"span",{isMathJax:true})}
+          if (addSpan) {SPAN = this.addElement(span,"span",{isMathJax:true, subSpan:true})}
           this.handleFont(SPAN,font,SPAN !== span);
         }
         newtext = this.handleChar(SPAN,font,c,n,newtext);
