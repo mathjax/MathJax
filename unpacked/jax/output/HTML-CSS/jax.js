@@ -1758,7 +1758,7 @@
 	  var span = this.HTMLspanElement();
 	  if (span.style.fontFamily) {values.fontfamily = span.style.fontFamily}
 	  if (span.style.fontWeight) {values.fontweight = span.style.fontWeight}
-	  if (span.style.fontStyle)  {values.fontStyle  = span.style.fontStyle}
+	  if (span.style.fontStyle)  {values.fontstyle  = span.style.fontStyle}
 	}
 	var variant = values.mathvariant; if (this.variantForm) {variant = "-"+HTMLCSS.fontInUse+"-variant"}
 	if (values.fontfamily && !this.mathvariant) {
