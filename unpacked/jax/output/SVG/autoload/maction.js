@@ -146,7 +146,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       tip.style.display = "block"; tip.style.opacity = "";
       if (this === currentTip) return;
       tip.style.left = x+"px"; tip.style.top = y+"px";
-      tip.innerHTML = '';
+      tip.innerHTML = ''; var span = MathJax.HTML.addElement(tip,"span");
 
       //
       //  Get the sizes from the jax (FIXME: should calculate again?)
@@ -163,12 +163,13 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       var mml = this.data[1];
       math = MML.math(mml);
-      try {math.toSVG(tip,tip)} catch(err) {
-        this.setData(1,mml); tip.style.display = "none";
+      try {math.toSVG(span,tip)} catch(err) {
+        this.SetData(1,mml); tip.style.display = "none";
         if (!err.restart) {throw err}
         MathJax.Callback.After(["SVGtooltipPost",this,x,y],err.restart);
+        return;
       }
-      this.setData(1,mml);
+      this.SetData(1,mml);
 
       currentTip = this;
     },
