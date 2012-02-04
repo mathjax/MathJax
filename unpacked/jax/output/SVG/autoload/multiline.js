@@ -78,10 +78,10 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
 
       //
       //  Start with a fresh SVG element
-      //  and make it full width
+      //  and make it full width if we are breaking to a specific width
       //
       svg = this.SVG();
-      svg.w = SVG.linebreakWidth;
+      if (SVG.linebreakWidth < SVG.BIGDIMEN) {svg.w = SVG.linebreakWidth}
       
       var state = {
             n: 0, Y: 0,
@@ -195,8 +195,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Add in space for the shift
       //
       if (shift) {
-        if (align === MML.INDENTALIGN.LEFT) {line.x = shift} else
-        if (align === MMLINDENTALIGN.RIGHT) {line.w += shift; line.r = line.w}
+        if (align === MML.INDENTALIGN.LEFT)  {line.x = shift} else
+        if (align === MML.INDENTALIGN.RIGHT) {line.w += shift; line.r = line.w}
       }
       //
       //  Set the Y offset based on previous depth, leading, and current height
