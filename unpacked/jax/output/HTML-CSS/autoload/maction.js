@@ -167,8 +167,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  get em sizes (taken from HTMLCSS.preTranslate)
       //
       var emex = tip.insertBefore(HTMLCSS.EmExSpan.cloneNode(true),tip.firstChild);
-      var ex = emex.firstChild.offsetWidth/60,
-          em = emex.lastChild.firstChild.offsetWidth/60;
+      var ex = emex.firstChild.offsetHeight/60,
+          em = emex.lastChild.firstChild.offsetHeight/60;
       HTMLCSS.em = HTMLCSS.outerEm = MML.mbase.prototype.em = em;
       var scale = Math.floor(Math.max(HTMLCSS.config.minScaleAdjust/100,(ex/HTMLCSS.TeX.x_height)/em) * HTMLCSS.config.scale);
       tip.firstChild.style.fontSize = scale+"%";
