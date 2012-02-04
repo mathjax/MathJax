@@ -1645,26 +1645,27 @@
 	if (values.mathcolor) {span.style.color = values.mathcolor}
 	if ((values.mathbackground && values.mathbackground !== MML.COLOR.TRANSPARENT) || 
              borders || padding) {
-	  var dd = (span.bbox.exact ? 0 : 1/HTMLCSS.em), lW = 0, rW = 0,
+	  var bbox = span.bbox, dd = (bbox.exact ? 0 : 1/HTMLCSS.em), lW = 0, rW = 0,
               lpad = span.style.paddingLeft, rpad = span.style.paddingRight;
-	  if (this.isToken) {lW = span.bbox.lw; rW = span.bbox.rw - span.bbox.w}
+	  if (this.isToken) {lW = bbox.lw; rW = bbox.rw - bbox.w}
 	  if (lpad !== "") {lW += parseFloat(lpad)*(span.scale||1)}
 	  if (rpad !== "") {rW -= parseFloat(rpad)*(span.scale||1)}
-	  var W = Math.max(0,HTMLCSS.getW(span) + (HTMLCSS.PaddingWidthBug || span.bbox.keepPadding? 0 : rW - lW));
-	  var H = span.bbox.h + span.bbox.d, D = -span.bbox.d, lp = 0, rp = 0;
+          var dw = (HTMLCSS.PaddingWidthBug || bbox.keepPadding || bbox.exactW ? 0 : rW - lW);
+	  var W = Math.max(0,HTMLCSS.getW(span) + dw);
+	  var H = bbox.h + bbox.d, D = -bbox.d, lp = 0, rp = 0;
 	  if (W > 0) {W += 2*dd; lW -= dd}; if (H > 0) {H += 2*dd; D -= dd}; rW = -W-lW;
           if (borders) {
             rW -= borders.right; D -= borders.bottom; lp += borders.left; rp += borders.right;
-            span.bbox.h += borders.top; span.bbox.d += borders.bottom;
-            span.bbox.w += borders.left + borders.right;
-            span.bbox.lw -= borders.left; span.bbox.rw += borders.right;
+            bbox.h += borders.top; bbox.d += borders.bottom;
+            bbox.w += borders.left + borders.right;
+            bbox.lw -= borders.left; bbox.rw += borders.right;
           }
           if (padding) {
             H += padding.top + padding.bottom; W += padding.left + padding.right;
             rW -= padding.right; D -= padding.bottom; lp += padding.left; rp += padding.right;
-            span.bbox.h += padding.top; span.bbox.d += padding.bottom;
-            span.bbox.w += padding.left + padding.right;
-            span.bbox.lw -= padding.left; span.bbox.rw += padding.right;
+            bbox.h += padding.top; bbox.d += padding.bottom;
+            bbox.w += padding.left + padding.right;
+            bbox.lw -= padding.left; bbox.rw += padding.right;
           }
           if (rp) {span.style.paddingRight = HTMLCSS.Em(rp)}
 	  var frame = HTMLCSS.Element("span",{
@@ -1674,7 +1675,7 @@
 		   marginLeft: HTMLCSS.Em(lW), marginRight: HTMLCSS.Em(rW)}
 	  });
           HTMLCSS.setBorders(frame,borders);
-          if (span.bbox.width) {frame.style.width = span.bbox.width; frame.style.marginRight = "-"+span.bbox.width}
+          if (bbox.width) {frame.style.width = bbox.width; frame.style.marginRight = "-"+bbox.width}
 	  if (HTMLCSS.msieInlineBlockAlignBug) {
             // FIXME:  handle variable width background
 	    frame.style.position = "relative"; frame.style.width = frame.style.height = 0;
@@ -1688,7 +1689,7 @@
 	      style: {display:"inline-block", position:"absolute", overflow:"hidden",
 		      background:(values.mathbackground||"transparent"), 
                       width: HTMLCSS.Em(W), height: HTMLCSS.Em(H)}
-	    }),lW,span.bbox.h+dd);
+	    }),lW,bbox.h+dd);
             HTMLCSS.setBorders(frame.firstChild,borders);
 	  }
 	  span.parentNode.insertBefore(frame,span);
