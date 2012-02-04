@@ -180,6 +180,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (!err.restart) {throw err}
         tip.style.display = "none";
         MathJax.Callback.After(["HTMLtooltipPost",this,x,y],err.restart);
+        return;
       }
       HTMLCSS.placeBox(box,0,0);
       HTMLCSS.createRule(tip.firstChild.firstChild,box.bbox.h,box.bbox.d,0);
