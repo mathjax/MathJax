@@ -82,7 +82,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       svg = this.SVG();
       if (SVG.linebreakWidth < SVG.BIGDIMEN) {svg.w = SVG.linebreakWidth}
-      
+        else {svg.w = SVG.cwidth/SVG.em * 1000}
+
       var state = {
             n: 0, Y: 0,
             scale: this.SVGgetScale(),
