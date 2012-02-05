@@ -28,7 +28,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
   
   MML.ms.Augment({
     toSVG: function () {
-      var svg = this.SVG(); this.SVGhandleSpace();
+      var svg = this.SVG(); this.SVGhandleSpace(svg);
       var values = this.getValues("lquote","rquote");
       var variant = this.SVGgetVariant(), scale = this.SVGgetScale();
       var text = this.data.join("");  // FIXME:  handle mglyph?
