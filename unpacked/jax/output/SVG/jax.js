@@ -760,10 +760,9 @@
           var child = svg.element.firstChild;
           if (child.nodeName === "use" || child.nodeName === "rect") {
             svg.element = child; svg.scale = svg.childScale;
-            var x = parseFloat(svg.element.getAttribute("x")||"0") * svg.scale,
-                y = parseFloat(svg.element.getAttribute("y")||"0") * svg.scale;
+            var x = svg.childX, y = svg.childY;
             svg.x += x; svg.y += y;
-            svg.h += y; svg.d += y; svg.H += y; svg.D +=y;
+            svg.h -= y; svg.d += y; svg.H -= y; svg.D +=y;
             svg.w -= x; svg.r -= x; svg.l += x;
             svg.removeable = false;
           }
@@ -780,6 +779,7 @@
                      svg.element.nodeName === "a") {
             svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")");
           } else {
+            this.childX = svg.x; this.childY = svg.y;
             svg.element.setAttribute("x",Math.floor(svg.x/svg.scale));
             svg.element.setAttribute("y",Math.floor(svg.y/svg.scale));
           }
@@ -1636,7 +1636,6 @@
 	if (this.data[0] != null) {
           this.SVGhandleSpace(svg);
 	  svg.Add(this.data[0].toSVG()); svg.Clean();
-	  this.SVGhandleColor(svg);
 	} else {svg.Clean()}
         this.SVGsaveData(svg);
 	return svg;
@@ -1825,13 +1824,13 @@
           style.verticalAlign = SVG.Ex(-svg.D);
           style.marginLeft = SVG.Ex(-l); style.marginRight = SVG.Ex(-r);
           svg.element.setAttribute("viewBox",(-l)+" "+(-svg.H)+" "+(l+svg.w+r)+" "+(svg.H+svg.D));
-          span.style.padding="1px 0"; // some space around it so lines don't bump into each other
+          svg.element.style.margin="1px 0px";
           //
           //  If there is extra height or depth, hide that
           //
           if (svg.H > svg.h || svg.D > svg.d) {
             var frame = HTML.Element(
-              "span",{style: {display:"inline-block", "white-space":"nowrap"}, isMathJax:true},[[
+              "span",{style: {display:"inline-block", "white-space":"nowrap", padding:"1px 0px"}, isMathJax:true},[[
               "span",{style: {display:"inline-block", position:"relative", isMathJax:true,
                               width:SVG.Ex(svg.w), height:SVG.Ex(svg.h+svg.d),
                               "vertical-align":SVG.Ex(-svg.d)}}]]);
