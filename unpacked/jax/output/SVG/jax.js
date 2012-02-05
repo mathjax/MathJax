@@ -779,7 +779,6 @@
                      svg.element.nodeName === "a") {
             svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")");
           } else {
-            this.childX = svg.x; this.childY = svg.y;
             svg.element.setAttribute("x",Math.floor(svg.x/svg.scale));
             svg.element.setAttribute("y",Math.floor(svg.y/svg.scale));
           }
@@ -806,7 +805,7 @@
       if (svg.x + svg.l < this.l) {this.l = svg.x + svg.l}
       if (svg.x + svg.r > this.r) {this.r = svg.x + svg.r}
       if (forcew || svg.x + svg.w + (svg.X||0) > this.w) {this.w = svg.x + svg.w + (svg.X||0)}
-      this.childScale = svg.scale; this.n++;
+      this.childScale = svg.scale; this.childX = svg.x; this.childY = svg.y; this.n++;
       return svg;
     },
     Align: function (svg,align,dx,dy) {
