@@ -113,7 +113,7 @@
       webFont: [
         ["closeBox"],
         "MathJax is using web-based fonts to display the mathematics ",
-        "on this page.  These take time to download, so the page would",
+        "on this page.  These take time to download, so the page would ",
         "render faster if you installed math fonts directly in your ",
         "system's font folder.",
         ["fonts"]
