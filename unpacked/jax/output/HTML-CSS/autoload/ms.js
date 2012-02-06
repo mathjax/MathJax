@@ -44,7 +44,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       return string.replace(/([.*+?|{}()\[\]\\])/g,"\\$1");
     }
   });
-  MML.ms.prototype.defaults.fontfamily = 'monospace';
+  MML.ms.prototype.defaults.mathvariant = 'monospace';
   
   MathJax.Hub.Startup.signal.Post("HTML-CSS ms Ready");
   MathJax.Ajax.loadComplete(HTMLCSS.autoloadDir+"/ms.js");
