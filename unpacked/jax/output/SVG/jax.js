@@ -1013,6 +1013,7 @@
         var style = this.Get("style");
         if (style) {
           svg.element.style.cssText = style;
+          if (svg.element.style.fontSize) {svg.element.style.fontSize = ""} // handled by scale
           svg.element.style.border = svg.element.style.padding = "";
           if (svg.removeable) {svg.removeable = svg.element.style.cssText === ""}
         }
@@ -1820,10 +1821,10 @@
           var style = svg.element.style;
           style.width = SVG.Ex(l+svg.w+r);
           style.height = SVG.Ex(svg.H+svg.D);
-          style.verticalAlign = SVG.Ex(-svg.D);
+          style.verticalAlign = SVG.Ex(-svg.D-2*SVG.em); // remove 2 extra pixels added below
           style.marginLeft = SVG.Ex(-l); style.marginRight = SVG.Ex(-r);
           svg.element.setAttribute("viewBox",(-l)+" "+(-svg.H)+" "+(l+svg.w+r)+" "+(svg.H+svg.D));
-          svg.element.style.margin="1px 0px";
+          svg.element.style.margin="1px 0px"; // 1px above and below to prevent lines from touching
           //
           //  If there is extra height or depth, hide that
           //
