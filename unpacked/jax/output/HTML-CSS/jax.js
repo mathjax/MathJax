@@ -2746,7 +2746,7 @@
       Opera: function (browser) {
         browser.isMini = (navigator.appVersion.match("Opera Mini") != null);
         HTMLCSS.config.styles[".MathJax .merror"]["vertical-align"] = null;
-        HTMLCSS.config.styles[".MathJax span"]["z-index"] = 1;
+        HTMLCSS.config.styles[".MathJax span"]["z-index"] = 0;
         HTMLCSS.Augment({
           operaHeightBug: true,
           operaVerticalAlignBug: true,
