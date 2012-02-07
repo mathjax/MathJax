@@ -37,9 +37,15 @@ MathJax.ElementJax.mml.Augment({
   Init: function () {
     if (arguments.length === 1 && arguments[0].type === "math") {this.root = arguments[0]}
       else {this.root = MathJax.ElementJax.mml.math.apply(this,arguments)}
-    if (this.root.mode) {
-      if (!this.root.display && this.root.mode === "display") {this.root.display = "block"}
-      delete this.root.mode;
+    if (this.root.attr && this.root.attr.mode) {
+      if (!this.root.display && this.root.attr.mode === "display") {
+        this.root.display = "block";
+        this.root.attrNames.push("display");
+      }
+      delete this.root.attr.mode;
+      for (var i = 0, m = this.root.attrNames.length; i < m; i++) {
+        if (this.root.attrNames[i] === "mode") {this.root.attrNames.splice(i,1); break}
+      }
     }
   }
 },{
