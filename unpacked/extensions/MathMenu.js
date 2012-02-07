@@ -595,6 +595,7 @@
     var HTMLCSS = OUTPUT["HTML-CSS"] || {fontInUse: ""};
     var local = (HTMLCSS.webFonts ? "" : "local "), web = (HTMLCSS.webFonts ? " web" : "");
     var font = (HTMLCSS.imgFonts ? "Image" : local+HTMLCSS.fontInUse+web) + " fonts";
+    if (font === "local  fonts" && OUTPUT.SVG) {font = "web SVG fonts"}
     var jax = ["MathJax.js v"+MathJax.fileversion,["br"]];
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
     MENU.About.GetJax(jax,MathJax.InputJax,"Input Jax");
