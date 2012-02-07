@@ -2140,7 +2140,7 @@
       HTMLlength2em: function (span,length,mu,d,m) {
 	if (m == null) {m = -HTMLCSS.BIGDIMEN}
 	var match = String(length).match(/width|height|depth/);
-	var size = (match ? span.bbox[match[0].charAt(0)] : (d ? span.bbox[d] : null));
+	var size = (match ? span.bbox[match[0].charAt(0)] : (d ? span.bbox[d] : 0));
 	var v = HTMLCSS.length2em(length,mu,size);
 	if (d && String(length).match(/^\s*[-+]/))
 	  {return Math.max(m,span.bbox[d]+v)} else {return v}
