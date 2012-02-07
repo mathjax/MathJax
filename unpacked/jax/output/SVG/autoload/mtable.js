@@ -137,7 +137,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var Y, fY, n = "";
       if (typeof(values.align) !== "string") {values.align = String(values.align)}
       if (values.align.match(/(top|bottom|center|baseline|axis)( +(-?\d+))?/))
-        {n = RegExp.$3; values.align = RegExp.$1} else {values.align = "center"}
+        {n = RegExp.$3; values.align = RegExp.$1} else {values.align = this.defaults.align}
       if (n !== "") {
         //
         //  Find the height of the given row
