@@ -1307,9 +1307,11 @@
       if (text.length == 1 && font.skew && font.skew[n]) {span.bbox.skew = font.skew[n]}
     },
     checkFont: function (font,style) {
+      var weight = (style.fontWeight||"normal");
+      if (weight.match(/^\d+$/)) {weight = (parseInt(weight) >= 600 ? "bold" : "normal")}
       return (font.family.replace(/'/g,"") === style.fontFamily.replace(/'/g,"") &&
              (font.style||"normal") === (style.fontStyle||"normal") &&
-             (font.weight||"normal") === (style.fontWeight||"normal"));
+             (font.weight||"normal") === weight);
     },
 
     handleFont: function (span,font,force) {
