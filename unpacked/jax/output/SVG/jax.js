@@ -1459,7 +1459,7 @@
       SVGlength2em: function (svg,length,mu,d,m) {
 	if (m == null) {m = -SVG.BIGDIMEN}
 	var match = String(length).match(/width|height|depth/);
-	var size = (match ? svg[match[0].charAt(0)] : (d ? svg[d] : null));
+	var size = (match ? svg[match[0].charAt(0)] : (d ? svg[d] : 0));
 	var v = SVG.length2em(length,mu,size);
 	if (d && String(length).match(/^\s*[-+]/))
 	  {return Math.max(m,svg[d]+v)} else {return v}
