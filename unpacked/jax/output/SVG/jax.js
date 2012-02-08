@@ -616,7 +616,7 @@
       }
       if (delim.load) {HUB.RestartAfter(AJAX.Require(this.fontDir+"/fontdata-"+delim.load+".js"))}
       for (var i = 0, m = delim.HW.length; i < m; i++) {
-        if (delim.HW[i][0]*scale >= HW-10 || (i == m-1 && !delim.stretch)) {
+        if (delim.HW[i][0]*scale >= HW-10-SVG.config.blacker || (i == m-1 && !delim.stretch)) {
           if (delim.HW[i][2]) {scale *= delim.HW[i][2]}
           if (delim.HW[i][3]) {code = delim.HW[i][3]}
           return this.createChar(scale,[code,delim.HW[i][1]],font).With({stretched: true});
