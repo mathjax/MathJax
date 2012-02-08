@@ -1763,10 +1763,12 @@
         }
 	if (this.style) {
           var span = this.HTMLspanElement();
-	  if (span.style.fontFamily) {values.family = span.style.fontFamily}
-	  if (span.style.fontWeight) {values.weight = span.style.fontWeight}
-	  if (span.style.fontStyle)  {values.style  = span.style.fontStyle}
+	  if (!values.family && span.style.fontFamily) {values.family = span.style.fontFamily}
+	  if (!values.weight && span.style.fontWeight) {values.weight = span.style.fontWeight}
+	  if (!values.style  && span.style.fontStyle)  {values.style  = span.style.fontStyle}
 	}
+        if (values.weight && values.weight.match(/^\d+$/))
+            {values.weight = (parseInt(values.weight) > 600 ? "bold" : "normal")}
 	var variant = values.mathvariant; if (this.variantForm) {variant = "-"+HTMLCSS.fontInUse+"-variant"}
 	if (values.family && !this.mathvariant) {
 	  if (!values.weight && values.mathvariant.match(/bold/)) {values.weight = "bold"}

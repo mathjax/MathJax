@@ -1031,6 +1031,8 @@
           if (span.style.fontStyle)  {this.styles.fontStyle = span.style.fontStyle}
           if (span.style.fontWeight) {this.styles.fontWeight = span.style.fontWeight}
           if (span.style.fontFamily) {this.styles.fontFamily = span.style.fontFamily}
+          if (this.styles.fontWeight && this.styles.fontWeight.match(/^\d+$/))
+            {this.styles.fontWeight = (parseInt(this.styles.fontWeight) > 600 ? "bold" : "normal")}
         }
       },
             
@@ -1118,48 +1120,51 @@
       SVGgetVariant: function () {
 	var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
 	var variant = values.mathvariant; if (this.variantForm) {variant = "-TeX-variant"}
-        if (this.styles) {
-          if (!values.fontstyle && this.styles.fontStyle) {values.fontstyle = this.styles.fontStyle}
-          if (!values.fontweight && this.styles.fontWeight) {values.fontweight = this.styles.fontWeight}
-          if (!values.fontfamily && this.styles.fontFamily) {values.fontfamily = this.styles.fontFamily}
+        if (!this.mathvariant) {
+          values.family = values.fontfamily;
+          values.weight = values.fontweight;
+          values.style  = values.fontstyle;
         }
-        if (values.fontfamily && !this.mathvariant) {
-	  if (!values.fontweight && values.mathvariant.match(/bold/)) {values.fontweight = "bold"}
-          if (!values.fontstyle && values.mathvariant.match(/italic/)) {values.fontstyle = "italic"}
-          variant = {forceFamily: true, font: {"font-family":values.fontfamily}};
-          if (values.fontstyle) {variant.font["font-style"] = values.fontstyle}
-          if (values.fontweight) {variant.font["font-weight"] = values.fontweight}
+        if (this.styles) {
+          if (!values.style  && this.styles.fontStyle)  {values.style = this.styles.fontStyle}
+          if (!values.weight && this.styles.fontWeight) {values.weight = this.styles.fontWeight}
+          if (!values.family && this.styles.fontFamily) {values.family = this.styles.fontFamily}
+        }
+        if (values.family && !this.mathvariant) {
+	  if (!values.weight && values.mathvariant.match(/bold/)) {values.weight = "bold"}
+          if (!values.style && values.mathvariant.match(/italic/)) {values.style = "italic"}
+          variant = {forceFamily: true, font: {"font-family":values.family}};
+          if (values.style) {variant.font["font-style"] = values.style}
+          if (values.weight) {variant.font["font-weight"] = values.weight}
 	  return variant;
 	}
-        if (!this.mathvariant) {
-          if (values.fontweight === "bold") {
-            variant = {
-              normal:MML.VARIANT.BOLD, italic:MML.VARIANT.BOLDITALIC,
-              fraktur:MML.VARIANT.BOLDFRAKTUR, script:MML.VARIANT.BOLDSCRIPT,
-              "sans-serif":MML.VARIANT.BOLDSANSSERIF,
-              "sans-serif-italic":MML.VARIANT.SANSSERIFBOLDITALIC
-            }[variant]||variant;
-          } else if (values.fontweight === "normal") {
-            variant = {
-              bold:MML.VARIANT.normal, "bold-italic":MML.VARIANT.ITALIC,
-              "bold-fraktur":MML.VARIANT.FRAKTUR, "bold-script":MML.VARIANT.SCRIPT,
-              "bold-sans-serif":MML.VARIANT.SANSSERIF,
-              "sans-serif-bold-italic":MML.VARIANT.SANSSERIFITALIC
-            }[variant]||variant;
-          }
-          if (values.fontstyle === "italic") {
-            variant = {
-              normal:MML.VARIANT.ITALIC, bold:MML.VARIANT.BOLDITALIC,
-              "sans-serif":MML.VARIANT.SANSSERIFITALIC,
-              "bold-sans-serif":MML.VARIANT.SANSSERIFBOLDITALIC
-            }[variant]||variant;
-          } else if (values.fontstyle === "normal") {
-            variant = {
-              italic:MML.VARIANT.NORMAL, "bold-italic":MML.VARIANT.BOLD,
-              "sans-serif-italic":MML.VARIANT.SANSSERIF,
-              "sans-serif-bold-italic":MML.VARIANT.BOLDSANSSERIF
-            }[variant]||variant;
-          }
+        if (values.weight === "bold") {
+          variant = {
+            normal:MML.VARIANT.BOLD, italic:MML.VARIANT.BOLDITALIC,
+            fraktur:MML.VARIANT.BOLDFRAKTUR, script:MML.VARIANT.BOLDSCRIPT,
+            "sans-serif":MML.VARIANT.BOLDSANSSERIF,
+            "sans-serif-italic":MML.VARIANT.SANSSERIFBOLDITALIC
+          }[variant]||variant;
+        } else if (values.weight === "normal") {
+          variant = {
+            bold:MML.VARIANT.normal, "bold-italic":MML.VARIANT.ITALIC,
+            "bold-fraktur":MML.VARIANT.FRAKTUR, "bold-script":MML.VARIANT.SCRIPT,
+            "bold-sans-serif":MML.VARIANT.SANSSERIF,
+            "sans-serif-bold-italic":MML.VARIANT.SANSSERIFITALIC
+          }[variant]||variant;
+        }
+        if (values.style === "italic") {
+          variant = {
+            normal:MML.VARIANT.ITALIC, bold:MML.VARIANT.BOLDITALIC,
+            "sans-serif":MML.VARIANT.SANSSERIFITALIC,
+            "bold-sans-serif":MML.VARIANT.SANSSERIFBOLDITALIC
+          }[variant]||variant;
+        } else if (values.style === "normal") {
+          variant = {
+            italic:MML.VARIANT.NORMAL, "bold-italic":MML.VARIANT.BOLD,
+            "sans-serif-italic":MML.VARIANT.SANSSERIF,
+            "sans-serif-bold-italic":MML.VARIANT.BOLDSANSSERIF
+          }[variant]||variant;
         }
 	return SVG.FONTDATA.VARIANT[variant];
       },
