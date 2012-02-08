@@ -128,7 +128,7 @@
     0x23B4: // top square bracket
     {
       dir: H, HW: [],
-      stretch: {left:[0x250C,AMS,0,-.1], rep:[0x2212,MAIN,0,.35], right:[0x2510,AMS,0,-.1]}
+      stretch: {left:[0x250C,AMS,0,-.1], rep:[0x2212,MAIN,0,.325], right:[0x2510,AMS,0,-.1]}
     },
     0x23B5: // bottom square bracket
     {

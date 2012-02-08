@@ -633,8 +633,11 @@
         for (var i = 0, m = data[0].length; i < m; i++) {text += String.fromCharCode(data[0][i])}
       } else {text = String.fromCharCode(data[0])}
       var svg = this.HandleVariant(variant,scale,text);
-      if (data[2]) {svg.x = data[2]}
-// handle data[3] (y-offset), data[4] (scale), data[5] (extra h), data[6] (extra d)
+      if (data[2]) {svg.x = data[2]*1000}
+      if (data[3]) {svg.y = data[3]*1000}
+      if (data[5]) {svg.h += data[5]*1000}
+      if (data[6]) {svg.d += data[6]*1000}
+      // FIXME handle data[4] (scale factor)
       return svg;
     },
     extendDelimiterV: function (svg,H,delim,scale,font) {
@@ -647,7 +650,7 @@
         var ext = this.createChar(scale,delim.ext,font);
         var k = (delim.mid ? 2 : 1), eH = (H-h) / k, s = (eH+100) / (ext.h+ext.d);
         while (k-- > 0) {
-          var g = SVG.Element("g",{transform:"translate(0,"+(y-s*ext.h+50)+") scale(1,"+s+")"});
+          var g = SVG.Element("g",{transform:"translate("+ext.y+","+(y-s*ext.h+50+ext.y)+") scale(1,"+s+")"});
           g.appendChild(ext.element.cloneNode(false)); svg.element.appendChild(g); y -= eH;
           if (delim.mid && k) {svg.Add(mid,0,y-mid.h); y -= (mid.h+mid.d)}
         }
@@ -670,7 +673,7 @@
         var rep = this.createChar(scale,delim.rep,font), fuzz = delim.fuzz || 0;
         var k = (delim.mid ? 2 : 1), rW = (W-w) / k, s = (rW+fuzz) / (rep.r-rep.l);
         while (k-- > 0) {
-          var g = SVG.Element("g",{transform:"translate("+(x-fuzz/2-s*rep.l)+",0) scale("+s+",1)"});
+          var g = SVG.Element("g",{transform:"translate("+(x-fuzz/2-s*rep.l+rep.x)+","+rep.y+") scale("+s+",1)"});
           g.appendChild(rep.element.cloneNode(false)); svg.element.appendChild(g); x += rW;
           if (delim.mid && k) {svg.Add(mid,x,0); x += mid.w}
         }
