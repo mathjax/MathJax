@@ -38,6 +38,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     
     toobig:        500,
     nestfactor:    400,
+    spacefactor:  -100,
+    spaceoffset:     2,
+    spacelimit:      1,  // spaces larger than this get a penalty boost
     fence:         500
   };
   
@@ -374,10 +377,17 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         "linebreak","linebreakstyle","lineleading","linebreakmultchar",
         "indentalign","indentshift",
         "indentalignfirst","indentshiftfirst",
-        "indentalignlast","indentshiftlast"
+        "indentalignlast","indentshiftlast",
+        "texClass", "fence"
       );
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.INFIXLINEBREAKSTYLE) 
         {values.linebreakstyle = this.Get("infixlinebreakstyle")}
+      //
+      //  Adjust nesting by TeX class (helps output that does not include
+      //  mrows for nesting, but can leave these unbalanced.
+      //
+      if (values.texClass === MML.TEXCLASS.OPEN) {info.nest++}
+      if (values.texClass === MML.TEXCLASS.CLOSE) {info.nest--}
       //
       //  Get the default penalty for this location
       //
@@ -387,7 +397,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
       if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)
       var offset = HTMLCSS.linebreakWidth - W;
-      // adjust offest for explicit first-line indent and align
+      // Adjust offest for explicit first-line indent and align
       if (state.n === 0 && (values.indentshiftfirst !== state.VALUES.indentshiftfirst ||
           values.indentalignfirst !== state.VALUES.indentalignfirst)) {
         var align = this.HTMLgetAlign(state,values),
@@ -397,7 +407,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       var penalty = Math.floor(offset / HTMLCSS.linebreakWidth * 1000);
       if (penalty < 0) {penalty = PENALTY.toobig - 3*penalty}
-      if (this.Get("fence")) {penalty += PENALTY.fence}
+      if (values.fence) {penalty += PENALTY.fence}
       penalty += info.nest * PENALTY.nestfactor;
       //
       //  Get the penalty for this type of break and
@@ -444,6 +454,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //    use it to modify the default penalty
       //
       var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO];
+      if (values.linebreak === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit)
+        {linebreak = [(w+PENALTY.spaceoffset)*PENALTY.spacefactor]}
       if (!(linebreak instanceof Array)) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}
