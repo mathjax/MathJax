@@ -1528,6 +1528,9 @@
     HTMLCSS.FONTDATA.FONTS["STIXGeneral"].family = "STIXGeneral-Regular";
     HTMLCSS.FONTDATA.FONTS["STIXGeneral-italic"].family = "STIXGeneral-Italic";
     delete HTMLCSS.FONTDATA.FONTS["STIXGeneral-italic"].style;
+    HTMLCSS.FONTDATA.FONTS["STIXNonUnicode"].family = "STIXNonUnicode-Regular";
+    HTMLCSS.FONTDATA.FONTS["STIXNonUnicode-italic"].family = "STIXNonUnicode-Italic";
+    delete HTMLCSS.FONTDATA.FONTS["STIXNonUnicode-italic"].style;
   }
   
   //
