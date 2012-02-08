@@ -42,7 +42,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     spacefactor:  -100,
     spaceoffset:     2,
     spacelimit:      1,  // spaces larger than this get a penalty boost
-    fence:         500
+    fence:         500,
+    close:         500
   };
   
   var ENDVALUES = {linebreakstyle: "after"};
@@ -365,6 +366,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var penalty = Math.floor(offset / SVG.linebreakWidth * 1000);
       if (penalty < 0) {penalty = PENALTY.toobig - 3*penalty}
       if (values.fence) {penalty += PENALTY.fence}
+      if ((values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER &&
+          values.texClass === MML.TEXCLASS.OPEN) ||
+          values.texClass === MML.TEXCLASS.CLOSE) {penalty += PENALTY.close}
       penalty += info.nest * PENALTY.nestfactor;
       //
       //  Get the penalty for this type of break and
