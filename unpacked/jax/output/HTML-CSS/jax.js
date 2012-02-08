@@ -1003,22 +1003,24 @@
           });
         }
       }
-      span.style.top = this.Em(-y-HH);
-      span.style.left = this.Em(x+dx);
       // Clip so that bbox doesn't include extra height and depth
       if (bbox) {
         if (this.initialSkipBug) {
-          if (bbox.lw < 0) {dx = bbox.lw; HTMLCSS.createBlank(span,-dx,true); l = 0}
+          if (bbox.lw < 0) {dx = bbox.lw; HTMLCSS.createBlank(span,-dx,true)}
           if (bbox.rw > bbox.w) {HTMLCSS.createBlank(span,bbox.rw-bbox.w+.1)}
         }
         if (!this.msieClipRectBug && !bbox.noclip && !noclip) {
           var dd = 3/this.em;
           var H = (bbox.H == null ? bbox.h : bbox.H), D = (bbox.D == null ? bbox.d : bbox.D);
           var t = HH - H - dd, b = HH + D + dd, l = bbox.lw - 3*dd, r = 1000;
+          if (this.initialSkipBug && bbox.lw < 0) {l = -3*dd}
           if (bbox.isFixed) {r = bbox.width-l}
           span.style.clip = "rect("+this.Em(t)+" "+this.Em(r)+" "+this.Em(b)+" "+this.Em(l)+")";
         }
       }
+      // Place the box
+      span.style.top = this.Em(-y-HH);
+      span.style.left = this.Em(x+dx);
       // Update the bounding box
       if (bbox && BBOX) {
         if (bbox.H != null && (BBOX.H == null || bbox.H + y > BBOX.H)) {BBOX.H = bbox.H + y}
@@ -2138,8 +2140,8 @@
 	  if (span.bbox.H <= span.bbox.h) {delete span.bbox.H}
 	  if (span.bbox.D <= span.bbox.d) {delete span.bbox.D}
           var dimen = /^\s*(\d+(\.\d*)?|\.\d+)\s*(pt|em|ex|mu|px|pc|in|mm|cm)\s*$/
-          span.bbox.exact = (this.data[0] && this.data[0].data.length == 0) ||
-             dimen.exec(values.height) || dimen.exec(values.width) || dimen.exec(values.depth);
+          span.bbox.exact = !!((this.data[0] && this.data[0].data.length == 0) ||
+             dimen.exec(values.height) || dimen.exec(values.width) || dimen.exec(values.depth));
 	  HTMLCSS.setStackWidth(stack,span.bbox.w);
 	}
 	this.HTMLhandleSpace(span);
