@@ -1756,7 +1756,8 @@
 
       HTMLgetVariant: function () {
 	var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
-        if (!this.mathvariant) {
+        values.hasVariant = this.Get("mathvariant",true);  // null if not explicitly specified
+        if (!values.hasVariant) {
           values.family = values.fontfamily;
           values.weight = values.fontweight;
           values.style  = values.fontstyle;
@@ -1770,7 +1771,7 @@
         if (values.weight && values.weight.match(/^\d+$/))
             {values.weight = (parseInt(values.weight) > 600 ? "bold" : "normal")}
 	var variant = values.mathvariant; if (this.variantForm) {variant = "-"+HTMLCSS.fontInUse+"-variant"}
-	if (values.family && !this.mathvariant) {
+	if (values.family && !values.hasVariant) {
 	  if (!values.weight && values.mathvariant.match(/bold/)) {values.weight = "bold"}
 	  if (!values.style && values.mathvariant.match(/italic/)) {values.style = "italic"}
 	  return {FONTS:[], fonts:[], noRemap:true,
@@ -2026,7 +2027,9 @@
       HTMLstretchH: function (box,W) {
 	this.HTMLremoveColor();
 	var values = this.getValues("maxsize","minsize","mathvariant","fontweight");
-	if (values.fontweight === "bold" && !this.mathvariant) {values.mathvariant = MML.VARIANT.BOLD}
+        // FIXME:  should take style="font-weight:bold" into account as well
+	if ((values.fontweight === "bold" || parseInt(values.fontweight) >= 600) &&
+            !this.Get("mathvariant",true)) {values.mathvariant = MML.VARIANT.BOLD}
 	var span = this.HTMLspanElement(), mu = this.HTMLgetMu(span), scale = span.scale;
 	values.maxsize = HTMLCSS.length2em(values.maxsize,mu,span.bbox.w);
 	values.minsize = HTMLCSS.length2em(values.minsize,mu,span.bbox.w);

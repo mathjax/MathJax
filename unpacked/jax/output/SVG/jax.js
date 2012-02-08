@@ -1120,7 +1120,8 @@
       SVGgetVariant: function () {
 	var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
 	var variant = values.mathvariant; if (this.variantForm) {variant = "-TeX-variant"}
-        if (!this.mathvariant) {
+        values.hasVariant = this.Get("mathvariant",true);  // null if not explicitly specified
+        if (!values.hasVariant) {
           values.family = values.fontfamily;
           values.weight = values.fontweight;
           values.style  = values.fontstyle;
@@ -1130,7 +1131,7 @@
           if (!values.weight && this.styles.fontWeight) {values.weight = this.styles.fontWeight}
           if (!values.family && this.styles.fontFamily) {values.family = this.styles.fontFamily}
         }
-        if (values.family && !this.mathvariant) {
+        if (values.family && !values.hasVariant) {
 	  if (!values.weight && values.mathvariant.match(/bold/)) {values.weight = "bold"}
           if (!values.style && values.mathvariant.match(/italic/)) {values.style = "italic"}
           variant = {forceFamily: true, font: {"font-family":values.family}};
@@ -1353,7 +1354,9 @@
       SVGstretchH: function (w) {
         var svg = this.svg || this.toSVG(), mu = this.SVGgetMu(svg);
 	var values = this.getValues("maxsize","minsize","mathvariant","fontweight");
-	if (values.fontweight === "bold" && !this.mathvariant) {values.mathvariant = MML.VARIANT.BOLD}
+        // FIXME:  should take style="font-weight:bold" into account as well
+	if ((values.fontweight === "bold" || parseInt(values.fontweight) >= 600) &&
+            !this.Get("mathvariant",true)) {values.mathvariant = MML.VARIANT.BOLD}
 	values.maxsize = SVG.length2em(values.maxsize,mu,svg.w);
 	values.minsize = SVG.length2em(values.minsize,mu,svg.w);
 	w = Math.max(values.minsize,Math.min(values.maxsize,w));
