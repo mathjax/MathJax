@@ -55,12 +55,27 @@ MathJax.Extension.mml2jax = {
     //
     //  Handle math with namespaces in HTML
     //
-    var html = document.getElementsByTagName("html")[0];
-    if (html) {
-      for (var i = 0, m = html.attributes.length; i < m; i++) {
-        var attr = html.attributes[i];
-        if (attr.nodeName.substr(0,6) === "xmlns:" && attr.nodeValue === this.MMLnamespace)
-          {this.ProcessMathArray(element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
+    var i, m;
+    if (document.namespaces) {
+      //
+      // IE namespaces are listed in document.namespaces
+      //
+      for (i = 0, m = document.namespaces.length; i < m; i++) {
+        var ns = document.namespaces[i];
+        if (ns.urn === this.MMLnamespace)
+          {this.ProcessMathArray(element.getElementsByTagName(ns.name+":math"))}
+      }
+    } else {
+      //
+      //  Everybody else
+      //  
+      var html = document.getElementsByTagName("html")[0];
+      if (html) {
+        for (i = 0, m = html.attributes.length; i < m; i++) {
+          var attr = html.attributes[i];
+          if (attr.nodeName.substr(0,6) === "xmlns:" && attr.nodeValue === this.MMLnamespace)
+            {this.ProcessMathArray(element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
+        }
       }
     }
   },
