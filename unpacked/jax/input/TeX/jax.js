@@ -1137,6 +1137,8 @@
      *  Handle ^, _, and '
      */
     Superscript: function (c) {
+      if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
+        {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
       var position, base = this.stack.Prev(); if (!base) {base = MML.mi("")}
       if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
       if (base.type === "msubsup") {
@@ -1158,6 +1160,8 @@
       this.Push(STACKITEM.subsup(base).With({position: position}));
     },
     Subscript: function (c) {
+      if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
+        {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
       var position, base = this.stack.Prev(); if (!base) {base = MML.mi("")}
       if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
       if (base.type === "msubsup") {
@@ -1998,8 +2002,7 @@
       // Konqueror incorrectly quotes these characters in script.innerHTML 
       if (HUB.Browser.isKonqueror)
         {math = math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
-      // avoid parsing super- and subscript numbers as a unit
-      return math.replace(/([_^]\s*\d)([0-9.,])/g,"$1 $2");
+      return math;
     },
     postfilterMath: function (math,displaystyle,script) {
       this.combineRelations(math.root);
