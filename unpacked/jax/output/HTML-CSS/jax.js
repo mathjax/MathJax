@@ -239,7 +239,8 @@
         },
         
         ".MathJax img": {
-          display: "inline ! important"
+          display: "inline ! important",
+          "float": "none ! important"
         },
 
         ".MathJax_Processing": {
