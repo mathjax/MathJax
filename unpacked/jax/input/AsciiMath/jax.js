@@ -1258,7 +1258,7 @@ junk = null;
     postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run after processing AsciiMath
 
     Translate: function (script) {
-      var mml, math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
+      var mml, math = MathJax.HTML.getScript(script);
       var data = {math:math, script:script};
       this.prefilterHooks.Execute(data); math = data.math;
       try {

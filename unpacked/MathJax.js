@@ -981,13 +981,17 @@ MathJax.HTML = {
   addText: function (span,text) {return span.appendChild(this.TextNode(text))},
 
   //
-  //  Set the text of a script
+  //  Set and get the text of a script
   //
   setScript: function (script,text) {
     if (this.setScriptBug) {script.text = text} else {
       while (script.firstChild) {script.removeChild(script.firstChild)}
       this.addText(script,text);
     }
+  },
+  getScript: function (script) {
+    var text = (script.text === "" ? script.innerHTML : script.text);
+    return text.replace(/^\s+/,"").replace(/\s+$/,"");
   },
 
   //
@@ -2111,7 +2115,7 @@ MathJax.Hub.Startup = {
     },
     needsUpdate: function (jax) {
       var script = jax.SourceElement();
-      return (jax.originalText !== (script.text == "" ? script.innerHTML : script.text));
+      return (jax.originalText !== BASE.HTML.getScript(script));
     },
     Register: function (mimetype) {
       if (!HUB.inputJax) {HUB.inputJax = {}}
@@ -2201,7 +2205,7 @@ MathJax.Hub.Startup = {
         if (script.id) {this.inputID = script.id}
           else {script.id = this.inputID = BASE.ElementJax.GetID(); this.newID = 1}
       }
-      jax.originalText = (script.text == "" ? script.innerHTML : script.text);
+      jax.originalText = BASE.HTML.getScript(script);
       jax.inputJax = inputJax;
       if (jax.root) {jax.root.inputID = jax.inputID}
       return jax;

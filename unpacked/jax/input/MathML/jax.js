@@ -206,10 +206,8 @@
         data.math = script.firstChild;
         this.prefilterHooks.Execute(data); math = data.math;
       } else {
-        math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
+        math = MathJax.HTML.getScript(script);
         if (BROWSER.isMSIE) {math = math.replace(/(&nbsp;)+$/,"")}
-        else if (BROWSER.isKonqueror)
-          {math = math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
         data.math = math; this.prefilterHooks.Execute(data); math = data.math;
       }
       try {

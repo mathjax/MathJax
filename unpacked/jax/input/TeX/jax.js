@@ -1980,7 +1980,7 @@
     //  Convert TeX to ElementJax
     //
     Translate: function (script) {
-      var mml, isError = false, math = script.innerHTML.replace(/^\s+/,"").replace(/\s+$/,"");
+      var mml, isError = false, math = MathJax.HTML.getScript(script);
       var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
       var data = {math:math, display:display, script:script};
       this.prefilterHooks.Execute(data); math = data.math;
@@ -1999,9 +1999,6 @@
       return data.math;
     },
     prefilterMath: function (math,displaystyle,script) {
-      // Konqueror incorrectly quotes these characters in script.innerHTML 
-      if (HUB.Browser.isKonqueror)
-        {math = math.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")}
       return math;
     },
     postfilterMath: function (math,displaystyle,script) {
