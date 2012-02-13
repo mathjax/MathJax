@@ -1629,10 +1629,7 @@ MathJax.Hub = {
         //
         result = MathJax.OutputJax[jax.outputJax].Process(script,state);
         script.MathJax.state = STATE.PROCESSED; state.i++;
-        if (script.MathJax.preview) {
-          script.MathJax.preview.style.display = "none";
-          script.MathJax.preview.style.visibility = "hidden"; // hide from screen readers
-        }
+        if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
         //
         //  Signal that new math is available
         //
@@ -1684,10 +1681,7 @@ MathJax.Hub = {
       });
     }
     script.parentNode.insertBefore(error,script);
-    if (script.MathJax.preview) {
-      script.MathJax.preview.style.display = "none";
-      script.MathJax.preview.style.visibility = "hidden"; // hide from screen readers
-    }
+    if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
     this.lastError = err;
   },
   
