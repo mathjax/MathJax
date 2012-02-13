@@ -59,6 +59,7 @@
           "div.MathJax_MathContainer > span": {"text-align": align+"!important"}
         });
       }
+      if (!this.require) {this.require = []}
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
     },
     Startup: function () {
