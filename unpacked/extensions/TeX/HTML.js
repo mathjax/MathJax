@@ -6,7 +6,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010 Design Science, Inc.
+ *  Copyright (c) 2010-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,16 +21,23 @@
  *  limitations under the License.
  */
 
+MathJax.Extension["TeX/HTML"] = {
+  version: "2.0"
+};
+
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1";
 
   var TEX = MathJax.InputJax.TeX;
   var TEXDEF = TEX.Definitions;
   
-  TEXDEF.macros.href = 'HREF_attribute';
-  TEXDEF.macros["class"] = 'CLASS_attribute';
-  TEXDEF.macros.style = 'STYLE_attribute';
-  TEXDEF.macros.cssId = 'ID_attribute';
+  TEXDEF.Add({
+    macros: {
+      href:    'HREF_attribute',
+      "class": 'CLASS_attribute',
+      style:   'STYLE_attribute',
+      cssId:   'ID_attribute'
+    }
+  });
 
   TEX.Parse.Augment({
 

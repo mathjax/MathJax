@@ -8,7 +8,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2011 Design Science, Inc.
+ *  Copyright (c) 2010-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "1.1.2",
+  version: "2.0",
   config: {
     preview: "alttext"      // Use the <math> element's alttext as the 
                             //   preview.  Set to "none" for no preview,
@@ -55,12 +55,27 @@ MathJax.Extension.mml2jax = {
     //
     //  Handle math with namespaces in HTML
     //
-    var html = document.getElementsByTagName("html")[0];
-    if (html) {
-      for (var i = 0, m = html.attributes.length; i < m; i++) {
-        var attr = html.attributes[i];
-        if (attr.nodeName.substr(0,6) === "xmlns:" && attr.nodeValue === this.MMLnamespace)
-          {this.ProcessMathArray(element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
+    var i, m;
+    if (document.namespaces) {
+      //
+      // IE namespaces are listed in document.namespaces
+      //
+      for (i = 0, m = document.namespaces.length; i < m; i++) {
+        var ns = document.namespaces[i];
+        if (ns.urn === this.MMLnamespace)
+          {this.ProcessMathArray(element.getElementsByTagName(ns.name+":math"))}
+      }
+    } else {
+      //
+      //  Everybody else
+      //  
+      var html = document.getElementsByTagName("html")[0];
+      if (html) {
+        for (i = 0, m = html.attributes.length; i < m; i++) {
+          var attr = html.attributes[i];
+          if (attr.nodeName.substr(0,6) === "xmlns:" && attr.nodeValue === this.MMLnamespace)
+            {this.ProcessMathArray(element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
+        }
       }
     }
   },
@@ -162,7 +177,7 @@ MathJax.Extension.mml2jax = {
     var preview;
     if (this.config.preview === "alttext") {
       var text = math.getAttribute("alttext");
-      if (text != null) {preview = [this.filterText(text)]}
+      if (text != null) {preview = [this.filterPreview(text)]}
     } else if (this.config.preview instanceof Array) {preview = this.config.preview}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
@@ -170,7 +185,7 @@ MathJax.Extension.mml2jax = {
     }
   },
   
-  filterText: function (text) {return text},
+  filterPreview: function (text) {return text},
   
   InitBrowser: function () {
     var test = MathJax.HTML.Element("span",{id:"<", className: "mathjax", innerHTML: "<math><mi>x</mi><mspace /></math>"});

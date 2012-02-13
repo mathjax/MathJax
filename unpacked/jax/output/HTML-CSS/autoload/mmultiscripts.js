@@ -6,7 +6,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2011 Design Science, Inc.
+ *  Copyright (c) 2010-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "2.0";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -31,11 +31,12 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       span = this.HTMLcreateSpan(span); var scale = this.HTMLgetScale();
       var stack = HTMLCSS.createStack(span), values;
       var base = HTMLCSS.createBox(stack);
-      this.HTMLmeasureChild(this.base,base);
       if (this.data[this.base]) {
-        if (D != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchV(base,HW,D),base)}
-        else if (HW != null) {HTMLCSS.Remeasured(this.data[this.base].HTMLstretchH(base,HW),base)}
-      }
+        var child = this.data[this.base].toHTML(base);
+        if (D != null) {this.data[this.base].HTMLstretchV(base,HW,D)}
+        else if (HW != null) {this.data[this.base].HTMLstretchH(base,HW)}
+        HTMLCSS.Measured(child,base);
+      } else {base.bbox = this.HTMLzeroBBox()}
       var x_height = HTMLCSS.TeX.x_height * scale,
           s = HTMLCSS.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?
 
@@ -51,9 +52,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (this.data[this.base].data.join("").length === 1 && base.bbox.scale === 1 &&
             !this.data[this.base].Get("largeop")) {u = v = 0}
       }
-      var min = this.getValues("subscriptshift","superscriptshift");
-      min.subscriptshift   = (min.subscriptshift === ""   ? 0 : HTMLCSS.length2em(min.subscriptshift));
-      min.superscriptshift = (min.superscriptshift === "" ? 0 : HTMLCSS.length2em(min.superscriptshift));
+      var min = this.getValues("subscriptshift","superscriptshift"), mu = this.HTMLgetMu(span);
+      min.subscriptshift   = (min.subscriptshift === ""   ? 0 : HTMLCSS.length2em(min.subscriptshift,mu));
+      min.superscriptshift = (min.superscriptshift === "" ? 0 : HTMLCSS.length2em(min.superscriptshift,mu));
 
       var dx = 0;
       if (presub) {dx = presub.bbox.w+delta} else if (presup) {dx = presup.bbox.w-delta}

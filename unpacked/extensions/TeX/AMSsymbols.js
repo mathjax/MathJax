@@ -6,7 +6,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,12 +21,15 @@
  *  limitations under the License.
  */
 
+MathJax.Extension["TeX/AMSsymbols"] = {
+  version: "2.0"
+};
+
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1.2";
+  var MML = MathJax.ElementJax.mml,
+      TEXDEF = MathJax.InputJax.TeX.Definitions;
   
-  var MML = MathJax.ElementJax.mml;
-  
-  MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions,{
+  TEXDEF.Add({
 
     mathchar0mi: {
       // Lowercase Greek letters
@@ -148,7 +151,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       backsim:                '223D',
       thicksim:               ['223C',{variantForm: true}],
       backsimeq:              '22CD',
-      thickapprox:            '2248',
+      thickapprox:            ['2248',{variantForm: true}],
       subseteqq:              '2AC5',
       supseteqq:              '2AC6',
       Subset:                 '22D0',
@@ -295,10 +298,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     
     delimiter: {
       // corners
-      "\\ulcorner":           '250C',
-      "\\urcorner":           '2510',
-      "\\llcorner":           '2514',
-      "\\lrcorner":           '2518'
+      "\\ulcorner":           '231C',
+      "\\urcorner":           '231D',
+      "\\llcorner":           '231E',
+      "\\lrcorner":           '231F'
     },
     
     macros: {
@@ -306,7 +309,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       impliedby:  ['Macro','\\;\\Longleftarrow\\;']
     }
     
-  });
+  },null,true);
   
   var REL = MML.mo.OPTYPES.REL;
 
@@ -336,10 +339,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     }
   });
 
-//  if (MathJax.Hub.Browser.isMSIE) {
-//    MathJax.InputJax.TeX.Definitions.mathchar0mi.digamma  = ['03DD',{variantForm: true}];
-//    MathJax.InputJax.TeX.Definitions.mathchar0mi.varkappa = ['03F0',{variantForm: true}];
-//  }
+  MathJax.Hub.Startup.signal.Post("TeX AMSsymbols Ready");
+
 });
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
@@ -382,9 +383,19 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     });
   }
   
-  MathJax.Hub.Startup.signal.Post("TeX AMSsymbols Ready");
-  
 });
 
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+  var SVG = MathJax.OutputJax.SVG;
+  var VARIANT = SVG.FONTDATA.VARIANT;
 
+  VARIANT["-TeX-variant"] = {
+    fonts: ["MathJax_AMS","MathJax_Main","MathJax_Size1"],
+    remap: {0x2268: 0xE00C, 0x2269: 0xE00D, 0x2270: 0xE011, 0x2271: 0xE00E,
+            0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2224: 0xE006, 0x2226: 0xE007,
+            0x2288: 0xE016, 0x2289: 0xE018, 0x228A: 0xE01A, 0x228B: 0xE01B,
+            0x2ACB: 0xE017, 0x2ACC: 0xE019, 0x03DC: 0xE008, 0x03F0: 0xE009}
+  };
+});
+  
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");

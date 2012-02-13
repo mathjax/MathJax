@@ -9,7 +9,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "1.1a";
-MathJax.fileversion = "1.1.7";
+MathJax.version = "2.0";
+MathJax.fileversion = "2.0";
 
 /**********************************************************/
 
@@ -124,10 +124,10 @@ MathJax.fileversion = "1.1.7";
       define: function (src) {
 	var dst = {};
 	if (src != null) {
-          for (var id in src) {if (src.hasOwnProperty(id)) {this.protoFunction(id,src[id])}}
+          for (var id in src) {if (src.hasOwnProperty(id)) {dst[id] = this.wrap(id,src[id])}}
 	  // MSIE doesn't list toString even if it is not native so handle it separately
           if (src.toString !== this.prototype.toString && src.toString !== {}.toString)
-            {this.protoFunction('toString',src.toString)}
+            {dst.toString = this.wrap('toString',src.toString)}
 	}
 	return dst;
       },
@@ -366,25 +366,65 @@ MathJax.fileversion = "1.1.7";
   };
 
   //
-  //  Run an array of callbacks passing them the given data.
-  //  If any return callbacks, return a callback that will be 
-  //  executed when they all have completed.
+  //  An array of priorities hooks that are executed sequentially
+  //  with a given set of data.
   //
-  var HOOKS = function (hooks,data,reset) {
+  var HOOKS = MathJax.Object.Subclass({
+    //
+    //  Initialize the array and the auto-reset status
+    //
+    Init: function (reset) {
+      this.hooks = [];
+      this.reset = reset;
+    },
+    //
+    //  Add a callback to the list, in priority order (default priority is 10)
+    //
+    Add: function (hook,priority) {
+      if (priority == null) {priority = 10}
+      if (!ISCALLBACK(hook)) {hook = USING(hook)}
+      hook.priority = priority;
+      var i = this.hooks.length;
+      while (i > 0 && priority < this.hooks[i-1].priority) {i--}
+      this.hooks.splice(i,0,hook);
+      return hook;
+    },
+    Remove: function (hook) {
+      for (var i = 0, m = this.hooks.length; i < m; i++) {
+        if (this.hooks[i] === hook) {this.hooks.splice(i,1); return}
+      }
+    },
+    //
+    //  Execute the list of callbacks, resetting them if requested.
+    //  If any return callbacks, return a callback that will be 
+    //  executed when they all have completed.
+    //
+    Execute: function () {
+      var callbacks = [{}];
+      for (var i = 0, m = this.hooks.length; i < m; i++) {
+        if (this.reset) {this.hooks[i].reset()}
+        var result = this.hooks[i].apply(window,arguments);
+        if (ISCALLBACK(result) && !result.called) {callbacks.push(result)}
+      }
+      if (callbacks.length === 1) {return null}
+      if (callbacks.length === 2) {return callbacks[1]}
+      return AFTER.apply({},callbacks);
+    }
+  });
+  
+  //
+  //  Run an array of callbacks passing them the given data.
+  //  (Legacy function, since this has been replaced by the HOOKS object).
+  //
+  var EXECUTEHOOKS = function (hooks,data,reset) {
     if (!hooks) {return null}
     if (!(hooks instanceof Array)) {hooks = [hooks]}
     if (!(data instanceof Array))  {data = (data == null ? [] : [data])}
-    var callbacks = [{}];
-    for (var i = 0, m = hooks.length; i < m; i++) {
-      if (reset) {hooks[i].reset()}
-      var result = hooks[i].apply(window,data);
-      if (ISCALLBACK(result) && !result.called) {callbacks.push(result)}
-    }
-    if (callbacks.length === 1) {return null}
-    if (callbacks.length === 2) {return callbacks[1]}
-    return AFTER.apply({},callbacks);
+    var handler = HOOKS(reset);
+    for (var i = 0, m = hooks.length; i < m; i++) {handler.Add(hooks[i])}
+    return handler.Execute.apply(handler,data);
   };
-  
+   
   //
   //  Command queue that performs commands in order, waiting when
   //  necessary for commands to complete asynchronousely
@@ -447,8 +487,8 @@ MathJax.fileversion = "1.1.7";
     Init: function (name) {
       QUEUE.prototype.Init.call(this);
       this.name = name;
-      this.posted = [];     // the messages posted so far
-      this.listeners = [];  // those with interest in this signal
+      this.posted = [];              // the messages posted so far
+      this.listeners = HOOKS(true);  // those with interest in this signal
     },
     //
     // Post a message to the signal listeners, with callback for when complete
@@ -460,12 +500,9 @@ MathJax.fileversion = "1.1.7";
       } else {
         this.callback = callback; callback.reset();
         if (!forget) {this.posted.push(message)}
-        this.Suspend(); this.posting = 1;
-        for (var i = 0, m = this.listeners.length; i < m; i++) {
-          this.listeners[i].reset();
-          var result = (this.listeners[i])(message);
-          if (ISCALLBACK(result) && !result.called) {WAITFOR(result,this)}
-        }
+        this.Suspend(); this.posting = true;
+        var result = this.listeners.Execute(message);
+        if (ISCALLBACK(result) && !result.called) {WAITFOR(result,this)}
         this.Resume(); delete this.posting;
         if (!this.pending) {this.call()}
       }
@@ -491,11 +528,11 @@ MathJax.fileversion = "1.1.7";
     
     //
     //  A listener calls this to register intrest in the signal (so it will be called
-    //  when posts occur).  If ignorePast is 1, it will not be sent the post history.
+    //  when posts occur).  If ignorePast is true, it will not be sent the post history.
     //
-    Interest: function (callback,ignorePast) {
+    Interest: function (callback,ignorePast,priority) {
       callback = USING(callback);
-      this.listeners[this.listeners.length] = callback;
+      this.listeners.Add(callback,priority);
       if (!ignorePast) {
         for (var i = 0, m = this.posted.length; i < m; i++) {
           callback.reset();
@@ -509,19 +546,17 @@ MathJax.fileversion = "1.1.7";
     //  A listener calls this to remove itself from a signal
     //
     NoInterest: function (callback) {
-      for (var i = 0, m = this.listeners.length; i < m; i++) {
-        if (this.listeners[i] === callback) {this.listeners.splice(i,1); return}
-      }
+      this.listeners.Remove(callback);
     },
     
     //
     //  Hook a callback to a particular message on this signal
     //
-    MessageHook: function (msg,callback) {
+    MessageHook: function (msg,callback,priority) {
       callback = USING(callback);
       if (!this.hooks) {this.hooks = {}; this.Interest(["ExecuteHooks",this])}
-      if (!this.hooks[msg]) {this.hooks[msg] = []}
-      this.hooks[msg].push(callback);
+      if (!this.hooks[msg]) {this.hooks[msg] = HOOKS(true)}
+      this.hooks[msg].Add(callback,priority);
       for (var i = 0, m = this.posted.length; i < m; i++)
         {if (this.posted[i] == msg) {callback.reset(); callback(this.posted[i])}}
       return callback;
@@ -531,7 +566,8 @@ MathJax.fileversion = "1.1.7";
     //
     ExecuteHooks: function (msg,more) {
       var type = ((msg instanceof Array) ? msg[0] : msg);
-      return HOOKS(this.hooks[type],[msg],true);
+      if (!this.hooks[type]) {return null}
+      return this.hooks[type].Execute(msg);
     }
     
   },{
@@ -550,7 +586,8 @@ MathJax.fileversion = "1.1.7";
   BASE.Callback.After = AFTER;
   BASE.Callback.Queue = QUEUE;
   BASE.Callback.Signal = SIGNAL.find;
-  BASE.Callback.ExecuteHooks = HOOKS;
+  BASE.Callback.Hooks = HOOKS;
+  BASE.Callback.ExecuteHooks = EXECUTEHOOKS;
 })("MathJax");
 
 /**********************************************************/
@@ -635,8 +672,7 @@ MathJax.fileversion = "1.1.7";
         else {type = file.split(/\./).pop().toUpperCase()}
       file = this.fileURL(file);
       if (this.loading[file]) {
-        if (!this.loadHooks[file]) {this.loadHooks[file] = []}
-        this.loadHooks[file].push(callback);
+        this.addHook(file,callback);
       } else {
         this.head = HEAD(this.head);
         if (this.loader[type]) {this.loader[type].call(this,file,callback)}
@@ -649,17 +685,17 @@ MathJax.fileversion = "1.1.7";
     //  Register a load hook for a particular file (it will be called when
     //  loadComplete() is called for that file)
     //
-    LoadHook: function (file,callback) {
+    LoadHook: function (file,callback,priority) {
       callback = BASE.Callback(callback);
       if (file instanceof Object) {for (var i in file) {file = file[i]}}
       file = this.fileURL(file);
-      if (this.loaded[file]) {
-        callback(this.loaded[file]);
-      } else {
-        if (!this.loadHooks[file]) {this.loadHooks[file] = []}
-        this.loadHooks[file].push(callback);
-      }
+      if (this.loaded[file]) {callback(this.loaded[file])}
+        else {this.addHook(file,callback,priority)}
       return callback;
+    },
+    addHook: function (file,callback,priority) {
+      if (!this.loadHooks[file]) {this.loadHooks[file] = MathJax.Callback.Hooks()}
+      this.loadHooks[file].Add(callback,priority);
     },
     
     //
@@ -743,7 +779,7 @@ MathJax.fileversion = "1.1.7";
         check.execute = this.execute; check.time = this.time;
         check.STATUS = AJAX.STATUS; check.timeout = timeout || AJAX.timeout;
         check.delay = check.total = 0;
-        setTimeout(check,delay);
+        if (delay) {setTimeout(check,delay)} else {check()}
       },
       //
       //  Increment the time total, increase the delay
@@ -818,13 +854,14 @@ MathJax.fileversion = "1.1.7";
 	  SCRIPTS.push(loading.script);
 	}
         this.loaded[file] = loading.status; delete this.loading[file];
-        if (!this.loadHooks[file]) {this.loadHooks[file] = []}
-        this.loadHooks[file].push(loading.callback);
+        this.addHook(file,loading.callback);
       } else {
+        if (loading) {delete this.loading[file]}
         this.loaded[file] = this.STATUS.OK;
         loading = {status: this.STATUS.OK}
       }
-      BASE.Callback.ExecuteHooks(this.loadHooks[file],loading.status);
+      if (!this.loadHooks[file]) {return null}
+      return this.loadHooks[file].Execute(loading.status);
     },
     
     //
@@ -841,7 +878,10 @@ MathJax.fileversion = "1.1.7";
     //
     //  The default error hook for file load failures
     //
-    loadError: function (file) {BASE.Message.Set("File failed to load: "+file,null,2000)},
+    loadError: function (file) {
+      BASE.Message.Set("File failed to load: "+file,null,2000);
+      BASE.Hub.signal.Post(["file load error",file]);
+    },
 
     //
     //  Defines a style sheet from a hash of style declarations (key:value pairs
@@ -941,13 +981,17 @@ MathJax.HTML = {
   addText: function (span,text) {return span.appendChild(this.TextNode(text))},
 
   //
-  //  Set the text of a script
+  //  Set and get the text of a script
   //
   setScript: function (script,text) {
     if (this.setScriptBug) {script.text = text} else {
       while (script.firstChild) {script.removeChild(script.firstChild)}
       this.addText(script,text);
     }
+  },
+  getScript: function (script) {
+    var text = (script.text === "" ? script.innerHTML : script.text);
+    return text.replace(/^\s+/,"").replace(/\s+$/,"");
   },
 
   //
@@ -989,14 +1033,16 @@ MathJax.HTML = {
           match = keys[i].match(/([^:]+):(.*)/);
           var value = match[2].replace(/&&/g,'&');
           if (value === "true") {value = true} else if (value === "false") {value = false}
-          else if (value.match(/^-?(\d+(\.\d+)?|\.\d+)$/)) {value = parseFloat(value)}
+            else if (value.match(/^-?(\d+(\.\d+)?|\.\d+)$/)) {value = parseFloat(value)}
           obj[match[1]] = value;
         }
       }
       return obj;
     }
   }
+    
 };
+
 
 /**********************************************************/
 
@@ -1091,6 +1137,9 @@ MathJax.Message = {
       } else if (text.match(/^Processing /)) {
         if (!this.processing) {this.processing = "Processing "}
         text = this.processing; this.processing += ".";
+      } else if (text.match(/^Typesetting /)) {
+        if (!this.typesetting) {this.typesetting = "Typesetting "}
+        text = this.typesetting; this.typesetting += ".";
       }
     }
     return text;
@@ -1116,6 +1165,7 @@ MathJax.Message = {
       }
     }
     if (clearDelay) {setTimeout(MathJax.Callback(["Clear",this,n]),clearDelay)}
+    else if (clearDelay == 0) {this.Clear(n,0)}
     return n;
   },
   
@@ -1127,8 +1177,10 @@ MathJax.Message = {
       if (this.text) {
         if (this.div.parentNode == null) {this.Init()} // see ASCIIMathML comments above
         if (this.current == null) {
-          if (this.timer) {clearTimeout(this.timer)}
-          this.timer = setTimeout(MathJax.Callback(["Remove",this]),(delay||600));
+	if (this.timer) {clearTimeout(this.timer); delete this.timer}
+          if (delay == null) {delay = 600}
+          if (delay === 0) {this.Remove()}
+	    else {this.timer = setTimeout(MathJax.Callback(["Remove",this]),delay)}
         } else if (MathJax.Hub.config.messageStyle !== "none") {
           if (this.textNodeBug) {this.div.innerHTML = this.log[this.current].filteredText}
                            else {this.text.nodeValue = this.log[this.current].filteredText}
@@ -1169,7 +1221,9 @@ MathJax.Hub = {
     root: "",
     config: [],      // list of configuration files to load
     styleSheets: [], // list of CSS files to load
-    styles: {},      // styles to generate in-line
+    styles: {        // styles to generate in-line
+      ".MathJax_Preview": {color: "#888"}
+    },
     jax: [],         // list of input and output jax to load
     extensions: [],  // list of extensions to load
     preJax: null,    // pattern to remove from before math script tag
@@ -1183,24 +1237,28 @@ MathJax.Hub = {
                                   // set to "configured" to delay startup until MathJax.Hub.Configured() is called
                                   // set to a Callback to wait for before continuing with the startup
     skipStartupTypeset: false,    // set to true to skip PreProcess and Process during startup
-    "v1.0-compatible": true,  // set to false to prevent loading of default configuration file
-    elements: [],    // array of elements to process when none is given explicitly
+    "v1.0-compatible": true,  // set to false to prevent message about configuration change
+    elements: [],             // array of elements to process when none is given explicitly
+    positionToHash: true,     // after initial typeset pass, position to #hash location?
      
-    preProcessors: [], // list of callbacks for preprocessing (initialized by extensions)
-    inputJax: {},      // mime-type mapped to input jax (by registration)
-    outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
+    showMathMenu: true,      // attach math context menu to typeset math?
+    showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
+                             //  (since the code for that is a bit delicate)
 
     menuSettings: {
-      //format: "MathML",  //  the Show Source format (set in MathMenu.js)
       zoom: "None",        //  when to do MathZoom
       CTRL: false,         //    require CTRL for MathZoom?
       ALT: false,          //    require Alt or Option?
       CMD: false,          //    require CMD?
       Shift: false,        //    require Shift?
+      discoverable: false, //  make math menu discoverable on hover?
       zscale: "200%",      //  the scaling factor for MathZoom
       renderer: "",        //  set when Jax are loaded
       font: "Auto",        //  what font HTML-CSS should use
-      context: "MathJax"   //  or "Browser" for pass-through to browser menu
+      context: "MathJax",  //  or "Browser" for pass-through to browser menu
+      mpContext: false,    //  true means pass menu events to MathPlayer in IE
+      mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
+      texHints: true       //  include class names for TeXAtom elements
     },
     
     errorSettings: {
@@ -1209,7 +1267,12 @@ MathJax.Hub = {
     }
   },
   
+  preProcessors: MathJax.Callback.Hooks(true), // list of callbacks for preprocessing (initialized by extensions)
+  inputJax: {},          // mime-type mapped to input jax (by registration)
+  outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
+
   processUpdateTime: 250, // time between screen updates when processing math (milliseconds)
+  processUpdateDelay: 10, // pause between screen updates to allow other processing (milliseconds)
 
   signal: MathJax.Callback.Signal("Hub"), // Signal used for Hub events
 
@@ -1228,7 +1291,7 @@ MathJax.Hub = {
   },
   
   Register: {
-    PreProcessor: function (callback) {MathJax.Hub.config.preProcessors.push(MathJax.Callback(callback))},
+    PreProcessor: function () {MathJax.Hub.preProcessors.Add.apply(MathJax.Hub.preProcessors,arguments)},
     MessageHook: function () {return MathJax.Hub.signal.MessageHook.apply(MathJax.Hub.signal,arguments)},
     StartupHook: function () {return MathJax.Hub.Startup.signal.MessageHook.apply(MathJax.Hub.Startup.signal,arguments)},
     LoadHook: function () {return MathJax.Ajax.LoadHook.apply(MathJax.Ajax,arguments)}
@@ -1266,21 +1329,44 @@ MathJax.Hub = {
   getJaxFor: function (element) {
     if (typeof(element) === 'string') {element = document.getElementById(element)}
     if (element && element.MathJax) {return element.MathJax.elementJax}
-    // FIXME: also check for results of outputJax
+    if (element && element.isMathJax) {
+      while (element && !element.jaxID) {element = element.parentNode}
+      if (element) {return MathJax.OutputJax[element.jaxID].getJaxFromMath(element)}
+    }
     return null;
   },
   
   isJax: function (element) {
     if (typeof(element) === 'string') {element = document.getElementById(element)}
+    if (element && element.isMathJax) {return 1}
     if (element && element.tagName != null && element.tagName.toLowerCase() === 'script') {
       if (element.MathJax) 
         {return (element.MathJax.state === MathJax.ElementJax.STATE.PROCESSED ? 1 : -1)}
-      if (element.type && this.config.inputJax[element.type.replace(/ *;(.|\s)*/,"")]) {return -1}
+      if (element.type && this.inputJax[element.type.replace(/ *;(.|\s)*/,"")]) {return -1}
     }
-    // FIXME: check for results of outputJax
     return 0;
   },
   
+  setRenderer: function (renderer,type) {
+    if (!renderer) return;
+    if (!MathJax.OutputJax[renderer]) {
+      this.config.menuSettings.renderer = "";
+      var file = "[MathJax]/jax/output/"+renderer+"/config.js";
+      return MathJax.Ajax.Require(file,["setRenderer",this,renderer,type]);
+    } else {
+      this.config.menuSettings.renderer = renderer;
+      if (type == null) {type = "jax/mml"}
+      var jax = this.outputJax;
+      if (jax[type] && jax[type].length) {
+        if (renderer !== jax[type][0].id) {
+          jax[type].unshift(MathJax.OutputJax[renderer]);
+          return this.signal.Post(["Renderer Selected",renderer]);
+        }
+      }
+      return null;
+    }
+  },
+
   Queue: function () {
     return this.queue.Push.apply(this.queue,arguments);
   },
@@ -1307,8 +1393,7 @@ MathJax.Hub = {
       if (ec.elements[i]) {
         queue.Push(
           ["Post",this.signal,["Begin PreProcess",ec.elements[i]]],
-          ["ExecuteHooks",MathJax.Callback,
-            (arguments.callee.disabled ? [] : this.config.preProcessors), ec.elements[i], true],
+          (arguments.callee.disabled? {} : ["Execute",this.preProcessors,ec.elements[i]]),
           ["Post",this.signal,["End PreProcess",ec.elements[i]]]
         );
       }
@@ -1319,19 +1404,33 @@ MathJax.Hub = {
   Process:   function (element,callback) {return this.takeAction("Process",element,callback)},
   Update:    function (element,callback) {return this.takeAction("Update",element,callback)},
   Reprocess: function (element,callback) {return this.takeAction("Reprocess",element,callback)},
+  Rerender:  function (element,callback) {return this.takeAction("Rerender",element,callback)},
   
   takeAction: function (action,element,callback) {
     var ec = this.elementCallback(element,callback);
     var queue = MathJax.Callback.Queue(["Clear",this.signal]);
     for (var i = 0, m = ec.elements.length; i < m; i++) {
       if (ec.elements[i]) {
-        var scripts = []; // filled in by prepareScripts
+        var state = {
+          scripts: [],                  // filled in by prepareScripts
+          start: new Date().getTime(),  // timer for processing messages
+          i: 0, j: 0,                   // current script, current jax
+          jax: {},                      // scripts grouped by output jax
+          jaxIDs: []                    // id's of jax used
+        };
         queue.Push(
           ["Post",this.signal,["Begin "+action,ec.elements[i]]],
-          ["Post",this.signal,["Begin Math",ec.elements[i]]],
-          ["prepareScripts",this,action,ec.elements[i],scripts],
-          ["processScripts",this,scripts],
-          ["Post",this.signal,["End Math",ec.elements[i]]],
+          ["Post",this.signal,["Begin Math",ec.elements[i],action]],
+          ["prepareScripts",this,action,ec.elements[i],state],
+          ["Post",this.signal,["Begin Math Input",ec.elements[i],action]],
+          ["processInput",this,state],
+          ["Post",this.signal,["End Math Input",ec.elements[i],action]],
+          ["prepareOutput",this,state,"preProcess"],
+          ["Post",this.signal,["Begin Math Output",ec.elements[i],action]],
+          ["processOutput",this,state],
+          ["Post",this.signal,["End Math Output",ec.elements[i],action]],
+          ["prepareOutput",this,state,"postProcess"],
+          ["Post",this.signal,["End Math",ec.elements[i],action]],
           ["Post",this.signal,["End "+action,ec.elements[i]]]
         );
       }
@@ -1343,40 +1442,44 @@ MathJax.Hub = {
     Process: function (script) {},
     Update: function (script) {
       var jax = script.MathJax.elementJax;
-      //  FIXME:  Have intputJax determine if things have changed?
-      if (jax && jax.originalText === (script.text == "" ? script.innerHTML : script.text))
-        {script.MathJax.state = jax.STATE.PROCESSED} else
-        {jax.outputJax.Remove(jax); script.MathJax.state = jax.STATE.UPDATE}
+      if (jax && jax.needsUpdate()) {jax.Remove(true); script.MathJax.state = jax.STATE.UPDATE}
+        else {script.MathJax.state = jax.STATE.PROCESSED}
     },
     Reprocess: function (script) {
       var jax = script.MathJax.elementJax;
-      if (jax) {jax.outputJax.Remove(jax); script.MathJax.state = jax.STATE.UPDATE}
+      if (jax) {jax.Remove(true); script.MathJax.state = jax.STATE.UPDATE}
+    },
+    Rerender: function (script) {
+      var jax = script.MathJax.elementJax;
+      if (jax) {jax.Remove(true); script.MathJax.state = jax.STATE.OUTPUT}
     }
   },
   
-  prepareScripts: function (action,element,math) {
+  prepareScripts: function (action,element,state) {
     if (arguments.callee.disabled) return;
     var scripts = this.elementScripts(element);
     var STATE = MathJax.ElementJax.STATE;
     for (var i = 0, m = scripts.length; i < m; i++) {
       var script = scripts[i];
-      if (script.type && this.config.inputJax[script.type.replace(/ *;(.|\n)*/,"")]) {
-        if (script.MathJax && script.MathJax.state !== STATE.PENDING)
-          {this.scriptAction[action](script)}
+      if (script.type && this.inputJax[script.type.replace(/ *;(.|\n)*/,"")]) {
+        if (script.MathJax) {
+          if (script.MathJax.elementJax && script.MathJax.elementJax.hover) {
+            MathJax.Extension.MathEvents.Hover.ClearHover(script.MathJax.elementJax);
+          }
+          if (script.MathJax.state !== STATE.PENDING) {this.scriptAction[action](script)}
+        }
         if (!script.MathJax) {script.MathJax = {state: STATE.PENDING}}
-        if (script.MathJax.state !== STATE.PROCESSED) {math.push(script)}
+        if (script.MathJax.state !== STATE.PROCESSED) {state.scripts.push(script)}
       }
     }
   },
   
   checkScriptSiblings: function (script) {
-    if (script.MathJax && script.MathJax.checked) return;
-    var config = this.config;
-    var pre = script.previousSibling;
-    if (pre && pre.nodeName == "#text") {
-      var preJax,postJax;
-      var post = script.nextSibling;
-      if (post && post.nodeName != "#text") {post = null}
+    if (script.MathJax.checked) return;
+    var config = this.config, pre = script.previousSibling;
+    if (pre && pre.nodeName === "#text") {
+      var preJax,postJax, post = script.nextSibling;
+      if (post && post.nodeName !== "#text") {post = null}
       if (config.preJax) {
         if (typeof(config.preJax) === "string") {config.preJax = new RegExp(config.preJax+"$")}
         preJax = pre.nodeValue.match(config.preJax);
@@ -1396,71 +1499,195 @@ MathJax.Hub = {
       }
       if (pre && !pre.nodeValue.match(/\S/)) {pre = pre.previousSibling}
     }
-    if (config.preRemoveClass && pre && pre.className == config.preRemoveClass) {
-      try {pre.innerHTML = ""} catch (err) {}
-      pre.style.display = "none";
-    }
-    if (script.MathJax) {script.MathJax.checked = 1}
+    if (config.preRemoveClass && pre && pre.className === config.preRemoveClass)
+      {script.MathJax.preview = pre}
+    script.MathJax.checked = 1;
   },
   
-  processScripts: function (scripts,start,n) {
-    if (arguments.callee.disabled) {return null}
-    var result, STATE = MathJax.ElementJax.STATE;
-    var inputJax = this.config.inputJax, outputJax = this.config.outputJax;
+  processInput: function (state) {
+    var jax, STATE = MathJax.ElementJax.STATE;
+    var script, prev, m = state.scripts.length;
     try {
-      if (!start) {start = new Date().getTime()}
-      var i = 0, script, prev;
-      while (i < scripts.length) {
-        script = scripts[i]; if (!script) {i++; continue}
+      //
+      //  Loop through the scripts
+      //
+      while (state.i < m) {
+        script = state.scripts[state.i]; if (!script) {state.i++; continue}
+        //
+        //  Remove previous error marker, if any
+        //
         prev = script.previousSibling;
         if (prev && prev.className === "MathJax_Error") {prev.parentNode.removeChild(prev)}
-        var type = script.type.replace(/ *;(.|\s)*/,"");
-        if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) {i++; continue};
+        //
+        //  Check if already processed or needs processing
+        //
+        if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) {state.i++; continue};
         if (!script.MathJax.elementJax || script.MathJax.state === STATE.UPDATE) {
-          this.checkScriptSiblings(script);
-          result = inputJax[type].Process(script);
+          this.checkScriptSiblings(script);                 // remove preJax/postJax etc.
+          var type = script.type.replace(/ *;(.|\s)*/,"");  // the input jax type
+          jax = this.inputJax[type].Process(script,state);  // run the input jax
+          if (typeof jax === 'function') {                  // if a callback was returned
+            if (jax.called) continue;                       //   go back and call Process() again
+            this.RestartAfter(jax);                         //   wait for the callback
+          }
+          jax.Attach(script,this.inputJax[type].id);        // register the jax on the script
+          this.saveScript(jax,state,script,STATE);          // add script to state
+        } else if (script.MathJax.state === STATE.OUTPUT) {
+          this.saveScript(script.MathJax.elementJax,state,script,STATE); // add script to state
+        }
+        //
+        //  Go on to the next script, and check if we need to update the processing message
+        //
+        state.i++; var now = new Date().getTime();
+        if (now - state.start > this.processUpdateTime && state.i < state.scripts.length)
+          {state.start = now; this.RestartAfter(MathJax.Callback.Delay(1))}
+      }
+    } catch (err) {return this.processError(err,state,"Input")}
+    //
+    //  Put up final message, reset the state and return
+    //
+    if (state.scripts.length && this.config.showProcessingMessages)
+      {MathJax.Message.Set("Processing math: 100%",0)}
+    state.start = new Date().getTime(); state.i = state.j = 0;
+    return null;
+  },
+  saveScript: function (jax,state,script,STATE) {
+    //
+    //  Check that output jax exists
+    //
+    if (!this.outputJax[jax.mimeType]) {
+      script.MathJax.state = STATE.UPDATE;
+      throw Error("No output jax registered for "+jax.mimeType);
+    }
+    //
+    //  Record the output jax
+    //  and put this script in the queue for that jax
+    //
+    jax.outputJax = this.outputJax[jax.mimeType][0].id;
+    if (!state.jax[jax.outputJax]) {
+      if (state.jaxIDs.length === 0) {
+        // use original array until we know there are more (rather than two copies)
+        state.jax[jax.outputJax] = state.scripts;
+      } else {
+        if (state.jaxIDs.length === 1) // get the script so far for the existing jax
+          {state.jax[state.jaxIDs[0]] = state.scripts.slice(0,state.i)}
+        state.jax[jax.outputJax] = []; // start a new array for the new jax
+      }
+      state.jaxIDs.push(jax.outputJax); // save the ID of the jax
+    }
+    if (state.jaxIDs.length > 1) {state.jax[jax.outputJax].push(script)}
+    //
+    //  Mark script as needing output
+    //
+    script.MathJax.state = STATE.OUTPUT;
+  },
+  
+  //
+  //  Pre- and post-process scripts by jax
+  //    (to get scaling factors, hide/show output, and so on)
+  //  Since this can cause the jax to load, we need to trap restarts
+  //
+  prepareOutput: function (state,method) {
+    while (state.j < state.jaxIDs.length) {
+      var id = state.jaxIDs[state.j], JAX = MathJax.OutputJax[id];
+      if (JAX[method]) {
+        try {
+          var result = JAX[method](state);
           if (typeof result === 'function') {
-            if (result.called) continue; // go back and call Process() again
+            if (result.called) continue;  // go back and try again
             this.RestartAfter(result);
           }
-          result.Attach(script,inputJax[type]);
-          script.MathJax.state = STATE.OUTPUT;
+        } catch (err) {
+          if (!err.restart) {
+            MathJax.Message.Set("Error preparing "+id+" output ("+method+")",null,600);
+            MathJax.Hub.lastPrepError = err;
+            state.j++;
+          }
+          return MathJax.Callback.After(["prepareOutput",this,state,method],err.restart);
         }
-        var jax = script.MathJax.elementJax;
-        if (!outputJax[jax.mimeType]) {
-          script.MathJax.state = STATE.UPDATE;
-          throw Error("No output jax registered for "+jax.mimeType);
-        }
-        jax.outputJax = outputJax[jax.mimeType][0];
-        result = jax.outputJax.Process(script);
-        if (typeof result === 'function') {
-          if (result.called) continue; // go back and call Process() again
-          this.RestartAfter(result);
-        }
-        script.MathJax.state = STATE.PROCESSED;
-        this.signal.Post(["New Math",jax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
-        i++;
-        if (new Date().getTime() - start > this.processUpdateTime && i < scripts.length)
-          {start = 0; this.RestartAfter(MathJax.Callback.Delay(1))}
       }
-    } catch (err) {
-      if (!err.restart) {
-        if (!this.config.errorSettings.message) {throw err}
-        this.formatError(script,err); i++;
-      }
-      if (!n) {n = 0}; var m = Math.floor((n+i)/(n+scripts.length)*100); n += i;
-      if (this.config.showProcessingMessages) {MathJax.Message.Set("Processing math: "+m+"%",0)}
-      return MathJax.Callback.After(["processScripts",this,scripts.slice(i),start,n],err.restart);
-    }
-    if ((n || scripts.length) && this.config.showProcessingMessages) {
-      MathJax.Message.Set("Processing Math: 100%",0);
-      MathJax.Message.Clear(0);
+      state.j++;
     }
     return null;
   },
+
+  processOutput: function (state) {
+    var result, STATE = MathJax.ElementJax.STATE, script, m = state.scripts.length;
+    try {
+      //
+      //  Loop through the scripts
+      //
+      while (state.i < m) {
+        //
+        //  Check that there is an element jax
+        //
+        script = state.scripts[state.i]; if (!script || !script.MathJax) {state.i++; continue}
+        var jax = script.MathJax.elementJax; if (!jax) {state.i++; continue}
+        //
+        //  Call the output Jax's Process method (which will be its Translate()
+        //  method once loaded).  Mark it as complete and remove the preview.
+        //
+        result = MathJax.OutputJax[jax.outputJax].Process(script,state);
+        script.MathJax.state = STATE.PROCESSED; state.i++;
+        if (script.MathJax.preview) {
+          script.MathJax.preview.style.display = "none";
+          script.MathJax.preview.style.visibility = "hidden"; // hide from screen readers
+        }
+        //
+        //  Signal that new math is available
+        //
+        this.signal.Post(["New Math",jax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
+        //
+        //  Update the processing message, if needed
+        //
+        var now = new Date().getTime();
+        if (now - state.start > this.processUpdateTime && state.i < state.scripts.length)
+          {state.start = now; this.RestartAfter(MathJax.Callback.Delay(this.processUpdateDelay))}
+      }
+    } catch (err) {return this.processError(err,state,"Output")}
+    //
+    //  Put up the typesetting-complete message
+    //
+    if (state.scripts.length && this.config.showProcessingMessages) {
+      MathJax.Message.Set("Typesetting math: 100%",0);
+      MathJax.Message.Clear(0);
+    }
+    state.i = state.j = 0;
+    return null;
+  },
+  
+  processMessage: function (state,type) {
+    var m = Math.floor(state.i/(state.scripts.length)*100);
+    var message = (type === "Output" ? "Typesetting" : "Processing");
+    if (this.config.showProcessingMessages) {MathJax.Message.Set(message+" math: "+m+"%",0)}
+  },
+
+  processError: function (err,state,type) {
+    if (!err.restart) {
+      if (!this.config.errorSettings.message) {throw err}
+      this.formatError(state.scripts[state.i],err); state.i++;
+    }
+    this.processMessage(state,type);
+    return MathJax.Callback.After(["process"+type,this,state],err.restart);
+  },
+  
   formatError: function (script,err) {
     var error = MathJax.HTML.Element("span",{className:"MathJax_Error"},this.config.errorSettings.message);
+    error.jaxID = "Error";
+    if (MathJax.Extension.MathEvents) {
+      error.oncontextmenu = MathJax.Extension.MathEvents.Event.Menu;
+      error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
+    } else {
+      MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js",function () {
+        error.oncontextmenu = MathJax.Extension.MathEvents.Event.Menu;
+        error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
+      });
+    }
     script.parentNode.insertBefore(error,script);
+    if (script.MathJax.preview) {
+      script.MathJax.preview.style.display = "none";
+      script.MathJax.preview.style.visibility = "hidden"; // hide from screen readers
+    }
     this.lastError = err;
   },
   
@@ -1505,8 +1732,7 @@ MathJax.Hub.Insert(MathJax.Hub.config.styles,MathJax.Message.styles);
 MathJax.Hub.Insert(MathJax.Hub.config.styles,{".MathJax_Error":MathJax.Hub.config.errorSettings.style});
 
 //
-//  Storage area for preprocessors and extensions
-//  (should these be classes?)
+//  Storage area for extensions and preprocessors
 //
 MathJax.Extension = {};
 
@@ -1594,7 +1820,8 @@ MathJax.Hub.Startup = {
   //
   ConfigDefault: function () {
     var CONFIG = MathJax.Hub.config;
-    if (CONFIG["v1.0-compatible"] && CONFIG.jax.length === 0)
+    if (CONFIG["v1.0-compatible"] && (CONFIG.jax||[]).length === 0 &&
+        !this.params.config && (CONFIG.config||[]).length === 0)
       {return MathJax.Ajax.Require(this.URL("extensions","v1.0-warning.js"))}
   },
 
@@ -1637,11 +1864,11 @@ MathJax.Hub.Startup = {
   //  Load the input and output jax
   //
   Jax: function () {
-    var config = MathJax.Hub.config;
+    var config = MathJax.Hub.config, jax = MathJax.Hub.outputJax;
     //  Save the order of the output jax since they are loading asynchronously
     for (var i = 0, m = config.jax.length, k = 0; i < m; i++) {
       if (config.jax[i].substr(0,7) === "output/") 
-        {config.outputJax.order[config.jax[i].substr(7)] = k; k++}
+        {jax.order[config.jax[i].substr(7)] = k; k++}
     }
     var queue = MathJax.Callback.Queue();
     return queue.Push(
@@ -1674,7 +1901,7 @@ MathJax.Hub.Startup = {
   //  (this must come after the jax are loaded)
   //
   Menu: function () {
-    var menu = MathJax.Hub.config.menuSettings, jax = MathJax.Hub.config.outputJax, registered;
+    var menu = MathJax.Hub.config.menuSettings, jax = MathJax.Hub.outputJax, registered;
     for (var id in jax) {if (jax.hasOwnProperty(id)) {
       if (jax[id].length) {registered = jax[id]; break}
     }}
@@ -1686,12 +1913,46 @@ MathJax.Hub.Startup = {
   },
   
   //
+  //  Set the location to the designated hash position
+  //
+  Hash: function () {
+    if (MathJax.Hub.config.positionToHash && document.location.hash)
+      {setTimeout("document.location = document.location.hash",1)}
+  },
+  
+  //
+  //  Load the Menu and Zoom code, if it hasn't already been loaded.
+  //  This is called after the initial typeset, so should no longer be
+  //  competing with other page loads, but will make these available
+  //  if needed later on.
+  //
+  MenuZoom: function () {
+    if (!MathJax.Extension.MathMenu) {
+      setTimeout(
+        MathJax.Callback(["Require",MathJax.Ajax,"[MathJax]/extensions/MathMenu.js",{}]),
+        1000
+      );
+    }
+    if (!MathJax.Extension.MathZoom) {
+      setTimeout(
+        MathJax.Callback(["Require",MathJax.Ajax,"[MathJax]/extensions/MathZoom.js",{}]),
+        2000
+      );
+    }
+  },
+  
+  //
   //  Setup the onload callback
   //
   onLoad: function (when) {
     var onload = this.onload =
       MathJax.Callback(function () {MathJax.Hub.Startup.signal.Post("onLoad")});
-    if (window.addEventListener) {window.addEventListener("load",onload,false)}
+    if (document.body && document.readyState && document.readyState !== "loading") {return [onload]}
+    if (window.addEventListener) {
+      window.addEventListener("load",onload,false);
+      if (!this.params.noDOMContentEvent)
+        {window.addEventListener("DOMContentLoaded",onload,false)}
+    }
     else if (window.attachEvent) {window.attachEvent("onload",onload)}
     else {window.onload = onload}
     return onload;
@@ -1778,9 +2039,13 @@ MathJax.Hub.Startup = {
       cObject.Augment(null,cdef);
       return this;
     },
-    Process: function (element) {
-      var load = AJAX.Require(this.directory+"/"+this.JAXFILE);
-      if (!load.called) {this.constructor.prototype.Process = function (element) {return load}}
+    preProcess: function (element) {
+      var load, file = this.directory+"/"+this.JAXFILE;
+      this.constructor.prototype.preProcess = function (element) {
+	if (!load.called) {return load}
+        throw Error(file+" failed to load properly");
+      }
+      load = AJAX.Require(file);
       return load;
     },
     Translate: function (element) {
@@ -1794,7 +2059,7 @@ MathJax.Hub.Startup = {
     Startup: function () {},
     loadComplete: function (file) {
       if (file === "config.js") {
-        AJAX.loadComplete(this.directory+"/"+file);
+        return AJAX.loadComplete(this.directory+"/"+file);
       } else {
         var queue = CALLBACK.Queue();
         queue.Push(
@@ -1809,14 +2074,18 @@ MathJax.Hub.Startup = {
           ["Post",HUB.Startup.signal,this.id+" Jax Startup"],
           ["Startup",this],
           ["Post",HUB.Startup.signal,this.id+" Jax Ready"],
-          [function (THIS) {THIS.Process = THIS.Translate},this.constructor.prototype],
-          ["loadComplete",AJAX,this.directory+"/"+file]
+          [function (THIS) {
+            THIS.preProcess  = THIS.preTranslate;
+            THIS.Process     = THIS.Translate;
+            THIS.postProcess = THIS.postTranslate;
+          },this.constructor.prototype]
         );
+        return queue.Push(["loadComplete",AJAX,this.directory+"/"+file]);
       }
     }
   },{
-    id: "unknown",
-    version: "1.1",
+    id: "Jax",
+    version: "2.0",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -1840,16 +2109,21 @@ MathJax.Hub.Startup = {
       var load = queue.Push(AJAX.Require(this.directory+"/"+this.JAXFILE));
       if (!load.called) {this.constructor.prototype.Process = function () {return load}}
       // Load the associated output jax
-      jax = HUB.config.outputJax["jax/"+jax[0]];
+      jax = HUB.outputJax["jax/"+jax[0]];
       if (jax) {queue.Push(AJAX.Require(jax[0].directory+"/"+this.JAXFILE))}
       return queue.Push({});
     },
+    needsUpdate: function (jax) {
+      var script = jax.SourceElement();
+      return (jax.originalText !== BASE.HTML.getScript(script));
+    },
     Register: function (mimetype) {
-      if (!HUB.config.inputJax) {HUB.config.inputJax = {}}
-      HUB.config.inputJax[mimetype] = this;
+      if (!HUB.inputJax) {HUB.inputJax = {}}
+      HUB.inputJax[mimetype] = this;
     }
   },{
-    version: "1.1",
+    id: "InputJax",
+    version: "2.0",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -1858,7 +2132,7 @@ MathJax.Hub.Startup = {
 
   BASE.OutputJax = JAX.Subclass({
     Register: function (mimetype) {
-      var jax = HUB.config.outputJax;
+      var jax = HUB.outputJax;
       if (!jax[mimetype]) {jax[mimetype] = []}
       //  If the output jax is earlier in the original configuration list, put it first here
       if (jax[mimetype].length && (this.id === HUB.config.menuSettings.renderer ||
@@ -1871,10 +2145,12 @@ MathJax.Hub.Startup = {
     },
     Remove: function (jax) {}
   },{
-    version: "1.1",
+    id: "OutputJax",
+    version: "2.0",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
-    fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts"
+    fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
+    imageDir: ROOT+(BASE.isPacked?"":"/..")+"/images"
   });
   
   /***********************************/
@@ -1900,15 +2176,22 @@ MathJax.Hub.Startup = {
       script.MathJax.state = this.STATE.UPDATE;
       return HUB.Reprocess(script,callback);
     },
-    Update: function (callback) {
+    Update: function (callback) {return this.Rerender(callback)},
+    Rerender: function (callback) {
       var script = this.SourceElement();
       script.MathJax.state = this.STATE.OUTPUT;
       return HUB.Process(script,callback);
     },
-    Remove: function () {
-      this.outputJax.Remove(this);
-      HUB.signal.Post(["Remove Math",this.inputID]); // wait for this to finish?
-      this.Detach();
+    Remove: function (keep) {
+      if (this.hover) {this.hover.clear(this)}
+      BASE.OutputJax[this.outputJax].Remove(this);
+      if (!keep) {
+        HUB.signal.Post(["Remove Math",this.inputID]); // wait for this to finish?
+        this.Detach();
+      }
+    },
+    needsUpdate: function () {
+      return BASE.InputJax[this.inputJax].needsUpdate(this);
     },
 
     SourceElement: function () {return document.getElementById(this.inputID)},
@@ -1922,9 +2205,10 @@ MathJax.Hub.Startup = {
         if (script.id) {this.inputID = script.id}
           else {script.id = this.inputID = BASE.ElementJax.GetID(); this.newID = 1}
       }
-      jax.originalText = (script.text == "" ? script.innerHTML : script.text);
+      jax.originalText = BASE.HTML.getScript(script);
       jax.inputJax = inputJax;
       if (jax.root) {jax.root.inputID = jax.inputID}
+      return jax;
     },
     Detach: function () {
       var script = this.SourceElement(); if (!script) return;
@@ -1938,13 +2222,14 @@ MathJax.Hub.Startup = {
         if (typeof(jax[id]) === 'undefined' && id !== 'newID') {delete this[id]}
       }
       for (id in jax) {
-        if (!this.hasOwnProperty(id)) continue;
+        if (!jax.hasOwnProperty(id)) continue;
         if (typeof(this[id]) === 'undefined' || (this[id] !== jax[id] && id !== 'inputID'))
           {this[id] = jax[id]}
       }
     }
   },{
-    version: "1.1",
+    id: "ElementJax",
+    version: "2.0",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -1963,6 +2248,20 @@ MathJax.Hub.Startup = {
     }
   });
   BASE.ElementJax.prototype.STATE = BASE.ElementJax.STATE;
+
+  //
+  //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
+  //
+  BASE.OutputJax.Error = {
+    id: "Error", version: "2.0", config: {},
+    ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
+    Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
+    getJaxFromMath: function () {return {inputJax:"Error", outputJax:"Error", originalText:"Math Processing Error"}}
+  };
+  BASE.InputJax.Error = {
+    id: "Error", version: "2.0", config: {},
+    sourceMenuTitle: "Error Message"
+  };
   
 })("MathJax");
 
@@ -1998,7 +2297,8 @@ MathJax.Hub.Startup = {
     isPC:        (navigator.platform.substr(0,3) === "Win"),
     isMSIE:      (window.ActiveXObject != null && window.clipboardData != null),
     isFirefox:   (window.netscape != null && document.ATTRIBUTE_NODE != null && !window.opera),
-    isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null && !window.chrome),
+    isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null &&
+                     (!window.chrome || window.chrome.loadTimes == null)),
     isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
     isOpera:     (window.opera != null && window.opera.version != null),
     isKonqueror: (window.hasOwnProperty && window.hasOwnProperty("konqueror") && navigator.vendor == "KDE"),
@@ -2044,25 +2344,56 @@ MathJax.Hub.Startup = {
     Safari: function (browser) {
       var v = parseInt((String(browser.version).split("."))[0]);
       if (v > 85) {browser.webkit = browser.version}
-      if      (v >= 533) {browser.version = "5.0"}
+      if      (v >= 534) {browser.version = "5.1"}
+      else if (v >= 533) {browser.version = "5.0"}
       else if (v >= 526) {browser.version = "4.0"}
       else if (v >= 525) {browser.version = "3.1"}
       else if (v >  500) {browser.version = "3.0"}
       else if (v >  400) {browser.version = "2.0"}
       else if (v >   85) {browser.version = "1.0"}
+      browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
+      browser.noContextMenu = browser.isMobile;
     },
     Firefox: function (browser) {
-      if (browser.version === "0.0" && navigator.product === "Gecko" && navigator.productSub) {
-        var date = navigator.productSub.substr(0,8);
-        if      (date >= "20090630") {browser.version = "3.5"}
-        else if (date >= "20080617") {browser.version = "3.0"}
-        else if (date >= "20061024") {browser.version = "2.0"}
+      if ((browser.version === "0.0" || navigator.userAgent.match(/Firefox/) == null) &&
+           navigator.product === "Gecko") {
+        var rv = navigator.userAgent.match(/[\/ ]rv:(\d+\.\d.*?)[\) ]/);
+        if (rv) {browser.version = rv[1]}
+        else {
+          var date = (navigator.buildID||navigator.productSub||"0").substr(0,8);
+          if      (date >= "20111220") {browser.version = "9.0"}
+          else if (date >= "20111120") {browser.version = "8.0"}
+          else if (date >= "20110927") {browser.version = "7.0"}
+          else if (date >= "20110816") {browser.version = "6.0"}
+          else if (date >= "20110621") {browser.version = "5.0"}
+          else if (date >= "20110320") {browser.version = "4.0"}
+          else if (date >= "20100121") {browser.version = "3.6"}
+          else if (date >= "20090630") {browser.version = "3.5"}
+          else if (date >= "20080617") {browser.version = "3.0"}
+          else if (date >= "20061024") {browser.version = "2.0"}
+        }
       }
+      browser.isMobile = (navigator.appVersion.match(/Android/i) != null ||
+                          navigator.userAgent.match(/ Fennec\//) != null);
     },
     Opera: function (browser) {browser.version = opera.version()},
     MSIE: function (browser) {
       browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
+      var MathPlayer = false;
+      try {new ActiveXObject("MathPlayer.Factory.1"); MathPlayer = true} catch(err) {}
+      if (MathPlayer) {
+        var mathplayer = document.createElement("object");
+        mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
+        document.getElementsByTagName("head")[0].appendChild(mathplayer);
+        document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
+        browser.hasMathPlayer = true;
+        if (document.readyState && (document.readyState === "loading" ||
+                                    document.readyState === "interactive")) {
+          document.write('<?import namespace="m" implementation="#MathPlayer">');
+          browser.mpImported = true;
+        }
+      }
     }
   });
   HUB.Browser.Select(MathJax.Message.browsers);
@@ -2086,6 +2417,8 @@ MathJax.Hub.Startup = {
     STARTUP.onLoad(),
     function () {MathJax.isReady = true}, // indicates that MathJax is ready to process math
     ["Typeset",STARTUP],
+    ["Hash",STARTUP],
+    ["MenuZoom",STARTUP],
     ["Post",STARTUP.signal,"End"]
   );
   

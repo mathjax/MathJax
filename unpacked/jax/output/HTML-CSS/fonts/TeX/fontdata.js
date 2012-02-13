@@ -7,7 +7,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "1.1.1";
+  var VERSION = "2.0";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -33,7 +33,7 @@
       SIZE2  = "MathJax_Size2",
       SIZE3  = "MathJax_Size3",
       SIZE4  = "MathJax_Size4";
-  var H = "H", V = "V";
+  var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
 
   HTMLCSS.Augment({
     FONTDATA: {
@@ -71,12 +71,24 @@
                    offsetG: 0x03B1, variantG: "italic",
                    remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                            0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
-                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58, 0x29F8:[0x002F,"italic"]}},
         "bold":   {fonts:[BOLD,SIZE1,AMS], bold:true,
                    offsetG: 0x03B1, variantG: "bold-italic",
                    remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                            0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
-                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58, 0x29F8:[0x002F,"bold-italic"],
+                           0x2204:"\u2203\u0338", 0x2224:"\u2223\u0338", 0x2226:"\u2225\u0338",
+                           0x2241:"\u223C\u0338", 0x2247:"\u2245\u0338", 
+                           0x226E:"<\u0338", 0x226F:">\u0338",
+                           0x2270:"\u2264\u0338", 0x2271:"\u2265\u0338",
+                           0x2280:"\u227A\u0338", 0x2281:"\u227B\u0338",
+                           0x2288:"\u2286\u0338", 0x2289:"\u2287\u0338",
+                           0x22AC:"\u22A2\u0338", 0x22AD:"\u22A8\u0338",
+//                         0x22AE:"\u22A9\u0338", 0x22AF:"\u22AB\u0338",
+                           0x22E0:"\u227C\u0338", 0x22E1:"\u227D\u0338"//,
+//                         0x22EA:"\u22B2\u0338", 0x22EB:"\u22B3\u0338",
+//                         0x22EC:"\u22B4\u0338", 0x22ED:"\u22B5\u0338"
+                  }},
         "italic": {fonts:[ITALIC,"MathJax_Main-italic",MAIN,SIZE1,AMS], italic:true,
                    remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                            0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
@@ -97,6 +109,10 @@
         "monospace": {fonts:["MathJax_Typewriter",MAIN,SIZE1,AMS]},
         "-tex-caligraphic": {fonts:["MathJax_Caligraphic",MAIN], offsetA: 0x41, variantA: "italic"},
         "-tex-oldstyle": {fonts:["MathJax_Caligraphic",MAIN]},
+        "-tex-mathit": {fonts:["MathJax_Main-italic",ITALIC,MAIN,SIZE1,AMS], italic:true, noIC: true,
+                   remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
+                           0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
         "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
         "-smallOp": {fonts:[SIZE1,MAIN]}
       },
@@ -109,7 +125,7 @@
       
       RULECHAR: 0x2212,
       
-      REMAP: { 
+      REMAP: {
         0x203E: 0x2C9,                  // overline
         0x20D0: 0x21BC, 0x20D1: 0x21C0, // combining left and right harpoons
         0x20D6: 0x2190, 0x20E1: 0x2194, // combining left arrow and lef-right arrow
@@ -130,7 +146,69 @@
         0x2329: 0x27E8, 0x232A: 0x27E9, // langle, rangle
         0x3008: 0x27E8, 0x3009: 0x27E9, // langle, rangle
         0x2758: 0x2223,                 // VerticalSeparator
-        0x2A2F: 0xD7                    // cross product
+        0x2A2F: 0xD7,                   // cross product
+
+        //
+        //  Letter-like symbols (that appear elsewhere)
+        //
+        0x2102: [0x0043,MML.VARIANT.DOUBLESTRUCK],
+//      0x210A: [0x0067,MML.VARIANT.SCRIPT],
+        0x210B: [0x0048,MML.VARIANT.SCRIPT],
+        0x210C: [0x0048,MML.VARIANT.FRAKTUR],
+        0x210D: [0x0048,MML.VARIANT.DOUBLESTRUCK],
+        0x210E: [0x0068,MML.VARIANT.ITALIC],
+        0x2110: [0x004A,MML.VARIANT.SCRIPT],
+        0x2111: [0x004A,MML.VARIANT.FRAKTUR],
+        0x2112: [0x004C,MML.VARIANT.SCRIPT],
+        0x2115: [0x004E,MML.VARIANT.DOUBLESTRUCK],
+        0x2119: [0x0050,MML.VARIANT.DOUBLESTRUCK],
+        0x211A: [0x0051,MML.VARIANT.DOUBLESTRUCK],
+        0x211B: [0x0052,MML.VARIANT.SCRIPT],
+        0x211C: [0x0052,MML.VARIANT.FRAKTUR],
+        0x211D: [0x0052,MML.VARIANT.DOUBLESTRUCK],
+        0x2124: [0x005A,MML.VARIANT.DOUBLESTRUCK],
+        0x2126: [0x03A9,MML.VARIANT.NORMAL],
+        0x2128: [0x005A,MML.VARIANT.FRAKTUR],
+        0x212C: [0x0042,MML.VARIANT.SCRIPT],
+        0x212D: [0x0043,MML.VARIANT.FRAKTUR],
+//      0x212F: [0x0065,MML.VARIANT.SCRIPT],
+        0x2130: [0x0045,MML.VARIANT.SCRIPT],
+        0x2131: [0x0046,MML.VARIANT.SCRIPT],
+        0x2133: [0x004D,MML.VARIANT.SCRIPT],
+//      0x2134: [0x006F,MML.VARIANT.SCRIPT],
+
+        0x2247: 0x2246,                 // wrong placement of this character
+        0x231C: 0x250C, 0x231D:0x2510,  // wrong placement of \ulcorner, \urcorner
+        0x231E: 0x2514, 0x231F:0x2518,  // wrong placement of \llcorner, \lrcorner
+
+        //
+        //  compound symbols not in these fonts
+        //  
+        0x2204: "\u2203\u0338",    // \not\exists
+        0x220C: "\u220B\u0338",    // \not\ni
+        0x2244: "\u2243\u0338",    // \not\cong
+        0x2249: "\u2248\u0338",    // \not\approx
+        0x2262: "\u2261\u0338",    // \not\equiv
+        0x2274: "\u2272\u0338",    // \not\lesssim
+        0x2275: "\u2273\u0338",    // \not\gtrsim
+        0x2278: "\u2276\u0338",    // \not\lessgtr
+        0x2279: "\u2277\u0338",    // \not\gtrless
+        0x2284: "\u2282\u0338",    // \not\subset
+        0x2285: "\u2283\u0338",    // \not\supset
+        0x22E2: "\u2291\u0338",    // \not\sqsubseteq
+        0x22E3: "\u2292\u0338",    // \not\sqsupseteq
+
+        0x2033: "\u2032\u2032",        // double prime
+        0x2034: "\u2032\u2032\u2032",  // triple prime
+        0x2036: "\u2035\u2035",        // double back prime
+        0x2037: "\u2035\u2035\u2035",  // trile back prime
+        0x2057: "\u2032\u2032\u2032\u2032"  // quadruple prime
+      },
+      
+      REMAPACCENT: {
+        "\u2192":"\u20D7"
+      },
+      REMAPACCENTUNDER: {
       },
       
       PLANE1MAP: [
@@ -244,13 +322,17 @@
           dir: V, HW: [[1,MAIN],[1.2,SIZE1],[1.8,SIZE2],[2.4,SIZE3],[3.0,SIZE4]],
           stretch: {top: [0x23AB,SIZE4], mid:[0x23AC,SIZE4], bot: [0x23AD,SIZE4], ext: [0x23AA,SIZE4]}
         },
+        0x00AF: // macron
+        {
+          dir: H, HW: [[.59,MAIN]], stretch: {rep:[0xAF,MAIN]}
+        },
         0x02C6: // wide hat
         {
-          dir: H, HW: [[.267+.05,MAIN],[.567+.05,SIZE1],[1.005+.05,SIZE2],[1.447+.1,SIZE3],[1.909+.1,SIZE4]]
+          dir: H, HW: [[.267+.25,MAIN],[.567+.25,SIZE1],[1.005+.33,SIZE2],[1.447+.33,SIZE3],[1.909,SIZE4]]
         },
         0x02DC: // wide tilde
         {
-          dir: H, HW: [[.333,MAIN],[.555+.05,SIZE1],[1+.05,SIZE2],[1.443+.1,SIZE3],[1.887+.1,SIZE4]]
+          dir: H, HW: [[.333+.25,MAIN],[.555+.25,SIZE1],[1+.33,SIZE2],[1.443+.33,SIZE3],[1.887,SIZE4]]
         },
         0x2016: // vertical arrow extension
         {
@@ -396,11 +478,15 @@
         0x005E: {alias: 0x02C6, dir:H}, // wide hat
         0x005F: {alias: 0x2212, dir:H}, // low line
         0x007E: {alias: 0x02DC, dir:H}, // wide tilde
-        0x00AF: {alias: 0x2212, dir:H}, // over line
+        0x02C9: {alias: 0x00AF, dir:H}, // macron
+        0x0302: {alias: 0x02C6, dir:H}, // wide hat
+        0x0303: {alias: 0x02DC, dir:H}, // wide tilde
+        0x030C: {alias: 0x02C7, dir:H}, // wide caron
         0x0332: {alias: 0x2212, dir:H}, // combining low line
         0x2015: {alias: 0x2212, dir:H}, // horizontal line
         0x2017: {alias: 0x2212, dir:H}, // horizontal line
-        0x203E: {alias: 0x2212, dir:H}, // over line
+        0x203E: {alias: 0x00AF, dir:H}, // overline
+        0x2215: {alias: 0x002F, dir:V}, // division slash
         0x2329: {alias: 0x27E8, dir:V}, // langle
         0x232A: {alias: 0x27E9, dir:V}, // rangle
         0x23AF: {alias: 0x2212, dir:H}, // horizontal line extension
@@ -409,7 +495,57 @@
         0x3008: {alias: 0x27E8, dir:V}, // langle
         0x3009: {alias: 0x27E9, dir:V}, // rangle
         0xFE37: {alias: 0x23DE, dir:H}, // horizontal brace down
-        0xFE38: {alias: 0x23DF, dir:H}  // horizontal brace up
+        0xFE38: {alias: 0x23DF, dir:H}, // horizontal brace up
+
+        0x003D: EXTRAH, // equal sign
+        0x219E: EXTRAH, // left two-headed arrow
+        0x21A0: EXTRAH, // right two-headed arrow
+        0x21A4: EXTRAH, // left arrow from bar
+        0x21A5: EXTRAV, // up arrow from bar
+        0x21A6: EXTRAH, // right arrow from bar
+        0x21A7: EXTRAV, // down arrow from bar
+        0x21B0: EXTRAV, // up arrow with top leftwards
+        0x21B1: EXTRAV, // up arrow with top right
+        0x21BC: EXTRAH, // left harpoon with barb up
+        0x21BD: EXTRAH, // left harpoon with barb down
+        0x21BE: EXTRAV, // up harpoon with barb right
+        0x21BF: EXTRAV, // up harpoon with barb left
+        0x21C0: EXTRAH, // right harpoon with barb up
+        0x21C1: EXTRAH, // right harpoon with barb down
+        0x21C2: EXTRAV, // down harpoon with barb right
+        0x21C3: EXTRAV, // down harpoon with barb left
+        0x21DA: EXTRAH, // left triple arrow
+        0x21DB: EXTRAH, // right triple arrow
+        0x23B4: EXTRAH, // top square bracket
+        0x23B5: EXTRAH, // bottom square bracket
+        0x23DC: EXTRAH, // top paren
+        0x23DD: EXTRAH, // bottom paren
+        0x23E0: EXTRAH, // top tortoise shell
+        0x23E1: EXTRAH, // bottom tortoise shell
+        0x2906: EXTRAH, // leftwards double arrow from bar
+        0x2907: EXTRAH, // rightwards double arrow from bar
+        0x294E: EXTRAH, // left barb up right barb up harpoon
+        0x294F: EXTRAV, // up barb right down barb right harpoon
+        0x2950: EXTRAH, // left barb dow right barb down harpoon
+        0x2951: EXTRAV, // up barb left down barb left harpoon
+        0x295A: EXTRAH, // leftwards harpoon with barb up from bar
+        0x295B: EXTRAH, // rightwards harpoon with barb up from bar
+        0x295C: EXTRAV, // up harpoon with barb right from bar
+        0x295D: EXTRAV, // down harpoon with barb right from bar
+        0x295E: EXTRAH, // leftwards harpoon with barb down from bar
+        0x295F: EXTRAH, // rightwards harpoon with barb down from bar
+        0x2960: EXTRAV, // up harpoon with barb left from bar
+        0x2961: EXTRAV, // down harpoon with barb left from bar
+        0x27F5: {alias: 0x2190, dir:H}, // long left arrow
+        0x27F6: {alias: 0x2192, dir:H}, // long right arrow
+        0x27F7: {alias: 0x2194, dir:H}, // long left-right arrow
+        0x27F8: {alias: 0x21D0, dir:H}, // long left double arrow
+        0x27F9: {alias: 0x21D2, dir:H}, // long right double arrow
+        0x27FA: {alias: 0x21D4, dir:H}, // long left-right double arrow
+        0x27FB: {alias: 0x21A4, dir:H}, // long left arrow from bar
+        0x27FC: {alias: 0x21A6, dir:H}, // long right arrow from bar
+        0x27FD: {alias: 0x2906, dir:H}, // long left double arrow from bar
+        0x27FE: {alias: 0x2907, dir:H}  // long right double arrow from bar
       }
     }
   });
@@ -433,12 +569,6 @@
     TEX.Definitions.mathchar0mi.ell  = ['2113',{mathvariant: MML.VARIANT.NORMAL}];
     TEX.Definitions.mathchar0mi.hbar = ['210F',{mathvariant: MML.VARIANT.NORMAL}];
     TEX.Definitions.mathchar0mi.S    = ['00A7',{mathvariant: MML.VARIANT.SCRIPT}];
-    if (MathJax.Hub.Browser.isOpera) {
-      TEX.Definitions.macros.not = ['Macro','\\mathrel{\\rlap{\\hphantom{\\mathrel{\\subset}}\\notChar}}'];
-    } else {
-      TEX.Definitions.mathchar0mo.notChar = ['002F',{mathvariant: MML.VARIANT.ITALIC}];
-      TEX.Definitions.macros.not = ['Macro','\\mathrel{\\rlap{\\notChar}}'];
-    }
   });
   
   HTMLCSS.FONTDATA.FONTS['MathJax_Caligraphic'] = {
@@ -1406,6 +1536,14 @@
   HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x22F1][0] += 700;  // adjust height for \ddots
   HTMLCSS.FONTDATA.FONTS['MathJax_Size4'][0xE154][0] += 200;  // adjust height for brace extender
   HTMLCSS.FONTDATA.FONTS['MathJax_Size4'][0xE154][1] += 200;  // adjust depth for brace extender
+  HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2212][1] += 100; // adjust depth of minus (used as arrow extender)
+  HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x003D][1] += 100; // adjust depth of = (used as arrow extender)
+  HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2245][2] -= 222; // fix error in character's right bearing
+  HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2245][5] = {rfix:-222}; // fix error in character's right bearing
+  MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Main/Bold/MathOperators.js",function () {
+    HTMLCSS.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][2] -= 106; // fix error in character's right bearing
+    HTMLCSS.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][5] = {rfix:-106}; // fix error in character's right bearing
+  });
 
   if (!HTMLCSS.imgFonts) {
     MathJax.Hub.Browser.Select({
@@ -1612,7 +1750,8 @@
             0x2660:0xE230, 0x2661:0xE231, 0x2662:0xE232, 0x2663:0xE233, // \spadesuit, \heartsuit, \diamondsuit, \clubsuit
             0x266D:0xE234, 0x266E:0xE235, 0x266F:0xE236,                // \flat, \naturl, \sharp
             0x2266:0xE2C5, 0x2267:0xE2C6, 0x226E:0xE2C7, 0x226F:0xE2C8, // \leqq, \geqq, \nless, \ngtr
-            0x250C:0xE2CA, 0x2510:0xE2CB, 0x2514:0xE2CC, 0x2518:0xE2CD, // corners
+            0x231C:0xE2CA, 0x231D:0xE2CB, 0x231E:0xE2CC, 0x231F:0xE2CD, // corners
+            0x250C:0xE2CA, 0x2510:0xE2CB, 0x2514:0xE2CC, 0x2518:0xE2CD, // corners (wrong positions)
             0x2571:0xE2CE, 0x2572:0xE2CF, 0x25A0:0xE2D0, 0x25A1:0xE2D1, // \diagup, \diagdown, \blacksquare, \square
             0x25B2:0xE2D2, 0x25B6:0xE2D4, 0x25BC:0xE2D5,                // \blacktriangle, \blacktriangleright, \blacktriangledown
             0x25BD:0xE2D6, 0x25C0:0xE2D7, 0x25CA:0xE2D8,                // \vartriangledown, \blacktriangleleft, \lozenge
@@ -1633,7 +1772,8 @@
             0x2660:0xE270, 0x2661:0xE271, 0x2662:0xE272, 0x2663:0xE273, // \spadesuit, \heartsuit, \diamondsuit, \clubsuit
             0x266D:0xE274, 0x266E:0xE275, 0x266F:0xE276,                // \flat, \naturl, \sharp
             0x2266:0xE2C5, 0x2267:0xE2C6, 0x226E:0xE2C7, 0x226F:0xE2C8, // \leqq, \geqq, \nless, \ngtr
-            0x250C:0xE2CA, 0x2510:0xE2CB, 0x2514:0xE2CC, 0x2518:0xE2CD, // corners
+            0x231C:0xE2CA, 0x231D:0xE2CB, 0x231E:0xE2CC, 0x231F:0xE2CD, // corners
+            0x250C:0xE2CA, 0x2510:0xE2CB, 0x2514:0xE2CC, 0x2518:0xE2CD, // corners (wrong positions)
             0x2571:0xE2CE, 0x2572:0xE2CF, 0x25A0:0xE2D0, 0x25A1:0xE2D1, // \diagup, \diagdown, \blacksquare, \square
             0x25B2:0xE2D2, 0x25B6:0xE2D4, 0x25BC:0xE2D5,                // \blacktriangle, \blacktriangleright, \blacktriangledown
             0x25BD:0xE2D6, 0x25C0:0xE2D7, 0x25CA:0xE2D8,                // \vartriangledown, \blacktriangleleft, \lozenge

@@ -67,7 +67,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2011 Design Science, Inc.
+ *  Copyright (c) 2010-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "1.1";
+  var VERSION = "2.0";
   
   var CONFIG = HUB.CombineConfig("FontWarnings",{
     //
@@ -91,7 +91,7 @@
     //
     messageStyle: {
       position:"fixed", bottom:"4em", left:"3em", width:"40em",
-      border: "3px solid #880000", "background-color": "#E0E0E0",
+      border: "3px solid #880000", "background-color": "#E0E0E0", color: "black",
       padding: "1em", "font-size":"small", "white-space":"normal",
       
       "border-radius": ".75em",                     // Opera 10.5 and IE9
@@ -113,7 +113,7 @@
       webFont: [
         ["closeBox"],
         "MathJax is using web-based fonts to display the mathematics ",
-        "on this page.  These take time to download, so the page would",
+        "on this page.  These take time to download, so the page would ",
         "render faster if you installed math fonts directly in your ",
         "system's font folder.",
         ["fonts"]

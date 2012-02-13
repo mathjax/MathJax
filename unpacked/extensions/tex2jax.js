@@ -8,7 +8,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "1.1.3",
+  version: "2.0",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
@@ -35,6 +35,10 @@ MathJax.Extension.tex2jax = {
       ['$$','$$'],             //  (comment out any you don't want, or add your own, but
       ['\\[','\\]']            //  be sure that you don't have an extra comma at the end)
     ],
+
+    balanceBraces: true,       // determines whether tex2jax requires braces to be
+                               // balanced within math delimiters (allows for nested
+                               // dollar signs).  Set to false to get pre-v2.0 compatibility.
 
     skipTags: ["script","noscript","style","textarea","pre","code"],
                                // The names of the tags whose contents will not be
@@ -56,6 +60,9 @@ MathJax.Extension.tex2jax = {
     processEnvironments: true, // set to true to process \begin{xxx}...\end{xxx} outside
                                //   of math mode, false to prevent that
 
+    processRefs: true,         // set to true to process \ref{...} outside of math mode
+
+
     preview: "TeX"             // set to "none" to not insert MathJax_Preview spans
                                //   or set to an array specifying an HTML snippet
                                //   to use the same preview for every equation.
@@ -72,12 +79,11 @@ MathJax.Extension.tex2jax = {
     }
     if (typeof(element) === "string") {element = document.getElementById(element)}
     if (!element) {element = document.body}
-    this.createPatterns();
-    this.scanElement(element,element.nextSibling);
+    if (this.createPatterns()) {this.scanElement(element,element.nextSibling)}
   },
   
   createPatterns: function () {
-    var starts = [], i, m, config = this.config;
+    var starts = [], parts = [], i, m, config = this.config;
     this.match = {};
     for (i = 0, m = config.inlineMath.length; i < m; i++) {
       starts.push(this.patternQuote(config.inlineMath[i][0]));
@@ -95,20 +101,21 @@ MathJax.Extension.tex2jax = {
         pattern: this.endPattern(config.displayMath[i][1])
       };
     }
-    this.start = new RegExp(
-        starts.sort(this.sortLength).join("|") + 
-        (config.processEnvironments ? "|\\\\begin\\{([^}]*)\\}" : "") + 
-        (config.processEscapes ? "|\\\\*\\\\\\\$" : ""), "g"
-    );
+    if (starts.length) {parts.push(starts.sort(this.sortLength).join("|"))}
+    if (config.processEnvironments) {parts.push("\\\\begin\\{([^}]*)\\}")}
+    if (config.processEscapes)      {parts.push("\\\\*\\\\\\\$")}
+    if (config.processRefs)         {parts.push("\\\\(eq)?ref\\{[^}]*\\}")}
+    this.start = new RegExp(parts.join("|"),"g");
     this.skipTags = new RegExp("^("+config.skipTags.join("|")+")$","i");
     this.ignoreClass = new RegExp("(^| )("+config.ignoreClass+")( |$)");
     this.processClass = new RegExp("(^| )("+config.processClass+")( |$)");
+    return (parts.length > 0);
   },
   
   patternQuote: function (s) {return s.replace(/([\^$(){}+*?\-|\[\]\:\\])/g,'\\$1')},
   
   endPattern: function (end) {
-    return new RegExp(this.patternQuote(end)+"|\\\\.","g");
+    return new RegExp(this.patternQuote(end)+"|\\\\.|[{}]","g");
   },
   
   sortLength: function (a,b) {
@@ -117,7 +124,7 @@ MathJax.Extension.tex2jax = {
   },
   
   scanElement: function (element,stop,ignore) {
-    var cname, tname, ignoreChild;
+    var cname, tname, ignoreChild, process;
     while (element && element != stop) {
       if (element.nodeName.toLowerCase() === '#text') {
         if (!ignore) {element = this.scanText(element)}
@@ -125,8 +132,10 @@ MathJax.Extension.tex2jax = {
         cname = (typeof(element.className) === "undefined" ? "" : element.className);
         tname = (typeof(element.tagName)   === "undefined" ? "" : element.tagName);
         if (typeof(cname) !== "string") {cname = String(cname)} // jsxgraph uses non-string class names!
-        if (element.firstChild && !cname.match(/(^| )MathJax/) && !this.skipTags.exec(tname)) {
-          ignoreChild = (ignore || this.ignoreClass.exec(cname)) && !this.processClass.exec(cname);
+        process = this.processClass.exec(cname);
+        if (element.firstChild && !cname.match(/(^| )MathJax/) &&
+             (process || !this.skipTags.exec(tname))) {
+          ignoreChild = (ignore || this.ignoreClass.exec(cname)) && !process;
           this.scanElement(element.firstChild,stop,ignoreChild);
         }
       }
@@ -151,7 +160,8 @@ MathJax.Extension.tex2jax = {
         do {prev = element; element = element.nextSibling}
           while (element && (element.nodeName.toLowerCase() === 'br' ||
                              element.nodeName.toLowerCase() === '#comment'));
-        if (!element || element.nodeName !== '#text') {return prev}
+        if (!element || element.nodeName !== '#text')
+          {return (this.search.close ? this.prevEndMatch() : prev)}
       }
     }
     return element;
@@ -161,17 +171,23 @@ MathJax.Extension.tex2jax = {
     var delim = this.match[match[0]];
     if (delim != null) {                              // a start delimiter
       this.search = {
-        end: delim.end, mode: delim.mode,
+        end: delim.end, mode: delim.mode, pcount: 0,
         open: element, olen: match[0].length, opos: this.pattern.lastIndex - match[0].length
       };
       this.switchPattern(delim.pattern);
     } else if (match[0].substr(0,6) === "\\begin") {  // \begin{...}
       this.search = {
-        end: "\\end{"+match[1]+"}", mode: "; mode=display",
+        end: "\\end{"+match[1]+"}", mode: "; mode=display", pcount: 0,
         open: element, olen: 0, opos: this.pattern.lastIndex - match[0].length,
         isBeginEnd: true
       };
       this.switchPattern(this.endPattern(this.search.end));
+    } else if (match[0].substr(0,4) === "\\ref" || match[0].substr(0,6) === "\\eqref") {
+      this.search = {
+        mode: "", end: "", open: element, pcount: 0,
+        olen: 0, opos: this.pattern.lastIndex - match[0].length
+      }
+      return this.endMatch([""],element);
     } else {                                         // escaped dollar signs
       // put $ in a span so it doesn't get processed again
       // split off backslashes so they don't get removed later
@@ -189,14 +205,27 @@ MathJax.Extension.tex2jax = {
   },
   
   endMatch: function (match,element) {
-    if (match[0] == this.search.end) {
-      this.search.close = element;
-      this.search.cpos = this.pattern.lastIndex;
-      this.search.clen = (this.search.isBeginEnd ? 0 : match[0].length);
-      this.search.matched = true;
-      element = this.encloseMath(element);
-      this.switchPattern(this.start);
+    var search = this.search;
+    if (match[0] == search.end) {
+      if (!search.close || search.pcount === 0) {
+        search.close = element;
+        search.cpos = this.pattern.lastIndex;
+        search.clen = (search.isBeginEnd ? 0 : match[0].length);
+      }
+      if (search.pcount === 0) {
+        search.matched = true;
+        element = this.encloseMath(element);
+        this.switchPattern(this.start);
+      }
     }
+    else if (match[0] === "{") {search.pcount++}
+    else if (match[0] === "}" && search.pcount) {search.pcount--}
+    return element;
+  },
+  prevEndMatch: function () {
+    this.search.matched = true;
+    var element = this.encloseMath(this.search.close);
+    this.switchPattern(this.start);
     return element;
   },
   
@@ -243,7 +272,7 @@ MathJax.Extension.tex2jax = {
   
   createPreview: function (mode,tex) {
     var preview;
-    if (this.config.preview === "TeX") {preview = [this.filterTeX(tex)]}
+    if (this.config.preview === "TeX") {preview = [this.filterPreview(tex)]}
     else if (this.config.preview instanceof Array) {preview = this.config.preview}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
@@ -259,7 +288,7 @@ MathJax.Extension.tex2jax = {
     return script;
   },
   
-  filterTeX: function (tex) {return tex},
+  filterPreview: function (tex) {return tex},
   
   msieNewlineBug: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9)
   

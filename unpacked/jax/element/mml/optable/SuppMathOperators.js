@@ -148,9 +148,9 @@
         '\u2A7B': MO.REL,      // less-than with question mark above
         '\u2A7C': MO.REL,      // greater-than with question mark above
         '\u2A7D': MO.REL,      // less-than or slanted equal to
-        '\u2A7D\u0338': MO.BIN4, // less-than or slanted equal to with slash
+        '\u2A7D\u0338': MO.REL, // less-than or slanted equal to with slash
         '\u2A7E': MO.REL,      // greater-than or slanted equal to
-        '\u2A7E\u0338': MO.BIN4, // greater-than or slanted equal to with slash
+        '\u2A7E\u0338': MO.REL, // greater-than or slanted equal to with slash
         '\u2A7F': MO.REL,      // less-than or slanted equal to with dot inside
         '\u2A80': MO.REL,      // greater-than or slanted equal to with dot inside
         '\u2A81': MO.REL,      // less-than or slanted equal to with dot above
@@ -186,9 +186,9 @@
         '\u2A9F': MO.REL,      // similar above less-than above equals sign
         '\u2AA0': MO.REL,      // similar above greater-than above equals sign
         '\u2AA1': MO.REL,      // double nested less-than
-        '\u2AA1\u0338': MO.BIN4, // double nested less-than with slash
+        '\u2AA1\u0338': MO.REL, // double nested less-than with slash
         '\u2AA2': MO.REL,      // double nested greater-than
-        '\u2AA2\u0338': MO.BIN4, // double nested greater-than with slash
+        '\u2AA2\u0338': MO.REL, // double nested greater-than with slash
         '\u2AA3': MO.REL,      // double nested less-than with underbar
         '\u2AA4': MO.REL,      // greater-than overlapping less-than
         '\u2AA5': MO.REL,      // greater-than beside less-than
@@ -201,8 +201,8 @@
         '\u2AAC': MO.REL,      // smaller than or equal to
         '\u2AAD': MO.REL,      // larger than or equal to
         '\u2AAE': MO.REL,      // equals sign with bumpy above
-        '\u2AAF\u0338': MO.BIN4, // precedes above single-line equals sign with slash
-        '\u2AB0\u0338': MO.BIN4, // succeeds above single-line equals sign with slash
+        '\u2AAF\u0338': MO.REL, // precedes above single-line equals sign with slash
+        '\u2AB0\u0338': MO.REL, // succeeds above single-line equals sign with slash
         '\u2AB1': MO.REL,      // precedes above single-line not equal to
         '\u2AB2': MO.REL,      // succeeds above single-line not equal to
         '\u2AB3': MO.REL,      // precedes above equals sign

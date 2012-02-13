@@ -205,7 +205,7 @@ MathJax.Hub.Insert(
     0xE382: [707,14,622,14,598],       // stix-small k italic with straight bar through it
     0xE384: [628,14,411,18,390],       // stix-small t italic with straight bar through it
     0xE386: [473,14,355,15,338],       // stix-small Greek iota with straight bar through it
-    0xE388: [707,14,598,18,563],       // stix-small Greek lambda with straight bar through it
+    0xE388: [666,0,493,25,508],        // stix-small Greek lambda with straight bar through it
     0xE389: [666,0,480,16,472],        // LATIN SMALL LETTER LAMBDA WITH STROKE
     0xE3C5: [462,207,514,47,475],      // stix-mathematical bold italic small dotless j
     0xE3C6: [462,9,357,55,274]         // stix-mathematical bold italic small dotless i

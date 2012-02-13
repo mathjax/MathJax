@@ -7,7 +7,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,8 +22,11 @@
  *  limitations under the License.
  */
 
+MathJax.Extension["TeX/boldsymbol"] = {
+  version: "2.0"
+};
+
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1";
   
   var MML = MathJax.ElementJax.mml;
   var TEX = MathJax.InputJax.TeX;
@@ -62,6 +65,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     }
   });
   
+  MathJax.Hub.Startup.signal.Post("TeX boldsymbol Ready");
+
 });
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
@@ -102,9 +107,20 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
               0xE26C: 0xE287}
     };
   }
-  
-  MathJax.Hub.Startup.signal.Post("TeX boldsymbol Ready");
+});
 
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+  var SVG = MathJax.OutputJax.SVG;
+  var FONTS = SVG.FONTDATA.FONTS;
+  var VARIANT = SVG.FONTDATA.VARIANT;
+
+  FONTS["MathJax_Caligraphic-bold"] = "Caligraphic/Bold/Main.js";
+
+  VARIANT["-tex-caligraphic-bold"] =
+    {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"],
+     offsetA: 0x41, variantA: "bold-italic"};
+  VARIANT["-tex-oldstyle-bold"] =
+    {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"]};
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/boldsymbol.js");

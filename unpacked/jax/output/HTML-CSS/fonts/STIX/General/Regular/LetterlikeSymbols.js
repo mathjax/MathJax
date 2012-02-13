@@ -70,11 +70,11 @@ MathJax.Hub.Insert(
     0x2142: [662,0,559,13,485],        // TURNED SANS-SERIF CAPITAL L
     0x2143: [662,0,559,13,485],        // REVERSED SANS-SERIF CAPITAL L
     0x2144: [662,0,630,21,609],        // TURNED SANS-SERIF CAPITAL Y
-    0x2145: [662,0,722,70,677],        // stix-mathematical bold double-struck capital D
-    0x2146: [683,10,574,45,519],       // stix-mathematical bold double-struck small letter d
-    0x2147: [460,10,523,45,478],       // stix-mathematical bold double-struck small letter e
-    0x2148: [683,0,258,55,203],        // stix-mathematical bold double-struck small letter i
-    0x2149: [683,217,305,-15,250],     // stix-mathematical bold double-struck small letter j
+    0x2145: [653,0,713,17,703],        // stix-mathematical bold double-struck capital D
+    0x2146: [683,11,581,40,634],       // stix-mathematical bold double-struck small letter d
+    0x2147: [441,11,515,40,485],       // stix-mathematical bold double-struck small letter e
+    0x2148: [653,0,293,27,346],        // stix-mathematical bold double-struck small letter i
+    0x2149: [653,217,341,-104,394],    // stix-mathematical bold double-struck small letter j
     0x214A: [692,0,664,45,602],        // PROPERTY LINE
     0x214B: [676,13,778,28,736]        // TURNED AMPERSAND
   }

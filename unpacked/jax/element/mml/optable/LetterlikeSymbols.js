@@ -26,10 +26,7 @@
     OPTABLE: {
       prefix: {
         '\u2145': MO.ORD21,    // double-struck italic capital d
-        '\u2146': [2,0,TEXCLASS.ORD], // double-struck italic small d
-        '\u2147': MO.ORD,      // double-struck italic small e
-        '\u2148': MO.ORD,      // double-struck italic small i
-        '\u2149': MO.ORD       // double-struck italic small j
+        '\u2146': [2,0,TEXCLASS.ORD]  // double-struck italic small d
       }
     }
   });

@@ -39,7 +39,6 @@ MathJax.Hub.Insert(
     0xE05B: [574,-16,750,68,683],      // stix-not bumpy single equals
     0xE05C: [553,31,750,68,683],       // stix-not equal or similar
     0xE05E: [762,-565,0,95,425],       // stix-double macron
-    0xE060: [-137,322,0,0,330],        // stix-double underbar
     0xE061: [-137,437,0,0,330],        // stix-triple underbar
     0xE062: [-137,552,0,0,330],        // stix-quadruple underbar
     0xE064: [837,-565,333,-16,349],    // stix-tilde over bar over
@@ -58,7 +57,6 @@ MathJax.Hub.Insert(
     0xE083: [742,234,750,80,670],      // stix-not (slash) equal (slant) or greater-than
     0xE084: [738,230,750,80,670],      // stix-not (vert) equals (slant) or less-than
     0xE085: [742,234,750,80,670],      // stix-not (vert) equals (slant) or greater-than
-    0xE0A1: [691,19,769,27,734],       // stix-capital C with stroke
     0xE0B0: [752,-531,0,100,417],      // stix-left overangle (combining)
     0xE0B1: [-50,271,0,100,417],       // stix-left underangle (combining)
     0xE0B2: [-50,271,0,99,416],        // stix-right underangle (combining)
@@ -124,46 +122,6 @@ MathJax.Hub.Insert(
     0xE36D: [793,235,757,-49,758],     // stix-capital koppa, Greek slashed
     0xE371: [775,235,734,27,710],      // stix-capital sampi, Greek slashed
     0xE37C: [775,235,667,16,641],      // stix-capital E roman bold slashed
-    0xE38A: [676,0,787,50,737],        // stix-mathematical bold double-struck capital A
-    0xE38B: [676,0,729,75,669],        // stix-mathematical bold double-struck capital B
-    0xE38D: [676,0,650,75,595],        // stix-mathematical bold double-struck capital E
-    0xE38E: [676,0,474,75,595],        // stix-mathematical bold double-struck capital F
-    0xE38F: [691,19,751,45,686],       // stix-mathematical bold double-struck capital G
-    0xE390: [676,0,380,80,300],        // stix-mathematical bold double-struck capital I
-    0xE391: [676,19,618,50,548],       // stix-mathematical bold double-struck capital J
-    0xE392: [676,0,792,75,767],        // stix-mathematical bold double-struck capital K
-    0xE393: [676,0,662,70,607],        // stix-mathematical bold double-struck capital L
-    0xE394: [676,0,914,75,839],        // stix-mathematical bold double-struck capital M
-    0xE395: [691,19,787,45,742],       // stix-mathematical bold double-struck capital O
-    0xE396: [692,19,702,45,657],       // stix-mathematical bold double-struck capital S
-    0xE397: [676,0,556,25,645],        // stix-mathematical bold double-struck capital T
-    0xE398: [676,19,738,70,668],       // ??
-    0xE399: [676,0,627,17,704],        // stix-mathematical bold double-struck capital V
-    0xE39A: [676,0,996,17,1015],       // stix-mathematical bold double-struck capital W
-    0xE39B: [676,0,794,20,769],        // stix-mathematical bold double-struck capital X
-    0xE39C: [676,0,652,23,739],        // stix-mathematical bold double-struck capital Y
-    0xE39D: [473,14,623,50,563],       // stix-mathematical bold double-struck small letter a
-    0xE39E: [676,14,643,60,593],       // stix-mathematical bold double-struck small letter b
-    0xE39F: [473,14,574,50,524],       // stix-mathematical bold double-struck small letter c
-    0xE3A2: [676,0,474,25,536],        // stix-mathematical bold double-struck small letter f
-    0xE3A3: [473,205,643,50,583],      // stix-mathematical bold double-struck small letter g
-    0xE3A4: [676,0,624,60,564],        // stix-mathematical bold double-struck small letter h
-    0xE3A7: [676,0,646,60,621],        // stix-mathematical bold double-struck small letter k
-    0xE3A8: [676,0,325,60,265],        // stix-mathematical bold double-struck small letter l
-    0xE3A9: [473,0,908,60,848],        // stix-mathematical bold double-struck small letter m
-    0xE3AA: [473,0,624,60,564],        // stix-mathematical bold double-struck small letter n
-    0xE3AB: [473,14,598,45,553],       // stix-mathematical bold double-struck small letter o
-    0xE3AC: [473,205,643,60,593],      // stix-mathematical bold double-struck small letter p
-    0xE3AD: [473,205,643,50,583],      // stix-mathematical bold double-struck small letter q
-    0xE3AE: [473,0,339,60,445],        // stix-mathematical bold double-struck small letter r
-    0xE3AF: [473,14,549,52,497],       // stix-mathematical bold double-struck small letter s
-    0xE3B0: [676,14,446,25,411],       // stix-mathematical bold double-struck small letter t
-    0xE3B1: [461,16,619,55,559],       // stix-mathematical bold double-struck small letter u
-    0xE3B2: [461,0,494,6,544],         // stix-mathematical bold double-struck small letter v
-    0xE3B3: [461,0,786,22,789],        // stix-mathematical bold double-struck small letter w
-    0xE3B4: [461,0,660,25,635],        // stix-mathematical bold double-struck small letter x
-    0xE3B5: [461,205,471,-9,537],      // stix-mathematical bold double-struck small letter y
-    0xE3B6: [461,0,513,40,473],        // stix-mathematical bold double-struck small letter z
     0xE3B7: [681,11,525,40,482],       // MATHEMATICAL MONOSPACE DIGIT ZERO
     0xE3B8: [681,0,525,90,450],        // MATHEMATICAL MONOSPACE DIGIT ONE
     0xE3B9: [681,0,525,52,470],        // MATHEMATICAL MONOSPACE DIGIT TWO

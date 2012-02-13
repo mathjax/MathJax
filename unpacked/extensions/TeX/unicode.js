@@ -14,7 +14,7 @@
  *      \unicode[.55,0.05][Geramond]{x22D6} % same taken from Geramond font
  *      \unicode[Garamond]{x22D6}           % same, but with default height, depth of .8,.2
  *
- *  Once a size and font are provided for a given conde point, they need
+ *  Once a size and font are provided for a given code point, they need
  *  not be specified again in subsequent \unicode calls for that character.
  *  Note that a font list can be given, but Internet Explorer has a buggy
  *  implementation of font-family where it only looks in the first
@@ -40,7 +40,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/unicode"] = {
-  version: "1.1",
+  version: "2.0",
   unicode: {},
   config: MathJax.Hub.CombineConfig("TeX.unicode",{
     fonts: "STIXGeneral,'Arial Unicode MS'"
@@ -69,7 +69,6 @@ MathJax.Extension["TeX/unicode"] = {
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var TEX = MathJax.InputJax.TeX;
   var MML = MathJax.ElementJax.mml;
-  var FONTS = MathJax.Extension["TeX/unicode"].config.fonts;
   var UNICODE = MathJax.Extension["TeX/unicode"].unicode;
   
   //
@@ -83,50 +82,83 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     Unicode: function(name) {
       var HD = this.GetBrackets(name), font;
       if (HD) {
-        HD = HD.replace(/ /g,"");
-        if (HD.match(/^(\d+(\.\d*)?|\.\d+),(\d+(\.\d*)?|\.\d+)$/))
-          {HD = HD.split(/,/); font = this.GetBrackets(name)} else {font = HD; HD = null}
+        if (HD.replace(/ /g,"").match(/^(\d+(\.\d*)?|\.\d+),(\d+(\.\d*)?|\.\d+)$/))
+          {HD = HD.replace(/ /g,"").split(/,/); font = this.GetBrackets(name)}
+            else {font = HD; HD = null}
       }
       var n = this.trimSpaces(this.GetArgument(name)),
           N = parseInt(n.match(/^x/) ? "0"+n : n);
-      UNICODE[N] = [800,200,500,0,500,{isUnknown:true, isUnicode:true, font:FONTS}];
+      if (!UNICODE[N]) {UNICODE[N] = [800,200,font,N]}
+      else if (!font) {font = UNICODE[N][2]}
       if (HD) {
         UNICODE[N][0] = Math.floor(HD[0]*1000);
         UNICODE[N][1] = Math.floor(HD[1]*1000);
       }
       var variant = this.stack.env.font, def = {};
       if (font) {
-        def.fontfamily = font;
+        UNICODE[N][2] = def.fontfamily = font.replace(/"/g,"'");
         if (variant) {
           if (variant.match(/bold/))   {def.fontweight = "bold"}
-          if (variant.match(/italic/)) {def.fontstyle = "italic"}
+          if (variant.match(/italic|-mathit/)) {def.fontstyle = "italic"}
         }
-        UNICODE[N][5].font = font+","+FONTS
       } else if (variant) {def.mathvariant = variant}
+      def.unicode = [].concat(UNICODE[N]); // make a copy
       this.Push(MML.mtext(MML.entity("#"+n)).With(def));
-    }
-  });
-
-});
-    
-MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var HTMLCSS = MathJax.OutputJax["HTML-CSS"];
-  var UNICODE = MathJax.Extension["TeX/unicode"].unicode;
-
-  //
-  // Override lookupChar to add unicode character to font
-  //
-  var save_lookupChar = HTMLCSS.lookupChar;
-  HTMLCSS.Augment({
-    lookupChar: function (variant,n) {
-      var font = save_lookupChar.call(this,variant,n);
-      if (font[n][5] && font[n][5].isUnknown && UNICODE[n]) {font[n] = UNICODE[n]}
-      return font;
     }
   });
 
   MathJax.Hub.Startup.signal.Post("TeX unicode Ready");
   
+});
+    
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+  var MML = MathJax.ElementJax.mml;
+  var FONTS = MathJax.Extension["TeX/unicode"].config.fonts;
+
+  //
+  //  Override getVariant to make one that includes the font and size
+  //
+  var GETVARIANT = MML.mbase.prototype.HTMLgetVariant;
+  MML.mbase.Augment({
+    HTMLgetVariant: function () {
+      var variant = GETVARIANT.call(this);
+      if (variant.unicode) {delete variant.unicode; delete variant.FONTS} // clear font cache in case of restart
+      if (!this.unicode) {return variant}
+      variant.unicode = true;
+      if (!variant.defaultFont) {
+        variant = MathJax.Hub.Insert({},variant); // make a copy
+        variant.defaultFont = {family:FONTS};
+      }
+      var family = this.unicode[2]; if (family) {family += ","+FONTS} else {family = FONTS}
+      variant.defaultFont[this.unicode[3]] = [
+        this.unicode[0],this.unicode[1],500,0,500,
+        {isUnknown:true, isUnicode:true, font:family}
+      ];
+      return variant;
+    }
+  });
+});
+
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+  var MML = MathJax.ElementJax.mml;
+  var FONTS = MathJax.Extension["TeX/unicode"].config.fonts;
+
+  //
+  //  Override getVariant to make one that includes the font and size
+  //
+  var GETVARIANT = MML.mbase.prototype.SVGgetVariant;
+  MML.mbase.Augment({
+    SVGgetVariant: function () {
+      var variant = GETVARIANT.call(this);
+      if (variant.unicode) {delete variant.unicode; delete variant.FONTS} // clear font cache in case of restart
+      if (!this.unicode) {return variant}
+      variant.unicode = true;
+      if (!variant.forceFamily) {variant = MathJax.Hub.Insert({},variant)} // make a copy
+      variant.defaultFamily = FONTS; variant.noRemap = true;
+      variant.h = this.unicode[0]; variant.d = this.unicode[1];
+      return variant;
+    }
+  });
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/unicode.js");

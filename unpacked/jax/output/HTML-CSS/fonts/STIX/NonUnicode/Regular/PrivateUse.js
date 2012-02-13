@@ -52,8 +52,6 @@ MathJax.Hub.Insert(
     0xE03C: [662,156,685,60,625],      // stix-negated set membership, two horizontal strokes
     0xE03D: [602,98,486,64,422],       // stix-negated (slash) set membership
     0xE040: [415,-92,685,48,637],      // stix-congruence sign (lazy S)
-    0xE041: [911,-433,480,64,398],     // stix-modifier letter small h turned, superscript
-    0xE042: [755,-425,441,57,387],     // stix-modifier letter small a (one-story) turned, superscript
     0xE043: [818,311,685,60,625],      // stix-two-line slanted equal to or less-than - with vertical stroke
     0xE044: [818,311,685,60,625],      // stix-two-line slanted equal to or greater-than with vertical stroke
     0xE045: [818,311,685,60,625],      // stix-two-line slanted equal to or less-than - with slash
@@ -77,7 +75,6 @@ MathJax.Hub.Insert(
     0xE05C: [534,19,685,48,637],       // stix-not equal or similar
     0xE05D: [459,10,452,16,436],       // stix-barred ess
     0xE05E: [698,-547,0,95,406],       // stix-double macron
-    0xE060: [-140,292,1,11,323],       // stix-double underbar
     0xE061: [-141,390,0,11,322],       // stix-triple underbar
     0xE062: [-141,486,0,11,322],       // stix-quadruple underbar
     0xE063: [734,-508,0,94,485],       // stix-accent caret over dot
@@ -119,9 +116,6 @@ MathJax.Hub.Insert(
     0xE099: [567,183,612,25,587],      // stix-narrow sloped nabla
     0xE09A: [719,213,708,18,690],      // stix-parentheses around thin space
     0xE09B: [719,213,708,18,690],      // stix-center dot in parentheses
-    0xE09F: [662,156,902,0,863],       // stix-rising diagonal
-    0xE0A0: [662,156,902,0,863],       // stix-falling diagonal
-    0xE0A1: [676,14,734,18,700],       // stix-capital C with stroke
     0xE0A2: [460,218,561,24,539],      // stix-barred open gee
     0xE0A4: [470,233,378,10,358],      // stix-Latin letter small r-fishhook, reversed, with descender stem
     0xE0A5: [669,-426,397,75,338],     // stix-hooktop (phonetic symbol)
@@ -186,7 +180,6 @@ MathJax.Hub.Insert(
     0xE0E1: [757,0,389,81,318],        // stix-seconds (roman s with dot below)
     0xE0E2: [754,0,500,60,429],        // stix-years (roman y with dot below)
     0xE0E3: [638,134,842,35,807],      // stix-eclipse
-    0xE0E4: [773,80,700,94,606],       // stix-Uranus
     0xE0E5: [690,189,523,72,450],      // stix-dashed solidus
     0xE0E6: [690,189,523,72,450],      // stix-dashed backslash
     0xE0E7: [811,127,772,35,737],      // stix-narrow down-triangle

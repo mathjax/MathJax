@@ -12,5 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{infix:{"\u2713":c.WIDEACCENT}}});MathJax.Ajax.loadComplete(a.optableDir+"/Dingbats.js")})(MathJax.ElementJax.mml);
+(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{prefix:{"\u2772":c.OPEN},postfix:{"\u2773":c.CLOSE}}});MathJax.Ajax.loadComplete(a.optableDir+"/Dingbats.js")})(MathJax.ElementJax.mml);
 

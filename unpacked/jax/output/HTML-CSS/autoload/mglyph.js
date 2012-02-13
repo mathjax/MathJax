@@ -6,7 +6,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2011 Design Science, Inc.
+ *  Copyright (c) 2010-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "2.0";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -61,20 +61,21 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           this.Append(err); err.toHTML(span); this.data.pop();
           span.bbox = err.HTMLspanElement().bbox;
         } else {
-          img = HTMLCSS.addElement(span,"img",{src:values.src, alt:values.alt, title:values.alt});
+          var mu = this.HTMLgetMu(span);
+          img = HTMLCSS.addElement(span,"img",{isMathJax:true, src:values.src, alt:values.alt, title:values.alt});
           if (values.width)  {
             if (String(values.width).match(/^\s*-?\d+\s*$/)) {values.width += "px"}
-            img.style.width = HTMLCSS.Em(HTMLCSS.length2em(values.width,this.img.img.width/HTMLCSS.em));
+            img.style.width = HTMLCSS.Em(HTMLCSS.length2em(values.width,mu,this.img.img.width/HTMLCSS.em));
           }
           if (values.height) {
             if (String(values.height).match(/^\s*-?\d+\s*$/)) {values.height += "px"}
-            img.style.height = HTMLCSS.Em(HTMLCSS.length2em(values.height,this.img.img.height/HTMLCSS.em));
+            img.style.height = HTMLCSS.Em(HTMLCSS.length2em(values.height,mu,this.img.img.height/HTMLCSS.em));
           }
           span.bbox.w = span.bbox.rw = img.offsetWidth/HTMLCSS.em;
           span.bbox.h = img.offsetHeight/HTMLCSS.em;
           if (values.valign) {
             if (String(values.valign).match(/^\s*-?\d+\s*$/)) {values.valign += "px"}
-            span.bbox.d = -HTMLCSS.length2em(values.valign,this.img.img.height/HTMLCSS.em);
+            span.bbox.d = -HTMLCSS.length2em(values.valign,mu,this.img.img.height/HTMLCSS.em);
             img.style.verticalAlign = HTMLCSS.Em(-span.bbox.d);
             span.bbox.h -= span.bbox.d;
           }
