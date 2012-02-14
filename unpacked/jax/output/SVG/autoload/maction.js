@@ -59,8 +59,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var type = this.Get("actiontype");
       if (this.SVGaction[type]) {this.SVGaction[type].call(this,svg,frame,this.Get("selection"))}
     },
-    SVGstretchH: MML.mbase.SVGstretchH,
-    SVGstretchV: MML.mbase.SVGstretchV,
+    SVGstretchH: MML.mbase.prototype.SVGstretchH,
+    SVGstretchV: MML.mbase.prototype.SVGstretchV,
     
     //
     //  Implementations for the various actions
