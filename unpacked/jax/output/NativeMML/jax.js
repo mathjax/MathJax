@@ -327,7 +327,7 @@
     getHoverBBox: function (jax,span,math) {return EVENT.getBBox(span.parentNode)},
 
     Zoom: function (jax,span,math,Mw,Mh) {
-      jax.root.toNativeMML(span,span);
+      jax.root.toNativeMML(span);
       if (this.msieIE8HeightBug) {span.style.position = "absolute"}
       var mW = math.offsetWidth  || math.scrollWidth,
           mH = math.offsetHeight || math.scrollHeight;
@@ -563,8 +563,28 @@
       //  Some browsers don't seem to add the xmlns attribute, so do it by hand.
       //
       toNativeMML: function (parent) {
-        this.SUPER(arguments).toNativeMML.call(this,parent);
-        parent.lastChild.setAttribute("xmlns",nMML.MMLnamespace);
+        var tag = this.NativeMMLelement(this.type), math = tag;
+        tag.setAttribute("xmlns",nMML.MMLnamespace);
+        this.NativeMMLattributes(tag);
+        if (nMML.widthBug) {tag = tag.appendChild(this.NativeMMLelement("mrow"))}
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          if (this.data[i]) {this.data[i].toNativeMML(tag)}
+            else {tag.appendChild(this.NativeMMLelement("mrow"))}
+        }
+        parent.appendChild(math);
+        //
+        //  Firefox can't get the width of <math> elements right, so
+        //  use an <mrow> to get the actual width and set the style on the 
+        //  <math> element to match.
+        //
+        if (nMML.widthBug && math.scrollWidth < math.firstChild.scrollWidth) {
+          var style = "width:"+math.firstChild.scrollWidth+"px";
+          if (this.style) {
+            if (this.style.match(/(^|;| )width:/)) {style = this.style}
+              else {style += "; "+this.style}
+          }
+          math.setAttribute("style",style);
+        }
       }
     });
 
@@ -641,6 +661,7 @@
     },
     Firefox: function (browser) {
       nMML.forceReflow = true;
+      nMML.widthBug = true;
     }
   });
   
