@@ -148,7 +148,7 @@ MathJax.fileversion = "2.0";
 	  catch (err) {delete this.SUPER; throw err}
 	delete this.SUPER;
 	return result;
-      }.toString().replace(/^\s*function \(\)\s*\{\s*/i,"").replace(/\s*\}\s*$/i,""),
+      }.toString().replace(/^\s*function\s*\(\)\s*\{\s*/i,"").replace(/\s*\}\s*$/i,""),
 
       toString: function () {
 	return this.original.toString.apply(this.original,arguments);
