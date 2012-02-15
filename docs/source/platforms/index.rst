@@ -4,15 +4,16 @@
 Using MathJax in popular web platforms
 ======================================
 
-MathJax plugins are available for a growing number of wikis, blogs, and 
-other content-management systems.  These include WordPress, Blogger, 
-Sphinx, TiddlyWiki, and MathEL-Wiki.  A list of these is available in the 
-`web applications and integrations 
-<http://www.mathjax.org/community/mathjax-in-use/#web-apps>`_ list of the 
+MathJax plugins are available for a growing number of wikis, blogs,
+and other content-management systems.  These include WordPress,
+Blogger, Sphinx, TiddlyWiki, and MathEL-Wiki.  A list of these is
+available in the `web applications
+<http://www.mathjax.org/community/mathjax-in-use>`_ list of the
 `MathJax web site <http://www.mathjax.org>`_.
 
 If the program you are using is not one of these, you may still be able to 
-use MathJax by modifying the theme or template for your wiki or blog.
+use MathJax by modifying the theme or template for your wiki or blog,
+as explained below.
 
 
 Using MathJax in a Theme File

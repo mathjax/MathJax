@@ -29,7 +29,7 @@ Optimization
 * Parallel downloading of files needed by MathJax, for faster startup 
   times.
 
-* Shorter timeout for web fonts, so if they can't be downlaoded, you don't 
+* Shorter timeout for web fonts, so if they can't be downloaded, you don't 
   have to wait so long.
 
 * Rollover to image fonts if a web font fails to load (so you don't have 

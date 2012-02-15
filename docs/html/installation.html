@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installing and Testing MathJax &mdash; MathJax v1.1 documentation</title>
+    <title>Installing and Testing MathJax &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="index.html" />
     <link rel="next" title="Loading and Configuring MathJax" href="configuration.html" />
     <link rel="prev" title="Getting Started" href="start.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="start.html" title="Getting Started"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -55,20 +55,21 @@
 distributed network service (see <a class="reference internal" href="start.html#mathjax-cdn"><em>Using the MathJax CDN</em></a>).  In that case, there is no need to install MathJax
 yourself, and you can begin using MathJax right away; skip this document on
 installation and go directly to <a class="reference internal" href="configuration.html#loading"><em>Configuring MathJax</em></a>.</p>
-<p>MathJax can be loaded from a public web server or privately from your hard drive
-or other local media. To use MathJax in either way, you will need to obtain a
-copy of MathJax and its font package. There are three ways to do this: via
-<tt class="docutils literal"><span class="pre">git</span></tt>, <tt class="docutils literal"><span class="pre">svn</span></tt>, or via a pre-packaged archive. We recommend git or svn, as it
-is easier to keep your installation up to date with these tools.</p>
+<p>MathJax can be loaded from a public web server or privately from your
+hard drive or other local media. To use MathJax in either way, you
+will need to obtain a copy of MathJax. There are three ways to do
+this: via <tt class="docutils literal"><span class="pre">git</span></tt>, <tt class="docutils literal"><span class="pre">svn</span></tt>, or via a pre-packaged archive. We
+recommend <tt class="docutils literal"><span class="pre">git</span></tt> or <tt class="docutils literal"><span class="pre">svn</span></tt>, as it is easier to keep your
+installation up to date with these tools.</p>
 <div class="section" id="obtaining-mathjax-via-git">
 <span id="getting-mathjax-git"></span><h2>Obtaining MathJax via Git<a class="headerlink" href="#obtaining-mathjax-via-git" title="Permalink to this headline">¶</a></h2>
 <p>The easiest way to get MathJax and keep it up to date is to use the <a class="reference external" href="http://git-scm.com/">Git</a> version control system to access our <a class="reference external" href="http://github.com/mathjax/MathJax">GitHub repository</a>. Use the command</p>
 <div class="highlight-sh"><div class="highlight"><pre>git clone git://github.com/mathjax/MathJax.git MathJax
 </pre></div>
 </div>
-<p>to obtain and set up a copy of MathJax.  Note that there is no longer
-a <tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file, and that the <tt class="docutils literal"><span class="pre">fonts</span></tt> directory is now part of
-the repository itself.</p>
+<p>to obtain and set up a copy of MathJax.  (Note that there is no longer
+a <tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file, as there was in v1.0, and that the <tt class="docutils literal"><span class="pre">fonts</span></tt>
+directory is now part of the repository itself.)</p>
 <p>Whenever you want to update MathJax, you can now use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>MathJax
 git remote show origin
@@ -134,12 +135,12 @@ git pull origin v1.1-latest
 <p>If you are more comfortable with the <a class="reference external" href="http://subversion.apache.org/">subversion</a> source control system, you may want
 to use GitHub&#8217;s <tt class="docutils literal"><span class="pre">svn</span></tt> service to obtain MathJax.  If you want to get the
 latest revision using <tt class="docutils literal"><span class="pre">svn</span></tt>, use the command</p>
-<div class="highlight-sh"><div class="highlight"><pre>svn checkout http://svn.github.com/mathjax/MathJax.git MathJax
+<div class="highlight-sh"><div class="highlight"><pre>svn checkout http://github.com/mathjax/MathJax/trunk MathJax
 </pre></div>
 </div>
-<p>to obtain and set up a copy of MathJax.  Note that there is no longer
-a <tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file, and that the <tt class="docutils literal"><span class="pre">fonts</span></tt> directory is now part of
-the repository itself.</p>
+<p>to obtain and set up a copy of MathJax.  (Note that there is no longer
+a <tt class="docutils literal"><span class="pre">fonts.zip</span></tt> file as of v1.1, and that the <tt class="docutils literal"><span class="pre">fonts</span></tt> directory is
+now part of the repository itself.)</p>
 <p>Whenever you want to update MathJax, you can now use</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>MathJax
 svn status -u
@@ -158,26 +159,25 @@ latest bug fixes and new features as they become available.</p>
 that contains all the latest changes to MathJax.  Although we try to make
 sure this version is a stable and usable version of MathJax, it is under
 active development, and at times it may be less stable than the &#8220;release&#8221;
-version.  If you prefer to use one of the tagged releases instead, then
-either use <tt class="docutils literal"><span class="pre">git</span></tt> as described above, or one of the archive files as
-described below.  You can use</p>
-<div class="highlight-sh"><div class="highlight"><pre>svn checkout http://svn.github.com/mathjax/MathJax.git@nnn mathjax
+version.  If you prefer to use one of the tagged releases instead,
+then use</p>
+<div class="highlight-sh"><div class="highlight"><pre>svn checkout http://github.com/mathjax/MathJax/branch/<span class="o">[</span>name<span class="o">]</span> MathJax
 </pre></div>
 </div>
-<p>to check out revision number <cite>nnn</cite>, but it is not easy to tell what
-svn revision number is associated with a particular release.  GitHub&#8217;s
-<tt class="docutils literal"><span class="pre">svn</span></tt> service doesn&#8217;t appear to allow you to specify a particular
-tagged version.</p>
+<p>where <tt class="docutils literal"><span class="pre">[name]</span></tt> is replaced by the name of the branch you want to
+check out; e.g., <tt class="docutils literal"><span class="pre">2.0-latest</span></tt>.  The branch names can be found on the
+<a class="reference external" href="http://github.com/mathjax/MathJax/">GitHub MathJax page</a> under the
+<a class="reference external" href="https://github.com/mathjax/MathJax/branches">branches</a> tab.</p>
 </div>
 <div class="section" id="obtaining-mathjax-via-an-archive">
 <span id="getting-mathjax-zip"></span><h2>Obtaining MathJax via an archive<a class="headerlink" href="#obtaining-mathjax-via-an-archive" title="Permalink to this headline">¶</a></h2>
 <p>Release versions of MathJax are available in archive files from the
 <a class="reference external" href="http://www.mathjax.org/download/">MathJax download page</a> or the
-<a class="reference external" href="http://github.com/mathjax/mathjax/">GitHub downloads</a> (click the
-big download button on the right), where you can download the archive
+<a class="reference external" href="http://github.com/mathjax/mathjax/">MathJax GitHub page</a> (via the
+&#8220;zip&#8221; button, or the &#8220;downloads&#8221; tab), where you can download the archive
 that you need.</p>
-<p>You should download the v1.1 archive (which will get you a file with a
-name like <tt class="docutils literal"><span class="pre">mathjax-MathJax-v1.1-X-XXXXXXXX.zip</span></tt>, where the X&#8217;s are
+<p>You should download the v2.0 archive (which will get you a file with a
+name like <tt class="docutils literal"><span class="pre">mathjax-MathJax-v2.0-X-XXXXXXXX.zip</span></tt>, where the X&#8217;s are
 some sequence of random-looking letters and numbers), then simply unzip
 it.  Once the MathJax directory is unpacked, you should move it to the
 desired location on your server (or your hard disk, if you are using
@@ -185,20 +185,18 @@ it locally rather then through a web server).  One natural location is
 to put it at the top level of your web server&#8217;s hierarchy.  That would
 let you refer to the main MathJax file as <tt class="docutils literal"><span class="pre">/MathJax/MathJax.js</span></tt> from
 within any page on your server.</p>
-<p>From the <a class="reference external" href="http://github.com/mathjax/mathjax/">MathJax GitHub download link</a> (the download button at the
-right), you can also select the <tt class="docutils literal"><span class="pre">Download</span> <span class="pre">.tar.gz</span></tt> or <tt class="docutils literal"><span class="pre">Download</span>
-<span class="pre">.zip</span></tt> buttons to get a copy of the current development version of
-MathJax that contains all the latest changes and bug-fixes.  You can
-also get older tagged versions (if there are any).</p>
+<p>From the <a class="reference external" href="http://github.com/mathjax/mathjax/downloads">MathJax GitHub download link</a>, you can also select
+the <tt class="docutils literal"><span class="pre">Download</span> <span class="pre">.tar.gz</span></tt> or <tt class="docutils literal"><span class="pre">Download</span> <span class="pre">.zip</span></tt> buttons to get a copy of
+the current development version of MathJax that contains all the
+latest changes and bug-fixes.</p>
 <p>If a packaged release receives any important updates, then those
 updates will be part of the <cite>branch</cite> for that version.  The link to
 the <tt class="docutils literal"><span class="pre">.zip</span></tt> file in the download list will be the original release
 version, not the patched version.  To obtain the patched version, use
 the <cite>Branches</cite> drop down menu (at the far left of the menus within the
 page) to select the release branch that you want (for example
-<tt class="docutils literal"><span class="pre">v1.1-latest</span></tt>), and then use the download button and the <tt class="docutils literal"><span class="pre">Download</span>
-<span class="pre">.tar.gz</span></tt> or <tt class="docutils literal"><span class="pre">Download</span> <span class="pre">.zip</span></tt> button to get the latest patched
-version of that release.</p>
+<tt class="docutils literal"><span class="pre">v2.0-latest</span></tt>), and then use the &#8220;zip&#8221; button just above it to get
+the latest patched version of that release.</p>
 </div>
 <div class="section" id="testing-your-installation">
 <h2>Testing your installation<a class="headerlink" href="#testing-your-installation" title="Permalink to this headline">¶</a></h2>
@@ -248,7 +246,7 @@ MathJax is installed, and if that server is running the <a class="reference exte
 server</a>.  In the remote server&#8217;s
 <tt class="docutils literal"><span class="pre">MathJax/fonts/</span></tt> folder, create a file called
 <tt class="docutils literal"><span class="pre">.htaccess</span></tt> that contains the following lines:</p>
-<div class="highlight-python"><pre>&lt;FilesMatch "\.(ttf|otf|eot)$"&gt;
+<div class="highlight-python"><pre>&lt;FilesMatch "\.(ttf|otf|eot|woff)$"&gt;
 &lt;IfModule mod_headers.c&gt;
 Header set Access-Control-Allow-Origin "*"
 &lt;/IfModule&gt;
@@ -301,7 +299,7 @@ directory and restart your browser (see the <a class="reference external" href="
 <p>IE9&#8217;s same-origin policy affects its ability to load web-based fonts, as
 described above.  This has implications not ony to cross-domain loading of
 MathJax, but also to the case where you view a local page (with a
-<tt class="docutils literal"><span class="pre">file://</span></tt> URL) that accesses MathJax from a remote site, like the MathJax
+<tt class="docutils literal"><span class="pre">file://</span></tt> URL) that accesses MathJax from a remote site such as the MathJax
 CDN service.  In this case, IE9 does <strong>not</strong> honor the
 <tt class="docutils literal"><span class="pre">Access-Control-Allow-Origin</span></tt> setting of the remote server (as it would
 if the web page came from an <tt class="docutils literal"><span class="pre">http://</span></tt> URL), and so it <strong>never</strong> allows the
@@ -368,11 +366,11 @@ fonts help page</a> for details).</p>
         <li class="right" >
           <a href="start.html" title="Getting Started"
              >previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

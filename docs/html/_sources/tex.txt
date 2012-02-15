@@ -81,7 +81,7 @@ TeX and LaTeX in HTML documents
 Keep in mind that your mathematics is part of an HTML document, so you
 need to be aware of the special characters used by HTML as part of its
 markup.  There cannot be HTML tags within the math delimiters (other
-than ``<BR>``) as TeX-formatted math does not include HTML tags.
+than ``<br>``) as TeX-formatted math does not include HTML tags.
 Also, since the mathematics is initially given as text on the page,
 you need to be careful that your mathematics doesn't look like HTML
 tags to the browser (which parses the page before MathJax gets to see
@@ -129,6 +129,151 @@ easier to enter ``<`` and ``>`` using TeX-like syntax:
 Keep in mind that the browser interprets your text before MathJax
 does.
 
+Another source of difficulty is when MathJax is used in content
+management systems that have their own document processing commands
+that are interpreted before the HTML page is created.  For example,
+many blogs and wikis use formats like :term:`Markdown` to allow you to
+create the content of you pages.  In Markdown, the underscore is used
+to indicate italics, and this usage will conflict with MathJax's ise
+of the underscore to indicate a subscript.  Since Markdown is applied
+to the page first, it will convert your subscripts markers into
+italics (inserting ``<i>`` tags into your mathematics, which will
+cause MathJax to ignore the math).
+
+Such systems need to be told not to modify the mathematics that
+appears between math delimiters.  That usually involves modifying the
+content-management system itself, which is beyond the means of most
+page authors.  If you are lucky, someone else will already have done
+this for you, and you can find a MathJax plugin for your system on the
+`MathJax-In-Use page
+<http://www.mathjax.org/community/mathjax-in-use/>`_ page.
+
+If there is no plugin for your system, or if it doesn't handle the
+subtleties of issolating the mathematics from the other markup that it
+supports, then you may have to "trick" it into leaving your
+mathematics untouched.  Most content-management systems provide some
+means of indicating text that should not be modified ("verbatim"
+text), often for giving code snippets for computer languages.
+You may be use that to enclose your mathematics so that the system
+leaves it unchanged and MathJax can process it.  For example, in
+Markdown, the back-tick (`````) is used to mark verbatim text, so
+
+.. code-block:: latex
+
+    ... we have `\(x_1 = 132\)` and `\(x_2 = 370\)` and so ...
+
+may be able to protect the underscores from being processed by
+Markdown.
+
+Some content-management systems use the backslash (``\``) as a special
+character for "escaping" other characters, but TeX uses this character
+to indicate a macro name.  In such systems, you may have to double the
+backslashes in order to obtain a single backslash in your HTML page.
+For example, you may have to do
+
+.. code-block:: latex
+
+    \\begin{array}{cc}
+      a & b \\\\
+      c & c
+    \\end{array}
+
+to get an array with the four entries *a*, *b*, *c*, and *d*.  Note in
+particular that if you want ``\\`` you will have to double *both*
+backslashes, giving ``\\\\``.
+
+Finally, if you have enabled single dollar-signs as math delimiters,
+and you want to include a literal dollar sign in your web page (one
+that doesn't represent a math delimiter), you will need to prevent
+MathJax from using it as a math delimiter.  If you also enable the
+``processEscapes`` configuration parameter, then you can use ``\$`` in
+the text of your page to get a dollar sign (without the backslash) in
+the end.  Alternatively, you use something like
+``<span>$</span>`` to isolate the dollar sign so that
+MathJax will not use it as a delimiter.
+
+
+.. _tex-macros:
+
+Defining TeX macros
+===================
+
+You can use the ``\def``, ``\newcommand``, ``\renewcommand``,
+``\newenvironment``, ``\renewenvironment``, and ``\let`` commands to
+create your own macros and environments.  Unlike actual TeX, however,
+in order for MathJax to process these, they must be enclosed in math
+delimiters (since MathJax only processes macros in math-mode).  For
+example
+
+.. code-block:: latex
+
+    \(
+       \def\RR{\bf R}
+       \def\bold#1{\bf #1}
+    \)
+
+would define ``\RR`` to produce a bold-faced "R", and ``\bold{...}``
+to put its argument into bold face.  Both definitions would be
+available throughout the rest of the page.
+
+You can include macro definitions in the `Macros` section of the `TeX`
+blocks of your configuration, but they must be represetned as
+JavaScript objects.  For example, the two macros above can be
+pre-defined in the configuraiton by
+
+.. code-block:: javascript
+
+    MathJax.Hub.Config({
+      TeX: {
+        Macros: {
+	  RR: "{\\bf R}",
+	  bold: ["{\\bf #1}",1]
+	}
+      }
+    });
+
+Here you give the macro as a `name:value` pair, where the `name`
+is the name of the control sequence (without the backslash) that you
+are defining, and `value` is either the replacement string for the
+macro (when there are no arguments) or an array consisting of the
+replacement string followed by the number of arguments for the macro.
+
+Note that the replacement string is given as a JavaScript string
+literal, and the backslash has special meaning in JavaScript strings.
+So to get an actual backslash in the string you must double it, as int
+he examples above.
+
+If you have many such definitions that you want to use on more than
+one page, you could put them into a configuration file that you can
+load along with the main configuration file.  For example, you could
+create a file in ``MathJax/config/local`` called ``local.js`` that
+contains your macro definitions:
+
+.. code-block:: javascript
+
+    MathJax.Hub.Config({
+      TeX: {
+        Macros: {
+	  RR: "{\\bf R}",
+	  bold: ["{\\bf #1}",1]
+	}
+      }
+    });
+
+    MathJax.Ajax.loadComplete("[MathJax]/config/local/local.js");
+
+and then load it along with your main configuration file on the script
+that loads ``MathJax.js``:
+
+.. code-block:: html
+
+    <script src="/MathJax/MathJax.js?config=TeX-AMS_HTML,local/local.js"></script>
+
+If you are using the CDN, you can make a local configuration file on
+your own server, and load MathJax itself from the CDN and your
+configuration file from your server.  See :ref:`Using a Local
+Configuration File with the CDN <local-config-files>` for details.
+
 
 .. _tex-extensions:
 
@@ -165,7 +310,53 @@ script prior to loading MathJax.  For example
 will load the `autobold` TeX extension in addition to those already 
 included in the ``TeX-AMS_HTML`` configuration file.
 
-The main extensions are described below.  
+You can also load these extensions from within a math expresion using
+the non-standard ``\require{extension}`` macro.  For example
+
+.. code-block:: latex
+
+    \(\require{color}\)
+
+would load the `color` extension into the page.  This way you you can
+load extensions into pages that didn't load them in their
+configurations (and prevents you from having to load all the
+extensions into all pages even if they aren't used).
+
+The main extensions are described below.
+
+
+Action
+------
+
+The `action` extension gives you access to the MathML ``<maction>``
+element.  It defines three new non-standard macros:
+
+.. describe:: \\mathtip{math}{tip}
+
+    Use ``tip`` (in math mode) as tooltip for ``math``.
+
+.. describe:: \\texttip{math}{tip}
+
+    Use ``tip`` (in text mode) as tooltip for ``math``.
+
+.. describe:: \\toggle{math1}{math2}...\\endtoggle
+
+    Show ``math1``, and when clicked, show ``math2``, and so on.
+    When the last one is clicked, go back to math1.   
+
+To use this extension in your own configurations, add it to the
+`extensions` array in the TeX block.
+
+.. code-block:: javascript
+
+    TeX: {
+      extensions: ["action.js"]
+    }
+
+This extension is **not** included in any of the combined configurations,
+and will not be loaded automatically, so you must include it
+explicitly in your configuration if you wish to use these commands.
+
 
 AMSmath and AMSsymbols
 ----------------------
@@ -208,6 +399,295 @@ appears in a section of an HTML page that is in bold.
 This extension is **not** loaded by the combined configuration files.
 
 
+BBox
+----
+
+The `bbox` extension defines a new macro for adding background colors,
+borders, and padding to your math expressions.
+
+.. describe:: \\bbox[options]{math}
+
+    puts a bounding box around ``math`` using the provided ``options``.
+    The options can be one of the following:
+
+    1.  A color name used for the background color.
+    2.  A dimension (e.g., ``2px``) to be used as a padding around the
+        mathematics (on all sides).
+    3.  Style attributes to be applied to the mathematics (e.g.,
+        ``border:1px solid red``).
+    4.  A combination of these separated by commas.
+
+Here are some examples:
+
+.. code-block:: latex
+
+    \bbox[red]{x+y}      % a red box behind x+y
+    \bbox[2pt]{x+1}      % an invisible box around x+y with 2pt of extra space
+    \bbox[red,2pt]{x+1}  % a red box around x+y with 2pt of extra space
+    \bbox[5px,border:2px solid red]
+                         % a 2px red border around the math 5px away
+
+This extension is **not** included in any of the combined configurations,
+but it will be loaded automatically, so you do not need to include it
+in your `extensions` array.
+
+
+Begingroup
+----------
+
+The `begingroup` extension implements commands that provide a
+mechanism for localizing macro defintions so that they are not
+permanent.  This is useful if you have a blog site, for example, and
+want to isolate changes that your readers make in their comments so
+that they don't affect later comments.
+
+It defines two new non-standard macros, ``\begingroup`` and
+``\endgroup``, that are used to start and stop a local namespace for
+macros.  Any macros that are defined between the ``\begingroup`` and
+``\endgroup`` will be removed after the ``\endgroup`` is executed.
+For example, if you put ``\(\begingroup\)`` at the top of each reader's
+comments and ``\(\endgroup\)`` at the end, then any macros they define
+within their response will be removed after it is processed.
+
+In addition to these two macros, the `begingroup` extension defines
+the standard ``\global`` and ``\gdef`` control sequences from TeX.
+(The ``\let``, ``\def``, ``\newcommand``, and ``\newenvironment``
+control sequences are already defined in the core TeX input jax.)
+
+To use this extension in your own configurations, add it to the
+`extensions` array in the TeX block.
+
+.. code-block:: javascript
+
+    TeX: {
+      extensions: ["begingroup.js"]
+    }
+
+This extension is **not** included in any of the combined configurations,
+and will not be loaded automatically, so you must include it
+explicitly in your configuration if you wish to use these commands.
+
+
+Cancel
+------
+
+The `cancel` extension defines the following macros:
+
+.. describe:: \\cancel{math}
+
+    Strikeout ``math`` from lower left to upper right.
+
+.. describe:: \\bcancel{math}
+
+    Strikeout ``math`` from upper left to lower right.
+
+.. describe:: \\xcancel{math}
+
+    Strikeout ``math`` with an "X".
+
+.. describe:: \\cancelto{value}{math}
+
+    Strikeout ``math`` with an arrow going to ``value``.
+
+To use this extension in your own configurations, add it to the
+`extensions` array in the TeX block.
+
+.. code-block:: javascript
+
+    TeX: {
+      extensions: ["cancel.js"]
+    }
+
+This extension is **not** included in any of the combined configurations,
+and will not be loaded automatically, so you must include it
+explicitly in your configuration if you wish to use these commands.
+
+
+Color
+-----
+
+The ``\color`` command in the core TeX input jax is not standard in
+that it takes the mathematics to be colored as one of its parameters,
+whereas the LaTeX ``\color`` command is a switch that changes the
+color of everything that follows it.  
+
+The `color` extension changes the ``\color`` command to be compatible
+with the LaTeX implementation, and also defines ``\colorbox``,
+``\fcolorbox``, and ``\DefineColor``, as in the LaTeX color package.
+It defines the standard set of colors (Apricot, Aquamarine,
+Bittersweet, and so on), and provides the RGB and grey-scale color
+spaces in addition to named colors.
+
+To use this extension in your own configurations, add it to the
+`extensions` array in the TeX block.
+
+.. code-block:: javascript
+
+    TeX: {
+      extensions: ["color.js"]
+    }
+
+This extension is **not** included in any of the combined configurations,
+and will not be loaded automatically, so you must include it
+explicitly in your configuration if you wish to use these commands,
+and have ``\color`` be compatible with LaTeX usage.
+
+
+Enclose
+-------
+
+The `enclose` extension gives you access to the MathML ``<menclose>``
+element for adding boxes, ovals, strikethroughs, and other marks over
+your mathematics.  It defines the following non-standard macro:
+
+.. describe:: \\enclose{notation}[attributes]{math}
+
+    Where ``notation`` is a comma-separated list of MathML
+    ``<menclose>`` notations (e.g., ``circle``, ``left``,
+    ``updiagonalstrike``, ``longdiv``, etc.), ``attributes`` are
+    MathML attribute values allowed on the ``<menclose>`` element
+    (e.g., ``mathcolor="red"``, ``mathbackground="yellow"``), and
+    ``math`` is the mathematics to be enclosed.
+
+For example
+
+.. code-block:: latex
+
+   \enclose{circle}[mathcolor="red"]{x}
+   \enclose{circle}[mathcolor="red"]{\color{black}{x}}
+   \enclose{circle,box}{x}
+   \enclose{circle}{\enclose{box}{x}}
+
+To use this extension in your own configurations, add it to the
+`extensions` array in the TeX block.
+
+.. code-block:: javascript
+
+    TeX: {
+      extensions: ["action.js"]
+    }
+
+This extension is **not** included in any of the combined configurations,
+and will not be loaded automatically, so you must include it
+explicitly in your configuration if you wish to use these commands.
+
+
+Extpfeil
+--------
+
+The `extpfeil` extension adds more macros for producing extensible
+arrows, including ``\xtwoheadrightarrow``, ``\xtwoheadleftarrow``,
+``\xmapsto``, ``\xlongequal``, ``\xtofrom``, and a non-standard
+``\Newextarrow`` for creating your own extensible arrows.  The latter
+has the form
+
+.. describe:: \\Newextarrow{\\cs}{lspace,rspace}{unicode-char}
+
+    where ``\cs`` is the new control sequence name to be defined,
+    ``lspace`` and ``rspace`` are integers representing the amount of
+    space (in suitably small units) to use at the left and right of
+    text that is placed above or below the arrow, and ``unicode-char``
+    is a number representing a unicode character position in either
+    decimal or hexadecimal notation.
+
+For example
+
+.. code-block:: latex
+
+   \Newextarrow{\xrightharpoonup}{5,10}{0x21C0}
+
+defines an extensible right harpoon with barb up.  Note that MathJax
+knows how to stretch only a limited number of characters, so you may
+not actually get a stretchy character this way.
+
+To use this extension in your own configurations, add it to the
+`extensions` array in the TeX block.
+
+.. code-block:: javascript
+
+    TeX: {
+      extensions: ["extpfeil.js"]
+    }
+
+This extension is **not** included in any of the combined configurations,
+and will not be loaded automatically, so you must include it
+explicitly in your configuration if you wish to use these commands.
+
+
+HTML
+----
+
+The `HTML` extension gives you access to some HTML features like
+styles, classes, element ID's and clickable links.  It defines the
+following non-standard macros:
+
+.. describe:: \\href{url}{math}
+
+    Makes ``math`` be a link to the page given by ``url``.
+
+.. describe:: \\class{name}{math}
+
+    Attaches the CSS class ``name`` to the output associated with
+    ``math`` when it is included in the HTML page.  This allows your
+    CSS to style the element.
+
+.. describe:: \\cssId{id}{math}
+
+    Attaches an id attribute with value ``id`` to the output
+    associated with ``math`` when it is included in the HTML page.
+    This allows your CSS to style the element, or your javascript to
+    locate it on the page.
+
+.. describe:: \\style{css}{math}
+
+    Adds the give ``css`` declarations to the element associated with
+    ``math``.
+
+For example:
+
+.. code-block:: latex
+
+    x \href{why-equal.html}{=} y^2 + 1
+    
+    (x+1)^2 = \class{hidden}{(x+1)(x+1)}
+
+    (x+1)^2 = \cssId{step1}{\style{visibility:hidden}{(x+1)(x+1)}}
+
+This extension is **not** included in any of the combined configurations,
+but it will be loaded automatically when any of these macros is used,
+so you do not need to include it explicitly in your configuration.
+
+
+mhchem
+------
+
+The `mhchem` extensions implements the ``\ce``, ``\cf``, and ``\cee``
+chemical equation macros of the LaTeX `mhchem` package.  See the
+`mhchem CPAN page <http://www.ctan.org/pkg/mhchem>`_ for more
+information and a link to the documentation for `mhchem`.
+
+For example
+
+.. code-block:: latex
+
+    \ce{C6H5-CHO}
+    \ce{$A$ ->[\ce{+H2O}] $B$}
+    \ce{SO4^2- + Ba^2+ -> BaSO4 v}
+
+To use this extension in your own configurations, add it to the
+`extensions` array in the TeX block.
+
+.. code-block:: javascript
+
+    TeX: {
+      extensions: ["mhchem.js"]
+    }
+
+This extension is **not** included in any of the combined configurations,
+and will not be loaded automatically, so you must include it
+explicitly in your configuration if you wish to use these commands.
+
+
 noErrors
 --------
 
@@ -230,10 +710,11 @@ following to your :meth:`MathJax.Hub.Config()` call:
         inlineDelimiters: ["",""],   // or ["$","$"] or ["\\(","\\)"]
         multiLine: true,             // false for TeX on all one line
         style: {
-          "font-family": "serif",
-          "font-size":   "80%",
+          "font-size":   "90%",
+          "text-align":  "left",
           "color":       "black",
-          "border":      "1px solid" 
+          "padding":     "1px 3px",
+          "border":      "1px solid"
           // add any additional CSS styles that you want
           //  (be sure there is no extra comma at the end of the last item)
         }
@@ -358,6 +839,11 @@ macro is defined in an extension, the name of the extension follows
 the macro name.  If the extension is in brackets, the extension will
 be loaded automatically when the macro or environment is first used.
 
+More complete details about how to use these macros, with examples and
+explanations, is available at Carol Fisher's `TeX Commands Available
+in MathJax
+<http://www.onemathematicalcat.org/MathJaxDocumentation/TeXSyntax.htm>`_ page.
+
 Symbols
 -------
     
@@ -431,8 +917,11 @@ B
     \barwedge               AMSsymbols
     \Bbb
     \Bbbk                   AMSsymbols
+    \bbox                  [bbox]
+    \bcancel                cancel
     \because                AMSsymbols
     \begin
+    \begingroup             begingroup      non-standard
     \beta
     \beth                   AMSsymbols
     \between                AMSsymbols
@@ -498,13 +987,18 @@ C
 .. code-block:: latex
     
     \cal
+    \cancel                 cancel
+    \cancelto               cancel
     \cap
     \Cap                    AMSsymbols
     \cases
     \cdot
     \cdotp
     \cdots
+    \ce                     mhchem
+    \cee                    mhchem
     \centerdot              AMSsymbols
+    \cf                     mhchem
     \cfrac                  AMSmath
     \check
     \checkmark              AMSsymbols
@@ -522,7 +1016,8 @@ C
     \class                 [HTML]           non-standard
     \clubsuit
     \colon
-    \color
+    \color                  color
+    \colorbox               color
     \complement             AMSsymbols
     \cong
     \coprod
@@ -603,12 +1098,15 @@ E
     
     \ell
     \emptyset
+    \enclose                enclose         non-standard
     \end
+    \endgroup               begingroup      non-standard
     \enspace
     \epsilon
     \eqalign
     \eqalignno
     \eqcirc                 AMSsymbols
+    \eqref                 [AMSmath]
     \eqsim                  AMSsymbols
     \eqslantgtr             AMSsymbols
     \eqslantless            AMSsymbols
@@ -625,6 +1123,7 @@ F
     
     \fallingdotseq          AMSsymbols
     \fbox
+    \fcolorbox              color
     \Finv                   AMSsymbols
     \flat
     \forall
@@ -642,6 +1141,7 @@ G
     \Gamma
     \gamma
     \gcd
+    \gdef                   begingroup
     \ge
     \genfrac                AMSmath
     \geq
@@ -652,6 +1152,7 @@ G
     \ggg                    AMSsymbols
     \gggtr                  AMSsymbols
     \gimel                  AMSsymbols
+    \global                 begingroup
     \gnapprox               AMSsymbols
     \gneq                   AMSsymbols
     \gneqq                  AMSsymbols
@@ -774,6 +1275,7 @@ L
     \lesseqqgtr             AMSsymbols
     \lessgtr                AMSsymbols
     \lesssim                AMSsymbols
+    \let                   [newcommand]
     \lfloor
     \lg
     \lgroup
@@ -843,6 +1345,7 @@ M
     \mathscr
     \mathsf
     \mathstrut
+    \mathtip                action          non-standard
     \mathtt
     \matrix
     \max
@@ -850,9 +1353,11 @@ M
     \measuredangle          AMSsymbols
     \mho                    AMSsymbols
     \mid
+    \middle
     \min
     \mit
     \mkern
+    \mmlToken                               non-standard
     \mod
     \models
     \moveleft
@@ -880,6 +1385,7 @@ N
     \neq
     \newcommand            [newcommand]
     \newenvironment        [newcommand]
+    \Newextarrow            extpfeil
     \newline
     \nexists                AMSsymbols
     \ngeq                   AMSsymbols
@@ -1007,7 +1513,9 @@ R
     \rbrack
     \rceil
     \Re
+    \ref                   [AMSmath]
     \renewcommand          [newcommand]
+    \renewenvironment      [newcommand]
     \require                               non-standard
     \restriction            AMSsymbols
     \rfloor
@@ -1130,6 +1638,7 @@ T
     \textit
     \textrm
     \textstyle
+    \texttip                action         non-standard
     \tfrac                  AMSmath
     \therefore              AMSsymbols
     \Theta
@@ -1142,6 +1651,7 @@ T
     \tiny
     \Tiny                                  non-standard
     \to
+    \toggle                 action         non-standard
     \top
     \triangle
     \triangledown           AMSsymbols
@@ -1250,8 +1760,14 @@ X
     
     \Xi
     \xi
+    \xcancel                cancel
     \xleftarrow             AMSmath
+    \xlongequal             extpfeil
+    \xmapsto                extpfeil
     \xrightarrow            AMSmath
+    \xtofrom                extpfeil
+    \xtwoheadleftarrow      extpfeil
+    \xtwoheadrightarrow     extpfeil
 
 Y
 -

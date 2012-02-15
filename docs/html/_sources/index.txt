@@ -2,8 +2,8 @@
 MathJax Documentation
 #####################
 
-MathJax is an open-source JavaScript display engine for LaTeX and
-MathML that works in all modern browsers.
+MathJax is an open-source JavaScript display engine for LaTeX,
+MathML, and AsciiMath notaion that works in all modern browsers.
 
 Basic Usage
 ===========
@@ -24,6 +24,7 @@ Basic Usage
 
     MathJax TeX and LaTeX Support <tex>
     MathJax MathML Support <mathml>
+    MathJax AsciiMath Support <asciimath>
     MathJax Output Formats <output>
 
 .. toctree::

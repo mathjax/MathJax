@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Loading and Configuring MathJax &mdash; MathJax v1.1 documentation</title>
+    <title>Loading and Configuring MathJax &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="index.html" />
     <link rel="next" title="Common Configurations" href="config-files.html" />
     <link rel="prev" title="Installing and Testing MathJax" href="installation.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="installation.html" title="Installing and Testing MathJax"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -89,14 +89,14 @@ typical invocation of MathJax would be</p>
 <span class="nt">&lt;/script&gt;</span>
 </pre></div>
 </div>
-<p>which loads MathJax with a configuration file that includes everything you
-need in order to enter mathematics in either TeX, LaTeX, or MathML
-notation, and produces output using MathML if the browser supports that,
-or HTML-with-CSS otherwise.  If you <strong>don&#8217;t</strong> load an explicit
-configuration file, you will need to include an in-line configuration
-block in order to tell MathJax how to read and display the mathematics on
-your pages.  See the section below on <a class="reference internal" href="#inline-config"><em>Using In-line Configuration
-Options</em></a> for details.</p>
+<p>which loads MathJax with a configuration file that includes everything
+you need in order to enter mathematics in either TeX, LaTeX, or MathML
+notation, and produces output using MathML if the browser supports
+that well enough, or HTML-with-CSS otherwise.  If you <strong>don&#8217;t</strong> load
+an explicit configuration file, you will need to include an in-line
+configuration block in order to tell MathJax how to read and display
+the mathematics on your pages.  See the section below on <a class="reference internal" href="#inline-config"><em>Using
+In-line Configuration Options</em></a> for details.</p>
 <p>It is best to load MathJax in the document&#8217;s <tt class="docutils literal"><span class="pre">&lt;head&gt;</span></tt> block, but it
 is also possible to load MathJax into the <tt class="docutils literal"><span class="pre">&lt;body&gt;</span></tt> section, if
 needed.  If you do this, load it as early as possible, as
@@ -111,7 +111,7 @@ been prepared, for example, via a <a class="reference external" href="http://www
 advanced topic, however; see <a class="reference internal" href="dynamic.html#ajax-mathjax"><em>Loading MathJax Dynamically</em></a> for more details.</p>
 <div class="section" id="loading-mathjax-from-the-cdn">
 <span id="loading-cdn"></span><h2>Loading MathJax from the CDN<a class="headerlink" href="#loading-mathjax-from-the-cdn" title="Permalink to this headline">¶</a></h2>
-<p>MathJax is now available as a web service from <tt class="docutils literal"><span class="pre">cdn.mathjax.org</span></tt>, so you
+<p>MathJax is available as a web service from <tt class="docutils literal"><span class="pre">cdn.mathjax.org</span></tt>, so you
 can obtain MathJax from there without needing to install it on your own
 server.  The CDN is part of a distributed &#8220;cloud&#8221; network, so it is
 handled by servers around the world.  That means that you should get access
@@ -124,10 +124,11 @@ that your pages always use the same version of MathJax.</p>
 get.  The CDN has the following directory structure:</p>
 <div class="highlight-sh"><div class="highlight"><pre>mathjax/         <span class="c"># project-name</span>
    1.0-latest/
-   1.1-beta/     <span class="c"># temporary</span>
    1.1-latest/   <span class="c"># the 1.1 release with any ciritical patches</span>
+   2.0-beta/     <span class="c"># temporary</span>
+   2.0-latest/   <span class="c"># the 2.0 release with any ciritical patches</span>
    ...
-   latest/       <span class="c"># the most current version (1.1-latest in this case)</span>
+   latest/       <span class="c"># the most current version (2.0-latest in this case)</span>
 </pre></div>
 </div>
 <p>Each directory corresponds to an official MathJax release; however,
@@ -135,9 +136,9 @@ hotfixes (urgent bug fixes) will be applied in each release branch as
 necessary, even if new releases are not prepared.  In other words,
 <tt class="docutils literal"><span class="pre">1.1-latest</span></tt> will initially point to v1.1, but over time may be updated
 with patches that would correspond to releases that might be numbers 1.1a,
-1.1b, etc., even if such releases are not actually prepared for
-distribution (they likely won&#8217;t be).</p>
-<p>We may occasionally introduce directories for betas, as indicated above,
+1.1b, etc., even if such releases are not actually packaged for
+separate distribution (they likely won&#8217;t be).
+We may occasionally introduce directories for betas, as indicated above,
 but they will be temporary, and will be removed after the official
 release.</p>
 <p>To load from a particular release, use the directory for that release.
@@ -145,13 +146,13 @@ For example,</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/1.1-latest/MathJax.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
 </pre></div>
 </div>
-<p>will load the stable v1.1 version, even if we release v1.2 or other later
+<p>will load the stable v1.1 version, even after we release v2.0 or other later
 versions, while</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
 </pre></div>
 </div>
 <p>will always be the most current stable release, so it will go from v1.1 to
-v1.2 automatically when that is released.  Note that all the versions
+v2.0 automatically when that is released.  Note that all the versions
 available on the CDN are stable versions; the development version is not
 hosted on the CDN.  (If you wish to use the development version of
 MathJax, you will need to install your own copy; see <a class="reference internal" href="installation.html#installation"><em>Installing
@@ -159,8 +160,8 @@ and Testing MathJax</em></a> for information on how to do that.)</p>
 <p>The use of <tt class="docutils literal"><span class="pre">cdn.mathjax.org</span></tt> is governed by its <a class="reference external" href="http://www.mathjax.org/download/mathjax-cdn-terms-of-service/">terms of service</a>, so be
 sure to read that before linking to the MathJax CDN server.</p>
 <p>If you wish to use the MathJax CDN but use your own configuration file
-rather than one of the pre-defined ones, see the information at the end
-of the <a class="reference internal" href="#config-files"><em>Using a configuration file</em></a> section below.</p>
+rather than one of the pre-defined ones, see the information at the
+end of the <a class="reference internal" href="#local-config-files"><em>Using a Local Configuration File</em></a> section below.</p>
 </div>
 <div class="section" id="configuring-mathjax">
 <h2>Configuring MathJax<a class="headerlink" href="#configuring-mathjax" title="Permalink to this headline">¶</a></h2>
@@ -170,7 +171,7 @@ used independently, or in combination.  For example, you can load a main
 pre-defined configuration file, but include in-line commands to
 adjust the configuration to your needs.</p>
 <p>Note that you must use at least one of these two forms of configuration.
-Unlike earlier versions of MathJax, version 1.1 does not load a default
+Unlike MathJax v1.0, version 1.1 and higher does not load a default
 configuration file.  If you have been using version 1.0&#8217;s
 <tt class="docutils literal"><span class="pre">config/MathJax.js</span></tt> for your configuration, you will need to load that
 configuration file explicitly via a <tt class="docutils literal"><span class="pre">config</span></tt> parameter, as described
@@ -191,15 +192,16 @@ describing them, which you can edit to suit your needs.</p>
 <dl class="describe">
 <dt>
 <tt class="descname">TeX-AMS-MML_HTMLorMML.js</tt></dt>
-<dd><p>Allows math to be specified in TeX, LaTeX, or MathML notation, with the
-<cite>AMSmath</cite> and <cite>AMSsymbols</cite> packages included, producing output using
-MathML if the browser supports it, and HTML-with-CSS otherwise.</p>
+<dd><p>Allows math to be specified in <a class="reference internal" href="glossary.html#term-tex"><em class="xref std std-term">TeX</em></a>, <a class="reference internal" href="glossary.html#term-latex"><em class="xref std std-term">LaTeX</em></a>, or
+<a class="reference internal" href="glossary.html#term-mathml"><em class="xref std std-term">MathML</em></a> notation, with the <cite>AMSmath</cite> and <cite>AMSsymbols</cite>
+packages included, producing output using MathML if the browser
+supports it sufficiently, and HTML-with-CSS otherwise.</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">TeX-AMS_HTML.js</tt></dt>
-<dd><p>Allows math to be specified in TeX or LaTeX notation, with the
+<dd><p>Allows math to be specified in <a class="reference internal" href="glossary.html#term-tex"><em class="xref std std-term">TeX</em></a> or <a class="reference internal" href="glossary.html#term-latex"><em class="xref std std-term">LaTeX</em></a> notation, with the
 <cite>AMSmath</cite> and <cite>AMSsymbols</cite> packages included, and produces output
 using the HTML-CSS output processor.</p>
 </dd></dl>
@@ -207,18 +209,34 @@ using the HTML-CSS output processor.</p>
 <dl class="describe">
 <dt>
 <tt class="descname">MML_HTMLorMML.js</tt></dt>
-<dd><p>Allows math to be specified using MathML notation, and produces MathML
-output if the browser supports it, or HTML-CSS output otherwise.</p>
+<dd><p>Allows math to be specified using <a class="reference internal" href="glossary.html#term-mathml"><em class="xref std std-term">MathML</em></a> notation, and produces MathML
+output if the browser supports it sufficiently, or HTML-CSS output otherwise.</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
-<tt class="descname">Accessible.js</tt></dt>
-<dd><p>Essentially the same as <tt class="docutils literal"><span class="pre">TeX-AMS-MML_HTMLorMML</span></tt>, but with some
-settings specified to make MathJax work better with assistive
-technology (for the visually impaired).  This includes setting the
-zoom trigger to be a double-click, and removing the MathMenu in
-Internet Explorer (which can interfere with some screen readers).</p>
+<tt class="descname">AM_HTMLorMML.js</tt></dt>
+<dd><p>Allows math to be specified using <a class="reference internal" href="glossary.html#term-asciimath"><em class="xref std std-term">AsciiMath</em></a> notation,
+producing output in MathML if the browser supports it
+sufficiently, or as HTML-with-CSS otherwise.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">TeX-AMS-MML_SVG.js</tt></dt>
+<dd><p>Allows math to be specified in <a class="reference internal" href="glossary.html#term-tex"><em class="xref std std-term">TeX</em></a>, <a class="reference internal" href="glossary.html#term-latex"><em class="xref std std-term">LaTeX</em></a>, or
+<a class="reference internal" href="glossary.html#term-mathml"><em class="xref std std-term">MathML</em></a> notation, with the <cite>AMSmath</cite> and <cite>AMSsymbols</cite>
+packages included, producing output using SVG.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">TeX-MML-AM_HTMLorMML.js</tt></dt>
+<dd><p>Allows math to be specified in <a class="reference internal" href="glossary.html#term-tex"><em class="xref std std-term">TeX</em></a>, <a class="reference internal" href="glossary.html#term-latex"><em class="xref std std-term">LaTeX</em></a>,
+<a class="reference internal" href="glossary.html#term-mathml"><em class="xref std std-term">MathML</em></a>, or <a class="reference internal" href="glossary.html#term-asciimath"><em class="xref std std-term">AsciiMath</em></a> notation, with the <cite>AMSmath</cite>
+and <cite>AMSsymbols</cite> packages included, producing output using MathML
+if the browser supports it sufficiently, and HTML-with-CSS
+otherwise.</p>
 </dd></dl>
 
 <p>The first of these is a file that you can edit to suit your needs.  It
@@ -241,7 +259,7 @@ the main code, and a &#8220;full&#8221; version, that also includes the complete
 output processors.  For example, with <tt class="docutils literal"><span class="pre">TeX-AMS_HTML.js</span></tt> and
 <tt class="docutils literal"><span class="pre">TeX-AMS_HTML-full.js</span></tt>, the latter includes the complete HTML-CSS output
 processor.  The &#8220;full&#8221; configuration files are substantially larger (on
-the order of 70KB), so you need to decide whether it is worth loading the
+the order of 70KB more), so you need to decide whether it is worth loading the
 full configuration for your pages.</p>
 <p>If most of your pages include mathematics, then it is to your advantage to
 load the full version, but if you are including MathJax in a theme file for
@@ -278,8 +296,14 @@ can use</p>
 </pre></div>
 </div>
 <p>to first load the main configuration, then the local modifications.</p>
-<p>You can also load MathJax from the MathJax CDN server but use a configuration from
-your own local server:</p>
+</div>
+<div class="section" id="using-a-local-configuration-file-with-the-cdn">
+<span id="local-config-files"></span><h2>Using a local configuration file with the CDN<a class="headerlink" href="#using-a-local-configuration-file-with-the-cdn" title="Permalink to this headline">¶</a></h2>
+<p>You can load MathJax from the MathJax CDN server but still use a
+configuration from your own local server.  For example, suppose you
+have a configuration file called <tt class="docutils literal"><span class="pre">local.js</span></tt> on your own server, in a
+directory called <tt class="docutils literal"><span class="pre">MathJax/config/local</span></tt>.  Then you can load MathJax
+from the CDN and still use your configuration file as follows:</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span>
    <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML,http://myserver.com/MathJax/config/local/local.js&quot;</span><span class="nt">&gt;</span>
 <span class="nt">&lt;/script&gt;</span>
@@ -290,7 +314,7 @@ the complete URL to the local configuration file.  Note that you also
 have to edit the <a class="reference internal" href="api/ajax.html#loadComplete" title="loadComplete"><tt class="xref py py-meth docutils literal"><span class="pre">loadComplete()</span></tt></a> call that is at the bottom of
 the configuration file to change it from
 <tt class="docutils literal"><span class="pre">[MathJax]/config/local/local.js</span></tt> to the complete URL as you give it
-in the <tt class="docutils literal"><span class="pre">config</span></tt> parameter:</p>
+in the <tt class="docutils literal"><span class="pre">config</span></tt> parameter.  In the example above, it would be</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">loadComplete</span><span class="p">(</span><span class="s2">&quot;http://myserver.com/MathJax/config/local/local.js&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -302,22 +326,23 @@ location of your configuration file.</p>
 <div class="section" id="using-in-line-configuration-options">
 <span id="inline-config"></span><h2>Using in-line configuration options<a class="headerlink" href="#using-in-line-configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The second way to configure MathJax is through <cite>in-line configuration</cite>,
-that puts the configuration options within the web page itself.  This
-process has changed in version 1.1 to make it compatible with HTML5.
+which puts the configuration options within the web page itself.  This
+process was changed in version 1.1 to make it compatible with HTML5.
 Earlier versions of MathJax had in-line configuration included within the
 content of the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag that loads <tt class="docutils literal"><span class="pre">MathJax.js</span></tt>, but HTML5 makes
 it illegal to have content for a script with a <tt class="docutils literal"><span class="pre">src</span></tt> attribute.</p>
-<p>MathJax solves this problem by using separate <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tags to perform
-configuration for MathJax.  Because MathJax starts its configuration
-process as soon as it is loaded, the configuration script must come
-<strong>before</strong> the script tag that loads <tt class="docutils literal"><span class="pre">MathJax.js</span></tt> itself.  You do this
-by including a <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> with <tt class="docutils literal"><span class="pre">type=&quot;text/x-mathjax-config&quot;</span></tt>, whose
-content will be run when MathJax performs its configuration.  Generally,
-this script will include a <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call to perform
-MathJax configuration, but it can also include other MathJax commands,
-such as registering signal actions, or any JavaScript commands that you
-want.  You can have as many such script tags as you want, and MathJax will
-process them in order as they appear in the document.</p>
+<p>MathJax solves this problem by using separate <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tags to
+perform the configuration for and loading of MathJax.  Because MathJax
+starts its configuration process as soon as it is loaded, the
+configuration script must come <strong>before</strong> the script tag that loads
+<tt class="docutils literal"><span class="pre">MathJax.js</span></tt> itself.  You do this by including a <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> with
+<tt class="docutils literal"><span class="pre">type=&quot;text/x-mathjax-config&quot;</span></tt> whose content will be run when
+MathJax performs its configuration.  Generally, this script will
+include a <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call to perform MathJax
+configuration, but it can also include other MathJax commands, such as
+registering signal actions, or any JavaScript commands that you want.
+You can have as many such script tags as you need, and MathJax will
+process them in the order in which they appear in the document.</p>
 <p>For instance,</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
   <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
@@ -340,15 +365,16 @@ the <cite>TeX</cite> input processor and the <cite>HTML-CSS</cite> output proces
 HTML-CSS processor to use the TeX fonts rather than other locally installed
 fonts (e.g., <a class="reference internal" href="glossary.html#term-stix"><em class="xref std std-term">STIX</em></a> fonts).  See the <a class="reference internal" href="options/index.html#configuration"><em>configuration options</em></a> section (or the comments in the <tt class="docutils literal"><span class="pre">config/default.js</span></tt>
 file) for more information about the configuration options that you can
-include in the <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call.  Note that this
+include in the <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call.  This
 configuration does <strong>not</strong> load any pre-defined configuration file.</p>
 <p>Note that you can combine in-line configuration with file-based
 configuration; simply include <tt class="docutils literal"><span class="pre">text/x-mathjax-config</span></tt> scripts as above,
 but also include <tt class="docutils literal"><span class="pre">config=filename</span></tt> when you load the <tt class="docutils literal"><span class="pre">MathJax.js</span></tt>
 file.  For example, the <cite>tex2jax</cite> preprocessor does <strong>not</strong> enable the TeX
 single-dollar in-line math delimiters by default.  You can load one of the
-pre-defined configuration files that include the TeX preprocessor, and use
-an in-line configuration block to enable the single-dollar signs:</p>
+pre-defined configuration files that includes the TeX preprocessor, and use
+an in-line configuration block to enable the single-dollar signs, as
+in this example:</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
   <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
     <span class="nx">tex2jax</span><span class="o">:</span> <span class="p">{</span>
@@ -405,17 +431,21 @@ example, you could use</p>
 <span class="nt">&lt;/script&gt;</span>
 </pre></div>
 </div>
-<p>in its footer, so that MathJax will delay setting up until the footer is
-reached, but will not have to wait until images and other files are
-loaded.  If you have <tt class="docutils literal"><span class="pre">text/x-mathjax-config</span></tt> script tags within the main
-body of the document, MathJax will read and process those before
-continuing its startup.  In this way you can use a default configuration
-that can be modified on a page-by-page basis.</p>
+<p>in its footer, so that MathJax will delay setting up until the footer
+is reached, but will not have to wait until images and other files are
+loaded.  In this way, if you have <tt class="docutils literal"><span class="pre">text/x-mathjax-config</span></tt> script
+tags within the main body of the document, MathJax will read and
+process those before continuing its startup.  In this way you can use
+a default configuration that can be modified on a page-by-page basis.</p>
+<p>Note that <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Configured()</span></tt> is not called by MathJax;
+you must make that call somewhere within the page yourself after the
+configuration blocks are set up.  If you do not execute this function,
+MathJax will not process any of the math on the page.</p>
 </div>
 <div class="section" id="details-of-the-mathjax-configuration-process">
 <h2>Details of the MathJax configuration process<a class="headerlink" href="#details-of-the-mathjax-configuration-process" title="Permalink to this headline">¶</a></h2>
 <p>Since there are a number of different ways to configure MathJax, it is
-important to know how they interact.  The configuration process is the
+important to know how they interact.  The configuration actions are the
 following:</p>
 <ol class="arabic simple">
 <li>Process any configuration file explicitly specified as a script parameter.</li>
@@ -444,6 +474,7 @@ when MathJax runs, and browser-dependent erratic behavior will result.</p>
 <li><a class="reference internal" href="#loading-mathjax-from-the-cdn">Loading MathJax from the CDN</a></li>
 <li><a class="reference internal" href="#configuring-mathjax">Configuring MathJax</a></li>
 <li><a class="reference internal" href="#using-a-configuration-file">Using a configuration file</a></li>
+<li><a class="reference internal" href="#using-a-local-configuration-file-with-the-cdn">Using a local configuration file with the CDN</a></li>
 <li><a class="reference internal" href="#using-in-line-configuration-options">Using in-line configuration options</a></li>
 <li><a class="reference internal" href="#configuring-mathjax-after-it-is-loaded">Configuring MathJax after it is loaded</a></li>
 <li><a class="reference internal" href="#details-of-the-mathjax-configuration-process">Details of the MathJax configuration process</a></li>
@@ -486,11 +517,11 @@ when MathJax runs, and browser-dependent erratic behavior will result.</p>
         <li class="right" >
           <a href="installation.html" title="Installing and Testing MathJax"
              >previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

@@ -10,11 +10,12 @@ distributed network service (see :ref:`Using the MathJax CDN
 yourself, and you can begin using MathJax right away; skip this document on
 installation and go directly to :ref:`Configuring MathJax <loading>`.
 
-MathJax can be loaded from a public web server or privately from your hard drive
-or other local media. To use MathJax in either way, you will need to obtain a
-copy of MathJax and its font package. There are three ways to do this: via
-``git``, ``svn``, or via a pre-packaged archive. We recommend git or svn, as it
-is easier to keep your installation up to date with these tools.
+MathJax can be loaded from a public web server or privately from your
+hard drive or other local media. To use MathJax in either way, you
+will need to obtain a copy of MathJax. There are three ways to do
+this: via ``git``, ``svn``, or via a pre-packaged archive. We
+recommend ``git`` or ``svn``, as it is easier to keep your
+installation up to date with these tools.
 
 
 .. _getting-mathjax-git:
@@ -30,9 +31,9 @@ The easiest way to get MathJax and keep it up to date is to use the `Git
 
     git clone git://github.com/mathjax/MathJax.git MathJax
 
-to obtain and set up a copy of MathJax.  Note that there is no longer
-a ``fonts.zip`` file, and that the ``fonts`` directory is now part of
-the repository itself.
+to obtain and set up a copy of MathJax.  (Note that there is no longer
+a ``fonts.zip`` file, as there was in v1.0, and that the ``fonts``
+directory is now part of the repository itself.)
 
 Whenever you want to update MathJax, you can now use
 
@@ -123,11 +124,11 @@ latest revision using ``svn``, use the command
 
 .. code-block:: sh
 
-    svn checkout http://svn.github.com/mathjax/MathJax.git MathJax
+    svn checkout http://github.com/mathjax/MathJax/trunk MathJax
 
-to obtain and set up a copy of MathJax.  Note that there is no longer
-a ``fonts.zip`` file, and that the ``fonts`` directory is now part of
-the repository itself.
+to obtain and set up a copy of MathJax.  (Note that there is no longer
+a ``fonts.zip`` file as of v1.1, and that the ``fonts`` directory is
+now part of the repository itself.)
 
 Whenever you want to update MathJax, you can now use
 
@@ -152,18 +153,17 @@ This gets you the current development copy of MathJax, which is the version
 that contains all the latest changes to MathJax.  Although we try to make
 sure this version is a stable and usable version of MathJax, it is under
 active development, and at times it may be less stable than the "release"
-version.  If you prefer to use one of the tagged releases instead, then
-either use ``git`` as described above, or one of the archive files as
-described below.  You can use
+version.  If you prefer to use one of the tagged releases instead,
+then use
 
 .. code-block:: sh
 
-    svn checkout http://svn.github.com/mathjax/MathJax.git@nnn mathjax
+    svn checkout http://github.com/mathjax/MathJax/branch/[name] MathJax
 
-to check out revision number `nnn`, but it is not easy to tell what
-svn revision number is associated with a particular release.  GitHub's
-``svn`` service doesn't appear to allow you to specify a particular
-tagged version.
+where ``[name]`` is replaced by the name of the branch you want to
+check out; e.g., ``2.0-latest``.  The branch names can be found on the
+`GitHub MathJax page <http://github.com/mathjax/MathJax/>`_ under the
+`branches <https://github.com/mathjax/MathJax/branches>`_ tab.
 
 
 .. _getting-mathjax-zip:
@@ -173,12 +173,12 @@ Obtaining MathJax via an archive
 
 Release versions of MathJax are available in archive files from the
 `MathJax download page <http://www.mathjax.org/download/>`_ or the
-`GitHub downloads <http://github.com/mathjax/mathjax/>`_ (click the
-big download button on the right), where you can download the archive
+`MathJax GitHub page <http://github.com/mathjax/mathjax/>`_ (via the
+"zip" button, or the "downloads" tab), where you can download the archive
 that you need.
 
-You should download the v1.1 archive (which will get you a file with a
-name like ``mathjax-MathJax-v1.1-X-XXXXXXXX.zip``, where the X's are
+You should download the v2.0 archive (which will get you a file with a
+name like ``mathjax-MathJax-v2.0-X-XXXXXXXX.zip``, where the X's are
 some sequence of random-looking letters and numbers), then simply unzip
 it.  Once the MathJax directory is unpacked, you should move it to the
 desired location on your server (or your hard disk, if you are using
@@ -188,11 +188,10 @@ let you refer to the main MathJax file as ``/MathJax/MathJax.js`` from
 within any page on your server.
 
 From the `MathJax GitHub download link
-<http://github.com/mathjax/mathjax/>`_ (the download button at the
-right), you can also select the ``Download .tar.gz`` or ``Download
-.zip`` buttons to get a copy of the current development version of
-MathJax that contains all the latest changes and bug-fixes.  You can
-also get older tagged versions (if there are any).
+<http://github.com/mathjax/mathjax/downloads>`_, you can also select
+the ``Download .tar.gz`` or ``Download .zip`` buttons to get a copy of
+the current development version of MathJax that contains all the
+latest changes and bug-fixes.
 
 If a packaged release receives any important updates, then those
 updates will be part of the `branch` for that version.  The link to
@@ -200,9 +199,8 @@ the ``.zip`` file in the download list will be the original release
 version, not the patched version.  To obtain the patched version, use
 the `Branches` drop down menu (at the far left of the menus within the
 page) to select the release branch that you want (for example
-``v1.1-latest``), and then use the download button and the ``Download
-.tar.gz`` or ``Download .zip`` button to get the latest patched
-version of that release.
+``v2.0-latest``), and then use the "zip" button just above it to get
+the latest patched version of that release.
 
 
 Testing your installation
@@ -263,7 +261,7 @@ server <http://www.apache.org/>`_.  In the remote server's
 ``.htaccess`` that contains the following lines:
 ::
 
-   <FilesMatch "\.(ttf|otf|eot)$">
+   <FilesMatch "\.(ttf|otf|eot|woff)$">
    <IfModule mod_headers.c>
    Header set Access-Control-Allow-Origin "*"
    </IfModule>
@@ -328,7 +326,7 @@ IE9 and remote fonts
 IE9's same-origin policy affects its ability to load web-based fonts, as
 described above.  This has implications not ony to cross-domain loading of
 MathJax, but also to the case where you view a local page (with a
-``file://`` URL) that accesses MathJax from a remote site, like the MathJax
+``file://`` URL) that accesses MathJax from a remote site such as the MathJax
 CDN service.  In this case, IE9 does **not** honor the
 ``Access-Control-Allow-Origin`` setting of the remote server (as it would
 if the web page came from an ``http://`` URL), and so it **never** allows the
