@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/Main/Bold/SpacingModLetters.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ MathJax.Hub.Insert(
     0x2CB: [706,-503,575,114,338],     // MODIFIER LETTER GRAVE ACCENT
     0x2D8: [694,-500,575,102,472],     // BREVE
     0x2D9: [695,-525,575,202,372],     // DOT ABOVE
-    0x2DA: [703,-536,575,160,414],     // RING ABOVE
-    0x2DC: [694,-551,575,96,478]       // SMALL TILDE
+    0x2DA: [702,-536,575,160,414],     // RING ABOVE
+    0x2DC: [694,-552,575,96,478]       // SMALL TILDE
   }
 );
 

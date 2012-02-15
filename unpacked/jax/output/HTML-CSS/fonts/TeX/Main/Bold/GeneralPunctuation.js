@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/Main/Bold/GeneralPunctuation.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,9 +35,9 @@ MathJax.Hub.Insert(
     0x201C: [694,-329,603,110,564],    // LEFT DOUBLE QUOTATION MARK
     0x201D: [694,-329,603,38,492],     // RIGHT DOUBLE QUOTATION MARK
     0x2020: [702,211,511,64,446],      // DAGGER
-    0x2021: [702,203,511,64,446],      // DOUBLE DAGGER
+    0x2021: [702,202,511,64,446],      // DOUBLE DAGGER
     0x2026: [171,-1,1295,74,1221],     // HORIZONTAL ELLIPSIS
-    0x2032: [563,-33,344,35,332]       // PRIME
+    0x2032: [563,-33,344,35,331]       // PRIME
   }
 );
 

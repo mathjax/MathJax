@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/Main/Bold/MiscTechnical.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ MathJax.Hub.Insert(
     0x2309: [750,248,511,17,317],      // RIGHT CEILING
     0x230A: [749,248,511,194,493],     // LEFT FLOOR
     0x230B: [749,248,511,17,317],      // RIGHT FLOOR
-    0x2322: [405,-108,1150,64,1084],   // stix-small down curve
-    0x2323: [393,-126,1150,64,1085]    // stix-small up curve
+    0x2322: [405,-108,1150,65,1084],   // stix-small down curve
+    0x2323: [392,-126,1150,64,1085]    // stix-small up curve
   }
 );
 

@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/GeometricShapes.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ MathJax.Hub.Insert(
     0x25B2: [575,20,722,84,637],       // BLACK UP-POINTING TRIANGLE
     0x25B3: [575,20,722,84,637],       // WHITE UP-POINTING TRIANGLE
     0x25B6: [539,41,778,83,694],       // BLACK RIGHT-POINTING TRIANGLE
-    0x25BC: [576,20,722,84,638],       // BLACK DOWN-POINTING TRIANGLE
-    0x25BD: [576,20,722,84,638],       // WHITE DOWN-POINTING TRIANGLE
+    0x25BC: [576,19,722,84,637],       // BLACK DOWN-POINTING TRIANGLE
+    0x25BD: [576,19,722,84,637],       // WHITE DOWN-POINTING TRIANGLE
     0x25C0: [539,41,778,83,694],       // BLACK LEFT-POINTING TRIANGLE
-    0x25CA: [716,132,667,56,612]       // LOZENGE
+    0x25CA: [716,132,667,56,611]       // LOZENGE
   }
 );
 

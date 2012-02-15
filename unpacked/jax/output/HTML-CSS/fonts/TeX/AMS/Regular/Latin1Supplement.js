@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/Latin1Supplement.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ MathJax.Hub.Insert(
   MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_AMS'],
   {
     0xA0: [0,0,250,0,0],               // NO-BREAK SPACE
-    0xA5: [684,0,750,11,738],          // YEN SIGN
+    0xA5: [683,0,750,11,738],          // YEN SIGN
     0xAE: [709,175,947,32,915],        // REGISTERED SIGN
-    0xF0: [749,21,556,42,510]          // LATIN SMALL LETTER ETH
+    0xF0: [749,21,556,42,509]          // LATIN SMALL LETTER ETH
   }
 );
 

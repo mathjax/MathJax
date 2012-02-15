@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/Greek/BoldItalic/Main.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Greek-bold-italic'] = {
   family: 'MathJax_Greek',
   weight: 'bold',
   style: 'italic',
-  testString: String.fromCharCode(0x393)+" "+String.fromCharCode(0x3A5)+" "+String.fromCharCode(0x39B),
+  testString: "\u0393 \u03A5 \u039B",
   skew: {
     0x393: 0.0958,
     0x394: 0.192,

@@ -44,7 +44,8 @@
                 padding:0, border:0, margin:0, whiteSpace:"nowrap",
                 textAlign:"left", textIndent:0, textTransform:"none",
                 lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
-                fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal"}
+                fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal",
+                fontSizeAdjust:"none"}
       },[""]);
       this.text = this.div.firstChild;
     },
@@ -74,7 +75,7 @@
           this.div.style.fontFamily = "'"+font.family+"',"+this.comparisonFont[W[2]];
           if (this.div.offsetWidth == W[1]) {return false}
         }
-        if (this.div.offsetWidth != W[3]) {
+        if (this.div.offsetWidth != W[3] || this.div.offsetHeight != W[4]) {
           if (font.noStyleChar || !HTMLCSS.FONTDATA || !HTMLCSS.FONTDATA.hasStyleChar) {return true}
           for (var i = 0, m = this.testSize.length; i < m; i++)
             {if (this.testStyleChar(font,this.testSize[i])) {return true}}
@@ -116,12 +117,12 @@
       if (HTMLCSS.safariTextNodeBug) {this.div.innerHTML = string}
         else {this.text.nodeValue = string}
       this.div.style.fontFamily = this.comparisonFont[0];
-      var W = this.div.offsetWidth, sW = -1;
-        this.div.style.fontFamily = HTMLCSS.webFontDefault;
-        sW = this.div.offsetWidth;
+      var W = this.div.offsetWidth;
+      this.div.style.fontFamily = HTMLCSS.webFontDefault;
+      var sW = this.div.offsetWidth, sH = this.div.offsetHeight;
       for (var i = 1, m = this.comparisonFont.length; i < m; i++) {
         this.div.style.fontFamily = this.comparisonFont[i];
-        if (this.div.offsetWidth != W) {return [W,this.div.offsetWidth,i,sW]}
+        if (this.div.offsetWidth != W) {return [W,this.div.offsetWidth,i,sW,sH]}
       }
       return null;
     },

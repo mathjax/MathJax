@@ -12,5 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["MathJax_Main-bold"],{8463:[694,8,668,45,642],8465:[702,9,831,64,798],8467:[702,19,474,-1,447],8472:[462,211,740,72,727],8476:[711,17,831,41,824],8501:[694,1,703,64,639]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Bold/LetterlikeSymbols.js");
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["MathJax_Main-bold"],{8463:[694,8,668,45,642],8465:[702,8,831,64,798],8467:[702,19,474,-1,446],8472:[461,210,740,72,726],8476:[711,16,831,42,824],8501:[694,0,703,64,638]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Bold/LetterlikeSymbols.js");
 
