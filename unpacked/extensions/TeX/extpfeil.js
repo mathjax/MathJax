@@ -67,7 +67,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   //
   TEX.Parse.Augment({
     NewExtArrow: function (name) {
-      var cs     = this.GetArgument(name),
+      var cs    = this.GetArgument(name),
           space = this.GetArgument(name),
           chr   = this.GetArgument(name);
       if (!cs.match(/^\\([a-z]+|.)$/i))

@@ -8,7 +8,7 @@
  *  
  *      \cancel{math}            % strikeout math from lower left to upper right
  *      \bcancel{math}           % strikeout from upper left to lower right
- *      \xcancel{math}           % strikout with an X
+ *      \xcancel{math}           % strikeout with an X
  *      \cancelto{value}{math}   % strikeout with arrow going to value
  *  
  *  ---------------------------------------------------------------------

@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/MiscMathSymbolsB.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 MathJax.Hub.Insert(
   MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_AMS'],
   {
-    0x29EB: [716,132,667,56,612]       // BLACK LOZENGE
+    0x29EB: [716,132,667,56,611]       // BLACK LOZENGE
   }
 );
 

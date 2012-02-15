@@ -324,7 +324,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         svg.Add(this.SVGdataStretched(0,HW,D));
         svg.Clean();
       }
-      this.SVGhandleColor();
+      this.SVGhandleColor(svg);
       this.SVGsaveData(svg);
       return svg;
     }

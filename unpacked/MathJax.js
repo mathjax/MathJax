@@ -148,7 +148,7 @@ MathJax.fileversion = "2.0";
 	  catch (err) {delete this.SUPER; throw err}
 	delete this.SUPER;
 	return result;
-      }.toString().replace(/^\s*function \(\)\s*\{\s*/i,"").replace(/\s*\}\s*$/i,""),
+      }.toString().replace(/^\s*function\s*\(\)\s*\{\s*/i,"").replace(/\s*\}\s*$/i,""),
 
       toString: function () {
 	return this.original.toString.apply(this.original,arguments);
@@ -1629,10 +1629,7 @@ MathJax.Hub = {
         //
         result = MathJax.OutputJax[jax.outputJax].Process(script,state);
         script.MathJax.state = STATE.PROCESSED; state.i++;
-        if (script.MathJax.preview) {
-          script.MathJax.preview.style.display = "none";
-          script.MathJax.preview.style.visibility = "hidden"; // hide from screen readers
-        }
+        if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
         //
         //  Signal that new math is available
         //
@@ -1684,10 +1681,7 @@ MathJax.Hub = {
       });
     }
     script.parentNode.insertBefore(error,script);
-    if (script.MathJax.preview) {
-      script.MathJax.preview.style.display = "none";
-      script.MathJax.preview.style.visibility = "hidden"; // hide from screen readers
-    }
+    if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
     this.lastError = err;
   },
   
@@ -2382,7 +2376,7 @@ MathJax.Hub.Startup = {
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
       var MathPlayer = false;
       try {new ActiveXObject("MathPlayer.Factory.1"); MathPlayer = true} catch(err) {}
-      if (MathPlayer) {
+      if (MathPlayer && !STARTUP.params.NoMathPlayer) {
         var mathplayer = document.createElement("object");
         mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
         document.getElementsByTagName("head")[0].appendChild(mathplayer);

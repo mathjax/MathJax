@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/Main/Bold/Latin1Supplement.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ MathJax.Hub.Insert(
   {
     0xA0: [0,0,250,0,0],               // NO-BREAK SPACE
     0xA8: [695,-535,575,96,478],       // DIAERESIS
-    0xAC: [371,-61,767,64,703],        // NOT SIGN
+    0xAC: [371,-61,767,64,702],        // NOT SIGN
     0xAF: [607,-540,575,80,494],       // MACRON
-    0xB0: [703,-536,575,160,414],      // DEGREE SIGN
+    0xB0: [702,-536,575,160,414],      // DEGREE SIGN
     0xB1: [728,35,894,64,829],         // PLUS-MINUS SIGN
     0xB4: [706,-503,575,236,460],      // ACUTE ACCENT
-    0xD7: [531,29,894,167,727],        // MULTIPLICATION SIGN
+    0xD7: [530,28,894,168,726],        // MULTIPLICATION SIGN
     0xF7: [597,96,894,64,828]          // DIVISION SIGN
   }
 );

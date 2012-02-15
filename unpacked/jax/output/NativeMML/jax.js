@@ -59,6 +59,7 @@
           "div.MathJax_MathContainer > span": {"text-align": align+"!important"}
         });
       }
+      if (!this.require) {this.require = []}
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
     },
     Startup: function () {
@@ -326,7 +327,7 @@
     getHoverBBox: function (jax,span,math) {return EVENT.getBBox(span.parentNode)},
 
     Zoom: function (jax,span,math,Mw,Mh) {
-      jax.root.toNativeMML(span,span);
+      jax.root.toNativeMML(span);
       if (this.msieIE8HeightBug) {span.style.position = "absolute"}
       var mW = math.offsetWidth  || math.scrollWidth,
           mH = math.offsetHeight || math.scrollHeight;
@@ -562,8 +563,22 @@
       //  Some browsers don't seem to add the xmlns attribute, so do it by hand.
       //
       toNativeMML: function (parent) {
-        this.SUPER(arguments).toNativeMML.call(this,parent);
-        parent.lastChild.setAttribute("xmlns",nMML.MMLnamespace);
+        var tag = this.NativeMMLelement(this.type), math = tag;
+        tag.setAttribute("xmlns",nMML.MMLnamespace);
+        this.NativeMMLattributes(tag);
+        if (nMML.widthBug) {tag = tag.appendChild(this.NativeMMLelement("mrow"))}
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          if (this.data[i]) {this.data[i].toNativeMML(tag)}
+            else {tag.appendChild(this.NativeMMLelement("mrow"))}
+        }
+        parent.appendChild(math);
+        //
+        //  Firefox can't seem to get the width of <math> elements right, so
+        //  use an <mrow> to get the actual width and set the style on the 
+        //  parent element to match.  Even if we set the <math> width properly,
+        //  it doesn't seem to propagate up to the <span> correctly.
+        //
+        if (nMML.widthBug) {parent.style.width = math.firstChild.scrollWidth+"px"}
       }
     });
 
@@ -640,6 +655,7 @@
     },
     Firefox: function (browser) {
       nMML.forceReflow = true;
+      nMML.widthBug = true;
     }
   });
   

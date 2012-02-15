@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/SansSerif/Regular/Other.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ MathJax.Hub.Insert(
     0x39E: [688,0,667,42,624],         // GREEK CAPITAL LETTER XI
     0x3A0: [691,0,708,86,621],         // GREEK CAPITAL LETTER PI
     0x3A3: [694,0,722,55,666],         // GREEK CAPITAL LETTER SIGMA
-    0x3A5: [717,0,778,55,722],         // GREEK CAPITAL LETTER UPSILON
+    0x3A5: [716,0,778,55,722],         // GREEK CAPITAL LETTER UPSILON
     0x3A6: [694,0,722,55,666],         // GREEK CAPITAL LETTER PHI
     0x3A8: [694,0,778,55,722],         // GREEK CAPITAL LETTER PSI
     0x3A9: [716,0,722,44,677],         // GREEK CAPITAL LETTER OMEGA

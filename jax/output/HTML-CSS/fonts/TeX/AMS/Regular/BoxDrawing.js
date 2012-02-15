@@ -12,5 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_AMS,{9484:[694,-306,500,54,444],9488:[695,-306,500,55,444],9492:[367,23,500,54,444],9496:[366,22,500,55,445],9585:[694,195,889,0,860],9586:[694,195,889,0,860]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/AMS/Regular/BoxDrawing.js");
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS.MathJax_AMS,{9484:[694,-306,500,55,444],9488:[694,-306,500,55,444],9492:[366,22,500,55,444],9496:[366,22,500,55,444],9585:[694,195,889,0,860],9586:[694,195,889,0,860]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/AMS/Regular/BoxDrawing.js");
 

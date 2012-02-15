@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/BoxDrawing.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,10 +21,10 @@
 MathJax.Hub.Insert(
   MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_AMS'],
   {
-    0x250C: [694,-306,500,54,444],     // BOX DRAWINGS LIGHT DOWN AND RIGHT
-    0x2510: [695,-306,500,55,444],     // BOX DRAWINGS LIGHT DOWN AND LEFT
-    0x2514: [367,23,500,54,444],       // BOX DRAWINGS LIGHT UP AND RIGHT
-    0x2518: [366,22,500,55,445],       // BOX DRAWINGS LIGHT UP AND LEFT
+    0x250C: [694,-306,500,55,444],     // BOX DRAWINGS LIGHT DOWN AND RIGHT
+    0x2510: [694,-306,500,55,444],     // BOX DRAWINGS LIGHT DOWN AND LEFT
+    0x2514: [366,22,500,55,444],       // BOX DRAWINGS LIGHT UP AND RIGHT
+    0x2518: [366,22,500,55,444],       // BOX DRAWINGS LIGHT UP AND LEFT
     0x2571: [694,195,889,0,860],       // BOX DRAWINGS LIGHT DIAGONAL UPPER RIGHT TO LOWER LEFT
     0x2572: [694,195,889,0,860]        // BOX DRAWINGS LIGHT DIAGONAL UPPER LEFT TO LOWER RIGHT
   }
