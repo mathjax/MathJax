@@ -560,9 +560,9 @@ MathJax.Hub.Config({
 
   //============================================================================
   //
-  //  These parameters control the AsciiMath inupt jax.
+  //  These parameters control the AsciiMath input jax.
   //
-  AasciiMath: {
+  AsciiMath: {
     //
     //  Determines whether limits are placed above and below operators,
     //  or next to them.  (AsciiMath doesn't have separate in-line and
@@ -573,7 +573,7 @@ MathJax.Hub.Config({
     
     //
     //  The character to use for decimal places when scanning for a number.
-    //  If you change it to ,, beware of things like "(1,2)" which would need
+    //  If you change it to ",", beware of things like "(1,2)" which would need
     //  to be changed to "(1, 2)" to be parsed correctly.
     // 
     decimal: "."
@@ -581,7 +581,7 @@ MathJax.Hub.Config({
   
   //============================================================================
   //
-  //  These parameters control the MathML inupt jax.
+  //  These parameters control the MathML input jax.
   //
   MathML: {
     //

@@ -15,10 +15,11 @@
  *            inlineDelimiters: ["",""],   // or ["$","$"] or ["\\(","\\)"]
  *            multiLine: true,             // false for TeX on all one line
  *            style: {
- *              "font-family": "serif",
- *              "font-size":   "80%",
+ *              "font-size":   "90%",
+ *              "text-align":  "left",
  *              "color":       "black",
- *              "border":      "1px solid" 
+ *              "padding":     "1px 3px",
+ *              "border":      "1px solid"
  *                // add any additional CSS styles that you want
  *                //  (be sure there is no extra comma at the end of the last item)
  *            }
