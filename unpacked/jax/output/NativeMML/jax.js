@@ -573,18 +573,12 @@
         }
         parent.appendChild(math);
         //
-        //  Firefox can't get the width of <math> elements right, so
+        //  Firefox can't seem to get the width of <math> elements right, so
         //  use an <mrow> to get the actual width and set the style on the 
-        //  <math> element to match.
+        //  parent element to match.  Even if we set the <math> width properly,
+        //  it doesn't seem to propagate up to the <span> correctly.
         //
-        if (nMML.widthBug && math.scrollWidth < math.firstChild.scrollWidth) {
-          var style = "width:"+math.firstChild.scrollWidth+"px";
-          if (this.style) {
-            if (this.style.match(/(^|;| )width:/)) {style = this.style}
-              else {style += "; "+this.style}
-          }
-          math.setAttribute("style",style);
-        }
+        if (nMML.widthBug) {parent.style.width = math.firstChild.scrollWidth+"px"}
       }
     });
 
