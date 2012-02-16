@@ -1093,7 +1093,7 @@
             var g = SVG.Element("g"); g.appendChild(svg.element);
             svg.element = g; svg.removable = true;
           }
-          svg.Add(BBOX.RECT(svg.h,svg.d,svg.w,{fill:values.background}),0,0,false,true);
+          svg.Add(BBOX.RECT(svg.h,svg.d,svg.w,{fill:values.background,stroke:"none"}),0,0,false,true)
         }
         //
         //  Add borders

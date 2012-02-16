@@ -414,7 +414,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //    use it to modify the default penalty
       //
       var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO];
-      if (values.linebreak === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit)
+      if (values.linebreak === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit*1000)
         {linebreak = [(w+PENALTY.spaceoffset)*PENALTY.spacefactor]}
       if (!(linebreak instanceof Array)) {
         //  for breaks past the width, don't modify penalty
