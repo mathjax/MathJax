@@ -542,7 +542,7 @@
               + String.fromCharCode((N&0x3FF)+0xDC00);
           }
           text = BBOX.TEXT(scale,c,{
-            "font-family":variant.defaultFamily||SVG.config.MISSINGFONT,
+            "font-family":variant.defaultFamily||SVG.config.undefinedFamily,
             "font-style":(variant.italic?"italic":""),
             "font-weight":(variant.bold?"bold":"")
           })

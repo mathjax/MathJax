@@ -826,7 +826,7 @@ MathJax.Hub.Config({
     //  that exists on the system (even if it doesn't contain the needed
     //  character), so order these carefully.
     //  
-    MISSINGFONT: "STIXGeneral,'Arial Unicode MS',serif",
+    undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",
 
     //
     //  This setting controls whether <mtext> elements will be typeset

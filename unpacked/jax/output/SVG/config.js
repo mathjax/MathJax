@@ -35,7 +35,7 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
     font: "TeX",                    // currently the only font available
     blacker: 10,                    // stroke-width to make fonts blacker
     mtextFontInherit: false,        // to make <mtext> be in page font rather than MathJax font
-    MISSINGFONT: "STIXGeneral,'Arial Unicode MS',serif",  // fonts to use for missing characters
+    undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",  // fonts to use for missing characters
 
     addMMLclasses: false,           // keep MathML structure and use CSS classes to mark elements
 
