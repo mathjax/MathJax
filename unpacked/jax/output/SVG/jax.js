@@ -1411,6 +1411,7 @@
         svg.d = SVG.length2em(values.depth,mu)  / svg.scale;
 	svg.w = svg.r = SVG.length2em(values.width,mu) / svg.scale;
         if (svg.w < 0) {svg.x = svg.w; svg.w = svg.r = 0}
+        if (svg.h < -svg.d) {svg.d = -svg.h}
         svg.l = 0; svg.Clean();
         this.SVGhandleColor(svg);
         this.SVGsaveData(svg);

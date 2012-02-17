@@ -894,7 +894,8 @@
       return space;
     },
     createSpace: function (span,h,d,w,color) {
-      var H = this.Em(Math.max(0,h+d)), D = this.Em(-d);
+      if (h < -d) {d = -h} // make sure h is above d
+      var H = this.Em(h+d), D = this.Em(-d);
       if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode).d-d)}
       if (span.isBox || span.className == "mspace") {
         var scale = (span.scale == null ? 1 : span.scale);
@@ -925,6 +926,7 @@
       return span;
     },
     createRule: function (span,h,d,w,color) {
+      if (h < -d) {d = -h} // make sure h is above d
       var min = HTMLCSS.TeX.min_rule_thickness, f = 1;
       // If rule is very thin, make it at least min_rule_thickness so it doesn't disappear
       if (w > 0 && w*this.em < min) {w = min/this.em}
@@ -942,6 +944,7 @@
       return rule;
     },
     createFrame: function (span,h,d,w,t,style) {
+      if (h < -d) {d = -h} // make sure h is above d
       var T = (this.msieBorderWidthBug ? 0 : 2*t);
       var H = this.Em(h+d-T), D = this.Em(-d-t), W = this.Em(w-T);
       var B = this.Em(t)+" "+style;
