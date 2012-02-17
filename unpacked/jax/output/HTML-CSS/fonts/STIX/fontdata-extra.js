@@ -332,11 +332,11 @@
     },
     0x27EA: // left double angle bracket
     {
-      dir: V, HW: [[.931,GENERAL],[1.23,SIZE1],[1.845,SIZE2],[2.461,SIZE3],[3.075,SIZE4]],
+      dir: V, HW: [[.931,GENERAL],[1.23,SIZE1],[1.845,SIZE2],[2.461,SIZE3],[3.075,SIZE4]]
     },
     0x27EB: // right double angle bracket
     {
-      dir: V, HW: [[.931,GENERAL],[1.23,SIZE1],[1.845,SIZE2],[2.461,SIZE3],[3.075,SIZE4]],
+      dir: V, HW: [[.931,GENERAL],[1.23,SIZE1],[1.845,SIZE2],[2.461,SIZE3],[3.075,SIZE4]]
     },
     0x290A: // up triple arrow
     {
@@ -399,7 +399,7 @@
     {
       dir: V, HW: [[.932,GENERAL]],
       stretch: {top:[0xE10C,NONUNI,-.1,.05], ext:[0x23D0,GENERAL], bot:[0xE10D,NONUNI,-.1]}
-    },
+    }
 
   };
   

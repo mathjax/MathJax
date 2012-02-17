@@ -325,7 +325,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     HTMLcreateSliceSpan: function (span) {
       var SPAN = this.HTMLspanElement(), n = 0;
       var LAST = SPAN; while (LAST.nextMathJaxSpan) {LAST = LAST.nextMathJaxSpan; n++}
-      var SLICE = SPAN.cloneNode(false); LAST.nextMathJaxSpan = SLICE;
+      var SLICE = SPAN.cloneNode(false); LAST.nextMathJaxSpan = SLICE; SLICE.nextMathJaxSpan = null;
       SLICE.id += "-MathJax-Continue-"+n;
       SLICE.bbox = this.HTMLemptyBBox({});
       return span.appendChild(SLICE);

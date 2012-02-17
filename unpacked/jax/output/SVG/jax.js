@@ -542,7 +542,7 @@
               + String.fromCharCode((N&0x3FF)+0xDC00);
           }
           text = BBOX.TEXT(scale,c,{
-            "font-family":variant.defaultFamily||SVG.config.MISSINGFONT,
+            "font-family":variant.defaultFamily||SVG.config.undefinedFamily,
             "font-style":(variant.italic?"italic":""),
             "font-weight":(variant.bold?"bold":"")
           })
@@ -1093,7 +1093,7 @@
             var g = SVG.Element("g"); g.appendChild(svg.element);
             svg.element = g; svg.removable = true;
           }
-          svg.Add(BBOX.RECT(svg.h,svg.d,svg.w,{fill:values.background}),0,0,false,true);
+          svg.Add(BBOX.RECT(svg.h,svg.d,svg.w,{fill:values.background,stroke:"none"}),0,0,false,true)
         }
         //
         //  Add borders
@@ -1411,6 +1411,7 @@
         svg.d = SVG.length2em(values.depth,mu)  / svg.scale;
 	svg.w = svg.r = SVG.length2em(values.width,mu) / svg.scale;
         if (svg.w < 0) {svg.x = svg.w; svg.w = svg.r = 0}
+        if (svg.h < -svg.d) {svg.d = -svg.h}
         svg.l = 0; svg.Clean();
         this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
