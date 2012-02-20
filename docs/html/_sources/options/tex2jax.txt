@@ -56,6 +56,21 @@ preprocessor.
     the browser before MathJax has the chance to run.  You can only
     include text, not tags, as your math delimiters.
 
+.. describe:: balanceBraces: true,
+
+    This value determines whether `tex2jax` requires braces to be
+    balanced within math delimiters (which allows for nested dollar
+    signs).  Set to ``false`` to get pre-v2.0 compatibility.  When
+    ``true``,
+    
+    .. code-block:: latex
+
+        $y = x^2 \hbox{ when $x > 2$}$.
+      
+    will be properly handled as a single expression.  When ``false``,
+    it would be interpreted as two searpate expressions, each with
+    improperly balanced braces.
+
 .. describe:: processEscapes: false
 
     When set to ``true``, you may use ``\$`` to represent a literal
@@ -116,11 +131,11 @@ preprocessor.
     special characters.  The pattern is inserted into one that
     requires your pattern to match a complete word, so setting
     ``ignoreClass: "class2"`` would cause it to match an element with
-    ``class="class1 class2 class3"``.  Note that you can assign
-    several classes by separating them by the vertical line character
-    (``|``).  For instance, with ``ignoreClass: "class1|class2"``
-    any element assigned a class of either ``class1`` or ``class2``
-    will be skipped.
+    ``class="class1 class2 class3"`` but not ``class="myclass2"``.
+    Note that you can assign several classes by separating them by the
+    vertical line character (``|``).  For instance, with
+    ``ignoreClass: "class1|class2"`` any element assigned a class of
+    either ``class1`` or ``class2`` will be skipped.
 
 .. describe:: processClass: "tex2jax_process"
 
@@ -133,8 +148,8 @@ preprocessor.
     `regexp` special characters.  The pattern is inserted into one
     that requires your pattern to match a complete word, so setting
     ``processClass: "class2"`` would cause it to match an element with
-    ``class="class1 class2 class3"``.  Note that you can assign
-    several classes by separating them by the vertical line character
-    (``|``).  For instance, with ``processClass: "class1|class2"`` any
-    element assigned a class of either ``class1`` or ``class2`` will
-    have its contents processed.
+    ``class="class1 class2 class3"`` but not ``class="myclass2"``.
+    Note that you can assign several classes by separating them by the
+    vertical line character (``|``).  For instance, with
+    ``processClass: "class1|class2"`` any element assigned a class of
+    either ``class1`` or ``class2`` will have its contents processed.

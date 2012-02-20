@@ -32,7 +32,7 @@ the `jax` array of your MathJax configuration.  For example
 would specify TeX input and HTML-with-CSS output for the mathematics
 in your document.
 
-The HTML-CSS output processor produces high-quality output in all
+The **HTML-CSS output processor** produces high-quality output in all
 major browsers, with results that are consistent across browsers and
 operating systems.  This is MathJax's primary output mode.  Its major
 advantage is its quality and consistency; its drawback is that it is
@@ -46,7 +46,7 @@ fonts so that users don't have to have math fonts installed on their
 computers; but this does introduce some printing issues in some
 browsers.
 
-The SVG output processor is new in MathJax version 2.0, and it uses
+The **SVG output processor** is new in MathJax version 2.0, and it uses
 `Scalable Vector Graphics` to render the mathematics on the page.  SVG
 is supported in all the major browsers and most mobile devices; note,
 however, that Internet Explorer prior to IE9 does not support SVG, and
@@ -63,7 +63,7 @@ once they are typeset, and don't rescale if the window size changes
 variable-width tables, that means equation numbers may not stay at the
 edge of the window if it is resized.
 
-The NativeMML output processor uses the browser's internal MathML
+The **NativeMML output processor** uses the browser's internal MathML
 support (if any) to render the mathematics.  Currently, Firefox has
 native support for MathML, and IE has the `MathPlayer plugin
 <http://www.dessci.com/en/products/mathplayer/>`_ for rendering
@@ -179,3 +179,32 @@ possible.  That can be accomplished by adding
 at the top of the ``<head>`` section of your HTML documents.  Note
 that this line must come at the beginning of the ``<head>``, before
 any stylesheets, scripts, or other content are loaded.
+
+.. _html-css-extensions:
+
+HTML-CSS Extensions
+===================
+
+The HTML-CSS output jax uses elements with width set to 100% when it
+typesets displayed equations.  If there are floating elements on the
+left or right, this can mean that displayed mathematics isn't properly
+centered, and can cause equation numbers to overlap the floating
+content.  To avoid this, you can specify the `handle-floats` extension
+in the `extensions` array of your `HTML-CSS` configuration block.
+
+.. code-block:: javascript
+
+    "HTML-CSS": {
+      extensions: ["handle-floats.js"]
+    }
+
+This will use CSS that puts the displayed equations into elements that
+work like tabel cells, and won't overlap the floaring content.
+Because this is somewhat of a misuse of CSS, it is not used by
+default, but it has proved successful in most situations, so you may
+consider using it in pages that include material that floats to the
+left or right of text containing displayed mathematics, especially
+when equation numbers or tags are used.
+
+See the :ref:`HTML-CSS configuration options <configure-HTML-CSS>` for
+other options of the HTML-CSS output jax.

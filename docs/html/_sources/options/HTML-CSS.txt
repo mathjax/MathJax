@@ -6,10 +6,12 @@ The HTML-CSS output processor
 
 The options below control the operation of the HTML-CSS output
 processor that is run when you include ``"output/HTML-CSS"`` in the
-`jax` array of your configuration.  They are listed with their default
-values.  To set any of these options, include a ``"HTML-CSS"`` section
-in your :meth:`MathJax.Hub.Config()` call.  Note that, because of the
-dash, you need to enclose the name in quotes.  For example
+`jax` array of your configuration or load a combined configuration
+file that includes the HTML-CSS output jax.  They are listed with
+their default values.  To set any of these options, include a
+``"HTML-CSS"`` section in your :meth:`MathJax.Hub.Config()` call.
+Note that, because of the dash, you need to enclose the name in
+quotes.  For example
 
 .. code-block:: javascript
 
@@ -25,7 +27,7 @@ would set the ``preferredFont`` option to the :term:`STIX` fonts.
 
     The scaling factor (as a percentage) of math with respect to the
     surrounding text.  The `HTML-CSS` output processor tries to match
-    the en-size of the mathematics with that of the text where it is
+    the ex-size of the mathematics with that of the text where it is
     placed, but you may want to adjust the results using this scaling
     factor.  The user can also adjust this value using the contextual
     menu item associated with the typeset mathematics.
@@ -86,6 +88,68 @@ would set the ``preferredFont`` option to the :term:`STIX` fonts.
     (even if it doesn't contain the needed character), so order these
     carefully.
 
+.. describe:: mtextFontInherit: false
+
+    This setting controls whether ``<mtext>`` elements will be typeset
+    using the math fonts or the font of the surrounding text.  When
+    ``false``, the font for ``mathvariant="normal"`` will be used;
+    when ``true``, the font will be inherited from the surrounding
+    paragraph.
+
+.. describe:: EqnChunk: 50
+              EqnChunkFactor: 1.5
+	      EqnChunkDelay: 100
+
+    These values control how "chunky" the display of mathematical
+    expressions will be; that is, how often the equations will be
+    updated as they are processed.
+    
+    ``EqnChunk`` is the number of equations that will be typeset before
+    they appear on screen.  Larger values make for less visual flicker
+    as the equations are drawn, but also mean longer delays before the
+    reader sees anything.
+    
+    ``EqChunkFactor`` is the factor by which the ``EqnChunk`` will
+    grow after each chunk is displayed.
+    
+    ``EqChunkDelay`` is the time (in milliseconds) to delay between
+    chunks (to allow the browser to respond to other user
+    interaction).
+    
+    Set ``EqnChunk`` to 1, ``EqnChunkFactor`` to 1, and
+    ``EqnChunkDelay`` to 10 to get the behavior from MathJax v1.1 and
+    below.
+
+.. describe:: linebreaks: {}
+
+    This is an object that configures automatic linebreaking in the
+    HTML-CSS output.  In order to be backward compatible with earlier
+    versions of MathJax, only explicit line breaks are performed by
+    default, so you must enable line breaks if you want automatic
+    ones.  The object contains the following values:
+
+    .. describe:: automatic: false
+
+        This controls the automatic breaking of expressions: when
+        ``false``, only ``linebreak="newline"`` is processed; when
+        ``true``, line breaks are inserted automatically in long
+        expressions.
+
+    .. describe:: width: "container"
+
+      This controls how wide the lines of mathematics can be.
+      
+      Use an explicit width like ``"30em"`` for a fixed width.
+      Use ``"container"`` to compute the size from the containing
+      element.
+      Use ``"nn% container"`` for a portion of the container.
+      Use ``"nn%"`` for a portion of the window size.
+        
+      The container-based widths may be slower, and may not produce
+      the expected results if the layout width changes due to the
+      removal of previews or inclusion of mathematics during
+      typesetting.
+
 .. describe:: styles: {}
 
     This is a list of CSS declarations for styling the HTML-CSS
@@ -96,18 +160,10 @@ would set the ``preferredFont`` option to the :term:`STIX` fonts.
 
 .. describe:: showMathMenu: true
 
-    This controls whether the MathJax contextual menu will be
-    available on the mathematics in the page.  If true, then
-    right-clicking (on the PC) or control-clicking (on the Mac) will
-    produce a MathJax menu that allows you to get the source of the
-    mathematics in various formats, change the size of the mathematics
-    relative to the surrounding text, get information about
-    MathJax, and configure other MathJax settings.
-     
-    Set this to ``false`` to disable the menu.  When ``true``, the
-    ``MathMenu`` configuration block determines the operation of the
-    menu.  See :ref:`the MathMenu options <configure-MathMenu>` for
-    more details.
+    This value has been moved to the core configuration block, since
+    it applies to all output jax, but it will still be honored (for
+    now) if it is set here.  See the :ref:`Core configuration options
+    <configure-hub>` for more details.
 
 .. describe:: tooltip: { ... }
 
@@ -128,7 +184,8 @@ would set the ``preferredFont`` option to the :term:`STIX` fonts.
         The delay (in milliseconds) before the tooltop is cleared
         after the mouse moves out of the ``maction`` element.
 
-    .. describe:: offsetX: 10 and offsetY: 5
+    .. describe:: offsetX: 10
+                  offsetY: 5
 
         These are the offset from the mouse position (in pixels) 
 	where the tooltip will be placed.

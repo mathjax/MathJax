@@ -6,9 +6,11 @@ The NativeMML output processor
 
 The options below control the operation of the NativeMML output
 processor that is run when you include ``"output/NativeMML"`` in the
-`jax` array of your configuration.  They are listed with their default
-values.  To set any of these options, include a ``NativeMML`` section
-in your :meth:`MathJax.Hub.Config()` call.  For example
+`jax` array of your configuration or load a combined configuration
+file taht includes the NativeMML output jax.  They are listed with
+their default values.  To set any of these options, include a
+``NativeMML`` section in your :meth:`MathJax.Hub.Config()` call.  For
+example
 
 .. code-block:: javascript
 
@@ -23,35 +25,26 @@ would set the ``scale`` option to 105 percent.
 .. describe:: scale: 100
 
     The scaling factor (as a percentage) of math with respect to the
-    surrounding text.  Since the `NativeMML` output relies on the
-    browser's native MathML support, MathJax does not control the
-    font size used in the mathematics.  You may need to set this value
-    to compensate for the size selected by the browser.  The user can
-    also adjust this value using the contextual menu item associated
-    with the typeset mathematics.
+    surrounding text.  The `NativeMML` output processor tries to match
+    the ex-size of the mathematics with that of the text where it is
+    placed, but you may want to adjust the results using this scaling
+    factor.  The user can also adjust this value using the contextual
+    menu item associated with the typeset mathematics.
+
+.. describe:: minScaleAdjust: 50
+
+   This gives a minimum scale (as a percent) for the scaling used by 
+   MathJax to match the equation to the surrounding text.  This will 
+   prevent MathJax from making the mathematics too small.
 
 .. describe:: showMathMath: true
+              showMathMenuMSIE: true
 
-    This controls whether the MathJax contextual menu will be
-    available on the mathematics in the page.  If true, then
-    right-clicking (on the PC) or control-clicking (on the Mac) will
-    produce a MathJax menu that allows you to get the source of the
-    mathematics in various formats, change the size of the mathematics
-    relative to the surrounding text, get information about
-    MathJax, and configure other MathJax settings.
-     
-    Set this to ``false`` to disable the menu.  When ``true``, the
-    ``MathMenu`` configuration block determines the operation of the
-    menu.  See :ref:`the MathMenu options <configure-MathMenu>` for
-    more details.
+    These values have been moved to the core configuration block, since
+    it applies to all output jax, but they will still be honored (for
+    now) if it is set here.  See the :ref:`Core configuration options
+    <configure-hub>` for more details.
 
-.. describe:: showMathMenuMSIE: true
-
-    There is a separate menu setting for MSIE since the code to handle
-    that is a bit delicate; if it turns out to have unexpected
-    consequences, you can turn it off without turning off the
-    menu support in other browsers.
-   
 .. describe:: styles: {}
 
     This is a list of CSS declarations for styling the NativeMML

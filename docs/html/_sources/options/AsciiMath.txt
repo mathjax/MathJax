@@ -6,10 +6,11 @@ The AsciiMath input processor
 
 The options below control the operation of the AsciiMath input
 processor that is run when you include ``"input/AsciiMath"`` in the
-`jax` array of your configuration or use a combined configuration file
-that includes AsciiMath input.  They are listed with their default
-values.  To set any of these options, include a ``AsciiMath`` section
-in your :meth:`MathJax.Hub.Config()` call.  For example
+`jax` array of your configuration or load a combined configuration
+file that includes the AsciiMath input jax.  They are listed with
+their default values.  To set any of these options, include a
+``AsciiMath`` section in your :meth:`MathJax.Hub.Config()` call.  For
+example
 
 .. code-block:: javascript
 

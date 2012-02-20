@@ -59,15 +59,15 @@ will see that <tt class="docutils literal"><span class="pre">config/default.js</
 <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt>).  Anything that is in
 <tt class="docutils literal"><span class="pre">config/default.js</span></tt> can be included in-line to configure MathJax.</p>
 <p>The structure that you pass to <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> is a
-JavaScript object that includes name-value pairs giving the names of
+JavaScript object that includes <cite>name:value</cite> pairs giving the names of
 parameters and their values, with pairs separated by commas.  Be
 careful not to include a comma after the last value, however, as some
 browsers (namely Internet Explorer) will fail to process the
 configuration if you do.</p>
 <p>The MathJax components, like the TeX input processor, have their own
-sections in the configuration object, labeled by the component name,
+sections in the configuration object labeled by the component name,
 and using an object as its value.  That object is itself
-a configuration object made up of name-value pairs that give the
+a configuration object made up of <cite>name:value</cite> pairs that give the
 configuration options for the component.</p>
 <p>For example,</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
@@ -117,6 +117,7 @@ are categorized by the component they affect.</p>
 <li class="toctree-l1"><a class="reference internal" href="AsciiMath.html">The AsciiMath input processor options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="HTML-CSS.html">The HTML-CSS output processor options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="NativeMML.html">The NativeMML output processor options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SVG.html">The SVG output processor options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MMLorHTML.html">The MMLorHTML configuration options</a></li>
 </ul>
 </div>
@@ -124,6 +125,7 @@ are categorized by the component they affect.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="MathMenu.html">The MathMenu options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MathZoom.html">The MathZoom options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MathEvents.html">The MathEvents options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="FontWarnings.html">The FontWarnings options</a></li>
 </ul>
 </div>

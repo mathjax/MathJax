@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The MathML input processor &mdash; MathJax v2.0 documentation</title>
+    <title>The MathEvents extension &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -24,8 +24,8 @@
     <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
     <link rel="top" title="MathJax v2.0 documentation" href="../index.html" />
     <link rel="up" title="Configuration Objects" href="index.html" />
-    <link rel="next" title="The AsciiMath input processor" href="AsciiMath.html" />
-    <link rel="prev" title="The TeX input processor" href="TeX.html" /> 
+    <link rel="next" title="The FontWarnings extension" href="FontWarnings.html" />
+    <link rel="prev" title="The MathZoom extension" href="MathZoom.html" /> 
   </head>
   <body>
     
@@ -36,10 +36,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="AsciiMath.html" title="The AsciiMath input processor"
+          <a href="FontWarnings.html" title="The FontWarnings extension"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="TeX.html" title="The TeX input processor"
+          <a href="MathZoom.html" title="The MathZoom extension"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Configuration Objects</a> &raquo;</li> 
@@ -51,28 +51,38 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="the-mathml-input-processor">
-<span id="configure-mathml"></span><h1>The MathML input processor<a class="headerlink" href="#the-mathml-input-processor" title="Permalink to this headline">¶</a></h1>
-<p>The options below control the operation of the MathML input processor
-that is run when you include <tt class="docutils literal"><span class="pre">&quot;input/MathML&quot;</span></tt> in the <cite>jax</cite> array of
-your configuration or load a combined configuration file that includes
-the MathML input jax.  They are listed with their default values.  To
-set any of these options, include a <tt class="docutils literal"><span class="pre">MathML</span></tt> section in your
-<tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call.  For example</p>
+  <div class="section" id="the-mathevents-extension">
+<span id="configure-mathevents"></span><h1>The MathEvents extension<a class="headerlink" href="#the-mathevents-extension" title="Permalink to this headline">¶</a></h1>
+<p>The options below control the operation of the MathEvents component that
+allows handles mouse and menu events attached to mathematics that is
+typeset by MathJax.  They are listed with their
+default values.  To set any of these options, include a <tt class="docutils literal"><span class="pre">MathEvents</span></tt>
+section in your <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call.  For example</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
-  <span class="nx">MathML</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">useMathMLspacing</span><span class="o">:</span> <span class="kc">true</span>
+  <span class="nx">MathEvents</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">hover</span><span class="o">:</span> <span class="mi">400</span>
   <span class="p">}</span>
 <span class="p">});</span>
 </pre></div>
 </div>
-<p>would set the <tt class="docutils literal"><span class="pre">useMathMLspacing</span></tt> option so that the MathML rules for
-spacing would be used (rather than TeX spacing rules).</p>
+<p>would set the required delay for hovering over a math element to
+400 milliseconds.</p>
 <dl class="describe">
 <dt>
-<tt class="descname">useMathMLspacing: false</tt></dt>
-<dd><p>Specifies whether to use TeX spacing or MathML spacing when the
-<cite>HTML-CSS</cite> output jax is used.</p>
+<tt class="descname">hover: 500</tt></dt>
+<dd><p>This value is the time (in milliseconds) that a user must hold the
+mouse still over a math element before it is considered to be
+hovering over the math.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">styles: {}</tt></dt>
+<dd><p>This is a list of CSS declarations for styling the zoomed
+mathematics.  See the definitions in <tt class="docutils literal"><span class="pre">extensions/MathEvents.js</span></tt>
+for details of what are defined by default.  See <a class="reference internal" href="../CSS-styles.html#css-style-objects"><em>CSS Style
+Objects</em></a> for details on how to specify CSS
+style in a JavaScript object.</p>
 </dd></dl>
 
 </div>
@@ -84,11 +94,11 @@ spacing would be used (rather than TeX spacing rules).</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="TeX.html"
-                        title="previous chapter">The TeX input processor</a></p>
+  <p class="topless"><a href="MathZoom.html"
+                        title="previous chapter">The MathZoom extension</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="AsciiMath.html"
-                        title="next chapter">The AsciiMath input processor</a></p>
+  <p class="topless"><a href="FontWarnings.html"
+                        title="next chapter">The FontWarnings extension</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -113,10 +123,10 @@ spacing would be used (rather than TeX spacing rules).</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="AsciiMath.html" title="The AsciiMath input processor"
+          <a href="FontWarnings.html" title="The FontWarnings extension"
              >next</a> |</li>
         <li class="right" >
-          <a href="TeX.html" title="The TeX input processor"
+          <a href="MathZoom.html" title="The MathZoom extension"
              >previous</a> |</li>
         <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Configuration Objects</a> &raquo;</li> 

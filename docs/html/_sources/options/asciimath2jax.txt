@@ -86,11 +86,11 @@ preprocessor to include dollar signs as well as back-ticks.
     special characters.  The pattern is inserted into one that
     requires your pattern to match a complete word, so setting
     ``ignoreClass: "class2"`` would cause it to match an element with
-    ``class="class1 class2 class3"``.  Note that you can assign
-    several classes by separating them by the vertical line character
-    (``|``).  For instance, with ``ignoreClass: "class1|class2"``
-    any element assigned a class of either ``class1`` or ``class2``
-    will be skipped.
+    ``class="class1 class2 class3"`` but not ``class="myclass2"``.
+    Note that you can assign several classes by separating them by the
+    vertical line character (``|``).  For instance, with
+    ``ignoreClass: "class1|class2"`` any element assigned a class of
+    either ``class1`` or ``class2`` will be skipped.
 
 .. describe:: processClass: "asciimath2jax_process"
 
@@ -103,8 +103,8 @@ preprocessor to include dollar signs as well as back-ticks.
     `regexp` special characters.  The pattern is inserted into one
     that requires your pattern to match a complete word, so setting
     ``processClass: "class2"`` would cause it to match an element with
-    ``class="class1 class2 class3"``.  Note that you can assign
-    several classes by separating them by the vertical line character
-    (``|``).  For instance, with ``processClass: "class1|class2"`` any
-    element assigned a class of either ``class1`` or ``class2`` will
-    have its contents processed.
+    ``class="class1 class2 class3"`` but not ``class="myclass2"``.
+    Note that you can assign several classes by separating them by the
+    vertical line character (``|``).  For instance, with
+    ``processClass: "class1|class2"`` any element assigned a class of
+    either ``class1`` or ``class2`` will have its contents processed.

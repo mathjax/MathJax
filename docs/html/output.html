@@ -74,7 +74,7 @@ the <cite>jax</cite> array of your MathJax configuration.  For example</p>
 </div>
 <p>would specify TeX input and HTML-with-CSS output for the mathematics
 in your document.</p>
-<p>The HTML-CSS output processor produces high-quality output in all
+<p>The <strong>HTML-CSS output processor</strong> produces high-quality output in all
 major browsers, with results that are consistent across browsers and
 operating systems.  This is MathJax&#8217;s primary output mode.  Its major
 advantage is its quality and consistency; its drawback is that it is
@@ -87,7 +87,7 @@ more comparable to other browsers.  The HTML-CSS output uses web-based
 fonts so that users don&#8217;t have to have math fonts installed on their
 computers; but this does introduce some printing issues in some
 browsers.</p>
-<p>The SVG output processor is new in MathJax version 2.0, and it uses
+<p>The <strong>SVG output processor</strong> is new in MathJax version 2.0, and it uses
 <cite>Scalable Vector Graphics</cite> to render the mathematics on the page.  SVG
 is supported in all the major browsers and most mobile devices; note,
 however, that Internet Explorer prior to IE9 does not support SVG, and
@@ -103,7 +103,7 @@ once they are typeset, and don&#8217;t rescale if the window size changes
 (for example).  Since equation numbers are handled through
 variable-width tables, that means equation numbers may not stay at the
 edge of the window if it is resized.</p>
-<p>The NativeMML output processor uses the browser&#8217;s internal MathML
+<p>The <strong>NativeMML output processor</strong> uses the browser&#8217;s internal MathML
 support (if any) to render the mathematics.  Currently, Firefox has
 native support for MathML, and IE has the <a class="reference external" href="http://www.dessci.com/en/products/mathplayer/">MathPlayer plugin</a> for rendering
 MathML.  Opera has some built-in support for MathML that works well
@@ -200,6 +200,29 @@ possible.  That can be accomplished by adding</p>
 that this line must come at the beginning of the <tt class="docutils literal"><span class="pre">&lt;head&gt;</span></tt>, before
 any stylesheets, scripts, or other content are loaded.</p>
 </div>
+<div class="section" id="html-css-extensions">
+<span id="id1"></span><h2>HTML-CSS Extensions<a class="headerlink" href="#html-css-extensions" title="Permalink to this headline">¶</a></h2>
+<p>The HTML-CSS output jax uses elements with width set to 100% when it
+typesets displayed equations.  If there are floating elements on the
+left or right, this can mean that displayed mathematics isn&#8217;t properly
+centered, and can cause equation numbers to overlap the floating
+content.  To avoid this, you can specify the <cite>handle-floats</cite> extension
+in the <cite>extensions</cite> array of your <cite>HTML-CSS</cite> configuration block.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="s2">&quot;HTML-CSS&quot;</span><span class="o">:</span> <span class="p">{</span>
+  <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;handle-floats.js&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This will use CSS that puts the displayed equations into elements that
+work like tabel cells, and won&#8217;t overlap the floaring content.
+Because this is somewhat of a misuse of CSS, it is not used by
+default, but it has proved successful in most situations, so you may
+consider using it in pages that include material that floats to the
+left or right of text containing displayed mathematics, especially
+when equation numbers or tags are used.</p>
+<p>See the <a class="reference internal" href="options/HTML-CSS.html#configure-html-css"><em>HTML-CSS configuration options</em></a> for
+other options of the HTML-CSS output jax.</p>
+</div>
 </div>
 
 
@@ -213,6 +236,7 @@ any stylesheets, scripts, or other content are loaded.</p>
 <li><a class="reference internal" href="#">MathJax Output Formats</a><ul>
 <li><a class="reference internal" href="#automatic-selection-of-the-output-processor">Automatic Selection of the Output Processor</a></li>
 <li><a class="reference internal" href="#html-css-with-ie8-and-ie9">HTML-CSS with IE8 and IE9</a></li>
+<li><a class="reference internal" href="#html-css-extensions">HTML-CSS Extensions</a></li>
 </ul>
 </li>
 </ul>

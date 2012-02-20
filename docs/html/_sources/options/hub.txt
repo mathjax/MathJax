@@ -19,10 +19,7 @@ behavior of MathJax.  They are given with their default values.
 
     A comma-separated list of extensions to load at startup. The
     default directory is ``MathJax/extensions``.  The ``tex2jax`` and
-    ``mml2jax`` preprocessors can be listed here, as well as a number
-    of TeX-specific extensions (see the :ref:`TeX and LaTeX input
-    <tex-and-latex-input>` section of the :ref:`Getting Started
-    <getting-started>` document for more details).  There is also a
+    ``mml2jax`` preprocessors can be listed here, as well as a
     ``FontWarnings`` extension that you can use to inform your user
     that mathematics fonts are available that they can download to
     improve their experience of your site.
@@ -33,7 +30,9 @@ behavior of MathJax.  They are given with their default values.
     starts up, e.g., to define local macros, etc., and there is a
     sample config file named ``config/local/local.js``.  The default
     directory is the `MathJax/config` directory.  The ``MMLorHTML.js``
-    configuration is the only other predefined configuration file.
+    configuration is one such configuration file, and there are a
+    number of other pre-defined configurations (see :ref:`Using a
+    configuration file <config-files>` for more details).
 
 .. describe:: styleSheets: []
 
@@ -43,8 +42,9 @@ behavior of MathJax.  They are given with their default values.
 
 .. describe:: styles: {}
 
-    CSS `selector: rules;` styles to be defined dynamically at startup
-    time.
+    CSS styles to be defined dynamically at startup time.  These are
+    in the form `selector:rules` (see :ref:`CSS Style Objects
+    <css-style-objects>` for complete details).
 
 .. describe:: preJax: null and postJax: null
 
@@ -149,12 +149,50 @@ behavior of MathJax.  They are given with their default values.
 .. describe:: elements: []
 
     This is a list of DOM element ID's that are the ones to process for
-    mathematics when any of the Hub typesetting calls (Typeset, Process,
-    Update, etc.) are called with no element specified, and during
+    mathematics when any of the Hub typesetting calls (``Typeset()``, ``Process()``,
+    ``Update()``, etc.) are called with no element specified, and during
     MathJax's initial typesetting run when it starts up.  This lets you
     restrict the processing to particular containers rather than scanning
     the entire document for mathematics.  If none are supplied, the complete
     document is processed.
+
+.. describe:: positionToHash: true
+
+    Since typesetting usually changes the vertical dimensions of the
+    page, if the URL contains an anchor position, then after the page
+    is typeset, you may no longer be positioned at the correct
+    position on the page.  MathJax can reposition to that location
+    after it completes its initial typesetting of the page.  This
+    value controls whether MathJax will reposition the browser to the
+    ``#hash`` location from the page URL after typesetting for the page.
+
+
+.. describe:: showMathMenu: true  
+    showMathMenuMSIE: true
+
+    These control whether to attach the MathJax contextual menu to the
+    expressions typeset by MathJax.  Since the code for handling
+    MathPlayer in Internet Explorer is somewhat delicate, it is
+    controlled separately via ``showMathMenuMSIE``, but the latter is
+    now deprecated in favor of the MathJax contextual menu settings
+    for MathPlayer (see below).
+    
+    If ``showMathMenu`` is ``true``, then right-clicking (on Windows
+    or Linux) or control-clicking (on Mac OS X) will produce a MathJax
+    menu that allows you to get the source of the mathematics in
+    various formats, change the size of the mathematics relative to
+    the surrounding text, get information about MathJax, and configure
+    other MathJax settings.
+     
+    Set this to ``false`` to disable the menu.  When ``true``, the
+    ``MathMenu`` configuration block determines the operation of the
+    menu.  See :ref:`the MathMenu options <configure-MathMenu>` for
+    more details.
+
+    These values used to be listed in the separate output jax, but
+    have been moved to this more central location since they are
+    shared by all output jax.  MathJax will still honor their values
+    from their original positions, if they are set there.
 
 .. describe:: menuSettings: { ... }
 
@@ -195,9 +233,19 @@ behavior of MathJax.  They are given with their default values.
         to ``"Browser"``, you will get the MathPlayer contextual menu
         rather than the MathJax menu.
 
-    There are also settings for ``format``, ``renderer``, and ``font``,
-    but these are maintained by MathJax and should not be set by the
-    page author.
+    .. describe:: texHints: true
+
+        This controls whether the "Show Source" menu item includes
+        special class names that help MathJax to typeset the
+        mathematics that was produced by the TeX input jax.  If these
+        are included, then you can take the output from "Show Source"
+        and put it into a page that uses MathJax's MathML input jax
+        and expect to get the same results as the original TeX.
+        (Without this, there may be some spacing differences.)
+
+    There are also settings for ``format``, ``renderer``, ``font``,
+    ``mpContext``, and ``mpMouse``, but these are maintained by
+    MathJax and should not be set by the page author.
 
 .. describe:: errorSettings: { ... }
 
