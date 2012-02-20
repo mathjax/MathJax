@@ -366,7 +366,7 @@ MathJax.fileversion = "2.0";
   };
 
   //
-  //  An array of priorities hooks that are executed sequentially
+  //  An array of prioritized hooks that are executed sequentially
   //  with a given set of data.
   //
   var HOOKS = MathJax.Object.Subclass({
@@ -589,6 +589,7 @@ MathJax.fileversion = "2.0";
   BASE.Callback.Hooks = HOOKS;
   BASE.Callback.ExecuteHooks = EXECUTEHOOKS;
 })("MathJax");
+
 
 /**********************************************************/
 
@@ -2033,17 +2034,8 @@ MathJax.Hub.Startup = {
       cObject.Augment(null,cdef);
       return this;
     },
-    preProcess: function (element) {
-      var load, file = this.directory+"/"+this.JAXFILE;
-      this.constructor.prototype.preProcess = function (element) {
-	if (!load.called) {return load}
-        throw Error(file+" failed to load properly");
-      }
-      load = AJAX.Require(file);
-      return load;
-    },
-    Translate: function (element) {
-      throw Error(this.directory+"/"+this.JAXFILE+" failed to redefine the Translate() method");
+    Translate: function (script,state) {
+      throw Error(this.directory+"/"+this.JAXFILE+" failed to define the Translate() method");
     },
     Register: function (mimetype) {},
     Config: function () {
@@ -2067,13 +2059,17 @@ MathJax.Hub.Startup = {
           [function (config,id) {return MathJax.Hub.Startup.loadArray(config.extensions,"extensions/"+id)},this.config||{},this.id],
           ["Post",HUB.Startup.signal,this.id+" Jax Startup"],
           ["Startup",this],
-          ["Post",HUB.Startup.signal,this.id+" Jax Ready"],
-          [function (THIS) {
-            THIS.preProcess  = THIS.preTranslate;
-            THIS.Process     = THIS.Translate;
-            THIS.postProcess = THIS.postTranslate;
-          },this.constructor.prototype]
+          ["Post",HUB.Startup.signal,this.id+" Jax Ready"]
         );
+        if (this.copyTranslate) {
+          queue.Push(
+            [function (THIS) {
+              THIS.preProcess  = THIS.preTranslate;
+              THIS.Process     = THIS.Translate;
+              THIS.postProcess = THIS.postTranslate;
+            },this.constructor.prototype]
+          );
+        }
         return queue.Push(["loadComplete",AJAX,this.directory+"/"+file]);
       }
     }
@@ -2088,20 +2084,27 @@ MathJax.Hub.Startup = {
 
   BASE.InputJax = JAX.Subclass({
     elementJax: "mml",  // the element jax to load for this input jax
-    Process: function (element) {
-      var queue = CALLBACK.Queue();
+    copyTranslate: true,
+    Process: function (script,state) {
+      var queue = CALLBACK.Queue(), file;
       // Load any needed element jax
       var jax = this.elementJax; if (!(jax instanceof Array)) {jax = [jax]}
       for (var i = 0, m = jax.length; i < m; i++) {
-        var file = BASE.ElementJax.directory+"/"+jax[i]+"/"+this.JAXFILE;
+        file = BASE.ElementJax.directory+"/"+jax[i]+"/"+this.JAXFILE;
         if (!this.require) {this.require = []}
           else if (!(this.require instanceof Array)) {this.require = [this.require]};
         this.require.push(file);  // so Startup will wait for it to be loaded
         queue.Push(AJAX.Require(file));
       }
       // Load the input jax
-      var load = queue.Push(AJAX.Require(this.directory+"/"+this.JAXFILE));
-      if (!load.called) {this.constructor.prototype.Process = function () {return load}}
+      file = this.directory+"/"+this.JAXFILE;
+      var load = queue.Push(AJAX.Require(file));
+      if (!load.called) {
+        this.constructor.prototype.Process = function () {
+          if (!load.called) {return load}
+          throw Error(file+" failed to load properly");
+        }
+      }
       // Load the associated output jax
       jax = HUB.outputJax["jax/"+jax[0]];
       if (jax) {queue.Push(AJAX.Require(jax[0].directory+"/"+this.JAXFILE))}
@@ -2125,6 +2128,16 @@ MathJax.Hub.Startup = {
   /***********************************/
 
   BASE.OutputJax = JAX.Subclass({
+    copyTranslate: true,
+    preProcess: function (state) {
+      var load, file = this.directory+"/"+this.JAXFILE;
+      this.constructor.prototype.preProcess = function (state) {
+	if (!load.called) {return load}
+        throw Error(file+" failed to load properly");
+      }
+      load = AJAX.Require(file);
+      return load;
+    },
     Register: function (mimetype) {
       var jax = HUB.outputJax;
       if (!jax[mimetype]) {jax[mimetype] = []}
