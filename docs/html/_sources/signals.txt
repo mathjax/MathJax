@@ -53,14 +53,14 @@ One way that MathJax makes use of this feature is in configuring its
 various extensions.  The extension may not be loaded when the user's
 configuration code runs, so the configuration code can't modify the
 extension because it isn't there yet.  Fortunately, most extensions
-signal when they are loaded and initialized via an ``Extension [name] Ready`` message,
-so the configuration code can implement a listener for that message, and
-have the listener perform the configuration when the message arrives.
-But even if the extension *has* already been loaded, this will still
-work, because the listener will receive the ready signal even if it
-has already been posted.  In this way, listening for signals is a
-robust method of synchronizing code components no matter when they are
-loaded and run.
+signal when they are loaded and initialized via an ``Extension [name]
+Ready`` message, or just ``[name] Ready``, so the configuration code
+can implement a listener for that message, and have the listener
+perform the configuration when the message arrives.  But even if the
+extension *has* already been loaded, this will still work, because the
+listener will receive the ready signal even if it has already been
+posted.  In this way, listening for signals is a robust method of
+synchronizing code components no matter when they are loaded and run.
 
 In some cases, it may be inappropriate for a new listener to receive
 past messages that were sent to a signal object. There are two ways to
@@ -79,14 +79,14 @@ message, and can act on it in whatever ways they see fit.
 Creating a Listener
 ===================
 
-MathJax maintains two separate signal channels: the `startup signal`
-and the `processing signal` (or the `hub signal`).  The startup signal
-is where the messages about different components starting up and
-becoming ready appear.  The processing signal is where the messages
-are sent about processing mathematics, like the ``New Math`` messages
-for when newly typeset mathematics appears on the page.  The latter is
-cleared when a new processing pass is started (so messages from past
-processing runs are not kept).
+MathJax maintains two separate pre-defined signal channels: the
+`startup signal` and the `processing signal` (or the `hub signal`).
+The startup signal is where the messages about different components
+starting up and becoming ready appear.  The processing signal is where
+the messages are sent about processing mathematics, like the ``New
+Math`` messages for when newly typeset mathematics appears on the
+page.  The latter is cleared when a new processing pass is started (so
+messages from past processing runs are not kept).
 
 The easiest way to create a listener is to use either
 :meth:`MathJax.Hub.Register.StartupHook()` or
@@ -103,10 +103,12 @@ called when it arrives.  For example
 
 See the :ref:`MathJax Startup Sequence <startup-sequence>` page for
 details of the messages sent during startup.  See also the
-``test/sample-signals.html`` file (and its source) for examples of
-using signals.  This example lists all the signals that occur while
-MathJax is processing that page, so it gives useful information about
-the details of the signals produced by various components.
+`test/sample-signals.html
+<http://cdn.mathjax.org/mathjax/latest/test/sample-signals.html>`_
+file (and its source) for examples of using signals.  This example
+lists all the signals that occur while MathJax is processing that
+page, so it gives useful information about the details of the signals
+produced by various components.
 
 In this example, the listener starts loading an extra configuration
 file (from the same directory as the web page).  Since it returns
@@ -154,8 +156,9 @@ signal's :meth:`Interest()` method, as in the following example.
 
 This will cause an alert for every signal that MathJax produces.  You
 probably don't want to try this out, since it will produce a *lot* of
-them; instead, use the ``test/sample-signals.html`` file, which
-displays them in the web page.
+them; instead, use the `test/sample-signals.html
+<http://cdn.mathjax.org/mathjax/latest/test/sample-signals.html>`_
+file, which displays them in the web page.
 
 See the :ref:`Signal Object <api-signal>` reference page for details on the
 structure and methods of the signal object.

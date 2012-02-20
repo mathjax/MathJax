@@ -54,7 +54,7 @@
 <p>The purpose of MathJax is to bring the ability to include mathematics
 easily in web pages to as wide a range of browsers as possible.
 Authors can specify mathematics in a variety of formats (e.g.,
-<a class="reference internal" href="glossary.html#term-mathml"><em class="xref std std-term">MathML</em></a> or <a class="reference internal" href="glossary.html#term-latex"><em class="xref std std-term">LaTeX</em></a>), and MathJax provides high-quality
+<a class="reference internal" href="glossary.html#term-mathml"><em class="xref std std-term">MathML</em></a>, <a class="reference internal" href="glossary.html#term-latex"><em class="xref std std-term">LaTeX</em></a>, or <a class="reference internal" href="glossary.html#term-asciimath"><em class="xref std std-term">AsciiMath</em></a>), and MathJax provides high-quality
 mathematical typesetting even in those browsers that do not have
 native MathML support.  This all happens without the need for special
 downloads or plugins, but rendering will be enhanced if high-quality
@@ -81,17 +81,19 @@ document is to be typeset as mathematics.  In this case, MathJax can
 run a preprocessor to locate the math delimiters and replace them by
 the special tags that it uses to mark the formulas.  There are
 preprocessors for <a class="reference internal" href="tex.html#tex-support"><em>TeX notation</em></a>, <a class="reference internal" href="mathml.html#mathml-support"><em>MathML
-notation</em></a>, and the <a class="reference internal" href="jsMath.html#jsmath-support"><em>jsMath notation</em></a> that uses <cite>span</cite> and <cite>div</cite> tags.</p>
+notation</em></a>, <a class="reference internal" href="asciimath.html#asciimath-support"><em>AsciiMath notation</em></a> and the <a class="reference internal" href="jsMath.html#jsmath-support"><em>jsMath notation</em></a> that uses <cite>span</cite> and <cite>div</cite> tags.</p>
 <p>For pages that are constructed programmatically, such as HTML
 pages that result from running a processor on text in some other
 format (e.g., pages produced from Markdown documents, or via programs
 like <cite>tex4ht</cite>), it would be best to use MathJax&#8217;s special tags
 directly, as described below, rather than having MathJax run
 another preprocessor.  This will speed up the final display of the
-mathematics, since the extra preprocessing step would not be needed,
-and it also avoids the conflict between the use of the less-than sign,
+mathematics, since the extra preprocessing step would not be needed.
+It also avoids the conflict between the use of the less-than sign,
 <tt class="docutils literal"><span class="pre">&lt;</span></tt>, in mathematics and as an HTML special character (that starts
-an HTML tag).</p>
+an HTML tag), and several other issues involved in having the
+mathematics directly in the text of the page (see the documentation on
+the various input jax for more details on this).</p>
 <div class="section" id="how-mathematics-is-stored-in-the-page">
 <span id="mathjax-script-tags"></span><h2>How mathematics is stored in the page<a class="headerlink" href="#how-mathematics-is-stored-in-the-page" title="Permalink to this headline">¶</a></h2>
 <p>In order to identify mathematics in the page, MathJax uses special
@@ -107,8 +109,9 @@ kind of script that the tag contains.  The usual (and default) value
 is <tt class="docutils literal"><span class="pre">type=&quot;text/javascript&quot;</span></tt>, and when a script has this type, the
 browser executes the script as a javascript program.  MathJax,
 however, uses the type <cite>math/tex</cite> to identify mathematics in the TeX
-and LaTeX notation, and <cite>math/mml</cite> for mathematics in MathML
-notation.  When the <cite>tex2jax</cite> or <cite>mml2jax</cite> preprocessors run, they
+and LaTeX notation, <cite>math/mml</cite> for mathematics in MathML notation, and
+<cite>math/asciimath</cite> for mathematics in AsciiMath notation.  When the
+<cite>tex2jax</cite>, <cite>mml2jax</cite>, or <cite>asciimath2jax</cite> preprocessors run, they
 create <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tags with these types so that MathJax can process
 them when it runs its main typesetting pass.</p>
 <p>For example,</p>
@@ -214,16 +217,24 @@ specific output format.  For example, the NativeMML output jax inserts
 MathML tags into the page to represent the mathematics, while the
 HTML-CSS output jax uses HTML with CSS styling to lay out the
 mathematics so that it can be displayed even in browsers that don&#8217;t
-understand MathML.  Output jax could be produced that render the
-mathematics using SVG, for example, or that speak an equation for
-blind users.  The MathJax contextual menu can be used to switch
-between the output jax that are available.</p>
+understand MathML.  MathJax also has an <a class="reference internal" href="glossary.html#term-svg"><em class="xref std std-term">SVG</em></a> output jax that
+will render the mathematics using scalable vector grtaphics.  Output
+jax could be produced that render the mathematics using HTML5 canvas
+elements, for example, or that speak an equation for blind users.  The
+MathJax contextual menu can be used to switch between the output jax
+that are available.</p>
 <p>Each input and output jax has a small configuration file that is
 loaded when that input jax is included in the <cite>jax</cite> array in the
 MathJax configuration, and a larger file that implements the core
-functionality of that particular jax.  The latter file is loaded
-the first time the jax is needed by MathJax to process some
-mathematics.</p>
+functionality of that particular jax.  The latter file is loaded the
+first time the jax is needed by MathJax to process some mathematics.
+Most of the combined configuration files include only the small
+configuration portion for the input and output jax, making the
+configuraiton file smaller and faster to load for those pages that
+don&#8217;t actually incldue mathematics; the combined configurations that
+end in <tt class="docutils literal"><span class="pre">-full</span></tt> include both parts of the jax, so there is no delay
+when the math is to be rendered, but at the expense of a larger
+initial download.</p>
 <p>The <strong>MathJax Hub</strong> keeps track of the internal representations of the
 various mathematical equations on the page, and can be queried to
 obtain information about those equations.  For example, one can obtain

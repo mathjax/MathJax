@@ -79,7 +79,19 @@ Options</em></a> reference page.</p>
 <dt>
 <tt class="descname">processUpdateTime: 250</tt></dt>
 <dd><p>The minimum time (in milliseconds) between updates of the
-&#8220;Processing Math&#8221; message.</p>
+&#8220;Processing Math&#8221; message.  After this amount of time has passed,
+and after the next equation has finished being processed,
+MathJax will stop processing momentarily so that the update
+message can be displayed, and so that the browser can handle user
+interaction.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">processUpdateDelay: 10</tt></dt>
+<dd><p>The amount of time (in milliseconds) that MathJax pauses after
+issuing its processing message before starting the processing again
+(to give browsers time to handle user interaction).</p>
 </dd></dl>
 
 <dl class="describe">
@@ -115,6 +127,13 @@ additional properties and methods concerning the browser:</p>
 <dd><p>These are boolean values that indicate whether the browser is
 running on a Macintosh computer or a Windows computer.  They
 will both be <tt class="docutils literal"><span class="pre">false</span></tt> for a Linux computer.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">isMobile</tt></dt>
+<dd><p>This is <tt class="docutils literal"><span class="pre">true</span></tt> when MathJax is running a mobile version of a
+WebKit or Gecko-based browser.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -159,6 +178,21 @@ need to do special processing.  For example:</p>
 </div>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">inputJax</tt></dt>
+<dd><p>An object storing the MIME types associated with the various
+registered input jax (these are the types of the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tags
+that store the math to be processed by each input jax).</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">outputJax</tt></dt>
+<dd><p>An object storing the output jax associate with the various
+element jax MIME types for the registered output jax.</p>
 </dd></dl>
 
 </div>
@@ -434,13 +468,43 @@ references.  The <cite>callback</cite> is called when the processing is complete
 <dl class="method">
 <dt id="Reprocess">
 <tt class="descname">Reprocess</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Reprocess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes any typeset mathematics from the document or DOM element (or
-elements if it is an array of elements), and then processes the
-mathematics again, re-typesetting everything.  This may be necessary,
-for example, if the CSS styles have changed and those changes would
-affect the mathematics.  The <cite>element</cite> is either the DOM <cite>id</cite> of the
-element to scan, a reference to the DOM element itself, or an array of
-id&#8217;s or references.  The <cite>callback</cite> is called when the processing is
+<dd><p>Removes any typeset mathematics from the document or DOM element
+(or elements if it is an array of elements), and then processes
+the mathematics again, re-typesetting everything.  This may be
+necessary, for example, if the CSS styles have changed and those
+changes would affect the mathematics.  Reprocess calls both the
+input and output jax to completely rebuild the data for
+mathematics.  The <cite>element</cite> is either the DOM <cite>id</cite> of the element
+to scan, a reference to the DOM element itself, or an array of
+id&#8217;s or references.  The <cite>callback</cite> is called when the processing
+is complete.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>element</strong> &#8212; the element(s) to be reprocessed</li>
+<li><strong>callback</strong> &#8212; the callback specification</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the callback object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Rerender">
+<tt class="descname">Rerender</tt><big>(</big><span class="optional">[</span><em>element</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Rerender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any typeset mathematics from the document or DOM element
+(or elements if it is an array of elements), and then renders the
+mathematics again, re-typesetting everything from the current
+internal version (without calling the input jax again).  The
+<cite>element</cite> is either the DOM <cite>id</cite> of the element to scan, a
+reference to the DOM element itself, or an array of id&#8217;s or
+references.  The <cite>callback</cite> is called when the processing is
 complete.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -571,6 +635,33 @@ handled by MathJax, and returns <tt class="docutils literal"><span class="pre">1
 </td>
 </tr>
 <tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">integer (-1, 0, 1)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="setRenderer">
+<tt class="descname">setRenderer</tt><big>(</big><em>renderer</em><span class="optional">[</span>, <em>type</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#setRenderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the output jax for the given element jax <tt class="docutils literal"><span class="pre">type</span></tt> (or <tt class="docutils literal"><span class="pre">jax/mml</span></tt>
+if none is specified) to be the one given by <tt class="docutils literal"><span class="pre">renderer</span></tt>, which
+must be the name of a renderer, such as <tt class="docutils literal"><span class="pre">NativeMML</span></tt> or
+<tt class="docutils literal"><span class="pre">HTML-CSS</span></tt>.  Note that this does not cause the math on the page
+to be rerendered; it just sets the renderer for output in the
+future (call :meth:<tt class="docutils literal"><span class="pre">Rerender()</span></tt> above to replace the current
+renderings by new ones).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>renderer</strong> &#8212; the name of the output jax to use for rendering</li>
+<li><strong>type</strong> &#8212; the element jax MIME type whose renderer to set</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">null</span></tt></p>
 </td>
 </tr>
 </tbody>

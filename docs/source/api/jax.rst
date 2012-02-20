@@ -63,26 +63,12 @@ Instance Properties
     jax.  These can be modified by the author by including a
     configuration subsection for the specific jax in question.
 
+.. describe:: JAXFILE: "jax.js"
+
+    The name of the file that contains the main code for the jax.
 
 Methods
 =======
-
-.. Method:: Process(script)
-    :noindex:
-
-    This is the method that the ``MathJax.Hub`` calls when it needs the 
-    input or output jax to process the given math ``<script>``.  Its 
-    default action is to start loading the jax's ``jax.js`` file, and 
-    redefine itself to simply return the callback for the load operation 
-    (so that further calls to it will cause the processing to wait for the 
-    callback).  Once the ``jax.js`` file has loaded, this method is 
-    replaced by the jax's :meth:`Translate()` method, so that subsequent calls 
-    to :meth:`Process()` will perform the appropriate translation.
-
-    :Parameters:
-        - **script** --- reference to the DOM ``<script>`` object for
-                         the mathematics to be translated
-    :Returns: an `ElementJax` object, or ``null``
 
 .. Method:: Translate(script)
 
@@ -90,7 +76,7 @@ Methods
     ``jax.js`` file when it is loaded.  It should perform the translation
     action for the specific jax.  For an input jax, it should return the
     `ElementJax` object that it created.  The :meth:`Translate()` method is
-    never called directly by MathJax; during the :meth:`loadComplete()`
+    never called directly by MathJax; during the ``loadComplete()``
     call, this function is copied to the :meth:`Process()` method, and is
     called via that name.  The default :meth:`Translate()` method throws an
     error indicating that the :meth:`Translate()` method was not
@@ -147,7 +133,10 @@ Methods
        5. Post the "[name] Jax Startup" message to the startup signal.
        6. Perform the jax's :meth:`Startup()` method.
        7. Post the "[name] Jax Ready" message to the startup signal.
-       8. Perform the :meth:`MathJax.Ajax.loadComplete()` call for the
+       8. Copy the ``preTranslate``, ``Translate``, and
+          ``postTranslate`` functions to ``preProcess``, ``Process``,
+	  and ``postProcess``.
+       9. Perform the :meth:`MathJax.Ajax.loadComplete()` call for the
           ``jax.js`` file.
 
     Note that the configuration process (the :meth:`Config()` call) can 

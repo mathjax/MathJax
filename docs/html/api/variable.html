@@ -70,7 +70,7 @@ code, the onload handler, the browser data, and so forth.</p>
 <dt>
 <tt class="descname">MathJax.Ajax</tt></dt>
 <dd><p>Contains the code for loading external modules and creating
-stylesheets.  Most of the code that causes most of MathJax to
+stylesheets.  Most of the code that causes MathJax to
 operate asynchronously is handled here.</p>
 </dd></dl>
 
@@ -101,6 +101,13 @@ signals.</p>
 <dd><p>Initially empty, this is where extensions can load their code.
 For example, the <cite>tex2jax</cite> preprocessor creates
 <tt class="docutils literal"><span class="pre">MathJax.Extension.tex2jax</span></tt> for its code and variables.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">MathJax.Menu</tt></dt>
+<dd><p>Initially null, this is where the MathJax contextual menu is
+stored, when <tt class="docutils literal"><span class="pre">extensions/MathMenu.js</span></tt> is loaded.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -142,7 +149,13 @@ itself as <tt class="docutils literal"><span class="pre">MathJax.ElementJax.mml<
 <dl class="describe">
 <dt>
 <tt class="descname">MathJax.version</tt></dt>
-<dd><p>The version number of the MathJax library.</p>
+<dd><p>The version number of the MathJax library as a whole.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">MathJax.fileversion</tt></dt>
+<dd><p>The version number of the <tt class="docutils literal"><span class="pre">MathJax.js</span></tt> file specifically.</p>
 </dd></dl>
 
 <dl class="describe">

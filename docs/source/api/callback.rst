@@ -58,7 +58,7 @@ A callback specification is any one of the following:
         the given function, and it would return their sum, ``5``, when
         the callback is executed.
 
-	.. describe:: [object, fn]
+    .. describe:: [object, fn]
 
         An array containing an object to use as `this` and a function to
         call for the callback.  For example,
@@ -75,7 +75,7 @@ A callback specification is any one of the following:
 	Similar to the previous case, but with data that is passed to
 	the function as well.
 
-    ..describe:: ["method", object]
+    .. describe:: ["method", object]
 
         Here, `object` is an object that has a method called `method`, and
         the callback will execute that method (with the object as
@@ -220,24 +220,6 @@ MathJax.Callback Methods
         - **callback** --- the callback specification
     :Returns: the callback object
 
-.. method:: ExecuteHooks(hooks[, data[,reset]])
-
-    Calls each callback in the `hooks` array (or the single hook if it
-    is not an array), passing it the arguments stored in the data
-    array.  If `reset` is ``true``, then the callback's
-    :meth:`reset()` method will be called before each hook is
-    executed.  If any of the hooks returns a `Callback` object, then
-    it collects those callbacks and returns a new callback that will
-    execute when all the ones returned by the hooks have been
-    completed.  Otherwise, :meth:`MathJax.Callback.ExecuteHooks()`
-    returns ``null``.
-        
-    :Parameters:
-        - **hooks** --- array of hooks to be called, or a hook
-        - **data** --- array of arguments to pass to each hook in turn
-        - **reset** --- ``true`` if the :meth:`reset()` method should be called
-    :Returns: callback that waits for all the hooks to complete, or ``null``
-
 .. method:: Queue([callback,...])
 
     Creates a `MathJax.CallBack.Queue` object and pushes the given
@@ -257,3 +239,66 @@ MathJax.Callback Methods
     :Parameters:
         - **name** --- name of the signal to get or create
     :Returns: the `Signal` object
+
+.. method:: ExecuteHooks(hooks[, data[,reset]])
+
+    Calls each callback in the `hooks` array (or the single hook if it
+    is not an array), passing it the arguments stored in the data
+    array.  If `reset` is ``true``, then the callback's
+    :meth:`reset()` method will be called before each hook is
+    executed.  If any of the hooks returns a `Callback` object, then
+    it collects those callbacks and returns a new callback that will
+    execute when all the ones returned by the hooks have been
+    completed.  Otherwise, :meth:`MathJax.Callback.ExecuteHooks()`
+    returns ``null``.
+
+    :Parameters:
+        - **hooks** --- array of hooks to be called, or a hook
+        - **data** --- array of arguments to pass to each hook in turn
+        - **reset** --- ``true`` if the :meth:`reset()` method should be called
+    :Returns: callback that waits for all the hooks to complete, or ``null``
+
+.. method:: Hooks(reset)
+
+    Creates a prioritized list of hooks that are called in order based
+    on their priority (low priority numbers are handled first).  This
+    is meant to replace :meth:`MathJax.Callback.ExecuteHooks()` and is
+    used internally for signal callbacks, pre- and post-filters, and
+    other lists of callbacks.
+
+    :Parameters:
+        - **reset** --- ``true`` if callbacks can be called more than once
+    :Returns: the `Hooks` object
+
+    The list has the following methods:
+
+    .. method:: Add(hook[,priority])
+
+        Add a callback to the prioritized list.  If ``priority`` is
+        not provided, the default is 10.  The ``hook`` is a `Callback`
+        specification as described above.
+
+        :Parameters:
+            - **hook** --- callback specification to add to the list
+	    - **priority** --- priority of the hook in the list (default: 10)
+	:Returns: the callback object being added
+
+    .. method:: Remove(hook)
+        :noindex:
+
+        Remove a given hook (as returned from :meth:`Add()` above)
+        from the prioritized list.
+
+	:Parameters:
+	    - **hook** --- the callback to be removed
+	:Returns: ``null``
+
+    .. method:: Execute()
+
+        Execute the list of callbacks, resetting them if requested.
+        If any of the hooks return callbacks, then ``Execute()``
+        returns a callback that will be executed when they all have
+        completed.
+
+	:Returns: a callback object or ``null``
+	

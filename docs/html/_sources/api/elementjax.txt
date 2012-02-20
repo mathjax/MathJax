@@ -42,13 +42,11 @@ Instance Properties
 
 .. describe:: inputJax
 
-    A reference to the input jax that created the element.  (In the 
-    future, this will be changed to the name of the input jax.)
+    The name of the input jax that created the element.
  
 .. describe:: outputJax
 
-    A reference to the output jax that has processed this element.  (In 
-    the future, this will be changed to the name of the output jax.)
+    The name of the output jax that has processed this element.
  
 .. describe:: inputID
 
@@ -89,13 +87,25 @@ Methods
 	- **callback** --- the callback specification
     :Returns: the callback object
  
+.. Method:: Rerender([callback])
+    :noindex:
+
+    Removes the output and produces it again (for example, if CSS has
+    changed that would alter the spacing of the mathematics).  Note
+    that the internal representation isn't regenerated; only the
+    output is.  The `callback`, if any, is called when the process
+    completes.
+ 
+    :Parameters:
+	- **callback** --- the callback specification
+    :Returns: the callback object
+
 .. Method:: Reprocess([callback])
     :noindex:
 
-    Removes the output and produces it again.  This may be necessary if
-    there are changes to the CSS styles that would affect the layout
-    of the mathematics, for example.  The `callback`, if any, is
-    called when the process completes.
+    Removes the output and then retranslates the input into the
+    internal form and reredners the output again.  The `callback`, if
+    any, is called when the process completes.
  
     :Parameters:
 	- **callback** --- the callback specification
@@ -117,6 +127,16 @@ Methods
     associated to this element jax.
 
     :Returns: the ``<script>`` element
+
+.. Method:: needsUpdate()
+
+    Indicates whether the mathematics has changed so that its output
+    needs to be updated.
+
+    :Returns: ``true`` if the mathematics needs to be reprocessed,
+              ``false`` otherwise
+
+
 
 Output jax may add new methods to the base element jax class to
 perform exporting to other formats.  For example, a MathML output jax

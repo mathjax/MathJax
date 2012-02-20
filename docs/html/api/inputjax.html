@@ -107,11 +107,57 @@ that class.</p>
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
 <dt>
-<tt class="descname">Translate</tt><big>(</big><em>script</em><big>)</big></dt>
+<tt class="descname">Process</tt><big>(</big><em>script</em>, <em>state</em><big>)</big></dt>
+<dd><p>This is the method that the <tt class="docutils literal"><span class="pre">MathJax.Hub</span></tt> calls when it needs
+the input jax to process the given math <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt>.  Its default
+action is to do the following:</p>
+<ol class="arabic simple">
+<li>Start loading any element jax  specified in the <tt class="docutils literal"><span class="pre">elementJax</span></tt> array;</li>
+<li>Start loading the jax&#8217;s <tt class="docutils literal"><span class="pre">jax.js</span></tt> file;</li>
+<li>Start loading the required output jax (so it is ready when needed); and</li>
+<li>Redefine itself to simply return the callback for the load operation
+(so that further calls to it will cause the processing to wait for the
+callback).</li>
+</ol>
+<p>Once the <tt class="docutils literal"><span class="pre">jax.js</span></tt> file has loaded, this method is replaced by
+the jax&#8217;s <tt class="docutils literal"><span class="pre">Translate()</span></tt> method (see below), so that
+subsequent calls to <tt class="docutils literal"><span class="pre">Process()</span></tt> will perform the appropriate
+translation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first">
+<li><dl class="first docutils">
+<dt><strong>script</strong> &#8212; reference to the DOM <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> object for</dt>
+<dd><p class="first last">the mathematics to be translated</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>state</strong> &#8212; a structure containing information about the</dt>
+<dd><p class="first last">current proccessing state of the mathematics
+(internal use)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">an <cite>ElementJax</cite> object, or <tt class="docutils literal"><span class="pre">null</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">Translate</tt><big>(</big><em>script</em>, <em>state</em><big>)</big></dt>
 <dd><p>This is the main routine called by MathJax when a <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> of the
 appropriate type is found.  The default <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> method
 throws an error indicating that <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> hasn&#8217;t been
-redefined, so when the <tt class="docutils literal"><span class="pre">jax.js</span></tt> file loads, it should override the
+defined, so when the <tt class="docutils literal"><span class="pre">jax.js</span></tt> file loads, it should override the
 default <a class="reference internal" href="jax.html#Translate" title="Translate"><tt class="xref py py-meth docutils literal"><span class="pre">Translate()</span></tt></a> with its own version that does the actual
 translation.</p>
 <p>The translation process should include the creation of an
@@ -121,8 +167,16 @@ for this element.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>script</strong>  &#8212; the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> element to be translated</li>
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first">
+<li><p class="first"><strong>script</strong>  &#8212; the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> element to be translated</p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>state</strong> &#8212; a structure containing information about the</dt>
+<dd><p class="first last">current proccessing state of the mathematics
+(internal use)</p>
+</dd>
+</dl>
+</li>
 </ul>
 </td>
 </tr>
@@ -151,6 +205,28 @@ of the various types from one another.</p>
 </td>
 </tr>
 <tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">null</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">needsUpdate</tt><big>(</big><em>jax</em><big>)</big></dt>
+<dd><p>This implements the element jax&#8217;s <tt class="docutils literal"><span class="pre">needsUpdate()</span></tt> method, and
+returns <tt class="docutils literal"><span class="pre">true</span></tt> if the <tt class="docutils literal"><span class="pre">jax</span></tt> needs to be rerendered (i.e., the
+text has changed), and <tt class="docutils literal"><span class="pre">false</span></tt> otherwise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Perameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>jax</strong> &#8212; the element jax to be checked</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">true</span></tt> if the jax&#8217;s text has changed, <tt class="docutils literal"><span class="pre">false</span></tt> otherwise</p>
 </td>
 </tr>
 </tbody>

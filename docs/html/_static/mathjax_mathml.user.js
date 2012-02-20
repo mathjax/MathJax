@@ -10,9 +10,9 @@ if ((window.unsafeWindow == null ? window : unsafeWindow).MathJax == null) {
       (document.getElementsByTagNameNS == null ? false :
       (document.getElementsByTagNameNS("http://www.w3.org/1998/Math/MathML","math").length > 0))) {
     var script = document.createElement("script");
+    script.type = "text/javascript";
     script.src = "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full";
     var config = 'MathJax.Hub.Startup.onload()';
-    if (window.opera) {script.innerHTML = config} else {script.text = config}
     document.getElementsByTagName("head")[0].appendChild(script);
   }
 }

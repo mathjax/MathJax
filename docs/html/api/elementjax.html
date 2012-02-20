@@ -91,15 +91,13 @@ that class.</p>
 <dl class="describe">
 <dt>
 <tt class="descname">inputJax</tt></dt>
-<dd><p>A reference to the input jax that created the element.  (In the
-future, this will be changed to the name of the input jax.)</p>
+<dd><p>The name of the input jax that created the element.</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">outputJax</tt></dt>
-<dd><p>A reference to the output jax that has processed this element.  (In
-the future, this will be changed to the name of the output jax.)</p>
+<dd><p>The name of the output jax that has processed this element.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -159,11 +157,34 @@ new one given by <cite>text</cite>).  When the processing is complete, the
 
 <dl class="method">
 <dt>
+<tt class="descname">Rerender</tt><big>(</big><span class="optional">[</span><em>callback</em><span class="optional">]</span><big>)</big></dt>
+<dd><p>Removes the output and produces it again (for example, if CSS has
+changed that would alter the spacing of the mathematics).  Note
+that the internal representation isn&#8217;t regenerated; only the
+output is.  The <cite>callback</cite>, if any, is called when the process
+completes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>callback</strong> &#8212; the callback specification</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the callback object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
 <tt class="descname">Reprocess</tt><big>(</big><span class="optional">[</span><em>callback</em><span class="optional">]</span><big>)</big></dt>
-<dd><p>Removes the output and produces it again.  This may be necessary if
-there are changes to the CSS styles that would affect the layout
-of the mathematics, for example.  The <cite>callback</cite>, if any, is
-called when the process completes.</p>
+<dd><p>Removes the output and then retranslates the input into the
+internal form and reredners the output again.  The <cite>callback</cite>, if
+any, is called when the process completes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -207,6 +228,22 @@ associated to this element jax.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Returns :</th><td class="field-body">the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> element</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="needsUpdate">
+<tt class="descname">needsUpdate</tt><big>(</big><big>)</big><a class="headerlink" href="#needsUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the mathematics has changed so that its output
+needs to be updated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><tt class="docutils literal"><span class="pre">true</span></tt> if the mathematics needs to be reprocessed,
+<tt class="docutils literal"><span class="pre">false</span></tt> otherwise</td>
 </tr>
 </tbody>
 </table>

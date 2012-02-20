@@ -5,7 +5,7 @@ The MathJax Processing Model
 The purpose of MathJax is to bring the ability to include mathematics
 easily in web pages to as wide a range of browsers as possible.
 Authors can specify mathematics in a variety of formats (e.g.,
-:term:`MathML` or :term:`LaTeX`), and MathJax provides high-quality
+:term:`MathML`, :term:`LaTeX`, or :term:`AsciiMath`), and MathJax provides high-quality
 mathematical typesetting even in those browsers that do not have
 native MathML support.  This all happens without the need for special
 downloads or plugins, but rendering will be enhanced if high-quality
@@ -35,7 +35,8 @@ document is to be typeset as mathematics.  In this case, MathJax can
 run a preprocessor to locate the math delimiters and replace them by
 the special tags that it uses to mark the formulas.  There are
 preprocessors for :ref:`TeX notation <TeX-support>`, :ref:`MathML
-notation <MathML-support>`, and the :ref:`jsMath notation
+notation <MathML-support>`, :ref:`AsciiMath notation
+<AsciiMath-support>` and the :ref:`jsMath notation
 <jsMath-support>` that uses `span` and `div` tags.
 
 For pages that are constructed programmatically, such as HTML
@@ -44,10 +45,12 @@ format (e.g., pages produced from Markdown documents, or via programs
 like `tex4ht`), it would be best to use MathJax's special tags
 directly, as described below, rather than having MathJax run
 another preprocessor.  This will speed up the final display of the
-mathematics, since the extra preprocessing step would not be needed,
-and it also avoids the conflict between the use of the less-than sign,
+mathematics, since the extra preprocessing step would not be needed.
+It also avoids the conflict between the use of the less-than sign,
 ``<``, in mathematics and as an HTML special character (that starts
-an HTML tag).
+an HTML tag), and several other issues involved in having the
+mathematics directly in the text of the page (see the documentation on
+the various input jax for more details on this).
 
 
 .. _mathjax-script-tags:
@@ -69,8 +72,9 @@ kind of script that the tag contains.  The usual (and default) value
 is ``type="text/javascript"``, and when a script has this type, the
 browser executes the script as a javascript program.  MathJax,
 however, uses the type `math/tex` to identify mathematics in the TeX
-and LaTeX notation, and `math/mml` for mathematics in MathML
-notation.  When the `tex2jax` or `mml2jax` preprocessors run, they
+and LaTeX notation, `math/mml` for mathematics in MathML notation, and
+`math/asciimath` for mathematics in AsciiMath notation.  When the
+`tex2jax`, `mml2jax`, or `asciimath2jax` preprocessors run, they
 create ``<script>`` tags with these types so that MathJax can process
 them when it runs its main typesetting pass.
 
@@ -197,17 +201,25 @@ specific output format.  For example, the NativeMML output jax inserts
 MathML tags into the page to represent the mathematics, while the
 HTML-CSS output jax uses HTML with CSS styling to lay out the
 mathematics so that it can be displayed even in browsers that don't
-understand MathML.  Output jax could be produced that render the
-mathematics using SVG, for example, or that speak an equation for
-blind users.  The MathJax contextual menu can be used to switch
-between the output jax that are available.
+understand MathML.  MathJax also has an :term:`SVG` output jax that
+will render the mathematics using scalable vector grtaphics.  Output
+jax could be produced that render the mathematics using HTML5 canvas
+elements, for example, or that speak an equation for blind users.  The
+MathJax contextual menu can be used to switch between the output jax
+that are available.
 
 Each input and output jax has a small configuration file that is
 loaded when that input jax is included in the `jax` array in the
 MathJax configuration, and a larger file that implements the core
-functionality of that particular jax.  The latter file is loaded
-the first time the jax is needed by MathJax to process some
-mathematics.
+functionality of that particular jax.  The latter file is loaded the
+first time the jax is needed by MathJax to process some mathematics.
+Most of the combined configuration files include only the small
+configuration portion for the input and output jax, making the
+configuraiton file smaller and faster to load for those pages that
+don't actually incldue mathematics; the combined configurations that
+end in ``-full`` include both parts of the jax, so there is no delay
+when the math is to be rendered, but at the expense of a larger
+initial download.
 
 The **MathJax Hub** keeps track of the internal representations of the
 various mathematical equations on the page, and can be queried to
