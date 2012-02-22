@@ -689,7 +689,7 @@ MathJax.Hub.Config({
     //  EqChunkDelay is the time (in milliseconds) to delay between chunks
     //  (to allow the browser to respond to other user interaction).
     //  
-    //  Set EqnChunk to 1, EqnChunkFactor to 1, and EwnChunkDelay to 10 to get
+    //  Set EqnChunk to 1, EqnChunkFactor to 1, and EqnChunkDelay to 10 to get
     //  the behavior from MathJax v1.1 and below.
     //
     EqnChunk: 50,
@@ -838,7 +838,7 @@ MathJax.Hub.Config({
 
     //
     //  This controls whether the MathML structure is retained and CSS
-    //  classes are used to mark the original MathML elements (as in the
+    //  classes are added to mark the original MathML elements (as in the
     //  HTML-CSS output).  By default, the SVG output jax removes unneeded
     //  nesting in order to produce a more efficient markup, but if you
     //  want to use CSS to style the elements as if they were MathML, you
@@ -941,7 +941,7 @@ MathJax.Hub.Config({
     //  this long, the menu will appear.  (The menu also will appear if you
     //  click on the label.)  It is in milliseconds.
     //  
-    delay: 400,
+    delay: 150,
     
     //
     //  This is the URL for the MathJax Help menu item.
@@ -977,6 +977,20 @@ MathJax.Hub.Config({
     //
     styles: {}
     
+  },
+  
+  //============================================================================
+  //
+  //  These parameters control the contextual menus that are available on the 
+  //  mathematics within the page (provided the showMathMenu value is true above).
+  //
+  MathEvents: {
+    //
+    //  This is the time required for the mouse to be held still over a
+    //  typeset equation in order for it to count as a hover (used when the
+    //  zoom trigger is "Hover").  It is in milliseconds.
+    //  
+    hover: 500
   },
 
   //============================================================================
