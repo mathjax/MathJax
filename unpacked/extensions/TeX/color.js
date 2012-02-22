@@ -167,6 +167,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
   COLOR.TEX = TEX; // for reference in getColor above
   
+  TEX.Definitions.macros.color = "Color";
   TEX.Definitions.macros.definecolor = "DefineColor";
   TEX.Definitions.macros.colorbox = "ColorBox";
   TEX.Definitions.macros.fcolorbox = "fColorBox";
