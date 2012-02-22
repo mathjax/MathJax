@@ -333,7 +333,9 @@ to be loaded, redefining all four to their proper values.  Note that
 this may be better than loading the extension explicitly, since it
 avoids loading the extra file on pages where these macros are <em>not</em>
 used.  The <a class="reference external" href="http://cdn.mathjax.org/mathjax/latest/test/sample-autoload.html">sample autoloading macros</a>
-example page shows this in action.</p>
+example page shows this in action.  The <cite>autoload-all</cite> extension below
+defines such macros for <em>all</em> the extensions so that if you include
+it, MathJax will have access to all the macros it knows about.</p>
 <p>The main extensions are described below.</p>
 <div class="section" id="action">
 <h3>Action<a class="headerlink" href="#action" title="Permalink to this headline">¶</a></h3>
@@ -551,7 +553,7 @@ MathML attribute values allowed on the <tt class="docutils literal"><span class=
 <p>To use this extension in your own configurations, add it to the
 <cite>extensions</cite> array in the TeX block.</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
-  <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;action.js&quot;</span><span class="p">]</span>
+  <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;enclose.js&quot;</span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -801,6 +803,45 @@ array.  You can configure the extension as follows:</p>
     <span class="nx">fonts</span><span class="o">:</span> <span class="s2">&quot;STIXGeneral, &#39;Arial Unicode MS&#39;&quot;</span>
   <span class="p">}</span>
 <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="autoload-all">
+<h3>Autoload-all<a class="headerlink" href="#autoload-all" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>autoload-all</cite> extension predefines all the macros from the
+extensions above so that they autoload the extensions when first
+used.  A number of macros already do this, e.g., <tt class="docutils literal"><span class="pre">\unicode</span></tt>, but
+this extension defines the others to do the same.  That way MathJax
+will have access to all the macros that it knows about.</p>
+<p>To use this extension in your own configurations, add it to the
+<cite>extensions</cite> array in the TeX block.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span>
+  <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;autoload-all.js&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This extension is <strong>not</strong> included in any of the combined configurations,
+and will not be loaded automatically, so you must include it
+explicitly in your configuration if you wish to use these commands.</p>
+<p>Note that <cite>autoload-all</cite> redefines <tt class="docutils literal"><span class="pre">\color</span></tt> to be the one from the
+<cite>color</cite> extension (the LaTeX-compatible one rather than the
+non-standard MathJax version).  This is because <tt class="docutils literal"><span class="pre">\colorbox</span></tt> and
+<tt class="docutils literal"><span class="pre">\fcolorbox</span></tt> autoload the <cite>color</cite> extension, which will cause
+<tt class="docutils literal"><span class="pre">\color</span></tt> to be redefined, and so for consistency, <tt class="docutils literal"><span class="pre">\color</span></tt> is
+redefined immediately.</p>
+<p>If you wish to retain the original definition of <tt class="docutils literal"><span class="pre">\color</span></tt>, then use
+the following</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
+<span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
+  <span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span> <span class="nx">extensions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;autoload-all.js&quot;</span><span class="p">]</span> <span class="p">}</span>
+<span class="p">});</span>
+<span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Register</span><span class="p">.</span><span class="nx">StartupHook</span><span class="p">(</span><span class="s2">&quot;TeX autoload-all Ready&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">MACROS</span> <span class="o">=</span> <span class="nx">MathJax</span><span class="p">.</span><span class="nx">InputJax</span><span class="p">.</span><span class="nx">TeX</span><span class="p">.</span><span class="nx">Definitions</span><span class="p">.</span><span class="nx">macros</span><span class="p">;</span>
+  <span class="nx">MACROS</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="s2">&quot;Color&quot;</span><span class="p">;</span>
+  <span class="k">delete</span> <span class="nx">MACROS</span><span class="p">.</span><span class="nx">colorbox</span><span class="p">;</span>
+  <span class="k">delete</span> <span class="nx">MACROS</span><span class="p">.</span><span class="nx">fcolorbox</span><span class="p">;</span>
+<span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
 </pre></div>
 </div>
 </div>
@@ -1191,7 +1232,8 @@ in MathJax</a> page.</p>
 </div>
 <div class="section" id="l">
 <h3>L<a class="headerlink" href="#l" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-latex"><div class="highlight"><pre><span class="k">\Lambda</span>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\label</span>                 [AMSmath]
+<span class="k">\Lambda</span>
 <span class="k">\lambda</span>
 <span class="k">\land</span>
 <span class="k">\langle</span>
@@ -1797,6 +1839,7 @@ vmatrix
 <li><a class="reference internal" href="#noerrors">noErrors</a></li>
 <li><a class="reference internal" href="#noundefined">noUndefined</a></li>
 <li><a class="reference internal" href="#unicode-support">Unicode support</a></li>
+<li><a class="reference internal" href="#autoload-all">Autoload-all</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#supported-latex-commands">Supported LaTeX commands</a><ul>
