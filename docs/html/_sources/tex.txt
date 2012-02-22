@@ -322,6 +322,33 @@ load extensions into pages that didn't load them in their
 configurations (and prevents you from having to load all the
 extensions into all pages even if they aren't used).
 
+It is also possible to create a macro that will autoload an extension
+when it is first used (under the assumption that the extension will
+redefine it to perform its true function).  For example
+
+.. code-block:: html
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+
+would declare the ``\cancel``, ``\bcancel``, ``\xcancel``, and
+``\cancelto`` macros to load the `cancel` extension (where they are
+actually defined).  Whichever is used first will cause the extension
+to be loaded, redefining all four to their proper values.  Note that
+this may be better than loading the extension explicitly, since it
+avoids loading the extra file on pages where these macros are *not*
+used.  The `sample autoloading macros
+<http://cdn.mathjax.org/mathjax/latest/test/sample-autoload.html>`_
+example page shows this in action.
+
 The main extensions are described below.
 
 
@@ -382,6 +409,9 @@ environments it defines, but you will have to load it explicitly if you
 want to use the other macros that it defines.  The `AMSsymbols` extension
 is not loaded automatically, so you must include it explicitly if you want
 to use the macros it defines.
+
+Both extensions are included in all the combined configuration files
+that load the TeX input processor.
 
 
 Autobold
@@ -742,7 +772,20 @@ the paragraph, use
       }
     }
   
-You may also wish to set the font family, as the default is "serif".
+You may also wish to set the font family or other CSS values here.
+
+If you are using a combined configuration file that loads the TeX
+input processor, it will also load the `noErrors` extension
+automatically.  If you want to disable the `noErrors` extension so
+that you receive the normal TeX error messages, use the following
+configuration:
+
+.. code-block:: javascript
+
+    TeX: { noErrors: { disabled: true } }
+  
+Any math that includes errors will be replaced by an error message
+indicating what went wrong.
 
 
 noUndefined
@@ -776,6 +819,19 @@ The ``attributes`` setting specifies attributes to apply to the
 default values set ``mathcolor`` to ``"red"``, but do not set any
 other attributes.  This example sets the background to a light pink,
 and reduces the font size slightly.
+
+If you are using a combined configuration file that loads the TeX
+input processor, it will also load the `noUndefined` extension
+automatically.  If you want to disable the `noUndefined` extension so
+that you receive the normal TeX error messages for undefined macros,
+use the following configuration:
+
+.. code-block:: javascript
+
+    TeX: { noUndefined: { disabled: true } }
+  
+Any math that includes an undefined control sequence name will be
+replaced by an error message indicating what name was undefined.
 
 
 Unicode support

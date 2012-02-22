@@ -311,6 +311,29 @@ the non-standard <tt class="docutils literal"><span class="pre">\require{extensi
 load extensions into pages that didn&#8217;t load them in their
 configurations (and prevents you from having to load all the
 extensions into all pages even if they aren&#8217;t used).</p>
+<p>It is also possible to create a macro that will autoload an extension
+when it is first used (under the assumption that the extension will
+redefine it to perform its true function).  For example</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
+<span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Register</span><span class="p">.</span><span class="nx">StartupHook</span><span class="p">(</span><span class="s2">&quot;TeX Jax Ready&quot;</span><span class="p">,</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Insert</span><span class="p">(</span><span class="nx">MathJax</span><span class="p">.</span><span class="nx">InputJax</span><span class="p">.</span><span class="nx">TeX</span><span class="p">.</span><span class="nx">Definitions</span><span class="p">.</span><span class="nx">macros</span><span class="p">,{</span>
+    <span class="nx">cancel</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span><span class="s2">&quot;cancel&quot;</span><span class="p">],</span>
+    <span class="nx">bcancel</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span><span class="s2">&quot;cancel&quot;</span><span class="p">],</span>
+    <span class="nx">xcancel</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span><span class="s2">&quot;cancel&quot;</span><span class="p">],</span>
+    <span class="nx">cancelto</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span><span class="s2">&quot;cancel&quot;</span><span class="p">]</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+</div>
+<p>would declare the <tt class="docutils literal"><span class="pre">\cancel</span></tt>, <tt class="docutils literal"><span class="pre">\bcancel</span></tt>, <tt class="docutils literal"><span class="pre">\xcancel</span></tt>, and
+<tt class="docutils literal"><span class="pre">\cancelto</span></tt> macros to load the <cite>cancel</cite> extension (where they are
+actually defined).  Whichever is used first will cause the extension
+to be loaded, redefining all four to their proper values.  Note that
+this may be better than loading the extension explicitly, since it
+avoids loading the extra file on pages where these macros are <em>not</em>
+used.  The <a class="reference external" href="http://cdn.mathjax.org/mathjax/latest/test/sample-autoload.html">sample autoloading macros</a>
+example page shows this in action.</p>
 <p>The main extensions are described below.</p>
 <div class="section" id="action">
 <h3>Action<a class="headerlink" href="#action" title="Permalink to this headline">¶</a></h3>
@@ -366,6 +389,8 @@ environments it defines, but you will have to load it explicitly if you
 want to use the other macros that it defines.  The <cite>AMSsymbols</cite> extension
 is not loaded automatically, so you must include it explicitly if you want
 to use the macros it defines.</p>
+<p>Both extensions are included in all the combined configuration files
+that load the TeX input processor.</p>
 </div>
 <div class="section" id="autobold">
 <h3>Autobold<a class="headerlink" href="#autobold" title="Permalink to this headline">¶</a></h3>
@@ -687,7 +712,17 @@ the paragraph, use</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>You may also wish to set the font family, as the default is &#8220;serif&#8221;.</p>
+<p>You may also wish to set the font family or other CSS values here.</p>
+<p>If you are using a combined configuration file that loads the TeX
+input processor, it will also load the <cite>noErrors</cite> extension
+automatically.  If you want to disable the <cite>noErrors</cite> extension so
+that you receive the normal TeX error messages, use the following
+configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span> <span class="nx">noErrors</span><span class="o">:</span> <span class="p">{</span> <span class="nx">disabled</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Any math that includes errors will be replaced by an error message
+indicating what went wrong.</p>
 </div>
 <div class="section" id="noundefined">
 <h3>noUndefined<a class="headerlink" href="#noundefined" title="Permalink to this headline">¶</a></h3>
@@ -716,6 +751,16 @@ the following to your <tt class="xref py py-meth docutils literal"><span class="
 default values set <tt class="docutils literal"><span class="pre">mathcolor</span></tt> to <tt class="docutils literal"><span class="pre">&quot;red&quot;</span></tt>, but do not set any
 other attributes.  This example sets the background to a light pink,
 and reduces the font size slightly.</p>
+<p>If you are using a combined configuration file that loads the TeX
+input processor, it will also load the <cite>noUndefined</cite> extension
+automatically.  If you want to disable the <cite>noUndefined</cite> extension so
+that you receive the normal TeX error messages for undefined macros,
+use the following configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span> <span class="nx">noUndefined</span><span class="o">:</span> <span class="p">{</span> <span class="nx">disabled</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Any math that includes an undefined control sequence name will be
+replaced by an error message indicating what name was undefined.</p>
 </div>
 <div class="section" id="unicode-support">
 <h3>Unicode support<a class="headerlink" href="#unicode-support" title="Permalink to this headline">¶</a></h3>
