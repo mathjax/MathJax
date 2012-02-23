@@ -274,6 +274,67 @@ your own server, and load MathJax itself from the CDN and your
 configuration file from your server.  See <a class="reference internal" href="configuration.html#local-config-files"><em>Using a Local
 Configuration File with the CDN</em></a> for details.</p>
 </div>
+<div class="section" id="autmatic-equation-numering">
+<span id="tex-eq-numbers"></span><h2>Autmatic Equation Numering<a class="headerlink" href="#autmatic-equation-numering" title="Permalink to this headline">¶</a></h2>
+<p>New in MathJax v2.0 is the ability to have equations be numbered
+automatically.  This is off by default, so that pages don&#8217;t change
+when you update from v1.1 to v2.0, but it is easy to configure MathJax
+to produce automatic equation numbers by adding:</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
+<span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
+  <span class="nx">TeX</span><span class="o">:</span> <span class="p">{</span> <span class="nx">equationNumbers</span><span class="o">:</span> <span class="p">{</span> <span class="nx">autoNumber</span><span class="o">:</span> <span class="s2">&quot;AMS&quot;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+</div>
+<p>to your page just before the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag that loads
+<tt class="docutils literal"><span class="pre">MathJax.js</span></tt> itself.</p>
+<p>Equations can be numbered in two ways: either number the AMSmath
+environments as LaTeX would, or number all displayed equations (the
+example above uses AMS-style numbering).  Set <tt class="docutils literal"><span class="pre">autoNumber</span></tt> to
+<tt class="docutils literal"><span class="pre">&quot;all&quot;</span></tt> if you want every displayed equation to be numbered.
+You can use <tt class="docutils literal"><span class="pre">\notag</span></tt> or <tt class="docutils literal"><span class="pre">\nonumber</span></tt> to prevent
+individual equations from being numbered, and <tt class="docutils literal"><span class="pre">\tag{}</span></tt> can be used
+to override the usual equation number with your own symbol instead.</p>
+<p>Note that the AMS environments come in two forms:  starred and
+unstarred.  The unstarred versions produce equation numbers (when
+<tt class="docutils literal"><span class="pre">autoNumber</span></tt> is set to <tt class="docutils literal"><span class="pre">&quot;AMS&quot;</span></tt>) and the starred ones don&#8217;t.  For
+example</p>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\begin</span><span class="nb">{</span>equation<span class="nb">}</span>
+   E = mc<span class="nb">^</span>2
+<span class="k">\end</span><span class="nb">{</span>equation<span class="nb">}</span>
+</pre></div>
+</div>
+<p>will be numbered, while</p>
+<div class="highlight-latex"><div class="highlight"><pre><span class="k">\begin</span><span class="nb">{</span>equation*<span class="nb">}</span>
+   e<span class="nb">^{</span><span class="k">\pi</span> i<span class="nb">}</span> - 1 = 0
+<span class="k">\end</span><span class="nb">{</span>equation*<span class="nb">}</span>
+</pre></div>
+</div>
+<p>won&#8217;t be numbered (when <tt class="docutils literal"><span class="pre">autoNumber</span></tt> is <tt class="docutils literal"><span class="pre">&quot;AMS&quot;</span></tt>).</p>
+<p>You can use <tt class="docutils literal"><span class="pre">\label</span></tt> to give an equation an identifier that you can
+use to refer to it later, and then use <tt class="docutils literal"><span class="pre">\ref</span></tt> or <tt class="docutils literal"><span class="pre">\eqref</span></tt> within
+your document to insert the actual equation number at that location,
+as a reference. For example,</p>
+<div class="highlight-latex"><div class="highlight"><pre>In equation <span class="k">\eqref</span><span class="nb">{</span>eq:sample<span class="nb">}</span>, we find the value of an
+interesting integral:
+
+<span class="k">\begin</span><span class="nb">{</span>equation<span class="nb">}</span>
+  <span class="k">\int</span><span class="nb">_</span>0<span class="nb">^</span><span class="k">\infty</span> <span class="k">\frac</span><span class="nb">{</span>x<span class="nb">^</span>3<span class="nb">}{</span>e<span class="nb">^</span>x-1<span class="nb">}</span><span class="k">\,</span>dx = <span class="k">\frac</span><span class="nb">{</span><span class="k">\pi</span><span class="nb">^</span>4<span class="nb">}{</span>15<span class="nb">}</span>
+  <span class="k">\label</span><span class="nb">{</span>eq:sample<span class="nb">}</span>
+<span class="k">\end</span><span class="nb">{</span>equation<span class="nb">}</span>
+</pre></div>
+</div>
+<p>includes a labeled equation and a reference to that equation.  Note
+that references can come before the corresponding formula as well as
+after them.  See the equation numbering links in the <a class="reference external" href="http://cdn.mathjax.org/mathjax/latest/test/examples.html">MathJax examples
+page</a> for
+more examples.</p>
+<p>You can configure the way that numbers are displayed and how the
+references to them are made using paramters in the <tt class="docutils literal"><span class="pre">equationNumbers</span></tt>
+block of your <tt class="docutils literal"><span class="pre">TeX</span></tt> configuration.  See the <a class="reference internal" href="options/TeX.html#configure-tex"><em>TeX configuration
+options</em></a> page for more details.</p>
+</div>
 <div class="section" id="tex-and-latex-extensions">
 <span id="tex-extensions"></span><h2>TeX and LaTeX extensions<a class="headerlink" href="#tex-and-latex-extensions" title="Permalink to this headline">¶</a></h2>
 <p>While MathJax includes nearly all of the Plain TeX math macros, and
@@ -1824,6 +1885,7 @@ vmatrix
 <li><a class="reference internal" href="#tex-and-latex-math-delimiters">TeX and LaTeX math delimiters</a></li>
 <li><a class="reference internal" href="#tex-and-latex-in-html-documents">TeX and LaTeX in HTML documents</a></li>
 <li><a class="reference internal" href="#defining-tex-macros">Defining TeX macros</a></li>
+<li><a class="reference internal" href="#autmatic-equation-numering">Autmatic Equation Numering</a></li>
 <li><a class="reference internal" href="#tex-and-latex-extensions">TeX and LaTeX extensions</a><ul>
 <li><a class="reference internal" href="#action">Action</a></li>
 <li><a class="reference internal" href="#amsmath-and-amssymbols">AMSmath and AMSsymbols</a></li>

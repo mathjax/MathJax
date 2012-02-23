@@ -275,6 +275,83 @@ configuration file from your server.  See :ref:`Using a Local
 Configuration File with the CDN <local-config-files>` for details.
 
 
+.. _tex-eq-numbers:
+
+Autmatic Equation Numering
+==========================
+
+New in MathJax v2.0 is the ability to have equations be numbered
+automatically.  This is off by default, so that pages don't change
+when you update from v1.1 to v2.0, but it is easy to configure MathJax
+to produce automatic equation numbers by adding:
+
+.. code-block:: html
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+    </script>
+
+to your page just before the ``<script>`` tag that loads
+``MathJax.js`` itself.  
+
+Equations can be numbered in two ways: either number the AMSmath
+environments as LaTeX would, or number all displayed equations (the
+example above uses AMS-style numbering).  Set ``autoNumber`` to
+``"all"`` if you want every displayed equation to be numbered.
+You can use ``\notag`` or ``\nonumber`` to prevent
+individual equations from being numbered, and ``\tag{}`` can be used
+to override the usual equation number with your own symbol instead.
+
+Note that the AMS environments come in two forms:  starred and
+unstarred.  The unstarred versions produce equation numbers (when
+``autoNumber`` is set to ``"AMS"``) and the starred ones don't.  For
+example
+
+.. code-block::  latex
+
+    \begin{equation}
+       E = mc^2
+    \end{equation}
+
+will be numbered, while
+
+.. code-block::  latex
+
+    \begin{equation*}
+       e^{\pi i} - 1 = 0
+    \end{equation*}
+
+won't be numbered (when ``autoNumber`` is ``"AMS"``).
+
+You can use ``\label`` to give an equation an identifier that you can
+use to refer to it later, and then use ``\ref`` or ``\eqref`` within
+your document to insert the actual equation number at that location,
+as a reference. For example,
+
+.. code-block:: latex
+
+    In equation \eqref{eq:sample}, we find the value of an
+    interesting integral:
+    
+    \begin{equation}
+      \int_0^\infty \frac{x^3}{e^x-1}\,dx = \frac{\pi^4}{15}
+      \label{eq:sample}
+    \end{equation}
+
+includes a labeled equation and a reference to that equation.  Note
+that references can come before the corresponding formula as well as
+after them.  See the equation numbering links in the `MathJax examples
+page <http://cdn.mathjax.org/mathjax/latest/test/examples.html>`_ for
+more examples.
+
+You can configure the way that numbers are displayed and how the
+references to them are made using paramters in the ``equationNumbers``
+block of your ``TeX`` configuration.  See the :ref:`TeX configuration
+options <configure-TeX>` page for more details.
+
+
 .. _tex-extensions:
 
 TeX and LaTeX extensions
