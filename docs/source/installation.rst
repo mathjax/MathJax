@@ -213,6 +213,7 @@ installation is working properly::
         index.html          # Tests default configuration
         index-images.html   # Tests image-font fallback display
         sample.html         # Sample page with lots of pretty equations
+	examples.html       # Page with links to all sample pages
 
 Open these files in your browser to see that they appear to be working
 properly.  If you have installed MathJax on a server, use the web

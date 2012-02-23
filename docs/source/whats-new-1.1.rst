@@ -1,4 +1,4 @@
-.. _whats-new:
+.. _whats-new-1.1:
 
 **************************
 What's New in MathJax v1.1
