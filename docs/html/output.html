@@ -177,8 +177,39 @@ NativeMML output processor, you are making a trade-off: gaining speed
 at the expense of quality and reliability, a decision that should not
 be taken lightly.</p>
 </div>
-<div class="section" id="html-css-with-ie8-and-ie9">
-<span id="html-css-with-ie8"></span><h2>HTML-CSS with IE8 and IE9<a class="headerlink" href="#html-css-with-ie8-and-ie9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="automatic-line-breaking">
+<span id="automatic-linebreaking"></span><h2>Automatic Line Breaking<a class="headerlink" href="#automatic-line-breaking" title="Permalink to this headline">¶</a></h2>
+<p>The HTML-CSS and SVG output processors implement (most of) the MathML3
+automatic line-breaking specification.  (The NativeMML output
+processor relies on the browser&#8217;s native MathML support to handle line
+breaking when it is used.)  Since line-breaking takes extra processing
+and so can slow down the mathematical output, it is off by default,
+but you can enable it by adding</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/x-mathjax-config&quot;</span><span class="nt">&gt;</span>
+<span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
+  <span class="s2">&quot;HTML-CSS&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="nx">linebreaks</span><span class="o">:</span> <span class="p">{</span> <span class="nx">automatic</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span> <span class="p">},</span>
+         <span class="nx">SVG</span><span class="o">:</span> <span class="p">{</span> <span class="nx">linebreaks</span><span class="o">:</span> <span class="p">{</span> <span class="nx">automatic</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span> <span class="p">}</span>
+<span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+</div>
+<p>to your page just before the <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag that loads
+<tt class="docutils literal"><span class="pre">MathJax.js</span></tt> itself.</p>
+<p>Note that line breaking only applies to displayed equations, not
+in-line equations (unless the in-line euqation is itself longer than a
+line), and that the line-breaks are only computed once when the
+equation is initially typeset, and do not change if the user changes
+the window size, or if the container changes size for some other
+reason.</p>
+<p>You can control what width is used to determine where the line breaks
+shoud occur using the <tt class="docutils literal"><span class="pre">container</span></tt> parameter of the <tt class="docutils literal"><span class="pre">linebreaks</span></tt>
+block.  By default it is the width of the containing element, but you
+can make it a fixed width, or make it a percentage of the container.
+See the <a class="reference internal" href="options/HTML-CSS.html#configure-html-css"><em>HTML-CSS configuration</em></a> or
+<a class="reference internal" href="options/SVG.html#configure-svg"><em>SVG configuration</em></a> pages for more details.</p>
+</div>
+<div class="section" id="html-css-with-ie">
+<span id="html-css-with-ie8"></span><h2>HTML-CSS with IE<a class="headerlink" href="#html-css-with-ie" title="Permalink to this headline">¶</a></h2>
 <p>The performance of MathJax in Internet Explorer 8 and 9 has been
 substantially improved in version 2.0.  The HTML-CSS output processing
 was redesigned to avoid the page reflows that were the main source of
@@ -235,7 +266,8 @@ other options of the HTML-CSS output jax.</p>
   <ul>
 <li><a class="reference internal" href="#">MathJax Output Formats</a><ul>
 <li><a class="reference internal" href="#automatic-selection-of-the-output-processor">Automatic Selection of the Output Processor</a></li>
-<li><a class="reference internal" href="#html-css-with-ie8-and-ie9">HTML-CSS with IE8 and IE9</a></li>
+<li><a class="reference internal" href="#automatic-line-breaking">Automatic Line Breaking</a></li>
+<li><a class="reference internal" href="#html-css-with-ie">HTML-CSS with IE</a></li>
 <li><a class="reference internal" href="#html-css-extensions">HTML-CSS Extensions</a></li>
 </ul>
 </li>
