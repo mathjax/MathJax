@@ -207,6 +207,15 @@ block.  By default it is the width of the containing element, but you
 can make it a fixed width, or make it a percentage of the container.
 See the <a class="reference internal" href="options/HTML-CSS.html#configure-html-css"><em>HTML-CSS configuration</em></a> or
 <a class="reference internal" href="options/SVG.html#configure-svg"><em>SVG configuration</em></a> pages for more details.</p>
+<p>The linbe-breaking algorithm uses the nesting depth, the type of
+operator, the size of spaces, and other factors to decide on the
+breakpoints, but it does not know the meaning of the mathematics, and
+may not choose the optimal breakpoints. We will continue to work on
+the algorithm as we gain information from its actual use in the field.
+If you are using <a class="reference internal" href="glossary.html#term-mathml"><em class="xref std std-term">MathML</em></a> as your input format, you can use the
+<tt class="docutils literal"><span class="pre">linebreak=&quot;goodbreak&quot;</span></tt> and <tt class="docutils literal"><span class="pre">linebreak=&quot;badbreak&quot;</span></tt> attributes on
+<tt class="docutils literal"><span class="pre">&lt;mo&gt;</span></tt> elements to help MathJax pick the best breakpoints for your
+mathematics.</p>
 </div>
 <div class="section" id="html-css-with-ie">
 <span id="html-css-with-ie8"></span><h2>HTML-CSS with IE<a class="headerlink" href="#html-css-with-ie" title="Permalink to this headline">¶</a></h2>

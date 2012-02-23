@@ -188,6 +188,16 @@ can make it a fixed width, or make it a percentage of the container.
 See the :ref:`HTML-CSS configuration <configure-HTML-CSS>` or
 :ref:`SVG configuration <configure-SVG>` pages for more details.
 
+The linbe-breaking algorithm uses the nesting depth, the type of
+operator, the size of spaces, and other factors to decide on the
+breakpoints, but it does not know the meaning of the mathematics, and
+may not choose the optimal breakpoints. We will continue to work on
+the algorithm as we gain information from its actual use in the field.
+If you are using :term:`MathML` as your input format, you can use the
+``linebreak="goodbreak"`` and ``linebreak="badbreak"`` attributes on
+``<mo>`` elements to help MathJax pick the best breakpoints for your
+mathematics.
+
 
 .. _html-css-with-ie8:
 

@@ -93,7 +93,7 @@ configuration.  See the <a class="reference internal" href="options/hub.html#con
 (though the default is not to number equations so that existing pages
 will not change their appearance).  This is controlled through the
 <tt class="docutils literal"><span class="pre">equationNumbers</span></tt> section of the <tt class="docutils literal"><span class="pre">TeX</span></tt> block of your configuration
-(see the <a class="reference internal" href="options/TeX.html#configure-tex"><em>TeX configuration options</em></a> page for
+(see the <a class="reference internal" href="tex.html#tex-eq-numbers"><em>equation numbering</em></a> section for
 details).  You can request that the numbering follow the AMS-style
 numbering of environments, or you can request that every displayed
 equation be numbered.  There are now <tt class="docutils literal"><span class="pre">\label</span></tt>, <tt class="docutils literal"><span class="pre">\ref</span></tt>, and
@@ -106,15 +106,14 @@ within the document.</p>
 breaking of displayed equations in its HTML-CSS output.  This is
 disabled by default, but can be enabled via the <tt class="docutils literal"><span class="pre">linebreaks</span></tt> section
 of the <tt class="docutils literal"><span class="pre">HTML-CSS</span></tt> or <tt class="docutils literal"><span class="pre">SVG</span></tt> block of your configuration (see the
-<a class="reference internal" href="options/HTML-CSS.html#configure-html-css"><em>HTML-CS configuration options</em></a> or <a class="reference internal" href="options/SVG.html#configure-svg"><em>SVG
-configuration options</em></a> page for details).  Note that
-automatic line breaking only applies to displayed equations, not
-in-line equations, unless they are themselves longer than a line.  The
-algorithm uses the nesting depth, the type of operator, the size of
-spaces, and other factors to decide on the breakpoints, but it does
-not know the meaning of the mathematics, and may not choose the
-optimal breakpoints.  We will continue to work on the algorithm as we
-gain information from its actual use in the field.</p>
+<a class="reference internal" href="output.html#automatic-linebreaking"><em>automatic line breaking</em></a> section for
+details).  Note that automatic line breaking only applies to displayed
+equations, not in-line equations, unless they are themselves longer
+than a line.  The algorithm uses the nesting depth, the type of
+operator, the size of spaces, and other factors to decide on the
+breakpoints, but it does not know the meaning of the mathematics, and
+may not choose the optimal breakpoints.  We will continue to work on
+the algorithm as we gain information from its actual use in the field.</p>
 </div>
 <div class="section" id="new-asciimath-input-jax-and-svg-output-jax">
 <h2>New AsciiMath input jax and SVG output jax<a class="headerlink" href="#new-asciimath-input-jax-and-svg-output-jax" title="Permalink to this headline">¶</a></h2>

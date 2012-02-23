@@ -56,7 +56,7 @@ The TeX input jax now can be configured to add equation numbers
 (though the default is not to number equations so that existing pages
 will not change their appearance).  This is controlled through the
 ``equationNumbers`` section of the ``TeX`` block of your configuration
-(see the :ref:`TeX configuration options <configure-TeX>` page for
+(see the :ref:`equation numbering <tex-eq-numbers>` section for
 details).  You can request that the numbering follow the AMS-style
 numbering of environments, or you can request that every displayed
 equation be numbered.  There are now ``\label``, ``\ref``, and
@@ -71,15 +71,14 @@ MathJax now implements the MathML3 specification for automatic line
 breaking of displayed equations in its HTML-CSS output.  This is
 disabled by default, but can be enabled via the ``linebreaks`` section
 of the ``HTML-CSS`` or ``SVG`` block of your configuration (see the
-:ref:`HTML-CS configuration options <configure-HTML-CSS>` or :ref:`SVG
-configuration options <configure-SVG>` page for details).  Note that
-automatic line breaking only applies to displayed equations, not
-in-line equations, unless they are themselves longer than a line.  The
-algorithm uses the nesting depth, the type of operator, the size of
-spaces, and other factors to decide on the breakpoints, but it does
-not know the meaning of the mathematics, and may not choose the
-optimal breakpoints.  We will continue to work on the algorithm as we
-gain information from its actual use in the field.
+:ref:`automatic line breaking <automatic-linebreaking>` section for
+details).  Note that automatic line breaking only applies to displayed
+equations, not in-line equations, unless they are themselves longer
+than a line.  The algorithm uses the nesting depth, the type of
+operator, the size of spaces, and other factors to decide on the
+breakpoints, but it does not know the meaning of the mathematics, and
+may not choose the optimal breakpoints.  We will continue to work on
+the algorithm as we gain information from its actual use in the field.
 
 
 New AsciiMath input jax and SVG output jax
