@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The MathJax.Callback Class &mdash; MathJax v1.1 documentation</title>
+    <title>The MathJax.Callback Class &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="../index.html" />
     <link rel="up" title="The MathJax API" href="index.html" />
     <link rel="next" title="The MathJax.Callback.Queue Class" href="queue.html" />
     <link rel="prev" title="The MathJax.HTML Object" href="html.html" /> 
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="html.html" title="The MathJax.HTML Object"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">The MathJax API</a> &raquo;</li> 
       </ul>
     </div>  
@@ -102,12 +102,12 @@ the window object. For example,</p>
 <p>would specify a callback that would pass <tt class="docutils literal"><span class="pre">2</span></tt> and <tt class="docutils literal"><span class="pre">3</span></tt> to
 the given function, and it would return their sum, <tt class="docutils literal"><span class="pre">5</span></tt>, when
 the callback is executed.</p>
+</dd></dl>
+
 <dl class="describe">
 <dt>
 <tt class="descname">[object, fn]</tt></dt>
-<dd></dd></dl>
-
-<p>An array containing an object to use as <cite>this</cite> and a function to
+<dd><p>An array containing an object to use as <cite>this</cite> and a function to
 call for the callback.  For example,</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="p">[{</span><span class="nx">x</span><span class="o">:</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span><span class="s1">&#39;bar&#39;</span><span class="p">},</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">x</span><span class="p">}]</span>
 </pre></div>
@@ -123,9 +123,10 @@ when it is called.</p>
 the function as well.</p>
 </dd></dl>
 
-<p>..describe:: [&#8220;method&#8221;, object]</p>
-<blockquote>
-<div><p>Here, <cite>object</cite> is an object that has a method called <cite>method</cite>, and
+<dl class="describe">
+<dt>
+<tt class="descname">[&quot;method&quot;, object]</tt></dt>
+<dd><p>Here, <cite>object</cite> is an object that has a method called <cite>method</cite>, and
 the callback will execute that method (with the object as
 <cite>this</cite>) when it is called.  For example,</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="p">[</span><span class="s2">&quot;toString&quot;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
@@ -133,7 +134,8 @@ the callback will execute that method (with the object as
 </div>
 <p>would call the <cite>toString</cite> method on the array <tt class="docutils literal"><span class="pre">[1,2,3,4]</span></tt> when
 the callback is called, returning <tt class="docutils literal"><span class="pre">1,2,3,4</span></tt>.</p>
-</div></blockquote>
+</dd></dl>
+
 <dl class="describe">
 <dt>
 <tt class="descname">[&quot;method&quot;, object, data...]</tt></dt>
@@ -289,36 +291,6 @@ commands.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ExecuteHooks">
-<tt class="descname">ExecuteHooks</tt><big>(</big><em>hooks</em><span class="optional">[</span>, <em>data</em><span class="optional">[</span>, <em>reset</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#ExecuteHooks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls each callback in the <cite>hooks</cite> array (or the single hook if it
-is not an array), passing it the arguments stored in the data
-array.  If <cite>reset</cite> is <tt class="docutils literal"><span class="pre">true</span></tt>, then the callback&#8217;s
-<a class="reference internal" href="#reset" title="reset"><tt class="xref py py-meth docutils literal"><span class="pre">reset()</span></tt></a> method will be called before each hook is
-executed.  If any of the hooks returns a <cite>Callback</cite> object, then
-it collects those callbacks and returns a new callback that will
-execute when all the ones returned by the hooks have been
-completed.  Otherwise, <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Callback.ExecuteHooks()</span></tt>
-returns <tt class="docutils literal"><span class="pre">null</span></tt>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
-<li><strong>hooks</strong> &#8212; array of hooks to be called, or a hook</li>
-<li><strong>data</strong> &#8212; array of arguments to pass to each hook in turn</li>
-<li><strong>reset</strong> &#8212; <tt class="docutils literal"><span class="pre">true</span></tt> if the <a class="reference internal" href="#reset" title="reset"><tt class="xref py py-meth docutils literal"><span class="pre">reset()</span></tt></a> method should be called</li>
-</ul>
-</td>
-</tr>
-<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">callback that waits for all the hooks to complete, or <tt class="docutils literal"><span class="pre">null</span></tt></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="Queue">
 <tt class="descname">Queue</tt><big>(</big><span class="optional">[</span><em>callback</em>, <em>...</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a <cite>MathJax.CallBack.Queue</cite> object and pushes the given
@@ -360,6 +332,122 @@ and returns the signal object.  See
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ExecuteHooks">
+<tt class="descname">ExecuteHooks</tt><big>(</big><em>hooks</em><span class="optional">[</span>, <em>data</em><span class="optional">[</span>, <em>reset</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#ExecuteHooks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls each callback in the <cite>hooks</cite> array (or the single hook if it
+is not an array), passing it the arguments stored in the data
+array.  If <cite>reset</cite> is <tt class="docutils literal"><span class="pre">true</span></tt>, then the callback&#8217;s
+<a class="reference internal" href="#reset" title="reset"><tt class="xref py py-meth docutils literal"><span class="pre">reset()</span></tt></a> method will be called before each hook is
+executed.  If any of the hooks returns a <cite>Callback</cite> object, then
+it collects those callbacks and returns a new callback that will
+execute when all the ones returned by the hooks have been
+completed.  Otherwise, <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Callback.ExecuteHooks()</span></tt>
+returns <tt class="docutils literal"><span class="pre">null</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>hooks</strong> &#8212; array of hooks to be called, or a hook</li>
+<li><strong>data</strong> &#8212; array of arguments to pass to each hook in turn</li>
+<li><strong>reset</strong> &#8212; <tt class="docutils literal"><span class="pre">true</span></tt> if the <a class="reference internal" href="#reset" title="reset"><tt class="xref py py-meth docutils literal"><span class="pre">reset()</span></tt></a> method should be called</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">callback that waits for all the hooks to complete, or <tt class="docutils literal"><span class="pre">null</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Hooks">
+<tt class="descname">Hooks</tt><big>(</big><em>reset</em><big>)</big><a class="headerlink" href="#Hooks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a prioritized list of hooks that are called in order based
+on their priority (low priority numbers are handled first).  This
+is meant to replace <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Callback.ExecuteHooks()</span></tt> and is
+used internally for signal callbacks, pre- and post-filters, and
+other lists of callbacks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>reset</strong> &#8212; <tt class="docutils literal"><span class="pre">true</span></tt> if callbacks can be called more than once</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the <cite>Hooks</cite> object</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The list has the following methods:</p>
+<dl class="method">
+<dt id="Add">
+<tt class="descname">Add</tt><big>(</big><em>hook</em><span class="optional">[</span>, <em>priority</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a callback to the prioritized list.  If <tt class="docutils literal"><span class="pre">priority</span></tt> is
+not provided, the default is 10.  The <tt class="docutils literal"><span class="pre">hook</span></tt> is a <cite>Callback</cite>
+specification as described above.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>hook</strong> &#8212; callback specification to add to the list</li>
+<li><strong>priority</strong> &#8212; priority of the hook in the list (default: 10)</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last">the callback object being added</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">Remove</tt><big>(</big><em>hook</em><big>)</big></dt>
+<dd><p>Remove a given hook (as returned from <a class="reference internal" href="#Add" title="Add"><tt class="xref py py-meth docutils literal"><span class="pre">Add()</span></tt></a> above)
+from the prioritized list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><ul class="first simple">
+<li><strong>hook</strong> &#8212; the callback to be removed</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">null</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Execute">
+<tt class="descname">Execute</tt><big>(</big><big>)</big><a class="headerlink" href="#Execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the list of callbacks, resetting them if requested.
+If any of the hooks return callbacks, then <tt class="docutils literal"><span class="pre">Execute()</span></tt>
+returns a callback that will be executed when they all have
+completed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body">a callback object or <tt class="docutils literal"><span class="pre">null</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -420,12 +508,12 @@ and returns the signal object.  See
         <li class="right" >
           <a href="html.html" title="The MathJax.HTML Object"
              >previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >The MathJax API</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

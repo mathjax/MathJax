@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Modifying Math on the Page &mdash; MathJax v1.1 documentation</title>
+    <title>Modifying Math on the Page &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="index.html" />
     <link rel="next" title="The MathJax API" href="api/index.html" />
     <link rel="prev" title="Loading MathJax Dynamically" href="dynamic.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="dynamic.html" title="Loading MathJax Dynamically"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -156,10 +156,18 @@ will not occur before the math is typeset.</p>
 
 <dl class="describe">
 <dt>
+<tt class="descname">Rerender()</tt></dt>
+<dd><p>to remove the output and reproduce it again (for example, if
+CSS has changed that would alter the spacing of the
+mathematics).  Note that the internal representation isn&#8217;t
+regenerated; only the output is.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">Reprocess()</tt></dt>
-<dd><p>to remove the output and reproduce it again (for
-example, if CSS has changed that would alter the spacing of the
-mathematics).</p>
+<dd><p>to remove the output and then retranslate the input into the
+internal MathML and rerender the output.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -167,6 +175,13 @@ mathematics).</p>
 <tt class="descname">Remove()</tt></dt>
 <dd><p>to remove the output for this math element (but not
 the original <tt class="docutils literal"><span class="pre">&lt;script&gt;</span></tt> tag).</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">needsUpdate()</tt></dt>
+<dd><p>to find out if the mathematics has changed so that its output
+needs to be updated.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -190,7 +205,7 @@ time.  This is another situation where you want to use the MathJax
 queue.  If your startup code performs the commands</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">studentDisplay</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Queue</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="nx">studentDisplay</span> <span class="o">=</span> <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">getAllJax</span><span class="p">(</span><span class="s2">&quot;MathDiv&quot;</span><span class="p">);</span>
+  <span class="nx">studentDisplay</span> <span class="o">=</span> <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">getAllJax</span><span class="p">(</span><span class="s2">&quot;MathDiv&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
 <span class="p">});</span>
 </pre></div>
 </div>
@@ -200,8 +215,11 @@ queue.  If your startup code performs the commands</p>
 </div>
 <p>to change the student&#8217;s answer to be the typeset version of whatever
 is in the <tt class="docutils literal"><span class="pre">studentAnswer</span></tt> variable.</p>
-<p>Here is a complete example that illustrates this approach (available in a
-more full-featured version as <tt class="docutils literal"><span class="pre">test/sample-dynamic.html</span></tt>):</p>
+<p>Here is a complete example that illustrates this approach. Note,
+however, that Internet Explorer does not fire the <tt class="docutils literal"><span class="pre">onchange</span></tt> event
+when you press RETURN, so this example does not work as expected in
+IE.  A more full-featured version that addresses this problem is
+available in <a class="reference external" href="http://cdn.mathjax.org/mathjax/latest/test/sample-dynamic.html">test/sample-dynamic.html</a>.</p>
 <div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
 <span class="nt">&lt;head&gt;</span>
 <span class="nt">&lt;title&gt;</span>MathJax Dynamic Math Test Page<span class="nt">&lt;/title&gt;</span>
@@ -258,6 +276,9 @@ You typed: ${}$
 <span class="nt">&lt;/html&gt;</span>
 </pre></div>
 </div>
+<p>There are a number of additional example pages at <a class="reference external" href="http://cdn.mathjax.org/mathjax/latest/test/examples.html">test/examples.html</a> that
+illustrate how to call MathJax dynamically or perform other actions
+with MathJax.</p>
 </div>
 </div>
 
@@ -310,11 +331,11 @@ You typed: ${}$
         <li class="right" >
           <a href="dynamic.html" title="Loading MathJax Dynamically"
              >previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

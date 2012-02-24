@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The MathJax Startup Sequence &mdash; MathJax v1.1 documentation</title>
+    <title>The MathJax Startup Sequence &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="index.html" />
     <link rel="next" title="Synchronizing your code with MathJax" href="synchronize.html" />
     <link rel="prev" title="The MathJax Processing Model" href="model.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="model.html" title="The MathJax Processing Model"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -131,6 +131,10 @@ pushed into the queue:</p>
 </li>
 </ol>
 <ol class="arabic simple" start="5">
+<li>Initialize the Message system (the grey information box in the
+lower left)</li>
+</ol>
+<ol class="arabic simple" start="6">
 <li>Load the jax configuration files:<ul>
 <li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">Jax</span></tt> startup signal</li>
 <li>Load the jax config files from the <tt class="docutils literal"><span class="pre">MathJax.Hub.config.jax</span></tt> array<ul>
@@ -141,7 +145,7 @@ pushed into the queue:</p>
 </ul>
 </li>
 </ol>
-<ol class="arabic simple" start="6">
+<ol class="arabic simple" start="7">
 <li>Load the extension files:<ul>
 <li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">Extensions</span></tt> startup signal</li>
 <li>Load the files from the <tt class="docutils literal"><span class="pre">MathJax.Hub.config.extensions</span></tt> array<ul>
@@ -154,17 +158,19 @@ pushed into the queue:</p>
 </ul>
 </li>
 </ol>
-<ol class="arabic simple" start="7">
+<ol class="arabic simple" start="8">
 <li>Set the MathJax menu&#8217;s renderer value based on the jax that have been
 loaded</li>
 </ol>
-<ol class="arabic simple" start="8">
-<li>Wait for the onload handler to fire</li>
-</ol>
 <ol class="arabic simple" start="9">
-<li>Set <tt class="docutils literal"><span class="pre">MathJax.isReady</span></tt> to <tt class="docutils literal"><span class="pre">true</span></tt></li>
+<li>Wait for the onload handler to fire (in MathJax v2.0 this can
+occur on the <tt class="docutils literal"><span class="pre">DOMContentLoaded</span></tt> event rather than the page&#8217;s
+<tt class="docutils literal"><span class="pre">onload</span></tt> event, so processing of mathematics can start earlier)</li>
 </ol>
 <ol class="arabic simple" start="10">
+<li>Set <tt class="docutils literal"><span class="pre">MathJax.isReady</span></tt> to <tt class="docutils literal"><span class="pre">true</span></tt></li>
+</ol>
+<ol class="arabic simple" start="11">
 <li>Perform the typesetting pass (preprocessors and processors)<ul>
 <li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">Typeset</span></tt> startup signal</li>
 <li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">PreProcess</span></tt> hub signal</li>
@@ -173,6 +179,11 @@ loaded</li>
 <li>Clear the hub signal history</li>
 <li>Post the <tt class="docutils literal"><span class="pre">Begin</span> <span class="pre">Process</span></tt> hub signal</li>
 <li>Process the math script elements on the page<ul>
+<li>There are a number of Hub signals generated during math
+processing, including a signal that a <tt class="docutils literal"><span class="pre">Math</span></tt> action is
+starting (with a parameter indicating what action that is),
+<tt class="docutils literal"><span class="pre">Begin</span></tt> and <tt class="docutils literal"><span class="pre">End</span> <span class="pre">Math</span> <span class="pre">Input</span></tt> messages, and <tt class="docutils literal"><span class="pre">Begin</span></tt> and
+<tt class="docutils literal"><span class="pre">End</span> <span class="pre">Math</span> <span class="pre">Output</span></tt> signals.</li>
 <li>Each new math element generates a <tt class="docutils literal"><span class="pre">New</span> <span class="pre">Math</span></tt> hub signal
 with the math element&#8217;s ID</li>
 </ul>
@@ -182,7 +193,16 @@ with the math element&#8217;s ID</li>
 </ul>
 </li>
 </ol>
-<ol class="arabic simple" start="11">
+<ol class="arabic simple" start="12">
+<li>Jump to the location specified in the URL&#8217;s hash reference, if
+any.</li>
+</ol>
+<ol class="arabic simple" start="13">
+<li>Initiate timers to load the zoom and menu code, if it hasn&#8217;t
+already been loading in the configuration (so it will be ready
+when the user needs it).</li>
+</ol>
+<ol class="arabic simple" start="14">
 <li>Post the <tt class="docutils literal"><span class="pre">End</span></tt> startup signal</li>
 </ol>
 <p>The loading of the jax and extensions in steps 5 and 6 are now done in
@@ -193,7 +213,8 @@ extensions can be intermixed.  (In general, you will get <cite>Begin Jax</cite>
 followed by <cite>Begin Extensions</cite>, but the order of <cite>End Jax</cite> and <cite>End
 Extensions</cite> will depend on the files being loaded.)  Both 5 and 6 must
 complete, however, before 7 will be performed.</p>
-<p>See the <tt class="docutils literal"><span class="pre">test/sample-signals.html</span></tt> file to see the signals in action.</p>
+<p>See the <a class="reference external" href="http://cdn.mathjax.org/mathjax/latest/test/sample-signals.html">test/sample-signals.html</a> file
+to see the signals in action.</p>
 </div>
 
 
@@ -237,11 +258,11 @@ complete, however, before 7 will be performed.</p>
         <li class="right" >
           <a href="model.html" title="The MathJax Processing Model"
              >previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The HTML-CSS output processor &mdash; MathJax v1.1 documentation</title>
+    <title>The HTML-CSS output processor &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,10 +22,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="../index.html" />
     <link rel="up" title="Configuration Objects" href="index.html" />
     <link rel="next" title="The NativeMML output processor" href="NativeMML.html" />
-    <link rel="prev" title="The MathML input processor" href="MathML.html" /> 
+    <link rel="prev" title="The AsciiMath input processor" href="AsciiMath.html" /> 
   </head>
   <body>
     
@@ -39,9 +39,9 @@
           <a href="NativeMML.html" title="The NativeMML output processor"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="MathML.html" title="The MathML input processor"
+          <a href="AsciiMath.html" title="The AsciiMath input processor"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>  
@@ -55,10 +55,12 @@
 <span id="configure-html-css"></span><h1>The HTML-CSS output processor<a class="headerlink" href="#the-html-css-output-processor" title="Permalink to this headline">¶</a></h1>
 <p>The options below control the operation of the HTML-CSS output
 processor that is run when you include <tt class="docutils literal"><span class="pre">&quot;output/HTML-CSS&quot;</span></tt> in the
-<cite>jax</cite> array of your configuration.  They are listed with their default
-values.  To set any of these options, include a <tt class="docutils literal"><span class="pre">&quot;HTML-CSS&quot;</span></tt> section
-in your <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call.  Note that, because of the
-dash, you need to enclose the name in quotes.  For example</p>
+<cite>jax</cite> array of your configuration or load a combined configuration
+file that includes the HTML-CSS output jax.  They are listed with
+their default values.  To set any of these options, include a
+<tt class="docutils literal"><span class="pre">&quot;HTML-CSS&quot;</span></tt> section in your <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call.
+Note that, because of the dash, you need to enclose the name in
+quotes.  For example</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
   <span class="s2">&quot;HTML-CSS&quot;</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">preferredFont</span><span class="o">:</span> <span class="s2">&quot;STIX&quot;</span>
@@ -72,7 +74,7 @@ dash, you need to enclose the name in quotes.  For example</p>
 <tt class="descname">scale: 100</tt></dt>
 <dd><p>The scaling factor (as a percentage) of math with respect to the
 surrounding text.  The <cite>HTML-CSS</cite> output processor tries to match
-the en-size of the mathematics with that of the text where it is
+the ex-size of the mathematics with that of the text where it is
 placed, but you may want to adjust the results using this scaling
 factor.  The user can also adjust this value using the contextual
 menu item associated with the typeset mathematics.</p>
@@ -147,6 +149,74 @@ carefully.</p>
 
 <dl class="describe">
 <dt>
+<tt class="descname">mtextFontInherit: false</tt></dt>
+<dd><p>This setting controls whether <tt class="docutils literal"><span class="pre">&lt;mtext&gt;</span></tt> elements will be typeset
+using the math fonts or the font of the surrounding text.  When
+<tt class="docutils literal"><span class="pre">false</span></tt>, the font for <tt class="docutils literal"><span class="pre">mathvariant=&quot;normal&quot;</span></tt> will be used;
+when <tt class="docutils literal"><span class="pre">true</span></tt>, the font will be inherited from the surrounding
+paragraph.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">EqnChunk: 50</tt></dt>
+<dt>
+<tt class="descname">EqnChunkFactor: 1.5</tt></dt>
+<dt>
+<tt class="descname">EqnChunkDelay: 100</tt></dt>
+<dd><p>These values control how &#8220;chunky&#8221; the display of mathematical
+expressions will be; that is, how often the equations will be
+updated as they are processed.</p>
+<p><tt class="docutils literal"><span class="pre">EqnChunk</span></tt> is the number of equations that will be typeset before
+they appear on screen.  Larger values make for less visual flicker
+as the equations are drawn, but also mean longer delays before the
+reader sees anything.</p>
+<p><tt class="docutils literal"><span class="pre">EqChunkFactor</span></tt> is the factor by which the <tt class="docutils literal"><span class="pre">EqnChunk</span></tt> will
+grow after each chunk is displayed.</p>
+<p><tt class="docutils literal"><span class="pre">EqChunkDelay</span></tt> is the time (in milliseconds) to delay between
+chunks (to allow the browser to respond to other user
+interaction).</p>
+<p>Set <tt class="docutils literal"><span class="pre">EqnChunk</span></tt> to 1, <tt class="docutils literal"><span class="pre">EqnChunkFactor</span></tt> to 1, and
+<tt class="docutils literal"><span class="pre">EqnChunkDelay</span></tt> to 10 to get the behavior from MathJax v1.1 and
+below.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">linebreaks: {}</tt></dt>
+<dd><p>This is an object that configures automatic linebreaking in the
+HTML-CSS output.  In order to be backward compatible with earlier
+versions of MathJax, only explicit line breaks are performed by
+default, so you must enable line breaks if you want automatic
+ones.  The object contains the following values:</p>
+<dl class="describe">
+<dt>
+<tt class="descname">automatic: false</tt></dt>
+<dd><p>This controls the automatic breaking of expressions: when
+<tt class="docutils literal"><span class="pre">false</span></tt>, only <tt class="docutils literal"><span class="pre">linebreak=&quot;newline&quot;</span></tt> is processed; when
+<tt class="docutils literal"><span class="pre">true</span></tt>, line breaks are inserted automatically in long
+expressions.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">width: &quot;container&quot;</tt></dt>
+<dd><p>This controls how wide the lines of mathematics can be.</p>
+<p>Use an explicit width like <tt class="docutils literal"><span class="pre">&quot;30em&quot;</span></tt> for a fixed width.
+Use <tt class="docutils literal"><span class="pre">&quot;container&quot;</span></tt> to compute the size from the containing
+element.
+Use <tt class="docutils literal"><span class="pre">&quot;nn%</span> <span class="pre">container&quot;</span></tt> for a portion of the container.
+Use <tt class="docutils literal"><span class="pre">&quot;nn%&quot;</span></tt> for a portion of the window size.</p>
+<p>The container-based widths may be slower, and may not produce
+the expected results if the layout width changes due to the
+removal of previews or inclusion of mathematics during
+typesetting.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">styles: {}</tt></dt>
 <dd><p>This is a list of CSS declarations for styling the HTML-CSS
 output.  See the definitions in <tt class="docutils literal"><span class="pre">jax/output/HTML-CSS/config.js</span></tt>
@@ -158,17 +228,9 @@ CSS style in a JavaScript object.</p>
 <dl class="describe">
 <dt>
 <tt class="descname">showMathMenu: true</tt></dt>
-<dd><p>This controls whether the MathJax contextual menu will be
-available on the mathematics in the page.  If true, then
-right-clicking (on the PC) or control-clicking (on the Mac) will
-produce a MathJax menu that allows you to get the source of the
-mathematics in various formats, change the size of the mathematics
-relative to the surrounding text, get information about
-MathJax, and configure other MathJax settings.</p>
-<p>Set this to <tt class="docutils literal"><span class="pre">false</span></tt> to disable the menu.  When <tt class="docutils literal"><span class="pre">true</span></tt>, the
-<tt class="docutils literal"><span class="pre">MathMenu</span></tt> configuration block determines the operation of the
-menu.  See <a class="reference internal" href="MathMenu.html#configure-mathmenu"><em>the MathMenu options</em></a> for
-more details.</p>
+<dd><p>This value has been moved to the core configuration block, since
+it applies to all output jax, but it will still be honored (for
+now) if it is set here.  See the <a class="reference internal" href="hub.html#configure-hub"><em>Core configuration options</em></a> for more details.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -195,7 +257,9 @@ after the mouse moves out of the <tt class="docutils literal"><span class="pre">
 
 <dl class="describe">
 <dt>
-<tt class="descname">offsetX: 10 and offsetY: 5</tt></dt>
+<tt class="descname">offsetX: 10</tt></dt>
+<dt>
+<tt class="descname">offsetY: 5</tt></dt>
 <dd><p>These are the offset from the mouse position (in pixels)
 where the tooltip will be placed.</p>
 </dd></dl>
@@ -211,8 +275,8 @@ where the tooltip will be placed.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="MathML.html"
-                        title="previous chapter">The MathML input processor</a></p>
+  <p class="topless"><a href="AsciiMath.html"
+                        title="previous chapter">The AsciiMath input processor</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="NativeMML.html"
                         title="next chapter">The NativeMML output processor</a></p>
@@ -243,14 +307,14 @@ where the tooltip will be placed.</p>
           <a href="NativeMML.html" title="The NativeMML output processor"
              >next</a> |</li>
         <li class="right" >
-          <a href="MathML.html" title="The MathML input processor"
+          <a href="AsciiMath.html" title="The AsciiMath input processor"
              >previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

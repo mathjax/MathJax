@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The tex2jax Preprocessor &mdash; MathJax v1.1 documentation</title>
+    <title>The tex2jax Preprocessor &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="../index.html" />
     <link rel="up" title="Configuration Objects" href="index.html" />
     <link rel="next" title="The mml2jax Preprocessor" href="mml2jax.html" />
     <link rel="prev" title="The Core Configuration Options" href="hub.html" /> 
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="hub.html" title="The Core Configuration Options"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>  
@@ -99,6 +99,21 @@ as many pairs as you want.</p>
 include the less-than sign), as these would be turned into tags by
 the browser before MathJax has the chance to run.  You can only
 include text, not tags, as your math delimiters.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">balanceBraces: true,</tt></dt>
+<dd><p>This value determines whether <cite>tex2jax</cite> requires braces to be
+balanced within math delimiters (which allows for nested dollar
+signs).  Set to <tt class="docutils literal"><span class="pre">false</span></tt> to get pre-v2.0 compatibility.  When
+<tt class="docutils literal"><span class="pre">true</span></tt>,</p>
+<div class="highlight-latex"><div class="highlight"><pre><span class="s">$</span><span class="nb">y </span><span class="o">=</span><span class="nb"> x^</span><span class="m">2</span><span class="nb"> </span><span class="nv">\hbox</span><span class="nb">{ when </span><span class="s">$</span>x &gt; 2<span class="s">$</span><span class="nb">}</span><span class="s">$</span>.
+</pre></div>
+</div>
+<p>will be properly handled as a single expression.  When <tt class="docutils literal"><span class="pre">false</span></tt>,
+it would be interpreted as two searpate expressions, each with
+improperly balanced braces.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -163,25 +178,33 @@ contexts.</p>
 not be processed by tex2jax (other than to look for the
 <tt class="docutils literal"><span class="pre">processClass</span></tt> pattern below).  Note that this is a regular
 expression, and so you need to be sure to quote any <cite>regexp</cite>
-special characters.  The pattern is automatically preceeded by
-<tt class="docutils literal"><span class="pre">'(^|</span> <span class="pre">)('</span></tt> and followed by <tt class="docutils literal"><span class="pre">')(</span> <span class="pre">|$)'</span></tt>, so your pattern will
-have to match full words in the class name.  Assigning an element
-this class name will prevent <cite>tex2jax</cite> from processing its
-contents.</p>
+special characters.  The pattern is inserted into one that
+requires your pattern to match a complete word, so setting
+<tt class="docutils literal"><span class="pre">ignoreClass:</span> <span class="pre">&quot;class2&quot;</span></tt> would cause it to match an element with
+<tt class="docutils literal"><span class="pre">class=&quot;class1</span> <span class="pre">class2</span> <span class="pre">class3&quot;</span></tt> but not <tt class="docutils literal"><span class="pre">class=&quot;myclass2&quot;</span></tt>.
+Note that you can assign several classes by separating them by the
+vertical line character (<tt class="docutils literal"><span class="pre">|</span></tt>).  For instance, with
+<tt class="docutils literal"><span class="pre">ignoreClass:</span> <span class="pre">&quot;class1|class2&quot;</span></tt> any element assigned a class of
+either <tt class="docutils literal"><span class="pre">class1</span></tt> or <tt class="docutils literal"><span class="pre">class2</span></tt> will be skipped.</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">processClass: &quot;tex2jax_process&quot;</tt></dt>
 <dd><p>This is the class name used to mark elements whose contents
-<em>should</em> be processed by <cite>tex2jax</cite>.  This is used to turn on
-processing within tags that have been marked as ignored or skipped
-above.  Note that this is a regular expression, and so you need to
-be sure to quote any <cite>regexp</cite> special characters.  The pattern is
-automatically preceeded by <tt class="docutils literal"><span class="pre">'(^|</span> <span class="pre">)('</span></tt> and followed by <tt class="docutils literal"><span class="pre">')(</span>
-<span class="pre">|$)'</span></tt>, so your pattern will have to match full words in the class
-name.  Use this to restart processing within an element that has
-been marked as ignored above.</p>
+<em>should</em> be processed by <cite>tex2jax</cite>.  This is used to restart
+processing within tags that have been marked as ignored via the
+<tt class="docutils literal"><span class="pre">ignoreClass</span></tt> or to cause a tag that appears in the <tt class="docutils literal"><span class="pre">skipTags</span></tt>
+list to be processed rather than skipped.  Note that this is a
+regular expression, and so you need to be sure to quote any
+<cite>regexp</cite> special characters.  The pattern is inserted into one
+that requires your pattern to match a complete word, so setting
+<tt class="docutils literal"><span class="pre">processClass:</span> <span class="pre">&quot;class2&quot;</span></tt> would cause it to match an element with
+<tt class="docutils literal"><span class="pre">class=&quot;class1</span> <span class="pre">class2</span> <span class="pre">class3&quot;</span></tt> but not <tt class="docutils literal"><span class="pre">class=&quot;myclass2&quot;</span></tt>.
+Note that you can assign several classes by separating them by the
+vertical line character (<tt class="docutils literal"><span class="pre">|</span></tt>).  For instance, with
+<tt class="docutils literal"><span class="pre">processClass:</span> <span class="pre">&quot;class1|class2&quot;</span></tt> any element assigned a class of
+either <tt class="docutils literal"><span class="pre">class1</span></tt> or <tt class="docutils literal"><span class="pre">class2</span></tt> will have its contents processed.</p>
 </dd></dl>
 
 </div>
@@ -227,12 +250,12 @@ been marked as ignored above.</p>
         <li class="right" >
           <a href="hub.html" title="The Core Configuration Options"
              >previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

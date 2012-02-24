@@ -13,16 +13,16 @@ will see that ``config/default.js`` is itself one big call to
 ``config/default.js`` can be included in-line to configure MathJax.
 
 The structure that you pass to :meth:`MathJax.Hub.Config()` is a
-JavaScript object that includes name-value pairs giving the names of
+JavaScript object that includes `name:value` pairs giving the names of
 parameters and their values, with pairs separated by commas.  Be
 careful not to include a comma after the last value, however, as some
 browsers (namely Internet Explorer) will fail to process the
 configuration if you do.
 
 The MathJax components, like the TeX input processor, have their own
-sections in the configuration object, labeled by the component name,
-and using a configuration object as its value.  The object is itself
-a configuration object made up of name-value pairs that give the
+sections in the configuration object labeled by the component name,
+and using an object as its value.  That object is itself
+a configuration object made up of `name:value` pairs that give the
 configuration options for the component.
 
 For example,
@@ -70,6 +70,7 @@ are categorized by the component they affect.
 
     The tex2jax preprocessor options <tex2jax>
     The mml2jax preprocessor options <mml2jax>
+    The asciimath2jax preprocessor options <asciimath2jax>
     The jsMath2jax preprocessor options <jsMath2jax>
 
 .. toctree::
@@ -77,8 +78,10 @@ are categorized by the component they affect.
 
     The TeX input processor options <TeX>
     The MathML input processor options <MathML>
+    The AsciiMath input processor options <AsciiMath>
     The HTML-CSS output processor options <HTML-CSS>
     The NativeMML output processor options <NativeMML>
+    The SVG output processor options <SVG>
     The MMLorHTML configuration options <MMLorHTML>
     
 .. toctree::
@@ -86,6 +89,7 @@ are categorized by the component they affect.
 
     The MathMenu options <MathMenu>
     The MathZoom options <MathZoom>
+    The MathEvents options <MathEvents>
     The FontWarnings options <FontWarnings>
 
     

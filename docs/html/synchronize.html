@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Synchronizing your code with MathJax &mdash; MathJax v1.1 documentation</title>
+    <title>Synchronizing your code with MathJax &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="index.html" />
     <link rel="next" title="Using Callbacks" href="callbacks.html" />
     <link rel="prev" title="The MathJax Startup Sequence" href="startup.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="startup.html" title="The MathJax Startup Sequence"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -59,7 +59,7 @@ yet).  Actions such as loading files, loading web-based fonts, and
 creating stylesheets all happen asynchronously within the browser, and
 since JavaScript has no method of halting a program while waiting for
 an action to complete, synchronizing your code with these types of
-actions is made much more difficult.  MathJax used three mechanisms to
+actions is made much more difficult.  MathJax uses three mechanisms to
 overcome this language shortcoming: callbacks, queues, and signals.</p>
 <p><strong>Callbacks</strong> are functions that are called when an action is
 completed, so that your code can continue where it left off when the
@@ -81,20 +81,22 @@ synchronize with MathJax, but you can also create your own private
 queues for actions that need to be synchronized with each other, but
 not to MathJax as a whole.  See the <a class="reference internal" href="api/queue.html#api-queue"><em>Queue Object</em></a>
 reference page for more details.</p>
-<p><strong>Signals</strong> are another means of synchronizing your own code with MathJax.
-Many of the important actions that MathJax takes (like typesetting new math
-on the page, or loading an external component) are &#8220;announced&#8221; by posting a
-message to a special object called a <cite>Signal</cite>.  Your code can register an
-interest in receiving one or more of these signals by providing a callback
-to be called when the signal is posted.  When the signal arrives, MathJax
-will call your code.  This works somewhat like an event handler, except
-that many different types of events can go through the same signal, and the
-signals have a &#8220;memory&#8221;, meaning that if you register an interest in a
-particular type of signal and that signal has already occurred, you will be
-told about the past occurrences as well as any future ones.  See the
-<a class="reference internal" href="api/signal.html#api-signal"><em>Signal Object</em></a> reference page for more details.  See
-also the <tt class="docutils literal"><span class="pre">test/sample-signals.html</span></tt> file in the MathJax <tt class="docutils literal"><span class="pre">test</span></tt>
-directory for a working example of using signals.</p>
+<p><strong>Signals</strong> are another means of synchronizing your own code with
+MathJax.  Many of the important actions that MathJax takes (like
+typesetting new math on the page, or loading an external component)
+are &#8220;announced&#8221; by posting a message to a special object called a
+<cite>Signal</cite>.  Your code can register an interest in receiving one or more
+of these signals by providing a callback to be called when the signal
+is posted.  When the signal arrives, MathJax will call your code.
+This works somewhat like an event handler, except that many different
+types of events can go through the same signal, and the signals have a
+&#8220;memory&#8221;, meaning that if you register an interest in a particular
+type of signal and that signal has already occurred, you will be told
+about the past occurrences as well as any future ones.  See the
+<a class="reference internal" href="api/signal.html#api-signal"><em>Signal Object</em></a> reference page for more details.
+See also the <a class="reference external" href="http://cdn.mathjax.org/mathjax/latest/test/sample-signals.html">test/sample-signals.html</a>
+file in the MathJax <tt class="docutils literal"><span class="pre">test</span></tt> directory for a working example of using
+signals.</p>
 <p>Each of these is explained in more detail in the links below:</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -146,11 +148,11 @@ directory for a working example of using signals.</p>
         <li class="right" >
           <a href="startup.html" title="The MathJax Startup Sequence"
              >previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

@@ -92,6 +92,15 @@ Methods
         - **text** --- the text that is to be the script's new content
     :Returns: ``null``
 
+.. method:: getScript(script)
+
+    Gets the contents of the ``script`` element, properly taking into
+    account the browser limitations and bugs.
+
+    :Parameters:
+        - **script** --- the script whose content is to be retrieved
+    :Returns: the text of the ``script``
+
 .. describe:: Cookie.Set(name,data)
 
     Creates a MathJax cookie using the ``MathJax.HTML.Cookie.prefix``

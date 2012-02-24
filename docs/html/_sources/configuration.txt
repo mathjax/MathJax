@@ -52,14 +52,14 @@ typical invocation of MathJax would be
        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
     </script>
 
-which loads MathJax with a configuration file that includes everything you 
-need in order to enter mathematics in either TeX, LaTeX, or MathML 
-notation, and produces output using MathML if the browser supports that, 
-or HTML-with-CSS otherwise.  If you **don't** load an explicit 
-configuration file, you will need to include an in-line configuration 
-block in order to tell MathJax how to read and display the mathematics on 
-your pages.  See the section below on :ref:`Using In-line Configuration
-Options <inline-config>` for details.
+which loads MathJax with a configuration file that includes everything
+you need in order to enter mathematics in either TeX, LaTeX, or MathML
+notation, and produces output using MathML if the browser supports
+that well enough, or HTML-with-CSS otherwise.  If you **don't** load
+an explicit configuration file, you will need to include an in-line
+configuration block in order to tell MathJax how to read and display
+the mathematics on your pages.  See the section below on :ref:`Using
+In-line Configuration Options <inline-config>` for details.
 
 It is best to load MathJax in the document's ``<head>`` block, but it
 is also possible to load MathJax into the ``<body>`` section, if
@@ -82,7 +82,7 @@ advanced topic, however; see :ref:`Loading MathJax Dynamically
 Loading MathJax from the CDN
 ============================
 
-MathJax is now available as a web service from ``cdn.mathjax.org``, so you 
+MathJax is available as a web service from ``cdn.mathjax.org``, so you 
 can obtain MathJax from there without needing to install it on your own 
 server.  The CDN is part of a distributed "cloud" network, so it is 
 handled by servers around the world.  That means that you should get access 
@@ -100,19 +100,19 @@ get.  The CDN has the following directory structure:
 
     mathjax/         # project-name
        1.0-latest/
-       1.1-beta/     # temporary
        1.1-latest/   # the 1.1 release with any ciritical patches
+       2.0-beta/     # temporary
+       2.0-latest/   # the 2.0 release with any ciritical patches
        ...
-       latest/       # the most current version (1.1-latest in this case)
+       latest/       # the most current version (2.0-latest in this case)
 
 Each directory corresponds to an official MathJax release; however,
 hotfixes (urgent bug fixes) will be applied in each release branch as
 necessary, even if new releases are not prepared.  In other words,
 ``1.1-latest`` will initially point to v1.1, but over time may be updated
 with patches that would correspond to releases that might be numbers 1.1a,
-1.1b, etc., even if such releases are not actually prepared for
-distribution (they likely won't be).
-
+1.1b, etc., even if such releases are not actually packaged for
+separate distribution (they likely won't be).
 We may occasionally introduce directories for betas, as indicated above,
 but they will be temporary, and will be removed after the official
 release.
@@ -124,7 +124,7 @@ For example,
 
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/1.1-latest/MathJax.js"></script>
 
-will load the stable v1.1 version, even if we release v1.2 or other later 
+will load the stable v1.1 version, even after we release v2.0 or other later 
 versions, while
 
 .. code-block:: html
@@ -132,7 +132,7 @@ versions, while
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 
 will always be the most current stable release, so it will go from v1.1 to 
-v1.2 automatically when that is released.  Note that all the versions 
+v2.0 automatically when that is released.  Note that all the versions 
 available on the CDN are stable versions; the development version is not 
 hosted on the CDN.  (If you wish to use the development version of
 MathJax, you will need to install your own copy; see :ref:`Installing
@@ -143,8 +143,9 @@ The use of ``cdn.mathjax.org`` is governed by its `terms of service
 sure to read that before linking to the MathJax CDN server.
 
 If you wish to use the MathJax CDN but use your own configuration file
-rather than one of the pre-defined ones, see the information at the end
-of the :ref:`Using a configuration file <config-files>` section below.
+rather than one of the pre-defined ones, see the information at the
+end of the :ref:`Using a Local Configuration File
+<local-config-files>` section below.
 
 
 Configuring MathJax
@@ -157,7 +158,7 @@ pre-defined configuration file, but include in-line commands to
 adjust the configuration to your needs.
 
 Note that you must use at least one of these two forms of configuration.
-Unlike earlier versions of MathJax, version 1.1 does not load a default
+Unlike MathJax v1.0, version 1.1 and higher does not load a default
 configuration file.  If you have been using version 1.0's
 ``config/MathJax.js`` for your configuration, you will need to load that 
 configuration file explicitly via a ``config`` parameter, as described 
@@ -180,28 +181,41 @@ stored in the ``MathJax/config`` directory.  Among these are the following
 
 .. describe:: TeX-AMS-MML_HTMLorMML.js
 
-    Allows math to be specified in TeX, LaTeX, or MathML notation, with the
-    `AMSmath` and `AMSsymbols` packages included, producing output using
-    MathML if the browser supports it, and HTML-with-CSS otherwise.
+    Allows math to be specified in :term:`TeX`, :term:`LaTeX`, or
+    :term:`MathML` notation, with the `AMSmath` and `AMSsymbols`
+    packages included, producing output using MathML if the browser
+    supports it sufficiently, and HTML-with-CSS otherwise.
 
 .. describe:: TeX-AMS_HTML.js
 
-    Allows math to be specified in TeX or LaTeX notation, with the 
+    Allows math to be specified in :term:`TeX` or :term:`LaTeX` notation, with the 
     `AMSmath` and `AMSsymbols` packages included, and produces output 
     using the HTML-CSS output processor.
 
 .. describe:: MML_HTMLorMML.js
 
-    Allows math to be specified using MathML notation, and produces MathML 
-    output if the browser supports it, or HTML-CSS output otherwise.
+    Allows math to be specified using :term:`MathML` notation, and produces MathML 
+    output if the browser supports it sufficiently, or HTML-CSS output otherwise.
 
-.. describe:: Accessible.js
+.. describe:: AM_HTMLorMML.js
 
-    Essentially the same as ``TeX-AMS-MML_HTMLorMML``, but with some 
-    settings specified to make MathJax work better with assistive 
-    technology (for the visually impaired).  This includes setting the 
-    zoom trigger to be a double-click, and removing the MathMenu in 
-    Internet Explorer (which can interfere with some screen readers).
+    Allows math to be specified using :term:`AsciiMath` notation,
+    producing output in MathML if the browser supports it
+    sufficiently, or as HTML-with-CSS otherwise.
+
+.. describe:: TeX-AMS-MML_SVG.js
+
+    Allows math to be specified in :term:`TeX`, :term:`LaTeX`, or
+    :term:`MathML` notation, with the `AMSmath` and `AMSsymbols`
+    packages included, producing output using SVG.
+
+.. describe:: TeX-MML-AM_HTMLorMML.js
+
+    Allows math to be specified in :term:`TeX`, :term:`LaTeX`,
+    :term:`MathML`, or :term:`AsciiMath` notation, with the `AMSmath`
+    and `AMSsymbols` packages included, producing output using MathML
+    if the browser supports it sufficiently, and HTML-with-CSS
+    otherwise.
 
 The first of these is a file that you can edit to suit your needs.  It 
 contains nearly all the configuration options that MathJax allows, and has 
@@ -226,7 +240,7 @@ the main code, and a "full" version, that also includes the complete
 output processors.  For example, with ``TeX-AMS_HTML.js`` and 
 ``TeX-AMS_HTML-full.js``, the latter includes the complete HTML-CSS output 
 processor.  The "full" configuration files are substantially larger (on 
-the order of 70KB), so you need to decide whether it is worth loading the 
+the order of 70KB more), so you need to decide whether it is worth loading the 
 full configuration for your pages.
 
 If most of your pages include mathematics, then it is to your advantage to
@@ -271,8 +285,17 @@ can use
 
 to first load the main configuration, then the local modifications.
 
-You can also load MathJax from the MathJax CDN server but use a configuration from
-your own local server:
+
+.. _local-config-files:
+
+Using a local configuration file with the CDN
+=============================================
+
+You can load MathJax from the MathJax CDN server but still use a
+configuration from your own local server.  For example, suppose you
+have a configuration file called ``local.js`` on your own server, in a
+directory called ``MathJax/config/local``.  Then you can load MathJax
+from the CDN and still use your configuration file as follows:
 
 .. code-block:: html
 
@@ -285,7 +308,7 @@ the complete URL to the local configuration file.  Note that you also
 have to edit the :meth:`loadComplete()` call that is at the bottom of
 the configuration file to change it from
 ``[MathJax]/config/local/local.js`` to the complete URL as you give it
-in the ``config`` parameter:
+in the ``config`` parameter.  In the example above, it would be
 
 .. code-block:: javascript
 
@@ -303,23 +326,24 @@ Using in-line configuration options
 ===================================
 
 The second way to configure MathJax is through `in-line configuration`, 
-that puts the configuration options within the web page itself.  This 
-process has changed in version 1.1 to make it compatible with HTML5.  
+which puts the configuration options within the web page itself.  This 
+process was changed in version 1.1 to make it compatible with HTML5.  
 Earlier versions of MathJax had in-line configuration included within the 
 content of the ``<script>`` tag that loads ``MathJax.js``, but HTML5 makes 
 it illegal to have content for a script with a ``src`` attribute.
 
-MathJax solves this problem by using separate ``<script>`` tags to perform 
-configuration for MathJax.  Because MathJax starts its configuration 
-process as soon as it is loaded, the configuration script must come 
-**before** the script tag that loads ``MathJax.js`` itself.  You do this 
-by including a ``<script>`` with ``type="text/x-mathjax-config"``, whose
-content will be run when MathJax performs its configuration.  Generally, 
-this script will include a :meth:`MathJax.Hub.Config()` call to perform 
-MathJax configuration, but it can also include other MathJax commands, 
-such as registering signal actions, or any JavaScript commands that you 
-want.  You can have as many such script tags as you want, and MathJax will 
-process them in order as they appear in the document.
+MathJax solves this problem by using separate ``<script>`` tags to
+perform the configuration for and loading of MathJax.  Because MathJax
+starts its configuration process as soon as it is loaded, the
+configuration script must come **before** the script tag that loads
+``MathJax.js`` itself.  You do this by including a ``<script>`` with
+``type="text/x-mathjax-config"`` whose content will be run when
+MathJax performs its configuration.  Generally, this script will
+include a :meth:`MathJax.Hub.Config()` call to perform MathJax
+configuration, but it can also include other MathJax commands, such as
+registering signal actions, or any JavaScript commands that you want.
+You can have as many such script tags as you need, and MathJax will
+process them in the order in which they appear in the document.
 
 For instance,
 
@@ -346,7 +370,7 @@ HTML-CSS processor to use the TeX fonts rather than other locally installed
 fonts (e.g., :term:`STIX` fonts).  See the :ref:`configuration options
 <configuration>` section (or the comments in the ``config/default.js``
 file) for more information about the configuration options that you can
-include in the :meth:`MathJax.Hub.Config()` call.  Note that this 
+include in the :meth:`MathJax.Hub.Config()` call.  This 
 configuration does **not** load any pre-defined configuration file.
 
 Note that you can combine in-line configuration with file-based 
@@ -354,8 +378,9 @@ configuration; simply include ``text/x-mathjax-config`` scripts as above,
 but also include ``config=filename`` when you load the ``MathJax.js`` 
 file.  For example, the `tex2jax` preprocessor does **not** enable the TeX 
 single-dollar in-line math delimiters by default.  You can load one of the 
-pre-defined configuration files that include the TeX preprocessor, and use 
-an in-line configuration block to enable the single-dollar signs:
+pre-defined configuration files that includes the TeX preprocessor, and use 
+an in-line configuration block to enable the single-dollar signs, as
+in this example:
 
 .. code-block:: html
 
@@ -424,19 +449,24 @@ in your theme's header file, and
       MathJax.Hub.Configured()
     </script>
 
-in its footer, so that MathJax will delay setting up until the footer is 
-reached, but will not have to wait until images and other files are 
-loaded.  If you have ``text/x-mathjax-config`` script tags within the main 
-body of the document, MathJax will read and process those before 
-continuing its startup.  In this way you can use a default configuration 
-that can be modified on a page-by-page basis.
+in its footer, so that MathJax will delay setting up until the footer
+is reached, but will not have to wait until images and other files are
+loaded.  In this way, if you have ``text/x-mathjax-config`` script
+tags within the main body of the document, MathJax will read and
+process those before continuing its startup.  In this way you can use
+a default configuration that can be modified on a page-by-page basis.
+
+Note that :meth:`MathJax.Hub.Configured()` is not called by MathJax;
+you must make that call somewhere within the page yourself after the
+configuration blocks are set up.  If you do not execute this function,
+MathJax will not process any of the math on the page.
 
 
 Details of the MathJax configuration process
 ============================================
 
 Since there are a number of different ways to configure MathJax, it is 
-important to know how they interact.  The configuration process is the 
+important to know how they interact.  The configuration actions are the 
 following:
 
 1.  Process any configuration file explicitly specified as a script parameter.

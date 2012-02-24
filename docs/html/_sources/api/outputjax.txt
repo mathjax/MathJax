@@ -48,17 +48,65 @@ Properties
 
     The directory where the jax files are stored (e.g., ``"[MathJax]/jax/output/HTML-CSS"``);
 
+.. describe:: fontDir
+
+    The directory where the fonts are stored (e.g., ``"[MathJax]/fonts"``)
+
+.. describe:: imageDir
+
+    The directory where MathJax images are found (e.g. ``"[MathJax]/images"``)
+
 
 Methods
 =======
 
-.. Method:: Translate(script)
+.. Method:: preProcess(state)
+
+    This is called by ``MathJax.Hub`` to ask the output processor to
+    prepare to process math scripts.  Its default action is to start
+    loading the jax's ``jax.js`` file, and redefine itself to simply
+    return the callback for the load operation (so that further calls
+    to it will cause the processing to wait for the callback).
+
+    Once the ``jax.js`` file has loaded, this method is replaced by
+    the jax's :meth:`preTranslate()` method, so that subsequent calls
+    to :meth:`preProcess()` will perform the appropriate translation.
+
+    :Parameters:
+        - **state** --- a structure containing information about the
+                        current proccessing state of the mathematics
+    :Returns: ``null``
+
+.. Method:: preTranslate(state)
+
+    This routine replaces :meth:`preProcess()` above when the jax's
+    ``jax.js`` file is loaded.  It is called by ``MathJax.Hub`` to ask
+    the output processor to prepare to process math scripts.  (For
+    example, the HTML-CSS output jax uses this to determine em-sizes
+    for all the mathematics at once, to minimize page reflows that
+    slow down Internet Explorer.)
+
+    The routine can use ``state.jax[this.id]`` to obtain the array of
+    element jax that are to be processed.  The output jax can use the
+    ``state`` variable to maintain its own state information, but
+    any properties that it adds to the variable should have a prefix
+    that is the output jax's ID.  For example, the HTML-CSS output jax
+    might use ``state.HTMLCSSlast`` to keep track of the last equation
+    it processed, or could add ``state.HTMLCSS = {...}`` to create an
+    object of its own within the state variable.
+
+    :Parameters:
+        - **state** --- a structure containing information about the
+                        current proccessing state of the mathematics
+    :Returns: ``null``
+
+.. Method:: Translate(script,state)
     :noindex:
 
     This is the main routine called by MathJax when an element jax is
     to be converted to output.  The default :meth:`Translate()`
     method throws an error indicating that :meth:`Translate()` hasn't been
-    redefined, so when the ``jax.js`` file loads, it should override the
+    defined, so when the ``jax.js`` file loads, it should override the
     default :meth:`Translate()` with its own version that does the actual
     translation.
 
@@ -66,12 +114,35 @@ Methods
     element jax for the given script.  The translation process may 
     modify the element jax (e.g., if it has data that needs to be
     stored with the jax), and may insert DOM elements into the
-    document near the jax's ``<script>`` tag.
+    document near the jax's ``<script>`` tag.  The output jax can use
+    the ``state`` variable to maintain information about its
+    processing state, but see :meth:`preTranslate()` above for naming
+    conventions for properties that are added.
 
     :Parameters:
         - **script**  --- the ``<script>`` element to be translated
+        - **state** --- a structure containing information about the
+                        current proccessing state of the mathematics
     :Returns: the `element jax` resulting from the translation
  
+.. Method:: postTranslate(state)
+
+    This routines is called by ``MathJax.Hub`` when the translation
+    of math elements is complete, and can be used by the output
+    processor to finalize any actions that it needs to complete.
+    (For example, making the mathematics visible, or forcing a reflow
+    of the page.)
+
+    The routine can use ``state.jax[this.id]`` to obtain the array of
+    element jax that were processed, or can use the ``state`` variable
+    to store its own state information (see :meth:`preProcess()`
+    above for caveats about naming properties).
+
+    :Parameters:
+        - **state** --- a structure containing information about the
+                        current proccessing state of the mathematics
+    :Returns: ``null``
+
 .. Method:: Register(mimetype)
     :noindex:
 
@@ -95,3 +166,53 @@ Methods
     :Parameters:
         - **jax** --- the element jax whose display should be removed
     :Returns: ``null``
+
+
+If an output jax wants its output to handle the contextual menu item
+and zooming, then it needs to tie into the event-handling code
+(`MathEvents`) and the zoom-handling code (`MathZoom`).  That requires
+the following methods.
+
+.. Method:: getJaxFromMath(math)
+
+    This is called by the event-handling code (`MathEvents`) to get
+    the element jax associated with the DOM element that caused an
+    event to occur.  The output jax will have attached event handlers
+    to some DOM element that is part of its output, and the
+    `MathEvents` code uses this routine to map back to the jax
+    associated with that output.
+
+    :Parameters:
+        - **math** --- a DOM element that triggered a DOM event
+                       (e.g., a mouse click)
+    :Returns: the `ElementJax` structure associated with the DOM element
+
+.. Method:: Zoom(jax,span,math,Mw,Mh)
+
+    This routine is called by the zoom-handling code (`MathZoom`)
+    when an expression has received its zoom trigger event (e.g., a
+    double-click).  The ``jax`` is the math that needs to be zoomed,
+    ``span`` is a ``<span>`` element in which the zoomed version of
+    the math should be placed, ``math`` is the DOM element that
+    received the zoom trigger event, and ``Mw`` and ``Mh`` are the
+    maximum width and height allowed for the zoom box (the ``span``).
+
+    The return value is an object with the following properties:
+
+    - ``Y`` --- the vertical offset from the top of the ``span`` to
+                the baseline of the mathematics
+    - ``mW`` --- the width of the original mathematics element
+    - ``mH`` --- the height of the original mathematics element
+    - ``zW`` --- the width of the zoomed math
+    - ``zH`` --- the height of the zoomed math
+
+    All of these values are in pixels.
+
+    :Parameters:
+        - **jax** --- the jax to be zoomed
+	- **span** --- the ``<span>`` in which to place the zoomed math
+    	- **math** --- the DOM element generating the zoom event
+	- **Mw** --- the maximum width of the zoom box
+	- **Mh** --- the maximum height of the zoom box
+    :Returns: a structure as described above
+

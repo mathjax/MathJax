@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Using Signals &mdash; MathJax v1.1 documentation</title>
+    <title>Using Signals &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="index.html" />
     <link rel="up" title="Synchronizing your code with MathJax" href="synchronize.html" />
     <link rel="next" title="Loading MathJax Dynamically" href="dynamic.html" />
     <link rel="prev" title="Using Queues" href="queues.html" /> 
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="queues.html" title="Using Queues"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="synchronize.html" accesskey="U">Synchronizing your code with MathJax</a> &raquo;</li> 
       </ul>
     </div>  
@@ -99,14 +99,14 @@ it starts listening after they were sent.</p>
 various extensions.  The extension may not be loaded when the user&#8217;s
 configuration code runs, so the configuration code can&#8217;t modify the
 extension because it isn&#8217;t there yet.  Fortunately, most extensions
-signal when they are loaded and initialized via an <tt class="docutils literal"><span class="pre">Extension</span> <span class="pre">[name]</span> <span class="pre">Ready</span></tt> message,
-so the configuration code can implement a listener for that message, and
-have the listener perform the configuration when the message arrives.
-But even if the extension <em>has</em> already been loaded, this will still
-work, because the listener will receive the ready signal even if it
-has already been posted.  In this way, listening for signals is a
-robust method of synchronizing code components no matter when they are
-loaded and run.</p>
+signal when they are loaded and initialized via an <tt class="docutils literal"><span class="pre">Extension</span> <span class="pre">[name]</span>
+<span class="pre">Ready</span></tt> message, or just <tt class="docutils literal"><span class="pre">[name]</span> <span class="pre">Ready</span></tt>, so the configuration code
+can implement a listener for that message, and have the listener
+perform the configuration when the message arrives.  But even if the
+extension <em>has</em> already been loaded, this will still work, because the
+listener will receive the ready signal even if it has already been
+posted.  In this way, listening for signals is a robust method of
+synchronizing code components no matter when they are loaded and run.</p>
 <p>In some cases, it may be inappropriate for a new listener to receive
 past messages that were sent to a signal object. There are two ways to
 handle this: first, a new listener can indicate that it doesn&#8217;t want
@@ -121,14 +121,14 @@ also be a JavaScript array containing data, or an object containing
 message, and can act on it in whatever ways they see fit.</p>
 <div class="section" id="creating-a-listener">
 <h2>Creating a Listener<a class="headerlink" href="#creating-a-listener" title="Permalink to this headline">¶</a></h2>
-<p>MathJax maintains two separate signal channels: the <cite>startup signal</cite>
-and the <cite>processing signal</cite> (or the <cite>hub signal</cite>).  The startup signal
-is where the messages about different components starting up and
-becoming ready appear.  The processing signal is where the messages
-are sent about processing mathematics, like the <tt class="docutils literal"><span class="pre">New</span> <span class="pre">Math</span></tt> messages
-for when newly typeset mathematics appears on the page.  The latter is
-cleared when a new processing pass is started (so messages from past
-processing runs are not kept).</p>
+<p>MathJax maintains two separate pre-defined signal channels: the
+<cite>startup signal</cite> and the <cite>processing signal</cite> (or the <cite>hub signal</cite>).
+The startup signal is where the messages about different components
+starting up and becoming ready appear.  The processing signal is where
+the messages are sent about processing mathematics, like the <tt class="docutils literal"><span class="pre">New</span>
+<span class="pre">Math</span></tt> messages for when newly typeset mathematics appears on the
+page.  The latter is cleared when a new processing pass is started (so
+messages from past processing runs are not kept).</p>
 <p>The easiest way to create a listener is to use either
 <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Register.StartupHook()</span></tt> or
 <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Register.MessageHook()</span></tt>.  The first sets a listener
@@ -142,10 +142,11 @@ called when it arrives.  For example</p>
 </div>
 <p>See the <a class="reference internal" href="startup.html#startup-sequence"><em>MathJax Startup Sequence</em></a> page for
 details of the messages sent during startup.  See also the
-<tt class="docutils literal"><span class="pre">test/sample-signals.html</span></tt> file (and its source) for examples of
-using signals.  This example lists all the signals that occur while
-MathJax is processing that page, so it gives useful information about
-the details of the signals produced by various components.</p>
+<a class="reference external" href="http://cdn.mathjax.org/mathjax/latest/test/sample-signals.html">test/sample-signals.html</a>
+file (and its source) for examples of using signals.  This example
+lists all the signals that occur while MathJax is processing that
+page, so it gives useful information about the details of the signals
+produced by various components.</p>
 <p>In this example, the listener starts loading an extra configuration
 file (from the same directory as the web page).  Since it returns
 the callback from that request, the signal processing will wait until
@@ -185,8 +186,8 @@ signal&#8217;s <a class="reference internal" href="api/signal.html#Interest" tit
 </div>
 <p>This will cause an alert for every signal that MathJax produces.  You
 probably don&#8217;t want to try this out, since it will produce a <em>lot</em> of
-them; instead, use the <tt class="docutils literal"><span class="pre">test/sample-signals.html</span></tt> file, which
-displays them in the web page.</p>
+them; instead, use the <a class="reference external" href="http://cdn.mathjax.org/mathjax/latest/test/sample-signals.html">test/sample-signals.html</a>
+file, which displays them in the web page.</p>
 <p>See the <a class="reference internal" href="api/signal.html#api-signal"><em>Signal Object</em></a> reference page for details on the
 structure and methods of the signal object.</p>
 </div>
@@ -242,12 +243,12 @@ structure and methods of the signal object.</p>
         <li class="right" >
           <a href="queues.html" title="Using Queues"
              >previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="synchronize.html" >Synchronizing your code with MathJax</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

@@ -127,16 +127,27 @@ The actions you can perform on an element jax include:
 
         to set the math text of the element to `newmath` and typeset.
 
+    .. describe::  Rerender()
+
+        to remove the output and reproduce it again (for example, if
+        CSS has changed that would alter the spacing of the
+        mathematics).  Note that the internal representation isn't
+        regenerated; only the output is.
+
     .. describe::  Reprocess()
 
-        to remove the output and reproduce it again (for
-        example, if CSS has changed that would alter the spacing of the
-        mathematics).
+        to remove the output and then retranslate the input into the
+        internal MathML and rerender the output.
 
     .. describe:: Remove()
 
         to remove the output for this math element (but not
         the original ``<script>`` tag).
+
+    .. describe:: needsUpdate()
+
+        to find out if the mathematics has changed so that its output
+        needs to be updated.
 
     .. describe:: SourceElement()
 
@@ -161,7 +172,7 @@ queue.  If your startup code performs the commands
 
     var studentDisplay = null;
     MathJax.Hub.Queue(function () {
-      studentDisplay = MathJax.Hub.getAllJax("MathDiv");
+      studentDisplay = MathJax.Hub.getAllJax("MathDiv")[0];
     });
 
 then you can use 
@@ -173,8 +184,12 @@ then you can use
 to change the student's answer to be the typeset version of whatever
 is in the ``studentAnswer`` variable.
 
-Here is a complete example that illustrates this approach (available in a 
-more full-featured version as ``test/sample-dynamic.html``):
+Here is a complete example that illustrates this approach. Note,
+however, that Internet Explorer does not fire the ``onchange`` event
+when you press RETURN, so this example does not work as expected in
+IE.  A more full-featured version that addresses this problem is
+available in `test/sample-dynamic.html
+<http://cdn.mathjax.org/mathjax/latest/test/sample-dynamic.html>`_.
 
 .. code-block:: html
 
@@ -232,3 +247,8 @@ more full-featured version as ``test/sample-dynamic.html``):
 
     </body>
     </html>
+
+There are a number of additional example pages at `test/examples.html
+<http://cdn.mathjax.org/mathjax/latest/test/examples.html>`_ that
+illustrate how to call MathJax dynamically or perform other actions
+with MathJax.

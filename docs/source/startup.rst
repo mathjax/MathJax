@@ -90,7 +90,12 @@ pushed into the queue:
 
 ..
 
-5.  Load the jax configuration files:
+5.  Initialize the Message system (the grey information box in the
+    lower left)
+
+..
+
+6.  Load the jax configuration files:
 
     - Post the ``Begin Jax`` startup signal
     - Load the jax config files from the ``MathJax.Hub.config.jax`` array
@@ -101,7 +106,7 @@ pushed into the queue:
 
 ..
 
-6.  Load the extension files:
+7.  Load the extension files:
 
     - Post the ``Begin Extensions`` startup signal
     - Load the files from the ``MathJax.Hub.config.extensions`` array
@@ -114,20 +119,22 @@ pushed into the queue:
 
 ..
 
-7.  Set the MathJax menu's renderer value based on the jax that have been 
+8.  Set the MathJax menu's renderer value based on the jax that have been 
     loaded
 
 ..
 
-8.  Wait for the onload handler to fire
+9.  Wait for the onload handler to fire (in MathJax v2.0 this can
+    occur on the ``DOMContentLoaded`` event rather than the page's
+    ``onload`` event, so processing of mathematics can start earlier)
 
 ..
 
-9.  Set ``MathJax.isReady`` to ``true``
+10. Set ``MathJax.isReady`` to ``true``
 
 ..
 
-10. Perform the typesetting pass (preprocessors and processors)
+11. Perform the typesetting pass (preprocessors and processors)
 
     - Post the ``Begin Typeset`` startup signal
     - Post the ``Begin PreProcess`` hub signal
@@ -137,6 +144,12 @@ pushed into the queue:
     - Post the ``Begin Process`` hub signal
     - Process the math script elements on the page
 
+      - There are a number of Hub signals generated during math
+        processing, including a signal that a ``Math`` action is
+        starting (with a parameter indicating what action that is),
+        ``Begin`` and ``End Math Input`` messages, and ``Begin`` and
+        ``End Math Output`` signals.
+
       - Each new math element generates a ``New Math`` hub signal
         with the math element's ID
 
@@ -145,7 +158,18 @@ pushed into the queue:
 
 ..
 
-11. Post the ``End`` startup signal
+12. Jump to the location specified in the URL's hash reference, if
+    any.
+
+..
+
+13. Initiate timers to load the zoom and menu code, if it hasn't
+    already been loading in the configuration (so it will be ready
+    when the user needs it).
+
+..
+
+14. Post the ``End`` startup signal
 
 
 The loading of the jax and extensions in steps 5 and 6 are now done in 
@@ -157,4 +181,6 @@ followed by `Begin Extensions`, but the order of `End Jax` and `End
 Extensions` will depend on the files being loaded.)  Both 5 and 6 must 
 complete, however, before 7 will be performed.
 
-See the ``test/sample-signals.html`` file to see the signals in action.
+See the `test/sample-signals.html
+<http://cdn.mathjax.org/mathjax/latest/test/sample-signals.html>`_ file
+to see the signals in action.

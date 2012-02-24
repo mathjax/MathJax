@@ -1,0 +1,141 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The MathEvents extension &mdash; MathJax v2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+    <link rel="top" title="MathJax v2.0 documentation" href="../index.html" />
+    <link rel="up" title="Configuration Objects" href="index.html" />
+    <link rel="next" title="The FontWarnings extension" href="FontWarnings.html" />
+    <link rel="prev" title="The MathZoom extension" href="MathZoom.html" /> 
+  </head>
+  <body>
+    
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="FontWarnings.html" title="The FontWarnings extension"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="MathZoom.html" title="The MathZoom extension"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Configuration Objects</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-mathevents-extension">
+<span id="configure-mathevents"></span><h1>The MathEvents extension<a class="headerlink" href="#the-mathevents-extension" title="Permalink to this headline">¶</a></h1>
+<p>The options below control the operation of the MathEvents component that
+allows handles mouse and menu events attached to mathematics that is
+typeset by MathJax.  They are listed with their
+default values.  To set any of these options, include a <tt class="docutils literal"><span class="pre">MathEvents</span></tt>
+section in your <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call.  For example</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
+  <span class="nx">MathEvents</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">hover</span><span class="o">:</span> <span class="mi">400</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>would set the required delay for hovering over a math element to
+400 milliseconds.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">hover: 500</tt></dt>
+<dd><p>This value is the time (in milliseconds) that a user must hold the
+mouse still over a math element before it is considered to be
+hovering over the math.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">styles: {}</tt></dt>
+<dd><p>This is a list of CSS declarations for styling the zoomed
+mathematics.  See the definitions in <tt class="docutils literal"><span class="pre">extensions/MathEvents.js</span></tt>
+for details of what are defined by default.  See <a class="reference internal" href="../CSS-styles.html#css-style-objects"><em>CSS Style
+Objects</em></a> for details on how to specify CSS
+style in a JavaScript object.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="MathZoom.html"
+                        title="previous chapter">The MathZoom extension</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="FontWarnings.html"
+                        title="next chapter">The FontWarnings extension</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="FontWarnings.html" title="The FontWarnings extension"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="MathZoom.html" title="The MathZoom extension"
+             >previous</a> |</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Configuration Objects</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012 Design Science.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+    
+  </body>
+</html>

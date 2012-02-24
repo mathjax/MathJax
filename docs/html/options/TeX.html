@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The TeX input processor &mdash; MathJax v1.1 documentation</title>
+    <title>The TeX input processor &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="../index.html" />
     <link rel="up" title="Configuration Objects" href="index.html" />
     <link rel="next" title="The MathML input processor" href="MathML.html" />
     <link rel="prev" title="The jsMath2jax Preprocessor" href="jsMath2jax.html" /> 
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="jsMath2jax.html" title="The jsMath2jax Preprocessor"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>  
@@ -55,7 +55,8 @@
 <span id="configure-tex"></span><h1>The TeX input processor<a class="headerlink" href="#the-tex-input-processor" title="Permalink to this headline">¶</a></h1>
 <p>The options below control the operation of the TeX input processor
 that is run when you include <tt class="docutils literal"><span class="pre">&quot;input/TeX&quot;</span></tt> in the <cite>jax</cite> array of
-your configuration.  They are listed with their default values.  To
+your configuration or load a combined configuration file that includes
+the TeX input jax.  They are listed with their default values.  To
 set any of these options, include a <tt class="docutils literal"><span class="pre">TeX</span></tt> section in your
 <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call.  For example</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
@@ -96,15 +97,76 @@ the value to leave sufficient margin for tags.</p>
 
 <dl class="describe">
 <dt>
+<tt class="descname">equationNumbers: {}</tt></dt>
+<dd><p>This object controls the automatic equation numbering and the
+equation referencing.  It contains the following values:</p>
+<dl class="describe">
+<dt>
+<tt class="descname">autoNumber: &quot;none&quot;</tt></dt>
+<dd><p>This controls whether equations are numbered and how.  By
+default it is set to <tt class="docutils literal"><span class="pre">&quot;none&quot;</span></tt> to be compatible with earlier
+versions of MathJax where auto-numbering was not performed (so
+pages will not change their appearance).  You can change
+this to <tt class="docutils literal"><span class="pre">&quot;AMS&quot;</span></tt> for equations numbered as the <cite>AMSmath</cite>
+package would do, or <tt class="docutils literal"><span class="pre">&quot;all&quot;</span></tt> to get an equation number for
+every displayed equation.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">formatNumber: function (n) {return n}</tt></dt>
+<dd><p>A function that tells MathJax what tag to use for equation
+number <tt class="docutils literal"><span class="pre">n</span></tt>.  This could be used to have the equations labeled
+by a sequence of symbols rather than numbers, or to use section
+and subsection numbers instead.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">formatTag: function (n) {return '('+n+')'}</tt></dt>
+<dd><p>A function that tells MathJax how to format an equation number
+for displaying as a tag for an equation.  This is what appears
+in the margin of a tagged or numbered equation.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">formatID: function {return 'mjx-eqn-'+String(n).replace(/[:'&quot;&lt;&gt;&amp;]/g,&quot;&quot;)}</tt></dt>
+<dd><p>A function that rells MathJax what ID to use as an anchor for
+the equation (so that it can be used in URL references).</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">formatURL: function (id) {return '#'+escape(id)}</tt></dt>
+<dd><p>A function that takes an equation ID and returns the URL to
+link to it.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">useLabelIds: true</tt></dt>
+<dd><p>This controls whether element ID&#8217;s use the <tt class="docutils literal"><span class="pre">\label</span></tt> name or
+the equation number.  When <tt class="docutils literal"><span class="pre">true</span></tt>, use the label, when
+<tt class="docutils literal"><span class="pre">false</span></tt>, use the equation number.</p>
+</dd></dl>
+
+<p>See the <a class="reference external" href="http://cdn.mathjax.org/mathjax/latest/test/examples.html">MathJax examples page</a> for
+some examples of equation numbering.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">Macros: {}</tt></dt>
 <dd><p>This lists macros to define before the TeX input processor begins.
-These are name:value pairs where the <cite>name</cite> gives the name of the TeX
-macro to be defined, and <cite>value</cite> gives the replacement text for the
-macro.  The <cite>value</cite> can be an array of the form <cite>[value,n]</cite>, where
-<cite>value</cite> is the replacement text and <cite>n</cite> is the number of parameters
-for the macro.  Note that since the <cite>value</cite> is a javascript string,
-backslashes in the replacement text must be doubled to prevent them
-from acting as javascript escape characters.</p>
+These are <cite>name:value</cite> pairs where the <cite>name</cite> gives the name of
+the TeX macro to be defined, and <cite>value</cite> gives the replacement
+text for the macro.  The <cite>value</cite> can be an array of the form
+<cite>[value,n]</cite>, where <cite>value</cite> is the replacement text and <cite>n</cite> is the
+number of parameters for the macro.  Note that since the <cite>value</cite>
+is a javascript string, backslashes in the replacement text must
+be doubled to prevent them from acting as javascript escape
+characters.</p>
 <p>For example,</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">Macros</span><span class="o">:</span> <span class="p">{</span>
   <span class="nx">RR</span><span class="o">:</span> <span class="s1">&#39;{\\bf R}&#39;</span><span class="p">,</span>
@@ -178,12 +240,12 @@ be sufficient for any reasonable equation.</p>
         <li class="right" >
           <a href="jsMath2jax.html" title="The jsMath2jax Preprocessor"
              >previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

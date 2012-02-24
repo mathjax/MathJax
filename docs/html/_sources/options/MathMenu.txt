@@ -34,33 +34,41 @@ would set the ``delay`` option to 600 milliseconds.
 
 .. describe:: showRenderer: true
 
-   This controls whether the "Math Renderer" item will be displayed in
-   the "Settings" submenu of the mathematics contextual menu.  It
-   allows the user to change between the `HTML-CSS` and `NativeMML`
-   output processors for the mathematics on the page.  Set to
-   ``false`` to prevent this menu item from showing.
-   
-.. describe:: showContext: false
-
-   This controls whether the "Contextual Menu" item will be displayed
-   in the "Settings" submenu of the mathematics contextual menu.
-   It allows the user to decide whether the MathJax menu or the
-   browser's default contextual menu will be shown when the context
-   menu click occurs over mathematics typeset by MathJax.  (The main
-   reason to allow pass-through to the browser's menu is to gain
-   access to the MathPlayer contextual menu when the NativeMML output
-   processor is used in Internet Explorer with the `MathPlayer plugin
-   <http://www.dessci.com/en/products/mathplayer/>`_.)  Set to
-   ``false`` to prevent this menu item from showing.
+    This controls whether the "Math Renderer" item will be displayed
+    in the "Math Settings" submenu of the MathJax contextual menu.
+    It allows the user to change between the `HTML-CSS`, `NativeMML`,
+    and `SVG` output processors for the mathematics on the page.  Set
+    to ``false`` to prevent this menu item from showing.
    
 .. describe:: showFontMenu: false
 
    This controls whether the "Font Preference" item will be displayed
-   in the "Settings" submenu of the mathematics contextual menu.
+   in the "Math Settings" submenu of the MathJax contextual menu.
    This submenu lets the user select what font to use in the
    mathematics produced by the `HTML-CSS` output processor.  Note that
    changing the selection in the font menu will cause the page to
    reload.  Set to ``false`` to prevent this menu item from showing.
+
+.. describe:: showMathPlayer: true
+
+    This controls whether the "MathPlayer" item will be displayed in
+    the "Math Settings" submenu of the MathJax contextual menu.  This
+    submenu lets the user select what events should be passed on to
+    the `MathPlayer plugin
+    <http://www.dessci.com/en/products/mathplayer/>`_, when it is
+    present.  Mouse events can be passed on (so that clicks will be
+    processed by MathPlayer rather than MathJax), and emnu events can
+    be passed on (to allow the user access to the MathPlayer menu).
+    Set to ``false`` to prevent this menu item from showing.
+   
+.. describe:: showContext: false
+
+    This controls whether the "Contextual Menu" item will be displayed
+    in the "Math Settings" submenu of the MathJax contextual menu.
+    It allows the user to decide whether the MathJax menu or the
+    browser's default contextual menu will be shown when the context
+    menu click occurs over mathematics typeset by MathJax.  Set to
+    ``false`` to prevent this menu item from showing.
    
 .. describe:: windowSettings: { ... }
 

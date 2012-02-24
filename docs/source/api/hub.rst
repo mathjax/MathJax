@@ -31,7 +31,17 @@ Properties
 .. describe:: processUpdateTime: 250
 
     The minimum time (in milliseconds) between updates of the
-    "Processing Math" message.
+    "Processing Math" message.  After this amount of time has passed,
+    and after the next equation has finished being processed, 
+    MathJax will stop processing momentarily so that the update
+    message can be displayed, and so that the browser can handle user
+    interaction.
+
+.. describe:: processUpdateDelay: 10
+
+   The amount of time (in milliseconds) that MathJax pauses after
+   issuing its processing message before starting the processing again
+   (to give browsers time to handle user interaction).
 
 .. describe:: signal
 
@@ -59,6 +69,11 @@ Properties
         These are boolean values that indicate whether the browser is
         running on a Macintosh computer or a Windows computer.  They
         will both be ``false`` for a Linux computer.
+
+    .. describe:: isMobile
+
+        This is ``true`` when MathJax is running a mobile version of a
+        WebKit or Gecko-based browser.
 
     .. describe:: isFirefox, isSafari, isChrome, isOpera, isMSIE, isKonqueror
 
@@ -96,6 +111,18 @@ Properties
 		... do general Firefox stuff
 	      }
 	    );
+
+.. describe:: inputJax
+
+    An object storing the MIME types associated with the various
+    registered input jax (these are the types of the ``<script>`` tags
+    that store the math to be processed by each input jax).
+
+.. describe:: outputJax
+
+    An object storing the output jax associate with the various
+    element jax MIME types for the registered output jax.
+
 
 Methods
 =======
@@ -243,13 +270,31 @@ Methods
 
 .. method:: Reprocess([element[,callback]])
 
-    Removes any typeset mathematics from the document or DOM element (or
-    elements if it is an array of elements), and then processes the
-    mathematics again, re-typesetting everything.  This may be necessary,
-    for example, if the CSS styles have changed and those changes would
-    affect the mathematics.  The `element` is either the DOM `id` of the
-    element to scan, a reference to the DOM element itself, or an array of
-    id's or references.  The `callback` is called when the processing is
+    Removes any typeset mathematics from the document or DOM element
+    (or elements if it is an array of elements), and then processes
+    the mathematics again, re-typesetting everything.  This may be
+    necessary, for example, if the CSS styles have changed and those
+    changes would affect the mathematics.  Reprocess calls both the
+    input and output jax to completely rebuild the data for
+    mathematics.  The `element` is either the DOM `id` of the element
+    to scan, a reference to the DOM element itself, or an array of
+    id's or references.  The `callback` is called when the processing
+    is complete.
+        
+    :Parameters:
+        - **element** --- the element(s) to be reprocessed
+        - **callback** --- the callback specification
+    :Returns: the callback object
+
+.. method:: Rerender([element[,callback]])
+
+    Removes any typeset mathematics from the document or DOM element
+    (or elements if it is an array of elements), and then renders the
+    mathematics again, re-typesetting everything from the current
+    internal version (without calling the input jax again).  The
+    `element` is either the DOM `id` of the element to scan, a
+    reference to the DOM element itself, or an array of id's or
+    references.  The `callback` is called when the processing is
     complete.
         
     :Parameters:
@@ -314,6 +359,21 @@ Methods
     :Parameters:
         - **element** --- the element to inspect
     :Returns: integer (-1, 0, 1)
+
+.. Method:: setRenderer(renderer[,type])
+
+    Sets the output jax for the given element jax ``type`` (or ``jax/mml``
+    if none is specified) to be the one given by ``renderer``, which
+    must be the name of a renderer, such as ``NativeMML`` or
+    ``HTML-CSS``.  Note that this does not cause the math on the page
+    to be rerendered; it just sets the renderer for output in the
+    future (call :meth:``Rerender()`` above to replace the current
+    renderings by new ones).
+
+    :Parameters:
+        - **renderer** --- the name of the output jax to use for rendering
+	- **type** --- the element jax MIME type whose renderer to set
+    :Returns: ``null``
 
 .. Method:: Insert(dst,src)
 

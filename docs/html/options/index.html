@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Configuration Objects &mdash; MathJax v1.1 documentation</title>
+    <title>Configuration Objects &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="../index.html" />
     <link rel="next" title="The Core Configuration Options" href="hub.html" />
     <link rel="prev" title="Common Configurations" href="../config-files.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="../config-files.html" title="Common Configurations"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -59,15 +59,15 @@ will see that <tt class="docutils literal"><span class="pre">config/default.js</
 <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt>).  Anything that is in
 <tt class="docutils literal"><span class="pre">config/default.js</span></tt> can be included in-line to configure MathJax.</p>
 <p>The structure that you pass to <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> is a
-JavaScript object that includes name-value pairs giving the names of
+JavaScript object that includes <cite>name:value</cite> pairs giving the names of
 parameters and their values, with pairs separated by commas.  Be
 careful not to include a comma after the last value, however, as some
 browsers (namely Internet Explorer) will fail to process the
 configuration if you do.</p>
 <p>The MathJax components, like the TeX input processor, have their own
-sections in the configuration object, labeled by the component name,
-and using a configuration object as its value.  The object is itself
-a configuration object made up of name-value pairs that give the
+sections in the configuration object labeled by the component name,
+and using an object as its value.  That object is itself
+a configuration object made up of <cite>name:value</cite> pairs that give the
 configuration options for the component.</p>
 <p>For example,</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
@@ -106,6 +106,7 @@ are categorized by the component they affect.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tex2jax.html">The tex2jax preprocessor options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mml2jax.html">The mml2jax preprocessor options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asciimath2jax.html">The asciimath2jax preprocessor options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jsMath2jax.html">The jsMath2jax preprocessor options</a></li>
 </ul>
 </div>
@@ -113,8 +114,10 @@ are categorized by the component they affect.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="TeX.html">The TeX input processor options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MathML.html">The MathML input processor options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AsciiMath.html">The AsciiMath input processor options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="HTML-CSS.html">The HTML-CSS output processor options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="NativeMML.html">The NativeMML output processor options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SVG.html">The SVG output processor options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MMLorHTML.html">The MMLorHTML configuration options</a></li>
 </ul>
 </div>
@@ -122,6 +125,7 @@ are categorized by the component they affect.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="MathMenu.html">The MathMenu options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MathZoom.html">The MathZoom options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MathEvents.html">The MathEvents options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="FontWarnings.html">The FontWarnings options</a></li>
 </ul>
 </div>
@@ -179,11 +183,11 @@ are categorized by the component they affect.</p>
         <li class="right" >
           <a href="../config-files.html" title="Common Configurations"
              >previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

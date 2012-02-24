@@ -1,0 +1,146 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The AsciiMath input processor &mdash; MathJax v2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+    <link rel="top" title="MathJax v2.0 documentation" href="../index.html" />
+    <link rel="up" title="Configuration Objects" href="index.html" />
+    <link rel="next" title="The HTML-CSS output processor" href="HTML-CSS.html" />
+    <link rel="prev" title="The MathML input processor" href="MathML.html" /> 
+  </head>
+  <body>
+    
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="HTML-CSS.html" title="The HTML-CSS output processor"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="MathML.html" title="The MathML input processor"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Configuration Objects</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-asciimath-input-processor">
+<span id="configure-asciimath"></span><h1>The AsciiMath input processor<a class="headerlink" href="#the-asciimath-input-processor" title="Permalink to this headline">¶</a></h1>
+<p>The options below control the operation of the AsciiMath input
+processor that is run when you include <tt class="docutils literal"><span class="pre">&quot;input/AsciiMath&quot;</span></tt> in the
+<cite>jax</cite> array of your configuration or load a combined configuration
+file that includes the AsciiMath input jax.  They are listed with
+their default values.  To set any of these options, include a
+<tt class="docutils literal"><span class="pre">AsciiMath</span></tt> section in your <tt class="xref py py-meth docutils literal"><span class="pre">MathJax.Hub.Config()</span></tt> call.  For
+example</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Config</span><span class="p">({</span>
+  <span class="nx">AsciiMath</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">displaystyle</span><span class="o">:</span> <span class="kc">false</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>would set the <tt class="docutils literal"><span class="pre">displaystyle</span></tt> configuration option so that the limits
+for operators like summation symbols will appear next to them rather
+than above and below.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">displaystyle: true</tt></dt>
+<dd><p>Determines whether operators like summation symbols will have
+their limits above and below the operators (true) or to their
+right (false).  The former is how they would appear in displayed
+equations that appear on their own lines, while the latter is
+better suited to in-line equations so that they don&#8217;t interfere
+with the line spacing so much.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">decimal: &quot;.&quot;</tt></dt>
+<dd><p>This is the character to be used for decimal points in numbers.
+if you change this to <tt class="docutils literal"><span class="pre">&quot;,&quot;</span></tt>, then you need to be careful about
+entering points or intervals.  E.g., use <tt class="docutils literal"><span class="pre">(1,</span> <span class="pre">2)</span></tt> rather than
+<tt class="docutils literal"><span class="pre">(1,2)</span></tt> in that case.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="MathML.html"
+                        title="previous chapter">The MathML input processor</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HTML-CSS.html"
+                        title="next chapter">The HTML-CSS output processor</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="HTML-CSS.html" title="The HTML-CSS output processor"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="MathML.html" title="The MathML input processor"
+             >previous</a> |</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Configuration Objects</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012 Design Science.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+    
+  </body>
+</html>

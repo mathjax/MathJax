@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The FontWarnings extension &mdash; MathJax v1.1 documentation</title>
+    <title>The FontWarnings extension &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,10 +22,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="../index.html" />
     <link rel="up" title="Configuration Objects" href="index.html" />
     <link rel="next" title="Using MathJax in popular web platforms" href="../platforms/index.html" />
-    <link rel="prev" title="The MathZoom extension" href="MathZoom.html" /> 
+    <link rel="prev" title="The MathEvents extension" href="MathEvents.html" /> 
   </head>
   <body>
     
@@ -39,9 +39,9 @@
           <a href="../platforms/index.html" title="Using MathJax in popular web platforms"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="MathZoom.html" title="The MathZoom extension"
+          <a href="MathEvents.html" title="The MathEvents extension"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>  
@@ -189,14 +189,17 @@ override the ones that are there with your own text.</p>
 <dt>
 <tt class="descname">removeAfter: 12*1000</tt></dt>
 <dd><p>This is the amount of time to show the FontWarning message, in
-milliseconds.  The default is 12 seconds.</p>
+milliseconds.  The default is 12 seconds.  Setting this value
+to zero means that the message will not fade out (the user must
+close it manually).</p>
 </dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">fadeoutSteps: 10</tt></dt>
 <dd><p>This is the number of steps to take while fading out the
-FontWarning message.  More steps make for a smoother fade-out.</p>
+FontWarning message.  More steps make for a smoother fade-out.
+Set to zero to cause the message to be removed without fading.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -215,8 +218,8 @@ The default is 1.5 seconds.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="MathZoom.html"
-                        title="previous chapter">The MathZoom extension</a></p>
+  <p class="topless"><a href="MathEvents.html"
+                        title="previous chapter">The MathEvents extension</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../platforms/index.html"
                         title="next chapter">Using MathJax in popular web platforms</a></p>
@@ -247,14 +250,14 @@ The default is 1.5 seconds.</p>
           <a href="../platforms/index.html" title="Using MathJax in popular web platforms"
              >next</a> |</li>
         <li class="right" >
-          <a href="MathZoom.html" title="The MathZoom extension"
+          <a href="MathEvents.html" title="The MathEvents extension"
              >previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

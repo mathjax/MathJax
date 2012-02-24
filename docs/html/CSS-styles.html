@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>CSS Style Objects &mdash; MathJax v1.1 documentation</title>
+    <title>CSS Style Objects &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="index.html" />
     <link rel="next" title="Glossary" href="glossary.html" />
     <link rel="prev" title="Describing HTML snippets" href="HTML-snippets.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="HTML-snippets.html" title="Describing HTML snippets"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -52,8 +52,8 @@
   <div class="section" id="css-style-objects">
 <span id="id1"></span><h1>CSS Style Objects<a class="headerlink" href="#css-style-objects" title="Permalink to this headline">¶</a></h1>
 <p>Many MathJax components allow you to specify CSS styles that control
-the look of the elements they create.  These are described using CSS
-style objects, which are JavaScript objects that represent standard
+the look of the elements they create.  These are described using <cite>CSS
+style objects</cite>, which are JavaScript objects that represent standard
 CSS declarations.  The main CSS style object is a collection of
 <cite>name:value</cite> pairs where the <cite>name</cite> is the CSS selector that is being
 defined, and the <cite>value</cite> is an object that gives the style for that
@@ -73,25 +73,27 @@ quotation marks as well.</p>
 declaration:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">styles</span><span class="o">:</span> <span class="p">{</span>
 
+  <span class="s2">&quot;.MathJax_Display&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;text-align&quot;</span><span class="o">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
+    <span class="nx">margin</span><span class="o">:</span>       <span class="s2">&quot;1em 0em&quot;</span>
+  <span class="p">},</span>
+
   <span class="s2">&quot;.MathJax .merror&quot;</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">&quot;background-color&quot;</span><span class="o">:</span> <span class="s2">&quot;#FFFF88&quot;</span><span class="p">,</span>
     <span class="nx">color</span><span class="o">:</span>   <span class="s2">&quot;#CC0000&quot;</span><span class="p">,</span>
     <span class="nx">border</span><span class="o">:</span>  <span class="s2">&quot;1px solid #CC0000&quot;</span><span class="p">,</span>
     <span class="nx">padding</span><span class="o">:</span> <span class="s2">&quot;1px 3px&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;font-family&quot;</span><span class="o">:</span> <span class="s2">&quot;serif&quot;</span><span class="p">,</span>
     <span class="s2">&quot;font-style&quot;</span><span class="o">:</span> <span class="s2">&quot;normal&quot;</span><span class="p">,</span>
     <span class="s2">&quot;font-size&quot;</span><span class="o">:</span>  <span class="s2">&quot;90%&quot;</span>
-  <span class="p">},</span>
-
-  <span class="s2">&quot;.MathJax_Preview&quot;</span><span class="o">:</span> <span class="p">{</span><span class="nx">color</span><span class="o">:</span> <span class="s2">&quot;#888888&quot;</span><span class="p">},</span>
+  <span class="p">}</span>
 
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>This defines two CSS styles, one for the selector <tt class="docutils literal"><span class="pre">.MathJax</span>
-<span class="pre">.merror</span></tt>, which specifies a background color, foreground color,
-border, and so on, and a second for <tt class="docutils literal"><span class="pre">.MathJax_Preview</span></tt> that sets its
-color.</p>
+<p>This defines two CSS styles, one for the selector
+<tt class="docutils literal"><span class="pre">.MathJax_Display</span></tt>, which specifies its text alignment and margin
+settings, and a second for <tt class="docutils literal"><span class="pre">.MathJax</span> <span class="pre">.merror</span></tt>, which specifies a
+background color, foreground color, border, and so on.</p>
 <p>You can add as many such definitions to a <tt class="docutils literal"><span class="pre">styles</span></tt> object as you
 wish.  Note, however, that since this is a JavaScript object, the
 selectors must be unique (e.g., you can&#8217;t use two definitions for
@@ -159,11 +161,11 @@ samples.  In particular, the <tt class="docutils literal"><span class="pre">exte
         <li class="right" >
           <a href="HTML-snippets.html" title="Describing HTML snippets"
              >previous</a> |</li>
-        <li><a href="index.html">MathJax v1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">MathJax v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     

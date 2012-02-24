@@ -214,10 +214,10 @@ you simply passed the object's method to ``setTimeout()``.  Or you
 might want to pass an argument to the function called by
 ``setTimeout()``.  (Altough the ``setTimeout()`` function can accept
 additional arguements that are supposed to be passed on to the code
-when it is called, Internet Explorer does not implement that feature,
-so you can't rely on it.)  You can use a `Callback` object to
-do this, and the :meth:`MathJax.Callback()` method will create one for
-you.  For example,
+when it is called, some versions of Internet Explorer do not implement
+that feature, so you can't rely on it.)  You can use a `Callback`
+object to do this, and the :meth:`MathJax.Callback()` method will
+create one for you.  For example,
 
 .. code-block:: javascript
 

@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The Core Configuration Options &mdash; MathJax v1.1 documentation</title>
+    <title>The Core Configuration Options &mdash; MathJax v2.0 documentation</title>
     <link rel="stylesheet" href="../_static/mj.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <!--<script type="text/javascript" src="../../../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-    <link rel="top" title="MathJax v1.1 documentation" href="../index.html" />
+    <link rel="top" title="MathJax v2.0 documentation" href="../index.html" />
     <link rel="up" title="Configuration Objects" href="index.html" />
     <link rel="next" title="The tex2jax Preprocessor" href="tex2jax.html" />
     <link rel="prev" title="Configuration Objects" href="index.html" /> 
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="index.html" title="Configuration Objects"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>  
@@ -70,8 +70,7 @@ directory.</p>
 <tt class="descname">extensions: []</tt></dt>
 <dd><p>A comma-separated list of extensions to load at startup. The
 default directory is <tt class="docutils literal"><span class="pre">MathJax/extensions</span></tt>.  The <tt class="docutils literal"><span class="pre">tex2jax</span></tt> and
-<tt class="docutils literal"><span class="pre">mml2jax</span></tt> preprocessors can be listed here, as well as a number
-of TeX-specific extensions (see the <a class="reference internal" href="../start.html#tex-and-latex-input"><em>TeX and LaTeX input</em></a> section of the <a class="reference internal" href="../start.html#getting-started"><em>Getting Started</em></a> document for more details).  There is also a
+<tt class="docutils literal"><span class="pre">mml2jax</span></tt> preprocessors can be listed here, as well as a
 <tt class="docutils literal"><span class="pre">FontWarnings</span></tt> extension that you can use to inform your user
 that mathematics fonts are available that they can download to
 improve their experience of your site.</p>
@@ -84,7 +83,9 @@ improve their experience of your site.</p>
 starts up, e.g., to define local macros, etc., and there is a
 sample config file named <tt class="docutils literal"><span class="pre">config/local/local.js</span></tt>.  The default
 directory is the <cite>MathJax/config</cite> directory.  The <tt class="docutils literal"><span class="pre">MMLorHTML.js</span></tt>
-configuration is the only other predefined configuration file.</p>
+configuration is one such configuration file, and there are a
+number of other pre-defined configurations (see <a class="reference internal" href="../configuration.html#config-files"><em>Using a
+configuration file</em></a> for more details).</p>
 </dd></dl>
 
 <dl class="describe">
@@ -98,8 +99,8 @@ directory.</p>
 <dl class="describe">
 <dt>
 <tt class="descname">styles: {}</tt></dt>
-<dd><p>CSS <cite>selector: rules;</cite> styles to be defined dynamically at startup
-time.</p>
+<dd><p>CSS styles to be defined dynamically at startup time.  These are
+in the form <cite>selector:rules</cite> (see <a class="reference internal" href="../CSS-styles.html#css-style-objects"><em>CSS Style Objects</em></a> for complete details).</p>
 </dd></dl>
 
 <dl class="describe">
@@ -116,20 +117,21 @@ MathJax inserts the typeset mathematics, this means there will be
 no space before it and the preceding text.  In order to avoid
 this, you should include some &#8220;guard characters&#8221; before or after
 the math SCRIPT tag; define the patterns you want to use below.
-Note that these are used as regular expressions, so you will need
-to quote special characters.  Furthermore, since they are
-javascript strings, you must quote javascript special characters
-as well.  So to obtain a backslash, you must use <tt class="docutils literal"><span class="pre">\\</span></tt> (doubled
-for javascript).  For example, <tt class="docutils literal"><span class="pre">&quot;\\[&quot;</span></tt> represents the pattern
-<tt class="docutils literal"><span class="pre">\[</span></tt> in the regular expression.  That means that if you want an
-actual backslash in your guard characters, you need to use
-<tt class="docutils literal"><span class="pre">&quot;\\\\&quot;</span></tt> in order to get <tt class="docutils literal"><span class="pre">\\</span></tt> in the regular expression, and
-<tt class="docutils literal"><span class="pre">\</span></tt> in the actual text.  If both preJax and postJax are defined,
-both must be present in order to be removed.</p>
+Note that these are used as part of a regular expression, so you
+will need to quote special characters.  Furthermore, since they
+are javascript strings, you must quote javascript special
+characters as well.  So to obtain a backslash, you must use <tt class="docutils literal"><span class="pre">\\</span></tt>
+(doubled for javascript).  For example, <tt class="docutils literal"><span class="pre">&quot;\\[&quot;</span></tt> represents the
+pattern <tt class="docutils literal"><span class="pre">\[</span></tt> in the regular expression, or <tt class="docutils literal"><span class="pre">[</span></tt> in the text of
+the web page.  That means that if you want an actual backslash in
+your guard characters, you need to use <tt class="docutils literal"><span class="pre">&quot;\\\\&quot;</span></tt> in order to get
+<tt class="docutils literal"><span class="pre">\\</span></tt> in the regular expression, and <tt class="docutils literal"><span class="pre">\</span></tt> in the actual text.
+If both <tt class="docutils literal"><span class="pre">preJax</span></tt> and <tt class="docutils literal"><span class="pre">postJax</span></tt> are defined, both must be
+present in order to be removed.</p>
 <p>See also the <tt class="docutils literal"><span class="pre">preRemoveClass</span></tt> comments below.</p>
 <p>Examples:</p>
 <blockquote>
-<div><p><tt class="docutils literal"><span class="pre">preJax:</span> <span class="pre">&quot;\\\\\\\\\&quot;</span></tt> makes a double backslash the preJax text</p>
+<div><p><tt class="docutils literal"><span class="pre">preJax:</span> <span class="pre">&quot;\\\\\\\\\&quot;</span></tt> makes a double backslash the <tt class="docutils literal"><span class="pre">preJax</span></tt> text</p>
 <p><tt class="docutils literal"><span class="pre">preJax:</span> <span class="pre">&quot;\\[\\[&quot;,</span> <span class="pre">postJax:</span> <span class="pre">&quot;\\]\\]&quot;</span></tt> makes it so jax
 scripts must be enclosed in double brackets.</p>
 </div></blockquote>
@@ -212,12 +214,51 @@ yourself by hand, set this value to <tt class="docutils literal"><span class="pr
 <dt>
 <tt class="descname">elements: []</tt></dt>
 <dd><p>This is a list of DOM element ID&#8217;s that are the ones to process for
-mathematics when any of the Hub typesetting calls (Typeset, Process,
-Update, etc.) are called with no element specified, and during
+mathematics when any of the Hub typesetting calls (<tt class="docutils literal"><span class="pre">Typeset()</span></tt>, <tt class="docutils literal"><span class="pre">Process()</span></tt>,
+<tt class="docutils literal"><span class="pre">Update()</span></tt>, etc.) are called with no element specified, and during
 MathJax&#8217;s initial typesetting run when it starts up.  This lets you
 restrict the processing to particular containers rather than scanning
 the entire document for mathematics.  If none are supplied, the complete
 document is processed.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">positionToHash: true</tt></dt>
+<dd><p>Since typesetting usually changes the vertical dimensions of the
+page, if the URL contains an anchor position, then after the page
+is typeset, you may no longer be positioned at the correct
+position on the page.  MathJax can reposition to that location
+after it completes its initial typesetting of the page.  This
+value controls whether MathJax will reposition the browser to the
+<tt class="docutils literal"><span class="pre">#hash</span></tt> location from the page URL after typesetting for the page.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">showMathMenu: true</tt></dt>
+<dt>
+<tt class="descname">showMathMenuMSIE: true</tt></dt>
+<dd><p>These control whether to attach the MathJax contextual menu to the
+expressions typeset by MathJax.  Since the code for handling
+MathPlayer in Internet Explorer is somewhat delicate, it is
+controlled separately via <tt class="docutils literal"><span class="pre">showMathMenuMSIE</span></tt>, but the latter is
+now deprecated in favor of the MathJax contextual menu settings
+for MathPlayer (see below).</p>
+<p>If <tt class="docutils literal"><span class="pre">showMathMenu</span></tt> is <tt class="docutils literal"><span class="pre">true</span></tt>, then right-clicking (on Windows
+or Linux) or control-clicking (on Mac OS X) will produce a MathJax
+menu that allows you to get the source of the mathematics in
+various formats, change the size of the mathematics relative to
+the surrounding text, get information about MathJax, and configure
+other MathJax settings.</p>
+<p>Set this to <tt class="docutils literal"><span class="pre">false</span></tt> to disable the menu.  When <tt class="docutils literal"><span class="pre">true</span></tt>, the
+<tt class="docutils literal"><span class="pre">MathMenu</span></tt> configuration block determines the operation of the
+menu.  See <a class="reference internal" href="MathMenu.html#configure-mathmenu"><em>the MathMenu options</em></a> for
+more details.</p>
+<p>These values used to be listed in the separate output jax, but
+have been moved to this more central location since they are
+shared by all output jax.  MathJax will still honor their values
+from their original positions, if they are set there.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -267,9 +308,21 @@ to <tt class="docutils literal"><span class="pre">&quot;Browser&quot;</span></tt
 rather than the MathJax menu.</p>
 </dd></dl>
 
-<p>There are also settings for <tt class="docutils literal"><span class="pre">format</span></tt>, <tt class="docutils literal"><span class="pre">renderer</span></tt>, and <tt class="docutils literal"><span class="pre">font</span></tt>,
-but these are maintained by MathJax and should not be set by the
-page author.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">texHints: true</tt></dt>
+<dd><p>This controls whether the &#8220;Show Source&#8221; menu item includes
+special class names that help MathJax to typeset the
+mathematics that was produced by the TeX input jax.  If these
+are included, then you can take the output from &#8220;Show Source&#8221;
+and put it into a page that uses MathJax&#8217;s MathML input jax
+and expect to get the same results as the original TeX.
+(Without this, there may be some spacing differences.)</p>
+</dd></dl>
+
+<p>There are also settings for <tt class="docutils literal"><span class="pre">format</span></tt>, <tt class="docutils literal"><span class="pre">renderer</span></tt>, <tt class="docutils literal"><span class="pre">font</span></tt>,
+<tt class="docutils literal"><span class="pre">mpContext</span></tt>, and <tt class="docutils literal"><span class="pre">mpMouse</span></tt>, but these are maintained by
+MathJax and should not be set by the page author.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -353,12 +406,12 @@ does <strong>not</strong> cause a default configuration file to be loaded.</p>
         <li class="right" >
           <a href="index.html" title="Configuration Objects"
              >previous</a> |</li>
-        <li><a href="../index.html">MathJax v1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">MathJax v2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Configuration Objects</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Design Science.
+        &copy; Copyright 2012 Design Science.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
     
