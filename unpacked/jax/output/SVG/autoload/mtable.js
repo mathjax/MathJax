@@ -301,11 +301,20 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         if (indent.indentalign === MML.INDENTALIGN.AUTO) {indent.indentalign = this.displayAlign}
         if (indent.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {indent.indentshift = indent.indentshiftfirst}
         if (indent.indentshift === "auto") {indent.indentshift = this.displayIndent}
-        var eqn = svg; svg = this.SVG();
-        svg.width = SVG.cwidth+"px"; svg.w = SVG.length2em(svg.width);
         var shift = (indent.indentshift ? SVG.length2em(indent.indentshift,mu) : 0);
+        var labelshift = SVG.length2em(values.minlabelspacing,mu);
+        var eqn = svg; svg = this.SVG();
+        if (indent.indentalign === MML.INDENTALIGN.CENTER) {
+          svg.w = svg.r = SVG.length2em(SVG.cwidth+"px"); shift = 0; svg.hasIndent = true;
+        } else if (CALIGN[LABEL] !== indent.indentalign) {
+          svg.w = svg.r = SVG.length2em(SVG.cwidth+"px") - shift - labelshift;
+          shift = labelshift = 0;
+        } else {
+          svg.w = svg.r = eqn.w + shift;
+          svg.hasIndent = true;
+        }
         svg.Align(eqn,indent.indentalign,shift,0);
-        svg.Align(C[LABEL],CALIGN[LABEL],SVG.length2em(values.minlabelspacing,mu),0);
+        svg.Align(C[LABEL],CALIGN[LABEL],labelshift,0);
       }
       
       this.SVGsaveData(svg);

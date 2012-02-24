@@ -400,8 +400,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         var eqn = HTMLCSS.createStack(span,false,"100%");
         HTMLCSS.addBox(eqn,stack); HTMLCSS.alignBox(stack,indent.indentalign,0);
 	if (indent.indentshift && indent.indentalign !== MML.INDENTALIGN.CENTER) {
-	  stack.style[{left:"Left",right:"Right"}[indent.indentalign]] =
-	    HTMLCSS.Em(HTMLCSS.length2em(indent.indentshift,mu));
+	  stack.style[indent.indentalign] = HTMLCSS.Em(HTMLCSS.length2em(indent.indentshift,mu));
 	}
         C[LABEL].parentNode.parentNode.removeChild(C[LABEL].parentNode);
         HTMLCSS.addBox(eqn,C[LABEL]); HTMLCSS.alignBox(C[LABEL],CALIGN[LABEL],0);

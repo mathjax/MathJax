@@ -800,6 +800,7 @@
         }
         delete svg.element;
       }
+      if (svg.hasIndent) {this.hasIndent = svg.hasIndent}
       if (svg.d - svg.y > this.d) {this.d = svg.d - svg.y; if (this.d > this.D) {this.D = this.d}}
       if (svg.y + svg.h > this.h) {this.h = svg.y + svg.h; if (this.h > this.H) {this.H = this.h}}
       if (svg.D - svg.y > this.D) {this.D = svg.D - svg.y}
@@ -1864,7 +1865,7 @@
             div.style.textAlign = values.indentalign;
             if (values.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {values.indentshift = values.indentshiftfirst}
             if (values.indentshift === "auto") {values.indentshift = this.displayIndent}
-            if (values.indentshift && values.indentalign !== MML.INDENTALIGN.CENTER) {
+            if (values.indentshift && values.indentalign !== MML.INDENTALIGN.CENTER && !svg.hasIndent) {
               span.style[{left:"marginLeft",right:"marginRight"}[values.indentalign]] =
                 SVG.Ex(SVG.length2em(values.indentshift));
 	    }
