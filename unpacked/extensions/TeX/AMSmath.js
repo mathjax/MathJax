@@ -549,6 +549,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     }
     return null;
   });
+  
+  //
+  //  Clear the equation numbers and labels
+  //
+  TEX.resetEquationNumbers = function (n,keepLabels) {
+    AMS.startNumber = (n || 0);
+    if (!keepLabels) {AMS.labels = {}}
+  }
 
   /******************************************************************************/
 
