@@ -1023,10 +1023,9 @@
       },
       
       SVGgetStyles: function () {
-        var style = this.Get("style");
-        if (style) {
+        if (this.style) {
           var span = HTML.Element("span");
-          span.style.cssText = style;
+          span.style.cssText = this.style;
           this.styles = {border:SVG.getBorders(span), padding:SVG.getPadding(span)}
           if (span.style.fontSize) {this.styles.fontSize = span.style.fontSize}
           if (span.style.color) {this.styles.color = span.style.color}
