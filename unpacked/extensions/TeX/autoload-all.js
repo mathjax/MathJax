@@ -42,7 +42,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
                    "shoveleft","shoveright","xrightarrow","xleftarrow"],
     begingroup: ["begingroup","endgroup","gdef","global"],
     cancel:     ["cancel","bcancel","xcancel","cancelto"],
-    color:      ["color","colorbox","fcolorbox"],
+    color:      ["color","colorbox","fcolorbox","DefineColor"],
     enclose:    ["enclose"],
     extpfeil:   ["Newextarrow","xlongequal","xmapsto","xtofrom",
                    "xtwoheadleftarrow","xtwoheadrightarrow"],

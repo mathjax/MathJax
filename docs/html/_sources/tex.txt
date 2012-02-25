@@ -1236,6 +1236,7 @@ D
     \ddot
     \ddots
     \DeclareMathOperator    AMSmath
+    \DefineColor            color
     \def                   [newcommand]
     \deg
     \Delta
