@@ -171,6 +171,7 @@
   
   var navigator = {appName: "MathJax"};  // hide the true navigator object
   
+  var i; // avoid global variable used in code below
   
 /******************************************************************
  *
@@ -182,6 +183,11 @@
  *   A few items are commented out and marked with DPVC comments
  *   in order to keep the minifier from complaining about the
  *   coding practices in ASCIIMathML.js
+ *   
+ *   Two sections are modified to include changes from version 2.0.1 of
+ *   ASCIIMathML.js and are marked with comments to that effect.  This
+ *   makes this version effectively the same as version 2.0.1, but 
+ *   without the overhead of the LaTeX-processing code.
  *
  ******************************************************************/
 
@@ -542,6 +548,10 @@ function AMcreateMmlNode(t,frag) {
 function newcommand(oldstr,newstr) {
   AMsymbols = AMsymbols.concat([{input:oldstr, tag:"mo", output:newstr, 
                                  tex:null, ttype:DEFINITION}]);
+  // ####  Added from Version 2.0.1 #### //
+  AMsymbols.sort(compareNames);
+  for (i=0; i<AMsymbols.length; i++) AMnames[i] = AMsymbols[i].input;
+  // ####  End of Addition #### //
 }
 
 function AMremoveCharsAndBlanks(str,n) {
@@ -625,8 +635,12 @@ function AMgetSymbol(str) {
     st = str.slice(0,1); //take 1 character
     tagst = (("A">st || st>"Z") && ("a">st || st>"z")?"mo":"mi");
   }
-  if (st=="-" && AMpreviousSymbol==INFIX)
+  // #### Replaced by lines from Version 2.0.1 #### //
+  if (st=="-" && AMpreviousSymbol==INFIX) {
+    AMcurrentSymbol = INFIX;  //trick "/" into recognizing "-" on second parse
     return {input:st, tag:tagst, output:st, ttype:UNARY, func:true};
+  }
+  // #### End of Replacement #### //
   return {input:st, tag:tagst, output:st, ttype:CONST};
 }
 
