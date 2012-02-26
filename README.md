@@ -2,11 +2,11 @@
 
 ## Beautiful math in all browsers
 
-MathJax is an open-source JavaScript display engine for LaTeX and MathML
-that works in all modern browsers.  It was designed with the goal of
-consolidating the recent advances in web technologies into a single,
-definitive, math-on-the-web platform supporting the major browsers and
-operating systems.  It requires no setup on the part of the user (no
+MathJax is an open-source JavaScript display engine for LaTeX, MathML, and
+AsciiMath notation that works in all modern browsers.  It was designed with
+the goal of consolidating the recent advances in web technologies into a
+single, definitive, math-on-the-web platform supporting the major browsers
+and operating systems.  It requires no setup on the part of the user (no
 plugins to download or software to install), so the page author can write
 web documents that include mathematics and be confident that users will be
 able to view it naturally and easily.  Simply include MathJax and some
@@ -14,14 +14,14 @@ mathematics in a web page, and MathJax does the rest.
 
 Some of the main features of MathJax include:
 
-- High-quality display of LaTeX and MathML math notation in HTML pages
+- High-quality display of LaTeX, MathML, and AsciiMath notation in HTML pages
 
 - Supported in most browsers with no plug-ins, extra fonts, or special
   setup for the reader
 
 - Easy for authors, flexible for publishers, extensible for developers
 
-- Supports math accessibility, cut-and-paste interoperability and other
+- Supports math accessibility, cut-and-paste interoperability, and other
   advanced functionality
 
 - Powerful API for integration with other web applications
