@@ -946,7 +946,7 @@ MathJax.Hub.Config({
     //
     //  This is the URL for the MathJax Help menu item.
     //
-    helpURL: "http://www.mathjax.org/help-2-0/user/",
+    helpURL: "http://www.mathjax.org/help-v2/user/",
 
     //
     //  These control whether the "Math Renderer", "MathPlayer", "Font
