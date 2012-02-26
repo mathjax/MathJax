@@ -38,7 +38,7 @@
   
   var CONFIG = HUB.CombineConfig("MathMenu",{
     delay: 150,                                    // the delay for submenus
-    helpURL: "http://www.mathjax.org/help/user/",  // the URL for the "MathJax Help" menu
+    helpURL: "http://www.mathjax.org/help-2-0/user/",  // the URL for the "MathJax Help" menu
     closeImg: AJAX.fileURL(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     showRenderer: true,                            //  show the "Math Renderer" menu?

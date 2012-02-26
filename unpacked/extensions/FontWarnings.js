@@ -180,7 +180,7 @@
         "MathJax can use either the ",
         ["a",{href:"http://www.stixfonts.org/",target:"_blank"},"STIX fonts"],
         " or the ",
-        ["a",{href:"http://www.mathjax.org/help/fonts/",target:"_blank"},["MathJax TeX fonts"]],
+        ["a",{href:"http://www.mathjax.org/help-2-0/fonts/",target:"_blank"},["MathJax TeX fonts"]],
         ".  Download and install either one to improve your MathJax experience."
       ],
       
@@ -194,7 +194,7 @@
       TeXfonts: [
         ["p"],
         "This page is designed to use the ",
-        ["a",{href:"http://www.mathjax.org/help/fonts/",target:"_blank"},["MathJax TeX fonts"]],
+        ["a",{href:"http://www.mathjax.org/help-2-0/fonts/",target:"_blank"},["MathJax TeX fonts"]],
         ".  Download and install those fonts to improve your MathJax experience."
       ]
       
