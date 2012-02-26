@@ -96,20 +96,20 @@ to get a list of the available branches.  There are separate branches
 for the main releases, but with ``-latest`` appended.  These contain
 all the patches for that particular release.  You can check out one of
 the branches just as you would a tagged copy.  For example, the branch
-for the ``v1.1`` tagged release is ``v1.1-latest``.  To get this
+for the ``v2.0`` tagged release is ``v2.0-latest``.  To get this
 release, use
 
 .. code-block:: sh
 
     cd MathJax
-    git checkout v1.1-latest
+    git checkout v2.0-latest
 
 and to update it when changes occur, use
 
 .. code-block:: sh
 
     cd MathJax
-    git pull origin v1.1-latest
+    git pull origin v2.0-latest
 
 
 .. _getting-mathjax-svn:

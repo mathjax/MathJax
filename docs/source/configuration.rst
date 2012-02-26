@@ -326,17 +326,12 @@ Using in-line configuration options
 ===================================
 
 The second way to configure MathJax is through `in-line configuration`, 
-which puts the configuration options within the web page itself.  This 
-process was changed in version 1.1 to make it compatible with HTML5.  
-Earlier versions of MathJax had in-line configuration included within the 
-content of the ``<script>`` tag that loads ``MathJax.js``, but HTML5 makes 
-it illegal to have content for a script with a ``src`` attribute.
-
-MathJax solves this problem by using separate ``<script>`` tags to
-perform the configuration for and loading of MathJax.  Because MathJax
-starts its configuration process as soon as it is loaded, the
-configuration script must come **before** the script tag that loads
-``MathJax.js`` itself.  You do this by including a ``<script>`` with
+which puts the configuration options within the web page itself. The use 
+of in-line configuration with MathJax requires two separate  ``<script>`` 
+tags: one for specifying the configuration settings and one for loading of 
+MathJax.  Because MathJax starts its configuration process as soon as it is 
+loaded, the configuration script must come **before** the script tag that 
+loads ``MathJax.js`` itself.  You do this by including a ``<script>`` with
 ``type="text/x-mathjax-config"`` whose content will be run when
 MathJax performs its configuration.  Generally, this script will
 include a :meth:`MathJax.Hub.Config()` call to perform MathJax

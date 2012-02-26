@@ -43,8 +43,7 @@ more math is processed.  MathJax version 2.0 includes a number of
 optimizations to improve the display performance in IE, and it is now
 more comparable to other browsers.  The HTML-CSS output uses web-based
 fonts so that users don't have to have math fonts installed on their
-computers; but this does introduce some printing issues in some
-browsers.
+computers, which introduces some printing issues in certain browsers.
 
 The **SVG output processor** is new in MathJax version 2.0, and it uses
 `Scalable Vector Graphics` to render the mathematics on the page.  SVG
@@ -73,12 +72,12 @@ don't recommend using the NativeMML output processor with Opera.
 Safari has some support for MathML since version 5.1, but the quality
 is not as high as either Firefox's implementation or IE with MathPlayer.
 Chrome, Konqueror, and most other browsers don't support MathML
-natively, but may in the future, since MathML is part of the HTML5
-specification.
+natively, but this may change in the future, since MathML is part of 
+the HTML5 specification.
 
 The advantage of the NativeMML output Processor is its speed, since
 native MathML support is much faster than using complicated HTML and
-CSS to lay out mathematics, as the HTML-CSS output processor does.
+CSS to typeset mathematics, as the HTML-CSS output processor does.
 The disadvantage is that you are dependent on the browser's MathML
 implementation for your rendering, and these vary in quality of output
 and completeness of implementation.  MathJax relies on features that
