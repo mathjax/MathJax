@@ -281,7 +281,8 @@ Autmatic Equation Numering
 ==========================
 
 New in MathJax v2.0 is the ability to have equations be numbered
-automatically.  This is off by default, so that pages don't change
+automatically.  This functionality is turned off by default, so 
+that pages don't change
 when you update from v1.1 to v2.0, but it is easy to configure MathJax
 to produce automatic equation numbers by adding:
 

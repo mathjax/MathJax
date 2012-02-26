@@ -85,24 +85,28 @@ more math is processed.  MathJax version 2.0 includes a number of
 optimizations to improve the display performance in IE, and it is now
 more comparable to other browsers.  The HTML-CSS output uses web-based
 fonts so that users don&#8217;t have to have math fonts installed on their
-computers; but this does introduce some printing issues in some
-browsers.</p>
-<p>The <strong>SVG output processor</strong> is new in MathJax version 2.0, and it uses
-<cite>Scalable Vector Graphics</cite> to render the mathematics on the page.  SVG
-is supported in all the major browsers and most mobile devices; note,
-however, that Internet Explorer prior to IE9 does not support SVG, and
-IE9 only does in &#8220;IE9 standards mode&#8221;, not its emulation modes for
-earlier versions.  The SVG output mode is high quality and slightly
-faster than HTML-CSS, and it does not suffer from some of the
+computers, which introduces some printing issues in certain browsers.</p>
+<p>The <strong>SVG output processor</strong> is new in MathJax version 2.0, and it
+uses <cite>Scalable Vector Graphics</cite> to render the mathematics on the page.
+SVG is supported in all the major browsers and most mobile devices;
+note, however, that Internet Explorer prior to IE9 does not support
+SVG, and IE9 only does in &#8220;IE9 standards mode&#8221;, not its emulation
+modes for earlier versions.  The SVG output mode is high quality and
+slightly faster than HTML-CSS, and it does not suffer from some of the
 font-related issues that HTML-CSS does, so prints well in all
 browsers.  This format also works well in some ebook readers (e.g.,
-iBooks).  The disadvantage of this mode is that it does not take
-advantage of STIX fonts, and so only has access to the characters in
-the web-based fonts, and it variable-width tables become fixed size
-once they are typeset, and don&#8217;t rescale if the window size changes
-(for example).  Since equation numbers are handled through
+iBooks).  The disadvantages of this mode are the following: first,
+Internet Explorer only supports SVG in IE9 and later versions (and
+then only in IE9 standards mode or above), and some versions of the
+Android Internet browser don&#8217;t have SVG enabled. Second, it does not
+take advantage of STIX fonts, and so only has access to the characters
+in the web-based fonts, and third, its variable-width tables become
+fixed size once they are typeset, and don&#8217;t rescale if the window size
+changes (for example).  Since equation numbers are handled through
 variable-width tables, that means equation numbers may not stay at the
-edge of the window if it is resized.</p>
+edge of the window if it is resized.  For these reasons it is probably
+best not to force the use of SVG output unless you have some control
+over the browsers that are used to view your documents.</p>
 <p>The <strong>NativeMML output processor</strong> uses the browser&#8217;s internal MathML
 support (if any) to render the mathematics.  Currently, Firefox has
 native support for MathML, and IE has the <a class="reference external" href="http://www.dessci.com/en/products/mathplayer/">MathPlayer plugin</a> for rendering
@@ -112,11 +116,11 @@ don&#8217;t recommend using the NativeMML output processor with Opera.
 Safari has some support for MathML since version 5.1, but the quality
 is not as high as either Firefox&#8217;s implementation or IE with MathPlayer.
 Chrome, Konqueror, and most other browsers don&#8217;t support MathML
-natively, but may in the future, since MathML is part of the HTML5
-specification.</p>
+natively, but this may change in the future, since MathML is part of
+the HTML5 specification.</p>
 <p>The advantage of the NativeMML output Processor is its speed, since
 native MathML support is much faster than using complicated HTML and
-CSS to lay out mathematics, as the HTML-CSS output processor does.
+CSS to typeset mathematics, as the HTML-CSS output processor does.
 The disadvantage is that you are dependent on the browser&#8217;s MathML
 implementation for your rendering, and these vary in quality of output
 and completeness of implementation.  MathJax relies on features that

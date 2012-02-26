@@ -45,22 +45,27 @@ more comparable to other browsers.  The HTML-CSS output uses web-based
 fonts so that users don't have to have math fonts installed on their
 computers, which introduces some printing issues in certain browsers.
 
-The **SVG output processor** is new in MathJax version 2.0, and it uses
-`Scalable Vector Graphics` to render the mathematics on the page.  SVG
-is supported in all the major browsers and most mobile devices; note,
-however, that Internet Explorer prior to IE9 does not support SVG, and
-IE9 only does in "IE9 standards mode", not its emulation modes for
-earlier versions.  The SVG output mode is high quality and slightly
-faster than HTML-CSS, and it does not suffer from some of the
+The **SVG output processor** is new in MathJax version 2.0, and it
+uses `Scalable Vector Graphics` to render the mathematics on the page.
+SVG is supported in all the major browsers and most mobile devices;
+note, however, that Internet Explorer prior to IE9 does not support
+SVG, and IE9 only does in "IE9 standards mode", not its emulation
+modes for earlier versions.  The SVG output mode is high quality and
+slightly faster than HTML-CSS, and it does not suffer from some of the
 font-related issues that HTML-CSS does, so prints well in all
 browsers.  This format also works well in some ebook readers (e.g.,
-iBooks).  The disadvantage of this mode is that it does not take
-advantage of STIX fonts, and so only has access to the characters in
-the web-based fonts, and it variable-width tables become fixed size
-once they are typeset, and don't rescale if the window size changes
-(for example).  Since equation numbers are handled through
+iBooks).  The disadvantages of this mode are the following: first,
+Internet Explorer only supports SVG in IE9 and later versions (and
+then only in IE9 standards mode or above), and some versions of the
+Android Internet browser don't have SVG enabled. Second, it does not
+take advantage of STIX fonts, and so only has access to the characters
+in the web-based fonts, and third, its variable-width tables become
+fixed size once they are typeset, and don't rescale if the window size
+changes (for example).  Since equation numbers are handled through
 variable-width tables, that means equation numbers may not stay at the
-edge of the window if it is resized.
+edge of the window if it is resized.  For these reasons it is probably
+best not to force the use of SVG output unless you have some control
+over the browsers that are used to view your documents.
 
 The **NativeMML output processor** uses the browser's internal MathML
 support (if any) to render the mathematics.  Currently, Firefox has
