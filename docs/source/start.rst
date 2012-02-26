@@ -5,13 +5,14 @@ Getting Started
 ***************
 
 MathJax allows you to include mathematics in your web pages, either
-using TeX and LaTeX notation, MathML, or AsciiMath notation, and you
-can even use all three in the same document.
+using LaTeX, MathML, or AsciiMath notation, and the mathematics
+will be processed using javascript to produce HTML, SVG or MathML 
+equations for viewing in any modern browser.
 
 There are two ways to access MathJax: the easiest way is to use the
 copy of MathJax available from our distributed network service at
 ``cdn.mathjax.org``, but you can also download and install a copy of
-MathJax on your own server, or use it locally on your own hard disk
+MathJax on your own server, or use it locally on your hard disk
 (with no need for network access).  All three of these are described
 below, with links to more detailed explanations.  This page gives the
 quickest and easiest ways to get MathJax up and running on your web
@@ -105,14 +106,12 @@ hard disk.
 Obtaining and Installing MathJax
 --------------------------------
 
-The easiest way to set up MathJax is to obtain the v1.1 archive from
+The easiest way to set up MathJax is to obtain the v2.0 archive from
 the `MathJax download page <http://www.mathjax.org/download/>`_ (you
-should obtain a file named something like
-``mathjax-MathJax-v1.1-X-XXXXXXXX.zip``, where the X's are
-random-looking letters and numbers).  This archive includes both the
-MathJax code and the MathJax webfonts, so it is the only file you
-need.  Note that this is different from v1.0 and earlier releases,
-which had the fonts separate from the rest of the code.
+should obtain a file named something like ``mathjax-MathJax-v2.0?.zip``).  
+This archive includes both the MathJax code and the MathJax webfonts, 
+so it is the only file you need.  Note that this is different from v1.0 
+and earlier releases, which had the fonts separate from the rest of the code.
 
 Unpack the archive and place the resulting MathJax folder onto your
 web server at a convenient location where you can include it into your
