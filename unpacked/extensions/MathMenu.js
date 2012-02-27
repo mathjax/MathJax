@@ -806,7 +806,7 @@
                "MathML output may cause some expressions to render poorly.",
 
       Firefox: "Your browser's native MathML does not implement all the features " +
-               "used by MathJax, so some expressions my render improperly."
+               "used by MathJax, so some expressions may render improperly."
     },
     
     SVG: {
