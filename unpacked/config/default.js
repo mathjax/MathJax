@@ -192,7 +192,7 @@ MathJax.Hub.Config({
   //  reposition the browser to the #hash location from the page URL after
   //  typesetting for the page.
   //  
-  positionToHash: true,
+  positionToHash: false,
   
   //
   //  These control whether to attach the MathJax contextual menu to the
