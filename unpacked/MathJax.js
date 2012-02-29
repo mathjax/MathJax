@@ -2400,6 +2400,11 @@ MathJax.Hub.Startup = {
           document.write('<?import namespace="m" implementation="#MathPlayer">');
           browser.mpImported = true;
         }
+      } else {
+        //  Adding any namespace avoids a crash in IE9 in IE9-standards mode
+        //  (any reference to document.namespaces before document.readyState is 
+        //   "complete" causes an "unspecified error" to be thrown)
+        document.namespaces.add("mjx_IE_fix","http://www.w3.org/1999/xlink");
       }
     }
   });
