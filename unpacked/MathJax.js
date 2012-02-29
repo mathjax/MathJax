@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.0";
-MathJax.fileversion = "2.0.1";
+MathJax.fileversion = "2.0.2";
 
 /**********************************************************/
 
