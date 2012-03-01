@@ -7,7 +7,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,14 +24,24 @@
 
 MathJax.InputJax.TeX = MathJax.InputJax({
   id: "TeX",
-  version: "1.1.1",
+  version: "2.0",
   directory: MathJax.InputJax.directory + "/TeX",
   extensionDir: MathJax.InputJax.extensionDir + "/TeX",
   
   config: {
     TagSide:       "right",
     TagIndent:     "0.8em",
-    MultLineWidth: "85%"
+    MultLineWidth: "85%",
+    
+    equationNumbers: {
+      autoNumber: "none",  // "AMS" for standard AMS numbering,
+                           //  or "all" for all displayed equations
+      formatNumber: function (n) {return n},
+      formatTag:    function (n) {return '('+n+')'},
+      formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/[:"'<>&]/g,"")},
+      formatURL:    function (id) {return '#'+escape(id)},
+      useLabelIds:  true
+    }
   }
 });
 MathJax.InputJax.TeX.Register("math/tex");

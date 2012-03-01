@@ -8,7 +8,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "1.1.1",
+  version: "2.0",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -37,9 +37,15 @@ MathJax.ElementJax.mml.Augment({
   Init: function () {
     if (arguments.length === 1 && arguments[0].type === "math") {this.root = arguments[0]}
       else {this.root = MathJax.ElementJax.mml.math.apply(this,arguments)}
-    if (this.root.mode) {
-      if (!this.root.display && this.root.mode === "display") {this.root.display = "block"}
-      delete this.root.mode;
+    if (this.root.attr && this.root.attr.mode) {
+      if (!this.root.display && this.root.attr.mode === "display") {
+        this.root.display = "block";
+        this.root.attrNames.push("display");
+      }
+      delete this.root.attr.mode;
+      for (var i = 0, m = this.root.attrNames.length; i < m; i++) {
+        if (this.root.attrNames[i] === "mode") {this.root.attrNames.splice(i,1); break}
+      }
     }
   }
 },{
@@ -202,24 +208,38 @@ MathJax.ElementJax.mml.Augment({
     VCENTER: 8,
     NONE:   -1
   },
-  PLANE1: String.fromCharCode(0xD835)
+  TEXCLASSNAMES: ["ORD", "OP", "BIN", "REL", "OPEN", "CLOSE", "PUNCT", "INNER", "VCENTER"],
+  copyAttributes: {
+    fontfamily:true, fontsize:true, fontweight:true, fontstyle:true,
+    color:true, background:true,
+    id:true, "class":true, href:true, style:true
+  },
+  skipAttributes: {texClass: true, useHeight: true, texprimestyle: true},
+  copyAttributeNames: [
+    "fontfamily", "fontsize", "fontweight", "fontstyle",
+    "color", "background",
+    "id", "class", "href", "style"
+  ]
 });
 
 (function (MML) {
-  var FALSE = false; var TRUE = true;
-  
+
   MML.mbase = MathJax.Object.Subclass({
-    type: "base", isToken: FALSE,
+    type: "base", isToken: false,
     defaults: {
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT
     },
     noInherit: {},
+    noInheritAttribute: {
+      texClass: true
+    },
+    linebreakContainer: false,
     
     Init: function () {
       this.data = [];
       if (this.inferRow && !(arguments.length === 1 && arguments[0].inferred))
-        {this.Append(MML.mrow().With({inferred: TRUE}))}
+        {this.Append(MML.mrow().With({inferred: true}))}
       this.Append.apply(this,arguments);
     },
     With: function (def) {
@@ -249,7 +269,8 @@ MathJax.ElementJax.mml.Augment({
       return parent;
     },
     Get: function (name,nodefault) {
-      if (typeof(this[name]) !== "undefined") {return this[name]}
+      if (this[name] != null) {return this[name]}
+      if (this.attr && this.attr[name] != null) {return this.attr[name]}
       // FIXME: should cache these values and get from cache
       // (clear cache when appended to a new object?)
       var parent = this.Parent();
@@ -257,9 +278,10 @@ MathJax.ElementJax.mml.Augment({
         {return (parent["adjustChild_"+name])(parent.childPosition(this))}
       var obj = this.inherit; var root = obj;
       while (obj) {
-        if (typeof(obj[name]) !== "undefined") {
+        var value = obj[name]; if (value == null && obj.attr) {value = obj.attr[name]}
+        if (value != null && !obj.noInheritAttribute[name]) {
           var noInherit = obj.noInherit[this.type];
-          if (!(noInherit && noInherit[name])) {return obj[name]}
+          if (!(noInherit && noInherit[name])) {return value}
         }
         root = obj; obj = obj.inherit;
       }
@@ -339,21 +361,25 @@ MathJax.ElementJax.mml.Augment({
       [ 1,-1, 2, 3, 1, 0, 1, 1]  // INNER
     ],
     autoDefault: function (name) {return ""},
-    isSpacelike: function () {return FALSE},
-    isEmbellished: function () {return FALSE},
+    isSpacelike: function () {return false},
+    isEmbellished: function () {return false},
     Core: function () {return this},
     CoreMO: function () {return this},
-    lineBreak: function () {
-      if (this.isEmbellished()) {return this.CoreMO().lineBreak()} else {return "none"}
+    hasNewline: function () {
+      if (this.isEmbellished()) {return this.CoreMO().hasNewline()}
+      if (this.isToken || this.linebreakContainer) {return false}
+      for (var i = 0, m = this.data.length; i < m; i++) {
+        if (this.data[i] && this.data[i].hasNewline()) {return true}
+      }
+      return false;
     },
     array: function () {if (this.inferred) {return this.data} else {return [this]}},
     toString: function () {return this.type+"("+this.data.join(",")+")"}
   },{
     childrenSpacelike: function () {
-      for (var i = 0; i < this.data.length; i++) {
-        if (!this.data[i].isSpacelike()) {return FALSE}
-      }
-      return TRUE;
+      for (var i = 0, m = this.data.length; i < m; i++)
+        {if (!this.data[i].isSpacelike()) {return false}}
+      return true;
     },
     childEmbellished: function () {
       return (this.data[0] && this.data[0].isEmbellished());
@@ -387,7 +413,7 @@ MathJax.ElementJax.mml.Augment({
   });
   
   MML.mi = MML.mbase.Subclass({
-    type: "mi", isToken: TRUE,
+    type: "mi", isToken: true,
     texClass: MML.TEXCLASS.ORD,
     defaults: {
       mathvariant: MML.AUTO,
@@ -398,7 +424,8 @@ MathJax.ElementJax.mml.Augment({
     autoDefault: function (name) {
       if (name === "mathvariant") {
         var mi = (this.data[0]||"").toString();
-        return (mi.length === 1 || (mi.length === 2 && mi.charCodeAt(0) === this.PLANE1) ?
+        return (mi.length === 1 ||
+               (mi.length === 2 && mi.charCodeAt(0) >= 0xD800 && mi.charCodeAt(0) < 0xDC00) ?
                   MML.VARIANT.ITALIC : MML.VARIANT.NORMAL);
       }
       return "";
@@ -406,7 +433,7 @@ MathJax.ElementJax.mml.Augment({
   });
   
   MML.mn = MML.mbase.Subclass({
-    type: "mn", isToken: TRUE,
+    type: "mn", isToken: true,
     texClass: MML.TEXCLASS.ORD,
     defaults: {
       mathvariant: MML.INHERIT,
@@ -417,7 +444,7 @@ MathJax.ElementJax.mml.Augment({
   });
   
   MML.mo = MML.mbase.Subclass({
-    type: "mo", isToken: TRUE,
+    type: "mo", isToken: true,
     defaults: {
       mathvariant: MML.INHERIT,
       mathsize: MML.INHERIT,
@@ -450,17 +477,17 @@ MathJax.ElementJax.mml.Augment({
     },
     defaultDef: {
       form: MML.FORM.INFIX,
-      fence: FALSE,
-      separator: FALSE,
+      fence: false,
+      separator: false,
       lspace: MML.LENGTH.THICKMATHSPACE,
       rspace: MML.LENGTH.THICKMATHSPACE,
-      stretchy: FALSE,
-      symmetric: TRUE,
+      stretchy: false,
+      symmetric: true,
       maxsize: MML.SIZE.INFINITY,
       minsize: '0em', //'1em',
-      largeop: FALSE,
-      movablelimits: FALSE,
-      accent: FALSE,
+      largeop: false,
+      movablelimits: false,
+      accent: false,
       linebreak: MML.LINEBREAK.AUTO,
       lineleading: "1ex",
       linebreakstyle: "before",
@@ -499,7 +526,7 @@ MathJax.ElementJax.mml.Augment({
     },
     CheckRange: function (mo) {
       var n = mo.charCodeAt(0);
-      if (mo.charAt(0) === MML.PLANE1) {n = mo.charCodeAt(1) + 0x1D400 - 0xDC00}
+      if (n >= 0xD800 && n < 0xDC00) {n = (((n-0xD800)<<10)+(mo.charCodeAt(1)-0xDC00))+0x10000}
       for (var i = 0, m = this.RANGES.length; i < m && this.RANGES[i][0] <= n; i++) {
         if (n <= this.RANGES[i][1]) {
           if (this.RANGES[i][3]) {
@@ -507,7 +534,7 @@ MathJax.ElementJax.mml.Augment({
             this.RANGES[i][3] = null;
             MathJax.Hub.RestartAfter(MathJax.Ajax.Require(file));
           }
-          var data = (["ORD","OP","BIN","REL","OPEN","CLOSE","PUNCT","INNER"])[this.RANGES[i][2]];
+          var data = MML.TEXCLASSNAMES[this.RANGES[i][2]];
           data = this.OPTABLE.infix[mo] = MML.mo.OPTYPES[data === "BIN" ? "BIN3" : data];
           return this.makeDef(data);
         }
@@ -520,6 +547,9 @@ MathJax.ElementJax.mml.Augment({
       var def = MathJax.Hub.Insert({},data[3]);
       def.lspace = this.SPACE[data[0]]; def.rspace = this.SPACE[data[1]];
       def.texClass = data[2];
+      if (def.texClass === MML.TEXCLASS.REL &&
+         (this.movablelimits || this.data.join("").match(/^[a-z]+$/i)))
+             {def.texClass = MML.TEXCLASS.OP} // mark named operators as OP
       return def;
     },
     getForm: function () {
@@ -532,20 +562,12 @@ MathJax.ElementJax.mml.Augment({
       }
       return MML.FORM.INFIX;
     },
-    isEmbellished: function () {return TRUE},
-    lineBreak: function () {
-      var values = this.getValues("linebreak","linebreakstyle");
-      if (values.linebreak === MML.LINEBREAK.NEWLINE) {
-        if (values.linebreakstyle === MML.LINEBREAKSTYLE.INFIXLINEBREAKSTYLE)
-          {values.linebreakstyle = this.Get("infixlinebreakstyle")}
-        return values.linebreakstyle;
-      }
-      return "none";
-    },
+    isEmbellished: function () {return true},
+    hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)},
     setTeXclass: function (prev) {
       this.getValues("lspace","rspace"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
-      this.texClass = this.Get("texClass");
+      this.texClass = this.Get("texClass"); if (this.texClass === MML.TEXCLASS.NONE) {return prev}
       if (prev) {this.prevClass = prev.texClass || MML.TEXCLASS.ORD; this.prevLevel = prev.Get("scriptlevel")}
         else {this.prevClass = MML.TEXCLASS.NONE}
       if (this.texClass === MML.TEXCLASS.BIN &&
@@ -567,8 +589,8 @@ MathJax.ElementJax.mml.Augment({
   });
   
   MML.mtext = MML.mbase.Subclass({
-    type: "mtext", isToken: TRUE,
-    isSpacelike: function () {return TRUE},
+    type: "mtext", isToken: true,
+    isSpacelike: function () {return true},
     texClass: MML.TEXCLASS.ORD,
     defaults: {
       mathvariant: MML.INHERIT,
@@ -579,8 +601,8 @@ MathJax.ElementJax.mml.Augment({
   });
 
   MML.mspace = MML.mbase.Subclass({
-    type: "mspace", isToken: TRUE,
-    isSpacelike: function () {return TRUE},
+    type: "mspace", isToken: true,
+    isSpacelike: function () {return true},
     defaults: {
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
@@ -589,14 +611,11 @@ MathJax.ElementJax.mml.Augment({
       depth: "0ex",
       linebreak: MML.LINEBREAK.AUTO
     },
-    lineBreak: function () {
-      return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE ?
-                MML.LINEBREAKSTYLE.AFTER : "none");
-    }
+    hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)}
   });
 
   MML.ms = MML.mbase.Subclass({
-    type: "ms", isToken: TRUE,
+    type: "ms", isToken: true,
     texClass: MML.TEXCLASS.ORD,
     defaults: {
       mathvariant: MML.INHERIT,
@@ -609,7 +628,7 @@ MathJax.ElementJax.mml.Augment({
   });
 
   MML.mglyph = MML.mbase.Subclass({
-    type: "mglyph", isToken: TRUE,
+    type: "mglyph", isToken: true,
     texClass: MML.TEXCLASS.ORD,
     defaults: {
       mathbackground: MML.INHERIT,
@@ -625,15 +644,15 @@ MathJax.ElementJax.mml.Augment({
   MML.mrow = MML.mbase.Subclass({
     type: "mrow",
     isSpacelike: MML.mbase.childrenSpacelike,
-    inferred: FALSE,
+    inferred: false,
     isEmbellished: function () {
-      var isEmbellished = FALSE;
+      var isEmbellished = false;
       for (var i = 0, m = this.data.length; i < m; i++) {
         if (this.data[i] == null) continue;
         if (this.data[i].isEmbellished()) {
-          if (isEmbellished) {return FALSE}
-          isEmbellished = TRUE; this.core = i;
-        } else if (!this.data[i].isSpacelike()) {return FALSE}
+          if (isEmbellished) {return false}
+          isEmbellished = true; this.core = i;
+        } else if (!this.data[i].isSpacelike()) {return false}
       }
       return isEmbellished;
     },
@@ -675,6 +694,7 @@ MathJax.ElementJax.mml.Augment({
 
   MML.mfrac = MML.mbase.Subclass({
     type: "mfrac", num: 0, den: 1,
+    linebreakContainer: true,
     texClass: MML.TEXCLASS.INNER,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
@@ -685,9 +705,9 @@ MathJax.ElementJax.mml.Augment({
       linethickness: MML.LINETHICKNESS.MEDIUM,
       numalign: MML.ALIGN.CENTER,
       denomalign: MML.ALIGN.CENTER,
-      bevelled: FALSE
+      bevelled: false
     },
-    adjustChild_displaystyle: function (n) {return FALSE},
+    adjustChild_displaystyle: function (n) {return false},
     adjustChild_scriptlevel: function (n) {
       var level = this.Get("scriptlevel");
       if (!this.Get("displaystyle") || level > 0) {level++}
@@ -702,17 +722,19 @@ MathJax.ElementJax.mml.Augment({
 
   MML.msqrt = MML.mbase.Subclass({
     type: "msqrt",
-    inferRow: TRUE,
+    inferRow: true,
+    linebreakContainer: true,
     texClass: MML.TEXCLASS.ORD,
     setTeXclass: MML.mbase.setSeparateTeXclasses,
-    adjustChild_texprimestyle: function (n) {return TRUE}
+    adjustChild_texprimestyle: function (n) {return true}
   });
 
   MML.mroot = MML.mbase.Subclass({
     type: "mroot",
+    linebreakContainer: true,
     texClass: MML.TEXCLASS.ORD,
     adjustChild_displaystyle: function (n) {
-      if (n === 1) {return FALSE}
+      if (n === 1) {return false}
       return this.Get("displaystyle");
     },
     adjustChild_scriptlevel: function (n) {
@@ -721,7 +743,7 @@ MathJax.ElementJax.mml.Augment({
       return level;
     },
     adjustChild_texprimestyle: function (n) {
-      if (n === 0) {return TRUE};
+      if (n === 0) {return true};
       return this.Get("texprimestyle");
     },
     setTeXclass: MML.mbase.setSeparateTeXclasses
@@ -733,7 +755,7 @@ MathJax.ElementJax.mml.Augment({
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
-    inferRow: TRUE,
+    inferRow: true,
     defaults: {
       scriptlevel: MML.INHERIT,
       displaystyle: MML.INHERIT,
@@ -756,23 +778,24 @@ MathJax.ElementJax.mml.Augment({
       }
       return level;
     },
-    inheritFromMe: TRUE,
+    inheritFromMe: true,
     noInherit: {
-      mpadded: {width: TRUE, height: TRUE, depth: TRUE, lspace: TRUE, voffset: TRUE},
-      mtable:  {width: TRUE, height: TRUE, depth: TRUE, align: TRUE}
+      mpadded: {width: true, height: true, depth: true, lspace: true, voffset: true},
+      mtable:  {width: true, height: true, depth: true, align: true}
     },
     setTeXclass: MML.mbase.setChildTeXclass
   });
 
   MML.merror = MML.mbase.Subclass({
     type: "merror",
-    inferRow: TRUE,
+    inferRow: true,
+    linebreakContainer: true,
     texClass: MML.TEXCLASS.ORD
   });
 
   MML.mpadded = MML.mbase.Subclass({
     type: "mpadded",
-    inferRow: TRUE,
+    inferRow: true,
     isSpacelike: MML.mbase.childrenSpacelike,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
@@ -792,7 +815,7 @@ MathJax.ElementJax.mml.Augment({
   MML.mphantom = MML.mbase.Subclass({
     type: "mphantom",
     texClass: MML.TEXCLASS.ORD,
-    inferRow: TRUE,
+    inferRow: true,
     isSpacelike: MML.mbase.childrenSpacelike,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
@@ -851,7 +874,8 @@ MathJax.ElementJax.mml.Augment({
 
   MML.menclose = MML.mbase.Subclass({
     type: "menclose",
-    inferRow: TRUE,
+    inferRow: true,
+    linebreakContainer: true,
     defaults: {
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
@@ -863,6 +887,7 @@ MathJax.ElementJax.mml.Augment({
 
   MML.msubsup = MML.mbase.Subclass({
     type: "msubsup", base: 0, sub: 1, sup: 2,
+    linebreakContainer: true,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -879,7 +904,7 @@ MathJax.ElementJax.mml.Augment({
       return 0;
     },
     adjustChild_displaystyle: function (n) {
-      if (n > 0) {return FALSE}
+      if (n > 0) {return false}
       return this.Get("displaystyle");
     },
     adjustChild_scriptlevel: function (n) {
@@ -888,7 +913,7 @@ MathJax.ElementJax.mml.Augment({
       return level;
     },
     adjustChild_texprimestyle: function (n) {
-      if (n === this.sub) {return TRUE}
+      if (n === this.sub) {return true}
       return this.Get("texprimestyle");
     },
     setTeXclass: MML.mbase.setBaseTeXclasses
@@ -899,7 +924,7 @@ MathJax.ElementJax.mml.Augment({
   MML.mmultiscripts = MML.msubsup.Subclass({
     type: "mmultiscripts",
     adjustChild_texprimestyle: function (n) {
-      if (n % 2 === 1) {return TRUE}
+      if (n % 2 === 1) {return true}
       return this.Get("texprimestyle");
     }
   });
@@ -910,6 +935,7 @@ MathJax.ElementJax.mml.Augment({
     type: "munderover",
     base: 0, under: 1, over: 2, sub: 1, sup: 2,
     ACCENTS: ["", "accentunder", "accent"],
+    linebreakContainer: true,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -928,20 +954,22 @@ MathJax.ElementJax.mml.Augment({
         {return (this.isEmbellished() ? this.CoreMO().Get(name) : MML.TEXCLASS.ORD)}
       if (name === "accent" && this.data[this.over]) {return this.data[this.over].CoreMO().Get("accent")}
       if (name === "accentunder" && this.data[this.under]) {return this.data[this.under].CoreMO().Get("accent")}
-      return FALSE;
+      return false;
     },
     adjustChild_displaystyle: function (n) {
-      if (n > 0) {return FALSE}
+      if (n > 0) {return false}
       return this.Get("displaystyle");
     },
     adjustChild_scriptlevel: function (n) {
       var level = this.Get("scriptlevel");
-      if (n == this.under && !this.Get("accentunder")) {level++}
-      if (n == this.over  && !this.Get("accent")) {level++}
+      var force = (this.data[this.base] && !this.Get("displaystyle") &&
+                   this.data[this.base].CoreMO().Get("movablelimits"));
+      if (n == this.under && (force || !this.Get("accentunder"))) {level++}
+      if (n == this.over  && (force || !this.Get("accent"))) {level++}
       return level;
     },
     adjustChild_texprimestyle: function (n) {
-      if (n === this.base && this.data[this.over]) {return TRUE}
+      if (n === this.base && this.data[this.over]) {return true}
       return this.Get("texprimestyle");
     },
     setTeXclass: MML.mbase.setBaseTeXclasses
@@ -962,7 +990,7 @@ MathJax.ElementJax.mml.Augment({
       rowalign: MML.ALIGN.BASELINE,
       columnalign: MML.ALIGN.CENTER,
       groupalign: "{left}",
-      alignmentscope: TRUE,
+      alignmentscope: true,
       columnwidth: MML.WIDTH.AUTO,
       width: MML.WIDTH.AUTO,
       rowspacing: "1ex",
@@ -971,24 +999,25 @@ MathJax.ElementJax.mml.Augment({
       columnlines: MML.LINES.NONE,
       frame: MML.LINES.NONE,
       framespacing: "0.4em 0.5ex",
-      equalrows: FALSE,
-      equalcolumns: FALSE,
-      displaystyle: FALSE,
+      equalrows: false,
+      equalcolumns: false,
+      displaystyle: false,
       side: MML.SIDE.RIGHT,
       minlabelspacing: "0.8em",
       texClass: MML.TEXCLASS.ORD,
       useHeight: 1
     },
-    inheritFromMe: TRUE,
+    inheritFromMe: true,
     noInherit: {
       mtable: {
-        align: TRUE, rowalign: TRUE, columnalign: TRUE, groupalign: TRUE,
-        alignmentscope: TRUE, columnwidth: TRUE, width: TRUE, rowspacing: TRUE,
-        columnspacing: TRUE, rowlines: TRUE, columnlines: TRUE, frame: TRUE,
-        framespacing: TRUE, equalrows: TRUE, equalcolumns: TRUE,
-        side: TRUE, minlabelspacing: TRUE, texClass: TRUE, useHeight: 1
+        align: true, rowalign: true, columnalign: true, groupalign: true,
+        alignmentscope: true, columnwidth: true, width: true, rowspacing: true,
+        columnspacing: true, rowlines: true, columnlines: true, frame: true,
+        framespacing: true, equalrows: true, equalcolumns: true,
+        side: true, minlabelspacing: true, texClass: true, useHeight: 1
       }
     },
+    linebreakContainer: true,
     Append: function () {
       for (var i = 0, m = arguments.length; i < m; i++) {
         if (!((arguments[i] instanceof MML.mtr) ||
@@ -1008,11 +1037,12 @@ MathJax.ElementJax.mml.Augment({
       columnalign: MML.INHERIT,
       groupalign: MML.INHERIT
     },
-    inheritFromMe: TRUE,
+    inheritFromMe: true,
     noInherit: {
-      mrow: {rowalign: TRUE, columnalign: TRUE, groupalign: TRUE},
-      mtable: {rowalign: TRUE, columnalign: TRUE, groupalign: TRUE}
+      mrow: {rowalign: true, columnalign: true, groupalign: true},
+      mtable: {rowalign: true, columnalign: true, groupalign: true}
     },
+    linebreakContainer: true,
     Append: function () {
       for (var i = 0, m = arguments.length; i < m; i++) {
         if (!(arguments[i] instanceof MML.mtd)) {arguments[i] = MML.mtd(arguments[i])}
@@ -1024,7 +1054,8 @@ MathJax.ElementJax.mml.Augment({
 
   MML.mtd = MML.mbase.Subclass({
     type: "mtd",
-    inferRow: TRUE,
+    inferRow: true,
+    linebreakContainer: true,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -1042,16 +1073,16 @@ MathJax.ElementJax.mml.Augment({
 
   MML.maligngroup = MML.mbase.Subclass({
     type: "malign",
-    isSpacelike: function () {return TRUE},
+    isSpacelike: function () {return true},
     defaults: {
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
       groupalign: MML.INHERIT
     },
-    inheritFromMe: TRUE,
+    inheritFromMe: true,
     noInherit: {
-      mrow: {groupalign: TRUE},
-      mtable: {groupalign: TRUE}
+      mrow: {groupalign: true},
+      mtable: {groupalign: true}
     }
   });
 
@@ -1062,7 +1093,7 @@ MathJax.ElementJax.mml.Augment({
       mathcolor: MML.INHERIT,
       edge: MML.SIDE.LEFT
     },
-    isSpacelike: function () {return TRUE}
+    isSpacelike: function () {return true}
   });
 
   MML.mlabeledtr = MML.mtr.Subclass({
@@ -1097,7 +1128,8 @@ MathJax.ElementJax.mml.Augment({
     setTeXclass: MML.mbase.setChildTeXclass
   });
   MML.annotation = MML.mbase.Subclass({
-    type: "annotation", isToken: TRUE,
+    type: "annotation", isToken: true,
+    linebreakContainer: true,
     defaults: {
       definitionURL: null,
       encoding: null,
@@ -1108,6 +1140,7 @@ MathJax.ElementJax.mml.Augment({
   });
   MML["annotation-xml"] = MML.mbase.Subclass({
     type: "annotation-xml",
+    linebreakContainer: true,
     defaults: {
       definitionURL: null,
       encoding: null,
@@ -1143,13 +1176,16 @@ MathJax.ElementJax.mml.Augment({
       indentalign: MML.INDENTALIGN.AUTO,
       indentalignfirst: MML.INDENTALIGN.INDENTALIGN,
       indentshiftfirst: MML.INDENTSHIFT.INDENTSHIFT,
+      indentalignlast:  MML.INDENTALIGN.INDENTALIGN,
+      indentshiftlast:  MML.INDENTSHIFT.INDENTSHIFT,
       decimalseparator: ".",
-      texprimestyle: FALSE     // is it in TeX's C' style?
+      texprimestyle: false     // is it in TeX's C' style?
     },
     autoDefault: function (name) {
       if (name === "displaystyle") {return this.Get("display") === "block"}
       return "";
     },
+    linebreakContainer: true,
     setTeXclass: MML.mbase.setChildTeXclass
   });
   
@@ -1171,7 +1207,9 @@ MathJax.ElementJax.mml.Augment({
     toString: function () {
       var n = this.value();
       if (n <= 0xFFFF) {return String.fromCharCode(n)}
-      return this.PLANE1 + String.fromCharCode(n-0x1D400+0xDC00);
+      n -= 0x10000;
+      return String.fromCharCode((n>>10)+0xD800)
+           + String.fromCharCode((n&0x3FF)+0xDC00);
     }
   });
   
@@ -1221,7 +1259,7 @@ MathJax.ElementJax.mml.Augment({
   
   MML.TeXAtom = MML.mbase.Subclass({
     type: "texatom",
-    inferRow: TRUE,
+    inferRow: true,
     texClass: MML.TEXCLASS.ORD,
     setTeXclass: function (prev) {
       this.getPrevClass(prev);
@@ -1247,13 +1285,15 @@ MathJax.ElementJax.mml.Augment({
     BIN3:       [3,3,TEXCLASS.BIN],
     BIN4:       [4,4,TEXCLASS.BIN],
     BIN01:      [0,1,TEXCLASS.BIN],
+    BIN5:       [5,5,TEXCLASS.BIN],
     TALLBIN:    [4,4,TEXCLASS.BIN,{stretchy: true}],
     BINOP:      [4,4,TEXCLASS.BIN,{largeop: true, movablelimits: true}],
     REL:        [5,5,TEXCLASS.REL],
     REL1:       [1,1,TEXCLASS.REL,{stretchy: true}],
     REL4:       [4,4,TEXCLASS.REL],
-    WIDEREL:    [5,5,TEXCLASS.REL,{stretchy: true}],
-    RELACCENT:  [5,5,TEXCLASS.REL,{accent: true, stretchy: true}],
+    RELSTRETCH: [5,5,TEXCLASS.REL,{stretchy: true}],
+    RELACCENT:  [5,5,TEXCLASS.REL,{accent: true}],
+    WIDEREL:    [5,5,TEXCLASS.REL,{accent: true, stretchy: true}],
     OPEN:       [0,0,TEXCLASS.OPEN,{fence: true, stretchy: true, symmetric: true}],
     CLOSE:      [0,0,TEXCLASS.CLOSE,{fence: true, stretchy: true, symmetric: true}],
     INNER:      [0,0,TEXCLASS.INNER],
@@ -1290,20 +1330,19 @@ MathJax.ElementJax.mml.Augment({
       [0x2200,0x22FF,TEXCLASS.BIN,"MathOperators"],
       [0x2300,0x23FF,TEXCLASS.ORD,"MiscTechnical"],
       [0x2460,0x24FF,TEXCLASS.ORD],
+      [0x2500,0x259F,TEXCLASS.ORD],
       [0x25A0,0x25FF,TEXCLASS.ORD,"GeometricShapes"],
       [0x2700,0x27BF,TEXCLASS.ORD,"Dingbats"],
       [0x27C0,0x27EF,TEXCLASS.ORD,"MiscMathSymbolsA"],
+      [0x27F0,0x27FF,TEXCLASS.REL,"SupplementalArrowsA"],
       [0x2900,0x297F,TEXCLASS.REL,"SupplementalArrowsB"],
       [0x2980,0x29FF,TEXCLASS.ORD,"MiscMathSymbolsB"],
       [0x2A00,0x2AFF,TEXCLASS.BIN,"SuppMathOperators"],
-      [0x2B00,0x2BFF,TEXCLASS.ORD],
+      [0x2B00,0x2BFF,TEXCLASS.ORD,"MiscSymbolsAndArrows"],
       [0x1D400,0x1D7FF,TEXCLASS.ORD]
     ],
     OPTABLE: {
       prefix: {
-        '\u2111': MO.ORD11,    // black-letter capital i
-        '\u2113': MO.ORD11,    // script small l
-        '\u211C': MO.ORD11,    // black-letter capital r
         '\u2200': MO.ORD21,    // for all
         '\u2202': MO.ORD21,    // partial differential
         '\u2203': MO.ORD21,    // there exists
@@ -1324,6 +1363,7 @@ MathJax.ElementJax.mml.Augment({
         '\u2308': MO.OPEN,     // left ceiling
         '\u230A': MO.OPEN,     // left floor
         '\u27E8': MO.OPEN,     // mathematical left angle bracket
+        '\u27EE': MO.OPEN,     // mathematical left flattened parenthesis
         '\u2A00': MO.OP,       // n-ary circled dot operator
         '\u2A01': MO.OP,       // n-ary circled plus operator
         '\u2A02': MO.OP,       // n-ary circled times operator
@@ -1351,12 +1391,16 @@ MathJax.ElementJax.mml.Augment({
         '\u266E': MO.ORD02,    // music natural sign
         '\u266F': MO.ORD02,    // music sharp sign
         '\u27E9': MO.CLOSE,    // mathematical right angle bracket
+        '\u27EF': MO.CLOSE,    // mathematical right flattened parenthesis
         '\u02C6': MO.WIDEACCENT, // modifier letter circumflex accent
         '\u02C7': MO.WIDEACCENT, // caron
+        '\u02C9': MO.WIDEACCENT, // modifier letter macron
+        '\u02CA': MO.ACCENT,   // modifier letter acute accent
+        '\u02CB': MO.ACCENT,   // modifier letter grave accent
         '\u02D8': MO.ACCENT,   // breve
         '\u02D9': MO.ACCENT,   // dot above
         '\u02DC': MO.WIDEACCENT, // small tilde
-        '\u0302': MO.ACCENT,   // combining circumflex accent
+        '\u0302': MO.WIDEACCENT, // combining circumflex accent
         '\u00A8': MO.ACCENT,   // diaeresis
         '\u00AF': MO.WIDEACCENT, // macron
         ')': MO.CLOSE,         // right parenthesis
@@ -1369,38 +1413,39 @@ MathJax.ElementJax.mml.Augment({
         '~': MO.WIDEACCENT     // tilde
       },
       infix: {
+        '': MO.ORD,            // empty <mo>
         '%': [3,3,TEXCLASS.ORD], // percent sign
         '\u2022': MO.BIN4,     // bullet
         '\u2026': MO.INNER,    // horizontal ellipsis
         '\u2044': MO.TALLBIN,  // fraction slash
         '\u2061': MO.ORD,      // function application
         '\u2062': MO.ORD,      // invisible times
-        '\u2063': [0,0,TEXCLASS.ORD,{separator: true}], // invisible separator
+        '\u2063': [0,0,TEXCLASS.ORD,{linebreakstyle:"after", separator: true}], // invisible separator
         '\u2064': MO.ORD,      // invisible plus
-        '\u2190': MO.RELACCENT, // leftwards arrow
-        '\u2191': MO.WIDEREL,  // upwards arrow
-        '\u2192': MO.RELACCENT, // rightwards arrow
-        '\u2193': MO.WIDEREL,  // downwards arrow
-        '\u2194': MO.RELACCENT, // left right arrow
-        '\u2195': MO.WIDEREL,  // up down arrow
-        '\u2196': MO.WIDEREL,  // north west arrow
-        '\u2197': MO.WIDEREL,  // north east arrow
-        '\u2198': MO.WIDEREL,  // south east arrow
-        '\u2199': MO.WIDEREL,  // south west arrow
+        '\u2190': MO.WIDEREL,  // leftwards arrow
+        '\u2191': MO.RELSTRETCH, // upwards arrow
+        '\u2192': MO.WIDEREL,  // rightwards arrow
+        '\u2193': MO.RELSTRETCH, // downwards arrow
+        '\u2194': MO.WIDEREL,  // left right arrow
+        '\u2195': MO.RELSTRETCH, // up down arrow
+        '\u2196': MO.RELSTRETCH, // north west arrow
+        '\u2197': MO.RELSTRETCH, // north east arrow
+        '\u2198': MO.RELSTRETCH, // south east arrow
+        '\u2199': MO.RELSTRETCH, // south west arrow
         '\u21A6': MO.WIDEREL,  // rightwards arrow from bar
         '\u21A9': MO.WIDEREL,  // leftwards arrow with hook
         '\u21AA': MO.WIDEREL,  // rightwards arrow with hook
-        '\u21BC': MO.RELACCENT, // leftwards harpoon with barb upwards
+        '\u21BC': MO.WIDEREL,  // leftwards harpoon with barb upwards
         '\u21BD': MO.WIDEREL,  // leftwards harpoon with barb downwards
-        '\u21C0': MO.RELACCENT, // rightwards harpoon with barb upwards
+        '\u21C0': MO.WIDEREL,  // rightwards harpoon with barb upwards
         '\u21C1': MO.WIDEREL,  // rightwards harpoon with barb downwards
         '\u21CC': MO.WIDEREL,  // rightwards harpoon over leftwards harpoon
         '\u21D0': MO.WIDEREL,  // leftwards double arrow
-        '\u21D1': MO.WIDEREL,  // upwards double arrow
+        '\u21D1': MO.RELSTRETCH, // upwards double arrow
         '\u21D2': MO.WIDEREL,  // rightwards double arrow
-        '\u21D3': MO.WIDEREL,  // downwards double arrow
+        '\u21D3': MO.RELSTRETCH, // downwards double arrow
         '\u21D4': MO.WIDEREL,  // left right double arrow
-        '\u21D5': MO.WIDEREL,  // up down double arrow
+        '\u21D5': MO.RELSTRETCH, // up down double arrow
         '\u2208': MO.REL,      // element of
         '\u2209': MO.REL,      // not an element of
         '\u220B': MO.REL,      // contains as member
@@ -1459,20 +1504,20 @@ MathJax.ElementJax.mml.Augment({
         '\u22EE': MO.ORD55,    // vertical ellipsis
         '\u22EF': MO.INNER,    // midline horizontal ellipsis
         '\u22F1': [5,5,TEXCLASS.INNER], // down right diagonal ellipsis
-        '\u2500': [0,0,TEXCLASS.ORD,{stretchy: true}], // box drawings light horizontal
         '\u25B3': MO.BIN4,     // white up-pointing triangle
         '\u25B5': MO.BIN4,     // white up-pointing small triangle
         '\u25B9': MO.BIN4,     // white right-pointing small triangle
         '\u25BD': MO.BIN4,     // white down-pointing triangle
         '\u25BF': MO.BIN4,     // white down-pointing small triangle
         '\u25C3': MO.BIN4,     // white left-pointing small triangle
-        '\u2758': [4,4,TEXCLASS.REL,{fence: true, stretchy: true, symmetric: true}], // light vertical bar
-        '\u27F5': MO.REL1,     // long leftwards arrow
-        '\u27F6': MO.REL1,     // long rightwards arrow
-        '\u27F7': MO.REL1,     // long left right arrow
-        '\u27F8': MO.REL1,     // long leftwards double arrow
-        '\u27F9': MO.REL1,     // long rightwards double arrow
-        '\u27FA': MO.REL1,     // long left right double arrow
+        '\u2758': MO.REL,      // light vertical bar
+        '\u27F5': MO.WIDEREL,  // long leftwards arrow
+        '\u27F6': MO.WIDEREL,  // long rightwards arrow
+        '\u27F7': MO.WIDEREL,  // long left right arrow
+        '\u27F8': MO.WIDEREL,  // long leftwards double arrow
+        '\u27F9': MO.WIDEREL,  // long rightwards double arrow
+        '\u27FA': MO.WIDEREL,  // long left right double arrow
+        '\u27FC': MO.WIDEREL,  // long rightwards arrow from bar
         '\u2A2F': MO.BIN4,     // vector or cross product
         '\u2A3F': MO.BIN4,     // amalgamation or coproduct
         '\u2AAF': MO.REL,      // precedes above single-line equals sign
@@ -1483,26 +1528,24 @@ MathJax.ElementJax.mml.Augment({
         '\u00F7': MO.BIN4,     // division sign
         '*': MO.BIN3,          // asterisk
         '+': MO.BIN4,          // plus sign
-        ',': [0,3,TEXCLASS.PUNCT,{separator: true}], // comma
+        ',': [0,3,TEXCLASS.PUNCT,{linebreakstyle:"after", separator: true}], // comma
         '-': MO.BIN4,          // hyphen-minus
         '.': [3,3,TEXCLASS.ORD], // full stop
         '/': MO.ORD11,         // solidus
         ':': [1,2,TEXCLASS.REL], // colon
-        ';': [0,3,TEXCLASS.PUNCT,{separator: true}], // semicolon
+        ';': [0,3,TEXCLASS.PUNCT,{linebreakstyle:"after", separator: true}], // semicolon
         '<': MO.REL,           // less-than sign
         '=': MO.REL,           // equals sign
         '>': MO.REL,           // greater-than sign
         '?': [1,1,TEXCLASS.CLOSE], // question mark
         '\\': MO.ORD,          // reverse solidus
+        '^': MO.ORD11,         // circumflex accent
         '_': MO.ORD11,         // low line
         '|': [2,2,TEXCLASS.ORD,{fence: true, stretchy: true, symmetric: true}], // vertical line
         '#': MO.ORD,           // #
         '$': MO.ORD,           // $
         '\u002E': [0,3,TEXCLASS.PUNCT,{separator: true}], // \ldotp
         '\u02B9': MO.ORD,      // prime
-        '\u02C9': MO.ACCENT,   // \bar
-        '\u02CA': MO.ACCENT,   // \acute
-        '\u02CB': MO.ACCENT,   // \grave
         '\u0300': MO.ACCENT,   // \grave
         '\u0301': MO.ACCENT,   // \acute
         '\u0303': MO.WIDEACCENT, // \tilde
@@ -1518,7 +1561,10 @@ MathJax.ElementJax.mml.Augment({
         '\u2020': MO.BIN3,     // \dagger
         '\u2021': MO.BIN3,     // \ddagger
         '\u20D7': MO.ACCENT,   // \vec
+        '\u2111': MO.ORD,      // \Im
+        '\u2113': MO.ORD,      // \ell
         '\u2118': MO.ORD,      // \wp
+        '\u211C': MO.ORD,      // \Re
         '\u2205': MO.ORD,      // \emptyset
         '\u221E': MO.ORD,      // \infty
         '\u2305': MO.BIN3,     // barwedge
@@ -1531,14 +1577,12 @@ MathJax.ElementJax.mml.Augment({
         '\u23AF': [0,0,TEXCLASS.ORD,{stretchy: true}], // \underline
         '\u23B0': MO.OPEN,     // \lmoustache
         '\u23B1': MO.CLOSE,    // \rmoustache
+        '\u2500': MO.ORD,      // horizontal line
         '\u25EF': MO.BIN3,     // \bigcirc
         '\u2660': MO.ORD,      // \spadesuit
         '\u2661': MO.ORD,      // \heartsuit
         '\u2662': MO.ORD,      // \diamondsuit
         '\u2663': MO.ORD,      // \clubsuit
-        '\u27EE': MO.OPEN,     // \lgroup
-        '\u27EF': MO.CLOSE,    // \rgroup
-        '\u27FC': MO.REL4,     // \longmapsto
         '\u3008': MO.OPEN,     // langle
         '\u3009': MO.CLOSE,    // rangle
         '\uFE37': MO.WIDEACCENT, // horizontal brace down
@@ -1548,6 +1592,13 @@ MathJax.ElementJax.mml.Augment({
   },{
     OPTYPES: MO
   });
+  
+  //
+  //  These are not in the W3C table, but FF works this way,
+  //  and it makes sense, so add it here
+  //
+  MML.mo.prototype.OPTABLE.infix["^"] = MO.WIDEREL;
+  MML.mo.prototype.OPTABLE.infix["_"] = MO.WIDEREL;
   
 })(MathJax.ElementJax.mml);
 

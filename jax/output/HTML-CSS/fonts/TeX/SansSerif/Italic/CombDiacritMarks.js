@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/SansSerif/Italic/CombDiacritMarks.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ MathJax.Hub.Insert(
     0x306: [694,-508,0,-284,73],       // COMBINING BREVE
     0x307: [680,-576,0,-180,-54],      // COMBINING DOT ABOVE
     0x308: [680,-582,0,-273,40],       // COMBINING DIAERESIS
-    0x30A: [694,-527,0,-227,-2],       // COMBINING RING ABOVE
+    0x30A: [693,-527,0,-227,-2],       // COMBINING RING ABOVE
     0x30B: [694,-527,0,-287,63],       // COMBINING DOUBLE ACUTE ACCENT
     0x30C: [654,-487,0,-283,60]        // COMBINING CARON
   }

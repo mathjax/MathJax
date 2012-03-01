@@ -62,12 +62,12 @@ MathJax.Hub.Insert(
     0x23B5: [109,83,926,55,871],       // BOTTOM SQUARE BRACKET
     0x23B6: [495,-11,926,55,871],      // BOTTOM SQUARE BRACKET OVER TOP SQUARE BRACKET
     0x23CE: [731,225,926,50,856],      // RETURN SYMBOL
-    0x23DC: [55,152,556,-10,566],      // TOP PARENTHESIS (mathematical use)
-    0x23DD: [771,-564,556,-10,566],    // BOTTOM PARENTHESIS (mathematical use)
-    0x23DE: [117,88,556,-10,566],      // TOP CURLY BRACKET (mathematical use)
-    0x23DF: [769,-564,556,-10,566],    // BOTTOM CURLY BRACKET (mathematical use)
-    0x23E0: [66,212,926,-3,929],       // TOP TORTOISE SHELL BRACKET (mathematical use)
-    0x23E1: [842,-564,926,-3,929],     // BOTTOM TORTOISE SHELL BRACKET (mathematical use)
+    0x23DC: [100,100,1000,0,1000],     // TOP PARENTHESIS (mathematical use)
+    0x23DD: [764,-564,1000,0,1000],    // BOTTOM PARENTHESIS (mathematical use)
+    0x23DE: [214,114,1000,0,1000],     // TOP CURLY BRACKET (mathematical use)
+    0x23DF: [892,-564,1000,0,1000],    // BOTTOM CURLY BRACKET (mathematical use)
+    0x23E0: [100,114,1000,0,1000],     // TOP TORTOISE SHELL BRACKET (mathematical use)
+    0x23E1: [778,-564,1000,0,1000],    // BOTTOM TORTOISE SHELL BRACKET (mathematical use)
     0x23E2: [558,53,1144,54,1090],     // WHITE TRAPEZIUM
     0x23E3: [680,178,910,82,828],      // BENZENE RING WITH CIRCLE
     0x23E4: [286,-220,1094,47,1047],   // STRAIGHTNESS

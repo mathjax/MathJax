@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/Greek/Bold/Main.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Greek-bold'] = {
   directory: 'Greek/Bold',
   family: 'MathJax_Greek',
   weight: 'bold',
-  testString: String.fromCharCode(0x393)+" "+String.fromCharCode(0x3A5)+" "+String.fromCharCode(0x39B),
+  testString: "\u0393 \u03A5 \u039B",
   0x20: [0,0,250,0,0],               // SPACE
   0xA0: [0,0,250,0,0],               // NO-BREAK SPACE
   0x393: [680,0,692,39,643],         // GREEK CAPITAL LETTER GAMMA

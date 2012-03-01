@@ -7,7 +7,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2011 Design Science, Inc.
+ *  Copyright (c) 2010-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,16 +23,17 @@
  */
 
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
-  var VERSION = "1.1.1";
+  var VERSION = "2.0";
   
-  var MML = MathJax.ElementJax.mml;
+  var MML = MathJax.ElementJax.mml
+      SETTINGS = MathJax.Hub.config.menuSettings;
   
   MML.mbase.Augment({
 
     toMathML: function (space) {
       var inferred = (this.inferred && this.parent.inferRow);
       if (space == null) {space = ""}
-      var tag = this.type, attr = this.MathMLattributes();
+      var tag = this.type, attr = this.toMathMLattributes();
       if (tag === "mspace") {return space + "<"+tag+attr+" />"}
       var data = []; var SPACE = (this.isToken ? "" : space+(inferred ? "" : "  "));
       for (var i = 0, m = this.data.length; i < m; i++) {
@@ -46,35 +47,61 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       return space + "<"+tag+attr+">\n"+data.join("\n")+"\n"+ space +"</"+tag+">";
     },
 
-    MathMLattributes: function () {
+    toMathMLattributes: function () {
       var attr = [], defaults = this.defaults;
-      var copy = this.copyAttributes,
-          skip = this.skipAttributes;
+      var copy = (this.attrNames||MML.copyAttributeNames), skip = MML.skipAttributes;
 
       if (this.type === "math") {attr.push('xmlns="http://www.w3.org/1998/Math/MathML"')}
-      if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
-      for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
-        var force = (id === "open" || id === "close");
-        if (this[id] != null && (force || this[id] !== defaults[id])) {
-          var value = this[id]; delete this[id];
-          if (force || this.Get(id) !== value)
-            {attr.push(id+'="'+this.quoteHTML(value)+'"')}
-          this[id] = value;
-        }
-      }}
-      for (var i = 0, m = copy.length; i < m; i++) {
-        if (this[copy[i]] != null) {attr.push(copy[i]+'="'+this.quoteHTML(this[copy[i]])+'"')}
+      if (!this.attrNames) {
+        if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
+        for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
+          var force = (id === "open" || id === "close");
+          if (this[id] != null && (force || this[id] !== defaults[id])) {
+            var value = this[id]; delete this[id];
+            if (force || this.Get(id) !== value)
+              {attr.push(id+'="'+this.toMathMLattribute(value)+'"')}
+            this[id] = value;
+          }
+        }}
       }
+      for (var i = 0, m = copy.length; i < m; i++) {
+        if (copy[i] === "class") continue;  // this is handled separately below
+        value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
+        if (value != null) {attr.push(copy[i]+'="'+this.toMathMLquote(value)+'"')}
+      }
+      this.toMathMLclass(attr);
       if (attr.length) {return " "+attr.join(" ")} else {return ""}
     },
-    copyAttributes: [
-      "fontfamily","fontsize","fontweight","fontstyle",
-      "color","background",
-      "id","class","href","style"
-    ],
-    skipAttributes: {texClass: 1, useHeight: 1, texprimestyle: 1},
+    toMathMLclass: function (attr) {
+      var CLASS = []; if (this["class"]) {CLASS.push(this["class"])}
+      if (this.isa(MML.TeXAtom) && SETTINGS.texHints) {
+        var TEXCLASS = ["ORD","OP","BIN","REL","OPEN","CLOSE","PUNCT","INNER","VCENTER"][this.texClass];
+        if (TEXCLASS) {CLASS.push("MJX-TeXAtom-"+TEXCLASS)}
+      }
+      if (this.mathvariant && this.toMathMLvariants[this.mathvariant])
+        {CLASS.push("MJX"+this.mathvariant)}
+      if (this.arrow) {CLASS.push("MJX-arrow")}
+      if (this.variantForm) {CLASS.push("MJX-variant")}
+      if (CLASS.length) {attr.unshift('class="'+CLASS.join(" ")+'"')}
+    },
+    toMathMLattribute: function (value) {
+      if (typeof(value) === "string" &&
+          value.replace(/ /g,"").match(/^(([-+])?(\d+(\.\d*)?|\.\d+))mu$/)) {
+        // FIXME:  should take scriptlevel into account
+        return ((1/18)*RegExp.$1).toFixed(3).replace(/\.?0+$/,"")+"em";
+      }
+      else if (this.toMathMLvariants[value]) {return this.toMathMLvariants[value]}
+      return this.toMathMLquote(value);
+    },
+    toMathMLvariants: {
+      "-tex-caligraphic":      MML.VARIANT.SCRIPT,
+      "-tex-caligraphic-bold": MML.VARIANT.BOLDSCRIPT,
+      "-tex-oldstyle":         MML.VARIANT.NORMAL,
+      "-tex-oldstyle-bold":    MML.VARIANT.BOLD,
+      "-tex-mathit":           MML.VARIANT.ITALIC
+    },
     
-    quoteHTML: function (string) {
+    toMathMLquote: function (string) {
       string = String(string).split("");
       for (var i = 0, m = string.length; i < m; i++) {
         var n = string[i].charCodeAt(0);
@@ -94,7 +121,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       var tag = this.type;
       if (this.data[this.sup] == null) {tag = "msub"}
       if (this.data[this.sub] == null) {tag = "msup"}
-      var attr = this.MathMLattributes();
+      var attr = this.toMathMLattributes();
       delete this.data[0].inferred;
       var data = [];
       for (var i = 0, m = this.data.length; i < m; i++)
@@ -108,7 +135,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       var tag = this.type;
       if (this.data[this.under] == null) {tag = "mover"}
       if (this.data[this.over] == null)  {tag = "munder"}
-      var attr = this.MathMLattributes();
+      var attr = this.toMathMLattributes();
       delete this.data[0].inferred;
       var data = [];
       for (var i = 0, m = this.data.length; i < m; i++)
@@ -120,12 +147,14 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
   MML.TeXAtom.Augment({
     toMathML: function (space) {
       // FIXME:  Handle spacing using mpadded?
-      return space+"<mrow>\n"+this.data[0].toMathML(space+"  ")+"\n"+space+"</mrow>";
+      var attr = this.toMathMLattributes();
+      if (!attr && this.data[0].data.length === 1) {return space.substr(2) + this.data[0].toMathML(space)}
+      return space+"<mrow"+attr+">\n" + this.data[0].toMathML(space+"  ")+"\n"+space+"</mrow>";
     }
   });
   
   MML.chars.Augment({
-    toMathML: function (space) {return (space||"") + this.quoteHTML(this.toString())}
+    toMathML: function (space) {return (space||"") + this.toMathMLquote(this.toString())}
   });
   
   MML.entity.Augment({

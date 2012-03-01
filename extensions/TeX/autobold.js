@@ -5,7 +5,7 @@
  *  Adds \boldsymbol around mathematics that appears in a section
  *  of an HTML page that is in bold.
  *  
- *  Copyright (c) 2009 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,23 +20,23 @@
  *  limitations under the License.
  */
 
+MathJax.Extension["TeX/autobold"] = {
+  version: "2.0"
+};
+
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1";
-  
   var TEX = MathJax.InputJax.TeX;
-  var oldPrefilter = TEX.prefilterMath;
   
-  TEX.prefilterMath = function (math,displaystyle,script) {
-    var span = script.parentNode.insertBefore(document.createElement("span"),script);
+  TEX.prefilterHooks.Add(function (data) {
+    var span = data.script.parentNode.insertBefore(document.createElement("span"),data.script);
     span.visibility = "hidden";
     span.style.fontFamily = "Times, serif";
     span.appendChild(document.createTextNode("ABCXYZabcxyz"));
     var W = span.offsetWidth;
     span.style.fontWeight = "bold";
-    if (span.offsetWidth == W) {math = "\\bf {"+math+"}"}
+    if (W && span.offsetWidth === W) {data.math = "\\boldsymbol{"+data.math+"}"}
     span.parentNode.removeChild(span);
-    return oldPrefilter.call(TEX,math,displaystyle,script);
-  };
+  });
   
   MathJax.Hub.Startup.signal.Post("TeX autobold Ready");
 

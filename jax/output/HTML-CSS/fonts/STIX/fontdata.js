@@ -7,7 +7,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@
  *  limitations under the License.
  */
 
-(function (HTMLCSS) {
-  var VERSION = "1.1";
+(function (HTMLCSS,HTML) {
+  var VERSION = "2.0";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -36,11 +36,12 @@
       SIZE3   = "STIXSizeThreeSym",
       SIZE4   = "STIXSizeFourSym",
       SIZE5   = "STIXSizeFiveSym";
-  var H = "H", V = "V";
+  var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
 
   HTMLCSS.Augment({
     FONTDATA: {
       version: VERSION,
+      STIXversion: "1.1",
       
       TeX_factor: 1.125,    // TeX em's to STIX em's seem to need this
       baselineskip: 1.2,
@@ -91,6 +92,7 @@
                           remap: {0xE262: 0xE265, 0xE263: 0xE269, 0xE264: 0xE26D, 0xE265: 0xE271,
                                   0xE266: 0xE275, 0xE267: 0xE279, 0xE268: 0xE27D, 0xE269: 0xE281,
                                   0xE26A: 0xE285}},
+        "-tex-mathit": {fonts: [ITALIC,"STIXNonUnicode-italic",GENERAL,NONUNI,SIZE1], italic:true, noIC:true},
         "-largeOp": {fonts:[SIZE1,"STIXIntegralsD",NONUNI,GENERAL]},
         "-smallOp": {}
       },
@@ -111,6 +113,12 @@
         0xFE37: 0x23DE, 0xFE38: 0x23DF, // OverBrace, UnderBrace
         0x3008: 0x27E8, 0x3009: 0x27E9, // langle, rangle
         0x2758: 0x2223                  // VerticalSeparator
+      },
+      
+      REMAPACCENT: {
+        "\u2192": "\u20D7"
+      },
+      REMAPACCENTUNDER: {
       },
       
       DELIMITERS: {
@@ -299,12 +307,12 @@
         },
         0x23DE: // horizontal brace down
         {
-          dir: H, HW: [[.556,GENERAL],[.926,SIZE1],[1.46,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.238,SIZE5]],
+          dir: H, HW: [[.926,SIZE1],[1,GENERAL],[1.46,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.238,SIZE5]],
           stretch: {left:[0xE13B,NONUNI], mid:[0xE140,NONUNI], right:[0xE13C,NONUNI], rep:[0xE14A,NONUNI]}
         },
         0x23DF: // horizontal brace up
         {
-          dir: H, HW: [[.556,GENERAL],[.926,SIZE1],[1.46,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.238,SIZE5]],
+          dir: H, HW: [[.926,SIZE1],[1,GENERAL],[1.46,SIZE2],[1.886,SIZE3],[2.328,SIZE4],[3.238,SIZE5]],
           stretch: {left:[0xE13D,NONUNI], mid:[0xE141,NONUNI], right:[0xE13E,NONUNI], rep:[0xE14B,NONUNI]}
         },
         0x27E8: // \langle
@@ -331,7 +339,8 @@
         0x005E: {alias: 0x02D6, dir:H}, // wide hat
         0x005F: {alias: 0x23AF, dir:H}, // low line
         0x007E: {alias: 0x02DC, dir:H}, // wide tilde
-        0x00AF: {alias: 0x23AF, dir:H}, // over line
+        0x00AF: {alias: 0x23AF, dir:H}, // macron
+        0x02C9: {alias: 0x23AF, dir:H}, // macron
         0x0302: {alias: 0x02C6, dir:H}, // wide hat
         0x0303: {alias: 0x02DC, dir:H}, // wide tilde
         0x030C: {alias: 0x02C7, dir:H}, // wide caron
@@ -339,6 +348,7 @@
         0x2015: {alias: 0x23AF, dir:H}, // horizontal line
         0x2017: {alias: 0x23AF, dir:H}, // horizontal line
         0x2212: {alias: 0x23AF, dir:H}, // minus
+        0x2215: {alias: 0x002F, dir:V}, // division slash
         0x2329: {alias: 0x27E8, dir:V}, // langle
         0x232A: {alias: 0x27E9, dir:V}, // rangle
         0x2500: {alias: 0x2212, dir:H}, // horizontal line
@@ -346,7 +356,100 @@
         0x3008: {alias: 0x27E8, dir:V}, // langle
         0x3009: {alias: 0x27E9, dir:V}, // rangle
         0xFE37: {alias: 0x23DE, dir:H}, // horizontal brace down
-        0xFE38: {alias: 0x23DF, dir:H}  // horizontal brace up
+        0xFE38: {alias: 0x23DF, dir:H}, // horizontal brace up
+
+        0x003D: EXTRAH, // equal sign
+        0x219E: EXTRAH, // left two-headed arrow
+        0x21A0: EXTRAH, // right two-headed arrow
+        0x21A4: EXTRAH, // left arrow from bar
+        0x21A5: EXTRAV, // up arrow from bar
+        0x21A6: EXTRAH, // right arrow from bar
+        0x21A7: EXTRAV, // down arrow from bar
+        0x21B0: EXTRAV, // up arrow with top leftwards
+        0x21B1: EXTRAV, // up arrow with top right
+        0x21BC: EXTRAH, // left harpoon with barb up
+        0x21BD: EXTRAH, // left harpoon with barb down
+        0x21BE: EXTRAV, // up harpoon with barb right
+        0x21BF: EXTRAV, // up harpoon with barb left
+        0x21C0: EXTRAH, // right harpoon with barb up
+        0x21C1: EXTRAH, // right harpoon with barb down
+        0x21C2: EXTRAV, // down harpoon with barb right
+        0x21C3: EXTRAV, // down harpoon with barb left
+        0x21DA: EXTRAH, // left triple arrow
+        0x21DB: EXTRAH, // right triple arrow
+        0x23B4: EXTRAH, // top square bracket
+        0x23B5: EXTRAH, // bottom square bracket
+        0x23DC: EXTRAH, // top paren
+        0x23DD: EXTRAH, // bottom paren
+        0x23E0: EXTRAH, // top tortoise shell
+        0x23E1: EXTRAH, // bottom tortoise shell
+        0x2906: EXTRAH, // leftwards double arrow from bar
+        0x2907: EXTRAH, // rightwards double arrow from bar
+        0x294E: EXTRAH, // left barb up right barb up harpoon
+        0x294F: EXTRAV, // up barb right down barb right harpoon
+        0x2950: EXTRAH, // left barb dow right barb down harpoon
+        0x2951: EXTRAV, // up barb left down barb left harpoon
+        0x295A: EXTRAH, // leftwards harpoon with barb up from bar
+        0x295B: EXTRAH, // rightwards harpoon with barb up from bar
+        0x295C: EXTRAV, // up harpoon with barb right from bar
+        0x295D: EXTRAV, // down harpoon with barb right from bar
+        0x295E: EXTRAH, // leftwards harpoon with barb down from bar
+        0x295F: EXTRAH, // rightwards harpoon with barb down from bar
+        0x2960: EXTRAV, // up harpoon with barb left from bar
+        0x2961: EXTRAV, // down harpoon with barb left from bar
+        0x27F5: {alias: 0x2190, dir:H}, // long left arrow
+        0x27F6: {alias: 0x2192, dir:H}, // long right arrow
+        0x27F7: {alias: 0x2194, dir:H}, // long left-right arrow
+        0x27F8: {alias: 0x21D0, dir:H}, // long left double arrow
+        0x27F9: {alias: 0x21D2, dir:H}, // long right double arrow
+        0x27FA: {alias: 0x21D4, dir:H}, // long left-right double arrow
+        0x27FB: {alias: 0x21A4, dir:H}, // long left arrow from bar
+        0x27FC: {alias: 0x21A6, dir:H}, // long right arrow from bar
+        0x27FD: {alias: 0x2906, dir:H}, // long left double arrow from bar
+        0x27FE: {alias: 0x2907, dir:H}, // long right double arrow from bar
+
+        0x02C7: EXTRAH, // caron
+        0x02CD: EXTRAH, // low macron
+        0x02F7: EXTRAH, // low tilde
+        0x219F: EXTRAV, // upwards two headed arrow
+        0x21A1: EXTRAV, // downwards two headed arrow
+        0x21A8: EXTRAV, // up down arrow with base
+        0x21A9: EXTRAH, // left hook arrow
+        0x21AA: EXTRAH, // right hook arrow
+        0x21B2: EXTRAV, // down arrow with tip left
+        0x21B3: EXTRAV, // down arrow with tip right
+        0x21B4: EXTRAH, // right arrow with corner down
+        0x21B5: EXTRAV, // down arrow with corner left
+        0x21CB: EXTRAH, // left harpoon over right harpoon
+        0x21CC: EXTRAH, // right harpoon over left harpoon
+        0x21E0: EXTRAH, // left dashed arrow
+        0x21E1: EXTRAV, // up dashed arrow
+        0x21E2: EXTRAH, // right dashed arrow
+        0x21E3: EXTRAV, // down dahsed arrow
+        0x21E4: EXTRAH, // left arrow to bar
+        0x21E5: EXTRAH, // right arrow to bar
+        0x21FD: EXTRAH, // left open-headed arrow
+        0x21FE: EXTRAH, // right open-headed arrow
+        0x21FF: EXTRAH, // left right open-headed arrow
+        0x27E6: EXTRAV, // left white square bracket
+        0x27E7: EXTRAV, // right white square bracket
+        0x27EA: EXTRAV, // left double angle bracket
+        0x27EB: EXTRAV, // right double angle bracket
+        0x290A: EXTRAV, // up triple arrow
+        0x290B: EXTRAV, // down triple arrow
+        0x2912: EXTRAV, // up arrow to bar
+        0x2913: EXTRAV, // down arrow to bar
+        0x2952: EXTRAH, // left harpoon with barb up to bar
+        0x2953: EXTRAH, // right harpoon with barb up to bar
+        0x2954: EXTRAV, // up harpoon with barb right to bar
+        0x2955: EXTRAV, // down harpoon with barb right to bar
+        0x2956: EXTRAH, // left harpoon with barb down to bar
+        0x2957: EXTRAH, // right harpoon with barb down to bar
+        0x2958: EXTRAV, // up harpoon with barb left to bar
+        0x2959: EXTRAV, // down harpoon with barb left to bar
+        0x2980: EXTRAV, // triple vertical bar
+        0x2997: EXTRAV, // left balck tortoise shell
+        0x2998: EXTRAV  // right balck tortoise shell
       }
     }
   });
@@ -356,7 +459,6 @@
     
     TEX.isSTIX = true;
     TEX.Definitions.mathchar0mi.hbar = ['210F',{variantForm: true}];
-    TEX.Definitions.mathchar0mi.prime[1].variantForm = true;
     TEX.Definitions.mathchar0mi.emptyset[1].variantForm = true;
     TEX.Definitions.mathchar0mi.backslash[1].variantForm = true;
     TEX.Definitions.mathchar0mi.triangle[1].mathsize = "71%";
@@ -753,8 +855,10 @@
       [0x27C0,0x27EF,"MiscMathSymbolsA"],
       [0x2980,0x29FF,"MiscMathSymbolsB"],
       [0x2A00,0x2AFF,"SuppMathOperators"],
+      [0xA720,0xA7FF,"LatinExtendedD"],
       [0xFB00,0xFB4F,"AlphaPresentForms"],
       [0x1D400,0x1D433,"MathBold"],
+      [0x1D538,0x1D56B,"BBBold"],
       [0x1D56C,0x1D59F,"BoldFraktur"],
       [0x1D5D4,0x1D607,"MathSSBold"],
       [0x1D6A8,0x1D6E1,"GreekBold"],
@@ -1383,6 +1487,8 @@
 
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x22EE][0] += 400;  // adjust height for \vdots
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x22F1][0] += 500;  // adjust height for \ddots
+  HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x2212][1] += 100;  // adjust depth for minus (arrow extender)
+  HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x003D][1] += 100;  // adjust depth for = (double arrow extender)
   HTMLCSS.FONTDATA.FONTS['STIXNonUnicode'][0xE14A][0] += 200;  // adjust height for brace extender
   HTMLCSS.FONTDATA.FONTS['STIXNonUnicode'][0xE14A][1] += 200;  // adjust depth for brace extender
   HTMLCSS.FONTDATA.FONTS['STIXNonUnicode'][0xE14B][0] += 200;  // adjust height for brace extender
@@ -1405,23 +1511,61 @@
 	FONTDATA.VARIANT["italic"].offsetGG = 0x1D6FC; FONTDATA.VARIANT["italic"].offsetG = 0x1D6E2;
         FONTDATA.VARIANT["bold-italic"].offsetGG = 0x1D736; FONTDATA.VARIANT["bold-italic"].offsetG = 0x1D71C;
       }
+    },
+    Safari: function (browser) {
+      browser.STIXfontBug = browser.versionAtLeast("5.1") && browser.isMac;
+    },
+    Chrome: function (browser) {
+      var match = navigator.appVersion.match(/AppleWebKit\/(\d+)/);
+      if (match && parseInt(match[1]) > 534) {browser.STIXfontBug = true}
     }
   });
   
   //
-  //  Check for Beta version versus release version of fonts
+  //  Fix WebKit problem with STIX fonts in OS X Lion
   //
-  if (HTMLCSS.Font.testFont({family:"STIXSizeOneSym",testString:String.fromCharCode(0x2C6)})) {
-    //  Release version -- all OK
-    MathJax.Ajax.loadComplete(HTMLCSS.fontDir + "/fontdata.js");
-  } else {
-    //  Beta version, so load patch file and don't say fontdata is complete until it loads
-    MathJax.Callback.Queue(
-      ["Require",MathJax.Ajax,HTMLCSS.fontDir + "/fontdata-beta.js"],
-      ["loadComplete",MathJax.Ajax,HTMLCSS.fontDir + "/fontdata.js"]
-    );
+  if (MathJax.Hub.Browser.STIXfontBug) {
+    HTMLCSS.FONTDATA.FONTS["STIXGeneral"].family = "STIXGeneral-Regular";
+    HTMLCSS.FONTDATA.FONTS["STIXGeneral-italic"].family = "STIXGeneral-Italic";
+    delete HTMLCSS.FONTDATA.FONTS["STIXGeneral-italic"].style;
+    HTMLCSS.FONTDATA.FONTS["STIXNonUnicode"].family = "STIXNonUnicode-Regular";
+    HTMLCSS.FONTDATA.FONTS["STIXNonUnicode-italic"].family = "STIXNonUnicode-Italic";
+    delete HTMLCSS.FONTDATA.FONTS["STIXNonUnicode-italic"].style;
   }
   
+  //
+  //  Check for STIX font version
+  //
+  var QUEUE = [];
+  
+  //
+  //  Test for v1.1 rather than v1.0 (double-struck alphabet was moved from
+  //  user-defined area in STIXNonUnicode to STIXGeneral math alphabet)
+  //
+  var DIV = HTMLCSS.Font.div;
+  HTML.addElement(DIV,"span",
+    {style:{display:"inline-block","font-family":"STIXNonUnicode","font-weight":"bold"}},
+    ["\uE38C\uE38C\uE38C\uE38C\uE38C"]
+  );
+  HTML.addElement(DIV,"span",
+    {style:{display:"inline-block","font-family":"STIXNonUnicode","font-weight":"bold"}},
+    ["\uE39A\uE39A\uE39A\uE39A\uE39A"]
+  );
+  if (DIV.lastChild.previousSibling.offsetWidth < DIV.lastChild.offsetWidth)
+    {QUEUE.push(["Require",MathJax.Ajax,HTMLCSS.fontDir+"/fontdata-1.0.js"])}
+  DIV.removeChild(DIV.lastChild); DIV.removeChild(DIV.lastChild);
 
-})(MathJax.OutputJax["HTML-CSS"]);
+  //
+  //  Text for 1.0-beta version (U+02C56 was added in 1.0)
+  //
+  if (!HTMLCSS.Font.testFont({family:"STIXSizeOneSym",testString:"\u02C6"}))
+    {QUEUE.push(["Require",MathJax.Ajax,HTMLCSS.fontDir + "/fontdata-beta.js"])}
+  
+  //
+  //  Load any patch files and then call loadComplete()
+  //
+  QUEUE.push(["loadComplete",MathJax.Ajax,HTMLCSS.fontDir + "/fontdata.js"]);
+  MathJax.Callback.Queue.apply(MathJax.Callback,QUEUE);
+
+})(MathJax.OutputJax["HTML-CSS"],MathJax.HTML);
 

@@ -63,7 +63,7 @@
         '\u223F': MO.BIN3,     // sine wave
         '\u2241': MO.REL,      // not tilde
         '\u2242': MO.REL,      // minus tilde
-        '\u2242\u0338': MO.BIN4, // minus tilde with slash
+        '\u2242\u0338': MO.REL, // minus tilde with slash
         '\u2244': MO.REL,      // not asymptotically equal to
         '\u2246': MO.REL,      // approximately but not actually equal to
         '\u2247': MO.REL,      // neither approximately nor actually equal to
@@ -72,9 +72,9 @@
         '\u224B': MO.REL,      // triple tilde
         '\u224C': MO.REL,      // all equal to
         '\u224E': MO.REL,      // geometrically equivalent to
-        '\u224E\u0338': MO.BIN4, // geometrically equivalent to with slash
+        '\u224E\u0338': MO.REL, // geometrically equivalent to with slash
         '\u224F': MO.REL,      // difference between
-        '\u224F\u0338': MO.BIN4, // difference between with slash
+        '\u224F\u0338': MO.REL, // difference between with slash
         '\u2251': MO.REL,      // geometrically equal to
         '\u2252': MO.REL,      // approximately equal to or the image of
         '\u2253': MO.REL,      // image of or approximately equal to
@@ -92,12 +92,12 @@
         '\u2262': MO.REL,      // not identical to
         '\u2263': MO.REL,      // strictly equivalent to
         '\u2266': MO.REL,      // less-than over equal to
-        '\u2266\u0338': MO.BIN4, // less-than over equal to with slash
+        '\u2266\u0338': MO.REL, // less-than over equal to with slash
         '\u2267': MO.REL,      // greater-than over equal to
         '\u2268': MO.REL,      // less-than but not equal to
         '\u2269': MO.REL,      // greater-than but not equal to
-        '\u226A\u0338': MO.BIN4, // much less than with slash
-        '\u226B\u0338': MO.BIN4, // much greater than with slash
+        '\u226A\u0338': MO.REL, // much less than with slash
+        '\u226B\u0338': MO.REL, // much greater than with slash
         '\u226C': MO.REL,      // between
         '\u226D': MO.REL,      // not equivalent to
         '\u226E': MO.REL,      // not less-than
@@ -116,11 +116,11 @@
         '\u227D': MO.REL,      // succeeds or equal to
         '\u227E': MO.REL,      // precedes or equivalent to
         '\u227F': MO.REL,      // succeeds or equivalent to
-        '\u227F\u0338': MO.BIN4, // succeeds or equivalent to with slash
+        '\u227F\u0338': MO.REL, // succeeds or equivalent to with slash
         '\u2280': MO.REL,      // does not precede
         '\u2281': MO.REL,      // does not succeed
-        '\u2282\u20D2': MO.BIN4, // subset of with vertical line
-        '\u2283\u20D2': MO.BIN4, // superset of with vertical line
+        '\u2282\u20D2': MO.REL, // subset of with vertical line
+        '\u2283\u20D2': MO.REL, // superset of with vertical line
         '\u2284': MO.REL,      // not a subset of
         '\u2285': MO.REL,      // not a superset of
         '\u2288': MO.REL,      // neither a subset of nor equal to
@@ -130,9 +130,9 @@
         '\u228C': MO.BIN4,     // multiset
         '\u228D': MO.BIN4,     // multiset multiplication
         '\u228F': MO.REL,      // square image of
-        '\u228F\u0338': MO.BIN4, // square image of with slash
+        '\u228F\u0338': MO.REL, // square image of with slash
         '\u2290': MO.REL,      // square original of
-        '\u2290\u0338': MO.BIN4, // square original of with slash
+        '\u2290\u0338': MO.REL, // square original of with slash
         '\u229A': MO.BIN4,     // circled ring operator
         '\u229B': MO.BIN4,     // circled asterisk operator
         '\u229C': MO.BIN4,     // circled equals

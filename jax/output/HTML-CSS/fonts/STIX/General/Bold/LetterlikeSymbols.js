@@ -58,11 +58,6 @@ MathJax.Hub.Insert(
     0x213E: [676,0,497,75,643],        // DOUBLE-STRUCK CAPITAL GAMMA
     0x213F: [676,0,768,75,693],        // DOUBLE-STRUCK CAPITAL PI
     0x2140: [773,269,976,36,952],      // DOUBLE-STRUCK N-ARY SUMMATION
-    0x2145: [676,0,748,75,703],        // stix-mathematical bold double-struck capital D
-    0x2146: [676,14,643,50,583],       // stix-mathematical bold double-struck small letter d
-    0x2147: [473,14,573,50,523],       // stix-mathematical bold double-struck small letter e
-    0x2148: [691,0,330,65,265],        // stix-mathematical bold double-struck small letter i
-    0x2149: [691,205,371,-20,311],     // stix-mathematical bold double-struck small letter j
     0x214B: [690,17,833,61,788]        // TURNED AMPERSAND
   }
 );

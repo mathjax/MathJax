@@ -6,7 +6,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2011 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 (function (HUB,HTMLCSS,AJAX) {
-  var VERSION = "1.1";
+  var VERSION = "2.0";
   
   HUB.Register.LoadHook(HTMLCSS.fontDir + "/fontdata.js",function () {
 
@@ -61,7 +61,7 @@
             "AlphaImageLoader(src='"+AJAX.fileURL(file)+"', sizingMethod='scale')";
           file = this.directory+"/blank.gif"
         }
-        this.addElement(span,"img",{src:AJAX.fileURL(file), style:style});
+        this.addElement(span,"img",{src:AJAX.fileURL(file), style:style, isMathJax:true});
         return "";
       },
       
@@ -120,7 +120,7 @@
 
         HTMLCSS.Augment({
           imgSpaceBug: true,
-          imgSpace: String.fromCharCode(0xA0),
+          imgSpace: "\u00A0",
           
           imgZoomLevel: (browser.isMac ?
             {50:.3, 30:.5, 22:.67, 19:.8, 16:.9, 15:1, 13:1.1, 12:1.2,
@@ -162,7 +162,7 @@
       Opera: function (browser) {
         HTMLCSS.Augment({
           imgSpaceBug: true,
-          imgSpace: String.fromCharCode(0xA0)+String.fromCharCode(0xA0),
+          imgSpace: "\u00A0\u00A0",
           
           imgDoc: (document.compatMode == "BackCompat" ? document.body :
                    document.documentElement),

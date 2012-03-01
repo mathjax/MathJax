@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/Main.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_AMS'] = {
   directory: 'AMS/Regular',
   family: 'MathJax_AMS',
-  testString: "MATHJAX AMS",
+  testString: "MATHJAX AMS \u02C6",
   Ranges: [
     [0x0,0x7F,"BBBold"],
     [0x80,0xFF,"Latin1Supplement"],

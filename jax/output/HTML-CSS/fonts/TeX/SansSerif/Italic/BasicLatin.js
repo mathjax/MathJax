@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/SansSerif/Italic/BasicLatin.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,15 +31,15 @@ MathJax.Hub.Insert(
     0x27: [694,-471,278,190,335],      // APOSTROPHE
     0x28: [750,250,389,104,491],       // LEFT PARENTHESIS
     0x29: [750,250,389,2,390],         // RIGHT PARENTHESIS
-    0x2A: [750,-305,500,156,569],      // ASTERISK
+    0x2A: [750,-306,500,156,568],      // ASTERISK
     0x2B: [583,83,778,108,775],        // PLUS SIGN
     0x2C: [98,125,278,63,209],         // COMMA
     0x2D: [259,-186,333,51,332],       // HYPHEN-MINUS
     0x2E: [98,0,278,90,209],           // FULL STOP
     0x2F: [750,250,500,6,600],         // SOLIDUS
-    0x30: [678,23,500,88,549],         // DIGIT ZERO
+    0x30: [678,22,500,88,549],         // DIGIT ZERO
     0x31: [678,0,500,88,451],          // DIGIT ONE
-    0x32: [679,0,500,50,552],          // DIGIT TWO
+    0x32: [678,0,500,50,551],          // DIGIT TWO
     0x33: [678,22,500,56,544],         // DIGIT THREE
     0x34: [656,0,500,62,521],          // DIGIT FOUR
     0x35: [656,22,500,50,555],         // DIGIT FIVE
@@ -49,7 +49,7 @@ MathJax.Hub.Insert(
     0x39: [677,22,500,77,545],         // DIGIT NINE
     0x3A: [444,0,278,90,282],          // COLON
     0x3B: [444,125,278,63,282],        // SEMICOLON
-    0x3D: [370,-130,778,87,796],       // EQUALS SIGN
+    0x3D: [370,-130,778,88,796],       // EQUALS SIGN
     0x3F: [704,0,472,173,536],         // QUESTION MARK
     0x40: [705,10,667,120,707],        // COMMERCIAL AT
     0x41: [694,0,667,28,638],          // LATIN CAPITAL LETTER A
@@ -69,12 +69,12 @@ MathJax.Hub.Insert(
     0x4F: [716,22,736,118,763],        // LATIN CAPITAL LETTER O
     0x50: [694,0,639,88,690],          // LATIN CAPITAL LETTER P
     0x51: [716,125,736,118,763],       // LATIN CAPITAL LETTER Q
-    0x52: [694,0,646,88,699],          // LATIN CAPITAL LETTER R
+    0x52: [694,0,646,88,698],          // LATIN CAPITAL LETTER R
     0x53: [716,22,556,54,609],         // LATIN CAPITAL LETTER S
     0x54: [688,0,681,165,790],         // LATIN CAPITAL LETTER T
-    0x55: [694,22,688,130,747],        // LATIN CAPITAL LETTER U
+    0x55: [694,22,688,131,747],        // LATIN CAPITAL LETTER U
     0x56: [694,0,667,161,799],         // LATIN CAPITAL LETTER V
-    0x57: [694,0,944,160,1076],        // LATIN CAPITAL LETTER W
+    0x57: [694,0,944,161,1076],        // LATIN CAPITAL LETTER W
     0x58: [694,0,667,14,758],          // LATIN CAPITAL LETTER X
     0x59: [694,0,667,151,810],         // LATIN CAPITAL LETTER Y
     0x5A: [694,0,611,55,702],          // LATIN CAPITAL LETTER Z
@@ -82,10 +82,10 @@ MathJax.Hub.Insert(
     0x5D: [750,250,289,-31,353],       // RIGHT SQUARE BRACKET
     0x5E: [694,-527,500,190,533],      // CIRCUMFLEX ACCENT
     0x5F: [-38,114,500,50,565],        // LOW LINE
-    0x61: [461,11,481,61,474],         // LATIN SMALL LETTER A
+    0x61: [461,10,481,61,473],         // LATIN SMALL LETTER A
     0x62: [694,11,517,75,539],         // LATIN SMALL LETTER B
-    0x63: [461,11,444,75,499],         // LATIN SMALL LETTER C
-    0x64: [694,11,517,73,588],         // LATIN SMALL LETTER D
+    0x63: [460,11,444,75,499],         // LATIN SMALL LETTER C
+    0x64: [694,10,517,73,588],         // LATIN SMALL LETTER D
     0x65: [460,11,444,71,472],         // LATIN SMALL LETTER E
     0x66: [705,0,306,94,494],          // LATIN SMALL LETTER F
     0x67: [455,206,500,12,568],        // LATIN SMALL LETTER G
@@ -102,7 +102,7 @@ MathJax.Hub.Insert(
     0x72: [455,0,342,74,424],          // LATIN SMALL LETTER R
     0x73: [461,11,383,35,436],         // LATIN SMALL LETTER S
     0x74: [571,11,361,97,410],         // LATIN SMALL LETTER T
-    0x75: [444,11,517,90,537],         // LATIN SMALL LETTER U
+    0x75: [444,10,517,90,537],         // LATIN SMALL LETTER U
     0x76: [444,0,461,108,540],         // LATIN SMALL LETTER V
     0x77: [444,0,683,108,762],         // LATIN SMALL LETTER W
     0x78: [444,0,461,1,537],           // LATIN SMALL LETTER X

@@ -6,7 +6,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "1.1";
+  var VERSION = "2.0";
 
   var MML = MathJax.ElementJax.mml;
   var TEX = MathJax.InputJax.TeX;
@@ -56,8 +56,19 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     toHTML: function (span) {
       span = this.HTMLcreateSpan(span);
       span.bbox = this.Core().toHTML(span).bbox;
+      // Firefox doesn't correctly handle a span with a negatively sized content,
+      //   so move marginLeft to main span (this is a hack to get \iiiint to work).
+      //   FIXME:  This is a symptom of a more general problem with Firefox, and
+      //           there probably needs to be a more general solution (e.g., modifying
+      //           HTMLhandleSpace() to get the width and adjust the right margin to
+      //           compensate for negative-width contents)
+      if (span.firstChild && span.firstChild.style.marginLeft) {
+        span.style.marginLeft = span.firstChild.style.marginLeft;
+        span.firstChild.style.marginLeft = "";
+      }
       return span;
-    }
+    },
+    toSVG: function () {return this.Core().toSVG()}
   });
   
   MathJax.Hub.Startup.signal.Post("TeX mathchoice Ready");

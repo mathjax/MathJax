@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/TeX/Size2/Regular/Main.js
  *
- *  Copyright (c) 2009-2010 Design Science, Inc.
+ *  Copyright (c) 2009-2012 Design Science, Inc.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Size2'] = {
   testString: "() [] {}",
   0x20: [0,0,250,0,0],               // SPACE
   0x28: [1150,649,597,180,561],      // LEFT PARENTHESIS
-  0x29: [1151,649,597,35,416],       // RIGHT PARENTHESIS
-  0x2F: [1150,649,811,55,755],       // SOLIDUS
+  0x29: [1150,649,597,35,416],       // RIGHT PARENTHESIS
+  0x2F: [1150,649,811,56,754],       // SOLIDUS
   0x5B: [1150,649,472,224,455],      // LEFT SQUARE BRACKET
   0x5C: [1150,649,811,54,754],       // REVERSE SOLIDUS
   0x5D: [1150,649,472,16,247],       // RIGHT SQUARE BRACKET
   0x7B: [1150,649,667,119,547],      // LEFT CURLY BRACKET
-  0x7D: [1151,649,667,119,547],      // RIGHT CURLY BRACKET
+  0x7D: [1150,649,667,119,547],      // RIGHT CURLY BRACKET
   0xA0: [0,0,250,0,0],               // NO-BREAK SPACE
   0x2C6: [772,-565,1000,-5,1004],    // MODIFIER LETTER CIRCUMFLEX ACCENT
   0x2DC: [750,-611,1000,0,999],      // SMALL TILDE
@@ -41,8 +41,8 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Size2'] = {
   0x2211: [950,450,1444,55,1388],    // N-ARY SUMMATION
   0x221A: [1150,650,1000,111,1020],  // SQUARE ROOT
   0x222B: [1360,862,556,55,944],     // INTEGRAL
-  0x222C: [1361,862,1084,55,1473],   // DOUBLE INTEGRAL
-  0x222D: [1361,862,1592,55,1981],   // TRIPLE INTEGRAL
+  0x222C: [1360,862,1084,55,1472],   // DOUBLE INTEGRAL
+  0x222D: [1360,862,1592,55,1980],   // TRIPLE INTEGRAL
   0x222E: [1360,862,556,55,944],     // CONTOUR INTEGRAL
   0x22C0: [950,450,1111,55,1055],    // N-ARY LOGICAL AND
   0x22C1: [950,450,1111,55,1055],    // N-ARY LOGICAL OR

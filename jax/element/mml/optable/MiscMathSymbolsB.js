@@ -25,6 +25,7 @@
   MathJax.Hub.Insert(MML.mo.prototype,{
     OPTABLE: {
       prefix: {
+        '\u2980': [0,0,TEXCLASS.ORD,{fence: true, stretchy: true}], // triple vertical bar delimiter
         '\u2983': MO.OPEN,     // left white curly bracket
         '\u2985': MO.OPEN,     // left white parenthesis
         '\u2987': MO.OPEN,     // z notation left image bracket
@@ -39,6 +40,7 @@
         '\u29FC': MO.OPEN      // left-pointing curved angle bracket
       },
       postfix: {
+        '\u2980': [0,0,TEXCLASS.ORD,{fence: true, stretchy: true}], // triple vertical bar delimiter
         '\u2984': MO.CLOSE,    // right white curly bracket
         '\u2986': MO.CLOSE,    // right white parenthesis
         '\u2988': MO.CLOSE,    // z notation right image bracket
@@ -53,7 +55,6 @@
         '\u29FD': MO.CLOSE     // right-pointing curved angle bracket
       },
       infix: {
-        '\u2980': MO.ORD,      // triple vertical bar delimiter
         '\u2981': MO.BIN3,     // z notation spot
         '\u2982': MO.BIN3,     // z notation type colon
         '\u2999': MO.BIN3,     // dotted fence
@@ -111,9 +112,9 @@
         '\u29CD': MO.BIN3,     // triangle with serifs at bottom
         '\u29CE': MO.REL,      // right triangle above left triangle
         '\u29CF': MO.REL,      // left triangle beside vertical bar
-        '\u29CF\u0338': MO.BIN4, // left triangle beside vertical bar with slash
+        '\u29CF\u0338': MO.REL, // left triangle beside vertical bar with slash
         '\u29D0': MO.REL,      // vertical bar beside right triangle
-        '\u29D0\u0338': MO.BIN4, // vertical bar beside right triangle with slash
+        '\u29D0\u0338': MO.REL, // vertical bar beside right triangle with slash
         '\u29D1': MO.REL,      // bowtie with left half black
         '\u29D2': MO.REL,      // bowtie with right half black
         '\u29D3': MO.REL,      // black bowtie
