@@ -506,7 +506,7 @@
         });
       }
 
-      var fontDir = MathJax.OutputJax.fontDir + "/HTML-CSS/TeX/otf";
+      var fontDir = MathJax.Ajax.fileURL(MathJax.OutputJax.fontDir+"/HTML-CSS/TeX/otf");
 
       /*
        *  Add fix for mathvariant issues in FF
