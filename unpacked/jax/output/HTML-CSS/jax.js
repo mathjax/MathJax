@@ -2484,7 +2484,6 @@
 	  if (D != null) {this.data[this.base].HTMLstretchV(base,HW,D)}
 	  else if (HW != null) {this.data[this.base].HTMLstretchH(base,HW)}
 	} else {base.bbox = this.HTMLzeroBBox()}
-	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
 	var x_height = HTMLCSS.TeX.x_height * scale,
 	    s = HTMLCSS.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?
 	var sup, sub;
@@ -2496,6 +2495,7 @@
 	if (sup) {sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw)}
 	if (sub) {sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw)}
 	HTMLCSS.placeBox(base,0,0);
+	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
 	if (base.bbox.ic) {
