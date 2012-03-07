@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.0.1";
+  var VERSION = "2.0.2";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -866,7 +866,7 @@
       var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
       MENU.Augment({
         margin: 20,
-        msieBackgroundBug: true,
+        msieBackgroundBug: (document.documentMode < 9),
         msieFixedPositionBug: (quirks || !isIE8),
         msieAboutBug: quirks
       });
