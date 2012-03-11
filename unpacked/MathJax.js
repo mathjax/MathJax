@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.0";
-MathJax.fileversion = "2.0.2";
+MathJax.fileversion = "2.0.3";
 
 /**********************************************************/
 
@@ -1862,8 +1862,9 @@ MathJax.Hub.Startup = {
     var config = MathJax.Hub.config, jax = MathJax.Hub.outputJax;
     //  Save the order of the output jax since they are loading asynchronously
     for (var i = 0, m = config.jax.length, k = 0; i < m; i++) {
-      if (config.jax[i].substr(0,7) === "output/") 
-        {jax.order[config.jax[i].substr(7)] = k; k++}
+      var name = config.jax[i].substr(7);
+      if (config.jax[i].substr(0,7) === "output/" && jax.order[name] == null)
+        {jax.order[name] = k; k++}
     }
     var queue = MathJax.Callback.Queue();
     return queue.Push(
