@@ -98,12 +98,12 @@
           //
           //  Insert data needed to use MathPlayer for MathML output
           //
-          if (!HUB.Browser.hasMathPlayer) {
+          if (!HUB.Browser.mpNamespace) {
             var mathplayer = document.createElement("object");
             mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
             document.getElementsByTagName("head")[0].appendChild(mathplayer);
             document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
-            HUB.Browser.hasMathPlayer = true;
+            HUB.Browser.mpNamespace = true;
           }
           if (!HUB.Browser.mpImported) {
             document.namespaces.m.doImport("#mathplayer");
