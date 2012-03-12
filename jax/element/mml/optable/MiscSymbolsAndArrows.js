@@ -1,36 +1,16 @@
-/*************************************************************
+/*
+ *  /MathJax/jax/element/mml/optable/MiscSymbolsAndArrows.js
+ *  
+ *  Copyright (c) 2012 Design Science, Inc.
  *
- *  MathJax/jax/output/HTML-CSS/optable/MiscSymbolsAndArrows.js
- *
- *  Copyright (c) 2010 Design Science, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  Part of the MathJax library.
+ *  See http://www.mathjax.org for details.
+ * 
+ *  Licensed under the Apache License, Version 2.0;
  *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-(function (MML) {
-  var MO = MML.mo.OPTYPES;
-  var TEXCLASS = MML.TEXCLASS;
+(function(a){var c=a.mo.OPTYPES;var b=a.TEXCLASS;MathJax.Hub.Insert(a.mo.prototype,{OPTABLE:{infix:{"\u2B45":c.RELSTRETCH,"\u2B46":c.RELSTRETCH}}});MathJax.Ajax.loadComplete(a.optableDir+"/MiscSymbolsAndArrows.js")})(MathJax.ElementJax.mml);
 
-  MathJax.Hub.Insert(MML.mo.prototype,{
-    OPTABLE: {
-      infix: {
-        '\u2B45': MO.RELSTRETCH, // leftwards quadruple arrow
-        '\u2B46': MO.RELSTRETCH  // rightwards quadruple arrow
-      }
-    }
-  });
-
-  MathJax.Ajax.loadComplete(MML.optableDir+"/MiscSymbolsAndArrows.js");
-
-})(MathJax.ElementJax.mml);

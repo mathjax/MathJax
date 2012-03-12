@@ -1,58 +1,16 @@
-/*************************************************************
- *
- *  MathJax/extensions/TeX/verb.js
+/*
+ *  /MathJax/extensions/TeX/verb.js
  *  
- *  Implements the \verb|...| command for including text verbatim
- *  (with no processing of macros or special characters).
+ *  Copyright (c) 2012 Design Science, Inc.
  *
- *  ---------------------------------------------------------------------
- *  
- *  Copyright (c) 2009-2012 Design Science, Inc.
+ *  Part of the MathJax library.
+ *  See http://www.mathjax.org for details.
  * 
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  Licensed under the Apache License, Version 2.0;
  *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
  */
 
-MathJax.Extension["TeX/verb"] = {
-  version: "2.0"
-};
+MathJax.Extension["TeX/verb"]={version:"2.0"};MathJax.Hub.Register.StartupHook("TeX Jax Ready",function(){var a=MathJax.ElementJax.mml;var c=MathJax.InputJax.TeX;var b=c.Definitions;b.macros.verb="Verb";c.Parse.Augment({Verb:function(d){var g=this.GetNext();var f=++this.i;if(g==""){c.Error(d+" requires an argument")}while(this.i<this.string.length&&this.string.charAt(this.i)!=g){this.i++}if(this.i==this.string.length){c.Error("Can't find closing delimiter for "+d)}var e=this.string.slice(f,this.i);this.i++;this.Push(a.mtext(e).With({mathvariant:a.VARIANT.MONOSPACE}))}});MathJax.Hub.Startup.signal.Post("TeX verb Ready")});MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/verb.js");
 
-MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  
-  var MML = MathJax.ElementJax.mml;
-  var TEX = MathJax.InputJax.TeX;
-  var TEXDEF = TEX.Definitions;
-  
-  TEXDEF.macros.verb = 'Verb';
-
-  TEX.Parse.Augment({
-
-    /*
-     *  Implement \verb|...|
-     */
-    Verb: function (name) {
-      var c = this.GetNext(); var start = ++this.i;
-      if (c == "" ) {TEX.Error(name+" requires an argument")}
-      while (this.i < this.string.length && this.string.charAt(this.i) != c) {this.i++}
-      if (this.i == this.string.length) 
-        {TEX.Error("Can't find closing delimiter for "+name)}
-      var text = this.string.slice(start,this.i); this.i++;
-      this.Push(MML.mtext(text).With({mathvariant:MML.VARIANT.MONOSPACE}));
-    }
-    
-  });
-  
-  MathJax.Hub.Startup.signal.Post("TeX verb Ready");
-
-});
-
-MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/verb.js");

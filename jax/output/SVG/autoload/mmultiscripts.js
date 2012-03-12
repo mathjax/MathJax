@@ -1,120 +1,16 @@
-/*************************************************************
- *
- *  MathJax/jax/output/SVG/autoload/mmultiscripts.js
+/*
+ *  /MathJax/jax/output/SVG/autoload/mmultiscripts.js
  *  
- *  Implements the SVG output for <mmultiscripts> elements.
+ *  Copyright (c) 2012 Design Science, Inc.
  *
- *  ---------------------------------------------------------------------
- *  
- *  Copyright (c) 2011-2012 Design Science, Inc.
+ *  Part of the MathJax library.
+ *  See http://www.mathjax.org for details.
  * 
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  Licensed under the Apache License, Version 2.0;
  *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
  */
 
-MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.0";
-  var MML = MathJax.ElementJax.mml,
-      SVG = MathJax.OutputJax.SVG;
-  
-  MML.mmultiscripts.Augment({
-    toSVG: function (HW,D) {
-      var svg = this.SVG(); this.SVGhandleSpace();
-      var scale = this.SVGgetScale();
-      var base = (this.data[this.base] ? this.SVGdataStretched(this.base,HW,D) : SVG.BBOX.G().Clean());
-      var x_height = SVG.TeX.x_height * scale,
-          s = SVG.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?
-
-      var BOX = this.SVGgetScripts(s);
-      var sub = BOX[0], sup = BOX[1], presub = BOX[2], presup = BOX[3];
-
-      var sscale = (this.data[1]||this).SVGgetScale();
-      var q = SVG.TeX.sup_drop * sscale, r = SVG.TeX.sub_drop * sscale;
-      var u = base.h - q, v = base.d + r, delta = 0, p;
-      if (base.ic) {delta = base.ic}
-      if (this.data[this.base] &&
-         (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
-        if (this.data[this.base].data.join("").length === 1 && base.scale === 1 &&
-            !base.stretched && !this.data[this.base].Get("largeop")) {u = v = 0}
-      }
-      var min = this.getValues("subscriptshift","superscriptshift"), mu = this.SVGgetMu(svg);
-      min.subscriptshift   = (min.subscriptshift === ""   ? 0 : SVG.length2em(min.subscriptshift,mu));
-      min.superscriptshift = (min.superscriptshift === "" ? 0 : SVG.length2em(min.superscriptshift,mu));
-
-      var dx = 0;
-      if (presub) {dx = presub.w+delta} else if (presup) {dx = presup.w-delta}
-      svg.Add(base,Math.max(0,dx),0);
-
-      if (!sup && !presup) {
-        v = Math.max(v,SVG.TeX.sub1*scale,min.subscriptshift);
-        if (sub)    {v = Math.max(v,sub.h-(4/5)*x_height)}
-        if (presub) {v = Math.max(v,presub.h-(4/5)*x_height)}
-        if (sub)    {svg.Add(sub,dx+base.w+s-delta,-v)}
-        if (presub) {svg.Add(presub,0,-v)}
-      } else {
-        if (!sub && !presub) {
-          var values = this.getValues("displaystyle","texprimestyle");
-          p = SVG.TeX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
-          u = Math.max(u,p*scale,min.superscriptshift);
-          if (sup)    {u = Math.max(u,sup.d+(1/4)*x_height)}
-          if (presup) {u = Math.max(u,presup.d+(1/4)*x_height)}
-          if (sup)    {svg.Add(sup,dx+base.w+s,u)}
-          if (presup) {svg.Add(presup,0,u)}
-        } else {
-          v = Math.max(v,SVG.TeX.sub2*scale);
-          var t = SVG.TeX.rule_thickness * scale;
-          var h = (sub||presub).h, d = (sup||presup).d;
-          if (presub) {h = Math.max(h,presub.h)}
-          if (presup) {d = Math.max(d,presup.d)}
-          if ((u - d) - (h - v) < 3*t) {
-            v = 3*t - u + d + h; q = (4/5)*x_height - (u - d);
-            if (q > 0) {u += q; v -= q}
-          }
-          u = Math.max(u,min.superscriptshift); v = Math.max(v,min.subscriptshift);
-          if (sup)    {svg.Add(sup,dx+base.w+s,u)}
-          if (presup) {svg.Add(presup,dx+delta-presup.w,u)}
-          if (sub)    {svg.Add(sub,dx+base.w+s-delta,-v)}
-          if (presub) {svg.Add(presub,dx-presub.w,-v)}
-        }
-      }
-      svg.Clean();
-      this.SVGhandleColor(svg);
-      this.SVGsaveData(svg);
-      return svg;
-    },
-    SVGgetScripts: function (s) {
-      var sup, sub, BOX = [];
-      var i = 1, m = this.data.length, W = 0;
-      for (var k = 0; k < 4; k += 2) {
-        while (i < m && this.data[i].type !== "mprescripts") {
-          for (var j = k; j < k+2; j++) {
-            if (this.data[i] && this.data[i].type !== "none") {
-              if (!BOX[j]) {BOX[j] = SVG.BBOX.G()}
-              BOX[j].Add(this.data[i].toSVG().With({x:W}));
-            }
-            i++;
-          }
-          sub = BOX[k]||{w:0}; sup = BOX[k+1]||{w:0};
-          sub.w = sup.w = W = Math.max(sub.w,sup.w);
-        }
-        i++; W = 0;
-      }
-      for (j = 0; j < 4; j++) {if (BOX[j]) {BOX[j].w += s; BOX[j].Clean()}}
-      return BOX;
-    }
-  });
-  
-  MathJax.Hub.Startup.signal.Post("SVG mmultiscripts Ready");
-  MathJax.Ajax.loadComplete(SVG.autoloadDir+"/mmultiscripts.js");
-
-});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function(){var b="2.0";var a=MathJax.ElementJax.mml,c=MathJax.OutputJax.SVG;a.mmultiscripts.Augment({toSVG:function(G,z){var B=this.SVG();this.SVGhandleSpace();var M=this.SVGgetScale();var j=(this.data[this.base]?this.SVGdataStretched(this.base,G,z):c.BBOX.G().Clean());var K=c.TeX.x_height*M,y=c.TeX.scriptspace*M*0.75;var x=this.SVGgetScripts(y);var k=x[0],e=x[1],n=x[2],i=x[3];var g=(this.data[1]||this).SVGgetScale();var C=c.TeX.sup_drop*g,A=c.TeX.sub_drop*g;var o=j.h-C,m=j.d+A,L=0,F;if(j.ic){L=j.ic}if(this.data[this.base]&&(this.data[this.base].type==="mi"||this.data[this.base].type==="mo")){if(this.data[this.base].data.join("").length===1&&j.scale===1&&!j.stretched&&!this.data[this.base].Get("largeop")){o=m=0}}var H=this.getValues("subscriptshift","superscriptshift"),E=this.SVGgetMu(B);H.subscriptshift=(H.subscriptshift===""?0:c.length2em(H.subscriptshift,E));H.superscriptshift=(H.superscriptshift===""?0:c.length2em(H.superscriptshift,E));var l=0;if(n){l=n.w+L}else{if(i){l=i.w-L}}B.Add(j,Math.max(0,l),0);if(!e&&!i){m=Math.max(m,c.TeX.sub1*M,H.subscriptshift);if(k){m=Math.max(m,k.h-(4/5)*K)}if(n){m=Math.max(m,n.h-(4/5)*K)}if(k){B.Add(k,l+j.w+y-L,-m)}if(n){B.Add(n,0,-m)}}else{if(!k&&!n){var f=this.getValues("displaystyle","texprimestyle");F=c.TeX[(f.displaystyle?"sup1":(f.texprimestyle?"sup3":"sup2"))];o=Math.max(o,F*M,H.superscriptshift);if(e){o=Math.max(o,e.d+(1/4)*K)}if(i){o=Math.max(o,i.d+(1/4)*K)}if(e){B.Add(e,l+j.w+y,o)}if(i){B.Add(i,0,o)}}else{m=Math.max(m,c.TeX.sub2*M);var w=c.TeX.rule_thickness*M;var I=(k||n).h,J=(e||i).d;if(n){I=Math.max(I,n.h)}if(i){J=Math.max(J,i.d)}if((o-J)-(I-m)<3*w){m=3*w-o+J+I;C=(4/5)*K-(o-J);if(C>0){o+=C;m-=C}}o=Math.max(o,H.superscriptshift);m=Math.max(m,H.subscriptshift);if(e){B.Add(e,l+j.w+y,o)}if(i){B.Add(i,l+L-i.w,o)}if(k){B.Add(k,l+j.w+y-L,-m)}if(n){B.Add(n,l-n.w,-m)}}}B.Clean();this.SVGhandleColor(B);this.SVGsaveData(B);return B},SVGgetScripts:function(p){var o,d,e=[];var n=1,g=this.data.length,f=0;for(var h=0;h<4;h+=2){while(n<g&&this.data[n].type!=="mprescripts"){for(var l=h;l<h+2;l++){if(this.data[n]&&this.data[n].type!=="none"){if(!e[l]){e[l]=c.BBOX.G()}e[l].Add(this.data[n].toSVG().With({x:f}))}n++}d=e[h]||{w:0};o=e[h+1]||{w:0};d.w=o.w=f=Math.max(d.w,o.w)}n++;f=0}for(l=0;l<4;l++){if(e[l]){e[l].w+=p;e[l].Clean()}}return e}});MathJax.Hub.Startup.signal.Post("SVG mmultiscripts Ready");MathJax.Ajax.loadComplete(c.autoloadDir+"/mmultiscripts.js")});
 

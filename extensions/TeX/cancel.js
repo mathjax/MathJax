@@ -1,105 +1,16 @@
-/*************************************************************
+/*
+ *  /MathJax/extensions/TeX/cancel.js
+ *  
+ *  Copyright (c) 2012 Design Science, Inc.
  *
- *  MathJax/extensions/TeX/cancel.js
- *  
- *  Implements the \cancel, \bcancel, \xcancel, and \cancelto macros.
- *  
- *  Usage:
- *  
- *      \cancel{math}            % strikeout math from lower left to upper right
- *      \bcancel{math}           % strikeout from upper left to lower right
- *      \xcancel{math}           % strikeout with an X
- *      \cancelto{value}{math}   % strikeout with arrow going to value
- *  
- *  ---------------------------------------------------------------------
- *  
- *  Copyright (c) 2011-2012 Design Science, Inc.
+ *  Part of the MathJax library.
+ *  See http://www.mathjax.org for details.
  * 
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  Licensed under the Apache License, Version 2.0;
  *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
  */
 
-MathJax.Extension["TeX/cancel"] = {
-  version: "2.0",
+MathJax.Extension["TeX/cancel"]={version:"2.0",ALLOWED:{arrow:1,color:1,mathcolor:1,background:1,mathbackground:1,padding:1,thickness:1}};MathJax.Hub.Register.StartupHook("TeX Jax Ready",function(){var d=MathJax.InputJax.TeX,c=d.Definitions.macros,a=MathJax.ElementJax.mml,b=MathJax.Extension["TeX/cancel"];b.setAttributes=function(j,f){if(f!==""){f=f.replace(/ /g,"").split(/,/);for(var h=0,e=f.length;h<e;h++){var g=f[h].split(/[:=]/);if(b.ALLOWED[g[0]]){if(g[1]==="true"){g[1]=true}if(g[1]==="false"){g[1]=false}j[g[0]]=g[1]}}}return j};c.cancel=["Cancel",a.NOTATION.UPDIAGONALSTRIKE];c.bcancel=["Cancel",a.NOTATION.DOWNDIAGONALSTRIKE];c.xcancel=["Cancel",a.NOTATION.UPDIAGONALSTRIKE+" "+a.NOTATION.DOWNDIAGONALSTRIKE];c.cancelto="CancelTo";d.Parse.Augment({Cancel:function(f,h){var e=this.GetBrackets(f,""),g=this.ParseArg(f);var i=b.setAttributes({notation:h},e);this.Push(a.menclose(g).With(i))},CancelTo:function(f,h){var j=this.ParseArg(f),e=this.GetBrackets(f,""),g=this.ParseArg(f);var i=b.setAttributes({notation:a.NOTATION.UPDIAGONALSTRIKE,arrow:true},e);j=a.mpadded(j).With({depth:"-.1em",height:"+.1em",voffset:".1em"});this.Push(a.msup(a.menclose(g).With(i),j))}});MathJax.Hub.Startup.signal.Post("TeX cancel Ready")});MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/cancel.js");
 
-  //
-  //  The attributes allowed in \enclose{notation}[attributes]{math}
-  //
-  ALLOWED: {
-    arrow: 1,
-    color: 1, mathcolor: 1,
-    background: 1, mathbackground: 1,
-    padding: 1,
-    thickness: 1
-  }
-};
-
-MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var TEX = MathJax.InputJax.TeX,
-      MACROS = TEX.Definitions.macros,
-      MML = MathJax.ElementJax.mml,
-      CANCEL = MathJax.Extension["TeX/cancel"];
-      
-      CANCEL.setAttributes = function (def,attr) {
-        if (attr !== "") {
-          attr = attr.replace(/ /g,"").split(/,/);
-          for (var i = 0, m = attr.length; i < m; i++) {
-            var keyvalue = attr[i].split(/[:=]/);
-            if (CANCEL.ALLOWED[keyvalue[0]]) {
-              if (keyvalue[1] === "true") {keyvalue[1] = true}
-              if (keyvalue[1] === "false") {keyvalue[1] = false}
-              def[keyvalue[0]] = keyvalue[1];
-            }
-          }
-        }
-        return def;
-      };
-  
-  //
-  //  Set up macro
-  //
-  MACROS.cancel  = ['Cancel',MML.NOTATION.UPDIAGONALSTRIKE];
-  MACROS.bcancel = ['Cancel',MML.NOTATION.DOWNDIAGONALSTRIKE];
-  MACROS.xcancel = ['Cancel',MML.NOTATION.UPDIAGONALSTRIKE+" "+MML.NOTATION.DOWNDIAGONALSTRIKE];
-  MACROS.cancelto = 'CancelTo';
-
-  TEX.Parse.Augment({
-    //
-    //  Implement \cancel[attributes]{math},
-    //            \bcancel[attributes]{math}, and
-    //            \xcancel[attributes]{math}
-    //
-    Cancel: function(name,notation) {
-      var attr = this.GetBrackets(name,""), math = this.ParseArg(name);
-      var def = CANCEL.setAttributes({notation: notation},attr);
-      this.Push(MML.menclose(math).With(def));
-    },
-    
-    //
-    //  Implement \cancelto{value}[attributes]{math}
-    //
-    CancelTo: function(name,notation) {
-      var value = this.ParseArg(name),
-          attr = this.GetBrackets(name,""),
-          math = this.ParseArg(name);
-      var def = CANCEL.setAttributes({notation: MML.NOTATION.UPDIAGONALSTRIKE, arrow:true},attr);
-      value = MML.mpadded(value).With({depth:"-.1em",height:"+.1em",voffset:".1em"});
-      this.Push(MML.msup(MML.menclose(math).With(def),value));
-    }
-
-  });
-
-  MathJax.Hub.Startup.signal.Post("TeX cancel Ready");
-  
-});
-
-MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/cancel.js");
