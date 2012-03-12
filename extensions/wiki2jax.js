@@ -16,10 +16,9 @@ MathJax.Extension.wiki2jax = {
 
   PreProcess: function (element) {
     if (!this.configured) {
-      MathJax.Hub.Insert(this.config,(MathJax.Hub.config.wiki2jax||{}));
+	  this.config = MathJax.Hub.CombineConfig("wiki2jax", this.config);
       if (this.config.Augment) {MathJax.Hub.Insert(this,this.config.Augment)}
-      if (typeof(this.config.previewTeX) !== "undefined" && !this.config.previewTeX)
-        {this.config.preview = "none"} // backward compatibility for previewTeX parameter
+
       this.previewClass = MathJax.Hub.config.preRemoveClass;
       this.configured = true;
     }
@@ -31,7 +30,7 @@ MathJax.Extension.wiki2jax = {
 
   ConvertMath: function (node) {
     var parent = node.parentNode,
-        mode = parent.tagName === "DD" && parent.firstChild === parent.lastChild ? "; mode=display" : "",
+        mode = parent.tagName === "DD" && parent.childNodes.length === 1 ? "; mode=display" : "",
 		tex;
 	if (node.nodeName == 'IMG') {
 		tex = node.alt;
@@ -46,6 +45,7 @@ MathJax.Extension.wiki2jax = {
       if (parent.firstChild === node) tex = "\\displaystyle{"+tex+"}";
     }
 
+	// @fixme auto-enable the 'color' extension and drop this
     var i;
     while ((i = tex.search(/\\color{/)) != -1) {
       var braces = 0;
@@ -61,8 +61,7 @@ MathJax.Extension.wiki2jax = {
 
     var script = document.createElement("script");
     script.type = "math/tex" + mode;
-    if (MathJax.Hub.Browser.isMSIE) {script.text = tex}
-      else {script.appendChild(document.createTextNode(tex))}
+	MathJax.HTML.setScript(script, tex);
 
     if (node.nextSibling) {parent.insertBefore(script,node.nextSibling)}
       else {parent.appendChild(script)}
@@ -80,7 +79,7 @@ MathJax.Extension.wiki2jax = {
     }
   },
 
-  filterTeX: function (tex) {return tex}
+  filterPreview: function (tex) {return tex}
 
 };
 

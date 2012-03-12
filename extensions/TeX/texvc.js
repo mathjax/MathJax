@@ -113,16 +113,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
 
     macros: {
-      sgn:                ['NamedOp',0],
+      sgn:                'NamedFn',
       textcolor:          ['Macro','\\color{#1}',1],
-      bold:               ['Macro','{\\boldsymbol #1}',1]  // boldsymbol
+      bold:               ['Macro','\\boldsymbol']  // boldsymbol
     }
 
   });
 });
 
-MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  MathJax.Hub.Startup.signal.Post("TeX texvc Ready");
-});
+MathJax.Hub.Startup.signal.Post("TeX texvc Ready");
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/texvc.js");
