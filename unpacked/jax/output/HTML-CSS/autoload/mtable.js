@@ -71,9 +71,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             mo = cell.CoreMO()
             var min = mo.Get("minsize",true);
             if (min && mo.HTMLcanStretch("Horizontal")) {
-              var mw = mo.HTMLspanElement().bbox.w
-              A[i][j].dw = HTMLCSS.length2em(min,mu,mw) - mw;
-              min = A[i][j].bbox.w + A[i][j].dw;
+              min = HTMLCSS.length2em(min,mu,mo.HTMLspanElement().bbox.w);
               if (min > W[j]) {W[j] = min}
             }
           }
@@ -258,7 +256,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             s = (this.data[i].type === "mlabeledtr" ? LABEL : 0);
             cell = this.data[i].data[j-s];
             if (cell.HTMLcanStretch("Horizontal")) {
-              A[i][j].bbox = cell.HTMLstretchH(C[j],W[j]-(A[i][j].dw||0)).bbox
+              A[i][j].bbox = cell.HTMLstretchH(C[j],W[j]).bbox
             } else if (cell.HTMLcanStretch("Vertical")) {
               mo = cell.CoreMO();
               var symmetric = mo.symmetric; mo.symmetric = false;

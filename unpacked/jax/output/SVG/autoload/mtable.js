@@ -67,8 +67,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
             mo = cell.CoreMO();
             var min = mo.Get("minsize",true);
             if (min && mo.SVGcanStretch("Horizontal")) {
-              A[i][j].dw = SVG.length2em(min,mu,mo.SVGdata.w) - mo.SVGdata.w;
-              min = A[i][j].w + A[i][j].dw;
+              min = SVG.length2em(min,mu,mo.SVGdata.w);
               if (min > W[j]) {W[j] = min}
             }
           }
@@ -241,7 +240,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
             s = (this.data[i].type === "mlabeledtr" ? LABEL : 0);
             cell = this.data[i].data[j-s];
 	    if (cell.SVGcanStretch("Horizontal")) {
-	      A[i][j] = cell.SVGstretchH(W[j]-(A[i][j].dw||0));
+	      A[i][j] = cell.SVGstretchH(W[j]);
 	    } else if (cell.SVGcanStretch("Vertical")) {
 	      mo = cell.CoreMO();
 	      var symmetric = mo.symmetric; mo.symmetric = false;
