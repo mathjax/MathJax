@@ -233,6 +233,10 @@
         container.onmousedown   = EVENT.Mousedown;
         container.onclick       = EVENT.Click;
         container.ondblclick    = EVENT.DblClick;
+	if (HUB.Browser.noContextMenu) {
+	  container.ontouchstart = TOUCH.start;
+	  container.ontouchend   = TOUCH.end;
+	}
       }
     },
 
