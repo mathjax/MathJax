@@ -38,7 +38,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var stack = HTMLCSS.createStack(span);
       var scale = this.HTMLgetScale(), mu = this.HTMLgetMu(span), LABEL = -1;
 
-      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row, entries = [];
+      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row, cell, mo, entries = [];
       var LHD = HTMLCSS.FONTDATA.baselineskip * scale * values.useHeight,
           LH = HTMLCSS.FONTDATA.lineH * scale, LD = HTMLCSS.FONTDATA.lineD * scale;
 
@@ -62,10 +62,21 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       for (i = 0, m = this.data.length; i < m; i++) {
         row = this.data[i]; s = (row.type === "mlabeledtr" ? LABEL : 0);
         for (j = s, M = row.data.length + s; j < M; j++) {
-          if (row.data[j-s].isMultiline) {A[i][j].style.width = "100%"}
+          cell = row.data[j-s];
+          if (cell.isMultiline) {A[i][j].style.width = "100%"}
           if (A[i][j].bbox.h > H[i]) {H[i] = A[i][j].bbox.h}
           if (A[i][j].bbox.d > D[i]) {D[i] = A[i][j].bbox.d}
           if (A[i][j].bbox.w > W[j]) {W[j] = A[i][j].bbox.w}
+          if (cell.isEmbellished()) {
+            mo = cell.CoreMO()
+            var min = mo.Get("minsize",true);
+            if (min && mo.HTMLcanStretch("Horizontal")) {
+              var mw = mo.HTMLspanElement().bbox.w
+              A[i][j].dw = HTMLCSS.length2em(min,mu,mw) - mw;
+              min = A[i][j].bbox.w + A[i][j].dw;
+              if (min > W[j]) {W[j] = min}
+            }
+          }
         }
       }
       if (H[0]+D[0]) {H[0] = Math.max(H[0],LH)}
@@ -245,11 +256,11 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         for (i = 0, m = A.length; i < m; i++) {
           if (A[i][j]) {
             s = (this.data[i].type === "mlabeledtr" ? LABEL : 0);
-            var cell = this.data[i].data[j-s];
+            cell = this.data[i].data[j-s];
             if (cell.HTMLcanStretch("Horizontal")) {
-              A[i][j].bbox = cell.HTMLstretchH(C[j],W[j]).bbox
+              A[i][j].bbox = cell.HTMLstretchH(C[j],W[j]-(A[i][j].dw||0)).bbox
             } else if (cell.HTMLcanStretch("Vertical")) {
-              var mo = cell.CoreMO();
+              mo = cell.CoreMO();
               var symmetric = mo.symmetric; mo.symmetric = false;
               A[i][j].bbox = cell.HTMLstretchV(C[j],H[i],D[i]).bbox;
               mo.symmetric = symmetric;

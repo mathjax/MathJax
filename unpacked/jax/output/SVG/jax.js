@@ -1349,7 +1349,7 @@
         svg.y = H - svg.h;
 	this.SVGhandleSpace(svg);
 	this.SVGhandleColor(svg);
-        delete this.svg;
+        delete this.svg.element;
         this.SVGsaveData(svg);
 	return svg;
       },
@@ -1365,7 +1365,7 @@
         svg = SVG.createDelimiter(this.data.join("").charCodeAt(0),w,svg.scale,values.mathvariant);
 	this.SVGhandleSpace(svg);
 	this.SVGhandleColor(svg);
-        delete this.svg;
+        delete this.svg.element;
         this.SVGsaveData(svg);
 	return svg;
       }
