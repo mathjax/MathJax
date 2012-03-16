@@ -136,7 +136,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     //
-    //  Make a number of fraction preceeding an atom,
+    //  Make a number or fraction preceeding an atom,
     //  or a subscript for an atom.
     //  
     ParseNumber: function () {
@@ -215,7 +215,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       c = this.string.charAt(++this.i);
       if (c === "{") {
         this.i++; var m = this.Find("}");
-        if (m === "-.") {this.sup += "{-}{\\cdot}"} else if (m) {this.sup += CE(m).Parse()}
+        if (m === "-.") {this.sup += "{-}{\\cdot}"}
+        else if (m) {this.sup += CE(m).Parse().replace(/^\{-\}/,"-")}
       } else if (c === " " || c === "") {
         this.tex += "{\\"+this.Arrows["^"]+"}"; this.i++;
       } else {
@@ -228,7 +229,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     ParseSubscript: function (c) {
       if (this.string.charAt(++this.i) == "{") {
-        this.i++; this.sub += CE(this.Find("}")).Parse();
+        this.i++; this.sub += CE(this.Find("}")).Parse().replace(/^\{-\}/,"-");
       } else {
         var n = this.Match(/^\d+/);
         if (n) {this.sub += n}
@@ -300,12 +301,15 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           //
           // right-justify super- and subscripts when they are before the atom
           //
-          var n = Math.abs(this.sup.length-this.sub.length);
+          var sup = this.sup, sub = this.sub;
+          var n = Math.abs(sup.replace(/[^\d]/g,"").length-sub.replace(/[^\d]/g,"").length);
           if (n) {
             var zeros = "0000000000".substr(0,n);
-            var script = (this.sup.length > this.sub.length ? "sub" : "sup");
+            var script = (sup.length > sub.length ? "sub" : "sup");
             this[script] = "\\phantom{"+zeros+"}" + this[script];
           }
+          if (sup.charAt(0) === "-" && sub.charAt(0) !== "-") {this.sub = "\\phantom{-}"+this.sub}
+          if (sub.charAt(0) === "-" && sup.charAt(0) !== "-") {this.sup = "\\phantom{-}"+this.sup}
         }
         if (!this.sup) {this.sup = "\\Space{0pt}{0pt}{.2em}"} // forces subscripts to align properly
         this.tex += "^{"+this.sup+"}_{"+this.sub+"}";
