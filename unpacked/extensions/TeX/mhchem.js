@@ -302,17 +302,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           // right-justify super- and subscripts when they are before the atom
           //
           var sup = this.sup, sub = this.sub;
-          var n = Math.abs(sup.replace(/[^\d]/g,"").length-sub.replace(/[^\d]/g,"").length);
-          if (n) {
-            var zeros = "0000000000".substr(0,n);
-            var script = (sup.length > sub.length ? "sub" : "sup");
-            this[script] = "\\phantom{"+zeros+"}" + this[script];
-          }
-          if (sup.charAt(0) === "-" && sub.charAt(0) !== "-") {this.sub = "\\phantom{-}"+this.sub}
-          if (sub.charAt(0) === "-" && sup.charAt(0) !== "-") {this.sup = "\\phantom{-}"+this.sup}
+          if (!sup.match(/\d/)) {sup += "\\vphantom{0}"} // force common heights
+          if (!sub.match(/\d/)) {sub += "\\vphantom{0}"}
+          this.tex += "\\raise 1pt{\\scriptstyle\\begin{CEscriptstack}"+sup+"\\\\"+
+                         sub+"\\end{CEscriptstack}}\\kern-.125em ";
+        } else {
+          if (!this.sup) {this.sup = "\\Space{0pt}{0pt}{.2em}"} // forces subscripts to align properly
+          this.tex += "^{"+this.sup+"}_{"+this.sub+"}";
         }
-        if (!this.sup) {this.sup = "\\Space{0pt}{0pt}{.2em}"} // forces subscripts to align properly
-        this.tex += "^{"+this.sup+"}_{"+this.sub+"}";
         this.sup = this.sub = "";
       }
       this.atom = false;
@@ -388,7 +385,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   //  Needed for \bond for the ~ forms
   //
   MACROS.tripledash = ["Macro","\\raise3mu{\\tiny\\text{-}\\kern2mu\\text{-}\\kern2mu\\text{-}}"];
-  TEX.Definitions.environment.CEstack = ['Array',null,null,null,'r',null,"0.001em",'T',1]
+  TEX.Definitions.environment.CEstack = ['Array',null,null,null,'r',null,"0.001em",'T',1];
+  TEX.Definitions.environment.CEscriptstack = ['Array',null,null,null,'r',null,"0.2em",'S',1];
 
   //
   //  Add \hyphen used in some mhchem examples
