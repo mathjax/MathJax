@@ -666,7 +666,7 @@
         // toMathML() can call MathJax.Hub.RestartAfter, so trap errors and check
         try {MENU.ShowSource.Text(MENU.jax.root.toMathML(),event)} catch (err) {
           if (!err.restart) {throw err}
-          CALLBACK.After([this,MENU.ShowSource,EVENT]);
+          CALLBACK.After([this,MENU.ShowSource,EVENT],err.restart);
         }
       } else if (!AJAX.loadingToMathML) {
         AJAX.loadingToMathML = true;
