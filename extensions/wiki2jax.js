@@ -45,20 +45,6 @@ MathJax.Extension.wiki2jax = {
       if (parent.firstChild === node) tex = "\\displaystyle{"+tex+"}";
     }
 
-	// @fixme auto-enable the 'color' extension and drop this
-    var i;
-    while ((i = tex.search(/\\color{/)) != -1) {
-      var braces = 0;
-      for (i += 6; i < tex.length; i++) {
-        if (tex[i] == '{') braces++;
-        else if (tex[i] == '}') {
-          if (braces-- == 0)
-            break;
-        }
-      }
-      tex = (tex.substring(0, i) + "}" + tex.substring(i, tex.length)).replace(/\\color{(\w*)}/, "\\textcolor{$1}{");
-    }
-
     var script = document.createElement("script");
     script.type = "math/tex" + mode;
 	MathJax.HTML.setScript(script, tex);
