@@ -114,6 +114,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
     macros: {
       sgn:                'NamedFn',
+      arccot:             'NamedFn',
+      arcsec:             'NamedFn',
+      arccsc:             'NamedFn',
       textcolor:          ['Macro','\\color{#1}',1],
       bold:               ['Macro','\\boldsymbol']  // boldsymbol
     }
