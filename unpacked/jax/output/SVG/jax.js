@@ -1013,7 +1013,7 @@
           svg.removeable = false;
           svg.element.setAttribute("className","mjx-svg-"+this.type);
         }
-        var style = this.Get("style");
+        var style = this.style;
         if (style) {
           svg.element.style.cssText = style;
           if (svg.element.style.fontSize) {svg.element.style.fontSize = ""} // handled by scale
@@ -1091,7 +1091,7 @@
 	if (values.background !== MML.COLOR.TRANSPARENT) {
           if (svg.element.nodeName !== "g" && svg.element.nodeName !== "svg") {
             var g = SVG.Element("g"); g.appendChild(svg.element);
-            svg.element = g; svg.removable = true;
+            svg.element = g; svg.removeable = true;
           }
           svg.Add(BBOX.RECT(svg.h,svg.d,svg.w,{fill:values.background,stroke:"none"}),0,0,false,true)
         }
@@ -1428,8 +1428,8 @@
           while (svg.element.firstChild) {svg.element.removeChild(svg.element.firstChild)}
 	}
 	this.SVGhandleColor(svg);
-        if (!svg.element.firstChild) {delete svg.element}
         this.SVGsaveData(svg);
+        if (svg.removeable && !svg.element.firstChild) {delete svg.element}
 	return svg;
       }
     });
