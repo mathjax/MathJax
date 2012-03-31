@@ -348,7 +348,7 @@ page <http://cdn.mathjax.org/mathjax/latest/test/examples.html>`_ for
 more examples.
 
 You can configure the way that numbers are displayed and how the
-references to them are made using paramters in the ``equationNumbers``
+references to them are made using parameters in the ``equationNumbers``
 block of your ``TeX`` configuration.  See the :ref:`TeX configuration
 options <configure-TeX>` page for more details.
 
