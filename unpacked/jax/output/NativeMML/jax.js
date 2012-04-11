@@ -149,7 +149,8 @@
         //
         //  Add the MathJax span
         //
-        jax = script.MathJax.elementJax; math = jax.root; jax.NativeMML = {};
+        jax = script.MathJax.elementJax; if (!jax) continue;
+        math = jax.root; jax.NativeMML = {};
         var type = (math.Get("display") === "block" ? "div" : "span");
 	span = HTML.Element(type,{
 	  className: "MathJax_MathML", id:jax.inputID+"-Frame"
@@ -170,7 +171,7 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        jax = script.MathJax.elementJax;
+        jax = script.MathJax.elementJax; if (!jax) continue;
         if (!isMSIE) {
           test = script.previousSibling; span = test.previousSibling;
           ex = test.firstChild.offsetWidth/60;
@@ -186,7 +187,7 @@
       //
       if (!isMSIE) {
         for (i = 0; i < m; i++) {
-          script = scripts[i]; if (!script.parentNode) continue;
+          script = scripts[i]; if (!script.parentNode || !script.MathJax.elementJax) continue;
           test = scripts[i].previousSibling;
           test.parentNode.removeChild(test);
         }
