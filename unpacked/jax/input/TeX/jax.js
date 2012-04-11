@@ -1286,7 +1286,7 @@
     },
     Limits: function (name,limits) {
       var op = this.stack.Prev("nopop");
-      if (op.texClass !== MML.TEXCLASS.OP) {TEX.Error(name+" is allowed only on operators")}
+      if (!op || op.texClass !== MML.TEXCLASS.OP) {TEX.Error(name+" is allowed only on operators")}
       op.movesupsub = (limits ? true : false);
       op.movablelimits = false;
     },
