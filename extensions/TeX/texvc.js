@@ -117,7 +117,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       arccot:             'NamedFn',
       arcsec:             'NamedFn',
       arccsc:             'NamedFn',
-      bold:               ['Macro','\\boldsymbol']  // boldsymbol
+      bold:               ['Macro','\\boldsymbol'],  // boldsymbol
+      href: 'NamedFn', // disable dangerous command
+      style: 'NamedFn' // disable dangerous command
     }
 
   });
