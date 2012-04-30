@@ -85,7 +85,7 @@
         "sans-serif": {offsetA: 0x1D5A0, offsetN: 0x1D7E2, offsetG: 0xE17D},
         "bold-sans-serif": {offsetA: 0x1D5D4, offsetG: 0x1D756, offsetN: 0x1D7EC, bold:true},
         "sans-serif-italic": {fonts: [ITALIC,NONUNII], offsetA: 0x1D608, offsetN: 0xE1B4, offsetG: 0xE1BF, italic:true},
-        "sans-serif-bold-italic": {fonts: ["STIXGeneral-bold-italic","STIXNonUnicode-bold-italic"], offsetA: 0x1D63C, offsetN: 0xE1F6, offsetG: 0x1D791, bold:true, italic:true},
+        "sans-serif-bold-italic": {fonts: ["STIXGeneral-bold-italic","STIXNonUnicode-bold-italic"], offsetA: 0x1D63C, offsetN: 0xE1F6, offsetG: 0x1D790, bold:true, italic:true},
         "monospace": {offsetA: 0x1D670, offsetN: 0x1D7F6},
         "-STIX-variant": {fonts:["STIXVariants",NONUNI,GENERAL]},
         "-tex-caligraphic": {fonts: [ITALIC,NONUNII,NONUNI,SIZE1], offsetA: 0xE22D, noLowerCase: 1},
@@ -102,7 +102,7 @@
         {name: "alpha", low: 0x61, high: 0x7A, offset: "A", add: 26},
         {name: "Alpha", low: 0x41, high: 0x5A, offset: "A"},
         {name: "number", low: 0x30, high: 0x39, offset: "N"},
-        {name: "greek", low: 0x03B1, high: 0x03C9, offset: "G", add: 25},
+        {name: "greek", low: 0x03B1, high: 0x03C9, offset: "G", add: 26},
         {name: "Greek", low: 0x0391, high: 0x03F6, offset: "G",
            remap: {0x03F5: 53, 0x03D1: 54, 0x03F0: 55, 0x03D5: 56, 0x03F1: 57, 0x03D6: 58, 0x03F4: 17}}
       ],
