@@ -337,7 +337,7 @@
           stretch: {top:[0x23AB,SIZE1], ext:[0x23AA,SIZE1], bot:[0x23AD,SIZE1]}
         },
         0x002D: {alias: 0x23AF, dir:H}, // minus
-        0x005E: {alias: 0x02D6, dir:H}, // wide hat
+        0x005E: {alias: 0x02C6, dir:H}, // wide hat
         0x005F: {alias: 0x23AF, dir:H}, // low line
         0x007E: {alias: 0x02DC, dir:H}, // wide tilde
         0x00AF: {alias: 0x23AF, dir:H}, // macron
