@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.0.1";
+  var VERSION = "2.0.2";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -805,8 +805,11 @@
       Opera:   "Opera's support for MathML is limited, so switching to " +
                "MathML output may cause some expressions to render poorly.",
 
+      Safari: "Your browser's native MathML does not implement all the features " +
+               "used by MathJax, so some expressions may not render properly.",
+
       Firefox: "Your browser's native MathML does not implement all the features " +
-               "used by MathJax, so some expressions may render improperly."
+               "used by MathJax, so some expressions may not render properly."
     },
     
     SVG: {
