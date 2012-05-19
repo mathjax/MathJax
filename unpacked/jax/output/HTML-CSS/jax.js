@@ -455,7 +455,7 @@
         //  Add the span, and a div if in display mode,
         //  then set the role and mark it as being processed
         //
-        jax = script.MathJax.elementJax;
+        jax = script.MathJax.elementJax; if (!jax) continue;
         jax.HTMLCSS = {display: (jax.root.Get("display") === "block")}
         span = div = this.Element("span",{
 	  className:"MathJax", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
@@ -491,7 +491,7 @@
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         test = script.previousSibling; div = test.previousSibling;
-        jax = script.MathJax.elementJax;
+        jax = script.MathJax.elementJax; if (!jax) continue;
         ex = test.firstChild.offsetHeight/60;
         em = test.lastChild.firstChild.offsetHeight/60;
         if (relwidth) {maxwidth = div.previousSibling.firstChild.offsetWidth}
@@ -513,7 +513,8 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        test = scripts[i].previousSibling; jax = scripts[i].MathJax.elementJax;
+        test = scripts[i].previousSibling;
+        jax = scripts[i].MathJax.elementJax; if (!jax) continue;
         if (relwidth) {
           span = test.previousSibling;
           if (!jax.HTMLCSS.isHidden) {span = span.previousSibling}
@@ -524,7 +525,7 @@
       //
       //  Set state variables used for displaying equations in chunks
       //
-      state.HTMLCSSeqn = state.HTMLCSSlast = 0;
+      state.HTMLCSSeqn = state.HTMLCSSlast = 0; state.HTMLCSSi = -1;
       state.HTMLCSSchunk = this.config.EqnChunk;
       state.HTMLCSSdelay = false;
     },
@@ -583,7 +584,7 @@
         //
         //  Check if we should show this chunk of equations
         //
-        state.HTMLCSSeqn++;
+        state.HTMLCSSeqn += (state.i - state.HTMLCSSi); state.HTMLCSSi = state.i;
         if (state.HTMLCSSeqn >= state.HTMLCSSlast + state.HTMLCSSchunk) {
           this.postTranslate(state);
           state.HTMLCSSchunk = Math.floor(state.HTMLCSSchunk*this.config.EqnChunkFactor);
@@ -600,7 +601,7 @@
       //
       for (var i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
         var script = scripts[i];
-        if (script) {
+        if (script && script.MathJax.elementJax) {
           //
           //  Remove the processed marker
           //
