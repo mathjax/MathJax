@@ -1601,7 +1601,7 @@
       HTMLcreateSpan: function (span) {
 	if (this.spanID) {
 	  var SPAN = this.HTMLspanElement();
-	  if (SPAN) {
+	  if (SPAN && SPAN.parentNode === span) {
 	    while (SPAN.firstChild) {SPAN.removeChild(SPAN.firstChild)}
 	    SPAN.bbox = {w:0, h:0, d:0, lw:0, rw:0};
 	    SPAN.scale = 1; SPAN.isMultChar = null;
