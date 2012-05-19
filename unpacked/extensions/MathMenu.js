@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.0";
+  var VERSION = "2.0.1";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -666,7 +666,7 @@
         // toMathML() can call MathJax.Hub.RestartAfter, so trap errors and check
         try {MENU.ShowSource.Text(MENU.jax.root.toMathML(),event)} catch (err) {
           if (!err.restart) {throw err}
-          CALLBACK.After([this,MENU.ShowSource,EVENT]);
+          CALLBACK.After([this,MENU.ShowSource,EVENT],err.restart);
         }
       } else if (!AJAX.loadingToMathML) {
         AJAX.loadingToMathML = true;
@@ -806,7 +806,7 @@
                "MathML output may cause some expressions to render poorly.",
 
       Firefox: "Your browser's native MathML does not implement all the features " +
-               "used by MathJax, so some expressions my render improperly."
+               "used by MathJax, so some expressions may render improperly."
     },
     
     SVG: {

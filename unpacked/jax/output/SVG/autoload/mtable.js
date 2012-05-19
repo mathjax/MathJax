@@ -22,13 +22,14 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.0.1";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
   
   MML.mtable.Augment({
     toSVG: function (span) {
+      this.SVGgetStyles();
       var svg = this.SVG();
       if (this.data.length === 0) {return svg}
       var values = this.getValues("columnalign","rowalign","columnspacing","rowspacing",

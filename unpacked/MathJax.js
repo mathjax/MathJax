@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.0";
-MathJax.fileversion = "2.0";
+MathJax.fileversion = "2.0.3";
 
 /**********************************************************/
 
@@ -1240,7 +1240,7 @@ MathJax.Hub = {
     skipStartupTypeset: false,    // set to true to skip PreProcess and Process during startup
     "v1.0-compatible": true,  // set to false to prevent message about configuration change
     elements: [],             // array of elements to process when none is given explicitly
-    positionToHash: true,     // after initial typeset pass, position to #hash location?
+    positionToHash: false,    // after initial typeset pass, position to #hash location?
      
     showMathMenu: true,      // attach math context menu to typeset math?
     showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
@@ -1862,8 +1862,9 @@ MathJax.Hub.Startup = {
     var config = MathJax.Hub.config, jax = MathJax.Hub.outputJax;
     //  Save the order of the output jax since they are loading asynchronously
     for (var i = 0, m = config.jax.length, k = 0; i < m; i++) {
-      if (config.jax[i].substr(0,7) === "output/") 
-        {jax.order[config.jax[i].substr(7)] = k; k++}
+      var name = config.jax[i].substr(7);
+      if (config.jax[i].substr(0,7) === "output/" && jax.order[name] == null)
+        {jax.order[name] = k; k++}
     }
     var queue = MathJax.Callback.Queue();
     return queue.Push(
@@ -2400,6 +2401,11 @@ MathJax.Hub.Startup = {
           document.write('<?import namespace="m" implementation="#MathPlayer">');
           browser.mpImported = true;
         }
+      } else {
+        //  Adding any namespace avoids a crash in IE9 in IE9-standards mode
+        //  (any reference to document.namespaces before document.readyState is 
+        //   "complete" causes an "unspecified error" to be thrown)
+        document.namespaces.add("mjx_IE_fix","http://www.w3.org/1999/xlink");
       }
     }
   });

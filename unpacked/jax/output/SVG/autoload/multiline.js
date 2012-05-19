@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.0.1";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -152,12 +152,12 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           m = this.data.length, W, scanW = info.W,
           broken = (info.index.length > 0), better = false;
       if (i == null) {i = -1}; if (!broken) {i++; info.W += info.w};
-      info.w = 0; info.nest++;
+      info.w = 0; info.nest++; info.scanW = scanW;
       //
       //  Look through the line for breakpoints,
       //    (as long as we are not too far past the breaking width)
       //
-      while (i < m && info.W < 1.33*SVG.linebreakWidth) {
+      while (i < m && info.scanW < 1.33*SVG.linebreakWidth) {
         if (this.data[i]) {
           if (this.data[i].SVGbetterBreak(info,state)) {
             better = true; index = [i].concat(info.index); W = info.W;
@@ -350,7 +350,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Get the default penalty for this location
       //
-      var W = info.W, mo = (info.embellished||this); delete info.embellished;
+      var W = info.scanW, mo = (info.embellished||this); delete info.embellished;
       var svg = mo.SVGdata, w = svg.w + svg.x;
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
       if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)
@@ -401,7 +401,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Get the default penalty for this location
       //
-      var W = info.W, svg = this.SVGdata, w = svg.w + svg.x;
+      var W = info.scanW, svg = this.SVGdata, w = svg.w + svg.x;
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
       if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)
       var offset = SVG.linebreakWidth - W;
