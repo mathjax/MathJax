@@ -1940,7 +1940,7 @@ MathJax.Hub.Startup = {
   //
   //  Setup the onload callback
   //
-  onLoad: function (when) {
+  onLoad: function () {
     var onload = this.onload =
       MathJax.Callback(function () {MathJax.Hub.Startup.signal.Post("onLoad")});
     if (document.body && document.readyState && document.readyState !== "loading") {return [onload]}
