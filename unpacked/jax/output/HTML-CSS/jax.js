@@ -2366,23 +2366,19 @@
     MML.maction.Augment({toHTML: MML.mbase.HTMLautoload});
 
     MML.semantics.Augment({
-      toHTML: function (span) {
+      toHTML: function (span,HW,D) {
+	span = this.HTMLcreateSpan(span);
 	if (this.data[0] != null) {
-	  span = this.data[0].toHTML(span);
-	  this.spanID = this.data[0].spanID;
-	  this.HTMLhandleSpace(span);
+	  var SPAN = this.data[0].toHTML(span);
+	  if (D != null) {this.data[0].HTMLstretchV(span,HW,D)}
+	  else if (HW != null) {this.data[0].HTMLstretchH(span,HW)}
+          span.bbox = SPAN.bbox;
 	}
+	this.HTMLhandleSpace(span);
 	return span;
       },
-      HTMLspanElement: function () {
-	return (this.data[0] != null ? this.data[0].HTMLspanElement() : null);
-      },
-      HTMLstretchH: function (box,w) {
-	return (this.data[0] != null ? this.data[0].HTMLstretchH(box,w) : box);
-      },
-      HTMLstretchV: function (box,h,d) {
-	return (this.data[0] != null ? this.data[0].HTMLstretchV(box,h,d) : box);
-      }
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
     });
 
     MML.munderover.Augment({
