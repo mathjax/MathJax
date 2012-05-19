@@ -100,7 +100,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     Init: function (eqn) {
       this.isEqn = eqn; this.stack = [];
-      if (!eqn) {this.Push(NSFRAME(TEXDEF.macros,TEXDEF.environments))}
+      if (!eqn) {this.Push(NSFRAME(TEXDEF.macros,TEXDEF.environment))}
            else {this.Push(NSFRAME())}
     },
     //
