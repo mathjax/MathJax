@@ -100,7 +100,7 @@ Properties
 
 	.. code-block:: javascript
 
-	    MathJax.Hub.Browser.Select(
+	    MathJax.Hub.Browser.Select({
 	      MSIE: function (browser) {
 	        if (browser.versionAtLeast("8.0")) {... do version 8 stuff ... }
 		... do general MSIE stuff ...
@@ -110,7 +110,7 @@ Properties
 	        if (browser.isMac) {... do Mac stuff ... }
 		... do general Firefox stuff
 	      }
-	    );
+	    });
 
 .. describe:: inputJax
 
