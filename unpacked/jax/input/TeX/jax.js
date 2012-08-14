@@ -455,7 +455,7 @@
         Im:           ['2111',{mathvariant: MML.VARIANT.NORMAL}],
         partial:      ['2202',{mathvariant: MML.VARIANT.NORMAL}],
         infty:        ['221E',{mathvariant: MML.VARIANT.NORMAL}],
-        prime:        ['2032',{mathvariant: MML.VARIANT.NORMAL}],
+        prime:        ['2032',{mathvariant: MML.VARIANT.NORMAL, variantForm: true}],
         emptyset:     ['2205',{mathvariant: MML.VARIANT.NORMAL}],
         nabla:        ['2207',{mathvariant: MML.VARIANT.NORMAL}],
         top:          ['22A4',{mathvariant: MML.VARIANT.NORMAL}],
