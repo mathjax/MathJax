@@ -1234,7 +1234,6 @@ MathJax.ElementJax.mml.Augment({
       var nNode, i, m;
       if (node.nodeType === 1) { // ELEMENT_NODE
         nNode = document.createElement(node.nodeName);
-        if (node.className) {nNode.className=iNode.className}
         for (i = 0, m = node.attributes.length; i < m; i++) {
           var attribute = node.attributes[i];
           if (attribute.specified && attribute.nodeValue != null && attribute.nodeValue != '')
