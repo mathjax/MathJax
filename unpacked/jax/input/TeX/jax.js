@@ -135,6 +135,16 @@
     type: "close", isClose: true
   });
 
+  STACKITEM.prime = STACKITEM.Subclass({
+    type: "prime",
+    checkItem: function (item) {
+      if (this.data[0].type !== "msubsup") 
+        {return [MML.msup(this.data[0],this.data[1]),item]}
+      this.data[0].SetData(this.data[0].sup,this.data[1]);
+      return [this.data[0],item];
+    }
+  });
+  
   STACKITEM.subsup = STACKITEM.Subclass({
     type: "subsup",
     stopError: "Missing superscript or subscript argument",
@@ -142,6 +152,10 @@
       var script = ["","subscript","superscript"][this.position];
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml") {
+        if (this.primes) {
+          if (this.position === 2) {item.data[0] = MML.mrow(this.primes,item.data[0])}
+            else {this.data[0].SetData(2,this.primes)}
+        }
         this.data[0].SetData(this.position,item.data[0]);
         return STACKITEM.mml(this.data[0]);
       }
@@ -1141,13 +1155,12 @@
     Superscript: function (c) {
       if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
         {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
-      var position, base = this.stack.Prev(); if (!base) {base = MML.mi("")}
+      var position, primes, base, top = this.stack.Top();
+      if (top.type === "prime") {base = top.data[0]; primes = top.data[1]; this.stack.Pop()}
+        else {base = this.stack.Prev(); if (!base) {base = MML.mi("")}}
       if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
       if (base.type === "msubsup") {
-        if (base.data[base.sup]) {
-          if (!base.data[base.sup].isPrime) {TEX.Error("Double exponent: use braces to clarify")}
-          base = MML.msubsup(base,null,null);
-        }
+        if (base.data[base.sup]) {TEX.Error("Double exponent: use braces to clarify")}
         position = base.sup;
       } else if (base.movesupsub) {
         if (base.type !== "munderover" || base.data[base.over]) {
@@ -1159,12 +1172,14 @@
         base = MML.msubsup(base,null,null);
         position = base.sup;
       }
-      this.Push(STACKITEM.subsup(base).With({position: position}));
+      this.Push(STACKITEM.subsup(base).With({position: position, primes: primes}));
     },
     Subscript: function (c) {
       if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
         {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
-      var position, base = this.stack.Prev(); if (!base) {base = MML.mi("")}
+      var position, primes, base, top = this.stack.Top();
+      if (top.type === "prime") {base = top.data[0]; primes = top.data[1]; this.stack.Pop()}
+        else {base = this.stack.Prev(); if (!base) {base = MML.mi("")}}
       if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
       if (base.type === "msubsup") {
         if (base.data[base.sub]) {TEX.Error("Double subscripts: use braces to clarify")}
@@ -1179,7 +1194,7 @@
         base = MML.msubsup(base,null,null);
         position = base.sub;
       }
-      this.Push(STACKITEM.subsup(base).With({position: position}));
+      this.Push(STACKITEM.subsup(base).With({position: position, primes: primes}));
     },
     PRIME: "\u2032", SMARTQUOTE: "\u2019",
     Prime: function (c) {
@@ -1189,8 +1204,7 @@
       var sup = ""; this.i--;
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
-      sup = this.mmlToken(MML.mo(MML.chars(sup)).With({isPrime: true}));
-      this.Push(MML.msup(base,sup));
+      this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup))));
     },
     mi2mo: function (mi) {
       var mo = MML.mo();  mo.Append.apply(mo,mi.data); var id;
