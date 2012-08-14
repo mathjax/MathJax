@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.0",
+  version: "2.0.1",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -74,12 +74,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       
       substack:   ['Macro','\\begin{subarray}{c}#1\\end{subarray}',1],
       
-      injlim:     ['Macro','\\mathop{\\rm inj\\,lim}'],
-      projlim:    ['Macro','\\mathop{\\rm proj\\,lim}'],
-      varliminf:  ['Macro','\\mathop{\\underline{\\rm lim}}'],
-      varlimsup:  ['Macro','\\mathop{\\overline{\\rm lim}}'],
-      varinjlim:  ['Macro','\\mathop{\\underrightarrow{\\rm lim\\Rule{-1pt}{0pt}{1pt}}\\Rule{0pt}{0pt}{.45em}}'],
-      varprojlim: ['Macro','\\mathop{\\underleftarrow{\\rm lim\\Rule{-1pt}{0pt}{1pt}}\\Rule{0pt}{0pt}{.45em}}'],
+      injlim:     ['NamedOp','inj&thinsp;lim'],
+      projlim:    ['NamedOp','proj&thinsp;lim'],
+      varliminf:  ['Macro','\\mathop{\\underline{\\mmlToken{mi}{lim}}}'],
+      varlimsup:  ['Macro','\\mathop{\\overline{\\mmlToken{mi}{lim}}}'],
+      varinjlim:  ['Macro','\\mathop{\\underrightarrow{\\mmlToken{mi}{lim}\\Rule{-1pt}{0pt}{1pt}}\\Rule{0pt}{0pt}{.45em}}'],
+      varprojlim: ['Macro','\\mathop{\\underleftarrow{\\mmlToken{mi}{lim}\\Rule{-1pt}{0pt}{1pt}}\\Rule{0pt}{0pt}{.45em}}'],
       
       DeclareMathOperator: 'HandleDeclareOp',
       operatorname:        'HandleOperatorName',
