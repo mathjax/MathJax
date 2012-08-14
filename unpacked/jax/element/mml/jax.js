@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.0.1",
+  version: "2.0.2",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -567,7 +567,11 @@ MathJax.ElementJax.mml.Augment({
     setTeXclass: function (prev) {
       this.getValues("lspace","rspace"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
-      this.texClass = this.Get("texClass"); if (this.texClass === MML.TEXCLASS.NONE) {return prev}
+      this.texClass = this.Get("texClass");
+      return this.adjustTeXclass(prev);
+    },
+    adjustTeXclass: function (prev) {
+      if (this.texClass === MML.TEXCLASS.NONE) {return prev}
       if (prev) {this.prevClass = prev.texClass || MML.TEXCLASS.ORD; this.prevLevel = prev.Get("scriptlevel")}
         else {this.prevClass = MML.TEXCLASS.NONE}
       if (this.texClass === MML.TEXCLASS.BIN &&
@@ -1261,10 +1265,10 @@ MathJax.ElementJax.mml.Augment({
     inferRow: true,
     texClass: MML.TEXCLASS.ORD,
     setTeXclass: function (prev) {
-      this.getPrevClass(prev);
       this.data[0].setTeXclass();
-      return this;
-    }
+      return this.adjustTeXclass(prev);
+    },
+    adjustTeXclass: MML.mo.prototype.adjustTeXclass
   });
   
   MML.NULL = MML.mbase().With({type:"null"});
