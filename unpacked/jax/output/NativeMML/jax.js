@@ -35,6 +35,25 @@
     //
     config: {
       styles: {
+        ".MathJax_MathML": {
+          "display":         "inline",
+          "font-style":      "normal",
+          "font-weight":     "normal",
+          "line-height":     "normal",
+          "font-size":       "100%",
+          "font-size-adjust":"none",
+          "text-indent":     0,
+          "text-align":      "left",
+          "text-transform":  "none",
+          "letter-spacing":  "normal",
+          "word-spacing":    "normal",
+          "word-wrap":       "normal",
+          "white-space":     "nowrap",
+          "float":           "none",
+          "direction":       "ltr",
+          border: 0, padding: 0, margin: 0
+        },
+        
         ".MathJax_mmlExBox": {
           display:"block", overflow:"hidden",
           height:"1px", width:"60ex",
