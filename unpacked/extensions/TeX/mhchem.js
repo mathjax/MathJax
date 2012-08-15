@@ -371,12 +371,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       cee:  'CE',
   
       //
-      //  Include some missing arrows (some are hacks)
+      //  Make these load AMSmath package (redefined below when loaded)
       //
-      xleftrightarrow:    ['xArrow',0x2194,6,6],
-      xrightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  doesn't stretch in HTML-CSS output
-      xRightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  how should this be handled?
-      xLeftrightharpoons: ['xArrow',0x21CC,5,7],
+      xleftrightarrow:    ['Extension','AMSmath'],
+      xrightleftharpoons: ['Extension','AMSmath'],
+      xRightleftharpoons: ['Extension','AMSmath'],
+      xLeftrightharpoons: ['Extension','AMSmath'],
 
       //  FIXME:  These don't work well in FF NativeMML mode
       longrightleftharpoons: ["Macro","\\stackrel{\\textstyle{{-}\\!\\!{\\rightharpoonup}}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"],
@@ -401,6 +401,32 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       CEstack: ['Array',null,null,null,'r',null,"0.001em",'T',1]
     }
   },null,true);
+  
+  if (!MathJax.Extension["TeX/AMSmath"]) {
+    TEX.Definitions.Add({
+      macros: {
+        xrightarrow: ['Extension','AMSmath'],
+        xleftarrow:  ['Extension','AMSmath']
+      }
+    },null,true);
+  }
+  
+  //
+  //  These arrows need to wait until AMSmath is loaded
+  //
+  MathJax.Hub.Register.StartupHook("TeX AMSmath Ready",function () {
+    TEX.Definitions.Add({
+      macros: {
+        //
+        //  Some of these are hacks for now
+        //
+        xleftrightarrow:    ['xArrow',0x2194,6,6],
+        xrightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  doesn't stretch in HTML-CSS output
+        xRightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  how should this be handled?
+        xLeftrightharpoons: ['xArrow',0x21CC,5,7],
+      }
+    },null,true);
+  });
 
 
   TEX.Parse.Augment({
