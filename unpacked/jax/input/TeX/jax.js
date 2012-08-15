@@ -1608,9 +1608,12 @@
     },
     
     CrLaTeX: function (name) {
-      var n = this.GetBrackets(name,"").replace(/ /g,"");
-      if (n && !n.match(/^(((\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/))
-        {TEX.Error("Bracket argument to "+name+" must be a dimension")}
+      var n;
+      if (this.string.charAt(this.i) === "[") {
+        n = this.GetBrackets(name,"").replace(/ /g,"");
+        if (n && !n.match(/^(((\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/))
+          {TEX.Error("Bracket argument to "+name+" must be a dimension")}
+      }
       this.Push(STACKITEM.cell().With({isCR: true, name: name, linebreak: true}));
       var top = this.stack.Top();
       if (top.isa(STACKITEM.array)) {
