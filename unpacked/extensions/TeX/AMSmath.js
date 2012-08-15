@@ -159,6 +159,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     HandleLabel: function (name) {
       var global = this.stack.global, label = this.GetArgument(name);
+      if (label === "") return;
       if (!AMS.refUpdate) {
         if (global.label) {TEX.Error("Multiple "+name+"'s")}
         global.label = label;
