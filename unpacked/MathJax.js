@@ -1684,6 +1684,7 @@ MathJax.Hub = {
     script.parentNode.insertBefore(error,script);
     if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
     this.lastError = err;
+    this.signal.Post(["Math Processing Error",script,err]);
   },
   
   RestartAfter: function (callback) {
