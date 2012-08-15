@@ -179,7 +179,7 @@
         jax = script.MathJax.elementJax; if (!jax) continue;
         jax.SVG = {display: (jax.root.Get("display") === "block")}
         span = div = HTML.Element("span",{
-          style: {"font-size": this.scale+"%", display:"inline-block"},
+          style: {"font-size": this.config.scale+"%", display:"inline-block"},
  	  className:"MathJax_SVG", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
