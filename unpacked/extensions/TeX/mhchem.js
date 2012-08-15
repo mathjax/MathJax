@@ -80,6 +80,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       '<->': "leftrightarrow",
       '<=>': "rightleftharpoons",
       '<=>>': "Rightleftharpoons",
+      '<<=>': "Leftrightharpoons",
       '^': "uparrow",
       'v': "downarrow"
     },
@@ -203,7 +204,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     ParseLess: function (c) {
       this.FinishAtom();
-      var arrow = this.Match(/^(<->?|<=>>?)/);
+      var arrow = this.Match(/^(<->?|<=>>?|<<=>)/);
       if (!arrow) {this.tex += c; this.i++} else {this.AddArrow(arrow)}
     },
 
@@ -375,10 +376,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       xleftrightarrow:    ['xArrow',0x2194,6,6],
       xrightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  doesn't stretch in HTML-CSS output
       xRightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  how should this be handled?
+      xLeftrightharpoons: ['xArrow',0x21CC,5,7],
 
       //  FIXME:  These don't work well in FF NativeMML mode
       longrightleftharpoons: ["Macro","\\stackrel{\\textstyle{{-}\\!\\!{\\rightharpoonup}}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"],
       longRightleftharpoons: ["Macro","\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\small\\smash\\leftharpoondown}"],
+      longLeftrightharpoons: ["Macro","\\stackrel{\\rightharpoonup}{{{\\leftharpoondown}\\!\\!\\textstyle{-}}}"],
 
       //
       //  Add \hyphen used in some mhchem examples
