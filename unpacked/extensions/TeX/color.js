@@ -27,7 +27,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/color"] = {
-  version: "2.0",
+  version: "2.0.1",
 
   config: MathJax.Hub.CombineConfig("TeX.color",{
     padding: "5px",
@@ -166,11 +166,15 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var COLOR = MathJax.Extension["TeX/color"];
 
   COLOR.TEX = TEX; // for reference in getColor above
-  
-  TEX.Definitions.macros.color = "Color";
-  TEX.Definitions.macros.definecolor = "DefineColor";
-  TEX.Definitions.macros.colorbox = "ColorBox";
-  TEX.Definitions.macros.fcolorbox = "fColorBox";
+
+  TEX.Definitions.Add({
+    macros: {
+      color: "Color",
+      definecolor: "DefineColor",
+      colorbox: "ColorBox",
+      fcolorbox: "fColorBox"
+    }
+  },null,true);
 
   TEX.Parse.Augment({
     

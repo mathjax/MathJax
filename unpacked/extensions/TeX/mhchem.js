@@ -23,13 +23,12 @@
  */
 
 MathJax.Extension["TeX/mhchem"] = {
-  version: "2.0"
+  version: "2.0.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
-  var TEX = MathJax.InputJax.TeX,
-      MACROS = TEX.Definitions.macros;
+  var TEX = MathJax.InputJax.TeX;
   
   /*
    *  This is the main class for handing the \ce and related commands.
@@ -361,34 +360,45 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
   /***************************************************************************/
   
-  //
-  //  Set up the macros for chemistry
-  //
-  MACROS.ce  = 'CE';
-  MACROS.cf  = 'CE';
-  MACROS.cee = 'CE';
+  TEX.Definitions.Add({
+    macros: {
+      //
+      //  Set up the macros for chemistry
+      //
+      ce:   'CE',
+      cf:   'CE',
+      cee:  'CE',
   
-  //
-  //  Include some missing arrows (some are hacks)
-  //
-  MACROS.xleftrightarrow = ['xArrow',0x2194,6,6];
-  MACROS.xrightleftharpoons = ['xArrow',0x21CC,5,7];  // FIXME:  doesn't stretch in HTML-CSS output
-  MACROS.xRightleftharpoons = ['xArrow',0x21CC,5,7];  // FIXME:  how should this be handled?
+      //
+      //  Include some missing arrows (some are hacks)
+      //
+      xleftrightarrow:    ['xArrow',0x2194,6,6],
+      xrightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  doesn't stretch in HTML-CSS output
+      xRightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  how should this be handled?
 
-  //  FIXME:  These don't work well in FF NativeMML mode
-  MACROS.longrightleftharpoons = ["Macro","\\stackrel{\\textstyle{{-}\\!\\!{\\rightharpoonup}}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"];
-  MACROS.longRightleftharpoons = ["Macro","\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\small\\smash\\leftharpoondown}"];
+      //  FIXME:  These don't work well in FF NativeMML mode
+      longrightleftharpoons: ["Macro","\\stackrel{\\textstyle{{-}\\!\\!{\\rightharpoonup}}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"],
+      longRightleftharpoons: ["Macro","\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\small\\smash\\leftharpoondown}"],
 
-  //
-  //  Needed for \bond for the ~ forms
-  //
-  MACROS.tripledash = ["Macro","\\raise3mu{\\tiny\\text{-}\\kern2mu\\text{-}\\kern2mu\\text{-}}"];
-  TEX.Definitions.environment.CEstack = ['Array',null,null,null,'r',null,"0.001em",'T',1]
+      //
+      //  Add \hyphen used in some mhchem examples
+      //  
+      hyphen: ["Macro","\\text{-}"],
+      
+      //
+      //  Needed for \bond for the ~ forms
+      //
+      tripledash: ["Macro","\\raise3mu{\\tiny\\text{-}\\kern2mu\\text{-}\\kern2mu\\text{-}}"],
+    },
+    
+    //
+    //  Needed for \bond for the ~ forms
+    //
+    environment: {
+      CEstack: ['Array',null,null,null,'r',null,"0.001em",'T',1]
+    }
+  },null,true);
 
-  //
-  //  Add \hyphen used in some mhchem examples
-  //  
-  MACROS.hyphen = ["Macro","\\text{-}"];
 
   TEX.Parse.Augment({
 
