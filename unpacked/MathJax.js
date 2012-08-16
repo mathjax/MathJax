@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.0";
-MathJax.fileversion = "2.0.3";
+MathJax.fileversion = "2.0.4";
 
 /**********************************************************/
 
@@ -1240,7 +1240,7 @@ MathJax.Hub = {
     skipStartupTypeset: false,    // set to true to skip PreProcess and Process during startup
     "v1.0-compatible": true,  // set to false to prevent message about configuration change
     elements: [],             // array of elements to process when none is given explicitly
-    positionToHash: false,    // after initial typeset pass, position to #hash location?
+    positionToHash: true,    // after initial typeset pass, position to #hash location?
      
     showMathMenu: true,      // attach math context menu to typeset math?
     showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
@@ -1912,8 +1912,17 @@ MathJax.Hub.Startup = {
   //  Set the location to the designated hash position
   //
   Hash: function () {
-    if (MathJax.Hub.config.positionToHash && document.location.hash)
-      {setTimeout("document.location = document.location.hash",1)}
+    if (MathJax.Hub.config.positionToHash && document.location.hash &&
+        document.body && document.body.scrollIntoView) {
+      var name = document.location.hash.substr(1);
+      var target = document.getElementById(name);
+      if (!target) {
+        var a = document.getElementsByTagName("a");
+        for (var i = 0, m = a.length; i < m; i++)
+          {if (a[i].name === name) {target = a[i]; break}}
+      }
+      if (target) {setTimeout(function () {target.scrollIntoView(true)},1)}
+    }
   },
   
   //
