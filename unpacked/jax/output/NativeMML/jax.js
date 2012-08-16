@@ -499,20 +499,22 @@
     });
 
     if (HUB.Browser.isFirefox) {
-      MML.mtable.Augment({
-	toNativeMML: function (parent) {
-	  //
-	  //  FF doesn't handle width, so put it in styles instead
-	  //
-	  if (this.width) {
-	    var styles = (this.style||"").replace(/;\s*$/,"").split(";");
-            if (styles[0] === "") {styles.shift()}
-	    styles.push("width:"+this.width);
-	    this.style = styles.join(";");
-	  }
-	  this.SUPER(arguments).toNativeMML.call(this,parent);
-	}
-      });
+      if (!HUB.Browser.versionAtLeast("13.0")) {
+        MML.mtable.Augment({
+          toNativeMML: function (parent) {
+            //
+            //  Firefox < 13 doesn't handle width, so put it in styles instead
+            //
+            if (this.width) {
+              var styles = (this.style||"").replace(/;\s*$/,"").split(";");
+              if (styles[0] === "") {styles.shift()}
+              styles.push("width:"+this.width);
+              this.style = styles.join(";");
+            }
+            this.SUPER(arguments).toNativeMML.call(this,parent);
+          }
+        });
+      }
       if (!HUB.Browser.versionAtLeast("9.0")) {
         MML.mlabeledtr.Augment({
 	  toNativeMML: function (parent) {
