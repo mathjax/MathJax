@@ -23,7 +23,7 @@
  */
 
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.0.1";
   
   var MML = MathJax.ElementJax.mml
       SETTINGS = MathJax.Hub.config.menuSettings;
@@ -88,7 +88,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       if (typeof(value) === "string" &&
           value.replace(/ /g,"").match(/^(([-+])?(\d+(\.\d*)?|\.\d+))mu$/)) {
         // FIXME:  should take scriptlevel into account
-        return ((1/18)*RegExp.$1).toFixed(3).replace(/\.?0+$/,"")+"em";
+        return RegExp.$2+((1/18)*RegExp.$3).toFixed(3).replace(/\.?0+$/,"")+"em";
       }
       else if (this.toMathMLvariants[value]) {return this.toMathMLvariants[value]}
       return this.toMathMLquote(value);
