@@ -1263,6 +1263,11 @@
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {mapchars = SVG.FONTDATA.REMAPACCENTUNDER}
         }
         //
+        //  Primes must come from another font
+        //
+        if (isScript && this.data.join("").match(/\u2032/))
+          {variant = SVG.FONTDATA.VARIANT["-TeX-variant"]}
+        //
         //  Typeset contents
         //
 	for (var i = 0, m = this.data.length; i < m; i++) {
