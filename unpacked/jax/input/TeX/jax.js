@@ -1204,7 +1204,7 @@
       var sup = ""; this.i--;
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
-      this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup))));
+      this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup)).With({variantForm:true})));
     },
     mi2mo: function (mi) {
       var mo = MML.mo();  mo.Append.apply(mo,mi.data); var id;
