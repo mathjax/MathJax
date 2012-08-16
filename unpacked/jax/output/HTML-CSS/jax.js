@@ -1924,10 +1924,10 @@
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {mapchars = HTMLCSS.FONTDATA.REMAPACCENTUNDER}
         }
         //
-        //  STIX fonts need quotes from variant font
+        //  STIX and TeX fonts need quotes from variant font
         //
-        if (isScript && HTMLCSS.fontInUse === "STIX" && text.match(/['`"\u00B4\u2032-\u2037]/))
-          {variant = HTMLCSS.FONTDATA.VARIANT["-STIX-variant"]}
+        if (isScript && text.match(/['`"\u00B4\u2032-\u2037]/))
+          {variant = HTMLCSS.FONTDATA.VARIANT["-"+HTMLCSS.fontInUse+"-variant"]}
         //
         //  Typeset contents
         //

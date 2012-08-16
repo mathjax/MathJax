@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.0.2";
+  var VERSION = "2.0.4";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -609,7 +609,7 @@
     ]]);
     MENU.About.div = MENU.Background(MENU.About);
     var about = HTML.addElement(MENU.About.div,"div",{
-      id: "MathJax_About", onclick: MENU.About.Remove
+      id: "MathJax_About"
     },[
       ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
       "using "+font,["br"],["br"],
@@ -618,7 +618,12 @@
         "max-height":"20em", overflow:"auto", 
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
       }},jax],["br"],["br"],
-      ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]]
+      ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
+      ["img", {
+        src: CONFIG.closeImg,
+        style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
+        onclick: MENU.About.Remove
+      }]
     ]);
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;

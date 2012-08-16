@@ -541,13 +541,13 @@
             c = String.fromCharCode((N>>10)+0xD800)
               + String.fromCharCode((N&0x3FF)+0xDC00);
           }
-          text = BBOX.TEXT(scale,c,{
+          var box = BBOX.TEXT(scale,c,{
             "font-family":variant.defaultFamily||SVG.config.undefinedFamily,
             "font-style":(variant.italic?"italic":""),
             "font-weight":(variant.bold?"bold":"")
           })
-          if (variant.h != null) {text.h = variant.h}; if (variant.d != null) {text.d = variant.d}
-          c = BBOX.G(); c.Add(text); svg.Add(c,svg.w,0); text = "";
+          if (variant.h != null) {box.h = variant.h}; if (variant.d != null) {box.d = variant.d}
+          c = BBOX.G(); c.Add(box); svg.Add(c,svg.w,0);
           HUB.signal.Post(["SVG Jax - unknown char",n,variant]);
         }
       }

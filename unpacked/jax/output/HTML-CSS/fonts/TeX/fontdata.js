@@ -23,7 +23,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "2.0";
+  var VERSION = "2.0.2";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -71,12 +71,16 @@
                    offsetG: 0x03B1, variantG: "italic",
                    remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                            0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
-                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58, 0x29F8:[0x002F,"italic"]}},
+                           0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58,
+                           0x2032:[0x27,"sans-serif-italic"],  // HACK: a smaller prime
+                           0x29F8:[0x002F,"italic"]}},
         "bold":   {fonts:[BOLD,SIZE1,AMS], bold:true,
                    offsetG: 0x03B1, variantG: "bold-italic",
                    remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                            0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                            0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58, 0x29F8:[0x002F,"bold-italic"],
+                           0x219A:"\u2190\u0338", 0x219B:"\u2192\u0338", 0x21AE:"\u2194\u0338",
+                           0x21CD:"\u21D0\u0338", 0x21CE:"\u21D4\u0338", 0x21CF:"\u21D2\u0338",
                            0x2204:"\u2203\u0338", 0x2224:"\u2223\u0338", 0x2226:"\u2225\u0338",
                            0x2241:"\u223C\u0338", 0x2247:"\u2245\u0338", 
                            0x226E:"<\u0338", 0x226F:">\u0338",
@@ -113,6 +117,7 @@
                    remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                            0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                            0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
+        "-TeX-variant": {fonts:[MAIN]},   // HACK: to get larger prime for \prime
         "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
         "-smallOp": {fonts:[SIZE1,MAIN]}
       },
@@ -186,9 +191,10 @@
         //  
         0x2204: "\u2203\u0338",    // \not\exists
         0x220C: "\u220B\u0338",    // \not\ni
-        0x2244: "\u2243\u0338",    // \not\cong
+        0x2244: "\u2243\u0338",    // \not\simeq
         0x2249: "\u2248\u0338",    // \not\approx
         0x2262: "\u2261\u0338",    // \not\equiv
+        0x226D: "\u224D\u0338",    // \not\asymp
         0x2274: "\u2272\u0338",    // \not\lesssim
         0x2275: "\u2273\u0338",    // \not\gtrsim
         0x2278: "\u2276\u0338",    // \not\lessgtr

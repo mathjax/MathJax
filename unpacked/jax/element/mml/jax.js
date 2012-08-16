@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.0",
+  version: "2.0.3",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -395,7 +395,7 @@ MathJax.ElementJax.mml.Augment({
     },
     setBaseTeXclasses: function (prev) {
       this.getPrevClass(prev); this.texClass = null;
-      if (this.isEmbellished()) {
+      if (this.isEmbellished() || this.data[0].isa(MML.mi)) {
         prev = this.data[0].setTeXclass(prev);
         this.updateTeXclass(this.Core());
       } else {if (this.data[0]) {this.data[0].setTeXclass()}; prev = this}
@@ -567,7 +567,11 @@ MathJax.ElementJax.mml.Augment({
     setTeXclass: function (prev) {
       this.getValues("lspace","rspace"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
-      this.texClass = this.Get("texClass"); if (this.texClass === MML.TEXCLASS.NONE) {return prev}
+      this.texClass = this.Get("texClass");
+      return this.adjustTeXclass(prev);
+    },
+    adjustTeXclass: function (prev) {
+      if (this.texClass === MML.TEXCLASS.NONE) {return prev}
       if (prev) {this.prevClass = prev.texClass || MML.TEXCLASS.ORD; this.prevLevel = prev.Get("scriptlevel")}
         else {this.prevClass = MML.TEXCLASS.NONE}
       if (this.texClass === MML.TEXCLASS.BIN &&
@@ -1234,7 +1238,6 @@ MathJax.ElementJax.mml.Augment({
       var nNode, i, m;
       if (node.nodeType === 1) { // ELEMENT_NODE
         nNode = document.createElement(node.nodeName);
-        if (node.className) {nNode.className=iNode.className}
         for (i = 0, m = node.attributes.length; i < m; i++) {
           var attribute = node.attributes[i];
           if (attribute.specified && attribute.nodeValue != null && attribute.nodeValue != '')
@@ -1262,10 +1265,10 @@ MathJax.ElementJax.mml.Augment({
     inferRow: true,
     texClass: MML.TEXCLASS.ORD,
     setTeXclass: function (prev) {
-      this.getPrevClass(prev);
       this.data[0].setTeXclass();
-      return this;
-    }
+      return this.adjustTeXclass(prev);
+    },
+    adjustTeXclass: MML.mo.prototype.adjustTeXclass
   });
   
   MML.NULL = MML.mbase().With({type:"null"});
