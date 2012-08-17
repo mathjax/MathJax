@@ -1265,7 +1265,7 @@
         //
         //  Primes must come from another font
         //
-        if (isScript && this.data.join("").match(/\u2032/))
+        if (isScript && this.data.join("").match(/['`"\u00B4\u2032-\u2037]/))
           {variant = SVG.FONTDATA.VARIANT["-TeX-variant"]}
         //
         //  Typeset contents
