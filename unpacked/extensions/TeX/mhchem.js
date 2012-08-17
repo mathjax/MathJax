@@ -393,7 +393,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       //
       //  Needed for \bond for the ~ forms
       //
-      tripledash: ["Macro","\\raise3mu{\\tiny\\text{-}\\kern2mu\\text{-}\\kern2mu\\text{-}}"],
+      tripledash: ["Macro","\\raise3mu{\\tiny\\text{-}\\kern2mu\\text{-}\\kern2mu\\text{-}}"]
     },
     
     //
@@ -426,7 +426,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         xleftrightarrow:    ['xArrow',0x2194,6,6],
         xrightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  doesn't stretch in HTML-CSS output
         xRightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  how should this be handled?
-        xLeftrightharpoons: ['xArrow',0x21CC,5,7],
+        xLeftrightharpoons: ['xArrow',0x21CC,5,7]
       }
     },null,true);
   });
