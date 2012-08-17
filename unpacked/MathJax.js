@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.0";
-MathJax.fileversion = "2.0.4";
+MathJax.fileversion = "2.0.5";
 
 /**********************************************************/
 
@@ -966,6 +966,7 @@ MathJax.HTML = {
       MathJax.Hub.Insert(obj,def);
     }
     if (contents) {
+      if (!(contents instanceof Array)) {contents = [contents]}
       for (var i = 0; i < contents.length; i++) {
         if (contents[i] instanceof Array) {
           obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
