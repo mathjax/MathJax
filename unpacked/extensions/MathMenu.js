@@ -734,21 +734,22 @@
    *  Handle rescaling all the math
    */
   MENU.Scale = function () {
-    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML;
-    var SCALE = (HTMLCSS ? HTMLCSS.config.scale : nMML.config.scale);
+    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML, SVG = OUTPUT.SVG;
+    var SCALE = (HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
     var scale = prompt("Scale all mathematics (compared to surrounding text) by",SCALE+"%");
     if (scale) {
-      if (scale.match(/^\s*\d+\s*%?\s*$/)) {
-        scale = parseInt(scale);
+      if (scale.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
+        scale = parseFloat(scale);
         if (scale) {
           if (scale !== SCALE) {
             if (HTMLCSS) {HTMLCSS.config.scale = scale}
             if (nMML)    {nMML.config.scale = scale}
+            if (SVG)     {SVG.config.scale = scale}
             MENU.cookie.scale = scale;
             MENU.saveCookie(); HUB.Reprocess();
           }
         } else {alert("The scale should not be zero")}
-      } else {alert("The scale should be a perentage (e.g., 120%)")}
+      } else {alert("The scale should be a percentage (e.g., 120%)")}
     }
   };
   
