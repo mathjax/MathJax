@@ -153,8 +153,8 @@
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml") {
         if (this.primes) {
-          if (this.position === 2) {item.data[0] = MML.mrow(this.primes,item.data[0])}
-            else {this.data[0].SetData(2,this.primes)}
+          if (this.position !== 2) {this.data[0].SetData(2,this.primes)}
+            else {item.data[0] = MML.mrow(this.primes.With({variantForm:true}),item.data[0])}
         }
         this.data[0].SetData(this.position,item.data[0]);
         return STACKITEM.mml(this.data[0]);
@@ -1204,7 +1204,7 @@
       var sup = ""; this.i--;
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
-      this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup)).With({variantForm:true})));
+      this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup))));
     },
     mi2mo: function (mi) {
       var mo = MML.mo();  mo.Append.apply(mo,mi.data); var id;
