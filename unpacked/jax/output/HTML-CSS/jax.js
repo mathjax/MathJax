@@ -1841,9 +1841,11 @@
       toHTML: function (span,variant,remap,chars) {
         var text = this.data.join("").replace(/[\u2061-\u2064]/g,""); // remove invisibles
         if (remap) {text = remap(text,chars)}
-        if (!variant) {
+        if (variant.fontInherit) {
           var scale = Math.floor(100/HTMLCSS.scale+.5) + "%";
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
+          if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
+          if (variant.italic) {span.lastChild.style.fontStyle = "italic"}
           var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
           span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
         } else {
@@ -1854,9 +1856,11 @@
     MML.entity.Augment({
       toHTML: function (span,variant) {
         var text = this.toString().replace(/[\u2061-\u2064]/g,""); // remove invisibles
-        if (!variant) {
+        if (variant.fontInherit) {
           var scale = Math.floor(100/HTMLCSS.scale+.5) + "%";
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
+          if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
+          if (variant.italic) {span.lastChild.style.fontStyle = "italic"}
           var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
           span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
         } else {
@@ -2056,7 +2060,8 @@
         span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); 
         var variant = this.HTMLgetVariant();
         //  Avoid setting the font style for error text or if mtextFontInherit is set
-        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror") {variant = null}
+        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror")
+          {variant = {bold:variant.bold, italic:variant.italic, fontInherit: true}}
         for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
         if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}

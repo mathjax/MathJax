@@ -1391,7 +1391,10 @@
           return svg;
 	} else if (SVG.config.mtextFontInherit) {
           svg = this.SVG(); this.SVGhandleSpace(svg);
-          svg.Add(BBOX.TEXT(scale,this.data.join(""))); svg.Clean();
+          var variant = this.SVGgetVariant(), def = {};
+          if (variant.bold)   {def["font-weight"] = "bold"}
+          if (variant.italic) {def["font-style"] = "italic"}
+          svg.Add(BBOX.TEXT(scale,this.data.join(""),def)); svg.Clean();
           this.SVGhandleColor(svg);
           this.SVGsaveData(svg);
           return svg;
