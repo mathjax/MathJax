@@ -24,7 +24,7 @@
 
 MathJax.OutputJax.SVG = MathJax.OutputJax({
   id: "SVG",
-  version: "2.0.5",
+  version: "2.0.6",
   directory: MathJax.OutputJax.directory + "/SVG",
   extensionDir: MathJax.OutputJax.extensionDir + "/SVG",
   autoloadDir: MathJax.OutputJax.directory + "/SVG/autoload",
