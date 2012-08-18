@@ -23,7 +23,7 @@
  */
 
 MathJax.Extension["TeX/autoload-all"] = {
-  version: "2.0.2"
+  version: "2.0.3"
 };
   
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -38,7 +38,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
                    "shoveleft","shoveright","xrightarrow","xleftarrow"],
     begingroup: ["begingroup","endgroup","gdef","global"],
     cancel:     ["cancel","bcancel","xcancel","cancelto"],
-    color:      ["color","colorbox","fcolorbox","DefineColor"],
+    color:      ["color","textcolor","colorbox","fcolorbox","DefineColor"],
     enclose:    ["enclose"],
     extpfeil:   ["Newextarrow","xlongequal","xmapsto","xtofrom",
                    "xtwoheadleftarrow","xtwoheadrightarrow"],

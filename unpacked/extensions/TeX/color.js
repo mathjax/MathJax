@@ -2,9 +2,10 @@
  *
  *  MathJax/extensions/TeX/color.js
  *  
- *  Implements LaTeX-compatible \color macro rather than MathJax's
- *  original (non-standard) version.  It includes the rgb, gray, and
- *  named color models, and the \definecolor macro.
+ *  Implements LaTeX-compatible \color macro rather than MathJax's original
+ *  (non-standard) version.  It includes the rgb, gray, and named color
+ *  models, and the \textcolor, \definecolor, \colorbox, and \fcolorbox
+ *  macros.
  *  
  *  ---------------------------------------------------------------------
  *  
@@ -27,7 +28,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/color"] = {
-  version: "2.0.1",
+  version: "2.0.2",
 
   config: MathJax.Hub.CombineConfig("TeX.color",{
     padding: "5px",
@@ -170,6 +171,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   TEX.Definitions.Add({
     macros: {
       color: "Color",
+      textcolor: "TextColor",
       definecolor: "DefineColor",
       colorbox: "ColorBox",
       fcolorbox: "fColorBox"
@@ -188,6 +190,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var mml = STACKITEM.style().With({styles:{mathcolor:color}});
       this.stack.env.color = color;
       this.Push(mml);
+    },
+    
+    TextColor: function (name) {
+      var model = this.GetBrackets(name),
+          color = this.GetArgument(name);
+      color = COLOR.getColor(model,color);
+      var old = this.stack.env.color; this.stack.env.color = color;
+      var math = this.ParseArg(name);
+      if (old) {this.stack.env.color} else {delete this.stack.env.color}
+      this.Push(MML.mstyle(math).With({mathcolor: color}));
     },
 
     //
