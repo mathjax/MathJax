@@ -3,7 +3,7 @@
  *  MathJax/extensions/TeX/color.js
  *  
  *  Implements LaTeX-compatible \color macro rather than MathJax's original
- *  (non-standard) version.  It includes the rgb, gray, and named color
+ *  (non-standard) version.  It includes the rgb, RGB, gray, and named color
  *  models, and the \textcolor, \definecolor, \colorbox, and \fcolorbox
  *  macros.
  *  
@@ -117,16 +117,32 @@ MathJax.Extension["TeX/color"] = {
   },
   
   /*
-   *  Get an RGB color
+   *  Get an rgb color
    */
   get_rgb: function (rgb) {
     rgb = rgb.split(/,/); var RGB = "#";
-    if (rgb.length !== 3) {this.TEX.Error("RGB colors require 3 decimal numbers")}
+    if (rgb.length !== 3) {this.TEX.Error("rgb colors require 3 decimal numbers")}
     for (var i = 0; i < 3; i++) {
       if (!rgb[i].match(/^(\d+(\.\d*)?|\.\d+)$/)) {this.TEX.Error("Invalid decimal number")}
       var n = parseFloat(rgb[i]);
-      if (n < 0 || n > 1) {this.TEX.Error("RGB values must be between 0 and 1")}
+      if (n < 0 || n > 1) {this.TEX.Error("rgb values must be between 0 and 1")}
       n = Math.floor(n*255).toString(16); if (n.length < 2) {n = "0"+n}
+      RGB += n;
+    }
+    return RGB;
+  },
+  
+  /*
+   *  Get an RGB color
+   */
+  get_RGB: function (rgb) {
+    rgb = rgb.split(/,/); var RGB = "#";
+    if (rgb.length !== 3) {this.TEX.Error("RGB colors require 3 numbers")}
+    for (var i = 0; i < 3; i++) {
+      if (!rgb[i].match(/^\d+$/)) {this.TEX.Error("Invalid number")}
+      var n = parseInt(rgb[i]);
+      if (n > 255) {this.TEX.Error("RGB values must be between 0 and 255")}
+      n = n.toString(16); if (n.length < 2) {n = "0"+n}
       RGB += n;
     }
     return RGB;
