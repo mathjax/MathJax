@@ -1113,6 +1113,7 @@
         mid = this.createBox(stack); this.createChar(mid,delim.mid,scale,font);
         h += mid.bbox.h + mid.bbox.d;
       }
+      if (delim.min && H < h*delim.min) {H = h*delim.min}
       if (H > h) {
         ext = this.Element("span"); this.createChar(ext,delim.ext,scale,font);
         var eH = ext.bbox.h + ext.bbox.d, eh = eH - .05, n, N, k = (delim.mid ? 2 : 1);
@@ -1162,6 +1163,7 @@
         mid = this.createBox(stack); this.createChar(mid,delim.mid,scale,font);
         w += mid.bbox.w;
       }
+      if (delim.min && W < w*delim.min) {W = w*delim.min}
       if (W > w) {
         var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
         N = n = Math.ceil((W-w)/(k*rw));
@@ -1176,8 +1178,9 @@
           if (delim.mid && k) {this.placeBox(mid,x,0,true); x += mid.bbox.w - dx; n = N}
         }
       } else {
-        dx = Math.min(w - W,left.bbox.w/2);
-        x -= dx/2; if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w}; x -= dx/2;
+        x -= (w - W)/2;
+        if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w};
+        x -= (w - W)/2;
       }
       this.placeBox(right,x,0,true);
       span.bbox = {
@@ -1336,6 +1339,10 @@
         if (text.length) {this.addText(span,text)}
         var scale = span.scale;
         HTMLCSS.createDelimiter(span,n,0,1,font);
+        if (this.FONTDATA.DELIMITERS[n].dir === "V") {
+          span.style.verticalAlign = this.Em(span.bbox.d);
+          span.bbox.h += span.bbox.d; span.bbox.d = 0;
+        }
         span.scale = scale;
         c[0] = span.bbox.h*1000; c[1] = span.bbox.d*1000;
         c[2] = span.bbox.w*1000; c[3] = span.bbox.lw*1000; c[4] = span.bbox.rw*1000;
