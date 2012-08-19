@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.0.3",
+  version: "2.0.4",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -1013,6 +1013,9 @@ MathJax.ElementJax.mml.Augment({
     },
     inheritFromMe: true,
     noInherit: {
+      mover: {align: true},
+      munder: {align: true},
+      munderover: {align: true},
       mtable: {
         align: true, rowalign: true, columnalign: true, groupalign: true,
         alignmentscope: true, columnwidth: true, width: true, rowspacing: true,
