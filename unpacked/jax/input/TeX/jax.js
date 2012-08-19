@@ -984,11 +984,12 @@
         vmatrix:      ['Array',null,'\\vert','\\vert','c'],
         Vmatrix:      ['Array',null,'\\Vert','\\Vert','c'],
         cases:        ['Array',null,'\\{','.','ll',null,".1em"],
-        eqnarray:     ['Array',null,null,null,'rcl',MML.LENGTH.THICKMATHSPACE,".5em",'D'],
-        'eqnarray*':  ['Array',null,null,null,'rcl',MML.LENGTH.THICKMATHSPACE,".5em",'D'],
 
         equation:     [null,'Equation'],
         'equation*':  [null,'Equation'],
+
+        eqnarray:     ['ExtensionEnv',null,'AMSmath'],
+        'eqnarray*':  ['ExtensionEnv',null,'AMSmath'],
 
         align:        ['ExtensionEnv',null,'AMSmath'],
         'align*':     ['ExtensionEnv',null,'AMSmath'],

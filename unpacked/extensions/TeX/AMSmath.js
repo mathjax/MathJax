@@ -121,7 +121,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       smallmatrix:   ['Array',null,null,null,'c',COLS([1/3]),".2em",'S',1],
       
       'equation':    ['EquationBegin','Equation',true],
-      'equation*':   ['EquationBegin','EquationStar',false]
+      'equation*':   ['EquationBegin','EquationStar',false],
+
+      eqnarray:      ['AMSarray',null,true,true, 'rcl',COLS([MML.LENGTH.THICKMATHSPACE]),".5em"],
+      'eqnarray*':   ['AMSarray',null,false,true,'rcl',COLS([MML.LENGTH.THICKMATHSPACE]),".5em"]
     },
     
     delimiter: {
@@ -463,7 +466,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     EndRow: function () {
       var mtr = MML.mtr;
       if (!this.global.tag && this.numbered) {this.autoTag()}
-      if (this.global.tag &&! this.global.notags) {
+      if (this.global.tag && !this.global.notags) {
         this.row = [this.getTag()].concat(this.row);
         mtr = MML.mlabeledtr;
       }
