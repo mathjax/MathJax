@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.0.1",
+  version: "2.0.2",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
