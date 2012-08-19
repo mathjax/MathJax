@@ -1954,7 +1954,13 @@ MathJax.Hub.Startup = {
   onLoad: function () {
     var onload = this.onload =
       MathJax.Callback(function () {MathJax.Hub.Startup.signal.Post("onLoad")});
-    if (document.body && document.readyState && document.readyState !== "loading") {return [onload]}
+    if (document.body && document.readyState)
+      if (MathJax.Hub.Browser.isMSIE) {
+        // IE can change from loading to interactive before
+        //  full page is ready, so go with complete (even though
+        //  that means we may have to wait longer).
+        if (document.readyState === "complete") {return [onload]}
+      } else if (document.readyState !== "loading") {return [onload]}
     if (window.addEventListener) {
       window.addEventListener("load",onload,false);
       if (!this.params.noDOMContentEvent)
