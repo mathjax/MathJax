@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.0.3",
+  version: "2.0.4",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -429,7 +429,13 @@ MathJax.ElementJax.mml.Augment({
                   MML.VARIANT.ITALIC : MML.VARIANT.NORMAL);
       }
       return "";
-    } 
+    },
+    setTeXclass: function (prev) {
+      this.getPrevClass(prev);
+      if (this.data.join("").length > 1 && this.texClass === MML.TEXCLASS.ORD)
+        {this.texClass = MML.TEXCLASS.OP}
+      return this;
+    }
   });
   
   MML.mn = MML.mbase.Subclass({
