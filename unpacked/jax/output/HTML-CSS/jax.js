@@ -1931,7 +1931,7 @@
         //
         //  STIX and TeX fonts need quotes from variant font
         //
-        if (isScript && text.match(/['`"\u00B4\u2032-\u2037]/))
+        if (isScript && text.match(/['`"\u00B4\u2032-\u2037\u2057]/))
           {variant = HTMLCSS.FONTDATA.VARIANT["-"+HTMLCSS.fontInUse+"-variant"]}
         //
         //  Typeset contents

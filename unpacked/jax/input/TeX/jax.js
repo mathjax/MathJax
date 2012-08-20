@@ -1204,6 +1204,7 @@
       var sup = ""; this.i--;
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
+      sup = ["","\u2032","\u2033","\u2034","\u2057"][sup.length] || sup;
       this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup))));
     },
     mi2mo: function (mi) {
