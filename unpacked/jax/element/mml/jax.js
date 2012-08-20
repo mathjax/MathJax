@@ -1019,6 +1019,9 @@ MathJax.ElementJax.mml.Augment({
     },
     inheritFromMe: true,
     noInherit: {
+      mover: {align: true},
+      munder: {align: true},
+      munderover: {align: true},
       mtable: {
         align: true, rowalign: true, columnalign: true, groupalign: true,
         alignmentscope: true, columnwidth: true, width: true, rowspacing: true,
