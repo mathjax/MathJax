@@ -123,8 +123,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       'equation':    ['EquationBegin','Equation',true],
       'equation*':   ['EquationBegin','EquationStar',false],
 
-      eqnarray:      ['AMSarray',null,true,true, 'rcl',COLS([MML.LENGTH.THICKMATHSPACE]),".5em"],
-      'eqnarray*':   ['AMSarray',null,false,true,'rcl',COLS([MML.LENGTH.THICKMATHSPACE]),".5em"]
+      eqnarray:      ['AMSarray',null,true,true, 'rcl',MML.LENGTH.THICKMATHSPACE,".5em"],
+      'eqnarray*':   ['AMSarray',null,false,true,'rcl',MML.LENGTH.THICKMATHSPACE,".5em"]
     },
     
     delimiter: {
