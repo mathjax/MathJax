@@ -2442,7 +2442,7 @@
 	    var accent = (i != this.base && values[this.ACCENTS[i]]);
 	    if (accent && box.bbox.w <= 1/HTMLCSS.em+.0001) { // images can get the width off by 1px
 	      box.bbox.w = box.bbox.rw - box.bbox.lw; box.bbox.noclip = true;
-	      if (box.bbox.lw && !HTMLCSS.zeroWidthBug)
+	      if (box.bbox.lw && HTMLCSS.zeroWidthBug)
 		{box.insertBefore(HTMLCSS.createSpace(box.parentNode,0,0,-box.bbox.lw),box.firstChild)}
 	      HTMLCSS.createBlank(box,0,0,box.bbox.rw+.1);
 	    }
@@ -2687,7 +2687,7 @@
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
           msieIE6: !isIE7,
           msieItalicWidthBug: true,
-          zeroWidthBug: (mode < 8),
+          zeroWidthBug: true,
           FontFaceBug: true,
           msieFontCSSBug: browser.isIE9,
           allowWebFonts: (mode >= 9 ? "woff" : "eot")
