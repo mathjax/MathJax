@@ -1233,8 +1233,10 @@
       }
     });
     MML.entity.Augment({
-      toSVG: function (variant,scale) {
-	return this.SVGhandleVariant(variant,scale,this.toString().replace(/[\u2061-\u2064]/g,"")); // remove invisibles
+      toSVG: function (variant,scale,remap,chars) {
+        var text = this.toString().replace(/[\u2061-\u2064]/g,""); // remove invisibles
+        if (remap) {text = remap(text,chars)}
+	return this.SVGhandleVariant(variant,scale,text);
       }
     });
 

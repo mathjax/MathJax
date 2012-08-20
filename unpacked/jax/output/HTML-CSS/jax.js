@@ -1854,8 +1854,9 @@
       }
     });
     MML.entity.Augment({
-      toHTML: function (span,variant) {
+      toHTML: function (span,variant,remap,chars) {
         var text = this.toString().replace(/[\u2061-\u2064]/g,""); // remove invisibles
+        if (remap) {text = remap(text,chars)}
         if (variant.fontInherit) {
           var scale = Math.floor(100/HTMLCSS.scale+.5) + "%";
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);

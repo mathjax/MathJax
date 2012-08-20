@@ -23,7 +23,7 @@
  */
 
 (function (SVG,MML,AJAX) {
-  var VERSION = "2.0.1";
+  var VERSION = "2.0.2";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -113,7 +113,7 @@
                    remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                            0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                            0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
-        "-TeX-variant": {fonts:[MAIN]},
+        "-TeX-variant": {fonts:[MAIN]},   // HACK: to get larger prime for \prime
         "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
         "-smallOp": {fonts:[SIZE1,MAIN]}
       },
@@ -200,15 +200,21 @@
         0x22E2: "\u2291\u0338",    // \not\sqsubseteq
         0x22E3: "\u2292\u0338",    // \not\sqsupseteq
 
+        0x2A0C: "\u222C\u222C",    // quadruple integral
+
         0x2033: "\u2032\u2032",        // double prime
         0x2034: "\u2032\u2032\u2032",  // triple prime
         0x2036: "\u2035\u2035",        // double back prime
         0x2037: "\u2035\u2035\u2035",  // trile back prime
-        0x2057: "\u2032\u2032\u2032\u2032"  // quadruple prime
+        0x2057: "\u2032\u2032\u2032\u2032",  // quadruple prime
+        0x20DB: "...",                 // combining three dots above (only works with mover/under)
+        0x20DC: "...."                 // combining four dots above (only works with mover/under)
       },
       
       REMAPACCENT: {
-        "\u2192":"\u20D7"
+        "\u2192":"\u20D7",
+        "\u2032":"'",
+        "\u2035":"`"
       },
       REMAPACCENTUNDER: {
       },
