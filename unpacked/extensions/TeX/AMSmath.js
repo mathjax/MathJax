@@ -46,6 +46,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   /******************************************************************************/
   
   TEXDEF.Add({
+    mathchar0mo: {
+      iiiint:     ['2A0C',{texClass: MML.TEXCLASS.OP}]
+    },
+    
     macros: {
       mathring:   ['Accent','2DA'],  // or 0x30A
       
@@ -53,14 +57,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       negmedspace:    ['Spacer',MML.LENGTH.NEGATIVEMEDIUMMATHSPACE],
       negthickspace:  ['Spacer',MML.LENGTH.NEGATIVETHICKMATHSPACE],
       
-      intI:       ['Macro','\\mathchoice{\\!}{}{}{}\\!\\!\\int'],
+//    intI:       ['Macro','\\mathchoice{\\!}{}{}{}\\!\\!\\int'],
 //    iint:       ['MultiIntegral','\\int\\intI'],          // now in core TeX input jax
 //    iiint:      ['MultiIntegral','\\int\\intI\\intI'],    // now in core TeX input jax
-      iiiint:     ['MultiIntegral','\\int\\intI\\intI\\intI'],
+//    iiiint:     ['MultiIntegral','\\int\\intI\\intI\\intI'], // now in mathchar0mo above
       idotsint:   ['MultiIntegral','\\int\\cdots\\int'],
       
-      dddot:      ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}}',1],
-      ddddot:     ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}\\mathord{.}}',1],
+//    dddot:      ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}}',1],
+//    ddddot:     ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}\\mathord{.}}',1],
+      dddot:      ['Accent','20DB'],
+      ddddot:     ['Accent','20DC'],
       
       sideset:    ['Macro','\\mathop{\\mathop{\\rlap{\\phantom{#3}}}\\nolimits#1\\!\\mathop{#3}\\nolimits#2}',3],
       

@@ -1861,8 +1861,9 @@
       }
     });
     MML.entity.Augment({
-      toHTML: function (span,variant) {
+      toHTML: function (span,variant,remap,chars) {
         var text = this.toString().replace(/[\u2061-\u2064]/g,""); // remove invisibles
+        if (remap) {text = remap(text,chars)}
         if (variant.fontInherit) {
           var scale = Math.floor(100/HTMLCSS.scale+.5) + "%";
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
@@ -1937,7 +1938,7 @@
         //
         //  STIX and TeX fonts need quotes from variant font
         //
-        if (isScript && text.match(/['`"\u00B4\u2032-\u2037]/))
+        if (isScript && text.match(/['`"\u00B4\u2032-\u2037\u2057]/))
           {variant = HTMLCSS.FONTDATA.VARIANT["-"+HTMLCSS.fontInUse+"-variant"]}
         //
         //  Typeset contents

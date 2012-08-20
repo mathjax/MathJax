@@ -878,18 +878,18 @@
         hphantom:          ['Phantom',0,1],
         smash:              'Smash',
     
-        acute:             ['Accent', "02CA"],  // or 0301
-        grave:             ['Accent', "02CB"],  // or 0300
+        acute:             ['Accent', "00B4"],  // or 0301 or 02CA
+        grave:             ['Accent', "0060"],  // or 0300 or 02CB
         ddot:              ['Accent', "00A8"],  // or 0308
-        tilde:             ['Accent', "02DC"],  // or 0303
-        bar:               ['Accent', "02C9"],  // or 0304
+        tilde:             ['Accent', "007E"],  // or 0303 or 02DC
+        bar:               ['Accent', "00AF"],  // or 0304 or 02C9
         breve:             ['Accent', "02D8"],  // or 0306
         check:             ['Accent', "02C7"],  // or 030C
-        hat:               ['Accent', "02C6"],  // or 0302
-        vec:               ['Accent', "20D7"],
+        hat:               ['Accent', "005E"],  // or 0302 or 02C6
+        vec:               ['Accent', "2192"],  // or 20D7
         dot:               ['Accent', "02D9"],  // or 0307
-        widetilde:         ['Accent', "02DC",1], // or 0303
-        widehat:           ['Accent', "02C6",1], // or 0302
+        widetilde:         ['Accent', "007E",1], // or 0303 or 02DC
+        widehat:           ['Accent', "005E",1], // or 0302 or 02C6
 
         matrix:             'Matrix',
         array:              'Matrix',
@@ -1205,6 +1205,7 @@
       var sup = ""; this.i--;
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
+      sup = ["","\u2032","\u2033","\u2034","\u2057"][sup.length] || sup;
       this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup))));
     },
     mi2mo: function (mi) {

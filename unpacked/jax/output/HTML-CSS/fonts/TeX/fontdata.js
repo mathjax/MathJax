@@ -204,15 +204,21 @@
         0x22E2: "\u2291\u0338",    // \not\sqsubseteq
         0x22E3: "\u2292\u0338",    // \not\sqsupseteq
 
+        0x2A0C: "\u222C\u222C",    // quadruple integral
+
         0x2033: "\u2032\u2032",        // double prime
         0x2034: "\u2032\u2032\u2032",  // triple prime
         0x2036: "\u2035\u2035",        // double back prime
         0x2037: "\u2035\u2035\u2035",  // trile back prime
-        0x2057: "\u2032\u2032\u2032\u2032"  // quadruple prime
+        0x2057: "\u2032\u2032\u2032\u2032",  // quadruple prime
+        0x20DB: "...",                 // combining three dots above (only works with mover/under)
+        0x20DC: "...."                 // combining four dots above (only works with mover/under)
       },
       
       REMAPACCENT: {
-        "\u2192":"\u20D7"
+        "\u2192":"\u20D7",
+        "\u2032":"'",
+        "\u2035":"`"
       },
       REMAPACCENTUNDER: {
       },
