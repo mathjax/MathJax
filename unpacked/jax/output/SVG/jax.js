@@ -534,7 +534,8 @@
           c = [scale,font.id+"-"+n.toString(16).toUpperCase()].concat(c);
           svg.Add(BBOX.GLYPH.apply(BBOX,c),svg.w,0);
         } else if (this.FONTDATA.DELIMITERS[n]) {
-          svg.Add(this.createDelimiter(n,0,1,font),svg.w,0);
+          c = this.createDelimiter(n,0,1,font);
+          svg.Add(c,svg.w,(this.FONTDATA.DELIMITERS[n].dir === "V" ? c.d: 0));
         } else {
           if (n <= 0xFFFF) {c = String.fromCharCode(n)} else {
             N = n - 0x10000;
@@ -631,12 +632,12 @@
       if (data[0] instanceof Array) {
         for (var i = 0, m = data[0].length; i < m; i++) {text += String.fromCharCode(data[0][i])}
       } else {text = String.fromCharCode(data[0])}
+      if (data[4]) {scale = scale*data[4]}
       var svg = this.HandleVariant(variant,scale,text);
       if (data[2]) {svg.x = data[2]*1000}
       if (data[3]) {svg.y = data[3]*1000}
       if (data[5]) {svg.h += data[5]*1000}
       if (data[6]) {svg.d += data[6]*1000}
-      // FIXME handle data[4] (scale factor)
       return svg;
     },
     extendDelimiterV: function (svg,H,delim,scale,font) {
@@ -645,6 +646,7 @@
       var h = top.h + top.d + bot.h + bot.d;
       var y = -top.h; svg.Add(top,0,y); y -= top.d;
       if (delim.mid) {var mid = this.createChar(scale,delim.mid,font); h += mid.h + mid.d}
+      if (delim.min && H < h*delim.min) {H = h*delim.min}
       if (H > h) {
         var ext = this.createChar(scale,delim.ext,font);
         var k = (delim.mid ? 2 : 1), eH = (H-h) / k, s = (eH+100) / (ext.h+ext.d);
@@ -668,6 +670,7 @@
       svg.Add(left,-left.l,0);
       var w = (left.r - left.l) + (right.r - right.l), x = left.r - left.l;
       if (delim.mid) {var mid = this.createChar(scale,delim.mid,font); w += mid.w}
+      if (delim.min && W < w*delim.min) {W = w*delim.min}
       if (W > w) {
         var rep = this.createChar(scale,delim.rep,font), fuzz = delim.fuzz || 0;
         var k = (delim.mid ? 2 : 1), rW = (W-w) / k, s = (rW+fuzz) / (rep.r-rep.l);
@@ -677,8 +680,7 @@
           if (delim.mid && k) {svg.Add(mid,x,0); x += mid.w}
         }
       } else if (delim.mid) {
-        var dx = Math.min(w - W,left.w/2);
-        x -= dx/2; svg.Add(mid,x,0); x += mid.w - dx/2;
+        x -= (w - W)/2; svg.Add(mid,x,0); x += mid.w - (w - W)/2;
       } else {
         x -= (w - W);
       }

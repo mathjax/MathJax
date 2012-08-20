@@ -23,7 +23,7 @@
  */
 
 (function (SVG,MML,AJAX) {
-  var VERSION = "2.0.1";
+  var VERSION = "2.0.2";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -447,12 +447,12 @@
         0x23DE: // horizontal brace down
         {
           dir: H, HW: [],
-          stretch: {left:[0xE150,SIZE4], mid:[[0xE153,0xE152],SIZE4], right:[0xE151,SIZE4], rep:[0xE154,SIZE4]}
+          stretch: {min:.9, left:[0xE150,SIZE4], mid:[[0xE153,0xE152],SIZE4], right:[0xE151,SIZE4], rep:[0xE154,SIZE4]}
         },
         0x23DF: // horizontal brace up
         {
           dir: H, HW: [],
-          stretch: {left:[0xE152,SIZE4], mid:[[0xE151,0xE150],SIZE4], right:[0xE153,SIZE4], rep:[0xE154,SIZE4]}
+          stretch: {min:.9, left:[0xE152,SIZE4], mid:[[0xE151,0xE150],SIZE4], right:[0xE153,SIZE4], rep:[0xE154,SIZE4]}
         },
         0x27E8: // \langle
         {
