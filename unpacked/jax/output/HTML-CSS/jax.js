@@ -807,6 +807,9 @@
       if (Math.abs(m) < .0006) {return "0em"}
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
+    unEm: function (m) {
+      return parseFloat(m);
+    },
     Percent: function (m) {
       return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
     },
@@ -1053,7 +1056,7 @@
       var r = 0, c = -bbox.w/2, l = "50%";
       if (this.initialSkipBug) {r = bbox.w-bbox.rw-.1; c += bbox.lw}
       if (this.msieMarginScaleBug) {c = (c*this.em) + "px"} else {c = this.Em(c)}
-      if (isRelative) {c = ""; l = (50 - parseFloat(bbox.width)/2) + "%"}
+      if (isRelative) {c = ""; l = (50 - HTMLCSS.unEm(bbox.width)/2) + "%"}
       HUB.Insert(span.style,({
         right:  {left:"", right: this.Em(r)},
         center: {left:l, marginLeft: c}
@@ -1223,7 +1226,7 @@
         if (this.safariVerticalAlignBug || this.konquerorVerticalAlignBug ||
            (this.operaVerticalAlignBug && span.isMultiChar)) {
           if (span.firstChild.style.display === "" && span.style.top !== "")
-            {span = span.firstChild; h -= parseFloat(span.style.top)}
+            {span = span.firstChild; h -= HTMLCSS.unEm(span.style.top)}
           span.style.position = "relative";
           span.style.top = this.Em(-h);
         } else {
@@ -1561,11 +1564,11 @@
 	if (bbox.h > BBOX.h) {BBOX.h = bbox.h}
 	if (bbox.D != null && bbox.D > BBOX.D) {BBOX.D = bbox.D}
 	if (bbox.H != null && bbox.H > BBOX.H) {BBOX.H = bbox.H}
-	if (child.style.paddingLeft) {BBOX.w += parseFloat(child.style.paddingLeft)*(child.scale||1)}
+	if (child.style.paddingLeft) {BBOX.w += HTMLCSS.unEm(child.style.paddingLeft)*(child.scale||1)}
 	if (BBOX.w + bbox.lw < BBOX.lw) {BBOX.lw = BBOX.w + bbox.lw}
 	if (BBOX.w + bbox.rw > BBOX.rw) {BBOX.rw = BBOX.w + bbox.rw}
 	BBOX.w += bbox.w;
-	if (child.style.paddingRight) {BBOX.w += parseFloat(child.style.paddingRight)*(child.scale||1)}
+	if (child.style.paddingRight) {BBOX.w += HTMLCSS.unEm(child.style.paddingRight)*(child.scale||1)}
 	if (bbox.width) {BBOX.width = bbox.width}
         if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
         if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
@@ -1665,8 +1668,8 @@
 	  var bbox = span.bbox, dd = (bbox.exact ? 0 : 1/HTMLCSS.em), lW = 0, rW = 0,
               lpad = span.style.paddingLeft, rpad = span.style.paddingRight;
 	  if (this.isToken) {lW = bbox.lw; rW = bbox.rw - bbox.w}
-	  if (lpad !== "") {lW += parseFloat(lpad)*(span.scale||1)}
-	  if (rpad !== "") {rW -= parseFloat(rpad)*(span.scale||1)}
+	  if (lpad !== "") {lW += HTMLCSS.unEm(lpad)*(span.scale||1)}
+	  if (rpad !== "") {rW -= HTMLCSS.unEm(rpad)*(span.scale||1)}
           var dw = (HTMLCSS.PaddingWidthBug || bbox.keepPadding || bbox.exactW ? 0 : rW - lW);
 	  var W = Math.max(0,HTMLCSS.getW(span) + dw);
 	  var H = bbox.h + bbox.d, D = -bbox.d, lp = 0, rp = 0;
@@ -1738,7 +1741,7 @@
 	  var space = this.texSpacing();
 	  if (space !== "") {
 	    space = HTMLCSS.length2em(space,this.HTMLgetScale())/(span.scale||1);
-	    if (span.style.paddingLeft) {space += parseFloat(span.style.paddingLeft)}
+	    if (span.style.paddingLeft) {space += HTMLCSS.unEm(span.style.paddingLeft)}
 	    span.style.paddingLeft = HTMLCSS.Em(space);
 	  }
 	}
@@ -1961,7 +1964,7 @@
 	  var p = (span.bbox.h - span.bbox.d)/2 - HTMLCSS.TeX.axis_height*span.scale;
 	  if (HTMLCSS.safariVerticalAlignBug && span.lastChild.nodeName === "IMG") {
 	    span.lastChild.style.verticalAlign =
-	      HTMLCSS.Em(parseFloat(span.lastChild.style.verticalAlign||0)/HTMLCSS.em-p/span.scale);
+	      HTMLCSS.Em(HTMLCSS.unEm(span.lastChild.style.verticalAlign||0)/HTMLCSS.em-p/span.scale);
 	  } else if (HTMLCSS.konquerorVerticalAlignBug && span.lastChild.nodeName === "IMG") {
 	    span.style.position = "relative";
 	    span.lastChild.style.position="relative";
@@ -2268,8 +2271,8 @@
       HTMLhandleSpace: function (span) {
 	if (!this.texWithDelims) {
 	  var space = (this.useMMLspacing ? 0 : HTMLCSS.length2em(this.texSpacing()||0)) + .12;
-	  span.style.paddingLeft = HTMLCSS.Em(space);
-	  span.style.paddingRight = ".12em";
+	  span.style.paddingLeft  = HTMLCSS.Em(space);
+	  span.style.paddingRight = HTMLCSS.Em(.12);
 	}
       }
     });

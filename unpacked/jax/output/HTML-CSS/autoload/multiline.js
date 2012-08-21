@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.0.1";
+  var VERSION = "2.0.2";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
       
@@ -163,8 +163,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           if (!broken) {
             var span = this.data[i].HTMLspanElement();
             scanW += span.bbox.w;
-            if (span.style.paddingLeft)  {scanW += parseFloat(span.style.paddingLeft)}
-            if (span.style.paddingRight) {scanW += parseFloat(span.style.paddingRight)}
+            if (span.style.paddingLeft)  {scanW += HTMLCSS.unEm(span.style.paddingLeft)}
+            if (span.style.paddingRight) {scanW += HTMLCSS.unEm(span.style.paddingRight)}
             info.W = info.scanW = scanW;
           }
         }
@@ -394,7 +394,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       var W = info.scanW, mo = (info.embellished||this); delete info.embellished;
       var span = mo.HTMLspanElement(), w = span.bbox.w;
-      if (span.style.paddingLeft) {w += parseFloat(span.style.paddingLeft)}
+      if (span.style.paddingLeft) {w += HTMLCSS.unEm(span.style.paddingLeft)}
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
       if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)
       var offset = HTMLCSS.linebreakWidth - W;
@@ -445,7 +445,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Get the default penalty for this location
       //
       var W = info.scanW, span = this.HTMLspanElement(), w = span.bbox.w;
-      if (span.style.paddingLeft) {w += parseFloat(span.style.paddingLeft)}
+      if (span.style.paddingLeft) {w += HTMLCSS.unEm(span.style.paddingLeft)}
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
       if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)
       var offset = HTMLCSS.linebreakWidth - W;

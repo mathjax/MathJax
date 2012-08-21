@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.0.1";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -302,7 +302,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           //  Set width/position based on the type of column
           //
           if (CWIDTH[j].match(/%$/)) {
-            var pp = parseFloat(CWIDTH[j]) * Wf;
+            var pp = HTMLCSS.unEm(CWIDTH[j]) * Wf;
             if (f === 0) {
               CjStyle.width = (wp + pp) + "%"; xp += wp + pp;
               Cj = HTMLCSS.createBox(Cj); HTMLCSS.addBox(Cj,C[j].firstChild);
@@ -431,7 +431,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     },
     HTMLhandleSpace: function (span) {
       span.bbox.keepPadding = true; span.bbox.exact = true;
-      if (!this.hasFrame) {span.style.paddingLeft = span.style.paddingRight = ".1667em"}
+      if (!this.hasFrame) {span.style.paddingLeft = span.style.paddingRight = HTMLCSS.Em(1/6)}
       this.SUPER(arguments).HTMLhandleSpace.call(this,span);
     }
   });
