@@ -432,8 +432,12 @@ MathJax.ElementJax.mml.Augment({
     },
     setTeXclass: function (prev) {
       this.getPrevClass(prev);
-      if (this.data.join("").length > 1 && this.texClass === MML.TEXCLASS.ORD)
-        {this.texClass = MML.TEXCLASS.OP}
+      var name = this.data.join("");
+      if (name.length > 1 && name.match(/^[a-z][a-z0-9]*$/i) &&
+          this.texClass === MML.TEXCLASS.ORD) {
+        this.texClass = MML.TEXCLASS.OP;
+        this.autoOP = true;
+      }
       return this;
     }
   });
@@ -574,12 +578,18 @@ MathJax.ElementJax.mml.Augment({
       this.getValues("lspace","rspace"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
       this.texClass = this.Get("texClass");
+      if (this.data.join("") === "\u2061") {prev.texClass = MML.TEXCLASS.OP}
       return this.adjustTeXclass(prev);
     },
     adjustTeXclass: function (prev) {
       if (this.texClass === MML.TEXCLASS.NONE) {return prev}
-      if (prev) {this.prevClass = prev.texClass || MML.TEXCLASS.ORD; this.prevLevel = prev.Get("scriptlevel")}
-        else {this.prevClass = MML.TEXCLASS.NONE}
+      if (prev) {
+        if (prev.autoOP && (this.texClass === MML.TEXCLASS.BIN ||
+                            this.texClass === MML.TEXCLASS.REL))
+          {prev.texClass = MML.TEXCLASS.ORD}
+        this.prevClass = prev.texClass || MML.TEXCLASS.ORD;
+        this.prevLevel = prev.Get("scriptlevel")
+      } else {this.prevClass = MML.TEXCLASS.NONE}
       if (this.texClass === MML.TEXCLASS.BIN &&
             (this.prevClass === MML.TEXCLASS.NONE ||
              this.prevClass === MML.TEXCLASS.BIN ||
