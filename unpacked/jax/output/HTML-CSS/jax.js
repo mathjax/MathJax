@@ -810,6 +810,13 @@
     unEm: function (m) {
       return parseFloat(m);
     },
+    Px: function (m) {
+      m *= this.em; var s = (m < 0? "-" : "");
+      return s+Math.abs(m).toFixed(1).replace(/\.?0+$/,"") + "px";
+    },
+    unPx: function (m) {
+      return parseFloat(m)/this.em;
+    },
     Percent: function (m) {
       return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
     },
@@ -1000,6 +1007,7 @@
         else {HH = span.offsetHeight/this.em}
       if (!span.noAdjust) {
         HH += 1;
+        HH = Math.round(HH*this.em)/this.em; // make this an integer number of pixels (for Chrome)
         if (this.msieInlineBlockAlignBug) {
           this.addElement(span,"img",{
             className:"MathJax_strut", border:0, src:"about:blank", isMathJax:true,
@@ -1009,6 +1017,8 @@
           this.addElement(span,"span",{
             isMathJax: true, style:{display:"inline-block",width:0,height:this.Em(HH)}
           });
+          if (HTMLCSS.chromeHeightBug) 
+            {HH -= (span.lastChild.offsetHeight - Math.round(HH*this.em))/this.em}
         }
       }
       // Clip so that bbox doesn't include extra height and depth
@@ -2763,6 +2773,9 @@
 
       Chrome: function (browser) {
         HTMLCSS.Augment({
+          Em: HTMLCSS.Px,       // vertical alignment is better in pixels (since around v20)
+          unEm: HTMLCSS.unPx,
+          chromeHeightBug: true, // heights can be 1px off from the explicitly set size
           rfuzz: .011,
           AccentBug: true,
           AdjustSurd: true,
