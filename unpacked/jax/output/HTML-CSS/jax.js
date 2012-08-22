@@ -992,7 +992,7 @@
       return box;
     },
     addBox: function (span,box) {
-      box.style.position = "absolute"; box.isBox = true;
+      box.style.position = "absolute"; box.isBox = box.isMathJax = true;
       return span.appendChild(box);
     },
     placeBox: function (span,x,y,noclip) {
@@ -1184,7 +1184,7 @@
         dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
           while (n-- > 0) {
-            if (!this.msieCloneNodeBug) {REP = rep.cloneNode(true)}
+            if (!this.cloneNodeBug) {REP = rep.cloneNode(true)}
               else {REP = this.Element("span"); this.createChar(REP,delim.rep,scale,font)}
             this.placeBox(this.addBox(stack,REP),x,0,true); x += rw;
           }
@@ -2308,7 +2308,7 @@
 	if (surd.bbox.h + surd.bbox.d > H) {q = ((surd.bbox.h+surd.bbox.d) - (H-t))/2}
 	var ruleC = HTMLCSS.FONTDATA.DELIMITERS[HTMLCSS.FONTDATA.RULECHAR];
 	if (!ruleC || W < ruleC.HW[0][0]*scale || scale < .75) {
-	  HTMLCSS.createRule(rule,t,0,W);
+	  HTMLCSS.createRule(rule,0,t,W);
 	} else {
 	  HTMLCSS.createDelimiter(rule,HTMLCSS.FONTDATA.RULECHAR,W,scale);
 	}
@@ -2696,7 +2696,7 @@
           msiePlaceBoxBug: (isIE8 && !quirks),
           msieClipRectBug: !isIE8,
           msieNegativeSpaceBug: quirks,
-          msieCloneNodeBug: (isIE8 && browser.version === "8.0"),
+          cloneNodeBug: (isIE8 && browser.version === "8.0"),
           initialSkipBug: (mode < 8),        // confused by initial left-margin values
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
           msieIE6: !isIE7,
@@ -2776,6 +2776,7 @@
           Em: HTMLCSS.Px,       // vertical alignment is better in pixels (since around v20)
           unEm: HTMLCSS.unPx,
           chromeHeightBug: true, // heights can be 1px off from the explicitly set size
+          cloneNodeBug: true,    // Chrome gets heights wrong with the cloned ones
           rfuzz: .011,
           AccentBug: true,
           AdjustSurd: true,
