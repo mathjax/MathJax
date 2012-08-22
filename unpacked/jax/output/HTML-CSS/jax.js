@@ -2577,7 +2577,8 @@
 	  }
 	  MML.mbase.prototype.displayAlign = HUB.config.displayAlign;
 	  MML.mbase.prototype.displayIndent = HUB.config.displayIndent;
-	  math = HTMLCSS.Measured(this.data[0].toHTML(box),box);
+          var html = this.data[0].toHTML(box); html.bbox.exactW = false; // force remeasure just to be sure
+	  math = HTMLCSS.Measured(html,box);
 	}
 	HTMLCSS.placeBox(box,0,0);
 	//
