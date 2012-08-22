@@ -578,7 +578,12 @@ MathJax.ElementJax.mml.Augment({
       this.getValues("lspace","rspace"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
       this.texClass = this.Get("texClass");
-      if (this.data.join("") === "\u2061") {prev.texClass = MML.TEXCLASS.OP}
+      if (this.data.join("") === "\u2061") {
+        // force previous node to be texClass OP, and skip this node
+        prev.texClass = MML.TEXCLASS.OP;
+        this.texClass = this.prevClass = MML.TEXCLASS.NONE;
+        return prev;
+      }
       return this.adjustTeXclass(prev);
     },
     adjustTeXclass: function (prev) {
