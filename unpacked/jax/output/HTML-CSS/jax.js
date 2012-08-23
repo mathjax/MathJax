@@ -1056,7 +1056,7 @@
       var r = 0, c = -bbox.w/2, l = "50%";
       if (this.initialSkipBug) {r = bbox.w-bbox.rw-.1; c += bbox.lw}
       if (this.msieMarginScaleBug) {c = (c*this.em) + "px"} else {c = this.Em(c)}
-      if (isRelative) {c = ""; l = (50 - HTMLCSS.unEm(bbox.width)/2) + "%"}
+      if (isRelative) {c = ""; l = (50 - parseFloat(bbox.width)/2) + "%"}
       HUB.Insert(span.style,({
         right:  {left:"", right: this.Em(r)},
         center: {left:l, marginLeft: c}
