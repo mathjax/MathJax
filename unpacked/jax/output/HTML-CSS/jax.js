@@ -2581,6 +2581,7 @@
 	  math = HTMLCSS.Measured(html,box);
 	}
 	HTMLCSS.placeBox(box,0,0);
+        stack.style.width = Math.round(HTMLCSS.unEm(stack.style.width)*this.em)+"px"; // get width right if minimum font size is set
 	//
 	//  Adjust bbox to match outer em-size
 	// 
