@@ -302,7 +302,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           //  Set width/position based on the type of column
           //
           if (CWIDTH[j].match(/%$/)) {
-            var pp = HTMLCSS.unEm(CWIDTH[j]) * Wf;
+            var pp = parseFloat(CWIDTH[j]) * Wf;
             if (f === 0) {
               CjStyle.width = (wp + pp) + "%"; xp += wp + pp;
               Cj = HTMLCSS.createBox(Cj); HTMLCSS.addBox(Cj,C[j].firstChild);

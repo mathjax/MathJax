@@ -904,17 +904,13 @@
       if (before) {span.insertBefore(space,span.firstChild)} else {span.appendChild(space)}
       return space;
     },
-    createSpace: function (span,h,d,w,color) {
+    createSpace: function (span,h,d,w,color,isSpace) {
       if (h < -d) {d = -h} // make sure h is above d
       var H = this.Em(h+d), D = this.Em(-d);
       if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode).d-d)}
-      if (span.isBox || span.className == "mspace") {
-        var scale = (span.scale == null ? 1 : span.scale);
-        span.bbox = {
-          exactW: true,
-          h: h*scale, d: d*scale,
-          w: w*scale, rw: w*scale, lw: 0
-        };
+      if (span.isBox || isSpace) {
+	var scale = (span.scale == null ? 1 : span.scale);
+	span.bbox = {exactW: true, h: h*scale, d: d*scale, w: w*scale, rw: w*scale, lw: 0};
         span.style.height = H; span.style.verticalAlign = D;
         span.HH = (h+d)*scale;
       } else {
@@ -1066,7 +1062,7 @@
       var r = 0, c = -bbox.w/2, l = "50%";
       if (this.initialSkipBug) {r = bbox.w-bbox.rw-.1; c += bbox.lw}
       if (this.msieMarginScaleBug) {c = (c*this.em) + "px"} else {c = this.Em(c)}
-      if (isRelative) {c = ""; l = (50 - HTMLCSS.unEm(bbox.width)/2) + "%"}
+      if (isRelative) {c = ""; l = (50 - parseFloat(bbox.width)/2) + "%"}
       HUB.Insert(span.style,({
         right:  {left:"", right: this.Em(r)},
         center: {left:l, marginLeft: c}
@@ -2113,15 +2109,15 @@
 
     MML.mspace.Augment({
       toHTML: function (span) {
-	span = this.HTMLhandleSize(this.HTMLcreateSpan(span));
+	span = this.HTMLcreateSpan(span);
 	var values = this.getValues("height","depth","width");
         var mu = this.HTMLgetMu(span);
 	values.mathbackground = this.mathbackground;
 	if (this.background && !this.mathbackground) {values.mathbackground = this.background}
-	var h = HTMLCSS.length2em(values.height,mu) / span.scale,
-            d = HTMLCSS.length2em(values.depth,mu)  / span.scale,
-	    w = HTMLCSS.length2em(values.width,mu)  / span.scale;
-       HTMLCSS.createSpace(span,h,d,w,values.mathbackground);
+	var h = HTMLCSS.length2em(values.height,mu),
+            d = HTMLCSS.length2em(values.depth,mu),
+	    w = HTMLCSS.length2em(values.width,mu);
+       HTMLCSS.createSpace(span,h,d,w,values.mathbackground,true);
        return span;
       }
     });
