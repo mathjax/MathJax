@@ -1575,7 +1575,10 @@
       },
       HTMLzeroBBox: function () {return {h:0, d:0, w:0, lw: 0, rw:0}},
       HTMLcanStretch: function (direction) {
-	if (this.isEmbellished()) {return this.Core().HTMLcanStretch(direction)}
+	if (this.isEmbellished()) {
+          var core = this.Core();
+          if (core && core !== this) {return core.HTMLcanStretch(direction)}
+        }
 	return false;
       },
       HTMLstretchH: function (box,W) {return this.HTMLspanElement()},
@@ -1979,14 +1982,14 @@
       CoreParent: function () {
         var parent = this;
         while (parent && parent.isEmbellished() &&
-               parent.CoreMO() === this && !parent.isa(MML.math))  {parent = parent.Parent()}
+               parent.CoreMO() === this && !parent.isa(MML.math)) {parent = parent.Parent()}
         return parent;
       },
       CoreText: function (parent) {
         if (!parent) {return ""}
         if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
-        while (parent.isa(MML.mrow) && parent.data.length === 1 && parent.data[0])
-          {parent = parent.data[0]}
+        while ((parent.isa(MML.mrow) || parent.isa(MML.TeXAtom)) &&
+                parent.data.length === 1 && parent.data[0]) {parent = parent.data[0]}
         if (!parent.isToken) {return ""} else {return parent.data.join("")}
       },
       HTMLremapChars: {

@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.0.3",
+  version: "2.0.4",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -1264,6 +1264,9 @@ MathJax.ElementJax.mml.Augment({
     type: "texatom",
     inferRow: true,
     texClass: MML.TEXCLASS.ORD,
+    Core: MML.mbase.childCore,
+    CoreMO: MML.mbase.childCoreMO,
+    isEmbellished: MML.mbase.childEmbellished,
     setTeXclass: function (prev) {
       this.data[0].setTeXclass();
       return this.adjustTeXclass(prev);
