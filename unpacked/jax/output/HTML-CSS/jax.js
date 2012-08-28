@@ -810,6 +810,13 @@
     unEm: function (m) {
       return parseFloat(m);
     },
+    Px: function (m) {
+      m *= this.em; var s = (m < 0? "-" : "");
+      return s+Math.abs(m).toFixed(1).replace(/\.?0+$/,"") + "px";
+    },
+    unPx: function (m) {
+      return parseFloat(m)/this.em;
+    },
     Percent: function (m) {
       return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
     },
@@ -897,17 +904,13 @@
       if (before) {span.insertBefore(space,span.firstChild)} else {span.appendChild(space)}
       return space;
     },
-    createSpace: function (span,h,d,w,color) {
+    createSpace: function (span,h,d,w,color,isSpace) {
       if (h < -d) {d = -h} // make sure h is above d
       var H = this.Em(h+d), D = this.Em(-d);
       if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode).d-d)}
-      if (span.isBox || span.className == "mspace") {
-        var scale = (span.scale == null ? 1 : span.scale);
-        span.bbox = {
-          exactW: true,
-          h: h*scale, d: d*scale,
-          w: w*scale, rw: w*scale, lw: 0
-        };
+      if (span.isBox || isSpace) {
+	var scale = (span.scale == null ? 1 : span.scale);
+	span.bbox = {exactW: true, h: h*scale, d: d*scale, w: w*scale, rw: w*scale, lw: 0};
         span.style.height = H; span.style.verticalAlign = D;
         span.HH = (h+d)*scale;
       } else {
@@ -985,7 +988,7 @@
       return box;
     },
     addBox: function (span,box) {
-      box.style.position = "absolute"; box.isBox = true;
+      box.style.position = "absolute"; box.isBox = box.isMathJax = true;
       return span.appendChild(box);
     },
     placeBox: function (span,x,y,noclip) {
@@ -1000,6 +1003,7 @@
         else {HH = span.offsetHeight/this.em}
       if (!span.noAdjust) {
         HH += 1;
+        HH = Math.round(HH*this.em)/this.em; // make this an integer number of pixels (for Chrome)
         if (this.msieInlineBlockAlignBug) {
           this.addElement(span,"img",{
             className:"MathJax_strut", border:0, src:"about:blank", isMathJax:true,
@@ -1009,6 +1013,8 @@
           this.addElement(span,"span",{
             isMathJax: true, style:{display:"inline-block",width:0,height:this.Em(HH)}
           });
+          if (HTMLCSS.chromeHeightBug) 
+            {HH -= (span.lastChild.offsetHeight - Math.round(HH*this.em))/this.em}
         }
       }
       // Clip so that bbox doesn't include extra height and depth
@@ -1174,7 +1180,7 @@
         dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
           while (n-- > 0) {
-            if (!this.msieCloneNodeBug) {REP = rep.cloneNode(true)}
+            if (!this.cloneNodeBug) {REP = rep.cloneNode(true)}
               else {REP = this.Element("span"); this.createChar(REP,delim.rep,scale,font)}
             this.placeBox(this.addBox(stack,REP),x,0,true); x += rw;
           }
@@ -2106,15 +2112,15 @@
 
     MML.mspace.Augment({
       toHTML: function (span) {
-	span = this.HTMLhandleSize(this.HTMLcreateSpan(span));
+	span = this.HTMLcreateSpan(span);
 	var values = this.getValues("height","depth","width");
         var mu = this.HTMLgetMu(span);
 	values.mathbackground = this.mathbackground;
 	if (this.background && !this.mathbackground) {values.mathbackground = this.background}
-	var h = HTMLCSS.length2em(values.height,mu) / span.scale,
-            d = HTMLCSS.length2em(values.depth,mu)  / span.scale,
-	    w = HTMLCSS.length2em(values.width,mu)  / span.scale;
-       HTMLCSS.createSpace(span,h,d,w,values.mathbackground);
+	var h = HTMLCSS.length2em(values.height,mu),
+            d = HTMLCSS.length2em(values.depth,mu),
+	    w = HTMLCSS.length2em(values.width,mu);
+       HTMLCSS.createSpace(span,h,d,w,values.mathbackground,true);
        return span;
       }
     });
@@ -2301,7 +2307,7 @@
 	if (surd.bbox.h + surd.bbox.d > H) {q = ((surd.bbox.h+surd.bbox.d) - (H-t))/2}
 	var ruleC = HTMLCSS.FONTDATA.DELIMITERS[HTMLCSS.FONTDATA.RULECHAR];
 	if (!ruleC || W < ruleC.HW[0][0]*scale || scale < .75) {
-	  HTMLCSS.createRule(rule,t,0,W);
+	  HTMLCSS.createRule(rule,0,t,W);
 	} else {
 	  HTMLCSS.createDelimiter(rule,HTMLCSS.FONTDATA.RULECHAR,W,scale);
 	}
@@ -2690,7 +2696,7 @@
           msiePlaceBoxBug: (isIE8 && !quirks),
           msieClipRectBug: !isIE8,
           msieNegativeSpaceBug: quirks,
-          msieCloneNodeBug: (isIE8 && browser.version === "8.0"),
+          cloneNodeBug: (isIE8 && browser.version === "8.0"),
           initialSkipBug: (mode < 8),        // confused by initial left-margin values
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
           msieIE6: !isIE7,
@@ -2766,6 +2772,10 @@
 
       Chrome: function (browser) {
         HTMLCSS.Augment({
+          Em: HTMLCSS.Px,       // vertical alignment is better in pixels (since around v20)
+          unEm: HTMLCSS.unPx,
+          chromeHeightBug: true, // heights can be 1px off from the explicitly set size
+          cloneNodeBug: true,    // Chrome gets heights wrong with the cloned ones
           rfuzz: .011,
           AccentBug: true,
           AdjustSurd: true,
