@@ -22,8 +22,8 @@
  *  limitations under the License.
  */
 
-(function (HTMLCSS,HTML) {
-  var VERSION = "2.0";
+(function (HTMLCSS,MML,HTML) {
+  var VERSION = "2.0.1";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -67,15 +67,16 @@
       },
       
       VARIANT: {
-        "normal": {fonts: [GENERAL,NONUNI,SIZE1]},
+        "normal": {fonts: [GENERAL,NONUNI,SIZE1],
+                   remap: {0x2205: [0x2205,"-STIX-variant"]}}, // \emptyset
         "bold":   {fonts: [BOLD,"STIXNonUnicode-bold","STIXSizeOneSym-bold"], bold:true},
         "italic": {fonts: [ITALIC,NONUNII,GENERAL,NONUNI,SIZE1], italic:true},
         "bold-italic": {fonts: ["STIXGeneral-bold-italic","STIXNonUnicode-bold-italic"], bold:true, italic:true},
         "double-struck": {offsetA: 0x1D538, offsetN: 0x1D7D8,
-                           remap: {0x1D53A: 0x2102, 0x1D53F: 0x210D, 0x1D545: 0x2115, 0x1D547: 0x2119,
-                                   0x1D548: 0x211A, 0x1D549: 0x211D, 0x1D551: 0x2124}},
+                   remap: {0x1D53A: 0x2102, 0x1D53F: 0x210D, 0x1D545: 0x2115, 0x1D547: 0x2119,
+                           0x1D548: 0x211A, 0x1D549: 0x211D, 0x1D551: 0x2124}},
         "fraktur": {offsetA: 0x1D504,
-                    remap: {0x1D506: 0x212D, 0x1D50B: 0x210C, 0x1D50C: 0x2111, 0x1D515: 0x211C, 0x1D51D: 0x2128}},
+                   remap: {0x1D506: 0x212D, 0x1D50B: 0x210C, 0x1D50C: 0x2111, 0x1D515: 0x211C, 0x1D51D: 0x2128}},
         "bold-fraktur": {fonts: [BOLD], offsetA: 0x1D56C, bold:true},
         "script": {fonts: [ITALIC], offsetA: 0x1D49C,
                    remap: {0x1D49D: 0x212C, 0x1D4A0: 0x2130, 0x1D4A1: 0x2131, 0x1D4A3: 0x210B,
@@ -87,12 +88,16 @@
         "sans-serif-italic": {fonts: [ITALIC,NONUNII], offsetA: 0x1D608, offsetN: 0xE1B4, offsetG: 0xE1BF, italic:true},
         "sans-serif-bold-italic": {fonts: ["STIXGeneral-bold-italic","STIXNonUnicode-bold-italic"], offsetA: 0x1D63C, offsetN: 0xE1F6, offsetG: 0x1D790, bold:true, italic:true},
         "monospace": {offsetA: 0x1D670, offsetN: 0x1D7F6},
-        "-STIX-variant": {fonts:["STIXVariants",NONUNI,GENERAL]},
+        "-STIX-variant": {fonts:["STIXVariants",NONUNI,GENERAL],
+                   remap: {0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2270: 0xE011, 0x2271: 0xE00E,
+                           0x22E0: 0xE04B, 0x22E1: 0xE04F, 0x2288: 0xE016, 0x2289: 0xE018,
+                           0x25B3: 0x25B5, 0x25BD: 0x25BF,
+                           0x2205: [0x2205,MML.VARIANT.NORMAL]}},  // \varnothing
         "-tex-caligraphic": {fonts: [ITALIC,NONUNII,NONUNI,SIZE1], offsetA: 0xE22D, noLowerCase: 1},
         "-tex-oldstyle": {offsetN: 0xE261,
-                          remap: {0xE262: 0xE265, 0xE263: 0xE269, 0xE264: 0xE26D, 0xE265: 0xE271,
-                                  0xE266: 0xE275, 0xE267: 0xE279, 0xE268: 0xE27D, 0xE269: 0xE281,
-                                  0xE26A: 0xE285}},
+                   remap: {0xE262: 0xE265, 0xE263: 0xE269, 0xE264: 0xE26D, 0xE265: 0xE271,
+                           0xE266: 0xE275, 0xE267: 0xE279, 0xE268: 0xE27D, 0xE269: 0xE281,
+                           0xE26A: 0xE285}},
         "-tex-mathit": {fonts: [ITALIC,NONUNII,GENERAL,NONUNI,SIZE1], italic:true, noIC:true},
         "-largeOp": {fonts:[SIZE1,"STIXIntegralsD",NONUNI,GENERAL]},
         "-smallOp": {}
@@ -455,18 +460,6 @@
     }
   });
   
-  MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
-    var TEX = MathJax.InputJax.TeX;
-    
-    TEX.isSTIX = true;
-    TEX.Definitions.mathchar0mi.hbar = ['210F',{variantForm: true}];
-    TEX.Definitions.mathchar0mi.emptyset[1].variantForm = true;
-    TEX.Definitions.mathchar0mi.backslash[1].variantForm = true;
-    TEX.Definitions.mathchar0mi.triangle[1].mathsize = "71%";
-
-    TEX.Definitions.mathchar0mo.setminus = ['2216',{variantForm: true}];
-  });
-
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'] = {
     directory: 'General/Regular',
     family: 'STIXGeneral',
@@ -1568,5 +1561,5 @@
   QUEUE.push(["loadComplete",MathJax.Ajax,HTMLCSS.fontDir + "/fontdata.js"]);
   MathJax.Callback.Queue.apply(MathJax.Callback,QUEUE);
 
-})(MathJax.OutputJax["HTML-CSS"],MathJax.HTML);
+})(MathJax.OutputJax["HTML-CSS"],MathJax.ElementJax.mml,MathJax.HTML);
 
