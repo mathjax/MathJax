@@ -23,7 +23,7 @@
  */
 
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
-  var VERSION = "2.0.1";
+  var VERSION = "2.0.2";
   
   var MML = MathJax.ElementJax.mml
       SETTINGS = MathJax.Hub.config.menuSettings;
@@ -51,7 +51,8 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       var attr = [], defaults = this.defaults;
       var copy = (this.attrNames||MML.copyAttributeNames), skip = MML.skipAttributes;
 
-      if (this.type === "math") {attr.push('xmlns="http://www.w3.org/1998/Math/MathML"')}
+      if (this.type === "math" && (!this.attr || !this.attr.xmlns))
+        {attr.push('xmlns="http://www.w3.org/1998/Math/MathML"')}
       if (!this.attrNames) {
         if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
         for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
