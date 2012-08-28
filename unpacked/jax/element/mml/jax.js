@@ -1288,6 +1288,9 @@ MathJax.ElementJax.mml.Augment({
     type: "texatom",
     inferRow: true,
     texClass: MML.TEXCLASS.ORD,
+    Core: MML.mbase.childCore,
+    CoreMO: MML.mbase.childCoreMO,
+    isEmbellished: MML.mbase.childEmbellished,
     setTeXclass: function (prev) {
       this.data[0].setTeXclass();
       return this.adjustTeXclass(prev);
