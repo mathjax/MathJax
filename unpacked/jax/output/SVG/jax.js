@@ -57,6 +57,10 @@
           display: "block",
           width: "100%"
         },
+        
+        ".MathJax_SVG svg a > g, .MathJax_SVG_Display svg a > g": {
+          fill: "blue", stroke: "blue"
+        },
 
         ".MathJax_SVG_Processing": {
           visibility: "hidden", position:"absolute", top:0, left:0,
@@ -995,8 +999,9 @@
         if (this.href) {
 	  var a = SVG.Element("a");
 	  a.setAttributeNS(XLINKNS,"href",this.href);
+          a.onclick = this.SVGlink;
           SVG.addElement(a,"rect",{width:svg.w, height:svg.h+svg.d, y:-svg.d,
-                                  fill:"none", stroke:"none", "pointer-events":"all"});
+                                   fill:"none", stroke:"none", "pointer-events":"all"});
           if (svg.type === "svg") {
             // for svg element, put <a> inside the main <g> element
             var g = svg.element.firstChild;
@@ -1022,6 +1027,22 @@
           svg.element.style.border = svg.element.style.padding = "";
           if (svg.removeable) {svg.removeable = svg.element.style.cssText === ""}
         }
+      },
+      //
+      //  WebKit currently scrolls to the BOTTOM of an svg element if it contains the
+      //  target of the link, so implement link by hand, to the containing span element.
+      //  
+      SVGlink: function () {
+        var href = this.href.animVal;
+        if (href.charAt(0) === "#") {
+          var link = document.getElementById(href.substr(1));
+          if (link && link.nodeName === "g") {
+            do {link = link.parentNode} while (link && link.nodeName !== "svg");
+            if (link && link.parentNode && link.parentNode.scrollIntoView) 
+              {setTimeout(function () {link.parentNode.scrollIntoView(true)},1)}
+          }
+        }
+        document.location = href;
       },
       
       SVGgetStyles: function () {
