@@ -1185,7 +1185,7 @@
 	  values.scriptminsize = SVG.length2em(this.Get("scriptminsize"))/1000;
 	  if (scale < values.scriptminsize) {scale = values.scriptminsize}
 	}
-	scale *= SVG.length2em(values.mathsize)/1000;
+	if (this.isToken) {scale *= SVG.length2em(values.mathsize)/1000}
 	return scale;
       },
       SVGgetMu: function (svg) {

@@ -1769,7 +1769,7 @@
 	  values.scriptminsize = HTMLCSS.length2em(this.Get("scriptminsize"));
 	  if (scale < values.scriptminsize) {scale = values.scriptminsize}
 	}
-	scale *= HTMLCSS.length2em(values.mathsize);
+	if (this.isToken) {scale *= HTMLCSS.length2em(values.mathsize)}
 	return scale;
       },
       HTMLgetMu: function (span) {
