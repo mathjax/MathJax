@@ -149,9 +149,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Get the current breakpoint position and other data
       //
       var index = info.index.slice(0), i = info.index.shift(),
-          m = this.data.length, W, broken = (info.index.length > 0), better = false;
+          m = this.data.length, W, w, scanW, broken = (info.index.length > 0), better = false;
       if (i == null) {i = -1}; if (!broken) {i++; info.W += info.w; info.w = 0}
-      info.scanW = info.W; info.nest++;
+      scanW = info.scanW = info.W; info.nest++;
       //
       //  Look through the line for breakpoints,
       //    (as long as we are not too far past the breaking width)
@@ -159,10 +159,10 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       while (i < m && info.scanW < 1.33*SVG.linebreakWidth) {
         if (this.data[i]) {
           if (this.data[i].SVGbetterBreak(info,state)) {
-            better = true; index = [i].concat(info.index); W = info.W;
+            better = true; index = [i].concat(info.index); W = info.W; w = info.w;
             if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
           }
-          if (!broken) {this.SVGaddWidth(i,info)}
+          if (!broken) {scanW = this.SVGaddWidth(i,info,scanW)}
         }
         info.index = []; i++; broken = false;
       }
@@ -170,10 +170,11 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (better) {info.W = W}
       return better;
     },
-    SVGaddWidth: function (i,info) {
+    SVGaddWidth: function (i,info,scanW) {
       var svg = this.data[i].SVGdata;
-      info.scanW += svg.w + svg.x; if (svg.X) {info.scanW += svg.X}
-      info.W = info.scanW;
+      scanW += svg.w + svg.x; if (svg.X) {scanW += svg.X}
+      info.W = info.scanW = scanW; info.w = 0;
+      return scanW;
     },
     
     /****************************************************************/
@@ -333,9 +334,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Get the current breakpoint position and other data
       //
       var index = info.index.slice(0), i = info.index.shift(),
-          m = this.data.length, W, broken = (info.index.length > 0), better = false;
+          m = this.data.length, W, w, scanW, broken = (info.index.length > 0), better = false;
       if (i == null) {i = -1}; if (!broken) {i++; info.W += info.w; info.w = 0}
-      info.scanW = info.W; info.nest++;
+      scanW = info.scanW = info.W; info.nest++;
       //
       //  Create indices that include the delimiters and separators
       //
@@ -358,15 +359,15 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         var k = this.dataI[i];
         if (this.data[k]) {
           if (this.data[k].SVGbetterBreak(info,state)) {
-            better = true; index = [i].concat(info.index); W = info.W;
+            better = true; index = [i].concat(info.index); W = info.W; w = info.w;
             if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
           }
-          if (!broken) {this.SVGaddWidth(k,info)}
+          if (!broken) {scanW = this.SVGaddWidth(k,info,scanW)}
         }
         info.index = []; i++; broken = false;
       }
       info.nest--; info.index = index;
-      if (better) {info.W = W}
+      if (better) {info.W = W; info.w = w}
       return better;
     },
 
