@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.0.1";
+  var VERSION = "2.0.2";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -149,10 +149,10 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Get the current breakpoint position and other data
       //
       var index = info.index.slice(0), i = info.index.shift(),
-          m = this.data.length, W, scanW = info.W,
-          broken = (info.index.length > 0), better = false;
+          m = this.data.length, W, broken = (info.index.length > 0), better = false;
+      info.scanW = info.W;
       if (i == null) {i = -1}; if (!broken) {i++; info.W += info.w};
-      info.w = 0; info.nest++; info.scanW = scanW;
+      info.w = 0; info.nest++;
       //
       //  Look through the line for breakpoints,
       //    (as long as we are not too far past the breaking width)
@@ -163,17 +163,18 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
             better = true; index = [i].concat(info.index); W = info.W;
             if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
           }
-          if (!broken) {
-            var svg = this.data[i].SVGdata;
-            scanW += svg.w + svg.x; if (svg.X) {scanW += svg.X}
-            info.W = info.scanW = scanW;
-          }
+          if (!broken) {this.SVGaddWidth(i,info)}
         }
         info.index = []; i++; broken = false;
       }
       info.nest--; info.index = index;
       if (better) {info.W = W}
       return better;
+    },
+    SVGaddWidth: function (i,info) {
+      var svg = this.data[i].SVGdata;
+      info.scanW += svg.w + svg.x; if (svg.X) {info.scanW += svg.X}
+      info.W = info.scanW;
     },
     
     /****************************************************************/
@@ -303,8 +304,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
 
     /****************************************************************/
     //
-    //  Move an element from its original span to its new location in
-    //    a split element or the new line's span
+    //  Move an element from its original position to its new location in
+    //    a split element or the new line's position
     //
     SVGmove: function (line,state,values) {
       // FIXME:  handle linebreakstyle === "duplicate"
@@ -325,6 +326,82 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     }
   });
       
+  /**************************************************************************/
+
+  MML.mfenced.Augment({
+    SVGbetterBreak: function (info,state) {
+      //
+      //  Get the current breakpoint position and other data
+      //
+      var index = info.index.slice(0), i = info.index.shift(),
+          m = this.data.length, W, broken = (info.index.length > 0), better = false;
+      info.scanW = info.W;
+      if (i == null) {i = -1}; if (!broken) {i++; info.W += info.w};
+      info.w = 0; info.nest++;
+      //
+      //  Look through the line for breakpoints, including the open, close, and separators
+      //    (as long as we are not too far past the breaking width)
+      //
+      if (!broken && this.data.open) {this.SVGaddWidth("open",info)}
+      while (i < m && info.scanW < 1.33*SVG.linebreakWidth) {
+        if (this.data[i]) {
+          if (this.data[i].SVGbetterBreak(info,state)) {
+            better = true; index = [i].concat(info.index); W = info.W;
+            if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
+          }
+          if (!broken) {this.SVGaddWidth(i,info)}
+        }
+        info.index = []; i++; broken = false;
+        // FIXME: should be able to break at the following (but don't have index for it)
+        if (this.data["sep"+i]) {this.SVGaddWidth("sep"+i,info)}
+      }
+      if (this.data.close) {this.SVGaddWidth("close",info)}
+      info.nest--; info.index = index;
+      if (better) {info.W = W}
+      return better;
+    },
+
+    SVGmoveLine: function (start,end,svg,state,values) {
+      var i = start[0], j = end[0];
+      if (i == null) {i = -1}; if (j == null) {j = this.data.length-1}
+      if (i === j && start.length > 1) {
+        //
+        //  If starting and ending in the same element move the subpiece to the new line
+        //  Add the closing fence, if present
+        //
+        this.data[i].SVGmoveSlice(start.slice(1),end.slice(1),svg,state,values,"paddingLeft");
+        if (i === this.data.length-1 && this.data.close) {this.data.close.SVGmove(svg,state,values)}
+      } else {
+        //
+        //  Otherwise, move the remainder of the initial item
+        //  and any others (including open and separators) up to the last one
+        //
+        var last = state.last; state.last = false;
+        if (i < 0 && this.data.open) {this.data.open.SVGmove(svg,state,values)}
+        while (i < j) {
+          if (this.data[i]) {
+            if (start.length <= 1) {this.data[i].SVGmove(svg,state,values)}
+              else {this.data[i].SVGmoveSlice(start.slice(1),[],svg,state,values,"paddingLeft")}
+          }
+          i++; state.first = false; start = [];
+          if (this.data["sep"+i]) {this.data["sep"+i].SVGmove(svg,state,values)}
+        }
+        //
+        //  If the last item is complete, move it and the closing fence,
+        //    otherwise move the first part of it up to the split
+        //
+        state.last = last;
+        if (this.data[i]) {
+          if (end.length <= 1) {
+            this.data[i].SVGmove(svg,state,values);
+            if (this.data.close) {this.data.close.SVGmove(svg,state,values)}
+          } else {this.data[i].SVGmoveSlice([],end.slice(1),svg,state,values,"paddingRight")}
+        }
+      }
+    }
+    
+  });
+  
   /**************************************************************************/
 
   MML.mo.Augment({

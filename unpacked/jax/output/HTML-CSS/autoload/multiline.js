@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.0.2";
+  var VERSION = "2.0.3";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
       
@@ -146,10 +146,10 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Get the current breakpoint position and other data
       //
       var index = info.index.slice(0), i = info.index.shift(),
-          m = this.data.length, W, scanW = info.W,
-          broken = (info.index.length > 0), better = false;
+          m = this.data.length, W, broken = (info.index.length > 0), better = false;
+      info.scanW = info.W;
       if (i == null) {i = -1}; if (!broken) {i++; info.W += info.w};
-      info.w = 0; info.nest++; info.scanW = scanW;
+      info.w = 0; info.nest++;
       //
       //  Look through the line for breakpoints,
       //    (as long as we are not too far past the breaking width)
@@ -160,19 +160,20 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             better = true; index = [i].concat(info.index); W = info.W;
             if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
           }
-          if (!broken) {
-            var span = this.data[i].HTMLspanElement();
-            scanW += span.bbox.w;
-            if (span.style.paddingLeft)  {scanW += HTMLCSS.unEm(span.style.paddingLeft)}
-            if (span.style.paddingRight) {scanW += HTMLCSS.unEm(span.style.paddingRight)}
-            info.W = info.scanW = scanW;
-          }
+          if (!broken) {this.HTMLaddWidth(i,info)}
         }
         info.index = []; i++; broken = false;
       }
       info.nest--; info.index = index;
       if (better) {info.W = W}
       return better;
+    },
+    HTMLaddWidth: function (i,info) {
+      var span = this.data[i].HTMLspanElement();
+      info.scanW += span.bbox.w;
+      if (span.style.paddingLeft)  {info.scanW += HTMLCSS.unEm(span.style.paddingLeft)}
+      if (span.style.paddingRight) {info.scanW += HTMLCSS.unEm(span.style.paddingRight)}
+      info.W = info.scanW;
     },
     
     /****************************************************************/
@@ -262,7 +263,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       } else {
         //
         //  Otherwise, move the remainder of the initial item
-        //  and any others up tp the last one
+        //  and any others up to the last one
         //
         var last = state.last; state.last = false;
         while (i < j) {
@@ -366,7 +367,84 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       } else if (state.first) {state.nextIsFirst = true} else {delete state.nextIsFirst}
     }
   });
+
+  /**************************************************************************/
+
+  MML.mfenced.Augment({
+    HTMLbetterBreak: function (info,state) {
+      //
+      //  Get the current breakpoint position and other data
+      //
+      var index = info.index.slice(0), i = info.index.shift(),
+          m = this.data.length, W, broken = (info.index.length > 0), better = false;
+      info.scanW = info.W;
+      if (i == null) {i = -1}; if (!broken) {i++; info.W += info.w};
+      info.w = 0; info.nest++;
+      //
+      //  Look through the line for breakpoints, including the open, close, and separators
+      //    (as long as we are not too far past the breaking width)
+      //
+      if (!broken && this.data.open) {this.HTMLaddWidth("open",info)}
+      while (i < m && info.scanW < 1.33*HTMLCSS.linebreakWidth) {
+        if (this.data[i]) {
+          if (this.data[i].HTMLbetterBreak(info,state)) {
+            better = true; index = [i].concat(info.index); W = info.W;
+            if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
+          }
+          if (!broken) {this.HTMLaddWidth(i,info)}
+        }
+        info.index = []; i++; broken = false;
+        // FIXME: should be able to break at the following (but don't have index for it)
+        if (this.data["sep"+i]) {this.HTMLaddWidth("sep"+i,info)}
+      }
+      if (this.data.close) {this.HTMLaddWidth("close",info)}
+      info.nest--; info.index = index;
+      if (better) {info.W = W}
+      return better;
+    },
     
+    HTMLmoveLine: function (start,end,span,state,values) {
+      var i = start[0], j = end[0];
+      if (i == null) {i = -1}; if (j == null) {j = this.data.length-1}
+      if (i === j && start.length > 1) {
+        //
+        //  If starting and ending in the same element move the subpiece to the new line
+        //  Add the closing fence, if present
+        //
+        this.data[i].HTMLmoveSlice(start.slice(1),end.slice(1),span,state,values,"paddingLeft");
+        if (i === this.data.length-1 && this.data.close)
+          {this.data.close.HTMLmoveSpan(span,state,values)}
+      } else {
+        //
+        //  Otherwise, move the remainder of the initial item
+        //  and any others (including open and separators) up to the last one
+        //
+        var last = state.last; state.last = false;
+        if (i < 0 && this.data.open) {this.data.open.HTMLmoveSpan(span,state,values)}
+        while (i < j) {
+          if (this.data[i]) {
+            if (start.length <= 1) {this.data[i].HTMLmoveSpan(span,state,values)}
+              else {this.data[i].HTMLmoveSlice(start.slice(1),[],span,state,values,"paddingLeft")}
+          }
+          i++; state.first = false; start = [];
+          if (this.data["sep"+i]) {this.data["sep"+i].HTMLmoveSpan(span,state,values)}
+        }
+        //
+        //  If the last item is complete, move it and the closing fence,
+        //    otherwise move the first part of it up to the split
+        //
+        state.last = last;
+        if (this.data[i]) {
+          if (end.length <= 1) {
+            this.data[i].HTMLmoveSpan(span,state,values);
+            if (this.data.close) {this.data.close.HTMLmoveSpan(span,state,values)}
+          } else {this.data[i].HTMLmoveSlice([],end.slice(1),span,state,values,"paddingRight")}
+        }
+      }
+    }
+
+  });
+  
   /**************************************************************************/
 
   MML.mo.Augment({

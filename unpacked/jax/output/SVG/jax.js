@@ -837,8 +837,11 @@
     Stretch: function () {
       for (var i = 0, m = this.svg.length; i < m; i++)
       {
-        var svg = this.svg[i];
-        if (svg.mml) {svg = svg.mml.SVGstretchV(this.sh,this.sd)}
+        var svg = this.svg[i], mml = svg.mml;
+        if (mml) {
+          svg = mml.SVGstretchV(this.sh,this.sd);
+          mml.SVGdata.HW = this.sh; mml.SVGdata.D = this.sd;
+        }
         if (svg.ic) {this.ic = svg.ic} else {delete this.ic}
         this.Add(svg,this.w,0,true);
       }
@@ -1243,10 +1246,15 @@
     });
 
     MML.mo.Augment({
-      toSVG: function () {
+      toSVG: function (HW,D) {
         this.SVGgetStyles();
         var svg = this.svg = this.SVG(); this.SVGhandleSpace(svg);
         if (this.data.length == 0) {svg.Clean(); this.SVGsaveData(svg); return svg}
+        //
+        //  Stretch the operator, if that is requested
+        //
+        if (D != null) {return this.SVGstretchV(HW,D)}
+        else if (HW != null) {return this.SVG.strechH(HW)}
         //
         //  Get the variant, and check for operator size
         //
