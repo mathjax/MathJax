@@ -571,13 +571,6 @@
   });
 
   
-  MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
-    var TEX = MathJax.InputJax.TeX;
-    TEX.Definitions.mathchar0mi.ell  = ['2113',{mathvariant: MML.VARIANT.NORMAL}];
-    TEX.Definitions.mathchar0mi.hbar = ['210F',{mathvariant: MML.VARIANT.NORMAL}];
-    TEX.Definitions.mathchar0mi.S    = ['00A7',{mathvariant: MML.VARIANT.SCRIPT}];
-  });
-  
   SVG.FONTDATA.FONTS['MathJax_Main'] = {
     directory: 'Main/Regular',
     family: 'MathJax_Main',
