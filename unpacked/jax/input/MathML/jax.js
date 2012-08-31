@@ -126,6 +126,7 @@
         var name = node.attributes[i].name;
         if (name == "xlink:href") {name = "href"}
         if (name.match(/:/)) continue;
+        if (name.match(/^_moz-math-((column|row)(align|line)|font-style)$/)) continue;
         var value = node.attributes[i].value;
         if (value.toLowerCase() === "true") {value = true}
           else if (value.toLowerCase() === "false") {value = false}
