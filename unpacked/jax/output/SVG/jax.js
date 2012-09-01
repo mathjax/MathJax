@@ -1015,7 +1015,7 @@
           svg.element.setAttribute("className","mjx-svg-"+this.type);
         }
         var style = this.Get("style");
-        if (style) {
+        if (style && svg.element) {
           svg.element.style.cssText = style;
           if (svg.element.style.fontSize) {svg.element.style.fontSize = ""} // handled by scale
           svg.element.style.border = svg.element.style.padding = "";
@@ -1430,7 +1430,9 @@
 	}
 	this.SVGhandleColor(svg);
         if (!svg.element.firstChild) {delete svg.element}
+console.log("6");
         this.SVGsaveData(svg);
+console.log("7");
 	return svg;
       }
     });
