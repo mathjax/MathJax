@@ -1430,9 +1430,7 @@
 	}
 	this.SVGhandleColor(svg);
         if (!svg.element.firstChild) {delete svg.element}
-console.log("6");
         this.SVGsaveData(svg);
-console.log("7");
 	return svg;
       }
     });
