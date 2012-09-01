@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.0.1";
+  var VERSION = "2.0.2";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -42,7 +42,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var LABEL = -1;
 
       var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row, cell, mo;
-      var LHD = SVG.FONTDATA.baselineskip * scale * values.useHeight,
+      var LHD = SVG.FONTDATA.baselineskip * scale * values.useHeight, HD,
           LH = SVG.FONTDATA.lineH * scale, LD = SVG.FONTDATA.lineD * scale;
 
       //
@@ -60,17 +60,26 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           cell = row.data[j-s];
           A[i][j] = cell.toSVG();
 //          if (row.data[j-s].isMultiline) {A[i][j].style.width = "100%"}
-          if (A[i][j].h > H[i]) {H[i] = A[i][j].h}
-          if (A[i][j].d > D[i]) {D[i] = A[i][j].d}
-          if (A[i][j].w > W[j]) {W[j] = A[i][j].w}
           if (cell.isEmbellished()) {
             mo = cell.CoreMO();
             var min = mo.Get("minsize",true);
-            if (min && mo.SVGcanStretch("Horizontal")) {
-              min = SVG.length2em(min,mu,mo.SVGdata.w);
-              if (min > W[j]) {W[j] = min}
+            if (min) {
+              if (mo.SVGcanStretch("Vertical")) {
+                HD = mo.SVGdata.h + mo.SVGdata.d;
+                if (HD) {
+                  min = SVG.length2em(min,mu,HD);
+                  if (min*mo.SVGdata.h/HD > H[j]) {H[j] = min*mo.SVGdata.h/HD}
+                  if (min*mo.SVGdata.d/HD > D[j]) {D[j] = min*mo.SVGdata.d/HD}
+                }
+              } else if (mo.SVGcanStretch("Horizontal")) {
+                min = SVG.length2em(min,mu,mo.SVGdata.w);
+                if (min > W[j]) {W[j] = min}
+              }
             }
           }
+          if (A[i][j].h > H[i]) {H[i] = A[i][j].h}
+          if (A[i][j].d > D[i]) {D[i] = A[i][j].d}
+          if (A[i][j].w > W[j]) {W[j] = A[i][j].w}
         }
       }
       if (H[0]+D[0]) {H[0] = Math.max(H[0],LH)}
@@ -127,7 +136,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Determine array total height
       //
-      var HD = H[0] + D[A.length-1];
+      HD = H[0] + D[A.length-1];
       for (i = 0, m = A.length-1; i < m; i++)
         {HD += Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i])}
       //

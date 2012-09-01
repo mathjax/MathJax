@@ -985,6 +985,7 @@
       SVGsaveData: function (svg) {
         if (!this.SVGdata) {this.SVGdata = {}}
         this.SVGdata.w = svg.w, this.SVGdata.x = svg.x;
+        this.SVGdata.h = svg.h, this.SVGdata.d = svg.d;
         if (svg.X != null) {this.SVGdata.X = svg.X}
         if (this["class"]) {svg.removeable = false; SVG.Element(svg.element,{"class":this["class"]})}
         // FIXME:  if an element is split by linebreaking, the ID will be the same on both parts
