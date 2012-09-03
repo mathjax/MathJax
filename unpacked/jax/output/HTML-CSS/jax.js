@@ -631,7 +631,8 @@
 
     getJaxFromMath: function (math) {
       if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
-      return HUB.getJaxFor(math.nextSibling);
+      do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
+      return HUB.getJaxFor(math);
     },
     getHoverSpan: function (jax,math) {return jax.root.HTMLspanElement()},
     getHoverBBox: function (jax,span,math) {
