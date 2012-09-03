@@ -36,7 +36,6 @@
     config: {
       styles: {
         ".MathJax_MathML": {
-          "display":         "inline",
           "font-style":      "normal",
           "font-weight":     "normal",
           "line-height":     "normal",
@@ -52,6 +51,14 @@
           "float":           "none",
           "direction":       "ltr",
           border: 0, padding: 0, margin: 0
+        },
+        
+        "span.MathJax_MathML": {
+          display: "inline"
+        },
+        
+        "div.MathJax_MathML": {
+          display: "block"
         },
         
         ".MathJax_mmlExBox": {
