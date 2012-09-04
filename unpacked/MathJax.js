@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.0";
-MathJax.fileversion = "2.0.5";
+MathJax.fileversion = "2.0.6";
 
 /**********************************************************/
 
@@ -1923,8 +1923,21 @@ MathJax.Hub.Startup = {
         for (var i = 0, m = a.length; i < m; i++)
           {if (a[i].name === name) {target = a[i]; break}}
       }
-      if (target) {setTimeout(function () {target.scrollIntoView(true)},1)}
+      if (target) {
+        while (!target.scrollIntoView) {target = target.parentNode}
+        target = this.HashCheck(target);
+        if (target && target.scrollIntoView)
+          {setTimeout(function () {target.scrollIntoView(true)},1)}
+      }
     }
+  },
+  HashCheck: function (target) {
+    if (target.isMathJax) {
+      var jax = MathJax.Hub.getJaxFor(target);
+      if (jax && MathJax.OutputJax[jax.outputJax].hashCheck)
+        {target = MathJax.OutputJax[jax.outputJax].hashCheck(target)}
+    }
+    return target;
   },
   
   //

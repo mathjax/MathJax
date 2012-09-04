@@ -345,6 +345,16 @@
       state.SVGlast = state.SVGeqn;
     },
 
+    //
+    //  Return the containing HTML element rather than the SVG element, since
+    //  most browsers can't position to an SVG element properly.
+    //
+    hashCheck: function (target) {
+      if (target && target.nodeName === "g")
+        {do {target = target.parentNode} while (target && target.firstChild.nodeName !== "svg")}
+      return target;
+    },
+
     getJaxFromMath: function (math) {
       if (math.parentNode.className === "MathJax_SVG_Display") {math = math.parentNode}
       return HUB.getJaxFor(math.nextSibling);
@@ -1035,12 +1045,9 @@
       SVGlink: function () {
         var href = this.href.animVal;
         if (href.charAt(0) === "#") {
-          var link = document.getElementById(href.substr(1));
-          if (link && link.nodeName === "g") {
-            do {link = link.parentNode} while (link && link.nodeName !== "svg");
-            if (link && link.parentNode && link.parentNode.scrollIntoView) 
-              {setTimeout(function () {link.parentNode.scrollIntoView(true)},1)}
-          }
+          var target = SVG.hashCheck(document.getElementById(href.substr(1)));
+          if (target && target.scrollIntoView) 
+            {setTimeout(function () {target.parentNode.scrollIntoView(true)},1)}
         }
         document.location = href;
       },
