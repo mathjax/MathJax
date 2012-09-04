@@ -23,7 +23,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "2.0.4";
+  var VERSION = "2.0.5";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -1562,6 +1562,15 @@
     HTMLCSS.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][2] -= 106; // fix error in character's right bearing
     HTMLCSS.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][5] = {rfix:-106}; // fix error in character's right bearing
   });
+  
+  //
+  //  Add some spacing characters (more will come later)
+  //
+  MathJax.Hub.Insert(HTMLCSS.FONTDATA.FONTS['MathJax_Main'],{
+    0xEEE0: [0,0,-575,0,0,{space:1}],
+    0xEEE1: [0,0,-300,0,0,{space:1}],
+    0xEEE8: [0,0,25,0,0,{space:1}]
+  });
 
   if (!HTMLCSS.imgFonts) {
     MathJax.Hub.Browser.Select({
@@ -1845,6 +1854,23 @@
       },
       
       Chrome: function (browser) {
+        if (browser.isPC && navigator.userAgent.match(/Windows NT (5|6.0)/)) {
+          //
+          //  Chrome on XP and Vista don't seem to handle four combining characters,
+          //  so work around them as best we can.
+          //
+          HTMLCSS.Augment({
+            FONTDATA: {
+              REMAP: {0x338: "\uEEE0/\uEEE8"}, // combining long solidas
+              REMAPACCENT: {
+                "\u0307":".",                  // combining dot above
+                "\u030B":"\u00B4\uEEE1\u00B4", // combining double acute accent
+                "\u20D7":"\u2192"              // combining arrow above
+              }
+            }
+          });
+          delete HTMLCSS.FONTDATA.REMAPACCENT["\u2192"];
+        }
         if (browser.isPC && !MathJax.Hub.Browser.versionAtLeast("5.0")) {
           // FIXME:  patch caligraphic bold, too
           var WinChrome = "-WinChrome";
