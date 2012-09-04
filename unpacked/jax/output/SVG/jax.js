@@ -990,6 +990,7 @@
       SVGsaveData: function (svg) {
         if (!this.SVGdata) {this.SVGdata = {}}
         this.SVGdata.w = svg.w, this.SVGdata.x = svg.x;
+        this.SVGdata.h = svg.h, this.SVGdata.d = svg.d;
         if (svg.X != null) {this.SVGdata.X = svg.X}
         if (this["class"]) {svg.removeable = false; SVG.Element(svg.element,{"class":this["class"]})}
         // FIXME:  if an element is split by linebreaking, the ID will be the same on both parts
@@ -1019,7 +1020,7 @@
           svg.element.setAttribute("className","mjx-svg-"+this.type);
         }
         var style = this.style;
-        if (style) {
+        if (style && svg.element) {
           svg.element.style.cssText = style;
           if (svg.element.style.fontSize) {svg.element.style.fontSize = ""} // handled by scale
           svg.element.style.border = svg.element.style.padding = "";
@@ -1366,7 +1367,7 @@
         svg.y = H - svg.h;
 	this.SVGhandleSpace(svg);
 	this.SVGhandleColor(svg);
-        delete this.svg;
+        delete this.svg.element;
         this.SVGsaveData(svg);
 	return svg;
       },
@@ -1382,7 +1383,7 @@
         svg = SVG.createDelimiter(this.data.join("").charCodeAt(0),w,svg.scale,values.mathvariant);
 	this.SVGhandleSpace(svg);
 	this.SVGhandleColor(svg);
-        delete this.svg;
+        delete this.svg.element;
         this.SVGsaveData(svg);
 	return svg;
       }

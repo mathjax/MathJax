@@ -1133,6 +1133,7 @@
           while (n-- > 0) {
             if (!this.msieCloneNodeBug) {EXT = ext.cloneNode(true)}
               else {EXT = this.Element("span"); this.createChar(EXT,delim.ext,scale,font)}
+            EXT.bbox = ext.bbox;
             y -= eh; this.placeBox(this.addBox(stack,EXT),0,y,true);
           }
           y += dy - ext.bbox.d;
@@ -1182,6 +1183,7 @@
           while (n-- > 0) {
             if (!this.cloneNodeBug) {REP = rep.cloneNode(true)}
               else {REP = this.Element("span"); this.createChar(REP,delim.rep,scale,font)}
+            REP.bbox = rep.bbox;
             this.placeBox(this.addBox(stack,REP),x,0,true); x += rw;
           }
           if (delim.mid && k) {this.placeBox(mid,x,0,true); x += mid.bbox.w - dx; n = N}
@@ -1623,7 +1625,7 @@
 	  if (SPAN && (SPAN.parentNode === span || (SPAN.parentNode||{}).parentNode === span)) {
 	    while (SPAN.firstChild) {SPAN.removeChild(SPAN.firstChild)}
 	    SPAN.bbox = {w:0, h:0, d:0, lw:0, rw:0};
-	    SPAN.scale = 1; SPAN.isMultChar = null;
+	    SPAN.scale = 1; SPAN.isMultChar = SPAN.HH = null;
 	    SPAN.style.cssText = "";
 	    return SPAN;
 	  }
