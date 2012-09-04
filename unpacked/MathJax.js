@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.0";
-MathJax.fileversion = "2.0.3";
+MathJax.fileversion = "2.0.6";
 
 /**********************************************************/
 
@@ -966,6 +966,7 @@ MathJax.HTML = {
       MathJax.Hub.Insert(obj,def);
     }
     if (contents) {
+      if (!(contents instanceof Array)) {contents = [contents]}
       for (var i = 0; i < contents.length; i++) {
         if (contents[i] instanceof Array) {
           obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
@@ -1240,7 +1241,7 @@ MathJax.Hub = {
     skipStartupTypeset: false,    // set to true to skip PreProcess and Process during startup
     "v1.0-compatible": true,  // set to false to prevent message about configuration change
     elements: [],             // array of elements to process when none is given explicitly
-    positionToHash: false,    // after initial typeset pass, position to #hash location?
+    positionToHash: true,    // after initial typeset pass, position to #hash location?
      
     showMathMenu: true,      // attach math context menu to typeset math?
     showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
@@ -1684,6 +1685,7 @@ MathJax.Hub = {
     script.parentNode.insertBefore(error,script);
     if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
     this.lastError = err;
+    this.signal.Post(["Math Processing Error",script,err]);
   },
   
   RestartAfter: function (callback) {
@@ -1862,8 +1864,9 @@ MathJax.Hub.Startup = {
     var config = MathJax.Hub.config, jax = MathJax.Hub.outputJax;
     //  Save the order of the output jax since they are loading asynchronously
     for (var i = 0, m = config.jax.length, k = 0; i < m; i++) {
-      if (config.jax[i].substr(0,7) === "output/") 
-        {jax.order[config.jax[i].substr(7)] = k; k++}
+      var name = config.jax[i].substr(7);
+      if (config.jax[i].substr(0,7) === "output/" && jax.order[name] == null)
+        {jax.order[name] = k; k++}
     }
     var queue = MathJax.Callback.Queue();
     return queue.Push(
@@ -1911,8 +1914,17 @@ MathJax.Hub.Startup = {
   //  Set the location to the designated hash position
   //
   Hash: function () {
-    if (MathJax.Hub.config.positionToHash && document.location.hash)
-      {setTimeout("document.location = document.location.hash",1)}
+    if (MathJax.Hub.config.positionToHash && document.location.hash &&
+        document.body && document.body.scrollIntoView) {
+      var name = document.location.hash.substr(1);
+      var target = document.getElementById(name);
+      if (!target) {
+        var a = document.getElementsByTagName("a");
+        for (var i = 0, m = a.length; i < m; i++)
+          {if (a[i].name === name) {target = a[i]; break}}
+      }
+      if (target) {setTimeout(function () {target.scrollIntoView(true)},1)}
+    }
   },
   
   //
@@ -1939,7 +1951,7 @@ MathJax.Hub.Startup = {
   //
   //  Setup the onload callback
   //
-  onLoad: function (when) {
+  onLoad: function () {
     var onload = this.onload =
       MathJax.Callback(function () {MathJax.Hub.Startup.signal.Post("onLoad")});
     if (document.body && document.readyState && document.readyState !== "loading") {return [onload]}

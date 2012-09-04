@@ -35,6 +35,32 @@
     //
     config: {
       styles: {
+        ".MathJax_MathML": {
+          "font-style":      "normal",
+          "font-weight":     "normal",
+          "line-height":     "normal",
+          "font-size":       "100%",
+          "font-size-adjust":"none",
+          "text-indent":     0,
+          "text-align":      "left",
+          "text-transform":  "none",
+          "letter-spacing":  "normal",
+          "word-spacing":    "normal",
+          "word-wrap":       "normal",
+          "white-space":     "nowrap",
+          "float":           "none",
+          "direction":       "ltr",
+          border: 0, padding: 0, margin: 0
+        },
+        
+        "span.MathJax_MathML": {
+          display: "inline"
+        },
+        
+        "div.MathJax_MathML": {
+          display: "block"
+        },
+        
         ".MathJax_mmlExBox": {
           display:"block", overflow:"hidden",
           height:"1px", width:"60ex",
@@ -149,7 +175,8 @@
         //
         //  Add the MathJax span
         //
-        jax = script.MathJax.elementJax; math = jax.root; jax.NativeMML = {};
+        jax = script.MathJax.elementJax; if (!jax) continue;
+        math = jax.root; jax.NativeMML = {};
         var type = (math.Get("display") === "block" ? "div" : "span");
 	span = HTML.Element(type,{
 	  className: "MathJax_MathML", id:jax.inputID+"-Frame"
@@ -170,7 +197,7 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        jax = script.MathJax.elementJax;
+        jax = script.MathJax.elementJax; if (!jax) continue;
         if (!isMSIE) {
           test = script.previousSibling; span = test.previousSibling;
           ex = test.firstChild.offsetWidth/60;
@@ -186,7 +213,7 @@
       //
       if (!isMSIE) {
         for (i = 0; i < m; i++) {
-          script = scripts[i]; if (!script.parentNode) continue;
+          script = scripts[i]; if (!script.parentNode || !script.MathJax.elementJax) continue;
           test = scripts[i].previousSibling;
           test.parentNode.removeChild(test);
         }
@@ -233,6 +260,10 @@
         container.onmousedown   = EVENT.Mousedown;
         container.onclick       = EVENT.Click;
         container.ondblclick    = EVENT.DblClick;
+	if (HUB.Browser.noContextMenu) {
+	  container.ontouchstart = TOUCH.start;
+	  container.ontouchend   = TOUCH.end;
+	}
       }
     },
 
@@ -400,7 +431,7 @@
 	value = String(value);
 	if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaces
 	else if (value.match(/^\s*(([-+])?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/))
-          {value = ((1/18)*RegExp.$1).toFixed(3).replace(/\.?0+$/,"")+"em"} // FIXME:  should take scriptlevel into account
+          {value = RegExp.$2+((1/18)*RegExp.$3).toFixed(3).replace(/\.?0+$/,"")+"em"} // FIXME:  should take scriptlevel into account
 	else if (this.NativeMMLvariants[value]) {value = this.NativeMMLvariants[value]}
 	return value;
       },
@@ -475,20 +506,22 @@
     });
 
     if (HUB.Browser.isFirefox) {
-      MML.mtable.Augment({
-	toNativeMML: function (parent) {
-	  //
-	  //  FF doesn't handle width, so put it in styles instead
-	  //
-	  if (this.width) {
-	    var styles = (this.style||"").replace(/;\s*$/,"").split(";");
-            if (styles[0] === "") {styles.shift()}
-	    styles.push("width:"+this.width);
-	    this.style = styles.join(";");
-	  }
-	  this.SUPER(arguments).toNativeMML.call(this,parent);
-	}
-      });
+      if (!HUB.Browser.versionAtLeast("13.0")) {
+        MML.mtable.Augment({
+          toNativeMML: function (parent) {
+            //
+            //  Firefox < 13 doesn't handle width, so put it in styles instead
+            //
+            if (this.width) {
+              var styles = (this.style||"").replace(/;\s*$/,"").split(";");
+              if (styles[0] === "") {styles.shift()}
+              styles.push("width:"+this.width);
+              this.style = styles.join(";");
+            }
+            this.SUPER(arguments).toNativeMML.call(this,parent);
+          }
+        });
+      }
       if (!HUB.Browser.versionAtLeast("9.0")) {
         MML.mlabeledtr.Augment({
 	  toNativeMML: function (parent) {

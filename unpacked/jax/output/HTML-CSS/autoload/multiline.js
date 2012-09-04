@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.0.1";
+  var VERSION = "2.0.3";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
       
@@ -146,10 +146,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Get the current breakpoint position and other data
       //
       var index = info.index.slice(0), i = info.index.shift(),
-          m = this.data.length, W, scanW = info.W,
-          broken = (info.index.length > 0), better = false;
-      if (i == null) {i = -1}; if (!broken) {i++; info.W += info.w};
-      info.w = 0; info.nest++; info.scanW = scanW;
+          m = this.data.length, W, w, scanW, broken = (info.index.length > 0), better = false;
+      if (i == null) {i = -1}; if (!broken) {i++; info.W += info.w; info.w = 0}
+      scanW = info.scanW = info.W; info.nest++;
       //
       //  Look through the line for breakpoints,
       //    (as long as we are not too far past the breaking width)
@@ -157,22 +156,24 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       while (i < m && info.scanW < 1.33*HTMLCSS.linebreakWidth) {
         if (this.data[i]) {
           if (this.data[i].HTMLbetterBreak(info,state)) {
-            better = true; index = [i].concat(info.index); W = info.W;
+            better = true; index = [i].concat(info.index); W = info.W; w = info.w;
             if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
           }
-          if (!broken) {
-            var span = this.data[i].HTMLspanElement();
-            scanW += span.bbox.w;
-            if (span.style.paddingLeft)  {scanW += parseFloat(span.style.paddingLeft)}
-            if (span.style.paddingRight) {scanW += parseFloat(span.style.paddingRight)}
-            info.W = info.scanW = scanW;
-          }
+          if (!broken) {scanW = this.HTMLaddWidth(i,info,scanW)}
         }
         info.index = []; i++; broken = false;
       }
       info.nest--; info.index = index;
-      if (better) {info.W = W}
+      if (better) {info.W = W; info.w = w}
       return better;
+    },
+    HTMLaddWidth: function (i,info,scanW) {
+      var span = this.data[i].HTMLspanElement();
+      scanW += span.bbox.w;
+      if (span.style.paddingLeft)  {scanW += HTMLCSS.unEm(span.style.paddingLeft)}
+      if (span.style.paddingRight) {scanW += HTMLCSS.unEm(span.style.paddingRight)}
+      info.W = info.scanW = scanW; info.w = 0;
+      return scanW;
     },
     
     /****************************************************************/
@@ -262,7 +263,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       } else {
         //
         //  Otherwise, move the remainder of the initial item
-        //  and any others up tp the last one
+        //  and any others up to the last one
         //
         var last = state.last; state.last = false;
         while (i < j) {
@@ -366,7 +367,88 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       } else if (state.first) {state.nextIsFirst = true} else {delete state.nextIsFirst}
     }
   });
+
+  /**************************************************************************/
+
+  MML.mfenced.Augment({
+    HTMLbetterBreak: function (info,state) {
+      //
+      //  Get the current breakpoint position and other data
+      //
+      var index = info.index.slice(0), i = info.index.shift(),
+          m = this.data.length, W, w, scanW, broken = (info.index.length > 0), better = false;
+      if (i == null) {i = -1}; if (!broken) {i++; info.W += info.w; info.w = 0}
+      scanW = info.scanW = info.W; info.nest++;
+      //
+      //  Create indices that include the delimiters and separators
+      //
+      if (!this.dataI) {
+        this.dataI = [];
+        if (this.data.open) {this.dataI.push("open")}
+        if (m) {this.dataI.push(0)}
+        for (var j = 1; j < m; j++) {
+          if (this.data["sep"+j]) {this.dataI.push("sep"+j)}
+          this.dataI.push(j);
+        }
+        if (this.data.close) {this.dataI.push("close")}
+      }
+      m = this.dataI.length;
+      //
+      //  Look through the line for breakpoints, including the open, close, and separators
+      //    (as long as we are not too far past the breaking width)
+      //
+      while (i < m && info.scanW < 1.33*HTMLCSS.linebreakWidth) {
+        var k = this.dataI[i];
+        if (this.data[k]) {
+          if (this.data[k].HTMLbetterBreak(info,state)) {
+            better = true; index = [i].concat(info.index); W = info.W; w = info.w;
+            if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
+          }
+          if (!broken) {scanW = this.HTMLaddWidth(k,info,scanW)}
+        }
+        info.index = []; i++; broken = false;
+      }
+      info.nest--; info.index = index;
+      if (better) {info.W = W; info.w = w}
+      return better;
+    },
     
+    HTMLmoveLine: function (start,end,span,state,values) {
+      var i = start[0], j = end[0];
+      if (i == null) {i = -1}; if (j == null) {j = this.dataI.length-1}
+      if (i === j && start.length > 1) {
+        //
+        //  If starting and ending in the same element move the subpiece to the new line
+        //  Add the closing fence, if present
+        //
+        this.data[this.dataI[i]].HTMLmoveSlice(start.slice(1),end.slice(1),span,state,values,"paddingLeft");
+      } else {
+        //
+        //  Otherwise, move the remainder of the initial item
+        //  and any others (including open and separators) up to the last one
+        //
+        var last = state.last; state.last = false; var k = this.dataI[i];
+        while (i < j) {
+          if (this.data[k]) {
+            if (start.length <= 1) {this.data[k].HTMLmoveSpan(span,state,values)}
+              else {this.data[k].HTMLmoveSlice(start.slice(1),[],span,state,values,"paddingLeft")}
+          }
+          i++; k = this.dataI[i]; state.first = false; start = [];
+        }
+        //
+        //  If the last item is complete, move it and the closing fence,
+        //    otherwise move the first part of it up to the split
+        //
+        state.last = last;
+        if (this.data[k]) {
+          if (end.length <= 1) {this.data[k].HTMLmoveSpan(span,state,values)}
+            else {this.data[k].HTMLmoveSlice([],end.slice(1),span,state,values,"paddingRight")}
+        }
+      }
+    }
+
+  });
+  
   /**************************************************************************/
 
   MML.mo.Augment({
@@ -394,7 +476,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       var W = info.scanW, mo = (info.embellished||this); delete info.embellished;
       var span = mo.HTMLspanElement(), w = span.bbox.w;
-      if (span.style.paddingLeft) {w += parseFloat(span.style.paddingLeft)}
+      if (span.style.paddingLeft) {w += HTMLCSS.unEm(span.style.paddingLeft)}
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
       if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)
       var offset = HTMLCSS.linebreakWidth - W;
@@ -445,8 +527,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Get the default penalty for this location
       //
       var W = info.scanW, span = this.HTMLspanElement(), w = span.bbox.w;
-      if (span.style.paddingLeft) {w += parseFloat(span.style.paddingLeft)}
-      if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
+      if (span.style.paddingLeft) {w += HTMLCSS.unEm(span.style.paddingLeft)}
       if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)
       var offset = HTMLCSS.linebreakWidth - W;
       //

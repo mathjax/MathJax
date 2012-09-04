@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.0.2";
+  var VERSION = "2.0.5";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -609,7 +609,7 @@
     ]]);
     MENU.About.div = MENU.Background(MENU.About);
     var about = HTML.addElement(MENU.About.div,"div",{
-      id: "MathJax_About", onclick: MENU.About.Remove
+      id: "MathJax_About"
     },[
       ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
       "using "+font,["br"],["br"],
@@ -618,7 +618,12 @@
         "max-height":"20em", overflow:"auto", 
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
       }},jax],["br"],["br"],
-      ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]]
+      ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
+      ["img", {
+        src: CONFIG.closeImg,
+        style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
+        onclick: MENU.About.Remove
+      }]
     ]);
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;
@@ -666,7 +671,7 @@
         // toMathML() can call MathJax.Hub.RestartAfter, so trap errors and check
         try {MENU.ShowSource.Text(MENU.jax.root.toMathML(),event)} catch (err) {
           if (!err.restart) {throw err}
-          CALLBACK.After([this,MENU.ShowSource,EVENT]);
+          CALLBACK.After([this,MENU.ShowSource,EVENT],err.restart);
         }
       } else if (!AJAX.loadingToMathML) {
         AJAX.loadingToMathML = true;
@@ -729,21 +734,22 @@
    *  Handle rescaling all the math
    */
   MENU.Scale = function () {
-    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML;
-    var SCALE = (HTMLCSS ? HTMLCSS.config.scale : nMML.config.scale);
+    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML, SVG = OUTPUT.SVG;
+    var SCALE = (HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
     var scale = prompt("Scale all mathematics (compared to surrounding text) by",SCALE+"%");
     if (scale) {
-      if (scale.match(/^\s*\d+\s*%?\s*$/)) {
-        scale = parseInt(scale);
+      if (scale.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
+        scale = parseFloat(scale);
         if (scale) {
           if (scale !== SCALE) {
             if (HTMLCSS) {HTMLCSS.config.scale = scale}
             if (nMML)    {nMML.config.scale = scale}
+            if (SVG)     {SVG.config.scale = scale}
             MENU.cookie.scale = scale;
             MENU.saveCookie(); HUB.Reprocess();
           }
         } else {alert("The scale should not be zero")}
-      } else {alert("The scale should be a perentage (e.g., 120%)")}
+      } else {alert("The scale should be a percentage (e.g., 120%)")}
     }
   };
   
@@ -805,8 +811,11 @@
       Opera:   "Opera's support for MathML is limited, so switching to " +
                "MathML output may cause some expressions to render poorly.",
 
+      Safari: "Your browser's native MathML does not implement all the features " +
+               "used by MathJax, so some expressions may not render properly.",
+
       Firefox: "Your browser's native MathML does not implement all the features " +
-               "used by MathJax, so some expressions may render improperly."
+               "used by MathJax, so some expressions may not render properly."
     },
     
     SVG: {
