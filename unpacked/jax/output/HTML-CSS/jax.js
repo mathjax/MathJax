@@ -1312,8 +1312,10 @@
           this.handleFont(SPAN,font,SPAN !== span);
         }
         newtext = this.handleChar(SPAN,font,c,n,newtext);
-        if (c[0]/1000 > span.bbox.h) {span.bbox.h = c[0]/1000}
-        if (c[1]/1000 > span.bbox.d) {span.bbox.d = c[1]/1000}
+        if (!(c[5]||{}).space) {
+          if (c[0]/1000 > span.bbox.h) {span.bbox.h = c[0]/1000}
+          if (c[1]/1000 > span.bbox.d) {span.bbox.d = c[1]/1000}
+        }
         if (span.bbox.w + c[3]/1000 < span.bbox.lw) {span.bbox.lw = span.bbox.w + c[3]/1000}
         if (span.bbox.w + c[4]/1000 > span.bbox.rw) {span.bbox.rw = span.bbox.w + c[4]/1000}
         span.bbox.w += c[2]/1000;
@@ -1345,6 +1347,11 @@
 
     handleChar: function (span,font,c,n,text) {
       var C = c[5];
+      if (C.space) {
+        if (text.length) {this.addText(span,text)}
+        HTMLCSS.createShift(span,c[2]/1000);
+        return "";
+      }
       if (C.img) {return this.handleImg(span,font,c,n,text)}
       if (C.isUnknown && this.FONTDATA.DELIMITERS[n]) {
         if (text.length) {this.addText(span,text)}
@@ -1366,7 +1373,7 @@
               + String.fromCharCode((N&0x3FF)+0xDC00);
         }
       }
-      if (C.rfix) {this.addText(span,C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
+      if (C.rfix) {this.addText(span,text+C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
       if (c[2] || !this.msieAccentBug || text.length) {return text + C.c}
       //  Handle IE accent clipping bug
       HTMLCSS.createShift(span,c[3]/1000);

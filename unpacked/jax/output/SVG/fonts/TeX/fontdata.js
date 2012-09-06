@@ -23,7 +23,7 @@
  */
 
 (function (SVG,MML,AJAX) {
-  var VERSION = "2.0.3";
+  var VERSION = "2.0.4";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -1553,6 +1553,15 @@
   SVG.FONTDATA.FONTS['MathJax_Main'][0x22F1][0]  += 700;  // adjust height for \ddots
   SVG.FONTDATA.FONTS['MathJax_Main'][0x2212][1]  += 100;  // adjust depth of minus (used as arrow extender)
   SVG.FONTDATA.FONTS['MathJax_Main'][0x003D][1]  += 100;  // adjust depth of = (used as arrow extender)
+
+  //
+  //  Add some spacing characters (more will come later)
+  //
+  MathJax.Hub.Insert(SVG.FONTDATA.FONTS['MathJax_Main'],{
+    0xEEE0: [0,0,-575,0,0,{space:1}],
+    0xEEE1: [0,0,-300,0,0,{space:1}],
+    0xEEE8: [0,0,25,0,0,{space:1}]
+  });
 
   MathJax.Hub.Register.LoadHook(SVG.fontDir+"/Size4/Regular/Main.js",function () {
     SVG.FONTDATA.FONTS['MathJax_Size4'][0xE154][0] += 200;  // adjust height for brace extender

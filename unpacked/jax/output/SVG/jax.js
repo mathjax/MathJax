@@ -531,8 +531,10 @@
         }
         font = this.lookupChar(variant,n); c = font[n];
         if (c) {
-          c = [scale,font.id+"-"+n.toString(16).toUpperCase()].concat(c);
-          svg.Add(BBOX.GLYPH.apply(BBOX,c),svg.w,0);
+          if (c[5] && c[5].space) {svg.w += c[2]} else {
+            c = [scale,font.id+"-"+n.toString(16).toUpperCase()].concat(c);
+            svg.Add(BBOX.GLYPH.apply(BBOX,c),svg.w,0);
+          }
         } else if (this.FONTDATA.DELIMITERS[n]) {
           c = this.createDelimiter(n,0,1,font);
           svg.Add(c,svg.w,(this.FONTDATA.DELIMITERS[n].dir === "V" ? c.d: 0));
