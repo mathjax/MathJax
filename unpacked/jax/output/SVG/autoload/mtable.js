@@ -261,7 +261,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
             dy = ({top:    H[i] - A[i][j].h,
                    bottom: A[i][j].d - D[i],
                    center: ((H[i]-D[i]) - (A[i][j].h-A[i][j].d))/2,
-                   baseline: 0, axis: 0})[align]; // FIXME:  handle axis better?
+                   baseline: 0, axis: 0})[align] || 0; // FIXME:  handle axis better?
             align = (cell.columnalign||RCALIGN[i][j]||CALIGN[j])
             C[j].Align(A[i][j],align,0,y+dy);
           }
