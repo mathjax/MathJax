@@ -20,12 +20,23 @@ MathJax.Extension.wiki2jax = {
       if (this.config.Augment) {MathJax.Hub.Insert(this,this.config.Augment)}
 
       this.previewClass = MathJax.Hub.config.preRemoveClass;
+      this.setupPrefilter();
       this.configured = true;
     }
     var that = this;
     $('span.tex, img.tex', element || document).each(function(i, span) {
 		that.ConvertMath(span);
 	});
+  },
+
+  setupPrefilter: function() {  // used to fix a number of common wiki math hacks
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready", function() {
+      MathJax.InputJax.TeX.prefilterHooks.Add( function(data) {
+        data.math = data.math.replace(/^\s*\\scriptstyle(\W)/,"\\textstyle$1").replace(/^\s*\\scriptscriptstyle(\W)/,"\\scriptstyle$1");
+        if (data.script.type.match(/(;|\s|\n)mode\s*=\s*display-nobreak(;|\s|\n|$)/) != null)
+          data.math = "\\displaystyle " + data.math;
+      });
+    });
   },
 
   ConvertMath: function (node) {
@@ -40,10 +51,8 @@ MathJax.Extension.wiki2jax = {
 	}
 
     tex = tex.replace(/\\iiint([^!]*)!\\!\\!\\!\\!.*\\subset\\!\\supset/g,"\\iiint$1mkern-2.5em\\subset\\!\\supset").replace(/\\iint([^!]*)!\\!\\!\\!\\!\\!\\!\\!\\!\\!\\!(.*)\\subset\\!\\supset/g,"\\iint$1mkern-1.65em$2\\subset\\!\\!\\supset").replace(/\\int\\!\\!\\!(\\!)+\\int\\!\\!\\!(\\!)+\\int([^!]*)!\\!\\!\\!\\!.*\\bigcirc(\\,)*/g,"\\iiint$3mkern-2.5em\\subset\\!\\supset").replace(/\\int\\!\\!\\!(\\!)+\\int([^!]*)!\\!\\!\\!\\!\\!\\!\\!\\!(.*)\\bigcirc(\\,)*/g,"\\iint$2mkern-1.65em$3\\subset\\!\\!\\supset");
-    if (mode === "") {
-      tex = tex.replace(/ *\\scriptstyle(\W)/g,"\\textstyle$1").replace(/ *\\scriptscriptstyle(\W)/g,"\\scriptstyle$1");
-      if (parent.firstChild === node) tex = "\\displaystyle "+tex;
-    }
+
+    if (mode === "" && parent.firstChild === node) mode = "; mode=display-nobreak";
 
     var script = document.createElement("script");
     script.type = "math/tex" + mode;
