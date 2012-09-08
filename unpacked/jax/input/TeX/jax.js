@@ -296,7 +296,7 @@
       }
       if (this.rowspacing) {
         var rows = this.arraydef.rowspacing.split(/ /);
-        while (rows.length < this.table.length) {rows.push(this.rowspacing)}
+        while (rows.length < this.table.length) {rows.push(this.rowspacing+"em")}
         this.arraydef.rowspacing = rows.join(' ');
       }
     },
@@ -1613,7 +1613,7 @@
       var n;
       if (this.string.charAt(this.i) === "[") {
         n = this.GetBrackets(name,"").replace(/ /g,"");
-        if (n && !n.match(/^(((\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/))
+        if (n && !n.match(/^((-?(\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/))
           {TEX.Error("Bracket argument to "+name+" must be a dimension")}
       }
       this.Push(STACKITEM.cell().With({isCR: true, name: name, linebreak: true}));
@@ -1622,8 +1622,8 @@
         if (n && top.arraydef.rowspacing) {
           var rows = top.arraydef.rowspacing.split(/ /);
           if (!top.rowspacing) {top.rowspacing = this.dimen2em(rows[0])}
-          while (rows.length < top.table.length) {rows.push(top.rowspacing)}
-          rows[top.table.length-1] = (top.rowspacing+this.dimen2em(n)) + "em";
+          while (rows.length < top.table.length) {rows.push(this.Em(top.rowspacing))}
+          rows[top.table.length-1] = this.Em(Math.max(0,top.rowspacing+this.dimen2em(n)));
           top.arraydef.rowspacing = rows.join(' ');
         }
       } else {
@@ -1633,7 +1633,7 @@
     },
     emPerInch: 7.2,
     dimen2em: function (dim) {
-      var match = dim.match(/^((?:\.\d+|\d+(?:\.\d*)?))(pt|em|ex|mu|pc|in|mm|cm)/);
+      var match = dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(pt|em|ex|mu|pc|in|mm|cm)/);
       var m = parseFloat(match[1]||"1"), unit = match[2];
       if (unit === "em") {return m}
       if (unit === "ex") {return m * .43}
@@ -1644,6 +1644,10 @@
       if (unit === "mm") {return m * this.emPerInch / 25.4} // 10 mm to a cm
       if (unit === "mu") {return m / 18}
       return 0;
+    },
+    Em: function (m) {
+      if (Math.abs(m) < .0006) {return "0em"}
+      return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
     
     HLine: function (name,style) {
