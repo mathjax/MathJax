@@ -353,7 +353,11 @@
       return EVENT[type].call(this,event);
     },
 
-    getJaxFromMath: function (math) {return HUB.getJaxFor(math.parentNode.nextSibling)},
+    getJaxFromMath: function (math) {
+      math = math.parentNode;
+      do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
+      return HUB.getJaxFor(math);
+    },
     getHoverSpan: function (jax,math) {return math.firstChild},
     getHoverBBox: function (jax,span,math) {return EVENT.getBBox(span.parentNode)},
 

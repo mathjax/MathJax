@@ -357,7 +357,8 @@
 
     getJaxFromMath: function (math) {
       if (math.parentNode.className === "MathJax_SVG_Display") {math = math.parentNode}
-      return HUB.getJaxFor(math.nextSibling);
+      do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
+      return HUB.getJaxFor(math);
     },
     getHoverSpan: function (jax,math) {
       math.style.position = "relative"; // make sure inline containers have position set
