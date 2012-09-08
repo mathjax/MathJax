@@ -217,7 +217,7 @@ to put its argument into bold face.  Both definitions would be
 available throughout the rest of the page.
 
 You can include macro definitions in the `Macros` section of the `TeX`
-blocks of your configuration, but they must be represetned as
+blocks of your configuration, but they must be represented as
 JavaScript objects.  For example, the two macros above can be
 pre-defined in the configuraiton by
 
@@ -240,8 +240,8 @@ replacement string followed by the number of arguments for the macro.
 
 Note that the replacement string is given as a JavaScript string
 literal, and the backslash has special meaning in JavaScript strings.
-So to get an actual backslash in the string you must double it, as int
-he examples above.
+So to get an actual backslash in the string you must double it, as in
+the examples above.
 
 If you have many such definitions that you want to use on more than
 one page, you could put them into a configuration file that you can
@@ -277,8 +277,8 @@ Configuration File with the CDN <local-config-files>` for details.
 
 .. _tex-eq-numbers:
 
-Autmatic Equation Numering
-==========================
+Automatic Equation Numering
+===========================
 
 New in MathJax v2.0 is the ability to have equations be numbered
 automatically.  This functionality is turned off by default, so 
