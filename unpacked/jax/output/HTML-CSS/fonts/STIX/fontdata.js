@@ -23,7 +23,7 @@
  */
 
 (function (HTMLCSS,MML,HTML) {
-  var VERSION = "2.0.1";
+  var VERSION = "2.0.2";
   
   HTMLCSS.allowWebFonts = false;
   
