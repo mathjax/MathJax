@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.0.5";
+  var VERSION = "2.0.6";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -50,7 +50,9 @@
     windowSettings: {                              // for source window
       status: "no", toolbar: "no", locationbar: "no", menubar: "no",
       directories: "no", personalbar: "no", resizable: "yes", scrollbars: "yes",
-      width: 100, height: 50
+      width: 400, height: 300,
+      left: Math.round((screen.width - 400)/2),
+      top:  Math.round((screen.height - 300)/3)
     },
     
     styles: {
@@ -700,7 +702,7 @@
     return MENU.ShowSource.w;
   };
   MENU.ShowSource.Text = function (text,event) {
-    var w = MENU.ShowSource.Window(event);
+    var w = MENU.ShowSource.Window(event); delete MENU.ShowSource.w;
     text = text.replace(/^\s*/,"").replace(/\s*$/,"");
     text = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     if (MENU.isMobile) {
@@ -717,17 +719,18 @@
       w.document.write("</body></html>");
       w.document.close();
       var table = w.document.body.firstChild;
-      var H = (w.outerHeight-w.innerHeight)||30, W = (w.outerWidth-w.innerWidth)||30;
-      W = Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25);
-      H = Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25);
-      w.resizeTo(W,H);
-      if (event && event.screenX != null) {
-        var x = Math.max(0,Math.min(event.screenX-Math.floor(W/2), screen.width-W-20)),
-            y = Math.max(0,Math.min(event.screenY-Math.floor(H/2), screen.height-H-20));
-        w.moveTo(x,y);
-      }
+      setTimeout(function () {
+        var H = (w.outerHeight-w.innerHeight)||30, W = (w.outerWidth-w.innerWidth)||30, x, y;
+        W = Math.max(100,Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25));
+        H = Math.max(40,Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25));
+        w.resizeTo(W,H);
+        if (event && event.screenX != null) {
+          x = Math.max(0,Math.min(event.screenX-Math.floor(W/2), screen.width-W-20));
+          y = Math.max(0,Math.min(event.screenY-Math.floor(H/2), screen.height-H-20));
+          w.moveTo(x,y);
+        }
+      },50);
     }
-    delete MENU.ShowSource.w;
   };
   
   /*
