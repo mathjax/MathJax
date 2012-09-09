@@ -1827,7 +1827,7 @@
 	if (!sup) {
 	  if (sub) {
 	    v = Math.max(v,SVG.TeX.sub1*scale,sub.h-(4/5)*x_height,min.subscriptshift);
-            svg.Add(sub,base.w,-v);
+            svg.Add(sub,base.w,-v); this.data[this.sub].SVGdata.dy = -v;
 	  }
 	} else {
 	  if (!sub) {
@@ -1835,6 +1835,8 @@
 	    p = SVG.TeX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
 	    u = Math.max(u,p*scale,sup.d+(1/4)*x_height,min.superscriptshift);
             svg.Add(sup,base.w+delta,u);
+            this.data[this.sup].SVGdata.dx = delta; 
+            this.data[this.sup].SVGdata.dy = u;
 	  } else {
 	    v = Math.max(v,SVG.TeX.sub2*scale);
 	    var t = SVG.TeX.rule_thickness * scale;
@@ -1845,6 +1847,9 @@
 	    }
             svg.Add(sup,base.w+delta,Math.max(u,min.superscriptshift));
 	    svg.Add(sub,base.w,-Math.max(v,min.subscriptshift));
+            this.data[this.sup].SVGdata.dx = delta; 
+            this.data[this.sup].SVGdata.dy = Math.max(u,min.superscriptshift);
+            this.data[this.sub].SVGdata.dy = -Math.max(v,min.subscriptshift);
 	  }
 	}
         svg.Clean();

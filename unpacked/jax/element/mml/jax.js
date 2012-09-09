@@ -912,7 +912,6 @@ MathJax.ElementJax.mml.Augment({
 
   MML.msubsup = MML.mbase.Subclass({
     type: "msubsup", base: 0, sub: 1, sup: 2,
-    linebreakContainer: true,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,

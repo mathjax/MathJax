@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.0.2";
+  var VERSION = "2.0.3";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -37,7 +37,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     badbreak:    [+200],
     auto:           [0],
     
-    toobig:        500,
+    toobig:        800,
     nestfactor:    400,
     spacefactor:  -100,
     spaceoffset:     2,
@@ -162,7 +162,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
             better = true; index = [i].concat(info.index); W = info.W; w = info.w;
             if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
           }
-          if (!broken) {scanW = this.SVGaddWidth(i,info,scanW)}
+          scanW = (broken ? info.scanW : this.SVGaddWidth(i,info,scanW));
         }
         info.index = []; i++; broken = false;
       }
@@ -362,7 +362,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
             better = true; index = [i].concat(info.index); W = info.W; w = info.w;
             if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
           }
-          if (!broken) {scanW = this.SVGaddWidth(k,info,scanW)}
+          scanW = (broken ? info.scanW : this.SVGaddWidth(i,info,scanW));
         }
         info.index = []; i++; broken = false;
       }
@@ -377,7 +377,6 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (i === j && start.length > 1) {
         //
         //  If starting and ending in the same element move the subpiece to the new line
-        //  Add the closing fence, if present
         //
         this.data[this.dataI[i]].SVGmoveSlice(start.slice(1),end.slice(1),svg,state,values,"paddingLeft");
       } else {
@@ -394,8 +393,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           i++; k = this.dataI[i]; state.first = false; start = [];
         }
         //
-        //  If the last item is complete, move it and the closing fence,
-        //    otherwise move the first part of it up to the split
+        //  If the last item is complete, move it
         //
         state.last = last;
         if (this.data[k]) {
@@ -405,6 +403,64 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       }
     }
     
+  });
+  
+  /**************************************************************************/
+
+  MML.msubsup.Augment({
+    SVGbetterBreak: function (info,state) {
+      if (!this.data[this.base]) {return false}
+      //
+      //  Get the current breakpoint position and other data
+      //
+      var index = info.index.slice(0), i = info.index.shift(),
+          W, w, scanW, broken = (info.index.length > 0), better = false;
+      if (!broken) {info.W += info.w; info.w = 0}
+      scanW = info.scanW = info.W;
+      //
+      //  Record the width of the base and the super- and subscripts
+      //
+      if (i == null) {this.SVGdata.dw = this.SVGdata.w - this.data[this.base].SVGdata.w}
+      //
+      //  Check if the base can be broken
+      //
+      if (this.data[this.base].SVGbetterBreak(info,state)) {
+        better = true; index = [this.base].concat(info.index); W = info.W; w = info.w;
+        if (info.penalty === PENALTY.newline) {better = broken = true}
+      }
+      //
+      //  Add in the base if it is unbroken, and add the scripts
+      //
+      if (!broken) {this.SVGaddWidth(this.base,info,scanW)}
+      info.scanW += this.SVGdata.dw; info.W = info.scanW;
+      info.index = index; if (better) {info.W = W; info.w = w}
+      return better;
+    },
+    
+    SVGmoveLine: function (start,end,svg,state,values) {
+      //
+      //  Move the proper part of the base
+      //
+      if (this.data[this.base]) {
+        if (start.length > 1) {
+          this.data[this.base].SVGmoveSlice(start.slice(1),end.slice(1),svg,state,values,"paddingLeft");
+        } else {
+          if (end.length <= 1) {this.data[i].SVGmove(svg,state,values)}
+            else {this.data[this.base].SVGmoveSlice([],end.slice(1),svg,state,values,"paddingRight")}
+        }
+      }
+      //
+      //  If this is the end, check for super and subscripts, and move those
+      //  by moving the stack tht contains them, and shifting by the amount of the
+      //  base that has been removed.  Remove the empty base box from the stack.
+      //
+      if (end.length === 0) {
+        var sup = this.data[this.sup], sub = this.data[this.sub], w = svg.w;
+        if (sup) {svg.Add(sup.toSVG(),w+(sup.SVGdata.dx||0),sup.SVGdata.dy)}
+        if (sub) {svg.Add(sub.toSVG(),w+(sub.SVGdata.dx||0),sub.SVGdata.dy)}
+      }
+    }
+
   });
   
   /**************************************************************************/

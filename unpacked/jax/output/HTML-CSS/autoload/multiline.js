@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.0.3";
+  var VERSION = "2.0.4";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
       
@@ -36,7 +36,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     badbreak:    [+200],
     auto:           [0],
     
-    toobig:        500,
+    toobig:        800,
     nestfactor:    400,
     spacefactor:  -100,
     spaceoffset:     2,
@@ -159,7 +159,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             better = true; index = [i].concat(info.index); W = info.W; w = info.w;
             if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
           }
-          if (!broken) {scanW = this.HTMLaddWidth(i,info,scanW)}
+          scanW = (broken ? info.scanW : this.HTMLaddWidth(i,info,scanW));
         }
         info.index = []; i++; broken = false;
       }
@@ -193,7 +193,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       this.HTMLmoveLine(start,end,line,state,values);
       this.HTMLcleanBBox(line.bbox);
       //
-      //  Get the alignment and shift  values
+      //  Get the alignment and shift values
       //
       var align = this.HTMLgetAlign(state,values),
           shift = this.HTMLgetShift(state,values,align);
@@ -404,7 +404,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             better = true; index = [i].concat(info.index); W = info.W; w = info.w;
             if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
           }
-          if (!broken) {scanW = this.HTMLaddWidth(k,info,scanW)}
+          scanW = (broken ? info.scanW : this.HTMLaddWidth(i,info,scanW));
         }
         info.index = []; i++; broken = false;
       }
@@ -419,7 +419,6 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (i === j && start.length > 1) {
         //
         //  If starting and ending in the same element move the subpiece to the new line
-        //  Add the closing fence, if present
         //
         this.data[this.dataI[i]].HTMLmoveSlice(start.slice(1),end.slice(1),span,state,values,"paddingLeft");
       } else {
@@ -436,13 +435,80 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           i++; k = this.dataI[i]; state.first = false; start = [];
         }
         //
-        //  If the last item is complete, move it and the closing fence,
-        //    otherwise move the first part of it up to the split
+        //  If the last item is complete, move it
         //
         state.last = last;
         if (this.data[k]) {
           if (end.length <= 1) {this.data[k].HTMLmoveSpan(span,state,values)}
             else {this.data[k].HTMLmoveSlice([],end.slice(1),span,state,values,"paddingRight")}
+        }
+      }
+    }
+
+  });
+  
+  /**************************************************************************/
+
+  MML.msubsup.Augment({
+    HTMLbetterBreak: function (info,state) {
+      if (!this.data[this.base]) {return false}
+      //
+      //  Get the current breakpoint position and other data
+      //
+      var index = info.index.slice(0), i = info.index.shift(),
+          W, w, scanW, broken = (info.index.length > 0), better = false;
+      if (!broken) {info.W += info.w; info.w = 0}
+      scanW = info.scanW = info.W;
+      //
+      //  Record the width of the base and the super- and subscripts
+      //
+      if (i == null) {
+        this.HTMLbaseW = this.data[this.base].HTMLspanElement().bbox.w;
+        this.HTMLdw = this.HTMLspanElement().bbox.w - this.HTMLbaseW;
+      }
+      //
+      //  Check if the base can be broken
+      //
+      if (this.data[this.base].HTMLbetterBreak(info,state)) {
+        better = true; index = [this.base].concat(info.index); W = info.W; w = info.w;
+        if (info.penalty === PENALTY.newline) {better = broken = true}
+      }
+      //
+      //  Add in the base if it is unbroken, and add the scripts
+      //
+      if (!broken) {this.HTMLaddWidth(this.base,info,scanW)}
+      info.scanW += this.HTMLdw; info.W = info.scanW;
+      info.index = index; if (better) {info.W = W; info.w = w}
+      return better;
+    },
+    
+    HTMLmoveLine: function (start,end,span,state,values) {
+      //
+      //  Move the proper part of the base
+      //
+      if (this.data[this.base]) {
+        if (start.length > 1) {
+          this.data[this.base].HTMLmoveSlice(start.slice(1),end.slice(1),span,state,values,"paddingLeft");
+        } else {
+          if (end.length <= 1) {this.data[i].HTMLmoveSpan(span,state,values)}
+            else {this.data[this.base].HTMLmoveSlice([],end.slice(1),span,state,values,"paddingRight")}
+        }
+      }
+      //
+      //  If this is the end, check for super and subscripts, and move those
+      //  by moving the stack tht contains them, and shifting by the amount of the
+      //  base that has been removed.  Remove the empty base box from the stack.
+      //
+      if (end.length === 0) {
+        var s = this.data[this.sup] || this.data[this.sub];
+        if (s) {
+          var box = s.HTMLspanElement().parentNode, stack = box.parentNode;
+          if (this.data[this.base]) {stack.removeChild(stack.firstChild)}
+          for (box = stack.firstChild; box; box = box.nextSibling)
+            {box.style.left = HTMLCSS.Em(HTMLCSS.unEm(box.style.left)-this.HTMLbaseW)}
+          stack.bbox.w -= this.HTMLbaseW; stack.style.width = HTMLCSS.Em(stack.bbox.w);
+          this.HTMLcombineBBoxes(stack,span.bbox);
+          span.appendChild(stack);
         }
       }
     }
