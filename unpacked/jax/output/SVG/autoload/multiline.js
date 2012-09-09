@@ -219,7 +219,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Save the values needed for the future
       //
-      state.d = line.d; state.values = values; state.n++;
+      state.d = line.d-(line.y||0);
+      state.values = values; state.n++;
     },
     
     /****************************************************************/
@@ -433,7 +434,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       if (!broken) {this.SVGaddWidth(this.base,info,scanW)}
       info.scanW += this.SVGdata.dw; info.W = info.scanW;
-      info.index = index; if (better) {info.W = W; info.w = w}
+      info.index = []; if (better) {info.W = W; info.w = w; info.index = index}
       return better;
     },
     
@@ -455,9 +456,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  base that has been removed.  Remove the empty base box from the stack.
       //
       if (end.length === 0) {
-        var sup = this.data[this.sup], sub = this.data[this.sub], w = svg.w;
-        if (sup) {svg.Add(sup.toSVG(),w+(sup.SVGdata.dx||0),sup.SVGdata.dy)}
-        if (sub) {svg.Add(sub.toSVG(),w+(sub.SVGdata.dx||0),sub.SVGdata.dy)}
+        var sup = this.data[this.sup], sub = this.data[this.sub], w = svg.w, data;
+        if (sup) {data = sup.SVGdata; svg.Add(sup.toSVG(),w+(data.dx||0),data.dy)}
+        if (sub) {data = sub.SVGdata; svg.Add(sub.toSVG(),w+(data.dx||0),data.dy)}
       }
     }
 
@@ -470,6 +471,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     //  Override the method for checking line breaks to properly handle <mo>
     //
     SVGbetterBreak: function (info,state) {
+      if (info.values && info.values.last === this) {return false}
       var values = this.getValues(
         "linebreak","linebreakstyle","lineleading","linebreakmultchar",
         "indentalign","indentshift",
@@ -524,6 +526,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (penalty >= info.penalty) {return false}
       info.penalty = penalty; info.values = values; info.W = W; info.w = w;
       values.lineleading = SVG.length2em(values.lineleading,state.VALUES.lineleading);
+      values.last = this;
       return true;
     }
   });
@@ -535,6 +538,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     //  Override the method for checking line breaks to properly handle <mspace>
     //
     SVGbetterBreak: function (info,state) {
+      if (info.values && info.values.last === this) {return false}
       var values = this.getValues("linebreak");
       //
       //  Get the default penalty for this location
@@ -563,7 +567,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       if (penalty >= info.penalty) {return false}
       info.penalty = penalty; info.values = values; info.W = W; info.w = w;
-      values.lineleading = state.VALUES.lineleading; values.linebreakstyle = "before";
+      values.lineleading = state.VALUES.lineleading;
+      values.linebreakstyle = "before"; values.last = this;
       return true;
     }
   });
@@ -592,24 +597,6 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     SVGmoveLine: function (start,end,svg,state,values) {
       return this.Core().SVGmoveSlice(start,end,svg,state,values);
     },
-    /* 
-     * //
-     * //  Split and move the hit boxes as well
-     * //
-     * SVGmoveSlice: function (start,end,svg,state,values,padding) {
-     *   var hitbox = document.getElementById("MathJax-HitBox-"+this.spanID+SVG.idPostfix);
-     *   if (hitbox) {hitbox.parentNode.removeChild(hitbox)}
-     *   var slice = this.SUPER(arguments).SVGmoveSlice.apply(this,arguments);
-     *   if (end.length === 0) {
-     *     span = this.SVGspanElement(); var n = 0;
-     *     while (span) {
-     *       hitbox = this.SVGhandleHitBox(span,"-Continue-"+n);
-     *       span = span.nextMathJaxSpan; n++;
-     *     }
-     *   }
-     *   return slice;
-     * }
-     */
   });
   
   //

@@ -1811,7 +1811,7 @@
 	  sub.w += s; sub.r = Math.max(sub.w,sub.r);
 	}
 	var q = SVG.TeX.sup_drop * sscale, r = SVG.TeX.sub_drop * sscale;
-	var u = base.h - q, v = base.d + r, delta = 0, p;
+	var u = base.h+(base.y||0) - q, v = base.d-(base.y||0) + r, delta = 0, p;
 	if (base.ic) {
           base.w -= base.ic;       // remove IC (added by mo and mi)
           delta = 1.3*base.ic+.05; // adjust faked IC to be more in line with expeted results

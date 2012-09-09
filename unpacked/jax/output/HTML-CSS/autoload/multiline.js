@@ -478,7 +478,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       if (!broken) {this.HTMLaddWidth(this.base,info,scanW)}
       info.scanW += this.HTMLdw; info.W = info.scanW;
-      info.index = index; if (better) {info.W = W; info.w = w}
+      info.index = []; if (better) {info.W = W; info.w = w; info.index = index}
       return better;
     },
     
@@ -504,8 +504,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (s) {
           var box = s.HTMLspanElement().parentNode, stack = box.parentNode;
           if (this.data[this.base]) {stack.removeChild(stack.firstChild)}
-          for (box = stack.firstChild; box; box = box.nextSibling)
-            {box.style.left = HTMLCSS.Em(HTMLCSS.unEm(box.style.left)-this.HTMLbaseW)}
+	  for (box = stack.firstChild; box; box = box.nextSibling)
+	    {box.style.left = HTMLCSS.Em(HTMLCSS.unEm(box.style.left)-this.HTMLbaseW)}
           stack.bbox.w -= this.HTMLbaseW; stack.style.width = HTMLCSS.Em(stack.bbox.w);
           this.HTMLcombineBBoxes(stack,span.bbox);
           span.appendChild(stack);
@@ -522,6 +522,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     //  Override the method for checking line breaks to properly handle <mo>
     //
     HTMLbetterBreak: function (info,state) {
+      if (info.values && info.values.id === this.spanID) {return false}
       var values = this.getValues(
         "linebreak","linebreakstyle","lineleading","linebreakmultchar",
         "indentalign","indentshift",
@@ -577,6 +578,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (penalty >= info.penalty) {return false}
       info.penalty = penalty; info.values = values; info.W = W; info.w = w;
       values.lineleading = HTMLCSS.length2em(values.lineleading,state.VALUES.lineleading);
+      values.id = this.spanID;
       return true;
     }
   });
@@ -588,6 +590,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     //  Override the method for checking line breaks to properly handle <mspace>
     //
     HTMLbetterBreak: function (info,state) {
+      if (info.values && info.values.id === this.spanID) {return false}
       var values = this.getValues("linebreak");
       //
       //  Get the default penalty for this location
@@ -617,7 +620,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       if (penalty >= info.penalty) {return false}
       info.penalty = penalty; info.values = values; info.W = W; info.w = w;
-      values.lineleading = state.VALUES.lineleading; values.linebreakstyle = "before";
+      values.lineleading = state.VALUES.lineleading;
+      values.linebreakstyle = "before"; values.id = this.spanID;
       return true;
     }
   });
