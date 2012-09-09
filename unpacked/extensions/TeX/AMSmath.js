@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.0.2",
+  version: "2.0.3",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -41,7 +41,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       STACKITEM = TEX.Stack.Item,
       CONFIG = TEX.config.equationNumbers;
       
-  var COLS = function (W) {return W.join("em ") + "em"};
+  var COLS = function (W) {
+    var WW = [];
+    for (var i = 0, m = W.length; i < m; i++) 
+      {WW[i] = TEX.Parse.prototype.Em(W[i])}
+    return WW.join(" ");
+  };
   
   /******************************************************************************/
   
