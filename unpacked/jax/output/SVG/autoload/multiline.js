@@ -445,7 +445,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         if (start.length > 1) {
           this.data[this.base].SVGmoveSlice(start.slice(1),end.slice(1),svg,state,values,"paddingLeft");
         } else {
-          if (end.length <= 1) {this.data[i].SVGmove(svg,state,values)}
+          if (end.length <= 1) {this.data[this.base].SVGmove(svg,state,values)}
             else {this.data[this.base].SVGmoveSlice([],end.slice(1),svg,state,values,"paddingRight")}
         }
       }

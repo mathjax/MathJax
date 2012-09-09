@@ -490,7 +490,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (start.length > 1) {
           this.data[this.base].HTMLmoveSlice(start.slice(1),end.slice(1),span,state,values,"paddingLeft");
         } else {
-          if (end.length <= 1) {this.data[i].HTMLmoveSpan(span,state,values)}
+          if (end.length <= 1) {this.data[this.base].HTMLmoveSpan(span,state,values)}
             else {this.data[this.base].HTMLmoveSlice([],end.slice(1),span,state,values,"paddingRight")}
         }
       }
