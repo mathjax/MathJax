@@ -188,7 +188,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //    fill it with the proper elements,
       //    and clean up the bbox
       //
-      line = BBOX();
+      var line = BBOX();
       state.first = broken; state.last = true;
       this.SVGmoveLine(start,end,line,state,values);
       line.Clean();
