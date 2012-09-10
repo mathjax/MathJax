@@ -386,6 +386,8 @@
       emex.parentNode.removeChild(emex);
 
       this.idPostfix = "-zoom"; jax.root.toSVG(span,span); this.idPostfix = "";
+      if (this.operaZoomRefresh)
+        {setTimeout(function () {span.firstChild.style.border="1px solid transparent"},1)}
       //
       //  Get height and width of zoomed math and original math
       //
@@ -1960,6 +1962,14 @@
     });
   });
 
+  HUB.Browser.Select({
+    Opera: function (browser) {
+      SVG.Augment({
+        operaZoomRefresh: true          // Opera needs a kick to redraw zoomed equations
+      });
+    }
+  });
+    
   HUB.Register.StartupHook("End Cookie", function () {
     if (HUB.config.menuSettings.zoom !== "None")
       {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
