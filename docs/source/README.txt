@@ -5,7 +5,7 @@ GitHub repository at
 
 The HTML versions are now available at
 
-       http://mathjax.readthedocs.org/en/latest/
+       http://docs.mathjax.org/
 
 where it is possible for you to submit corrections and modifications
 directly to the documentation on line.
