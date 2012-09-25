@@ -23,7 +23,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT,INPUT) {
-  var VERSION = "2.0.1";
+  var VERSION = "2.1";
   
   var EXTENSION = MathJax.Extension;
   var ME = EXTENSION.MathEvents = {version: VERSION};

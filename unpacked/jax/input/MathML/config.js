@@ -24,7 +24,7 @@
 
 MathJax.InputJax.MathML = MathJax.InputJax({
   id: "MathML",
-  version: "2.0",
+  version: "2.1",
   directory: MathJax.InputJax.directory + "/MathML",
   extensionDir: MathJax.InputJax.extensionDir + "/MathML",
   entityDir: MathJax.InputJax.directory + "/MathML/entities",

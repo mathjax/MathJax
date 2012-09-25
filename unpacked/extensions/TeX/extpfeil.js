@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/extpfeil"] = {
-  version: "2.0.1"
+  version: "2.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {

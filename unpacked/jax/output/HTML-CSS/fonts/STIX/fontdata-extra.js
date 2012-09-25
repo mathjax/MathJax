@@ -22,6 +22,7 @@
  */
 
 (function (HTMLCSS) {
+  var VERSION = "2.1";
   
   var DELIMITERS = HTMLCSS.FONTDATA.DELIMITERS;
 

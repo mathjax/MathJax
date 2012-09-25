@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "2.0.1",
+  version: "2.1",
   config: {
     preview: "alttext"      // Use the <math> element's alttext as the 
                             //   preview.  Set to "none" for no preview,

@@ -28,7 +28,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/color"] = {
-  version: "2.0.2",
+  version: "2.1",
 
   config: MathJax.Hub.CombineConfig("TeX.color",{
     padding: "5px",

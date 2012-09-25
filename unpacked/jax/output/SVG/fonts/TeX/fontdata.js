@@ -23,7 +23,7 @@
  */
 
 (function (SVG,MML,AJAX) {
-  var VERSION = "2.0.4";
+  var VERSION = "2.1";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
