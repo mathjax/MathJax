@@ -2334,7 +2334,8 @@ MathJax.Hub.Startup = {
     isMac:       (navigator.platform.substr(0,3) === "Mac"),
     isPC:        (navigator.platform.substr(0,3) === "Win"),
     isMSIE:      (window.ActiveXObject != null && window.clipboardData != null),
-    isFirefox:   (window.netscape != null && document.ATTRIBUTE_NODE != null && !window.opera),
+    isFirefox:   ((window.netscape != null || window.mozPaintCount != null) &&
+                     document.ATTRIBUTE_NODE != null && !window.opera),
     isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null &&
                      (!window.chrome || window.chrome.loadTimes == null)),
     isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
