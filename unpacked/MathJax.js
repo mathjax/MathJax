@@ -2315,7 +2315,7 @@ MathJax.Hub.Startup = {
   var scripts = (document.documentElement || document).getElementsByTagName("script");
   var namePattern = new RegExp("(^|/)"+BASENAME+"\\.js(\\?.*)?$");
   for (var i = scripts.length-1; i >= 0; i--) {
-    if (scripts[i].src.match(namePattern)) {
+    if ((scripts[i].src||"").match(namePattern)) {
       STARTUP.script = scripts[i].innerHTML;
       if (RegExp.$2) {
         var params = RegExp.$2.substr(1).split(/\&/);
