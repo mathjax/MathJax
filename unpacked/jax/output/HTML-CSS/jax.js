@@ -292,8 +292,9 @@
 
     hideProcessedMath: true,           // use display:none until all math is processed
 
-    Font: null,  // created by Config() below
+    Font: null,                        // created by Config() below
     webFontDefault: "MathJax_Blank",
+    allowWebFonts: "otf",              // assume browser can use OTF web fonts
 
     Config: function () {
       if (!this.require) {this.require = []}
