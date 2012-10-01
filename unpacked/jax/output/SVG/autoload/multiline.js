@@ -219,8 +219,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Save the values needed for the future
       //
-      state.d = line.d-(line.y||0);
-      state.values = values; state.n++;
+      state.d = line.d; state.values = values; state.n++;
     },
     
     /****************************************************************/
