@@ -171,9 +171,11 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       return better;
     },
     SVGaddWidth: function (i,info,scanW) {
-      var svg = this.data[i].SVGdata;
-      scanW += svg.w + svg.x; if (svg.X) {scanW += svg.X}
-      info.W = info.scanW = scanW; info.w = 0;
+      if (this.data[i]) {
+        var svg = this.data[i].SVGdata;
+        scanW += svg.w + svg.x; if (svg.X) {scanW += svg.X}
+        info.W = info.scanW = scanW; info.w = 0;
+      }
       return scanW;
     },
     

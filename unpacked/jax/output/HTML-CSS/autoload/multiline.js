@@ -168,11 +168,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       return better;
     },
     HTMLaddWidth: function (i,info,scanW) {
-      var span = this.data[i].HTMLspanElement();
-      scanW += span.bbox.w;
-      if (span.style.paddingLeft)  {scanW += HTMLCSS.unEm(span.style.paddingLeft)}
-      if (span.style.paddingRight) {scanW += HTMLCSS.unEm(span.style.paddingRight)}
-      info.W = info.scanW = scanW; info.w = 0;
+      if (this.data[i]) {
+        var span = this.data[i].HTMLspanElement();
+        scanW += span.bbox.w;
+        if (span.style.paddingLeft)  {scanW += HTMLCSS.unEm(span.style.paddingLeft)}
+        if (span.style.paddingRight) {scanW += HTMLCSS.unEm(span.style.paddingRight)}
+        info.W = info.scanW = scanW; info.w = 0;
+      }
       return scanW;
     },
     
