@@ -954,7 +954,9 @@
     },
     createFrame: function (span,h,d,w,t,style) {
       if (h < -d) {d = -h} // make sure h is above d
-      var T = (this.msieBorderWidthBug ? 0 : 2*t);
+      var T = 2*t;
+      if (this.msieFrameSizeBug) {if (w < T) {w = T}; if (h+d < T) {h = T-d}}
+      if (this.msieBorderWidthBug) {T = 0}
       var H = this.Em(h+d-T), D = this.Em(-d-t), W = this.Em(w-T);
       var B = this.Em(t)+" "+style;
       var frame = this.addElement(span,"span",{
@@ -1625,6 +1627,7 @@
       },
       HTMLboxChild: function (n,box) {
 	if (this.data[n]) {return this.data[n].toHTML(box)}
+        if (!box.bbox) {box.bbox = this.HTMLzeroBBox()}
         return null;
       },
 
@@ -2703,6 +2706,7 @@
           msieMarginScaleBug: (mode < 8),   // relative margins are not scaled properly by font-size
           msiePaddingWidthBug: true,
           msieBorderWidthBug: quirks,
+          msieFrameSizeBug: (mode <= 8),    // crashes if size of box isn't big enough for border
           msieInlineBlockAlignBug: (!isIE8 || quirks),
           msiePlaceBoxBug: (isIE8 && !quirks),
           msieClipRectBug: !isIE8,
