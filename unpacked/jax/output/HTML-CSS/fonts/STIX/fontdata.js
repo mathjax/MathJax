@@ -1511,8 +1511,10 @@
       browser.STIXfontBug = browser.versionAtLeast("5.1") && browser.isMac;
     },
     Chrome: function (browser) {
-      var match = navigator.appVersion.match(/AppleWebKit\/(\d+)/);
-      if (match && parseInt(match[1]) > 534) {browser.STIXfontBug = true}
+      if (browser.isMac) {
+        var match = navigator.appVersion.match(/AppleWebKit\/(\d+)/);
+        if (match && parseInt(match[1]) > 534) {browser.STIXfontBug = true}
+      }
     }
   });
   
