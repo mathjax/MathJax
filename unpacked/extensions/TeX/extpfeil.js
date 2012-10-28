@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/extpfeil"] = {
-  version: "2.0"
+  version: "2.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -34,7 +34,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   //  Define the arrows to load the AMSmath extension
   //  (since they need its xArrow method)
   // 
-  MathJax.Hub.Insert(TEXDEF,{
+  TEXDEF.Add({
     macros: {
       xtwoheadrightarrow: ['Extension','AMSmath'],
       xtwoheadleftarrow:  ['Extension','AMSmath'],
@@ -43,7 +43,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       xtofrom:            ['Extension','AMSmath'],
       Newextarrow:        ['Extension','AMSmath']
     }
-  });
+  },null,true);
   
   //
   //  Redefine the macros when AMSmath is loaded

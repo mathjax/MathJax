@@ -22,16 +22,15 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.1";
 
   var MML = MathJax.ElementJax.mml;
   var TEX = MathJax.InputJax.TeX;
   var TEXDEF = TEX.Definitions;
   
-  TEXDEF.macros.mathchoice = 'MathChoice';
+  TEXDEF.Add({macros: {mathchoice: 'MathChoice'}},null,true);
 
   TEX.Parse.Augment({
-
     MathChoice: function (name) {
       var D  = this.ParseArg(name),
           T  = this.ParseArg(name),
@@ -39,7 +38,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           SS = this.ParseArg(name);
       this.Push(MML.TeXmathchoice(D,T,S,SS));
     }
-
   });
   
   MML.TeXmathchoice = MML.mbase.Subclass({

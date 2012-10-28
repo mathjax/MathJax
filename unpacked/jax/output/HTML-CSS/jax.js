@@ -292,8 +292,9 @@
 
     hideProcessedMath: true,           // use display:none until all math is processed
 
-    Font: null,  // created by Config() below
+    Font: null,                        // created by Config() below
     webFontDefault: "MathJax_Blank",
+    allowWebFonts: "otf",              // assume browser can use OTF web fonts
 
     Config: function () {
       if (!this.require) {this.require = []}
@@ -449,13 +450,13 @@
         //  Remove any existing output
         //
         prev = script.previousSibling;
-        if (prev && String(prev.className).match(/^MathJax(_Display)?$/))
+        if (prev && String(prev.className).match(/^MathJax(_Display)?( MathJax_Processing)?$/))
           {prev.parentNode.removeChild(prev)}
         //
         //  Add the span, and a div if in display mode,
         //  then set the role and mark it as being processed
         //
-        jax = script.MathJax.elementJax;
+        jax = script.MathJax.elementJax; if (!jax) continue;
         jax.HTMLCSS = {display: (jax.root.Get("display") === "block")}
         span = div = this.Element("span",{
 	  className:"MathJax", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
@@ -491,7 +492,7 @@
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         test = script.previousSibling; div = test.previousSibling;
-        jax = script.MathJax.elementJax;
+        jax = script.MathJax.elementJax; if (!jax) continue;
         ex = test.firstChild.offsetHeight/60;
         em = test.lastChild.firstChild.offsetHeight/60;
         if (relwidth) {maxwidth = div.previousSibling.firstChild.offsetWidth}
@@ -513,7 +514,8 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        test = scripts[i].previousSibling; jax = scripts[i].MathJax.elementJax;
+        test = scripts[i].previousSibling;
+        jax = scripts[i].MathJax.elementJax; if (!jax) continue;
         if (relwidth) {
           span = test.previousSibling;
           if (!jax.HTMLCSS.isHidden) {span = span.previousSibling}
@@ -524,7 +526,7 @@
       //
       //  Set state variables used for displaying equations in chunks
       //
-      state.HTMLCSSeqn = state.HTMLCSSlast = 0;
+      state.HTMLCSSeqn = state.HTMLCSSlast = 0; state.HTMLCSSi = -1;
       state.HTMLCSSchunk = this.config.EqnChunk;
       state.HTMLCSSdelay = false;
     },
@@ -583,7 +585,7 @@
         //
         //  Check if we should show this chunk of equations
         //
-        state.HTMLCSSeqn++;
+        state.HTMLCSSeqn += (state.i - state.HTMLCSSi); state.HTMLCSSi = state.i;
         if (state.HTMLCSSeqn >= state.HTMLCSSlast + state.HTMLCSSchunk) {
           this.postTranslate(state);
           state.HTMLCSSchunk = Math.floor(state.HTMLCSSchunk*this.config.EqnChunkFactor);
@@ -600,7 +602,7 @@
       //
       for (var i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
         var script = scripts[i];
-        if (script) {
+        if (script && script.MathJax.elementJax) {
           //
           //  Remove the processed marker
           //
@@ -630,7 +632,8 @@
 
     getJaxFromMath: function (math) {
       if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
-      return HUB.getJaxFor(math.nextSibling);
+      do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
+      return HUB.getJaxFor(math);
     },
     getHoverSpan: function (jax,math) {return jax.root.HTMLspanElement()},
     getHoverBBox: function (jax,span,math) {
@@ -806,6 +809,16 @@
       if (Math.abs(m) < .0006) {return "0em"}
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
+    unEm: function (m) {
+      return parseFloat(m);
+    },
+    Px: function (m) {
+      m *= this.em; var s = (m < 0? "-" : "");
+      return s+Math.abs(m).toFixed(1).replace(/\.?0+$/,"") + "px";
+    },
+    unPx: function (m) {
+      return parseFloat(m)/this.em;
+    },
     Percent: function (m) {
       return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
     },
@@ -893,17 +906,13 @@
       if (before) {span.insertBefore(space,span.firstChild)} else {span.appendChild(space)}
       return space;
     },
-    createSpace: function (span,h,d,w,color) {
+    createSpace: function (span,h,d,w,color,isSpace) {
       if (h < -d) {d = -h} // make sure h is above d
       var H = this.Em(h+d), D = this.Em(-d);
       if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode).d-d)}
-      if (span.isBox || span.className == "mspace") {
-        var scale = (span.scale == null ? 1 : span.scale);
-        span.bbox = {
-          exactW: true,
-          h: h*scale, d: d*scale,
-          w: w*scale, rw: w*scale, lw: 0
-        };
+      if (span.isBox || isSpace) {
+	var scale = (span.scale == null ? 1 : span.scale);
+	span.bbox = {exactW: true, h: h*scale, d: d*scale, w: w*scale, rw: w*scale, lw: 0};
         span.style.height = H; span.style.verticalAlign = D;
         span.HH = (h+d)*scale;
       } else {
@@ -945,7 +954,9 @@
     },
     createFrame: function (span,h,d,w,t,style) {
       if (h < -d) {d = -h} // make sure h is above d
-      var T = (this.msieBorderWidthBug ? 0 : 2*t);
+      var T = 2*t;
+      if (this.msieFrameSizeBug) {if (w < T) {w = T}; if (h+d < T) {h = T-d}}
+      if (this.msieBorderWidthBug) {T = 0}
       var H = this.Em(h+d-T), D = this.Em(-d-t), W = this.Em(w-T);
       var B = this.Em(t)+" "+style;
       var frame = this.addElement(span,"span",{
@@ -981,7 +992,7 @@
       return box;
     },
     addBox: function (span,box) {
-      box.style.position = "absolute"; box.isBox = true;
+      box.style.position = "absolute"; box.isBox = box.isMathJax = true;
       return span.appendChild(box);
     },
     placeBox: function (span,x,y,noclip) {
@@ -996,6 +1007,7 @@
         else {HH = span.offsetHeight/this.em}
       if (!span.noAdjust) {
         HH += 1;
+        HH = Math.round(HH*this.em)/this.em; // make this an integer number of pixels (for Chrome)
         if (this.msieInlineBlockAlignBug) {
           this.addElement(span,"img",{
             className:"MathJax_strut", border:0, src:"about:blank", isMathJax:true,
@@ -1005,6 +1017,8 @@
           this.addElement(span,"span",{
             isMathJax: true, style:{display:"inline-block",width:0,height:this.Em(HH)}
           });
+          if (HTMLCSS.chromeHeightBug) 
+            {HH -= (span.lastChild.offsetHeight - Math.round(HH*this.em))/this.em}
         }
       }
       // Clip so that bbox doesn't include extra height and depth
@@ -1112,6 +1126,7 @@
         mid = this.createBox(stack); this.createChar(mid,delim.mid,scale,font);
         h += mid.bbox.h + mid.bbox.d;
       }
+      if (delim.min && H < h*delim.min) {H = h*delim.min}
       if (H > h) {
         ext = this.Element("span"); this.createChar(ext,delim.ext,scale,font);
         var eH = ext.bbox.h + ext.bbox.d, eh = eH - .05, n, N, k = (delim.mid ? 2 : 1);
@@ -1122,6 +1137,7 @@
           while (n-- > 0) {
             if (!this.msieCloneNodeBug) {EXT = ext.cloneNode(true)}
               else {EXT = this.Element("span"); this.createChar(EXT,delim.ext,scale,font)}
+            EXT.bbox = ext.bbox;
             y -= eh; this.placeBox(this.addBox(stack,EXT),0,y,true);
           }
           y += dy - ext.bbox.d;
@@ -1161,6 +1177,7 @@
         mid = this.createBox(stack); this.createChar(mid,delim.mid,scale,font);
         w += mid.bbox.w;
       }
+      if (delim.min && W < w*delim.min) {W = w*delim.min}
       if (W > w) {
         var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
         N = n = Math.ceil((W-w)/(k*rw));
@@ -1168,15 +1185,17 @@
         dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
           while (n-- > 0) {
-            if (!this.msieCloneNodeBug) {REP = rep.cloneNode(true)}
+            if (!this.cloneNodeBug) {REP = rep.cloneNode(true)}
               else {REP = this.Element("span"); this.createChar(REP,delim.rep,scale,font)}
+            REP.bbox = rep.bbox;
             this.placeBox(this.addBox(stack,REP),x,0,true); x += rw;
           }
           if (delim.mid && k) {this.placeBox(mid,x,0,true); x += mid.bbox.w - dx; n = N}
         }
       } else {
-        dx = Math.min(w - W,left.bbox.w/2);
-        x -= dx/2; if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w}; x -= dx/2;
+        x -= (w - W)/2;
+        if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w};
+        x -= (w - W)/2;
       }
       this.placeBox(right,x,0,true);
       span.bbox = {
@@ -1219,7 +1238,7 @@
         if (this.safariVerticalAlignBug || this.konquerorVerticalAlignBug ||
            (this.operaVerticalAlignBug && span.isMultiChar)) {
           if (span.firstChild.style.display === "" && span.style.top !== "")
-            {span = span.firstChild; h -= parseFloat(span.style.top)}
+            {span = span.firstChild; h -= HTMLCSS.unEm(span.style.top)}
           span.style.position = "relative";
           span.style.top = this.Em(-h);
         } else {
@@ -1297,8 +1316,10 @@
           this.handleFont(SPAN,font,SPAN !== span);
         }
         newtext = this.handleChar(SPAN,font,c,n,newtext);
-        if (c[0]/1000 > span.bbox.h) {span.bbox.h = c[0]/1000}
-        if (c[1]/1000 > span.bbox.d) {span.bbox.d = c[1]/1000}
+        if (!(c[5]||{}).space) {
+          if (c[0]/1000 > span.bbox.h) {span.bbox.h = c[0]/1000}
+          if (c[1]/1000 > span.bbox.d) {span.bbox.d = c[1]/1000}
+        }
         if (span.bbox.w + c[3]/1000 < span.bbox.lw) {span.bbox.lw = span.bbox.w + c[3]/1000}
         if (span.bbox.w + c[4]/1000 > span.bbox.rw) {span.bbox.rw = span.bbox.w + c[4]/1000}
         span.bbox.w += c[2]/1000;
@@ -1330,11 +1351,20 @@
 
     handleChar: function (span,font,c,n,text) {
       var C = c[5];
+      if (C.space) {
+        if (text.length) {this.addText(span,text)}
+        HTMLCSS.createShift(span,c[2]/1000);
+        return "";
+      }
       if (C.img) {return this.handleImg(span,font,c,n,text)}
       if (C.isUnknown && this.FONTDATA.DELIMITERS[n]) {
         if (text.length) {this.addText(span,text)}
         var scale = span.scale;
         HTMLCSS.createDelimiter(span,n,0,1,font);
+        if (this.FONTDATA.DELIMITERS[n].dir === "V") {
+          span.style.verticalAlign = this.Em(span.bbox.d);
+          span.bbox.h += span.bbox.d; span.bbox.d = 0;
+        }
         span.scale = scale;
         c[0] = span.bbox.h*1000; c[1] = span.bbox.d*1000;
         c[2] = span.bbox.w*1000; c[3] = span.bbox.lw*1000; c[4] = span.bbox.rw*1000;
@@ -1347,7 +1377,7 @@
               + String.fromCharCode((N&0x3FF)+0xDC00);
         }
       }
-      if (C.rfix) {this.addText(span,C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
+      if (C.rfix) {this.addText(span,text+C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
       if (c[2] || !this.msieAccentBug || text.length) {return text + C.c}
       //  Handle IE accent clipping bug
       HTMLCSS.createShift(span,c[3]/1000);
@@ -1553,11 +1583,11 @@
 	if (bbox.h > BBOX.h) {BBOX.h = bbox.h}
 	if (bbox.D != null && bbox.D > BBOX.D) {BBOX.D = bbox.D}
 	if (bbox.H != null && bbox.H > BBOX.H) {BBOX.H = bbox.H}
-	if (child.style.paddingLeft) {BBOX.w += parseFloat(child.style.paddingLeft)*(child.scale||1)}
+	if (child.style.paddingLeft) {BBOX.w += HTMLCSS.unEm(child.style.paddingLeft)*(child.scale||1)}
 	if (BBOX.w + bbox.lw < BBOX.lw) {BBOX.lw = BBOX.w + bbox.lw}
 	if (BBOX.w + bbox.rw > BBOX.rw) {BBOX.rw = BBOX.w + bbox.rw}
 	BBOX.w += bbox.w;
-	if (child.style.paddingRight) {BBOX.w += parseFloat(child.style.paddingRight)*(child.scale||1)}
+	if (child.style.paddingRight) {BBOX.w += HTMLCSS.unEm(child.style.paddingRight)*(child.scale||1)}
 	if (bbox.width) {BBOX.width = bbox.width}
         if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
         if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
@@ -1574,7 +1604,10 @@
       },
       HTMLzeroBBox: function () {return {h:0, d:0, w:0, lw: 0, rw:0}},
       HTMLcanStretch: function (direction) {
-	if (this.isEmbellished()) {return this.Core().HTMLcanStretch(direction)}
+	if (this.isEmbellished()) {
+          var core = this.Core();
+          if (core && core !== this) {return core.HTMLcanStretch(direction)}
+        }
 	return false;
       },
       HTMLstretchH: function (box,W) {return this.HTMLspanElement()},
@@ -1594,16 +1627,17 @@
       },
       HTMLboxChild: function (n,box) {
 	if (this.data[n]) {return this.data[n].toHTML(box)}
+        if (!box.bbox) {box.bbox = this.HTMLzeroBBox()}
         return null;
       },
 
       HTMLcreateSpan: function (span) {
 	if (this.spanID) {
 	  var SPAN = this.HTMLspanElement();
-	  if (SPAN) {
+	  if (SPAN && (SPAN.parentNode === span || (SPAN.parentNode||{}).parentNode === span)) {
 	    while (SPAN.firstChild) {SPAN.removeChild(SPAN.firstChild)}
 	    SPAN.bbox = {w:0, h:0, d:0, lw:0, rw:0};
-	    SPAN.scale = 1; SPAN.isMultChar = null;
+	    SPAN.scale = 1; SPAN.isMultChar = SPAN.HH = null;
 	    SPAN.style.cssText = "";
 	    return SPAN;
 	  }
@@ -1657,8 +1691,8 @@
 	  var bbox = span.bbox, dd = (bbox.exact ? 0 : 1/HTMLCSS.em), lW = 0, rW = 0,
               lpad = span.style.paddingLeft, rpad = span.style.paddingRight;
 	  if (this.isToken) {lW = bbox.lw; rW = bbox.rw - bbox.w}
-	  if (lpad !== "") {lW += parseFloat(lpad)*(span.scale||1)}
-	  if (rpad !== "") {rW -= parseFloat(rpad)*(span.scale||1)}
+	  if (lpad !== "") {lW += HTMLCSS.unEm(lpad)*(span.scale||1)}
+	  if (rpad !== "") {rW -= HTMLCSS.unEm(rpad)*(span.scale||1)}
           var dw = (HTMLCSS.PaddingWidthBug || bbox.keepPadding || bbox.exactW ? 0 : rW - lW);
 	  var W = Math.max(0,HTMLCSS.getW(span) + dw);
 	  var H = bbox.h + bbox.d, D = -bbox.d, lp = 0, rp = 0;
@@ -1730,7 +1764,7 @@
 	  var space = this.texSpacing();
 	  if (space !== "") {
 	    space = HTMLCSS.length2em(space,this.HTMLgetScale())/(span.scale||1);
-	    if (span.style.paddingLeft) {space += parseFloat(span.style.paddingLeft)}
+	    if (span.style.paddingLeft) {space += HTMLCSS.unEm(span.style.paddingLeft)}
 	    span.style.paddingLeft = HTMLCSS.Em(space);
 	  }
 	}
@@ -1749,7 +1783,7 @@
 	  values.scriptminsize = HTMLCSS.length2em(this.Get("scriptminsize"));
 	  if (scale < values.scriptminsize) {scale = values.scriptminsize}
 	}
-	scale *= HTMLCSS.length2em(values.mathsize);
+	if (this.isToken) {scale *= HTMLCSS.length2em(values.mathsize)}
 	return scale;
       },
       HTMLgetMu: function (span) {
@@ -1840,9 +1874,11 @@
       toHTML: function (span,variant,remap,chars) {
         var text = this.data.join("").replace(/[\u2061-\u2064]/g,""); // remove invisibles
         if (remap) {text = remap(text,chars)}
-        if (!variant) {
+        if (variant.fontInherit) {
           var scale = Math.floor(100/HTMLCSS.scale+.5) + "%";
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
+          if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
+          if (variant.italic) {span.lastChild.style.fontStyle = "italic"}
           var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
           span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
         } else {
@@ -1851,11 +1887,14 @@
       }
     });
     MML.entity.Augment({
-      toHTML: function (span,variant) {
+      toHTML: function (span,variant,remap,chars) {
         var text = this.toString().replace(/[\u2061-\u2064]/g,""); // remove invisibles
-        if (!variant) {
+        if (remap) {text = remap(text,chars)}
+        if (variant.fontInherit) {
           var scale = Math.floor(100/HTMLCSS.scale+.5) + "%";
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
+          if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
+          if (variant.italic) {span.lastChild.style.fontStyle = "italic"}
           var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
           span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
         } else {
@@ -1923,10 +1962,10 @@
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {mapchars = HTMLCSS.FONTDATA.REMAPACCENTUNDER}
         }
         //
-        //  STIX fonts need quotes from variant font
+        //  STIX and TeX fonts need quotes from variant font
         //
-        if (isScript && HTMLCSS.fontInUse === "STIX" && text.match(/['`"\u00B4\u2032-\u2037]/))
-          {variant = HTMLCSS.FONTDATA.VARIANT["-STIX-variant"]}
+        if (isScript && text.match(/['`"\u00B4\u2032-\u2037\u2057]/))
+          {variant = HTMLCSS.FONTDATA.VARIANT["-"+HTMLCSS.fontInUse+"-variant"]}
         //
         //  Typeset contents
         //
@@ -1948,7 +1987,7 @@
 	  var p = (span.bbox.h - span.bbox.d)/2 - HTMLCSS.TeX.axis_height*span.scale;
 	  if (HTMLCSS.safariVerticalAlignBug && span.lastChild.nodeName === "IMG") {
 	    span.lastChild.style.verticalAlign =
-	      HTMLCSS.Em(parseFloat(span.lastChild.style.verticalAlign||0)/HTMLCSS.em-p/span.scale);
+	      HTMLCSS.Em(HTMLCSS.unEm(span.lastChild.style.verticalAlign||0)/HTMLCSS.em-p/span.scale);
 	  } else if (HTMLCSS.konquerorVerticalAlignBug && span.lastChild.nodeName === "IMG") {
 	    span.style.position = "relative";
 	    span.lastChild.style.position="relative";
@@ -1973,14 +2012,14 @@
       CoreParent: function () {
         var parent = this;
         while (parent && parent.isEmbellished() &&
-               parent.CoreMO() === this && !parent.isa(MML.math))  {parent = parent.Parent()}
+               parent.CoreMO() === this && !parent.isa(MML.math)) {parent = parent.Parent()}
         return parent;
       },
       CoreText: function (parent) {
         if (!parent) {return ""}
         if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
-        while (parent.isa(MML.mrow) && parent.data.length === 1 && parent.data[0])
-          {parent = parent.data[0]}
+        while ((parent.isa(MML.mrow) || parent.isa(MML.TeXAtom)) &&
+                parent.data.length === 1 && parent.data[0]) {parent = parent.data[0]}
         if (!parent.isToken) {return ""} else {return parent.data.join("")}
       },
       HTMLremapChars: {
@@ -2055,7 +2094,8 @@
         span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); 
         var variant = this.HTMLgetVariant();
         //  Avoid setting the font style for error text or if mtextFontInherit is set
-        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror") {variant = null}
+        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror")
+          {variant = {bold:variant.bold, italic:variant.italic, fontInherit: true}}
         for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
         if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
@@ -2086,15 +2126,15 @@
 
     MML.mspace.Augment({
       toHTML: function (span) {
-	span = this.HTMLhandleSize(this.HTMLcreateSpan(span));
+	span = this.HTMLcreateSpan(span);
 	var values = this.getValues("height","depth","width");
         var mu = this.HTMLgetMu(span);
 	values.mathbackground = this.mathbackground;
 	if (this.background && !this.mathbackground) {values.mathbackground = this.background}
-	var h = HTMLCSS.length2em(values.height,mu) / span.scale,
-            d = HTMLCSS.length2em(values.depth,mu)  / span.scale,
-	    w = HTMLCSS.length2em(values.width,mu)  / span.scale;
-       HTMLCSS.createSpace(span,h,d,w,values.mathbackground);
+	var h = HTMLCSS.length2em(values.height,mu),
+            d = HTMLCSS.length2em(values.depth,mu),
+	    w = HTMLCSS.length2em(values.width,mu);
+       HTMLCSS.createSpace(span,h,d,w,values.mathbackground,true);
        return span;
       }
     });
@@ -2254,8 +2294,8 @@
       HTMLhandleSpace: function (span) {
 	if (!this.texWithDelims) {
 	  var space = (this.useMMLspacing ? 0 : HTMLCSS.length2em(this.texSpacing()||0)) + .12;
-	  span.style.paddingLeft = HTMLCSS.Em(space);
-	  span.style.paddingRight = ".12em";
+	  span.style.paddingLeft  = HTMLCSS.Em(space);
+	  span.style.paddingRight = HTMLCSS.Em(.12);
 	}
       }
     });
@@ -2281,7 +2321,7 @@
 	if (surd.bbox.h + surd.bbox.d > H) {q = ((surd.bbox.h+surd.bbox.d) - (H-t))/2}
 	var ruleC = HTMLCSS.FONTDATA.DELIMITERS[HTMLCSS.FONTDATA.RULECHAR];
 	if (!ruleC || W < ruleC.HW[0][0]*scale || scale < .75) {
-	  HTMLCSS.createRule(rule,t,0,W);
+	  HTMLCSS.createRule(rule,0,t,W);
 	} else {
 	  HTMLCSS.createDelimiter(rule,HTMLCSS.FONTDATA.RULECHAR,W,scale);
 	}
@@ -2365,23 +2405,19 @@
     MML.maction.Augment({toHTML: MML.mbase.HTMLautoload});
 
     MML.semantics.Augment({
-      toHTML: function (span) {
+      toHTML: function (span,HW,D) {
+	span = this.HTMLcreateSpan(span);
 	if (this.data[0] != null) {
-	  span = this.data[0].toHTML(span);
-	  this.spanID = this.data[0].spanID;
-	  this.HTMLhandleSpace(span);
+	  var SPAN = this.data[0].toHTML(span);
+	  if (D != null) {this.data[0].HTMLstretchV(span,HW,D)}
+	  else if (HW != null) {this.data[0].HTMLstretchH(span,HW)}
+          span.bbox = SPAN.bbox;
 	}
+	this.HTMLhandleSpace(span);
 	return span;
       },
-      HTMLspanElement: function () {
-	return (this.data[0] != null ? this.data[0].HTMLspanElement() : null);
-      },
-      HTMLstretchH: function (box,w) {
-	return (this.data[0] != null ? this.data[0].HTMLstretchH(box,w) : box);
-      },
-      HTMLstretchV: function (box,h,d) {
-	return (this.data[0] != null ? this.data[0].HTMLstretchV(box,h,d) : box);
-      }
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
     });
 
     MML.munderover.Augment({
@@ -2432,7 +2468,7 @@
 	    var accent = (i != this.base && values[this.ACCENTS[i]]);
 	    if (accent && box.bbox.w <= 1/HTMLCSS.em+.0001) { // images can get the width off by 1px
 	      box.bbox.w = box.bbox.rw - box.bbox.lw; box.bbox.noclip = true;
-	      if (box.bbox.lw && !HTMLCSS.zeroWidthBug)
+	      if (box.bbox.lw)
 		{box.insertBefore(HTMLCSS.createSpace(box.parentNode,0,0,-box.bbox.lw),box.firstChild)}
 	      HTMLCSS.createBlank(box,0,0,box.bbox.rw+.1);
 	    }
@@ -2484,7 +2520,6 @@
 	  if (D != null) {this.data[this.base].HTMLstretchV(base,HW,D)}
 	  else if (HW != null) {this.data[this.base].HTMLstretchH(base,HW)}
 	} else {base.bbox = this.HTMLzeroBBox()}
-	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
 	var x_height = HTMLCSS.TeX.x_height * scale,
 	    s = HTMLCSS.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?
 	var sup, sub;
@@ -2496,6 +2531,7 @@
 	if (sup) {sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw)}
 	if (sub) {sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw)}
 	HTMLCSS.placeBox(base,0,0);
+	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
 	if (base.bbox.ic) {
@@ -2564,9 +2600,11 @@
 	  }
 	  MML.mbase.prototype.displayAlign = HUB.config.displayAlign;
 	  MML.mbase.prototype.displayIndent = HUB.config.displayIndent;
-	  math = HTMLCSS.Measured(this.data[0].toHTML(box),box);
+          var html = this.data[0].toHTML(box); html.bbox.exactW = false; // force remeasure just to be sure
+	  math = HTMLCSS.Measured(html,box);
 	}
 	HTMLCSS.placeBox(box,0,0);
+        stack.style.width = Math.round(HTMLCSS.unEm(stack.style.width)*this.em)+"px"; // get width right if minimum font size is set
 	//
 	//  Adjust bbox to match outer em-size
 	// 
@@ -2668,16 +2706,16 @@
           msieMarginScaleBug: (mode < 8),   // relative margins are not scaled properly by font-size
           msiePaddingWidthBug: true,
           msieBorderWidthBug: quirks,
+          msieFrameSizeBug: (mode <= 8),    // crashes if size of box isn't big enough for border
           msieInlineBlockAlignBug: (!isIE8 || quirks),
           msiePlaceBoxBug: (isIE8 && !quirks),
           msieClipRectBug: !isIE8,
           msieNegativeSpaceBug: quirks,
-          msieCloneNodeBug: (isIE8 && browser.version === "8.0"),
+          cloneNodeBug: (isIE8 && browser.version === "8.0"),
           initialSkipBug: (mode < 8),        // confused by initial left-margin values
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
           msieIE6: !isIE7,
           msieItalicWidthBug: true,
-          zeroWidthBug: (mode < 8),
           FontFaceBug: true,
           msieFontCSSBug: browser.isIE9,
           allowWebFonts: (mode >= 9 ? "woff" : "eot")
@@ -2749,6 +2787,10 @@
 
       Chrome: function (browser) {
         HTMLCSS.Augment({
+          Em: HTMLCSS.Px,       // vertical alignment is better in pixels (since around v20)
+          unEm: HTMLCSS.unPx,
+          chromeHeightBug: true, // heights can be 1px off from the explicitly set size
+          cloneNodeBug: true,    // Chrome gets heights wrong with the cloned ones
           rfuzz: .011,
           AccentBug: true,
           AdjustSurd: true,
@@ -2769,7 +2811,6 @@
           operaVerticalAlignBug: true,
           operaFontSizeBug: browser.versionAtLeast("10.61"),
           initialSkipBug: true,
-          zeroWidthBug: true,
           FontFaceBug: true,
           PaddingWidthBug: true,
           allowWebFonts: (browser.versionAtLeast("10.0") && !browser.isMini ? "otf" : false),

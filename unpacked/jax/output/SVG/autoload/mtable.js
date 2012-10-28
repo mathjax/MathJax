@@ -22,13 +22,14 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.1";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
   
   MML.mtable.Augment({
     toSVG: function (span) {
+      this.SVGgetStyles();
       var svg = this.SVG();
       if (this.data.length === 0) {return svg}
       var values = this.getValues("columnalign","rowalign","columnspacing","rowspacing",
@@ -41,8 +42,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var scale = this.SVGgetScale(), mu = this.SVGgetMu(svg);
       var LABEL = -1;
 
-      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row;
-      var LHD = SVG.FONTDATA.baselineskip * scale * values.useHeight,
+      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row, cell, mo;
+      var LHD = SVG.FONTDATA.baselineskip * scale * values.useHeight, HD,
           LH = SVG.FONTDATA.lineH * scale, LD = SVG.FONTDATA.lineD * scale;
 
       //
@@ -57,8 +58,26 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
             C[j] = BBOX.G();
             W[j] = -SVG.BIGDIMEN;
           }
-          A[i][j] = row.data[j-s].toSVG();
+          cell = row.data[j-s];
+          A[i][j] = cell.toSVG();
 //          if (row.data[j-s].isMultiline) {A[i][j].style.width = "100%"}
+          if (cell.isEmbellished()) {
+            mo = cell.CoreMO();
+            var min = mo.Get("minsize",true);
+            if (min) {
+              if (mo.SVGcanStretch("Vertical")) {
+                HD = mo.SVGdata.h + mo.SVGdata.d;
+                if (HD) {
+                  min = SVG.length2em(min,mu,HD);
+                  if (min*mo.SVGdata.h/HD > H[j]) {H[j] = min*mo.SVGdata.h/HD}
+                  if (min*mo.SVGdata.d/HD > D[j]) {D[j] = min*mo.SVGdata.d/HD}
+                }
+              } else if (mo.SVGcanStretch("Horizontal")) {
+                min = SVG.length2em(min,mu,mo.SVGdata.w);
+                if (min > W[j]) {W[j] = min}
+              }
+            }
+          }
           if (A[i][j].h > H[i]) {H[i] = A[i][j].h}
           if (A[i][j].d > D[i]) {D[i] = A[i][j].d}
           if (A[i][j].w > W[j]) {W[j] = A[i][j].w}
@@ -118,7 +137,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Determine array total height
       //
-      var HD = H[0] + D[A.length-1];
+      HD = H[0] + D[A.length-1];
       for (i = 0, m = A.length-1; i < m; i++)
         {HD += Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i])}
       //
@@ -229,11 +248,11 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         for (i = 0, m = A.length; i < m; i++) {
           if (A[i][j]) {
             s = (this.data[i].type === "mlabeledtr" ? LABEL : 0);
-            var cell = this.data[i].data[j-s];
+            cell = this.data[i].data[j-s];
 	    if (cell.SVGcanStretch("Horizontal")) {
 	      A[i][j] = cell.SVGstretchH(W[j]);
 	    } else if (cell.SVGcanStretch("Vertical")) {
-	      var mo = cell.CoreMO();
+	      mo = cell.CoreMO();
 	      var symmetric = mo.symmetric; mo.symmetric = false;
 	      A[i][j] = cell.SVGstretchV(H[i],D[i]);
 	      mo.symmetric = symmetric;
@@ -242,7 +261,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
             dy = ({top:    H[i] - A[i][j].h,
                    bottom: A[i][j].d - D[i],
                    center: ((H[i]-D[i]) - (A[i][j].h-A[i][j].d))/2,
-                   baseline: 0, axis: 0})[align]; // FIXME:  handle axis better?
+                   baseline: 0, axis: 0})[align] || 0; // FIXME:  handle axis better?
             align = (cell.columnalign||RCALIGN[i][j]||CALIGN[j])
             C[j].Align(A[i][j],align,0,y+dy);
           }

@@ -23,13 +23,12 @@
  */
 
 MathJax.Extension["TeX/mhchem"] = {
-  version: "2.0"
+  version: "2.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
-  var TEX = MathJax.InputJax.TeX,
-      MACROS = TEX.Definitions.macros;
+  var TEX = MathJax.InputJax.TeX;
   
   /*
    *  This is the main class for handing the \ce and related commands.
@@ -81,6 +80,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       '<->': "leftrightarrow",
       '<=>': "rightleftharpoons",
       '<=>>': "Rightleftharpoons",
+      '<<=>': "Leftrightharpoons",
       '^': "uparrow",
       'v': "downarrow"
     },
@@ -136,7 +136,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     //
-    //  Make a number of fraction preceeding an atom,
+    //  Make a number or fraction preceeding an atom,
     //  or a subscript for an atom.
     //  
     ParseNumber: function () {
@@ -204,7 +204,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     ParseLess: function (c) {
       this.FinishAtom();
-      var arrow = this.Match(/^(<->?|<=>>?)/);
+      var arrow = this.Match(/^(<->?|<=>>?|<<=>)/);
       if (!arrow) {this.tex += c; this.i++} else {this.AddArrow(arrow)}
     },
 
@@ -215,7 +215,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       c = this.string.charAt(++this.i);
       if (c === "{") {
         this.i++; var m = this.Find("}");
-        if (m === "-.") {this.sup += "{-}{\\cdot}"} else if (m) {this.sup += CE(m).Parse()}
+        if (m === "-.") {this.sup += "{-}{\\cdot}"}
+        else if (m) {this.sup += CE(m).Parse().replace(/^\{-\}/,"-")}
       } else if (c === " " || c === "") {
         this.tex += "{\\"+this.Arrows["^"]+"}"; this.i++;
       } else {
@@ -228,7 +229,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     ParseSubscript: function (c) {
       if (this.string.charAt(++this.i) == "{") {
-        this.i++; this.sub += CE(this.Find("}")).Parse();
+        this.i++; this.sub += CE(this.Find("}")).Parse().replace(/^\{-\}/,"-");
       } else {
         var n = this.Match(/^\d+/);
         if (n) {this.sub += n}
@@ -300,15 +301,15 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           //
           // right-justify super- and subscripts when they are before the atom
           //
-          var n = Math.abs(this.sup.length-this.sub.length);
-          if (n) {
-            var zeros = "0000000000".substr(0,n);
-            var script = (this.sup.length > this.sub.length ? "sub" : "sup");
-            this[script] = "\\phantom{"+zeros+"}" + this[script];
-          }
+          var sup = this.sup, sub = this.sub;
+          if (!sup.match(/\d/)) {sup += "\\vphantom{0}"} // force common heights
+          if (!sub.match(/\d/)) {sub += "\\vphantom{0}"}
+          this.tex += "\\raise 1pt{\\scriptstyle\\begin{CEscriptstack}"+sup+"\\\\"+
+                         sub+"\\end{CEscriptstack}}\\kern-.125em ";
+        } else {
+          if (!this.sup) {this.sup = "\\Space{0pt}{0pt}{.2em}"} // forces subscripts to align properly
+          this.tex += "^{"+this.sup+"}_{"+this.sub+"}";
         }
-        if (!this.sup) {this.sup = "\\Space{0pt}{0pt}{.2em}"} // forces subscripts to align properly
-        this.tex += "^{"+this.sup+"}_{"+this.sub+"}";
         this.sup = this.sub = "";
       }
       this.atom = false;
@@ -358,37 +359,77 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     
   });
   
+  MathJax.Extension["TeX/mhchem"].CE = CE;
   
   /***************************************************************************/
   
-  //
-  //  Set up the macros for chemistry
-  //
-  MACROS.ce  = 'CE';
-  MACROS.cf  = 'CE';
-  MACROS.cee = 'CE';
+  TEX.Definitions.Add({
+    macros: {
+      //
+      //  Set up the macros for chemistry
+      //
+      ce:   'CE',
+      cf:   'CE',
+      cee:  'CE',
+  
+      //
+      //  Make these load AMSmath package (redefined below when loaded)
+      //
+      xleftrightarrow:    ['Extension','AMSmath'],
+      xrightleftharpoons: ['Extension','AMSmath'],
+      xRightleftharpoons: ['Extension','AMSmath'],
+      xLeftrightharpoons: ['Extension','AMSmath'],
+
+      //  FIXME:  These don't work well in FF NativeMML mode
+      longrightleftharpoons: ["Macro","\\stackrel{\\textstyle{{-}\\!\\!{\\rightharpoonup}}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"],
+      longRightleftharpoons: ["Macro","\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\small\\smash\\leftharpoondown}"],
+      longLeftrightharpoons: ["Macro","\\stackrel{\\rightharpoonup}{{{\\leftharpoondown}\\!\\!\\textstyle{-}}}"],
+
+      //
+      //  Add \hyphen used in some mhchem examples
+      //  
+      hyphen: ["Macro","\\text{-}"],
+      
+      //
+      //  Needed for \bond for the ~ forms
+      //
+      tripledash: ["Macro","\\raise3mu{\\tiny\\text{-}\\kern2mu\\text{-}\\kern2mu\\text{-}}"]
+    },
+    
+    //
+    //  Needed for \bond for the ~ forms
+    //
+    environment: {
+      CEstack:       ['Array',null,null,null,'r',null,"0.001em",'T',1],
+      CEscriptstack: ['Array',null,null,null,'r',null,"0.2em",'S',1]
+    }
+  },null,true);
+  
+  if (!MathJax.Extension["TeX/AMSmath"]) {
+    TEX.Definitions.Add({
+      macros: {
+        xrightarrow: ['Extension','AMSmath'],
+        xleftarrow:  ['Extension','AMSmath']
+      }
+    },null,true);
+  }
   
   //
-  //  Include some missing arrows (some are hacks)
+  //  These arrows need to wait until AMSmath is loaded
   //
-  MACROS.xleftrightarrow = ['xArrow',0x2194,6,6];
-  MACROS.xrightleftharpoons = ['xArrow',0x21CC,5,7];  // FIXME:  doesn't stretch in HTML-CSS output
-  MACROS.xRightleftharpoons = ['xArrow',0x21CC,5,7];  // FIXME:  how should this be handled?
-
-  //  FIXME:  These don't work well in FF NativeMML mode
-  MACROS.longrightleftharpoons = ["Macro","\\stackrel{\\textstyle{{-}\\!\\!{\\rightharpoonup}}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"];
-  MACROS.longRightleftharpoons = ["Macro","\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\small\\smash\\leftharpoondown}"];
-
-  //
-  //  Needed for \bond for the ~ forms
-  //
-  MACROS.tripledash = ["Macro","\\raise3mu{\\tiny\\text{-}\\kern2mu\\text{-}\\kern2mu\\text{-}}"];
-  TEX.Definitions.environment.CEstack = ['Array',null,null,null,'r',null,"0.001em",'T',1]
-
-  //
-  //  Add \hyphen used in some mhchem examples
-  //  
-  MACROS.hyphen = ["Macro","\\text{-}"];
+  MathJax.Hub.Register.StartupHook("TeX AMSmath Ready",function () {
+    TEX.Definitions.Add({
+      macros: {
+        //
+        //  Some of these are hacks for now
+        //
+        xleftrightarrow:    ['xArrow',0x2194,6,6],
+        xrightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  doesn't stretch in HTML-CSS output
+        xRightleftharpoons: ['xArrow',0x21CC,5,7],  // FIXME:  how should this be handled?
+        xLeftrightharpoons: ['xArrow',0x21CC,5,7]
+      }
+    },null,true);
+  });
 
   TEX.Parse.Augment({
 

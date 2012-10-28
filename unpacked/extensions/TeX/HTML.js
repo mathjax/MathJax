@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/HTML"] = {
-  version: "2.0"
+  version: "2.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -37,7 +37,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       style:   'STYLE_attribute',
       cssId:   'ID_attribute'
     }
-  });
+  },null,true);
 
   TEX.Parse.Augment({
 

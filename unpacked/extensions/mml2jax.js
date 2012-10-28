@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "2.0",
+  version: "2.1",
   config: {
     preview: "alttext"      // Use the <math> element's alttext as the 
                             //   preview.  Set to "none" for no preview,
@@ -56,15 +56,17 @@ MathJax.Extension.mml2jax = {
     //  Handle math with namespaces in HTML
     //
     var i, m;
-    if (document.namespaces) {
+    if (typeof(document.namespaces) !== "undefined") {
       //
       // IE namespaces are listed in document.namespaces
       //
-      for (i = 0, m = document.namespaces.length; i < m; i++) {
-        var ns = document.namespaces[i];
-        if (ns.urn === this.MMLnamespace)
-          {this.ProcessMathArray(element.getElementsByTagName(ns.name+":math"))}
-      }
+      try {
+        for (i = 0, m = document.namespaces.length; i < m; i++) {
+          var ns = document.namespaces[i];
+          if (ns.urn === this.MMLnamespace)
+            {this.ProcessMathArray(element.getElementsByTagName(ns.name+":math"))}
+        }
+      } catch (err) {}
     } else {
       //
       //  Everybody else

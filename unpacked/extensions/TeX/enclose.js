@@ -29,7 +29,7 @@
  */
 
 MathJax.Extension["TeX/enclose"] = {
-  version: "2.0",
+  version: "2.1",
   
   //
   //  The attributes allowed in \enclose{notation}[attributes]{math}
@@ -51,7 +51,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   //
   //  Set up macro
   //
-  TEX.Definitions.macros.enclose = 'Enclose';
+  TEX.Definitions.Add({macros: {enclose: 'Enclose'}},null,true);
 
   TEX.Parse.Augment({
     //

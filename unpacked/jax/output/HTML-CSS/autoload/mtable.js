@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.1";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -38,8 +38,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var stack = HTMLCSS.createStack(span);
       var scale = this.HTMLgetScale(), mu = this.HTMLgetMu(span), LABEL = -1;
 
-      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row, entries = [];
-      var LHD = HTMLCSS.FONTDATA.baselineskip * scale * values.useHeight,
+      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row, cell, mo, entries = [];
+      var LHD = HTMLCSS.FONTDATA.baselineskip * scale * values.useHeight, HD,
           LH = HTMLCSS.FONTDATA.lineH * scale, LD = HTMLCSS.FONTDATA.lineD * scale;
 
       //
@@ -62,7 +62,26 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       for (i = 0, m = this.data.length; i < m; i++) {
         row = this.data[i]; s = (row.type === "mlabeledtr" ? LABEL : 0);
         for (j = s, M = row.data.length + s; j < M; j++) {
-          if (row.data[j-s].isMultiline) {A[i][j].style.width = "100%"}
+          cell = row.data[j-s];
+          if (cell.isMultiline) {A[i][j].style.width = "100%"}
+          if (cell.isEmbellished()) {
+            mo = cell.CoreMO();
+            var min = mo.Get("minsize",true);
+            if (min) {
+              var bbox = mo.HTMLspanElement().bbox;
+              if (mo.HTMLcanStretch("Vertical")) {
+                HD = bbox.h + bbox.d;
+                if (HD) {
+                  min = HTMLCSS.length2em(min,mu,HD);
+                  if (min*bbox.h/HD > H[j]) {H[j] = min*bbox.h/HD}
+                  if (min*bbox.d/HD > D[j]) {D[j] = min*bbox.d/HD}
+                }
+              } else if (mo.HTMLcanStretch("Horizontal")) {
+                min = HTMLCSS.length2em(min,mu,bbox.w);
+                if (min > W[j]) {W[j] = min}
+              }
+            }
+          }
           if (A[i][j].bbox.h > H[i]) {H[i] = A[i][j].bbox.h}
           if (A[i][j].bbox.d > D[i]) {D[i] = A[i][j].bbox.d}
           if (A[i][j].bbox.w > W[j]) {W[j] = A[i][j].bbox.w}
@@ -122,7 +141,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       //  Determine array total height
       //
-      var HD = H[0] + D[A.length-1];
+      HD = H[0] + D[A.length-1];
       for (i = 0, m = A.length-1; i < m; i++) {HD += Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i])}
       //
       //  Determine frame and line sizes
@@ -245,21 +264,21 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         for (i = 0, m = A.length; i < m; i++) {
           if (A[i][j]) {
             s = (this.data[i].type === "mlabeledtr" ? LABEL : 0);
-            var cell = this.data[i].data[j-s];
+            cell = this.data[i].data[j-s];
             if (cell.HTMLcanStretch("Horizontal")) {
-              A[i][j].bbox = cell.HTMLstretchH(C[j],W[j]).bbox
+              A[i][j].bbox = cell.HTMLstretchH(C[j],W[j]).bbox;
             } else if (cell.HTMLcanStretch("Vertical")) {
-              var mo = cell.CoreMO();
+              mo = cell.CoreMO();
               var symmetric = mo.symmetric; mo.symmetric = false;
-              A[i][j].bbox = cell.HTMLstretchV(C[j],H[i],D[i]).bbox;
+              A[i][j].bbox = cell.HTMLstretchV(C[j],H[i],D[i]).bbox; A[i][j].HH = null;
               mo.symmetric = symmetric;
             }
             align = cell.rowalign||this.data[i].rowalign||RALIGN[i];
             dy = ({top:    H[i] - A[i][j].bbox.h,
                    bottom: A[i][j].bbox.d - D[i],
                    center: ((H[i]-D[i]) - (A[i][j].bbox.h-A[i][j].bbox.d))/2,
-                   baseline: 0, axis: 0})[align]; // FIXME:  handle axis better?
-            align = (cell.columnalign||RCALIGN[i][j]||CALIGN[j])
+                   baseline: 0, axis: 0})[align] || 0; // FIXME:  handle axis better?
+            align = (cell.columnalign||RCALIGN[i][j]||CALIGN[j]);
             HTMLCSS.alignBox(A[i][j],align,y+dy);
           }
           if (i < A.length-1) {y -= Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i])}
@@ -431,7 +450,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     },
     HTMLhandleSpace: function (span) {
       span.bbox.keepPadding = true; span.bbox.exact = true;
-      if (!this.hasFrame) {span.style.paddingLeft = span.style.paddingRight = ".1667em"}
+      if (!this.hasFrame) {span.style.paddingLeft = span.style.paddingRight = HTMLCSS.Em(1/6)}
       this.SUPER(arguments).HTMLhandleSpace.call(this,span);
     }
   });

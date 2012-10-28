@@ -22,12 +22,13 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.1";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG;
   
   MML.ms.Augment({
     toSVG: function () {
+      this.SVGgetStyles();
       var svg = this.SVG(); this.SVGhandleSpace(svg);
       var values = this.getValues("lquote","rquote");
       var variant = this.SVGgetVariant(), scale = this.SVGgetScale();

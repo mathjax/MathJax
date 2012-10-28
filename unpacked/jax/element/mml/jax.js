@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.0",
+  version: "2.1",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -395,7 +395,7 @@ MathJax.ElementJax.mml.Augment({
     },
     setBaseTeXclasses: function (prev) {
       this.getPrevClass(prev); this.texClass = null;
-      if (this.isEmbellished()) {
+      if (this.isEmbellished() || this.data[0].isa(MML.mi)) {
         prev = this.data[0].setTeXclass(prev);
         this.updateTeXclass(this.Core());
       } else {if (this.data[0]) {this.data[0].setTeXclass()}; prev = this}
@@ -429,7 +429,17 @@ MathJax.ElementJax.mml.Augment({
                   MML.VARIANT.ITALIC : MML.VARIANT.NORMAL);
       }
       return "";
-    } 
+    },
+    setTeXclass: function (prev) {
+      this.getPrevClass(prev);
+      var name = this.data.join("");
+      if (name.length > 1 && name.match(/^[a-z][a-z0-9]*$/i) &&
+          this.texClass === MML.TEXCLASS.ORD) {
+        this.texClass = MML.TEXCLASS.OP;
+        this.autoOP = true;
+      }
+      return this;
+    }
   });
   
   MML.mn = MML.mbase.Subclass({
@@ -567,9 +577,24 @@ MathJax.ElementJax.mml.Augment({
     setTeXclass: function (prev) {
       this.getValues("lspace","rspace"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
-      this.texClass = this.Get("texClass"); if (this.texClass === MML.TEXCLASS.NONE) {return prev}
-      if (prev) {this.prevClass = prev.texClass || MML.TEXCLASS.ORD; this.prevLevel = prev.Get("scriptlevel")}
-        else {this.prevClass = MML.TEXCLASS.NONE}
+      this.texClass = this.Get("texClass");
+      if (this.data.join("") === "\u2061") {
+        // force previous node to be texClass OP, and skip this node
+        prev.texClass = MML.TEXCLASS.OP;
+        this.texClass = this.prevClass = MML.TEXCLASS.NONE;
+        return prev;
+      }
+      return this.adjustTeXclass(prev);
+    },
+    adjustTeXclass: function (prev) {
+      if (this.texClass === MML.TEXCLASS.NONE) {return prev}
+      if (prev) {
+        if (prev.autoOP && (this.texClass === MML.TEXCLASS.BIN ||
+                            this.texClass === MML.TEXCLASS.REL))
+          {prev.texClass = MML.TEXCLASS.ORD}
+        this.prevClass = prev.texClass || MML.TEXCLASS.ORD;
+        this.prevLevel = prev.Get("scriptlevel")
+      } else {this.prevClass = MML.TEXCLASS.NONE}
       if (this.texClass === MML.TEXCLASS.BIN &&
             (this.prevClass === MML.TEXCLASS.NONE ||
              this.prevClass === MML.TEXCLASS.BIN ||
@@ -887,7 +912,6 @@ MathJax.ElementJax.mml.Augment({
 
   MML.msubsup = MML.mbase.Subclass({
     type: "msubsup", base: 0, sub: 1, sup: 2,
-    linebreakContainer: true,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -1009,6 +1033,9 @@ MathJax.ElementJax.mml.Augment({
     },
     inheritFromMe: true,
     noInherit: {
+      mover: {align: true},
+      munder: {align: true},
+      munderover: {align: true},
       mtable: {
         align: true, rowalign: true, columnalign: true, groupalign: true,
         alignmentscope: true, columnwidth: true, width: true, rowspacing: true,
@@ -1234,7 +1261,6 @@ MathJax.ElementJax.mml.Augment({
       var nNode, i, m;
       if (node.nodeType === 1) { // ELEMENT_NODE
         nNode = document.createElement(node.nodeName);
-        if (node.className) {nNode.className=iNode.className}
         for (i = 0, m = node.attributes.length; i < m; i++) {
           var attribute = node.attributes[i];
           if (attribute.specified && attribute.nodeValue != null && attribute.nodeValue != '')
@@ -1261,11 +1287,14 @@ MathJax.ElementJax.mml.Augment({
     type: "texatom",
     inferRow: true,
     texClass: MML.TEXCLASS.ORD,
+    Core: MML.mbase.childCore,
+    CoreMO: MML.mbase.childCoreMO,
+    isEmbellished: MML.mbase.childEmbellished,
     setTeXclass: function (prev) {
-      this.getPrevClass(prev);
       this.data[0].setTeXclass();
-      return this;
-    }
+      return this.adjustTeXclass(prev);
+    },
+    adjustTeXclass: MML.mo.prototype.adjustTeXclass
   });
   
   MML.NULL = MML.mbase().With({type:"null"});

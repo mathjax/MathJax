@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.0";
+  var VERSION = "2.1";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -50,7 +50,9 @@
     windowSettings: {                              // for source window
       status: "no", toolbar: "no", locationbar: "no", menubar: "no",
       directories: "no", personalbar: "no", resizable: "yes", scrollbars: "yes",
-      width: 100, height: 50
+      width: 400, height: 300,
+      left: Math.round((screen.width - 400)/2),
+      top:  Math.round((screen.height - 300)/3)
     },
     
     styles: {
@@ -605,11 +607,12 @@
     MENU.About.GetJax(jax,MathJax.Extension,"Extension",true);
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}],["center",{},[
       HUB.Browser + " v"+HUB.Browser.version +
-      (HTMLCSS.webFonts && !HTMLCSS.imgFonts ? " \u2014 "+HTMLCSS.allowWebFonts+" fonts" : "")
+      (HTMLCSS.webFonts && !HTMLCSS.imgFonts ? " \u2014 " + 
+        HTMLCSS.allowWebFonts.replace(/otf/,"woff or otf") + " fonts" : "")
     ]]);
     MENU.About.div = MENU.Background(MENU.About);
     var about = HTML.addElement(MENU.About.div,"div",{
-      id: "MathJax_About", onclick: MENU.About.Remove
+      id: "MathJax_About"
     },[
       ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
       "using "+font,["br"],["br"],
@@ -618,7 +621,12 @@
         "max-height":"20em", overflow:"auto", 
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
       }},jax],["br"],["br"],
-      ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]]
+      ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
+      ["img", {
+        src: CONFIG.closeImg,
+        style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
+        onclick: MENU.About.Remove
+      }]
     ]);
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;
@@ -666,7 +674,7 @@
         // toMathML() can call MathJax.Hub.RestartAfter, so trap errors and check
         try {MENU.ShowSource.Text(MENU.jax.root.toMathML(),event)} catch (err) {
           if (!err.restart) {throw err}
-          CALLBACK.After([this,MENU.ShowSource,EVENT]);
+          CALLBACK.After([this,MENU.ShowSource,EVENT],err.restart);
         }
       } else if (!AJAX.loadingToMathML) {
         AJAX.loadingToMathML = true;
@@ -695,7 +703,7 @@
     return MENU.ShowSource.w;
   };
   MENU.ShowSource.Text = function (text,event) {
-    var w = MENU.ShowSource.Window(event);
+    var w = MENU.ShowSource.Window(event); delete MENU.ShowSource.w;
     text = text.replace(/^\s*/,"").replace(/\s*$/,"");
     text = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     if (MENU.isMobile) {
@@ -712,38 +720,40 @@
       w.document.write("</body></html>");
       w.document.close();
       var table = w.document.body.firstChild;
-      var H = (w.outerHeight-w.innerHeight)||30, W = (w.outerWidth-w.innerWidth)||30;
-      W = Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25);
-      H = Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25);
-      w.resizeTo(W,H);
-      if (event && event.screenX != null) {
-        var x = Math.max(0,Math.min(event.screenX-Math.floor(W/2), screen.width-W-20)),
-            y = Math.max(0,Math.min(event.screenY-Math.floor(H/2), screen.height-H-20));
-        w.moveTo(x,y);
-      }
+      setTimeout(function () {
+        var H = (w.outerHeight-w.innerHeight)||30, W = (w.outerWidth-w.innerWidth)||30, x, y;
+        W = Math.max(100,Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25));
+        H = Math.max(40,Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25));
+        w.resizeTo(W,H);
+        if (event && event.screenX != null) {
+          x = Math.max(0,Math.min(event.screenX-Math.floor(W/2), screen.width-W-20));
+          y = Math.max(0,Math.min(event.screenY-Math.floor(H/2), screen.height-H-20));
+          w.moveTo(x,y);
+        }
+      },50);
     }
-    delete MENU.ShowSource.w;
   };
   
   /*
    *  Handle rescaling all the math
    */
   MENU.Scale = function () {
-    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML;
-    var SCALE = (HTMLCSS ? HTMLCSS.config.scale : nMML.config.scale);
+    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML, SVG = OUTPUT.SVG;
+    var SCALE = (HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
     var scale = prompt("Scale all mathematics (compared to surrounding text) by",SCALE+"%");
     if (scale) {
-      if (scale.match(/^\s*\d+\s*%?\s*$/)) {
-        scale = parseInt(scale);
+      if (scale.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
+        scale = parseFloat(scale);
         if (scale) {
           if (scale !== SCALE) {
             if (HTMLCSS) {HTMLCSS.config.scale = scale}
             if (nMML)    {nMML.config.scale = scale}
+            if (SVG)     {SVG.config.scale = scale}
             MENU.cookie.scale = scale;
             MENU.saveCookie(); HUB.Reprocess();
           }
         } else {alert("The scale should not be zero")}
-      } else {alert("The scale should be a perentage (e.g., 120%)")}
+      } else {alert("The scale should be a percentage (e.g., 120%)")}
     }
   };
   
@@ -805,8 +815,11 @@
       Opera:   "Opera's support for MathML is limited, so switching to " +
                "MathML output may cause some expressions to render poorly.",
 
+      Safari: "Your browser's native MathML does not implement all the features " +
+               "used by MathJax, so some expressions may not render properly.",
+
       Firefox: "Your browser's native MathML does not implement all the features " +
-               "used by MathJax, so some expressions my render improperly."
+               "used by MathJax, so some expressions may not render properly."
     },
     
     SVG: {
@@ -866,7 +879,7 @@
       var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
       MENU.Augment({
         margin: 20,
-        msieBackgroundBug: true,
+        msieBackgroundBug: (document.documentMode < 9),
         msieFixedPositionBug: (quirks || !isIE8),
         msieAboutBug: quirks
       });

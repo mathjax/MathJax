@@ -2,9 +2,10 @@
  *
  *  MathJax/extensions/TeX/color.js
  *  
- *  Implements LaTeX-compatible \color macro rather than MathJax's
- *  original (non-standard) version.  It includes the rgb, gray, and
- *  named color models, and the \definecolor macro.
+ *  Implements LaTeX-compatible \color macro rather than MathJax's original
+ *  (non-standard) version.  It includes the rgb, RGB, gray, and named color
+ *  models, and the \textcolor, \definecolor, \colorbox, and \fcolorbox
+ *  macros.
  *  
  *  ---------------------------------------------------------------------
  *  
@@ -27,7 +28,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/color"] = {
-  version: "2.0",
+  version: "2.1",
 
   config: MathJax.Hub.CombineConfig("TeX.color",{
     padding: "5px",
@@ -116,16 +117,32 @@ MathJax.Extension["TeX/color"] = {
   },
   
   /*
-   *  Get an RGB color
+   *  Get an rgb color
    */
   get_rgb: function (rgb) {
     rgb = rgb.split(/,/); var RGB = "#";
-    if (rgb.length !== 3) {this.TEX.Error("RGB colors require 3 decimal numbers")}
+    if (rgb.length !== 3) {this.TEX.Error("rgb colors require 3 decimal numbers")}
     for (var i = 0; i < 3; i++) {
       if (!rgb[i].match(/^(\d+(\.\d*)?|\.\d+)$/)) {this.TEX.Error("Invalid decimal number")}
       var n = parseFloat(rgb[i]);
-      if (n < 0 || n > 1) {this.TEX.Error("RGB values must be between 0 and 1")}
+      if (n < 0 || n > 1) {this.TEX.Error("rgb values must be between 0 and 1")}
       n = Math.floor(n*255).toString(16); if (n.length < 2) {n = "0"+n}
+      RGB += n;
+    }
+    return RGB;
+  },
+  
+  /*
+   *  Get an RGB color
+   */
+  get_RGB: function (rgb) {
+    rgb = rgb.split(/,/); var RGB = "#";
+    if (rgb.length !== 3) {this.TEX.Error("RGB colors require 3 numbers")}
+    for (var i = 0; i < 3; i++) {
+      if (!rgb[i].match(/^\d+$/)) {this.TEX.Error("Invalid number")}
+      var n = parseInt(rgb[i]);
+      if (n > 255) {this.TEX.Error("RGB values must be between 0 and 255")}
+      n = n.toString(16); if (n.length < 2) {n = "0"+n}
       RGB += n;
     }
     return RGB;
@@ -166,11 +183,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var COLOR = MathJax.Extension["TeX/color"];
 
   COLOR.TEX = TEX; // for reference in getColor above
-  
-  TEX.Definitions.macros.color = "Color";
-  TEX.Definitions.macros.definecolor = "DefineColor";
-  TEX.Definitions.macros.colorbox = "ColorBox";
-  TEX.Definitions.macros.fcolorbox = "fColorBox";
+
+  TEX.Definitions.Add({
+    macros: {
+      color: "Color",
+      textcolor: "TextColor",
+      definecolor: "DefineColor",
+      colorbox: "ColorBox",
+      fcolorbox: "fColorBox"
+    }
+  },null,true);
 
   TEX.Parse.Augment({
     
@@ -184,6 +206,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var mml = STACKITEM.style().With({styles:{mathcolor:color}});
       this.stack.env.color = color;
       this.Push(mml);
+    },
+    
+    TextColor: function (name) {
+      var model = this.GetBrackets(name),
+          color = this.GetArgument(name);
+      color = COLOR.getColor(model,color);
+      var old = this.stack.env.color; this.stack.env.color = color;
+      var math = this.ParseArg(name);
+      if (old) {this.stack.env.color} else {delete this.stack.env.color}
+      this.Push(MML.mstyle(math).With({mathcolor: color}));
     },
 
     //

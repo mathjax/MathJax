@@ -29,8 +29,8 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "2.0";
-MathJax.fileversion = "2.0";
+MathJax.version = "2.1";
+MathJax.fileversion = "2.1";
 
 /**********************************************************/
 
@@ -966,6 +966,7 @@ MathJax.HTML = {
       MathJax.Hub.Insert(obj,def);
     }
     if (contents) {
+      if (!(contents instanceof Array)) {contents = [contents]}
       for (var i = 0; i < contents.length; i++) {
         if (contents[i] instanceof Array) {
           obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
@@ -1240,7 +1241,7 @@ MathJax.Hub = {
     skipStartupTypeset: false,    // set to true to skip PreProcess and Process during startup
     "v1.0-compatible": true,  // set to false to prevent message about configuration change
     elements: [],             // array of elements to process when none is given explicitly
-    positionToHash: true,     // after initial typeset pass, position to #hash location?
+    positionToHash: true,    // after initial typeset pass, position to #hash location?
      
     showMathMenu: true,      // attach math context menu to typeset math?
     showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
@@ -1684,6 +1685,7 @@ MathJax.Hub = {
     script.parentNode.insertBefore(error,script);
     if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
     this.lastError = err;
+    this.signal.Post(["Math Processing Error",script,err]);
   },
   
   RestartAfter: function (callback) {
@@ -1862,8 +1864,9 @@ MathJax.Hub.Startup = {
     var config = MathJax.Hub.config, jax = MathJax.Hub.outputJax;
     //  Save the order of the output jax since they are loading asynchronously
     for (var i = 0, m = config.jax.length, k = 0; i < m; i++) {
-      if (config.jax[i].substr(0,7) === "output/") 
-        {jax.order[config.jax[i].substr(7)] = k; k++}
+      var name = config.jax[i].substr(7);
+      if (config.jax[i].substr(0,7) === "output/" && jax.order[name] == null)
+        {jax.order[name] = k; k++}
     }
     var queue = MathJax.Callback.Queue();
     return queue.Push(
@@ -1911,8 +1914,30 @@ MathJax.Hub.Startup = {
   //  Set the location to the designated hash position
   //
   Hash: function () {
-    if (MathJax.Hub.config.positionToHash && document.location.hash)
-      {setTimeout("document.location = document.location.hash",1)}
+    if (MathJax.Hub.config.positionToHash && document.location.hash &&
+        document.body && document.body.scrollIntoView) {
+      var name = document.location.hash.substr(1);
+      var target = document.getElementById(name);
+      if (!target) {
+        var a = document.getElementsByTagName("a");
+        for (var i = 0, m = a.length; i < m; i++)
+          {if (a[i].name === name) {target = a[i]; break}}
+      }
+      if (target) {
+        while (!target.scrollIntoView) {target = target.parentNode}
+        target = this.HashCheck(target);
+        if (target && target.scrollIntoView)
+          {setTimeout(function () {target.scrollIntoView(true)},1)}
+      }
+    }
+  },
+  HashCheck: function (target) {
+    if (target.isMathJax) {
+      var jax = MathJax.Hub.getJaxFor(target);
+      if (jax && MathJax.OutputJax[jax.outputJax].hashCheck)
+        {target = MathJax.OutputJax[jax.outputJax].hashCheck(target)}
+    }
+    return target;
   },
   
   //
@@ -1939,10 +1964,16 @@ MathJax.Hub.Startup = {
   //
   //  Setup the onload callback
   //
-  onLoad: function (when) {
+  onLoad: function () {
     var onload = this.onload =
       MathJax.Callback(function () {MathJax.Hub.Startup.signal.Post("onLoad")});
-    if (document.body && document.readyState && document.readyState !== "loading") {return [onload]}
+    if (document.body && document.readyState)
+      if (MathJax.Hub.Browser.isMSIE) {
+        // IE can change from loading to interactive before
+        //  full page is ready, so go with complete (even though
+        //  that means we may have to wait longer).
+        if (document.readyState === "complete") {return [onload]}
+      } else if (document.readyState !== "loading") {return [onload]}
     if (window.addEventListener) {
       window.addEventListener("load",onload,false);
       if (!this.params.noDOMContentEvent)
@@ -2075,7 +2106,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "Jax",
-    version: "2.0",
+    version: "2.1",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -2120,7 +2151,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "InputJax",
-    version: "2.0",
+    version: "2.1",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -2153,7 +2184,7 @@ MathJax.Hub.Startup = {
     Remove: function (jax) {}
   },{
     id: "OutputJax",
-    version: "2.0",
+    version: "2.1",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
@@ -2236,7 +2267,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "2.0",
+    version: "2.1",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -2260,13 +2291,13 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.0", config: {},
+    id: "Error", version: "2.1", config: {},
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function () {return {inputJax:"Error", outputJax:"Error", originalText:"Math Processing Error"}}
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.0", config: {},
+    id: "Error", version: "2.1", config: {},
     sourceMenuTitle: "Error Message"
   };
   
@@ -2284,7 +2315,7 @@ MathJax.Hub.Startup = {
   var scripts = (document.documentElement || document).getElementsByTagName("script");
   var namePattern = new RegExp("(^|/)"+BASENAME+"\\.js(\\?.*)?$");
   for (var i = scripts.length-1; i >= 0; i--) {
-    if (scripts[i].src.match(namePattern)) {
+    if ((scripts[i].src||"").match(namePattern)) {
       STARTUP.script = scripts[i].innerHTML;
       if (RegExp.$2) {
         var params = RegExp.$2.substr(1).split(/\&/);
@@ -2303,7 +2334,8 @@ MathJax.Hub.Startup = {
     isMac:       (navigator.platform.substr(0,3) === "Mac"),
     isPC:        (navigator.platform.substr(0,3) === "Win"),
     isMSIE:      (window.ActiveXObject != null && window.clipboardData != null),
-    isFirefox:   (window.netscape != null && document.ATTRIBUTE_NODE != null && !window.opera),
+    isFirefox:   ((window.netscape != null || window.mozPaintCount != null) &&
+                     document.ATTRIBUTE_NODE != null && !window.opera),
     isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null &&
                      (!window.chrome || window.chrome.loadTimes == null)),
     isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
@@ -2388,19 +2420,27 @@ MathJax.Hub.Startup = {
       browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
       var MathPlayer = false;
-      try {new ActiveXObject("MathPlayer.Factory.1"); MathPlayer = true} catch(err) {}
-      if (MathPlayer && !STARTUP.params.NoMathPlayer) {
-        var mathplayer = document.createElement("object");
-        mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
-        document.getElementsByTagName("head")[0].appendChild(mathplayer);
-        document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
-        browser.hasMathPlayer = true;
-        if (document.readyState && (document.readyState === "loading" ||
-                                    document.readyState === "interactive")) {
-          document.write('<?import namespace="m" implementation="#MathPlayer">');
-          browser.mpImported = true;
+      try {new ActiveXObject("MathPlayer.Factory.1"); browser.hasMathPlayer = MathPlayer = true}
+        catch (err) {}
+      try {
+        if (MathPlayer && !STARTUP.params.NoMathPlayer) {
+          var mathplayer = document.createElement("object");
+          mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
+          document.getElementsByTagName("head")[0].appendChild(mathplayer);
+          document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
+          browser.mpNamespace = true;
+          if (document.readyState && (document.readyState === "loading" ||
+                                      document.readyState === "interactive")) {
+            document.write('<?import namespace="m" implementation="#MathPlayer">');
+            browser.mpImported = true;
+          }
+        } else {
+          //  Adding any namespace avoids a crash in IE9 in IE9-standards mode
+          //  (any reference to document.namespaces before document.readyState is 
+          //   "complete" causes an "unspecified error" to be thrown)
+          document.namespaces.add("mjx_IE_fix","http://www.w3.org/1999/xlink");
         }
-      }
+      } catch (err) {}
     }
   });
   HUB.Browser.Select(MathJax.Message.browsers);

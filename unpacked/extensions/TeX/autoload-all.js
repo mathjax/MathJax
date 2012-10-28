@@ -23,14 +23,10 @@
  */
 
 MathJax.Extension["TeX/autoload-all"] = {
-  version: "2.0"
+  version: "2.1"
 };
   
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var TEX = MathJax.InputJax.TeX,
-      MACROS = TEX.Definitions.macros,
-      ENVS = TEX.Definitions.environment;
-  
 
   var EXTENSIONS = {
     action:     ["mathtip","texttip","toggle"],
@@ -42,24 +38,36 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
                    "shoveleft","shoveright","xrightarrow","xleftarrow"],
     begingroup: ["begingroup","endgroup","gdef","global"],
     cancel:     ["cancel","bcancel","xcancel","cancelto"],
-    color:      ["color","colorbox","fcolorbox","DefineColor"],
+    color:      ["color","textcolor","colorbox","fcolorbox","DefineColor"],
     enclose:    ["enclose"],
     extpfeil:   ["Newextarrow","xlongequal","xmapsto","xtofrom",
                    "xtwoheadleftarrow","xtwoheadrightarrow"],
     mhchem:     ["ce","cee","cf"]
   };
   
-  for (var name in EXTENSIONS) {if (EXTENSIONS.hasOwnProperty(name)) {
-    var macros = EXTENSIONS[name];
-    for (var i = 0, m = macros.length; i < m; i++) {
-      MACROS[macros[i]] = ["Extension",name];
+  var ENVIRONMENTS = {
+    AMSmath:    ["subarray","smallmatrix","equation","equation*"]
+  };
+
+  var name, i, m, defs = {macros:{}, environment:{}};
+
+  for (name in EXTENSIONS) {if (EXTENSIONS.hasOwnProperty(name)) {
+    if (!MathJax.Extension["TeX/"+name]) {
+      var macros = EXTENSIONS[name];
+      for (i = 0, m = macros.length; i < m; i++)
+        {defs.macros[macros[i]] = ["Extension",name]}
     }
   }}
   
-  ENVS["subarray"]    = ['ExtensionEnv',null,'AMSmath'];
-  ENVS["smallmatrix"] = ['ExtensionEnv',null,'AMSmath'];
-  ENVS["equation"]    = ['ExtensionEnv',null,'AMSmath'];
-  ENVS["equation*"]   = ['ExtensionEnv',null,'AMSmath'];
+  for (name in ENVIRONMENTS) {if (ENVIRONMENTS.hasOwnProperty(name)) {
+    if (!MathJax.Extension["TeX/"+name]) {
+      var envs = ENVIRONMENTS[name];
+      for (i = 0, m = envs.length; i < m; i++)
+        {defs.environment[envs[i]] = ["ExtensionEnv",null,name]}
+    }
+  }}
+  
+  MathJax.InputJax.TeX.Definitions.Add(defs);
 
   MathJax.Hub.Startup.signal.Post("TeX autoload-all Ready");
   

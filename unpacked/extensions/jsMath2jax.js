@@ -31,7 +31,7 @@
  */
 
 MathJax.Extension.jsMath2jax = {
-  version: "2.0",
+  version: "2.1",
   
   config: {
     preview: "TeX"    // Set to "none" to prevent preview strings from being inserted
@@ -91,5 +91,5 @@ MathJax.Extension.jsMath2jax = {
   
 };
 
-MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.jsMath2jax]);
+MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.jsMath2jax],8);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/jsMath2jax.js");

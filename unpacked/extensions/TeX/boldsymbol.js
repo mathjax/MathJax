@@ -23,7 +23,7 @@
  */
 
 MathJax.Extension["TeX/boldsymbol"] = {
-  version: "2.0"
+  version: "2.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -41,7 +41,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   BOLDVARIANT["-tex-caligraphic"]    = "-tex-caligraphic-bold";
   BOLDVARIANT["-tex-oldstyle"]       = "-tex-oldstyle-bold";
   
-  TEXDEF.macros.boldsymbol = 'Boldsymbol';
+  TEXDEF.Add({macros: {boldsymbol: 'Boldsymbol'}},null,true);
   
   TEX.Parse.Augment({
     mmlToken: function (token) {

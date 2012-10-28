@@ -22,13 +22,14 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.1";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG;
   
   MML.mmultiscripts.Augment({
     toSVG: function (HW,D) {
-      var svg = this.SVG(); this.SVGhandleSpace();
+      this.SVGgetStyles();
+      var svg = this.SVG(); this.SVGhandleSpace(svg);
       var scale = this.SVGgetScale();
       var base = (this.data[this.base] ? this.SVGdataStretched(this.base,HW,D) : SVG.BBOX.G().Clean());
       var x_height = SVG.TeX.x_height * scale,

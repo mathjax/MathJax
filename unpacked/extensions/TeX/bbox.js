@@ -43,15 +43,15 @@
  */
 
 MathJax.Extension["TeX/bbox"] = {
-  version: "2.0"
+  version: "2.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
   var TEX = MathJax.InputJax.TeX,
       MML = MathJax.ElementJax.mml;
-       
-  TEX.Definitions.macros.bbox = "BBox";
+
+  TEX.Definitions.Add({macros: {bbox: "BBox"}},null,true);
   
   TEX.Parse.Augment({
     BBox: function (name) {

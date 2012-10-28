@@ -59,7 +59,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/unicode"] = {
-  version: "2.0",
+  version: "2.1",
   unicode: {},
   config: MathJax.Hub.CombineConfig("TeX.unicode",{
     fonts: "STIXGeneral,'Arial Unicode MS'"
@@ -74,7 +74,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   //
   //  Add \unicode macro
   //
-  TEX.Definitions.macros.unicode = 'Unicode';
+  TEX.Definitions.Add({macros: {unicode: 'Unicode'}},null,true);
   //
   //  Implementation of \unicode in parser
   //

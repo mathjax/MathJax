@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.0",
+  version: "2.1",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -41,11 +41,20 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       STACKITEM = TEX.Stack.Item,
       CONFIG = TEX.config.equationNumbers;
       
-  var COLS = function (W) {return W.join("em ") + "em"};
+  var COLS = function (W) {
+    var WW = [];
+    for (var i = 0, m = W.length; i < m; i++) 
+      {WW[i] = TEX.Parse.prototype.Em(W[i])}
+    return WW.join(" ");
+  };
   
   /******************************************************************************/
   
   TEXDEF.Add({
+    mathchar0mo: {
+      iiiint:     ['2A0C',{texClass: MML.TEXCLASS.OP}]
+    },
+    
     macros: {
       mathring:   ['Accent','2DA'],  // or 0x30A
       
@@ -53,14 +62,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       negmedspace:    ['Spacer',MML.LENGTH.NEGATIVEMEDIUMMATHSPACE],
       negthickspace:  ['Spacer',MML.LENGTH.NEGATIVETHICKMATHSPACE],
       
-      intI:       ['Macro','\\mathchoice{\\!}{}{}{}\\!\\!\\int'],
+//    intI:       ['Macro','\\mathchoice{\\!}{}{}{}\\!\\!\\int'],
 //    iint:       ['MultiIntegral','\\int\\intI'],          // now in core TeX input jax
 //    iiint:      ['MultiIntegral','\\int\\intI\\intI'],    // now in core TeX input jax
-      iiiint:     ['MultiIntegral','\\int\\intI\\intI\\intI'],
+//    iiiint:     ['MultiIntegral','\\int\\intI\\intI\\intI'], // now in mathchar0mo above
       idotsint:   ['MultiIntegral','\\int\\cdots\\int'],
       
-      dddot:      ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}}',1],
-      ddddot:     ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}\\mathord{.}}',1],
+//    dddot:      ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}}',1],
+//    ddddot:     ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}\\mathord{.}}',1],
+      dddot:      ['Accent','20DB'],
+      ddddot:     ['Accent','20DC'],
       
       sideset:    ['Macro','\\mathop{\\mathop{\\rlap{\\phantom{#3}}}\\nolimits#1\\!\\mathop{#3}\\nolimits#2}',3],
       
@@ -74,12 +85,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       
       substack:   ['Macro','\\begin{subarray}{c}#1\\end{subarray}',1],
       
-      injlim:     ['Macro','\\mathop{\\rm inj\\,lim}'],
-      projlim:    ['Macro','\\mathop{\\rm proj\\,lim}'],
-      varliminf:  ['Macro','\\mathop{\\underline{\\rm lim}}'],
-      varlimsup:  ['Macro','\\mathop{\\overline{\\rm lim}}'],
-      varinjlim:  ['Macro','\\mathop{\\underrightarrow{\\rm lim\\Rule{-1pt}{0pt}{1pt}}\\Rule{0pt}{0pt}{.45em}}'],
-      varprojlim: ['Macro','\\mathop{\\underleftarrow{\\rm lim\\Rule{-1pt}{0pt}{1pt}}\\Rule{0pt}{0pt}{.45em}}'],
+      injlim:     ['NamedOp','inj&thinsp;lim'],
+      projlim:    ['NamedOp','proj&thinsp;lim'],
+      varliminf:  ['Macro','\\mathop{\\underline{\\mmlToken{mi}{lim}}}'],
+      varlimsup:  ['Macro','\\mathop{\\overline{\\mmlToken{mi}{lim}}}'],
+      varinjlim:  ['Macro','\\mathop{\\underrightarrow{\\mmlToken{mi}{lim}\\Rule{-1pt}{0pt}{1pt}}\\Rule{0pt}{0pt}{.45em}}'],
+      varprojlim: ['Macro','\\mathop{\\underleftarrow{\\mmlToken{mi}{lim}\\Rule{-1pt}{0pt}{1pt}}\\Rule{0pt}{0pt}{.45em}}'],
       
       DeclareMathOperator: 'HandleDeclareOp',
       operatorname:        'HandleOperatorName',
@@ -121,7 +132,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       smallmatrix:   ['Array',null,null,null,'c',COLS([1/3]),".2em",'S',1],
       
       'equation':    ['EquationBegin','Equation',true],
-      'equation*':   ['EquationBegin','EquationStar',false]
+      'equation*':   ['EquationBegin','EquationStar',false],
+
+      eqnarray:      ['AMSarray',null,true,true, 'rcl',MML.LENGTH.THICKMATHSPACE,".5em"],
+      'eqnarray*':   ['AMSarray',null,false,true,'rcl',MML.LENGTH.THICKMATHSPACE,".5em"]
     },
     
     delimiter: {
@@ -159,6 +173,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     HandleLabel: function (name) {
       var global = this.stack.global, label = this.GetArgument(name);
+      if (label === "") return;
       if (!AMS.refUpdate) {
         if (global.label) {TEX.Error("Multiple "+name+"'s")}
         global.label = label;
@@ -462,7 +477,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     EndRow: function () {
       var mtr = MML.mtr;
       if (!this.global.tag && this.numbered) {this.autoTag()}
-      if (this.global.tag &&! this.global.notags) {
+      if (this.global.tag && !this.global.notags) {
         this.row = [this.getTag()].concat(this.row);
         mtr = MML.mlabeledtr;
       }

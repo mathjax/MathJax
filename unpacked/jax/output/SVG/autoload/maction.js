@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.1";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax["SVG"];
   
@@ -109,11 +109,14 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     //
     SVGsetStatus: function (event) {
       // FIXME:  Do something better with non-token elements
-      window.status =
+      this.messageID = MathJax.Message.Set
         ((this.data[1] && this.data[1].isToken) ?
              this.data[1].data.join("") : this.data[1].toString());
     },
-    SVGclearStatus: function (event) {window.status = ""},
+    SVGclearStatus: function (event) {
+      if (this.messageID) {MathJax.Message.Clear(this.messageID,0)}
+      delete this.messageID;
+    },
     
     //
     //  Handle tooltips

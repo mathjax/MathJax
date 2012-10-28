@@ -23,7 +23,7 @@
  */
 
 MathJax.Extension["TeX/verb"] = {
-  version: "2.0"
+  version: "2.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -32,7 +32,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var TEX = MathJax.InputJax.TeX;
   var TEXDEF = TEX.Definitions;
   
-  TEXDEF.macros.verb = 'Verb';
+  TEXDEF.Add({macros: {verb: 'Verb'}},null,true);
 
   TEX.Parse.Augment({
 

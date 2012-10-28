@@ -23,7 +23,7 @@
  */
 
 MathJax.Extension["TeX/begingroup"] = {
-  version: "2.0"
+  version: "2.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -100,7 +100,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     Init: function (eqn) {
       this.isEqn = eqn; this.stack = [];
-      if (!eqn) {this.Push(NSFRAME(TEXDEF.macros,TEXDEF.environments))}
+      if (!eqn) {this.Push(NSFRAME(TEXDEF.macros,TEXDEF.environment))}
            else {this.Push(NSFRAME())}
     },
     //
@@ -186,10 +186,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   //
   //  Define the new macros
   //
-  TEXDEF.macros.begingroup = "BeginGroup";
-  TEXDEF.macros.endgroup   = "EndGroup";
-  TEXDEF.macros.global     = ["Extension","newcommand"];
-  TEXDEF.macros.gdef       = ["Extension","newcommand"];
+  TEXDEF.Add({
+    macros: {
+      begingroup: "BeginGroup",
+      endgroup:   "EndGroup",
+      global:     ["Extension","newcommand"],
+      gdef:       ["Extension","newcommand"]
+    }
+  },null,true);
   
   TEX.Parse.Augment({
     //
@@ -257,8 +261,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     //  Add the commands that depend on the newcommand code
     //
-    TEXDEF.macros.global           = "Global";
-    TEXDEF.macros.gdef             = ["Macro","\\global\\def"];
+    TEXDEF.Add({
+      macros: {
+        global: "Global",
+        gdef:   ["Macro","\\global\\def"]
+      }
+    },null,true);
 
     TEX.Parse.Augment({
       //

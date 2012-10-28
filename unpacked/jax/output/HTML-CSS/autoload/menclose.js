@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.0";
+  var VERSION = "2.1";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -279,14 +279,19 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
   
   MathJax.Hub.Browser.Select({
     MSIE: function (browser) {
-      MML.menclose.Augment({HTMLpx: function (n,d) {return (n*HTMLCSS.em+(d||0))+"px"}});
-      HTMLCSS.useVML = true;
-      if (!document.namespaces[vmlns]) {
-        if (document.documentMode && document.documentMode >= 8) {
-          document.namespaces.add(vmlns,VMLNS,"#default#VML");
-        } else {
-          document.namespaces.add(vmlns,VMLNS);
-          document.createStyleSheet().addRule(vmlns+"\\: *","{behavior: url(#default#VML)}");
+      //
+      //  IE8 and below doesn't have SVG, so use VML
+      //
+      if ((document.documentMode||0) < 9) {
+        MML.menclose.Augment({HTMLpx: function (n,d) {return (n*HTMLCSS.em+(d||0))+"px"}});
+        HTMLCSS.useVML = true;
+        if (!document.namespaces[vmlns]) {
+          if (document.documentMode && document.documentMode === 8) {
+            document.namespaces.add(vmlns,VMLNS,"#default#VML");
+          } else {
+            document.namespaces.add(vmlns,VMLNS);
+            document.createStyleSheet().addRule(vmlns+"\\: *","{behavior: url(#default#VML)}");
+          }
         }
       }
     }

@@ -23,7 +23,7 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
-  var VERSION = "2.0";
+  var VERSION = "2.1";
   
   var CONFIG = HUB.CombineConfig("MathZoom",{
     styles: {
@@ -147,7 +147,7 @@
         ]]
       );
       var zoom = div.lastChild, span = zoom.firstChild, overlay = div.firstChild;
-      math.parentNode.insertBefore(div,math);
+      math.parentNode.insertBefore(div,math); math.parentNode.insertBefore(math,div); // put div after math
       if (span.addEventListener) {span.addEventListener("mousedown",this.Remove,true)}
       
       if (this.msieTrapEventBug) {
@@ -215,7 +215,7 @@
     //
     Position: function (zoom,bbox) {
       var XY = this.Resize(), x = XY.x, y = XY.y, W = bbox.mW;
-      var dx = -Math.floor((zoom.offsetWidth-W)/2), dy = bbox.Y;
+      var dx = -W-Math.floor((zoom.offsetWidth-W)/2), dy = bbox.Y;
       zoom.style.left = Math.max(dx,10-x)+"px"; zoom.style.top = Math.max(dy,10-y)+"px";
       if (!ZOOM.msiePositionBug) {ZOOM.SetWH()} // refigure overlay width/height
     },
@@ -250,8 +250,8 @@
     Remove: function (event) {
       var div = document.getElementById("MathJax_ZoomFrame");
       if (div) {
-        var JAX = MathJax.OutputJax[div.nextSibling.jaxID];
-        var jax = JAX.getJaxFromMath(div.nextSibling);
+        var JAX = MathJax.OutputJax[div.previousSibling.jaxID];
+        var jax = JAX.getJaxFromMath(div.previousSibling);
         HUB.signal.Post(["math unzoomed",jax]);
         div.parentNode.removeChild(div);
         div = document.getElementById("MathJax_ZoomTracker");

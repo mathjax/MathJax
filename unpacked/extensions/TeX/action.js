@@ -32,7 +32,7 @@
  */
 
 MathJax.Extension["TeX/action"] = {
-  version: "2.0"
+  version: "2.1"
 };
   
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -42,9 +42,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   //
   //  Set up control sequenecs
   //
-  TEX.Definitions.macros.toggle  = 'Toggle';
-  TEX.Definitions.macros.mathtip = 'Mathtip';
-  TEX.Definitions.macros.texttip = ['Macro','\\mathtip{#1}{\\text{#2}}',2];
+  TEX.Definitions.Add({
+    macros: {
+      toggle:  'Toggle',
+      mathtip: 'Mathtip',
+      texttip: ['Macro','\\mathtip{#1}{\\text{#2}}',2]
+    }
+  },null,true);
 
   TEX.Parse.Augment({
 

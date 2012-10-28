@@ -23,7 +23,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT,INPUT) {
-  var VERSION = "2.0";
+  var VERSION = "2.1";
   
   var EXTENSION = MathJax.Extension;
   var ME = EXTENSION.MathEvents = {version: VERSION};
@@ -428,8 +428,8 @@
     //
     start: function (event) {
       var now = new Date().getTime();
-      var dblTap = (now - TOUCH.last < TOUCH.delay);
-      TOUCH.last = now;
+      var dblTap = (now - TOUCH.last < TOUCH.delay && TOUCH.up);
+      TOUCH.last = now; TOUCH.up = false;
       if (dblTap) {
         TOUCH.timeout = setTimeout(TOUCH.menu,TOUCH.delay,event,this);
         event.preventDefault();
@@ -444,9 +444,11 @@
     //  Prevent the default action and issue a double click.
     //
     end: function (event) {
+      var now = new Date().getTime();
+      TOUCH.up = (now - TOUCH.last < TOUCH.delay);
       if (TOUCH.timeout) {
         clearTimeout(TOUCH.timeout);
-        delete TOUCH.timeout; TOUCH.last = 0;
+        delete TOUCH.timeout; TOUCH.last = 0; TOUCH.up = false;
         event.preventDefault();
         return EVENT.Handler((event.touches[0]||event.touch),"DblClick",this);
       }
@@ -457,7 +459,7 @@
     //  the contextual menu event.
     //
     menu: function (event,math) {
-      delete TOUCH.timeout; TOUCH.last = 0;
+      delete TOUCH.timeout; TOUCH.last = 0; TOUCH.up = false;
       return EVENT.Handler((event.touches[0]||event.touch),"ContextMenu",math);
     }
     
