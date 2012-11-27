@@ -29,7 +29,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "2.1";
+MathJax.version = "2.1.1";
 MathJax.fileversion = "2.1";
 
 /**********************************************************/
@@ -1700,6 +1700,7 @@ MathJax.Hub = {
     element = [].concat(element); // make a copy so the original isn't changed
     for (var i = 0, m = element.length; i < m; i++)
       {if (typeof(element[i]) === 'string') {element[i] = document.getElementById(element[i])}}
+    if (!document.body) {document.body = document.getElementsByTagName("body")[0]}
     if (element.length == 0) {element.push(document.body)}
     if (!callback) {callback = {}}
     return {elements: element, callback: callback};
@@ -1707,6 +1708,7 @@ MathJax.Hub = {
   
   elementScripts: function (element) {
     if (typeof(element) === 'string') {element = document.getElementById(element)}
+    if (!document.body) {document.body = document.getElementsByTagName("body")[0]}
     if (element == null) {element = document.body}
     if (element.tagName != null && element.tagName.toLowerCase() === "script") {return [element]}
     return element.getElementsByTagName("script");
