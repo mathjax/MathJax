@@ -30,7 +30,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.1";
-MathJax.fileversion = "2.1";
+MathJax.fileversion = "2.1.1";
 
 /**********************************************************/
 
@@ -650,8 +650,10 @@ MathJax.fileversion = "2.1";
     //
     Require: function (file,callback) {
       callback = BASE.Callback(callback); var type;
-      if (file instanceof Object) {for (var i in file) {}; type = i.toUpperCase(); file = file[i]}
-        else {type = file.split(/\./).pop().toUpperCase()}
+      if (file instanceof Object) {
+        for (var i in file)
+          {if (file.hasOwnProperty(i)) {type = i.toUpperCase(); file = file[i]}}
+      } else {type = file.split(/\./).pop().toUpperCase()}
       file = this.fileURL(file);
       // FIXME: check that URL is OK
       if (this.loaded[file]) {
@@ -669,8 +671,10 @@ MathJax.fileversion = "2.1";
     //
     Load: function (file,callback) {
       callback = BASE.Callback(callback); var type;
-      if (file instanceof Object) {for (var i in file) {}; type = i.toUpperCase(); file = file[i]}
-        else {type = file.split(/\./).pop().toUpperCase()}
+      if (file instanceof Object) {
+        for (var i in file)
+          {if (file.hasOwnProperty(i)) {type = i.toUpperCase(); file = file[i]}}
+      } else {type = file.split(/\./).pop().toUpperCase()}
       file = this.fileURL(file);
       if (this.loading[file]) {
         this.addHook(file,callback);
@@ -688,7 +692,8 @@ MathJax.fileversion = "2.1";
     //
     LoadHook: function (file,callback,priority) {
       callback = BASE.Callback(callback);
-      if (file instanceof Object) {for (var i in file) {file = file[i]}}
+      if (file instanceof Object)
+        {for (var i in file) {if (file.hasOwnProperty(i)) {file = file[i]}}}
       file = this.fileURL(file);
       if (this.loaded[file]) {callback(this.loaded[file])}
         else {this.addHook(file,callback,priority)}
@@ -1097,7 +1102,7 @@ MathJax.Message = {
     if (!this.div) {
       var frame = document.body;
       if (MathJax.Hub.Browser.isMSIE) {
-	  frame = this.frame = this.addDiv(document.body); frame.removeAttribute("id");
+        frame = this.frame = this.addDiv(document.body); frame.removeAttribute("id");
         frame.style.position = "absolute";
         frame.style.border = frame.style.margin = frame.style.padding = "0px";
         frame.style.zIndex = "101"; frame.style.height = "0px";
@@ -1167,7 +1172,7 @@ MathJax.Message = {
       }
     }
     if (clearDelay) {setTimeout(MathJax.Callback(["Clear",this,n]),clearDelay)}
-    else if (clearDelay == 0) {this.Clear(n,0)}
+      else if (clearDelay == 0) {this.Clear(n,0)}
     return n;
   },
   
