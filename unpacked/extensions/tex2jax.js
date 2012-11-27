@@ -271,9 +271,8 @@ MathJax.Extension.tex2jax = {
   },
   
   createPreview: function (mode,tex) {
-    var preview;
-    if (this.config.preview === "TeX") {preview = [this.filterPreview(tex)]}
-    else if (this.config.preview instanceof Array) {preview = this.config.preview}
+    var preview = this.config.preview;
+    if (preview === "TeX") {preview = [this.filterPreview(tex)]}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
       this.insertNode(preview);

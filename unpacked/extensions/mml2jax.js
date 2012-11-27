@@ -172,15 +172,15 @@ MathJax.Extension.mml2jax = {
   },
   quoteHTML: function (string) {
     if (string == null) {string = ""}
-    return string.replace(/&/g,"&#x26;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    return string.replace(/&/g,"&#x26;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
   },
   
   createPreview: function (math,script) {
-    var preview;
-    if (this.config.preview === "alttext") {
+    var preview = this.config.preview;
+    if (preview === "alttext") {
       var text = math.getAttribute("alttext");
       if (text != null) {preview = [this.filterPreview(text)]}
-    } else if (this.config.preview instanceof Array) {preview = this.config.preview}
+    }
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
       script.parentNode.insertBefore(preview,script);
