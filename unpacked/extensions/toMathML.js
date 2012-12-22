@@ -122,10 +122,14 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
           // Code points U+10000 to U+10FFFF.
           // n is the lead surrogate, let's read the trail surrogate.
           var trailSurrogate = string[i+1].charCodeAt(0);
-          var codePoint = (((n-0xD800)*0x400)+(trailSurrogate-0xDC00)+0x10000);
+          var codePoint = (((n-0xD800)<<10)+(trailSurrogate-0xDC00)+0x10000);
           string[i] = "&#x"+codePoint.toString(16).toUpperCase()+";";
           string[i+1] = "";
           i++;
+        } else {
+          // n is a lead surrogate without corresponding trail surrogate:
+          // remove that character.
+          string[i] = "";
         }
       }
       return string.join("");
