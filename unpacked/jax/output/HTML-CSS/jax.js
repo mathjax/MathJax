@@ -2531,7 +2531,14 @@
 	if (sup) {sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw)}
 	if (sub) {sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw)}
 	HTMLCSS.placeBox(base,0,0);
-	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
+        var sscale;
+        if (sup) {
+          sscale = this.data[this.sup].HTMLgetScale();
+        } else if (sub) {
+          sscale = this.data[this.sub].HTMLgetScale();
+        } else {
+          sscale = this.HTMLgetScale();
+        }
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
 	if (base.bbox.ic) {
