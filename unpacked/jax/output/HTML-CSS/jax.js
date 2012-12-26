@@ -1130,7 +1130,7 @@
       if (H > h) {
         ext = this.Element("span"); this.createChar(ext,delim.ext,scale,font);
         var eH = ext.bbox.h + ext.bbox.d, eh = eH - .05, n, N, k = (delim.mid ? 2 : 1);
-        N = n = Math.ceil((H-h)/(k*eh));
+        N = n = Math.min(Math.ceil((H-h)/(k*eh)), 1000);
         if (!delim.fullExtenders) {eh = (H-h)/(k*n)}
         var dy = (n/(n+1))*(eH - eh); eh = eH - dy; y += dy + eh - ext.bbox.h;
         while (k-- > 0) {
@@ -1180,7 +1180,7 @@
       if (delim.min && W < w*delim.min) {W = w*delim.min}
       if (W > w) {
         var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
-        N = n = Math.ceil((W-w)/(k*rw));
+        N = n = Math.min(Math.ceil((W-w)/(k*rw)), 1000);
         if (!delim.fillExtenders) {rw = (W-w)/(k*n)}
         dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
