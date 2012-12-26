@@ -46,7 +46,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var sub = BOX[0], sup = BOX[1], presub = BOX[2], presup = BOX[3];
 
       var sscale;
-      if (this.data[1] && this.data[1].type !== "mprescripts") {
+      if (this.data[1] && this.data[1].type != "mprescripts" &&
+          this.data[1].type != "none") {
         sscale = this.data[1].HTMLgetScale();
       } else {
         sscale = this.HTMLgetScale();
