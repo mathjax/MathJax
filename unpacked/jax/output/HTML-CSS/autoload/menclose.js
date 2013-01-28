@@ -39,8 +39,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (values.thickness == null) {values.thickness = ".075em"}
       if (values.padding == null)   {values.padding   = ".2em"}
       span = this.HTMLcreateSpan(span);
-      var mu = this.HTMLgetMu(span);
-      var scale = this.HTMLgetScale();
+      var mu = this.HTMLgetMu(span), scale = this.HTMLgetScale();
       var p = HTMLCSS.length2em(values.padding,mu,1/HTMLCSS.em) * scale;
       var t = HTMLCSS.length2em(values.thickness,mu,1/HTMLCSS.em) * scale;
       var SOLID = HTMLCSS.Em(t)+" solid";
