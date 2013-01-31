@@ -1193,7 +1193,7 @@ ASCIIMATH.Augment({
   AM: {
     Init: function () {
       displaystyle = ASCIIMATH.config.displaystyle;
-      decimal      = ASCIIMATH.config.decimal;
+      decimalsign  = ASCIIMATH.config.decimal;
       INITASCIIMATH();
       AMinitSymbols();
     },
