@@ -33,7 +33,7 @@ MathJax.InputJax.AsciiMath = MathJax.InputJax({
   
   config: {
     displaystyle: true,               // put limits above and below operators
-    decimal: "."                      // can change to "," but watch out for "(1,2)"
+    decimalsign: "."                  // can change to "," but watch out for "(1,2)"
   }
 });
 MathJax.InputJax.AsciiMath.Register("math/asciimath");
