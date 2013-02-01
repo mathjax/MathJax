@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/extensions/TeX/AMSmath.js
@@ -252,7 +254,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var den = this.ParseArg(name);
       var frac = MML.mfrac(num,den);
       if (thick !== "") {frac.linethickness = thick}
-      if (left || right) {frac = MML.mfenced(frac).With({open: left, close: right})}
+      if (left || right) {
+        var mrow = MML.mrow();
+        if (left) {mrow.Append(MML.mo(left))}
+        mrow.Append(frac);
+        if (right) {mrow.Append(MML.mo(right))}
+        frac = mrow;
+      }
       if (style !== "") {
         var STYLE = (["D","T","S","SS"])[style];
         if (STYLE == null) {TEX.Error("Bad math style for "+name)}

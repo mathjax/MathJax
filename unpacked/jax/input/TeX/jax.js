@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/input/TeX/jax.js
@@ -175,7 +177,11 @@
         if (this.open || this.close) {
           mml.texClass = MML.TEXCLASS.INNER;
           mml.texWithDelims = true;
-          mml = MML.mfenced(mml).With({open: this.open, close: this.close});
+          var mrow = MML.mrow();
+          if (this.open) {mrow.Append(MML.mo(this.open))}
+          mrow.Append(mml);
+          if (this.close) {mrow.Append(MML.mo(this.close))}
+          mml = mrow;
         }
         return [STACKITEM.mml(mml), item];
       }
@@ -189,8 +195,11 @@
     stopError: "Extra \\left or missing \\right",
     checkItem: function (item) {
       if (item.type === "right") {
-        var mml = MML.mfenced(this.data.length === 1 ? this.data[0] : MML.mrow.apply(MML,this.data));
-        return STACKITEM.mml(mml.With({open: this.delim, close: item.delim}));
+        var mml = MML.mrow();
+        if (this.delim) {mml.Append(MML.mo(this.delim))}
+        mml.Append(this.data.length === 1 ? this.data[0] : this.data);
+        if (item.delim) {mml.Append(MML.mo(item.delim))}
+        return STACKITEM.mml(mml);
       }
       return this.SUPER(arguments).checkItem.call(this,item);
     }
@@ -267,7 +276,11 @@
               (this.arraydef.rowlines||"none") != "none") {mml.padding = 0} // HTML-CSS jax implements this
         }
         if (this.open || this.close) {
-          mml = MML.mfenced(mml).With({open: this.open, close: this.close});
+          var mrow = MML.mrow();
+          if (this.open) {mrow.Append(MML.mo(this.open))}
+          mrow.Append(mml);
+          if (this.close) {mrow.Append(MML.mo(this.close))}
+          mml = mrow;
         }
         mml = STACKITEM.mml(mml);
         if (this.requireClose) {
