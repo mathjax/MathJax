@@ -256,9 +256,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (thick !== "") {frac.linethickness = thick}
       if (left || right) {
         var mrow = MML.mrow();
-        if (left) {mrow.Append(MML.mo(left))}
+        mrow.open = left; mrow.close = right;
+        if (left) {
+          mrow.Append(MML.mo(left).With({fence: "true"}));
+        }
         mrow.Append(frac);
-        if (right) {mrow.Append(MML.mo(right))}
+        if (right) {
+          mrow.Append(MML.mo(right).With({fence: "true"}));
+        }
         frac = mrow;
       }
       if (style !== "") {

@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/NativeMML/jax.js
@@ -467,7 +469,28 @@
 	    if (this.data[i]) {this.data[i].toNativeMML(parent)}
 	      else {parent.appendChild(this.NativeMMLelement("mrow"))}
 	  }
-	} else {
+	} else if (nMML.stretchyMoBug && (this.open || this.close)) {
+          // This element contains opening and/or closing fences. Opera is not
+          // able to stretch <mo> operators, so let's use an <mfenced> element
+          // instead.
+          var mfenced = this.NativeMMLelement("mfenced");
+          this.NativeMMLattributes(mfenced);
+          var i = 0, m = this.data.length;
+          if (this.open) { mfenced.setAttribute("open", this.open); i++; }
+          if (this.close) { mfenced.setAttribute("close", this.close); m--; }
+          var tag = mfenced;
+          if (m - i + 1 > 1) {
+            // If there are several children, put them in an <mrow>
+            tag = this.NativeMMLelement("mrow");
+	    parent.appendChild(mfenced);
+            parent = mfenced;
+          }
+          for (; i < m; i++) {
+	    if (this.data[i]) {this.data[i].toNativeMML(tag)}
+	    else {tag.appendChild(this.NativeMMLelement("mrow"))}
+	  }
+	  parent.appendChild(tag);
+        } else {
 	  this.SUPER(arguments).toNativeMML.call(this,parent);
 	}
       }
@@ -619,6 +642,95 @@
       }
     });
 
+    MML.mfenced.Augment({
+      toNativeMML: function (parent) {
+        if (!nMML.mfencedBug) {
+	  this.SUPER(arguments).toNativeMML.call(this,parent);
+          return;
+        }
+
+        // Some browsers do not handle <mfenced> very well. The MathML spec
+        // suggests this equivalent construction instead, so let's use it:
+        // <mrow> open, child1, sep1, child2, ... sep(N-1), childN, close</mrow>
+        // Opera is a bit special: it does not support stretchy <mo>, does not
+        // parse mfenced@open/mfenced@close very well, does not support
+        // mfenced@separators and only displays the first child of the <mfenced>
+        // element... For this browser, we will use this construction:
+        // <mfenced open="open" close="close">
+        //   <mrow>child1, sep1, child2, sep2, ..., sep(N-1), childN</mrow>
+        // </mfenced>
+        var isOpera = HUB.Browser.isOpera;
+
+        // parse the open, close and separators attributes.
+        var values = this.getValues("open","close","separators");
+        values.open = values.open.trim();
+        values.close = values.close.trim();
+        values.separators = values.separators.replace(/\s+/g,"").split("");
+        if (values.separators.length == 0) {
+          // No separators specified, do not use separators at all.
+          values.separators = null;
+        } else if (values.separators.length < this.data.length-1) {
+          // There are not enough separators, repeat the last one.
+          for (var s = values.separators[values.separators.length-1],
+               i = this.data.length-1-values.separators.length; i > 0; i--) {
+            values.separators.push(s)
+          }
+        }
+
+        // create an <mrow> container and attach the attributes of the
+        // <mfenced> element to it. Note: removeAttribute does not raise any
+        // exception when the attributes is absent.
+        var tag = this.NativeMMLelement(isOpera ? this.type : "mrow");
+        this.NativeMMLattributes(tag);
+        tag.removeAttribute("separators");
+        if (isOpera) {
+          tag.setAttribute("open", values.open);
+          tag.setAttribute("close", values.close);
+          if (this.data.length > 1) {
+            parent.appendChild(tag);
+            parent = tag;
+            tag = this.NativeMMLelement("mrow");
+          }
+        } else {
+          tag.removeAttribute("open");
+          tag.removeAttribute("close");
+        }
+
+        if (!isOpera) {
+          // append the opening fence
+          var operator = this.NativeMMLelement("mo");
+          operator.setAttribute("fence", "true");
+          operator.textContent = values.open;
+          tag.appendChild(operator);
+        }
+
+        // append the content of the <mfenced>
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          if (values.separators && i > 0) {
+            var operator = this.NativeMMLelement("mo");
+            operator.setAttribute("separator", "true");
+            operator.textContent = values.separators[i-1];
+            tag.appendChild(operator);
+          }
+	  if (this.data[i]) {
+            this.data[i].toNativeMML(tag);
+          }
+	  else {tag.appendChild(this.NativeMMLelement("mrow"))}
+        }
+
+        if (!isOpera) {
+          // append the closing fence
+          var operator = this.NativeMMLelement("mo");
+          operator.setAttribute("fence", "true");
+          operator.textContent = values.close;
+          tag.appendChild(operator);
+        }
+
+        // finally, append the new element to the parent.
+        parent.appendChild(tag);
+      }
+    });
+
     MML.TeXAtom.Augment({
       //
       //  Convert TeXatom to an mrow
@@ -689,10 +801,19 @@
     },
     Opera: function (browser) {
       nMML.operaPositionBug = true;
+      nMML.stretchyMoBug = true;
+      nMML.mfencedBug = true;
     },
     Firefox: function (browser) {
       nMML.forceReflow = true;
       nMML.widthBug = true;
+      nMML.mfencedBug = true;
+    },
+    Safari: function (browser) {
+      nMML.mfencedBug = true;
+    },
+    Chrome: function (browser) {
+      nMML.mfencedBug = true;
     }
   });
   

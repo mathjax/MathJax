@@ -178,9 +178,14 @@
           mml.texClass = MML.TEXCLASS.INNER;
           mml.texWithDelims = true;
           var mrow = MML.mrow();
-          if (this.open) {mrow.Append(MML.mo(this.open))}
+          mrow.open = this.open; mrow.close = this.close;
+          if (this.open) {
+            mrow.Append(MML.mo(this.open).With({fence: "true"}));
+          }
           mrow.Append(mml);
-          if (this.close) {mrow.Append(MML.mo(this.close))}
+          if (this.close) {
+            mrow.Append(MML.mo(this.close).With({fence: "true"}));
+          }
           mml = mrow;
         }
         return [STACKITEM.mml(mml), item];
@@ -196,9 +201,16 @@
     checkItem: function (item) {
       if (item.type === "right") {
         var mml = MML.mrow();
-        if (this.delim) {mml.Append(MML.mo(this.delim))}
-        mml.Append(this.data.length === 1 ? this.data[0] : this.data);
-        if (item.delim) {mml.Append(MML.mo(item.delim))}
+        mml.open = this.delim; mml.close = item.delim;
+        if (this.delim) {
+          mml.Append(MML.mo(this.delim).With({fence: "true"}));
+        }
+        for (var i in this.data) {
+          mml.Append(this.data[i]);
+        }
+        if (item.delim) {
+          mml.Append(MML.mo(item.delim).With({fence: "true"}));
+        }
         return STACKITEM.mml(mml);
       }
       return this.SUPER(arguments).checkItem.call(this,item);
@@ -277,9 +289,14 @@
         }
         if (this.open || this.close) {
           var mrow = MML.mrow();
-          if (this.open) {mrow.Append(MML.mo(this.open))}
+          mrow.open = this.open; mrow.close = this.close;
+          if (this.open) {
+            mrow.Append(MML.mo(this.open).With({fence: "true"}))
+          }
           mrow.Append(mml);
-          if (this.close) {mrow.Append(MML.mo(this.close))}
+          if (this.close) {
+            mrow.Append(MML.mo(this.close).With({fence: "true"}))
+          }
           mml = mrow;
         }
         mml = STACKITEM.mml(mml);
