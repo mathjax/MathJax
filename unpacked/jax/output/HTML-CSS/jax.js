@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/jax.js
@@ -295,6 +297,9 @@
     Font: null,                        // created by Config() below
     webFontDefault: "MathJax_Blank",
     allowWebFonts: "otf",              // assume browser can use OTF web fonts
+
+    maxStretchyParts: 1000,            // limit the number of parts allowed for
+                                       // stretchy operators. See issue 366.
 
     Config: function () {
       if (!this.require) {this.require = []}
@@ -1130,7 +1135,7 @@
       if (H > h) {
         ext = this.Element("span"); this.createChar(ext,delim.ext,scale,font);
         var eH = ext.bbox.h + ext.bbox.d, eh = eH - .05, n, N, k = (delim.mid ? 2 : 1);
-        N = n = Math.min(Math.ceil((H-h)/(k*eh)), 1000);
+        N = n = Math.min(Math.ceil((H-h)/(k*eh)), this.maxStretchyParts);
         if (!delim.fullExtenders) {eh = (H-h)/(k*n)}
         var dy = (n/(n+1))*(eH - eh); eh = eH - dy; y += dy + eh - ext.bbox.h;
         while (k-- > 0) {
@@ -1180,7 +1185,7 @@
       if (delim.min && W < w*delim.min) {W = w*delim.min}
       if (W > w) {
         var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
-        N = n = Math.min(Math.ceil((W-w)/(k*rw)), 1000);
+        N = n = Math.min(Math.ceil((W-w)/(k*rw)), this.maxStretchyParts);
         if (!delim.fillExtenders) {rw = (W-w)/(k*n)}
         dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
