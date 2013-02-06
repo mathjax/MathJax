@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/NativeMML/jax.js
@@ -39,6 +41,36 @@
     }
   };
   
+  var CELLSPACING = function (obj,rowSpacing,columnSpacing) {
+    // Firefox default padding on mtd cells is
+    //
+    // mtd {padding-right: 0.4em;
+    //      padding-left: 0.4em;
+    //      padding-bottom: 0.5ex;
+    //      padding-top: 0.5ex;}
+    // mtr:first-child > mtd {padding-top: 0ex;}
+    // mtr:last-child > mtd {padding-bottom: 0ex;}
+    // mtd:first-child {padding-left: 0em;}
+    // mtd:last-child {padding-right: 0em;}
+    //
+    // that is the columnspacing/rowspacing is split into two adjacent cells,
+    // and the periphery of boundary cells is set to zero. Instead, we set the
+    // left/top padding of each cell to rowSpacing/columnSpacing (or 0px for the
+    // leftmost/topmost cells) and reset the right/bottom padding to zero.
+    if (obj) {
+      var span = HTML.Element("span");
+      span.style.cssText = (obj.getAttribute("style")||"");
+      if (span.style.padding === "") {
+        var padding = { paddingLeft: columnSpacing, paddingTop: rowSpacing,
+                        paddingRight: "0px", paddingBottom: "0px" };
+        for (var side in padding) {
+          if ((span.style[side]||"") === "") {span.style[side] = padding[side];}
+        }
+      }
+      obj.setAttribute("style",span.style.cssText);
+    }
+  };
+ 
   nMML.Augment({
     //
     //  User can configure styles
@@ -522,6 +554,24 @@
     if (HUB.Browser.isFirefox) {
       MML.mtable.Augment({
         toNativeMML: function (parent) {
+          if (nMML.TableSpacingBug) {
+            // Parse the rowspacing/columnspacing. For convenience, we convert
+            // them to a left/top padding value that will be applied to each
+            // cell. The leftmost/topmost cells will use "0px".
+            var values = this.getValues("rowspacing", "columnspacing");
+            this.topPadding = ("0px " + values.rowspacing);
+            this.topPadding = this.topPadding.trim().split(/\s+/);
+            this.leftPadding = ("0px " + values.columnspacing);
+            this.leftPadding = this.leftPadding.trim().split(/\s+/);
+            // transmit the top padding to each row. If this.parent.topPadding
+            // does not contain enough value, repeat the last one.
+            for (var i = 0, m = this.data.length, tp = this.topPadding;
+                 i < m; i++) {
+              if (this.data[i]) {
+                this.data[i].topPadding = tp[i < tp.length ? i : tp.length-1];
+              }
+            }
+          }
           //
           //  Look for labeled rows so we know how to handle them
           //
@@ -570,7 +620,20 @@
       MML.mtr.Augment({
         toNativeMML: function (parent) {
           this.SUPER(arguments).toNativeMML.call(this,parent);
-          var mtr = parent.lastChild, forceWidth = this.parent.forceWidth,
+          var mtr = parent.lastChild;
+
+          if (nMML.TableSpacingBug) {
+            // set the row/column spacing. If this.parent.leftPadding does not
+            // contain enough value, repeat the last one.
+            for (var i = 0, m = mtr.children.length,
+                 lp = this.parent.leftPadding; i < m; i++) {
+              CELLSPACING(mtr.children[i],
+                          this.topPadding,
+                          lp[i < lp.length ? i : lp.length-1]);
+            }
+          }
+
+          var forceWidth = this.parent.forceWidth,
               side = this.parent.Get("side").charAt(0),
               align = HUB.config.displayAlign.charAt(0);
           //
@@ -613,6 +676,18 @@
             if (this.data[i]) {this.data[i].toNativeMML(mtr)}
               else {mtr.appendChild(this.NativeMMLelement("mtd"))}
           }
+
+          if (nMML.TableSpacingBug) {
+            // set the row/column spacing. If this.parent.leftPadding does not
+            // contain enough value, repeat the last one.
+            for (var i = 0, m = mtr.children.length,
+                 lp = this.parent.leftPadding; i < m; i++) {
+              CELLSPACING(mtr.children[i],
+                          this.topPadding,
+                          lp[i < lp.length ? i : lp.length-1]);
+            }
+          }
+
           //
           //  Create label and either set the column width (if label is on the
           //    same side as the alignment), or use mpadded to hide the label width
@@ -875,6 +950,8 @@
       nMML.ffTableWidthBug = !browser.versionAtLeast("13.0"); // <mtable width="xx"> not implemented
       nMML.forceReflow = true;   // <mtable> with alignments set don't display properly without a reflow
       nMML.widthBug = true;      // <math> elements don't always get the correct width
+      nMML.TableSpacingBug = true; // mtable@rowspacing/mtable@columnspacing not
+                                   // supported.
     }
   });
   
