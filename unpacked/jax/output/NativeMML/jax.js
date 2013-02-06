@@ -551,7 +551,7 @@
       }
     });
 
-    if (HUB.Browser.isFirefox) {
+    if (!isMSIE) {
       MML.mtable.Augment({
         toNativeMML: function (parent) {
           if (nMML.TableSpacingBug) {
@@ -572,16 +572,20 @@
               }
             }
           }
-          //
-          //  Look for labeled rows so we know how to handle them
-          //
-          for (var i = 0, m = this.data.length; i < m; i++) {
-            if (this.data[i] && this.data[i].isa(MML.mlabeledtr)) {
-              var align = HUB.config.displayAlign.charAt(0),
-                  side = this.Get("side").charAt(0);
-              this.hasLabels = true; i = m;
-              this.laMatch = (align === side);
-              this.forceWidth = (align === "c" || !!(this.width||"").match("%"));
+          if (nMML.TableLabelBug) {
+            //
+            //  Look for labeled rows so we know how to handle them
+            //
+            for (var i = 0, m = this.data.length; i < m; i++) {
+              if (this.data[i] && this.data[i].isa(MML.mlabeledtr)) {
+                var align = HUB.config.displayAlign.charAt(0),
+                side = this.Get("side").charAt(0);
+                this.hasLabels = true;
+                this.laMatch = (align === side);
+                this.forceWidth = (align === "c" || !!(this.width||"").
+                                   match("%"));
+                break;
+              }
             }
           }
           //
@@ -611,7 +615,7 @@
               }
             }
             //
-            //  Force the table with to 100% when needed
+            //  Force the table width to 100% when needed
             //
             if (this.forceWidth || !this.laMatch) {mtable.setAttribute("width","100%")}
           }
@@ -621,52 +625,50 @@
         toNativeMML: function (parent) {
           this.SUPER(arguments).toNativeMML.call(this,parent);
           var mtr = parent.lastChild;
-
           if (nMML.TableSpacingBug) {
             // set the row/column spacing. If this.parent.leftPadding does not
             // contain enough value, repeat the last one.
-            for (var i = 0, m = mtr.children.length,
+            for (var i = 0, m = mtr.childNodes.length,
                  lp = this.parent.leftPadding; i < m; i++) {
-              CELLSPACING(mtr.children[i],
+              CELLSPACING(mtr.childNodes[i],
                           this.topPadding,
                           lp[i < lp.length ? i : lp.length-1]);
             }
           }
 
-          var forceWidth = this.parent.forceWidth,
-              side = this.parent.Get("side").charAt(0),
-              align = HUB.config.displayAlign.charAt(0);
-          //
-          if (this.parent.hasLabels && mtr.firstChild) {
-            //
-            //  If we add a label or padding column on the left of mlabeledtr,
-            //    mirror that here and remove padding from first table mtd
-            //    so the spacing is consistent with unlabeled equations
-            //
-            if (forceWidth || side !== "r") {
-              NOPADDING("Left",mtr.firstChild);
-              if (align !== "l") {
-                mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
-                   .setAttribute("style","padding:0");
+          if (nMML.TableLabelBug) {
+            var forceWidth = this.parent.forceWidth,
+            side = this.parent.Get("side").charAt(0),
+            align = HUB.config.displayAlign.charAt(0);
+
+            if (this.parent.hasLabels && mtr.firstChild) {
+              //
+              //  If we add a label or padding column on the left of mlabeledtr,
+              //    mirror that here and remove padding from first table mtd
+              //    so the spacing is consistent with unlabeled equations
+              //
+              if (forceWidth || side !== "r") {
+                NOPADDING("Left",mtr.firstChild);
+                if (align !== "l") {
+                  mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
+                    .setAttribute("style","padding:0");
+                }
+                if (side === "l") {
+                  mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
+                    .setAttribute("style","padding:0");
+                }
               }
-              if (side === "l") {
-                mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
-                   .setAttribute("style","padding:0");
-              }
+              //
+              //  If columns were added on the right, remove mtd padding
+              //    so that spacing is consistent with unlabled equations
+              //
+              if (forceWidth || side !== "l") {NOPADDING("Right",mtr.lastChild)}
             }
-            //
-            //  If columns were added on the right, remove mtd padding
-            //    so that spacing is consistent with unlabled equations
-            //
-            if (forceWidth || side !== "l") {NOPADDING("Right",mtr.lastChild)}
           }
         }
       });
       MML.mlabeledtr.Augment({
         toNativeMML: function (parent) {
-          var side = this.parent.Get("side").charAt(0),
-              align = HUB.config.displayAlign.charAt(0),
-              indent = HUB.config.displayIndent;
           var mtr = this.NativeMMLelement("mtr");
           this.NativeMMLattributes(mtr);
           //
@@ -680,61 +682,69 @@
           if (nMML.TableSpacingBug) {
             // set the row/column spacing. If this.parent.leftPadding does not
             // contain enough value, repeat the last one.
-            for (var i = 0, m = mtr.children.length,
+            for (var i = 0, m = mtr.childNodes.length,
                  lp = this.parent.leftPadding; i < m; i++) {
-              CELLSPACING(mtr.children[i],
+              CELLSPACING(mtr.childNodes[i],
                           this.topPadding,
                           lp[i < lp.length ? i : lp.length-1]);
             }
           }
 
-          //
-          //  Create label and either set the column width (if label is on the
-          //    same side as the alignment), or use mpadded to hide the label width
-          //
-          this.data[0].toNativeMML(mtr);
-          var label = mtr.lastChild, pad = label;
-          if (side === align) {
-            label.setAttribute("style","width:"+indent);
-            label.setAttribute("columnalign",HUB.config.displayAlign);
-          } else {
-            pad = this.NativeMMLelement("mpadded");
-            pad.setAttribute("style","width:0");
-            pad.setAttribute("width","0px");
-            pad.appendChild(label.firstChild);
-            label.appendChild(pad);
-          }
-          NOPADDING("",label); mtr.removeChild(label);
-          //
-          //  Get spacing to use for separation of label from main table
-          //
-          var width = 100, forceWidth = this.parent.forceWidth;
-          if ((this.parent.width||"").match(/%/)) {width -= parseFloat(this.parent.width)};
-          var w = width;
-          //
-          //  Add spacing (and possibly label) at the left if needed
-          //
-          if (forceWidth || side !== "r") {
-            NOPADDING("Left",mtr.firstChild);
-            if (align !== "l") {
-              if (align === "c") {w /= 2}; width -= w;
-              mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
-                 .setAttribute("style","padding:0;width:"+w+"%");
+          if (nMML.TableLabelBug) {
+            var side = this.parent.Get("side").charAt(0),
+            align = HUB.config.displayAlign.charAt(0),
+            indent = HUB.config.displayIndent;
+            //
+            // Create label and either set the column width (if label is on the
+            // same side as the alignment), or use mpadded to hide the label
+            // width
+            //
+            this.data[0].toNativeMML(mtr);
+            var label = mtr.lastChild, pad = label;
+            if (side === align) {
+              label.setAttribute("style","width:"+indent);
+              label.setAttribute("columnalign",HUB.config.displayAlign);
+            } else {
+              pad = this.NativeMMLelement("mpadded");
+              pad.setAttribute("style","width:0");
+              pad.setAttribute("width","0px");
+              pad.appendChild(label.firstChild);
+              label.appendChild(pad);
             }
-            if (side === "l") {mtr.insertBefore(label,mtr.firstChild)}
-          }
-          //
-          //  Add spacing (and possibly label) at the right if needed
-          //
-          if (forceWidth || side !== "l") {
-            NOPADDING("Right",mtr.lastChild);
-            if (align !== "r") {
-              mtr.appendChild(this.NativeMMLelement("mtd"))
-                 .setAttribute("style","padding:0;width:"+width+"%");
+            NOPADDING("",label); mtr.removeChild(label);
+            //
+            //  Get spacing to use for separation of label from main table
+            //
+            var width = 100, forceWidth = this.parent.forceWidth;
+            if ((this.parent.width||"").match(/%/)) {
+              width -= parseFloat(this.parent.width)
+            };
+            var w = width;
+            //
+            //  Add spacing (and possibly label) at the left if needed
+            //
+            if (forceWidth || side !== "r") {
+              NOPADDING("Left",mtr.firstChild);
+              if (align !== "l") {
+                if (align === "c") {w /= 2}; width -= w;
+                mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
+                  .setAttribute("style","padding:0;width:"+w+"%");
+              }
+              if (side === "l") {mtr.insertBefore(label,mtr.firstChild)}
             }
-            if (side === "r") {
-              if (side !== align) {pad.setAttribute("lspace","-1width")}
-              mtr.appendChild(label);
+            //
+            //  Add spacing (and possibly label) at the right if needed
+            //
+            if (forceWidth || side !== "l") {
+              NOPADDING("Right",mtr.lastChild);
+              if (align !== "r") {
+                mtr.appendChild(this.NativeMMLelement("mtd"))
+                  .setAttribute("style","padding:0;width:"+width+"%");
+              }
+              if (side === "r") {
+                if (side !== align) {pad.setAttribute("lspace","-1width")}
+                mtr.appendChild(label);
+              }
             }
           }
           //
@@ -747,8 +757,8 @@
       MML.mtd.Augment({
         toNativeMML: function (parent) {
           var tag = parent.appendChild(this.NativeMMLelement(this.type));
-          if (nMML.widthBug) {tag = tag.appendChild(this.NativeMMLelement("mrow"))}
           this.NativeMMLattributes(tag);
+          if (nMML.widthBug) {tag = tag.appendChild(this.NativeMMLelement("mrow"))}
           for (var i = 0, m = this.data.length; i < m; i++) {
             if (this.data[i]) {this.data[i].toNativeMML(tag)}
              else {tag.appendChild(this.NativeMMLelement("mrow"))}
@@ -759,7 +769,7 @@
       MML.mspace.Augment({
         toNativeMML: function (parent) {
           this.SUPER(arguments).toNativeMML.call(this,parent);
-          if (this.width) {
+          if (nMML.spaceWidthBug && this.width) {
             var mspace = parent.lastChild;
             var width = mspace.getAttribute("width");
             var style = mspace.getAttribute("style") || "";
@@ -950,8 +960,22 @@
       nMML.ffTableWidthBug = !browser.versionAtLeast("13.0"); // <mtable width="xx"> not implemented
       nMML.forceReflow = true;   // <mtable> with alignments set don't display properly without a reflow
       nMML.widthBug = true;      // <math> elements don't always get the correct width
+
+      // In Firefox < 20, the intrinsic width of <mspace> is not computed
+      // correctly and thus the element is displayed incorrectly in <mtable>.
+      nMML.spaceWidthBug = !browser.versionAtLeast("20.0");
+
       nMML.TableSpacingBug = true; // mtable@rowspacing/mtable@columnspacing not
                                    // supported.
+      nMML.TableLabelBug = true;   // mlabeledtr is not implemented.
+    },
+    Chrome: function (browser) {
+      nMML.TableSpacingBug = true;
+      nMML.TableLabelBug = true;
+    },
+    Safari: function (browser) {
+      nMML.TableSpacingBug = true;
+      nMML.TableLabelBug = true;
     }
   });
   
