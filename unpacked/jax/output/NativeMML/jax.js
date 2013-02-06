@@ -955,6 +955,7 @@
     },
     Opera: function (browser) {
       nMML.operaPositionBug = true;
+      nMML.TableLabelBug = true;
     },
     Firefox: function (browser) {
       nMML.ffTableWidthBug = !browser.versionAtLeast("13.0"); // <mtable width="xx"> not implemented
