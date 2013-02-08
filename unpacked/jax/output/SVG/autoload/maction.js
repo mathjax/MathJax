@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/SVG/autoload/maction.js
@@ -44,7 +46,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       this.SVGgetStyles();
       var svg = this.SVG();
       var selected = this.selected();
-      if (selected) {
+      if (selected.type !== "null") {
         svg.Add(this.SVGdataStretched(this.Get("selection")-1,HW,D));
         this.SVGhandleHitBox(svg);
       }

@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/autoload/maction.js
@@ -43,7 +45,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     toHTML: function (span,HW,D) {
       span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
       var selected = this.selected();
-      if (selected) {
+      if (selected.type !== "null") {
         var box = selected.toHTML(span);
         if (D != null) {HTMLCSS.Remeasured(selected.HTMLstretchV(span,HW,D),span)}
         else if (HW != null) {HTMLCSS.Remeasured(selected.HTMLstretchH(span,HW),span)}
