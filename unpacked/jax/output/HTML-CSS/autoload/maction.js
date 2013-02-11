@@ -43,15 +43,19 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     HTMLtooltip: HTMLCSS.addElement(document.body,"div",{id:"MathJax_Tooltip"}),
     
     toHTML: function (span,HW,D) {
-      span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
       var selected = this.selected();
-      if (selected.type !== "null") {
-        var box = selected.toHTML(span);
-        if (D != null) {HTMLCSS.Remeasured(selected.HTMLstretchV(span,HW,D),span)}
-        else if (HW != null) {HTMLCSS.Remeasured(selected.HTMLstretchH(span,HW),span)}
-	else {HTMLCSS.Measured(box,span)}
-        this.HTMLhandleHitBox(span);
+      if (selected.type == "null") {
+        span = this.HTMLcreateSpan(span);
+        span.bbox = {h:0, d:0, w:0, lw:0, rw:0};
+        return span;
       }
+      span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
+      var box = selected.toHTML(span);
+      if (D != null) {HTMLCSS.Remeasured(selected.HTMLstretchV(span,HW,D),span)}
+      else if (HW != null) {
+        HTMLCSS.Remeasured(selected.HTMLstretchH(span,HW),span)
+      } else {HTMLCSS.Measured(box,span)}
+      this.HTMLhandleHitBox(span);
       this.HTMLhandleSpace(span);
       this.HTMLhandleColor(span);
       return span;

@@ -46,10 +46,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       this.SVGgetStyles();
       var svg = this.SVG();
       var selected = this.selected();
-      if (selected.type !== "null") {
-        svg.Add(this.SVGdataStretched(this.Get("selection")-1,HW,D));
-        this.SVGhandleHitBox(svg);
-      }
+      if (selected.type == "null") {this.SVGsaveData(svg);return svg;}
+      svg.Add(this.SVGdataStretched(this.Get("selection")-1,HW,D));
+      this.SVGhandleHitBox(svg);
       this.SVGhandleSpace(svg);
       this.SVGhandleColor(svg);
       this.SVGsaveData(svg);
