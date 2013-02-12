@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/SVG/autoload/mtable.js
@@ -31,7 +33,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     toSVG: function (span) {
       this.SVGgetStyles();
       var svg = this.SVG();
-      if (this.data.length === 0) {return svg}
+      if (this.data.length === 0) {this.SVGsaveData(svg);return svg}
       var values = this.getValues("columnalign","rowalign","columnspacing","rowspacing",
                                   "columnwidth","equalcolumns","equalrows",
                                   "columnlines","rowlines","frame","framespacing",
