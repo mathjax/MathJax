@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/extensions/MathMenu.js
@@ -31,6 +33,13 @@
   MathJax.Extension.MathMenu = {
     version: VERSION,
     signal: SIGNAL
+  };
+
+  var _ = function (id) {
+    return MathJax.Localization._.apply(
+      MathJax.Localization,
+      [ ["Menu", id] ].concat([].slice.call(arguments,1))
+    );
   };
 
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE, isIE9 = ((document.documentMode||0) > 8);
@@ -690,7 +699,10 @@
         return;
       }
     } else {
-      if (MENU.jax.originalText == null) {alert("No original form available"); return}
+      if (MENU.jax.originalText == null) {
+        alert(_("NoOriginalForm", "No original form available"));
+        return;
+      }
       MENU.ShowSource.Text(MENU.jax.originalText,event);
     }
   };
@@ -706,16 +718,17 @@
     var w = MENU.ShowSource.Window(event); delete MENU.ShowSource.w;
     text = text.replace(/^\s*/,"").replace(/\s*$/,"");
     text = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    var title = _("EqSource", "MathJax Equation Source");
     if (MENU.isMobile) {
       w.document.open();
-      w.document.write("<html><head><meta name='viewport' content='width=device-width, initial-scale=1.0' /><title>MathJax Equation Source</title></head><body style='font-size:85%'>");
+      w.document.write("<html><head><meta name='viewport' content='width=device-width, initial-scale=1.0' /><title>"+title+"</title></head><body style='font-size:85%'>");
       w.document.write("<pre>"+text+"</pre>");
-      w.document.write("<hr><input type='button' value='Close' onclick='window.close()' />");
+      w.document.write("<hr><input type='button' value='"+_("Close", "Close")+"' onclick='window.close()' />");
       w.document.write("</body></html>");
       w.document.close();
     } else {
       w.document.open();
-      w.document.write("<html><head><title>MathJax Equation Source</title></head><body style='font-size:85%'>");
+      w.document.write("<html><head><title>"+title+"</title></head><body style='font-size:85%'>");
       w.document.write("<table><tr><td><pre>"+text+"</pre></td></tr></table>");
       w.document.write("</body></html>");
       w.document.close();
@@ -740,7 +753,7 @@
   MENU.Scale = function () {
     var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML, SVG = OUTPUT.SVG;
     var SCALE = (HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
-    var scale = prompt("Scale all mathematics (compared to surrounding text) by",SCALE+"%");
+    var scale = prompt(_("ScaleMath", "Scale all mathematics (compared to surrounding text) by %1%%",SCALE));
     if (scale) {
       if (scale.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         scale = parseFloat(scale);
@@ -752,8 +765,9 @@
             MENU.cookie.scale = scale;
             MENU.saveCookie(); HUB.Reprocess();
           }
-        } else {alert("The scale should not be zero")}
-      } else {alert("The scale should be a percentage (e.g., 120%)")}
+        } else {alert(_("NonZeroScale", "The scale should not be zero"))}
+      } else {alert(_("PercentScale",
+                      "The scale should be a percentage (e.g., 120%%)"))}
     }
   };
   
@@ -791,8 +805,10 @@
           break;  
       }
       if (message) {
-        message += "\n\nSwitch the renderer anyway?\n\n" +
-                    "(Press OK to switch, CANCEL to continue with the current renderer)";
+        message += "\n\n";
+        message += _("SwitchAnyway",
+                     "Switch the renderer anyway?\n\n" +
+                     "(Press OK to switch, CANCEL to continue with the current renderer)");
         MENU.cookie.renderer = jax[0].id; MENU.saveCookie(); if (!confirm(message)) {return}
         if (warned) {MENU.cookie[warned]  = CONFIG.settings[warned] = true}
         MENU.cookie.renderer = CONFIG.settings.renderer; MENU.saveCookie();
@@ -805,28 +821,34 @@
   };
   MENU.Renderer.Messages = {
     MML: {
-      WebKit:  "Your browser doesn't seem to support MathML natively, " +
-               "so switching to MathML output may cause the mathematics " +
-               "on the page to become unreadable.",
+      WebKit:  _("WebkitNativeMMLWarning",
+                 "Your browser doesn't seem to support MathML natively, " +
+                 "so switching to MathML output may cause the mathematics " +
+                 "on the page to become unreadable."),
 
-      MSIE:    "Internet Explorer requires the MathPlayer plugin " +
-               "in order to process MathML output.",
+      MSIE:    _("MSIENativeMMLWarning",
+                 "Internet Explorer requires the MathPlayer plugin " +
+                 "in order to process MathML output."),
       
-      Opera:   "Opera's support for MathML is limited, so switching to " +
-               "MathML output may cause some expressions to render poorly.",
+      Opera:   _("OperaNativeMMLWarning",
+                 "Opera's support for MathML is limited, so switching to " +
+                 "MathML output may cause some expressions to render poorly."),
 
-      Safari: "Your browser's native MathML does not implement all the features " +
-               "used by MathJax, so some expressions may not render properly.",
+      Safari:  _("SafariNativeMMLWarning",
+                 "Your browser's native MathML does not implement all the features " +
+                 "used by MathJax, so some expressions may not render properly."),
 
-      Firefox: "Your browser's native MathML does not implement all the features " +
-               "used by MathJax, so some expressions may not render properly."
+      Firefox: _("FirefoxNativeMMLWarning",
+                 "Your browser's native MathML does not implement all the features " +
+                 "used by MathJax, so some expressions may not render properly.")
     },
     
     SVG: {
-      MSIE:    "SVG is not implemented in Internet Explorer prior to " +
-               "IE9, or when the browser is emulating IE8 or below. " +
-               "Switching to SVG output will cause the mathemtics to " +
-               "not display properly."
+      MSIE:    _("MSIESVGWarning",
+                 "SVG is not implemented in Internet Explorer prior to " +
+                 "IE9, or when the browser is emulating IE8 or below. " +
+                 "Switching to SVG output will cause the mathemtics to " +
+                 "not display properly.")
     }
   };
   
@@ -861,13 +883,15 @@
   };
   MENU.MPEvents.Messages = {
     IE8warning:
+    _("IE8warning",
       "This will disable the MathJax menu and zoom features, " +
       "but you can Alt-Click on an expression to obtain the MathJax " +
-      "menu instead.\n\nReally change the MathPlayer settings?",
+      "menu instead.\n\nReally change the MathPlayer settings?"),
 
     IE9warning:
+    _("IE9warning",
       "The MathJax contextual menu will be disabled, but you can " +
-      "Alt-Click on an expression to obtain the MathJax menu instead."
+      "Alt-Click on an expression to obtain the MathJax menu instead.")
   };
 
   /*************************************************************/

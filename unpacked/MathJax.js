@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax.js
@@ -2476,3 +2478,313 @@ MathJax.Hub.Startup = {
 }}
 
 /**********************************************************/
+
+MathJax.Localization = {
+  
+  locale: "fr",
+  directory: "[MathJax]/localization",
+  strings: {
+    fr: {
+      isLoaded: true,
+      domains: {
+        "_": {
+          strings: {
+          }
+        },
+ //        FontWarnings: {
+ //          isLoaded: true,
+ //          strings: {
+ //            fonts:
+ // [
+ //        ["p"],
+ //        "MathJax peut utiliser soit les ",
+ //        ["a",{href:"http://www.stixfonts.org/",target:"_blank"},"polices STIX"],
+ //        " soit les ",
+ //        ["a",{href:"http://www.mathjax.org/help-v2/fonts/",target:"_blank"},["polices TeX de MathJax"]],
+ //        ".  Téléchargez et installez une de ces familles pour rendre plus confortable votre utilisation de MathJax."
+ //      ]
+ //          }
+ //        },
+
+        Menu: {
+          isLoaded: true,
+          strings: {
+            WebkitNativeMMLWarning:
+
+            "Votre navigateur ne semble pas comporter de support MathML, " +
+            "changer le mode de rendu pourrait rendre illisibles " +
+            "les expressions mathématiques.",
+
+            MSIENativeMMLWarning:
+
+            "Internet Explorer a besoin de module complémentaire MathPlayer " + 
+            "pour afficher le MathML.",
+      
+            OperaNativeMMLWarning:
+
+            "Le support MathML d'Opera est limité, changer le mode de rendu " +
+           "pourrait entrainer un affichage médiocre de certaines expressions.",
+
+            SafariNativeMMLWarning:
+
+            "Le support MathML natif de votre navigateur ne comporte pas " +
+            "toutes les fonctionnalités requises par MathJax, certaines " +
+            "expressions pourront donc ne pas s'afficher correctement.",
+
+            FirefoxNativeMMLWarning:
+
+            "Le support MathML natif de votre navigateur ne comporte pas " +
+            "toutes les fonctionnalités requises par MathJax, certaines " +
+            "expressions pourront donc ne pas s'afficher correctement.",
+
+            SwitchAnyway:
+            "Êtes vous certain de vouloir changer le mode de rendu ?\n\n" +
+            "Appuyez sur OK pour valider ou Annuler pour continuer avec le " +
+              "mode de rendu actuellement sélectionné.",
+
+            ScaleMath:
+            "Mise à l'échelle des expressions mathématiques (par rapport au " +
+              "text environnant) de %1%%",
+
+            NonZeroScale:
+            "L'échelle ne peut être nulle",
+
+            PercentScale:
+            "L'échelle doit être un pourcentage (e.g. 120%%)",
+
+            IE8warning:
+            "Ceci désactivera le menu de MathJax et les fonctionalités de " +
+            "zoom mais vous pourrez toujours obtenir le menu de MathJax " +
+            "en utilisant la commande Alt+Clic sur une expression.\n\n" +
+            "Êtes vous certain de vouloir choisir les options de MathPlayer?",
+
+            IE9warning:
+            "Le menu contextuel de MathJax sera désactivé, " +
+            "mais vous pourrez toujours obtenir le menu de MathJax " +
+            "en utilisant la commande Alt-Clic sur une expression.",
+
+            NoOriginalForm:
+            "Aucune forme originelle",
+
+            Close:
+            "Fermer",
+
+            EqSource:
+            "Source de l'équation MathJax"
+          }
+        }
+      }
+    }
+  },
+
+  _: function (messageId, englishPhrase) {
+
+    // These variables are used in string parsing
+    var plural = this.plural;
+    var args = arguments;
+    var i, s, result;
+
+    function parseNextUnicodePoint(appendToResult)
+    {
+      var n = s.charCodeAt(i);
+      if (n <= 0xD7FF || 0xE000 <= n) {
+        // Code points U+0000 to U+D7FF and U+E000 to U+FFFF.
+        // Append the character.
+        if (appendToResult) result += s[i]
+        i++;
+        return;
+      } else if (i+1 < m) {
+        // Code points U+10000 to U+10FFFF
+        // Append the surrogate pairs.
+        if (appendToResult) { result += s[i]; result += s[i+1]; }
+        i+=2
+        return;
+      }
+      // Ignore lead surrogate at the end of the string.
+      // This should not happen with valid unicode string.
+      i++;
+    }
+
+    function parseArgument(appendToResult)
+    {
+      if (!(/\d/.test(s[0]))) return false;
+
+      // %INTEGER argument substitution
+      var argIndex = s.match(/^\d+/)[0];
+      i += argIndex.length;
+      var key = +argIndex+1;
+      if (key in args) {
+        if (appendToResult) { result += args[key]; }
+        return true;
+      }
+
+      // invalid index: just %INTEGER and continue
+      if (appendToResult) { result += "%" + argIndex; }
+      i++;
+      return true;
+    }    
+
+    function parseInteger(appendToResult)
+    {
+      var number = s.match(/^\{(\d+)\}/);
+      if (!number) return false;
+
+      // %{INTEGER} escaped integer
+      if (appendToResult) { result += number[1]; }
+      i += number[0].length;
+      return true;
+    }
+
+    function parseChoiceBlock(blockName, choiceFunction)
+    {
+      var pattern = "^\\{"+blockName+":%(\\d)+\\|";
+      var blockStart = s.match(pattern);
+      if (!blockStart) return false;
+      
+      var key = +blockStart[1]+1;
+      if (!(key in args)) return false;
+
+      // %\{blockName:%INTEGER|form1|form2 ... \}
+      i = blockStart[0].length;
+
+      var choiceIndex = choiceFunction(args[key]), j = 1; 
+      var isChosenBlock = (j === choiceIndex);
+      var blockFound = false;
+
+      while (i < m) {
+        if (s[i] == "|") {
+          // new choice block
+          i++; j++;
+          isChosenBlock = (j === choiceIndex);
+          if (isChosenBlock) blockFound = true;
+          continue;
+        }
+        if (s[i] == "}") {
+          // closing brace
+          i++;
+          break;
+        }
+        if (s[i] != "%" || i+1 == m) {
+          // normal char or % at the end of the string
+          parseNextUnicodePoint(isChosenBlock);
+          continue;
+        }
+
+        // keep only the substring after the %
+        i++; s = s.substr(i); m -= i; i = 0;
+
+        // %INTEGER argument substitution
+        if (parseArgument(isChosenBlock)) continue;
+
+        // %{INTEGER} escaped integer
+        if (parseInteger(isChosenBlock)) continue;
+
+        // %CHAR: escaped character
+        parseNextUnicodePoint(isChosenBlock);
+        continue;
+      }
+
+      if (!blockFound) {
+        i = 0;
+        return false;
+      }
+
+      return true;
+    }
+
+    function transformString(string)
+    {
+      s = string;
+      i = 0;
+      m = s.length;
+      result = "";
+
+      while (i < m) {
+        if (s[i] != "%" || i+1 == m) {
+          // normal char or % at the end of the string
+          parseNextUnicodePoint(true);
+          continue;
+        }  
+
+        // keep only the substring after the %
+        i++; s = s.substr(i); m -= i; i = 0;
+
+        // %INTEGER argument substitution
+        if (parseArgument(true)) continue;
+
+        // %{INTEGER} escaped integer
+        if (parseInteger(true)) continue;
+
+        // %\{plural:%INTEGER|form1|form2 ... \} plural forms
+        if (parseChoiceBlock("plural", plural)) continue;
+
+        // %CHAR: escaped character
+        parseNextUnicodePoint(true);
+        continue;
+      }
+
+      return result;
+    }
+
+    function transformHTMLSnippet(snippet)
+    {
+      for (key in snippet) {
+        var e = snippet[key];
+        if (typeof e === "string") {
+          snippet[key] = transformString(e);
+          continue;
+        }
+        var lastIndex = e.length-1;
+        if (Array.isArray(e[lastIndex])) {
+          e[lastIndex] = transformHTMLSnippet(e[lastIndex]);
+        }
+      }
+      return snippet;
+    }
+
+    // try to get the translated phrase or use the englishPhrase fallback
+    var phrase = englishPhrase;
+    var translationData = this.strings[this.locale];
+    if (translationData) {
+      if (translationData.isLoaded) {
+        var domain = "_";
+        if (Array.isArray(messageId) && messageId.length == 2) {
+          domain = messageId[0];
+          messageId = messageId[1];
+        }
+        if (domain in translationData.domains) {
+          domain = translationData.domains[domain]
+          if (domain.isLoaded && messageId in domain.strings) {
+            phrase = domain.strings[messageId];
+          }
+        }
+      }
+    } 
+
+    if (typeof phrase === "string") {
+      // handle the phrase as a simple string
+      return transformString(phrase); 
+    }
+
+    // handle the phrase as a HTML snippet
+    return transformHTMLSnippet(phrase);
+  },
+
+  setLocale: function(locale) {
+    this.locale = locale;
+    // TODO
+  },
+
+  addTranslation: function (locale, domain, definition) {
+    // TODO
+  },
+
+  fontFamily: function () {
+    return null;
+  },
+
+  plural: function(n) {
+    if (n == 1) return 1;
+    return 2;
+  }
+};
