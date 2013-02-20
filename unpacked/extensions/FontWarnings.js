@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/extensions/FontWarnings.js
@@ -84,6 +86,12 @@
 
 (function (HUB,HTML) {
   var VERSION = "2.1";
+
+  var _ = function (id) {
+    return MathJax.Localization._.apply(MathJax.Localization,
+      [ ["FontWarnings",id] ].concat([].slice.call(arguments,1))
+    );
+  }
   
   var CONFIG = HUB.CombineConfig("FontWarnings",{
     //
@@ -112,29 +120,33 @@
     Message: {
       webFont: [
         ["closeBox"],
-        "MathJax is using web-based fonts to display the mathematics ",
-        "on this page.  These take time to download, so the page would ",
-        "render faster if you installed math fonts directly in your ",
-        "system's font folder.",
+        _("webFont",
+          "MathJax is using web-based fonts to display the mathematics "+
+          "on this page.  These take time to download, so the page would "+
+          "render faster if you installed math fonts directly in your "+
+          "system's font folder."),
         ["fonts"]
       ],
 
       imageFonts: [
         ["closeBox"],
-        "MathJax is using its image fonts rather than local or web-based fonts. ",
-        "This will render slower than usual, and the mathematics may not print ",
-        "at the full resolution of your printer.",
+        _("imageFonts",
+     "MathJax is using its image fonts rather than local or web-based fonts. "+
+     "This will render slower than usual, and the mathematics may not print "+
+     "at the full resolution of your printer."),
+
         ["fonts"],
         ["webfonts"]
       ],
       
       noFonts: [
         ["closeBox"],
-        "MathJax is unable to locate a font to use to display ",
-        "its mathematics, and image fonts are not available, so it ",
-        "is falling back on generic unicode characters in hopes that ",
-        "your browser will be able to display them.  Some characters ",
-        "may not show up properly, or possibly not at all.",
+        _("noFonts",
+        "MathJax is unable to locate a font to use to display "+
+        "its mathematics, and image fonts are not available, so it "+
+        "is falling back on generic unicode characters in hopes that "+
+        "your browser will be able to display them.  Some characters "+
+          "may not show up properly, or possibly not at all."),
         ["fonts"],
         ["webfonts"]
       ]
@@ -168,35 +180,37 @@
         [["span",{style:{position:"relative", bottom:".2em"}},["x"]]]
       ]],
       
-      webfonts: [
+      webFonts: [
         ["p"],
-        "Most modern browsers allow for fonts to be downloaded over the web. ",
-        "Updating to a more recent version of your browser (or changing browsers) ",
-        "could improve the quality of the mathematics on this page."
+        _("webFonts",
+        "Most modern browsers allow for fonts to be downloaded over the web. "+
+        "Updating to a more recent version of your browser (or changing"+
+         "browsers) could improve the quality of the mathematics on this page.")
       ],
       
-      fonts: [
-        ["p"],
-        "MathJax can use either the ",
-        ["a",{href:"http://www.stixfonts.org/",target:"_blank"},"STIX fonts"],
-        " or the ",
-        ["a",{href:"http://www.mathjax.org/help-v2/fonts/",target:"_blank"},["MathJax TeX fonts"]],
-        ".  Download and install either one to improve your MathJax experience."
-      ],
+      fonts: _("fonts",
+       "%1 MathJax can use either the %2 or the % "+
+       ".  Download and install either one to improve your MathJax experience.",
+       [["p"]],
+       [["a",{href:"http://www.stixfonts.org/",target:"_blank"},
+        _("STIXfonts", "STIX fonts")]],
+       [["a",{href:"http://www.mathjax.org/help-v2/fonts/",target:"_blank"},
+         [_("TeXfonts", "MathJax TeX fonts")]]]
+      ),
       
-      STIXfonts: [
-        ["p"],
-        "This page is designed to use the ",
-        ["a",{href:"http://www.stixfonts.org/",target:"_blank"},"STIX fonts"],
-        ".  Download and install those fonts to improve your MathJax experience."
-      ],
-      
-      TeXfonts: [
-        ["p"],
-        "This page is designed to use the ",
-        ["a",{href:"http://www.mathjax.org/help-v2/fonts/",target:"_blank"},["MathJax TeX fonts"]],
-        ".  Download and install those fonts to improve your MathJax experience."
-      ]
+     STIXfonts: _("PageDesigned",
+      "%1 This page is designed to use the %2."+
+      " Download and install those fonts to improve your MathJax experience.",
+      [["p"]],
+      [["a",{href:"http://www.mathjax.org/help-v2/fonts/",target:"_blank"},
+        [_("STIXfonts", "STIX fonts")]]]),
+
+      TeXfonts: _("PageDesigned", 
+      "%1 This page is designed to use the %2."+
+      " Download and install those fonts to improve your MathJax experience.",
+      [["p"]],
+      [["a",{href:"http://www.mathjax.org/help-v2/fonts/",target:"_blank"},
+       [_("TeXfonts", "MathJax TeX fonts")]]])
       
     },
     

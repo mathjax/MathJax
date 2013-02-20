@@ -622,9 +622,11 @@
     MENU.About.div = MENU.Background(MENU.About);
     var about = HTML.addElement(MENU.About.div,"div",{
       id: "MathJax_About"
-    },[
-      ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
-      "using "+font,["br"],["br"],
+    },
+    _("AboutBox", "%1 using %2",
+      [["b",{style:{fontSize:"120%"}},["MathJax"]],
+       " v"+MathJax.version,["br"]],
+      [font,["br"],["br"],
       ["span",{style:{
         display:"inline-block", "text-align":"left", "font-size":"80%",
         "max-height":"20em", overflow:"auto", 
@@ -635,8 +637,8 @@
         src: CONFIG.closeImg,
         style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
         onclick: MENU.About.Remove
-      }]
-    ]);
+      }]])
+                               );
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;
     if (MENU.prototype.msieAboutBug) {

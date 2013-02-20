@@ -2481,7 +2481,7 @@ MathJax.Hub.Startup = {
 
 MathJax.Localization = {
   
-  locale: "fr",
+  locale: "en",
   directory: "[MathJax]/localization",
   strings: {
     fr: {
@@ -2491,24 +2491,61 @@ MathJax.Localization = {
           strings: {
           }
         },
- //        FontWarnings: {
- //          isLoaded: true,
- //          strings: {
- //            fonts:
- // [
- //        ["p"],
- //        "MathJax peut utiliser soit les ",
- //        ["a",{href:"http://www.stixfonts.org/",target:"_blank"},"polices STIX"],
- //        " soit les ",
- //        ["a",{href:"http://www.mathjax.org/help-v2/fonts/",target:"_blank"},["polices TeX de MathJax"]],
- //        ".  Téléchargez et installez une de ces familles pour rendre plus confortable votre utilisation de MathJax."
- //      ]
- //          }
- //        },
+        FontWarnings: {
+          isLoaded: true,
+          strings: {
+            webFont:
+            "MathJax utilise les polices Web pour afficher les expressions " +
+            "mathématiques sur cette page. Celles-ci mettent du temps à être "+
+            "téléchargées et la page serait affichée plus rapidement si vous "+
+            "installiez les polices mathématiques directement dans le dossier "+
+            "des polices de votre système.",
+
+            imageFonts:
+            "MathJax utilise des images de caractères plutôt que les polices "+
+            "Web ou locales. Ceci rend le rendu plus lent que la normale et "+
+            "les expressions mathématiques peuvent ne pas s'imprimer à la "+
+            "résolution maximale de votre imprimante",
+
+            noFonts:
+            "MathJax n'est pas parvenu à localiser une police pour afficher "+
+            "les expressions mathématiques et les images de caractères ne "+
+            "sont pas disponibles. Comme solution de dernier recours, il "+
+            "utilise des caractères Unicode génériques en espérant que votre "+
+            "navigateur sera capable de les afficher. Certains pourront ne "+
+            "être rendus de façon incorrect voire pas du tout.",
+
+            webFonts:
+            "La plupart des navigateurs modernes permettent de télécharger "+
+            "des polices à partir du Web. En mettant à jour pour une version "+
+            "plus récente de votre navigateur (ou en changeant de navigateur) "+
+            "la qualité des expressions mathématiques sur cette page pourrait "+
+            "être améliorée.",
+
+            fonts:
+            "%1 MathJax peut utiliser les %2 ou bien les %3. Téléchargez et"+
+            "installez l'une de ces familles de polices pour améliorer votre"+
+            "expérience avec MathJax.",
+
+            PageDesigned:
+            "%1 Cette page est conçue pour utiliser les %2. Téléchargez "+
+            " et installez ces polices pour améliorer votre expérience "+
+            "avec MathJax",
+
+            STIXfonts:
+            "Polices STIX",
+
+            TeXfonts:
+            "Polices TeX de MathJax",
+          }
+        },
 
         Menu: {
           isLoaded: true,
           strings: {
+            AboutBox:
+            "%1 utilisant %2",
+
             WebkitNativeMMLWarning:
 
             "Votre navigateur ne semble pas comporter de support MathML, " +
@@ -2564,7 +2601,7 @@ MathJax.Localization = {
             "en utilisant la commande Alt-Clic sur une expression.",
 
             NoOriginalForm:
-            "Aucune forme originelle",
+            "Aucune forme d'origine disponible.",
 
             Close:
             "Fermer",
@@ -2572,17 +2609,46 @@ MathJax.Localization = {
             EqSource:
             "Source de l'équation MathJax"
           }
+        },
+
+        ConfigWarning: {
+          isLoaded: true,
+          strings: {
+            MissingConfig:
+            "%1 MathJax ne charge plus de fichier de configuration par défaut"+
+            " ; vous devez spécifier ces fichiers de façons explicites. Cette"+
+            " page semble utiliser l'ancien fichier de configuration par "+
+            "défaut %2 and doit donc être mise à jour. Ceci est expliqué "+
+            "en détails à l'addresse suivante: %3"
+          }
+        },
+
+        Message: {
+          isLoaded: true,
+          strings: {
+            LoadFailed: "Échec du chargement du fichier %1"
+          }
         }
+      },
+
+      plural: function(n) {
+        if (0 <= n && n < 2) return 1; // one
+        return 2; // other
+      },
+
+      number: function(n) {
+        return n.replace(".", ","); // replace dot by comma
       }
+
     }
   },
 
   _: function (messageId, englishPhrase) {
 
     // These variables are used in string parsing
-    var plural = this.plural;
+    var locale = this;
     var args = arguments;
-    var i, s, result;
+    var i, s, resultString, resultArray;
 
     function parseNextUnicodePoint(appendToResult)
     {
@@ -2590,13 +2656,13 @@ MathJax.Localization = {
       if (n <= 0xD7FF || 0xE000 <= n) {
         // Code points U+0000 to U+D7FF and U+E000 to U+FFFF.
         // Append the character.
-        if (appendToResult) result += s[i]
+        if (appendToResult) resultString += s[i]
         i++;
         return;
       } else if (i+1 < m) {
         // Code points U+10000 to U+10FFFF
         // Append the surrogate pairs.
-        if (appendToResult) { result += s[i]; result += s[i+1]; }
+        if (appendToResult) { resultString += s[i]; resultString += s[i+1]; }
         i+=2
         return;
       }
@@ -2614,12 +2680,26 @@ MathJax.Localization = {
       i += argIndex.length;
       var key = +argIndex+1;
       if (key in args) {
-        if (appendToResult) { result += args[key]; }
+        if (appendToResult) {
+          var e = args[key];
+          if (Array.isArray(e)) {
+            // if that's an array, concatenate it to the result array
+            resultArray.push(resultString);
+            resultArray = resultArray.concat(e);
+            resultString = "";
+          } else if (typeof e === "number") {
+            // if that's a number, append a localized version.
+            resultString += locale.number(e.toString())
+          } else {
+            // otherwise, just concatenate it to the result string
+            resultString += e;
+          }
+        }
         return true;
       }
 
       // invalid index: just %INTEGER and continue
-      if (appendToResult) { result += "%" + argIndex; }
+      if (appendToResult) { resultString += "%" + argIndex; }
       i++;
       return true;
     }    
@@ -2630,7 +2710,7 @@ MathJax.Localization = {
       if (!number) return false;
 
       // %{INTEGER} escaped integer
-      if (appendToResult) { result += number[1]; }
+      if (appendToResult) { resultString += number[1]; }
       i += number[0].length;
       return true;
     }
@@ -2697,7 +2777,8 @@ MathJax.Localization = {
       s = string;
       i = 0;
       m = s.length;
-      result = "";
+      resultString = "";
+      resultArray = [];
 
       while (i < m) {
         if (s[i] != "%" || i+1 == m) {
@@ -2716,14 +2797,16 @@ MathJax.Localization = {
         if (parseInteger(true)) continue;
 
         // %\{plural:%INTEGER|form1|form2 ... \} plural forms
-        if (parseChoiceBlock("plural", plural)) continue;
+        if (parseChoiceBlock("plural", locale.plural)) continue;
 
         // %CHAR: escaped character
         parseNextUnicodePoint(true);
         continue;
       }
 
-      return result;
+      if (resultArray.length == 0) return resultString;
+
+      return resultArray;
     }
 
     function transformHTMLSnippet(snippet)
@@ -2772,6 +2855,8 @@ MathJax.Localization = {
 
   setLocale: function(locale) {
     this.locale = locale;
+    this.plural = this.strings[locale].plural;
+    this.number = this.strings[locale].number;
     // TODO
   },
 
@@ -2784,7 +2869,11 @@ MathJax.Localization = {
   },
 
   plural: function(n) {
-    if (n == 1) return 1;
-    return 2;
+    if (n == 1) return 1; // one
+    return 2; // other
+  },
+
+  number: function(n) {
+    return n;
   }
 };

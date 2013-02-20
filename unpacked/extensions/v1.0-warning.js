@@ -26,6 +26,13 @@
 (function (HUB,HTML) {
   var VERSION = "2.1";
   
+  var _ = function (id) {
+    return MathJax.Localization._.apply(
+      MathJax.Localization,
+      [ ["ConfigWarning", id] ].concat([].slice.call(arguments,1))
+    );
+  };
+
   var CONFIG = {
     style: {
       position:"fixed", bottom:"4em", left:"3em", width:"40em",
@@ -56,8 +63,13 @@
       CONFIG.style.position = "absolute";
     } else {delete CONFIG.style.filter}
     CONFIG.style.maxWidth = (document.body.clientWidth-75) + "px";
-    DIV = HTML.addElement(frame,"div",{id:"MathJax_ConfigWarning",style:CONFIG.style},[
-      [
+    DIV = HTML.addElement(frame,"div",{id:"MathJax_ConfigWarning",style:CONFIG.style},
+     _("MissingConfig",
+    "%1 MathJax no longer loads a default configuration file; " +
+    "you must specify such files explicitly. " +
+    "This page seems to use the older default %2 file"+
+    ", and so needs to be updated. This is explained further at %3",
+    [[
         "div",{
           style: {
             position:"absolute", overflow:"hidden", top:".1em", right:".1em",
@@ -73,18 +85,14 @@
           onclick: function () {DIV.style.display = "none"}
         },
         [["span",{style:{position:"relative", bottom:".2em"}},["x"]]]
-      ],
-      "MathJax no longer loads a default configuration file; " +
-      "you must specify such files explicitly. " +
-      "This page seems to use the older default ",["code",{},["config/MathJax.js"]],
-      " file, and so needs to be updated.  This is explained further at",
-      ["p",{style:{"text-align":"center"}},[
+      ]],
+      [["code",{},["config/MathJax.js"]]],
+      [["p",{style:{"text-align":"center"}},[
         ["a",
           {href:"http://www.mathjax.org/help/configuration"},
           ["http://www.mathjax.org/help/configuration"]
         ]
-      ]]
-    ]);
+      ]]]))
   });
 
 })(MathJax.Hub,MathJax.HTML);
