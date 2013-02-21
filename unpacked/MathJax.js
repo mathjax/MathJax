@@ -2682,7 +2682,7 @@ MathJax.Localization = {
       if (key in args) {
         if (appendToResult) {
           var e = args[key];
-          if (Array.isArray(e)) {
+          if (e instanceof Array) {
             // if that's an array, concatenate it to the result array
             resultArray.push(resultString);
             resultArray = resultArray.concat(e);
@@ -2729,7 +2729,7 @@ MathJax.Localization = {
 
       var choiceIndex = choiceFunction(args[key]), j = 1; 
       var isChosenBlock = (j === choiceIndex);
-      var blockFound = false;
+      var blockFound = isChosenBlock;
 
       while (i < m) {
         if (s[i] == "|") {
@@ -2811,15 +2811,22 @@ MathJax.Localization = {
 
     function transformHTMLSnippet(snippet)
     {
-      for (key in snippet) {
+      for (var key in snippet) {
         var e = snippet[key];
         if (typeof e === "string") {
+          // transform the string content
           snippet[key] = transformString(e);
           continue;
         }
-        var lastIndex = e.length-1;
-        if (Array.isArray(e[lastIndex])) {
-          e[lastIndex] = transformHTMLSnippet(e[lastIndex]);
+        if (e[1]) {
+          // transform attribute values
+          for (var key2 in e[1]) {
+            snippet[key][1][key2] = transformString(e[1][key2]);
+          }
+        }
+        if (e[2]) {
+          // transform the HTML content
+          snippet[key][2] = transformHTMLSnippet(e[2]);
         }
       }
       return snippet;
@@ -2831,7 +2838,7 @@ MathJax.Localization = {
     if (translationData) {
       if (translationData.isLoaded) {
         var domain = "_";
-        if (Array.isArray(messageId) && messageId.length == 2) {
+        if (messageId instanceof Array && messageId.length == 2) {
           domain = messageId[0];
           messageId = messageId[1];
         }
