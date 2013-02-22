@@ -2646,6 +2646,100 @@ MathJax.Localization = {
           }
         },
 
+        Tex: {
+          isLoaded: true,
+          strings: {
+            ExtraCloseMissingOpen:
+            "Accolade fermante non attendue ou accolade ouvrante manquante",
+            MissingLeftExtraRight:
+            "Commande \\left manquante or ou commande \\right non attendue",
+            MissingScript:
+            "Argument en exposant ou en indice manquant",
+            ExtraLeftMissingRight:
+            "Commande \\left inattendue or ou commande \\right manquante",
+            Misplaced: "Mauvaise position pour la commande %1",
+            MissingOpenForScript:
+            "Accolade ouvrante manquante pour le script %1",
+            AmbiguousUseOf:
+            "Usage ambigu de la commande %1",
+            EnvBadEnd:
+            "\\begin{%1} s'est terminé par un \\end{%2}",
+            EnvMissingEnd:
+            "\\end{%1} manquant",
+            MissingBoxFor:
+            "Boite manquante pour la commande %1",
+            MissingCloseBrace:
+            "Accolade fermante manquante",
+            UndefinedControlSequence:
+            "Commande %1 non définie",
+            DoubleExponent:
+            "Double exposant: utilisez des accolades pour clarifier",
+            DoubleSubscripts:
+            "Double indice: utilisez des accolades pour clarifier",
+            DoubleExponentPrime:
+            "Un prime entraine un double exposant: utilisez"+
+              "des accolades pour clarifier",
+            CanUseHash:
+            "Vous ne pouvez pas utilisez le caractère #, indiquant un "+
+            "paramètre de macro, dans le mode mathématique",
+            MisplacedMiddle:
+            "La commande %1 doit être placée à l'intérieur d'une section"+
+              "\\left ... \right"
+            MisplacedLimits:
+            "La commande %1 n'est autorisée que sur les opérateurs",
+            MisplacedMoveRoot:
+            "La commande %1 n'est autorisée qu'à l'intérieur d'une racine",
+            MultipleMoveRoot:
+            "Commande %1 redondante",
+            MoveRootArg:
+            "L'argument de la commande %1 doit être un entier",
+            NotMathMLToken:
+            "L'élément %1 n'est pas un élément MathML élémentaire",
+            InvalidMathMLAttr:
+            "Attribut MathML non valide: %1",
+            UnknownAttrForElement:
+            "Attribut %1 inconnu pour l'élément %2",
+            MaxMacroSub1:
+            "Le nombre maximal de substitution de macro autorisé par MathJax a été dépassé. Il y a t'il un appel de macro récursif?",
+            MaxMacroSub2:
+            "Le nombre maximal de substitution de macro autorisé par MathJax a été dépassé. Il y a t'il un environnement LaTeX récursif?",
+            MissingArgFor:
+            "Argument manquant pour la commande %1",
+            ExtraAlignTab:
+            "Tabulation d'alignement non attendu pour le texte de la commande"+
+              "\\cases",
+            BracketMustBeDimension:
+            "L'argument entre crochets de la commande %1 doit être une"+
+            "dimension",
+            InvalidEnv:
+            "Nom d'environnement '%1' non valide",
+            UnknownEnv:
+            "Environnement '%1' inconnu",
+            ExtraClose:
+            "Accolade fermante non attendue",
+            ExtraCloseInBrackets:
+            "Accolade fermante non attendue avant le crochet fermant.",
+            MissingCloseBracket:
+            "Impossible de trouver le crochet fermant pour l'argument de la "+
+              "commande %1",
+            MissingOrUnrecognizedDelim:
+            "Délimiteur manquant ou non reconnu pour la commande %1",
+            MissingDimOrUnits:
+            "Dimension ou unité manquante pour la commande %1",
+            ExtraCloseBraceInUpTo:
+            "Accolade fermante non attendue avant la commande %1",
+            TokenNotFoundForCommand:
+            "Impossible de trouver la commande %1 pour la commande %2",
+            MathNotTerminated:
+            "Expression mathématique non terminée à l'intérieur de cette boite"+
+            " de texte",
+            IllegalMacroParam:
+            "Paramètre de référence de macro non autorisé",
+            MaxBufferSize:
+            "Taille maximale du tampon interne de MathJax dépassée. Il y a t'il un appel de macro récursif?"
+          }
+        },
+
         MathML: {
           isLoaded: true,
           strings: {
