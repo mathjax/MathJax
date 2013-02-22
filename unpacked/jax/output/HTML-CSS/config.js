@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/config.js
@@ -145,7 +147,10 @@ MathJax.Hub.Register.StartupHook("End Config",[function (HUB,HTMLCSS) {
      !HUB.Browser.versionAtLeast(CONFIG.minBrowserVersion[HUB.Browser]||0.0)) {
        HTMLCSS.Translate = CONFIG.minBrowserTranslate;
        HUB.Config({showProcessingMessages: false});
-       MathJax.Message.Set("Your browser does not support MathJax",null,4000);
+       MathJax.Message.Set(
+         MathJax.Localization._(["Message", "MathJaxNotSupported"],
+                                "Your browser does not support MathJax"),
+         null,4000);
        HUB.Startup.signal.Post("MathJax not supported");
   }
 

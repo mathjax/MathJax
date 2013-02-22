@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/input/MathML/jax.js
@@ -26,6 +28,11 @@
 (function (MATHML,BROWSER) {
   var MML;
   
+  var _ = function (id) {
+    return MathJax.Localization._.apply(MathJax.Localization,[
+      ["MathML",id] ].concat([].slice.call(arguments,1)))
+  };
+
   MATHML.Parse = MathJax.Object.Subclass({
 
     Init: function (string) {this.Parse(string)},
@@ -46,18 +53,35 @@
         }
         math = math.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/,"$2");
         math = math.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
-        doc = MATHML.ParseXML(math); if (doc == null) {MATHML.Error("Error parsing MathML")}
+        doc = MATHML.ParseXML(math);
+        if (doc == null) {
+          MATHML.Error(_("ErrorParsingMathML", "Error parsing MathML"))
+        }
       }
       var err = doc.getElementsByTagName("parsererror")[0];
+      // Localization: This seems to replace error messages produced
+      // by browsers. Does that work in all languages?
       if (err) MATHML.Error("Error parsing MathML: "+err.textContent.replace(/This page.*?errors:|XML Parsing Error: |Below is a rendering of the page.*/g,""));
-      if (doc.childNodes.length !== 1) MATHML.Error("MathML must be formed by a single element");
+      if (doc.childNodes.length !== 1) {
+        MATHML.Error(
+          _("MathMLSingleElement", "MathML must be formed by a single element")
+        );
+      }
       if (doc.firstChild.nodeName.toLowerCase() === "html") {
         var h1 = doc.getElementsByTagName("h1")[0];
         if (h1 && h1.textContent === "XML parsing error" && h1.nextSibling)
+          // Localization: This seems to replace error messages produced
+          // by browsers. Does that work in all languages?
           MATHML.Error("Error parsing MathML: "+String(h1.nextSibling.nodeValue).replace(/fatal parsing error: /,""));
       }
-      if (doc.firstChild.nodeName.toLowerCase().replace(/^[a-z]+:/,"") !== "math")
-        MATHML.Error("MathML must be formed by a <math> element, not <"+doc.firstChild.nodeName+">");
+      if (doc.firstChild.nodeName.toLowerCase().replace(/^[a-z]+:/,"") !==
+          "math") {
+        MATHML.Error(
+          _("MathMLRootElement",
+            "MathML must be formed by a <math> element, not %1",
+            "<"+doc.firstChild.nodeName+">")
+        );
+      }
       this.mml = this.MakeMML(doc.firstChild);
     },
     
@@ -72,7 +96,10 @@
         mml = this.TeXAtom(match[2]);
       } else if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase))) {
         MathJax.Hub.signal.Post(["MathML Jax - unknown node type",type]);
-        return MML.merror("Unknown node type: "+type);
+        return MML.merror(
+          MathJax.Localization._(
+            "UnknownNodeType", "Unknown node type: %1", type)
+        );
       } else {
         mml = MML[type]();
       }
@@ -148,7 +175,10 @@
             var text = child.nodeValue.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
             mml.Append(MML.chars(this.trimSpace(text)));
           } else if (child.nodeValue.match(/\S/)) {
-            MATHML.Error("Unexpected text node: '"+child.nodeValue+"'");
+            MATHML.Error(
+              _("UnexpectedTextNode", "Unexpected text node: %1",
+                "'"+child.nodeValue+"'")
+            );
           }
         } else if (mml.type === "annotation-xml") {
           mml.Append(MML.xml(child));

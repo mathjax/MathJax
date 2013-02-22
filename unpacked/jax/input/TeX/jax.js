@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/input/TeX/jax.js
@@ -72,8 +74,9 @@
   
   var STACKITEM = STACK.Item = MathJax.Object.Subclass({
     type: "base",
-    closeError: "Extra close brace or missing open brace",
-    rightError: "Missing \\left or extra \\right",
+    // Localization: should be updated when the language is changed    
+    closeError: _("closeError", "Extra close brace or missing open brace"),
+    rightError: _("rightError", "Missing \\left or extra \\right"),
     Init: function () {
       if (this.isOpen) {this.env = {}}
       this.data = [];

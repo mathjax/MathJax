@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/extensions/v1.0-warning.js
@@ -64,6 +66,9 @@
     } else {delete CONFIG.style.filter}
     CONFIG.style.maxWidth = (document.body.clientWidth-75) + "px";
     DIV = HTML.addElement(frame,"div",{id:"MathJax_ConfigWarning",style:CONFIG.style},
+    // Localization:
+    // - decide HTML snippet format
+    // - how do we ensure it is updated when the language is changed?
      _("MissingConfig",
     "%1 MathJax no longer loads a default configuration file; " +
     "you must specify such files explicitly. " +

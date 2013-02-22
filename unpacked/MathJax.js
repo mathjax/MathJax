@@ -882,7 +882,10 @@ MathJax.fileversion = "2.1";
     //  The default error hook for file load failures
     //
     loadError: function (file) {
-      BASE.Message.Set("File failed to load: "+file,null,2000);
+      BASE.Message.Set(
+        BASE.Localization._(["Message", "LoadFailed"],
+          "File failed to load: %1", file),
+        null,2000);
       BASE.Hub.signal.Post(["file load error",file]);
     },
 
@@ -1758,9 +1761,10 @@ MathJax.Hub.Startup = {
     var user = MathJax.HTML.Cookie.Get("user");
     if (user.URL || user.Config) {
       if (confirm(
-         "MathJax has found a user-configuration cookie that includes code to be run.  " +
-         "Do you want to run it?\n\n"+
-         "(You should press Cancel unless you set up the cookie yourself.)"
+        MathJax.Localization._("CookieConfig",
+        "MathJax has found a user-configuration cookie that includes code to"+
+        "be run. Do you want to run it?\n\n"+
+        "(You should press Cancel unless you set up the cookie yourself.)")
       )) {
         if (user.URL) {this.queue.Push(["Require",MathJax.Ajax,user.URL])}
         if (user.Config) {this.queue.Push(new Function(user.Config))}
@@ -2488,8 +2492,27 @@ MathJax.Localization = {
       isLoaded: true,
       domains: {
         "_": {
+          isLoaded: true,
           strings: {
+            CookieConfie:
+           "MathJax a trouvé un cookie de configuration utilisateur qui inclut"+
+           "du code à exécuter. Souhaitez vous l'exécuter?\n\n"+
+            "(Choisissez Annuler sauf si vous avez créé ce cookie vous-même",
           }
+        },
+        Message: {
+          LoadFailed: "Échec du téléchargement de %1",
+          CantLoadWebFont: "Impossible de télécharcharger la police Web %1",
+          FirefoxCantLoadWebFont:
+          "Firefox ne peut télécharger les polices Web à partir d'un hôte"+
+          "distant",
+          CantFindFontUsing:
+          "Impossible de trouver une police valide en utilisant %1",
+          WebFontsNotAvailable:
+          "Polices Web non disponibles -- des images de caractères vont être"+
+          "utilisées à la place",
+          MathJaxNotSupported:
+          "Votre navigateur ne supporte pas MathJax"
         },
         FontWarnings: {
           isLoaded: true,
@@ -2623,10 +2646,33 @@ MathJax.Localization = {
           }
         },
 
-        Message: {
+        MathML: {
           isLoaded: true,
           strings: {
-            LoadFailed: "Échec du chargement du fichier %1"
+            BadMglyph: "Élement mglyph incorrect: %1",
+            BadMglyphFont: "Police de caractère incorrecte: %1"
+            MathPlayer:
+           "MathJax n'est pas parvenu à configurer MathPlayer.\n\n"+
+           "Vous devez d'abord installer MathPlayer. Si c'est déjà le cas,\n"+
+           "vos paramètres de sécurités peuvent empêcher l'exécution des\n"+
+           "contrôles ActiveX. Sélectionnez Options Internet dans le menu\n"+
+           "Outils et sélectionnez l'onglet Sécurité. Appuyez ensuite sur\n"+
+           "le menu Niveau Personalisé. Assurez vous que les paramètres\n"+
+           "Exécution des contrôles ActiveX et Comportements des exécutables\n"+
+           "et des scripts sont activés.\n\n"+
+           "Actuellement, vous verez des messages d'erreur à la place des"+
+           "expressions mathématiques.",
+           CantCreateXMLParser:
+           "MathJax ne peut créer un analyseur grammatical XML pour le MathML",
+           UnknownNodeType: "Type de noeud inconnu: %1",
+           UnexpectedTextNode: "Noeud de texte inattendu: %1",
+           ErrorParsingMathML:
+           "Erreur lors de l'analyse grammaticale du code MathML",
+           MathMLSingleElement:
+          "Le code MathML doit être formé d'un unique élément",
+           MathMLRootElement:
+           "Le code MathML doit être formé d'un élément <math> et non un"+
+           "élément %1"
           }
         }
       },

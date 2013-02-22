@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/NativeMML/jax.js
@@ -139,7 +141,12 @@
           //
           //  If that fails, give an alert about security settings
           //
-          alert("MathJax was not able to set up MathPlayer.\n\n"+
+          // Localization: this seems to use "\n" to force new lines in the
+          // dialog: is it really necessary? If so, we need a localization note
+          // to explain that to localizers. Handling of concatenation might
+          // be an additional difficulty for the string extractor.
+          alert(_MathJax.Localization._(["MathML", "MathPlayer"],
+                "MathJax was not able to set up MathPlayer.\n\n"+
                 "If MathPlayer is not installed, you need to install it first.\n"+
                 "Otherwise, your security settings may be preventing ActiveX     \n"+
                 "controls from running.  Use the Internet Options item under\n"+
@@ -148,7 +155,7 @@
                 "'Run ActiveX Controls', and 'Binary and script behaviors'\n"+
                 "are enabled.\n\n"+
                 "Currently you will see error messages rather than\n"+
-                "typeset mathematics.");
+                "typeset mathematics."));
         }
       } else {
         //

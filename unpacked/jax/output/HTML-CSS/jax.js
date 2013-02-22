@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/jax.js
@@ -129,7 +131,12 @@
 
     loadWebFont: function (font) {
       HUB.Startup.signal.Post("HTML-CSS Jax - Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
-      var n = MathJax.Message.File("Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
+      var n = MathJax.Message.File(
+        // Localization: Message.File(fileName) will write "Loading "+fileName
+        // Here, this will become "Loading Web-Font "+fileName. Does it work
+        // for all languages (word order might be different)?
+        "Web-Font "+HTMLCSS.fontInUse+"/"+font.directory
+      );
       var done = MathJax.Callback({}); // called when font is loaded
       var callback = MathJax.Callback(["loadComplete",this,font,n,done]);
       AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],0,this.timeout);
@@ -149,11 +156,17 @@
       if (!this.webFontLoaded) {HTMLCSS.loadWebFontError(font,done)} else {done()}
     },
     loadError: function (font) {
-      MathJax.Message.Set("Can't load web font "+HTMLCSS.fontInUse+"/"+font.directory,null,2000);
+      MathJax.Message.Set(
+        MathJax.Localization._("Message", "CantLoadWebFont",
+          "Can't load web font %1", HTMLCSS.fontInUse+"/"+font.directory),
+        null,2000);
       HUB.Startup.signal.Post(["HTML-CSS Jax - web font error",HTMLCSS.fontInUse+"/"+font.directory,font]);
     },
     firefoxFontError: function (font) {
-      MathJax.Message.Set("Firefox can't load web fonts from a remote host",null,3000);
+      MathJax.Message.Set(
+        MathJax.Localization._(["Message", "FirefoxCantLoadWebFont"],
+        "Firefox can't load web fonts from a remote host"),
+        null,3000);
       HUB.Startup.signal.Post("HTML-CSS Jax - Firefox web fonts on remote host error");
     },
 
@@ -321,7 +334,11 @@
           HUB.Startup.signal.Post("HTML-CSS Jax - using image fonts");
         }
       } else {
-        MathJax.Message.Set("Can't find a valid font using ["+this.config.availableFonts.join(", ")+"]",null,3000);
+        MathJax.Message.Set(
+          MathJax.Localization._(["Message", "CantFindFontUsing"],
+            "Can't find a valid font using %1",
+            "["+this.config.availableFonts.join(", ")+"]"),
+          null,3000);
         this.FONTDATA = {
           TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
           FONTS: {}, VARIANT: {normal: {fonts:[]}}, RANGES: [],
@@ -1469,7 +1486,10 @@
         this.imgFonts = true;
         HUB.Startup.signal.Post("HTML-CSS Jax - switch to image fonts");
         HUB.Startup.signal.Post("HTML-CSS Jax - using image fonts");
-        MathJax.Message.Set("Web-Fonts not available -- using image fonts instead",null,3000);
+        MathJax.Message.Set(
+          MathJax.Localization._(["Message", "WebFontNotAvailable"],
+          "Web-Fonts not available -- using image fonts instead"),
+        null,3000);
         AJAX.Require(this.directory+"/imageFonts.js",done);
       } else {
         this.allowWebFonts = false;
