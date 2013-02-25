@@ -1267,7 +1267,7 @@
      *  Handle hash marks outside of definitions
      */
     Hash: function (c) {
-      TEX.Error(_("CanUseHash",
+      TEX.Error(_("CantUseHash1",
                   "You can't use 'macro parameter character #' in math mode"));
     },
     
@@ -1323,7 +1323,7 @@
       var delim = this.GetDelimiter(name);
       if (this.stack.Top().type !== "left") {
         TEX.Error(_("MisplacedMiddle",
-                    "%1 must be within \\left and \\right", name)}
+                    "%1 must be within \\left and \\right", name))}
       this.Push(MML.mo(delim).With({stretchy:true}));
     },
     

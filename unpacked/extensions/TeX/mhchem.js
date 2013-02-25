@@ -352,11 +352,22 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         if (C === "{") {braces++} else
         if (C === "}") {
           if (braces) {braces--}
-            else {TEX.Error("Extra close brace or missing open brace")}
+          else {
+            TEX.Error(
+              MathJax.Localization._(
+                ["TeX", "ExtraCloseMissingOpen"],
+                "Extra close brace or missing open brace"
+              )
+            )
+          }
         }
       }
-      if (braces) {TEX.Error("Missing close brace")};
-      TEX.Error("Can't find closing "+c);
+      if (braces) {
+        TEX.Error(MathJax.Localization._(["TeX", "MissingCloseBrace"],
+                                         "Missing close brace"))
+      };
+      TEX.Error(MathJax.Localization._(["TeX", "NoClosingChar"],
+                                       "Can't find closing %1", c)
     }
     
   });

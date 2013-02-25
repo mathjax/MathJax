@@ -215,7 +215,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (TEX.eqnStack.top > 1) {
         TEX.eqnStack.Pop();
       } else if (TEX.rootStack.top === 1) {
-        TEX.Error("Extra "+name+" or missing \\begingroup");
+        TEX.Error(
+          MathJax.Localization._(
+            ["TeX", "ExtraEndMissingBegin"],
+            "Extra %1 or missing \\begingroup", name
+          )
+        )
       } else {
         TEX.eqnStack.Clear();
         TEX.rootStack.Pop();
@@ -290,8 +295,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       //
       Global: function (name) {
         var i = this.i; var cs = this.GetCSname(name); this.i = i;
-        if (cs !== "let" && cs !== "def" && cs !== "newcommand")
-        {TEX.Error(name+" not followed by \\let, \\def, or \\newcommand")}
+        if (cs !== "let" && cs !== "def" && cs !== "newcommand") {
+          TEX.Error(
+            MathJax.Localization._(
+              ["TeX", "GlobalNotFollowedBy"],
+              "%1 not followed by \\let, \\def, or \\newcommand", name)
+          )
+        }
         this.stack.env.isGlobal = true;
       }
 

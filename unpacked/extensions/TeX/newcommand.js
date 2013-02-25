@@ -30,6 +30,11 @@ MathJax.Extension["TeX/newcommand"] = {
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
+  var _ = function (id) {
+    return MathJax.Localization._.apply(MathJax.Localization,
+      [ ["TeX", id] ].concat([].slice.call(arguments,1)))
+  };
+
   var TEX = MathJax.InputJax.TeX;
   var TEXDEF = TEX.Definitions;
   
@@ -55,10 +60,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           opt = this.GetBrackets(name),
           def = this.GetArgument(name);
       if (cs.charAt(0) === "\\") {cs = cs.substr(1)}
-      if (!cs.match(/^(.|[a-z]+)$/i)) {TEX.Error("Illegal control sequence name for "+name)}
+      if (!cs.match(/^(.|[a-z]+)$/i)) {
+        TEX.Error(_("IllegalControlSequenceName",
+                    "Illegal control sequence name for %1", name))
+      }
       if (n) {
         n = this.trimSpaces(n);
-        if (!n.match(/^[0-9]+$/)) {TEX.Error("Illegal number of parameters specified in "+name)}
+        if (!n.match(/^[0-9]+$/)) {
+          TEX.Error(_("IllegalParamNumber"
+                      "Illegal number of parameters specified in %1", name))
+        }
       }
       this.setDef(cs,['Macro',def,n,opt]);
     },
@@ -73,7 +84,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           edef = this.GetArgument(name);
       if (n) {
         n = this.trimSpaces(n);
-        if (!n.match(/^[0-9]+$/)) {TEX.Error("Illegal number of parameters specified in "+name)}
+        if (!n.match(/^[0-9]+$/)) {
+          TEX.Error(_("IllegalParamNumber"
+                      "Illegal number of parameters specified in %1", name))
+        }
       }
       this.setEnv(env,['BeginEnv','EndEnv',bdef,edef,n]);
     },
@@ -130,7 +144,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     GetCSname: function (cmd) {
       var c = this.GetNext();
-      if (c !== "\\") {TEX.Error("\\ must be followed by a control sequence")}
+      if (c !== "\\") {
+        TEX.Error(_("DoubleBackSlash",
+                    "\\ must be followed by a control sequence"))
+      }
       var cs = this.trimSpaces(this.GetArgument(cmd));
       return cs.substr(1);
     },
@@ -146,8 +163,15 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         if (c === '#') {
           if (i !== this.i) {params[n] = this.string.substr(i,this.i-i)}
           c = this.string.charAt(++this.i);
-          if (!c.match(/^[1-9]$/)) {TEX.Error("Illegal use of # in template for "+cs)}
-          if (parseInt(c) != ++n) {TEX.Error("Parameters for "+cs+" must be numbered sequentially")}
+          if (!c.match(/^[1-9]$/)) {
+            TEX.Error(_("CantUseHash2",
+                        "Illegal use of # in template for %1", cs))
+          }
+          if (parseInt(c) != ++n) {
+            TEX.Error(_(
+              "SequentialParam",
+              "Parameters for %1 must be numbered sequentially", cs))
+          }
           i = this.i+1;
         } else if (c === '{') {
           if (i !== this.i) {params[n] = this.string.substr(i,this.i-i)}
@@ -155,7 +179,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         }
         this.i++;
       }
-      TEX.Error("Missing replacement string for definition of "+cmd);
+      TEX.Error(_("MissingReplacementString",
+        "Missing replacement string for definition of %1", cmd));
     },
     
     /*
@@ -164,15 +189,23 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     MacroWithTemplate: function (name,text,n,params) {
       if (n) {
         var args = []; this.GetNext();
-        if (params[0] && !this.MatchParam(params[0]))
-          {TEX.Error("Use of "+name+" doesn't match its definition")}
+        if (params[0] && !this.MatchParam(params[0])) {
+          TEX.Error(
+            _("MismatchUseDef",
+              "Use of %1 doesn't match its definition", name))
+          )
+        }
         for (var i = 0; i < n; i++) {args.push(this.GetParameter(name,params[i+1]))}
         text = this.SubstituteArgs(args,text);
       }
       this.string = this.AddArgs(text,this.string.slice(this.i));
       this.i = 0;
-      if (++this.macroCount > TEX.config.MAXMACROS)
-        {TEX.Error("MathJax maximum macro substitution count exceeded; is there a recursive macro call?")}
+      if (++this.macroCount > TEX.config.MAXMACROS) {
+        TEX.Error(
+          _("MaxMacroSub1",
+            "MathJax maximum macro substitution count exceeded; is there a recursive macro call?")
+        )
+      }
     },
     
     /*
@@ -211,7 +244,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           this.i++; j++; hasBraces = 0;
         }
       }
-      TEX.Error("Runaway argument for "+name+"?");
+      TEX.Error(
+        _("RunawayArgument", "Runaway argument for %1?", name)
+      );
     },
     
     /*

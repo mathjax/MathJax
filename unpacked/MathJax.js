@@ -1279,8 +1279,9 @@ MathJax.Hub = {
     },
     
     errorSettings: {
-      // Localization: should be updated when the language is changed
-      message: ["["+MathJax.Localization_("MathProcessingError", "Math Processing Error")+"]"], // HTML snippet structure for message to use
+      // Localization: not defined at that point.
+      // should be updated when the language is changed
+      message: ["[Math Processing Error]"], // HTML snippet structure for message to use
       style: {color: "#CC0000", "font-style":"italic"}  // style for message
     }
   },
@@ -2522,6 +2523,8 @@ MathJax.Localization = {
           }
         },
         Message: {
+          isLoaded: true,
+          strings: {
           LoadFailed: "Échec du téléchargement de %1",
           CantLoadWebFont: "Impossible de télécharcharger la police Web %1",
           FirefoxCantLoadWebFont:
@@ -2534,6 +2537,7 @@ MathJax.Localization = {
           "utilisées à la place",
           MathJaxNotSupported:
           "Votre navigateur ne supporte pas MathJax"
+          }
         },
         FontWarnings: {
           isLoaded: true,
@@ -2693,6 +2697,10 @@ MathJax.Localization = {
             "Accolade fermante manquante",
             UndefinedControlSequence:
             "Commande %1 non définie",
+            IllegalControlSequenceName:
+            "Nom de contrôle de séquence non autorisé pour la commande %1",
+            IllegalParamNumber:
+            "Nombre de paramètres incorrect pour la commande %1",
             DoubleExponent:
             "Double exposant: utilisez des accolades pour clarifier",
             DoubleSubscripts:
@@ -2700,12 +2708,15 @@ MathJax.Localization = {
             DoubleExponentPrime:
             "Un prime entraine un double exposant: utilisez"+
               "des accolades pour clarifier",
-            CanUseHash:
+            CantUseHash1:
             "Vous ne pouvez pas utilisez le caractère #, indiquant un "+
             "paramètre de macro, dans le mode mathématique",
+            CantUseHash2:
+            "Usage du caractère # non autorisé dans le modèle pour la séquence"+
+              "de contrôle %1",
             MisplacedMiddle:
             "La commande %1 doit être placée à l'intérieur d'une section"+
-              "\\left ... \right"
+              "\\left ... \right",
             MisplacedLimits:
             "La commande %1 n'est autorisée que sur les opérateurs",
             MisplacedMoveRoot:
@@ -2724,9 +2735,11 @@ MathJax.Localization = {
             UnknownAttrForElement:
             "Attribut %1 inconnu pour l'élément %2",
             MaxMacroSub1:
-            "Le nombre maximal de substitution de macro autorisé par MathJax a été dépassé. Il y a t'il un appel de macro récursif?",
+            "Le nombre maximal de substitution de macro autorisé par MathJax "+
+            "a été dépassé. Il y a t'il un appel de macro récursif?",
             MaxMacroSub2:
-            "Le nombre maximal de substitution de macro autorisé par MathJax a été dépassé. Il y a t'il un environnement LaTeX récursif?",
+            "Le nombre maximal de substitution de macro autorisé par MathJax "+
+              "a été dépassé. Il y a t'il un environnement LaTeX récursif?",
             MissingArgFor:
             "Argument manquant pour la commande %1",
             ExtraAlignTab:
@@ -2760,7 +2773,8 @@ MathJax.Localization = {
             IllegalMacroParam:
             "Paramètre de référence de macro non autorisé",
             MaxBufferSize:
-            "Taille maximale du tampon interne de MathJax dépassée. Il y a t'il un appel de macro récursif?",
+            "Taille maximale du tampon interne de MathJax dépassée. " +
+              "Il y a t'il un appel de macro récursif?",
             CommandNotAllowedInEnv:
             "La commande %1 n'est pas autorisé à l'intérieur de"+
             "l'environnement %2", 
@@ -2772,16 +2786,53 @@ MathJax.Localization = {
             BadMathStyleFor:
             "Style mathématique non valide pour la commande %1",
             ErroneousNestingEq:
-            "Emboitement incorrect des structures d'équation"
+            "Emboitement incorrect des structures d'équation",
             MultipleRowsOneCol:
-            "Les lignes multiples doivent avoir exactement une colonne"
+            "Les lignes multiples doivent avoir exactement une colonne",
             NoClosingDelim:
             "Impossible de trouver le délimiteur fermant pour la commande %1",
+            NoClosingChar:
+            "Impossible de trouver le délimiteur '%1' fermant",
             MultipleBBoxProperty:
             "La propriété %1 de la commande %2 spécifiée deux fois",
             InvalidBboxProperty:
             "La valeur '%1' ne semble pas être une couleur, une dimension ou"+
-              "de marge intérieur ou un style."
+              "de marge intérieur ou un style.",
+            ExtraEndMissingBegin:
+            "Commande %1 non attendue ou commande \\begingroup manquante",
+            GlobalNotFollowedBy:
+            "Command %1 non suivie d'une commande \\let, \\def ou \newcommand",
+            NewextarrowArg1:
+            "Le premier argument de la commande %1 doit être le nom d'une"+
+              "séquence de contrôle",
+            NewextarrowArg2:
+            "Le second argument de la commande %1 doit être deux entiers"+
+              "séparés par une virgule",
+            NewextarrowArg3:
+            "Le troisième argument de la commande %1 doit être la valeur d'un"+
+              "caractère unicode",
+            UndefinedColorModel:
+            "Le modèle de couleur '%1' n'est pas défini",
+            rgbArg1:
+            "Les couleurs rgb nécéssitent 3 nombres décimaux",
+            InvalidDecimalNumber: "Nombre décimal non valide",
+            rgbArg2: "Les valeurs rgb doivent être comprises entre 0 et 1",
+            RGBArg1: "Les couleurs RGB nécéssitent 3 nombres",
+            InvalidNumber: "Nombre non valide",
+            RGBArg2: "Les valeurs RGB doivent être comprises entre 0 et 255",
+            GrayScalerArg: 
+           "Les valeurs de dégradé de gris doivent être comprises entre 0 et 1",
+            DoubleBackSlash:
+            "\\ doit être suivi d'une séquence de contrôle",
+            SequentialParam:
+            "Les paramètres de la séquence de contrôle %1 doivent être"+
+              "énumérés de façon séquentielle",
+            MissingReplacementString:
+          "Chaine de caractère de remplacement manquante pour la définition %1",
+            MismatchUseDef:
+            "L'utilisation de la commande %1 ne correspond pas à sa définition",
+            RunawayArgument:
+            "Argument manquant pour la commande %1 ?"
           }
         },
 
@@ -2789,7 +2840,7 @@ MathJax.Localization = {
           isLoaded: true,
           strings: {
             BadMglyph: "Élement mglyph incorrect: %1",
-            BadMglyphFont: "Police de caractère incorrecte: %1"
+            BadMglyphFont: "Police de caractère incorrecte: %1",
             MathPlayer:
            "MathJax n'est pas parvenu à configurer MathPlayer.\n\n"+
            "Vous devez d'abord installer MathPlayer. Si c'est déjà le cas,\n"+
