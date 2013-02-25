@@ -28,13 +28,6 @@
 (function (HUB,HTML) {
   var VERSION = "2.1";
   
-  var _ = function (id) {
-    return MathJax.Localization._.apply(
-      MathJax.Localization,
-      [ ["ConfigWarning", id] ].concat([].slice.call(arguments,1))
-    );
-  };
-
   var CONFIG = {
     style: {
       position:"fixed", bottom:"4em", left:"3em", width:"40em",
@@ -69,7 +62,7 @@
     // Localization:
     // - decide HTML snippet format
     // - how do we ensure it is updated when the language is changed?
-     _("MissingConfig",
+    MathJax.Localization._(["ConfigWarning", "MissingConfig"],
     "%1 MathJax no longer loads a default configuration file; " +
     "you must specify such files explicitly. " +
     "This page seems to use the older default %2 file"+

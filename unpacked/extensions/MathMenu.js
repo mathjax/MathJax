@@ -602,6 +602,10 @@
   /*
    *  Handle the ABOUT box
    */
+  // Localization: need to be reorganized. currently, there are concatenation
+  // of HTMLCSS.fontInUse and English strings based on the values of
+  // HTMLCSS.webFonts and HTMLCSS.imgFonts, HTMLCSS.allowWebFonts etc Update
+  // MENU.About.GetJax too.
   MENU.About = function () {
     var HTMLCSS = OUTPUT["HTML-CSS"] || {fontInUse: ""};
     var local = (HTMLCSS.webFonts ? "" : "local "), web = (HTMLCSS.webFonts ? " web" : "");
@@ -619,6 +623,9 @@
       (HTMLCSS.webFonts && !HTMLCSS.imgFonts ? " \u2014 " + 
         HTMLCSS.allowWebFonts.replace(/otf/,"woff or otf") + " fonts" : "")
     ]]);
+    // Localization:
+    // - decide HTML snippet format
+    // - how do we ensure it is updated when the language is changed?
     MENU.About.div = MENU.Background(MENU.About);
     var about = HTML.addElement(MENU.About.div,"div",{
       id: "MathJax_About"
@@ -807,6 +814,7 @@
           break;  
       }
       if (message) {
+        // Localization: concatenation, new line
         message += "\n\n";
         message += _("SwitchAnyway",
                      "Switch the renderer anyway?\n\n" +
@@ -823,6 +831,8 @@
   };
   MENU.Renderer.Messages = {
     MML: {
+      // Localization: should be updated when the language is changed
+      // concatenation
       WebKit:  _("WebkitNativeMMLWarning",
                  "Your browser doesn't seem to support MathML natively, " +
                  "so switching to MathML output may cause the mathematics " +
@@ -883,6 +893,8 @@
       alert(MESSAGE.IE9warning);
     }
   };
+  // Localization: should be updated when the language is changed
+  // concatenation
   MENU.MPEvents.Messages = {
     IE8warning:
     _("IE8warning",
@@ -940,6 +952,7 @@
     /*
      *  The main menu
      */
+    // Localization: items used as key, should be refactored.
     MENU.menu = MENU(
       ITEM.SUBMENU("Show Math As",
         ITEM.COMMAND("MathML Code",    MENU.ShowSource, {nativeTouch: true, format: "MathML"}),

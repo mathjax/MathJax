@@ -1136,6 +1136,13 @@ MathJax.Message = {
     frame.style.height = body.clientHeight + 'px';
   },
   
+  // Localization:
+  // - This will be a bit tedious, because some regexp matching and other
+  // concatenations are done.
+  // - In RTL languages: perhaps a "direction: rtl" style is needed somewhere ;
+  // the message box may need to be placed on the right hand side.
+  // - Perhaps related to the other messages "Loading", "Processing",
+  // "Typesetting" elsewhere.
   filterText: function (text,n) {
     if (MathJax.Hub.config.messageStyle === "simple") {
       if (text.match(/^Loading /)) {
@@ -1210,6 +1217,9 @@ MathJax.Message = {
   File: function (file) {
     var root = MathJax.Ajax.config.root;
     if (file.substr(0,root.length) === root) {file = "[MathJax]"+file.substr(root.length)}
+    // Localization:
+    // This is used in the HTML output jax,
+    // MathJax.Message.File("Web-Font "+...) and so needs to be adapted.
     return this.Set("Loading "+file);
   },
   
@@ -1269,7 +1279,8 @@ MathJax.Hub = {
     },
     
     errorSettings: {
-      message: ["[Math Processing Error]"], // HTML snippet structure for message to use
+      // Localization: should be updated when the language is changed
+      message: ["["+MathJax.Localization_("MathProcessingError", "Math Processing Error")+"]"], // HTML snippet structure for message to use
       style: {color: "#CC0000", "font-style":"italic"}  // style for message
     }
   },
@@ -1554,6 +1565,7 @@ MathJax.Hub = {
     //  Put up final message, reset the state and return
     //
     if (state.scripts.length && this.config.showProcessingMessages)
+      // Localization: see filterText
       {MathJax.Message.Set("Processing math: 100%",0)}
     state.start = new Date().getTime(); state.i = state.j = 0;
     return null;
@@ -1653,6 +1665,7 @@ MathJax.Hub = {
     //  Put up the typesetting-complete message
     //
     if (state.scripts.length && this.config.showProcessingMessages) {
+      // Localization: see filterText
       MathJax.Message.Set("Typesetting math: 100%",0);
       MathJax.Message.Clear(0);
     }
@@ -1662,6 +1675,7 @@ MathJax.Hub = {
   
   processMessage: function (state,type) {
     var m = Math.floor(state.i/(state.scripts.length)*100);
+    // Localization: see filterText
     var message = (type === "Output" ? "Typesetting" : "Processing");
     if (this.config.showProcessingMessages) {MathJax.Message.Set(message+" math: "+m+"%",0)}
   },
@@ -2302,10 +2316,13 @@ MathJax.Hub.Startup = {
     id: "Error", version: "2.1", config: {},
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
+    // Localization: should this be translated?
     getJaxFromMath: function () {return {inputJax:"Error", outputJax:"Error", originalText:"Math Processing Error"}}
   };
   BASE.InputJax.Error = {
     id: "Error", version: "2.1", config: {},
+    // Localization: should this be translated?
+    // should be updated when the language is changed
     sourceMenuTitle: "Error Message"
   };
   
@@ -2494,10 +2511,14 @@ MathJax.Localization = {
         "_": {
           isLoaded: true,
           strings: {
-            CookieConfie:
+            CookieConfig:
            "MathJax a trouvé un cookie de configuration utilisateur qui inclut"+
            "du code à exécuter. Souhaitez vous l'exécuter?\n\n"+
             "(Choisissez Annuler sauf si vous avez créé ce cookie vous-même",
+            MathProcessingError:
+            "Erreur de traitement de la formule mathématique",
+            MathError:
+            "Erreur dans la formule mathématique"
           }
         },
         Message: {
@@ -2691,8 +2712,11 @@ MathJax.Localization = {
             "La commande %1 n'est autorisée qu'à l'intérieur d'une racine",
             MultipleMoveRoot:
             "Commande %1 redondante",
-            MoveRootArg:
+            IntegerArg:
             "L'argument de la commande %1 doit être un entier",
+            PositiveIntegerArg:
+            "L'argument de la commande %1 doit être un entier strictement"+
+            "positif",
             NotMathMLToken:
             "L'élément %1 n'est pas un élément MathML élémentaire",
             InvalidMathMLAttr:
@@ -2736,7 +2760,28 @@ MathJax.Localization = {
             IllegalMacroParam:
             "Paramètre de référence de macro non autorisé",
             MaxBufferSize:
-            "Taille maximale du tampon interne de MathJax dépassée. Il y a t'il un appel de macro récursif?"
+            "Taille maximale du tampon interne de MathJax dépassée. Il y a t'il un appel de macro récursif?",
+            CommandNotAllowedInEnv:
+            "La commande %1 n'est pas autorisé à l'intérieur de"+
+            "l'environnement %2", 
+            MultipleCommand: "Usage multiple de la commande %1",
+            MultipleLabel: "Étiquette '%1' déjà définie",
+            CommandAtTheBeginingOfLine:
+            "La commande %1 doit être placée en début de ligne",
+            IllegalAlign: "Alignement non autorisé pour la commande %1",
+            BadMathStyleFor:
+            "Style mathématique non valide pour la commande %1",
+            ErroneousNestingEq:
+            "Emboitement incorrect des structures d'équation"
+            MultipleRowsOneCol:
+            "Les lignes multiples doivent avoir exactement une colonne"
+            NoClosingDelim:
+            "Impossible de trouver le délimiteur fermant pour la commande %1",
+            MultipleBBoxProperty:
+            "La propriété %1 de la commande %2 spécifiée deux fois",
+            InvalidBboxProperty:
+            "La valeur '%1' ne semble pas être une couleur, une dimension ou"+
+              "de marge intérieur ou un style."
           }
         },
 

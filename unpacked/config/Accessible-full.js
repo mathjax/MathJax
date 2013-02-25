@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*
  *  /MathJax/unpacked/config/Accessible-full.js
  *  
@@ -22,7 +24,8 @@ MathJax.Hub.Config({
     mpMouse: true
   },
   errorSettings: {
-    message: ["[Math Error]"]
+    // Localization: should be updated when the language is changed
+    message: ["["+MathJax.Localization._("MathError", "Math Error")+"]"]
   }
 });
 

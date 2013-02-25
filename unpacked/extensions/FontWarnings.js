@@ -118,6 +118,8 @@
     //  The messages for the various situations
     //
     Message: {
+      // Localization:
+      // how do we ensure it is updated when the language is changed?
       webFont: [
         ["closeBox"],
         _("webFont",
@@ -180,6 +182,9 @@
         [["span",{style:{position:"relative", bottom:".2em"}},["x"]]]
       ]],
       
+      // Localization:
+      // - decide HTML snippet format
+      // how do we ensure it is updated when the language is changed?
       webFonts: [
         ["p"],
         _("webFonts",

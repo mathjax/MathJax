@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/config/MMLorHTML.js
@@ -95,7 +97,10 @@
     } else {
       HUB.PreProcess.disabled = true;
       HUB.prepareScripts.disabled = true;
-      MathJax.Message.Set("Your browser does not support MathJax",null,4000);
+      MathJax.Message.Set(
+        MathJax.Localization._(["Message", MathJaxNotSupported],
+                               "Your browser does not support MathJax"),
+        null,4000);
       HUB.Startup.signal.Post("MathJax not supported");
     }
   });

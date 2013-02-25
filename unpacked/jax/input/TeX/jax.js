@@ -1407,7 +1407,7 @@
       }
       var n = this.GetArgument(name);
       if (!n.match(/-?[0-9]+/)) {
-        TEX.Error(_("MoveRootArg",
+        TEX.Error(_("IntegerArg",
                     "The argument to %1 must be an integer", name));
       }
       n = (n/15)+"em";

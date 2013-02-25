@@ -145,7 +145,7 @@
           // dialog: is it really necessary? If so, we need a localization note
           // to explain that to localizers. Handling of concatenation might
           // be an additional difficulty for the string extractor.
-          alert(_MathJax.Localization._(["MathML", "MathPlayer"],
+          alert(MathJax.Localization._(["MathML", "MathPlayer"],
                 "MathJax was not able to set up MathPlayer.\n\n"+
                 "If MathPlayer is not installed, you need to install it first.\n"+
                 "Otherwise, your security settings may be preventing ActiveX     \n"+
