@@ -588,9 +588,9 @@
               if (this.data[i] && this.data[i].isa(MML.mlabeledtr)) {
                 var align = HUB.config.displayAlign.charAt(0),
                 side = this.Get("side").charAt(0);
-                this.hasLabels = true;
-                this.laMatch = (align === side);
-                this.forceWidth = (align === "c" || !!(this.width||"").
+                this.nMMLhasLabels = true;
+                this.nMMLlaMatch = (align === side);
+                this.nMMLforceWidth = (align === "c" || !!(this.width||"").
                                    match("%"));
                 break;
               }
@@ -607,12 +607,12 @@
           }
           this.SUPER(arguments).toNativeMML.call(this,parent);
           //
-          if (this.hasLabels) {
+          if (this.nMMLhasLabels) {
             var mtable = parent.firstChild;
             //
             //  Add column attributes on the left when extra columns where inserted
             //
-            if (this.forceWidth || side !== "r") {
+            if (this.nMMLforceWidth || side !== "r") {
               var n = (align !== "l" ? 1 : 0) + (side === "l" ? 1 : 0);
               if (n) {
                 var attr = {columnalign:"left", columnwidth:"auto", columnspacing:"0px", columnlines:"none"};
@@ -625,7 +625,7 @@
             //
             //  Force the table width to 100% when needed
             //
-            if (this.forceWidth || !this.laMatch) {mtable.setAttribute("width","100%")}
+            if (this.nMMLforceWidth || !this.nMMLlaMatch) {mtable.setAttribute("width","100%")}
           }
         }
       });
@@ -646,11 +646,11 @@
           }
 
           if (nMML.tableLabelBug) {
-            var forceWidth = this.parent.forceWidth,
+            var forceWidth = this.parent.nMMLforceWidth,
             side = this.parent.Get("side").charAt(0),
             align = HUB.config.displayAlign.charAt(0);
 
-            if (this.parent.hasLabels && mtr.firstChild) {
+            if (this.parent.nMMLhasLabels && mtr.firstChild) {
               //
               //  If we add a label or padding column on the left of mlabeledtr,
               //    mirror that here and remove padding from first table mtd
@@ -725,7 +725,7 @@
             //
             //  Get spacing to use for separation of label from main table
             //
-            var width = 100, forceWidth = this.parent.forceWidth;
+            var width = 100, forceWidth = this.parent.nMMLforceWidth;
             if ((this.parent.width||"").match(/%/)) {
               width -= parseFloat(this.parent.width)
             };
@@ -868,12 +868,12 @@
         //      override the margin set by the stylesheet.
         //
         var mtable = ((this.data[0]||[]).data[0]||{});
-        if (mtable.hasLabels) {
-          if (mtable.forceWidth || !mtable.laMatch) {
+        if (mtable.nMMLhasLabels) {
+          if (mtable.nMMLforceWidth || !mtable.nMMLlaMatch) {
             tag.setAttribute("style","width:100%")
             parent.style.width = parent.parentNode.style.width="100%";
           };
-          if (mtable.laMatch) {
+          if (mtable.nMMLlaMatch) {
             if (parent.parentNode.parentNode.nodeName.toLowerCase() === "div") {
               parent.parentNode.parentNode.style
                 .setProperty("margin-"+HUB.config.displayAlign,"0px","important");
@@ -890,7 +890,7 @@
         //  parent element to match.  Even if we set the <math> width properly,
         //  it doesn't seem to propagate up to the <span> correctly.
         //
-        if (nMML.widthBug && !mtable.forceWidth && mtable.laMatch) 
+        if (nMML.widthBug && !mtable.nMMLforceWidth && mtable.nMMLlaMatch) 
           {parent.style.width = math.firstChild.scrollWidth+"px"}
       }
     });
