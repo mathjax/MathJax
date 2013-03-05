@@ -30,9 +30,9 @@
   
   MATHML.Parse = MathJax.Object.Subclass({
 
-    Init: function (string, cleanUpOnly) {
-      if (cleanUpOnly) {
-        return this.cleanUpMath.call(this,string);
+    Init: function (string, preProcessMathOnly) {
+      if (preProcessMathOnly) {
+        return this.preProcessMath.call(this,string);
       }
       this.Parse(string);
     },
@@ -43,7 +43,7 @@
     Parse: function (math) {
       var doc;
       if (typeof math !== "string") {doc = math.parentNode} else {
-        doc = MATHML.ParseXML(this.cleanUpMath.call(this,math));
+        doc = MATHML.ParseXML(this.preProcessMath.call(this,math));
         if (doc == null) {MATHML.Error("Error parsing MathML")}
       }
       var err = doc.getElementsByTagName("parsererror")[0];
@@ -161,7 +161,7 @@
     //
     // Clean Up the <math> source to prepare for XML parsing
     //
-    cleanUpMath: function (math) {
+    preProcessMath: function (math) {
       if (math.match(/^<[a-z]+:/i) && !math.match(/^<[^<>]* xmlns:/)) {
         math = math.replace(/^<([a-z]+)(:math)/i,'<$1$2 xmlns:$1="http://www.w3.org/1998/Math/MathML"')
       }
@@ -169,6 +169,10 @@
       var match = math.match(/^(<math( ('.*?'|".*?"|[^>])+)>)/i);
       if (match && match[2].match(/ (?!xmlns=)[a-z]+=\"http:/i)) {
 	math = match[1].replace(/ (?!xmlns=)([a-z]+=(['"])http:.*?\2)/ig," xmlns:$1 $1") + math.substr(match[0].length);
+      }
+      if (math.match(/^<math/i) && !math.match(/^<[^<>]* xmlns=/)) {
+        // append the MathML namespace
+        math = math.replace(/^<(math)/i,'<math xmlns="http://www.w3.org/1998/Math/MathML"')
       }
       math = math.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/,"$2");
       return math.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
@@ -253,6 +257,18 @@
       return this.div;
     },
     parseError: function (string) {return null},
+    createMSParser: function() {
+      var parser = null;
+      var xml = ["MSXML2.DOMDocument.6.0","MSXML2.DOMDocument.5.0",
+                 "MSXML2.DOMDocument.4.0","MSXML2.DOMDocument.3.0",
+                 "MSXML2.DOMDocument.2.0","Microsoft.XMLDOM"];
+      for (var i = 0, m = xml.length; i < m && !parser; i++) {
+        try {
+          parser = new ActiveXObject(xml[i])
+        } catch (err) {}
+      }
+      return parser;
+    },
     //
     //  Create the parser using a DOMParser, or other fallback method
     //
@@ -261,10 +277,7 @@
         this.parser = new DOMParser();
         return(this.parseDOM);
       } else if (window.ActiveXObject) {
-        var xml = ["MSXML2.DOMDocument.6.0","MSXML2.DOMDocument.5.0","MSXML2.DOMDocument.4.0",
-                   "MSXML2.DOMDocument.3.0","MSXML2.DOMDocument.2.0","Microsoft.XMLDOM"];
-        for (var i = 0, m = xml.length; i < m && !this.parser; i++)
-          {try {this.parser = new ActiveXObject(xml[i])} catch (err) {}}
+        this.parser = this.createMSParser();
         if (!this.parser) {
           alert("MathJax can't create an XML parser for MathML.  Check that\n"+
                 "the 'Script ActiveX controls marked safe for scripting' security\n"+
