@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/input/MathML/jax.js
@@ -28,7 +30,12 @@
   
   MATHML.Parse = MathJax.Object.Subclass({
 
-    Init: function (string) {this.Parse(string)},
+    Init: function (string, cleanUpOnly) {
+      if (cleanUpOnly) {
+        return this.cleanUpMath.call(this,string);
+      }
+      this.Parse(string);
+    },
     
     //
     //  Parse the MathML and check for errors
@@ -36,17 +43,8 @@
     Parse: function (math) {
       var doc;
       if (typeof math !== "string") {doc = math.parentNode} else {
-        if (math.match(/^<[a-z]+:/i) && !math.match(/^<[^<>]* xmlns:/))
-          {math = math.replace(/^<([a-z]+)(:math)/i,'<$1$2 xmlns:$1="http://www.w3.org/1998/Math/MathML"')}
-        // HTML5 removes xmlns: namespaces, so put them back for XML
-        var match = math.match(/^(<math( ('.*?'|".*?"|[^>])+)>)/i);
-        if (match && match[2].match(/ (?!xmlns=)[a-z]+=\"http:/i)) {
-	  math = match[1].replace(/ (?!xmlns=)([a-z]+=(['"])http:.*?\2)/ig," xmlns:$1 $1") +
-	         math.substr(match[0].length);
-        }
-        math = math.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/,"$2");
-        math = math.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
-        doc = MATHML.ParseXML(math); if (doc == null) {MATHML.Error("Error parsing MathML")}
+        doc = MATHML.ParseXML(this.cleanUpMath.call(this,math));
+        if (doc == null) {MATHML.Error("Error parsing MathML")}
       }
       var err = doc.getElementsByTagName("parsererror")[0];
       if (err) MATHML.Error("Error parsing MathML: "+err.textContent.replace(/This page.*?errors:|XML Parsing Error: |Below is a rendering of the page.*/g,""));
@@ -160,6 +158,22 @@
       }
     },
     
+    //
+    // Clean Up the <math> source to prepare for XML parsing
+    //
+    cleanUpMath: function (math) {
+      if (math.match(/^<[a-z]+:/i) && !math.match(/^<[^<>]* xmlns:/)) {
+        math = math.replace(/^<([a-z]+)(:math)/i,'<$1$2 xmlns:$1="http://www.w3.org/1998/Math/MathML"')
+      }
+      // HTML5 removes xmlns: namespaces, so put them back for XML
+      var match = math.match(/^(<math( ('.*?'|".*?"|[^>])+)>)/i);
+      if (match && match[2].match(/ (?!xmlns=)[a-z]+=\"http:/i)) {
+	math = match[1].replace(/ (?!xmlns=)([a-z]+=(['"])http:.*?\2)/ig," xmlns:$1 $1") + math.substr(match[0].length);
+      }
+      math = math.replace(/^\s*(?:\/\/)?<!(--)?\[CDATA\[((.|\n)*)(\/\/)?\]\]\1>\s*$/,"$2");
+      return math.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
+    },
+
     //
     //  Remove attribute whitespace
     //
