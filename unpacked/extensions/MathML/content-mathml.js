@@ -44,20 +44,23 @@ MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
   var MATHML = MathJax.InputJax.MathML;
 
   MATHML.prefilterHooks.Add(function (data) {
+    if (!MATHML.ctopXSLT) return;
+
     // Parse the <math> but use MATHML.Parse to apply the normal preprocessing.
     if (!MATHML.ParseXML) {MATHML.ParseXML = MATHML.createParser()}
     var doc = MathJax.InputJax.MathML.ParseXML(MATHML.Parse(data.math, true));
 
     // Now transform the <math> using the ctop stylesheet.
-    var newdoc = MathJax.InputJax.MathML.
-      ctopXSLT.transformToDocument(doc.documentElement);
+    var newdoc = MathJax.InputJax.MathML.ctopXSLT.transformToDocument(doc);
 
-    // Serialize the <math> again.
-    if (window.XMLSerializer) {
+    if ((typeof newdoc) === "string") {
+      // Internet Explorer returns a string, so just use it.
+      data.math = newdoc;
+    } else if (window.XMLSerializer) {
+      // Serialize the <math> again. We could directly provide the DOM content
+      // but other prefilterHooks may assume data.math is still a string.
       var serializer = new XMLSerializer();
       data.math = serializer.serializeToString(newdoc.documentElement, doc);
-    } else {
-      data.math = newdoc.toString();
     }
   });
 
@@ -67,18 +70,38 @@ MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
     if (!MATHML.ParseXML) {MATHML.ParseXML = MATHML.createParser()}
     MATHML.ctopXSLT = new XSLTProcessor();
     MATHML.ctopXSLT.importStylesheet(MATHML.ParseXML(ctopStylesheet));
-  } else {
-    // Internet Explorer <= 8: use transformNode
-    if (!MATHML.ParseXSLT) {
-      MATHML.ParseXSLT = MATHML.createMSParser();
-      MATHML.ParseXSLT.async = false;
-      MATHML.ParseXSLT.loadXML(ctopStylesheet);
-    }
-    MATHML.ctopXSLT = {
-      transformToDocument: function(node) {
-        return node.transformNode(MATHML.ParseXSLT);
+  } else if (MathJax.Hub.Browser.isMSIE) {
+    // nonstandard methods for Internet Explorer
+    if (MathJax.Hub.Browser.versionAtLeast("9.0")) {
+      // For Internet Explorer >= 9, use createProcessor
+      var ctop = new ActiveXObject("Msxml2.FreeThreadedDOMDocument");
+      ctop.loadXML(ctopStylesheet);
+      var xslt = new ActiveXObject("Msxml2.XSLTemplate");
+      xslt.stylesheet = ctop;
+      MATHML.ctopXSLT = {
+        ctop: xslt.createProcessor(),
+        transformToDocument: function(doc) {
+          this.ctop.input = doc;
+          this.ctop.transform();
+          return this.ctop.output;
+        }
+      }
+    } else {
+      // For Internet Explorer <= 8, use transformNode
+      var ctop = MATHML.createMSParser();
+      ctop.async = false;
+      ctop.loadXML(ctopStylesheet);
+
+      MATHML.ctopXSLT = {
+        ctop: ctop,
+        transformToDocument: function(doc) {
+          return doc.documentElement.transformNode(this.ctop);
+        }
       }
     }
+  } else {
+    // No XSLT support. Do not change the <math> content.
+    MATHML.ctopXSLT = null;
   }
 
   MathJax.Hub.Startup.signal.Post("MathML content-mathml Ready");
