@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax.js
@@ -2336,8 +2338,8 @@ MathJax.Hub.Startup = {
     isMac:       (navigator.platform.substr(0,3) === "Mac"),
     isPC:        (navigator.platform.substr(0,3) === "Win"),
     isMSIE:      (window.ActiveXObject != null && window.clipboardData != null),
-    isFirefox:   ((window.netscape != null || window.mozPaintCount != null) &&
-                     document.ATTRIBUTE_NODE != null && !window.opera),
+    isFirefox:   (navigator.userAgent.match(/Gecko/) != null &&
+                  navigator.userAgent.match(/KHTML/) == null),
     isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null &&
                      (!window.chrome || window.chrome.loadTimes == null)),
     isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
@@ -2415,7 +2417,8 @@ MathJax.Hub.Startup = {
         }
       }
       browser.isMobile = (navigator.appVersion.match(/Android/i) != null ||
-                          navigator.userAgent.match(/ Fennec\//) != null);
+                          navigator.userAgent.match(/ Fennec\//) != null ||
+                          navigator.userAgent.match(/Mobile/) != null);
     },
     Opera: function (browser) {browser.version = opera.version()},
     MSIE: function (browser) {
