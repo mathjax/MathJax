@@ -1,0 +1,10 @@
+{
+  "name": "MathJax",
+  "version": "2.1",
+  "main": "./MathJax.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}
