@@ -2,9 +2,11 @@
   "name": "MathJax",
   "version": "2.1.0",
   "main": "./MathJax.js",
+  "homepage": "http://www.mathjax.org/",
   "ignore": [
     "**/.*",
     "node_modules",
     "components"
-  ]
+  ],
+  "keywords": ["math", "js", "LaTeX", "MathML", "AsciiMath"]
 }
