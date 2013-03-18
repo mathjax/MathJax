@@ -1140,7 +1140,10 @@ MathJax.ElementJax.mml.Augment({
     isSpacelike: function () {return this.selected().isSpacelike()},
     Core: function () {return this.selected().Core()},
     CoreMO: function () {return this.selected().CoreMO()},
-    setTeXclass: function (prev) {return this.selected().setTeXclass(prev)}
+    setTeXclass: function (prev) {
+      if (this.Get("actiontype") === MML.ACTIONTYPE.TOOLTIP && this.data[1]) {this.data[1].setTeXclass()}
+      return this.selected().setTeXclass(prev);
+    }
   });
   
   MML.semantics = MML.mbase.Subclass({
