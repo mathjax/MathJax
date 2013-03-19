@@ -106,7 +106,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (values.padding == null)   {values.padding   = ".2em"}
       var mu = this.SVGgetMu(svg), scale = this.SVGgetScale();
       var p = SVG.length2em(values.padding,mu,1/SVG.em) * scale;
-      var t = SVG.length2em(values.thickness,mu,1/SVG.em) * scale;
+      var t = SVG.length2em(values.thickness,mu,1/SVG.em); // * scale;
       var H = base.h+p+t, D = base.d+p+t, W = base.w+2*(p+t);
       var notation = values.notation.split(/ /);
       var dx = 0, w, h, i, m, borders = [false,false,false,false];
