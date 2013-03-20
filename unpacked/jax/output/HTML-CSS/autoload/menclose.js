@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/autoload/menclose.js
@@ -36,12 +38,12 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (values.color && !this.mathcolor) {values.mathcolor = values.color}
       if (values.thickness == null) {values.thickness = ".075em"}
       if (values.padding == null)   {values.padding   = ".2em"}
+      span = this.HTMLcreateSpan(span);
       var mu = this.HTMLgetMu(span), scale = this.HTMLgetScale();
       var p = HTMLCSS.length2em(values.padding,mu,1/HTMLCSS.em) * scale;  // padding for enclosure
       var t = HTMLCSS.length2em(values.thickness,mu,1/HTMLCSS.em);        // thickness of lines (not scaled, see issue #414)
       var SOLID = HTMLCSS.Em(t)+" solid";
 
-      span = this.HTMLcreateSpan(span);
       var stack = HTMLCSS.createStack(span);
       var base = HTMLCSS.createBox(stack);
       this.HTMLmeasureChild(0,base);
