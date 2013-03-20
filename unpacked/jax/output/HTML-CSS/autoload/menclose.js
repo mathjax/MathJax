@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.1";
+  var VERSION = "2.1.1";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -37,8 +37,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (values.thickness == null) {values.thickness = ".075em"}
       if (values.padding == null)   {values.padding   = ".2em"}
       var mu = this.HTMLgetMu(span), scale = this.HTMLgetScale();
-      var p = HTMLCSS.length2em(values.padding,mu,1/HTMLCSS.em) * scale;
-      var t = HTMLCSS.length2em(values.thickness,mu,1/HTMLCSS.em) * scale;
+      var p = HTMLCSS.length2em(values.padding,mu,1/HTMLCSS.em) * scale;  // padding for enclosure
+      var t = HTMLCSS.length2em(values.thickness,mu,1/HTMLCSS.em);        // thickness of lines (not scaled, see issue #414)
       var SOLID = HTMLCSS.Em(t)+" solid";
 
       span = this.HTMLcreateSpan(span);
