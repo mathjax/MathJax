@@ -414,15 +414,8 @@
       if (Math.abs(m) < .0006) {return "0em"}
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
-    /* 
-     * Ex: function (m) {
-     *   m = m / this.TeX.x_height;
-     *   if (Math.abs(m) < .0006) {return "0ex"}
-     *   return m.toFixed(3).replace(/\.?0+$/,"") + "ex";
-     * },
-     */
     Ex: function (m) {
-      m = Math.round(m / this.TeX.x_height * this.ex) / this.ex;
+      m = Math.round(m / this.TeX.x_height * this.ex) / this.ex;  // try to use closest pixel size
       if (Math.abs(m) < .0006) {return "0ex"}
       return m.toFixed(3).replace(/\.?0+$/,"") + "ex";
     },
