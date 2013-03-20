@@ -27,7 +27,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.1",
+  version: "2.1.1",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -1141,7 +1141,10 @@ MathJax.ElementJax.mml.Augment({
     Core: function () {return this.selected().Core()},
     CoreMO: function () {return this.selected().CoreMO()},
     setTeXclass: function (prev) {
-      if (this.Get("actiontype") === MML.ACTIONTYPE.TOOLTIP && this.data[1]) {this.data[1].setTeXclass()}
+      if (this.Get("actiontype") === MML.ACTIONTYPE.TOOLTIP && this.data[1]) {
+        // Make sure tooltip has proper spacing when typeset (see issue #412)
+        this.data[1].setTeXclass();
+      }
       return this.selected().setTeXclass(prev);
     }
   });
