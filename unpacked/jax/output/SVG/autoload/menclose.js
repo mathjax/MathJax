@@ -22,7 +22,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.1";
+  var VERSION = "2.1.1";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -105,8 +105,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (values.thickness == null) {values.thickness = ".075em"}
       if (values.padding == null)   {values.padding   = ".2em"}
       var mu = this.SVGgetMu(svg), scale = this.SVGgetScale();
-      var p = SVG.length2em(values.padding,mu,1/SVG.em) * scale;
-      var t = SVG.length2em(values.thickness,mu,1/SVG.em); // * scale;
+      var p = SVG.length2em(values.padding,mu,1/SVG.em) * scale;  // padding for enclosure
+      var t = SVG.length2em(values.thickness,mu,1/SVG.em);        // thickness of lines (not scaled, see issue #414)
       var H = base.h+p+t, D = base.d+p+t, W = base.w+2*(p+t);
       var notation = values.notation.split(/ /);
       var dx = 0, w, h, i, m, borders = [false,false,false,false];
