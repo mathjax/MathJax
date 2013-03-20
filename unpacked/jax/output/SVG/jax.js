@@ -415,7 +415,7 @@
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
     Ex: function (m) {
-      m = m / this.TeX.x_height;
+      m = Math.round(m / this.TeX.x_height * this.ex) / this.ex;  // try to use closest pixel size
       if (Math.abs(m) < .0006) {return "0ex"}
       return m.toFixed(3).replace(/\.?0+$/,"") + "ex";
     },
@@ -1891,10 +1891,10 @@
           var l = Math.max(-svg.l,0), r = Math.max(svg.r-svg.w,0);
           var style = svg.element.style;
           style.width = SVG.Ex(l+svg.w+r);
-          style.height = SVG.Ex(svg.H+svg.D);
-          style.verticalAlign = SVG.Ex(-svg.D-2*SVG.em); // remove 2 extra pixels added below
+          style.height = SVG.Ex(svg.H+svg.D+2*SVG.em);
+          style.verticalAlign = SVG.Ex(-svg.D-3*SVG.em); // remove 2 extra pixels added below plus padding
           style.marginLeft = SVG.Ex(-l); style.marginRight = SVG.Ex(-r);
-          svg.element.setAttribute("viewBox",(-l)+" "+(-svg.H)+" "+(l+svg.w+r)+" "+(svg.H+svg.D));
+          svg.element.setAttribute("viewBox",(-l)+" "+(-svg.H-SVG.em)+" "+(l+svg.w+r)+" "+(svg.H+svg.D+2*SVG.em));
           svg.element.style.margin="1px 0px"; // 1px above and below to prevent lines from touching
           //
           //  If there is extra height or depth, hide that
@@ -1906,7 +1906,7 @@
                               width:SVG.Ex(svg.w), height:SVG.Ex(svg.h+svg.d),
                               "vertical-align":SVG.Ex(-svg.d)}}]]);
             frame.firstChild.appendChild(svg.element); svg.element = frame;
-            style.verticalAlign = ""; style.position = "absolute";
+            style.verticalAlign = style.margin = ""; style.position = "absolute";
             style.bottom = SVG.Ex(svg.d-svg.D); style.left = 0;
           }
           //
