@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/extensions/TeX/mathchoice.js
@@ -47,10 +49,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (values.scriptlevel > 0) {return Math.min(3,values.scriptlevel + 1)}
       return (values.displaystyle ? 0 : 1);
     },
-    setTeXclass: function (prev) {return this.Core().setTeXclass(prev)},
-    isSpacelike: function () {return this.Core().isSpacelike()},
-    isEmbellished: function () {return this.Core().isEmbellished()},
-    Core: function () {return this.data[this.choice()]},
+    selected: function () {return this.data[this.choice()]},
+    setTeXclass: function (prev) {return this.selected().setTeXclass(prev)},
+    isSpacelike: function () {return this.selected().isSpacelike()},
+    isEmbellished: function () {return this.selected().isEmbellished()},
+    Core: function () {return this.selected().Core()},
+    CoreMO: function () {return this.selected().CoreMO()},
     toHTML: function (span) {
       span = this.HTMLcreateSpan(span);
       span.bbox = this.Core().toHTML(span).bbox;
