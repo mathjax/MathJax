@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/element/mml/jax.js
@@ -580,7 +582,7 @@ MathJax.ElementJax.mml.Augment({
       this.texClass = this.Get("texClass");
       if (this.data.join("") === "\u2061") {
         // force previous node to be texClass OP, and skip this node
-        prev.texClass = MML.TEXCLASS.OP;
+        if (prev) prev.texClass = MML.TEXCLASS.OP;
         this.texClass = this.prevClass = MML.TEXCLASS.NONE;
         return prev;
       }
