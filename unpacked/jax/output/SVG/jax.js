@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/SVG/jax.js
@@ -1207,6 +1209,11 @@
             "sans-serif-italic":MML.VARIANT.SANSSERIF,
             "sans-serif-bold-italic":MML.VARIANT.BOLDSANSSERIF
           }[variant]||variant;
+        }
+        if (!(variant in SVG.FONTDATA.VARIANT)) {
+          // If the mathvariant value is invalid or not supported by this
+          // font, fallback to normal. See issue 363.
+          variant = "normal";
         }
 	return SVG.FONTDATA.VARIANT[variant];
       },

@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/jax.js
@@ -322,15 +324,15 @@
         }
       } else {
         MathJax.Message.Set("Can't find a valid font using ["+this.config.availableFonts.join(", ")+"]",null,3000);
+        this.fontInUse = "generic";
         this.FONTDATA = {
           TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
-          FONTS: {}, VARIANT: {normal: {fonts:[]}}, RANGES: [],
-          DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
+          FONTS: {},
+          VARIANT: {
+            "normal": {fonts:[]}, "-generic-variant": {fonts:[]},
+            "-largeOp": {fonts:[]}, "-smallOp": {fonts:[]}
+          }, RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
         };
-        if (MathJax.InputJax.TeX && MathJax.InputJax.TeX.Definitions) {
-          MathJax.InputJax.TeX.Definitions.macros.overline[1]  = "002D";
-          MathJax.InputJax.TeX.Definitions.macros.underline[1] = "002D";
-        }
         HUB.Startup.signal.Post("HTML-CSS Jax - no valid font");
       }
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
@@ -1846,6 +1848,11 @@
             "sans-serif-italic":MML.VARIANT.SANSSERIF,
             "sans-serif-bold-italic":MML.VARIANT.BOLDSANSSERIF
           }[variant]||variant;
+        }
+        if (!(variant in HTMLCSS.FONTDATA.VARIANT)) {
+          // If the mathvariant value is invalid or not supported by this
+          // font, fallback to normal. See issue 363.
+          variant = "normal";
         }
         return HTMLCSS.FONTDATA.VARIANT[variant];
       }
