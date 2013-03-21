@@ -164,8 +164,8 @@
         var first = mml.data[0], last = mml.data[mml.data.length-1];
         if (first.type === "mo" && first.fence &&
             last.type === "mo" && last.fence) {
-          mml.open = first.data[0].data[0];
-          mml.close = last.data[0].data[0];
+          if (first.data[0]) {mml.open = first.data[0].data[0]}
+          if (last.data[0]) {mml.close = last.data[0].data[0]}
         }
       }
     },
