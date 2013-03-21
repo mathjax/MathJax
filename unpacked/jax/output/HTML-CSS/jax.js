@@ -1636,7 +1636,7 @@
 	  var SPAN = this.HTMLspanElement();
 	  if (SPAN && (SPAN.parentNode === span || (SPAN.parentNode||{}).parentNode === span)) {
 	    while (SPAN.firstChild) {SPAN.removeChild(SPAN.firstChild)}
-	    SPAN.bbox = {w:0, h:0, d:0, lw:0, rw:0};
+	    SPAN.bbox = this.HTMLzeroBBox();
 	    SPAN.scale = 1; SPAN.isMultChar = SPAN.HH = null;
 	    SPAN.style.cssText = "";
 	    return SPAN;
@@ -1648,7 +1648,7 @@
 	if (this["class"]) {span.className += " "+this["class"]}
 	if (!this.spanID) {this.spanID = HTMLCSS.GetID()}
 	span.id = (this.id || "MathJax-Span-"+this.spanID) + HTMLCSS.idPostfix;
-	span.bbox = {w:0, h:0, d:0, lw:0, rw:0}; this.styles = {};
+	span.bbox = this.HTMLzeroBBox(); this.styles = {};
 	if (this.style) {
 	  span.style.cssText = this.style;
 	  if (span.style.fontSize) {this.mathsize = span.style.fontSize; span.style.fontSize = ""}
@@ -1909,7 +1909,7 @@
 	var variant = this.HTMLgetVariant();
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
-	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
         var text = this.data.join(""), bbox = span.bbox;
 	if (bbox.skew && text.length !== 1) {delete bbox.skew}
         if (bbox.rw > bbox.w && text.length === 1 && !variant.noIC) {
@@ -1929,7 +1929,7 @@
 	var variant = this.HTMLgetVariant();
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
-	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (this.data.join("").length !== 1) {delete span.bbox.skew}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
@@ -1971,7 +1971,7 @@
         //
 	for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant,this.HTMLremap,mapchars)}}
-	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (text.length !== 1) {delete span.bbox.skew}
         //
         //  Handle combining characters by adding a non-breaking space and removing that width
@@ -2098,7 +2098,7 @@
           {variant = {bold:variant.bold, italic:variant.italic, fontInherit: true}}
         for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
-        if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+        if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
         if (this.data.join("").length !== 1) {delete span.bbox.skew}
         this.HTMLhandleSpace(span);
         this.HTMLhandleColor(span);

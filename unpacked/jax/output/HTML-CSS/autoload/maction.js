@@ -46,7 +46,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var selected = this.selected();
       if (selected.type == "null") {
         span = this.HTMLcreateSpan(span);
-        span.bbox = {h:0, d:0, w:0, lw:0, rw:0};
+        span.bbox = this.HTMLzeroBBox();
         return span;
       }
       span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
