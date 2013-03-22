@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/element/mml/jax.js
@@ -27,7 +29,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.1",
+  version: "2.1.1",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -580,7 +582,7 @@ MathJax.ElementJax.mml.Augment({
       this.texClass = this.Get("texClass");
       if (this.data.join("") === "\u2061") {
         // force previous node to be texClass OP, and skip this node
-        prev.texClass = MML.TEXCLASS.OP;
+        if (prev) prev.texClass = MML.TEXCLASS.OP;
         this.texClass = this.prevClass = MML.TEXCLASS.NONE;
         return prev;
       }
@@ -1140,7 +1142,13 @@ MathJax.ElementJax.mml.Augment({
     isSpacelike: function () {return this.selected().isSpacelike()},
     Core: function () {return this.selected().Core()},
     CoreMO: function () {return this.selected().CoreMO()},
-    setTeXclass: function (prev) {return this.selected().setTeXclass(prev)}
+    setTeXclass: function (prev) {
+      if (this.Get("actiontype") === MML.ACTIONTYPE.TOOLTIP && this.data[1]) {
+        // Make sure tooltip has proper spacing when typeset (see issue #412)
+        this.data[1].setTeXclass();
+      }
+      return this.selected().setTeXclass(prev);
+    }
   });
   
   MML.semantics = MML.mbase.Subclass({

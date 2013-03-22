@@ -24,7 +24,7 @@
 
 MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   id: "HTML-CSS",
-  version: "2.1",
+  version: "2.1.1",
   directory: MathJax.OutputJax.directory + "/HTML-CSS",
   extensionDir: MathJax.OutputJax.extensionDir + "/HTML-CSS",
   autoloadDir: MathJax.OutputJax.directory + "/HTML-CSS/autoload",
@@ -79,7 +79,8 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
         "-moz-box-shadow": "2px 2px 5px #AAAAAA",    // Forefox 3.5
         "-khtml-box-shadow": "2px 2px 5px #AAAAAA",  // Konqueror
         filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')", // IE
-        padding: "3px 4px"
+        padding: "3px 4px",
+        "z-index": 401
       }
     }
     

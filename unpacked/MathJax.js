@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax.js
@@ -29,8 +31,8 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "2.1.1";
-MathJax.fileversion = "2.1";
+MathJax.version = "2.1";
+MathJax.fileversion = "2.1.2";
 
 /**********************************************************/
 
@@ -650,8 +652,10 @@ MathJax.fileversion = "2.1";
     //
     Require: function (file,callback) {
       callback = BASE.Callback(callback); var type;
-      if (file instanceof Object) {for (var i in file) {}; type = i.toUpperCase(); file = file[i]}
-        else {type = file.split(/\./).pop().toUpperCase()}
+      if (file instanceof Object) {
+        for (var i in file)
+          {if (file.hasOwnProperty(i)) {type = i.toUpperCase(); file = file[i]}}
+      } else {type = file.split(/\./).pop().toUpperCase()}
       file = this.fileURL(file);
       // FIXME: check that URL is OK
       if (this.loaded[file]) {
@@ -669,8 +673,10 @@ MathJax.fileversion = "2.1";
     //
     Load: function (file,callback) {
       callback = BASE.Callback(callback); var type;
-      if (file instanceof Object) {for (var i in file) {}; type = i.toUpperCase(); file = file[i]}
-        else {type = file.split(/\./).pop().toUpperCase()}
+      if (file instanceof Object) {
+        for (var i in file)
+          {if (file.hasOwnProperty(i)) {type = i.toUpperCase(); file = file[i]}}
+      } else {type = file.split(/\./).pop().toUpperCase()}
       file = this.fileURL(file);
       if (this.loading[file]) {
         this.addHook(file,callback);
@@ -688,7 +694,8 @@ MathJax.fileversion = "2.1";
     //
     LoadHook: function (file,callback,priority) {
       callback = BASE.Callback(callback);
-      if (file instanceof Object) {for (var i in file) {file = file[i]}}
+      if (file instanceof Object)
+        {for (var i in file) {if (file.hasOwnProperty(i)) {file = file[i]}}}
       file = this.fileURL(file);
       if (this.loaded[file]) {callback(this.loaded[file])}
         else {this.addHook(file,callback,priority)}
@@ -1097,7 +1104,7 @@ MathJax.Message = {
     if (!this.div) {
       var frame = document.body;
       if (MathJax.Hub.Browser.isMSIE) {
-	  frame = this.frame = this.addDiv(document.body); frame.removeAttribute("id");
+        frame = this.frame = this.addDiv(document.body); frame.removeAttribute("id");
         frame.style.position = "absolute";
         frame.style.border = frame.style.margin = frame.style.padding = "0px";
         frame.style.zIndex = "101"; frame.style.height = "0px";
@@ -1167,7 +1174,7 @@ MathJax.Message = {
       }
     }
     if (clearDelay) {setTimeout(MathJax.Callback(["Clear",this,n]),clearDelay)}
-    else if (clearDelay == 0) {this.Clear(n,0)}
+      else if (clearDelay == 0) {this.Clear(n,0)}
     return n;
   },
   
@@ -2336,8 +2343,8 @@ MathJax.Hub.Startup = {
     isMac:       (navigator.platform.substr(0,3) === "Mac"),
     isPC:        (navigator.platform.substr(0,3) === "Win"),
     isMSIE:      (window.ActiveXObject != null && window.clipboardData != null),
-    isFirefox:   ((window.netscape != null || window.mozPaintCount != null) &&
-                     document.ATTRIBUTE_NODE != null && !window.opera),
+    isFirefox:   (navigator.userAgent.match(/Gecko/) != null &&
+                  navigator.userAgent.match(/KHTML/) == null),
     isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null &&
                      (!window.chrome || window.chrome.loadTimes == null)),
     isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
@@ -2415,7 +2422,8 @@ MathJax.Hub.Startup = {
         }
       }
       browser.isMobile = (navigator.appVersion.match(/Android/i) != null ||
-                          navigator.userAgent.match(/ Fennec\//) != null);
+                          navigator.userAgent.match(/ Fennec\//) != null ||
+                          navigator.userAgent.match(/Mobile/) != null);
     },
     Opera: function (browser) {browser.version = opera.version()},
     MSIE: function (browser) {

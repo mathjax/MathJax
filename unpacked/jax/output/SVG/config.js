@@ -24,7 +24,7 @@
 
 MathJax.OutputJax.SVG = MathJax.OutputJax({
   id: "SVG",
-  version: "2.1",
+  version: "2.1.1",
   directory: MathJax.OutputJax.directory + "/SVG",
   extensionDir: MathJax.OutputJax.extensionDir + "/SVG",
   autoloadDir: MathJax.OutputJax.directory + "/SVG/autoload",
@@ -68,7 +68,8 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
         "-webkit-box-shadow": "2px 2px 5px #AAAAAA", // Safari 3 and Chrome
         "-moz-box-shadow": "2px 2px 5px #AAAAAA",    // Forefox 3.5
         "-khtml-box-shadow": "2px 2px 5px #AAAAAA",  // Konqueror
-        padding: "3px 4px"
+        padding: "3px 4px",
+        "z-index": 401
       }
     }
   }

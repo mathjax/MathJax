@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/jax.js
@@ -296,6 +298,9 @@
     webFontDefault: "MathJax_Blank",
     allowWebFonts: "otf",              // assume browser can use OTF web fonts
 
+    maxStretchyParts: 1000,            // limit the number of parts allowed for
+                                       // stretchy operators. See issue 366.
+
     Config: function () {
       if (!this.require) {this.require = []}
       this.Font = FONTTEST();
@@ -322,15 +327,15 @@
         }
       } else {
         MathJax.Message.Set("Can't find a valid font using ["+this.config.availableFonts.join(", ")+"]",null,3000);
+        this.fontInUse = "generic";
         this.FONTDATA = {
           TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
-          FONTS: {}, VARIANT: {normal: {fonts:[]}}, RANGES: [],
-          DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
+          FONTS: {},
+          VARIANT: {
+            "normal": {fonts:[]}, "-generic-variant": {fonts:[]},
+            "-largeOp": {fonts:[]}, "-smallOp": {fonts:[]}
+          }, RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
         };
-        if (MathJax.InputJax.TeX && MathJax.InputJax.TeX.Definitions) {
-          MathJax.InputJax.TeX.Definitions.macros.overline[1]  = "002D";
-          MathJax.InputJax.TeX.Definitions.macros.underline[1] = "002D";
-        }
         HUB.Startup.signal.Post("HTML-CSS Jax - no valid font");
       }
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
@@ -1130,7 +1135,7 @@
       if (H > h) {
         ext = this.Element("span"); this.createChar(ext,delim.ext,scale,font);
         var eH = ext.bbox.h + ext.bbox.d, eh = eH - .05, n, N, k = (delim.mid ? 2 : 1);
-        N = n = Math.ceil((H-h)/(k*eh));
+        N = n = Math.min(Math.ceil((H-h)/(k*eh)), this.maxStretchyParts);
         if (!delim.fullExtenders) {eh = (H-h)/(k*n)}
         var dy = (n/(n+1))*(eH - eh); eh = eH - dy; y += dy + eh - ext.bbox.h;
         while (k-- > 0) {
@@ -1180,7 +1185,7 @@
       if (delim.min && W < w*delim.min) {W = w*delim.min}
       if (W > w) {
         var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
-        N = n = Math.ceil((W-w)/(k*rw));
+        N = n = Math.min(Math.ceil((W-w)/(k*rw)), this.maxStretchyParts);
         if (!delim.fillExtenders) {rw = (W-w)/(k*n)}
         dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
@@ -1636,7 +1641,7 @@
 	  var SPAN = this.HTMLspanElement();
 	  if (SPAN && (SPAN.parentNode === span || (SPAN.parentNode||{}).parentNode === span)) {
 	    while (SPAN.firstChild) {SPAN.removeChild(SPAN.firstChild)}
-	    SPAN.bbox = {w:0, h:0, d:0, lw:0, rw:0};
+	    SPAN.bbox = this.HTMLzeroBBox();
 	    SPAN.scale = 1; SPAN.isMultChar = SPAN.HH = null;
 	    SPAN.style.cssText = "";
 	    return SPAN;
@@ -1648,7 +1653,7 @@
 	if (this["class"]) {span.className += " "+this["class"]}
 	if (!this.spanID) {this.spanID = HTMLCSS.GetID()}
 	span.id = (this.id || "MathJax-Span-"+this.spanID) + HTMLCSS.idPostfix;
-	span.bbox = {w:0, h:0, d:0, lw:0, rw:0}; this.styles = {};
+	span.bbox = this.HTMLzeroBBox(); this.styles = {};
 	if (this.style) {
 	  span.style.cssText = this.style;
 	  if (span.style.fontSize) {this.mathsize = span.style.fontSize; span.style.fontSize = ""}
@@ -1847,6 +1852,11 @@
             "sans-serif-bold-italic":MML.VARIANT.BOLDSANSSERIF
           }[variant]||variant;
         }
+        if (!(variant in HTMLCSS.FONTDATA.VARIANT)) {
+          // If the mathvariant value is invalid or not supported by this
+          // font, fallback to normal. See issue 363.
+          variant = "normal";
+        }
         return HTMLCSS.FONTDATA.VARIANT[variant];
       }
     },{
@@ -1909,7 +1919,7 @@
 	var variant = this.HTMLgetVariant();
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
-	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
         var text = this.data.join(""), bbox = span.bbox;
 	if (bbox.skew && text.length !== 1) {delete bbox.skew}
         if (bbox.rw > bbox.w && text.length === 1 && !variant.noIC) {
@@ -1929,7 +1939,7 @@
 	var variant = this.HTMLgetVariant();
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
-	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (this.data.join("").length !== 1) {delete span.bbox.skew}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
@@ -1971,7 +1981,7 @@
         //
 	for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant,this.HTMLremap,mapchars)}}
-	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (text.length !== 1) {delete span.bbox.skew}
         //
         //  Handle combining characters by adding a non-breaking space and removing that width
@@ -2098,7 +2108,7 @@
           {variant = {bold:variant.bold, italic:variant.italic, fontInherit: true}}
         for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
-        if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+        if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
         if (this.data.join("").length !== 1) {delete span.bbox.skew}
         this.HTMLhandleSpace(span);
         this.HTMLhandleColor(span);
@@ -2531,7 +2541,14 @@
 	if (sup) {sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw)}
 	if (sub) {sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw)}
 	HTMLCSS.placeBox(base,0,0);
-	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
+        var sscale;
+        if (sup) {
+          sscale = this.data[this.sup].HTMLgetScale();
+        } else if (sub) {
+          sscale = this.data[this.sub].HTMLgetScale();
+        } else {
+          sscale = this.HTMLgetScale();
+        }
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
 	if (base.bbox.ic) {
