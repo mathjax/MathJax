@@ -23,7 +23,7 @@
  */
 
 MathJax.Extension["TeX/autoload-all"] = {
-  version: "2.1"
+  version: "2.1.1"
 };
   
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -46,7 +46,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   };
   
   var ENVIRONMENTS = {
-    AMSmath:    ["subarray","smallmatrix","equation","equation*"]
+    AMSmath:    ["subarray","smallmatrix","equation","equation*"],
+    AMScd:      ["CD"]
   };
 
   var name, i, m, defs = {macros:{}, environment:{}};
