@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/SVG/autoload/multiline.js
@@ -541,6 +543,12 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     SVGbetterBreak: function (info,state) {
       if (info.values && info.values.last === this) {return false}
       var values = this.getValues("linebreak");
+      var linebreakValue = values.linebreak;
+      if (!linebreakValue || this.hasDimAttr()) {
+        // The MathML spec says that the linebreak attribute should be ignored
+        // if any dimensional attribute is set.
+        linebreakValue = MML.LINEBREAK.AUTO;
+      }
       //
       //  Get the default penalty for this location
       //
@@ -555,8 +563,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Get the penalty for this type of break and
       //    use it to modify the default penalty
       //
-      var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO];
-      if (values.linebreak === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit*1000)
+      var linebreak = PENALTY[linebreakValue];
+      if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit*1000)
         {linebreak = [(w+PENALTY.spaceoffset)*PENALTY.spacefactor]}
       if (!(linebreak instanceof Array)) {
         //  for breaks past the width, don't modify penalty
