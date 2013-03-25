@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/jax/output/SVG/autoload/menclose.js
@@ -108,7 +110,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var p = SVG.length2em(values.padding,mu,1/SVG.em) * scale;  // padding for enclosure
       var t = SVG.length2em(values.thickness,mu,1/SVG.em);        // thickness of lines (not scaled, see issue #414)
       var H = base.h+p+t, D = base.d+p+t, W = base.w+2*(p+t);
-      var notation = values.notation.split(/ /);
+      var notation = MathJax.Hub.SplitList(values.notation);
       var dx = 0, w, h, i, m, borders = [false,false,false,false];
       if (!values.mathcolor) {values.mathcolor = "black"}
       
