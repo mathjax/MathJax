@@ -91,13 +91,14 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Determine spacing and alignment
       //
-      var CSPACE = values.columnspacing.split(/ /),
-          RSPACE = values.rowspacing.split(/ /),
-          CALIGN = values.columnalign.split(/ /),
-          RALIGN = values.rowalign.split(/ /),
-          CLINES = values.columnlines.split(/ /),
-          RLINES = values.rowlines.split(/ /),
-          CWIDTH = values.columnwidth.split(/ /),
+      var SPLIT = MathJax.Hub.SplitList;
+      var CSPACE = SPLIT(values.columnspacing),
+          RSPACE = SPLIT(values.rowspacing),
+          CALIGN = SPLIT(values.columnalign),
+          RALIGN = SPLIT(values.rowalign),
+          CLINES = SPLIT(values.columnlines),
+          RLINES = SPLIT(values.rowlines),
+          CWIDTH = SPLIT(values.columnwidth),
           RCALIGN = [];
       for (i = 0, m = CSPACE.length; i < m; i++) {CSPACE[i] = SVG.length2em(CSPACE[i],mu)}
       for (i = 0, m = RSPACE.length; i < m; i++) {RSPACE[i] = SVG.length2em(RSPACE[i],mu)}
@@ -119,7 +120,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         row = this.data[i]; RCALIGN[i] = [];
         if (row.rowalign) {RALIGN[i] = row.rowalign}
         if (row.columnalign) {
-          RCALIGN[i] = row.columnalign.split(/ /);
+          RCALIGN[i] = SPLIT(row.columnalign);
           while (RCALIGN[i].length <= J) {RCALIGN[i].push(RCALIGN[i][RCALIGN[i].length-1])}
         }
       }
@@ -148,8 +149,13 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var fx = 0, fy = 0, fW, fH = HD;
       if (values.frame !== "none" ||
          (values.columnlines+values.rowlines).match(/solid|dashed/)) {
-        fx = SVG.length2em(values.framespacing.split(/[, ]+/)[0],mu);
-        fy = SVG.length2em(values.framespacing.split(/[, ]+/)[1],mu);
+        var frameSpacing = SPLIT(values.framespacing);
+        if (frameSpacing.length != 2) {
+          // invalid attribute value: use the default.
+          frameSpacing = SPLIT(this.defaults.framespacing);
+        }
+        fx = SVG.length2em(frameSpacing[0],mu);
+        fy = SVG.length2em(frameSpacing[1],mu);
         fH = HD + 2*fy; // fW waits until svg.w is determined
       }
       //

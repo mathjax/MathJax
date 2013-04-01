@@ -51,7 +51,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var frame = HTMLCSS.createFrame(stack,H+D,0,W,t,"none");
       frame.id = "MathJax-frame-"+this.spanID;
       HTMLCSS.addBox(stack,frame); stack.insertBefore(frame,base); // move base to above background
-      var notation = values.notation.split(/ /);
+      var notation = MathJax.Hub.SplitList(values.notation);
       var T = 0, B = 0, R = 0, L = 0, dx = 0, dy = 0; var svg, vml;
       var w, h, r;
       if (!values.mathcolor) {values.mathcolor = "black"} else {span.style.color = values.mathcolor}

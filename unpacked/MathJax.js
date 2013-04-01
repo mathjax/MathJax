@@ -1732,7 +1732,13 @@ MathJax.Hub = {
       }
     }}
     return dst;
-  }
+  },
+
+  // Old browsers (e.g. Internet Explorer <= 8) do not support trim().
+  SplitList: ("trim" in String.prototype ?
+              function (list) {return list.trim().split(/\s+/)} :
+              function (list) {return list.replace(/^\s+/,'').
+                                           replace(/\s+$/,'').split(/\s+/)})
 };
 MathJax.Hub.Insert(MathJax.Hub.config.styles,MathJax.Message.styles);
 MathJax.Hub.Insert(MathJax.Hub.config.styles,{".MathJax_Error":MathJax.Hub.config.errorSettings.style});
