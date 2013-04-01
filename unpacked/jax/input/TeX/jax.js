@@ -1503,7 +1503,7 @@
       size = String(size).replace(/(\.\d\d\d).+/,'$1')+"em";
       var delim = this.GetDelimiter(name);
       this.Push(MML.TeXAtom(MML.mo(delim).With({
-        minsize: size, maxsize: size, scriptlevel: 0,
+        minsize: size, maxsize: size,
         fence: true, stretchy: true, symmetric: true
       })).With({texClass: mclass}));
     },
