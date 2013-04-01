@@ -638,7 +638,16 @@ MathJax.ElementJax.mml.Augment({
       depth: "0ex",
       linebreak: MML.LINEBREAK.AUTO
     },
-    hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)}
+    hasDimAttr: function () {
+      return (this.hasValue("width") || this.hasValue("height") ||
+              this.hasValue("depth"));
+    },
+    hasNewline: function () {
+      // The MathML spec says that the linebreak attribute should be ignored
+      // if any dimensional attribute is set.
+      return (!this.hasDimAttr() &&
+              this.Get("linebreak") === MML.LINEBREAK.NEWLINE);
+    }
   });
 
   MML.ms = MML.mbase.Subclass({
