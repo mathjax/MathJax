@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/TeX/AMSmath.js
@@ -24,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.1",
+  version: "2.1.1",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -162,15 +163,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (!star) {arg = CONFIG.formatTag(arg)}
       var global = this.stack.global; global.tagID = tag;
       if (global.notags) {
-        TEX.Error(MathJax.Localization._(["TeX", "CommandNotAllowedInEnv"],
-                                         "%1 not allowed in %2 environment",
-                                         name, global.notags)
-        )
+        TEX.Error(["CommandNotAllowedInEnv",
+                   "%1 not allowed in %2 environment",
+                   name,global.notags]
+        );
       }
-      if (global.tag) {
-        TEX.Error(MathJax.Localization._(["TeX", "MultipleCommand"],
-                                         "Multiple %1", name))
-      }
+      if (global.tag) {TEX.Error(["MultipleCommand","Multiple %1",name])}
       global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
     },
     HandleNoTag: function (name) {
@@ -185,16 +183,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var global = this.stack.global, label = this.GetArgument(name);
       if (label === "") return;
       if (!AMS.refUpdate) {
-        if (global.label) {
-          TEX.Error(MathJax.Localization._(["TeX", "MultipleCommand"],
-                                           "Multiple %1", name))
-        }
+        if (global.label) {TEX.Error(["MultipleCommand","Multiple %1",name])}
         global.label = label;
-        if (AMS.labels[label] || AMS.eqlabels[label]) {
-          TEX.Error(MathJax.Localization._(["TeX", "MultipleLabel"],
-                                           "Label '%1' mutiply defined",
-                                           label)
-        }
+        if (AMS.labels[label] || AMS.eqlabels[label])
+          {TEX.Error(["MultipleLabel","Label '%1' mutiply defined",label])}
         AMS.eqlabels[label] = "???"; // will be replaced by tag value later
       }
     },
@@ -239,8 +231,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     HandleShove: function (name,shove) {
       var top = this.stack.Top();
       if (top.type !== "multline" || top.data.length) {
-        TEX.Error(MathJax.Localization._(["TeX", "CommandAtTheBeginingOfLine",
-                 "%1 must come at the beginning of the line"))
+        TEX.Error(["CommandAtTheBeginingOfLine",
+                   "%1 must come at the beginning of the line",name]);
       }
       top.data.shove = shove;
     },
@@ -255,11 +247,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var frac = MML.mfrac(TEX.Parse('\\strut\\textstyle{'+num+'}',this.stack.env).mml(),
                            TEX.Parse('\\strut\\textstyle{'+den+'}',this.stack.env).mml());
       lr = ({l:MML.ALIGN.LEFT, r:MML.ALIGN.RIGHT,"":""})[lr];
-      if (lr == null) {
-        TEX.Error(MathJax.Localization._(["TeX", "IllegalAlign"],
-                                         "Illegal alignment specified in %1",
-                                         name))
-      }
+      if (lr == null)
+        {TEX.Error(["IllegalAlign","Illegal alignment specified in %1",name])}
       if (lr) {frac.numalign = frac.denomalign = lr}
       this.Push(frac);
     },
@@ -279,10 +268,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (left || right) {frac = MML.mfenced(frac).With({open: left, close: right})}
       if (style !== "") {
         var STYLE = (["D","T","S","SS"])[style];
-        if (STYLE == null) {
-          TEX.Error(MathJax.Localization._(["TeX", "BadMathStyleFor"],
-                                           "Bad math style for %1", name)
-        }
+        if (STYLE == null)
+          {TEX.Error(["BadMathStyleFor","Bad math style for %1",name])}
         frac = MML.mstyle(frac);
         if (STYLE === "D") {frac.displaystyle = true; frac.scriptlevel = 0}
           else {frac.displaystyle = false; frac.scriptlevel = style - 1}
@@ -334,9 +321,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (!taggable) {valign = this.GetBrackets("\\begin{"+begin.name+"}")}
       n = this.GetArgument("\\begin{"+begin.name+"}");
       if (n.match(/[^0-9]/)) {
-        TEX.Error(MathJax.Localization._(["TeX", "PositiveIntegerArg"],
-                  "Argument to %1 must me a positive integer"),
-                  "\\begin{"+begin.name+"}")
+        TEX.Error(["PositiveIntegerArg","Argument to %1 must me a positive integer",
+                  "\\begin{"+begin.name+"}"]);
       }
       while (n > 0) {align += "rl"; spacing.push("0em 0em"); n--}
       spacing = spacing.join(" ");
@@ -362,12 +348,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Check for bad nesting of equation environments
      */
     checkEqnEnv: function () {
-      if (this.stack.global.eqnenv) {
-        TEX.Error(
-          MathJax.Localization._(["TeX", "ErroneousNestingEq"],
-                                 "Erroneous nesting of equation structures")
-        )
-      }
+      if (this.stack.global.eqnenv)
+        {TEX.Error(["ErroneousNestingEq","Erroneous nesting of equation structures"])}
       this.stack.global.eqnenv = true;
     },
     
@@ -413,9 +395,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var c = this.trimSpaces(this.GetArgument(name));
       if (c == "") {return null}
       if (TEXDEF.delimiter[c] == null) {
-        TEX.Error(MathJax.Localization._(["TeX",
-                                          "MissingOrUnrecognizedDelim"],
-                  "Missing or unrecognized delimiter for %1", name))
+        TEX.Error(["MissingOrUnrecognizedDelim",
+                   "Missing or unrecognized delimiter for %1",name]);
       }
       return this.convertDelimiter(c);
     },
@@ -479,10 +460,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     EndRow: function () {
       if (this.row.length != 1) {
-        TEX.Error(
-          MathJax.Localization._(["TeX", "MultipleRowsOneCol"],
-                                 "multline rows must have exactly one column")
-        )
+        TEX.Error(["MultipleRowsOneCol",
+                   "multline rows must have exactly one column"]);
       }
       this.table.push(this.row); this.row = [];
     },

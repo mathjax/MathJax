@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/autoload/mglyph.js
@@ -24,9 +25,10 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.1";
+  var VERSION = "2.1.1";
   var MML = MathJax.ElementJax.mml,
-      HTMLCSS = MathJax.OutputJax["HTML-CSS"];
+      HTMLCSS = MathJax.OutputJax["HTML-CSS"],
+      LOCALE = MathJax.Localization;
   
   MML.mglyph.Augment({
     toHTML: function (span,variant) {
@@ -41,11 +43,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             if (HTMLCSS.Font.testFont(font)) {
               this.HTMLhandleVariant(span,variant,String.fromCharCode(index));
             } else {
-              if (values.alt === "") {
-                values.alt =
-                  MathJax.Localization._(["MathML", "BadMglyphFont"],
-                                         "Bad font: %1", font.family);
-              }
+              if (values.alt === "")
+                {values.alt = LOCALE._(["MathML","BadMglyphFont"],"Bad font: %1",font.family)}
               err = MML.merror(values.alt).With({mathsize:"75%"});
               this.Append(err); err.toHTML(span); this.data.pop();
               span.bbox = err.HTMLspanElement().bbox;
@@ -64,8 +63,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         }
         if (this.img.status !== "OK") {
           err = MML.merror(
-            MathJax.Localization._(["MathML", "BadMglyph"],
-                                   "Bad mglyph: %1", values.src)
+            LOCALE._(["MathML","BadMglyph"],"Bad mglyph: %1",values.src)
           ).With({mathsize:"75%"});
           this.Append(err); err.toHTML(span); this.data.pop();
           span.bbox = err.HTMLspanElement().bbox;

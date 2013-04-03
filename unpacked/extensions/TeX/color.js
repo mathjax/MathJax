@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/TeX/color.js
@@ -30,7 +31,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/color"] = {
-  version: "2.1",
+  version: "2.1.1",
 
   config: MathJax.Hub.CombineConfig("TeX.color",{
     padding: "5px",
@@ -114,12 +115,7 @@ MathJax.Extension["TeX/color"] = {
   getColor: function (model,def) {
     if (!model) {model = "named"}
     var fn = this["get_"+model];
-    if (!fn) {
-      this.TEX.Error(
-        MathJax.Localization._(["TeX", "UndefinedColorModel"],
-                               "Color model '%1' not defined", model)
-      )
-    }
+    if (!fn) {this.TEX.Error(["UndefinedColorModel","Color model '%1' not defined",model])}
     return fn.call(this,def);
   },
   
@@ -128,24 +124,14 @@ MathJax.Extension["TeX/color"] = {
    */
   get_rgb: function (rgb) {
     rgb = rgb.split(/,/); var RGB = "#";
-    if (rgb.length !== 3) {
-      this.TEX.Error(MathJax.Localization._(["TeX", "rgbArg1"],
-                     "rgb colors require 3 decimal numbers"))
-    }
+    if (rgb.length !== 3)
+      {this.TEX.Error(["rgbArg1","rgb colors require 3 decimal numbers"])}
     for (var i = 0; i < 3; i++) {
-      if (!rgb[i].match(/^(\d+(\.\d*)?|\.\d+)$/)) {
-        this.TEX.Error(
-          MathJax.Localization._(["TeX", "InvalidDecimalNumber"],
-                                 "Invalid decimal number")
-        )
-      }
+      if (!rgb[i].match(/^(\d+(\.\d*)?|\.\d+)$/))
+        {this.TEX.Error(["InvalidDecimalNumber","Invalid decimal number"])}
       var n = parseFloat(rgb[i]);
-      if (n < 0 || n > 1) {
-        this.TEX.Error(
-          MathJax.Localization._(["TeX", "rgbArg2"],
-                                 "rgb values must be between 0 and 1")
-        )
-      }
+      if (n < 0 || n > 1)
+        {this.TEX.Error(["rgbArg2","rgb values must be between 0 and 1"])}
       n = Math.floor(n*255).toString(16); if (n.length < 2) {n = "0"+n}
       RGB += n;
     }
@@ -157,22 +143,14 @@ MathJax.Extension["TeX/color"] = {
    */
   get_RGB: function (rgb) {
     rgb = rgb.split(/,/); var RGB = "#";
-    if (rgb.length !== 3) {
-      this.TEX.Error(MathJax.Localization._(["TeX", "RGBArg1"],
-                                            "RGB colors require 3 numbers"))
-    }
+    if (rgb.length !== 3)
+      {this.TEX.Error(["RGBArg1","RGB colors require 3 numbers"])}
     for (var i = 0; i < 3; i++) {
-      if (!rgb[i].match(/^\d+$/)) {
-        this.TEX.Error(MathJax.Localization._(["TeX", "InvalidNumber"],
-                                              "Invalid number"))
-      }
+      if (!rgb[i].match(/^\d+$/))
+        {this.TEX.Error(["InvalidNumber","Invalid number"])}
       var n = parseInt(rgb[i]);
-      if (n > 255) {
-        this.TEX.Error(
-          MathJax.Localization._(["TeX", "RGBArg2"],
-                                 "RGB values must be between 0 and 255")
-        )
-      }
+      if (n > 255)
+        {this.TEX.Error(["RGBArg2","RGB values must be between 0 and 255"])}
       n = n.toString(16); if (n.length < 2) {n = "0"+n}
       RGB += n;
     }
@@ -183,18 +161,11 @@ MathJax.Extension["TeX/color"] = {
    *  Get a gray-scale value
    */
   get_gray: function (gray) {
-    if (!gray.match(/^(\d+(\.\d*)?|\.\d+)$/)) {
-        this.TEX.Error(
-          MathJax.Localization._(["TeX", "InvalidDecimalNumber"],
-                                 "Invalid decimal number")
-        )
-    }
+    if (!gray.match(/^(\d+(\.\d*)?|\.\d+)$/))
+      {this.TEX.Error(["InvalidDecimalNumber","Invalid decimal number"])}
     var n = parseFloat(gray);
-    if (n < 0 || n > 1) {
-        this.TEX.Error(
-          MathJax.Localization._(["TeX", "GrayScalerArg"],
-                                 "Grey-scale values must be between 0 and 1"))
-    }
+    if (n < 0 || n > 1)
+      {this.TEX.Error(["GrayScalerArg","Grey-scale values must be between 0 and 1"])}
     n = Math.floor(n*255).toString(16); if (n.length < 2) {n = "0"+n}
     return "#"+n+n+n;
   },

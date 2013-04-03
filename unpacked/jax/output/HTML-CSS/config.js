@@ -26,7 +26,7 @@
 
 MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   id: "HTML-CSS",
-  version: "2.1",
+  version: "2.1.1",
   directory: MathJax.OutputJax.directory + "/HTML-CSS",
   extensionDir: MathJax.OutputJax.extensionDir + "/HTML-CSS",
   autoloadDir: MathJax.OutputJax.directory + "/HTML-CSS/autoload",
@@ -147,10 +147,8 @@ MathJax.Hub.Register.StartupHook("End Config",[function (HUB,HTMLCSS) {
      !HUB.Browser.versionAtLeast(CONFIG.minBrowserVersion[HUB.Browser]||0.0)) {
        HTMLCSS.Translate = CONFIG.minBrowserTranslate;
        HUB.Config({showProcessingMessages: false});
-       MathJax.Message.Set(
-         MathJax.Localization._(["Message", "MathJaxNotSupported"],
-                                "Your browser does not support MathJax"),
-         null,4000);
+       MathJax.Message.Set(["MathJaxNotSupported",
+                            "Your browser does not support MathJax"],null,4000);
        HUB.Startup.signal.Post("MathJax not supported");
   }
 

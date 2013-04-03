@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/TeX/verb.js
@@ -25,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/verb"] = {
-  version: "2.1"
+  version: "2.1.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -43,19 +44,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     Verb: function (name) {
       var c = this.GetNext(); var start = ++this.i;
-      if (c == "" ) {
-        TEX.Error(
-          MathJax.Localization._(
-            ["TeX", "MissingArgFor"],
-            "Argument manquant pour la commande %1", name))
-      }
+      if (c == "" ) {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
       while (this.i < this.string.length && this.string.charAt(this.i) != c) {this.i++}
-      if (this.i == this.string.length) {
-        TEX.Error(
-          MathJax.Localization._(
-            ["TeX", "NoClosinDelim"],
-            "Can't find closing delimiter for %1", name))
-      }
+      if (this.i == this.string.length)
+        {TEX.Error(["NoClosingDelim","Can't find closing delimiter for %1", name])}
       var text = this.string.slice(start,this.i); this.i++;
       this.Push(MML.mtext(text).With({mathvariant:MML.VARIANT.MONOSPACE}));
     }

@@ -28,6 +28,12 @@
 
 (function (AJAX,HUB,HTMLCSS) {
   var MML, isMobile = HUB.Browser.isMobile;
+
+  var MESSAGE = function () {
+    var data = [].slice.call(arguments,0);
+    data[0][0] = ["HTML-CSS",data[0][0]];
+    return MathJax.Message.Set.apply(MathJax.Message,data);
+  };
    
   var FONTTEST = MathJax.Object.Subclass({
     timeout:  (isMobile? 15:8)*1000,   // timeout for loading web fonts
@@ -131,12 +137,7 @@
 
     loadWebFont: function (font) {
       HUB.Startup.signal.Post("HTML-CSS Jax - Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
-      var n = MathJax.Message.File(
-        // Localization: Message.File(fileName) will write "Loading "+fileName
-        // Here, this will become "Loading Web-Font "+fileName. Does it work
-        // for all languages (word order might be different)?
-        "Web-Font "+HTMLCSS.fontInUse+"/"+font.directory
-      );
+      var n = MESSAGE(["LoadWebFont","Loading webfont %1",HTMLCSS.fontInUse+"/"+font.directory]);
       var done = MathJax.Callback({}); // called when font is loaded
       var callback = MathJax.Callback(["loadComplete",this,font,n,done]);
       AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],0,this.timeout);
@@ -156,17 +157,11 @@
       if (!this.webFontLoaded) {HTMLCSS.loadWebFontError(font,done)} else {done()}
     },
     loadError: function (font) {
-      MathJax.Message.Set(
-        MathJax.Localization._("Message", "CantLoadWebFont",
-          "Can't load web font %1", HTMLCSS.fontInUse+"/"+font.directory),
-        null,2000);
+      MESSAGE(["CantLoadWebFont","Can't load web font %1",HTMLCSS.fontInUse+"/"+font.directory],null,2000);
       HUB.Startup.signal.Post(["HTML-CSS Jax - web font error",HTMLCSS.fontInUse+"/"+font.directory,font]);
     },
     firefoxFontError: function (font) {
-      MathJax.Message.Set(
-        MathJax.Localization._(["Message", "FirefoxCantLoadWebFont"],
-        "Firefox can't load web fonts from a remote host"),
-        null,3000);
+      MESSAGE(["FirefoxCantLoadWebFont","Firefox can't load web fonts from a remote host"],null,3000);
       HUB.Startup.signal.Post("HTML-CSS Jax - Firefox web fonts on remote host error");
     },
 
@@ -334,11 +329,8 @@
           HUB.Startup.signal.Post("HTML-CSS Jax - using image fonts");
         }
       } else {
-        MathJax.Message.Set(
-          MathJax.Localization._(["Message", "CantFindFontUsing"],
-            "Can't find a valid font using %1",
-            "["+this.config.availableFonts.join(", ")+"]"),
-          null,3000);
+        MESSAGE(["CantFindFontUsing","Can't find a valid font using %1",
+                "["+this.config.availableFonts.join(", ")+"]"],null,3000);
         this.FONTDATA = {
           TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
           FONTS: {}, VARIANT: {normal: {fonts:[]}}, RANGES: [],
@@ -1486,10 +1478,7 @@
         this.imgFonts = true;
         HUB.Startup.signal.Post("HTML-CSS Jax - switch to image fonts");
         HUB.Startup.signal.Post("HTML-CSS Jax - using image fonts");
-        MathJax.Message.Set(
-          MathJax.Localization._(["Message", "WebFontNotAvailable"],
-          "Web-Fonts not available -- using image fonts instead"),
-        null,3000);
+        MESSAGE(["WebFontNotAvailable","Web-Fonts not available -- using image fonts instead"],null,3000);
         AJAX.Require(this.directory+"/imageFonts.js",done);
       } else {
         this.allowWebFonts = false;

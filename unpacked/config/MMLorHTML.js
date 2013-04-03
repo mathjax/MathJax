@@ -98,9 +98,9 @@
       HUB.PreProcess.disabled = true;
       HUB.prepareScripts.disabled = true;
       MathJax.Message.Set(
-        MathJax.Localization._(["Message", MathJaxNotSupported],
-                               "Your browser does not support MathJax"),
-        null,4000);
+        ["MathJaxNotSupported","Your browser does not support MathJax"],
+        null,4000
+      );
       HUB.Startup.signal.Post("MathJax not supported");
     }
   });

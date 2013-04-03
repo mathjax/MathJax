@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/TeX/begingroup.js
@@ -25,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/begingroup"] = {
-  version: "2.1"
+  version: "2.1.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -215,12 +216,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (TEX.eqnStack.top > 1) {
         TEX.eqnStack.Pop();
       } else if (TEX.rootStack.top === 1) {
-        TEX.Error(
-          MathJax.Localization._(
-            ["TeX", "ExtraEndMissingBegin"],
-            "Extra %1 or missing \\begingroup", name
-          )
-        )
+        TEX.Error(["ExtraEndMissingBegin","Extra %1 or missing \\begingroup",name]);
       } else {
         TEX.eqnStack.Clear();
         TEX.rootStack.Pop();
@@ -296,11 +292,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       Global: function (name) {
         var i = this.i; var cs = this.GetCSname(name); this.i = i;
         if (cs !== "let" && cs !== "def" && cs !== "newcommand") {
-          TEX.Error(
-            MathJax.Localization._(
-              ["TeX", "GlobalNotFollowedBy"],
-              "%1 not followed by \\let, \\def, or \\newcommand", name)
-          )
+          TEX.Error(["GlobalNotFollowedBy",
+                     "%1 not followed by \\let, \\def, or \\newcommand",name]);
         }
         this.stack.env.isGlobal = true;
       }

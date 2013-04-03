@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/TeX/extpfeil.js
@@ -24,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/extpfeil"] = {
-  version: "2.1"
+  version: "2.1.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -73,23 +74,22 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           space = this.GetArgument(name),
           chr   = this.GetArgument(name);
       if (!cs.match(/^\\([a-z]+|.)$/i)) {
-        TEX.Error(
-          MathJax.Localization._(["TeX", "NewextarrowArg1"]
-          "First argument to %1 must be a control sequence name", name)
-        )
+        TEX.Error(["NewextarrowArg1",
+                   "First argument to %1 must be a control sequence name",name]);
       }
       if (!space.match(/^(\d+),(\d+)$/)) {
         TEX.Error(
-          MathJax.Localization._(["TeX", "NewextarrowArg2"]
-          "Second argument to %1 must be two integers separated by a comma",
-          name)
-        )
+          ["NewextarrowArg2",
+           "Second argument to %1 must be two integers separated by a comma",
+           name]
+        );
       }
       if (!chr.match(/^(\d+|0x[0-9A-F]+)$/i)) {
         TEX.Error(
-          MathJax.Localization._(["TeX", "NewextarrowArg3"]
-          "Third argument to %1 must be a unicode character number", name)
-        )
+          ["NewextarrowArg3",
+           "Third argument to %1 must be a unicode character number",
+           name]
+        );
       }
       cs = cs.substr(1); space = space.split(","); chr = parseInt(chr);
       TEXDEF.macros[cs] = ['xArrow',chr,parseInt(space[0]),parseInt(space[1])];

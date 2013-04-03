@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/FontWarnings.js
@@ -85,11 +86,11 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "2.1";
+  var VERSION = "2.1.1";
 
   var _ = function (id) {
     return MathJax.Localization._.apply(MathJax.Localization,
-      [ ["FontWarnings",id] ].concat([].slice.call(arguments,1))
+      [["FontWarnings",id]].concat([].slice.call(arguments,1))
     );
   }
   
@@ -194,7 +195,7 @@
       ],
       
       fonts: _("fonts",
-       "%1 MathJax can use either the %2 or the % "+
+       "%1 MathJax can use either the %2 or the %3 "+
        ".  Download and install either one to improve your MathJax experience.",
        [["p"]],
        [["a",{href:"http://www.stixfonts.org/",target:"_blank"},

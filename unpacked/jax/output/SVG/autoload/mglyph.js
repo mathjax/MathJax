@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/SVG/autoload/mglyph.js
@@ -27,7 +28,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
   var VERSION = "2.1";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
-      BBOX = SVG.BBOX;
+      BBOX = SVG.BBOX,
+      LOCALE = MathJax.Localization;
   
   var XLINKNS = "http://www.w3.org/1999/xlink";
 
@@ -73,8 +75,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         }
         if (this.img.status !== "OK") {
           err = MML.merror(
-            MathJax.Localization._(["MathML", "BadMglyph"],
-                                   "Bad mglyph: %1", values.src)
+            LOCALE._(["MathML","BadMglyph"],"Bad mglyph: %1",values.src)
           ).With({mathsize:"75%"});
           this.Append(err); svg = err.toSVG(); this.data.pop();
         } else {

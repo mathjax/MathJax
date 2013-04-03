@@ -24,8 +24,8 @@ MathJax.Hub.Config({
     mpMouse: true
   },
   errorSettings: {
-    // Localization: should be updated when the language is changed
-    message: ["["+MathJax.Localization._("MathError", "Math Error")+"]"]
+    message: ["[Math Error]"],
+    messageId: "MathErrorHTML"
   }
 });
 
