@@ -32,12 +32,12 @@ MathJax.Hub.Insert(MathJax.Localization.strings.fr.domains,{
         "être améliorée.",
 
       fonts:
-        "%1 MathJax peut utiliser les %2 ou bien les %3. Téléchargez et"+
+        "MathJax peut utiliser les %1 ou bien les %2. Téléchargez et"+
         "installez l'une de ces familles de polices pour améliorer votre"+
         "expérience avec MathJax.",
 
       PageDesigned:
-        "%1 Cette page est conçue pour utiliser les %2. Téléchargez "+
+        "Cette page est conçue pour utiliser les %1. Téléchargez "+
         " et installez ces polices pour améliorer votre expérience "+
         "avec MathJax",
 

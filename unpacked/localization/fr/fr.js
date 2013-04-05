@@ -6,7 +6,7 @@ MathJax.Hub.Insert(MathJax.Localization.strings.fr,{
       strings: {
 
         CookieConfig:
-          "MathJax a trouvé un cookie de configuration utilisateur qui inclut"+
+          "MathJax a trouvé un cookie de configuration utilisateur qui inclut "+
           "du code à exécuter. Souhaitez vous l'exécuter?\n\n"+
           "(Choisissez Annuler sauf si vous avez créé ce cookie vous-même",
 
@@ -25,26 +25,13 @@ MathJax.Hub.Insert(MathJax.Localization.strings.fr,{
 
         LoadFailed: "Échec du téléchargement de %1",
 
-        CantLoadWebFont: "Impossible de télécharcharger la police Web %1",
-
-        ProcessMath: "Traitement des maths: %1%%",
+        ProcessMath: "Traitement des formules: %1%%",
 
         Processing: "Traitement",
 
-        TypesetMath: "Composition des maths: %1%%",
+        TypesetMath: "Composition des formules: %1%%",
 
         Typesetting: "Composition",
-
-        FirefoxCantLoadWebFont:
-          "Firefox ne peut télécharger les polices Web à partir d'un hôte"+
-          "distant",
-
-        CantFindFontUsing:
-          "Impossible de trouver une police valide en utilisant %1",
-
-        WebFontsNotAvailable:
-          "Polices Web non disponibles -- des images de caractères vont être"+
-          "utilisées à la place",
 
         MathJaxNotSupported:
           "Votre navigateur ne supporte pas MathJax"
@@ -55,7 +42,8 @@ MathJax.Hub.Insert(MathJax.Localization.strings.fr,{
     FontWarnings: {},
     "v1.0-warning": {},
     TeX: {},
-    MathML: {}
+    MathML: {},
+    "HTML-CSS": {}
   },
 
   plural: function(n) {
@@ -64,7 +52,7 @@ MathJax.Hub.Insert(MathJax.Localization.strings.fr,{
   },
 
   number: function(n) {
-    return n.replace(".", ","); // replace dot by comma
+    return String(n).replace(".", ","); // replace dot by comma
   }
 
 });

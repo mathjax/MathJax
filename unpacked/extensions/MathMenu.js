@@ -772,7 +772,7 @@
   MENU.Scale = function () {
     var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML, SVG = OUTPUT.SVG;
     var SCALE = (HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
-    var scale = prompt(_("ScaleMath", "Scale all mathematics (compared to surrounding text) by %1%%",SCALE));
+    var scale = prompt(_("ScaleMath", "Scale all mathematics (compared to surrounding text) by"),SCALE+"%");
     if (scale) {
       if (scale.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         scale = parseFloat(scale);
@@ -898,7 +898,7 @@
       MENU.cookie.mpContext = MENU.cookie.mpMouse = CONFIG.settings.mpMouse;
       MENU.saveCookie();
       MathJax.Hub.Queue(["Rerender",MathJax.Hub])
-    } else if (!discoverable && item.name[0] === "Menu Events" && CONFIG.settings.mpContext) {
+    } else if (!discoverable && item.name[1] === "Menu Events" && CONFIG.settings.mpContext) {
       alert(_.apply(_,MESSAGE.IE9warning));
     }
   };

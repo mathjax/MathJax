@@ -88,11 +88,8 @@
 (function (HUB,HTML) {
   var VERSION = "2.1.1";
 
-  var _ = function (id) {
-    return MathJax.Localization._.apply(MathJax.Localization,
-      [["FontWarnings",id]].concat([].slice.call(arguments,1))
-    );
-  }
+  var STIXURL = "http://www.stixfonts.org/";
+  var MATHJAXURL = "http://www.mathjax.org/help-v2/fonts";
   
   var CONFIG = HUB.CombineConfig("FontWarnings",{
     //
@@ -119,37 +116,35 @@
     //  The messages for the various situations
     //
     Message: {
-      // Localization:
-      // how do we ensure it is updated when the language is changed?
+
       webFont: [
         ["closeBox"],
-        _("webFont",
+        ["webFont",
           "MathJax is using web-based fonts to display the mathematics "+
           "on this page.  These take time to download, so the page would "+
           "render faster if you installed math fonts directly in your "+
-          "system's font folder."),
+          "system's font folder."],
         ["fonts"]
       ],
 
       imageFonts: [
         ["closeBox"],
-        _("imageFonts",
-     "MathJax is using its image fonts rather than local or web-based fonts. "+
-     "This will render slower than usual, and the mathematics may not print "+
-     "at the full resolution of your printer."),
-
+        ["imageFonts",
+          "MathJax is using its image fonts rather than local or web-based fonts. "+
+          "This will render slower than usual, and the mathematics may not print "+
+          "at the full resolution of your printer."],
         ["fonts"],
         ["webfonts"]
       ],
       
       noFonts: [
         ["closeBox"],
-        _("noFonts",
-        "MathJax is unable to locate a font to use to display "+
-        "its mathematics, and image fonts are not available, so it "+
-        "is falling back on generic unicode characters in hopes that "+
-        "your browser will be able to display them.  Some characters "+
-          "may not show up properly, or possibly not at all."),
+        ["noFonts",
+          "MathJax is unable to locate a font to use to display "+
+          "its mathematics, and image fonts are not available, so it "+
+          "is falling back on generic unicode characters in hopes that "+
+          "your browser will be able to display them.  Some characters "+
+          "may not show up properly, or possibly not at all."],
         ["fonts"],
         ["webfonts"]
       ]
@@ -183,40 +178,48 @@
         [["span",{style:{position:"relative", bottom:".2em"}},["x"]]]
       ]],
       
-      // Localization:
-      // - decide HTML snippet format
-      // how do we ensure it is updated when the language is changed?
-      webFonts: [
-        ["p"],
-        _("webFonts",
-        "Most modern browsers allow for fonts to be downloaded over the web. "+
-        "Updating to a more recent version of your browser (or changing"+
-         "browsers) could improve the quality of the mathematics on this page.")
-      ],
+     webfonts: [
+       ["p"],
+       ["webfonts",
+         "Most modern browsers allow for fonts to be downloaded over the web. "+
+         "Updating to a more recent version of your browser (or changing "+
+         "browsers) could improve the quality of the mathematics on this page."
+       ]
+     ],
+ 
+     fonts: [
+       ["p"],
+       ["fonts",
+         "MathJax can use either the %1 or the %2",
+         [["a",{href:STIXURL,target:"_blank"},[["STIXfonts","STIX fonts"]]]],
+         [["a",{href:MATHJAXURL,target:"_blank"},[["TeXfonts","MathJax TeX fonts"]]]]
+       ]
+     ],
+ 
+//     fonts: [
+//       ["p"],
+//       ["fonts",
+//         "MathJax can use either the [STIX fonts](%1) or the [MathJax TeX fonts](%2)",
+//         "http://www.stixfonts.org/","http://www.mathjax.org/help-v2/fonts/"]
+//     ],
       
-      fonts: _("fonts",
-       "%1 MathJax can use either the %2 or the %3 "+
-       ".  Download and install either one to improve your MathJax experience.",
-       [["p"]],
-       [["a",{href:"http://www.stixfonts.org/",target:"_blank"},
-        _("STIXfonts", "STIX fonts")]],
-       [["a",{href:"http://www.mathjax.org/help-v2/fonts/",target:"_blank"},
-         [_("TeXfonts", "MathJax TeX fonts")]]]
-      ),
-      
-     STIXfonts: _("PageDesigned",
-      "%1 This page is designed to use the %2."+
-      " Download and install those fonts to improve your MathJax experience.",
-      [["p"]],
-      [["a",{href:"http://www.mathjax.org/help-v2/fonts/",target:"_blank"},
-        [_("STIXfonts", "STIX fonts")]]]),
+       STIXfonts: [
+         ["p"],
+         ["PageDesigned",
+           "This page is designed to use the %1.  " +
+           "Download and install those fonts to improve your MathJax experience.",
+           [["a",{href:STIXURL,target:"_blank"},[["STIXfonts","STIX fonts"]]]]
+         ]
+       ],
 
-      TeXfonts: _("PageDesigned", 
-      "%1 This page is designed to use the %2."+
-      " Download and install those fonts to improve your MathJax experience.",
-      [["p"]],
-      [["a",{href:"http://www.mathjax.org/help-v2/fonts/",target:"_blank"},
-       [_("TeXfonts", "MathJax TeX fonts")]]])
+      TeXfonts: [
+        ["p"],
+        ["PageDesigned",
+          "This page is designed to use the %1.  " +
+          "Download and install those fonts to improve your MathJax experience.",
+          [["a",{href:MATHJAXURL,target:"_blank"},[["TeXfonts","MathJax TeX fonts"]]]]
+        ]
+      ]
       
     },
     
@@ -251,10 +254,17 @@
     } else {delete CONFIG.messageStyle.filter}
     CONFIG.messageStyle.maxWidth = (document.body.clientWidth-75) + "px";
     var i = 0; while (i < data.length) {
-      if (data[i] instanceof Array && CONFIG.HTML[data[i][0]])
-        {data.splice.apply(data,[i,1].concat(CONFIG.HTML[data[i][0]]))} else {i++}
+      if (data[i] instanceof Array) {
+        if (data[i].length === 1 && CONFIG.HTML[data[i][0]]) {
+          data.splice.apply(data,[i,1].concat(CONFIG.HTML[data[i][0]]));
+        } else if (typeof data[i][1] === "string") {
+          data.splice.apply(data,[i,1].concat(message));
+          i += message.length;
+        } else {i++}
+      } else {i++}
     }
-    DATA.div = HTMLCSS.addElement(frame,"div",{id:"MathJax_FontWarning",style:CONFIG.messageStyle},data);
+    DATA.div = HTMLCSS.addElement(frame,"div",
+      {id:"MathJax_FontWarning",style:CONFIG.messageStyle},data);
     if (CONFIG.removeAfter) {
       HUB.Register.StartupHook("End",function () 
          {DATA.timer = setTimeout(FADEOUT,CONFIG.removeAfter)});
@@ -296,7 +306,13 @@
         if (message.match(/- Web-Font/)) {if (localFonts) {MSG = "webFont"}}
         else if (message.match(/- using image fonts/)) {MSG = "imageFonts"}
         else if (message.match(/- no valid font/)) {MSG = "noFonts"}
-        if (MSG && CONFIG.Message[MSG]) {CREATEMESSAGE(CONFIG.Message[MSG])}
+        if (MSG && CONFIG.Message[MSG]) {
+          MathJax.Callback.Queue(
+            ["loadDomain",MathJax.Localization,"FontWarnings"], // load locale
+            ["loadDomain",MathJax.Localization,"FontWarnings"], // load domain
+            [CREATEMESSAGE,CONFIG.Message[MSG]]
+          );
+        }
       }
     });
   }

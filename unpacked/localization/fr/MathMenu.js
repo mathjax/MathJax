@@ -3,44 +3,44 @@ MathJax.Hub.Insert(MathJax.Localization.strings.fr.domains,{
     isLoaded: true,
     strings: {
 
-      Show: "Voir Maths Comme",
-        MathMLcode:     "du Code MathML",
-        OriginalMathML: "d'Origine MathML",
-        TeXCommands:    "Commandes TeX",
-        AsciiMathInput: "AsciiMathml Entrée",
-        Original:       "Forme Originale",
-        ErrorMessage:   "Message d'Erreur",
-        texHints:       "Voir les notes TeX dans MathML",
-      Settings: "Paramètres Maths",
-         ZoomTrigger: "Trigger Zoom",
-           Hover:       "Flotter",
+      Show: "Afficher la Formule sous Forme",
+        MathMLcode:     "de Code MathML",
+        OriginalMathML: "de Code MathML d'Origine",
+        TeXCommands:    "de Commandes TeX",
+        AsciiMathInput: "de code AsciiMathml",
+        Original:       "d'Origine",
+        ErrorMessage:   "de Message d'Erreur",
+        texHints:       "Afficher les indications TeX dans le code MathML",
+      Settings: "Paramètres des formules",
+         ZoomTrigger: "Déclenchement du Zoom par",
+           Hover:       "Survol de la Souris",
            Click:       "Clic de Souris",
            DoubleClick: "Double-Clic",
            NoZoom:      "Pas de Zoom",
-         TriggerRequires: "Trigger Nécessite",
+         TriggerRequires: "Le déclenchement nécessite l'appui sur la touche",
            Option:      "Option",
            Alt:         "Alt",
            Command:     "Command",
            Control:     "Control",
            Shift:       "Shift",
          ZoomFactor:    "Facteur de Zoom",
-       Renderer: "Traduire Maths",
-       MPHandles: "Laissez MathPlayer Gérer:",
-         MenuEvents:    "Sélections du menu",
+       Renderer: "Mode de Rendu",
+       MPHandles: "Laissez MathPlayer Gérer les",
+         MenuEvents:    "Êvénements du menu",
          MouseEvents:   "Êvénements de la Souris",
-         MenuAndMouse:  "Les Êvénements de Menu et de la Souris",
+         MenuAndMouse:  "Êvénements de Menu et de la Souris",
        FontPrefs:  "Préférences des Polices",
          ForHTMLCSS: "Pour le HTML-CSS:",
            Auto:         "Auto",
-           TeXLocal:     "TeX (local)",
+           TeXLocal:     "TeX (locales)",
            TeXWeb:       "TeX (web)",
            TeXImage:     "TeX (image)",
-           STIXLocal:    "STIX (local)",
+           STIXLocal:    "STIX (locales)",
        ContextMenu: "Menu Contextuel",
          Browser:        "Navigateur",
-       Scale: "Ajuster tous les Maths ...",
-       Discoverable: "Mettez en Surbrillance lors de Survol",
-       About: "À propos de MathJax",
+       Scale: "Mise à l'échelle des formules ...",
+       Discoverable: "Mettez en Surbrillance lors du Survol",
+       About: "À Propos de MathJax",
        Help:  "Aide MathJax",
        
       localTeXfonts:  "utilisant les polices locales TeX",
@@ -60,7 +60,7 @@ MathJax.Hub.Insert(MathJax.Localization.strings.fr.domains,{
         "les expressions mathématiques.",
 
       MSIENativeMMLWarning:
-        "Internet Explorer a besoin de module complémentaire MathPlayer " + 
+        "Internet Explorer a besoin du module complémentaire MathPlayer " + 
         "pour afficher le MathML.",
       
       OperaNativeMMLWarning:
@@ -84,7 +84,7 @@ MathJax.Hub.Insert(MathJax.Localization.strings.fr.domains,{
 
       ScaleMath:
         "Mise à l'échelle des expressions mathématiques (par rapport au " +
-        "text environnant) de %1%%",
+        "text environnant) de",
 
       NonZeroScale:
         "L'échelle ne peut être nulle",

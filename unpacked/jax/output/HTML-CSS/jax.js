@@ -137,7 +137,7 @@
 
     loadWebFont: function (font) {
       HUB.Startup.signal.Post("HTML-CSS Jax - Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
-      var n = MESSAGE(["LoadWebFont","Loading webfont %1",HTMLCSS.fontInUse+"/"+font.directory]);
+      var n = MESSAGE(["LoadWebFont","Loading web-font %1",HTMLCSS.fontInUse+"/"+font.directory]);
       var done = MathJax.Callback({}); // called when font is loaded
       var callback = MathJax.Callback(["loadComplete",this,font,n,done]);
       AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],0,this.timeout);

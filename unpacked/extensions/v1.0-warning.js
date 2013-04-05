@@ -58,39 +58,43 @@
       CONFIG.style.position = "absolute";
     } else {delete CONFIG.style.filter}
     CONFIG.style.maxWidth = (document.body.clientWidth-75) + "px";
-    DIV = HTML.addElement(frame,"div",{id:"MathJax_ConfigWarning",style:CONFIG.style},
-    // Localization:
-    // - decide HTML snippet format
-    // - how do we ensure it is updated when the language is changed?
-    MathJax.Localization._(["ConfigWarning", "MissingConfig"],
-    "%1 MathJax no longer loads a default configuration file; " +
-    "you must specify such files explicitly. " +
-    "This page seems to use the older default %2 file"+
-    ", and so needs to be updated. This is explained further at %3",
-    [[
-        "div",{
-          style: {
-            position:"absolute", overflow:"hidden", top:".1em", right:".1em",
-            border: "1px outset", width:"1em", height:"1em",
-            "text-align": "center", cursor: "pointer",
-            "background-color": "#EEEEEE", color:"#606060",
+    MathJax.Localization.Try(function () {
+      DIV = HTML.addElement(frame,"div",{id:"MathJax_ConfigWarning",style:CONFIG.style},
+        MathJax.Localization._("v1.0-warning",
+        [
+          [
+            "div",{
+              style: {
+                position:"absolute", overflow:"hidden", top:".1em", right:".1em",
+                border: "1px outset", width:"1em", height:"1em",
+                "text-align": "center", cursor: "pointer",
+                "background-color": "#EEEEEE", color:"#606060",
 
-            "border-radius": ".5em",           // Opera 10.5
-            "-webkit-border-radius": ".5em",   // Safari and Chrome
-            "-moz-border-radius": ".5em",      // Firefox
-            "-khtml-border-radius": ".5em"     // Konqueror
-          },
-          onclick: function () {DIV.style.display = "none"}
-        },
-        [["span",{style:{position:"relative", bottom:".2em"}},["x"]]]
-      ]],
-      [["code",{},["config/MathJax.js"]]],
-      [["p",{style:{"text-align":"center"}},[
-        ["a",
-          {href:"http://www.mathjax.org/help/configuration"},
-          ["http://www.mathjax.org/help/configuration"]
-        ]
-      ]]]))
+                "border-radius": ".5em",           // Opera 10.5
+                "-webkit-border-radius": ".5em",   // Safari and Chrome
+                "-moz-border-radius": ".5em",      // Firefox
+                "-khtml-border-radius": ".5em"     // Konqueror
+              },
+              onclick: function () {DIV.style.display = "none"}
+            },
+            [["span",{style:{position:"relative", bottom:".2em"}},["x"]]]
+          ],
+          ["MissingConfig",
+            "MathJax no longer loads a default configuration file; " +
+            "you must specify such files explicitly. " +
+            "This page seems to use the older default %1 " +
+            "file, and so needs to be updated.  This is explained further at %1",
+            [["code",{},["config/MathJax.js"]]],
+            [["p",{style:{"text-align":"center"}},[
+              ["a",
+                {href:"http://www.mathjax.org/help-v2/configuration"},
+                ["http://www.mathjax.org/help-v2/configuration"]
+              ]
+            ]]]
+          ]
+        ])
+      );
+    });
   });
 
 })(MathJax.Hub,MathJax.HTML);

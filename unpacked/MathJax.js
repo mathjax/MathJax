@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax.js
@@ -1056,205 +1057,127 @@ MathJax.Localization = {
   
   locale: "fr",
   directory: "[MathJax]/localization",
-  strings: {fr: {}},
+  strings: {
+    en: {isLoaded: true},   // nothing needs to be loaded for this
+    fr: {}
+  },
 
-  _: function (messageId, phrase) {
-
-    // These variables are used in string parsing
-    var locale = this;
-    var args = arguments;
-    var i, s, m, resultString, resultArray;
-
-    function parseNextUnicodePoint(appendToResult)
-    {
-      var n = s.charCodeAt(i);
-      if (n <= 0xD7FF || 0xE000 <= n) {
-        // Code points U+0000 to U+D7FF and U+E000 to U+FFFF.
-        // Append the character.
-        if (appendToResult) resultString += s[i]
-        i++;
-        return;
-      } else if (i+1 < m) {
-        // Code points U+10000 to U+10FFFF
-        // Append the surrogate pairs.
-        if (appendToResult) { resultString += s[i]; resultString += s[i+1]; }
-        i+=2
-        return;
-      }
-      // Ignore lead surrogate at the end of the string.
-      // This should not happen with valid unicode string.
-      i++;
+  //
+  //  The pattern for substitution escapes:
+  //      %n or %{n} or %{plural:%n|option1|option1|...} or %c
+  //
+  pattern: /%(\d+|\{\d+\}|\{[a-z]+:\%\d+(?:\|(?:%(?:\d+|\{\d+\}|.)|[^\}])*)+\}|.)/g,
+  
+  _: function (id,phrase) {
+    if (phrase instanceof Array) {return this.processSnippet(id,phrase)}
+    return this.processString(this.lookupPhrase(id,phrase),[].slice.call(arguments,2));
+  },
+  
+  processString: function (string,args,domain) {
+    //
+    //  Process arguments for substitution
+    //    If the argument is a snippet (and we are processing snippets) do so,
+    //    Otherwise, if it is a number, convert it for the lacale
+    //
+    for (var i = 0, m = args.length; i < m; i++) {
+      if (domain && args[i] instanceof Array) {args[i] = this.processSnippet(domain,args[i])}
     }
-
-    function parseArgument(appendToResult)
-    {
-      if (!(/\d/.test(s[0]))) return false;
-
-      // %INTEGER argument substitution
-      var argIndex = s.match(/^\d+/)[0];
-      i += argIndex.length;
-      var key = +argIndex+1;
-      if (key in args) {
-        if (appendToResult) {
-          var e = args[key];
-          if (e instanceof Array) {
-            // if that's an array, concatenate it to the result array
-            resultArray.push(resultString);
-            resultArray = resultArray.concat(e);
-            resultString = "";
-          } else if (typeof e === "number") {
-            // if that's a number, append a localized version.
-            resultString += locale.number(e.toString())
-          } else {
-            // otherwise, just concatenate it to the result string
-            resultString += e;
-          }
+    //
+    //  Split string at escapes and process them individually
+    //
+    var parts = string.split(this.pattern);
+    for (var i = 1, m = parts.length; i < m; i += 2) {
+      var c = parts[i].charAt(0);  // first char will be { or \d or a char to be kept literally
+      if (c >= "0" && c <= "9") {    // %n
+        parts[i] = args[parts[i]-1] || "???";
+        if (typeof parts[i] === "number") parts[i] = this.number(parts[i]);
+      } else if (c === "{") {        // %{n} or %{plural:%n|...}
+        c = parts[i].substr(1);
+        if (c >= "0" && c <= "9") {  // %{n}
+          parts[i] = args[parts[i].substr(1,parts[i].length-2)-1] || "???";
+          if (typeof parts[i] === "number") parts[i] = this.number(parts[i]);
+        } else {                     // %{plural:%n|...}
+          var match = parts[i].match(/^\{([a-z]+):%(\d+)\|(.*)\}$/);
+          if (match[1] === "plural") {
+            var n = args[match[2]-1];
+            if (typeof n === "undefined") {
+              parts[i] = "???";        // argument doesn't exist
+            } else {
+              n = this.plural(n) - 1;  // index of the form to use
+              var plurals = match[3].replace(/%\|/g,"%\uEFEF").split(/\|/); // the parts (replacing %| with a special character)
+              if (n >= 0 && n < plurals.length) {
+                parts[i] = this.processString(plurals[n].replace(/\uEFEF/g,"|"),args,domain);
+              } else {
+                parts[i] = "???";      // no string for this index
+              }
+            }
+          } else {parts[i] = "%"+parts[i]}  // not "plural:put back the % and leave unchanged
         }
-        return true;
       }
-
-      // invalid index: just %INTEGER and continue
-      if (appendToResult) { resultString += "%" + argIndex; }
-      i++;
-      return true;
-    }    
-
-    function parseInteger(appendToResult)
-    {
-      var number = s.match(/^\{(\d+)\}/);
-      if (!number) return false;
-
-      // %{INTEGER} escaped integer
-      if (appendToResult) { resultString += number[1]; }
-      i += number[0].length;
-      return true;
     }
-
-    function parseChoiceBlock(blockName, choiceFunction)
-    {
-      var pattern = "^\\{"+blockName+":%(\\d)+\\|";
-      var blockStart = s.match(pattern);
-      if (!blockStart) return false;
-      
-      var key = +blockStart[1]+1;
-      if (!(key in args)) return false;
-
-      // %\{blockName:%INTEGER|form1|form2 ... \}
-      i = blockStart[0].length;
-
-      var choiceIndex = choiceFunction(args[key]), j = 1; 
-      var isChosenBlock = (j === choiceIndex);
-      var blockFound = isChosenBlock;
-
-      while (i < m) {
-        if (s[i] == "|") {
-          // new choice block
-          i++; j++;
-          isChosenBlock = (j === choiceIndex);
-          if (isChosenBlock) blockFound = true;
-          continue;
+    //
+    //  If we are not forming a snippet, return the completed string
+    //  
+    if (!domain) {return parts.join("")}
+    //
+    //  We need to return an HTML snippet, so buld it from the
+    //  broken up string with inserted parts (that could be snippets)
+    //
+    var snippet = [], part = "";
+    for (i = 0; i < m; i++) {
+      part += parts[i]; i++;  // add the string and move on to substitution result
+      if (i < m) {
+        if (parts[i] instanceof Array)  {        // substitution was a snippet
+          snippet.push(part);                        // add the accumulated string
+          snippet = snippet.concat(parts[i]);        // concatenate the substution snippet
+          part = "";                                 // start accumulating a new string
+        } else {                                 // substitution was a string
+          part += parts[i];                          // add to accumulating string
         }
-        if (s[i] == "}") {
-          // closing brace
-          i++;
-          break;
-        }
-        if (s[i] != "%" || i+1 == m) {
-          // normal char or % at the end of the string
-          parseNextUnicodePoint(isChosenBlock);
-          continue;
-        }
-
-        // keep only the substring after the %
-        i++; s = s.substr(i); m -= i; i = 0;
-
-        // %INTEGER argument substitution
-        if (parseArgument(isChosenBlock)) continue;
-
-        // %{INTEGER} escaped integer
-        if (parseInteger(isChosenBlock)) continue;
-
-        // %CHAR: escaped character
-        parseNextUnicodePoint(isChosenBlock);
-        continue;
       }
-
-      if (!blockFound) {
-        i = 0;
-        return false;
-      }
-
-      return true;
     }
-
-    function transformString(string)
-    {
-      s = string;
-      i = 0;
-      m = s.length;
-      resultString = "";
-      resultArray = [];
-
-      while (i < m) {
-        if (s[i] != "%" || i+1 == m) {
-          // normal char or % at the end of the string
-          parseNextUnicodePoint(true);
-          continue;
-        }  
-
-        // keep only the substring after the %
-        i++; s = s.substr(i); m -= i; i = 0;
-
-        // %INTEGER argument substitution
-        if (parseArgument(true)) continue;
-
-        // %{INTEGER} escaped integer
-        if (parseInteger(true)) continue;
-
-        // %\{plural:%INTEGER|form1|form2 ... \} plural forms
-        if (parseChoiceBlock("plural", locale.plural)) continue;
-
-        // %CHAR: escaped character
-        parseNextUnicodePoint(true);
-        continue;
+    if (part !== "") {snippet.push(part)} // add final string
+    return snippet;
+  },
+  
+  processSnippet: function (domain,snippet) {
+    var result = [];   // the new snippet
+    //
+    //  Look through the original snippet for
+    //   strings or snippets to translate
+    //
+    for (var i = 0, m = snippet.length; i < m; i++) {
+      if (snippet[i] instanceof Array) {
+        //
+        //  This could be a sub-snippet:
+        //    ["tag"] or ["tag",{properties}] or ["tag",{properties},snippet]
+        //  Or it could be something to translate:
+        //    [id,string,args] or [domain,snippet]
+        var data = snippet[i];
+        if (typeof data[1] === "string") {        // [id,string,args]
+          var id = data[0]; if (!(id instanceof Array)) {id = [domain,id]}
+          var phrase = this.lookupPhrase(id,data[1]);
+          result = result.concat(this.processString(phrase,data.slice(2),domain));
+        } else if (data[1] instanceof Array) {    // [domain,snippet]
+          result = result.concat(this.processSnippet.apply(this,data));
+        } else if (data.length >= 3) {            // ["tag",{properties},snippet]
+          result.push([data[0],data[1],this.processSnippet(domain,data[2])]);
+        } else {                                  // ["tag"] or ["tag",{properties}]
+          result.push(snippet[i]);
+        }
+      } else {                                    // a string
+        result.push(snippet[i]);
       }
-
-      if (resultArray.length == 0) return resultString;
-
-      return resultArray;
     }
+    return result;
+  },
 
-    function transformHTMLSnippet(snippet)
-    {
-      for (var key in snippet) {
-        var e = snippet[key];
-        if (typeof e === "string") {
-          // transform the string content
-          snippet[key] = transformString(e);
-          continue;
-        }
-        if (e[1]) {
-          // transform attribute values
-          for (var key2 in e[1]) {
-            snippet[key][1][key2] = transformString(e[1][key2]);
-          }
-        }
-        if (e[2]) {
-          // transform the HTML content
-          snippet[key][2] = transformHTMLSnippet(e[2]);
-        }
-      }
-      return snippet;
-    }
-
+  lookupPhrase: function (id,phrase,domain) {
     //
     //  Get the domain and messageID
     //
-    var domain = "_";
-    if (messageId instanceof Array) {
-      domain = (messageId[0] || "_");
-      messageId = (messageId[1] || "");
-    }
+    if (!domain) {domain = "_"}
+    if (id instanceof Array) {domain = (id[0] || "_"); id = (id[1] || "")}
     //
     //  Check if the data is available and if not,
     //    load it and throw a restart error so the calling
@@ -1270,18 +1193,14 @@ MathJax.Localization = {
     if (localeData) {
       if (localeData.domains && domain in localeData.domains) {
         var domainData = localeData.domains[domain];
-        if (domainData.strings && messageId in domainData.strings)
-          {phrase = domainData.strings[messageId]}
+        if (domainData.strings && id in domainData.strings)
+          {phrase = domainData.strings[id]}
       }
     }
-
-    if (typeof phrase === "string") {
-      // handle the phrase as a simple string
-      return transformString(phrase); 
-    }
-
-    // handle the phrase as a HTML snippet
-    return transformHTMLSnippet(phrase);
+    //
+    //  return the translated phrase
+    //
+    return phrase;
   },
   
   //
@@ -2004,8 +1923,7 @@ MathJax.Hub = {
     //  Put up final message, reset the state and return
     //
     if (state.scripts.length && this.config.showProcessingMessages)
-      // Localization: see filterText
-        {MathJax.Message.Set(["ProcessMath","Processing math: %1%%",100],0)}
+      {MathJax.Message.Set(["ProcessMath","Processing math: %1%%",100],0)}
     state.start = new Date().getTime(); state.i = state.j = 0;
     return null;
   },
