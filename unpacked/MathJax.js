@@ -1066,7 +1066,7 @@ MathJax.Localization = {
   //  The pattern for substitution escapes:
   //      %n or %{n} or %{plural:%n|option1|option1|...} or %c
   //
-  pattern: /%(\d+|\{\d+\}|\{[a-z]+:\%\d+(?:\|(?:%(?:\d+|\{\d+\}|.)|[^\}])*)+\}|.)/g,
+  pattern: /%(\d+|\{\d+\}|\{[a-z]+:\%\d+(?:\|(?:%\{\d+\}|%.|[^\}])*)+\}|.)/g,
   
   _: function (id,phrase) {
     if (phrase instanceof Array) {return this.processSnippet(id,phrase)}
@@ -1098,20 +1098,22 @@ MathJax.Localization = {
           if (typeof parts[i] === "number") parts[i] = this.number(parts[i]);
         } else {                     // %{plural:%n|...}
           var match = parts[i].match(/^\{([a-z]+):%(\d+)\|(.*)\}$/);
-          if (match[1] === "plural") {
-            var n = args[match[2]-1];
-            if (typeof n === "undefined") {
-              parts[i] = "???";        // argument doesn't exist
-            } else {
-              n = this.plural(n) - 1;  // index of the form to use
-              var plurals = match[3].replace(/%\|/g,"%\uEFEF").split(/\|/); // the parts (replacing %| with a special character)
-              if (n >= 0 && n < plurals.length) {
-                parts[i] = this.processString(plurals[n].replace(/\uEFEF/g,"|"),args,domain);
+          if (match) {
+            if (match[1] === "plural") {
+              var n = args[match[2]-1];
+              if (typeof n === "undefined") {
+                parts[i] = "???";        // argument doesn't exist
               } else {
-                parts[i] = "???";      // no string for this index
+                n = this.plural(n) - 1;  // index of the form to use
+                var plurals = match[3].replace(/(^|[^%])(%%)*%\|/g,"$1$2%\uEFEF").split(/\|/); // the parts (replacing %| with a special character)
+                if (n >= 0 && n < plurals.length) {
+                  parts[i] = this.processString(plurals[n].replace(/\uEFEF/g,"|"),args,domain);
+                } else {
+                  parts[i] = "???";      // no string for this index
+                }
               }
-            }
-          } else {parts[i] = "%"+parts[i]}  // not "plural:put back the % and leave unchanged
+            } else {parts[i] = "%"+parts[i]}  // not "plural:put back the % and leave unchanged
+          }
         }
       }
     }
@@ -1244,7 +1246,8 @@ MathJax.Localization = {
     if (localeData) {
       if (!localeData.isLoaded) {
         load = this.loadFile(this.locale,localeData);
-        if (load) {return load}
+        // if the main file must be loaded, call us again to load domain
+        if (load) {return MathJax.Callback.After(["loadDomain",this,domain],load)}
       }
       if (localeData.domains && domain in localeData.domains) {
         var domainData = localeData.domains[domain];
@@ -1637,8 +1640,8 @@ MathJax.Hub = {
     },
     
     errorSettings: {
-      message: ["[Math Processing Error]"], // HTML snippet structure for message to use
-      messageId: "MathProcessingErrorHTML", // ID of snippet for localization
+       // localized HTML snippet structure for message to use
+      message: ["[",["MathProcessingError","Math Processing Error"],"]"],
       style: {color: "#CC0000", "font-style":"italic"}  // style for message
     }
   },

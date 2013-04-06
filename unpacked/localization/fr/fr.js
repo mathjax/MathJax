@@ -13,11 +13,8 @@ MathJax.Hub.Insert(MathJax.Localization.strings.fr,{
         MathProcessingError:
           "Erreur de traitement de la formule mathématique",
 
-        MathProcessingErrorHTML:
-          ["[Erreur de traitement de la formule mathématique]"],
-
-        MathErrorHTML:
-          ["[Erreur dans la formule mathématique]"],
+        MathError:
+          "Erreur dans la formule mathématique",
 
         LoadFile: "Téléchargement %1",
 

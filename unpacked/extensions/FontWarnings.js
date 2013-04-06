@@ -308,8 +308,7 @@
         else if (message.match(/- no valid font/)) {MSG = "noFonts"}
         if (MSG && CONFIG.Message[MSG]) {
           MathJax.Callback.Queue(
-            ["loadDomain",MathJax.Localization,"FontWarnings"], // load locale
-            ["loadDomain",MathJax.Localization,"FontWarnings"], // load domain
+            ["loadDomain",MathJax.Localization,"FontWarnings"], // make sure these are available
             [CREATEMESSAGE,CONFIG.Message[MSG]]
           );
         }
