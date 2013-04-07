@@ -306,12 +306,8 @@
         if (message.match(/- Web-Font/)) {if (localFonts) {MSG = "webFont"}}
         else if (message.match(/- using image fonts/)) {MSG = "imageFonts"}
         else if (message.match(/- no valid font/)) {MSG = "noFonts"}
-        if (MSG && CONFIG.Message[MSG]) {
-          MathJax.Callback.Queue(
-            ["loadDomain",MathJax.Localization,"FontWarnings"], // make sure these are available
-            [CREATEMESSAGE,CONFIG.Message[MSG]]
-          );
-        }
+        if (MSG && CONFIG.Message[MSG])
+          {MathJax.Localization.loadDomain("FontWarnings",[CREATEMESSAGE,CONFIG.Message[MSG]])}
       }
     });
   }

@@ -1209,7 +1209,8 @@ MathJax.Localization = {
   //  Load a langauge data file from the proper
   //  directory and file.
   //
-  loadFile: function (file,data) {
+  loadFile: function (file,data,callback) {
+    callback = MathJax.Callback(callback||{});
     file = (data.file || file);  // the data's file name or the default name
     if (!file.match(/\.js$/)) {file += ".js"} // add .js if needed
     //
@@ -1227,7 +1228,7 @@ MathJax.Localization = {
     //  failed to load, so we don't continue to try to load it
     //  over and over).
     //
-    var load = MathJax.Ajax.Require(file,function () {data.isLoaded = true});
+    var load = MathJax.Ajax.Require(file,function () {data.isLoaded = true; return callback()});
     //
     //  Return the callback if needed, otherwise null.
     //
@@ -1240,24 +1241,27 @@ MathJax.Localization = {
   //  and return a callback for the loading operation.
   //  Otherwise return null (data are loaded).
   //  
-  loadDomain: function (domain) {
-    var load;
-    var localeData = this.strings[this.locale];
+  loadDomain: function (domain,callback) {
+    var load, localeData = this.strings[this.locale];
     if (localeData) {
       if (!localeData.isLoaded) {
         load = this.loadFile(this.locale,localeData);
-        // if the main file must be loaded, call us again to load domain
-        if (load) {return MathJax.Callback.After(["loadDomain",this,domain],load)}
+        if (load) {
+          return MathJax.Callback.Queue(
+            load,["loadDomain",this,domain] // call again to load domain
+          ).Push(callback);
+        }
       }
       if (localeData.domains && domain in localeData.domains) {
         var domainData = localeData.domains[domain];
         if (!domainData.isLoaded) {
           load = this.loadFile(domain,domainData);
-          if (load) {return load}
+          if (load) {return MathJax.Callback.Queue(load).Push(callback)}
         }
       }
     } 
-    return null; // localization data are loaded
+    // localization data are loaded, so just do the callback
+    return MathJax.Callback(callback)();
   },
 
   //
