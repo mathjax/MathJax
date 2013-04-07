@@ -883,12 +883,11 @@
   };
   
   /*
-   *  Handle selection of locale
+   *  Handle selection of locale and rerender the page
    */
   MENU.Locale = function () {
     MathJax.Localization.setLocale(CONFIG.settings.locale);
-    // FIXME:  Rerender the page?  (To force error messages to change?)
-    //    Just rerender error messages?
+    MathJax.Hub.Queue(["Reprocess",MathJax.Hub]); // FIXME: Just reprocess error messages?
   };
   MENU.LoadLocale = function () {
     var url = prompt(_("LoadURL","Load translation data from this URL:"));
