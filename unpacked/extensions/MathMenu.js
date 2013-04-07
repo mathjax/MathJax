@@ -889,7 +889,21 @@
     MathJax.Localization.setLocale(CONFIG.settings.locale);
     // FIXME:  Rerender the page?  (To force error messages to change?)
     //    Just rerender error messages?
-  }
+  };
+  MENU.LoadLocale = function () {
+    var url = prompt(_("LoadURL","Load translation data from this URL:"));
+    if (url) {
+      if (!url.match(/\.js$/)) {
+        alert(_("BadURL",
+          "The URL should be for a javascript file that defines MathJax translation data.  " +
+          "Javascript file names should end with '.js'"
+        ));
+      }
+      AJAX.Require(url,function (status) {
+        if (status != AJAX.STATUS.OK) {alert(_("BadData","Failed to load translation data from %1",url))}
+      });
+    }
+  };
   
   /*
    *  Handle setting MathPlayer events
@@ -1033,7 +1047,8 @@
         ITEM.RULE().With({hidden:!CONFIG.showLocale, name:["","locale_rule"]}),
         ITEM.SUBMENU(["Locale","Locale"],                  {hidden:!CONFIG.showLocale},
           ITEM.RADIO("en", "locale",  {action: MENU.Locale}),
-          ITEM.RADIO("fr", "locale",  {action: MENU.Locale})
+          ITEM.RULE(),
+          ITEM.COMMAND(["LoadLocale","Load from URL ..."], MENU.LoadLocale)
         )
       ),
       ITEM.RULE(),
@@ -1056,6 +1071,32 @@
     }
 
   });
+  
+  //
+  //  Creates the locale menu from the list of locales in MathJax.Localization.strings
+  //
+  MENU.CreateLocaleMenu = function () {
+    var menu = MENU.menu.Find("Math Settings","Locale").menu, items = menu.items;
+    //
+    //  Get the names of the languages and sort them
+    //
+    var locales = [], LOCALE = MathJax.Localization.strings;
+    for (var id in LOCALE) {if (LOCALE.hasOwnProperty(id)) {locales.push(id)}}
+    locales = locales.sort(); menu.items = [];
+    //
+    //  Add a menu item for each
+    //
+    for (var i = 0, m = locales.length; i < m; i++) {
+      var title = LOCALE[locales[i]].menuTitle;
+      if (title) {title += " ("+locales[i]+")"} else {title = locales[i]}
+      menu.items.push(ITEM.RADIO([locales[i],title],"locale",{action:MENU.Locale}));
+    }
+    //
+    //  Add the rule and "Load from URL" items
+    //
+    menu.items.push(items[items.length-2],items[items.length-1]);
+  };
+  MENU.CreateLocaleMenu();
 
   MENU.showRenderer = function (show) {
     MENU.cookie.showRenderer = CONFIG.showRenderer = show; MENU.saveCookie();

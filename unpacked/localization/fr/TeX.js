@@ -1,253 +1,250 @@
-MathJax.Hub.Insert(MathJax.Localization.strings.fr.domains,{
-  TeX: {
-    isLoaded: true,
-    strings: {
-      ExtraOpenMissingClose:
-        "Accolade ouvrant manquante ou accolade fermante non attendue",
+MathJax.Localization.addTranslation("fr","TeX",{
+  isLoaded: true,
+  strings: {
 
-      ExtraCloseMissingOpen:
-        "Accolade fermante non attendue ou accolade ouvrante manquante",
+    ExtraOpenMissingClose:
+      "Accolade ouvrant manquante ou accolade fermante non attendue",
 
-      MissingLeftExtraRight:
-        "Commande \\left manquante or ou commande \\right non attendue",
+    ExtraCloseMissingOpen:
+      "Accolade fermante non attendue ou accolade ouvrante manquante",
 
-      MissingScript:
-        "Argument en exposant ou en indice manquant",
+    MissingLeftExtraRight:
+      "Commande \\left manquante or ou commande \\right non attendue",
 
-      ExtraLeftMissingRight:
-        "Commande \\left inattendue or ou commande \\right manquante",
+    MissingScript:
+      "Argument en exposant ou en indice manquant",
 
-      Misplaced:
-        "Mauvaise position pour la commande %1",
+    ExtraLeftMissingRight:
+      "Commande \\left inattendue or ou commande \\right manquante",
 
-      MissingOpenForScript:
-        "Accolade ouvrante manquante pour le script %1",
+    Misplaced:
+      "Mauvaise position pour la commande %1",
 
-      AmbiguousUseOf:
-        "Usage ambigu de la commande %1",
+    MissingOpenForScript:
+      "Accolade ouvrante manquante pour le script %1",
 
-      EnvBadEnd:
-        "\\begin{%1} s'est terminé par un \\end{%2}",
+    AmbiguousUseOf:
+      "Usage ambigu de la commande %1",
 
-      EnvMissingEnd:
-	"\\end{%1} manquant",
+    EnvBadEnd:
+      "\\begin{%1} s'est terminé par un \\end{%2}",
 
-      MissingBoxFor:
-        "Boite manquante pour la commande %1",
+    EnvMissingEnd:
+      "\\end{%1} manquant",
 
-      MissingCloseBrace:
-        "Accolade fermante manquante",
+    MissingBoxFor:
+      "Boite manquante pour la commande %1",
 
-      UndefinedControlSequence:
-        "Commande %1 non définie",
+    MissingCloseBrace:
+      "Accolade fermante manquante",
 
-      IllegalControlSequenceName:
-        "Nom de contrôle de séquence non autorisé pour la commande %1",
+    UndefinedControlSequence:
+      "Commande %1 non définie",
 
-      IllegalParamNumber:
-        "Nombre de paramètres incorrect pour la commande %1",
+    IllegalControlSequenceName:
+      "Nom de contrôle de séquence non autorisé pour la commande %1",
 
-      DoubleExponent:
-        "Double exposant: utilisez des accolades pour clarifier",
+    IllegalParamNumber:
+      "Nombre de paramètres incorrect pour la commande %1",
 
-      DoubleSubscripts:
-        "Double indice: utilisez des accolades pour clarifier",
+    DoubleExponent:
+      "Double exposant: utilisez des accolades pour clarifier",
 
-      DoubleExponentPrime:
-        "Un prime entraine un double exposant: utilisez "+
-        "des accolades pour clarifier",
+    DoubleSubscripts:
+      "Double indice: utilisez des accolades pour clarifier",
 
-      CantUseHash1:
-        "Vous ne pouvez pas utilisez le caractère #, indiquant un "+
-        "paramètre de macro, dans le mode mathématique",
+    DoubleExponentPrime:
+      "Un prime entraine un double exposant: utilisez "+
+      "des accolades pour clarifier",
 
-      CantUseHash2:
-        "Usage du caractère # non autorisé dans le modèle pour la séquence "+
-        "de contrôle %1",
+    CantUseHash1:
+      "Vous ne pouvez pas utilisez le caractère #, indiquant un "+
+      "paramètre de macro, dans le mode mathématique",
 
-      MisplacedMiddle:
-        "La commande %1 doit être placée à l'intérieur d'une section "+
-        "\\left ... \right",
+    CantUseHash2:
+      "Usage du caractère # non autorisé dans le modèle pour la séquence "+
+      "de contrôle %1",
 
-      MisplacedLimits:
-        "La commande %1 n'est autorisée que sur les opérateurs",
+    MisplacedMiddle:
+      "La commande %1 doit être placée à l'intérieur d'une section "+
+      "\\left ... \right",
 
-      MisplacedMoveRoot:
-        "La commande %1 n'est autorisée qu'à l'intérieur d'une racine",
+    MisplacedLimits:
+      "La commande %1 n'est autorisée que sur les opérateurs",
 
-      MultipleMoveRoot:
-        "Commande %1 redondante",
+    MisplacedMoveRoot:
+      "La commande %1 n'est autorisée qu'à l'intérieur d'une racine",
 
-      IntegerArg:
-        "L'argument de la commande %1 doit être un entier",
+    MultipleMoveRoot:
+      "Commande %1 redondante",
 
-      PositiveIntegerArg:
-        "L'argument de la commande %1 doit être un entier strictement "+
-        "positif",
+    IntegerArg:
+      "L'argument de la commande %1 doit être un entier",
 
-      NotMathMLToken:
-        "L'élément %1 n'est pas un élément MathML élémentaire",
+    PositiveIntegerArg:
+      "L'argument de la commande %1 doit être un entier strictement "+
+      "positif",
 
-      InvalidMathMLAttr:
-        "Attribut MathML non valide: %1",
+    NotMathMLToken:
+      "L'élément %1 n'est pas un élément MathML élémentaire",
 
-      UnknownAttrForElement:
-        "Attribut %1 inconnu pour l'élément %2",
+    InvalidMathMLAttr:
+      "Attribut MathML non valide: %1",
 
-      MaxMacroSub1:
-        "Le nombre maximal de substitution de macro autorisé par MathJax "+
-        "a été dépassé. Il y a t'il un appel de macro récursif?",
+    UnknownAttrForElement:
+      "Attribut %1 inconnu pour l'élément %2",
 
-      MaxMacroSub2:
-        "Le nombre maximal de substitution de macro autorisé par MathJax "+
-        "a été dépassé. Il y a t'il un environnement LaTeX récursif?",
+    MaxMacroSub1:
+      "Le nombre maximal de substitution de macro autorisé par MathJax "+
+      "a été dépassé. Il y a t'il un appel de macro récursif?",
 
-      MissingArgFor:
-        "Argument manquant pour la commande %1",
+    MaxMacroSub2:
+      "Le nombre maximal de substitution de macro autorisé par MathJax "+
+      "a été dépassé. Il y a t'il un environnement LaTeX récursif?",
 
-      ExtraAlignTab:
-        "Tabulation d'alignement non attendu pour le texte de la commande "+
-        "\\cases",
+    MissingArgFor:
+      "Argument manquant pour la commande %1",
 
-      BracketMustBeDimension:
-        "L'argument entre crochets de la commande %1 doit être une "+
-        "dimension",
+    ExtraAlignTab:
+      "Tabulation d'alignement non attendu pour le texte de la commande \\cases",
 
-      InvalidEnv:
-        "Nom d'environnement '%1' non valide",
+    BracketMustBeDimension:
+      "L'argument entre crochets de la commande %1 doit être une dimension",
 
-      UnknownEnv:
-        "Environnement '%1' inconnu",
+    InvalidEnv:
+      "Nom d'environnement '%1' non valide",
 
-      ExtraClose:
-        "Accolade fermante non attendue",
+    UnknownEnv:
+      "Environnement '%1' inconnu",
 
-      ExtraCloseInBrackets:
-        "Accolade fermante non attendue avant le crochet fermant.",
+    ExtraClose:
+      "Accolade fermante non attendue",
 
-      MissingCloseBracket:
-        "Impossible de trouver le crochet fermant pour l'argument de la "+
-        "commande %1",
+    ExtraCloseInBrackets:
+      "Accolade fermante non attendue avant le crochet fermant.",
 
-      MissingOrUnrecognizedDelim:
-        "Délimiteur manquant ou non reconnu pour la commande %1",
+    MissingCloseBracket:
+      "Impossible de trouver le crochet fermant pour l'argument de la commande %1",
 
-      MissingDimOrUnits:
-        "Dimension ou unité manquante pour la commande %1",
+    MissingOrUnrecognizedDelim:
+      "Délimiteur manquant ou non reconnu pour la commande %1",
 
-      ExtraCloseBraceInUpTo:
-        "Accolade fermante non attendue avant la commande %1",
+    MissingDimOrUnits:
+      "Dimension ou unité manquante pour la commande %1",
 
-      TokenNotFoundForCommand:
-        "Impossible de trouver la commande %1 pour la commande %2",
+    ExtraCloseBraceInUpTo:
+      "Accolade fermante non attendue avant la commande %1",
 
-      MathNotTerminated:
-        "Expression mathématique non terminée à l'intérieur de cette boite "+
-        "de texte",
+    TokenNotFoundForCommand:
+      "Impossible de trouver la commande %1 pour la commande %2",
 
-      IllegalMacroParam:
-        "Paramètre de référence de macro non autorisé",
+    MathNotTerminated:
+      "Expression mathématique non terminée à l'intérieur de cette boite "+
+      "de texte",
 
-      MaxBufferSize:
-        "Taille maximale du tampon interne de MathJax dépassée. " +
-        "Il y a t'il un appel de macro récursif?",
+    IllegalMacroParam:
+      "Paramètre de référence de macro non autorisé",
 
-      CommandNotAllowedInEnv:
-        "La commande %1 n'est pas autorisé à l'intérieur de "+
-        "l'environnement %2", 
+    MaxBufferSize:
+      "Taille maximale du tampon interne de MathJax dépassée. " +
+      "Il y a t'il un appel de macro récursif?",
 
-      MultipleCommand:
-        "Usage multiple de la commande %1",
+    CommandNotAllowedInEnv:
+      "La commande %1 n'est pas autorisé à l'intérieur de "+
+      "l'environnement %2", 
 
-      MultipleLabel:
-        "Étiquette '%1' déjà définie",
+    MultipleCommand:
+      "Usage multiple de la commande %1",
 
-      CommandAtTheBeginingOfLine:
-        "La commande %1 doit être placée en début de ligne",
+    MultipleLabel:
+      "Étiquette '%1' déjà définie",
 
-      IllegalAlign:
-        "Alignement non autorisé pour la commande %1",
+    CommandAtTheBeginingOfLine:
+      "La commande %1 doit être placée en début de ligne",
 
-      BadMathStyleFor:
-        "Style mathématique non valide pour la commande %1",
+    IllegalAlign:
+      "Alignement non autorisé pour la commande %1",
 
-      ErroneousNestingEq:
-        "Emboitement incorrect des structures d'équation",
+    BadMathStyleFor:
+      "Style mathématique non valide pour la commande %1",
 
-      MultipleRowsOneCol:
-        "Les lignes multiples doivent avoir exactement une colonne",
+    ErroneousNestingEq:
+      "Emboitement incorrect des structures d'équation",
 
-      NoClosingDelim:
-        "Impossible de trouver le délimiteur fermant pour la commande %1",
+    MultipleRowsOneCol:
+      "Les lignes multiples doivent avoir exactement une colonne",
 
-      NoClosingChar:
-        "Impossible de trouver le délimiteur '%1' fermant",
+    NoClosingDelim:
+      "Impossible de trouver le délimiteur fermant pour la commande %1",
 
-      MultipleBBoxProperty:
-        "La propriété %1 de la commande %2 spécifiée deux fois",
+    NoClosingChar:
+      "Impossible de trouver le délimiteur '%1' fermant",
 
-      InvalidBBoxProperty:
-        "La valeur '%1' ne semble pas être une couleur, une dimension ou "+
-        "de marge intérieur ou un style.",
+    MultipleBBoxProperty:
+      "La propriété %1 de la commande %2 spécifiée deux fois",
 
-      ExtraEndMissingBegin:
-        "Commande %1 non attendue ou commande \\begingroup manquante",
+    InvalidBBoxProperty:
+      "La valeur '%1' ne semble pas être une couleur, une dimension ou "+
+      "de marge intérieur ou un style.",
 
-      GlobalNotFollowedBy:
-        "Command %1 non suivie d'une commande \\let, \\def ou \newcommand",
+    ExtraEndMissingBegin:
+      "Commande %1 non attendue ou commande \\begingroup manquante",
 
-      NewextarrowArg1:
-        "Le premier argument de la commande %1 doit être le nom d'une "+
-        "séquence de contrôle",
+    GlobalNotFollowedBy:
+      "Command %1 non suivie d'une commande \\let, \\def ou \newcommand",
 
-      NewextarrowArg2:
-        "Le second argument de la commande %1 doit être deux entiers "+
-        "séparés par une virgule",
+    NewextarrowArg1:
+      "Le premier argument de la commande %1 doit être le nom d'une "+
+      "séquence de contrôle",
 
-      NewextarrowArg3:
-        "Le troisième argument de la commande %1 doit être la valeur d'un "+
-        "caractère unicode",
+    NewextarrowArg2:
+      "Le second argument de la commande %1 doit être deux entiers "+
+      "séparés par une virgule",
 
-      UndefinedColorModel:
-        "Le modèle de couleur '%1' n'est pas défini",
+    NewextarrowArg3:
+      "Le troisième argument de la commande %1 doit être la valeur d'un "+
+      "caractère unicode",
 
-      rgbArg1:
-        "Les couleurs rgb nécéssitent 3 nombres décimaux",
+    UndefinedColorModel:
+      "Le modèle de couleur '%1' n'est pas défini",
 
-      InvalidDecimalNumber:
-         "Nombre décimal non valide",
+    rgbArg1:
+      "Les couleurs rgb nécéssitent 3 nombres décimaux",
 
-      rgbArg2:
-         "Les valeurs rgb doivent être comprises entre 0 et 1",
+    InvalidDecimalNumber:
+      "Nombre décimal non valide",
 
-      RGBArg1:
-         "Les couleurs RGB nécéssitent 3 nombres",
+    rgbArg2:
+      "Les valeurs rgb doivent être comprises entre 0 et 1",
 
-      InvalidNumber:
-         "Nombre non valide",
+    RGBArg1:
+      "Les couleurs RGB nécéssitent 3 nombres",
 
-      RGBArg2:
-         "Les valeurs RGB doivent être comprises entre 0 et 255",
+    InvalidNumber:
+      "Nombre non valide",
 
-      GrayScalerArg: 
-       "Les valeurs de dégradé de gris doivent être comprises entre 0 et 1",
+    RGBArg2:
+      "Les valeurs RGB doivent être comprises entre 0 et 255",
 
-      DoubleBackSlash:
-        "\\ doit être suivi d'une séquence de contrôle",
+    GrayScalerArg: 
+      "Les valeurs de dégradé de gris doivent être comprises entre 0 et 1",
 
-      SequentialParam:
-        "Les paramètres de la séquence de contrôle %1 doivent être "+
-        "énumérés de façon séquentielle",
+    DoubleBackSlash:
+      "\\ doit être suivi d'une séquence de contrôle",
 
-      MissingReplacementString:
-        "Chaine de caractère de remplacement manquante pour la définition %1",
+    SequentialParam:
+      "Les paramètres de la séquence de contrôle %1 doivent être "+
+      "énumérés de façon séquentielle",
 
-      MismatchUseDef:
-        "L'utilisation de la commande %1 ne correspond pas à sa définition",
+    MissingReplacementString:
+      "Chaine de caractère de remplacement manquante pour la définition %1",
 
-      RunawayArgument:
-        "Argument manquant pour la commande %1?"
-    }
+    MismatchUseDef:
+      "L'utilisation de la commande %1 ne correspond pas à sa définition",
+
+    RunawayArgument:
+      "Argument manquant pour la commande %1?"
+ 
   }
 });
 

@@ -1,4 +1,4 @@
-MathJax.Hub.Insert(MathJax.Localization.strings.fr,{
+MathJax.Localization.addTranslation("fr",null,{
   isLoaded: true,
   domains: {
     "_": {

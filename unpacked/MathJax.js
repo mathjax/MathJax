@@ -1058,8 +1058,8 @@ MathJax.Localization = {
   locale: "en",
   directory: "[MathJax]/localization",
   strings: {
-    en: {isLoaded: true},   // nothing needs to be loaded for this
-    fr: {}
+    en: {isLoaded: true, menuTitle: "English"},   // nothing needs to be loaded for this
+    fr: {menuTitle: "French"}
   },
 
   //
@@ -1302,6 +1302,7 @@ MathJax.Localization = {
       data = data.domains[domain];
     }
     MathJax.Hub.Insert(data,definition);
+    if (!domain && MathJax.Menu) {MathJax.Menu.CreateLocaleMenu()}
   },
   
   //
