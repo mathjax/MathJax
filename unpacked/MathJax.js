@@ -1055,7 +1055,7 @@ MathJax.HTML = {
 
 MathJax.Localization = {
   
-  locale: "fr",
+  locale: "en",
   directory: "[MathJax]/localization",
   strings: {
     en: {isLoaded: true},   // nothing needs to be loaded for this
@@ -1283,6 +1283,7 @@ MathJax.Localization = {
   setLocale: function(locale) {
     // don't set it if there isn't a definition for it
     if (this.strings[locale]) {this.locale = locale}
+    if (MathJax.Menu) {this.loadDomain("MathMenu")}
   },
 
   //
@@ -1634,6 +1635,7 @@ MathJax.Hub = {
       renderer: "",        //  set when Jax are loaded
       font: "Auto",        //  what font HTML-CSS should use
       context: "MathJax",  //  or "Browser" for pass-through to browser menu
+      locale: "en",        //  the language to use for messages
       mpContext: false,    //  true means pass menu events to MathPlayer in IE
       mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
       texHints: true       //  include class names for TeXAtom elements
@@ -2131,15 +2133,23 @@ MathJax.Hub.Startup = {
   Config: function () {
     this.queue.Push(["Post",this.signal,"Begin Config"]);
     //
+    //  If a locale is given as a parameter,
+    //    set the locale and the default menu value for the locale
+    //
+    if (this.params.locale) {
+      MathJax.Localization.locale = this.params.locale;
+      MathJax.Hub.config.menuSettings.locale = this.params.locale;
+    }
+    //
     //  Check for user cookie configuration
     //
     var user = MathJax.HTML.Cookie.Get("user");
     if (user.URL || user.Config) {
       if (confirm(
         MathJax.Localization._("CookieConfig",
-        "MathJax has found a user-configuration cookie that includes code to"+
-        "be run. Do you want to run it?\n\n"+
-        "(You should press Cancel unless you set up the cookie yourself.)")
+          "MathJax has found a user-configuration cookie that includes code to "+
+          "be run. Do you want to run it?\n\n"+
+          "(You should press Cancel unless you set up the cookie yourself.)")
       )) {
         if (user.URL) {this.queue.Push(["Require",MathJax.Ajax,user.URL])}
         if (user.Config) {this.queue.Push(new Function(user.Config))}
@@ -2207,6 +2217,7 @@ MathJax.Hub.Startup = {
 
   //
   //  Read cookie and set up menu defaults
+  //  (set the locale according to the cookie)
   //  (adjust the jax to accommodate renderer preferences)
   //
   Cookie: function () {
@@ -2214,6 +2225,8 @@ MathJax.Hub.Startup = {
       ["Post",this.signal,"Begin Cookie"],
       ["Get",MathJax.HTML.Cookie,"menu",MathJax.Hub.config.menuSettings],
       [function (config) {
+        if (config.menuSettings.locale)
+          {MathJax.Localization.locale = config.menuSettings.locale}
         var renderer = config.menuSettings.renderer, jax = config.jax;
         if (renderer) {
           var name = "output/"+renderer; jax.sort();
@@ -2332,7 +2345,16 @@ MathJax.Hub.Startup = {
   MenuZoom: function () {
     if (!MathJax.Extension.MathMenu) {
       setTimeout(
-        MathJax.Callback(["Require",MathJax.Ajax,"[MathJax]/extensions/MathMenu.js",{}]),
+        function () {
+          MathJax.Callback.Queue(
+            ["Require",MathJax.Ajax,"[MathJax]/extensions/MathMenu.js",{}],
+            ["loadDomain",MathJax.Localization,"MathMenu"]
+          )
+        },1000
+      );
+    } else {
+      setTimeout(
+        MathJax.Callback(["loadDomain",MathJax.Localization,"MathMenu"]),
         1000
       );
     }

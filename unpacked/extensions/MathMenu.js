@@ -56,6 +56,7 @@
     showFontMenu: false,                           //  show the "Font Preference" menu?
     showContext:  false,                           //  show the "Context Menu" menu?
     showDiscoverable: false,                       //  show the "Discoverable" menu?
+    showLocale: true,                              //  show the "Locale" menu?
 
     windowSettings: {                              // for source window
       status: "no", toolbar: "no", locationbar: "no", menubar: "no",
@@ -882,6 +883,15 @@
   };
   
   /*
+   *  Handle selection of locale
+   */
+  MENU.Locale = function () {
+    MathJax.Localization.setLocale(CONFIG.settings.locale);
+    // FIXME:  Rerender the page?  (To force error messages to change?)
+    //    Just rerender error messages?
+  }
+  
+  /*
    *  Handle setting MathPlayer events
    */
   MENU.MPEvents = function (item) {
@@ -1019,7 +1029,12 @@
         ),
         ITEM.COMMAND(["Scale","Scale All Math ..."],MENU.Scale),
         ITEM.RULE().With({hidden:!CONFIG.showDiscoverable, name:["","discover_rule"]}),
-        ITEM.CHECKBOX(["Discoverable","Highlight on Hover"], "discoverable", {hidden:!CONFIG.showDiscoverable})
+        ITEM.CHECKBOX(["Discoverable","Highlight on Hover"], "discoverable", {hidden:!CONFIG.showDiscoverable}),
+        ITEM.RULE().With({hidden:!CONFIG.showLocale, name:["","locale_rule"]}),
+        ITEM.SUBMENU(["Locale","Locale"],                  {hidden:!CONFIG.showLocale},
+          ITEM.RADIO("en", "locale",  {action: MENU.Locale}),
+          ITEM.RADIO("fr", "locale",  {action: MENU.Locale})
+        )
       ),
       ITEM.RULE(),
       ITEM.COMMAND(["About","About MathJax"],MENU.About),
@@ -1059,9 +1074,14 @@
     MENU.menu.Find("Math Settings","Contextual Menu").hidden = !show;
   };
   MENU.showDiscoverable = function (show) {
-    MENU.cookie.showContext = CONFIG.showContext = show; MENU.saveCookie();
+    MENU.cookie.showDiscoverable = CONFIG.showDiscoverable = show; MENU.saveCookie();
     MENU.menu.Find("Math Settings","Highlight on Hover").hidden = !show;
     MENU.menu.Find("Math Settings","discover_rule").hidden = !show;
+  };
+  MENU.showLocale = function (show) {
+    MENU.cookie.showLocale = CONFIG.showLocale = show; MENU.saveCookie();
+    MENU.menu.Find("Math Settings","Locale").hidden = !show;
+    MENU.menu.Find("Math Settings","locale_rule").hidden = !show;
   };
   
   MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
