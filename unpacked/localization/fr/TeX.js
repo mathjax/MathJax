@@ -9,13 +9,13 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Accolade fermante non attendue ou accolade ouvrante manquante",
 
     MissingLeftExtraRight:
-      "Commande \\left manquante or ou commande \\right non attendue",
+      "Commande \\left manquante ou commande \\right non attendue",
 
     MissingScript:
       "Argument en exposant ou en indice manquant",
 
     ExtraLeftMissingRight:
-      "Commande \\left inattendue or ou commande \\right manquante",
+      "Commande \\left inattendue ou commande \\right manquante",
 
     Misplaced:
       "Mauvaise position pour la commande %1",
@@ -106,7 +106,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Argument manquant pour la commande %1",
 
     ExtraAlignTab:
-      "Tabulation d'alignement non attendu pour le texte de la commande \\cases",
+      "Tabulation d'alignement non attendue pour le texte de la commande \\cases",
 
     BracketMustBeDimension:
       "L'argument entre crochets de la commande %1 doit être une dimension",
@@ -181,17 +181,17 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Impossible de trouver le délimiteur '%1' fermant",
 
     MultipleBBoxProperty:
-      "La propriété %1 de la commande %2 spécifiée deux fois",
+      "La propriété %1 de la commande %2 est spécifiée deux fois",
 
     InvalidBBoxProperty:
-      "La valeur '%1' ne semble pas être une couleur, une dimension ou "+
-      "de marge intérieur ou un style.",
+      "La valeur '%1' ne semble pas être une couleur, une dimension de "+
+      "marge intérieur ou un style.",
 
     ExtraEndMissingBegin:
       "Commande %1 non attendue ou commande \\begingroup manquante",
 
     GlobalNotFollowedBy:
-      "Command %1 non suivie d'une commande \\let, \\def ou \newcommand",
+      "Commande %1 non suivie d'une commande \\let, \\def ou \newcommand",
 
     NewextarrowArg1:
       "Le premier argument de la commande %1 doit être le nom d'une "+
