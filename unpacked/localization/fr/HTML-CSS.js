@@ -3,10 +3,10 @@ MathJax.Localization.addTranslation("fr","HTML-CSS",{
   strings: {
 
     LoadWebFont:
-      "Téléchargement la police Web %1",
+      "Téléchargement de la police Web %1",
 
     CantLoadWebFont:
-      "Impossible de télécharcharger la police Web %1",
+      "Impossible de télécharger la police Web %1",
 
     FirefoxCantLoadWebFont:
       "Firefox ne peut télécharger les polices Web à partir d'un hôte "+

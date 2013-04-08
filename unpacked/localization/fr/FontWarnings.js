@@ -20,13 +20,13 @@ MathJax.Localization.addTranslation("fr","FontWarnings",{
       "les expressions mathématiques et les images de caractères ne "+
       "sont pas disponibles. Comme solution de dernier recours, il "+
       "utilise des caractères Unicode génériques en espérant que votre "+
-      "navigateur sera capable de les afficher. Certains pourront ne "+
+      "navigateur sera capable de les afficher. Certains pourront "+
       "être rendus de façon incorrect voire pas du tout.",
 
     webFonts:
       "La plupart des navigateurs modernes permettent de télécharger "+
-      "des polices à partir du Web. En mettant à jour pour une version "+
-      "plus récente de votre navigateur (ou en changeant de navigateur) "+
+      "des polices à partir du Web. En mettant à jour votre navigateur "+
+      "vers une version plus récente (ou en changeant de navigateur) "+
       "la qualité des expressions mathématiques sur cette page pourrait "+
       "être améliorée.",
 

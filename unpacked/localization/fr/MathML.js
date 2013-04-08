@@ -17,7 +17,7 @@ MathJax.Localization.addTranslation("fr","MathML",{
       "le menu Niveau Personalisé. Assurez vous que les paramètres\n"+
       "Exécution des contrôles ActiveX et Comportements des exécutables\n"+
       "et des scripts sont activés.\n\n"+
-      "Actuellement, vous verez des messages d'erreur à la place des\n"+
+      "Actuellement, vous verrez des messages d'erreur à la place des\n"+
       "expressions mathématiques.",
 
    CantCreateXMLParser:
@@ -39,7 +39,7 @@ MathJax.Localization.addTranslation("fr","MathML",{
     "Le code MathML doit être formé d'un unique élément",
 
    MathMLRootElement:
-     "Le code MathML doit être formé d'un élément <math> et non un élément %1"
+     "Le code MathML doit être formé d'un élément <math> et non d'un élément %1"
 
   }
 });

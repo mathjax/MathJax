@@ -7,8 +7,8 @@ MathJax.Localization.addTranslation("fr",null,{
 
         CookieConfig:
           "MathJax a trouvé un cookie de configuration utilisateur qui inclut "+
-          "du code à exécuter. Souhaitez vous l'exécuter?\n\n"+
-          "(Choisissez Annuler sauf si vous avez créé ce cookie vous-même",
+          "du code exécutable. Souhaitez vous l'exécuter?\n\n"+
+          "(Choisissez Annuler sauf si vous avez créé ce cookie vous-même)",
 
         MathProcessingError:
           "Erreur de traitement de la formule mathématique",
@@ -16,7 +16,7 @@ MathJax.Localization.addTranslation("fr",null,{
         MathError:
           "Erreur dans la formule mathématique",
 
-        LoadFile: "Téléchargement %1",
+        LoadFile: "Téléchargement de %1",
 
         Loading: "Téléchargement",
 
