@@ -1059,7 +1059,7 @@ MathJax.Localization = {
   directory: "[MathJax]/localization",
   strings: {
     en: {isLoaded: true, menuTitle: "English"},   // nothing needs to be loaded for this
-    fr: {menuTitle: "French"}
+    fr: {menuTitle: "Fran\u00E7ais"}
   },
 
   //
@@ -1089,12 +1089,12 @@ MathJax.Localization = {
     for (var i = 1, m = parts.length; i < m; i += 2) {
       var c = parts[i].charAt(0);  // first char will be { or \d or a char to be kept literally
       if (c >= "0" && c <= "9") {    // %n
-        parts[i] = args[parts[i]-1] || "???";
+        parts[i] = args[parts[i]-1];
         if (typeof parts[i] === "number") parts[i] = this.number(parts[i]);
       } else if (c === "{") {        // %{n} or %{plural:%n|...}
         c = parts[i].substr(1);
         if (c >= "0" && c <= "9") {  // %{n}
-          parts[i] = args[parts[i].substr(1,parts[i].length-2)-1] || "???";
+          parts[i] = args[parts[i].substr(1,parts[i].length-2)-1];
           if (typeof parts[i] === "number") parts[i] = this.number(parts[i]);
         } else {                     // %{plural:%n|...}
           var match = parts[i].match(/^\{([a-z]+):%(\d+)\|(.*)\}$/);
@@ -1112,10 +1112,11 @@ MathJax.Localization = {
                   parts[i] = "???";      // no string for this index
                 }
               }
-            } else {parts[i] = "%"+parts[i]}  // not "plural:put back the % and leave unchanged
+            } else {parts[i] = "%"+parts[i]}  // not "plural", put back the % and leave unchanged
           }
         }
       }
+      if (parts[i] == null) {parts[i] = "???"}
     }
     //
     //  If we are not forming a snippet, return the completed string
@@ -1294,15 +1295,15 @@ MathJax.Localization = {
   //  Add or update a language or domain
   //
   addTranslation: function (locale,domain,definition) {
-    var data = this.strings[locale];
-    if (!data) {data = this.strings[locale] = {}}
+    var data = this.strings[locale], isNew = false;
+    if (!data) {data = this.strings[locale] = {}; isNew = true}
     if (!data.domains) {data.domains = {}}
     if (domain) {
       if (!data.domains[domain]) {data.domains[domain] = {}}
       data = data.domains[domain];
     }
     MathJax.Hub.Insert(data,definition);
-    if (!domain && MathJax.Menu) {MathJax.Menu.CreateLocaleMenu()}
+    if (isNew && MathJax.Menu) {MathJax.Menu.CreateLocaleMenu()}
   },
   
   //

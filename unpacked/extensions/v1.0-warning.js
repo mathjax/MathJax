@@ -84,7 +84,7 @@
             "MathJax no longer loads a default configuration file; " +
             "you must specify such files explicitly. " +
             "This page seems to use the older default %1 " +
-            "file, and so needs to be updated.  This is explained further at %1",
+            "file, and so needs to be updated.  This is explained further at %2",
             [["code",{},["config/MathJax.js"]]],
             [["p",{style:{"text-align":"center"}},[
               ["a",
@@ -95,6 +95,7 @@
           ]
         ])
       );
+      MathJax.Localization.setCSS(DIV);
     });
   });
 

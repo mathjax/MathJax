@@ -629,11 +629,11 @@
         HTMLCSS.allowWebFonts.replace(/otf/,"woff or otf") + " fonts");
     var jax = ["MathJax.js v"+MathJax.fileversion,["br"]];
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
-    MENU.About.GetJax(jax,MathJax.InputJax,_("InputJax","Input Jax"));
-    MENU.About.GetJax(jax,MathJax.OutputJax,_("OutputJax","Output Jax"));
-    MENU.About.GetJax(jax,MathJax.ElementJax,_("ElementJax","Element Jax"));
+    MENU.About.GetJax(jax,MathJax.InputJax,["InputJax","%1 Input Jax v%2"]);
+    MENU.About.GetJax(jax,MathJax.OutputJax,["OutputJax","%1 Output Jax v%2"]);
+    MENU.About.GetJax(jax,MathJax.ElementJax,["ElementJax","%1 Element Jax v%2"]);
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
-    MENU.About.GetJax(jax,MathJax.Extension,_("Extension","Extension"),true);
+    MENU.About.GetJax(jax,MathJax.Extension,["Extension","%1 Extension v%2"],true);
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}],["center",{},[
       HUB.Browser + " v"+HUB.Browser.version + (format ? 
         " \u2014 " + _(format.replace(/ /g,""),format) : "")
@@ -675,7 +675,7 @@
     var info = [];
     for (var id in JAX) {if (JAX.hasOwnProperty(id) && JAX[id]) {
       if ((noTypeCheck && JAX[id].version) || (JAX[id].isa && JAX[id].isa(JAX)))
-        {info.push((JAX[id].id||id)+" "+type+" v"+JAX[id].version)}
+        {info.push(_(type[0],type[1],(JAX[id].id||id),JAX[id].version))}
     }}
     info.sort();
     for (var i = 0, m = info.length; i < m; i++) {jax.push(info[i],["br"])}
@@ -831,8 +831,13 @@
         message += _("SwitchAnyway",
                      "Switch the renderer anyway?\n\n" +
                      "(Press OK to switch, CANCEL to continue with the current renderer)");
-        MENU.cookie.renderer = jax[0].id; MENU.saveCookie(); if (!confirm(message)) {return}
-        if (warned) {MENU.cookie[warned]  = CONFIG.settings[warned] = true}
+        MENU.cookie.renderer = jax[0].id; MENU.saveCookie();
+        if (!confirm(message)) {
+          MENU.cookie.renderer = CONFIG.settings.renderer = HTML.Cookie.Get("menu").renderer;
+          MENU.saveCookie();
+          return;
+        }
+        if (warned) {MENU.cookie.warned  = CONFIG.settings.warned = true}
         MENU.cookie.renderer = CONFIG.settings.renderer; MENU.saveCookie();
       }
       HUB.Queue(
@@ -1042,13 +1047,12 @@
         ),
         ITEM.COMMAND(["Scale","Scale All Math ..."],MENU.Scale),
         ITEM.RULE().With({hidden:!CONFIG.showDiscoverable, name:["","discover_rule"]}),
-        ITEM.CHECKBOX(["Discoverable","Highlight on Hover"], "discoverable", {hidden:!CONFIG.showDiscoverable}),
-        ITEM.RULE().With({hidden:!CONFIG.showLocale, name:["","locale_rule"]}),
-        ITEM.SUBMENU(["Locale","Locale"],                  {hidden:!CONFIG.showLocale},
-          ITEM.RADIO("en", "locale",  {action: MENU.Locale}),
-          ITEM.RULE(),
-          ITEM.COMMAND(["LoadLocale","Load from URL ..."], MENU.LoadLocale)
-        )
+        ITEM.CHECKBOX(["Discoverable","Highlight on Hover"], "discoverable", {hidden:!CONFIG.showDiscoverable})
+      ),
+      ITEM.SUBMENU(["Locale","Language"],                  {hidden:!CONFIG.showLocale},
+        ITEM.RADIO("en", "locale",  {action: MENU.Locale}),
+        ITEM.RULE(),
+        ITEM.COMMAND(["LoadLocale","Load from URL ..."], MENU.LoadLocale)
       ),
       ITEM.RULE(),
       ITEM.COMMAND(["About","About MathJax"],MENU.About),
@@ -1075,7 +1079,7 @@
   //  Creates the locale menu from the list of locales in MathJax.Localization.strings
   //
   MENU.CreateLocaleMenu = function () {
-    var menu = MENU.menu.Find("Math Settings","Locale").menu, items = menu.items;
+    var menu = MENU.menu.Find("Language").menu, items = menu.items;
     //
     //  Get the names of the languages and sort them
     //
@@ -1120,8 +1124,7 @@
   };
   MENU.showLocale = function (show) {
     MENU.cookie.showLocale = CONFIG.showLocale = show; MENU.saveCookie();
-    MENU.menu.Find("Math Settings","Locale").hidden = !show;
-    MENU.menu.Find("Math Settings","locale_rule").hidden = !show;
+    MENU.menu.Find("Language").hidden = !show;
   };
   
   MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {

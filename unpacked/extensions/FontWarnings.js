@@ -178,23 +178,24 @@
         [["span",{style:{position:"relative", bottom:".2em"}},["x"]]]
       ]],
       
-     webfonts: [
-       ["p"],
-       ["webfonts",
-         "Most modern browsers allow for fonts to be downloaded over the web. "+
-         "Updating to a more recent version of your browser (or changing "+
-         "browsers) could improve the quality of the mathematics on this page."
-       ]
-     ],
+      webfonts: [
+        ["p"],
+        ["webfonts",
+          "Most modern browsers allow for fonts to be downloaded over the web. "+
+          "Updating to a more recent version of your browser (or changing "+
+          "browsers) could improve the quality of the mathematics on this page."
+        ]
+      ],
  
-     fonts: [
-       ["p"],
-       ["fonts",
-         "MathJax can use either the %1 or the %2",
-         [["a",{href:STIXURL,target:"_blank"},[["STIXfonts","STIX fonts"]]]],
-         [["a",{href:MATHJAXURL,target:"_blank"},[["TeXfonts","MathJax TeX fonts"]]]]
-       ]
-     ],
+      fonts: [
+        ["p"],
+        ["fonts",
+          "MathJax can use either the %1 or the %2.  " +
+           "Download and install one of those fonts to improve your MathJax experience.",
+          [["a",{href:STIXURL,target:"_blank"},[["STIXfonts","STIX fonts"]]]],
+          [["a",{href:MATHJAXURL,target:"_blank"},[["TeXfonts","MathJax TeX fonts"]]]]
+        ]
+      ],
  
 //     fonts: [
 //       ["p"],
@@ -258,6 +259,8 @@
         if (data[i].length === 1 && CONFIG.HTML[data[i][0]]) {
           data.splice.apply(data,[i,1].concat(CONFIG.HTML[data[i][0]]));
         } else if (typeof data[i][1] === "string") {
+          var message = MathJax.Localization.lookupPhrase(["FontWarnings",data[i][0]],data[i][1]);
+          message = MathJax.Localization.processString(message,data[i].slice(2),"FontWarnings");
           data.splice.apply(data,[i,1].concat(message));
           i += message.length;
         } else {i++}
@@ -265,6 +268,7 @@
     }
     DATA.div = HTMLCSS.addElement(frame,"div",
       {id:"MathJax_FontWarning",style:CONFIG.messageStyle},data);
+    MathJax.Localization.setCSS(DATA.div);
     if (CONFIG.removeAfter) {
       HUB.Register.StartupHook("End",function () 
          {DATA.timer = setTimeout(FADEOUT,CONFIG.removeAfter)});
