@@ -75,8 +75,8 @@ MathJax.Localization.addTranslation("fr","TeX",{
     MisplacedMoveRoot:
       "La commande %1 n'est autorisée qu'à l'intérieur d'une racine",
 
-    MultipleMoveRoot:
-      "Commande %1 redondante",
+    MultipleCommand:
+      "Usage multiple de la commande %1",
 
     IntegerArg:
       "L'argument de la commande %1 doit être un entier",
@@ -120,8 +120,8 @@ MathJax.Localization.addTranslation("fr","TeX",{
     ExtraClose:
       "Accolade fermante non attendue",
 
-    ExtraCloseInBrackets:
-      "Accolade fermante non attendue avant le crochet fermant.",
+    ExtraCloseLooking:
+      "Extra close brace while looking for %1"
 
     MissingCloseBracket:
       "Impossible de trouver le crochet fermant pour l'argument de la commande %1",
@@ -131,9 +131,6 @@ MathJax.Localization.addTranslation("fr","TeX",{
 
     MissingDimOrUnits:
       "Dimension ou unité manquante pour la commande %1",
-
-    ExtraCloseBraceInUpTo:
-      "Accolade fermante non attendue avant la commande %1",
 
     TokenNotFoundForCommand:
       "Impossible de trouver la commande %1 pour la commande %2",
@@ -171,7 +168,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
     ErroneousNestingEq:
       "Emboitement incorrect des structures d'équation",
 
-    MultipleRowsOneCol:
+    MultlineRowsOneCol:
       "Les lignes multiples doivent avoir exactement une colonne",
 
     NoClosingDelim:

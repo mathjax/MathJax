@@ -80,8 +80,8 @@
   
   var STACKITEM = STACK.Item = MathJax.Object.Subclass({
     type: "base",
-    closeError: ["ExtraCloseMissingOpen","Extra close brace or missing open brace"],
-    rightError: ["MissingLeftExtraRight","Missing \\left or extra \\right"],
+    closeError: /*_()*/ ["ExtraCloseMissingOpen","Extra close brace or missing open brace"],
+    rightError: /*_()*/ ["MissingLeftExtraRight","Missing \\left or extra \\right"],
     Init: function () {
       if (this.isOpen) {this.env = {}}
       this.data = [];
@@ -98,7 +98,7 @@
       if (item.type === "over" && this.isOpen) {item.num = this.mmlData(false); this.data = []}
       if (item.type === "cell" && this.isOpen) {
         if (item.linebreak) {return false}
-        TEX.Error(["Misplaced %1","Misplaced ",item.name]);
+        TEX.Error(["Misplaced","Misplaced %1",item.name]);
       }
       if (item.isClose && this[item.type+"Error"]) {TEX.Error(this[item.type+"Error"])}
       if (!item.isNotStack) {return true}
@@ -129,7 +129,7 @@
 
   STACKITEM.open = STACKITEM.Subclass({
     type: "open", isOpen: true,
-    stopError: ["ExtraOpenMissingClose","Extra open brace or missing close brace"],
+    stopError: /*_()*/ ["ExtraOpenMissingClose","Extra open brace or missing close brace"],
     checkItem: function (item) {
       if (item.type === "close") {
         var mml = this.mmlData();
@@ -155,7 +155,7 @@
   
   STACKITEM.subsup = STACKITEM.Subclass({
     type: "subsup",
-    stopError: ["MissingScript","Missing superscript or subscript argument"],
+    stopError: /*_()*/ ["MissingScript","Missing superscript or subscript argument"],
     checkItem: function (item) {
       var script = ["","subscript","superscript"][this.position];
       if (item.type === "open" || item.type === "left") {return true}
@@ -195,7 +195,7 @@
 
   STACKITEM.left = STACKITEM.Subclass({
     type: "left", isOpen: true, delim: '(',
-    stopError: ["ExtraLeftMissingRight", "Extra \\left or missing \\right"],
+    stopError: /*_()*/ ["ExtraLeftMissingRight", "Extra \\left or missing \\right"],
     checkItem: function (item) {
       if (item.type === "right") {
         var mml = MML.mfenced(this.data.length === 1 ? this.data[0] : MML.mrow.apply(MML,this.data));
@@ -1371,7 +1371,7 @@
     },
     MoveRoot: function (name,id) {
       if (!this.stack.env.inRoot)
-        {TEX.Error(["BadMoveRoot","%1 can appear only within a root"])}
+        {TEX.Error(["MisplacedMoveRoot","%1 can appear only within a root",name])}
       if (this.stack.global[id])
         {TEX.Error(["MultipleMoveRoot","Multiple use of %1",name])}
       var n = this.GetArgument(name);
@@ -1432,7 +1432,7 @@
           data = this.GetArgument(name),
           def = {attrNames:[]}, match;
       if (!MML[type] || !MML[type].prototype.isToken)
-        {TEX.Error(["NotMathMLToken", "%1 is not a token element",type])}
+        {TEX.Error(["NotMathMLToken","%1 is not a token element",type])}
       while (attr !== "") {
         match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|\"[^"]*"|[^ ]*)\s*/i);
         if (!match)
@@ -1589,7 +1589,7 @@
       this.string = this.AddArgs(macro,this.string.slice(this.i));
       this.i = 0;
       if (++this.macroCount > TEX.config.MAXMACROS) {
-        TEX.Error(["MaxMacroSub",
+        TEX.Error(["MaxMacroSub1",
                    "MathJax maximum macro substitution count exceeded; " +
                    "is there a recursive macro call?"]);
       }
@@ -1866,7 +1866,7 @@
          case '\\':  this.i++; break;
          case '}':
           if (parens-- <= 0) {
-            TEX.Error(["ExtraCloseBrace",
+            TEX.Error(["ExtraCloseLooking",
                        "Extra close brace while looking for %1","']'"]);
           }
           break;   
@@ -1928,7 +1928,7 @@
          case '{':   parens++; break;
          case '}':
           if (parens == 0) {
-            TEX.Error(["ExtraCloseBrace",
+            TEX.Error(["ExtraCloseLooking",
                        "Extra close brace while looking for %1",token])
           }
           parens--;

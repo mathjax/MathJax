@@ -141,10 +141,6 @@
           //
           //  If that fails, give an alert about security settings
           //
-          // Localization: this seems to use "\n" to force new lines in the
-          // dialog: is it really necessary? If so, we need a localization note
-          // to explain that to localizers. Handling of concatenation might
-          // be an additional difficulty for the string extractor.
           alert(MathJax.Localization._(["MathML", "MathPlayer"],
                 "MathJax was not able to set up MathPlayer.\n\n"+
                 "If MathPlayer is not installed, you need to install it first.\n"+

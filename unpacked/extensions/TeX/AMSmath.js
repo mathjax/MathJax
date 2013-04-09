@@ -460,7 +460,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     EndRow: function () {
       if (this.row.length != 1) {
-        TEX.Error(["MultipleRowsOneCol",
+        TEX.Error(["MultlineRowsOneCol",
                    "multline rows must have exactly one column"]);
       }
       this.table.push(this.row); this.row = [];

@@ -287,7 +287,7 @@
       return(this.parseDIV);
     },
     parserCreationError: function () {
-      alert(_("MathPlayer",
+      alert(_("CantCreateXMLParser",
         "MathJax can't create an XML parser for MathML.  Check that\n"+
         "the 'Script ActiveX controls marked safe for scripting' security\n"+
         "setting is enabled (use the Internet Options item in the Tools\n"+

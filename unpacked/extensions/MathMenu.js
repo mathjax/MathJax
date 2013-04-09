@@ -773,7 +773,7 @@
   MENU.Scale = function () {
     var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML, SVG = OUTPUT.SVG;
     var SCALE = (HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
-    var scale = prompt(_("ScaleMath", "Scale all mathematics (compared to surrounding text) by"),SCALE+"%");
+    var scale = prompt(_("ScaleMath","Scale all mathematics (compared to surrounding text) by"),SCALE+"%");
     if (scale) {
       if (scale.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         scale = parseFloat(scale);
@@ -873,7 +873,7 @@
     SVG: {
       MSIE:    ["MSIESVGWarning",
                  "SVG is not implemented in Internet Explorer prior to " +
-                 "IE9, or when the browser is emulating IE8 or below. " +
+                 "IE9 or when it is emulating IE8 or below. " +
                  "Switching to SVG output will cause the mathemtics to " +
                  "not display properly."]
     }
