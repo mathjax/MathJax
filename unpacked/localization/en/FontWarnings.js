@@ -26,18 +26,17 @@ MathJax.Localization.addTranslation("en","FontWarnings",{
       "browsers) could improve the quality of the mathematics on this page.",
 
     fonts:
-      "MathJax can use either the %1 or the %2.  " +
+      "MathJax can use either the [STIX fonts](%1) or the [MathJax TeX fonts](%2).  " +
       "Download and install one of those fonts to improve your MathJax experience.",
 
-    PageDesigned:
-      "This page is designed to use the %1.  " +
+    STIXPage:
+      "This page is designed to use the [STIX fonts](%1).  " +
       "Download and install those fonts to improve your MathJax experience.",
 
-    STIXfonts:
-      "STIX fonts",
+    TeXPage:
+      "This page is designed to use the [MathJax TeX fonts](%1).  " +
+      "Download and install those fonts to improve your MathJax experience."
 
-    TeXfonts:
-      "MathJax TeX fonts"
   }
 });
 

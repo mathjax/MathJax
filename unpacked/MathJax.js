@@ -1161,7 +1161,7 @@ MathJax.Localization = {
         if (typeof data[1] === "string") {        // [id,string,args]
           var id = data[0]; if (!(id instanceof Array)) {id = [domain,id]}
           var phrase = this.lookupPhrase(id,data[1]);
-          result = result.concat(this.processString(phrase,data.slice(2),domain));
+          result = result.concat(this.processMarkdown(phrase,data.slice(2),domain));
         } else if (data[1] instanceof Array) {    // [domain,snippet]
           result = result.concat(this.processSnippet.apply(this,data));
         } else if (data.length >= 3) {            // ["tag",{properties},snippet]
@@ -1172,6 +1172,85 @@ MathJax.Localization = {
       } else {                                    // a string
         result.push(snippet[i]);
       }
+    }
+    return result;
+  },
+  
+  markdownPattern: /(%.)|(\*{1,3})((?:%.|.)+?)\2|(`+)((?:%.|.)+?)\4|\[((?:%.|.)+?)\]\(([^\s\)]+)\)/,
+  //   %c or *bold*, **italics**, ***bold-italics***, or `code`, or [link](url)
+   
+  processMarkdown: function (phrase,args,domain) {
+    var result = [], data;
+    //
+    //  Split the string by the Markdown pattern
+    //    (the text blocks are separated by 
+    //      c,stars,star-text,backtics,code-text,link-text,URL).
+    //  Start with teh first text string from the split.
+    //
+    var parts = phrase.split(this.markdownPattern);
+    var string = parts[0];
+    //
+    //  Loop through the matches and process them
+    //
+    for (var i = 1, m = parts.length; i < m; i += 8) {
+      if (parts[i+1]) {        // stars (for bold/italic)
+        //
+        //  Select the tag to use by number of stars (three stars requires two tags)
+        //
+        data = this.processString(parts[i+2],args,domain);
+        if (!(data instanceof Array)) {data = [data]}
+        data = [["b","i","i"][parts[i+1].length-1],{},data]; // number of stars determines type
+        if (parts[i+1].length === 3) {data = ["b",{},data]}  // bold-italic
+      } else if (parts[i+3]) { //  backtics (for code)
+        //
+        //  Remove one leading or trailing space, and process substitutions
+        //  Make a <code> tag
+        //
+        data = this.processString(parts[i+4].replace(/^\s/,"").replace(/\s$/,""),args,domain);
+        if (!(data instanceof Array)) {data = [data]}
+        data = ["code",{},data];
+      } else if (parts[i+5]) { //  hyperlink
+        //
+        //  Process the link text, and make an <a> tag with the URL
+        //
+        data = this.processString(parts[i+5],args,domain);
+        if (!(data instanceof Array)) {data = [data]}
+        data = ["a",{href:parts[i+6],target:"_blank"},data];
+      } else {
+        //
+        //  Escaped character (%c) gets added into the string.
+        //
+        string += parts[i]; data = null;
+      }
+      //
+      //  If there is a tag to insert,
+      //     Add any pending string, then push the tag
+      //
+      if (data) {
+        result = this.concatString(result,string,args,domain);
+        result.push(data); string = "";
+      }
+      //
+      //  Process the string that follows matches pattern
+      //
+      if (parts[i+7] !== "") {string += parts[i+7]}
+    };
+    //
+    //  Add any pending string and return the resulting snippet
+    //
+    result = this.concatString(result,string,args,domain);
+    return result;
+  },
+  concatString: function (result,string,args,domain) {
+    if (string != "") {
+      //
+      //  Process the substutions.
+      //  If the result is not a snippet, turn it into one.
+      //  Then concatenate the snippet to the current one
+      //
+      string = this.processString(string,args,domain);
+      if (!(string instanceof Array)) {string = [string]}
+      result = result.concat(string);
     }
     return result;
   },

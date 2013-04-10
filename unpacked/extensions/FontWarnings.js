@@ -190,35 +190,27 @@
       fonts: [
         ["p"],
         ["fonts",
-          "MathJax can use either the %1 or the %2.  " +
+          "MathJax can use either the [STIX fonts](%1) or the [MathJax TeX fonts](%2).  " +
            "Download and install one of those fonts to improve your MathJax experience.",
-          [["a",{href:STIXURL,target:"_blank"},[["STIXfonts","STIX fonts"]]]],
-          [["a",{href:MATHJAXURL,target:"_blank"},[["TeXfonts","MathJax TeX fonts"]]]]
+           STIXURL,MATHJAXURL
         ]
       ],
  
-//     fonts: [
-//       ["p"],
-//       ["fonts",
-//         "MathJax can use either the [STIX fonts](%1) or the [MathJax TeX fonts](%2)",
-//         "http://www.stixfonts.org/","http://www.mathjax.org/help-v2/fonts/"]
-//     ],
-      
        STIXfonts: [
          ["p"],
-         ["PageDesigned",
-           "This page is designed to use the %1.  " +
+         ["STIXPage",
+           "This page is designed to use the [STIX fonts](%1).  " +
            "Download and install those fonts to improve your MathJax experience.",
-           [["a",{href:STIXURL,target:"_blank"},[["STIXfonts","STIX fonts"]]]]
+           STIXURL
          ]
        ],
 
       TeXfonts: [
         ["p"],
-        ["PageDesigned",
-          "This page is designed to use the %1.  " +
+        ["TeXPage",
+          "This page is designed to use the [MathJax TeX fonts](%1).  " +
           "Download and install those fonts to improve your MathJax experience.",
-          [["a",{href:MATHJAXURL,target:"_blank"},[["TeXfonts","MathJax TeX fonts"]]]]
+          MATHJAXURL
         ]
       ]
       
