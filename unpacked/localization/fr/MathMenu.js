@@ -79,14 +79,14 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
       "expressions pourront donc ne pas s'afficher correctement.",
 
     LoadURL:
-      "Load translation data from this URL:",
+      "Charger les données de traduction à partir de cette addresse URL:",
       
     BadURL:
-      "The URL should be for a javascript file that defines MathJax translation data.  " +
-      "Javascript file names should end with '.js'",
+      "L'adresse URL doit être un fichier Javascript contenant des données de traduction MathJax." +
+      "Les noms de fichier Javascript doivent se terminer par '.js'",
 
     BadData:
-     "Failed to load translation data from %1",
+     "Échec du chargement des données de traduction à partir de %1",
      
     SwitchAnyway:
       "Êtes vous certain de vouloir changer le mode de rendu ?\n\n" +

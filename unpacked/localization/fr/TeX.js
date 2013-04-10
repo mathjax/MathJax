@@ -106,7 +106,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Argument manquant pour la commande %1",
 
     ExtraAlignTab:
-      "Tabulation d'alignement non attendue pour le texte de la commande \\cases",
+      "Caractère d'alignement '&' non attendue pour le texte de la commande \\cases",
 
     BracketMustBeDimension:
       "L'argument entre crochets de la commande %1 doit être une dimension",
@@ -121,7 +121,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Accolade fermante non attendue",
 
     ExtraCloseLooking:
-      "Extra close brace while looking for %1"
+      "Accolade fermante non attendue lors de la recherche de %1",
 
     MissingCloseBracket:
       "Impossible de trouver le crochet fermant pour l'argument de la commande %1",
@@ -169,7 +169,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Emboitement incorrect des structures d'équation",
 
     MultlineRowsOneCol:
-      "Les lignes multiples doivent avoir exactement une colonne",
+      "L'environnement multline doit avoir exactement une colonne",
 
     NoClosingDelim:
       "Impossible de trouver le délimiteur fermant pour la commande %1",
