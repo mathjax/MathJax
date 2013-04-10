@@ -156,8 +156,9 @@
   STACKITEM.subsup = STACKITEM.Subclass({
     type: "subsup",
     stopError: /*_()*/ ["MissingScript","Missing superscript or subscript argument"],
+    supError:  /*_()*/ ["MissingOpenForSup","Missing open brace for superscript"],
+    subError:  /*_()*/ ["MissingOpenForSup","Missing open brace for subscript"],
     checkItem: function (item) {
-      var script = ["","subscript","superscript"][this.position];
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml") {
         if (this.primes) {
@@ -168,7 +169,7 @@
         return STACKITEM.mml(this.data[0]);
       }
       if (this.SUPER(arguments).checkItem.call(this,item))
-        {TEX.Error(["MissingOpenForScript","Missing open brace for %1",script])}
+        {TEX.Error(this[["","subError","supError"][this.position]])}
     },
     Pop: function () {}
   });
@@ -240,7 +241,7 @@
   STACKITEM.position = STACKITEM.Subclass({
     type: "position",
     checkItem: function (item) {
-      if (item.isClose) {TEX.Error(["MissingBoxFor","Missing box for %1"])}
+      if (item.isClose) {TEX.Error(["MissingBoxFor","Missing box for %1",name])}
       if (item.isNotStack) {
         var mml = item.mmlData();
         switch (this.move) {

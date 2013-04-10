@@ -186,7 +186,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         if (global.label) {TEX.Error(["MultipleCommand","Multiple %1",name])}
         global.label = label;
         if (AMS.labels[label] || AMS.eqlabels[label])
-          {TEX.Error(["MultipleLabel","Label '%1' mutiply defined",label])}
+          {TEX.Error(["MultipleLabel","Label '%1' multiply defined",label])}
         AMS.eqlabels[label] = "???"; // will be replaced by tag value later
       }
     },
@@ -461,7 +461,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     EndRow: function () {
       if (this.row.length != 1) {
         TEX.Error(["MultlineRowsOneCol",
-                   "multline rows must have exactly one column"]);
+                   "The rows within the %1 environment must have exactly one column",
+                   "multline"]);
       }
       this.table.push(this.row); this.row = [];
     },

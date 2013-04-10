@@ -125,13 +125,16 @@ MathJax.Extension["TeX/color"] = {
   get_rgb: function (rgb) {
     rgb = rgb.split(/,/); var RGB = "#";
     if (rgb.length !== 3)
-      {this.TEX.Error(["rgbArg1","rgb colors require 3 decimal numbers"])}
+      {this.TEX.Error(["ModelArg1","Color values for the %1 model require 3 numbers","rgb"])}
     for (var i = 0; i < 3; i++) {
       if (!rgb[i].match(/^(\d+(\.\d*)?|\.\d+)$/))
         {this.TEX.Error(["InvalidDecimalNumber","Invalid decimal number"])}
       var n = parseFloat(rgb[i]);
-      if (n < 0 || n > 1)
-        {this.TEX.Error(["rgbArg2","rgb values must be between 0 and 1"])}
+      if (n < 0 || n > 1) {
+        this.TEX.Error(["ModelArg2",
+                        "Color values for the %1 model must be between %2 and %3",
+                        "rgb",0,1]);
+      }
       n = Math.floor(n*255).toString(16); if (n.length < 2) {n = "0"+n}
       RGB += n;
     }
@@ -144,13 +147,16 @@ MathJax.Extension["TeX/color"] = {
   get_RGB: function (rgb) {
     rgb = rgb.split(/,/); var RGB = "#";
     if (rgb.length !== 3)
-      {this.TEX.Error(["RGBArg1","RGB colors require 3 numbers"])}
+      {this.TEX.Error(["ModelArg1","Color values for the %1 model require 3 numbers","RGB"])}
     for (var i = 0; i < 3; i++) {
       if (!rgb[i].match(/^\d+$/))
         {this.TEX.Error(["InvalidNumber","Invalid number"])}
       var n = parseInt(rgb[i]);
-      if (n > 255)
-        {this.TEX.Error(["RGBArg2","RGB values must be between 0 and 255"])}
+      if (n > 255) {
+        this.TEX.Error(["ModelArg2",
+                        "Color values for the %1 model must be between %2 and %3",
+                        "RGB",0,255]);
+      }
       n = n.toString(16); if (n.length < 2) {n = "0"+n}
       RGB += n;
     }
@@ -164,8 +170,11 @@ MathJax.Extension["TeX/color"] = {
     if (!gray.match(/^(\d+(\.\d*)?|\.\d+)$/))
       {this.TEX.Error(["InvalidDecimalNumber","Invalid decimal number"])}
     var n = parseFloat(gray);
-    if (n < 0 || n > 1)
-      {this.TEX.Error(["GrayScalerArg","Grey-scale values must be between 0 and 1"])}
+    if (n < 0 || n > 1) {
+      this.TEX.Error(["ModelArg2",
+                      "Color values for the %1 model must be between %2 and %3",
+                      "gray",0,1]);
+    }
     n = Math.floor(n*255).toString(16); if (n.length < 2) {n = "0"+n}
     return "#"+n+n+n;
   },

@@ -20,8 +20,11 @@ MathJax.Localization.addTranslation("en","TeX",{
     Misplaced:
       "Misplaced %1",
 
-    MissingOpenForScript:
-      "Missing open brace for %1",
+    MissingOpenForSub:
+      "Missing open brace for subscript",
+
+    MissingOpenForSup:
+      "Missing open brace for superscript",
 
     AmbiguousUseOf:
       "Ambiguous use of %1",
@@ -133,7 +136,7 @@ MathJax.Localization.addTranslation("en","TeX",{
       "%1 not allowed in %2 environment", 
 
     MultipleLabel:
-      "Label '%1' mutiply defined",
+      "Label '%1' multiply defined",
 
     CommandAtTheBeginingOfLine:
       "%1 must come at the beginning of the line",
@@ -151,7 +154,7 @@ MathJax.Localization.addTranslation("en","TeX",{
       "Erroneous nesting of equation structures",
 
     MultlineRowsOneCol:
-      "multline rows must have exactly one column",
+      "The rows within the %1 environment must have exactly one column",
 
 /* bbox */
 
@@ -171,29 +174,20 @@ MathJax.Localization.addTranslation("en","TeX",{
 
 /* color */
 
-     UndefinedColorModel:
+    UndefinedColorModel:
       "Color model '%1' not defined",
 
-    rgbArg1:
-      "rgb colors require 3 decimal numbers",
+    ModelArg1:
+      "Color values for the %1 model require 3 numbers",
 
     InvalidDecimalNumber:
       "Invalid decimal number",
 
-    rgbArg2:
-      "rgb values must be between 0 and 1",
-
-    RGBArg1:
-      "RGB colors require 3 numbers",
+    ModelArg2:
+      "Color values for the %1 model must be between %2 and %3",
 
     InvalidNumber:
       "Invalid number",
-
-    RGBArg2:
-      "RGB values must be between 0 and 255",
-
-    GrayScalerArg: 
-      "Grey-scale values must be between 0 and 1",
 
 /* extpfeil */
 
@@ -235,7 +229,7 @@ MathJax.Localization.addTranslation("en","TeX",{
       "Use of %1 doesn't match its definition",
 
     RunawayArgument:
-      "Argument manquant pour la commande %1?"
+      "Runaway argument for %1?"
 
 /* verb */
 

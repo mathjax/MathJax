@@ -20,8 +20,11 @@ MathJax.Localization.addTranslation("fr","TeX",{
     Misplaced:
       "Mauvaise position pour la commande %1",
 
-    MissingOpenForScript:
-      "Accolade ouvrante manquante pour le script %1",
+    MissingOpenForSub:
+      "Missing open brace for subscript",  // *NEW*
+
+    MissingOpenForSup:
+      "Missing open brace for superscript",  // *NEW*
 
     AmbiguousUseOf:
       "Usage ambigu de la commande %1",
@@ -205,26 +208,17 @@ MathJax.Localization.addTranslation("fr","TeX",{
     UndefinedColorModel:
       "Le modèle de couleur '%1' n'est pas défini",
 
-    rgbArg1:
-      "Les couleurs rgb nécéssitent 3 nombres décimaux",
+    ModelArg1:
+      "Color values for the %1 model require 3 numbers",  // *NEW*
 
     InvalidDecimalNumber:
       "Nombre décimal non valide",
 
-    rgbArg2:
-      "Les valeurs rgb doivent être comprises entre 0 et 1",
-
-    RGBArg1:
-      "Les couleurs RGB nécéssitent 3 nombres",
+    ModelArg2:
+      "Color values for the %1 model must be between %2 and %3",  // *NEW*
 
     InvalidNumber:
       "Nombre non valide",
-
-    RGBArg2:
-      "Les valeurs RGB doivent être comprises entre 0 et 255",
-
-    GrayScalerArg: 
-      "Les valeurs de dégradé de gris doivent être comprises entre 0 et 1",
 
     DoubleBackSlash:
       "\\ doit être suivi d'une séquence de contrôle",
