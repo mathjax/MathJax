@@ -3,15 +3,15 @@ MathJax.Localization.addTranslation("de","TeX",{
   strings: {
 
     ExtraOpenMissingClose:
-      "Zusaetzliche offene oder fehlende schliessende Klammer",
+      "Zus\u00E4tzliche offene oder fehlende schliessende Klammer",//TODO maybe 'ueberfluessig' = superfluous is better? or 'zu viele' = too many?
 //    "Extra open brace or missing close brace",
 
     ExtraCloseMissingOpen:
-      "Zusaetzliche schliessende oder fehlende offene Klammer",
+      "Zus\u00E4tzliche schliessende oder fehlende offene Klammer",//TODO ditto
 //    "Extra close brace or missing open brace",
 
     MissingLeftExtraRight:
-      "Fehlendes \\left oder zusaetzliches \\right",
+      "Fehlendes '\\left' oder zus\u00E4tzliches '\\right'", //TODO ditto
 //    "Missing \\left or extra \\right",
 
     MissingScript:
@@ -19,18 +19,20 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Missing superscript or subscript argument",
 
     ExtraLeftMissingRight:
-      "Zusaetzliches \\left oder fehlendes \\right",
+      "Zus\u00E4tzliches '\\left' oder fehlendes '\\right'",//TODO ditto
 //    "Extra \\left or missing \\right",
 
     Misplaced:
-      "%1 falsch plaziert",
+      "%1 falsch plaziert", //TODO not sure; context?
 //    "Misplaced %1",
 
     MissingOpenForSub:
-      "Missing open brace for subscript",  // *NEW*
+      "Fehlende offende Klammer im Subskript", 
+//    "Missing open brace for subscript",  // *NEW*
 
     MissingOpenForSup:
-      "Missing open brace for superscript",  // *NEW*
+      "Fehlende offene Klammer im Superskript", 
+//    "Missing open brace for superscript",  // *NEW*
 
     AmbiguousUseOf:
       "Mehrdeutige Verwendung von %1",
@@ -45,11 +47,11 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Missing \\end{%1}",
 
     MissingBoxFor:
-      "Fehlende Box: %1",
-//    "Missing box for %1",TODO ???
+      "Fehlende Box: %1", //TODO What kind of TeX is this referring to?
+//    "Missing box for %1",
 
     MissingCloseBrace:
-      "Fehlende geschlossene Klammer Missing close brace",
+      "Fehlende geschlossene Klammer",
 //     "Missing close brace",
 
     UndefinedControlSequence:
@@ -57,7 +59,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Undefined control sequence %1",
 
     DoubleExponent:
-      "Doppeltes Superskript: verwende Klammern zum Gruppieren",
+      "Doppeltes Superskript: verwende Klammern zum Gruppieren", //TODO I used "use braces to group"
 //    "Double exponent: use braces to clarify",
 
     DoubleSubscripts:
@@ -65,19 +67,19 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Double subscripts: use braces to clarify",
 
     DoubleExponentPrime:
-      "Prime fuehrt zu doppeltem Superskript: verwende Klammern zum Gruppieren ",
+      "Prime f\u00FChrt zu doppeltem Superskript: verwende Klammern zum Gruppieren ",
 //    "Prime causes double exponent: use braces to clarify",
 
     CantUseHash1:
-      "'macro parameter character #' kann nicht im Mathematikmodus verwendet werden",
-//    "You can't use 'macro parameter character #' in math mode", TODO ???
+      "Das Zeichen '#' ist ein Makroparameter und kann nicht im Mathematikmodus verwendet werden.", //TODO Do we need to explain the why? Should we just say "can't be used, use '\#' instead"
+//    "You can't use 'macro parameter character #' in math mode", 
 
     MisplacedMiddle:
-      "%1 muss zwischen \\left und \\right stehen",
+      "%1 muss zwischen '\\left' und '\\right' stehen",
 //    "%1 must be within \\left and \\right",
  
     MisplacedLimits:
-      "%1 ist nur bei Operatoren erlaubt",
+      "%1 ist nur bei Operatoren erlaubt", //TODO "bei" could be wrong, maybe 'in', 'an'
 //    "%1 is allowed only on operators",
 
     MisplacedMoveRoot:
@@ -85,8 +87,8 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "%1 can appear only within a root",
 
     MultipleCommand:
-      "Vielfache %1",
-//    "Multiple %1", TODO ???
+      "Zu viele %1",//TODO need context. I translated this as "too many"
+//    "Multiple %1", 
 
     IntegerArg:
       "Das Argument in %1 muss ganzzahlig sein",
@@ -97,51 +99,51 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "%1 is not a token element",
 
     InvalidMathMLAttr:
-      "Unzulaessiges MathML-Attribut: %1",
+      "Unzul\u00E4ssiges MathML-Attribut: %1",
 //    "Invalid MathML attribute: %1",
 
     UnknownAttrForElement:
-      "%1 ist kein zulaessiged Attribut fuer %2",
+      "%1 ist kein zul\u00E4ssiges Attribut f\u00FCr %2",
 //    "%1 is not a recognized attribute for %2",
 
     MaxMacroSub1:
       "Maximale Anzahl an Makros ist erreicht; " +
-      "wird ein rekursiver Aufruf verwendet?",
+      "wird ein rekursiver Makroaufruf verwendet?",
 //    "MathJax maximum macro substitution count exceeded; " +
-//    "is there a recursive macro call?", TODO ???
+//    "is there a recursive macro call?", 
 
     MaxMacroSub2:
       "Maximale Anzahl an Substitutionen ist erreicht; " +
       "wird eine rekursive LaTeX-Umgebung verwendet?",
 //    "MathJax maximum substitution count exceeded; " +
-//    "is there a recursive latex environment?",
+//    "is there a recursive latex environment?", //TODO use LaTeX ?
 
     MissingArgFor:
-      "Fehlendes Argument in %1",
-//    "Missing argument for %1", TODO???
+      "Fehlendes Argument in %1", //TODO 'in' could be wrong preposition 
+//    "Missing argument for %1", 
 
     ExtraAlignTab:
-      "Zusaetzliches & im \\cases Text",
-//    "Extra alignment tab in \\cases text", TODO???
+      "Zus\u00E4tzliches & im '\\cases' Text",//TODO not sure about German TeX jargon, but & might be clearer? Maybe switch to 'zu viele // too many' instead of extra.
+//    "Extra alignment tab in \\cases text", 
 
     BracketMustBeDimension:
-      "Das geklammerte Argument fuer %1 muss eine Dimension sein",
+      "Das geklammerte Argument f\u00FCr %1 muss eine Dimension sein", //TODO wasn't sure about Dimension jargon
 //    "Bracket argument to %1 must be a dimension",
 
     InvalidEnv:
-      "Ungueltiger Umgebungsname %1",
+      "Ung\u00FCltiger Umgebungsname %1",
 //    "Invalid environment name '%1'",
 
     UnknownEnv:
-      "Ungueltige Umgebung %1",
+      "Ung\u00FCltige Umgebung %1",
 //    "Unknown environment '%1'",
 
     ExtraClose:
-      "Zusaetzliche geschlossene Klammer",
+      "Zus\u00E4tzliche geschlossene Klammer", //TODO 'zu viele / too many' might be better
 //    "Extra close brace",
 
     ExtraCloseLooking:
-      "Zusaetzliche geschlossene Klammer waehrend der Suche nach %1",
+      "Zus\u00E4tzliche geschlossene Klammer w\u00E4hrend der Suche nach %1", //TODO 'zu viele / too many' might be better, not sure about programming jargon for "while looking for"
 //    "Extra close brace while looking for %1",
 
     MissingCloseBracket:
@@ -149,28 +151,28 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Couldn't find closing ']' for argument to %1",
 
     MissingOrUnrecognizedDelim:
-      "Fehlender oder nichterkannter Delimiter bei %1",
+      "Fehlender oder nichterkannter Delimiter bei %1", //TODO not sure about Delimiter as TeX jargon
 //    "Missing or unrecognized delimiter for %1",
 
     MissingDimOrUnits:
-      "Fehlende Dimension oder Einheiten bei %1",
+      "Fehlende Dimension oder Einheiten bei %1", //TODO not sure about TeX jargon
 //    "Missing dimension or its units for %1",
 
     TokenNotFoundForCommand:
-      "Konnte %1 nicht vor %2 finden",
+      "Konnte %1 nicht f\u00FCr %2 finden", //TODO not sure about 'fuer' preposition. What's the context?
 //    "Couldn't find %1 for %2",
 
     MathNotTerminated:
-      "Formel in Textbox nicht abgschlossen",
+      "Formel in Textbox nicht abgeschlossen",
 //    "Math not terminated in text box",
 
     IllegalMacroParam:
-      "Ungueltiger Makroparameter",
+      "Ung\u00FC ltiger Makroparameter",
 //    "Illegal macro parameter reference",
 
     MaxBufferSize:
-      "Interner Puffergroesse ueberschritten; wird ein rekursiver Makroaufruf verwendet?",
-//    "MathJax internal buffer size exceeded; is there a recursive macro call?", TODO???
+      "Interner Puffergr\u00F6\u00DFe \u00FCberschritten; wird ein rekursiver Makroaufruf verwendet?", // TODO not sure about buffer/puffer, macro call/makroaufruf
+//    "MathJax internal buffer size exceeded; is there a recursive macro call?", 
 
  /* AMSmath */
  
@@ -179,7 +181,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "%1 not allowed in %2 environment", 
 
     MultipleLabel:
-      "Label '%1' ueberdefiniert",
+      "Label '%1' \u00FCberdefiniert",
 //    "Label '%1' multiply defined",
 
     CommandAtTheBeginingOfLine:
@@ -187,23 +189,23 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "%1 must come at the beginning of the line",
 
     IllegalAlign:
-      "Ungueltige Ausrichtung in %1",
-//    "Illegal alignment specified in %1", TODO ???
+      "Ung\u00FCltige Ausrichtung in %1",//TODO not sure about Ausrichtung/alignment
+//    "Illegal alignment specified in %1", ?
 
     BadMathStyleFor:
-      "Schlechter math style: %1",
-//    "Bad math style for %1", TODO???
+      "Schlechtes 'math style' Argument: %1", //TODO not sure about math style.
+//    "Bad math style for %1", 
 
     PositiveIntegerArg:
       "Argument bei %1 muss positiv und ganzzahlig sein",
 //    "Argument to %1 must me a positive integer",
 
     ErroneousNestingEq:
-      "Fehlerhafte Verschachtelung von Gleichungen",
-//    "Erroneous nesting of equation structures", TODO???
+      "Fehlerhafte Verschachtelung von Gleichungen", //TODO not sure about Verschachtelung/nesting jargon
+//    "Erroneous nesting of equation structures", 
 
     MultlineRowsOneCol:
-      "Zeilen in multiline Umgebung muessen genau eine Spalte haben",
+      "Zeilen in multiline Umgebung m\u00FC ssen genau eine Spalte haben",
 //    "The rows within the %1 environment must have exactly one column"
 
 /* bbox */
@@ -213,37 +215,39 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "%1 specified twice in %2",
 
     InvalidBBoxProperty:
-      "'%1' scheint keine Farbe, padding Dimension oder style zu sein",
-//    "'%1' doesn't look like a color, a padding dimension, or a style", TODO???
+      "'%1' scheint keine Farbe, Padding-Dimension oder Stil zu sein",//TODO not sure about TeX jargon
+//    "'%1' doesn't look like a color, a padding dimension, or a style", 
 
 /* begingroup */
 
     ExtraEndMissingBegin:
-      "Zusaetzliches oder Fehlendes \\begingroup",
+      "Zus\u00E4tzliches oder Fehlendes \\begingroup"
 //    "Extra %1 or missing \\begingroup",
 
     GlobalNotFollowedBy:
-      "%1 nicht von \\let, \\def oder \\newcommand gefolgt",
+      "%1 nicht von '\\let', '\\def' oder '\\newcommand' gefolgt",
 //    "%1 not followed by \\let, \\def, or \\newcommand",
 
 /* color */
 
     UndefinedColorModel:
-      "Farbmuster '%1' nicht definiert",
-//    "Color model '%1' not defined", TODO???
+      "Farbmodell '%1' nicht definiert",
+//    "Color model '%1' not defined", 
 
     ModelArg1:
-      "Color values for the %1 model require 3 numbers",  // *NEW*
+      "Farbwerte f\u00FCr Farbmodell '%1' ben\u00F6tigen 3 Werte",
+//    "Color values for the %1 model require 3 numbers",  // *NEW*
 
     InvalidDecimalNumber:
-      "Ungueltige Dezimalzahl",
+      "Ung\u00FCltige Dezimalzahl",
 //    "Invalid decimal number",
 
     ModelArg2:
-      "Color values for the %1 model must be between %2 and %3",  // *NEW*
+      "Farbwerte f\u00FCr Farbmodell '%1' m\u00FCssen zwischen %2 und %3 liegen",
+//    Color values for the %1 model must be between %2 and %3",  // *NEW*
 
     InvalidNumber:
-      "Ungueltige Zahl",
+      "Ung\u00FCltige Zahl",
 //    "Invalid number",
 
 /* extpfeil */
@@ -253,27 +257,27 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "First argument to %1 must be a control sequence name",
 
     NewextarrowArg2:
-      "Zweites Argument von %1 muessen zwei ganze Zahlen, durch Komma getrennt, sein",
+      "Zweites Argument von %1 m\u00FCssen zwei ganze Zahlen, durch Komma getrennt, sein",
 //    "Second argument to %1 must be two integers separated by a comma",
 
     NewextarrowArg3:
-      "Drittes argument von %1 muessen Unicode-Nummern sein",
+      "Drittes argument von %1 m\u00FCssen Unicode-Nummern sein",
 //    "Third argument to %1 must be a unicode character number",
 
 /* mhchem */
 
     NoClosingChar:
-      "Kann geschlossenes %1 nicht finden",
+      "Kann geschlossenes %1 nicht finden",//TODO geschlossenes is neutral Gender, hope this works, but probably not since chars have different genders
 //    "Can't find closing %1",
 
 /* newcommand */
       
     IllegalControlSequenceName:
-      "Ungueltige Befehlsfolge",
+      "Ung\u00FCltige Befehlsfolge",
 //    "Illegal control sequence name for %1",
 
     IllegalParamNumber:
-      "Ungueltige Anzahl von Parametern in %1",
+      "Ung\u00FCltige Anzahl von Parametern in %1",
 //    "Illegal number of parameters specified in %1",
 
     DoubleBackSlash:
@@ -281,30 +285,30 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "\\ must be followed by a control sequence",
 
     CantUseHash2:
-      "Ungueltige Verwendung von # in Template von %1",
-//    "Illegal use of # in template for %1", TODO??>?
+      "Ung\u00FCltige Verwendung von # im Template von %1",  //TODO not sure about 'im' and 'von'.
+//    "Illegal use of # in template for %1",
 
     SequentialParam:
-      "Parameter von %1 muessen durch nummeriert sein",
+      "Parameter von %1 m\u00FCssen durch nummeriert sein",
 //    "Parameters for %1 must be numbered sequentially",
 
     MissingReplacementString:
-      "Ersetzende Zeichenkette fuer Definition von %1 fehlt",
-//    "Missing replacement string for definition of %1", TODO???
+      "Ersetzende Zeichenkette f\u00FCr Definition von %1 fehlt", //TODO not sure about "ersetzen"
+//    "Missing replacement string for definition of %1", 
 
     MismatchUseDef:
       "Verwendung von %1 passt nicht zur Definition",
 //    "Use of %1 doesn't match its definition",
 
     RunawayArgument:
-      "Fehlendes Argument fuer %1?",
+      "Nichtgeschlossenes Argument f\u00FCr %1?", //TODO not sure about runaway argument, translated as 'not closed', not sure about 'fuer'.
 //    "Runaway argument for %1?"
 
 /* verb */
 
     NoClosingDelim:
-      "Kein schliessender Delimiter fuer %1"
-//    "Can't find closing delimiter for %1" TODO???
+      "Kein schliessender Delimiter f\u00FCr %1"  //TODO not sure about Delimiter jargon, not sure about 'fuer'
+//    "Can't find closing delimiter for %1"
  
   }
 });

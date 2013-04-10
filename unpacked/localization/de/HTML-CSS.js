@@ -15,11 +15,11 @@ MathJax.Localization.addTranslation("de","HTML-CSS",{
 //    "Firefox can't load web fonts from a remote host",
 
     CantFindFontUsing:
-      "Kein gueltiger font fuer %1 verfuegbar",
+      "Kein g\u00FCltiger Font fuer %1 verf\u00FCgbar",
 //    "Can't find a valid font using %1",
 
     WebFontsNotAvailable:
-      "Webfonts nicht verfuegbar -- benutze Bilderfont"
+      "Webfonts nicht verf\u00FCgbar -- benutze Bildfont"
 //    "Web-Fonts not available -- using image fonts instead"
 
   }

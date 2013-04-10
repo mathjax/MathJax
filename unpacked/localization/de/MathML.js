@@ -10,12 +10,12 @@ MathJax.Localization.addTranslation("de","MathML",{
       "Schlechter Font: %1",
 //    "Bad font: %1",
 
-    MathPlayer: //TODO CHECK WINDOWS IN GERMAN :(
+    MathPlayer: //TODO check names of German Windows settings http://support.microsoft.com/
       "MathJax konnnte MathPlayer nicht einrichten.\n\n"+
       "Falls MathPlayer nicht installiert ist,  muss es erst installiert werden.\n"+
-      "Eventuell blockieren die Sicherheitsoptionen ActiveX; ueberpruefen Sie\n"+
-      "unter 'Interneteinstellungen' -> 'Werkzeuge' -> 'Sicherheit' -> 'Anpassen' ob\n"+
-      "ob 'ActiveX aktivieren' und 'Binaer und Skriptverhalten' aktiviert sind.\n\n"+
+      "Eventuell blockieren die Sicherheitsoptionen ActiveX; \u00FCberpr\u00FCfen Sie\n"+
+      "unter 'Internetoptionen' -> 'Sicherheit' -> 'Stufe Anpassen',\n"+
+      "ob ActiveX aktiviert ist.\n\n"+
       "Bei der jetzigen Konfiguration wird MathJax nur Fehlermeldungen anzeigen.",
 //    "MathJax was not able to set up MathPlayer.\n\n"+
 //    "If MathPlayer is not installed, you need to install it first.\n"+
@@ -28,31 +28,36 @@ MathJax.Localization.addTranslation("de","MathML",{
 //    "Currently you will see error messages rather than\n"+
 //    "typeset mathematics.",
 
-   CantCreateXMLParser:
-      "MathJax can't create an XML parser for MathML.  Check that\n"+
-      "the 'Script ActiveX controls marked safe for scripting' security\n"+
-      "setting is enabled (use the Internet Options item in the Tools\n"+
-      "menu, and select the Security panel, then press the Custom Level\n"+
-      "button to check this).\n\n"+
-      "MathML equations will not be able to be processed by MathJax.",
+   CantCreateXMLParser://TODO check name of German Windows settings
+         "MathJax kann keinen XML-Parser f\u00FC r MathML erzeugen. "+
+	 "\u00DC berpr\u00FC fen Sie die Einstellungen unter\n"+
+	 "'Internetoptionen'-> 'Werkzeuge' -> 'Sicherheit' -> 'Stufe Anpassen'\n"+
+	 "und aktivieren sie ActiveX.\n\n"+
+	 "MathJax kann sonst kein MathML verarbeiten."
+//       "MathJax can't create an XML parser for MathML.  Check that\n"+
+//       "the 'Script ActiveX controls marked safe for scripting' security\n"+
+//       "setting is enabled (use the Internet Options item in the Tools\n"+
+//       "menu, and select the Security panel, then press the Custom Level\n"+
+//       "button to check this).\n\n"+
+//       "MathML equations will not be able to be processed by MathJax.", TODO Cumbersome English
 
    UnknownNodeType:
-     "Unknown node type: %1",
+     "Unbekannter Knotentyp: %1", //"Unknown node type: %1",
 
    UnexpectedTextNode:
-     "Unexpected text node: %1",
+     "Unbekannter Textknoten: %1", //"Unexpected text node: %1",
 
    ErrorParsingMathML:
-     "Error parsing MathML",
+     "Fehler beim Parsen von MathML", //"Error parsing MathML",
 
    ParsingError:
-     "Error parsing MathML: %1",
+     "Fehler beim Parsen von MathML: %1", // "Error parsing MathML: %1",
 
    MathMLSingleElement:
-    "MathML must be formed by a single element",
+    "MathML muss ein einzelnes <math> Element sein", //"MathML must be formed by a single element",
 
    MathMLRootElement:
-     "MathML must be formed by a <math> element, not %1"
+     "MathML muss ein einzelnes <math> Element sein, nicht %1", //"MathML must be formed by a <math> element, not %1"
 
   }
 });

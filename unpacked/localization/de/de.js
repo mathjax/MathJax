@@ -27,7 +27,7 @@ MathJax.Localization.addTranslation("de",null,{
 //        "Loading %1",
 
         Loading:
-          "Laden",
+          "Laden", //TODO could also be "Lade" 
 //        "Loading", 
 
         LoadFailed:
