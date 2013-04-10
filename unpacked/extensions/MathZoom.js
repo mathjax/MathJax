@@ -30,6 +30,12 @@
       //
       //  The styles for the MathZoom display box
       //
+      "#MathJax_ZoomFrame": {
+        position:"relative",
+        display:"inline-block",
+        height:0,
+        width:0
+      },
       "#MathJax_Zoom": {
         position:"absolute",
         "background-color":"#F0F0F0",
@@ -164,7 +170,6 @@
           Mh = Math.floor(.85*Math.max(document.body.clientHeight,document.documentElement.clientHeight));
       var div = HTML.Element(
         "span",{
-            style: {position:"relative", display:"inline-block", height:0, width:0},
             id:"MathJax_ZoomFrame"
         },[
           ["span",{id:"MathJax_ZoomOverlay", onmousedown:this.Remove}],
