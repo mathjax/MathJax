@@ -279,7 +279,12 @@ MathJax.ElementJax.mml.Augment({
       var obj = this.inherit; var root = obj;
       while (obj) {
         var value = obj[name]; if (value == null && obj.attr) {value = obj.attr[name]}
-        if (value != null && !obj.noInheritAttribute[name]) {
+  
+        # Patch - see https://groups.google.com/forum/?fromgroups=#!topic/mathjax-users/dKYAWAxAfBA
+        #if (value != null && !obj.noInheritAttribute[name]) {
+        if ( value != null && typeof(obj.noInheritAttribute) === 'object' && 
+             !obj.noInheritAttribute[name] )
+        {
           var noInherit = obj.noInherit[this.type];
           if (!(noInherit && noInherit[name])) {return value}
         }
