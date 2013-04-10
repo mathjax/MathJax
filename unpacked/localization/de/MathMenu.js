@@ -37,10 +37,10 @@ MathJax.Localization.addTranslation("de","MathMenu",{
           STIXLocal:    "STIX (lokal)",            // "STIX (local)",
       ContextMenu: "Kontextmenue",             // "Contextual Menu",
         Browser:        "Browser",
-      Scale: "Alle Mathe skalieren",           // "Scale All Math ...",
+      Scale: "Alle Mathe skalieren ...",       // "Scale All Math ...",
       Discoverable: "Highlight durch Hovern",  // "Highlight on Hover",
     Locale: "Sprache",                       // "Language",
-      LoadLocale: "Von URL laden",             // "Load from URL ...",
+      LoadLocale: "Von URL laden ...",         // "Load from URL ...",
     About: "Ueber MathJax",                  // "About MathJax",
     Help:  "MathJax Hilfe",                  // "MathJax Help",
        
@@ -58,32 +58,32 @@ MathJax.Localization.addTranslation("de","MathMenu",{
     WebkitNativeMMLWarning:
       "Ihr Browser scheint MathML nicht zu unterstuetzen, " +
       "so dass ein Wechsel zur MathML-Ausgabe die Mathematik " +
-      "auf der Seite unlesbar machen koennte."
+      "auf der Seite unlesbar machen koennte.",
 //    "Your browser doesn't seem to support MathML natively, " +
 //    "so switching to MathML output may cause the mathematics " +
 //    "on the page to become unreadable.",
 
     MSIENativeMMLWarning:
       "Internet Explorer benoetigt das MathPlayer Plugin " +
-      "um MathML-Ausgabe verarbeiten zu koennen."
+      "um MathML-Ausgabe verarbeiten zu koennen.",
 //    "Internet Explorer requires the MathPlayer plugin " +
 //    "in order to process MathML output.",
       
     OperaNativeMMLWarning:
       "Opera's MathML unterstuetzung ist beschraenkt, so dass beim Wechsel " +
-      "zur MathML-Ausgabe einige Ausdruecke schlecht gerendert werden."
+      "zur MathML-Ausgabe einige Ausdruecke schlecht gerendert werden.",
 //    "Opera's support for MathML is limited, so switching to " +
 //    "MathML output may cause some expressions to render poorly.",
 
     SafariNativeMMLWarning:
        "Die MathML-Unterstuetzung Ihres Browsers beherrscht nicht alle " +
-       "MathJax-Features, so dass einige Ausdruecke schlecht gerendert werden."
+       "MathJax-Features, so dass einige Ausdruecke schlecht gerendert werden.",
 //     "Your browser's native MathML does not implement all the features " +
 //     "used by MathJax, so some expressions may not render properly.",
 
     FirefoxNativeMMLWarning:
        "Die MathML-Unterstuetzung Ihres Browsers beherrscht nicht alle " +
-       "MathJax-Features, so dass einige Ausdruecke schlecht gerendert werden."
+       "MathJax-Features, so dass einige Ausdruecke schlecht gerendert werden.",
 //     "Your browser's native MathML does not implement all the features " +
 //     "used by MathJax, so some expressions may not render properly.",
       
@@ -131,14 +131,14 @@ MathJax.Localization.addTranslation("de","MathMenu",{
     IE8warning:
       "Dies Deaktiviert das MathJax Menue und den MathJax Zoom " +
       "Alt+Klick auf eine Formel zeigt weiter das MathJax-Menue.\n\n" +
-      "Wirklich MathPlayer Einstellungen aendern?"
+      "Wirklich MathPlayer Einstellungen aendern?",
 //    "This will disable the MathJax menu and zoom features, " +
 //    "but you can Alt-Click on an expression to obtain the MathJax " +
 //    "menu instead.\n\nReally change the MathPlayer settings?",
 
     IE9warning:
       "Das MathJax Menue wird deaktiviert und kann nur durch " +
-      "Alt+Klick auf eine Formel angezeigt werden."
+      "Alt+Klick auf eine Formel angezeigt werden.",
 //    "The MathJax contextual menu will be disabled, but you can " +
 //    "Alt-Click on an expression to obtain the MathJax menu instead.",
 

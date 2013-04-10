@@ -16,7 +16,7 @@ MathJax.Localization.addTranslation("de","MathML",{
       "Eventuell blockieren die Sicherheitsoptionen ActiveX; ueberpruefen Sie\n"+
       "unter 'Interneteinstellungen' -> 'Werkzeuge' -> 'Sicherheit' -> 'Anpassen' ob\n"+
       "ob 'ActiveX aktivieren' und 'Binaer und Skriptverhalten' aktiviert sind.\n\n"+
-      "Bei der jetzigen Konfiguration wird MathJax nur Fehlermeldungen anzeigen.\n"+
+      "Bei der jetzigen Konfiguration wird MathJax nur Fehlermeldungen anzeigen.",
 //    "MathJax was not able to set up MathPlayer.\n\n"+
 //    "If MathPlayer is not installed, you need to install it first.\n"+
 //    "Otherwise, your security settings may be preventing ActiveX     \n"+
