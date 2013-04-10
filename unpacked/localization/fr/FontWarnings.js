@@ -31,20 +31,21 @@ MathJax.Localization.addTranslation("fr","FontWarnings",{
       "être améliorée.",
 
     fonts:
-      "MathJax peut utiliser les %1 ou bien les %2. Téléchargez et"+
-      "installez l'une de ces familles de polices pour améliorer votre"+
+      "MathJax peut utiliser les [Polices STIX](%1) ou bien les " +
+      "[Polices TeX de MathJax](%2). Téléchargez et installez " +
+      "l'une de ces familles de polices pour améliorer votre "+
       "expérience avec MathJax.",
 
-    PageDesigned:
-      "Cette page est conçue pour utiliser les %1. Téléchargez "+
-      " et installez ces polices pour améliorer votre expérience "+
-      "avec MathJax",
+    TeXPage:
+      "Cette page est conçue pour utiliser les [Polices STIX](%1). " +
+      "Téléchargez et installez ces polices pour améliorer votre " +
+      "expérience avec MathJax",
 
-    STIXfonts:
-      "Polices STIX",
-
-    TeXfonts:
-      "Polices TeX de MathJax"
+    TeXPage:
+      "Cette page est conçue pour utiliser les [Polices TeX de MathJax](%1). " +
+      "Téléchargez et installez ces polices pour améliorer votre " +
+      "expérience avec MathJax"
+      
   }
 });
 
