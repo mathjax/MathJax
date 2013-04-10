@@ -15,7 +15,7 @@ MathJax.Localization.addTranslation("de","MathML",{
       "Falls MathPlayer nicht installiert ist,  muss es erst installiert werden.\n"+
       "Eventuell blockieren die Sicherheitsoptionen ActiveX; \u00FCberpr\u00FCfen Sie\n"+
       "unter 'Internetoptionen' -> 'Sicherheit' -> 'Stufe Anpassen',\n"+
-      "ob 'ActiveX aktivieren' und 'Bin\u00E4 r und Skriptverhalten' aktiviert sind.\n\n"+
+      "ob ActiveX aktiviert ist.\n\n"+
       "Bei der jetzigen Konfiguration wird MathJax nur Fehlermeldungen anzeigen.",
 //    "MathJax was not able to set up MathPlayer.\n\n"+
 //    "If MathPlayer is not installed, you need to install it first.\n"+
@@ -29,10 +29,10 @@ MathJax.Localization.addTranslation("de","MathML",{
 //    "typeset mathematics.",
 
    CantCreateXMLParser://TODO check name of German Windows settings
-         "MathJax kann keinen XML-Parser f\u00FC r MathML erzeugen."+
-	 "\u00DC berpr\u00FC fen Sie die Einstellungen unter "+
-	 "'Internetoptionen'-> 'Werkzeuge' -> 'Sicherheit' -> 'Anpassen'"+
-	 "und aktivieren sie 'ActiveX Skripte als sicher einstufen'.\n\n"+
+         "MathJax kann keinen XML-Parser f\u00FC r MathML erzeugen. "+
+	 "\u00DC berpr\u00FC fen Sie die Einstellungen unter\n"+
+	 "'Internetoptionen'-> 'Werkzeuge' -> 'Sicherheit' -> 'Stufe Anpassen'\n"+
+	 "und aktivieren sie ActiveX.\n\n"+
 	 "MathJax kann sonst kein MathML verarbeiten."
 //       "MathJax can't create an XML parser for MathML.  Check that\n"+
 //       "the 'Script ActiveX controls marked safe for scripting' security\n"+

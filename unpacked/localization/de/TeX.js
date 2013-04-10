@@ -3,15 +3,15 @@ MathJax.Localization.addTranslation("de","TeX",{
   strings: {
 
     ExtraOpenMissingClose:
-      "Zus\u00E4 tzliche offene oder fehlende schliessende Klammer",//TODO maybe 'ueberfluessig' = superfluous is better? or 'zu viele' = too many?
+      "Zus\u00E4tzliche offene oder fehlende schliessende Klammer",//TODO maybe 'ueberfluessig' = superfluous is better? or 'zu viele' = too many?
 //    "Extra open brace or missing close brace",
 
     ExtraCloseMissingOpen:
-      "Zus\u00E4 tzliche schliessende oder fehlende offene Klammer",//TODO ditto
+      "Zus\u00E4tzliche schliessende oder fehlende offene Klammer",//TODO ditto
 //    "Extra close brace or missing open brace",
 
     MissingLeftExtraRight:
-      "Fehlendes \\left oder zus\u00E4 tzliches \\right", //TODO ditto
+      "Fehlendes '\\left' oder zus\u00E4tzliches '\\right'", //TODO ditto
 //    "Missing \\left or extra \\right",
 
     MissingScript:
@@ -19,11 +19,11 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Missing superscript or subscript argument",
 
     ExtraLeftMissingRight:
-      "Zus\u00E4 tzliches \\left oder fehlendes \\right",//TODO ditto
+      "Zus\u00E4tzliches '\\left' oder fehlendes '\\right'",//TODO ditto
 //    "Extra \\left or missing \\right",
 
     Misplaced:
-      "%1 falsch plaziert", //TODO not sure about context.
+      "%1 falsch plaziert", //TODO not sure; context?
 //    "Misplaced %1",
 
     MissingOpenForSub:
@@ -51,7 +51,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Missing box for %1",
 
     MissingCloseBrace:
-      "Fehlende geschlossene Klammer Missing close brace",
+      "Fehlende geschlossene Klammer",
 //     "Missing close brace",
 
     UndefinedControlSequence:
@@ -59,7 +59,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Undefined control sequence %1",
 
     DoubleExponent:
-      "Doppeltes Superskript: verwende Klammern zum Gruppieren",
+      "Doppeltes Superskript: verwende Klammern zum Gruppieren", //TODO I used "use braces to group"
 //    "Double exponent: use braces to clarify",
 
     DoubleSubscripts:
@@ -75,7 +75,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "You can't use 'macro parameter character #' in math mode", 
 
     MisplacedMiddle:
-      "%1 muss zwischen \\left und \\right stehen",
+      "%1 muss zwischen '\\left' und '\\right' stehen",
 //    "%1 must be within \\left and \\right",
  
     MisplacedLimits:
@@ -87,7 +87,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "%1 can appear only within a root",
 
     MultipleCommand:
-      "Zu viele %1",//TODO need context. I translated as "too many"
+      "Zu viele %1",//TODO need context. I translated this as "too many"
 //    "Multiple %1", 
 
     IntegerArg:
@@ -123,7 +123,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Missing argument for %1", 
 
     ExtraAlignTab:
-      "Zus\u00E4tzliches & im \\cases Text",//TODO not sure about German TeX jargon, but & might be clearer? Maybe switch to 'zu viele // too many' instead of extra.
+      "Zus\u00E4tzliches & im '\\cases' Text",//TODO not sure about German TeX jargon, but & might be clearer? Maybe switch to 'zu viele // too many' instead of extra.
 //    "Extra alignment tab in \\cases text", 
 
     BracketMustBeDimension:
@@ -171,7 +171,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Illegal macro parameter reference",
 
     MaxBufferSize:
-      "Interner Puffergr\u00F6\u00DFe \u00FC berschritten; wird ein rekursiver Makroaufruf verwendet?", // TODO not sure about buffer/puffer, macro call/makroaufruf
+      "Interner Puffergr\u00F6\u00DFe \u00FCberschritten; wird ein rekursiver Makroaufruf verwendet?", // TODO not sure about buffer/puffer, macro call/makroaufruf
 //    "MathJax internal buffer size exceeded; is there a recursive macro call?", 
 
  /* AMSmath */
@@ -193,7 +193,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Illegal alignment specified in %1", ?
 
     BadMathStyleFor:
-      "Schlechter math style: %1", //TODO not sure about math style.
+      "Schlechtes 'math style' Argument: %1", //TODO not sure about math style.
 //    "Bad math style for %1", 
 
     PositiveIntegerArg:
@@ -225,7 +225,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Extra %1 or missing \\begingroup",
 
     GlobalNotFollowedBy:
-      "%1 nicht von \\let, \\def oder \\newcommand gefolgt",
+      "%1 nicht von '\\let', '\\def' oder '\\newcommand' gefolgt",
 //    "%1 not followed by \\let, \\def, or \\newcommand",
 
 /* color */
@@ -235,7 +235,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Color model '%1' not defined", 
 
     ModelArg1:
-      "Farbwerte f\u00FCr Farbmodell %1 ben\u00F6tigen 3 Werte",
+      "Farbwerte f\u00FCr Farbmodell '%1' ben\u00F6tigen 3 Werte",
 //    "Color values for the %1 model require 3 numbers",  // *NEW*
 
     InvalidDecimalNumber:
@@ -243,7 +243,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Invalid decimal number",
 
     ModelArg2:
-      "Farbwerte f\u00FCr Farbmodell %1 m\u00FCssen zwischen %2 und %3 liegen",
+      "Farbwerte f\u00FCr Farbmodell '%1' m\u00FCssen zwischen %2 und %3 liegen",
 //    Color values for the %1 model must be between %2 and %3",  // *NEW*
 
     InvalidNumber:

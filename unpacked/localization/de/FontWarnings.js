@@ -14,7 +14,7 @@ MathJax.Localization.addTranslation("de","FontWarnings",{
     imageFonts:
       "MathJax nutzt Bild-Fonts stall lokaler Fonts oder Webfonts. " +
       "Das Laden dauert l\u00E4nger als erwartet und Drucken wird " + // translated "expected" rather than "usual"
-      "evtl. nicht in bester Qualit\u00E4 t m\u00F6glich sein.", // translated 'best quality' rather than 'full resolution'
+      "evtl. nicht in bester Qualit\u00E4t m\u00F6glich sein.", // translated 'best quality' rather than 'full resolution'
 //    "MathJax is using its image fonts rather than local or web-based fonts. "+
 //    "This will render slower than usual, and the mathematics may not print "+
 //    "at the full resolution of your printer.",
@@ -31,10 +31,10 @@ MathJax.Localization.addTranslation("de","FontWarnings",{
 //    "may not show up properly, or possibly not at all.",
 
     webFonts:
-      "Die meisten modernen Browser k\u00F6 nnen Fonts aus dem Web laden. "+
-      "Um die Qualit\u00E4 t der Mathematik auf dieser Seite zu verbessern, "+
-      "sollten Sie ein Update auf eine akt\u00FC lle Version des Browsers vornehmen "+
-      "(oder einen akt\u00FC llen Browser installieren).",
+      "Die meisten modernen Browser k\u00F6nnen Fonts aus dem Web laden. "+
+      "Um die Qualit\u00E4t der Mathematik auf dieser Seite zu verbessern, "+
+      "sollten Sie ein Update auf eine aktuelle Version des Browsers vornehmen "+
+      "(oder einen aktuellen Browser installieren).",
 //    "Most modern browsers allow for fonts to be downloaded over the web. "+
 //    "Updating to a more recent version of your browser (or changing "+
 //    "browsers) could improve the quality of the mathematics on this page.",
@@ -46,7 +46,7 @@ MathJax.Localization.addTranslation("de","FontWarnings",{
 //    "Download and install one of those fonts to improve your MathJax experience.",
 
     PageDesigned:
-      "Diese Seite ist optimiert f\u00FC r %1. " +
+      "Diese Seite ist optimiert f\u00FCr %1. " +
       "Installieren dieser Fonts wird die Geschwindigkeit verbessern.", //"Installing these fonts will improve speed"
 //    "This page is designed to use the %1.  " +
 //    "Download and install those fonts to improve your MathJax experience.",

@@ -2,14 +2,14 @@ MathJax.Localization.addTranslation("de","MathMenu",{
   isLoaded: true,
   strings: {
 
-    Show: "Zeige Mathe als",                 // "Show Math As", TODO It's weird to have "Math" instead of "equation" "formula" etc but I think we should follow this globally
+    Show: "Zeige Mathe als",                 // "Show Math As", TODO It's a bit weird to have "Math" instead of "equation" "formula" etc but if we keep it we should follow this "globally"
       MathMLcode:     "MathML Code",
       OriginalMathML: "Original MathML",
-      TeXCommands:    "Original TeX",          // "TeX Commands", TODO maybe switch English, too? I find that order appealing
-      AsciiMathInput: "Original AsciiMathML",  // "AsciiMathML input", TODO see above
+      TeXCommands:    "Original TeX",          // "TeX Commands",
+      AsciiMathInput: "Original AsciiMathML",  // "AsciiMathML input"
       Original:       "Originalform",          // "Original Form", TODO What is that referring to?
       ErrorMessage:   "Fehlermeldung",         // "Error Message",
-      texHints:       "TeX Tipps in MathML", // "Show TeX hints in MathML", TODO I left out "show" -- seemed redundant & "embed" or "add" is more appropriate.
+      texHints:       "TeX Tipps in MathML", // "Show TeX hints in MathML", TODO I left out "show" -- seemed redundant; "embed" or "add" is more appropriate.
     Settings: "Einstellungen",               // "Math Settings", //TODO I dropped the "Math", is that ok? Should we do this in general?
       ZoomTrigger: "Zoom ausl\u00F6sen",           // "Zoom Trigger",
         Hover:       "Hover",

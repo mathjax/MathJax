@@ -7,8 +7,8 @@ MathJax.Localization.addTranslation("de",null,{
       strings: {
 
         CookieConfig:
-          "MathJax hat eine Cookie mit ausf\u00FC hrbaren Code gefunden. " +
-          "Soll dieser Code ausgef\u00FC hrt werden?\n\n" +
+          "MathJax hat eine Cookie mit ausf\u00FChrbaren Code gefunden. " +
+          "Soll dieser Code ausgef\u00FChrt werden?\n\n" +
           "(Klicken Sie 'Abbrechen' falls Sie das Cookie nicht selber akzeptiert haben.)",
 //        "MathJax has found a user-configuration cookie that includes code to " +
 //        "be run. Do you want to run it?\n\n" +
@@ -51,7 +51,7 @@ MathJax.Localization.addTranslation("de",null,{
 //        "Typesetting", 
 
         MathJaxNotSupported:
-          "Ihr Webbrowser unterst\u00FC tzt MathJax nicht"
+          "Ihr Webbrowser unterst\u00FCtzt MathJax nicht"
 //        "Your browser does not support MathJax"
 
       }
