@@ -7,15 +7,15 @@ MathJax.Localization.addTranslation("de",null,{
       strings: {
 
         CookieConfig:
-          "MathJax hat eine Cookie mit ausfuehrbaren Code gefunden. " +
-          "Soll dieser Code ausgefuehrt werden?\n\n" +
-          "(Klicken Sie 'Abbrechen' falls Sie nicht selber das Cookie akzeptiert haben.)",
+          "MathJax hat eine Cookie mit ausf\u00FChrbaren Code gefunden. " +
+          "Soll dieser Code ausgef\u00FChrt werden?\n\n" +
+          "(Klicken Sie 'Abbrechen' falls Sie das Cookie nicht selber akzeptiert haben.)",
 //        "MathJax has found a user-configuration cookie that includes code to " +
 //        "be run. Do you want to run it?\n\n" +
 //        "(You should press Cancel unless you set up the cookie yourself.)",
 
         MathProcessingError:
-          "Mathe Verarbeitungsfehler ",
+          "Mathe Verarbeitungsfehler",
 //        "Math Processing Error",
 
         MathError:
@@ -28,7 +28,7 @@ MathJax.Localization.addTranslation("de",null,{
 
         Loading:
           "Laden",
-//        "Loading", TODO???
+//        "Loading", 
 
         LoadFailed:
           "Datei konnte nicht geladen werden: %1",
@@ -40,18 +40,18 @@ MathJax.Localization.addTranslation("de",null,{
 
         Processing:
           "Verarbeiten",
-//        "Processing", TODO???
+//        "Processing", 
 
         TypesetMath:
-          "Mathe Textsatz: %1%%",
+          "Mathe wird gesetzt: %1%%",
 //        "Typesetting Math: %1%%",
 
         Typesetting:
           "Setzen",
-//        "Typesetting", TODO???
+//        "Typesetting", 
 
         MathJaxNotSupported:
-          "Ihr Webbrowser unterstuetzt MathJax nicht"
+          "Ihr Webbrowser unterst\u00FCtzt MathJax nicht"
 //        "Your browser does not support MathJax"
 
       }
