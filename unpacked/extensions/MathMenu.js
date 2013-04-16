@@ -27,7 +27,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.1.1";
+  var VERSION = "2.1.2";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -874,7 +874,7 @@
       MSIE:    ["MSIESVGWarning",
                  "SVG is not implemented in Internet Explorer prior to " +
                  "IE9 or when it is emulating IE8 or below. " +
-                 "Switching to SVG output will cause the mathemtics to " +
+                 "Switching to SVG output will cause the mathematics to " +
                  "not display properly."]
     }
   };
