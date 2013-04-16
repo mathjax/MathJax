@@ -93,7 +93,7 @@ MathJax.Localization.addTranslation("de","MathMenu",{
       "SVG-Ausgabe wird die Mathematik nicht richtig dargestellt.",
 //    "SVG is not implemented in Internet Explorer prior to " +
 //    "IE9 or when it is emulating IE8 or below. " +
-//    "Switching to SVG output will cause the mathemtics to " + TODO TYPO IN ENGLISH
+//    "Switching to SVG output will cause the mathematics to "
 //    "not display properly.",
       
     LoadURL:
