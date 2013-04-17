@@ -60,7 +60,7 @@
           width: "100%"
         },
         
-        ".MathJax_SVG svg a > g, .MathJax_SVG_Display svg a > g": {
+        ".mjx-href": {
           fill: "blue", stroke: "blue"
         },
 
@@ -1027,19 +1027,17 @@
             // for svg element, put <a> inside the main <g> element
             var g = svg.element.firstChild;
             while (g.firstChild) {a.appendChild(g.firstChild)}
-            g.appendChild(a);
+            g.appendChild(a); this.SVGaddClass(g,"mjx-href");
+            g.removeAttribute("fill"); g.removeAttribute("stroke");
           } else {
-            // if removeable, move contents of <g> to <a>, otherise move element to <a>
-            if (svg.removeable && svg.element.nodeName === "g") {
-              while (svg.element.firstChild) {a.appendChild(svg.element.firstChild)}
-            } else {a.appendChild(svg.element)}
-            svg.element = a;
+            this.SVGaddClass(svg.element,"mjx-href");
+            a.appendChild(svg.element); svg.element = a;
           }
           svg.removeable = false;
         }
         if (SVG.config.addMMLclasses) {
+          this.SVGaddClass(svg.element,"mjx-svg-"+this.type);
           svg.removeable = false;
-          svg.element.setAttribute("className","mjx-svg-"+this.type);
         }
         var style = this.style;
         if (style && svg.element) {
@@ -1048,6 +1046,10 @@
           svg.element.style.border = svg.element.style.padding = "";
           if (svg.removeable) {svg.removeable = svg.element.style.cssText === ""}
         }
+      },
+      SVGaddClass: function (node,name) {
+        var classes = node.getAttribute("class");
+        node.setAttribute("class",(classes ? classes+" " : "")+name);
       },
       //
       //  WebKit currently scrolls to the BOTTOM of an svg element if it contains the
