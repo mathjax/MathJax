@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax.js
@@ -32,7 +33,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.1";
-MathJax.fileversion = "2.1.2";
+MathJax.fileversion = "2.1.3";
 
 /**********************************************************/
 
@@ -1025,7 +1026,7 @@ MathJax.HTML = {
         var time = new Date(); time.setDate(time.getDate() + this.expires);
         cookie += '; expires='+time.toGMTString();
       }
-      document.cookie = cookie+"; path=/";
+      try {document.cookie = cookie+"; path=/"} catch (err) {} // ignore errors saving cookies
     },
     
     //
