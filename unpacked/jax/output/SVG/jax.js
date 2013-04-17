@@ -60,7 +60,7 @@
           width: "100%"
         },
         
-        ".mjx-href": {
+        ".mjx-svg-href": {
           fill: "blue", stroke: "blue"
         },
 
@@ -1027,10 +1027,10 @@
             // for svg element, put <a> inside the main <g> element
             var g = svg.element.firstChild;
             while (g.firstChild) {a.appendChild(g.firstChild)}
-            g.appendChild(a); this.SVGaddClass(g,"mjx-href");
+            g.appendChild(a); this.SVGaddClass(g,"mjx-svg-href");
             g.removeAttribute("fill"); g.removeAttribute("stroke");
           } else {
-            this.SVGaddClass(svg.element,"mjx-href");
+            this.SVGaddClass(svg.element,"mjx-svg-href");
             a.appendChild(svg.element); svg.element = a;
           }
           svg.removeable = false;
