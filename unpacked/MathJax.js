@@ -32,7 +32,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.1";
-MathJax.fileversion = "2.1.2";
+MathJax.fileversion = "2.1.3";
 
 /**********************************************************/
 
@@ -977,6 +977,8 @@ MathJax.HTML = {
       for (var i = 0; i < contents.length; i++) {
         if (contents[i] instanceof Array) {
           obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
+        } else if (type === "script") { // IE throws an error if script is added as a text node
+          this.setScript(obj, contents[i]);
         } else {
           obj.appendChild(document.createTextNode(contents[i]));
         }
