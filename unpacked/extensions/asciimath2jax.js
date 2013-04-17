@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.asciimath2jax = {
-  version: "2.1.1",
+  version: "2.1.2",
   config: {
     delimiters: [['`','`']],   // The star/stop delimiter pairs for asciimath code
 
@@ -75,7 +75,9 @@ MathJax.Extension.asciimath2jax = {
     }
     this.start = new RegExp(starts.sort(this.sortLength).join("|"),"g");
     this.skipTags = new RegExp("^("+config.skipTags.join("|")+")$","i");
-    this.ignoreClass = new RegExp("(^| )("+config.ignoreClass+")( |$)");
+    var ignore = MathJax.Hub.config.preRemoveClass;
+    if (config.ignoreClass !== "") {ignore += "|" + config.ignoreClass}
+    this.ignoreClass = new RegExp("(^| )("+ignore+")( |$)");
     this.processClass = new RegExp("(^| )("+config.processClass+")( |$)");
     return true;
   },
