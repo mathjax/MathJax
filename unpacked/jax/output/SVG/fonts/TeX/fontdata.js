@@ -23,7 +23,7 @@
  */
 
 (function (SVG,MML,AJAX,HUB) {
-  var VERSION = "2.1.1";
+  var VERSION = "2.1.2";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -1572,6 +1572,10 @@
     SVG.FONTDATA.FONTS['MathJax_Main'][0x2245][2] -= 222; // fix incorrect right bearing in font
     HUB.Register.LoadHook(SVG.fontDir+"/Main/Bold/MathOperators.js",function () {
       SVG.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][2] -= 106; // fix incorrect right bearing in font
+    });
+
+    HUB.Register.LoadHook(SVG.fontDir+"/Typewriter/Regular/BasicLatin.js",function () {
+      SVG.FONTDATA.FONTS['MathJax_Typewriter'][0x20][2] += 275; // fix incorrect width
     });
 
     AJAX.loadComplete(SVG.fontDir + "/fontdata.js");
