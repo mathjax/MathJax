@@ -2621,7 +2621,14 @@
 	  math = HTMLCSS.Measured(html,box);
 	}
 	HTMLCSS.placeBox(box,0,0);
-        stack.style.width = Math.round(HTMLCSS.unEm(stack.style.width)*this.em)+"px"; // get width right if minimum font size is set
+        //
+        //  Get width right if minimum font size is set:
+        //    Round to nearest pixel (plus a small amount), and convert back to outer-em's.
+        //    Add the width to the span (outside the MathJax class, so uses outer em size,
+        //    which makes it work even when minimum font size is in effect).
+        //
+        span.style.width = HTMLCSS.Em((Math.round(math.bbox.w*this.em)+.25)/HTMLCSS.outerEm);
+        span.style.display = "inline-block"; stack.style.width = "";
 	//
 	//  Adjust bbox to match outer em-size
 	// 
