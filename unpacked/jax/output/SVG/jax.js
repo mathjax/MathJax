@@ -387,7 +387,11 @@
       this.cwidth = .85*SVG.defaultWidth;
       emex.parentNode.removeChild(emex);
 
+      span.appendChild(this.textSVG);
+      this.mathDIV = span;
       this.idPostfix = "-zoom"; jax.root.toSVG(span,span); this.idPostfix = "";
+      span.removeChild(this.textSVG);
+      
       if (this.operaZoomRefresh)
         {setTimeout(function () {span.firstChild.style.border="1px solid transparent"},1)}
       //
