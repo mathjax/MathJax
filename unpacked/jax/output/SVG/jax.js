@@ -60,7 +60,7 @@
           width: "100%"
         },
         
-        ".MathJax_SVG svg a > g, .MathJax_SVG_Display svg a > g": {
+        ".mjx-svg-href": {
           fill: "blue", stroke: "blue"
         },
 
@@ -1022,7 +1022,7 @@
         // FIXME:  if an element has an id, its zoomed copy will have the same ID
         if (this.id) {svg.removeable = false; SVG.Element(svg.element,{"id":this.id})}
         if (this.href) {
-	  var a = SVG.Element("a");
+	  var a = SVG.Element("a",{"class":"mjx-svg-href"});
 	  a.setAttributeNS(XLINKNS,"href",this.href);
           a.onclick = this.SVGlink;
           SVG.addElement(a,"rect",{width:svg.w, height:svg.h+svg.d, y:-svg.d,
@@ -1033,17 +1033,13 @@
             while (g.firstChild) {a.appendChild(g.firstChild)}
             g.appendChild(a);
           } else {
-            // if removeable, move contents of <g> to <a>, otherise move element to <a>
-            if (svg.removeable && svg.element.nodeName === "g") {
-              while (svg.element.firstChild) {a.appendChild(svg.element.firstChild)}
-            } else {a.appendChild(svg.element)}
-            svg.element = a;
+            a.appendChild(svg.element); svg.element = a;
           }
           svg.removeable = false;
         }
         if (SVG.config.addMMLclasses) {
+          this.SVGaddClass(svg.element,"mjx-svg-"+this.type);
           svg.removeable = false;
-          svg.element.setAttribute("className","mjx-svg-"+this.type);
         }
         var style = this.style;
         if (style && svg.element) {
@@ -1052,6 +1048,10 @@
           svg.element.style.border = svg.element.style.padding = "";
           if (svg.removeable) {svg.removeable = svg.element.style.cssText === ""}
         }
+      },
+      SVGaddClass: function (node,name) {
+        var classes = node.getAttribute("class");
+        node.setAttribute("class",(classes ? classes+" " : "")+name);
       },
       //
       //  WebKit currently scrolls to the BOTTOM of an svg element if it contains the
