@@ -69,6 +69,7 @@
       }
     },
     settings: HUB.config.menuSettings,
+    ex: 1, // filled in later
     
     Config: function () {
       this.SUPER(arguments).Config.call(this);
@@ -205,6 +206,7 @@
           if (ex === 0 || ex === "NaN") {ex = this.defaultEx; mex = this.defaultMEx}
           scale = (mex > 1 ? ex/mex : 1) * this.config.scale;
           scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale));
+          jax.NativeMML.ex = ex;
         } else {scale = 100}
         jax.NativeMML.fontSize = scale+"%";
       }
@@ -232,6 +234,7 @@
       var span = document.getElementById(jax.inputID+"-Frame"),
 	  container = span.firstChild, mspan = container.firstChild;
       span.style.fontSize = jax.NativeMML.fontSize;
+      this.ex = jax.NativeMML.ex || this.defaultEx;
       //
       //  Convert to MathML (if restarted, remove any partial math)
       //
@@ -615,7 +618,13 @@
         //  parent element to match.  Even if we set the <math> width properly,
         //  it doesn't seem to propagate up to the <span> correctly.
         //
-        if (nMML.widthBug) {parent.style.width = math.firstChild.scrollWidth+"px"}
+        if (nMML.widthBug) {
+          //
+          //  Convert size to ex's so that it scales properly if the print media
+          //    has a different font size.
+          //
+          parent.style.width = (math.firstChild.scrollWidth/nMML.ex).toFixed(3) + "ex";
+        }
       }
     });
 
