@@ -10,7 +10,7 @@ MathJax.Localization.addTranslation("fr","FontWarnings",{
       "des polices de votre syst\u00E8me.",
 
     imageFonts:
-      "MathJax utilise des images de caract\u00E8res plutôt que les polices "+
+      "MathJax utilise des images de caract\u00E8res plut\u00F4t que les polices "+
       "Web ou locales. Ceci rend le rendu plus lent que la normale et "+
       "les expressions math\u00E9matiques peuvent ne pas s'imprimer \u00E0 la "+
       "r\u00E9solution maximale de votre imprimante",

@@ -45,7 +45,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Commande %1 non d\u00E9finie",
 
     IllegalControlSequenceName:
-      "Nom de contrôle de s\u00E9quence non autoris\u00E9 pour la commande %1",
+      "Nom de contr\u00F4le de s\u00E9quence non autoris\u00E9 pour la commande %1",
 
     IllegalParamNumber:
       "Nombre de param\u00E8tres incorrect pour la commande %1",
@@ -66,7 +66,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
 
     CantUseHash2:
       "Usage du caract\u00E8re # non autoris\u00E9 dans le mod\u00E8le pour la s\u00E9quence "+
-      "de contrôle %1",
+      "de contr\u00F4le %1",
 
     MisplacedMiddle:
       "La commande %1 doit \u00EAtre plac\u00E9e \u00E0 l'int\u00E9rieur d'une section "+
@@ -195,7 +195,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
 
     NewextarrowArg1:
       "Le premier argument de la commande %1 doit \u00EAtre le nom d'une "+
-      "s\u00E9quence de contrôle",
+      "s\u00E9quence de contr\u00F4le",
 
     NewextarrowArg2:
       "Le second argument de la commande %1 doit \u00EAtre deux entiers "+
@@ -221,10 +221,10 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Nombre non valide",
 
     DoubleBackSlash:
-      "\\ doit \u00EAtre suivi d'une s\u00E9quence de contrôle",
+      "\\ doit \u00EAtre suivi d'une s\u00E9quence de contr\u00F4le",
 
     SequentialParam:
-      "Les param\u00E8tres de la s\u00E9quence de contrôle %1 doivent \u00EAtre "+
+      "Les param\u00E8tres de la s\u00E9quence de contr\u00F4le %1 doivent \u00EAtre "+
       "\u00E9num\u00E9r\u00E9s de fa\u00E7on s\u00E9quentielle",
 
     MissingReplacementString:

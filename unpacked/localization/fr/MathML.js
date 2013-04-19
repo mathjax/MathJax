@@ -12,10 +12,10 @@ MathJax.Localization.addTranslation("fr","MathML",{
       "MathJax n'est pas parvenu \u00E0 configurer MathPlayer.\n\n"+
       "Vous devez d'abord installer MathPlayer. Si c'est d\u00E9j\u00E0 le cas,\n"+
       "vos param\u00E8tres de s\u00E9curit\u00E9s peuvent emp\u00EAcher l'ex\u00E9cution des\n"+
-      "contrôles ActiveX. S\u00E9lectionnez Options Internet dans le menu\n"+
+      "contr\u00F4les ActiveX. S\u00E9lectionnez Options Internet dans le menu\n"+
       "Outils et s\u00E9lectionnez l'onglet S\u00E9curit\u00E9. Appuyez ensuite sur\n"+
       "le menu Niveau Personalis\u00E9. Assurez vous que les param\u00E8tres\n"+
-      "Ex\u00E9cution des contrôles ActiveX et Comportements des ex\u00E9cutables\n"+
+      "Ex\u00E9cution des contr\u00F4les ActiveX et Comportements des ex\u00E9cutables\n"+
       "et des scripts sont activ\u00E9s.\n\n"+
       "Actuellement, vous verrez des messages d'erreur \u00E0 la place des\n"+
       "expressions math\u00E9matiques.",

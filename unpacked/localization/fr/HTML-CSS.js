@@ -9,7 +9,7 @@ MathJax.Localization.addTranslation("fr","HTML-CSS",{
       "Impossible de t\u00E9l\u00E9charger la police Web %1",
 
     FirefoxCantLoadWebFont:
-      "Firefox ne peut t\u00E9l\u00E9charger les polices Web \u00E0 partir d'un hôte "+
+      "Firefox ne peut t\u00E9l\u00E9charger les polices Web \u00E0 partir d'un h\u00F4te "+
       "distant",
 
     CantFindFontUsing:
