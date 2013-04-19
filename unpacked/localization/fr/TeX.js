@@ -3,7 +3,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
   strings: {
 
     ExtraOpenMissingClose:
-      "Accolade ouvrant manquante ou accolade fermante non attendue",
+      "Accolade ouvrante manquante ou accolade fermante non attendue",
 
     ExtraCloseMissingOpen:
       "Accolade fermante non attendue ou accolade ouvrante manquante",
@@ -21,16 +21,16 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Mauvaise position pour la commande %1",
 
     MissingOpenForSub:
-      "Missing open brace for subscript",  // *NEW*
+      "Accolade ouvrante manquante pour le script en indice",
 
     MissingOpenForSup:
-      "Missing open brace for superscript",  // *NEW*
+      "Accolade ouvrante manquante pour le script en exposant",
 
     AmbiguousUseOf:
       "Usage ambigu de la commande %1",
 
     EnvBadEnd:
-      "\\begin{%1} s'est terminé par un \\end{%2}",
+      "\\begin{%1} s'est termin\u00E9 par un \\end{%2}",
 
     EnvMissingEnd:
       "\\end{%1} manquant",
@@ -42,13 +42,13 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Accolade fermante manquante",
 
     UndefinedControlSequence:
-      "Commande %1 non définie",
+      "Commande %1 non d\u00E9finie",
 
     IllegalControlSequenceName:
-      "Nom de contrôle de séquence non autorisé pour la commande %1",
+      "Nom de contr\u00F4le de s\u00E9quence non autoris\u00E9 pour la commande %1",
 
     IllegalParamNumber:
-      "Nombre de paramètres incorrect pour la commande %1",
+      "Nombre de param\u00E8tres incorrect pour la commande %1",
 
     DoubleExponent:
       "Double exposant: utilisez des accolades pour clarifier",
@@ -61,58 +61,58 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "des accolades pour clarifier",
 
     CantUseHash1:
-      "Vous ne pouvez pas utilisez le caractère #, indiquant un "+
-      "paramètre de macro, dans le mode mathématique",
+      "Vous ne pouvez pas utilisez le caract\u00E8re #, indiquant un "+
+      "param\u00E8tre de macro, dans le mode math\u00E9matique",
 
     CantUseHash2:
-      "Usage du caractère # non autorisé dans le modèle pour la séquence "+
-      "de contrôle %1",
+      "Usage du caract\u00E8re # non autoris\u00E9 dans le mod\u00E8le pour la s\u00E9quence "+
+      "de contr\u00F4le %1",
 
     MisplacedMiddle:
-      "La commande %1 doit être placée à l'intérieur d'une section "+
+      "La commande %1 doit \u00EAtre plac\u00E9e \u00E0 l'int\u00E9rieur d'une section "+
       "\\left ... \right",
 
     MisplacedLimits:
-      "La commande %1 n'est autorisée que sur les opérateurs",
+      "La commande %1 n'est autoris\u00E9e que sur les op\u00E9rateurs",
 
     MisplacedMoveRoot:
-      "La commande %1 n'est autorisée qu'à l'intérieur d'une racine",
+      "La commande %1 n'est autoris\u00E9e qu'\u00E0 l'int\u00E9rieur d'une racine",
 
     MultipleCommand:
       "Usage multiple de la commande %1",
 
     IntegerArg:
-      "L'argument de la commande %1 doit être un entier",
+      "L'argument de la commande %1 doit \u00EAtre un entier",
 
     PositiveIntegerArg:
-      "L'argument de la commande %1 doit être un entier strictement "+
+      "L'argument de la commande %1 doit \u00EAtre un entier strictement "+
       "positif",
 
     NotMathMLToken:
-      "L'élément %1 n'est pas un élément MathML élémentaire",
+      "L'\u00E9l\u00E9ment %1 n'est pas un \u00E9l\u00E9ment MathML \u00E9l\u00E9mentaire",
 
     InvalidMathMLAttr:
       "Attribut MathML non valide: %1",
 
     UnknownAttrForElement:
-      "Attribut %1 inconnu pour l'élément %2",
+      "Attribut %1 inconnu pour l'\u00E9l\u00E9ment %2",
 
     MaxMacroSub1:
-      "Le nombre maximal de substitution de macro autorisé par MathJax "+
-      "a été dépassé. Il y a t'il un appel de macro récursif?",
+      "Le nombre maximal de substitution de macro autoris\u00E9 par MathJax "+
+      "a \u00E9t\u00E9 d\u00E9pass\u00E9. Il y a t'il un appel de macro r\u00E9cursif?",
 
     MaxMacroSub2:
-      "Le nombre maximal de substitution de macro autorisé par MathJax "+
-      "a été dépassé. Il y a t'il un environnement LaTeX récursif?",
+      "Le nombre maximal de substitution de macro autoris\u00E9 par MathJax "+
+      "a \u00E9t\u00E9 d\u00E9pass\u00E9. Il y a t'il un environnement LaTeX r\u00E9cursif?",
 
     MissingArgFor:
       "Argument manquant pour la commande %1",
 
     ExtraAlignTab:
-      "Caractère d'alignement '&' non attendue pour le texte de la commande \\cases",
+      "Caract\u00E8re d'alignement '&' non attendue pour le texte de la commande \\cases",
 
     BracketMustBeDimension:
-      "L'argument entre crochets de la commande %1 doit être une dimension",
+      "L'argument entre crochets de la commande %1 doit \u00EAtre une dimension",
 
     InvalidEnv:
       "Nom d'environnement '%1' non valide",
@@ -130,62 +130,62 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Impossible de trouver le crochet fermant pour l'argument de la commande %1",
 
     MissingOrUnrecognizedDelim:
-      "Délimiteur manquant ou non reconnu pour la commande %1",
+      "D\u00E9limiteur manquant ou non reconnu pour la commande %1",
 
     MissingDimOrUnits:
-      "Dimension ou unité manquante pour la commande %1",
+      "Dimension ou unit\u00E9 manquante pour la commande %1",
 
     TokenNotFoundForCommand:
       "Impossible de trouver la commande %1 pour la commande %2",
 
     MathNotTerminated:
-      "Expression mathématique non terminée à l'intérieur de cette boite "+
+      "Expression math\u00E9matique non termin\u00E9e \u00E0 l'int\u00E9rieur de cette boite "+
       "de texte",
 
     IllegalMacroParam:
-      "Paramètre de référence de macro non autorisé",
+      "Param\u00E8tre de r\u00E9f\u00E9rence de macro non autoris\u00E9",
 
     MaxBufferSize:
-      "Taille maximale du tampon interne de MathJax dépassée. " +
-      "Il y a t'il un appel de macro récursif?",
+      "Taille maximale du tampon interne de MathJax d\u00E9pass\u00E9e. " +
+      "Il y a t'il un appel de macro r\u00E9cursif?",
 
     CommandNotAllowedInEnv:
-      "La commande %1 n'est pas autorisé à l'intérieur de "+
+      "La commande %1 n'est pas autoris\u00E9 \u00E0 l'int\u00E9rieur de "+
       "l'environnement %2", 
 
     MultipleCommand:
       "Usage multiple de la commande %1",
 
     MultipleLabel:
-      "Étiquette '%1' déjà définie",
+      "\u00C9tiquette '%1' d\u00E9j\u00E0 d\u00E9finie",
 
     CommandAtTheBeginingOfLine:
-      "La commande %1 doit être placée en début de ligne",
+      "La commande %1 doit \u00EAtre plac\u00E9e en d\u00E9but de ligne",
 
     IllegalAlign:
-      "Alignement non autorisé pour la commande %1",
+      "Alignement non autoris\u00E9 pour la commande %1",
 
     BadMathStyleFor:
-      "Style mathématique non valide pour la commande %1",
+      "Style math\u00E9matique non valide pour la commande %1",
 
     ErroneousNestingEq:
-      "Emboitement incorrect des structures d'équation",
+      "Emboitement incorrect des structures d'\u00E9quation",
 
     MultlineRowsOneCol:
       "L'environnement multline doit avoir exactement une colonne",
 
     NoClosingDelim:
-      "Impossible de trouver le délimiteur fermant pour la commande %1",
+      "Impossible de trouver le d\u00E9limiteur fermant pour la commande %1",
 
     NoClosingChar:
-      "Impossible de trouver le délimiteur '%1' fermant",
+      "Impossible de trouver le d\u00E9limiteur '%1' fermant",
 
     MultipleBBoxProperty:
-      "La propriété %1 de la commande %2 est spécifiée deux fois",
+      "La propri\u00E9t\u00E9 %1 de la commande %2 est sp\u00E9cifi\u00E9e deux fois",
 
     InvalidBBoxProperty:
-      "La valeur '%1' ne semble pas être une couleur, une dimension de "+
-      "marge intérieur ou un style.",
+      "La valeur '%1' ne semble pas \u00EAtre une couleur, une dimension de "+
+      "marge int\u00E9rieur ou un style.",
 
     ExtraEndMissingBegin:
       "Commande %1 non attendue ou commande \\begingroup manquante",
@@ -194,47 +194,47 @@ MathJax.Localization.addTranslation("fr","TeX",{
       "Commande %1 non suivie d'une commande \\let, \\def ou \newcommand",
 
     NewextarrowArg1:
-      "Le premier argument de la commande %1 doit être le nom d'une "+
-      "séquence de contrôle",
+      "Le premier argument de la commande %1 doit \u00EAtre le nom d'une "+
+      "s\u00E9quence de contr\u00F4le",
 
     NewextarrowArg2:
-      "Le second argument de la commande %1 doit être deux entiers "+
-      "séparés par une virgule",
+      "Le second argument de la commande %1 doit \u00EAtre deux entiers "+
+      "s\u00E9par\u00E9s par une virgule",
 
     NewextarrowArg3:
-      "Le troisième argument de la commande %1 doit être la valeur d'un "+
-      "caractère unicode",
+      "Le troisi\u00E8me argument de la commande %1 doit \u00EAtre la valeur d'un "+
+      "caract\u00E8re unicode",
 
     UndefinedColorModel:
-      "Le modèle de couleur '%1' n'est pas défini",
+      "Le mod\u00E8le de couleur '%1' n'est pas d\u00E9fini",
 
     ModelArg1:
-      "Color values for the %1 model require 3 numbers",  // *NEW*
+      "Les valeurs de couleurs pour le mod\u00E8le %1 n\u00E9cessitent 3 nombres",
 
     InvalidDecimalNumber:
-      "Nombre décimal non valide",
+      "Nombre d\u00E9cimal non valide",
 
     ModelArg2:
-      "Color values for the %1 model must be between %2 and %3",  // *NEW*
+      "Les valeurs de couleurs pour le mod\u00E8le %1 doivent \u00EAtre comprises entre %2 et %3",
 
     InvalidNumber:
       "Nombre non valide",
 
     DoubleBackSlash:
-      "\\ doit être suivi d'une séquence de contrôle",
+      "\\ doit \u00EAtre suivi d'une s\u00E9quence de contr\u00F4le",
 
     SequentialParam:
-      "Les paramètres de la séquence de contrôle %1 doivent être "+
-      "énumérés de façon séquentielle",
+      "Les param\u00E8tres de la s\u00E9quence de contr\u00F4le %1 doivent \u00EAtre "+
+      "\u00E9num\u00E9r\u00E9s de fa\u00E7on s\u00E9quentielle",
 
     MissingReplacementString:
-      "Chaine de caractère de remplacement manquante pour la définition %1",
+      "Chaine de caract\u00E8re de remplacement manquante pour la d\u00E9finition %1",
 
     MismatchUseDef:
-      "L'utilisation de la commande %1 ne correspond pas à sa définition",
+      "L'utilisation de la commande %1 ne correspond pas \u00E0 sa d\u00E9finition",
 
     RunawayArgument:
-      "Argument manquant pour la commande %1?"
+      "Argument non termin\u00E9 pour la commande %1?"
  
   }
 });

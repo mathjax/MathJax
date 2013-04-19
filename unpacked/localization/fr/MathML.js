@@ -3,25 +3,25 @@ MathJax.Localization.addTranslation("fr","MathML",{
   strings: {
 
     BadMglyph:
-      "Élement mglyph incorrect: %1",
+      "\u00C9lement mglyph incorrect: %1",
 
     BadMglyphFont:
-      "Police de caractère incorrecte: %1",
+      "Police de caract\u00E8re incorrecte: %1",
 
     MathPlayer:
-      "MathJax n'est pas parvenu à configurer MathPlayer.\n\n"+
-      "Vous devez d'abord installer MathPlayer. Si c'est déjà le cas,\n"+
-      "vos paramètres de sécurités peuvent empêcher l'exécution des\n"+
-      "contrôles ActiveX. Sélectionnez Options Internet dans le menu\n"+
-      "Outils et sélectionnez l'onglet Sécurité. Appuyez ensuite sur\n"+
-      "le menu Niveau Personalisé. Assurez vous que les paramètres\n"+
-      "Exécution des contrôles ActiveX et Comportements des exécutables\n"+
-      "et des scripts sont activés.\n\n"+
-      "Actuellement, vous verrez des messages d'erreur à la place des\n"+
-      "expressions mathématiques.",
+      "MathJax n'est pas parvenu \u00E0 configurer MathPlayer.\n\n"+
+      "Vous devez d'abord installer MathPlayer. Si c'est d\u00E9j\u00E0 le cas,\n"+
+      "vos param\u00E8tres de s\u00E9curit\u00E9s peuvent emp\u00EAcher l'ex\u00E9cution des\n"+
+      "contr\u00F4les ActiveX. S\u00E9lectionnez Options Internet dans le menu\n"+
+      "Outils et s\u00E9lectionnez l'onglet S\u00E9curit\u00E9. Appuyez ensuite sur\n"+
+      "le menu Niveau Personalis\u00E9. Assurez vous que les param\u00E8tres\n"+
+      "Ex\u00E9cution des contr\u00F4les ActiveX et Comportements des ex\u00E9cutables\n"+
+      "et des scripts sont activ\u00E9s.\n\n"+
+      "Actuellement, vous verrez des messages d'erreur \u00E0 la place des\n"+
+      "expressions math\u00E9matiques.",
 
    CantCreateXMLParser:
-     "MathJax ne peut créer un analyseur grammatical XML pour le MathML",
+     "MathJax ne peut cr\u00E9er un analyseur grammatical XML pour le MathML",
 
    UnknownNodeType:
      "Type de noeud inconnu: %1",
@@ -36,10 +36,10 @@ MathJax.Localization.addTranslation("fr","MathML",{
      "Erreur lors de l'analyse du code MathML: %1",
 
    MathMLSingleElement:
-    "Le code MathML doit être formé d'un unique élément",
+    "Le code MathML doit \u00EAtre form\u00E9 d'un unique \u00E9l\u00E9ment",
 
    MathMLRootElement:
-     "Le code MathML doit être formé d'un élément <math> et non d'un élément %1"
+     "Le code MathML doit \u00EAtre form\u00E9 d'un \u00E9l\u00E9ment <math> et non d'un \u00E9l\u00E9ment %1"
 
   }
 });
