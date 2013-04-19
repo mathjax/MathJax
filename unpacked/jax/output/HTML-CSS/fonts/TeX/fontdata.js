@@ -23,7 +23,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "2.1";
+  var VERSION = "2.1.1";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -1561,6 +1561,10 @@
   MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Main/Bold/MathOperators.js",function () {
     HTMLCSS.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][2] -= 106; // fix error in character's right bearing
     HTMLCSS.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][5] = {rfix:-106}; // fix error in character's right bearing
+  });
+  MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Typewriter/Regular/BasicLatin.js",function () {
+    HTMLCSS.FONTDATA.FONTS['MathJax_Typewriter'][0x20][2] += 275;       // fix error in character width
+    HTMLCSS.FONTDATA.FONTS['MathJax_Typewriter'][0x20][5] = {rfix:275}; // fix error in character width
   });
   
   //
