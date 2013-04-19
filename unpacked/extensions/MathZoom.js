@@ -23,7 +23,7 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
-  var VERSION = "2.1";
+  var VERSION = "2.1.1";
   
   var CONFIG = HUB.CombineConfig("MathZoom",{
     styles: {
@@ -225,23 +225,53 @@
     //
     Resize: function (event) {
       if (ZOOM.onresize) {ZOOM.onresize(event)}
-      var x = 0, y = 0, obj,
-          div = document.getElementById("MathJax_ZoomFrame"),
+      var div = document.getElementById("MathJax_ZoomFrame"),
           overlay = document.getElementById("MathJax_ZoomOverlay");
-      obj = div; while (obj.offsetParent) {x += obj.offsetLeft; obj = obj.offsetParent}
-      if (ZOOM.operaPositionBug) {div.style.border = "1px solid"}  // to get vertical position right
-      obj = div; while (obj.offsetParent) {y += obj.offsetTop; obj = obj.offsetParent}
-      if (ZOOM.operaPositionBug) {div.style.border = ""}
-      overlay.style.left = (-x)+"px"; overlay.style.top = (-y)+"px";
+      var xy = ZOOM.getXY(div);
+      var obj = div.parentNode, overflow = ZOOM.getOverflow(obj);
+      while (obj.parentNode && overflow === "visible") {
+        obj = obj.parentNode;
+        overflow = ZOOM.getOverflow(obj);
+      }
+      if (overflow !== "visible") {
+        overlay.scroll_parent = obj;  // Save this for future reference.
+        var XY = ZOOM.getXY(obj);     // Remove container position
+        xy.x -= XY.x; xy.y -= XY.y;
+        XY = ZOOM.getBorder(obj);     // Remove container border
+        xy.x -= XY.x; xy.y -= XY.y;
+      }
+      overlay.style.left = (-xy.x)+"px"; overlay.style.top = (-xy.y)+"px";
       if (ZOOM.msiePositionBug) {setTimeout(ZOOM.SetWH,0)} else {ZOOM.SetWH()}
-      return {x:x, y:y};
+      return xy;
     },
     SetWH: function () {
       var overlay = document.getElementById("MathJax_ZoomOverlay");
       overlay.style.width = overlay.style.height = "1px"; // so scrollWidth/Height will be right below
-      var doc = document.documentElement || document.body;
+      var doc = overlay.scroll_parent || document.documentElement || document.body;
       overlay.style.width = doc.scrollWidth + "px";
       overlay.style.height = Math.max(doc.clientHeight,doc.scrollHeight) + "px";
+    },
+    //
+    //  Look up CSS properties (use getComputeStyle if available, or currentStyle if not)
+    //
+    getOverflow: (window.getComputedStyle ?
+      function (obj) {return getComputedStyle(obj).overflow} :
+      function (obj) {return (obj.currentStyle||{overflow:"visible"}).overflow}),
+    getBorder: function (obj) {
+      var style = (window.getComputedStyle ? getComputedStyle(obj) : 
+                     (object.currentStyle || {borderLeftWidth:0,borderTopWidth:0}));
+      return {x:parseInt(style.borderLeftWidth), y:parseInt(style.borderTopWidth)};
+    },
+    //
+    //  Get the position of an element on the page
+    //
+    getXY: function (div) {
+      var x = 0, y = 0, obj;
+      obj = div; while (obj.offsetParent) {x += obj.offsetLeft; obj = obj.offsetParent}
+      if (ZOOM.operaPositionBug) {div.style.border = "1px solid"}  // to get vertical position right
+      obj = div; while (obj.offsetParent) {y += obj.offsetTop; obj = obj.offsetParent}
+      if (ZOOM.operaPositionBug) {div.style.border = ""}
+      return {x:x, y:y};
     },
     
     //
