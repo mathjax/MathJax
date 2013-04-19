@@ -7,21 +7,21 @@ MathJax.Localization.addTranslation("fr",null,{
       strings: {
 
         CookieConfig:
-          "MathJax a trouvé un cookie de configuration utilisateur qui inclut "+
-          "du code exécutable. Souhaitez vous l'exécuter?\n\n"+
-          "(Choisissez Annuler sauf si vous avez créé ce cookie vous-même)",
+          "MathJax a trouv\u00E9 un cookie de configuration utilisateur qui inclut "+
+          "du code ex\u00E9cutable. Souhaitez vous l'ex\u00E9cuter?\n\n"+
+          "(Choisissez Annuler sauf si vous avez cr\u00E9\u00E9 ce cookie vous-m\u00EAme)",
 
         MathProcessingError:
-          "Erreur de traitement de la formule mathématique",
+          "Erreur de traitement de la formule math\u00E9matique",
 
         MathError:
-          "Erreur dans la formule mathématique",
+          "Erreur dans la formule math\u00E9matique",
 
-        LoadFile: "Téléchargement de %1",
+        LoadFile: "T\u00E9l\u00E9chargement de %1",
 
-        Loading: "Téléchargement",
+        Loading: "T\u00E9l\u00E9chargement",
 
-        LoadFailed: "Échec du téléchargement de %1",
+        LoadFailed: "\u00C9chec du t\u00E9l\u00E9chargement de %1",
 
         ProcessMath: "Traitement des formules: %1%%",
 

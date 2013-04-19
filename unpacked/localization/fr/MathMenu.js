@@ -9,14 +9,14 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
       AsciiMathInput: "de code AsciiMathML",
       Original:       "originelle",
       ErrorMessage:   "de message d'erreur",
-      texHints:       "Inclure les données TeX dans le MathML",
-    Settings: "Paramètres",
-      ZoomTrigger: "Déclenchement du zoom",
+      texHints:       "Inclure les donn\u00E9es TeX dans le MathML",
+    Settings: "Param\u00E8tres",
+      ZoomTrigger: "D\u00E9clenchement du zoom",
         Hover:       "Survol de la souris",
         Click:       "Clic de souris",
         DoubleClick: "Double-clic",
         NoZoom:      "Pas de zoom",
-      TriggerRequires: "Le déclenchement nécessite la touche",
+      TriggerRequires: "Le d\u00E9clenchement n\u00E9cessite la touche",
         Option:      "Option",
         Alt:         "Alt",
         Command:     "Command",
@@ -24,11 +24,11 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
         Shift:       "Shift",
       ZoomFactor:    "Facteur de zoom",
       Renderer: "Mode de rendu",
-      MPHandles: "Laissez MathPlayer gérer les",
-        MenuEvents:    "Évènements du menu",
-        MouseEvents:   "Évènements de la souris",
-        MenuAndMouse:  "Évènements de menu et de la souris",
-      FontPrefs:  "Préférences des polices",
+      MPHandles: "Laissez MathPlayer g\u00E9rer les",
+        MenuEvents:    "\u00C9v\u00E8nements du menu",
+        MouseEvents:   "\u00C9v\u00E8nements de la souris",
+        MenuAndMouse:  "\u00C9v\u00E8nements de menu et de la souris",
+      FontPrefs:  "Pr\u00E9f\u00E9rences des polices",
         ForHTMLCSS: "Pour le HTML-CSS:",
           Auto:         "Auto",
           TeXLocal:     "TeX (locales)",
@@ -37,19 +37,19 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
           STIXLocal:    "STIX (locales)",
       ContextMenu: "Menu contextuel",
         Browser:        "Navigateur",
-      Scale: "Mise à l'échelle ...",
+      Scale: "Mise \u00E0 l'\u00E9chelle ...",
       Discoverable: "Mettez en surbrillance lors du survol",
     Locale: "Langue",
-      LoadLocale: "Charger à partir de l'URL...",
-    About: "À propos de MathJax",
+      LoadLocale: "Charger \u00E0 partir de l'URL...",
+    About: "\u00C0 propos de MathJax",
     Help:  "Aide MathJax",
        
     localTeXfonts:  "utilisant les polices TeX locales",
     webTeXfonts:    "utilisant les polices TeX Web",
-    imagefonts:     "utilisant les images de caractères",
+    imagefonts:     "utilisant les images de caract\u00E8res",
     localSTIXfonts: "utilisant les polices STIX locales",
     webSVGfonts:    "utilisant les polices SVG Web",
-    genericfonts:   "utilisant les polices locales génériques",
+    genericfonts:   "utilisant les polices locales g\u00E9n\u00E9riques",
       
     wofforotffonts: "les polices woff ou otf",
     eotffonts:      "les polices eot",
@@ -58,59 +58,59 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
     WebkitNativeMMLWarning:
       "Votre navigateur ne semble pas comporter de support MathML, " +
       "changer le mode de rendu pourrait rendre illisibles " +
-      "les expressions mathématiques.",
+      "les expressions math\u00E9matiques.",
 
     MSIENativeMMLWarning:
-      "Internet Explorer a besoin du module complémentaire MathPlayer " + 
+      "Internet Explorer a besoin du module compl\u00E9mentaire MathPlayer " + 
       "pour afficher le MathML.",
       
     OperaNativeMMLWarning:
-      "Le support MathML d'Opera est limité, changer le mode de rendu " +
-      "pourrait entrainer un affichage médiocre de certaines expressions.",
+      "Le support MathML d'Opera est limit\u00E9, changer le mode de rendu " +
+      "pourrait entrainer un affichage m\u00E9diocre de certaines expressions.",
 
     SafariNativeMMLWarning:
       "Le support MathML natif de votre navigateur ne comporte pas " +
-      "toutes les fonctionnalités requises par MathJax, certaines " +
+      "toutes les fonctionnalit\u00E9s requises par MathJax, certaines " +
       "expressions pourront donc ne pas s'afficher correctement.",
 
     FirefoxNativeMMLWarning:
       "Le support MathML natif de votre navigateur ne comporte pas " +
-      "toutes les fonctionnalités requises par MathJax, certaines " +
+      "toutes les fonctionnalit\u00E9s requises par MathJax, certaines " +
       "expressions pourront donc ne pas s'afficher correctement.",
 
     LoadURL:
-      "Charger les données de traduction à partir de cette addresse URL:",
+      "Charger les donn\u00E9es de traduction \u00E0 partir de cette addresse URL:",
       
     BadURL:
-      "L'adresse URL doit être un fichier Javascript contenant des données de traduction MathJax." +
+      "L'adresse URL doit \u00EAtre un fichier Javascript contenant des donn\u00E9es de traduction MathJax." +
       "Les noms de fichier Javascript doivent se terminer par '.js'",
 
     BadData:
-     "Échec du chargement des données de traduction à partir de %1",
+     "\u00C9chec du chargement des donn\u00E9es de traduction \u00E0 partir de %1",
      
     SwitchAnyway:
-      "Êtes vous certain de vouloir changer le mode de rendu ?\n\n" +
+      "\u00CAtes vous certain de vouloir changer le mode de rendu ?\n\n" +
       "Appuyez sur OK pour valider ou Annuler pour continuer avec le " +
-      "mode de rendu actuellement sélectionné.",
+      "mode de rendu actuellement s\u00E9lectionn\u00E9.",
 
     ScaleMath:
-      "Mise à l'échelle des expressions mathématiques (par rapport au " +
+      "Mise \u00E0 l'\u00E9chelle des expressions math\u00E9matiques (par rapport au " +
       "text environnant) de",
 
     NonZeroScale:
-      "L'échelle ne peut être nulle",
+      "L'\u00E9chelle ne peut \u00EAtre nulle",
 
     PercentScale:
-      "L'échelle doit être un pourcentage (e.g. 120%%)",
+      "L'\u00E9chelle doit \u00EAtre un pourcentage (e.g. 120%%)",
 
     IE8warning:
-      "Ceci désactivera le menu de MathJax et les fonctionalités de " +
+      "Ceci d\u00E9sactivera le menu de MathJax et les fonctionalit\u00E9s de " +
       "zoom mais vous pourrez toujours obtenir le menu de MathJax " +
       "en utilisant la commande Alt+Clic sur une expression.\n\n" +
-      "Êtes vous certain de vouloir choisir les options de MathPlayer?",
+      "\u00CAtes vous certain de vouloir choisir les options de MathPlayer?",
 
     IE9warning:
-      "Le menu contextuel de MathJax sera désactivé, " +
+      "Le menu contextuel de MathJax sera d\u00E9sactiv\u00E9, " +
       "mais vous pourrez toujours obtenir le menu de MathJax " +
       "en utilisant la commande Alt-Clic sur une expression.",
 
@@ -121,7 +121,7 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
       "Fermer",
 
     EqSource:
-      "Source de l'équation MathJax"
+      "Source de l'\u00E9quation MathJax"
 
   }
 });
