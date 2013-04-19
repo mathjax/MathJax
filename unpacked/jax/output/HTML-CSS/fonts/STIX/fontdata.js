@@ -1491,7 +1491,7 @@
   HTMLCSS.FONTDATA.FONTS['STIXNonUnicode'][0xE14B][1] += 200;  // adjust depth for brace extender
   MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Variants/Regular/All.js",function () {
     // monospace mathvariant uses space from STIXVariants, so make it the right size
-    HTMLCSS.FONTDATA.FONTS['STIXVariants'][0x20][2] += 275;       // fix error incharacter width
+    HTMLCSS.FONTDATA.FONTS['STIXVariants'][0x20][2] += 275;       // fix error in character width
     HTMLCSS.FONTDATA.FONTS['STIXVariants'][0x20][5] = {rfix:275}; // fix error in character width
   });
 
