@@ -23,7 +23,7 @@
  */
 
 MathJax.Extension["TeX/verb"] = {
-  version: "2.1"
+  version: "2.1.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -45,7 +45,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       while (this.i < this.string.length && this.string.charAt(this.i) != c) {this.i++}
       if (this.i == this.string.length) 
         {TEX.Error("Can't find closing delimiter for "+name)}
-      var text = this.string.slice(start,this.i); this.i++;
+      var text = this.string.slice(start,this.i).replace(/ /g,"\u00A0"); this.i++;
       this.Push(MML.mtext(text).With({mathvariant:MML.VARIANT.MONOSPACE}));
     }
     
