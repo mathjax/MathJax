@@ -24,7 +24,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "2.1.1",
+  version: "2.1.2",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
@@ -107,7 +107,9 @@ MathJax.Extension.tex2jax = {
     if (config.processRefs)         {parts.push("\\\\(eq)?ref\\{[^}]*\\}")}
     this.start = new RegExp(parts.join("|"),"g");
     this.skipTags = new RegExp("^("+config.skipTags.join("|")+")$","i");
-    this.ignoreClass = new RegExp("(^| )("+config.ignoreClass+")( |$)");
+    var ignore = MathJax.Hub.config.preRemoveClass;
+    if (config.ignoreClass !== "") {ignore += "|" + config.ignoreClass}
+    this.ignoreClass = new RegExp("(^| )("+ignore+")( |$)");
     this.processClass = new RegExp("(^| )("+config.processClass+")( |$)");
     return (parts.length > 0);
   },
