@@ -86,10 +86,10 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "2.1.1";
+  var VERSION = "2.1.2";
 
   var STIXURL = "http://www.stixfonts.org/";
-  var MATHJAXURL = "http://www.mathjax.org/help-v2/fonts";
+  var MATHJAXURL = "https://github.com/mathjax/MathJax/tree/master/fonts/HTML-CSS/TeX/otf";
   
   var CONFIG = HUB.CombineConfig("FontWarnings",{
     //
