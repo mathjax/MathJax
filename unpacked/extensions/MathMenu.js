@@ -48,7 +48,6 @@
   
   var CONFIG = HUB.CombineConfig("MathMenu",{
     delay: 150,                                    // the delay for submenus
-    helpURL: "http://www.mathjax.org/help-v2/user/",  // the URL for the "MathJax Help" menu
     closeImg: AJAX.fileURL(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
@@ -331,12 +330,12 @@
       var div = HTML.addElement(document.body,"div",{style:this.BGSTYLE, id:"MathJax_MenuFrame"},
                     [["div",{style: this.BGSTYLE, menuItem: menu, onmousedown: this.Remove}]]);
       var bg = div.firstChild;
-      if (menu.msieBackgroundBug) {
+      if (MENU.msieBackgroundBug) {
         //  MSIE doesn't allow transparent background to be hit boxes, so
         //  fake it using opacity with solid background color
         bg.style.backgroundColor = "white"; bg.style.filter = "alpha(opacity=0)";
       }
-      if (menu.msieFixedPositionBug) {
+      if (MENU.msieFixedPositionBug) {
         //  MSIE can't do fixed position, so use a full-sized background
         //  and an onresize handler to update it (stupid, but necessary)
         div.width = div.height = 0; this.Resize();
@@ -615,9 +614,6 @@
   /*
    *  Handle the ABOUT box
    */
-  // Localization: need to be reorganized. currently, there are concatenation
-  // of HTMLCSS.fontInUse and English strings based on the values of
-  // HTMLCSS.webFonts and HTMLCSS.imgFonts, HTMLCSS.allowWebFonts etc
   MENU.About = function () {
     var HTMLCSS = OUTPUT["HTML-CSS"] || {};
     var font = 
@@ -687,7 +683,8 @@
    *  Handle the MathJax HELP menu
    */
   MENU.Help = function () {
-    window.open(CONFIG.helpURL,"MathJaxHelp");
+    AJAX.Require("[MathJax]/extensions/HelpDialog.js",
+                 function () {MathJax.Extension.Help.Dialog()});
   };
   
   /*

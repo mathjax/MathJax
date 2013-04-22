@@ -730,7 +730,7 @@ MathJax.fileversion = "2.1.2";
           script: script
         };
         // Add this to the structure above after it is created to prevent recursion
-        //  when loading the initial localiation file (before loading messsage is available)
+        //  when loading the initial localization file (before loading messsage is available)
         this.loading[file].message = BASE.Message.File(file);
         script.onerror = timeout;  // doesn't work in IE and no apparent substitute
         script.type = "text/javascript";
@@ -1215,7 +1215,7 @@ MathJax.Localization = {
         //
         data = this.processString(parts[i+5],args,domain);
         if (!(data instanceof Array)) {data = [data]}
-        data = ["a",{href:parts[i+6],target:"_blank"},data];
+        data = ["a",{href:this.processString(parts[i+6],args),target:"_blank"},data];
       } else {
         //
         //  Escaped character (%c) gets added into the string.
