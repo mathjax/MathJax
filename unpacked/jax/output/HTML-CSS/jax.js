@@ -814,6 +814,11 @@
       if (Math.abs(m) < .0006) {return "0em"}
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
+    EmRounded: function (m) {
+      m = (Math.round(m*HTMLCSS.em)+.05)/HTMLCSS.em;
+      if (Math.abs(m) < .0006) {return "0em"}
+      return m.toFixed(3).replace(/\.?0+$/,"") + "em";
+    },
     unEm: function (m) {
       return parseFloat(m);
     },
@@ -2811,10 +2816,8 @@
 
       Chrome: function (browser) {
         HTMLCSS.Augment({
-          Em: HTMLCSS.Px,       // vertical alignment is better in pixels (since around v20)
-          unEm: HTMLCSS.unPx,
-          chromeHeightBug: true, // heights can be 1px off from the explicitly set size
-          cloneNodeBug: true,    // Chrome gets heights wrong with the cloned ones
+          Em: HTMLCSS.EmRounded,   // vertical alignment needs help (since around v20)
+          cloneNodeBug: true,      // Chrome gets heights wrong with the cloned ones
           rfuzz: .011,
           AccentBug: true,
           AdjustSurd: true,
