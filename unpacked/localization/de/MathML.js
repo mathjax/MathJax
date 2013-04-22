@@ -39,7 +39,7 @@ MathJax.Localization.addTranslation("de","MathML",{
 //       "setting is enabled (use the Internet Options item in the Tools\n"+
 //       "menu, and select the Security panel, then press the Custom Level\n"+
 //       "button to check this).\n\n"+
-//       "MathML equations will not be able to be processed by MathJax.", TODO Cumbersome English
+//       "MathML equations will not be able to be processed by MathJax.",
 
    UnknownNodeType:
      "Unbekannter Knotentyp: %1", //"Unknown node type: %1",

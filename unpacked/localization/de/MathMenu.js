@@ -2,15 +2,15 @@ MathJax.Localization.addTranslation("de","MathMenu",{
   isLoaded: true,
   strings: {
 
-    Show: "Zeige Mathe als",                 // "Show Math As", TODO It's a bit weird to have "Math" instead of "equation" "formula" etc but if we keep it we should follow this "globally"
+    Show: "Zeige Mathe als",                 // "Show Math As", 
       MathMLcode:     "MathML Code",
       OriginalMathML: "Original MathML",
       TeXCommands:    "Original TeX",          // "TeX Commands",
       AsciiMathInput: "Original AsciiMathML",  // "AsciiMathML input"
-      Original:       "Originalform",          // "Original Form", TODO What is that referring to?
+      Original:       "Originalform",          // "Original Form",
       ErrorMessage:   "Fehlermeldung",         // "Error Message",
-      texHints:       "TeX Tipps in MathML", // "Show TeX hints in MathML", TODO I left out "show" -- seemed redundant; "embed" or "add" is more appropriate.
-    Settings: "Einstellungen",               // "Math Settings", //TODO I dropped the "Math", is that ok? Should we do this in general?
+      texHints:       "TeX Tipps in MathML", // "Show TeX hints in MathML", 
+    Settings: "Einstellungen",               // "Math Settings", 
       ZoomTrigger: "Zoom ausl\u00F6sen",           // "Zoom Trigger",
         Hover:       "Hover",
         Click:       "Klick",                    // "Click",
@@ -25,10 +25,10 @@ MathJax.Localization.addTranslation("de","MathMenu",{
       ZoomFactor:    "Zoomfaktor",             // "Zoom Factor",
       Renderer: "Mathe Renderer",              // "Math Renderer",
       MPHandles: "An MathPlayer \u00FCbergeben:",  // "Let MathPlayer Handle:",
-        MenuEvents:    "Men\u00FC Events",          // "Menu Events", //TODO not sure about "Events" jargon. what are these?
+        MenuEvents:    "Men\u00FC Events",          // "Menu Events", 
         MouseEvents:   "Maus Events",            // "Mouse Events",
         MenuAndMouse:  "Maus und Men\u00FC Events",  // "Mouse and Menu Events",
-      FontPrefs:  "Font Einstellungen",        // "Font Preferences", //TODO  What's this?
+      FontPrefs:  "Font Einstellungen",        // "Font Preferences", 
         ForHTMLCSS: "F\u00FCr HTML-CSS",             // "For HTML-CSS:",
           Auto:         "Auto",
           TeXLocal:     "TeX (lokal)",             // "TeX (local)",
@@ -41,7 +41,7 @@ MathJax.Localization.addTranslation("de","MathMenu",{
       Discoverable: "Highlight durch Hovern",  // "Highlight on Hover",
     Locale: "Sprache",                       // "Language",
       LoadLocale: "Von URL laden ...",         // "Load from URL ...",
-    About: "\u00DCber MathJax",                  // "About MathJax", TODO should be a line lower before the rest of the about box?
+    About: "\u00DCber MathJax",                  // "About MathJax", 
     Help:  "MathJax Hilfe",                  // "MathJax Help",
 /* About MathJax dialogue ? */ 
     localTeXfonts:  "Lokale TeX-Fonts verwendet",         // "using local TeX fonts",
@@ -51,7 +51,7 @@ MathJax.Localization.addTranslation("de","MathMenu",{
     webSVGfonts:    "Web SVG-fonts verwendet",            // "using web SVG fonts",
     genericfonts:   "Generische Unicode-Fonts verwendet", // "using generic unicode fonts",
       
-    wofforotffonts: "WOFF- oder OTF-Fonts", // "woff or otf fonts", TODO capitalize English?
+    wofforotffonts: "WOFF- oder OTF-Fonts", // "woff or otf fonts", 
     eotffonts:      "EOT-Fonts",            // "eot fonts",
     svgfonts:       "SVG-Fonts",            // "svg fonts",
 
@@ -112,7 +112,7 @@ MathJax.Localization.addTranslation("de","MathMenu",{
      
     SwitchAnyway:
       "Renderer trotzdem \u00E4ndern?\n\n" +
-      "(Mit OK wechseln, mit ABBRECHEN den akt\u00FCllen Renderer verwenden)", //TODO check German browser lingo OK // Abbrechen
+      "(Mit OK wechseln, mit ABBRECHEN den akt\u00FCllen Renderer verwenden)", 
 //    "Switch the renderer anyway?\n\n" +
 //    "(Press OK to switch, CANCEL to continue with the current renderer)",
 

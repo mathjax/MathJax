@@ -1,45 +1,66 @@
-MathJax.Localization.addTranslation("de","HelpDialog",{
+  MathJax.Localization.addTranslation("de","HelpDialog",{
   isLoaded: true,
   strings: {
 
     MathJax: 
-      "*MathJax* is a JavaScript library that allows page authors to include " +
-      "mathematics within their web pages.  As a reader, you don't need to do " +
-      "anything to make that happen.",
+         "*MathJax* ist eine JavaScript-Bibliothek, die Autoren erlaubt, " +
+	 "Ihren Webseiten mathematische Inhalte hinzuzuf\u00FCgen. Als Besucher " +
+	 "m\u00FCssen sie nichts zus\u00E4tzliches tun, damit MathJax funktioniert."
+//       "*MathJax* is a JavaScript library that allows page authors to include " +
+//       "mathematics within their web pages.  As a reader, you don't need to do " +
+//       "anything to make that happen.",
 
     Browsers:
-      "*Browsers*: MathJax works with all modern browsers including IE6+, Firefox 3+, " +
-      "Chrome 0.2+, Safari 2+, Opera 9.6+ and most mobile browsers.",
+         "*Browser*: MathJax ist kompatibel zu allen modernen Webbrowsern inklusive " +
+	 "IE6+, Firefox 3+, Chrome 0.2+, Safari 2+, Opera 9.6+ und g\u00E4ngigen mobilen Browsern."
+//       "*Browsers*: MathJax works with all modern browsers including IE6+, Firefox 3+, " +
+//       "Chrome 0.2+, Safari 2+, Opera 9.6+ and most mobile browsers.",
 
     Menu:
-      "*Math Menu*: MathJax adds a contextual menu to equations.  Right-click or " +
-      "CTRL-click on any mathematics to access the menu.",
+         "*Mathe Men\u00FC*: MathJax f\u00FCgt ein Kontextmen\u00FC bei allen Formen hinzu. " +
+	 "Es wird mit Rechtsklick oder STRG+Linksklick auf einer Formel aufgerufen."
+//       "*Math Menu*: MathJax adds a contextual menu to equations.  Right-click or " +
+//       "CTRL-click on any mathematics to access the menu.",
 
     ShowMath:
-      "*Show Math As* allows you to view the formula's source markup " +
-      "for copy & paste (as MathML or in its origianl format).",
+         "*Zeige Mathe als* erlaubt es, eine Formel im Quellformat anzuzeigen, " //NOTE needs to match menu item translations!
+	 "um Kopieren und Einf\u00FCgen (als MathML oder im Originalformat) zu erm00F6glichen."
+//       "*Show Math As* allows you to view the formula's source markup " + 
+//       "for copy & paste (as MathML or in its origianl format).",
 
     Settings:
-      "*Settings* gives you control over features of MathJax, such as the " +
-      "size of the mathematics, and the mechanism used to display equations.",
+         "*Einstellungen* erlabut es, das Verhalten von MathJax zu modifizieren, "+ //NOTE needs to match menu item translations!
+	 "so z.B. die Gr\u00CS\u00DFe der Mathematik sowie den Ausgabemechanismus."
+//       "*Settings* gives you control over features of MathJax, such as the " +
+//       "size of the mathematics, and the mechanism used to display equations.",
 
     Language:
-      "*Language* lets you select the language used by MathJax for its menus " +
-      "and warning messages.",
+         "*Sprache* erlaubt es, die Sprache zu wechseln, die MathJax  im Men\u00FC " + //NOTE needs to match menu item translations!
+	 "und den Warnmeldungen verwendent."
+//       "*Language* lets you select the language used by MathJax for its menus " +
+//       "and warning messages.",
 
     Zoom:
-      "*Math Zoom*: If you are having difficulty reading an equation, MathJax can " +
-      "enlarge it to help you see it better.",
+         "*Zoom*: Falls das Lesen der Formeln schwer f\u00E4llt, kann MathJax diese " + //NOTE needs to match menu item translations!
+	 "vergr\u00CS\u00DFern, um es zu erleichtern."
+//       "*Math Zoom*: If you are having difficulty reading an equation, MathJax can " +
+//       "enlarge it to help you see it better.",
 
     Accessibilty:
-      "*Accessibility*: MathJax will automatically work with screen readers to make " +
-      "mathematics accessible to the visually impaired.",
+         "*Barrierfreiheit*: MathJax arbeite automatisch mit g\u00E4ngigen Screenreadern " +
+	 "zusammen, um Mathematik barrierefrei darzustellen."
+//       "*Accessibility*: MathJax will automatically work with screen readers to make " +
+//       "mathematics accessible to the visually impaired.",
 
     Fonts:
-      "*Fonts*: MathJax will use certain math fonts if they are installed on your " +
-      "computer; otherwise, it will use web-based fonts.  Although not required, " +
-      "locally installed fonts will speed up typesetting.  We suggest installing " +
-      "the [STIX fonts](%1)."
+         "*Fonts*: MathJax benutzt gewisse mathematische Fonts, falls sie auf dem System" +
+	 "installiert sind; ansonsten verwendet es Webfonts. Obwohl nicht notwendig, " +
+	 "k\u00F6nnen installierte Fonts den Textsatz beschleunigen. Wir empfehlen, " +
+	 "die [STIX fonts](%1) zu installieren."
+//       "*Fonts*: MathJax will use certain math fonts if they are installed on your " +
+//       "computer; otherwise, it will use web-based fonts.  Although not required, " +
+//       "locally installed fonts will speed up typesetting.  We suggest installing " +
+//       "the [STIX fonts](%1)."
 
   }
 });
