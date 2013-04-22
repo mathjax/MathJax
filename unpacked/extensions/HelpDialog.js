@@ -24,7 +24,7 @@
  *  limitations under the License.
  */
 
-(function (HUB,HTML,AJAX,OUTPUT) {
+(function (HUB,HTML,AJAX,OUTPUT,LOCALE) {
 
   var HELP = MathJax.Extension.Help = {
     version: "2.1"
@@ -69,10 +69,14 @@
    *  Handle the Help Dialog box
    */
   HELP.Dialog = function () {
+    LOCALE.loadDomain("HelpDialog",["Post",HELP]);
+  };
+  
+  HELP.Post = function () {
     this.div = MENU.Background(this);
     var help = HTML.addElement(this.div,"div",{
       id: "MathJax_Help"
-    },MathJax.Localization._("HelpDialog",[
+    },LOCALE._("HelpDialog",[
       ["b",{style:{fontSize:"120%"}},[["Help","MathJax Help"]]],
       ["div",{id: "MathJax_HelpContent"},[
         ["p",{},[["MathJax",
@@ -124,7 +128,7 @@
         onclick: HELP.Remove
       }]
     ]));
-    MathJax.Localization.setCSS(help);
+    LOCALE.setCSS(help);
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;
     if (MENU.prototype.msieAboutBug) {
@@ -143,9 +147,8 @@
   MathJax.Callback.Queue(
     HUB.Register.StartupHook("End Config",{}), // wait until config is complete
     ["Styles",AJAX,CONFIG.styles],
-    ["loadDomain",MathJax.Localization,"HelpDialog"],
     ["Post",HUB.Startup.signal,"HelpDialig Ready"],
     ["loadComplete",AJAX,"[MathJax]/extensions/HelpDialog.js"]
   );
 
-})(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.OutputJax);
+})(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.OutputJax,MathJax.Localization);

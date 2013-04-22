@@ -38,6 +38,7 @@ MathJax.Localization.addTranslation("en",null,{
     },
     MathMenu: {},
     FontWarnings: {},
+    HelpDialog: {},
     "v1.0-warning": {},
     TeX: {},
     MathML: {},
