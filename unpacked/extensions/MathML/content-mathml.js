@@ -1,13 +1,15 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/MathML/content-mathml.js
  *
- *  This extension allows HTML-CSS output to deal with floating elements
- *  better.  In particular, when there are tags or equation numbers, these
- *  would overlap floating elements, but with this extension, the width of
- *  the line should properly correspond to the amount of space remaining.
+ *  This file implements an XSLT transform to convert Content-MathML to
+ *  Presentation MathML for processing by MathJax.  The transform is
+ *  performed in a pre-filter for the MathML input jax, so that the
+ *  Show Math As menu will still show the Original MathML as Content MathML,
+ *  but the Presentation MathML can be obtained from the main MathML menu.
  *  
  *  To load it, include
  *  
@@ -39,19 +41,20 @@ MathJax.Extension["MathML/content-mathml"] = {
   version: "2.2"
 };
 
-MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
+MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
 
-  var MATHML = MathJax.InputJax.MathML;
+  var MATHML = MathJax.InputJax.MathML,
+      PARSE = MATHML.Parse.prototype;
 
   MATHML.prefilterHooks.Add(function (data) {
     if (!MATHML.ctopXSLT) return;
 
     // Parse the <math> but use MATHML.Parse to apply the normal preprocessing.
     if (!MATHML.ParseXML) {MATHML.ParseXML = MATHML.createParser()}
-    var doc = MathJax.InputJax.MathML.ParseXML(MATHML.Parse(data.math, true));
+    var doc = MATHML.ParseXML(PARSE.preProcessMath(data.math));
 
     // Now transform the <math> using the ctop stylesheet.
-    var newdoc = MathJax.InputJax.MathML.ctopXSLT.transformToDocument(doc);
+    var newdoc = MATHML.ctopXSLT.transformToDocument(doc);
 
     if ((typeof newdoc) === "string") {
       // Internet Explorer returns a string, so just use it.
@@ -91,7 +94,6 @@ MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
       var ctop = MATHML.createMSParser();
       ctop.async = false;
       ctop.loadXML(ctopStylesheet);
-
       MATHML.ctopXSLT = {
         ctop: ctop,
         transformToDocument: function(doc) {
