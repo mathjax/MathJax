@@ -1,21 +1,21 @@
-MathJax.Localization.addTranslation("en","TeX",{
+MathJax.Localization.addTranslation("en","TeX",{ //NOTE use correct ISO name TODO autopopulate?
   isLoaded: true,
   strings: {
 
     ExtraOpenMissingClose:
-      "Extra open brace or missing close brace",
+      "Extra open brace or missing close brace", //NOTE TeX commands use braces and brackets as delimiters
 
     ExtraCloseMissingOpen:
       "Extra close brace or missing open brace",
 
     MissingLeftExtraRight:
-      "Missing \\left or extra \\right",
+      "Missing \\left or extra \\right", //NOTE do not translate \\left and \\right, they are TeX commands
 
     MissingScript:
       "Missing superscript or subscript argument",
 
     ExtraLeftMissingRight:
-      "Extra \\left or missing \\right",
+      "Extra \\left or missing \\right", //NOTE do not translate \\left and \\right, they are TeX commands
 
     Misplaced:
       "Misplaced %1",
@@ -27,72 +27,72 @@ MathJax.Localization.addTranslation("en","TeX",{
       "Missing open brace for superscript",
 
     AmbiguousUseOf:
-      "Ambiguous use of %1",
+      "Ambiguous use of %1", //NOTE %1 will be a TeX command 
 
     EnvBadEnd:
-      "\\begin{%1} ended with \\end{%2}",
+      "\\begin{%1} ended with \\end{%2}", //NOTE do not translate \\begin{%1} and \\end{{%1}}, they are TeX commands
 
     EnvMissingEnd:
-      "Missing \\end{%1}",
+      "Missing \\end{%1}", //NOTE do not translate \\end
 
     MissingBoxFor:
-      "Missing box for %1",
+      "Missing box for %1", //NOTE refers to TeX boxes
 
     MissingCloseBrace:
       "Missing close brace",
 
     UndefinedControlSequence:
-      "Undefined control sequence %1",
+      "Undefined control sequence %1", //NOTE %1 will be a TeX command
 
     DoubleExponent:
-      "Double exponent: use braces to clarify",
+      "Double exponent: use braces to clarify", // NOTE example: x^3^2 should be x^{3^2} or {x^3}^2
 
     DoubleSubscripts:
       "Double subscripts: use braces to clarify",
 
     DoubleExponentPrime:
-      "Prime causes double exponent: use braces to clarify",
+      "Prime causes double exponent: use braces to clarify", //NOTE example TODO
 
     CantUseHash1:
-      "You can't use 'macro parameter character #' in math mode",
+      "You can't use 'macro parameter character #' in math mode", //NOTE '#' is used in TeX macros
 
     MisplacedMiddle:
-      "%1 must be within \\left and \\right",
+      "%1 must be within \\left and \\right", //NOTE do not translate \\left and \\right, they are TeX commands
 
     MisplacedLimits:
-      "%1 is allowed only on operators",
+      "%1 is allowed only on operators", 
 
     MisplacedMoveRoot:
       "%1 can appear only within a root",
 
     MultipleCommand:
-      "Multiple %1",
+      "Multiple %1", //NOTE happens when a command or token can only be preset once
 
     IntegerArg:
       "The argument to %1 must be an integer",
 
     NotMathMLToken:
-      "%1 is not a token element",
+      "%1 is not a token element", //NOTE MathJax has a non-standard /mmltoken command to insert MathML token elements
 
     InvalidMathMLAttr:
-      "Invalid MathML attribute: %1",
+      "Invalid MathML attribute: %1", //NOTE MathJax has non standard MathML and HTML related commands which can contain attributes
 
     UnknownAttrForElement:
       "%1 is not a recognized attribute for %2",
 
     MaxMacroSub1:
-      "MathJax maximum macro substitution count exceeded; " +
+      "MathJax maximum macro substitution count exceeded; " + //NOTE MathJax has a limited for iterating macros
       "is there a recursive macro call?",
 
     MaxMacroSub2:
-      "MathJax maximum substitution count exceeded; " +
+      "MathJax maximum substitution count exceeded; " +//NOTE MathJax has a limited for iterating substitutions
       "is there a recursive latex environment?",
 
     MissingArgFor:
       "Missing argument for %1",
 
     ExtraAlignTab:
-      "Extra alignment tab in \\cases text",
+      "Extra alignment tab in \\cases text", //NOTE do not translate //cases
 
     BracketMustBeDimension:
       "Bracket argument to %1 must be a dimension",

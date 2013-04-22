@@ -3,7 +3,7 @@ MathJax.Localization.addTranslation("en","HelpDialog",{
   strings: {
 
     MathJax: 
-      "*MathJax* is a JavaScript library that allows page authors to include " +
+      "*MathJax* is a JavaScript library that allows page authors to include " + //NOTE Markdown syntax *...*
       "mathematics within their web pages.  As a reader, you don't need to do " +
       "anything to make that happen.",
 
@@ -39,7 +39,7 @@ MathJax.Localization.addTranslation("en","HelpDialog",{
       "*Fonts*: MathJax will use certain math fonts if they are installed on your " +
       "computer; otherwise, it will use web-based fonts.  Although not required, " +
       "locally installed fonts will speed up typesetting.  We suggest installing " +
-      "the [STIX fonts](%1)."
+      "the [STIX fonts](%1)." //NOTE Markdown syntax for links. %1 is a URL to the STIX fonts
 
   }
 });

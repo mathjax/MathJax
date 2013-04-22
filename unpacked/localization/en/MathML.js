@@ -2,7 +2,7 @@ MathJax.Localization.addTranslation("en","MathML",{
   isLoaded: true,
   strings: {
 
-    BadMglyph:
+    BadMglyph: //NOTE refers to MathML's mglyph element.
       "Bad mglyph: %1",
 
     BadMglyphFont:
@@ -29,7 +29,7 @@ MathJax.Localization.addTranslation("en","MathML",{
       "MathML equations will not be able to be processed by MathJax.",
 
    UnknownNodeType:
-     "Unknown node type: %1",
+     "Unknown node type: %1", //NOTE refers to XML nodes
 
    UnexpectedTextNode:
      "Unexpected text node: %1",
