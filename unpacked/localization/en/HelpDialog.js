@@ -2,6 +2,8 @@ MathJax.Localization.addTranslation("en","HelpDialog",{
   isLoaded: true,
   strings: {
 
+    Help: "MathJax Help",
+
     MathJax: 
       "*MathJax* is a JavaScript library that allows page authors to include " + //NOTE Markdown syntax *...*
       "mathematics within their web pages.  As a reader, you don't need to do " +
@@ -17,7 +19,7 @@ MathJax.Localization.addTranslation("en","HelpDialog",{
 
     ShowMath:
       "*Show Math As* allows you to view the formula's source markup " +
-      "for copy & paste (as MathML or in its origianl format).",
+      "for copy & paste (as MathML or in its original format).",
 
     Settings:
       "*Settings* gives you control over features of MathJax, such as the " +

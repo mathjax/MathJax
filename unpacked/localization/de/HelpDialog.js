@@ -2,6 +2,8 @@
   isLoaded: true,
   strings: {
 
+    Help: "MathJax Hilfe",
+
     MathJax: 
          "*MathJax* ist eine JavaScript-Bibliothek, die Autoren erlaubt, " +
 	 "Ihren Webseiten mathematische Inhalte hinzuzuf\u00FCgen. Als Besucher " +
