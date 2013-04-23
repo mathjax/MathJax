@@ -30,12 +30,7 @@
   
   MATHML.Parse = MathJax.Object.Subclass({
 
-    Init: function (string, preProcessMathOnly) {
-      if (preProcessMathOnly) {
-        return this.preProcessMath.call(this,string);
-      }
-      this.Parse(string);
-    },
+    Init: function (string) {this.Parse(string)},
     
     //
     //  Parse the MathML and check for errors
