@@ -2,7 +2,7 @@ MathJax.Localization.addTranslation("de","v1.0-warning",{
   isLoaded: true,
   strings: {
 
-    MissingConfig: //TODO discuss how to get rid of this
+    MissingConfig: 
       "MathJax l\u00E4dt keine Standardkonfiguration mehr; " +
       "der Author der Seite muss eine Konfigurationsdatei angeben. " +
       "Diese Seite nutze die alte Standardkonfiguration %1 " +

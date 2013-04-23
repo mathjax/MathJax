@@ -1,5 +1,5 @@
-MathJax.Localization.addTranslation("en",null,{
-  menuTitle: "English",
+MathJax.Localization.addTranslation("en",null,{ // NOTE use correct ISO-639-1 two letter code http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+  menuTitle: "English", // NOTE language name; will appear in the MathJax submenu for switching locales
   isLoaded: true,
   domains: {
     "_": {
@@ -12,27 +12,27 @@ MathJax.Localization.addTranslation("en",null,{
           "(You should press Cancel unless you set up the cookie yourself.)",
 
         MathProcessingError:
-          "Math Processing Error",
+          "Math Processing Error", // NOTE: MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.
 
         MathError:
-          "Math Error",
+          "Math Error", // generic error message
 
-        LoadFile: "Loading %1",
+        LoadFile: "Loading %1", 
 
-        Loading: "Loading",
+        Loading: "Loading", // NOTE followed by growing sequence of dots
 
         LoadFailed: "File failed to load: %1",
 
-        ProcessMath: "Processing Math: %1%%",
+        ProcessMath: "Processing Math: %1%%", //NOTE appears during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format
 
-        Processing: "Processing",
+        Processing: "Processing", //NOTE followed by growing sequence of dots
 
-        TypesetMath: "Typesetting Math: %1%%",
+        TypesetMath: "Typesetting Math: %1%%",//NOTE appears during the layout process of converting the internal format to the output format
 
-        Typesetting: "Typesetting",
+        Typesetting: "Typesetting", //NOTE followed by growing sequence of dots
 
         MathJaxNotSupported:
-          "Your browser does not support MathJax"
+          "Your browser does not support MathJax" //NOTE will load when MathJax determines the browser does not have adequate features
 
       }
     },

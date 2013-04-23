@@ -3,15 +3,15 @@ MathJax.Localization.addTranslation("de","TeX",{
   strings: {
 
     ExtraOpenMissingClose:
-      "Zus\u00E4tzliche offene oder fehlende schliessende Klammer",//TODO maybe 'ueberfluessig' = superfluous is better? or 'zu viele' = too many?
+      "Zus\u00E4tzliche offene oder fehlende schliessende Klammer", //TODO better alternative for "zusaetzlich"? Maybe a good translation of mismatched braces instead?
 //    "Extra open brace or missing close brace",
 
     ExtraCloseMissingOpen:
-      "Zus\u00E4tzliche schliessende oder fehlende offene Klammer",//TODO ditto
+      "Zus\u00E4tzliche schliessende oder fehlende offene Klammer",
 //    "Extra close brace or missing open brace",
 
     MissingLeftExtraRight:
-      "Fehlendes '\\left' oder zus\u00E4tzliches '\\right'", //TODO ditto
+      "Fehlendes '\\left' oder zus\u00E4tzliches '\\right'", 
 //    "Missing \\left or extra \\right",
 
     MissingScript:
@@ -19,20 +19,20 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Missing superscript or subscript argument",
 
     ExtraLeftMissingRight:
-      "Zus\u00E4tzliches '\\left' oder fehlendes '\\right'",//TODO ditto
+      "Zus\u00E4tzliches '\\left' oder fehlendes '\\right'",
 //    "Extra \\left or missing \\right",
 
     Misplaced:
-      "%1 falsch plaziert", //TODO not sure; context?
+      "%1 falsch plaziert", 
 //    "Misplaced %1",
 
     MissingOpenForSub:
       "Fehlende offende Klammer im Subskript", 
-//    "Missing open brace for subscript",  // *NEW*
+//    "Missing open brace for subscript",  
 
     MissingOpenForSup:
       "Fehlende offene Klammer im Superskript", 
-//    "Missing open brace for superscript",  // *NEW*
+//    "Missing open brace for superscript",
 
     AmbiguousUseOf:
       "Mehrdeutige Verwendung von %1",
@@ -47,7 +47,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Missing \\end{%1}",
 
     MissingBoxFor:
-      "Fehlende Box: %1", //TODO What kind of TeX is this referring to?
+      "Fehlende Box: %1", 
 //    "Missing box for %1",
 
     MissingCloseBrace:
@@ -59,7 +59,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Undefined control sequence %1",
 
     DoubleExponent:
-      "Doppeltes Superskript: verwende Klammern zum Gruppieren", //TODO I used "use braces to group"
+      "Doppeltes Superskript: verwende Klammern zum Gruppieren",
 //    "Double exponent: use braces to clarify",
 
     DoubleSubscripts:
@@ -71,7 +71,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Prime causes double exponent: use braces to clarify",
 
     CantUseHash1:
-      "Das Zeichen '#' ist ein Makroparameter und kann nicht im Mathematikmodus verwendet werden.", //TODO Do we need to explain the why? Should we just say "can't be used, use '\#' instead"
+      "Das Zeichen '#' ist ein Makroparameter und kann nicht im Mathematikmodus verwendet werden.", 
 //    "You can't use 'macro parameter character #' in math mode", 
 
     MisplacedMiddle:
@@ -79,7 +79,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "%1 must be within \\left and \\right",
  
     MisplacedLimits:
-      "%1 ist nur bei Operatoren erlaubt", //TODO "bei" could be wrong, maybe 'in', 'an'
+      "%1 ist nur bei Operatoren erlaubt", 
 //    "%1 is allowed only on operators",
 
     MisplacedMoveRoot:
@@ -87,7 +87,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "%1 can appear only within a root",
 
     MultipleCommand:
-      "Zu viele %1",//TODO need context. I translated this as "too many"
+      "Zu viele %1",
 //    "Multiple %1", 
 
     IntegerArg:
@@ -116,18 +116,18 @@ MathJax.Localization.addTranslation("de","TeX",{
       "Maximale Anzahl an Substitutionen ist erreicht; " +
       "wird eine rekursive LaTeX-Umgebung verwendet?",
 //    "MathJax maximum substitution count exceeded; " +
-//    "is there a recursive latex environment?", //TODO use LaTeX ?
+//    "is there a recursive latex environment?",
 
     MissingArgFor:
-      "Fehlendes Argument in %1", //TODO 'in' could be wrong preposition 
+      "Fehlendes Argument in %1", 
 //    "Missing argument for %1", 
 
     ExtraAlignTab:
-      "Zus\u00E4tzliches & im '\\cases' Text",//TODO not sure about German TeX jargon, but & might be clearer? Maybe switch to 'zu viele // too many' instead of extra.
+      "Zus\u00E4tzliches & im '\\cases' Text",
 //    "Extra alignment tab in \\cases text", 
 
     BracketMustBeDimension:
-      "Das geklammerte Argument f\u00FCr %1 muss eine Dimension sein", //TODO wasn't sure about Dimension jargon
+      "Das geklammerte Argument f\u00FCr %1 muss eine Dimension sein", 
 //    "Bracket argument to %1 must be a dimension",
 
     InvalidEnv:
@@ -139,11 +139,11 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Unknown environment '%1'",
 
     ExtraClose:
-      "Zus\u00E4tzliche geschlossene Klammer", //TODO 'zu viele / too many' might be better
+      "Zus\u00E4tzliche geschlossene Klammer", 
 //    "Extra close brace",
 
     ExtraCloseLooking:
-      "Zus\u00E4tzliche geschlossene Klammer w\u00E4hrend der Suche nach %1", //TODO 'zu viele / too many' might be better, not sure about programming jargon for "while looking for"
+      "Zus\u00E4tzliche geschlossene Klammer w\u00E4hrend der Suche nach %1", 
 //    "Extra close brace while looking for %1",
 
     MissingCloseBracket:
@@ -151,15 +151,15 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Couldn't find closing ']' for argument to %1",
 
     MissingOrUnrecognizedDelim:
-      "Fehlender oder nichterkannter Delimiter bei %1", //TODO not sure about Delimiter as TeX jargon
+      "Fehlender oder nichterkannter Delimiter bei %1", 
 //    "Missing or unrecognized delimiter for %1",
 
     MissingDimOrUnits:
-      "Fehlende Dimension oder Einheiten bei %1", //TODO not sure about TeX jargon
+      "Fehlende Dimension oder Einheiten bei %1", 
 //    "Missing dimension or its units for %1",
 
     TokenNotFoundForCommand:
-      "Konnte %1 nicht f\u00FCr %2 finden", //TODO not sure about 'fuer' preposition. What's the context?
+      "Konnte %1 nicht f\u00FCr %2 finden",
 //    "Couldn't find %1 for %2",
 
     MathNotTerminated:
@@ -171,7 +171,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Illegal macro parameter reference",
 
     MaxBufferSize:
-      "Interner Puffergr\u00F6\u00DFe \u00FCberschritten; wird ein rekursiver Makroaufruf verwendet?", // TODO not sure about buffer/puffer, macro call/makroaufruf
+      "Interner Puffergr\u00F6\u00DFe \u00FCberschritten; wird ein rekursiver Makroaufruf verwendet?", 
 //    "MathJax internal buffer size exceeded; is there a recursive macro call?", 
 
  /* AMSmath */
@@ -189,11 +189,11 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "%1 must come at the beginning of the line",
 
     IllegalAlign:
-      "Ung\u00FCltige Ausrichtung in %1",//TODO not sure about Ausrichtung/alignment
+      "Ung\u00FCltige Ausrichtung in %1",
 //    "Illegal alignment specified in %1", ?
 
     BadMathStyleFor:
-      "Schlechtes 'math style' Argument: %1", //TODO not sure about math style.
+      "Schlechtes 'math style' Argument: %1", 
 //    "Bad math style for %1", 
 
     PositiveIntegerArg:
@@ -201,7 +201,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Argument to %1 must me a positive integer",
 
     ErroneousNestingEq:
-      "Fehlerhafte Verschachtelung von Gleichungen", //TODO not sure about Verschachtelung/nesting jargon
+      "Fehlerhafte Verschachtelung von Gleichungen", 
 //    "Erroneous nesting of equation structures", 
 
     MultlineRowsOneCol:
@@ -215,7 +215,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "%1 specified twice in %2",
 
     InvalidBBoxProperty:
-      "'%1' scheint keine Farbe, Padding-Dimension oder Stil zu sein",//TODO not sure about TeX jargon
+      "'%1' scheint keine Farbe, Padding-Dimension oder Stil zu sein",
 //    "'%1' doesn't look like a color, a padding dimension, or a style", 
 
 /* begingroup */
@@ -267,7 +267,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 /* mhchem */
 
     NoClosingChar:
-      "Kann geschlossenes %1 nicht finden",//TODO geschlossenes is neutral Gender, hope this works, but probably not since chars have different genders
+      "Kann geschlossene %1 nicht finden",
 //    "Can't find closing %1",
 
 /* newcommand */
@@ -285,7 +285,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "\\ must be followed by a control sequence",
 
     CantUseHash2:
-      "Ung\u00FCltige Verwendung von # im Template von %1",  //TODO not sure about 'im' and 'von'.
+      "Ung\u00FCltige Verwendung von # im Template von %1", 
 //    "Illegal use of # in template for %1",
 
     SequentialParam:
@@ -293,7 +293,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Parameters for %1 must be numbered sequentially",
 
     MissingReplacementString:
-      "Ersetzende Zeichenkette f\u00FCr Definition von %1 fehlt", //TODO not sure about "ersetzen"
+      "Ersetzende Zeichenkette f\u00FCr Definition von %1 fehlt", 
 //    "Missing replacement string for definition of %1", 
 
     MismatchUseDef:
@@ -301,13 +301,13 @@ MathJax.Localization.addTranslation("de","TeX",{
 //    "Use of %1 doesn't match its definition",
 
     RunawayArgument:
-      "Nichtgeschlossenes Argument f\u00FCr %1?", //TODO not sure about runaway argument, translated as 'not closed', not sure about 'fuer'.
+      "Nichtgeschlossenes Argument f\u00FCr %1?", 
 //    "Runaway argument for %1?"
 
 /* verb */
 
     NoClosingDelim:
-      "Kein schliessender Delimiter f\u00FCr %1"  //TODO not sure about Delimiter jargon, not sure about 'fuer'
+      "Kein schliessender Delimiter f\u00FCr %1"
 //    "Can't find closing delimiter for %1"
  
   }

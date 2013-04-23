@@ -41,19 +41,19 @@ MathJax.Localization.addTranslation("de","FontWarnings",{
 
     fonts:
       "MathJax kann [STIX Fonts](%1) oder [MathJax TeX Fonts](%2) verwenden. "+
-      "Herunterladen und installieren dieser Fonts wird Ihre MathJax-Erfahrung verbessern.", //TODO ????
+      "Herunterladen und installieren dieser Fonts wird Ihre MathJax-Erfahrung verbessern.", 
 //    "MathJax can use either the [STIX Fonts](%1) or the [MathJax TeX fonts](%2).  " +
 //    "Download and install one of those fonts to improve your MathJax experience.",
 
     STIXPage:
       "Diese Seite ist optimiert fuer [STIX Fonts](%1). " +
-      "Herunterladen und installieren dieser Fonts wird Ihre MathJax-Erfahrung verbessern.", //TODO ????
+      "Herunterladen und installieren dieser Fonts wird Ihre MathJax-Erfahrung verbessern.", 
 //    "This page is designed to use the %1.  " +
 //    "Download and install those fonts to improve your MathJax experience.",
 
     TeXPage:
       "Diese Seite ist optimiert fuer [MathJax TeX Fonts](%1). " +
-      "Herunterladen und installieren dieser Fonts wird Ihre MathJax-Erfahrung verbessern." //TODO ????
+      "Herunterladen und installieren dieser Fonts wird Ihre MathJax-Erfahrung verbessern." 
 //    "This page is designed to use the %1.  " +
 //    "Download and install those fonts to improve your MathJax experience."
 

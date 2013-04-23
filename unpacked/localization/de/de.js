@@ -1,5 +1,5 @@
 MathJax.Localization.addTranslation("de",null,{
-  menuTitle: "Deutch",
+  menuTitle: "Deutsch",
   isLoaded: true,
   domains: {
     "_": {

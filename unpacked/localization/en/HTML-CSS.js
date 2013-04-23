@@ -3,7 +3,7 @@ MathJax.Localization.addTranslation("en","HTML-CSS",{
   strings: {
 
     LoadWebFont:
-      "Loading web-font %1",
+      "Loading web-font %1", // NOTE %1 is the name of a webfont file
 
     CantLoadWebFont:
       "Can't load web font %1",
