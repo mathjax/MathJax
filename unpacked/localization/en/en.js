@@ -15,31 +15,37 @@ MathJax.Localization.addTranslation("en",null,{ // NOTE use correct ISO-639-1 tw
           "Math Processing Error", // NOTE: MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.
 
         MathError:
-          "Math Error", // generic error message
+          "Math Error", // Error message used in obsolete Accessible configurations
 
-        LoadFile: "Loading %1", 
+        LoadFile:
+          "Loading %1", 
 
-        Loading: "Loading", // NOTE followed by growing sequence of dots
+        Loading:
+          "Loading", // NOTE: followed by growing sequence of dots
 
-        LoadFailed: "File failed to load: %1",
+        LoadFailed:
+          "File failed to load: %1",
 
-        ProcessMath: "Processing Math: %1%%", //NOTE appears during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format
+        ProcessMath:
+          "Processing Math: %1%%", // NOTE: appears during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format
 
-        Processing: "Processing", //NOTE followed by growing sequence of dots
+        Processing:
+          "Processing", // NOTE: followed by growing sequence of dots
 
-        TypesetMath: "Typesetting Math: %1%%",//NOTE appears during the layout process of converting the internal format to the output format
+        TypesetMath:
+          "Typesetting Math: %1%%", // NOTE: appears during the layout process of converting the internal format to the output format
 
-        Typesetting: "Typesetting", //NOTE followed by growing sequence of dots
+        Typesetting:
+          "Typesetting", // NOTE: followed by growing sequence of dots
 
         MathJaxNotSupported:
-          "Your browser does not support MathJax" //NOTE will load when MathJax determines the browser does not have adequate features
+          "Your browser does not support MathJax" // NOTE: will load when MathJax determines the browser does not have adequate features
 
       }
     },
     MathMenu: {},
     FontWarnings: {},
     HelpDialog: {},
-    "v1.0-warning": {},
     TeX: {},
     MathML: {},
     "HTML-CSS": {}

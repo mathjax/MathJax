@@ -42,22 +42,28 @@ MathJax.Localization.addTranslation("de","MathML",{
 //       "MathML equations will not be able to be processed by MathJax.",
 
    UnknownNodeType:
-     "Unbekannter Knotentyp: %1", //"Unknown node type: %1",
+     "Unbekannter Knotentyp: %1",
+//   "Unknown node type: %1",
 
    UnexpectedTextNode:
-     "Unbekannter Textknoten: %1", //"Unexpected text node: %1",
+     "Unbekannter Textknoten: %1",
+//   "Unexpected text node: %1",
 
    ErrorParsingMathML:
-     "Fehler beim Parsen von MathML", //"Error parsing MathML",
+     "Fehler beim Parsen von MathML",
+//   "Error parsing MathML",
 
    ParsingError:
-     "Fehler beim Parsen von MathML: %1", // "Error parsing MathML: %1",
+     "Fehler beim Parsen von MathML: %1",
+//   "Error parsing MathML: %1",
 
    MathMLSingleElement:
-    "MathML muss ein einzelnes <math> Element sein", //"MathML must be formed by a single element",
+    "MathML muss ein einzelnes <math> Element sein",
+//  "MathML must be formed by a single element",
 
    MathMLRootElement:
-     "MathML muss ein einzelnes <math> Element sein, nicht %1", //"MathML must be formed by a <math> element, not %1"
+     "MathML muss ein einzelnes <math> Element sein, nicht %1"
+//   "MathML must be formed by a <math> element, not %1"
 
   }
 });

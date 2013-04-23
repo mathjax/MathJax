@@ -29,21 +29,24 @@ MathJax.Localization.addTranslation("de","MathMenu",{
         MouseEvents:   "Maus Events",            // "Mouse Events",
         MenuAndMouse:  "Maus und Men\u00FC Events",  // "Mouse and Menu Events",
       FontPrefs:  "Font Einstellungen",        // "Font Preferences", 
-        ForHTMLCSS: "F\u00FCr HTML-CSS",             // "For HTML-CSS:",
+        ForHTMLCSS: "F\u00FCr HTML-CSS",         // "For HTML-CSS:",
           Auto:         "Auto",
           TeXLocal:     "TeX (lokal)",             // "TeX (local)",
           TeXWeb:       "TeX (Web)",               // "TeX (web)",
           TeXImage:     "TeX (Bild)",              // "TeX (image)",
           STIXLocal:    "STIX (lokal)",            // "STIX (local)",
-      ContextMenu: "Kontextmen\u00FC ",             // "Contextual Menu",
+      ContextMenu: "Kontextmen\u00FC ",         // "Contextual Menu",
         Browser:        "Browser",
       Scale: "Alle Mathe skalieren ...",       // "Scale All Math ...",
       Discoverable: "Highlight durch Hovern",  // "Highlight on Hover",
     Locale: "Sprache",                       // "Language",
       LoadLocale: "Von URL laden ...",         // "Load from URL ...",
-    About: "\u00DCber MathJax",                  // "About MathJax", 
+    About: "\u00DCber MathJax",              // "About MathJax", 
     Help:  "MathJax Hilfe",                  // "MathJax Help",
-/* About MathJax dialogue ? */ 
+
+
+/* About MathJax dialogue  */ 
+
     localTeXfonts:  "Lokale TeX-Fonts verwendet",         // "using local TeX fonts",
     webTeXfonts:    "Web TeX-Fonts verwendet",            // "using web TeX font",
     imagefonts:     "Bild-Fonts verwendet",               // "using Image fonts",
@@ -54,6 +57,9 @@ MathJax.Localization.addTranslation("de","MathMenu",{
     wofforotffonts: "WOFF- oder OTF-Fonts", // "woff or otf fonts", 
     eotffonts:      "EOT-Fonts",            // "eot fonts",
     svgfonts:       "SVG-Fonts",            // "svg fonts",
+
+
+/* Warnings when switching to MathML mode */
 
     WebkitNativeMMLWarning:
       "Ihr Browser scheint MathML nicht zu unterst\u00FCtzen, " +
@@ -87,6 +93,9 @@ MathJax.Localization.addTranslation("de","MathMenu",{
 //     "Your browser's native MathML does not implement all the features " +
 //     "used by MathJax, so some expressions may not render properly.",
       
+
+/* Warning when switching to SVG mode */
+
     MSIESVGWarning:
       "Internet Explorer unterst\u00FCtzt SVG erst ab IE9 und " + 
       "nicht im IE8-Emulationsmodus. Beim Wechsel zur " +

@@ -1,21 +1,21 @@
-MathJax.Localization.addTranslation("en","TeX",{ //NOTE use correct ISO name TODO autopopulate?
+MathJax.Localization.addTranslation("en","TeX",{
   isLoaded: true,
   strings: {
 
     ExtraOpenMissingClose:
-      "Extra open brace or missing close brace", //NOTE TeX commands use braces and brackets as delimiters
+      "Extra open brace or missing close brace", // NOTE: TeX commands use braces and brackets as delimiters
 
     ExtraCloseMissingOpen:
       "Extra close brace or missing open brace",
 
     MissingLeftExtraRight:
-      "Missing \\left or extra \\right", //NOTE do not translate \\left and \\right, they are TeX commands
+      "Missing \\left or extra \\right", // NOTE: do not translate \\left and \\right; they are TeX commands
 
     MissingScript:
       "Missing superscript or subscript argument",
 
     ExtraLeftMissingRight:
-      "Extra \\left or missing \\right", //NOTE do not translate \\left and \\right, they are TeX commands
+      "Extra \\left or missing \\right", // NOTE: do not translate \\left and \\right; they are TeX commands
 
     Misplaced:
       "Misplaced %1",
@@ -27,72 +27,72 @@ MathJax.Localization.addTranslation("en","TeX",{ //NOTE use correct ISO name TOD
       "Missing open brace for superscript",
 
     AmbiguousUseOf:
-      "Ambiguous use of %1", //NOTE %1 will be a TeX command 
+      "Ambiguous use of %1", // NOTE: %1 will be a TeX command 
 
     EnvBadEnd:
-      "\\begin{%1} ended with \\end{%2}", //NOTE do not translate \\begin{%1} and \\end{{%1}}, they are TeX commands
+      "\\begin{%1} ended with \\end{%2}", // NOTE: do not translate \\begin{%1} and \\end{%1}; they are TeX commands
 
     EnvMissingEnd:
-      "Missing \\end{%1}", //NOTE do not translate \\end
+      "Missing \\end{%1}", // NOTE: do not translate \\end
 
     MissingBoxFor:
-      "Missing box for %1", //NOTE refers to TeX boxes
+      "Missing box for %1", //NOTE: refers to TeX boxes
 
     MissingCloseBrace:
       "Missing close brace",
 
     UndefinedControlSequence:
-      "Undefined control sequence %1", //NOTE %1 will be a TeX command
+      "Undefined control sequence %1", // NOTE: %1 will be a TeX command
 
     DoubleExponent:
-      "Double exponent: use braces to clarify", // NOTE example: x^3^2 should be x^{3^2} or {x^3}^2
+      "Double exponent: use braces to clarify", // NOTE: example: x^3^2 should be x^{3^2} or {x^3}^2
 
     DoubleSubscripts:
       "Double subscripts: use braces to clarify",
 
     DoubleExponentPrime:
-      "Prime causes double exponent: use braces to clarify", //NOTE example TODO
+      "Prime causes double exponent: use braces to clarify", // NOTE: example:  x^a' should be {x^a}' or x^{a'}
 
     CantUseHash1:
-      "You can't use 'macro parameter character #' in math mode", //NOTE '#' is used in TeX macros
+      "You can't use 'macro parameter character #' in math mode", // NOTE: '#' is used in TeX macros
 
     MisplacedMiddle:
-      "%1 must be within \\left and \\right", //NOTE do not translate \\left and \\right, they are TeX commands
+      "%1 must be within \\left and \\right", // NOTE: do not translate \\left and \\right; they are TeX commands
 
     MisplacedLimits:
-      "%1 is allowed only on operators", 
+      "%1 is allowed only on operators", // NOTE: %1 will be \limits
 
     MisplacedMoveRoot:
-      "%1 can appear only within a root",
+      "%1 can appear only within a root",  // NOTE: %1 will be \uproot or \leftroot
 
     MultipleCommand:
-      "Multiple %1", //NOTE happens when a command or token can only be preset once
+      "Multiple %1", // NOTE: happens when a command or token can only be present once, e.g., \tag{}
 
     IntegerArg:
       "The argument to %1 must be an integer",
 
     NotMathMLToken:
-      "%1 is not a token element", //NOTE MathJax has a non-standard /mmltoken command to insert MathML token elements
+      "%1 is not a token element", // NOTE: MathJax has a non-standard \mmltoken command to insert MathML token elements
 
     InvalidMathMLAttr:
-      "Invalid MathML attribute: %1", //NOTE MathJax has non standard MathML and HTML related commands which can contain attributes
+      "Invalid MathML attribute: %1", // NOTE: MathJax has non standard MathML and HTML related commands which can contain attributes
 
     UnknownAttrForElement:
       "%1 is not a recognized attribute for %2",
 
     MaxMacroSub1:
-      "MathJax maximum macro substitution count exceeded; " + //NOTE MathJax has a limited for iterating macros
+      "MathJax maximum macro substitution count exceeded; " + // NOTE: MathJax limits the number of macro substitutions to prevent infinite loops
       "is there a recursive macro call?",
 
     MaxMacroSub2:
-      "MathJax maximum substitution count exceeded; " +//NOTE MathJax has a limited for iterating substitutions
+      "MathJax maximum substitution count exceeded; " + // NOTE: MathJax limits the number of nested environements to prevent infinite loops
       "is there a recursive latex environment?",
 
     MissingArgFor:
-      "Missing argument for %1",
+      "Missing argument for %1", // NOTE: %1 will be a macro name
 
     ExtraAlignTab:
-      "Extra alignment tab in \\cases text", //NOTE do not translate //cases
+      "Extra alignment tab in \\cases text", // NOTE: do not translate \\cases; it is a TeX command
 
     BracketMustBeDimension:
       "Bracket argument to %1 must be a dimension",
@@ -119,7 +119,7 @@ MathJax.Localization.addTranslation("en","TeX",{ //NOTE use correct ISO name TOD
       "Missing dimension or its units for %1",
 
     TokenNotFoundForCommand:
-      "Couldn't find %1 for %2",
+      "Couldn't find %1 for %2", // NOTE: %1 is a token (e.g.,macro or symbol) and %2 is a macro name
 
     MathNotTerminated:
       "Math not terminated in text box",
@@ -139,10 +139,10 @@ MathJax.Localization.addTranslation("en","TeX",{ //NOTE use correct ISO name TOD
       "Label '%1' multiply defined",
 
     CommandAtTheBeginingOfLine:
-      "%1 must come at the beginning of the line",
+      "%1 must come at the beginning of the line", // NOTE: %1 will be a macro name
 
     IllegalAlign:
-      "Illegal alignment specified in %1",
+      "Illegal alignment specified in %1",  // NOTE: %1 will be an environment name
 
     BadMathStyleFor:
       "Bad math style for %1",
@@ -167,10 +167,10 @@ MathJax.Localization.addTranslation("en","TeX",{ //NOTE use correct ISO name TOD
 /* begingroup */
 
     ExtraEndMissingBegin:
-      "Extra %1 or missing \\begingroup",
+      "Extra %1 or missing \\begingroup", // NOTE:  do not translate \\begingroup
 
     GlobalNotFollowedBy:
-      "%1 not followed by \\let, \\def, or \\newcommand",
+      "%1 not followed by \\let, \\def, or \\newcommand", // NOTE:  do not translate \\let, \\def, or \\newcommand; they are TeX commands
 
 /* color */
 
@@ -203,7 +203,7 @@ MathJax.Localization.addTranslation("en","TeX",{ //NOTE use correct ISO name TOD
 /* mhchem */
 
     NoClosingChar:
-      "Can't find closing %1",
+      "Can't find closing %1", // NOTE: %1 will be ) or } or ]
 
 /* newcommand */
       
