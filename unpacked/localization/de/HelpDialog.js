@@ -9,50 +9,50 @@
     MathJax: 
       "*MathJax* ist eine JavaScript-Bibliothek, die Autoren erlaubt, " +
       "Ihren Webseiten mathematische Inhalte hinzuzuf\u00FCgen. Als Besucher " +
-      "m\u00FCssen sie nichts zus\u00E4tzliches tun, damit MathJax funktioniert."
+      "m\u00FCssen sie nichts zus\u00E4tzliches tun, damit MathJax funktioniert.",
 //    "*MathJax* is a JavaScript library that allows page authors to include " +
 //    "mathematics within their web pages.  As a reader, you don't need to do " +
 //    "anything to make that happen.",
 
     Browsers:
       "*Browser*: MathJax ist kompatibel zu allen modernen Webbrowsern inklusive " +
-      "IE6+, Firefox 3+, Chrome 0.2+, Safari 2+, Opera 9.6+ und g\u00E4ngigen mobilen Browsern."
+      "IE6+, Firefox 3+, Chrome 0.2+, Safari 2+, Opera 9.6+ und g\u00E4ngigen mobilen Browsern.",
 //    "*Browsers*: MathJax works with all modern browsers including IE6+, Firefox 3+, " +
 //    "Chrome 0.2+, Safari 2+, Opera 9.6+ and most mobile browsers.",
 
     Menu:
       "*Mathe Men\u00FC*: MathJax f\u00FCgt ein Kontextmen\u00FC bei allen Formen hinzu. " +
-      "Es wird mit Rechtsklick oder STRG+Linksklick auf einer Formel aufgerufen."
+      "Es wird mit Rechtsklick oder STRG+Linksklick auf einer Formel aufgerufen.",
 //    "*Math Menu*: MathJax adds a contextual menu to equations.  Right-click or " +
 //    "CTRL-click on any mathematics to access the menu.",
 
     ShowMath:
-      "*Zeige Mathe als* erlaubt es, eine Formel im Quellformat anzuzeigen, " //NOTE needs to match menu item translations!
-      "um Kopieren und Einf\u00FCgen (als MathML oder im Originalformat) zu erm00F6glichen."
+      "*Zeige Mathe als* erlaubt es, eine Formel im Quellformat anzuzeigen, " + //NOTE needs to match menu item translations!
+      "um Kopieren und Einf\u00FCgen (als MathML oder im Originalformat) zu erm00F6glichen.",
 //    "*Show Math As* allows you to view the formula's source markup " + 
 //    "for copy & paste (as MathML or in its origianl format).",
 
     Settings:
-      "*Einstellungen* erlabut es, das Verhalten von MathJax zu modifizieren, "+ //NOTE needs to match menu item translations!
-      "so z.B. die Gr\u00CS\u00DFe der Mathematik sowie den Ausgabemechanismus."
+      "*Einstellungen* erlabut es, das Verhalten von MathJax zu modifizieren, " + //NOTE needs to match menu item translations!
+      "so z.B. die Gr\u00F6\u00DFe der Mathematik sowie den Ausgabemechanismus.",
 //    "*Settings* gives you control over features of MathJax, such as the " +
 //    "size of the mathematics, and the mechanism used to display equations.",
 
     Language:
       "*Sprache* erlaubt es, die Sprache zu wechseln, die MathJax  im Men\u00FC " + //NOTE needs to match menu item translations!
-      "und den Warnmeldungen verwendent."
+      "und den Warnmeldungen verwendent.",
 //    "*Language* lets you select the language used by MathJax for its menus " +
 //    "and warning messages.",
 
     Zoom:
       "*Zoom*: Falls das Lesen der Formeln schwer f\u00E4llt, kann MathJax diese " + //NOTE needs to match menu item translations!
-      "vergr\u00CS\u00DFern, um es zu erleichtern."
+      "vergr\u00F6\u00DFern, um es zu erleichtern.",
 //    "*Math Zoom*: If you are having difficulty reading an equation, MathJax can " +
 //    "enlarge it to help you see it better.",
 
     Accessibilty:
       "*Barrierfreiheit*: MathJax arbeite automatisch mit g\u00E4ngigen Screenreadern " +
-      "zusammen, um Mathematik barrierefrei darzustellen."
+      "zusammen, um Mathematik barrierefrei darzustellen.",
 //    "*Accessibility*: MathJax will automatically work with screen readers to make " +
 //    "mathematics accessible to the visually impaired.",
 
