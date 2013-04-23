@@ -2,44 +2,54 @@ MathJax.Localization.addTranslation("fr","HelpDialog",{
   isLoaded: true,
   strings: {
 
+    Help: "Aide MathJax",
+
     MathJax: 
-      "*MathJax* is a JavaScript library that allows page authors to include " +
-      "mathematics within their web pages.  As a reader, you don't need to do " +
-      "anything to make that happen.",
+     "*MathJax* est une librairie Javascript qui permet aux auteurs " +
+     "d'inclure des formules math\u00E9matiques au sein de leurs pages Web. " +
+     "Aucune action suppl\u00E9mentaire n'est n\u00E9cessaire de la part des visiteurs.", 
 
     Browsers:
-      "*Browsers*: MathJax works with all modern browsers including IE6+, Firefox 3+, " +
-      "Chrome 0.2+, Safari 2+, Opera 9.6+ and most mobile browsers.",
+      "*Navigateurs*: MathJax fonctionne avec tous les navigateurs modernes " +
+      "y compris Internet Explorer 6, Firefox 3, " +
+      "Chrome 0.2, Safari 2, Opera 9.6 et leurs versions sup\u00E9rieures ainsi " +
+      "que la plupart des navigateurs pour mobiles et tablettes.",
 
     Menu:
-      "*Math Menu*: MathJax adds a contextual menu to equations.  Right-click or " +
-      "CTRL-click on any mathematics to access the menu.",
+      "*Menu Math\u00E9matiques*: MathJax ajoute un menu contextuel aux \u00E9quations. "+
+      "Acc\u00E9dez au menu en effectuant un clic droit ou un Ctrl+clic sur " +
+      "n'importe quelle formule math\u00E9matique.",
 
     ShowMath:
-      "*Show Math As* allows you to view the formula's source markup " +
-      "for copy & paste (as MathML or in its origianl format).",
+      "Le menu *Afficher sous forme* vous permet de voir le code source de la "+
+      "formule pour la copier et coller (sous forme MathML ou sous son format "+
+      "d'origine).",
 
     Settings:
-      "*Settings* gives you control over features of MathJax, such as the " +
-      "size of the mathematics, and the mechanism used to display equations.",
+      "Le menu *Param\u00E8tres* vous permet de contr\u00F4ler diverses "+
+      "caract\u00E9ristiques de MathJax, telles que la taille des formules "+
+      "math\u00E9matiques ou le m\u00E9canisme utilis\u00E9 pour afficher ces formules.",
 
     Language:
-      "*Language* lets you select the language used by MathJax for its menus " +
-      "and warning messages.",
+      "Le menu *Langue* vous permet de s\u00E9lectionnez la langue utilis\u00E9e par "+
+      "MathJax pour ses menus et messages d'avertissement.",
 
     Zoom:
-      "*Math Zoom*: If you are having difficulty reading an equation, MathJax can " +
-      "enlarge it to help you see it better.",
+      "*Math Zoom*: si vous rencontrez des difficult\u00E9s pour lire les formules "+
+      "math\u00E9matiques, MathJax peut les agrandir de fa\u00E7on \u00E0 ce qu'elles soient "+
+      "plus lisibles.",
 
     Accessibilty:
-      "*Accessibility*: MathJax will automatically work with screen readers to make " +
-      "mathematics accessible to the visually impaired.",
+      "*Accessibilit\u00E9*: MathJax fonctionnera automatiquement avec les "+
+      "lecteurs d'\u00E9cran pour rendre les expressions math\u00E9matiques accessibles "+
+      "aux personnes malvoyantes.",
 
     Fonts:
-      "*Fonts*: MathJax will use certain math fonts if they are installed on your " +
-      "computer; otherwise, it will use web-based fonts.  Although not required, " +
-      "locally installed fonts will speed up typesetting.  We suggest installing " +
-      "the [STIX fonts](%1)."
+      "*Polices*: MathJax utilisera certaines polices math\u00E9matiques si elles "+
+      "sont intall\u00E9es sur votre syst\u00E8me ou bien des polices Web dans le cas "+
+      "contraire. Bien que non recquises, ces polices install\u00E9es sur votre "+
+      "syst\u00E8me acc\u00E9lereront le rendu des expressions math\u00E9matiques. Nous "+
+      "recommandons d'installer les [Polices STIX](%1)."
 
   }
 });

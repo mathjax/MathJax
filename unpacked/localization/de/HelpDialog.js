@@ -2,6 +2,8 @@ MathJax.Localization.addTranslation("de","HelpDialog",{
   isLoaded: true,
   strings: {
 
+    Help: "MathJax Hilfe",
+
     MathJax: 
       "*MathJax* is a JavaScript library that allows page authors to include " +
       "mathematics within their web pages.  As a reader, you don't need to do " +
