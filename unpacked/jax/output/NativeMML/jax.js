@@ -42,7 +42,11 @@
   };
   
   var CELLSPACING = function (obj,rowSpacing,columnSpacing) {
-    // Firefox default padding on mtd cells is
+    // Webkit default padding on mtd cells is simply
+    //
+    // mtd {padding: 0.5ex;}
+    //
+    // Gecko default padding on mtd cells is
     //
     // mtd {padding-right: 0.4em;
     //      padding-left: 0.4em;
@@ -54,9 +58,11 @@
     // mtd:last-child {padding-right: 0em;}
     //
     // that is the columnspacing/rowspacing is split into two adjacent cells,
-    // and the periphery of boundary cells is set to zero. Instead, we set the
-    // left/top padding of each cell to rowSpacing/columnSpacing (or 0px for the
-    // leftmost/topmost cells) and reset the right/bottom padding to zero.
+    // and the periphery of boundary cells is set to zero.
+    //
+    // Here, we will set the left/top padding of each cell to
+    // rowSpacing/columnSpacing (or 0px for the leftmost/topmost cells) and
+    // reset the right/bottom padding to zero.
     if (obj) {
       var span = HTML.Element("span");
       span.style.cssText = (obj.getAttribute("style")||"");
@@ -575,25 +581,27 @@
     if (!isMSIE) {
       MML.mtable.Augment({
         toNativeMML: function (parent) {
-          if (nMML.TableSpacingBug) {
+          if (nMML.tableSpacingBug) {
             // Parse the rowspacing/columnspacing. For convenience, we convert
             // them to a left/top padding value that will be applied to each
             // cell. The leftmost/topmost cells will use "0px".
             var values = this.getValues("rowspacing", "columnspacing");
-            this.topPadding = ("0px " + values.rowspacing);
-            this.topPadding = this.topPadding.trim().split(/\s+/);
-            this.leftPadding = ("0px " + values.columnspacing);
-            this.leftPadding = this.leftPadding.trim().split(/\s+/);
-            // transmit the top padding to each row. If this.parent.topPadding
-            // does not contain enough value, repeat the last one.
-            for (var i = 0, m = this.data.length, tp = this.topPadding;
+            this.nMMLtopPadding = ("0px " + values.rowspacing);
+            this.nMMLtopPadding = this.nMMLtopPadding.trim().split(/\s+/);
+            this.nMMLleftPadding = ("0px " + values.columnspacing);
+            this.nMMLleftPadding = this.nMMLleftPadding.trim().split(/\s+/);
+            // transmit the top padding to each row.
+            // If this.parent.nMML.topPadding does not contain enough value,
+            // repeat the last one.
+            for (var i = 0, m = this.data.length, tp = this.nMMLtopPadding;
                  i < m; i++) {
               if (this.data[i]) {
-                this.data[i].topPadding = tp[i < tp.length ? i : tp.length-1];
+                this.data[i].nMMLtopPadding =
+                  tp[i < tp.length ? i : tp.length-1];
               }
             }
           }
-          if (nMML.TableLabelBug) {
+          if (nMML.tableLabelBug) {
             //
             //  Look for labeled rows so we know how to handle them
             //
@@ -601,9 +609,9 @@
               if (this.data[i] && this.data[i].isa(MML.mlabeledtr)) {
                 var align = HUB.config.displayAlign.charAt(0),
                 side = this.Get("side").charAt(0);
-                this.hasLabels = true;
-                this.laMatch = (align === side);
-                this.forceWidth = (align === "c" || !!(this.width||"").
+                this.nMMLhasLabels = true;
+                this.nMMLlaMatch = (align === side);
+                this.nMMLforceWidth = (align === "c" || !!(this.width||"").
                                    match("%"));
                 break;
               }
@@ -620,12 +628,12 @@
           }
           this.SUPER(arguments).toNativeMML.call(this,parent);
           //
-          if (this.hasLabels) {
+          if (this.nMMLhasLabels) {
             var mtable = parent.firstChild;
             //
             //  Add column attributes on the left when extra columns where inserted
             //
-            if (this.forceWidth || side !== "r") {
+            if (this.nMMLforceWidth || side !== "r") {
               var n = (align !== "l" ? 1 : 0) + (side === "l" ? 1 : 0);
               if (n) {
                 var attr = {columnalign:"left", columnwidth:"auto", columnspacing:"0px", columnlines:"none"};
@@ -638,7 +646,7 @@
             //
             //  Force the table width to 100% when needed
             //
-            if (this.forceWidth || !this.laMatch) {mtable.setAttribute("width","100%")}
+            if (this.nMMLforceWidth || !this.nMMLlaMatch) {mtable.setAttribute("width","100%")}
           }
         }
       });
@@ -646,23 +654,24 @@
         toNativeMML: function (parent) {
           this.SUPER(arguments).toNativeMML.call(this,parent);
           var mtr = parent.lastChild;
-          if (nMML.TableSpacingBug) {
-            // set the row/column spacing. If this.parent.leftPadding does not
-            // contain enough value, repeat the last one.
-            for (var i = 0, m = mtr.childNodes.length,
-                 lp = this.parent.leftPadding; i < m; i++) {
-              CELLSPACING(mtr.childNodes[i],
-                          this.topPadding,
+          if (nMML.tableSpacingBug) {
+            // set the row/column spacing. If this.parent.nMMLleftPadding does
+            // not contain enough value, repeat the last one.
+            for (var mtd = mtr.firstElementChild, i = 0,
+                 lp = this.parent.nMMLleftPadding; mtd;
+                 mtd = mtd.nextElementSibling, i++) {
+              CELLSPACING(mtd,
+                          this.nMMLtopPadding,
                           lp[i < lp.length ? i : lp.length-1]);
             }
           }
 
-          if (nMML.TableLabelBug) {
-            var forceWidth = this.parent.forceWidth,
+          if (nMML.tableLabelBug) {
+            var forceWidth = this.parent.nMMLforceWidth,
             side = this.parent.Get("side").charAt(0),
             align = HUB.config.displayAlign.charAt(0);
 
-            if (this.parent.hasLabels && mtr.firstChild) {
+            if (this.parent.nMMLhasLabels && mtr.firstChild) {
               //
               //  If we add a label or padding column on the left of mlabeledtr,
               //    mirror that here and remove padding from first table mtd
@@ -700,18 +709,19 @@
               else {mtr.appendChild(this.NativeMMLelement("mtd"))}
           }
 
-          if (nMML.TableSpacingBug) {
-            // set the row/column spacing. If this.parent.leftPadding does not
-            // contain enough value, repeat the last one.
-            for (var i = 0, m = mtr.childNodes.length,
-                 lp = this.parent.leftPadding; i < m; i++) {
-              CELLSPACING(mtr.childNodes[i],
-                          this.topPadding,
+          if (nMML.tableSpacingBug) {
+            // set the row/column spacing. If this.parent.nMMLleftPadding does
+            // not contain enough value, repeat the last one.
+            for (var mtd = mtr.firstElementChild, i = 0,
+                 lp = this.parent.nMMLleftPadding; mtd;
+                 mtd = mtd.nextElementSibling, i++) {
+              CELLSPACING(mtd,
+                          this.nMMLtopPadding,
                           lp[i < lp.length ? i : lp.length-1]);
             }
           }
 
-          if (nMML.TableLabelBug) {
+          if (nMML.tableLabelBug) {
             var side = this.parent.Get("side").charAt(0),
             align = HUB.config.displayAlign.charAt(0),
             indent = HUB.config.displayIndent;
@@ -736,7 +746,7 @@
             //
             //  Get spacing to use for separation of label from main table
             //
-            var width = 100, forceWidth = this.parent.forceWidth;
+            var width = 100, forceWidth = this.parent.nMMLforceWidth;
             if ((this.parent.width||"").match(/%/)) {
               width -= parseFloat(this.parent.width)
             };
@@ -879,12 +889,12 @@
         //      override the margin set by the stylesheet.
         //
         var mtable = ((this.data[0]||[]).data[0]||{});
-        if (mtable.hasLabels) {
-          if (mtable.forceWidth || !mtable.laMatch) {
+        if (mtable.nMMLhasLabels) {
+          if (mtable.nMMLforceWidth || !mtable.nMMLlaMatch) {
             tag.setAttribute("style","width:100%")
             parent.style.width = parent.parentNode.style.width="100%";
           };
-          if (mtable.laMatch) {
+          if (mtable.nMMLlaMatch) {
             if (parent.parentNode.parentNode.nodeName.toLowerCase() === "div") {
               parent.parentNode.parentNode.style
                 .setProperty("margin-"+HUB.config.displayAlign,"0px","important");
@@ -901,7 +911,7 @@
         //  parent element to match.  Even if we set the <math> width properly,
         //  it doesn't seem to propagate up to the <span> correctly.
         //
-        if (nMML.widthBug && !mtable.forceWidth && mtable.laMatch) 
+        if (nMML.widthBug && !mtable.nMMLforceWidth && mtable.nMMLlaMatch) 
           {parent.style.width = math.firstChild.scrollWidth+"px"}
       }
     });
@@ -1066,6 +1076,7 @@
     Opera: function (browser) {
       nMML.operaPositionBug = true;
       nMML.stretchyMoBug = true;
+      nMML.tableLabelBug = true;
       nMML.mfencedBug = true;
     },
     Firefox: function (browser) {
@@ -1077,20 +1088,19 @@
       // correctly and thus the element is displayed incorrectly in <mtable>.
       nMML.spaceWidthBug = !browser.versionAtLeast("20.0");
 
-      nMML.TableSpacingBug = true; // mtable@rowspacing/mtable@columnspacing not
+      nMML.tableSpacingBug = true; // mtable@rowspacing/mtable@columnspacing not
                                    // supported.
-      nMML.TableLabelBug = true;   // mlabeledtr is not implemented.
-
+      nMML.tableLabelBug = true;   // mlabeledtr is not implemented.
       nMML.mfencedBug = true;      // mfenced not displayed correctly
     },
     Chrome: function (browser) {
-      nMML.TableSpacingBug = true;
-      nMML.TableLabelBug = true;
+      nMML.tableSpacingBug = true;
+      nMML.tableLabelBug = true;
       nMML.mfencedBug = true;
     },
     Safari: function (browser) {
-      nMML.TableSpacingBug = true;
-      nMML.TableLabelBug = true;
+      nMML.tableSpacingBug = true;
+      nMML.tableLabelBug = true;
       nMML.mfencedBug = true;
     }
   });
