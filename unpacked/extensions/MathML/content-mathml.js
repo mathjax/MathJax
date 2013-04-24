@@ -49,7 +49,7 @@ MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
   MATHML.prefilterHooks.Add(function (data) {
     if (!MATHML.ctopXSLT) return;
 
-    // Parse the <math> but use MATHML.Parse to apply the normal preprocessing.
+    // Parse the <math> but use MATHML.Parse's preProcessMath to apply the normal preprocessing.
     if (!MATHML.ParseXML) {MATHML.ParseXML = MATHML.createParser()}
     var doc = MATHML.ParseXML(PARSE.preProcessMath(data.math));
 
