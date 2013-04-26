@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/input/MathML/jax.js
@@ -162,10 +163,10 @@
       }
       if (mml.type === "mrow" && mml.data.length >= 2) {
         var first = mml.data[0], last = mml.data[mml.data.length-1];
-        if (first.type === "mo" && first.fence &&
-            last.type === "mo" && last.fence) {
-          if (first.data[0]) {mml.open = first.data[0].data[0]}
-          if (last.data[0]) {mml.close = last.data[0].data[0]}
+        if (first.type === "mo" && first.Get("fence") &&
+            last.type === "mo" && last.Get("fence")) {
+          if (first.data[0]) {mml.open = first.data.join("")}
+          if (last.data[0]) {mml.close = last.data.join("")}
         }
       }
     },

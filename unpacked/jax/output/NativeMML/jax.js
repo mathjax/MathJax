@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/NativeMML/jax.js
@@ -42,6 +43,7 @@
   };
   
   var CELLSPACING = function (obj,rowSpacing,columnSpacing) {
+    //
     // Webkit default padding on mtd cells is simply
     //
     // mtd {padding: 0.5ex;}
@@ -63,15 +65,16 @@
     // Here, we will set the left/top padding of each cell to
     // rowSpacing/columnSpacing (or 0px for the leftmost/topmost cells) and
     // reset the right/bottom padding to zero.
+    //
     if (obj) {
       var span = HTML.Element("span");
       span.style.cssText = (obj.getAttribute("style")||"");
       if (span.style.padding === "") {
         var padding = { paddingLeft: columnSpacing, paddingTop: rowSpacing,
                         paddingRight: "0px", paddingBottom: "0px" };
-        for (var side in padding) {
+        for (var side in padding) {if (padding.hasOwnProperty(side)) {
           if ((span.style[side]||"") === "") {span.style[side] = padding[side];}
-        }
+        }}
       }
       obj.setAttribute("style",span.style.cssText);
     }
@@ -317,8 +320,10 @@
 
     postTranslate: function (state) {
       if (this.forceReflow) {
+        //
         //  Firefox messes up some mtable's when they are dynamically created
         //  but gets them right on a reflow, so force reflow by toggling a stylesheet
+        //
         var sheet = (document.styleSheets||[])[0]||{};
         sheet.disabled = true; sheet.disabled = false;
       }
@@ -375,8 +380,10 @@
       if (nMML[type] && nMML[type](event,this) === false) {return false}
       if (ZOOM && ZOOM.HandleEvent(event,type,this) === false) {return false}
       if (event.srcElement.className === "MathJax_MathPlayer_Overlay" && this.msieMath.fireEvent) {
-        // for now, ignore all other events.  This will disable MathPlayer's zoom
-        // feature, but also its <maction> support.
+        //
+        //  For now, ignore all other events.  This will disable MathPlayer's zoom
+        //  feature, but also its <maction> support.
+        //
         if (type === "ContextMenu" || type === "Mouseover" || type === "Mouseout")
           {this.msieMath.fireEvent("on"+event.type,event)}
       }
@@ -516,9 +523,11 @@
 	      else {parent.appendChild(this.NativeMMLelement("mrow"))}
 	  }
 	} else if (nMML.stretchyMoBug && (this.open || this.close)) {
+          //
           // This element contains opening and/or closing fences. Opera is not
           // able to stretch <mo> operators, so let's use an <mfenced> element
           // instead.
+          //
           var mfenced = this.NativeMMLelement("mfenced");
           this.NativeMMLattributes(mfenced);
           var i = 0, m = this.data.length;
@@ -526,7 +535,9 @@
           if (this.close) { mfenced.setAttribute("close", this.close); m--; }
           var tag = mfenced;
           if (m - i + 1 > 1) {
+            //
             // If there are several children, put them in an <mrow>
+            //
             tag = this.NativeMMLelement("mrow");
 	    parent.appendChild(mfenced);
             parent = mfenced;
@@ -579,40 +590,42 @@
     });
 
     if (!isMSIE) {
+      var SPLIT = MathJax.Hub.SplitList;
       MML.mtable.Augment({
         toNativeMML: function (parent) {
+          var i, m;
           if (nMML.tableSpacingBug) {
+            //
             // Parse the rowspacing/columnspacing. For convenience, we convert
             // them to a left/top padding value that will be applied to each
             // cell. The leftmost/topmost cells will use "0px".
+            //
             var values = this.getValues("rowspacing", "columnspacing");
-            this.nMMLtopPadding = ("0px " + values.rowspacing);
-            this.nMMLtopPadding = this.nMMLtopPadding.trim().split(/\s+/);
-            this.nMMLleftPadding = ("0px " + values.columnspacing);
-            this.nMMLleftPadding = this.nMMLleftPadding.trim().split(/\s+/);
-            // transmit the top padding to each row.
+            this.nMMLtopPadding  = SPLIT("0px "+values.rowspacing);
+            this.nMMLleftPadding = SPLIT("0px "+values.columnspacing);
+            //
+            // Transmit the top padding to each row.
             // If this.parent.nMML.topPadding does not contain enough value,
             // repeat the last one.
-            for (var i = 0, m = this.data.length, tp = this.nMMLtopPadding;
-                 i < m; i++) {
-              if (this.data[i]) {
-                this.data[i].nMMLtopPadding =
-                  tp[i < tp.length ? i : tp.length-1];
-              }
+            //
+            var tp = this.nMMLtopPadding, M = tp.length;
+            for (i = 0, m = this.data.length; i < m; i++) {
+              if (this.data[i])
+                {this.data[i].nMMLtopPadding = tp[i < M ? i : M-1]}
             }
           }
           if (nMML.tableLabelBug) {
             //
             //  Look for labeled rows so we know how to handle them
             //
-            for (var i = 0, m = this.data.length; i < m; i++) {
+            for (i = 0, m = this.data.length; i < m; i++) {
               if (this.data[i] && this.data[i].isa(MML.mlabeledtr)) {
                 var align = HUB.config.displayAlign.charAt(0),
-                side = this.Get("side").charAt(0);
+                    side = this.Get("side").charAt(0);
                 this.nMMLhasLabels = true;
                 this.nMMLlaMatch = (align === side);
-                this.nMMLforceWidth = (align === "c" || !!(this.width||"").
-                                   match("%"));
+                this.nMMLforceWidth =
+                  (align === "c" || !!((this.width||"").match("%")));
                 break;
               }
             }
@@ -636,7 +649,8 @@
             if (this.nMMLforceWidth || side !== "r") {
               var n = (align !== "l" ? 1 : 0) + (side === "l" ? 1 : 0);
               if (n) {
-                var attr = {columnalign:"left", columnwidth:"auto", columnspacing:"0px", columnlines:"none"};
+                var attr = {columnalign:"left", columnwidth:"auto",
+                            columnspacing:"0px", columnlines:"none"};
                 for (var id in attr) {if (attr.hasOwnProperty(id) && this[id]) {
                   var cols = [attr[id],attr[id]].slice(2-n).join(" ")+" ";
                   mtable.setAttribute(id,cols+mtable.getAttribute(id));
@@ -646,7 +660,8 @@
             //
             //  Force the table width to 100% when needed
             //
-            if (this.nMMLforceWidth || !this.nMMLlaMatch) {mtable.setAttribute("width","100%")}
+            if (this.nMMLforceWidth || !this.nMMLlaMatch)
+              {mtable.setAttribute("width","100%")}
           }
         }
       });
@@ -655,21 +670,20 @@
           this.SUPER(arguments).toNativeMML.call(this,parent);
           var mtr = parent.lastChild;
           if (nMML.tableSpacingBug) {
-            // set the row/column spacing. If this.parent.nMMLleftPadding does
+            //
+            // Set the row/column spacing. If this.parent.nMMLleftPadding does
             // not contain enough value, repeat the last one.
-            for (var mtd = mtr.firstElementChild, i = 0,
-                 lp = this.parent.nMMLleftPadding; mtd;
-                 mtd = mtd.nextElementSibling, i++) {
-              CELLSPACING(mtd,
-                          this.nMMLtopPadding,
-                          lp[i < lp.length ? i : lp.length-1]);
+            //
+            var lp = this.parent.nMMLleftPadding, M = lp.length;
+            for (var mtd = mtr.firstChild, i = 0; mtd; mtd = mtd.nextSibling, i++) {
+              CELLSPACING(mtd,this.nMMLtopPadding,lp[i < M ? i : M-1]);
             }
           }
 
           if (nMML.tableLabelBug) {
             var forceWidth = this.parent.nMMLforceWidth,
-            side = this.parent.Get("side").charAt(0),
-            align = HUB.config.displayAlign.charAt(0);
+                side = this.parent.Get("side").charAt(0),
+                align = HUB.config.displayAlign.charAt(0);
 
             if (this.parent.nMMLhasLabels && mtr.firstChild) {
               //
@@ -681,11 +695,11 @@
                 NOPADDING("Left",mtr.firstChild);
                 if (align !== "l") {
                   mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
-                    .setAttribute("style","padding:0");
+                     .setAttribute("style","padding:0");
                 }
                 if (side === "l") {
                   mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
-                    .setAttribute("style","padding:0");
+                     .setAttribute("style","padding:0");
                 }
               }
               //
@@ -710,21 +724,20 @@
           }
 
           if (nMML.tableSpacingBug) {
-            // set the row/column spacing. If this.parent.nMMLleftPadding does
+            //
+            // Set the row/column spacing. If this.parent.nMMLleftPadding does
             // not contain enough value, repeat the last one.
-            for (var mtd = mtr.firstElementChild, i = 0,
-                 lp = this.parent.nMMLleftPadding; mtd;
-                 mtd = mtd.nextElementSibling, i++) {
-              CELLSPACING(mtd,
-                          this.nMMLtopPadding,
-                          lp[i < lp.length ? i : lp.length-1]);
+            //
+            var lp = this.parent.nMMLleftPadding, M = lp.length;
+            for (var mtd = mtr.firstChild, i = 0; mtd; mtd = mtd.nextSibling, i++) {
+              CELLSPACING(mtd,this.nMMLtopPadding,lp[i < M ? i : M-1]);
             }
           }
 
           if (nMML.tableLabelBug) {
             var side = this.parent.Get("side").charAt(0),
-            align = HUB.config.displayAlign.charAt(0),
-            indent = HUB.config.displayIndent;
+                align = HUB.config.displayAlign.charAt(0),
+                indent = HUB.config.displayIndent;
             //
             // Create label and either set the column width (if label is on the
             // same side as the alignment), or use mpadded to hide the label
@@ -759,7 +772,7 @@
               if (align !== "l") {
                 if (align === "c") {w /= 2}; width -= w;
                 mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
-                  .setAttribute("style","padding:0;width:"+w+"%");
+                   .setAttribute("style","padding:0;width:"+w+"%");
               }
               if (side === "l") {mtr.insertBefore(label,mtr.firstChild)}
             }
@@ -770,7 +783,7 @@
               NOPADDING("Right",mtr.lastChild);
               if (align !== "r") {
                 mtr.appendChild(this.NativeMMLelement("mtd"))
-                  .setAttribute("style","padding:0;width:"+width+"%");
+                   .setAttribute("style","padding:0;width:"+width+"%");
               }
               if (side === "r") {
                 if (side !== align) {pad.setAttribute("lspace","-1width")}
@@ -923,6 +936,7 @@
           return;
         }
 
+        //
         // Some browsers do not handle <mfenced> very well. The MathML spec
         // suggests this equivalent construction instead, so let's use it:
         // <mrow> open, child1, sep1, child2, ... sep(N-1), childN, close</mrow>
@@ -933,27 +947,36 @@
         // <mfenced open="open" close="close">
         //   <mrow>child1, sep1, child2, sep2, ..., sep(N-1), childN</mrow>
         // </mfenced>
+        //
         var isOpera = HUB.Browser.isOpera;
+        var i, m, operator;
 
+        //
         // parse the open, close and separators attributes.
+        //
         var values = this.getValues("open","close","separators");
-        values.open = values.open.trim();
-        values.close = values.close.trim();
+        values.open = values.open.replace(/^\s+/,"").replace(/\s+$/,"");
+        values.close = values.close.replace(/^\s+/,"").replace(/\s+$/,"");
         values.separators = values.separators.replace(/\s+/g,"").split("");
         if (values.separators.length == 0) {
+          //
           // No separators specified, do not use separators at all.
+          //
           values.separators = null;
         } else if (values.separators.length < this.data.length-1) {
+          //
           // There are not enough separators, repeat the last one.
-          for (var s = values.separators[values.separators.length-1],
-               i = this.data.length-1-values.separators.length; i > 0; i--) {
-            values.separators.push(s)
-          }
+          //
+          var s = values.separators[values.separators.length-1];
+          for (i = this.data.length-1-values.separators.length; i > 0; i--)
+            {values.separators.push(s)}
         }
 
-        // create an <mrow> container and attach the attributes of the
+        //
+        // Create an <mrow> container and attach the attributes of the
         // <mfenced> element to it. Note: removeAttribute does not raise any
         // exception when the attributes is absent.
+        //
         var tag = this.NativeMMLelement(isOpera ? this.type : "mrow");
         this.NativeMMLattributes(tag);
         tag.removeAttribute("separators");
@@ -961,8 +984,7 @@
           tag.setAttribute("open", values.open);
           tag.setAttribute("close", values.close);
           if (this.data.length > 1) {
-            parent.appendChild(tag);
-            parent = tag;
+            parent.appendChild(tag); parent = tag;
             tag = this.NativeMMLelement("mrow");
           }
         } else {
@@ -971,30 +993,34 @@
         }
 
         if (!isOpera) {
-          // append the opening fence
-          var operator = this.NativeMMLelement("mo");
+          //
+          // Append the opening fence
+          // 
+          operator = this.NativeMMLelement("mo");
           operator.setAttribute("fence", "true");
           operator.textContent = values.open;
           tag.appendChild(operator);
         }
 
-        // append the content of the <mfenced>
-        for (var i = 0, m = this.data.length; i < m; i++) {
+        //
+        // Append the content of the <mfenced>
+        //
+        for (i = 0, m = this.data.length; i < m; i++) {
           if (values.separators && i > 0) {
-            var operator = this.NativeMMLelement("mo");
+            operator = this.NativeMMLelement("mo");
             operator.setAttribute("separator", "true");
             operator.textContent = values.separators[i-1];
             tag.appendChild(operator);
           }
-	  if (this.data[i]) {
-            this.data[i].toNativeMML(tag);
-          }
-	  else {tag.appendChild(this.NativeMMLelement("mrow"))}
+	  if (this.data[i]) {this.data[i].toNativeMML(tag)}
+            else {tag.appendChild(this.NativeMMLelement("mrow"))}
         }
 
         if (!isOpera) {
-          // append the closing fence
-          var operator = this.NativeMMLelement("mo");
+          //
+          // Append the closing fence
+          //
+          operator = this.NativeMMLelement("mo");
           operator.setAttribute("fence", "true");
           operator.textContent = values.close;
           tag.appendChild(operator);
