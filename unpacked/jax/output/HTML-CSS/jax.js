@@ -245,6 +245,14 @@
           display: "inline ! important",
           "float": "none ! important"
         },
+        
+        ".MathJax *": {
+          transition: "none",
+          "-webkit-transition": "none",
+          "-moz-transition": "none",
+          "-ms-transition": "none",
+          "-o-transition": "none"
+        },
 
         ".MathJax_Processing": {
           visibility: "hidden", position:"fixed",

@@ -60,6 +60,14 @@
           width: "100%"
         },
         
+        ".MathJax_SVG *" {
+          transition: "none",
+          "-webkit-transition": "none",
+          "-moz-transition": "none",
+          "-ms-transition": "none",
+          "-o-transition": "none"
+        },
+        
         ".mjx-svg-href": {
           fill: "blue", stroke: "blue"
         },
