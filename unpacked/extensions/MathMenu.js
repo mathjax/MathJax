@@ -24,7 +24,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.1";
+  var VERSION = "2.1.1";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -689,6 +689,8 @@
         );
         return;
       }
+    } else if (this.format === "Error") {
+      MENU.ShowSource.Text(MENU.jax.errorText,event);
     } else {
       if (MENU.jax.originalText == null) {alert("No original form available"); return}
       MENU.ShowSource.Text(MENU.jax.originalText,event);
