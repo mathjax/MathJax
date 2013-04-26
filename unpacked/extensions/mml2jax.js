@@ -177,10 +177,11 @@ MathJax.Extension.mml2jax = {
   
   createPreview: function (math,script) {
     var preview = this.config.preview;
+    if (preview === "none") return;
     if (preview === "alttext") {
       var text = math.getAttribute("alttext");
-      if (text != null) {preview = [this.filterPreview(text)]}
-    }
+      if (text != null) {preview = [this.filterPreview(text)]} else {preview = null}
+    } 
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
       script.parentNode.insertBefore(preview,script);

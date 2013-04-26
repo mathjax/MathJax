@@ -274,6 +274,7 @@ MathJax.Extension.tex2jax = {
   
   createPreview: function (mode,tex) {
     var preview = this.config.preview;
+    if (preview === "none") return;
     if (preview === "TeX") {preview = [this.filterPreview(tex)]}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);

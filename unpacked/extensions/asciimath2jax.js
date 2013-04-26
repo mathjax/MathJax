@@ -204,6 +204,7 @@ MathJax.Extension.asciimath2jax = {
   
   createPreview: function (mode,asciimath) {
     var preview = this.config.preview;
+    if (preview === "none") return;
     if (preview === "AsciiMath") {preview = [this.filterPreview(asciimath)]}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
