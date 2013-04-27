@@ -39,6 +39,9 @@ MathJax.Extension.wiki2jax = {
 	    tex = tex.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&nbsp;/g," ");
 	}
 
+    // We don't allow comments (%) in texvc and escape all literal % by default.
+    tex = tex.replace(/([^\\])%/g, "$1\\%" );
+
     tex = tex.replace(/\\iiint([^!]*)!\\!\\!\\!\\!.*\\subset\\!\\supset/g,"\\iiint$1mkern-2.5em\\subset\\!\\supset").replace(/\\iint([^!]*)!\\!\\!\\!\\!\\!\\!\\!\\!\\!\\!(.*)\\subset\\!\\supset/g,"\\iint$1mkern-1.65em$2\\subset\\!\\!\\supset").replace(/\\int\\!\\!\\!(\\!)+\\int\\!\\!\\!(\\!)+\\int([^!]*)!\\!\\!\\!\\!.*\\bigcirc(\\,)*/g,"\\iiint$3mkern-2.5em\\subset\\!\\supset").replace(/\\int\\!\\!\\!(\\!)+\\int([^!]*)!\\!\\!\\!\\!\\!\\!\\!\\!(.*)\\bigcirc(\\,)*/g,"\\iint$2mkern-1.65em$3\\subset\\!\\!\\supset");
     if (mode === "") {
       tex = tex.replace(/ *\\scriptstyle(\W)/g,"\\textstyle$1").replace(/ *\\scriptscriptstyle(\W)/g,"\\scriptstyle$1");
