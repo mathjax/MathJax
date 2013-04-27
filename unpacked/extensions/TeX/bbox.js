@@ -43,7 +43,7 @@
  */
 
 MathJax.Extension["TeX/bbox"] = {
-  version: "2.1"
+  version: "2.1.1"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -70,7 +70,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           background = part;
         } else if (part.match(/^[-a-z]+:/i)) {
           if (style) {TEX.Error("Style specified twice in "+name)}
-          style = part;
+          style = this.BBoxStyle(part);
         } else if (part !== "") {
           TEX.Error("'"+part+"' doesn't look like a color, a padding dimension, or a style");
         }
@@ -80,7 +80,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         math = MML.mstyle(math).With({mathbackground:background, style:style});
       }
       this.Push(math);
-    }
+    },
+    BBoxStyle: function (styles) {return styles}
   });
 
   MathJax.Hub.Startup.signal.Post("TeX bbox Ready");

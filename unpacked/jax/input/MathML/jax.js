@@ -69,7 +69,7 @@
       } else {
         mml = MML[type]();
       }
-      this.AddAttributes(mml,node); this.CheckClass(mml,CLASS);
+      this.AddAttributes(mml,node); this.CheckClass(mml,mml["class"]);
       this.AddChildren(mml,node);
       if (MATHML.config.useMathMLspacing) {mml.useMMLspacing = 0x08}
       return mml;
@@ -80,7 +80,7 @@
       return mml;
     },
     CheckClass: function (mml,CLASS) {
-      CLASS = CLASS.split(/ /); var NCLASS = [];
+      CLASS = (CLASS||"").split(/ /); var NCLASS = [];
       for (var i = 0, m = CLASS.length; i < m; i++) {
         if (CLASS[i].substr(0,4) === "MJX-") {
           if (CLASS[i] === "MJX-arrow") {
