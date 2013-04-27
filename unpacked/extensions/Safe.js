@@ -311,7 +311,7 @@
             break;
 
           case "fontsize":
-            value = (ALLOW.fontsize ? mml.fontsize: null);
+            value = (ALLOW.fontsize === "all" ? mml.fontsize: null);
             break;
 
           case "style":
