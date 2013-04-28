@@ -12,5 +12,5 @@
  *      http://www.apache.org/licenses/LICENSE-2.0
  */
 
-MathJax.InputJax.AsciiMath=MathJax.InputJax({id:"AsciiMath",version:"2.0",directory:MathJax.InputJax.directory+"/AsciiMath",extensionDir:MathJax.InputJax.extensionDir+"/AsciiMath",config:{displaystyle:true,decimal:"."}});MathJax.InputJax.AsciiMath.Register("math/asciimath");MathJax.InputJax.AsciiMath.loadComplete("config.js");
+MathJax.InputJax.AsciiMath=MathJax.InputJax({id:"AsciiMath",version:"2.1",directory:MathJax.InputJax.directory+"/AsciiMath",extensionDir:MathJax.InputJax.extensionDir+"/AsciiMath",config:{displaystyle:true,decimal:"."}});MathJax.InputJax.AsciiMath.Register("math/asciimath");MathJax.InputJax.AsciiMath.loadComplete("config.js");
 
