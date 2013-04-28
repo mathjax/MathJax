@@ -120,7 +120,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       arccot:             'NamedFn',
       arcsec:             'NamedFn',
       arccsc:             'NamedFn',
-      bold:               ['Macro','\\boldsymbol'],  // boldsymbol
+      bold:               ['Macro','\\mathbf{#1}',1],  // boldsymbol
       href:               'NamedFn', // disable dangerous command
       style:              'NamedFn', // disable dangerous command
       pagecolor:          ['Macro','',1],  // ignore \pagecolor{}
