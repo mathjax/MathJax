@@ -7,22 +7,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
   var MML = MathJax.ElementJax.mml;
 
-  /*
-   *  Get an RGB color (a triplet of values between 0 and 255)
-   */
-  MathJax.Extension["TeX/color"].get_RGB = function (rgb) {
-    rgb = rgb.split(/,/); var RGB = "#";
-    if (rgb.length !== 3) {this.TEX.Error("RGB colors require 3 decimal numbers")}
-    for (var i = 0; i < 3; i++) {
-      if (!rgb[i].match(/^(\d{1,3})$/)) {this.TEX.Error("Invalid decimal number")}
-      var n = parseInt(rgb[i], 10);
-      if (n < 0 || n > 255) {this.TEX.Error("RGB values must be between 0 and 255")}
-      n = n.toString(16); if (n.length < 2) {n = "0"+n}
-      RGB += n;
-    }
-    return RGB;
-  }
-
   MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions,{
 
     mathchar0mi: {
