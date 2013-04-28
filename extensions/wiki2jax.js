@@ -46,7 +46,7 @@ MathJax.Extension.wiki2jax = {
 	if (node.nodeName == 'IMG') {
 		tex = node.alt;
 	} else {
-        tex = node.innerHTML.replace(/^\$/,"").replace(/\$$/,"");
+        tex = $(node).text().replace(/^\$/,"").replace(/\$$/,"");
 	    tex = tex.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&nbsp;/g," ");
 	}
 
@@ -69,7 +69,7 @@ MathJax.Extension.wiki2jax = {
 
   createPreview: function (node) {
     var preview;
-    if (this.config.preview === "TeX") {preview = [this.filterPreview(node.innerHTML)]}
+    if (this.config.preview === "TeX") {preview = [this.filterPreview($(node).text())]}
     else if (this.config.preview instanceof Array) {preview = this.config.preview}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className: MathJax.Hub.config.preRemoveClass},preview);
