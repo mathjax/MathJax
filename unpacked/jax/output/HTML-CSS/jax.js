@@ -760,15 +760,15 @@
       parent.bbox = this.Measured(span,parent).bbox;
     },
     MeasureSpans: function (SPANS) {
-      var spans = [], span, i, m, bbox, start, end, W;
+      var spans = [], span, i, m, bbox, start, end, W, parent;
       //
       //  Insert the needed markers
       // 
       for (i = 0, m = SPANS.length; i < m; i++) {
         span = SPANS[i]; if (!span) continue;
-        bbox = span.bbox;
+        bbox = span.bbox; parent = this.parentNode(span);
         if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline) {
-          if (!span.parentNode.bbox) {span.parentNode.bbox = bbox}
+          if (!parent.bbox) {parent.bbox = bbox}
           continue;
         }
         if (this.negativeBBoxes || !span.firstChild || (bbox.w >= 0 && !this.initialSkipBug) ||
@@ -787,11 +787,11 @@
       //  Read the widths and heights
       //
       for (i = 0, m = spans.length; i < m; i++) {
-        span = spans[i][0]; bbox = span.bbox; var parent = span.parentNode;
+        span = spans[i][0]; bbox = span.bbox; parent = this.parentNode(span);
         if ((bbox.w >= 0 && !this.initialSkipBug) || this.negativeBBoxes || !span.firstChild) {
-          W = span.offsetWidth; parent.HH = span.parentNode.offsetHeight/this.em;
+          W = span.offsetWidth; parent.HH = parent.offsetHeight/this.em;
         } else if (bbox.w < 0 && this.msieNegativeBBoxBug) {
-          W = -span.offsetWidth, parent.HH = span.parentNode.offsetHeight/this.em;
+          W = -span.offsetWidth, parent.HH = parent.offsetHeight/this.em;
         } else {
           W = spans[i][2].offsetLeft - ((spans[i][1]||{}).offsetLeft||0);
         }
@@ -971,6 +971,15 @@
       if (D) {frame.style.verticalAlign = D}
       return frame;
     },
+    
+    //
+    //  Find parent span (skipping over <a> tags)
+    //
+    parentNode: function (span) {
+      var parent = span.parentNode;
+      if (parent.nodeName.toLowerCase() === "a") {parent = parent.parentNode}
+      return parent;
+    },
 
     createStack: function (span,nobbox,w) {
       if (this.msiePaddingWidthBug) {this.createStrut(span,0)}
@@ -1002,7 +1011,7 @@
     },
     placeBox: function (span,x,y,noclip) {
       span.isMathJax = true;
-      var parent = span.parentNode, bbox = span.bbox, BBOX = parent.bbox;
+      var parent = HTMLCSS.parentNode(span), bbox = span.bbox, BBOX = parent.bbox;
       if (this.msiePlaceBoxBug) {this.addText(span,this.NBSP)}
       if (this.imgSpaceBug) {this.addText(span,this.imgSpace)}
       // Place the box
