@@ -1417,7 +1417,9 @@
         if (!match) {TEX.Error("Invalid MathML attribute: "+attr)}
         if (!MML[type].prototype.defaults[match[1]] && !this.MmlTokenAllow[match[1]])
           {TEX.Error(match[1]+" is not a recognized attribute for "+type)}
-        def[match[1]] = match[2].replace(/^(['"])(.*)\1$/,"$2");
+        var value = match[2].replace(/^(['"])(.*)\1$/,"$2");
+        if (value === "true") {value = true} else if (value === "false") {value = false}
+        def[match[1]] = value;
         def.attrNames.push(match[1]);
         attr = attr.substr(match[0].length);
       }
