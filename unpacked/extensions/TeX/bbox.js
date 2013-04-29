@@ -76,7 +76,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         } else if (part.match(/^[-a-z]+:/i)) {
           if (style)
             {TEX.Error(["MultipleBBoxProperty","%1 specified twice in %2", "Style",name])}
-          style = part;
+          style = this.BBoxStyle(part);
         } else if (part !== "") {
           TEX.Error(
             ["InvalidBBoxProperty",
@@ -90,7 +90,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         math = MML.mstyle(math).With({mathbackground:background, style:style});
       }
       this.Push(math);
-    }
+    },
+    BBoxStyle: function (styles) {return styles}
   });
 
   MathJax.Hub.Startup.signal.Post("TeX bbox Ready");

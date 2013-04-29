@@ -81,7 +81,7 @@
       } else {
         mml = MML[type]();
       }
-      this.AddAttributes(mml,node); this.CheckClass(mml,CLASS);
+      this.AddAttributes(mml,node); this.CheckClass(mml,mml["class"]);
       this.AddChildren(mml,node);
       if (MATHML.config.useMathMLspacing) {mml.useMMLspacing = 0x08}
       return mml;
@@ -92,7 +92,7 @@
       return mml;
     },
     CheckClass: function (mml,CLASS) {
-      CLASS = CLASS.split(/ /); var NCLASS = [];
+      CLASS = (CLASS||"").split(/ /); var NCLASS = [];
       for (var i = 0, m = CLASS.length; i < m; i++) {
         if (CLASS[i].substr(0,4) === "MJX-") {
           if (CLASS[i] === "MJX-arrow") {
@@ -133,13 +133,17 @@
         if (name.match(/:/)) continue;
         if (name.match(/^_moz-math-((column|row)(align|line)|font-style)$/)) continue;
         var value = node.attributes[i].value;
-        if (value.toLowerCase() === "true") {value = true}
-          else if (value.toLowerCase() === "false") {value = false}
-        if (mml.defaults[name] != null || MML.copyAttributes[name])
-          {mml[name] = value} else {mml.attr[name] = value}
-        mml.attrNames.push(name);
+        value = this.filterAttribute(name,value);
+        if (value != null) {
+          if (value.toLowerCase() === "true") {value = true}
+            else if (value.toLowerCase() === "false") {value = false}
+          if (mml.defaults[name] != null || MML.copyAttributes[name])
+            {mml[name] = value} else {mml.attr[name] = value}
+          mml.attrNames.push(name);
+        }
       }
     },
+    filterAttribute: function (name,value) {return value}, // safe mode overrides this
     
     //
     //  Create the children for the mml node
