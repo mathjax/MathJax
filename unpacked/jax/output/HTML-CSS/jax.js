@@ -678,7 +678,8 @@
       //
       //  Get height and width of zoomed math and original math
       //
-      span.style.position = math.style.position = "absolute";
+      span.style.position = "absolute";
+      if (!width) {math.style.position = "absolute"}
       var zW = span.offsetWidth, zH = span.offsetHeight,
           mH = math.offsetHeight, mW = math.offsetWidth;
       if (mW === 0) {mW = math.parentNode.offsetWidth}; // IE7 gets mW == 0?
@@ -2631,7 +2632,7 @@
         //    which makes it work even when minimum font size is in effect).
         //
         span.style.width = HTMLCSS.Em((Math.round(math.bbox.w*this.em)+.25)/HTMLCSS.outerEm);
-        span.style.display = "inline-block"; stack.style.width = "";
+        span.style.display = "inline-block";
 	//
 	//  Adjust bbox to match outer em-size
 	// 
