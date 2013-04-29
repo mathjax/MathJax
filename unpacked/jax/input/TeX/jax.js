@@ -1,5 +1,6 @@
 /* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/input/TeX/jax.js
@@ -177,16 +178,7 @@
         if (this.open || this.close) {
           mml.texClass = MML.TEXCLASS.INNER;
           mml.texWithDelims = true;
-          var mrow = MML.mrow();
-          mrow.open = this.open; mrow.close = this.close;
-          if (this.open) {
-            mrow.Append(MML.mo(this.open).With({fence: "true"}));
-          }
-          mrow.Append(mml);
-          if (this.close) {
-            mrow.Append(MML.mo(this.close).With({fence: "true"}));
-          }
-          mml = mrow;
+          mml = TEX.mfenced(this.open,mml,this.close);
         }
         return [STACKITEM.mml(mml), item];
       }
@@ -199,20 +191,8 @@
     type: "left", isOpen: true, delim: '(',
     stopError: "Extra \\left or missing \\right",
     checkItem: function (item) {
-      if (item.type === "right") {
-        var mml = MML.mrow();
-        mml.open = this.delim; mml.close = item.delim;
-        if (this.delim) {
-          mml.Append(MML.mo(this.delim).With({fence: "true"}));
-        }
-        for (var i in this.data) {
-          mml.Append(this.data[i]);
-        }
-        if (item.delim) {
-          mml.Append(MML.mo(item.delim).With({fence: "true"}));
-        }
-        return STACKITEM.mml(mml);
-      }
+      if (item.type === "right")
+        {return STACKITEM.mml(TEX.mfenced(this.delim,this.mmlData(),item.delim))}
       return this.SUPER(arguments).checkItem.call(this,item);
     }
   });
@@ -287,18 +267,7 @@
           if ((this.arraydef.columnlines||"none") != "none" ||
               (this.arraydef.rowlines||"none") != "none") {mml.padding = 0} // HTML-CSS jax implements this
         }
-        if (this.open || this.close) {
-          var mrow = MML.mrow();
-          mrow.open = this.open; mrow.close = this.close;
-          if (this.open) {
-            mrow.Append(MML.mo(this.open).With({fence: "true"}))
-          }
-          mrow.Append(mml);
-          if (this.close) {
-            mrow.Append(MML.mo(this.close).With({fence: "true"}))
-          }
-          mml = mrow;
-        }
+        if (this.open || this.close) {mml = TEX.mfenced(this.open,mml,this.close)}
         mml = STACKITEM.mml(mml);
         if (this.requireClose) {
           if (item.type === 'close') {return mml}
@@ -1081,7 +1050,7 @@
       return this.stack.Top().data[0];
     },
     mmlToken: function (token) {return token}, // used by boldsymbol extension
-    
+
     /************************************************************************/
     /*
      *   Handle various token classes
@@ -2079,6 +2048,18 @@
     Macro: function (name,def,argn) {
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
       TEXDEF.macros[name].isUser = true;
+    },
+    
+    /*
+     *  Create an mrow that represents the equivalent of an mfenced
+     */
+    mfenced: function (open,mml,close) {
+      var mrow = MML.mrow();
+      mrow.open = open; mrow.close = close;
+      if (open) {mrow.Append(MML.mo(open).With({fence:true, texClass:MML.TEXCLASS.OPEN}))}
+      if (mml.type === "mrow") {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
+      if (close) {mrow.Append(MML.mo(close).With({fence:true, texClass:MML.TEXCLASS.CLOSE}))}
+      return mrow;
     },
     
     //
