@@ -28,7 +28,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/color"] = {
-  version: "2.1",
+  version: "2.1.1",
 
   config: MathJax.Hub.CombineConfig("TeX.color",{
     padding: "5px",
@@ -120,7 +120,7 @@ MathJax.Extension["TeX/color"] = {
    *  Get an rgb color
    */
   get_rgb: function (rgb) {
-    rgb = rgb.split(/,/); var RGB = "#";
+    rgb = rgb.replace(/^\s+/,"").replace(/\s+$/,"").split(/\s*,\s*/); var RGB = "#";
     if (rgb.length !== 3) {this.TEX.Error("rgb colors require 3 decimal numbers")}
     for (var i = 0; i < 3; i++) {
       if (!rgb[i].match(/^(\d+(\.\d*)?|\.\d+)$/)) {this.TEX.Error("Invalid decimal number")}
@@ -136,7 +136,7 @@ MathJax.Extension["TeX/color"] = {
    *  Get an RGB color
    */
   get_RGB: function (rgb) {
-    rgb = rgb.split(/,/); var RGB = "#";
+    rgb = rgb.replace(/^\s+/,"").replace(/\s+$/,"").split(/\s*,\s*/); var RGB = "#";
     if (rgb.length !== 3) {this.TEX.Error("RGB colors require 3 numbers")}
     for (var i = 0; i < 3; i++) {
       if (!rgb[i].match(/^\d+$/)) {this.TEX.Error("Invalid number")}
@@ -152,7 +152,7 @@ MathJax.Extension["TeX/color"] = {
    *  Get a gray-scale value
    */
   get_gray: function (gray) {
-    if (!gray.match(/^(\d+(\.\d*)?|\.\d+)$/)) {this.TEX.Error("Invalid decimal number")}
+    if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/)) {this.TEX.Error("Invalid decimal number")}
     var n = parseFloat(gray);
     if (n < 0 || n > 1) {this.TEX.Error("Grey-scale values must be between 0 and 1")}
     n = Math.floor(n*255).toString(16); if (n.length < 2) {n = "0"+n}
