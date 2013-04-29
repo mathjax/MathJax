@@ -33,7 +33,7 @@ if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.1";
-MathJax.fileversion = "2.1.3";
+MathJax.fileversion = "2.1.4";
 
 /**********************************************************/
 
@@ -1249,7 +1249,6 @@ MathJax.Hub = {
                                   // set to "configured" to delay startup until MathJax.Hub.Configured() is called
                                   // set to a Callback to wait for before continuing with the startup
     skipStartupTypeset: false,    // set to true to skip PreProcess and Process during startup
-    "v1.0-compatible": true,  // set to false to prevent message about configuration change
     elements: [],             // array of elements to process when none is given explicitly
     positionToHash: true,    // after initial typeset pass, position to #hash location?
      
@@ -1794,14 +1793,12 @@ MathJax.Hub.Startup = {
     //  Run the deprecated configuration script, if any (ignoring return value)
     //  Wait for the startup delay signal
     //  Run the mathjax-config blocks
-    //  Handle the default configuration (v1.0 compatible)
     //  Load the files in the configuration's config array
     //
     if (this.script.match(/\S/)) {this.queue.Push(this.script+";\n1;")}
     this.queue.Push(
       ["ConfigDelay",this],
       ["ConfigBlocks",this],
-      ["ConfigDefault",this],
       [function (THIS) {return THIS.loadArray(MathJax.Hub.config.config,"config",null,true)},this],
       ["Post",this.signal,"End Config"]
     );
@@ -1829,15 +1826,6 @@ MathJax.Hub.Startup = {
       }
     }
     return last;
-  },
-  //
-  //  Check for v1.0 no-configuration and put up a warning message.
-  //
-  ConfigDefault: function () {
-    var CONFIG = MathJax.Hub.config;
-    if (CONFIG["v1.0-compatible"] && (CONFIG.jax||[]).length === 0 &&
-        !this.params.config && (CONFIG.config||[]).length === 0)
-      {return MathJax.Ajax.Require(this.URL("extensions","v1.0-warning.js"))}
   },
 
   //
