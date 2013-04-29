@@ -60,7 +60,7 @@
           width: "100%"
         },
         
-        ".MathJax_SVG *" {
+        ".MathJax_SVG *": {
           transition: "none",
           "-webkit-transition": "none",
           "-moz-transition": "none",
