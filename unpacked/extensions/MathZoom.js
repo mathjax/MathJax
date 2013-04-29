@@ -229,8 +229,8 @@
           overlay = document.getElementById("MathJax_ZoomOverlay");
       var xy = ZOOM.getXY(div);
       var obj = div.parentNode, overflow = ZOOM.getOverflow(obj);
-      while (obj.parentNode && overflow === "visible") {
-        obj = obj.parentNode;
+      while (obj.parentNode && obj !== document.body && overflow === "visible") {
+        obj = obj.parentNode
         overflow = ZOOM.getOverflow(obj);
       }
       if (overflow !== "visible") {
