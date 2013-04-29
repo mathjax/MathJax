@@ -1418,7 +1418,8 @@
         if (!MML[type].prototype.defaults[match[1]] && !this.MmlTokenAllow[match[1]])
           {TEX.Error(match[1]+" is not a recognized attribute for "+type)}
         var value = match[2].replace(/^(['"])(.*)\1$/,"$2");
-        if (value === "true") {value = true} else if (value === "false") {value = false}
+        if (value.toLowerCase() === "true") {value = true}
+          else if (value.toLowerCase() === "false") {value = false}
         def[match[1]] = value;
         def.attrNames.push(match[1]);
         attr = attr.substr(match[0].length);
