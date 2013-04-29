@@ -1368,8 +1368,9 @@
       CoreText: function (parent) {
         if (!parent) {return ""}
         if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
-        while (parent.isa(MML.mrow) && parent.data.length === 1 && parent.data[0])
-          {parent = parent.data[0]}
+        while ((parent.isa(MML.mrow) || parent.isa(MML.TeXAtom) ||
+                parent.isa(MML.mstyle) || parent.isa(MML.mphantom)) &&
+                parent.data.length === 1 && parent.data[0]) {parent = parent.data[0]}
         if (!parent.isToken) {return ""} else {return parent.data.join("")}
       },
       SVGremapChars: {
