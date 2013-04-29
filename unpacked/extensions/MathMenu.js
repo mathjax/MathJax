@@ -111,13 +111,6 @@
         background:"transparent"
       },
 
-      ".MathJax_MenuTitle": {
-        "background-color":"#CCCCCC",
-        margin: (isPC ? "-1px -1px 1px -1px" : "-5px 0 0 0"),
-        "text-align":"center", "font-style":"italic", "font-size":"80%", color:"#444444",
-        padding:"2px 0", overflow:"hidden"
-      },
-
       ".MathJax_MenuArrow": {
         position:"absolute", right:".5em", color:"#666666",
         "font-family": (isMSIE ? "'Arial unicode MS'" : null)
