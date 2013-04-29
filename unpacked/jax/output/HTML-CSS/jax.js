@@ -1059,7 +1059,10 @@
         if (bbox.rw + x > BBOX.rw) {BBOX.rw = bbox.rw + x}
         if (bbox.lw + x < BBOX.lw) {BBOX.lw = bbox.lw + x}
         if (bbox.width != null && !bbox.isFixed) {
-          if (BBOX.width == null) {parent.style.width = BBOX.width = "100%"}
+          if (BBOX.width == null) {
+            parent.style.width = BBOX.width = "100%";
+            if (bbox.minWidth) {parent.style.minWidth = BBOX.minWidth = bbox.minWidth}
+          }
           span.style.width = bbox.width;
         }
       }
@@ -1593,7 +1596,7 @@
 	if (BBOX.w + bbox.rw > BBOX.rw) {BBOX.rw = BBOX.w + bbox.rw}
 	BBOX.w += bbox.w;
 	if (child.style.paddingRight) {BBOX.w += HTMLCSS.unEm(child.style.paddingRight)*(child.scale||1)}
-	if (bbox.width) {BBOX.width = bbox.width}
+	if (bbox.width) {BBOX.width = bbox.width; BBOX.minWidth = bbox.minWidth}
         if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
         if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
       },
@@ -2636,7 +2639,8 @@
 	span.bbox.h *= f; span.bbox.d *= f; span.bbox.w *= f;
 	span.bbox.lw *= f; span.bbox.rw *= f;
 	if (math && math.bbox.width != null) {
-	  stack.style.width = math.bbox.width;
+          span.style.minWidth = (math.bbox.minWidth || span.style.width);
+	  span.style.width = stack.style.width = math.bbox.width;
 	  box.style.width = "100%";
 	}
 	//
