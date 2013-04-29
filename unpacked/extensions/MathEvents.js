@@ -155,8 +155,9 @@
         if (!load) {
           MENU.jax = jax;
           var source = MENU.menu.Find("Show Math As").menu;
+	  source.items[0].name = jax.sourceMenuTitle;
+	  source.items[0].format = (jax.sourceMenuFormat||"MathML");
           source.items[1].name = INPUT[jax.inputJax].sourceMenuTitle;
-          source.items[0].hidden = (jax.inputJax === "Error");  // hide MathML choice for error messages
           var MathPlayer = MENU.menu.Find("Math Settings","MathPlayer");
           MathPlayer.hidden = !(jax.outputJax === "NativeMML" && HUB.Browser.hasMathPlayer);
           return MENU.menu.Post(event);

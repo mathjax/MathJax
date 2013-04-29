@@ -715,6 +715,8 @@
         );
         return;
       }
+    } else if (this.format === "Error") {
+      MENU.ShowSource.Text(MENU.jax.errorText,event);
     } else {
       if (MENU.jax.originalText == null) {
         alert(_("NoOriginalForm","No original form available"));

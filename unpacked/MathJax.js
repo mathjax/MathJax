@@ -2094,7 +2094,8 @@ MathJax.Hub = {
         //
         //  Check that there is an element jax
         //
-        script = state.scripts[state.i]; if (!script || !script.MathJax) {state.i++; continue}
+        script = state.scripts[state.i];
+        if (!script || !script.MathJax || script.MathJax.error) {state.i++; continue}
         var jax = script.MathJax.elementJax; if (!jax) {state.i++; continue}
         //
         //  Call the output Jax's Process method (which will be its Translate()
@@ -2143,10 +2144,24 @@ MathJax.Hub = {
   },
   
   formatError: function (script,err) {
+    //
+    //  Get the error message, URL, and line, and save it for
+    //    reporting in the Show Math As Error menu
+    //
+    var message = "Error: "+err.message+"\n";
+    if (err.sourceURL) {message += "\nfile: "+err.sourceURL}
+    if (err.line) {message += "\nline: "+err.line}
+    script.MathJax.error = MathJax.OutputJax.Error.Jax(message,script);
+
+    //
+    //  Create the [Math Processing Error] span
+    //
     var errorSettings = this.config.errorSettings;
     var errorText = MathJax.Localization._(errorSettings.messageId,errorSettings.message);
-    var error = MathJax.HTML.Element("span",{className:"MathJax_Error"},errorText);
-    error.jaxID = "Error";
+    var error = MathJax.HTML.Element("span",{className:"MathJax_Error",jaxID:"Error"},errorText);
+    //
+    //  Attach the menu events
+    //
     if (MathJax.Extension.MathEvents) {
       error.oncontextmenu = MathJax.Extension.MathEvents.Event.Menu;
       error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
@@ -2156,8 +2171,15 @@ MathJax.Hub = {
         error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
       });
     }
+    //
+    //  Insert the error into the page and remove any preview
+    //
     script.parentNode.insertBefore(error,script);
     if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+    //
+    //  Save the error for debugging purposes
+    //  Report the error as a signal
+    //
     this.lastError = err;
     this.signal.Post(["Math Processing Error",script,err]);
   },
@@ -2695,6 +2717,7 @@ MathJax.Hub.Startup = {
     inputID: null,
     originalText: "",
     mimeType: "",
+    sourceMenuTitle: "MathML Code",
     
     Text: function (text,callback) {
       var script = this.SourceElement();
@@ -2784,19 +2807,24 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.1", config: {},
+    id: "Error", version: "2.1.1", config: {},
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
-    getJaxFromMath: function () {
+    getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
+    Jax: function (text,script) {
+      var jax = MathJax.Hub.inputJax[script.type.replace(/ *;(.|\s)*/,"")];
       return {
-        inputJax: "Error", outputJax: "Error",
-        originalText: BASE.Localization._("MathProcessingError","Math Processing Error")
-      };
+        inputJax: (jax||{id:"Error"}).id,  // Use Error InputJax as fallback
+        outputJax: "Error",
+        sourceMenuTitle: /*_(MathMenu)*/ ["ErrorMessage","Error Message"],
+        sourceMenuFormat: "Error",
+        originalText: MathJax.HTML.getScript(script),
+        errorText: text
+      }
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.1", config: {},
-    sourceMenuTitle: /*_(MathMenu)*/ ["ErrorMessage","Error Message"]
+    id: "Error", version: "2.1.1", config: {}
   };
   
 })("MathJax");
