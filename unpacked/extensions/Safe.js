@@ -35,7 +35,7 @@
       classes: "safe",   // safe start with MJX-
       cssIDs: "safe",    // safe start with MJX-
       styles: "safe",    // safe are in safeStyles below
-      fontsize: "safe",  // safe are between sizeMin and sizeMax em's
+      fontsize: "all",   // safe are between sizeMin and sizeMax em's
       require: "safe",   // safe are in safeRequire below
     },
     sizeMin: .7,        // \scriptsize
@@ -164,6 +164,9 @@
         {size = Math.min(Math.max(size,CONFIG.sizeMin),CONFIG.sizeMax)}
       return size;
     },
+    filterFontSize: function (size) {
+      return (ALLOW.fontsize === "all" ? size: null);
+    },
     
     //
     //  Filter TeX extension names
@@ -287,47 +290,25 @@
   });
   
   HUB.Register.StartupHook("MathML Jax Ready",function () {
-    var MATHML = MathJax.InputJax.MathML,
-        ATTRIBUTES = MATHML.Parse.prototype.AddAttributes;
+    var PARSE = MathJax.InputJax.MathML.Parse;
+    
+    var METHOD = {
+      href:     "filterURL",
+      "class":  "filterClass", 
+      id:       "filterID",
+      fontsize: "filterFontSize",
+      style:    "filterStyles"
+    };
 
     //
     //  Filter MathML attributes
     //
-    MATHML.Parse.prototype.AddAttributes = function (mml,node) {
-      ATTRIBUTES.apply(MATHML,arguments);
-      for (var i = 0, m = mml.attrNames.length; i < m; i++) {
-        var name = mml.attrNames[i], value = null;
-        switch (name) {
-          case "href":
-            value = SAFE.filterURL(mml.href);
-            break;
-
-          case "class":
-            value = SAFE.filterClass(mml["class"]);
-            break;
-
-          case "id":
-            value = SAFE.filterID(mml.id);
-            break;
-
-          case "fontsize":
-            value = (ALLOW.fontsize === "all" ? mml.fontsize: null);
-            break;
-
-          case "style":
-            value = SAFE.filterStyles(mml.style);
-            break;
-
-          default:
-            name = null;
-            break;
-        }
-        if (name) {
-          if (value) {mml[name] = value} 
-            else {delete mml[name]; mml.attrNames.splice(i,1); m--}
-        }
+    PARSE.Augment({
+      filterAttribute: function (name,value) {
+        if (METHOD[name]) {value = SAFE[METHOD[name]](value)}
+        return value;
       }
-    };
+    });
 
   });
   
