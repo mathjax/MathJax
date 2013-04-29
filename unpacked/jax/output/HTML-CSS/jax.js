@@ -686,7 +686,8 @@
       //
       //  Get height and width of zoomed math and original math
       //
-      span.style.position = math.style.position = "absolute";
+      span.style.position = "absolute";
+      if (!width) {math.style.position = "absolute"}
       var zW = span.offsetWidth, zH = span.offsetHeight,
           mH = math.offsetHeight, mW = math.offsetWidth;
       if (mW === 0) {mW = math.parentNode.offsetWidth}; // IE7 gets mW == 0?
@@ -1081,7 +1082,10 @@
         if (bbox.rw + x > BBOX.rw) {BBOX.rw = bbox.rw + x}
         if (bbox.lw + x < BBOX.lw) {BBOX.lw = bbox.lw + x}
         if (bbox.width != null && !bbox.isFixed) {
-          if (BBOX.width == null) {parent.style.width = BBOX.width = "100%"}
+          if (BBOX.width == null) {
+            parent.style.width = BBOX.width = "100%";
+            if (bbox.minWidth) {parent.style.minWidth = BBOX.minWidth = bbox.minWidth}
+          }
           span.style.width = bbox.width;
         }
       }
@@ -1615,7 +1619,7 @@
 	if (BBOX.w + bbox.rw > BBOX.rw) {BBOX.rw = BBOX.w + bbox.rw}
 	BBOX.w += bbox.w;
 	if (child.style.paddingRight) {BBOX.w += HTMLCSS.unEm(child.style.paddingRight)*(child.scale||1)}
-	if (bbox.width) {BBOX.width = bbox.width}
+	if (bbox.width) {BBOX.width = bbox.width; BBOX.minWidth = bbox.minWidth}
         if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
         if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
       },
@@ -2651,7 +2655,7 @@
         //    which makes it work even when minimum font size is in effect).
         //
         span.style.width = HTMLCSS.Em((Math.round(math.bbox.w*this.em)+.25)/HTMLCSS.outerEm);
-        span.style.display = "inline-block"; stack.style.width = "";
+        span.style.display = "inline-block";
 	//
 	//  Adjust bbox to match outer em-size
 	// 
@@ -2659,7 +2663,8 @@
 	span.bbox.h *= f; span.bbox.d *= f; span.bbox.w *= f;
 	span.bbox.lw *= f; span.bbox.rw *= f;
 	if (math && math.bbox.width != null) {
-	  stack.style.width = math.bbox.width;
+          span.style.minWidth = (math.bbox.minWidth || span.style.width);
+	  span.style.width = stack.style.width = math.bbox.width;
 	  box.style.width = "100%";
 	}
 	//
