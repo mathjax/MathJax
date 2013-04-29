@@ -1,3 +1,5 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
 /*************************************************************
  *
  *  MathJax/config/default.js
@@ -235,6 +237,7 @@ MathJax.Hub.Config({
   //
   errorSettings: {
     message: ["[Math Processing Error]"], // HTML snippet structure for message to use
+    messageId: "MathProcessingError",     // ID of snippet for localization
     style: {color: "#CC0000", "font-style":"italic"}  // style for message
   },
 

@@ -162,8 +162,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var arg = this.trimSpaces(this.GetArgument(name)), tag = arg;
       if (!star) {arg = CONFIG.formatTag(arg)}
       var global = this.stack.global; global.tagID = tag;
-      if (global.notags) {TEX.Error(name+" not allowed in "+global.notags+" environment")}
-      if (global.tag) {TEX.Error("Multiple "+name)}
+      if (global.notags) {
+        TEX.Error(["CommandNotAllowedInEnv",
+                   "%1 not allowed in %2 environment",
+                   name,global.notags]
+        );
+      }
+      if (global.tag) {TEX.Error(["MultipleCommand","Multiple %1",name])}
       global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
     },
     HandleNoTag: function (name) {
@@ -178,9 +183,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var global = this.stack.global, label = this.GetArgument(name);
       if (label === "") return;
       if (!AMS.refUpdate) {
-        if (global.label) {TEX.Error("Multiple "+name+"'s")}
+        if (global.label) {TEX.Error(["MultipleCommand","Multiple %1",name])}
         global.label = label;
-        if (AMS.labels[label] || AMS.eqlabels[label]) {TEX.Error("Label '"+label+"' mutiply defined")}
+        if (AMS.labels[label] || AMS.eqlabels[label])
+          {TEX.Error(["MultipleLabel","Label '%1' multiply defined",label])}
         AMS.eqlabels[label] = "???"; // will be replaced by tag value later
       }
     },
@@ -224,7 +230,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     HandleShove: function (name,shove) {
       var top = this.stack.Top();
-      if (top.type !== "multline" || top.data.length) {TEX.Error(name+" must come at the beginning of the line")}
+      if (top.type !== "multline" || top.data.length) {
+        TEX.Error(["CommandAtTheBeginingOfLine",
+                   "%1 must come at the beginning of the line",name]);
+      }
       top.data.shove = shove;
     },
     
@@ -238,7 +247,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var frac = MML.mfrac(TEX.Parse('\\strut\\textstyle{'+num+'}',this.stack.env).mml(),
                            TEX.Parse('\\strut\\textstyle{'+den+'}',this.stack.env).mml());
       lr = ({l:MML.ALIGN.LEFT, r:MML.ALIGN.RIGHT,"":""})[lr];
-      if (lr == null) {TEX.Error("Illegal alignment specified in "+name)}
+      if (lr == null)
+        {TEX.Error(["IllegalAlign","Illegal alignment specified in %1",name])}
       if (lr) {frac.numalign = frac.denomalign = lr}
       this.Push(frac);
     },
@@ -258,7 +268,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (left || right) {frac = TEX.mfenced(left,frac,right)}
       if (style !== "") {
         var STYLE = (["D","T","S","SS"])[style];
-        if (STYLE == null) {TEX.Error("Bad math style for "+name)}
+        if (STYLE == null)
+          {TEX.Error(["BadMathStyleFor","Bad math style for %1",name])}
         frac = MML.mstyle(frac);
         if (STYLE === "D") {frac.displaystyle = true; frac.scriptlevel = 0}
           else {frac.displaystyle = false; frac.scriptlevel = style - 1}
@@ -309,7 +320,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var n, valign, align = "", spacing = [];
       if (!taggable) {valign = this.GetBrackets("\\begin{"+begin.name+"}")}
       n = this.GetArgument("\\begin{"+begin.name+"}");
-      if (n.match(/[^0-9]/)) {TEX.Error("Argument to \\begin{"+begin.name+"} must me a positive integer")}
+      if (n.match(/[^0-9]/)) {
+        TEX.Error(["PositiveIntegerArg","Argument to %1 must me a positive integer",
+                  "\\begin{"+begin.name+"}"]);
+      }
       while (n > 0) {align += "rl"; spacing.push("0em 0em"); n--}
       spacing = spacing.join(" ");
       if (taggable) {return this.AMSarray(begin,numbered,taggable,align,spacing)}
@@ -334,7 +348,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Check for bad nesting of equation environments
      */
     checkEqnEnv: function () {
-      if (this.stack.global.eqnenv) {TEX.Error("Erroneous nesting of equation structures")}
+      if (this.stack.global.eqnenv)
+        {TEX.Error(["ErroneousNestingEq","Erroneous nesting of equation structures"])}
       this.stack.global.eqnenv = true;
     },
     
@@ -379,7 +394,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     GetDelimiterArg: function (name) {
       var c = this.trimSpaces(this.GetArgument(name));
       if (c == "") {return null}
-      if (TEXDEF.delimiter[c] == null) {TEX.Error("Missing or unrecognized delimiter for "+name)}
+      if (TEXDEF.delimiter[c] == null) {
+        TEX.Error(["MissingOrUnrecognizedDelim",
+                   "Missing or unrecognized delimiter for %1",name]);
+      }
       return this.convertDelimiter(c);
     },
     
@@ -441,7 +459,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.data = [];
     },
     EndRow: function () {
-      if (this.row.length != 1) {TEX.Error("multline rows must have exactly one column")}
+      if (this.row.length != 1) {
+        TEX.Error(["MultlineRowsOneCol",
+                   "The rows within the %1 environment must have exactly one column",
+                   "multline"]);
+      }
       this.table.push(this.row); this.row = [];
     },
     EndTable: function () {
