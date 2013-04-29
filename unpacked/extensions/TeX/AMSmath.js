@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/TeX/AMSmath.js
@@ -22,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.1",
+  version: "2.1.1",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -252,7 +255,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var den = this.ParseArg(name);
       var frac = MML.mfrac(num,den);
       if (thick !== "") {frac.linethickness = thick}
-      if (left || right) {frac = MML.mfenced(frac).With({open: left, close: right})}
+      if (left || right) {frac = TEX.mfenced(left,frac,right)}
       if (style !== "") {
         var STYLE = (["D","T","S","SS"])[style];
         if (STYLE == null) {TEX.Error("Bad math style for "+name)}

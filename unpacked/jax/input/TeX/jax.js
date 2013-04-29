@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/input/TeX/jax.js
@@ -175,7 +178,7 @@
         if (this.open || this.close) {
           mml.texClass = MML.TEXCLASS.INNER;
           mml.texWithDelims = true;
-          mml = MML.mfenced(mml).With({open: this.open, close: this.close});
+          mml = TEX.mfenced(this.open,mml,this.close);
         }
         return [STACKITEM.mml(mml), item];
       }
@@ -188,10 +191,8 @@
     type: "left", isOpen: true, delim: '(',
     stopError: "Extra \\left or missing \\right",
     checkItem: function (item) {
-      if (item.type === "right") {
-        var mml = MML.mfenced(this.data.length === 1 ? this.data[0] : MML.mrow.apply(MML,this.data));
-        return STACKITEM.mml(mml.With({open: this.delim, close: item.delim}));
-      }
+      if (item.type === "right")
+        {return STACKITEM.mml(TEX.mfenced(this.delim,this.mmlData(),item.delim))}
       return this.SUPER(arguments).checkItem.call(this,item);
     }
   });
@@ -266,9 +267,7 @@
           if ((this.arraydef.columnlines||"none") != "none" ||
               (this.arraydef.rowlines||"none") != "none") {mml.padding = 0} // HTML-CSS jax implements this
         }
-        if (this.open || this.close) {
-          mml = MML.mfenced(mml).With({open: this.open, close: this.close});
-        }
+        if (this.open || this.close) {mml = TEX.mfenced(this.open,mml,this.close)}
         mml = STACKITEM.mml(mml);
         if (this.requireClose) {
           if (item.type === 'close') {return mml}
@@ -1052,7 +1051,7 @@
       return this.stack.Top().data[0];
     },
     mmlToken: function (token) {return token}, // used by boldsymbol extension
-    
+
     /************************************************************************/
     /*
      *   Handle various token classes
@@ -2052,6 +2051,18 @@
     Macro: function (name,def,argn) {
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
       TEXDEF.macros[name].isUser = true;
+    },
+    
+    /*
+     *  Create an mrow that represents the equivalent of an mfenced
+     */
+    mfenced: function (open,mml,close) {
+      var mrow = MML.mrow();
+      mrow.open = open; mrow.close = close;
+      if (open) {mrow.Append(MML.mo(open).With({fence:true, texClass:MML.TEXCLASS.OPEN}))}
+      if (mml.type === "mrow") {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
+      if (close) {mrow.Append(MML.mo(close).With({fence:true, texClass:MML.TEXCLASS.CLOSE}))}
+      return mrow;
     },
     
     //
