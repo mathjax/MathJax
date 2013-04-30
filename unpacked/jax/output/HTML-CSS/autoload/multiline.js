@@ -500,7 +500,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       }
       //
       //  If this is the end, check for super and subscripts, and move those
-      //  by moving the stack tht contains them, and shifting by the amount of the
+      //  by moving the stack that contains them, and shifting by the amount of the
       //  base that has been removed.  Remove the empty base box from the stack.
       //
       if (end.length === 0) {
