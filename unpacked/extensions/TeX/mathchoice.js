@@ -53,7 +53,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     setTeXclass: function (prev) {return this.selected().setTeXclass(prev)},
     isSpacelike: function () {return this.selected().isSpacelike()},
     isEmbellished: function () {return this.selected().isEmbellished()},
-    Core: function () {return this.selected().Core()},
+    Core: function () {return this.selected()},
     CoreMO: function () {return this.selected().CoreMO()},
     toHTML: function (span) {
       span = this.HTMLcreateSpan(span);
