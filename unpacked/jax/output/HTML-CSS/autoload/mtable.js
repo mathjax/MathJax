@@ -440,7 +440,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (indent.indentalign === MML.INDENTALIGN.CENTER) {mw += 4*dw + 2*C[LABEL].bbox.w}
           else if (indent.indentalign !== CALIGN[LABEL]) {mw += 2*dw + C[LABEL].bbox.w}
         span.style.minWidth = span.bbox.minWidth = 
-          eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(min);
+          eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(mw);
       }
       //
       //  Finish the table
