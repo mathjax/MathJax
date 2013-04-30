@@ -397,10 +397,12 @@ MathJax.ElementJax.mml.Augment({
     },
     setBaseTeXclasses: function (prev) {
       this.getPrevClass(prev); this.texClass = null;
-      if (this.isEmbellished() || this.data[0].isa(MML.mi)) {
-        prev = this.data[0].setTeXclass(prev);
-        this.updateTeXclass(this.Core());
-      } else {if (this.data[0]) {this.data[0].setTeXclass()}; prev = this}
+      if (this.data[0]) {
+        if (this.isEmbellished() || this.data[0].isa(MML.mi)) {
+          prev = this.data[0].setTeXclass(prev);
+          this.updateTeXclass(this.Core());
+        } else {this.data[0].setTeXclass(); prev = this}
+      } else {prev = this}
       for (var i = 1, m = this.data.length; i < m; i++)
         {if (this.data[i]) {this.data[i].setTeXclass()}}
       return prev;

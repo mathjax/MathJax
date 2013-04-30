@@ -1674,9 +1674,8 @@
 	  else {box.bbox = this.HTMLzeroBBox()}
       },
       HTMLboxChild: function (n,box) {
-	if (this.data[n]) {return this.data[n].toHTML(box)}
-        if (!box.bbox) {box.bbox = this.HTMLzeroBBox()}
-        return null;
+        if (!this.data[n]) {this.SetData(n,MML.mrow())}
+	return this.data[n].toHTML(box);
       },
 
       HTMLcreateSpan: function (span) {
