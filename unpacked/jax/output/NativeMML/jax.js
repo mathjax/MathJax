@@ -426,6 +426,13 @@
       var mW = math.offsetWidth  || math.scrollWidth,
           mH = math.offsetHeight || math.scrollHeight;
       var zW = span.offsetWidth, zH = span.offsetHeight;
+      if (nMML.widthBug) {
+        //
+        //  FF doesn't get width of <math> right, so get it from <mrow>
+        //
+        var W = span.firstChild.firstChild.scrollWidth;
+        if (W > zW) {zW = W; span.style.width = zW + "px"}
+      }
       if (this.msieIE8HeightBug) {span.style.position = ""}
       return {Y:-EVENT.getBBox(span.parentNode).h, mW:mW, mH:mH, zW:zW, zH:zH}
     },
