@@ -241,7 +241,7 @@ MathJax.ElementJax.mml.Augment({
     Init: function () {
       this.data = [];
       if (this.inferRow && !(arguments.length === 1 && arguments[0].inferred))
-        {this.Append(MML.mrow().With({inferred: true}))}
+        {this.Append(MML.mrow().With({inferred: true, notParent: true}))}
       this.Append.apply(this,arguments);
     },
     With: function (def) {
@@ -267,17 +267,18 @@ MathJax.ElementJax.mml.Augment({
     },
     Parent: function () {
       var parent = this.parent;
-      while (parent && parent.inferred) {parent = parent.parent}
+      while (parent && parent.notParent) {parent = parent.parent}
       return parent;
     },
-    Get: function (name,nodefault) {
+    Get: function (name,nodefault,skipadjust) {
       if (this[name] != null) {return this[name]}
       if (this.attr && this.attr[name] != null) {return this.attr[name]}
       // FIXME: should cache these values and get from cache
       // (clear cache when appended to a new object?)
       var parent = this.Parent();
-      if (parent && parent["adjustChild_"+name] != null)
-        {return (parent["adjustChild_"+name])(parent.childPosition(this))}
+      if (parent && parent["adjustChild_"+name] != null && !skipadjust) {
+        return (parent["adjustChild_"+name])(this.childPosition(),nodefault);
+      }
       var obj = this.inherit; var root = obj;
       while (obj) {
         var value = obj[name]; if (value == null && obj.attr) {value = obj.attr[name]}
@@ -302,12 +303,13 @@ MathJax.ElementJax.mml.Augment({
         {values[arguments[i]] = this.Get(arguments[i])}
       return values;
     },
-    adjustChild_scriptlevel:   function (i) {return this.Get("scriptlevel")},   // always inherit from parent
-    adjustChild_displaystyle:  function (i) {return this.Get("displaystyle")},  // always inherit from parent
-    adjustChild_texprimestyle: function (i) {return this.Get("texprimestyle")}, // always inherit from parent
-    childPosition: function (child) {
-      if (child.parent.inferred) {child = child.parent}
-      for (var i = 0, m = this.data.length; i < m; i++) {if (this.data[i] === child) {return i}}
+    adjustChild_scriptlevel:   function (i,nodef) {return this.Get("scriptlevel",nodef,true)},   // always inherit from parent
+    adjustChild_displaystyle:  function (i,nodef) {return this.Get("displaystyle",nodef,true)},  // always inherit from parent
+    adjustChild_texprimestyle: function (i,nodef) {return this.Get("texprimestyle",nodef,true)}, // always inherit from parent
+    childPosition: function () {
+      var child = this, parent = child.parent;
+      while (parent.notParent) {child = parent; parent = child.parent}
+      for (var i = 0, m = parent.data.length; i < m; i++) {if (parent.data[i] === child) {return i}}
       return null;
     },
     setInherit: function (obj) {
@@ -680,7 +682,7 @@ MathJax.ElementJax.mml.Augment({
   MML.mrow = MML.mbase.Subclass({
     type: "mrow",
     isSpacelike: MML.mbase.childrenSpacelike,
-    inferred: false,
+    inferred: false, notParent: false,
     isEmbellished: function () {
       var isEmbellished = false;
       for (var i = 0, m = this.data.length; i < m; i++) {
@@ -1161,7 +1163,7 @@ MathJax.ElementJax.mml.Augment({
   });
   
   MML.semantics = MML.mbase.Subclass({
-    type: "semantics",
+    type: "semantics", notParent: true,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -1302,7 +1304,7 @@ MathJax.ElementJax.mml.Augment({
   
   MML.TeXAtom = MML.mbase.Subclass({
     type: "texatom",
-    inferRow: true,
+    inferRow: true, notParent: true,
     texClass: MML.TEXCLASS.ORD,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
