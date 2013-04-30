@@ -229,12 +229,12 @@ MathJax.Localization.addTranslation("en","TeX",{
       "Use of %1 doesn't match its definition",
 
     RunawayArgument:
-      "Runaway argument for %1?"
+      "Runaway argument for %1?",
 
 /* verb */
 
     NoClosingDelim:
-      "Can't find closing delimiter for %1",
+      "Can't find closing delimiter for %1"
  
   }
 });

@@ -419,7 +419,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Place the labels, if any
       //
       if (C[LABEL]) {
-        var min = stack.bbox.w, dw;
+        var mw = stack.bbox.w, dw;
         var indent = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
         if (indent.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) {indent.indentalign = indent.indentalignfirst}
         if (indent.indentalign === MML.INDENTALIGN.AUTO) {indent.indentalign = this.displayAlign}
@@ -428,7 +428,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         var eqn = HTMLCSS.createStack(span,false,"100%");
         HTMLCSS.addBox(eqn,stack); HTMLCSS.alignBox(stack,indent.indentalign,0);
 	if (indent.indentshift && indent.indentalign !== MML.INDENTALIGN.CENTER) {
-          dw = HTMLCSS.length2em(indent.indentshift,mu); min += dw;
+          dw = HTMLCSS.length2em(indent.indentshift,mu); mw += dw;
 	  stack.style[indent.indentalign] = HTMLCSS.Em(dw);
 	}
         C[LABEL].parentNode.parentNode.removeChild(C[LABEL].parentNode);
@@ -437,8 +437,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (hasRelativeWidth) {stack.style.width = values.width; span.bbox.width = "100%"}
         dw = HTMLCSS.length2em(values.minlabelspacing,mu);
         C[LABEL].style.marginRight = C[LABEL].style.marginLeft = HTMLCSS.Em(dw);
-        if (indent.indentalign === MML.INDENTALIGN.CENTER) {min += 4*dw + 2*C[LABEL].bbox.w}
-          else if (indent.indentalign !== CALIGN[LABEL]) {min += 2*dw + C[LABEL].bbox.w}
+        if (indent.indentalign === MML.INDENTALIGN.CENTER) {mw += 4*dw + 2*C[LABEL].bbox.w}
+          else if (indent.indentalign !== CALIGN[LABEL]) {mw += 2*dw + C[LABEL].bbox.w}
         span.style.minWidth = span.bbox.minWidth = 
           eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(min);
       }

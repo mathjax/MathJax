@@ -1087,14 +1087,15 @@ MathJax.Localization = {
     //    If the argument is a snippet (and we are processing snippets) do so,
     //    Otherwise, if it is a number, convert it for the lacale
     //
-    for (var i = 0, m = args.length; i < m; i++) {
+    var i, m;
+    for (i = 0, m = args.length; i < m; i++) {
       if (domain && args[i] instanceof Array) {args[i] = this.processSnippet(domain,args[i])}
     }
     //
     //  Split string at escapes and process them individually
     //
     var parts = string.split(this.pattern);
-    for (var i = 1, m = parts.length; i < m; i += 2) {
+    for (i = 1, m = parts.length; i < m; i += 2) {
       var c = parts[i].charAt(0);  // first char will be { or \d or a char to be kept literally
       if (c >= "0" && c <= "9") {    // %n
         parts[i] = args[parts[i]-1];

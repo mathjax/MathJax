@@ -221,7 +221,7 @@ MathJax.Localization.addTranslation("de","TeX",{
 /* begingroup */
 
     ExtraEndMissingBegin:
-      "Zus\u00E4tzliches oder Fehlendes \\begingroup"
+      "Zus\u00E4tzliches oder Fehlendes \\begingroup",
 //    "Extra %1 or missing \\begingroup",
 
     GlobalNotFollowedBy:

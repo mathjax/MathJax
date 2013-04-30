@@ -33,7 +33,7 @@ MathJax.Localization.addTranslation("de","MathML",{
 	 "\u00DC berpr\u00FC fen Sie die Einstellungen unter\n"+
 	 "'Internetoptionen'-> 'Werkzeuge' -> 'Sicherheit' -> 'Stufe Anpassen'\n"+
 	 "und aktivieren sie ActiveX.\n\n"+
-	 "MathJax kann sonst kein MathML verarbeiten."
+	 "MathJax kann sonst kein MathML verarbeiten.",
 //       "MathJax can't create an XML parser for MathML.  Check that\n"+
 //       "the 'Script ActiveX controls marked safe for scripting' security\n"+
 //       "setting is enabled (use the Internet Options item in the Tools\n"+

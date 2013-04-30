@@ -181,8 +181,7 @@
   };
   
   HUB.Register.StartupHook("TeX HTML Ready",function () {
-    var TEX = MathJax.InputJax.TeX,
-        TEXDEF = TEX.Definitions;
+    var TEX = MathJax.InputJax.TeX;
 
     TEX.Parse.Augment({
 

@@ -1,4 +1,4 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+b8561b0/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
 
 /*************************************************************
@@ -521,8 +521,9 @@
       //  Make inferred rows not include an mrow tag
       //
       toNativeMML: function (parent) {
+        var i, m; 
 	if (this.inferred  && this.parent.inferRow) {
-	  for (var i = 0, m = this.data.length; i < m; i++) {
+	  for (i = 0, m = this.data.length; i < m; i++) {
 	    if (this.data[i]) {this.data[i].toNativeMML(parent)}
 	      else {parent.appendChild(this.NativeMMLelement("mrow"))}
 	  }
@@ -534,7 +535,7 @@
           //
           var mfenced = this.NativeMMLelement("mfenced");
           this.NativeMMLattributes(mfenced);
-          var i = 0, m = this.data.length;
+          i = 0, m = this.data.length;
           if (this.open) { mfenced.setAttribute("open", this.open); i++; }
           if (this.close) { mfenced.setAttribute("close", this.close); m--; }
           var tag = mfenced;
@@ -732,8 +733,8 @@
             // Set the row/column spacing. If this.parent.nMMLleftPadding does
             // not contain enough value, repeat the last one.
             //
-            var lp = this.parent.nMMLleftPadding, M = lp.length;
-            for (var mtd = mtr.firstChild, i = 0; mtd; mtd = mtd.nextSibling, i++) {
+            var lp = this.parent.nMMLleftPadding, M = lp.length; i = 0;
+            for (var mtd = mtr.firstChild; mtd; mtd = mtd.nextSibling, i++) {
               CELLSPACING(mtd,this.nMMLtopPadding,lp[i < M ? i : M-1]);
             }
           }
