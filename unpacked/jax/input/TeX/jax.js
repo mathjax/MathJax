@@ -430,7 +430,7 @@
       remap: {
         '-':   '2212',
         '*':   '2217',
-        '`':   '2018',  // map ` to back quote
+        '`':   '2018'   // map ` to back quote
       },
     
       mathchar0mi: {
