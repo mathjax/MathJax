@@ -80,6 +80,7 @@
   
   var STACKITEM = STACK.Item = MathJax.Object.Subclass({
     type: "base",
+    endError:   /*_()*/ ["ExtraOpenMissingClose","Extra open brace or missing close brace"],
     closeError: /*_()*/ ["ExtraCloseMissingOpen","Extra close brace or missing open brace"],
     rightError: /*_()*/ ["MissingLeftExtraRight","Missing \\left or extra \\right"],
     Init: function () {
