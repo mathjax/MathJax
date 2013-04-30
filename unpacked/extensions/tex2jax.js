@@ -107,9 +107,10 @@ MathJax.Extension.tex2jax = {
     if (config.processRefs)         {parts.push("\\\\(eq)?ref\\{[^}]*\\}")}
     this.start = new RegExp(parts.join("|"),"g");
     this.skipTags = new RegExp("^("+config.skipTags.join("|")+")$","i");
-    var ignore = MathJax.Hub.config.preRemoveClass;
-    if (config.ignoreClass !== "") {ignore += "|" + config.ignoreClass}
-    this.ignoreClass = new RegExp("(^| )("+ignore+")( |$)");
+    var ignore = [];
+    if (MathJax.Hub.config.preRemoveClass) {ignore.push(MathJax.Hub.config.preRemoveClass)};
+    if (config.ignoreClass) {ignore.push(config.ignoreClass)}
+    this.ignoreClass = (ignore.length ? new RegExp("(^| )("+ignore.join("|")+")( |$)") : /^$/);
     this.processClass = new RegExp("(^| )("+config.processClass+")( |$)");
     return (parts.length > 0);
   },
