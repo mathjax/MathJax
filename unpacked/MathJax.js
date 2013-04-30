@@ -2718,7 +2718,7 @@ MathJax.Hub.Startup = {
     inputID: null,
     originalText: "",
     mimeType: "",
-    sourceMenuTitle: "MathML Code",
+    sourceMenuTitle: /*_(MathMenu)*/ ["MathMLcode","MathML Code"],
     
     Text: function (text,callback) {
       var script = this.SourceElement();
