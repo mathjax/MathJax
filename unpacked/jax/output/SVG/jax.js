@@ -1013,8 +1013,13 @@
 	return svg;
       },
       
+      SVGchildSVG: function (i) {
+        return (this.data[i] ? this.data[i].toSVG() : BBOX());
+      },
+      
       SVGdataStretched: function (i,HW,D) {
         this.SVGdata = {HW:HW, D:D};
+        if (!this.data[i]) {return BBOX()}
         if (D  != null) {return this.data[i].SVGstretchV(HW,D)}
         if (HW != null) {return this.data[i].SVGstretchH(HW)}
         return this.data[i].toSVG();
@@ -1599,7 +1604,7 @@
       toSVG: function () {
         this.SVGgetStyles();
         var svg = this.SVG(); this.SVGhandleSpace(svg);
-        var num = this.data[0].toSVG(), den = this.data[1].toSVG();
+        var num = this.SVGchildSVG(0), den = this.SVGchildSVG(1);
 	var values = this.getValues("displaystyle","linethickness","numalign","denomalign","bevelled");
 	var scale = svg.scale = this.SVGgetScale(), isDisplay = values.displaystyle;
 	var a = SVG.TeX.axis_height * scale;
@@ -1649,7 +1654,7 @@
       toSVG: function () {
         this.SVGgetStyles();
         var svg = this.SVG(); this.SVGhandleSpace(svg);
-	var base = this.data[0].toSVG(), rule, surd;
+	var base = this.SVGchildSVG(0), rule, surd;
 	var scale = this.SVGgetScale();
 	var t = SVG.TeX.rule_thickness * scale, p,q, H, x = 0;
 	if (this.Get("displaystyle")) {p = SVG.TeX.x_height * scale} else {p = t}
