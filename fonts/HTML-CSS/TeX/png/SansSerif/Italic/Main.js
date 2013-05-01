@@ -1,7 +1,7 @@
 /*
  *  /MathJax/fonts/HTML-CSS/TeX/png/SansSerif/Italic/Main.js
  *  
- *  Copyright (c) 2010 Design Science, Inc.
+ *  Copyright (c) 2010-2013 The MathJax Consortium
  *
  *  Part of the MathJax library.
  *  See http://www.mathjax.org for details.

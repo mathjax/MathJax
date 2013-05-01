@@ -7,7 +7,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2012 Design Science, Inc.
+ *  Copyright (c) 2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
  */
 
 MathJax.Extension["TeX/autoload-all"] = {
-  version: "2.1.1"
+  version: "2.2"
 };
   
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
