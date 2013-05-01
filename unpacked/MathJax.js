@@ -2826,7 +2826,8 @@ MathJax.Hub.Startup = {
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.2", config: {}
+    id: "Error", version: "2.2", config: {},
+    sourceMenuTitle: /*_(MathMenu)*/ ["OriginalForm","Original Form"]
   };
   
 })("MathJax");
