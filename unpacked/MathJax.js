@@ -1075,6 +1075,25 @@ MathJax.Localization = {
   //      %n or %{n} or %{plural:%n|option1|option1|...} or %c
   //
   pattern: /%(\d+|\{\d+\}|\{[a-z]+:\%\d+(?:\|(?:%\{\d+\}|%.|[^\}])*)+\}|.)/g,
+
+  SPLIT: ("axb".split(/(x)/).length === 3 ?
+    function (string,regex) {return string.split(regex)} :
+    //
+    //  IE8 and below don't do split() correctly when the pattern includes
+    //    parentheses (the split should include the matched exrepssions).
+    //    So implement it by hand here.
+    // 
+    function (string,regex) {
+      var result = [], match, last = 0;
+      regex.lastIndex = 0;
+      while (match = regex.exec(string)) {
+        result.push(string.substr(last,match.index));
+        result.push.apply(result,match.slice(1));
+        last = match.index + match[0].length;
+      }
+      result.push(string.substr(last));
+      return result;
+    }),
   
   _: function (id,phrase) {
     if (phrase instanceof Array) {return this.processSnippet(id,phrase)}
@@ -1094,7 +1113,7 @@ MathJax.Localization = {
     //
     //  Split string at escapes and process them individually
     //
-    var parts = string.split(this.pattern);
+    var parts = this.SPLIT(string,this.pattern);
     for (i = 1, m = parts.length; i < m; i += 2) {
       var c = parts[i].charAt(0);  // first char will be { or \d or a char to be kept literally
       if (c >= "0" && c <= "9") {    // %n
