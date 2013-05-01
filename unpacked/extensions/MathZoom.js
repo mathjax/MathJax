@@ -56,6 +56,11 @@
         "background-color":"white", opacity:0, filter:"alpha(opacity=0)"
       },
       
+      "#MathJax_ZoomFrame": {
+        position:"relative", display:"inline-block",
+        height:0, width:0
+      },
+      
       "#MathJax_ZoomEventTrap": {
         position:"absolute", left:0, top:0, "z-index":302,
         display:"inline-block", border:0, padding:0, margin:0,
@@ -135,10 +140,7 @@
       var Mw = Math.floor(.85*document.body.clientWidth),
           Mh = Math.floor(.85*Math.max(document.body.clientHeight,document.documentElement.clientHeight));
       var div = HTML.Element(
-        "span",{
-            style: {position:"relative", display:"inline-block", height:0, width:0},
-            id:"MathJax_ZoomFrame"
-        },[
+        "span",{id:"MathJax_ZoomFrame"},[
           ["span",{id:"MathJax_ZoomOverlay", onmousedown:this.Remove}],
           ["span",{
             id:"MathJax_Zoom", onclick:this.Remove,
