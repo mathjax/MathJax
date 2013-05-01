@@ -2159,7 +2159,8 @@ MathJax.Hub = {
     //
     var errorSettings = this.config.errorSettings;
     var errorText = MathJax.Localization._(errorSettings.messageId,errorSettings.message);
-    var error = MathJax.HTML.Element("span",{className:"MathJax_Error",jaxID:"Error"},errorText);
+    var error = MathJax.HTML.Element("span",
+                 {className:"MathJax_Error", jaxID:"Error", isMathJax:true},errorText);
     //
     //  Attach the menu events
     //
