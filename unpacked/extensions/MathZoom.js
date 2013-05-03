@@ -187,7 +187,8 @@
         if (zoom.offsetWidth  > Mw) {zoom.style.width  = Mw+"px"; zoom.style.height = (bbox.zH+this.scrollSize)+"px"}
       }
       if (this.operaPositionBug) {zoom.style.width = Math.min(Mw,bbox.zW)+"px"}  // Opera gets width as 0?
-      if (zoom.offsetWidth < Mw && zoom.offsetHeight < Mh) {zoom.style.overflow = "visible"}
+      if (zoom.offsetWidth && zoom.offsetWidth < Mw && zoom.offsetHeight < Mh)
+         {zoom.style.overflow = "visible"}  // don't show scroll bars if we don't need to
       this.Position(zoom,bbox);
       if (this.msieTrapEventBug) {
         trap.style.height = zoom.clientHeight+"px"; trap.style.width = zoom.clientWidth+"px";
@@ -263,9 +264,13 @@
       function (obj) {return getComputedStyle(obj).overflow} :
       function (obj) {return (obj.currentStyle||{overflow:"visible"}).overflow}),
     getBorder: function (obj) {
+      var size = {thin: 1, medium: 2, thick: 3};
       var style = (window.getComputedStyle ? getComputedStyle(obj) : 
-                     (object.currentStyle || {borderLeftWidth:0,borderTopWidth:0}));
-      return {x:parseInt(style.borderLeftWidth), y:parseInt(style.borderTopWidth)};
+                     (obj.currentStyle || {borderLeftWidth:0,borderTopWidth:0}));
+      var x = style.borderLeftWidth, y = style.borderTopWidth;
+      if (size[x]) {x = size[x]} else {x = parseInt(x)}
+      if (size[y]) {y = size[y]} else {y = parseInt(y)}
+      return {x:x, y:y};
     },
     //
     //  Get the position of an element on the page
