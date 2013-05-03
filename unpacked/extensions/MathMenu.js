@@ -962,6 +962,34 @@
 
   /*************************************************************/
 
+  //
+  //  Creates the locale menu from the list of locales in MathJax.Localization.strings
+  //
+  MENU.CreateLocaleMenu = function () {
+    if (!MENU.menu) return;
+    var menu = MENU.menu.Find("Language").menu, items = menu.items;
+    //
+    //  Get the names of the languages and sort them
+    //
+    var locales = [], LOCALE = MathJax.Localization.strings;
+    for (var id in LOCALE) {if (LOCALE.hasOwnProperty(id)) {locales.push(id)}}
+    locales = locales.sort(); menu.items = [];
+    //
+    //  Add a menu item for each
+    //
+    for (var i = 0, m = locales.length; i < m; i++) {
+      var title = LOCALE[locales[i]].menuTitle;
+      if (title) {title += " ("+locales[i]+")"} else {title = locales[i]}
+      menu.items.push(ITEM.RADIO([locales[i],title],"locale",{action:MENU.Locale}));
+    }
+    //
+    //  Add the rule and "Load from URL" items
+    //
+    menu.items.push(items[items.length-2],items[items.length-1]);
+  };
+
+  /*************************************************************/
+
   HUB.Register.StartupHook("End Config",function () {
 
     /*
@@ -1065,35 +1093,9 @@
       })();
     }
 
+    MENU.CreateLocaleMenu();
   });
   
-  //
-  //  Creates the locale menu from the list of locales in MathJax.Localization.strings
-  //
-  MENU.CreateLocaleMenu = function () {
-    if (!MENU.menu) return;
-    var menu = MENU.menu.Find("Language").menu, items = menu.items;
-    //
-    //  Get the names of the languages and sort them
-    //
-    var locales = [], LOCALE = MathJax.Localization.strings;
-    for (var id in LOCALE) {if (LOCALE.hasOwnProperty(id)) {locales.push(id)}}
-    locales = locales.sort(); menu.items = [];
-    //
-    //  Add a menu item for each
-    //
-    for (var i = 0, m = locales.length; i < m; i++) {
-      var title = LOCALE[locales[i]].menuTitle;
-      if (title) {title += " ("+locales[i]+")"} else {title = locales[i]}
-      menu.items.push(ITEM.RADIO([locales[i],title],"locale",{action:MENU.Locale}));
-    }
-    //
-    //  Add the rule and "Load from URL" items
-    //
-    menu.items.push(items[items.length-2],items[items.length-1]);
-  };
-  MENU.CreateLocaleMenu();
-
   MENU.showRenderer = function (show) {
     MENU.cookie.showRenderer = CONFIG.showRenderer = show; MENU.saveCookie();
     MENU.menu.Find("Math Settings","Math Renderer").hidden = !show;
