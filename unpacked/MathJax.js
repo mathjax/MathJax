@@ -1586,7 +1586,11 @@ MathJax.Message = {
       } catch (err) {
         if (!err.restart) {throw err}
         if (!err.restart.called) {
-          this.log[n].restarted = true; // mark it so we can tell if the Clear() comes before the message is up
+          //
+          //  Mark it so we can tell if the Clear() comes before the message is displayed
+          //
+          if (this.log[n].restarted == null) {this.log[n].restarted = 0}
+          this.log[n].restarted++; delete this.log[n].cleared;
           MathJax.Callback.After(["Set",this,text,n,clearDelay],err.restart);
           return n;
         }
@@ -1628,7 +1632,7 @@ MathJax.Message = {
     //
     if (this.log[n].restarted) {
       if (this.log[n].cleared) {clearDelay = 0}
-      delete this.log[n].restarted, this.log[n].cleared;
+      if (--this.log[n].restarted === 0) {delete this.log[n].cleared}
     }
     //
     //  Check if we need to clear the message automatically.
