@@ -1071,6 +1071,7 @@
   //  Creates the locale menu from the list of locales in MathJax.Localization.strings
   //
   MENU.CreateLocaleMenu = function () {
+    if (!MENU.menu) return;
     var menu = MENU.menu.Find("Language").menu, items = menu.items;
     //
     //  Get the names of the languages and sort them

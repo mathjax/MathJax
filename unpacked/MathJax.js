@@ -1410,7 +1410,7 @@ MathJax.Localization = {
       data = data.domains[domain];
     }
     MathJax.Hub.Insert(data,definition);
-    if (isNew && MathJax.Menu) {MathJax.Menu.CreateLocaleMenu()}
+    if (isNew && MathJax.Menu.menu) {MathJax.Menu.CreateLocaleMenu()}
   },
   
   //
