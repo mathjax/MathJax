@@ -271,13 +271,13 @@ MathJax.ElementJax.mml.Augment({
       while (parent && parent.notParent) {parent = parent.parent}
       return parent;
     },
-    Get: function (name,nodefault,skipadjust) {
+    Get: function (name,nodefault) {
       if (this[name] != null) {return this[name]}
       if (this.attr && this.attr[name] != null) {return this.attr[name]}
       // FIXME: should cache these values and get from cache
       // (clear cache when appended to a new object?)
       var parent = this.Parent();
-      if (parent && parent["adjustChild_"+name] != null && !skipadjust) {
+      if (parent && parent["adjustChild_"+name] != null) {
         return (parent["adjustChild_"+name])(this.childPosition(),nodefault);
       }
       var obj = this.inherit; var root = obj;
@@ -304,9 +304,9 @@ MathJax.ElementJax.mml.Augment({
         {values[arguments[i]] = this.Get(arguments[i])}
       return values;
     },
-    adjustChild_scriptlevel:   function (i,nodef) {return this.Get("scriptlevel",nodef,true)},   // always inherit from parent
-    adjustChild_displaystyle:  function (i,nodef) {return this.Get("displaystyle",nodef,true)},  // always inherit from parent
-    adjustChild_texprimestyle: function (i,nodef) {return this.Get("texprimestyle",nodef,true)}, // always inherit from parent
+    adjustChild_scriptlevel:   function (i,nodef) {return this.Get("scriptlevel",nodef)},   // always inherit from parent
+    adjustChild_displaystyle:  function (i,nodef) {return this.Get("displaystyle",nodef)},  // always inherit from parent
+    adjustChild_texprimestyle: function (i,nodef) {return this.Get("texprimestyle",nodef)}, // always inherit from parent
     childPosition: function () {
       var child = this, parent = child.parent;
       while (parent.notParent) {child = parent; parent = child.parent}
