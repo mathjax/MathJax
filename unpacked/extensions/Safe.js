@@ -39,7 +39,7 @@
       cssIDs: "safe",    // safe start with MJX-
       styles: "safe",    // safe are in safeStyles below
       fontsize: "all",   // safe are between sizeMin and sizeMax em's
-      require: "safe",   // safe are in safeRequire below
+      require: "safe"    // safe are in safeRequire below
     },
     sizeMin: .7,        // \scriptsize
     sizeMax: 1.44,      // \large
