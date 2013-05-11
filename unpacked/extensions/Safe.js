@@ -97,6 +97,17 @@
     config: CONFIG,
     div1: document.createElement("div"),  // for CSS processing
     div2: document.createElement("div"),
+
+    //
+    //  Methods called for MathML attribute processing
+    //
+    filter: {
+      "class":  "filterClass", 
+      id:       "filterID",
+      fontsize: "filterFontSize",
+      mathsize: "filterFontSize",
+      style:    "filterStyles"
+    },
     
     //
     //  Filter HREF URL's
@@ -242,9 +253,10 @@
   });
   
   HUB.Register.StartupHook("TeX Jax Ready",function () {
-    var TEX = MathJax.InputJax.TeX;
+    var TEX = MathJax.InputJax.TeX,
+        PARSE = TEX.Parse, METHOD = SAFE.filter;
     
-    TEX.Parse.Augment({
+    PARSE.Augment({
       
       //
       //  Implements \require{name} with filtering
@@ -258,11 +270,9 @@
       //
       //  Controls \mmlToken attributes
       //
-      MmlTokenAllow: {
-        fontsize: (ALLOW.fontsize === "all"),
-        id: (ALLOW.cssIDs === "all"),
-        "class": (ALLOW.classes === "all"),
-        style: (ALLOW.styles === "all")
+      MmlFilterAttribute: function (name,value) {
+        if (METHOD[name]) {value = SAFE[METHOD[name]](value)}
+        return value;
       },
       
       //
@@ -292,16 +302,9 @@
   });
   
   HUB.Register.StartupHook("MathML Jax Ready",function () {
-    var PARSE = MathJax.InputJax.MathML.Parse;
+    var PARSE = MathJax.InputJax.MathML.Parse,
+        METHOD = SAFE.filter;
     
-    var METHOD = {
-      href:     "filterURL",
-      "class":  "filterClass", 
-      id:       "filterID",
-      fontsize: "filterFontSize",
-      style:    "filterStyles"
-    };
-
     //
     //  Filter MathML attributes
     //
