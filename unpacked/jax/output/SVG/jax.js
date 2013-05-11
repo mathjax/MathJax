@@ -1903,7 +1903,7 @@
           //  Put that in an <svg> with xlink defined.
           //
           var box = BBOX.G({
-            stroke:"black", fill:"black", "stroke-thickness":0,
+            stroke:"black", fill:"black", "stroke-width":0,
             transform: "matrix(1 0 0 -1 0 0)"
           }).With({removeable: false});
           box.Add(this.data[0].toSVG(),0,0,true); box.Clean();
