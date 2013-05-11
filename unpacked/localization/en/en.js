@@ -81,6 +81,7 @@ MathJax.Localization.addTranslation("en",null,{ // NOTE use correct ISO-639-1 tw
 
   number: function(n) {
 //    return String(n).replace(".", ","); // replace dot by comma
+    return n;
   }
 
 });

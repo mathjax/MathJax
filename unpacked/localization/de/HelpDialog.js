@@ -44,7 +44,7 @@ MathJax.Localization.addTranslation("de","HelpDialog",{
 //    "Chrome 0.2+, Safari 2+, Opera 9.6+ and most mobile browsers.",
 
     Menu:
-      "*Mathe Men\u00FC*: MathJax f\u00FCgt ein Kontextmen\u00FC bei allen Formen hinzu. " +
+      "*Mathe Men\u00FC*: MathJax f\u00FCgt ein Kontextmen\u00FC bei allen Formeln hinzu. " +
       "Es wird mit Rechtsklick oder STRG+Linksklick auf einer Formel aufgerufen.",
 //    "*Math Menu*: MathJax adds a contextual menu to equations.  Right-click or " +
 //    "CTRL-click on any mathematics to access the menu.",
