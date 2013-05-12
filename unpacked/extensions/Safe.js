@@ -102,11 +102,14 @@
     //  Methods called for MathML attribute processing
     //
     filter: {
-      "class":  "filterClass", 
-      id:       "filterID",
-      fontsize: "filterFontSize",
-      mathsize: "filterFontSize",
-      style:    "filterStyles"
+      "class":              "filterClass", 
+      style:                "filterStyles",
+      id:                   "filterID",
+      fontsize:             "filterFontSize",
+      mathsize:             "filterFontSize",
+      scriptminsize:        "filterFontSize",
+      scriptsizemultiplier: "filterSizeMultiplier",
+      scriptlevel:          "filterScriptLevel"
     },
     
     //
@@ -180,6 +183,23 @@
     },
     filterFontSize: function (size) {
       return (ALLOW.fontsize === "all" ? size: null);
+    },
+    
+    //
+    //  Filter scriptsizemultiplier
+    //
+    filterSizeMultiplier: function (size) {
+      if (ALLOW.fontsize === "none") {size = null}
+      else if (ALLOW.fontsize !== "all") {size = Math.min(1,size).toString()}
+      return size;
+    },
+    //
+    //  Filter scriptLevel
+    //
+    filterScriptLevel: function (level) {
+      if (ALLOW.fontsize === "none") {level = null}
+      else if (ALLOW.fontsize !== "all") {level = Math.max(0,level).toString()}
+      return level;
     },
     
     //
