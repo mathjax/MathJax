@@ -22,6 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fr","TeX",{
+  version: "2.2",
   isLoaded: true,
   strings: {
 
