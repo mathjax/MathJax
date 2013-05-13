@@ -127,12 +127,12 @@
     //
     filterClass: function (CLASS) {
       if (ALLOW.classes === "none" ||
-         (ALLOW.classes !== "all" && !CLASS.match(/^MJX-/))) {CLASS = null}
+         (ALLOW.classes !== "all" && !CLASS.match(/^MJX-[-a-zA-Z0-9_.]+$/))) {CLASS = null}
       return CLASS;
     },
     filterID: function (id) {
       if (ALLOW.cssIDs === "none" ||
-         (ALLOW.cssIDs !== "all" && !id.match(/^MJX-/))) {id = null}
+         (ALLOW.cssIDs !== "all" && !id.match(/^MJX-[-a-zA-Z0-9_.]+$/))) {id = null}
       return id;
     },
     
@@ -190,7 +190,7 @@
     //
     filterSizeMultiplier: function (size) {
       if (ALLOW.fontsize === "none") {size = null}
-      else if (ALLOW.fontsize !== "all") {size = Math.min(1,size).toString()}
+      else if (ALLOW.fontsize !== "all") {size = Math.min(1,Math.max(.6,size)).toString()}
       return size;
     },
     //
