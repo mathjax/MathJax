@@ -56,6 +56,7 @@
     showContext:  false,                           //  show the "Context Menu" menu?
     showDiscoverable: false,                       //  show the "Discoverable" menu?
     showLocale: true,                              //  show the "Locale" menu?
+    showLocaleURL: false,                          //  show the "Load from URL" menu?
 
     windowSettings: {                              // for source window
       status: "no", toolbar: "no", locationbar: "no", menubar: "no",
@@ -1071,8 +1072,8 @@
       ),
       ITEM.SUBMENU(["Locale","Language"],                  {hidden:!CONFIG.showLocale},
         ITEM.RADIO("en", "locale",  {action: MENU.Locale}),
-        ITEM.RULE(),
-        ITEM.COMMAND(["LoadLocale","Load from URL ..."], MENU.LoadLocale)
+        ITEM.RULE().With({hidden:!CONFIG.showLocaleURL, name:["","localURL_rule"]}),
+        ITEM.COMMAND(["LoadLocale","Load from URL ..."], MENU.LoadLocale, {hidden:!CONFIG.showLocaleURL})
       ),
       ITEM.RULE(),
       ITEM.COMMAND(["About","About MathJax"],MENU.About),
