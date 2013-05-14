@@ -23,9 +23,11 @@
 
 MathJax.Localization.addTranslation("en",null,{ // NOTE use correct ISO-639-1 two letter code http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
   menuTitle: "English", // NOTE language name; will appear in the MathJax submenu for switching locales
+  version: "2.2",
   isLoaded: true,
   domains: {
     "_": {
+      version: "2.2",
       isLoaded: true,
       strings: {
 

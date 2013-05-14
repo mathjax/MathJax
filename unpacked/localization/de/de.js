@@ -23,10 +23,12 @@
 
 MathJax.Localization.addTranslation("de",null,{
   menuTitle: "Deutsch",
+  version: "2.2",
   isLoaded: true,
   domains: {
     "_": {
       isLoaded: true,
+      version: "2.2",
       strings: {
 
         CookieConfig:
