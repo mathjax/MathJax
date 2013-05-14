@@ -1441,15 +1441,18 @@
                      "%1 is not a recognized attribute for %2",
                      match[1],type]);
         }
-        var value = match[2].replace(/^(['"])(.*)\1$/,"$2");
-        if (value.toLowerCase() === "true") {value = true}
-          else if (value.toLowerCase() === "false") {value = false}
-        def[match[1]] = value;
-        def.attrNames.push(match[1]);
+        var value = this.MmlFilterAttribute(match[1],match[2].replace(/^(['"])(.*)\1$/,"$2"));
+        if (value) {
+          if (value.toLowerCase() === "true") {value = true}
+            else if (value.toLowerCase() === "false") {value = false}
+          def[match[1]] = value;
+          def.attrNames.push(match[1]);
+        }
         attr = attr.substr(match[0].length);
       }
       this.Push(this.mmlToken(MML[type](data).With(def)));
     },
+    MmlFilterAttribute: function (name,value) {return value},
     MmlTokenAllow: {
       fontfamily:1, fontsize:1, fontweight:1, fontstyle:1,
       color:1, background:1,
