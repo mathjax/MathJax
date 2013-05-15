@@ -102,6 +102,9 @@
     //  Methods called for MathML attribute processing
     //
     filter: {
+      href:                 "filterURL",
+      src:                  "filterURL",
+      altimg:               "filterURL",
       "class":              "filterClass", 
       style:                "filterStyles",
       id:                   "filterID",
