@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/MathMenu.js
@@ -8,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2012 Design Science, Inc.
+ *  Copyright (c) 2010-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +27,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.1";
+  var VERSION = "2.2";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -33,12 +36,18 @@
     signal: SIGNAL
   };
 
+  var _ = function (id) {
+    return MathJax.Localization._.apply(
+      MathJax.Localization,
+      [["MathMenu",id]].concat([].slice.call(arguments,1))
+    );
+  };
+
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE, isIE9 = ((document.documentMode||0) > 8);
   var ROUND = (isPC ? null : "5px");
   
   var CONFIG = HUB.CombineConfig("MathMenu",{
     delay: 150,                                    // the delay for submenus
-    helpURL: "http://www.mathjax.org/help-v2/user/",  // the URL for the "MathJax Help" menu
     closeImg: AJAX.fileURL(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
@@ -46,6 +55,8 @@
     showFontMenu: false,                           //  show the "Font Preference" menu?
     showContext:  false,                           //  show the "Context Menu" menu?
     showDiscoverable: false,                       //  show the "Discoverable" menu?
+    showLocale: true,                              //  show the "Locale" menu?
+    showLocaleURL: false,                          //  show the "Load from URL" menu?
 
     windowSettings: {                              // for source window
       status: "no", toolbar: "no", locationbar: "no", menubar: "no",
@@ -99,13 +110,6 @@
       ".MathJax_MenuItem": {
         padding: (isPC ? "2px 2em" : "1px 2em"),
         background:"transparent"
-      },
-
-      ".MathJax_MenuTitle": {
-        "background-color":"#CCCCCC",
-        margin: (isPC ? "-1px -1px 1px -1px" : "-5px 0 0 0"),
-        "text-align":"center", "font-style":"italic", "font-size":"80%", color:"#444444",
-        padding:"2px 0", overflow:"hidden"
       },
 
       ".MathJax_MenuArrow": {
@@ -175,7 +179,6 @@
      */
     Post: function (event,parent) {
       if (!event) {event = window.event};
-      var title = (!this.title ? null : [["div",{className: "MathJax_MenuTitle"},[this.title]]]);
       var div = document.getElementById("MathJax_MenuFrame");
       if (!div) {
         div = MENU.Background(this);
@@ -187,7 +190,8 @@
         onmouseup: MENU.Mouseup, ondblclick: FALSE,
         ondragstart: FALSE, onselectstart: FALSE, oncontextmenu: FALSE,
         menuItem: this, className: "MathJax_Menu"
-      },title);
+      });
+      MathJax.Localization.setCSS(menu);
 
       for (var i = 0, m = this.items.length; i < m; i++) {this.items[i].Create(menu)}
       if (MENU.isMobile) {
@@ -251,16 +255,17 @@
     },
 
     /*
-     *  Find a named item in a menu (or submenu).
-     *  A list of names means descend into submenus.
+     *  Find an item in a menu (or submenu) by name (Find) or ID (FindID).
+     *  A list of names or IDs means descend into submenus.
      */
-    Find: function (name) {
-      var names = [].slice.call(arguments,1);
+    Find: function (name) {return this.FindN(1,name,[].slice.call(arguments,1))},
+    FindId: function (name) {return this.FindN(0,name,[].slice.call(arguments,1))},
+    FindN: function (n,name,names) {
       for (var i = 0, m = this.items.length; i < m; i++) {
-        if (this.items[i].name === name) {
+        if (this.items[i].name[n] === name) {
           if (names.length) {
             if (!this.items[i].menu) {return null}
-            return this.items[i].menu.Find.apply(this.items[i].menu,names);
+            return this.items[i].menu.FindN(n,names[0],names.slice(1));
           }
           return this.items[i];
         }
@@ -271,9 +276,11 @@
     /*
      *  Find the index of a menu item (so we can insert before or after it)
      */
-    IndexOf: function (name) {
+    IndexOf: function (name) {return this.IndexOfN(1,name)},
+    IndexOfId: function (name) {return this.IndexOfN(0,name)},
+    IndexOfN: function (n,name) {
       for (var i = 0, m = this.items.length; i < m; i++)
-        {if (this.items[i].name === name) {return i}}
+        {if (this.items[i].name[n] === name) {return i}}
       return null;
     }
     
@@ -317,12 +324,12 @@
       var div = HTML.addElement(document.body,"div",{style:this.BGSTYLE, id:"MathJax_MenuFrame"},
                     [["div",{style: this.BGSTYLE, menuItem: menu, onmousedown: this.Remove}]]);
       var bg = div.firstChild;
-      if (menu.msieBackgroundBug) {
+      if (MENU.msieBackgroundBug) {
         //  MSIE doesn't allow transparent background to be hit boxes, so
         //  fake it using opacity with solid background color
         bg.style.backgroundColor = "white"; bg.style.filter = "alpha(opacity=0)";
       }
-      if (menu.msieFixedPositionBug) {
+      if (MENU.msieFixedPositionBug) {
         //  MSIE can't do fixed position, so use a full-sized background
         //  and an onresize handler to update it (stupid, but necessary)
         div.width = div.height = 0; this.Resize();
@@ -361,7 +368,7 @@
    *  The menu item root subclass
    */
   var ITEM = MENU.ITEM = MathJax.Object.Subclass({
-    name: "", // the menu item's label
+    name: "", // the menu item's label as [id,label] pair
 
     Create: function (menu) {
       if (!this.hidden) {
@@ -376,6 +383,7 @@
         HTML.addElement(menu,"div",def,this.Label(def,menu));
       }
     },
+    Name: function () {return _(this.name[0],this.name[1])},
 
     Mouseover: function (event,menu) {
       if (!this.disabled) {this.Activate(menu)}
@@ -433,11 +441,12 @@
     action: function () {},
 
     Init: function (name,action,def) {
+      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.action = action;
       this.With(def);
     },
     
-    Label: function (def,menu) {return [this.name]},
+    Label: function (def,menu) {return [this.Name()]},
     Mouseup: function (event,menu) {
       if (!this.disabled) {
         this.Remove(event,menu);
@@ -457,13 +466,14 @@
     marker: (isPC && !HUB.Browser.isSafari ? "\u25B6" : "\u25B8"),  // the menu arrow
 
     Init: function (name,def) {
+      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; var i = 1;
       if (!(def instanceof MENU.ITEM)) {this.With(def), i++}
       this.menu = MENU.apply(MENU,[].slice.call(arguments,i));
     },
     Label: function (def,menu) {
       this.menu.posted = false;
-      return [this.name+" ",["span",{className:"MathJax_MenuArrow"},[this.marker]]];
+      return [this.Name()+" ",["span",{className:"MathJax_MenuArrow"},[this.marker]]];
     },
     Timer: function (event,menu) {
       if (this.timer) {clearTimeout(this.timer)}
@@ -506,13 +516,14 @@
     marker: (isPC ? "\u25CF" : "\u2713"),   // the checkmark
 
     Init: function (name,variable,def) {
+      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
-      if (this.value == null) {this.value = this.name}
+      if (this.value == null) {this.value = this.name[0]}
     },
     Label: function (def,menu) {
       var span = {className:"MathJax_MenuRadioCheck"};
       if (CONFIG.settings[this.variable] !== this.value) {span = {style:{display:"none"}}}
-      return [["span",span,[this.marker]]," "+this.name];
+      return [["span",span,[this.marker]]," "+this.Name()];
     },
     Mouseup: function (event,menu) {
       if (!this.disabled) {
@@ -542,12 +553,13 @@
     marker: "\u2713",   // the checkmark
 
     Init: function (name,variable,def) {
+      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
     },
     Label: function (def,menu) {
       var span = {className:"MathJax_MenuCheck"};
       if (!CONFIG.settings[this.variable]) {span = {style:{display:"none"}}}
-      return [["span",span,[this.marker]]," "+this.name];
+      return [["span",span,[this.marker]]," "+this.Name()];
     },
     Mouseup: function (event,menu) {
       if (!this.disabled) {
@@ -567,11 +579,14 @@
    *  A menu item that is a label
    */
   MENU.ITEM.LABEL = MENU.ITEM.Subclass({
-    Init: function (name,def) {this.name = name; this.With(def)},
+    Init: function (name,def) {
+      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      this.name = name; this.With(def);
+    },
     Label: function (def,menu) {
       delete def.onmouseover, delete def.onmouseout; delete def.onmousedown;
       def.className += " MathJax_MenuLabel";
-      return [this.name];
+      return [this.Name()];
     }
   });
 
@@ -594,28 +609,31 @@
    *  Handle the ABOUT box
    */
   MENU.About = function () {
-    var HTMLCSS = OUTPUT["HTML-CSS"] || {fontInUse: ""};
-    var local = (HTMLCSS.webFonts ? "" : "local "), web = (HTMLCSS.webFonts ? " web" : "");
-    var font = (HTMLCSS.imgFonts ? "Image" : local+HTMLCSS.fontInUse+web) + " fonts";
-    if (font === "local  fonts" && OUTPUT.SVG) {font = "web SVG fonts"}
+    var HTMLCSS = OUTPUT["HTML-CSS"] || {};
+    var font = 
+       (HTMLCSS.imgFonts ? "image" :
+       (HTMLCSS.fontInUse ?
+         (HTMLCSS.webFonts ? "web" : "local")+" "+HTMLCSS.fontInUse :
+       (OUTPUT.SVG ? "web SVG" : "generic")) ) + " fonts";
+    var format = (!HTMLCSS.webFonts || HTMLCSS.imgFonts ? null :
+        HTMLCSS.allowWebFonts.replace(/otf/,"woff or otf") + " fonts");
     var jax = ["MathJax.js v"+MathJax.fileversion,["br"]];
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
-    MENU.About.GetJax(jax,MathJax.InputJax,"Input Jax");
-    MENU.About.GetJax(jax,MathJax.OutputJax,"Output Jax");
-    MENU.About.GetJax(jax,MathJax.ElementJax,"Element Jax");
+    MENU.About.GetJax(jax,MathJax.InputJax,["InputJax","%1 Input Jax v%2"]);
+    MENU.About.GetJax(jax,MathJax.OutputJax,["OutputJax","%1 Output Jax v%2"]);
+    MENU.About.GetJax(jax,MathJax.ElementJax,["ElementJax","%1 Element Jax v%2"]);
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
-    MENU.About.GetJax(jax,MathJax.Extension,"Extension",true);
+    MENU.About.GetJax(jax,MathJax.Extension,["Extension","%1 Extension v%2"],true);
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}],["center",{},[
-      HUB.Browser + " v"+HUB.Browser.version +
-      (HTMLCSS.webFonts && !HTMLCSS.imgFonts ? " \u2014 " + 
-        HTMLCSS.allowWebFonts.replace(/otf/,"woff or otf") + " fonts" : "")
+      HUB.Browser + " v"+HUB.Browser.version + (format ? 
+        " \u2014 " + _(format.replace(/ /g,""),format) : "")
     ]]);
     MENU.About.div = MENU.Background(MENU.About);
     var about = HTML.addElement(MENU.About.div,"div",{
       id: "MathJax_About"
     },[
       ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
-      "using "+font,["br"],["br"],
+      _(font.replace(/ /g,""),"using "+font),["br"],["br"],
       ["span",{style:{
         display:"inline-block", "text-align":"left", "font-size":"80%",
         "max-height":"20em", overflow:"auto", 
@@ -628,6 +646,7 @@
         onclick: MENU.About.Remove
       }]
     ]);
+    MathJax.Localization.setCSS(about);
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;
     if (MENU.prototype.msieAboutBug) {
@@ -646,7 +665,7 @@
     var info = [];
     for (var id in JAX) {if (JAX.hasOwnProperty(id) && JAX[id]) {
       if ((noTypeCheck && JAX[id].version) || (JAX[id].isa && JAX[id].isa(JAX)))
-        {info.push((JAX[id].id||id)+" "+type+" v"+JAX[id].version)}
+        {info.push(_(type[0],type[1],(JAX[id].id||id),JAX[id].version))}
     }}
     info.sort();
     for (var i = 0, m = info.length; i < m; i++) {jax.push(info[i],["br"])}
@@ -658,7 +677,8 @@
    *  Handle the MathJax HELP menu
    */
   MENU.Help = function () {
-    window.open(CONFIG.helpURL,"MathJaxHelp");
+    AJAX.Require("[MathJax]/extensions/HelpDialog.js",
+                 function () {MathJax.Extension.Help.Dialog()});
   };
   
   /*
@@ -689,8 +709,13 @@
         );
         return;
       }
+    } else if (this.format === "Error") {
+      MENU.ShowSource.Text(MENU.jax.errorText,event);
     } else {
-      if (MENU.jax.originalText == null) {alert("No original form available"); return}
+      if (MENU.jax.originalText == null) {
+        alert(_("NoOriginalForm","No original form available"));
+        return;
+      }
       MENU.ShowSource.Text(MENU.jax.originalText,event);
     }
   };
@@ -706,16 +731,17 @@
     var w = MENU.ShowSource.Window(event); delete MENU.ShowSource.w;
     text = text.replace(/^\s*/,"").replace(/\s*$/,"");
     text = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    var title = _("EqSource","MathJax Equation Source");
     if (MENU.isMobile) {
       w.document.open();
-      w.document.write("<html><head><meta name='viewport' content='width=device-width, initial-scale=1.0' /><title>MathJax Equation Source</title></head><body style='font-size:85%'>");
+      w.document.write("<html><head><meta name='viewport' content='width=device-width, initial-scale=1.0' /><title>"+title+"</title></head><body style='font-size:85%'>");
       w.document.write("<pre>"+text+"</pre>");
-      w.document.write("<hr><input type='button' value='Close' onclick='window.close()' />");
+      w.document.write("<hr><input type='button' value='"+_("Close","Close")+"' onclick='window.close()' />");
       w.document.write("</body></html>");
       w.document.close();
     } else {
       w.document.open();
-      w.document.write("<html><head><title>MathJax Equation Source</title></head><body style='font-size:85%'>");
+      w.document.write("<html><head><title>"+title+"</title></head><body style='font-size:85%'>");
       w.document.write("<table><tr><td><pre>"+text+"</pre></td></tr></table>");
       w.document.write("</body></html>");
       w.document.close();
@@ -740,7 +766,7 @@
   MENU.Scale = function () {
     var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML, SVG = OUTPUT.SVG;
     var SCALE = (HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
-    var scale = prompt("Scale all mathematics (compared to surrounding text) by",SCALE+"%");
+    var scale = prompt(_("ScaleMath","Scale all mathematics (compared to surrounding text) by"),SCALE+"%");
     if (scale) {
       if (scale.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         scale = parseFloat(scale);
@@ -752,8 +778,9 @@
             MENU.cookie.scale = scale;
             MENU.saveCookie(); HUB.Reprocess();
           }
-        } else {alert("The scale should not be zero")}
-      } else {alert("The scale should be a percentage (e.g., 120%)")}
+        } else {alert(_("NonZeroScale","The scale should not be zero"))}
+      } else {alert(_("PercentScale",
+                      "The scale should be a percentage (e.g., 120%%)"))}
     }
   };
   
@@ -777,7 +804,8 @@
       switch (CONFIG.settings.renderer) {
         case "NativeMML":
           if (!CONFIG.settings.warnedMML) {
-            if (BROWSER.isChrome || (BROWSER.isSafari && !BROWSER.versionAtLeast("5.0"))) {message = MESSAGE.MML.WebKit}
+            if (BROWSER.isChrome && BROWSER.version.substr(0,3) !== "24.") {message = MESSAGE.MML.WebKit} 
+            else if (BROWSER.isSafari && !BROWSER.versionAtLeast("5.0")) {message = MESSAGE.MML.WebKit}
             else if (BROWSER.isMSIE) {if (!BROWSER.hasMathPlayer) {message = MESSAGE.MML.MSIE}}
             else {message = MESSAGE.MML[BROWSER]}
             warned = "warnedMML";
@@ -791,10 +819,18 @@
           break;  
       }
       if (message) {
-        message += "\n\nSwitch the renderer anyway?\n\n" +
-                    "(Press OK to switch, CANCEL to continue with the current renderer)";
-        MENU.cookie.renderer = jax[0].id; MENU.saveCookie(); if (!confirm(message)) {return}
-        if (warned) {MENU.cookie[warned]  = CONFIG.settings[warned] = true}
+        message = _(message[0],message[1]);
+        message += "\n\n";
+        message += _("SwitchAnyway",
+                     "Switch the renderer anyway?\n\n" +
+                     "(Press OK to switch, CANCEL to continue with the current renderer)");
+        MENU.cookie.renderer = jax[0].id; MENU.saveCookie();
+        if (!confirm(message)) {
+          MENU.cookie.renderer = CONFIG.settings.renderer = HTML.Cookie.Get("menu").renderer;
+          MENU.saveCookie();
+          return;
+        }
+        if (warned) {MENU.cookie.warned  = CONFIG.settings.warned = true}
         MENU.cookie.renderer = CONFIG.settings.renderer; MENU.saveCookie();
       }
       HUB.Queue(
@@ -805,28 +841,34 @@
   };
   MENU.Renderer.Messages = {
     MML: {
-      WebKit:  "Your browser doesn't seem to support MathML natively, " +
-               "so switching to MathML output may cause the mathematics " +
-               "on the page to become unreadable.",
+      WebKit:  ["WebkitNativeMMLWarning",
+                 "Your browser doesn't seem to support MathML natively, " +
+                 "so switching to MathML output may cause the mathematics " +
+                 "on the page to become unreadable."],
 
-      MSIE:    "Internet Explorer requires the MathPlayer plugin " +
-               "in order to process MathML output.",
+      MSIE:    ["MSIENativeMMLWarning",
+                 "Internet Explorer requires the MathPlayer plugin " +
+                 "in order to process MathML output."],
       
-      Opera:   "Opera's support for MathML is limited, so switching to " +
-               "MathML output may cause some expressions to render poorly.",
+      Opera:   ["OperaNativeMMLWarning",
+                 "Opera's support for MathML is limited, so switching to " +
+                 "MathML output may cause some expressions to render poorly."],
 
-      Safari: "Your browser's native MathML does not implement all the features " +
-               "used by MathJax, so some expressions may not render properly.",
+      Safari:  ["SafariNativeMMLWarning",
+                 "Your browser's native MathML does not implement all the features " +
+                 "used by MathJax, so some expressions may not render properly."],
 
-      Firefox: "Your browser's native MathML does not implement all the features " +
-               "used by MathJax, so some expressions may not render properly."
+      Firefox: ["FirefoxNativeMMLWarning",
+                 "Your browser's native MathML does not implement all the features " +
+                 "used by MathJax, so some expressions may not render properly."]
     },
     
     SVG: {
-      MSIE:    "SVG is not implemented in Internet Explorer prior to " +
-               "IE9, or when the browser is emulating IE8 or below. " +
-               "Switching to SVG output will cause the mathemtics to " +
-               "not display properly."
+      MSIE:    ["MSIESVGWarning",
+                 "SVG is not implemented in Internet Explorer prior to " +
+                 "IE9 or when it is emulating IE8 or below. " +
+                 "Switching to SVG output will cause the mathematics to " +
+                 "not display properly."]
     }
   };
   
@@ -839,13 +881,35 @@
   };
   
   /*
+   *  Handle selection of locale and rerender the page
+   */
+  MENU.Locale = function () {
+    MathJax.Localization.setLocale(CONFIG.settings.locale);
+    MathJax.Hub.Queue(["Reprocess",MathJax.Hub]); // FIXME: Just reprocess error messages?
+  };
+  MENU.LoadLocale = function () {
+    var url = prompt(_("LoadURL","Load translation data from this URL:"));
+    if (url) {
+      if (!url.match(/\.js$/)) {
+        alert(_("BadURL",
+          "The URL should be for a javascript file that defines MathJax translation data.  " +
+          "Javascript file names should end with '.js'"
+        ));
+      }
+      AJAX.Require(url,function (status) {
+        if (status != AJAX.STATUS.OK) {alert(_("BadData","Failed to load translation data from %1",url))}
+      });
+    }
+  };
+  
+  /*
    *  Handle setting MathPlayer events
    */
   MENU.MPEvents = function (item) {
     var discoverable = CONFIG.settings.discoverable,
         MESSAGE = MENU.MPEvents.Messages;
     if (!isIE9) {
-      if (CONFIG.settings.mpMouse && !confirm(MESSAGE.IE8warning)) {
+      if (CONFIG.settings.mpMouse && !confirm(_.apply(_,MESSAGE.IE8warning))) {
         delete MENU.cookie.mpContext; delete CONFIG.settings.mpContext;
         delete MENU.cookie.mpMouse; delete CONFIG.settings.mpMouse;
         MENU.saveCookie();
@@ -855,19 +919,20 @@
       MENU.cookie.mpContext = MENU.cookie.mpMouse = CONFIG.settings.mpMouse;
       MENU.saveCookie();
       MathJax.Hub.Queue(["Rerender",MathJax.Hub])
-    } else if (!discoverable && item.name === "Menu Events" && CONFIG.settings.mpContext) {
-      alert(MESSAGE.IE9warning);
+    } else if (!discoverable && item.name[1] === "Menu Events" && CONFIG.settings.mpContext) {
+      alert(_.apply(_,MESSAGE.IE9warning));
     }
   };
+
   MENU.MPEvents.Messages = {
-    IE8warning:
+    IE8warning: ["IE8warning",
       "This will disable the MathJax menu and zoom features, " +
       "but you can Alt-Click on an expression to obtain the MathJax " +
-      "menu instead.\n\nReally change the MathPlayer settings?",
+      "menu instead.\n\nReally change the MathPlayer settings?"],
 
-    IE9warning:
+    IE9warning: ["IE9warning",
       "The MathJax contextual menu will be disabled, but you can " +
-      "Alt-Click on an expression to obtain the MathJax menu instead."
+      "Alt-Click on an expression to obtain the MathJax menu instead."]
   };
 
   /*************************************************************/
@@ -898,6 +963,34 @@
 
   /*************************************************************/
 
+  //
+  //  Creates the locale menu from the list of locales in MathJax.Localization.strings
+  //
+  MENU.CreateLocaleMenu = function () {
+    if (!MENU.menu) return;
+    var menu = MENU.menu.Find("Language").menu, items = menu.items;
+    //
+    //  Get the names of the languages and sort them
+    //
+    var locales = [], LOCALE = MathJax.Localization.strings;
+    for (var id in LOCALE) {if (LOCALE.hasOwnProperty(id)) {locales.push(id)}}
+    locales = locales.sort(); menu.items = [];
+    //
+    //  Add a menu item for each
+    //
+    for (var i = 0, m = locales.length; i < m; i++) {
+      var title = LOCALE[locales[i]].menuTitle;
+      if (title) {title += " ("+locales[i]+")"} else {title = locales[i]}
+      menu.items.push(ITEM.RADIO([locales[i],title],"locale",{action:MENU.Locale}));
+    }
+    //
+    //  Add the rule and "Load from URL" items
+    //
+    menu.items.push(items[items.length-2],items[items.length-1]);
+  };
+
+  /*************************************************************/
+
   HUB.Register.StartupHook("End Config",function () {
 
     /*
@@ -914,28 +1007,29 @@
     /*
      *  The main menu
      */
+    // Localization: items used as key, should be refactored.
     MENU.menu = MENU(
-      ITEM.SUBMENU("Show Math As",
-        ITEM.COMMAND("MathML Code",    MENU.ShowSource, {nativeTouch: true, format: "MathML"}),
-        ITEM.COMMAND("Original Form",  MENU.ShowSource, {nativeTouch: true}),
+      ITEM.SUBMENU(["Show","Show Math As"],
+        ITEM.COMMAND(["MathMLcode","MathML Code"],  MENU.ShowSource, {nativeTouch: true, format: "MathML"}),
+        ITEM.COMMAND(["Original","Original Form"],  MENU.ShowSource, {nativeTouch: true}),
         ITEM.RULE(),
-        ITEM.CHECKBOX("Show TeX hints in MathML", "texHints")
+        ITEM.CHECKBOX(["texHints","Show TeX hints in MathML"], "texHints")
       ),
       ITEM.RULE(),
-      ITEM.SUBMENU("Math Settings",
-        ITEM.SUBMENU("Zoom Trigger",
-          ITEM.RADIO("Hover",         "zoom", {action: MENU.Zoom}),
-          ITEM.RADIO("Click",         "zoom", {action: MENU.Zoom}),
-          ITEM.RADIO("Double-Click",  "zoom", {action: MENU.Zoom}),
-          ITEM.RADIO("No Zoom",       "zoom", {value: "None"}),
+      ITEM.SUBMENU(["Settings","Math Settings"],
+        ITEM.SUBMENU(["ZoomTrigger","Zoom Trigger"],
+          ITEM.RADIO(["Hover","Hover"],               "zoom", {action: MENU.Zoom}),
+          ITEM.RADIO(["Click","Click"],               "zoom", {action: MENU.Zoom}),
+          ITEM.RADIO(["DoubleClick","Double-Click"],  "zoom", {action: MENU.Zoom}),
+          ITEM.RADIO(["NoZoom","No Zoom"],            "zoom", {value: "None"}),
           ITEM.RULE(),
-          ITEM.LABEL("Trigger Requires:"),
-          ITEM.CHECKBOX((HUB.Browser.isMac ? "Option" : "Alt"), "ALT"),
-          ITEM.CHECKBOX("Command",    "CMD",  {hidden: !HUB.Browser.isMac}),
-          ITEM.CHECKBOX("Control",    "CTRL", {hidden:  HUB.Browser.isMac}),
-          ITEM.CHECKBOX("Shift",      "Shift")
+          ITEM.LABEL(["TriggerRequires","Trigger Requires:"]),
+          ITEM.CHECKBOX((HUB.Browser.isMac ? ["Option","Option"] : ["Alt","Alt"]), "ALT"),
+          ITEM.CHECKBOX(["Command","Command"],    "CMD",  {hidden: !HUB.Browser.isMac}),
+          ITEM.CHECKBOX(["Control","Control"],    "CTRL", {hidden:  HUB.Browser.isMac}),
+          ITEM.CHECKBOX(["Shift","Shift"],        "Shift")
         ),
-        ITEM.SUBMENU("Zoom Factor",
+        ITEM.SUBMENU(["ZoomFactor","Zoom Factor"],
           ITEM.RADIO("125%", "zscale"),
           ITEM.RADIO("133%", "zscale"),
           ITEM.RADIO("150%", "zscale"),
@@ -946,40 +1040,44 @@
           ITEM.RADIO("400%", "zscale")
         ),
         ITEM.RULE(),
-        ITEM.SUBMENU("Math Renderer",         {hidden:!CONFIG.showRenderer},
+        ITEM.SUBMENU(["Renderer","Math Renderer"],    {hidden:!CONFIG.showRenderer},
           ITEM.RADIO("HTML-CSS",  "renderer", {action: MENU.Renderer}),
           ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"}),
           ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer})
         ),
-        ITEM.SUBMENU("MathPlayer",            {hidden:!HUB.Browser.isMSIE ||
-                                                      !CONFIG.showMathPlayer,
-                                               disabled:!HUB.Browser.hasMathPlayer},
-          ITEM.LABEL("Let MathPlayer Handle:"),
-          ITEM.CHECKBOX("Menu Events",    "mpContext", {action: MENU.MPEvents, hidden:!isIE9}),
-          ITEM.CHECKBOX("Mouse Events",   "mpMouse",   {action: MENU.MPEvents, hidden:!isIE9}),
-          ITEM.CHECKBOX("Mouse and Menu Events", "mpMouse", {action: MENU.MPEvents, hidden:isIE9})
+        ITEM.SUBMENU("MathPlayer",  {hidden:!HUB.Browser.isMSIE || !CONFIG.showMathPlayer,
+                                                    disabled:!HUB.Browser.hasMathPlayer},
+          ITEM.LABEL(["MPHandles","Let MathPlayer Handle:"]),
+          ITEM.CHECKBOX(["MenuEvents","Menu Events"],             "mpContext", {action: MENU.MPEvents, hidden:!isIE9}),
+          ITEM.CHECKBOX(["MouseEvents","Mouse Events"],           "mpMouse",   {action: MENU.MPEvents, hidden:!isIE9}),
+          ITEM.CHECKBOX(["MenuAndMouse","Mouse and Menu Events"], "mpMouse", {action: MENU.MPEvents, hidden:isIE9})
         ),
-        ITEM.SUBMENU("Font Preference",       {hidden:!CONFIG.showFontMenu},
-          ITEM.LABEL("For HTML-CSS:"),
-          ITEM.RADIO("Auto",          "font", {action: MENU.Font}),
+        ITEM.SUBMENU(["FontPrefs","Font Preference"],       {hidden:!CONFIG.showFontMenu},
+          ITEM.LABEL(["ForHTMLCSS","For HTML-CSS:"]),
+          ITEM.RADIO(["Auto","Auto"],          "font", {action: MENU.Font}),
           ITEM.RULE(),
-          ITEM.RADIO("TeX (local)",   "font", {action: MENU.Font}),
-          ITEM.RADIO("TeX (web)",     "font", {action: MENU.Font}),
-          ITEM.RADIO("TeX (image)",   "font", {action: MENU.Font}),
+          ITEM.RADIO(["TeXLocal","TeX (local)"],   "font", {action: MENU.Font}),
+          ITEM.RADIO(["TeXWeb","TeX (web)"],       "font", {action: MENU.Font}),
+          ITEM.RADIO(["TeXImage","TeX (image)"],   "font", {action: MENU.Font}),
           ITEM.RULE(),
-          ITEM.RADIO("STIX (local)",  "font", {action: MENU.Font})
+          ITEM.RADIO(["STIXlocal","STIX (local)"], "font", {action: MENU.Font})
         ),
-        ITEM.SUBMENU("Contextual Menu",       {hidden:!CONFIG.showContext},
+        ITEM.SUBMENU(["ContextMenu","Contextual Menu"],    {hidden:!CONFIG.showContext},
           ITEM.RADIO("MathJax", "context"),
-          ITEM.RADIO("Browser", "context")
+          ITEM.RADIO(["Browser","Browser"], "context")
         ),
-        ITEM.COMMAND("Scale All Math ...",MENU.Scale),
-        ITEM.RULE().With({hidden:!CONFIG.showDiscoverable, name:"discover_rule"}),
-        ITEM.CHECKBOX("Highlight on Hover", "discoverable", {hidden:!CONFIG.showDiscoverable})
+        ITEM.COMMAND(["Scale","Scale All Math ..."],MENU.Scale),
+        ITEM.RULE().With({hidden:!CONFIG.showDiscoverable, name:["","discover_rule"]}),
+        ITEM.CHECKBOX(["Discoverable","Highlight on Hover"], "discoverable", {hidden:!CONFIG.showDiscoverable})
+      ),
+      ITEM.SUBMENU(["Locale","Language"],                  {hidden:!CONFIG.showLocale},
+        ITEM.RADIO("en", "locale",  {action: MENU.Locale}),
+        ITEM.RULE().With({hidden:!CONFIG.showLocaleURL, name:["","localURL_rule"]}),
+        ITEM.COMMAND(["LoadLocale","Load from URL ..."], MENU.LoadLocale, {hidden:!CONFIG.showLocaleURL})
       ),
       ITEM.RULE(),
-      ITEM.COMMAND("About MathJax",MENU.About),
-      ITEM.COMMAND("MathJax Help",MENU.Help)
+      ITEM.COMMAND(["About","About MathJax"],MENU.About),
+      ITEM.COMMAND(["Help","MathJax Help"],MENU.Help)
     );
 
     if (MENU.isMobile) {
@@ -996,8 +1094,9 @@
       })();
     }
 
+    MENU.CreateLocaleMenu();
   });
-
+  
   MENU.showRenderer = function (show) {
     MENU.cookie.showRenderer = CONFIG.showRenderer = show; MENU.saveCookie();
     MENU.menu.Find("Math Settings","Math Renderer").hidden = !show;
@@ -1015,9 +1114,13 @@
     MENU.menu.Find("Math Settings","Contextual Menu").hidden = !show;
   };
   MENU.showDiscoverable = function (show) {
-    MENU.cookie.showContext = CONFIG.showContext = show; MENU.saveCookie();
+    MENU.cookie.showDiscoverable = CONFIG.showDiscoverable = show; MENU.saveCookie();
     MENU.menu.Find("Math Settings","Highlight on Hover").hidden = !show;
     MENU.menu.Find("Math Settings","discover_rule").hidden = !show;
+  };
+  MENU.showLocale = function (show) {
+    MENU.cookie.showLocale = CONFIG.showLocale = show; MENU.saveCookie();
+    MENU.menu.Find("Language").hidden = !show;
   };
   
   MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {

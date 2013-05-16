@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/TeX/AMSsymbols.js
@@ -6,7 +9,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2012 Design Science, Inc.
+ *  Copyright (c) 2009-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSsymbols"] = {
-  version: "2.1"
+  version: "2.2"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -177,9 +180,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       vDash:                  '22A8',
       Vdash:                  '22A9',
       Vvdash:                 '22AA',
-      smallsmile:             '2323',
+      smallsmile:             ['2323',{variantForm: true}],
       shortmid:               ['2223',{variantForm: true}],
-      smallfrown:             '2322',
+      smallfrown:             ['2322',{variantForm: true}],
       shortparallel:          ['2225',{variantForm: true}],
       bumpeq:                 '224F',
       between:                '226C',

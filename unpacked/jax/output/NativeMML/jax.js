@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/NativeMML/jax.js
@@ -7,7 +10,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2012 Design Science, Inc.
+ *  Copyright (c) 2010-2012 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,6 +32,54 @@
 
   HUB.Register.StartupHook("MathZoom Ready",function () {ZOOM = MathJax.Extension.MathZoom});
   
+  var NOPADDING = function (side,obj) {
+    var span = HTML.Element("span"); side = "padding"+side;
+    if (obj) {
+      span.style.cssText = (obj.getAttribute("style")||"");
+      if (span.style.padding === "" && (span.style[side]||"") === "") {
+        span.style[side] = "0px"; obj.setAttribute("style",span.style.cssText)
+      }
+    }
+  };
+  
+  var CELLSPACING = function (obj,rowSpacing,columnSpacing) {
+    //
+    // Webkit default padding on mtd cells is simply
+    //
+    // mtd {padding: 0.5ex;}
+    //
+    // Gecko default padding on mtd cells is
+    //
+    // mtd {padding-right: 0.4em;
+    //      padding-left: 0.4em;
+    //      padding-bottom: 0.5ex;
+    //      padding-top: 0.5ex;}
+    // mtr:first-child > mtd {padding-top: 0ex;}
+    // mtr:last-child > mtd {padding-bottom: 0ex;}
+    // mtd:first-child {padding-left: 0em;}
+    // mtd:last-child {padding-right: 0em;}
+    //
+    // that is the columnspacing/rowspacing is split into two adjacent cells,
+    // and the periphery of boundary cells is set to zero.
+    //
+    // Here, we will set the left/top padding of each cell to
+    // rowSpacing/columnSpacing (or 0px for the leftmost/topmost cells) and
+    // reset the right/bottom padding to zero.
+    //
+    if (obj) {
+      var span = HTML.Element("span");
+      span.style.cssText = (obj.getAttribute("style")||"");
+      if (span.style.padding === "") {
+        var padding = { paddingLeft: columnSpacing, paddingTop: rowSpacing,
+                        paddingRight: "0px", paddingBottom: "0px" };
+        for (var side in padding) {if (padding.hasOwnProperty(side)) {
+          if ((span.style[side]||"") === "") {span.style[side] = padding[side];}
+        }}
+      }
+      obj.setAttribute("style",span.style.cssText);
+    }
+  };
+ 
   nMML.Augment({
     //
     //  User can configure styles
@@ -69,6 +120,7 @@
       }
     },
     settings: HUB.config.menuSettings,
+    ex: 1, // filled in later
     
     Config: function () {
       this.SUPER(arguments).Config.call(this);
@@ -79,7 +131,7 @@
       if (HUB.config.displayAlign !== "center") {
         var align = HUB.config.displayAlign, indent = HUB.config.displayIndent;
         var def = {"text-align": align+"!important"}; def["margin-"+align] = indent+"!important";
-        MathJax.Hub.Insert(this.config.styles,{
+        HUB.Insert(this.config.styles,{
           "div.MathJax_MathML": def,
           "div.MathJax_MathML math": {"text-align": align},
           "div.MathJax_MathContainer > span": {"text-align": align+"!important"}
@@ -139,7 +191,8 @@
           //
           //  If that fails, give an alert about security settings
           //
-          alert("MathJax was not able to set up MathPlayer.\n\n"+
+          alert(MathJax.Localization._(["MathML", "MathPlayer"],
+                "MathJax was not able to set up MathPlayer.\n\n"+
                 "If MathPlayer is not installed, you need to install it first.\n"+
                 "Otherwise, your security settings may be preventing ActiveX     \n"+
                 "controls from running.  Use the Internet Options item under\n"+
@@ -148,7 +201,7 @@
                 "'Run ActiveX Controls', and 'Binary and script behaviors'\n"+
                 "are enabled.\n\n"+
                 "Currently you will see error messages rather than\n"+
-                "typeset mathematics.");
+                "typeset mathematics."));
         }
       } else {
         //
@@ -205,6 +258,7 @@
           if (ex === 0 || ex === "NaN") {ex = this.defaultEx; mex = this.defaultMEx}
           scale = (mex > 1 ? ex/mex : 1) * this.config.scale;
           scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale));
+          jax.NativeMML.ex = ex;
         } else {scale = 100}
         jax.NativeMML.fontSize = scale+"%";
       }
@@ -232,6 +286,7 @@
       var span = document.getElementById(jax.inputID+"-Frame"),
 	  container = span.firstChild, mspan = container.firstChild;
       span.style.fontSize = jax.NativeMML.fontSize;
+      this.ex = jax.NativeMML.ex || this.defaultEx;
       //
       //  Convert to MathML (if restarted, remove any partial math)
       //
@@ -269,8 +324,10 @@
 
     postTranslate: function (state) {
       if (this.forceReflow) {
+        //
         //  Firefox messes up some mtable's when they are dynamically created
         //  but gets them right on a reflow, so force reflow by toggling a stylesheet
+        //
         var sheet = (document.styleSheets||[])[0]||{};
         sheet.disabled = true; sheet.disabled = false;
       }
@@ -327,8 +384,10 @@
       if (nMML[type] && nMML[type](event,this) === false) {return false}
       if (ZOOM && ZOOM.HandleEvent(event,type,this) === false) {return false}
       if (event.srcElement.className === "MathJax_MathPlayer_Overlay" && this.msieMath.fireEvent) {
-        // for now, ignore all other events.  This will disable MathPlayer's zoom
-        // feature, but also its <maction> support.
+        //
+        //  For now, ignore all other events.  This will disable MathPlayer's zoom
+        //  feature, but also its <maction> support.
+        //
         if (type === "ContextMenu" || type === "Mouseover" || type === "Mouseout")
           {this.msieMath.fireEvent("on"+event.type,event)}
       }
@@ -367,6 +426,13 @@
       var mW = math.offsetWidth  || math.scrollWidth,
           mH = math.offsetHeight || math.scrollHeight;
       var zW = span.offsetWidth, zH = span.offsetHeight;
+      if (nMML.widthBug) {
+        //
+        //  FF doesn't get width of <math> right, so get it from <mrow>
+        //
+        var W = span.firstChild.firstChild.scrollWidth;
+        if (W > zW) {zW = W; span.style.width = zW + "px"}
+      }
       if (this.msieIE8HeightBug) {span.style.position = ""}
       return {Y:-EVENT.getBBox(span.parentNode).h, mW:mW, mH:mH, zW:zW, zH:zH}
     },
@@ -462,12 +528,38 @@
       //  Make inferred rows not include an mrow tag
       //
       toNativeMML: function (parent) {
+        var i, m; 
 	if (this.inferred  && this.parent.inferRow) {
-	  for (var i = 0, m = this.data.length; i < m; i++) {
+	  for (i = 0, m = this.data.length; i < m; i++) {
 	    if (this.data[i]) {this.data[i].toNativeMML(parent)}
 	      else {parent.appendChild(this.NativeMMLelement("mrow"))}
 	  }
-	} else {
+	} else if (nMML.stretchyMoBug && (this.open || this.close)) {
+          //
+          // This element contains opening and/or closing fences. Opera is not
+          // able to stretch <mo> operators, so let's use an <mfenced> element
+          // instead.
+          //
+          var mfenced = this.NativeMMLelement("mfenced");
+          this.NativeMMLattributes(mfenced);
+          i = 0, m = this.data.length;
+          if (this.open) { mfenced.setAttribute("open", this.open); i++; }
+          if (this.close) { mfenced.setAttribute("close", this.close); m--; }
+          var tag = mfenced;
+          if (m - i + 1 > 1) {
+            //
+            // If there are several children, put them in an <mrow>
+            //
+            tag = this.NativeMMLelement("mrow");
+	    parent.appendChild(mfenced);
+            parent = mfenced;
+          }
+          for (; i < m; i++) {
+	    if (this.data[i]) {this.data[i].toNativeMML(tag)}
+	    else {tag.appendChild(this.NativeMMLelement("mrow"))}
+	  }
+	  parent.appendChild(tag);
+        } else {
 	  this.SUPER(arguments).toNativeMML.call(this,parent);
 	}
       }
@@ -509,39 +601,239 @@
       }
     });
 
-    if (HUB.Browser.isFirefox) {
-      if (!HUB.Browser.versionAtLeast("13.0")) {
-        MML.mtable.Augment({
-          toNativeMML: function (parent) {
+    if (!isMSIE) {
+      var SPLIT = MathJax.Hub.SplitList;
+      MML.mtable.Augment({
+        toNativeMML: function (parent) {
+          var i, m;
+          if (nMML.tableSpacingBug) {
             //
-            //  Firefox < 13 doesn't handle width, so put it in styles instead
+            // Parse the rowspacing/columnspacing. For convenience, we convert
+            // them to a left/top padding value that will be applied to each
+            // cell. The leftmost/topmost cells will use "0px".
             //
-            if (this.width) {
-              var styles = (this.style||"").replace(/;\s*$/,"").split(";");
-              if (styles[0] === "") {styles.shift()}
-              styles.push("width:"+this.width);
-              this.style = styles.join(";");
+            var values = this.getValues("rowspacing", "columnspacing");
+            this.nMMLtopPadding  = SPLIT("0px "+values.rowspacing);
+            this.nMMLleftPadding = SPLIT("0px "+values.columnspacing);
+            //
+            // Transmit the top padding to each row.
+            // If this.parent.nMML.topPadding does not contain enough value,
+            // repeat the last one.
+            //
+            var tp = this.nMMLtopPadding, M = tp.length;
+            for (i = 0, m = this.data.length; i < m; i++) {
+              if (this.data[i])
+                {this.data[i].nMMLtopPadding = tp[i < M ? i : M-1]}
             }
-            this.SUPER(arguments).toNativeMML.call(this,parent);
           }
-        });
-      }
-      if (!HUB.Browser.versionAtLeast("9.0")) {
-        MML.mlabeledtr.Augment({
-	  toNativeMML: function (parent) {
+          if (nMML.tableLabelBug) {
             //
-            //  FF doesn't handle mlabeledtr, so remove the label
+            //  Look for labeled rows so we know how to handle them
             //
-            var tag = this.NativeMMLelement("mtr");
-            this.NativeMMLattributes(tag);
-            for (var i = 1, m = this.data.length; i < m; i++) {
-              if (this.data[i]) {this.data[i].toNativeMML(tag)}
-              else {tag.appendChild(this.NativeMMLelement("mrow"))}
+            for (i = 0, m = this.data.length; i < m; i++) {
+              if (this.data[i] && this.data[i].isa(MML.mlabeledtr)) {
+                var align = HUB.config.displayAlign.charAt(0),
+                    side = this.Get("side").charAt(0);
+                this.nMMLhasLabels = true;
+                this.nMMLlaMatch = (align === side);
+                this.nMMLforceWidth =
+                  (align === "c" || !!((this.width||"").match("%")));
+                break;
+              }
             }
-            parent.appendChild(tag);
           }
-        });
-      }
+          //
+          //  Firefox < 13 doesn't handle width, so put it in styles instead
+          //
+          if (this.width && this.ffTableWidthBug) {
+            var styles = (this.style||"").replace(/;\s*$/,"").split(";");
+            if (styles[0] === "") {styles.shift()}
+            styles.push("width:"+this.width);
+            this.style = styles.join(";");
+          }
+          this.SUPER(arguments).toNativeMML.call(this,parent);
+          //
+          if (this.nMMLhasLabels) {
+            var mtable = parent.firstChild;
+            //
+            //  Add column attributes on the left when extra columns where inserted
+            //
+            if (this.nMMLforceWidth || side !== "r") {
+              var n = (align !== "l" ? 1 : 0) + (side === "l" ? 1 : 0);
+              if (n) {
+                var attr = {columnalign:"left", columnwidth:"auto",
+                            columnspacing:"0px", columnlines:"none"};
+                for (var id in attr) {if (attr.hasOwnProperty(id) && this[id]) {
+                  var cols = [attr[id],attr[id]].slice(2-n).join(" ")+" ";
+                  mtable.setAttribute(id,cols+mtable.getAttribute(id));
+                }}
+              }
+            }
+            //
+            //  Force the table width to 100% when needed
+            //
+            if (this.nMMLforceWidth || !this.nMMLlaMatch)
+              {mtable.setAttribute("width","100%")}
+          }
+        }
+      });
+      MML.mtr.Augment({
+        toNativeMML: function (parent) {
+          this.SUPER(arguments).toNativeMML.call(this,parent);
+          var mtr = parent.lastChild;
+          if (nMML.tableSpacingBug) {
+            //
+            // Set the row/column spacing. If this.parent.nMMLleftPadding does
+            // not contain enough value, repeat the last one.
+            //
+            var lp = this.parent.nMMLleftPadding, M = lp.length;
+            for (var mtd = mtr.firstChild, i = 0; mtd; mtd = mtd.nextSibling, i++) {
+              CELLSPACING(mtd,this.nMMLtopPadding,lp[i < M ? i : M-1]);
+            }
+          }
+
+          if (nMML.tableLabelBug) {
+            var forceWidth = this.parent.nMMLforceWidth,
+                side = this.parent.Get("side").charAt(0),
+                align = HUB.config.displayAlign.charAt(0);
+
+            if (this.parent.nMMLhasLabels && mtr.firstChild) {
+              //
+              //  If we add a label or padding column on the left of mlabeledtr,
+              //    mirror that here and remove padding from first table mtd
+              //    so the spacing is consistent with unlabeled equations
+              //
+              if (forceWidth || side !== "r") {
+                NOPADDING("Left",mtr.firstChild);
+                if (align !== "l") {
+                  mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
+                     .setAttribute("style","padding:0");
+                }
+                if (side === "l") {
+                  mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
+                     .setAttribute("style","padding:0");
+                }
+              }
+              //
+              //  If columns were added on the right, remove mtd padding
+              //    so that spacing is consistent with unlabled equations
+              //
+              if (forceWidth || side !== "l") {NOPADDING("Right",mtr.lastChild)}
+            }
+          }
+        }
+      });
+      MML.mlabeledtr.Augment({
+        toNativeMML: function (parent) {
+          var mtr = this.NativeMMLelement("mtr");
+          this.NativeMMLattributes(mtr);
+          //
+          //  Add row data
+          //
+          for (var i = 1, m = this.data.length; i < m; i++) {
+            if (this.data[i]) {this.data[i].toNativeMML(mtr)}
+              else {mtr.appendChild(this.NativeMMLelement("mtd"))}
+          }
+
+          if (nMML.tableSpacingBug) {
+            //
+            // Set the row/column spacing. If this.parent.nMMLleftPadding does
+            // not contain enough value, repeat the last one.
+            //
+            var lp = this.parent.nMMLleftPadding, M = lp.length; i = 0;
+            for (var mtd = mtr.firstChild; mtd; mtd = mtd.nextSibling, i++) {
+              CELLSPACING(mtd,this.nMMLtopPadding,lp[i < M ? i : M-1]);
+            }
+          }
+
+          if (nMML.tableLabelBug) {
+            var side = this.parent.Get("side").charAt(0),
+                align = HUB.config.displayAlign.charAt(0),
+                indent = HUB.config.displayIndent;
+            //
+            // Create label and either set the column width (if label is on the
+            // same side as the alignment), or use mpadded to hide the label
+            // width
+            //
+            this.data[0].toNativeMML(mtr);
+            var label = mtr.lastChild, pad = label;
+            if (side === align) {
+              label.setAttribute("style","width:"+indent);
+              label.setAttribute("columnalign",HUB.config.displayAlign);
+            } else {
+              pad = this.NativeMMLelement("mpadded");
+              pad.setAttribute("style","width:0");
+              pad.setAttribute("width","0px");
+              pad.appendChild(label.firstChild);
+              label.appendChild(pad);
+            }
+            NOPADDING("",label); mtr.removeChild(label);
+            //
+            //  Get spacing to use for separation of label from main table
+            //
+            var width = 100, forceWidth = this.parent.nMMLforceWidth;
+            if ((this.parent.width||"").match(/%/)) {
+              width -= parseFloat(this.parent.width)
+            };
+            var w = width;
+            //
+            //  Add spacing (and possibly label) at the left if needed
+            //
+            if (forceWidth || side !== "r") {
+              NOPADDING("Left",mtr.firstChild);
+              if (align !== "l") {
+                if (align === "c") {w /= 2}; width -= w;
+                mtr.insertBefore(this.NativeMMLelement("mtd"),mtr.firstChild)
+                   .setAttribute("style","padding:0;width:"+w+"%");
+              }
+              if (side === "l") {mtr.insertBefore(label,mtr.firstChild)}
+            }
+            //
+            //  Add spacing (and possibly label) at the right if needed
+            //
+            if (forceWidth || side !== "l") {
+              NOPADDING("Right",mtr.lastChild);
+              if (align !== "r") {
+                mtr.appendChild(this.NativeMMLelement("mtd"))
+                   .setAttribute("style","padding:0;width:"+width+"%");
+              }
+              if (side === "r") {
+                if (side !== align) {pad.setAttribute("lspace","-1width")}
+                mtr.appendChild(label);
+              }
+            }
+          }
+          //
+          //  Add row to table
+          //
+          parent.appendChild(mtr);
+        }
+      });
+      
+      MML.mtd.Augment({
+        toNativeMML: function (parent) {
+          var tag = parent.appendChild(this.NativeMMLelement(this.type));
+          this.NativeMMLattributes(tag);
+          if (nMML.widthBug) {tag = tag.appendChild(this.NativeMMLelement("mrow"))}
+          for (var i = 0, m = this.data.length; i < m; i++) {
+            if (this.data[i]) {this.data[i].toNativeMML(tag)}
+             else {tag.appendChild(this.NativeMMLelement("mrow"))}
+           }
+        }
+      });
+      
+      MML.mspace.Augment({
+        toNativeMML: function (parent) {
+          this.SUPER(arguments).toNativeMML.call(this,parent);
+          if (nMML.spaceWidthBug && this.width) {
+            var mspace = parent.lastChild;
+            var width = mspace.getAttribute("width");
+            var style = mspace.getAttribute("style") || "";
+            if (style != "") {style += ";"}
+            mspace.setAttribute("style",style+"width:"+width);
+          }
+        }
+      });
 
       var fontDir = MathJax.Ajax.fileURL(MathJax.OutputJax.fontDir+"/HTML-CSS/TeX/otf");
 
@@ -596,18 +888,47 @@
     }
     
     MML.math.Augment({
-      //
-      //  Some browsers don't seem to add the xmlns attribute, so do it by hand.
-      //
       toNativeMML: function (parent) {
         var tag = this.NativeMMLelement(this.type), math = tag;
+        //
+        //  Some browsers don't seem to add the xmlns attribute, so do it by hand.
+        //
         tag.setAttribute("xmlns",nMML.MMLnamespace);
         this.NativeMMLattributes(tag);
+        //
+        //  Use an extra <mrow> in FF so that we can get the correct width
+        //    (the math element doesn't always have an accurate one, see below)
+        //
         if (nMML.widthBug) {tag = tag.appendChild(this.NativeMMLelement("mrow"))}
+        //
+        //  Add the children
+        //
         for (var i = 0, m = this.data.length; i < m; i++) {
           if (this.data[i]) {this.data[i].toNativeMML(tag)}
             else {tag.appendChild(this.NativeMMLelement("mrow"))}
         }
+        //
+        //  Look for a top-level mtable and if it has labels
+        //    Make sure the containers have 100% width, when needed
+        //    If the label is on the same side as alignment,
+        //      override the margin set by the stylesheet.
+        //
+        var mtable = ((this.data[0]||[]).data[0]||{});
+        if (mtable.nMMLhasLabels) {
+          if (mtable.nMMLforceWidth || !mtable.nMMLlaMatch) {
+            tag.setAttribute("style","width:100%")
+            parent.style.width = parent.parentNode.style.width="100%";
+          };
+          if (mtable.nMMLlaMatch) {
+            if (parent.parentNode.parentNode.nodeName.toLowerCase() === "div") {
+              parent.parentNode.parentNode.style
+                .setProperty("margin-"+HUB.config.displayAlign,"0px","important");
+            }
+          }
+        }
+        //
+        //  Add the math to the page
+        //
         parent.appendChild(math);
         //
         //  Firefox can't seem to get the width of <math> elements right, so
@@ -615,7 +936,115 @@
         //  parent element to match.  Even if we set the <math> width properly,
         //  it doesn't seem to propagate up to the <span> correctly.
         //
-        if (nMML.widthBug) {parent.style.width = math.firstChild.scrollWidth+"px"}
+        if (nMML.widthBug && !mtable.nMMLforceWidth && mtable.nMMLlaMatch) {
+          //
+          //  Convert size to ex's so that it scales properly if the print media
+          //    has a different font size.
+          //
+          parent.style.width = (math.firstChild.scrollWidth/nMML.ex).toFixed(3) + "ex";
+        }
+      }
+    });
+
+    MML.mfenced.Augment({
+      toNativeMML: function (parent) {
+        if (!nMML.mfencedBug) {
+	  this.SUPER(arguments).toNativeMML.call(this,parent);
+          return;
+        }
+
+        //
+        // Some browsers do not handle <mfenced> very well. The MathML spec
+        // suggests this equivalent construction instead, so let's use it:
+        // <mrow> open, child1, sep1, child2, ... sep(N-1), childN, close</mrow>
+        // Opera is a bit special: it does not support stretchy <mo>, does not
+        // parse mfenced@open/mfenced@close very well, does not support
+        // mfenced@separators and only displays the first child of the <mfenced>
+        // element... For this browser, we will use this construction:
+        // <mfenced open="open" close="close">
+        //   <mrow>child1, sep1, child2, sep2, ..., sep(N-1), childN</mrow>
+        // </mfenced>
+        //
+        var isOpera = HUB.Browser.isOpera;
+        var i, m, operator;
+
+        //
+        // parse the open, close and separators attributes.
+        //
+        var values = this.getValues("open","close","separators");
+        values.open = values.open.replace(/^\s+/,"").replace(/\s+$/,"");
+        values.close = values.close.replace(/^\s+/,"").replace(/\s+$/,"");
+        values.separators = values.separators.replace(/\s+/g,"").split("");
+        if (values.separators.length == 0) {
+          //
+          // No separators specified, do not use separators at all.
+          //
+          values.separators = null;
+        } else if (values.separators.length < this.data.length-1) {
+          //
+          // There are not enough separators, repeat the last one.
+          //
+          var s = values.separators[values.separators.length-1];
+          for (i = this.data.length-1-values.separators.length; i > 0; i--)
+            {values.separators.push(s)}
+        }
+
+        //
+        // Create an <mrow> container and attach the attributes of the
+        // <mfenced> element to it. Note: removeAttribute does not raise any
+        // exception when the attributes is absent.
+        //
+        var tag = this.NativeMMLelement(isOpera ? this.type : "mrow");
+        this.NativeMMLattributes(tag);
+        tag.removeAttribute("separators");
+        if (isOpera) {
+          tag.setAttribute("open", values.open);
+          tag.setAttribute("close", values.close);
+          if (this.data.length > 1) {
+            parent.appendChild(tag); parent = tag;
+            tag = this.NativeMMLelement("mrow");
+          }
+        } else {
+          tag.removeAttribute("open");
+          tag.removeAttribute("close");
+        }
+
+        if (!isOpera) {
+          //
+          // Append the opening fence
+          // 
+          operator = this.NativeMMLelement("mo");
+          operator.setAttribute("fence", "true");
+          operator.textContent = values.open;
+          tag.appendChild(operator);
+        }
+
+        //
+        // Append the content of the <mfenced>
+        //
+        for (i = 0, m = this.data.length; i < m; i++) {
+          if (values.separators && i > 0) {
+            operator = this.NativeMMLelement("mo");
+            operator.setAttribute("separator", "true");
+            operator.textContent = values.separators[i-1];
+            tag.appendChild(operator);
+          }
+	  if (this.data[i]) {this.data[i].toNativeMML(tag)}
+            else {tag.appendChild(this.NativeMMLelement("mrow"))}
+        }
+
+        if (!isOpera) {
+          //
+          // Append the closing fence
+          //
+          operator = this.NativeMMLelement("mo");
+          operator.setAttribute("fence", "true");
+          operator.textContent = values.close;
+          tag.appendChild(operator);
+        }
+
+        // finally, append the new element to the parent.
+        parent.appendChild(tag);
       }
     });
 
@@ -689,10 +1118,33 @@
     },
     Opera: function (browser) {
       nMML.operaPositionBug = true;
+      nMML.stretchyMoBug = true;
+      nMML.tableLabelBug = true;
+      nMML.mfencedBug = true;
     },
     Firefox: function (browser) {
-      nMML.forceReflow = true;
-      nMML.widthBug = true;
+      nMML.ffTableWidthBug = !browser.versionAtLeast("13.0"); // <mtable width="xx"> not implemented
+      nMML.forceReflow = true;   // <mtable> with alignments set don't display properly without a reflow
+      nMML.widthBug = true;      // <math> elements don't always get the correct width
+
+      // In Firefox < 20, the intrinsic width of <mspace> is not computed
+      // correctly and thus the element is displayed incorrectly in <mtable>.
+      nMML.spaceWidthBug = !browser.versionAtLeast("20.0");
+
+      nMML.tableSpacingBug = true; // mtable@rowspacing/mtable@columnspacing not
+                                   // supported.
+      nMML.tableLabelBug = true;   // mlabeledtr is not implemented.
+      nMML.mfencedBug = true;      // mfenced not displayed correctly
+    },
+    Chrome: function (browser) {
+      nMML.tableSpacingBug = true;
+      nMML.tableLabelBug = true;
+      nMML.mfencedBug = true;
+    },
+    Safari: function (browser) {
+      nMML.tableSpacingBug = true;
+      nMML.tableLabelBug = true;
+      nMML.mfencedBug = true;
     }
   });
   

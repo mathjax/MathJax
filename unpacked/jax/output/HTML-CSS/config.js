@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/config.js
@@ -7,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2012 Design Science, Inc.
+ *  Copyright (c) 2009-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +27,7 @@
 
 MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   id: "HTML-CSS",
-  version: "2.1",
+  version: "2.2",
   directory: MathJax.OutputJax.directory + "/HTML-CSS",
   extensionDir: MathJax.OutputJax.extensionDir + "/HTML-CSS",
   autoloadDir: MathJax.OutputJax.directory + "/HTML-CSS/autoload",
@@ -79,7 +82,8 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
         "-moz-box-shadow": "2px 2px 5px #AAAAAA",    // Forefox 3.5
         "-khtml-box-shadow": "2px 2px 5px #AAAAAA",  // Konqueror
         filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')", // IE
-        padding: "3px 4px"
+        padding: "3px 4px",
+        "z-index": 401
       }
     }
     
@@ -145,7 +149,8 @@ MathJax.Hub.Register.StartupHook("End Config",[function (HUB,HTMLCSS) {
      !HUB.Browser.versionAtLeast(CONFIG.minBrowserVersion[HUB.Browser]||0.0)) {
        HTMLCSS.Translate = CONFIG.minBrowserTranslate;
        HUB.Config({showProcessingMessages: false});
-       MathJax.Message.Set("Your browser does not support MathJax",null,4000);
+       MathJax.Message.Set(["MathJaxNotSupported",
+                            "Your browser does not support MathJax"],null,4000);
        HUB.Startup.signal.Post("MathJax not supported");
   }
 

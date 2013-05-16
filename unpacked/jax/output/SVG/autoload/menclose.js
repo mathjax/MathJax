@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/SVG/autoload/menclose.js
@@ -6,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2012 Design Science, Inc.
+ *  Copyright (c) 2011-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.1";
+  var VERSION = "2.2";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -105,10 +108,10 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (values.thickness == null) {values.thickness = ".075em"}
       if (values.padding == null)   {values.padding   = ".2em"}
       var mu = this.SVGgetMu(svg), scale = this.SVGgetScale();
-      var p = SVG.length2em(values.padding,mu,1/SVG.em) * scale;
-      var t = SVG.length2em(values.thickness,mu,1/SVG.em) * scale;
+      var p = SVG.length2em(values.padding,mu,1/SVG.em) * scale;  // padding for enclosure
+      var t = SVG.length2em(values.thickness,mu,1/SVG.em);        // thickness of lines (not scaled, see issue #414)
       var H = base.h+p+t, D = base.d+p+t, W = base.w+2*(p+t);
-      var notation = values.notation.split(/ /);
+      var notation = MathJax.Hub.SplitList(values.notation);
       var dx = 0, w, h, i, m, borders = [false,false,false,false];
       if (!values.mathcolor) {values.mathcolor = "black"}
       

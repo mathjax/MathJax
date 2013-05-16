@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/input/AsciiMath/jax.js
@@ -18,7 +21,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2012 Design Science, Inc.
+ *  Copyright (c) 2012-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -1193,7 +1196,9 @@ ASCIIMATH.Augment({
   AM: {
     Init: function () {
       displaystyle = ASCIIMATH.config.displaystyle;
-      decimal      = ASCIIMATH.config.decimal;
+      // Old versions use the "decimal" option, so take it into account if it
+      // is defined by the user. See issue 384.
+      decimalsign  = (ASCIIMATH.config.decimal || ASCIIMATH.config.decimalsign);
       INITASCIIMATH();
       AMinitSymbols();
     },
@@ -1266,7 +1271,7 @@ junk = null;
   var MML;
   
   ASCIIMATH.Augment({
-    sourceMenuTitle: "AsciiMath Input",
+    sourceMenuTitle: /*_(MathMenu)*/ ["AsciiMathInput","AsciiMath Input"],
 
     prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run before processing AsciiMath
     postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run after processing AsciiMath

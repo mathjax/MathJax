@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/TeX/unicode.js
@@ -40,7 +43,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2012 Design Science, Inc.
+ *  Copyright (c) 2009-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -59,7 +62,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/unicode"] = {
-  version: "2.1",
+  version: "2.2",
   unicode: {},
   config: MathJax.Hub.CombineConfig("TeX.unicode",{
     fonts: "STIXGeneral,'Arial Unicode MS'"

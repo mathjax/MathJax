@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/font/STIX/fontdata.js
@@ -7,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2012 Design Science, Inc.
+ *  Copyright (c) 2009-2013 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,HTML) {
-  var VERSION = "2.1";
+  var VERSION = "2.2";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -88,7 +91,8 @@
         "bold-sans-serif": {offsetA: 0x1D5D4, offsetG: 0x1D756, offsetN: 0x1D7EC, bold:true},
         "sans-serif-italic": {fonts: [ITALIC,NONUNII], offsetA: 0x1D608, offsetN: 0xE1B4, offsetG: 0xE1BF, italic:true},
         "sans-serif-bold-italic": {fonts: [BITALIC,"STIXNonUnicode-bold-italic"], offsetA: 0x1D63C, offsetN: 0xE1F6, offsetG: 0x1D790, bold:true, italic:true},
-        "monospace": {offsetA: 0x1D670, offsetN: 0x1D7F6},
+        "monospace": {offsetA: 0x1D670, offsetN: 0x1D7F6,
+                   remap: {0x20: [0x20,"-STIX-variant"]}}, // use a special space for monospace (see below)
         "-STIX-variant": {fonts:["STIXVariants",NONUNI,GENERAL],
                    remap: {0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2270: 0xE011, 0x2271: 0xE00E,
                            0x22E0: 0xE04B, 0x22E1: 0xE04F, 0x2288: 0xE016, 0x2289: 0xE018,
@@ -1488,6 +1492,11 @@
   HTMLCSS.FONTDATA.FONTS['STIXNonUnicode'][0xE14A][1] += 200;  // adjust depth for brace extender
   HTMLCSS.FONTDATA.FONTS['STIXNonUnicode'][0xE14B][0] += 200;  // adjust height for brace extender
   HTMLCSS.FONTDATA.FONTS['STIXNonUnicode'][0xE14B][1] += 200;  // adjust depth for brace extender
+  MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Variants/Regular/All.js",function () {
+    // monospace mathvariant uses space from STIXVariants, so make it the right size
+    HTMLCSS.FONTDATA.FONTS['STIXVariants'][0x20][2] += 275;       // fix error in character width
+    HTMLCSS.FONTDATA.FONTS['STIXVariants'][0x20][5] = {rfix:275}; // fix error in character width
+  });
 
   MathJax.Hub.Browser.Select({
     MSIE: function (browser) {

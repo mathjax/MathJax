@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/MathEvents.js
@@ -7,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2012 Design Science, Inc.
+ *  Copyright (c) 2011-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,8 +25,8 @@
  *  limitations under the License.
  */
 
-(function (HUB,HTML,AJAX,CALLBACK,OUTPUT,INPUT) {
-  var VERSION = "2.1";
+(function (HUB,HTML,AJAX,CALLBACK,LOCALE,OUTPUT,INPUT) {
+  var VERSION = "2.2";
   
   var EXTENSION = MathJax.Extension;
   var ME = EXTENSION.MathEvents = {version: VERSION};
@@ -141,33 +144,47 @@
       }
 
       //
-      //  If the menu code is loaded, post the menu
-      //  Otherwse lad the menu code and try again
+      //  If the menu code is loaded, 
+      //    Check if localization needs loading;
+      //    If not, post the menu, and return.
+      //    Otherwise wait for the localization to load
+      //  Otherwse load the menu code.
+      //  Try again after the file is loaded.
       //
-      var MENU = MathJax.Menu;
+      var MENU = MathJax.Menu; var load, fn;
       if (MENU) {
-        MENU.jax = jax;
-        var source = MENU.menu.Find("Show Math As").menu;
-        source.items[1].name = (INPUT[jax.inputJax].sourceMenuTitle||"Original Form");
-        source.items[0].hidden = (jax.inputJax === "Error");  // hide MathML choice for error messages
-        var MathPlayer = MENU.menu.Find("Math Settings","MathPlayer");
-        MathPlayer.hidden = !(jax.outputJax === "NativeMML" && HUB.Browser.hasMathPlayer);
-        return MENU.menu.Post(event);
-      } else {
-        if (!AJAX.loadingMathMenu) {
-          AJAX.loadingMathMenu = true;
-          var ev = {
-            pageX:event.pageX, pageY:event.pageY,
-            clientX:event.clientX, clientY:event.clientY
-          };
-          CALLBACK.Queue(
-            AJAX.Require("[MathJax]/extensions/MathMenu.js"),
-            function () {delete AJAX.loadingMathMenu; if (!MathJax.Menu) {MathJax.Menu = {}}},
-            ["ContextMenu",this,ev,math,force]  // call this function again
-          );
+        if (MENU.loadingDomain) {return EVENT.False(event)}
+        load = LOCALE.loadDomain("MathMenu");
+        if (!load) {
+          MENU.jax = jax;
+          var source = MENU.menu.Find("Show Math As").menu;
+	  source.items[0].name = jax.sourceMenuTitle;
+	  source.items[0].format = (jax.sourceMenuFormat||"MathML");
+          source.items[1].name = INPUT[jax.inputJax].sourceMenuTitle;
+          var MathPlayer = MENU.menu.Find("Math Settings","MathPlayer");
+          MathPlayer.hidden = !(jax.outputJax === "NativeMML" && HUB.Browser.hasMathPlayer);
+          return MENU.menu.Post(event);
         }
-        return EVENT.False(event);
+        MENU.loadingDomain = true;
+        fn = function () {delete MENU.loadingDomain};
+      } else {
+        if (AJAX.loadingMathMenu) {return EVENT.False(event)}
+        AJAX.loadingMathMenu = true;
+        load = AJAX.Require("[MathJax]/extensions/MathMenu.js");
+        fn = function () {
+          delete AJAX.loadingMathMenu;
+          if (!MathJax.Menu) {MathJax.Menu = {}}
+        }
       }
+      var ev = {
+        pageX:event.pageX, pageY:event.pageY,
+        clientX:event.clientX, clientY:event.clientY
+      };
+      CALLBACK.Queue(
+        load, fn, // load the file and delete the marker when done
+        ["ContextMenu",EVENT,ev,math,force]  // call this function again
+      );
+      return EVENT.False(event);
     },
     
     //
@@ -530,4 +547,5 @@
     ["loadComplete",AJAX,"[MathJax]/extensions/MathEvents.js"]
   );
   
-})(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.Callback,MathJax.OutputJax,MathJax.InputJax);
+})(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.Callback,
+   MathJax.Localization,MathJax.OutputJax,MathJax.InputJax);

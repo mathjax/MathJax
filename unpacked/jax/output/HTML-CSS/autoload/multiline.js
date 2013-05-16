@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/autoload/multiline.js
@@ -6,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2012 Design Science, Inc.
+ *  Copyright (c) 2010-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.1";
+  var VERSION = "2.2";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
       
@@ -498,7 +501,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       }
       //
       //  If this is the end, check for super and subscripts, and move those
-      //  by moving the stack tht contains them, and shifting by the amount of the
+      //  by moving the stack that contains them, and shifting by the amount of the
       //  base that has been removed.  Remove the empty base box from the stack.
       //
       if (end.length === 0) {
@@ -594,6 +597,12 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     HTMLbetterBreak: function (info,state) {
       if (info.values && info.values.id === this.spanID) {return false}
       var values = this.getValues("linebreak");
+      var linebreakValue = values.linebreak;
+      if (!linebreakValue || this.hasDimAttr()) {
+        // The MathML spec says that the linebreak attribute should be ignored
+        // if any dimensional attribute is set.
+        linebreakValue = MML.LINEBREAK.AUTO;
+      }
       //
       //  Get the default penalty for this location
       //
@@ -609,8 +618,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Get the penalty for this type of break and
       //    use it to modify the default penalty
       //
-      var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO];
-      if (values.linebreak === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit)
+      var linebreak = PENALTY[linebreakValue];
+      if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit)
         {linebreak = [(w+PENALTY.spaceoffset)*PENALTY.spacefactor]}
       if (!(linebreak instanceof Array)) {
         //  for breaks past the width, don't modify penalty

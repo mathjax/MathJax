@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/SVG/autoload/maction.js
@@ -6,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2012 Design Science, Inc.
+ *  Copyright (c) 2011-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.1";
+  var VERSION = "2.2";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax["SVG"];
   
@@ -44,10 +47,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       this.SVGgetStyles();
       var svg = this.SVG();
       var selected = this.selected();
-      if (selected) {
-        svg.Add(this.SVGdataStretched(this.Get("selection")-1,HW,D));
-        this.SVGhandleHitBox(svg);
-      }
+      if (selected.type == "null") {this.SVGsaveData(svg);return svg;}
+      svg.Add(this.SVGdataStretched(this.Get("selection")-1,HW,D));
+      this.SVGhandleHitBox(svg);
       this.SVGhandleSpace(svg);
       this.SVGhandleColor(svg);
       this.SVGsaveData(svg);

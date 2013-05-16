@@ -1,7 +1,11 @@
-/*
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
+/*************************************************************
+ *
  *  /MathJax/unpacked/config/TeX-MML-AM_HTMLorMML-full.js
  *  
- *  Copyright (c) 2010-11 Design Science, Inc.
+ *  Copyright (c) 2010-2013 The MathJax Consortium
  *
  *  Part of the MathJax library.
  *  See http://www.mathjax.org for details.

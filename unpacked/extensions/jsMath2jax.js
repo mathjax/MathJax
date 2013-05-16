@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/jsMath2jax.js
@@ -15,7 +18,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2012 Design Science, Inc.
+ *  Copyright (c) 2010-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +34,7 @@
  */
 
 MathJax.Extension.jsMath2jax = {
-  version: "2.1",
+  version: "2.2",
   
   config: {
     preview: "TeX"    // Set to "none" to prevent preview strings from being inserted
@@ -70,9 +73,8 @@ MathJax.Extension.jsMath2jax = {
   },
   
   createPreview: function (node) {
-    var preview;
-    if (this.config.preview === "TeX") {preview = [this.filterPreview(node.innerHTML)]}
-    else if (this.config.preview instanceof Array) {preview = this.config.preview}
+    var preview = this.config.preview;
+    if (preview === "TeX") {preview = [this.filterPreview(node.innerHTML)]}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className: MathJax.Hub.config.preRemoveClass},preview);
       node.parentNode.insertBefore(preview,node);

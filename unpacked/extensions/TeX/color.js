@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/TeX/color.js
@@ -9,7 +12,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2012 Design Science, Inc.
+ *  Copyright (c) 2011-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,7 +31,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/color"] = {
-  version: "2.1",
+  version: "2.2",
 
   config: MathJax.Hub.CombineConfig("TeX.color",{
     padding: "5px",
@@ -112,7 +115,7 @@ MathJax.Extension["TeX/color"] = {
   getColor: function (model,def) {
     if (!model) {model = "named"}
     var fn = this["get_"+model];
-    if (!fn) {this.TEX.Error("Color model '"+model+"' not defined")}
+    if (!fn) {this.TEX.Error(["UndefinedColorModel","Color model '%1' not defined",model])}
     return fn.call(this,def);
   },
   
@@ -120,12 +123,18 @@ MathJax.Extension["TeX/color"] = {
    *  Get an rgb color
    */
   get_rgb: function (rgb) {
-    rgb = rgb.split(/,/); var RGB = "#";
-    if (rgb.length !== 3) {this.TEX.Error("rgb colors require 3 decimal numbers")}
+    rgb = rgb.replace(/^\s+/,"").replace(/\s+$/,"").split(/\s*,\s*/); var RGB = "#";
+    if (rgb.length !== 3)
+      {this.TEX.Error(["ModelArg1","Color values for the %1 model require 3 numbers","rgb"])}
     for (var i = 0; i < 3; i++) {
-      if (!rgb[i].match(/^(\d+(\.\d*)?|\.\d+)$/)) {this.TEX.Error("Invalid decimal number")}
+      if (!rgb[i].match(/^(\d+(\.\d*)?|\.\d+)$/))
+        {this.TEX.Error(["InvalidDecimalNumber","Invalid decimal number"])}
       var n = parseFloat(rgb[i]);
-      if (n < 0 || n > 1) {this.TEX.Error("rgb values must be between 0 and 1")}
+      if (n < 0 || n > 1) {
+        this.TEX.Error(["ModelArg2",
+                        "Color values for the %1 model must be between %2 and %3",
+                        "rgb",0,1]);
+      }
       n = Math.floor(n*255).toString(16); if (n.length < 2) {n = "0"+n}
       RGB += n;
     }
@@ -136,12 +145,18 @@ MathJax.Extension["TeX/color"] = {
    *  Get an RGB color
    */
   get_RGB: function (rgb) {
-    rgb = rgb.split(/,/); var RGB = "#";
-    if (rgb.length !== 3) {this.TEX.Error("RGB colors require 3 numbers")}
+    rgb = rgb.replace(/^\s+/,"").replace(/\s+$/,"").split(/\s*,\s*/); var RGB = "#";
+    if (rgb.length !== 3)
+      {this.TEX.Error(["ModelArg1","Color values for the %1 model require 3 numbers","RGB"])}
     for (var i = 0; i < 3; i++) {
-      if (!rgb[i].match(/^\d+$/)) {this.TEX.Error("Invalid number")}
+      if (!rgb[i].match(/^\d+$/))
+        {this.TEX.Error(["InvalidNumber","Invalid number"])}
       var n = parseInt(rgb[i]);
-      if (n > 255) {this.TEX.Error("RGB values must be between 0 and 255")}
+      if (n > 255) {
+        this.TEX.Error(["ModelArg2",
+                        "Color values for the %1 model must be between %2 and %3",
+                        "RGB",0,255]);
+      }
       n = n.toString(16); if (n.length < 2) {n = "0"+n}
       RGB += n;
     }
@@ -152,9 +167,14 @@ MathJax.Extension["TeX/color"] = {
    *  Get a gray-scale value
    */
   get_gray: function (gray) {
-    if (!gray.match(/^(\d+(\.\d*)?|\.\d+)$/)) {this.TEX.Error("Invalid decimal number")}
+    if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/))
+      {this.TEX.Error(["InvalidDecimalNumber","Invalid decimal number"])}
     var n = parseFloat(gray);
-    if (n < 0 || n > 1) {this.TEX.Error("Grey-scale values must be between 0 and 1")}
+    if (n < 0 || n > 1) {
+      this.TEX.Error(["ModelArg2",
+                      "Color values for the %1 model must be between %2 and %3",
+                      "gray",0,1]);
+    }
     n = Math.floor(n*255).toString(16); if (n.length < 2) {n = "0"+n}
     return "#"+n+n+n;
   },

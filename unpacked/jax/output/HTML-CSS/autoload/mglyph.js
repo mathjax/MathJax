@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/autoload/mglyph.js
@@ -6,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2012 Design Science, Inc.
+ *  Copyright (c) 2010-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,9 +25,10 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.1";
+  var VERSION = "2.2";
   var MML = MathJax.ElementJax.mml,
-      HTMLCSS = MathJax.OutputJax["HTML-CSS"];
+      HTMLCSS = MathJax.OutputJax["HTML-CSS"],
+      LOCALE = MathJax.Localization;
   
   MML.mglyph.Augment({
     toHTML: function (span,variant) {
@@ -39,7 +43,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             if (HTMLCSS.Font.testFont(font)) {
               this.HTMLhandleVariant(span,variant,String.fromCharCode(index));
             } else {
-              if (values.alt === "") {values.alt = "Bad font: "+font.family}
+              if (values.alt === "")
+                {values.alt = LOCALE._(["MathML","BadMglyphFont"],"Bad font: %1",font.family)}
               err = MML.merror(values.alt).With({mathsize:"75%"});
               this.Append(err); err.toHTML(span); this.data.pop();
               span.bbox = err.HTMLspanElement().bbox;
@@ -57,7 +62,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           MathJax.Hub.RestartAfter(img.onload);
         }
         if (this.img.status !== "OK") {
-          err = MML.merror("Bad mglyph: "+values.src).With({mathsize:"75%"});
+          err = MML.merror(
+            LOCALE._(["MathML","BadMglyph"],"Bad mglyph: %1",values.src)
+          ).With({mathsize:"75%"});
           this.Append(err); err.toHTML(span); this.data.pop();
           span.bbox = err.HTMLspanElement().bbox;
         } else {

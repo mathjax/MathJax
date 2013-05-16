@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/asciimath2jax.js
@@ -11,7 +14,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2012 Design Science, Inc.
+ *  Copyright (c) 2012-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +30,7 @@
  */
 
 MathJax.Extension.asciimath2jax = {
-  version: "2.1",
+  version: "2.2",
   config: {
     delimiters: [['`','`']],   // The star/stop delimiter pairs for asciimath code
 
@@ -75,7 +78,10 @@ MathJax.Extension.asciimath2jax = {
     }
     this.start = new RegExp(starts.sort(this.sortLength).join("|"),"g");
     this.skipTags = new RegExp("^("+config.skipTags.join("|")+")$","i");
-    this.ignoreClass = new RegExp("(^| )("+config.ignoreClass+")( |$)");
+    var ignore = [];
+    if (MathJax.Hub.config.preRemoveClass) {ignore.push(MathJax.Hub.config.preRemoveClass)}
+    if (config.ignoreClass) {ignore.push(config.ignoreClass)}
+    this.ignoreClass = (ignore.length ? new RegExp("(^| )("+ignore.join("|")+")( |$)") : /^$/);
     this.processClass = new RegExp("(^| )("+config.processClass+")( |$)");
     return true;
   },
@@ -201,9 +207,9 @@ MathJax.Extension.asciimath2jax = {
   },
   
   createPreview: function (mode,asciimath) {
-    var preview;
-    if (this.config.preview === "AsciiMath") {preview = [this.filterPreview(asciimath)]}
-    else if (this.config.preview instanceof Array) {preview = this.config.preview}
+    var preview = this.config.preview;
+    if (preview === "none") return;
+    if (preview === "AsciiMath") {preview = [this.filterPreview(asciimath)]}
     if (preview) {
       preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
       this.insertNode(preview);

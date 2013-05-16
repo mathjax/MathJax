@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/jax.js
@@ -8,7 +11,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2012 Design Science, Inc.
+ *  Copyright (c) 2009-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +29,12 @@
 
 (function (AJAX,HUB,HTMLCSS) {
   var MML, isMobile = HUB.Browser.isMobile;
+
+  var MESSAGE = function () {
+    var data = [].slice.call(arguments,0);
+    data[0][0] = ["HTML-CSS",data[0][0]];
+    return MathJax.Message.Set.apply(MathJax.Message,data);
+  };
    
   var FONTTEST = MathJax.Object.Subclass({
     timeout:  (isMobile? 15:8)*1000,   // timeout for loading web fonts
@@ -129,7 +138,7 @@
 
     loadWebFont: function (font) {
       HUB.Startup.signal.Post("HTML-CSS Jax - Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
-      var n = MathJax.Message.File("Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
+      var n = MESSAGE(["LoadWebFont","Loading web-font %1",HTMLCSS.fontInUse+"/"+font.directory]);
       var done = MathJax.Callback({}); // called when font is loaded
       var callback = MathJax.Callback(["loadComplete",this,font,n,done]);
       AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],0,this.timeout);
@@ -149,11 +158,11 @@
       if (!this.webFontLoaded) {HTMLCSS.loadWebFontError(font,done)} else {done()}
     },
     loadError: function (font) {
-      MathJax.Message.Set("Can't load web font "+HTMLCSS.fontInUse+"/"+font.directory,null,2000);
+      MESSAGE(["CantLoadWebFont","Can't load web font %1",HTMLCSS.fontInUse+"/"+font.directory],null,2000);
       HUB.Startup.signal.Post(["HTML-CSS Jax - web font error",HTMLCSS.fontInUse+"/"+font.directory,font]);
     },
     firefoxFontError: function (font) {
-      MathJax.Message.Set("Firefox can't load web fonts from a remote host",null,3000);
+      MESSAGE(["FirefoxCantLoadWebFont","Firefox can't load web fonts from a remote host"],null,3000);
       HUB.Startup.signal.Post("HTML-CSS Jax - Firefox web fonts on remote host error");
     },
 
@@ -243,6 +252,14 @@
           display: "inline ! important",
           "float": "none ! important"
         },
+        
+        ".MathJax *": {
+          transition: "none",
+          "-webkit-transition": "none",
+          "-moz-transition": "none",
+          "-ms-transition": "none",
+          "-o-transition": "none"
+        },
 
         ".MathJax_Processing": {
           visibility: "hidden", position:"fixed",
@@ -296,6 +313,9 @@
     webFontDefault: "MathJax_Blank",
     allowWebFonts: "otf",              // assume browser can use OTF web fonts
 
+    maxStretchyParts: 1000,            // limit the number of parts allowed for
+                                       // stretchy operators. See issue 366.
+
     Config: function () {
       if (!this.require) {this.require = []}
       this.Font = FONTTEST();
@@ -303,12 +323,21 @@
       if (this.adjustAvailableFonts) {this.adjustAvailableFonts(this.config.availableFonts)}
       if (settings.scale) {this.config.scale = settings.scale}
       if (settings.font && settings.font !== "Auto") {
-        if (settings.font === "TeX (local)")
-          {this.config.availableFonts = ["TeX"]; this.config.preferredFont = "TeX"; this.config.webFont = "TeX"}
-        else if (settings.font === "STIX (local)")
-          {this.config.availableFonts = ["STIX"]; this.config.preferredFont = "STIX"; this.config.webFont = "TeX"}
-        else if (settings.font === "TeX (web)") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "TeX"}
-        else if (settings.font === "TeX (image)") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = ""}
+        if (settings.font === "TeX (local)") {
+          this.config.availableFonts = ["TeX"];
+          this.config.preferredFont = this.config.webFont = "TeX";
+        } else if (settings.font === "STIX (local)") {
+          this.config.availableFonts = ["STIX"];
+          this.config.preferredFont = "STIX";
+          this.config.webFont = "TeX";
+        } else if (settings.font === "TeX (web)") {
+          this.config.availableFonts = [];
+          this.config.preferredFont = "";
+          this.config.webFont = "TeX";
+        } else if (settings.font === "TeX (image)") {
+          this.config.availableFonts = [];
+          this.config.preferredFont = this.config.webFont = "";
+        }
       }
       var font = this.Font.findFont(this.config.availableFonts,this.config.preferredFont);
       if (!font && this.allowWebFonts) {font = this.config.webFont; if (font) {this.webFonts = true}}
@@ -321,16 +350,17 @@
           HUB.Startup.signal.Post("HTML-CSS Jax - using image fonts");
         }
       } else {
-        MathJax.Message.Set("Can't find a valid font using ["+this.config.availableFonts.join(", ")+"]",null,3000);
+        MESSAGE(["CantFindFontUsing","Can't find a valid font using %1",
+                "["+this.config.availableFonts.join(", ")+"]"],null,3000);
+        this.fontInUse = "generic";
         this.FONTDATA = {
           TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
-          FONTS: {}, VARIANT: {normal: {fonts:[]}}, RANGES: [],
-          DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
+          FONTS: {},
+          VARIANT: {
+            "normal": {fonts:[]}, "-generic-variant": {fonts:[]},
+            "-largeOp": {fonts:[]}, "-smallOp": {fonts:[]}
+          }, RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
         };
-        if (MathJax.InputJax.TeX && MathJax.InputJax.TeX.Definitions) {
-          MathJax.InputJax.TeX.Definitions.macros.overline[1]  = "002D";
-          MathJax.InputJax.TeX.Definitions.macros.underline[1] = "002D";
-        }
         HUB.Startup.signal.Post("HTML-CSS Jax - no valid font");
       }
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
@@ -673,7 +703,8 @@
       //
       //  Get height and width of zoomed math and original math
       //
-      span.style.position = math.style.position = "absolute";
+      span.style.position = "absolute";
+      if (!width) {math.style.position = "absolute"}
       var zW = span.offsetWidth, zH = span.offsetHeight,
           mH = math.offsetHeight, mW = math.offsetWidth;
       if (mW === 0) {mW = math.parentNode.offsetWidth}; // IE7 gets mW == 0?
@@ -755,15 +786,15 @@
       parent.bbox = this.Measured(span,parent).bbox;
     },
     MeasureSpans: function (SPANS) {
-      var spans = [], span, i, m, bbox, start, end, W;
+      var spans = [], span, i, m, bbox, start, end, W, parent;
       //
       //  Insert the needed markers
       // 
       for (i = 0, m = SPANS.length; i < m; i++) {
         span = SPANS[i]; if (!span) continue;
-        bbox = span.bbox;
+        bbox = span.bbox; parent = this.parentNode(span);
         if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline) {
-          if (!span.parentNode.bbox) {span.parentNode.bbox = bbox}
+          if (!parent.bbox) {parent.bbox = bbox}
           continue;
         }
         if (this.negativeBBoxes || !span.firstChild || (bbox.w >= 0 && !this.initialSkipBug) ||
@@ -782,11 +813,11 @@
       //  Read the widths and heights
       //
       for (i = 0, m = spans.length; i < m; i++) {
-        span = spans[i][0]; bbox = span.bbox; var parent = span.parentNode;
+        span = spans[i][0]; bbox = span.bbox; parent = this.parentNode(span);
         if ((bbox.w >= 0 && !this.initialSkipBug) || this.negativeBBoxes || !span.firstChild) {
-          W = span.offsetWidth; parent.HH = span.parentNode.offsetHeight/this.em;
+          W = span.offsetWidth; parent.HH = parent.offsetHeight/this.em;
         } else if (bbox.w < 0 && this.msieNegativeBBoxBug) {
-          W = -span.offsetWidth, parent.HH = span.parentNode.offsetHeight/this.em;
+          W = -span.offsetWidth, parent.HH = parent.offsetHeight/this.em;
         } else {
           W = spans[i][2].offsetLeft - ((spans[i][1]||{}).offsetLeft||0);
         }
@@ -806,6 +837,11 @@
     },
 
     Em: function (m) {
+      if (Math.abs(m) < .0006) {return "0em"}
+      return m.toFixed(3).replace(/\.?0+$/,"") + "em";
+    },
+    EmRounded: function (m) {
+      m = (Math.round(m*HTMLCSS.em)+.05)/HTMLCSS.em;
       if (Math.abs(m) < .0006) {return "0em"}
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
@@ -966,6 +1002,15 @@
       if (D) {frame.style.verticalAlign = D}
       return frame;
     },
+    
+    //
+    //  Find parent span (skipping over <a> tags)
+    //
+    parentNode: function (span) {
+      var parent = span.parentNode;
+      if (parent.nodeName.toLowerCase() === "a") {parent = parent.parentNode}
+      return parent;
+    },
 
     createStack: function (span,nobbox,w) {
       if (this.msiePaddingWidthBug) {this.createStrut(span,0)}
@@ -997,7 +1042,7 @@
     },
     placeBox: function (span,x,y,noclip) {
       span.isMathJax = true;
-      var parent = span.parentNode, bbox = span.bbox, BBOX = parent.bbox;
+      var parent = HTMLCSS.parentNode(span), bbox = span.bbox, BBOX = parent.bbox;
       if (this.msiePlaceBoxBug) {this.addText(span,this.NBSP)}
       if (this.imgSpaceBug) {this.addText(span,this.imgSpace)}
       // Place the box
@@ -1054,7 +1099,10 @@
         if (bbox.rw + x > BBOX.rw) {BBOX.rw = bbox.rw + x}
         if (bbox.lw + x < BBOX.lw) {BBOX.lw = bbox.lw + x}
         if (bbox.width != null && !bbox.isFixed) {
-          if (BBOX.width == null) {parent.style.width = BBOX.width = "100%"}
+          if (BBOX.width == null) {
+            parent.style.width = BBOX.width = "100%";
+            if (bbox.minWidth) {parent.style.minWidth = BBOX.minWidth = bbox.minWidth}
+          }
           span.style.width = bbox.width;
         }
       }
@@ -1130,7 +1178,7 @@
       if (H > h) {
         ext = this.Element("span"); this.createChar(ext,delim.ext,scale,font);
         var eH = ext.bbox.h + ext.bbox.d, eh = eH - .05, n, N, k = (delim.mid ? 2 : 1);
-        N = n = Math.ceil((H-h)/(k*eh));
+        N = n = Math.min(Math.ceil((H-h)/(k*eh)), this.maxStretchyParts);
         if (!delim.fullExtenders) {eh = (H-h)/(k*n)}
         var dy = (n/(n+1))*(eH - eh); eh = eH - dy; y += dy + eh - ext.bbox.h;
         while (k-- > 0) {
@@ -1180,7 +1228,7 @@
       if (delim.min && W < w*delim.min) {W = w*delim.min}
       if (W > w) {
         var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
-        N = n = Math.ceil((W-w)/(k*rw));
+        N = n = Math.min(Math.ceil((W-w)/(k*rw)), this.maxStretchyParts);
         if (!delim.fillExtenders) {rw = (W-w)/(k*n)}
         dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
         while (k-- > 0) {
@@ -1469,7 +1517,7 @@
         this.imgFonts = true;
         HUB.Startup.signal.Post("HTML-CSS Jax - switch to image fonts");
         HUB.Startup.signal.Post("HTML-CSS Jax - using image fonts");
-        MathJax.Message.Set("Web-Fonts not available -- using image fonts instead",null,3000);
+        MESSAGE(["WebFontNotAvailable","Web-Fonts not available -- using image fonts instead"],null,3000);
         AJAX.Require(this.directory+"/imageFonts.js",done);
       } else {
         this.allowWebFonts = false;
@@ -1588,7 +1636,7 @@
 	if (BBOX.w + bbox.rw > BBOX.rw) {BBOX.rw = BBOX.w + bbox.rw}
 	BBOX.w += bbox.w;
 	if (child.style.paddingRight) {BBOX.w += HTMLCSS.unEm(child.style.paddingRight)*(child.scale||1)}
-	if (bbox.width) {BBOX.width = bbox.width}
+	if (bbox.width) {BBOX.width = bbox.width; BBOX.minWidth = bbox.minWidth}
         if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
         if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
       },
@@ -1626,9 +1674,8 @@
 	  else {box.bbox = this.HTMLzeroBBox()}
       },
       HTMLboxChild: function (n,box) {
-	if (this.data[n]) {return this.data[n].toHTML(box)}
-        if (!box.bbox) {box.bbox = this.HTMLzeroBBox()}
-        return null;
+        if (!this.data[n]) {this.SetData(n,MML.mrow())}
+	return this.data[n].toHTML(box);
       },
 
       HTMLcreateSpan: function (span) {
@@ -1636,7 +1683,7 @@
 	  var SPAN = this.HTMLspanElement();
 	  if (SPAN && (SPAN.parentNode === span || (SPAN.parentNode||{}).parentNode === span)) {
 	    while (SPAN.firstChild) {SPAN.removeChild(SPAN.firstChild)}
-	    SPAN.bbox = {w:0, h:0, d:0, lw:0, rw:0};
+	    SPAN.bbox = this.HTMLzeroBBox();
 	    SPAN.scale = 1; SPAN.isMultChar = SPAN.HH = null;
 	    SPAN.style.cssText = "";
 	    return SPAN;
@@ -1648,7 +1695,7 @@
 	if (this["class"]) {span.className += " "+this["class"]}
 	if (!this.spanID) {this.spanID = HTMLCSS.GetID()}
 	span.id = (this.id || "MathJax-Span-"+this.spanID) + HTMLCSS.idPostfix;
-	span.bbox = {w:0, h:0, d:0, lw:0, rw:0}; this.styles = {};
+	span.bbox = this.HTMLzeroBBox(); this.styles = {};
 	if (this.style) {
 	  span.style.cssText = this.style;
 	  if (span.style.fontSize) {this.mathsize = span.style.fontSize; span.style.fontSize = ""}
@@ -1847,6 +1894,11 @@
             "sans-serif-bold-italic":MML.VARIANT.BOLDSANSSERIF
           }[variant]||variant;
         }
+        if (!(variant in HTMLCSS.FONTDATA.VARIANT)) {
+          // If the mathvariant value is invalid or not supported by this
+          // font, fallback to normal. See issue 363.
+          variant = "normal";
+        }
         return HTMLCSS.FONTDATA.VARIANT[variant];
       }
     },{
@@ -1909,7 +1961,7 @@
 	var variant = this.HTMLgetVariant();
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
-	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
         var text = this.data.join(""), bbox = span.bbox;
 	if (bbox.skew && text.length !== 1) {delete bbox.skew}
         if (bbox.rw > bbox.w && text.length === 1 && !variant.noIC) {
@@ -1929,7 +1981,7 @@
 	var variant = this.HTMLgetVariant();
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
-	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (this.data.join("").length !== 1) {delete span.bbox.skew}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
@@ -1971,7 +2023,7 @@
         //
 	for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant,this.HTMLremap,mapchars)}}
-	if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (text.length !== 1) {delete span.bbox.skew}
         //
         //  Handle combining characters by adding a non-breaking space and removing that width
@@ -2018,7 +2070,8 @@
       CoreText: function (parent) {
         if (!parent) {return ""}
         if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
-        while ((parent.isa(MML.mrow) || parent.isa(MML.TeXAtom)) &&
+        while ((parent.isa(MML.mrow) || parent.isa(MML.TeXAtom) ||
+                parent.isa(MML.mstyle) || parent.isa(MML.mphantom)) &&
                 parent.data.length === 1 && parent.data[0]) {parent = parent.data[0]}
         if (!parent.isToken) {return ""} else {return parent.data.join("")}
       },
@@ -2098,7 +2151,7 @@
           {variant = {bold:variant.bold, italic:variant.italic, fontInherit: true}}
         for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
-        if (!span.bbox) {span.bbox = {w:0, h:0, d:0, rw:0, lw:0}}
+        if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
         if (this.data.join("").length !== 1) {delete span.bbox.skew}
         this.HTMLhandleSpace(span);
         this.HTMLhandleColor(span);
@@ -2531,7 +2584,14 @@
 	if (sup) {sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw)}
 	if (sub) {sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw)}
 	HTMLCSS.placeBox(base,0,0);
-	var sscale = (this.data[this.sup] || this.data[this.sub] || this).HTMLgetScale();
+        var sscale;
+        if (sup) {
+          sscale = this.data[this.sup].HTMLgetScale();
+        } else if (sub) {
+          sscale = this.data[this.sub].HTMLgetScale();
+        } else {
+          sscale = this.HTMLgetScale();
+        }
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
 	if (base.bbox.ic) {
@@ -2604,7 +2664,14 @@
 	  math = HTMLCSS.Measured(html,box);
 	}
 	HTMLCSS.placeBox(box,0,0);
-        stack.style.width = Math.round(HTMLCSS.unEm(stack.style.width)*this.em)+"px"; // get width right if minimum font size is set
+        //
+        //  Get width right if minimum font size is set:
+        //    Round to nearest pixel (plus a small amount), and convert back to outer-em's.
+        //    Add the width to the span (outside the MathJax class, so uses outer em size,
+        //    which makes it work even when minimum font size is in effect).
+        //
+        span.style.width = HTMLCSS.Em((Math.round(math.bbox.w*this.em)+.25)/HTMLCSS.outerEm);
+        span.style.display = "inline-block";
 	//
 	//  Adjust bbox to match outer em-size
 	// 
@@ -2612,7 +2679,8 @@
 	span.bbox.h *= f; span.bbox.d *= f; span.bbox.w *= f;
 	span.bbox.lw *= f; span.bbox.rw *= f;
 	if (math && math.bbox.width != null) {
-	  stack.style.width = math.bbox.width;
+          span.style.minWidth = (math.bbox.minWidth || span.style.width);
+	  span.style.width = stack.style.width = math.bbox.width;
 	  box.style.width = "100%";
 	}
 	//
@@ -2787,10 +2855,8 @@
 
       Chrome: function (browser) {
         HTMLCSS.Augment({
-          Em: HTMLCSS.Px,       // vertical alignment is better in pixels (since around v20)
-          unEm: HTMLCSS.unPx,
-          chromeHeightBug: true, // heights can be 1px off from the explicitly set size
-          cloneNodeBug: true,    // Chrome gets heights wrong with the cloned ones
+          Em: HTMLCSS.EmRounded,   // vertical alignment needs help (since around v20)
+          cloneNodeBug: true,      // Chrome gets heights wrong with the cloned ones
           rfuzz: .011,
           AccentBug: true,
           AdjustSurd: true,

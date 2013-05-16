@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/toMathML.js
@@ -7,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2012 Design Science, Inc.
+ *  Copyright (c) 2010-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +26,7 @@
  */
 
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
-  var VERSION = "2.1";
+  var VERSION = "2.2";
   
   var MML = MathJax.ElementJax.mml
       SETTINGS = MathJax.Hub.config.menuSettings;
@@ -106,11 +109,28 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       string = String(string).split("");
       for (var i = 0, m = string.length; i < m; i++) {
         var n = string[i].charCodeAt(0);
-        if (n < 0x20 || n > 0x7E) {
-          string[i] = "&#x"+n.toString(16).toUpperCase()+";";
+        if (n <= 0xD7FF || 0xE000 <= n) {
+          // Code points U+0000 to U+D7FF and U+E000 to U+FFFF.
+          // They are directly represented by n.
+          if (n < 0x20 || n > 0x7E) {
+            string[i] = "&#x"+n.toString(16).toUpperCase()+";";
+          } else {
+            var c =
+              {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;'}[string[i]];
+            if (c) {string[i] = c}
+          }
+        } else if (i+1 < m) {
+          // Code points U+10000 to U+10FFFF.
+          // n is the lead surrogate, let's read the trail surrogate.
+          var trailSurrogate = string[i+1].charCodeAt(0);
+          var codePoint = (((n-0xD800)<<10)+(trailSurrogate-0xDC00)+0x10000);
+          string[i] = "&#x"+codePoint.toString(16).toUpperCase()+";";
+          string[i+1] = "";
+          i++;
         } else {
-          var c = {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;'}[string[i]];
-          if (c) {string[i] = c}
+          // n is a lead surrogate without corresponding trail surrogate:
+          // remove that character.
+          string[i] = "";
         }
       }
       return string.join("");

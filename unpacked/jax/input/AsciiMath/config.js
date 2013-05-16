@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/input/AsciiMath/config.js
@@ -10,7 +13,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2012 Design Science, Inc.
+ *  Copyright (c) 2012-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,13 +30,13 @@
 
 MathJax.InputJax.AsciiMath = MathJax.InputJax({
   id: "AsciiMath",
-  version: "2.1",
+  version: "2.2",
   directory: MathJax.InputJax.directory + "/AsciiMath",
   extensionDir: MathJax.InputJax.extensionDir + "/AsciiMath",
   
   config: {
     displaystyle: true,               // put limits above and below operators
-    decimal: "."                      // can change to "," but watch out for "(1,2)"
+    decimalsign: "."                  // can change to "," but watch out for "(1,2)"
   }
 });
 MathJax.InputJax.AsciiMath.Register("math/asciimath");

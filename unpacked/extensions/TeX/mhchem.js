@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/extensions/TeX/mhchem.js
@@ -7,7 +10,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2012 Design Science, Inc.
+ *  Copyright (c) 2011-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/mhchem"] = {
-  version: "2.1"
+  version: "2.2"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -350,11 +353,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         if (C === "{") {braces++} else
         if (C === "}") {
           if (braces) {braces--}
-            else {TEX.Error("Extra close brace or missing open brace")}
+          else {
+            TEX.Error(["ExtraCloseMissingOpen","Extra close brace or missing open brace"])
+          }
         }
       }
-      if (braces) {TEX.Error("Missing close brace")};
-      TEX.Error("Can't find closing "+c);
+      if (braces) {TEX.Error(["MissingCloseBrace","Missing close brace"])}
+      TEX.Error(["NoClosingChar","Can't find closing %1",c]);
     }
     
   });

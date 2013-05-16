@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/HTML-CSS/autoload/mmultiscripts.js
@@ -6,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2012 Design Science, Inc.
+ *  Copyright (c) 2010-2013 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.1";
+  var VERSION = "2.2";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -43,7 +46,17 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var BOX = this.HTMLgetScripts(stack,s);
       var sub = BOX[0], sup = BOX[1], presub = BOX[2], presup = BOX[3];
 
-      var sscale = (this.data[1]||this).HTMLgetScale();
+      // <mmultiscripts> children other than the base can be <none/>,
+      // <mprescripts/>, <mrow></mrow> etc so try to get HTMLgetScale from the
+      // first element with a spanID. See issue 362.
+      var sscale = this.HTMLgetScale();
+      for (var i = 1; i < this.data.length; i++) {
+        if (this.data[i] && this.data[i].spanID) {
+          sscale = this.data[i].HTMLgetScale();
+          break;
+        }
+      }
+
       var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
       var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
       if (base.bbox.ic) {delta = base.bbox.ic}

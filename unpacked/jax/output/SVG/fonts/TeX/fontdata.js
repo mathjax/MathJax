@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/output/SVG/fonts/TeX/fontdata.js
@@ -7,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2012 Design Science, Inc.
+ *  Copyright (c) 2011-2013 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,8 +25,8 @@
  *  limitations under the License.
  */
 
-(function (SVG,MML,AJAX) {
-  var VERSION = "2.1";
+(function (SVG,MML,AJAX,HUB) {
+  var VERSION = "2.2";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -1563,17 +1566,23 @@
     0xEEE8: [0,0,25,0,0,{space:1}]
   });
 
-  MathJax.Hub.Register.LoadHook(SVG.fontDir+"/Size4/Regular/Main.js",function () {
-    SVG.FONTDATA.FONTS['MathJax_Size4'][0xE154][0] += 200;  // adjust height for brace extender
-    SVG.FONTDATA.FONTS['MathJax_Size4'][0xE154][1] += 200;  // adjust depth for brace extender
-  });
-  
-  SVG.FONTDATA.FONTS['MathJax_Main'][0x2245][2] -= 222; // fix incorrect right bearing in font
-  MathJax.Hub.Register.LoadHook(SVG.fontDir+"/Main/Bold/MathOperators.js",function () {
-    SVG.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][2] -= 106; // fix incorrect right bearing in font
-  });
+  HUB.Register.StartupHook("SVG Jax Require",function () {
+    HUB.Register.LoadHook(SVG.fontDir+"/Size4/Regular/Main.js",function () {
+      SVG.FONTDATA.FONTS['MathJax_Size4'][0xE154][0] += 200;  // adjust height for brace extender
+      SVG.FONTDATA.FONTS['MathJax_Size4'][0xE154][1] += 200;  // adjust depth for brace extender
+    });
+    
+    SVG.FONTDATA.FONTS['MathJax_Main'][0x2245][2] -= 222; // fix incorrect right bearing in font
+    HUB.Register.LoadHook(SVG.fontDir+"/Main/Bold/MathOperators.js",function () {
+      SVG.FONTDATA.FONTS['MathJax_Main-bold'][0x2245][2] -= 106; // fix incorrect right bearing in font
+    });
 
-  AJAX.loadComplete(SVG.fontDir + "/fontdata.js");
+    HUB.Register.LoadHook(SVG.fontDir+"/Typewriter/Regular/BasicLatin.js",function () {
+      SVG.FONTDATA.FONTS['MathJax_Typewriter'][0x20][2] += 275; // fix incorrect width
+    });
+
+    AJAX.loadComplete(SVG.fontDir + "/fontdata.js");
+  });
   
-})(MathJax.OutputJax.SVG,MathJax.ElementJax.mml,MathJax.Ajax);
+})(MathJax.OutputJax.SVG,MathJax.ElementJax.mml,MathJax.Ajax,MathJax.Hub);
 
