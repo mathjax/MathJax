@@ -32,7 +32,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "2.2-beta";
+MathJax.version = "2.2";
 MathJax.fileversion = "2.2";
 
 /**********************************************************/
