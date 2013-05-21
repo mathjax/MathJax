@@ -2127,9 +2127,9 @@
     mfenced: function (open,mml,close) {
       var mrow = MML.mrow();
       mrow.open = open; mrow.close = close;
-      if (open) {mrow.Append(MML.mo(open).With({fence:true, texClass:MML.TEXCLASS.OPEN}))}
+      if (open) {mrow.Append(MML.mo(open).With({fence:true, stretchy:true, texClass:MML.TEXCLASS.OPEN}))}
       if (mml.type === "mrow") {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
-      if (close) {mrow.Append(MML.mo(close).With({fence:true, texClass:MML.TEXCLASS.CLOSE}))}
+      if (close) {mrow.Append(MML.mo(close).With({fence:true, stretchy:true, texClass:MML.TEXCLASS.CLOSE}))}
       return mrow;
     },
     
