@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.2";
+  var VERSION = "2.2.1";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -76,8 +76,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
                 HD = bbox.h + bbox.d;
                 if (HD) {
                   min = HTMLCSS.length2em(min,mu,HD);
-                  if (min*bbox.h/HD > H[j]) {H[j] = min*bbox.h/HD}
-                  if (min*bbox.d/HD > D[j]) {D[j] = min*bbox.d/HD}
+                  if (min*bbox.h/HD > H[i]) {H[i] = min*bbox.h/HD}
+                  if (min*bbox.d/HD > D[i]) {D[i] = min*bbox.d/HD}
                 }
               } else if (mo.HTMLcanStretch("Horizontal")) {
                 min = HTMLCSS.length2em(min,mu,bbox.w);
