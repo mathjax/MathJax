@@ -265,7 +265,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var den = this.ParseArg(name);
       var frac = MML.mfrac(num,den);
       if (thick !== "") {frac.linethickness = thick}
-      if (left || right) {frac = TEX.mfenced(left,frac,right)}
+      if (left || right) {frac = TEX.fenced(left,frac,right)}
       if (style !== "") {
         var STYLE = (["D","T","S","SS"])[style];
         if (STYLE == null)
