@@ -124,7 +124,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       href:               'NamedFn', // disable dangerous command
       style:              'NamedFn', // disable dangerous command
       pagecolor:          ['Macro','',1],  // ignore \pagecolor{}
-      vline:              ['Macro','\\smash{\\large\\lvert}',0]
+      vline:              ['Macro','\\smash{\\large\\lvert}',0],
+      image:              ['Macro','\\Im']
     }
 
   });
