@@ -20,14 +20,17 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       C:            ['0043',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
       cnums:        ['0043',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
       Complex:      ['0043',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
+      H:            ['210D',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
       N:            ['004E',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
       natnums:      ['004E',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
+      Q:            ['0051',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
       R:            ['0052',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
       reals:        ['0052',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
       Reals:        ['0052',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
       Z:            ['005A',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
       sect:         '00A7',  // S
       P:            '00B6',
+      AA:           ['00C5',{mathvariant: MML.VARIANT.NORMAL}],  // Å, used for Angstrom
       alef:         ['2135',{mathvariant: MML.VARIANT.NORMAL}],  // aleph
       alefsym:      ['2135',{mathvariant: MML.VARIANT.NORMAL}],  // aleph
       weierp:       ['2118',{mathvariant: MML.VARIANT.NORMAL}],  // wp
