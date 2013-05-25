@@ -31,9 +31,9 @@ MathJax.Localization.addTranslation("it","HelpDialog",{
       //"MathJax Help",
 
     MathJax: 
-      "*MathJax* è una libreria JavaScript che permette agli autori di includere " +
+      "*MathJax* \u00E8 una libreria JavaScript che permette agli autori di includere " +
       "formule matematiche nelle loro pagine web. Come lettore, non devi " +
-      "far nulla perché questo accada.",
+      "far nulla perch\u00E9 questo accada.",
       //"*MathJax* is a JavaScript library that allows page authors to include " + // NOTE: Markdown syntax *...*
       //"mathematics within their web pages.  As a reader, you don't need to do " +
       //"anything to make that happen.",
@@ -72,19 +72,19 @@ MathJax.Localization.addTranslation("it","HelpDialog",{
       //"and warning messages.",
 
     Zoom:
-      "*Zoom formula*: se hai difficoltà nella lettura di un'equazione, MathJax può " +
+      "*Zoom formula*: se hai difficolt\u00E1 nella lettura di un'equazione, MathJax pu\u00F2 " +
       "ingrandirla per permetterti di vederla meglio.",
       //"*Math Zoom*: If you are having difficulty reading an equation, MathJax can " +
       //"enlarge it to help you see it better.",
 
     Accessibilty:
-      "*Accessibilità*: MathJax funzionerà automaticamente con gli screen reader " +
+      "*Accessibilit\u00E1*: MathJax funzioner\u00E1 automaticamente con gli screen reader " +
       "per rendere le formule accessibili a chi ha problemi di vista.",
       //"*Accessibility*: MathJax will automatically work with screen readers to make " +
       //"mathematics accessible to the visually impaired.",
 
     Fonts:
-      "*Font*: MathJax userà certi tipi di font se presenti sul tuo computer; " +
+      "*Font*: MathJax user\u00E1 certi tipi di font se presenti sul tuo computer; " +
       "altrimenti usera i web font. Sebbene non sia richiesto, font installati " +
       "sul proprio computer velocizzeranno l'esecuzione di MathJax. Ti suggeriamo " +
       "di installare se puoi gli [STIX font](%1)."

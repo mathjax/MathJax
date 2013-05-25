@@ -35,9 +35,9 @@ MathJax.Localization.addTranslation("it","MathML",{
       //"Bad font: %1",
 
     MathPlayer:
-      "MathJax non è stato in grado di avviare MathPlayer.\n\n"+
-      "Se MathPlayer non è installato, devi prima installarlo.\n"+
-      "Può darsi anche che le tue impostazioni di sicurezza stiano impedendo\n"+
+      "MathJax non \u00E8 stato in grado di avviare MathPlayer.\n\n"+
+      "Se MathPlayer non \u00E8 installato, devi prima installarlo.\n"+
+      "Pu\u00F2 darsi anche che le tue impostazioni di sicurezza stiano impedendo\n"+
       "l'esecuzione dei controlli ActiveX. Controlla la voce Opzioni Internet\n"+
       "del menu Strumenti e seleziona il pannello Protezione, quindi premi\n"+
       "il pulsante 'Livello personalizzato...'. Verifica che siano abilitati\n"+
@@ -55,7 +55,7 @@ MathJax.Localization.addTranslation("it","MathML",{
       //"typeset mathematics.",
 
    CantCreateXMLParser:
-      "MathJax non è in grado di creare un parser XML per MathML. Verifica che\n"+
+      "MathJax non \u00E8 in grado di creare un parser XML per MathML. Verifica che\n"+
       "l'impostazione 'Esegui script controlli ActiveX contrassegnati come sicuri'\n"+
       "sia abilitata (usa la voce Opzioni Internet nel menu Strumenti,\n"+
       "e seleziona il pannello Sicurezza, quindi premi il pulsante\n"+

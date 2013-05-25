@@ -36,7 +36,7 @@ MathJax.Localization.addTranslation("it","HTML-CSS",{
       //"Can't load web font %1",
 
     FirefoxCantLoadWebFont:
-      "Firefox non può scaricare i web font dal server remoto",
+      "Firefox non pu\u00F2 scaricare i web font dal server remoto",
       //"Firefox can't load web fonts from a remote host",
 
     CantFindFontUsing:

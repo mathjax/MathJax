@@ -81,7 +81,7 @@ MathJax.Localization.addTranslation("it","MathMenu",{
 
     WebkitNativeMMLWarning: // NOTE: This section deals with warnings for when a user changes the rendering output via the MathJax menu but a browser does not support the chosen mechanism
       "Il tuo browser non sembra supportare MathML nativamente, "+
-      "perciò il passaggio ora all'output MathML potrebbe rendere "+
+      "perci\u00F2 il passaggio ora all'output MathML potrebbe rendere "+
       "illegibili le formule della pagina.",
       //"Your browser doesn't seem to support MathML natively, " +
       //"so switching to MathML output may cause the mathematics " +
@@ -94,7 +94,7 @@ MathJax.Localization.addTranslation("it","MathMenu",{
       //"in order to process MathML output.",
 
     OperaNativeMMLWarning:
-      "Il supporto di Opera a MathML è limitato, perciò passando ora " +
+      "Il supporto di Opera a MathML \u00E8 limitato, perci\u00F2 passando ora " +
       "all'output MathML potrebbe succedere che alcune espressioni " +
       "siano rese in modo scadente.",
       //"Opera's support for MathML is limited, so switching to " +
@@ -102,20 +102,20 @@ MathJax.Localization.addTranslation("it","MathMenu",{
 
     SafariNativeMMLWarning:
        "L'implementazione di MathML del tuo browser non comprende tutte " +
-       "le caratteristiche usate da MathJax, perciò alcune espressioni " +
+       "le caratteristiche usate da MathJax, perci\u00F2 alcune espressioni " +
        "potrebbero non essere visualizzate perfettamente.",
        //"Your browser's native MathML does not implement all the features " +
        //"used by MathJax, so some expressions may not render properly.",
 
     FirefoxNativeMMLWarning:
       "L'implementazione di MathML del tuo browser non comprende tutte " +
-      "le caratteristiche usate da MathJax, perciò alcune espressioni " +
+      "le caratteristiche usate da MathJax, perci\u00F2 alcune espressioni " +
       "potrebbero non essere visualizzate perfettamente.",
       //"Your browser's native MathML does not implement all the features " +
       //"used by MathJax, so some expressions may not render properly.",
 
     MSIESVGWarning:
-      "SVG non è implementato nelle versioni precedenti IE9 " +
+      "SVG non \u00E8 implementato nelle versioni precedenti IE9 " +
       "oppure quando si sta emulando IE8 o precedenti. " +
       "Passando all'output SVG le formule non saranno " +
       "visualizzate correttamente.",
@@ -140,7 +140,7 @@ MathJax.Localization.addTranslation("it","MathMenu",{
 
     SwitchAnyway:
       "Passare comunque a questo interprete?\n\n" +
-      "(Premi OK per cambiare, ANNULLA per continuare con la modalità corrente",
+      "(Premi OK per cambiare, ANNULLA per continuare con la modalit\u00E1 corrente",
       //"Switch the renderer anyway?\n\n" +
       //"(Press OK to switch, CANCEL to continue with the current renderer)",
 
@@ -157,15 +157,15 @@ MathJax.Localization.addTranslation("it","MathMenu",{
       //"The scale should be a percentage (e.g., 120%%)",
 
     IE8warning: // NOTE: This section deals with MathPlayer and menu/mouse event handling
-      "Questo disabiliterà il menu di MathJax e la possibilità di zoom, " +
-      "puoi però accedere lo stesso al menu con Alt-Click su una formula.\n\n" +
+      "Questo disabiliter\u00E1 il menu di MathJax e la possibilit\u00E1 di zoom, " +
+      "puoi per\u00F2 accedere lo stesso al menu con Alt-Click su una formula.\n\n" +
       "Cambiare davvero le impostazioni di MathPlayer?",
       //"This will disable the MathJax menu and zoom features, " +
       //"but you can Alt-Click on an expression to obtain the MathJax " +
       //"menu instead.\n\nReally change the MathPlayer settings?",
 
     IE9warning:
-      "Il menu contestuale di MathJax verrà disabilitato, ma puoi " +
+      "Il menu contestuale di MathJax verr\u00E1 disabilitato, ma puoi " +
       "sempre premere Alt-Click sopra una formula per accedervi comunque.",
       //"The MathJax contextual menu will be disabled, but you can " +
       //"Alt-Click on an expression to obtain the MathJax menu instead.",

@@ -27,11 +27,11 @@ MathJax.Localization.addTranslation("it","TeX",{
   strings: {
 
     ExtraOpenMissingClose:
-      "Graffa d'apertura in più o di chiusura mancante",
+      "Graffa d'apertura in pi\u00F9 o di chiusura mancante",
       //"Extra open brace or missing close brace", // NOTE: TeX commands use braces and brackets as delimiters
 
     ExtraCloseMissingOpen:
-      "Graffa di chiusura in più o d'apertura mancante",
+      "Graffa di chiusura in pi\u00F9 o d'apertura mancante",
       //"Extra close brace or missing open brace",
 
     MissingLeftExtraRight:
@@ -95,7 +95,7 @@ MathJax.Localization.addTranslation("it","TeX",{
       //"Prime causes double exponent: use braces to clarify", // NOTE: example:  x^a' should be {x^a}' or x^{a'}
 
     CantUseHash1:
-      "Non puoi usare il carattere # come parametro delle macro in modalità matematica",
+      "Non puoi usare il carattere # come parametro delle macro in modalit\u00E1 matematica",
       //"You can't use 'macro parameter character #' in math mode", // NOTE: '#' is used in TeX macros
 
     MisplacedMiddle:
@@ -103,11 +103,11 @@ MathJax.Localization.addTranslation("it","TeX",{
       //"%1 must be within \\left and \\right", // NOTE: do not translate \\left and \\right; they are TeX commands
 
     MisplacedLimits:
-      "%1 è consentito solo con operatori",
+      "%1 \u00E8 consentito solo con operatori",
       //"%1 is allowed only on operators", // NOTE: %1 will be \limits
 
     MisplacedMoveRoot:
-      "%1 può appare solo sotto radice",
+      "%1 pu\u00F2 appare solo sotto radice",
       //"%1 can appear only within a root",  // NOTE: %1 will be \uproot or \leftroot
 
     MultipleCommand:
@@ -119,7 +119,7 @@ MathJax.Localization.addTranslation("it","TeX",{
       //"The argument to %1 must be an integer",
 
     NotMathMLToken:
-      "%1 non è un token",
+      "%1 non \u00E8 un token",
       //"%1 is not a token element", // NOTE: MathJax has a non-standard \mmltoken command to insert MathML token elements
 
     InvalidMathMLAttr:
@@ -127,7 +127,7 @@ MathJax.Localization.addTranslation("it","TeX",{
       //"Invalid MathML attribute: %1", // NOTE: MathJax has non standard MathML and HTML related commands which can contain attributes
 
     UnknownAttrForElement:
-      "%1 non è un attributo riconosciuto per %2",
+      "%1 non \u00E8 un attributo riconosciuto per %2",
       //"%1 is not a recognized attribute for %2",
 
     MaxMacroSub1:
@@ -179,7 +179,7 @@ MathJax.Localization.addTranslation("it","TeX",{
       //"Missing or unrecognized delimiter for %1",
 
     MissingDimOrUnits:
-      "Dimensione o sue unità mancanti per %1",
+      "Dimensione o sue unit\u00E1 mancanti per %1",
       //"Missing dimension or its units for %1",
 
     TokenNotFoundForCommand:
@@ -201,11 +201,11 @@ MathJax.Localization.addTranslation("it","TeX",{
  /* AMSmath */
 
     CommandNotAllowedInEnv:
-      "%1 non è consentito nell'ambiente %2",
+      "%1 non \u00E8 consentito nell'ambiente %2",
       //"%1 not allowed in %2 environment",
 
     MultipleLabel:
-      "Etichetta '%1' definita più volte",
+      "Etichetta '%1' definita pi\u00F9 volte",
       //"Label '%1' multiply defined",
 
     CommandAtTheBeginingOfLine:
