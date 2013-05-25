@@ -186,7 +186,7 @@
         if (this.open || this.close) {
           mml.texClass = MML.TEXCLASS.INNER;
           mml.texWithDelims = true;
-          mml = TEX.mfenced(this.open,mml,this.close);
+          mml = TEX.fenced(this.open,mml,this.close);
         }
         return [STACKITEM.mml(mml), item];
       }
@@ -200,7 +200,7 @@
     stopError: /*_()*/ ["ExtraLeftMissingRight", "Extra \\left or missing \\right"],
     checkItem: function (item) {
       if (item.type === "right")
-        {return STACKITEM.mml(TEX.mfenced(this.delim,this.mmlData(),item.delim))}
+        {return STACKITEM.mml(TEX.fenced(this.delim,this.mmlData(),item.delim))}
       return this.SUPER(arguments).checkItem.call(this,item);
     }
   });
@@ -276,7 +276,7 @@
           if ((this.arraydef.columnlines||"none") != "none" ||
               (this.arraydef.rowlines||"none") != "none") {mml.padding = 0} // HTML-CSS jax implements this
         }
-        if (this.open || this.close) {mml = TEX.mfenced(this.open,mml,this.close)}
+        if (this.open || this.close) {mml = TEX.fenced(this.open,mml,this.close)}
         mml = STACKITEM.mml(mml);
         if (this.requireClose) {
           if (item.type === 'close') {return mml}
@@ -2122,14 +2122,14 @@
     },
     
     /*
-     *  Create an mrow that represents the equivalent of an mfenced
+     *  Create an mrow that has stretchy delimiters at either end, as needed
      */
-    mfenced: function (open,mml,close) {
+    fenced: function (open,mml,close) {
       var mrow = MML.mrow();
       mrow.open = open; mrow.close = close;
-      if (open) {mrow.Append(MML.mo(open).With({fence:true, texClass:MML.TEXCLASS.OPEN}))}
+      if (open) {mrow.Append(MML.mo(open).With({fence:true, stretchy:true, texClass:MML.TEXCLASS.OPEN}))}
       if (mml.type === "mrow") {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
-      if (close) {mrow.Append(MML.mo(close).With({fence:true, texClass:MML.TEXCLASS.CLOSE}))}
+      if (close) {mrow.Append(MML.mo(close).With({fence:true, stretchy:true, texClass:MML.TEXCLASS.CLOSE}))}
       return mrow;
     },
     
