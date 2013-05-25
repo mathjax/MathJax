@@ -3,8 +3,8 @@
 
 /*************************************************************
  *
- *  MathJax/localization/en/en.js
- *  
+ *  MathJax/localization/it/it.js
+ *
  *  Copyright (c) 2013 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +21,8 @@
  *
  */
 
-MathJax.Localization.addTranslation("en",null,{ // NOTE use correct ISO-639-1 two letter code http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-  menuTitle: "English", // NOTE language name; will appear in the MathJax submenu for switching locales
+MathJax.Localization.addTranslation("it",null,{ // NOTE use correct ISO-639-1 two letter code http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+  menuTitle: "Italiano", // NOTE language name; will appear in the MathJax submenu for switching locales
   version: "2.2",
   isLoaded: true,
   domains: {
@@ -32,39 +32,52 @@ MathJax.Localization.addTranslation("en",null,{ // NOTE use correct ISO-639-1 tw
       strings: {
 
         CookieConfig:
-          "MathJax has found a user-configuration cookie that includes code to "+
-          "be run. Do you want to run it?\n\n"+
-          "(You should press Cancel unless you set up the cookie yourself.)",
+          "MathJax ha trovato un cookie di configurazione utente che include del "+
+          "codice eseguibile. Vuoi eseguirlo?\n\n"+
+          "(Premi Annulla a meno che non l'abbia effettivamente impostato tu.)",
+          //"MathJax has found a user-configuration cookie that includes code to "+
+          //"be run. Do you want to run it?\n\n"+
+          //"(You should press Cancel unless you set up the cookie yourself.)",
 
         MathProcessingError:
-          "Math Processing Error", // NOTE: MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.
+          "Errore elaborazione della formula",
+          //"Math Processing Error", // NOTE: MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.
 
         MathError:
-          "Math Error", // Error message used in obsolete Accessible configurations
+          "Errore nella formula"
+          //"Math Error", // Error message used in obsolete Accessible configurations
 
         LoadFile:
-          "Loading %1", 
+          "Caricamento %1",
+          //"Loading %1",
 
         Loading:
-          "Loading", // NOTE: followed by growing sequence of dots
+          "Caricamento",
+          //"Loading", // NOTE: followed by growing sequence of dots
 
         LoadFailed:
-          "File failed to load: %1",
+          "Caricamento del file fallito: %1",
+          //"File failed to load: %1",
 
         ProcessMath:
-          "Processing Math: %1%%", // NOTE: appears during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format
+          "Elaborazione formula: %1%%",
+          //"Processing Math: %1%%", // NOTE: appears during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format
 
         Processing:
-          "Processing", // NOTE: followed by growing sequence of dots
+          "Elaborazione in corso",
+          //"Processing", // NOTE: followed by growing sequence of dots
 
         TypesetMath:
-          "Typesetting Math: %1%%", // NOTE: appears during the layout process of converting the internal format to the output format
+          "Composizione della formula: %1%%",
+          //"Typesetting Math: %1%%", // NOTE: appears during the layout process of converting the internal format to the output format
 
         Typesetting:
-          "Typesetting", // NOTE: followed by growing sequence of dots
+          "Composizione",
+          //"Typesetting", // NOTE: followed by growing sequence of dots
 
         MathJaxNotSupported:
-          "Your browser does not support MathJax" // NOTE: will load when MathJax determines the browser does not have adequate features
+          "Il tuo browser non supporta MathJax"
+          //"Your browser does not support MathJax" // NOTE: will load when MathJax determines the browser does not have adequate features
 
       }
     },
@@ -88,4 +101,4 @@ MathJax.Localization.addTranslation("en",null,{ // NOTE use correct ISO-639-1 tw
 
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/en/en.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/it/it.js");

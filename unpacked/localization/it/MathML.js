@@ -3,8 +3,8 @@
 
 /*************************************************************
  *
- *  MathJax/localization/en/MathML.js
- *  
+ *  MathJax/localization/it/MathML.js
+ *
  *  Copyright (c) 2013 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,56 +21,78 @@
  *
  */
 
-MathJax.Localization.addTranslation("en","MathML",{
+MathJax.Localization.addTranslation("it","MathML",{
   version: "2.2",
   isLoaded: true,
   strings: {
 
     BadMglyph: // NOTE: refers to MathML's mglyph element.
-      "Bad mglyph: %1",
+      "mglyph errato: %1",
+      //"Bad mglyph: %1",
 
     BadMglyphFont:
-      "Bad font: %1",
+      "Font errato: %1",
+      //"Bad font: %1",
 
     MathPlayer:
-      "MathJax was not able to set up MathPlayer.\n\n"+
-      "If MathPlayer is not installed, you need to install it first.\n"+
-      "Otherwise, your security settings may be preventing ActiveX     \n"+
-      "controls from running.  Use the Internet Options item under\n"+
-      "the Tools menu and select the Security tab, then press the\n"+
-      "Custom Level button. Check that the settings for\n"+
-      "'Run ActiveX Controls', and 'Binary and script behaviors'\n"+
-      "are enabled.\n\n"+
-      "Currently you will see error messages rather than\n"+
-      "typeset mathematics.",
+      "MathJax non è stato in grado di avviare MathPlayer.\n\n"+
+      "Se MathPlayer non è installato, devi prima installarlo.\n"+
+      "Può darsi anche che le tue impostazioni di sicurezza stiano impedendo\n"+
+      "l'esecuzione dei controlli ActiveX. Controlla la voce Opzioni Internet\n"+
+      "del menu Strumenti e seleziona il pannello Protezione, quindi premi\n"+
+      "il pulsante 'Livello personalizzato...'. Verifica che siano abilitati\n"+
+      "'Esegui controlli ActiveX e plug-in' e 'Comportamento file binari e script'\n\n"+
+      "Ora come ora vedrai dei messaggi d'errore al posto delle formule.",
+      //"MathJax was not able to set up MathPlayer.\n\n"+
+      //"If MathPlayer is not installed, you need to install it first.\n"+
+      //"Otherwise, your security settings may be preventing ActiveX     \n"+
+      //"controls from running.  Use the Internet Options item under\n"+
+      //"the Tools menu and select the Security tab, then press the\n"+
+      //"Custom Level button. Check that the settings for\n"+
+      //"'Run ActiveX Controls', and 'Binary and script behaviors'\n"+
+      //"are enabled.\n\n"+
+      //"Currently you will see error messages rather than\n"+
+      //"typeset mathematics.",
 
    CantCreateXMLParser:
-      "MathJax can't create an XML parser for MathML.  Check that\n"+
-      "the 'Script ActiveX controls marked safe for scripting' security\n"+
-      "setting is enabled (use the Internet Options item in the Tools\n"+
-      "menu, and select the Security panel, then press the Custom Level\n"+
-      "button to check this).\n\n"+
-      "MathML equations will not be able to be processed by MathJax.",
+      "MathJax non è in grado di creare un parser XML per MathML. Verifica che\n"+
+      "l'impostazione 'Esegui script controlli ActiveX contrassegnati come sicuri'\n"+
+      "sia abilitata (usa la voce Opzioni Internet nel menu Strumenti,\n"+
+      "e seleziona il pannello Sicurezza, quindi premi il pulsante\n"+
+      "'Livello personalizzato...' per far questo).\n\n"+
+      "Le equazioni in MathML non potranno essere elaborate da MathJax.",
+      //"MathJax can't create an XML parser for MathML.  Check that\n"+
+      //"the 'Script ActiveX controls marked safe for scripting' security\n"+
+      //"setting is enabled (use the Internet Options item in the Tools\n"+
+      //"menu, and select the Security panel, then press the Custom Level\n"+
+      //"button to check this).\n\n"+
+      //"MathML equations will not be able to be processed by MathJax.",
 
    UnknownNodeType:
-     "Unknown node type: %1", // NOTE: refers to XML nodes
+     "Tipo di nodo sconosciuto: %1",
+     //"Unknown node type: %1", // NOTE: refers to XML nodes
 
    UnexpectedTextNode:
-     "Unexpected text node: %1",
+     "Nodo di testo non previsto: %1",
+     //"Unexpected text node: %1",
 
    ErrorParsingMathML:
-     "Error parsing MathML",
+     "Errore nell'analisi di MathML",
+     //"Error parsing MathML",
 
    ParsingError:
-     "Error parsing MathML: %1",
+     "Errore nell'analisi di MathML: %1",
+     //"Error parsing MathML: %1",
 
    MathMLSingleElement:
-    "MathML must be formed by a single element",
+     "MathML deve essere formato da un singolo elemento",
+     //"MathML must be formed by a single element",
 
    MathMLRootElement:
-     "MathML must be formed by a <math> element, not %1"
+     "MathML deve essere formato da un elemento <math>, non %1"
+     //"MathML must be formed by a <math> element, not %1"
 
   }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/en/MathML.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/it/MathML.js");

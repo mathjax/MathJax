@@ -3,8 +3,8 @@
 
 /*************************************************************
  *
- *  MathJax/localization/en/HTML-CSS.js
- *  
+ *  MathJax/localization/it/HTML-CSS.js
+ *
  *  Copyright (c) 2013 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,27 +21,33 @@
  *
  */
 
-MathJax.Localization.addTranslation("en","HTML-CSS",{
+MathJax.Localization.addTranslation("it","HTML-CSS",{
   version: "2.2",
   isLoaded: true,
   strings: {
 
     LoadWebFont:
-      "Loading web-font %1", // NOTE: %1 is the name of a webfont file
+      "Caricamento web-font %1",
+      //"Loading web-font %1",
+      // NOTE: %1 is the name of a webfont file
 
     CantLoadWebFont:
-      "Can't load web font %1",
+      "Impossibile caricare il web font %1",
+      //"Can't load web font %1",
 
     FirefoxCantLoadWebFont:
-      "Firefox can't load web fonts from a remote host",
+      "Firefox non può scaricare i web font dal server remoto",
+      //"Firefox can't load web fonts from a remote host",
 
     CantFindFontUsing:
-      "Can't find a valid font using %1", // Note: %1 is a list of font names
+      "Impossibile trovare un font valido tra %1",
+      //"Can't find a valid font using %1", // Note: %1 is a list of font names
 
     WebFontsNotAvailable:
-      "Web-Fonts not available -- using image fonts instead"
+      "Web font non disponibili -- font immagini in uso"
+      //"Web-Fonts not available -- using image fonts instead"
 
   }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/en/HTML-CSS.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/it/HTML-CSS.js");
