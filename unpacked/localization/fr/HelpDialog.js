@@ -55,7 +55,7 @@ MathJax.Localization.addTranslation("fr","HelpDialog",{
       "math\u00E9matiques ou le m\u00E9canisme utilis\u00E9 pour afficher ces formules.",
 
     Language:
-      "Le menu *Langue* vous permet de s\u00E9lectionnez la langue utilis\u00E9e par "+
+      "Le menu *Langue* vous permet de s\u00E9lectionner la langue utilis\u00E9e par "+
       "MathJax pour ses menus et messages d'avertissement.",
 
     Zoom:
