@@ -1067,7 +1067,8 @@ MathJax.Localization = {
   strings: {
     en: {menuTitle: "English", isLoaded: true},   // nothing needs to be loaded for this
     de: {menuTitle: "Deutsch"},
-    fr: {menuTitle: "Fran\u00E7ais"}
+    fr: {menuTitle: "Fran\u00E7ais"},
+    it: {menuTitle: "Italiano"}
   },
 
   //

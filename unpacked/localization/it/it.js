@@ -44,7 +44,7 @@ MathJax.Localization.addTranslation("it",null,{ // NOTE use correct ISO-639-1 tw
           //"Math Processing Error", // NOTE: MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.
 
         MathError:
-          "Errore nella formula"
+          "Errore nella formula",
           //"Math Error", // Error message used in obsolete Accessible configurations
 
         LoadFile:
