@@ -576,7 +576,7 @@
 	if (this.data[this.sub] == null) {type = "msup"}
 	var tag = this.NativeMMLelement(type);
 	this.NativeMMLattributes(tag);
-	delete this.data[0].inferred;
+	if (this.data[0]) {delete this.data[0].inferred}
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toNativeMML(tag)}}
 	parent.appendChild(tag);
