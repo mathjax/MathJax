@@ -1127,14 +1127,17 @@
           // constant values instead. So let's modify the CSS properties here.
           //
 
-          //
-          // Retrieve the values of lspace/rspace and convert named spaces.
-          // Other values (except unitless) will be parsed by the CSS engine.
-          //
-          var values = this.getValues("lspace", "rspace");
-          var lspace = values.lspace, rspace = values.rspace;
-          if (nMML.NAMEDSPACE[lspace]) {lspace = nMML.NAMEDSPACE[lspace]}
-          if (nMML.NAMEDSPACE[rspace]) {rspace = nMML.NAMEDSPACE[rspace]}
+          var lspace = 0, rspace = 0, p = this.parent;
+          if (p && p.type === "mrow" && (p.inferred || !p.isEmbellished())) {
+            //
+            // Retrieve the values of lspace/rspace and convert named spaces.
+            // Other values (except unitless) will be parsed by the CSS engine.
+            //
+            var values = this.getValues("lspace", "rspace");
+            lspace = values.lspace, rspace = values.rspace;
+            if (nMML.NAMEDSPACE[lspace]) {lspace = nMML.NAMEDSPACE[lspace]}
+            if (nMML.NAMEDSPACE[rspace]) {rspace = nMML.NAMEDSPACE[rspace]}
+          }
 
           //
           // Now update -webkit-margin-start and -webkit-margin-end.
