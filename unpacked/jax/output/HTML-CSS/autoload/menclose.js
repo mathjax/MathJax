@@ -52,13 +52,18 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var frame = HTMLCSS.createFrame(stack,H+D,0,W,t,"none");
       frame.id = "MathJax-frame-"+this.spanID;
       HTMLCSS.addBox(stack,frame); stack.insertBefore(frame,base); // move base to above background
-      var notation = MathJax.Hub.SplitList(values.notation);
       var T = 0, B = 0, R = 0, L = 0, dx = 0, dy = 0; var svg, vml;
       var w, h, r;
       if (!values.mathcolor) {values.mathcolor = "black"} else {span.style.color = values.mathcolor}
-      
-      for (var i = 0, m = notation.length; i < m; i++) {
-        switch (notation[i]) {
+
+      // perform some reduction e.g. eliminate duplicate notations.
+      var nl = MathJax.Hub.SplitList(values.notation), notation = {};
+      for (var i = 0, m = nl.length; i < m; i++) notation[nl[i]] = true;
+      if (notation[MML.NOTATION.UPDIAGONALARROW]) notation[MML.NOTATION.UPDIAGONALSTRIKE] = false;
+
+      for (var n in notation) {
+        if (!notation[n]) continue;
+        switch (n) {
          case MML.NOTATION.BOX:
            frame.style.border = SOLID; if (!HTMLCSS.msieBorderWidthBug) {T = B = L = R = t}
            break;
@@ -130,16 +135,17 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             break;
 
           case MML.NOTATION.UPDIAGONALSTRIKE:
+          case MML.NOTATION.UPDIAGONALARROW:
             if (HTMLCSS.useVML) {
               if (!vml) {vml = this.HTMLvml(stack,H,D,W,t,values.mathcolor)}
               var line = this.HTMLvmlElement(vml,"line",{from: "0,"+this.HTMLpx(H+D-t), to: this.HTMLpx(W)+",0"});
-              if (this.arrow) {
+              if (n == MML.NOTATION.UPDIAGONALARROW) {
                 this.HTMLvmlElement(line,"stroke",{endarrow:"classic"});
                 line.to = this.HTMLpx(W)+","+this.HTMLpx(t);
               }
             } else {
               if (!svg) {svg = this.HTMLsvg(stack,H,D,W,t,values.mathcolor)}
-              if (this.arrow) {
+              if (n == MML.NOTATION.UPDIAGONALARROW) {
                 var l = Math.sqrt(W*W + (H+D)*(H+D)), f = 1/l * 10*scale/HTMLCSS.em * t/.075;
                 w = W * f; h = (H+D) * f; var x = W - t/2, y = t/2;
                 if (y+h-.4*w < 0) {y = .4*w-h}
