@@ -96,11 +96,11 @@
       for (var i = 0, m = CLASS.length; i < m; i++) {
         if (CLASS[i].substr(0,4) === "MJX-") {
           if (CLASS[i] === "MJX-arrow") {
-            // This class was used in former version of MathJax to add an
+            // This class was used in former versions of MathJax to attach an
             // arrow to the updiagonalstrike notation. For backward
-            // compatibility, continue to handle this as updiagonalarrow.
-            mml.notation = mml.notation.replace(MML.NOTATION.UPDIAGONALSTRIKE,
-                                                MML.NOTATION.UPDIAGONALARROW);
+            // compatibility, let's continue to accept this case. See issue 481.
+            if (!mml.notation.match("/"+MML.NOTATION.UPDIAGONALARROW+"/"))
+                mml.notation += " "+MML.NOTATION.UPDIAGONALARROW;
           } else if (CLASS[i] === "MJX-variant") {
             mml.variantForm = true;
             //

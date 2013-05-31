@@ -120,7 +120,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (notation[MML.NOTATION.UPDIAGONALARROW]) notation[MML.NOTATION.UPDIAGONALSTRIKE] = false;
       
       for (var n in notation) {
-        if (!notation[n]) continue;
+        if (!notation.hasOwnProperty(n) || !notation[n]) continue;
         switch (n) {
           case MML.NOTATION.BOX:
             borders = [true,true,true,true];
@@ -162,17 +162,16 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
             break;
 
           case MML.NOTATION.UPDIAGONALSTRIKE:
+            svg.Add(BBOX.DLINE(H,D,W,t,values.mathcolor,"up"));
+            break;
+
           case MML.NOTATION.UPDIAGONALARROW:
-              if (n == MML.NOTATION.UPDIAGONALARROW) {
-                var l = Math.sqrt(W*W + (H+D)*(H+D)), f = 1/l * 10/SVG.em * t/.075;
-                w = W * f; h = (H+D) * f; var x = .4*h;
-                svg.Add(BBOX.DLINE(H-.5*h,D,W-.5*w,t,values.mathcolor,"up"));
-                svg.Add(BBOX.FPOLY(
-                  [[x+w,h], [x-.4*h,.4*w], [x+.3*w,.3*h], [x+.4*h,-.4*w], [x+w,h]],
-                  values.mathcolor),W-w-x,H-h);
-              } else {
-                svg.Add(BBOX.DLINE(H,D,W,t,values.mathcolor,"up"));
-              }
+              var l = Math.sqrt(W*W + (H+D)*(H+D)), f = 1/l * 10/SVG.em * t/.075;
+              w = W * f; h = (H+D) * f; var x = .4*h;
+              svg.Add(BBOX.DLINE(H-.5*h,D,W-.5*w,t,values.mathcolor,"up"));
+              svg.Add(BBOX.FPOLY(
+                [[x+w,h], [x-.4*h,.4*w], [x+.3*w,.3*h], [x+.4*h,-.4*w], [x+w,h]],
+                values.mathcolor),W-w-x,H-h);
             break;
 
           case MML.NOTATION.DOWNDIAGONALSTRIKE:

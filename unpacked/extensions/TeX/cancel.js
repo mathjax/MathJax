@@ -96,7 +96,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var value = this.ParseArg(name),
           attr = this.GetBrackets(name,""),
           math = this.ParseArg(name);
-      var def = CANCEL.setAttributes({notation: MML.NOTATION.UPDIAGONALARROW},attr);
+      var def = CANCEL.setAttributes({notation: MML.NOTATION.UPDIAGONALSTRIKE+" "+MML.NOTATION.UPDIAGONALARROW},attr);
       value = MML.mpadded(value).With({depth:"-.1em",height:"+.1em",voffset:".1em"});
       this.Push(MML.msup(MML.menclose(math).With(def),value));
     }
