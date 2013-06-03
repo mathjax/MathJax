@@ -184,8 +184,15 @@ MathJax.Localization.addTranslation("de","MathMenu",{
 //    "Close",
 
     EqSource:
-      "Original MathJax Formel"
+      "Original MathJax Formel",
 //    "MathJax Equation Source"
+
+    "Annotation": "Annotation",
+    "TeX": "TeX",
+    "StarMath": "StarMath",
+    "Maple": "Maple",
+    "Content MathML": "Content MathML",
+    "OpenMath": "OpenMath"
 
   }
 });

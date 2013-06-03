@@ -730,6 +730,10 @@ MathJax.ElementJax.mml.Augment({
         {if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}}
       if (this.data[0]) {this.updateTeXclass(this.data[0])}
       return prev;
+    },
+    getAnnotation: function (name) {
+      if (this.data.length != 1) return null;
+      return this.data[0].getAnnotation(name);
     }
   });
 
@@ -1174,7 +1178,18 @@ MathJax.ElementJax.mml.Augment({
       definitionURL: null,
       encoding: null
     },
-    setTeXclass: MML.mbase.setChildTeXclass
+    setTeXclass: MML.mbase.setChildTeXclass,
+    getAnnotation: function (name) {
+      var encodingList = MathJax.Hub.config.MathMenu.semanticsAnnotations[name];
+      if (encodingList) {
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          var encoding = this.data[i].attr.encoding;
+          if (encoding && encodingList.indexOf(encoding) !== -1)
+            return this.data[i];
+        }
+      }
+      return null;
+    }
   });
   MML.annotation = MML.mbase.Subclass({
     type: "annotation", isToken: true,
@@ -1235,7 +1250,11 @@ MathJax.ElementJax.mml.Augment({
       return "";
     },
     linebreakContainer: true,
-    setTeXclass: MML.mbase.setChildTeXclass
+    setTeXclass: MML.mbase.setChildTeXclass,
+    getAnnotation: function (name) {
+      if (this.data.length != 1) return null;
+      return this.data[0].getAnnotation(name);
+    }
   });
   
   MML.chars = MML.mbase.Subclass({

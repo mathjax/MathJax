@@ -711,6 +711,9 @@
       }
     } else if (this.format === "Error") {
       MENU.ShowSource.Text(MENU.jax.errorText,event);
+    } else if (CONFIG.semanticsAnnotations[this.format]) {
+      var annotation = MENU.jax.root.getAnnotation(this.format);
+      if (annotation.data[0]) MENU.ShowSource.Text(annotation.data[0].toString());
     } else {
       if (MENU.jax.originalText == null) {
         alert(_("NoOriginalForm","No original form available"));
@@ -989,6 +992,20 @@
     menu.items.push(items[items.length-2],items[items.length-1]);
   };
 
+  //
+  // Create the annotation menu from MathJax.Hub.config.semanticsAnnotations
+  //
+  MENU.CreateAnnotationMenu = function () {
+    if (!MENU.menu) return;
+    var menu = MENU.menu.Find("Show Math As","Annotation").menu;
+    var annotations = CONFIG.semanticsAnnotations;
+    for (var a in annotations) {
+      if (annotations.hasOwnProperty(a)) {
+        menu.items.push(ITEM.COMMAND([a,a], MENU.ShowSource, {hidden: true, nativeTouch: true, format: a}));
+      }
+    }
+  };
+
   /*************************************************************/
 
   HUB.Register.StartupHook("End Config",function () {
@@ -1012,6 +1029,7 @@
       ITEM.SUBMENU(["Show","Show Math As"],
         ITEM.COMMAND(["MathMLcode","MathML Code"],  MENU.ShowSource, {nativeTouch: true, format: "MathML"}),
         ITEM.COMMAND(["Original","Original Form"],  MENU.ShowSource, {nativeTouch: true}),
+        ITEM.SUBMENU(["Annotation","Annotation"], {hidden:true}),
         ITEM.RULE(),
         ITEM.CHECKBOX(["texHints","Show TeX hints in MathML"], "texHints")
       ),
@@ -1095,6 +1113,7 @@
     }
 
     MENU.CreateLocaleMenu();
+    MENU.CreateAnnotationMenu();
   });
   
   MENU.showRenderer = function (show) {
