@@ -1067,7 +1067,9 @@ MathJax.Localization = {
   strings: {
     en: {menuTitle: "English", isLoaded: true},   // nothing needs to be loaded for this
     de: {menuTitle: "Deutsch"},
-    fr: {menuTitle: "Fran\u00E7ais"}
+    fr: {menuTitle: "Fran\u00E7ais"},
+    pt: {menuTitle: "portugusê"},
+    'pt-br': {menuTitle: "português do Brasil"},
   },
 
   //
@@ -1393,6 +1395,8 @@ MathJax.Localization = {
   //  Set the current language
   //
   setLocale: function(locale) {
+    if (!locale ) {locale = ''};
+    locale = locale.toLowerCase();
     // don't set it if there isn't a definition for it
     if (this.strings[locale]) {this.locale = locale}
     if (MathJax.Menu) {this.loadDomain("MathMenu")}

@@ -21,7 +21,11 @@
  *
  */
 
-MathJax.Localization.addTranslation("en",null,{ // NOTE use correct ISO-639-1 two letter code http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+// NOTE Use correct ISO-639-1 two letter code http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes if available
+// If you are specifying in more detail (e.g. a specific dialect), you can use a IETF language tag:
+// https://en.wikipedia.org/wiki/IETF_language_tag
+// such as pt-br.
+MathJax.Localization.addTranslation("en",null,{
   menuTitle: "English", // NOTE language name; will appear in the MathJax submenu for switching locales
   version: "2.2",
   isLoaded: true,
