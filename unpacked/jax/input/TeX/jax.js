@@ -267,7 +267,6 @@
         if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return false}
         this.EndTable(); this.clearEnv();
         var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
-debug(show(this.arraydef));
         if (this.frame.length === 4) {
           mml.frame = (this.frame.dashed ? "dashed" : "solid");
         } else if (this.frame.length) {
