@@ -27,19 +27,19 @@ MathJax.Localization.addTranslation("pl","HTML-CSS",{
   strings: {
 
     LoadWebFont:
-      "Loading web-font %1", // NOTE: %1 is the name of a webfont file
+      "Ładuję czcionkę %1", // NOTE: %1 is the name of a webfont file
 
     CantLoadWebFont:
-      "Can't load web font %1",
+      "Nie mogę załadować czcionki %1",
 
     FirefoxCantLoadWebFont:
-      "Firefox can't load web fonts from a remote host",
+      "Firefox nie potrafi załadować czcionki ze zdalnego komputera",
 
     CantFindFontUsing:
-      "Can't find a valid font using %1", // Note: %1 is a list of font names
+      "Nie mogę znaleźć prawidłowej czcionki używając %1", // Note: %1 is a list of font names
 
     WebFontsNotAvailable:
-      "Web-Fonts not available -- using image fonts instead"
+      "Czcionki Web nie są dostępne -- używam czcionek obrazkowych"
 
   }
 });

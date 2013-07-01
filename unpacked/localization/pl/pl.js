@@ -32,39 +32,39 @@ MathJax.Localization.addTranslation("pl",null,{ // NOTE use correct ISO-639-1 tw
       strings: {
 
         CookieConfig:
-          "MathJax has found a user-configuration cookie that includes code to "+
-          "be run. Do you want to run it?\n\n"+
-          "(You should press Cancel unless you set up the cookie yourself.)",
+          "MathJax znalazł konfigurację zapisaną w ciasteczku, która zawiera kod "+
+          "do uruchomienia. Czy chcesz go uruchomić?\n\n"+
+          "(Powinienieś nacisnąć Anuluj, jeśli to nie Ty stworzyłeś tę konfigurację.)",
 
         MathProcessingError:
-          "Math Processing Error", // NOTE: MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.
+          "Błąd podczas przetwarzania wzorów matematycznych", // NOTE: MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.
 
         MathError:
-          "Math Error", // Error message used in obsolete Accessible configurations
+          "Błąd we wzorze matematycznym", // Error message used in obsolete Accessible configurations
 
         LoadFile:
-          "Loading %1", 
+          "Ładuję %1",
 
         Loading:
-          "Loading", // NOTE: followed by growing sequence of dots
+          "Ładuję", // NOTE: followed by growing sequence of dots
 
         LoadFailed:
-          "File failed to load: %1",
+          "Nie udało się załadować pliku: %1",
 
         ProcessMath:
-          "Processing Math: %1%%", // NOTE: appears during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format
+          "Przetwarzam wzory matematyczne: %1%%", // NOTE: appears during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format
 
         Processing:
-          "Processing", // NOTE: followed by growing sequence of dots
+          "Przetwarzam", // NOTE: followed by growing sequence of dots
 
         TypesetMath:
-          "Typesetting Math: %1%%", // NOTE: appears during the layout process of converting the internal format to the output format
+          "Przetwarzam wzory matematyczne: %1%%", // NOTE: appears during the layout process of converting the internal format to the output format
 
         Typesetting:
-          "Typesetting", // NOTE: followed by growing sequence of dots
+          "Przetwarzam", // NOTE: followed by growing sequence of dots
 
         MathJaxNotSupported:
-          "Your browser does not support MathJax" // NOTE: will load when MathJax determines the browser does not have adequate features
+          "Twoja przeglądarka nie obsługuje MathJax" // NOTE: will load when MathJax determines the browser does not have adequate features
 
       }
     },
@@ -82,7 +82,7 @@ MathJax.Localization.addTranslation("pl",null,{ // NOTE use correct ISO-639-1 tw
   },
 
   number: function(n) {
-//    return String(n).replace(".", ","); // replace dot by comma
+    return String(n).replace(".", ","); // replace dot by comma
     return n;
   }
 
