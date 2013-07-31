@@ -992,7 +992,7 @@
         Bmatrix:      ['Array',null,'\\{','\\}','c'],
         vmatrix:      ['Array',null,'\\vert','\\vert','c'],
         Vmatrix:      ['Array',null,'\\Vert','\\Vert','c'],
-        cases:        ['Array',null,'\\{','.','ll',null,".1em"],
+        cases:        ['Array',null,'\\{','.','ll',null,".2em",'T'],
 
         equation:     [null,'Equation'],
         'equation*':  [null,'Equation'],
@@ -1757,6 +1757,7 @@
       if (open)  {array.open  = this.convertDelimiter(open)}
       if (close) {array.close = this.convertDelimiter(close)}
       if (style === "D") {array.arraydef.displaystyle = true}
+         else if (style) {array.arraydef.displaystyle = false}
       if (style === "S") {array.arraydef.scriptlevel = 1} // FIXME: should use mstyle?
       if (raggedHeight)  {array.arraydef.useHeight = false}
       this.Push(begin);
