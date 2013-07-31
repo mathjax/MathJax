@@ -576,7 +576,7 @@
 	if (this.data[this.sub] == null) {type = "msup"}
 	var tag = this.NativeMMLelement(type);
 	this.NativeMMLattributes(tag);
-	delete this.data[0].inferred;
+	if (this.data[0]) {delete this.data[0].inferred}
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toNativeMML(tag)}}
 	parent.appendChild(tag);
@@ -594,7 +594,7 @@
 	if (this.data[this.over] == null)  {type = "munder"}
 	var tag = this.NativeMMLelement(type);
 	this.NativeMMLattributes(tag);
-	delete this.data[0].inferred;
+	if (this.data[0]) {delete this.data[0].inferred}
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toNativeMML(tag)}}
 	parent.appendChild(tag);
@@ -746,7 +746,7 @@
             }
           }
 
-          if (nMML.tableLabelBug) {
+          if (nMML.tableLabelBug && this.data[0]) {
             var side = this.parent.Get("side").charAt(0),
                 align = HUB.config.displayAlign.charAt(0),
                 indent = HUB.config.displayIndent;
