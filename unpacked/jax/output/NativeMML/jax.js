@@ -493,7 +493,6 @@
         }
         if (this.mathvariant && this.NativeMMLvariants[this.mathvariant])
           {CLASS.push("MJX"+this.mathvariant)}
-        if (this.arrow) {CLASS.push("MJX-arrow")}
         if (this.variantForm) {CLASS.push("MJX-variant")}
         if (CLASS.length) {tag.setAttribute("class",CLASS.join(" "))}
       },
