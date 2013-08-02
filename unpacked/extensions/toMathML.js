@@ -84,7 +84,6 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       }
       if (this.mathvariant && this.toMathMLvariants[this.mathvariant])
         {CLASS.push("MJX"+this.mathvariant)}
-      if (this.arrow) {CLASS.push("MJX-arrow")}
       if (this.variantForm) {CLASS.push("MJX-variant")}
       if (CLASS.length) {attr.unshift('class="'+CLASS.join(" ")+'"')}
     },
