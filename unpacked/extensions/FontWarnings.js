@@ -134,7 +134,7 @@
           "This will render slower than usual, and the mathematics may not print "+
           "at the full resolution of your printer."],
         ["fonts"],
-        ["webfonts"]
+        ["webFonts"]
       ],
       
       noFonts: [
@@ -146,7 +146,7 @@
           "your browser will be able to display them.  Some characters "+
           "may not show up properly, or possibly not at all."],
         ["fonts"],
-        ["webfonts"]
+        ["webFonts"]
       ]
     },
     
@@ -178,9 +178,9 @@
         [["span",{style:{position:"relative", bottom:".2em"}},["x"]]]
       ]],
       
-      webfonts: [
+      webFonts: [
         ["p"],
-        ["webfonts",
+        ["webFonts",
           "Most modern browsers allow for fonts to be downloaded over the web. "+
           "Updating to a more recent version of your browser (or changing "+
           "browsers) could improve the quality of the mathematics on this page."
@@ -252,7 +252,7 @@
           data.splice.apply(data,[i,1].concat(CONFIG.HTML[data[i][0]]));
         } else if (typeof data[i][1] === "string") {
           var message = MathJax.Localization.lookupPhrase(["FontWarnings",data[i][0]],data[i][1]);
-          message = MathJax.Localization.processString(message,data[i].slice(2),"FontWarnings");
+          message = MathJax.Localization.processMarkdown(message,data[i].slice(2),"FontWarnings");
           data.splice.apply(data,[i,1].concat(message));
           i += message.length;
         } else {i++}
