@@ -149,9 +149,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           case MML.NOTATION.UPDIAGONALARROW:
             if (HTMLCSS.useVML) {
               if (!vml) {vml = this.HTMLvml(stack,H,D,W,t,values.mathcolor)}
-              var line = this.HTMLvmlElement(vml,"line",{from: "0,"+this.HTMLpx(H+D-t), to: this.HTMLpx(W)+",0"});
+              var line = this.HTMLvmlElement(vml,"line",{from: "0,"+this.HTMLpx(H+D-t), to: this.HTMLpx(W)+","+this.HTMLpx(t)});
               this.HTMLvmlElement(line,"stroke",{endarrow:"classic"});
-              line.to = this.HTMLpx(W)+","+this.HTMLpx(t);
             } else {
               if (!svg) {svg = this.HTMLsvg(stack,H,D,W,t,values.mathcolor)}
               var l = Math.sqrt(W*W + (H+D)*(H+D)), f = 1/l * 10*scale/HTMLCSS.em * t/.075;
