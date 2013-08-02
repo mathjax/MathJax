@@ -26,7 +26,7 @@ MathJax.Hub.Config({
     mpMouse: true
   },
   errorSettings: {
-    message: ["[Math Error]"]
+    message: ["[",["MathError","MathError"],"]"]
   }
 });
 

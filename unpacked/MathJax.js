@@ -2655,7 +2655,7 @@ MathJax.Hub.Startup = {
 
   BASE.InputJax = JAX.Subclass({
     elementJax: "mml",  // the element jax to load for this input jax
-    sourceMenuTitle: /*_(MathMenu)*/ ["OriginalForm","Original Form"],
+    sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"],
     copyTranslate: true,
     Process: function (script,state) {
       var queue = CALLBACK.Queue(), file;
@@ -2851,7 +2851,7 @@ MathJax.Hub.Startup = {
   };
   BASE.InputJax.Error = {
     id: "Error", version: "2.2", config: {},
-    sourceMenuTitle: /*_(MathMenu)*/ ["OriginalForm","Original Form"]
+    sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"]
   };
   
 })("MathJax");
