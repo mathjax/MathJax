@@ -1100,18 +1100,15 @@
       toNativeMML: function (parent) {
         this.SUPER(arguments).toNativeMML.call(this,parent);
         if (nMML.miItalicBug) {
-          if (this.Get("mathvariant") == "normal") {
+          if (this.Get("mathvariant") === MML.VARIANT.NORMAL) {
             //
             // When not explicitly specified, mathvariant is set to "italic"
             // with single char mi and to "normal" with multiple char mi.
-            // Some browsers always set the default to "italic", so modify the
-            // style when it is supposed to be "normal".
+            // Some browsers always set the default to "italic", so let's
+            // attach an explicit mathvariant="normal" attribute.
             //
             var mi = parent.lastChild;
-            var span = HTML.Element("span");
-            span.style.cssText = (mi.getAttribute("style")||"");
-            span.style.fontStyle = "normal";
-            mi.setAttribute("style",span.style.cssText);
+            mi.setAttribute("mathvariant",MML.VARIANT.NORMAL);
           }
         }
       }
@@ -1158,7 +1155,7 @@
         // Some browsers do not implement the mmultiscripts element.
         // Try to emulate the support using basic script elements.
         //
-        if (!nMML.mmultiscriptsBug || this.data.length == 0 ) {
+        if (!nMML.mmultiscriptsBug || this.data.length === 0 ) {
           this.SUPER(arguments).toNativeMML.call(this,parent);
           return;
         }
@@ -1183,7 +1180,7 @@
         //
         var m = this.data.length, i;
         for (i = 1; i < m; i+=2) {
-          if (this.data[i].type == "mprescripts") break;
+          if (this.data[i].type === "mprescripts") break;
 
           var msubsup = this.NativeMMLelement("msubsup");
           msubsup.appendChild(base);
