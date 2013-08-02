@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/it/HTML-CSS.js
+ *  MathJax/localization/pt-br/HTML-CSS.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,16 +21,16 @@
  *
  */
 
-MathJax.Localization.addTranslation("it","HTML-CSS",{
+MathJax.Localization.addTranslation("pt-br","HTML-CSS",{
         version: "2.2",
         isLoaded: true,
         strings: {
-          LoadWebFont: "Caricamento web-font %1",
-          CantLoadWebFont: "Impossibile caricare il web font %1",
-          FirefoxCantLoadWebFont: "Firefox non pu\u00F2 scaricare i web font dal server remoto",
-          CantFindFontUsing: "Impossibile trovare un font valido tra %1",
-          WebFontsNotAvailable: "Web font non disponibili -- font immagini in uso"
+          LoadWebFont: "Carregando fonte baseada em web %1",
+          CantLoadWebFont: "N\u00E3o foi poss\u00EDvel carregar a fonte baseada em web %1",
+          FirefoxCantLoadWebFont: "O Firefox N\u00E3o pode carregar fontes baseadas em web a partir de um host remoto",
+          CantFindFontUsing: "N\u00E3o \u00E9 poss\u00EDvel encontrar uma fonte v\u00E1lida usando %1",
+          WebFontsNotAvailable: "Fontes baseadas em web n\u00E3o est\u00E3o dispon\u00EDveis -- usando fontes feitas com imagens em vez disso"
         }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/it/HTML-CSS.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/pt-br/HTML-CSS.js");
