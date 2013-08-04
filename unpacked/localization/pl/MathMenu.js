@@ -34,7 +34,7 @@ MathJax.Localization.addTranslation("pl","MathMenu",{
       Original:       "Postać oryginalna",
       ErrorMessage:   "Komunikat Błędu",
       texHints:       "Pokaż dodatki TeX w MathML",
-    Settings: "Ustawienia", 
+    Settings: "Ustawienia",
       ZoomTrigger: "Powiększanie po...",
         Hover:       "Najechaniu myszką",
         Click:       "Kliknięciu",
@@ -55,11 +55,11 @@ MathJax.Localization.addTranslation("pl","MathMenu",{
       FontPrefs:  "Wybór czcionek",
         ForHTMLCSS: "HTML-CSS:",
           Auto:         "Automatyczny",
-          TeXLocal:     "TeX (lokalne czionki)",
+          TeXLocal:     "TeX (lokalne czcionki)",
           TeXWeb:       "TeX (czcionki Web)",
           TeXImage:     "TeX (czcionki obrazkowe)",
           STIXLocal:    "STIX (czcionki lokalne)",
-      ContextMenu: "Menu kontektsowe",
+      ContextMenu: "Menu kontekstowe",
         Browser:        "Przeglądarka",
       Scale: "Przeskaluj wszystkie wzory...",
       Discoverable: "Podświetl po najechaniu",
@@ -117,11 +117,11 @@ MathJax.Localization.addTranslation("pl","MathMenu",{
       "Nie udało się pobrać tłumaczenia z %1",
      
     SwitchAnyway:
-      "Czy mimo wszystko przełączyć wyświeltnie?\n\n" +
+      "Czy mimo wszystko przełączyć wyświetlanie?\n\n" +
       "(Naciśnij OK, aby przełączyć, a Anuluj, aby pozostawić obecny tryb wyświetlania)",
 
     ScaleMath:
-      "Przeskaluj wzory (w odniesieniu do otaczającego ich tekstu) o",      
+      "Przeskaluj wzory (w odniesieniu do otaczającego ich tekstu) o",
 
     NonZeroScale:
       "Skala nie może być zerowa",
@@ -135,7 +135,7 @@ MathJax.Localization.addTranslation("pl","MathMenu",{
       "Czy na pewno chcesz zmienić ustawienia MathPlayer?",
 
     IE9warning:
-      "Menu kontektsowe MathJax zostanie wyłączone, ale możesz kliknąć " +
+      "Menu kontekstowe MathJax zostanie wyłączone, ale możesz kliknąć " +
       "z Altem na wzór, aby otworzyć menu.",
 
     NoOriginalForm:

@@ -27,7 +27,7 @@ MathJax.Localization.addTranslation("pl","HTML-CSS",{
   strings: {
 
     LoadWebFont:
-      "Ładuję czcionkę %1", // NOTE: %1 is the name of a webfont file
+      "Ładuję czcionkę %1",
 
     CantLoadWebFont:
       "Nie mogę załadować czcionki %1",
@@ -36,7 +36,7 @@ MathJax.Localization.addTranslation("pl","HTML-CSS",{
       "Firefox nie potrafi załadować czcionki ze zdalnego komputera",
 
     CantFindFontUsing:
-      "Nie mogę znaleźć prawidłowej czcionki używając %1", // Note: %1 is a list of font names
+      "Nie mogę znaleźć prawidłowej czcionki używając %1",
 
     WebFontsNotAvailable:
       "Czcionki Web nie są dostępne -- używam czcionek obrazkowych"

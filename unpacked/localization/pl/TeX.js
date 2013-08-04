@@ -48,10 +48,10 @@ MathJax.Localization.addTranslation("pl","TeX",{
       "Brakujący nawias otwierający dla indeksu dolnego",
 
     MissingOpenForSup:
-      "Brakujący nawias otwierający dla ineksu górnego",
+      "Brakujący nawias otwierający dla indeksu górnego",
 
     AmbiguousUseOf:
-      "Nieropoznane użycie %1",
+      "Nierozpoznane użycie %1",
 
     EnvBadEnd:
       "\\begin{%1} został zakończony \\end{%2}",
@@ -137,7 +137,7 @@ MathJax.Localization.addTranslation("pl","TeX",{
       "Nie odnaleziono zamykającego nawiasu ']' dla argumentu dla %1",
 
     MissingOrUnrecognizedDelim:
-      "Nieodnaleziony lub nieropoznany separator dla %1",
+      "Nieodnaleziony lub nierozpoznany separator dla %1",
 
     MissingDimOrUnits:
       "Brakuje wymiaru lub jego jednostki dla %1",
@@ -175,15 +175,15 @@ MathJax.Localization.addTranslation("pl","TeX",{
       "Argument dla %1 musi być dodatnią liczbą całkowitą",
 
     ErroneousNestingEq:
-      "Błędne zagnieżdzenie wyrażen",
+      "Błędne zagnieżdżenie wyrażeń",
 
     MultlineRowsOneCol:
-      "Wiersze w środowisku %1 musza mieć dokładnie jedną kolumnę",
+      "Wiersze w środowisku %1 muszą mieć dokładnie jedną kolumnę",
 
 /* bbox */
 
     MultipleBBoxProperty:
-      "%1 okreslony dwa razy w %2",
+      "%1 określony dwa razy w %2",
 
     InvalidBBoxProperty:
       "'%1' nie jest kolorem, wielkością odstępu, ani stylem",
@@ -199,7 +199,7 @@ MathJax.Localization.addTranslation("pl","TeX",{
 /* color */
 
     UndefinedColorModel:
-      "Przetrzeń barw '%1' nie jest zdefiniowana",
+      "Przestrzeń barw '%1' nie jest zdefiniowana",
 
     ModelArg1:
       "Wartości kolorów dla przestrzeni %1 wymagają 3 liczb",

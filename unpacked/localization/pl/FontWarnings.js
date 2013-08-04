@@ -29,7 +29,7 @@ MathJax.Localization.addTranslation("pl","FontWarnings",{
     webFont:
       "MathJax używa czcionek Web, aby wyświetlić wzory matematyczne " +
       "na tej stronie. Pobranie czcionek z sieci zajmuje chwilę. " +
-      "Strona ta mogłaby załadować się szybciej, jesli zainstalowałbyś " +
+      "Strona ta mogłaby załadować się szybciej, jeśli zainstalowałbyś " +
       "czcionki lokalnie w swoim systemie.",
 
     imageFonts:
@@ -40,7 +40,7 @@ MathJax.Localization.addTranslation("pl","FontWarnings",{
     noFonts:
       "MathJax nie może zlokalizować czcionek potrzebnych do wyświetlenia wzorów, " +
       "a czcionki obrazkowe nie są dostępne. Używane są więc znaki Unicode z nadzieją, " +
-      "że Twoja przeglądarka wyświeli je poprawnie. Niektóre znaki mogą jednak nie wyglądać " +
+      "że Twoja przeglądarka wyświetli je poprawnie. Niektóre znaki mogą jednak nie wyglądać " +
       "prawidłowo lub mogą nie być w ogóle wyświetlane.",
 
     webFonts:
@@ -49,7 +49,7 @@ MathJax.Localization.addTranslation("pl","FontWarnings",{
       "wyświetlanych wzorów matematycznych na tej stronie.",
 
     fonts:
-      "MathJax może użyc albo [czcionek STIX](%1) lub [czcionek MathJax Tex](%2). " +      
+      "MathJax może użyć albo [czcionek STIX](%1), albo [czcionek MathJax Tex](%2). " +
       "Pobierz i zainstaluj te czcionki, aby ulepszyć działanie MathJax.",
 
     STIXPage:

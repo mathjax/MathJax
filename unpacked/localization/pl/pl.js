@@ -34,7 +34,7 @@ MathJax.Localization.addTranslation("pl",null,{
         CookieConfig:
           "MathJax znalazł konfigurację zapisaną w ciasteczku, która zawiera kod "+
           "do uruchomienia. Czy chcesz go uruchomić?\n\n"+
-          "(Powinienieś nacisnąć Anuluj, jeśli to nie Ty stworzyłeś tę konfigurację.)",
+          "(Powinieneś nacisnąć Anuluj, jeśli to nie Ty stworzyłeś tę konfigurację.)",
 
         MathProcessingError:
           "Błąd podczas przetwarzania wzorów matematycznych",
