@@ -26,49 +26,45 @@ MathJax.Localization.addTranslation("pl","MathML",{
   isLoaded: true,
   strings: {
 
-    BadMglyph: // NOTE: refers to MathML's mglyph element.
-      "Bad mglyph: %1",
+    BadMglyph:
+      "Błąd w elemencie mglyph: %1",
 
     BadMglyphFont:
-      "Bad font: %1",
+      "Błędna czcionka: %1",
 
     MathPlayer:
-      "MathJax was not able to set up MathPlayer.\n\n"+
-      "If MathPlayer is not installed, you need to install it first.\n"+
-      "Otherwise, your security settings may be preventing ActiveX     \n"+
-      "controls from running.  Use the Internet Options item under\n"+
-      "the Tools menu and select the Security tab, then press the\n"+
-      "Custom Level button. Check that the settings for\n"+
-      "'Run ActiveX Controls', and 'Binary and script behaviors'\n"+
-      "are enabled.\n\n"+
-      "Currently you will see error messages rather than\n"+
-      "typeset mathematics.",
+      "MathJax nie mógł uruchomić MathPlayer.\n\n" +
+      "Jeśli MathPlayer nie jest zainstalowany, musisz go najpierw zainstalować.\n" +
+      "W przeciwnym razie, twoje ustawienia bezpieczeństwa mogą blokować działanie\n" +
+      "formantów ActiveX. W Opcjach internetowych, w menu Narzędzia wybierz zakładkę\n" +
+      "Zabezpieczenia i naciśnij przycisk Poziom niestandardowy. Upewnij się, że ustawienia\n" +
+      "dotyczące ActiveX oraz skryptów są włączone.\n\n" +
+      "Do tego czasu będą wyświetlane błędy zamiast wzorów matematycznych.",
 
    CantCreateXMLParser:
-      "MathJax can't create an XML parser for MathML.  Check that\n"+
-      "the 'Script ActiveX controls marked safe for scripting' security\n"+
-      "setting is enabled (use the Internet Options item in the Tools\n"+
-      "menu, and select the Security panel, then press the Custom Level\n"+
-      "button to check this).\n\n"+
-      "MathML equations will not be able to be processed by MathJax.",
+      "MathJax nie może utworzyć parsera XML dla MathML. Upewnij się, że\n" +
+      "opcja 'Wykonywanie skryptów formantów ActiveX' jest włączona\n" +
+      "(sprawdź to w Opcjach internetowych w menu Narzędzia,\n" +
+      "w zakładce Zabezpieczenia kliknij na przycisk Poziom niestandardowy).\n\n" +
+      "Do tego czasu będą wyświetlane błędy zamiast wzorów matematycznych.",
 
    UnknownNodeType:
-     "Unknown node type: %1", // NOTE: refers to XML nodes
+     "Nieznany typ elementu: %1",
 
    UnexpectedTextNode:
-     "Unexpected text node: %1",
+     "Nieoczekiwany element tekstowy: %1",
 
    ErrorParsingMathML:
-     "Error parsing MathML",
+     "Błąd podczas przetwarzania MathML",
 
    ParsingError:
-     "Error parsing MathML: %1",
+     "Błąd podczas przetwarzania MathML: %1",
 
    MathMLSingleElement:
-    "MathML must be formed by a single element",
+     "MathML musi być zamknięty w pojedynczym elemencie",
 
    MathMLRootElement:
-     "MathML must be formed by a <math> element, not %1"
+     "MathML musi być zamknięty w elemencie <math>, a nie %1"
 
   }
 });

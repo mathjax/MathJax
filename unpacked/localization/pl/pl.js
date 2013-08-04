@@ -21,8 +21,8 @@
  *
  */
 
-MathJax.Localization.addTranslation("pl",null,{ // NOTE use correct ISO-639-1 two letter code http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-  menuTitle: "Polski", // NOTE language name; will appear in the MathJax submenu for switching locales
+MathJax.Localization.addTranslation("pl",null,{
+  menuTitle: "Polski",
   version: "2.2",
   isLoaded: true,
   domains: {
@@ -37,34 +37,34 @@ MathJax.Localization.addTranslation("pl",null,{ // NOTE use correct ISO-639-1 tw
           "(Powinienieś nacisnąć Anuluj, jeśli to nie Ty stworzyłeś tę konfigurację.)",
 
         MathProcessingError:
-          "Błąd podczas przetwarzania wzorów matematycznych", // NOTE: MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.
+          "Błąd podczas przetwarzania wzorów matematycznych",
 
         MathError:
-          "Błąd we wzorze matematycznym", // Error message used in obsolete Accessible configurations
+          "Błąd we wzorze matematycznym",
 
         LoadFile:
           "Ładuję %1",
 
         Loading:
-          "Ładuję", // NOTE: followed by growing sequence of dots
+          "Ładuję",
 
         LoadFailed:
           "Nie udało się załadować pliku: %1",
 
         ProcessMath:
-          "Przetwarzam wzory matematyczne: %1%%", // NOTE: appears during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format
+          "Przetwarzam wzory matematyczne: %1%%",
 
         Processing:
-          "Przetwarzam", // NOTE: followed by growing sequence of dots
+          "Przetwarzam",
 
         TypesetMath:
-          "Przetwarzam wzory matematyczne: %1%%", // NOTE: appears during the layout process of converting the internal format to the output format
+          "Przetwarzam wzory matematyczne: %1%%",
 
         Typesetting:
-          "Przetwarzam", // NOTE: followed by growing sequence of dots
+          "Przetwarzam",
 
         MathJaxNotSupported:
-          "Twoja przeglądarka nie obsługuje MathJax" // NOTE: will load when MathJax determines the browser does not have adequate features
+          "MathJax nie obsługuje Twojej przeglądarki"
 
       }
     },
@@ -77,13 +77,17 @@ MathJax.Localization.addTranslation("pl",null,{ // NOTE use correct ISO-639-1 tw
   },
 
   plural: function(n) {
-    if (n === 1) {return 1} // one
-    return 2; // other
+    if (n == 1) {
+      return 0;
+    } else if (n % 10 >=2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) {
+      return 1;
+    } else {
+      return 2;
+    }
   },
 
   number: function(n) {
     return String(n).replace(".", ","); // replace dot by comma
-    return n;
   }
 
 });

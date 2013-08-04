@@ -27,46 +27,45 @@ MathJax.Localization.addTranslation("pl","HelpDialog",{
   strings: {
 
     Help:
-      "MathJax Help",
+      "Pomoc MathJax",
 
     MathJax: 
-      "*MathJax* is a JavaScript library that allows page authors to include " + // NOTE: Markdown syntax *...*
-      "mathematics within their web pages.  As a reader, you don't need to do " +
-      "anything to make that happen.",
+      "*MathJax* to biblioteka Javascript umożliwiająca autorom stron Web na " +
+      "zapisywanie wzorów matematycznych. Jako użytkownik, nie musisz robić nic " +
+      "dodatkowo, aby wzory były poprawnie wyświetlane.",
 
     Browsers:
-      "*Browsers*: MathJax works with all modern browsers including IE6+, Firefox 3+, " +
-      "Chrome 0.2+, Safari 2+, Opera 9.6+ and most mobile browsers.",
+      "*Przeglądarki*: MathJax działa z nowymi przeglądarkami, m.in. IE6+, Firefox 3+, " +
+      "Chrome 0.2+, Safari 2+, Opera 9.6+ i większością przeglądarek mobilnych.",
 
     Menu:
-      "*Math Menu*: MathJax adds a contextual menu to equations.  Right-click or " +
-      "CTRL-click on any mathematics to access the menu.",
+      "*Menu*: MathJax dodaje menu kontekstowe do wzorów matematycznych. Kliknij prawym " +
+      "klawiszem myszki (lub lewy klawisz i Ctrl), aby je otworzyć.",
 
     ShowMath:
-      "*Show Math As* allows you to view the formula's source markup " +
-      "for copy & paste (as MathML or in its original format).",
+      "Opcja *Pokaż wzory jako* pozwala zobaczyć źródłową postać wzorów, aby można " +
+      "było je skopiować do schowka.",
 
     Settings:
-      "*Settings* gives you control over features of MathJax, such as the " +
-      "size of the mathematics, and the mechanism used to display equations.",
+      "Opcja *Ustawienia* pozwala kontrolować MathJax, m.in. ustawiać wielkość " +
+      "wzorów i zmieniać mechanizm ich wyświetlania.",
 
     Language:
-      "*Language* lets you select the language used by MathJax for its menus " +
-      "and warning messages.",
+      "*Język* pozwala wybrać język, w jakim wyświetlane jest menu oraz komunikaty o błędach.",
 
     Zoom:
-      "*Math Zoom*: If you are having difficulty reading an equation, MathJax can " +
-      "enlarge it to help you see it better.",
+      "*Powiększanie*: Jeżeli masz problem z odczytaniem wzoru, MathJax może zwiększyć " +
+      "wielkość liter, aby łatwiej było go odczytać.",
 
     Accessibilty:
-      "*Accessibility*: MathJax will automatically work with screen readers to make " +
-      "mathematics accessible to the visually impaired.",
+      "*Dostępność*: MathJax działa automatycznie z czytnikami ekranowymi, aby wzory " +
+      "matematyczne były dostępne dla niedowidzących.",
 
     Fonts:
-      "*Fonts*: MathJax will use certain math fonts if they are installed on your " +
-      "computer; otherwise, it will use web-based fonts.  Although not required, " +
-      "locally installed fonts will speed up typesetting.  We suggest installing " +
-      "the [STIX fonts](%1)." // NOTE: Markdown syntax for links. %1 is a URL to the STIX fonts
+      "*Czcionki*: MathJax użyje czcionek matematycznych zainstalowanych w Twoim systemie. " +
+      "Jeżeli ich nie masz, to użyje czcionek Web. Nie jest to wymagane, ale lokalnie dostępne " +
+      "czcionki przyspieszą działanie MathJax. Sugerujemy zainstalowanie " +
+      "czcionek [STIX](%1)."
 
   }
 });

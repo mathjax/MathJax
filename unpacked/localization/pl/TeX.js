@@ -27,238 +27,238 @@ MathJax.Localization.addTranslation("pl","TeX",{
   strings: {
 
     ExtraOpenMissingClose:
-      "Extra open brace or missing close brace", // NOTE: TeX commands use braces and brackets as delimiters
+      "Nadmiarowy nawias otwierający lub brakujący nawias zamykający",
 
     ExtraCloseMissingOpen:
-      "Extra close brace or missing open brace",
+      "Nadmiarowy nawias zamykający lub brakujący nawias otwierający",
 
     MissingLeftExtraRight:
-      "Missing \\left or extra \\right", // NOTE: do not translate \\left and \\right; they are TeX commands
+      "Brakujący \\left lub nadmiarowy \\right",
 
     MissingScript:
-      "Missing superscript or subscript argument",
+      "Brakujący argument dla indeksu dolnego lub górnego",
 
     ExtraLeftMissingRight:
-      "Extra \\left or missing \\right", // NOTE: do not translate \\left and \\right; they are TeX commands
+      "Nadmiarowy \\left lub brakujący \\right",
 
     Misplaced:
-      "Misplaced %1",
+      "Źle umiejscowiony %1",
 
     MissingOpenForSub:
-      "Missing open brace for subscript",
+      "Brakujący nawias otwierający dla indeksu dolnego",
 
     MissingOpenForSup:
-      "Missing open brace for superscript",
+      "Brakujący nawias otwierający dla ineksu górnego",
 
     AmbiguousUseOf:
-      "Ambiguous use of %1", // NOTE: %1 will be a TeX command 
+      "Nieropoznane użycie %1",
 
     EnvBadEnd:
-      "\\begin{%1} ended with \\end{%2}", // NOTE: do not translate \\begin{%1} and \\end{%1}; they are TeX commands
+      "\\begin{%1} został zakończony \\end{%2}",
 
     EnvMissingEnd:
-      "Missing \\end{%1}", // NOTE: do not translate \\end
+      "Brakuje \\end{%1}",
 
     MissingBoxFor:
-      "Missing box for %1", //NOTE: refers to TeX boxes
+      "Brakuje pudełka (box) dla %1", 
 
     MissingCloseBrace:
-      "Missing close brace",
+      "Brakuje nawiasu zamykającego",
 
     UndefinedControlSequence:
-      "Undefined control sequence %1", // NOTE: %1 will be a TeX command
+      "Nieznana komenda sterująca %1",
 
     DoubleExponent:
-      "Double exponent: use braces to clarify", // NOTE: example: x^3^2 should be x^{3^2} or {x^3}^2
+      "Podwójna potęga: użyj nawiasów, aby uniknąć niejednoznaczności",
 
     DoubleSubscripts:
-      "Double subscripts: use braces to clarify",
+      "Podwójny indeks: użyj nawiasów, aby uniknąć niejednoznaczności",
 
     DoubleExponentPrime:
-      "Prime causes double exponent: use braces to clarify", // NOTE: example:  x^a' should be {x^a}' or x^{a'}
+      "Znak ' oznacza podwójny wykładnik: użyj nawiasów, aby uniknąć niejednoznaczności",
 
     CantUseHash1:
-      "You can't use 'macro parameter character #' in math mode", // NOTE: '#' is used in TeX macros
+      "Nie możesz używać znaku # w trybie matematycznym",
 
     MisplacedMiddle:
-      "%1 must be within \\left and \\right", // NOTE: do not translate \\left and \\right; they are TeX commands
+      "%1 musi być pomiędzy \\left i \\right",
 
     MisplacedLimits:
-      "%1 is allowed only on operators", // NOTE: %1 will be \limits
+      "%1 jest dozwolony tylko dla operatorów",
 
     MisplacedMoveRoot:
-      "%1 can appear only within a root",  // NOTE: %1 will be \uproot or \leftroot
+      "%1 może pojawić się tylko w ramach korzenia (root)",
 
     MultipleCommand:
-      "Multiple %1", // NOTE: happens when a command or token can only be present once, e.g., \tag{}
+      "Wielokrotny %1",
 
     IntegerArg:
-      "The argument to %1 must be an integer",
+      "Parametr dla %1 musi być liczbą całkowitą",
 
     NotMathMLToken:
-      "%1 is not a token element", // NOTE: MathJax has a non-standard \mmltoken command to insert MathML token elements
+      "%1 nie jest elementem typu token",
 
     InvalidMathMLAttr:
-      "Invalid MathML attribute: %1", // NOTE: MathJax has non standard MathML and HTML related commands which can contain attributes
+      "Nieprawidłowy atrybut MathML: %1",
 
     UnknownAttrForElement:
-      "%1 is not a recognized attribute for %2",
+      "%1 nie jest znanym atrybutem dla %2",
 
     MaxMacroSub1:
-      "MathJax maximum macro substitution count exceeded; " + // NOTE: MathJax limits the number of macro substitutions to prevent infinite loops
-      "is there a recursive macro call?",
+      "Przekroczono maksymalną liczbę wywołań makra; " +
+      "czy występuje rekursywne makro?",
 
     MaxMacroSub2:
-      "MathJax maximum substitution count exceeded; " + // NOTE: MathJax limits the number of nested environements to prevent infinite loops
-      "is there a recursive latex environment?",
+      "Przekroczono maksymalną liczbę zastąpień; " +
+      "czy występuje rekursywne środowisko latex?",
 
     MissingArgFor:
-      "Missing argument for %1", // NOTE: %1 will be a macro name
+      "Brakuje argumentu dla %1",
 
     ExtraAlignTab:
-      "Extra alignment tab in \\cases text", // NOTE: do not translate \\cases; it is a TeX command
+      "Nadmiarowy tabulator w \\cases",
 
     BracketMustBeDimension:
-      "Bracket argument to %1 must be a dimension",
+      "Argument w nawiasie dla %1 musi być wymiarem",
 
     InvalidEnv:
-      "Invalid environment name '%1'",
+      "Nieznane nazwa środowiska '%1'",
 
     UnknownEnv:
-      "Unknown environment '%1'",
+      "Nieznane środowisko '%1'",
 
     ExtraClose:
-      "Extra close brace",
+      "Nadmiarowy nawias zamykający",
 
     ExtraCloseLooking:
-      "Extra close brace while looking for %1",
+      "Nadmiarowy nawias zamykający napotkany w czasie poszukiwania %1",
 
     MissingCloseBracket:
-      "Couldn't find closing ']' for argument to %1",
+      "Nie odnaleziono zamykającego nawiasu ']' dla argumentu dla %1",
 
     MissingOrUnrecognizedDelim:
-      "Missing or unrecognized delimiter for %1",
+      "Nieodnaleziony lub nieropoznany separator dla %1",
 
     MissingDimOrUnits:
-      "Missing dimension or its units for %1",
+      "Brakuje wymiaru lub jego jednostki dla %1",
 
     TokenNotFoundForCommand:
-      "Couldn't find %1 for %2", // NOTE: %1 is a token (e.g.,macro or symbol) and %2 is a macro name
+      "Nie odnaleziono %1 dla %2",
 
     MathNotTerminated:
-      "Math not terminated in text box",
+      "Nie odnaleziono zakończenia w pudełku (box)",
 
     IllegalMacroParam:
-      "Illegal macro parameter reference",
+      "Nieprawidłowa referencja do parametru makra",
 
     MaxBufferSize:
-      "MathJax internal buffer size exceeded; is there a recursive macro call?",
+      "Przekroczono rozmiar bufora MathJax, czy istnieje rekursywne wywołanie makra?",
 
  /* AMSmath */
  
     CommandNotAllowedInEnv:
-      "%1 not allowed in %2 environment", 
+      "%1 nie jest dozwolony w środowisku %2", 
 
     MultipleLabel:
-      "Label '%1' multiply defined",
+      "Wielokrotna definicja etykiety '%1'",
 
     CommandAtTheBeginingOfLine:
-      "%1 must come at the beginning of the line", // NOTE: %1 will be a macro name
+      "%1 musi znajdować się na początku linii",
 
     IllegalAlign:
-      "Illegal alignment specified in %1",  // NOTE: %1 will be an environment name
+      "Nieprawidłowy argument dla %1",
 
     BadMathStyleFor:
-      "Bad math style for %1",
+      "Błędny styl dla %1",
 
     PositiveIntegerArg:
-      "Argument to %1 must me a positive integer",
+      "Argument dla %1 musi być dodatnią liczbą całkowitą",
 
     ErroneousNestingEq:
-      "Erroneous nesting of equation structures",
+      "Błędne zagnieżdzenie wyrażen",
 
     MultlineRowsOneCol:
-      "The rows within the %1 environment must have exactly one column",
+      "Wiersze w środowisku %1 musza mieć dokładnie jedną kolumnę",
 
 /* bbox */
 
     MultipleBBoxProperty:
-      "%1 specified twice in %2",
+      "%1 okreslony dwa razy w %2",
 
     InvalidBBoxProperty:
-      "'%1' doesn't look like a color, a padding dimension, or a style",
+      "'%1' nie jest kolorem, wielkością odstępu, ani stylem",
 
 /* begingroup */
 
     ExtraEndMissingBegin:
-      "Extra %1 or missing \\begingroup", // NOTE:  do not translate \\begingroup
+      "Nadmiarowy %1 lub brakujący \\begingroup",
 
     GlobalNotFollowedBy:
-      "%1 not followed by \\let, \\def, or \\newcommand", // NOTE:  do not translate \\let, \\def, or \\newcommand; they are TeX commands
+      "Po %1 nie występuje \\let, \\def, ani \\newcommand",
 
 /* color */
 
     UndefinedColorModel:
-      "Color model '%1' not defined",
+      "Przetrzeń barw '%1' nie jest zdefiniowana",
 
     ModelArg1:
-      "Color values for the %1 model require 3 numbers",
+      "Wartości kolorów dla przestrzeni %1 wymagają 3 liczb",
 
     InvalidDecimalNumber:
-      "Invalid decimal number",
+      "Nieprawidłowe liczba dziesiętna",
 
     ModelArg2:
-      "Color values for the %1 model must be between %2 and %3",
+      "Wartości kolorów dla przestrzeni %1 muszą być pomiędzy %2 i %3",
 
     InvalidNumber:
-      "Invalid number",
+      "Błędna liczba",
 
 /* extpfeil */
 
     NewextarrowArg1:
-      "First argument to %1 must be a control sequence name",
+      "Pierwszy argument dla %1 musi być nazwą sekwencji kontrolnej",
 
     NewextarrowArg2:
-      "Second argument to %1 must be two integers separated by a comma",
+      "Drugi argumentem dla %1 muszą być dwie liczby całkowite oddzielone przecinkiem",
 
     NewextarrowArg3:
-      "Third argument to %1 must be a unicode character number",
+      "Trzeci argument dla %1 musi być numerem znaku unicode",
 
 /* mhchem */
 
     NoClosingChar:
-      "Can't find closing %1", // NOTE: %1 will be ) or } or ]
+      "Nie można odnaleźć zamykającego %1",
 
 /* newcommand */
       
     IllegalControlSequenceName:
-      "Illegal control sequence name for %1",
+      "Nieprawidłowa nazwa sekwencji kontrolnej dla %1",
 
     IllegalParamNumber:
-      "Illegal number of parameters specified in %1",
+      "Nieprawidłowa liczba parametrów dla %1",
 
     DoubleBackSlash:
-      "\\ must be followed by a control sequence",
+      "Po \\ musi wystąpić sekwencja kontrolna",
 
     CantUseHash2:
-      "Illegal use of # in template for %1",
+      "Nieprawidłowe użycie # w szablonie dla %1",
 
     SequentialParam:
-      "Parameters for %1 must be numbered sequentially",
+      "Parametry dla %1 muszą być ponumerowane rosnąco",
 
     MissingReplacementString:
-      "Missing replacement string for definition of %1",
+      "Brak łańcucha zamiennego dla definicji %1",
 
     MismatchUseDef:
-      "Use of %1 doesn't match its definition",
+      "Użycie %1 niezgodne z definicją",
 
     RunawayArgument:
-      "Runaway argument for %1?",
+      "Zginął argument dla %1?",
 
 /* verb */
 
     NoClosingDelim:
-      "Can't find closing delimiter for %1"
+      "Nie można znaleźć kończącego separatora dla %1"
  
   }
 });
