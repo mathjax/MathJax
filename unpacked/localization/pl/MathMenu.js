@@ -32,7 +32,7 @@ MathJax.Localization.addTranslation("pl","MathMenu",{
       TeXCommands:    "Komendy TeX",
       AsciiMathInput: "Kod AsciiMathML",
       Original:       "Postać oryginalna",
-      ErrorMessage:   "Komunikat Błędu",
+      ErrorMessage:   "Komunikat błędu",
       texHints:       "Pokaż dodatki TeX w MathML",
     Settings: "Ustawienia",
       ZoomTrigger: "Powiększanie po...",
