@@ -62,7 +62,7 @@
       "TeX": ["TeX", "LaTeX", "application/x-tex"],
       "StarMath": ["StarMath 5.0"],
       "Maple": ["Maple"],
-      "Content MathML": ["MathML-Content", "application/mathml-content+xml"],
+      "ContentMathML": ["MathML-Content", "application/mathml-content+xml"],
       "OpenMath": ["OpenMath"]
     },
 
