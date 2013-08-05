@@ -166,13 +166,13 @@
           // Try and find each known annotation format and enable the menu
           // items accordingly.
           //
-          var annotations = source.items[2]; annotations.hidden = true;
+          var annotations = source.items[2]; annotations.disabled = true;
           var annotationItems = annotations.menu.items;
           annotationList = MathJax.Hub.Config.semanticsAnnotations;
           for (var i = 0, m = annotationItems.length; i < m; i++) {
             var name = annotationItems[i].name[1]
             if (jax.root.getAnnotation(name) !== null) {
-              annotations.hidden = false;
+              annotations.disabled = false;
               annotationItems[i].hidden = false;
             } else {
               annotationItems[i].hidden = true;

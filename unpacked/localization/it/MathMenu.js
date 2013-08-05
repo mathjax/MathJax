@@ -179,15 +179,9 @@ MathJax.Localization.addTranslation("it","MathMenu",{
       //"Close", // NOTE: for closing button in the 'MathJax Menu => SHow Math As' window.
 
     EqSource:
-      "Codice sorgente formula MathJax",
+      "Codice sorgente formula MathJax"
       //"MathJax Equation Source"
 
-    "Annotation": "Annotation",
-    "TeX": "TeX",
-    "StarMath": "StarMath",
-    "Maple": "Maple",
-    "Content MathML": "Content MathML",
-    "OpenMath": "OpenMath"
   }
 });
 

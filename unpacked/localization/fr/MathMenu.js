@@ -145,14 +145,8 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
       "Fermer",
 
     EqSource:
-      "Source de l'\u00E9quation MathJax",
+      "Source de l'\u00E9quation MathJax"
 
-    "Annotation": "d'annotation",
-    "TeX": "TeX",
-    "StarMath": "StarMath",
-    "Maple": "Maple",
-    "Content MathML": "MathML de contenu",
-    "OpenMath": "OpenMath"
   }
 });
 

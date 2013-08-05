@@ -58,6 +58,14 @@
     showLocale: true,                              //  show the "Locale" menu?
     showLocaleURL: false,                          //  show the "Load from URL" menu?
 
+    semanticsAnnotations: {
+      "TeX": ["TeX", "LaTeX", "application/x-tex"],
+      "StarMath": ["StarMath 5.0"],
+      "Maple": ["Maple"],
+      "Content MathML": ["MathML-Content", "application/mathml-content+xml"],
+      "OpenMath": ["OpenMath"]
+    },
+
     windowSettings: {                              // for source window
       status: "no", toolbar: "no", locationbar: "no", menubar: "no",
       directories: "no", personalbar: "no", resizable: "yes", scrollbars: "yes",
@@ -1029,7 +1037,7 @@
       ITEM.SUBMENU(["Show","Show Math As"],
         ITEM.COMMAND(["MathMLcode","MathML Code"],  MENU.ShowSource, {nativeTouch: true, format: "MathML"}),
         ITEM.COMMAND(["Original","Original Form"],  MENU.ShowSource, {nativeTouch: true}),
-        ITEM.SUBMENU(["Annotation","Annotation"], {hidden:true}),
+        ITEM.SUBMENU(["Annotation","Annotation"], {disabled:true}),
         ITEM.RULE(),
         ITEM.CHECKBOX(["texHints","Show TeX hints in MathML"], "texHints")
       ),
