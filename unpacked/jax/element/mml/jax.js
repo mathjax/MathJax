@@ -132,6 +132,7 @@ MathJax.ElementJax.mml.Augment({
     BOTTOM: "bottom",
     UPDIAGONALSTRIKE: "updiagonalstrike",
     DOWNDIAGONALSTRIKE: "downdiagonalstrike",
+    UPDIAGONALARROW: "updiagonalarrow",
     VERTICALSTRIKE: "verticalstrike",
     HORIZONTALSTRIKE: "horizontalstrike",
     MADRUWB: "madruwb"

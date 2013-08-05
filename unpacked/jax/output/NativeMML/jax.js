@@ -444,7 +444,14 @@
       negativemediummathspace:        "-.2222em",
       negativethickmathspace:         "-.2778em",
       negativeverythickmathspace:     "-.3333em",
-      negativeveryverythickmathspace: "-.3889em"
+      negativeveryverythickmathspace: "-.3889em",
+      veryverythinmathspace:          ".0556em",
+      verythinmathspace:              ".1111em",
+      thinmathspace:                  ".1667em",
+      mediummathspace:                ".2222em",
+      thickmathspace:                 ".2778em",
+      verythickmathspace:             ".3333em",
+      veryverythickmathspace:         ".3889em"
     }
   });
 
@@ -493,7 +500,6 @@
         }
         if (this.mathvariant && this.NativeMMLvariants[this.mathvariant])
           {CLASS.push("MJX"+this.mathvariant)}
-        if (this.arrow) {CLASS.push("MJX-arrow")}
         if (this.variantForm) {CLASS.push("MJX-variant")}
         if (CLASS.length) {tag.setAttribute("class",CLASS.join(" "))}
       },
@@ -576,7 +582,7 @@
 	if (this.data[this.sub] == null) {type = "msup"}
 	var tag = this.NativeMMLelement(type);
 	this.NativeMMLattributes(tag);
-	delete this.data[0].inferred;
+	if (this.data[0]) {delete this.data[0].inferred}
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toNativeMML(tag)}}
 	parent.appendChild(tag);
@@ -594,7 +600,7 @@
 	if (this.data[this.over] == null)  {type = "munder"}
 	var tag = this.NativeMMLelement(type);
 	this.NativeMMLattributes(tag);
-	delete this.data[0].inferred;
+	if (this.data[0]) {delete this.data[0].inferred}
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toNativeMML(tag)}}
 	parent.appendChild(tag);
@@ -746,7 +752,7 @@
             }
           }
 
-          if (nMML.tableLabelBug) {
+          if (nMML.tableLabelBug && this.data[0]) {
             var side = this.parent.Get("side").charAt(0),
                 align = HUB.config.displayAlign.charAt(0),
                 indent = HUB.config.displayIndent;
@@ -1089,6 +1095,138 @@
       }
     });
 
+    MML.mi.Augment({
+      toNativeMML: function (parent) {
+        this.SUPER(arguments).toNativeMML.call(this,parent);
+        if (nMML.miItalicBug) {
+          if (this.Get("mathvariant") === MML.VARIANT.NORMAL) {
+            //
+            // When not explicitly specified, mathvariant is set to "italic"
+            // with single char mi and to "normal" with multiple char mi.
+            // Some browsers always set the default to "italic", so let's
+            // attach an explicit mathvariant="normal" attribute.
+            //
+            var mi = parent.lastChild;
+            mi.setAttribute("mathvariant",MML.VARIANT.NORMAL);
+          }
+        }
+      }
+    });
+
+    MML.mo.Augment({
+      toNativeMML: function (parent) {
+        this.SUPER(arguments).toNativeMML.call(this,parent);
+        if (nMML.webkitMoSpacingBug) {
+          //
+          // WebKit does not support lspace/rspace values around operators
+          // (neither explicit nor given by the operator dictionary) and uses
+          // constant values instead. So let's modify the CSS properties here.
+          //
+
+          var lspace = 0, rspace = 0, p = this.parent;
+          if (p && p.type === "mrow" && (p.inferred || !p.isEmbellished())) {
+            //
+            // Retrieve the values of lspace/rspace and convert named spaces.
+            // Other values (except unitless) will be parsed by the CSS engine.
+            //
+            var values = this.getValues("lspace", "rspace");
+            lspace = values.lspace, rspace = values.rspace;
+            if (nMML.NAMEDSPACE[lspace]) {lspace = nMML.NAMEDSPACE[lspace]}
+            if (nMML.NAMEDSPACE[rspace]) {rspace = nMML.NAMEDSPACE[rspace]}
+          }
+
+          //
+          // Now update -webkit-margin-start and -webkit-margin-end.
+          //
+          var mo = parent.lastChild;
+          var span = HTML.Element("span");
+          span.style.cssText = (mo.getAttribute("style")||"");
+          span.style.setProperty("-webkit-margin-start", lspace);
+          span.style.setProperty("-webkit-margin-end", rspace);
+          mo.setAttribute("style",span.style.cssText);
+        }
+      }
+    });
+
+    MML.mmultiscripts.Augment({
+      toNativeMML: function (parent) {
+        //
+        // Some browsers do not implement the mmultiscripts element.
+        // Try to emulate the support using basic script elements.
+        //
+        if (!nMML.mmultiscriptsBug || this.data.length === 0 ) {
+          this.SUPER(arguments).toNativeMML.call(this,parent);
+          return;
+        }
+
+        //
+        // The children of the mmultiscripts will be wrapped in an mrow so that
+        // attributes and properties set on the original mmultiscripts will
+        // be reflected on this mrow element.
+        //
+        var tag = this.NativeMMLelement("mrow");
+        this.NativeMMLattributes(tag);
+
+        //
+        // Create the base
+        //
+        if (this.data[0]) {this.data[0].toNativeMML(tag)}
+        else {tag.appendChild(this.NativeMMLelement("mrow"))}
+        base = tag.removeChild(tag.lastChild);
+
+        //
+        // Process the postscript pairs
+        //
+        var m = this.data.length, i;
+        for (i = 1; i < m; i+=2) {
+          if (this.data[i].type === "mprescripts") break;
+
+          var msubsup = this.NativeMMLelement("msubsup");
+          msubsup.appendChild(base);
+
+          //
+          // append the subscript
+          //
+          if (this.data[i]) {this.data[i].toNativeMML(msubsup)}
+          else {msubsup.appendChild(this.NativeMMLelement("mrow"))}
+
+          //
+          // append the supscript
+          //
+          if (i+1 < m && this.data[i+1]) {this.data[i+1].toNativeMML(msubsup)}
+          else {msubsup.appendChild(this.NativeMMLelement("mrow"))}
+
+          base = msubsup;
+        }
+
+        tag.appendChild(base);
+
+        //
+        // Process the prescript pairs
+        //
+        for (i++; i < m; i+=2) {
+          var msubsup = this.NativeMMLelement("msubsup");
+          msubsup.appendChild(this.NativeMMLelement("mrow"));
+
+          //
+          // append the presubscript
+          //
+          if (this.data[i]) {this.data[i].toNativeMML(msubsup)}
+          else {msubsup.appendChild(this.NativeMMLelement("mrow"))}
+
+          //
+          // append the presupscript
+          //
+          if (i+1 < m && this.data[i+1]) {this.data[i+1].toNativeMML(msubsup)}
+          else {msubsup.appendChild(this.NativeMMLelement("mrow"))}
+
+          tag.insertBefore(msubsup, base);
+        }
+
+        parent.appendChild(tag);
+      }
+    });
+
     HUB.Register.StartupHook("TeX mathchoice Ready",function () {
       MML.TeXmathchoice.Augment({
 	//
@@ -1121,6 +1259,8 @@
       nMML.stretchyMoBug = true;
       nMML.tableLabelBug = true;
       nMML.mfencedBug = true;
+      nMML.miBug = true;
+      nMML.mmultiscriptsBug = true;
     },
     Firefox: function (browser) {
       nMML.ffTableWidthBug = !browser.versionAtLeast("13.0"); // <mtable width="xx"> not implemented
@@ -1145,6 +1285,10 @@
       nMML.tableSpacingBug = true;
       nMML.tableLabelBug = true;
       nMML.mfencedBug = true;
+      nMML.miItalicBug = true;
+      nMML.webkitMoSpacingBug = true;
+      nMML.spaceWidthBug = true;
+      nMML.mmultiscriptsBug = true;
     }
   });
   

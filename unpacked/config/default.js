@@ -237,8 +237,7 @@ MathJax.Hub.Config({
   //  jax that prevents it from operating properly).
   //
   errorSettings: {
-    message: ["[Math Processing Error]"], // HTML snippet structure for message to use
-    messageId: "MathProcessingError",     // ID of snippet for localization
+    message: ["[",["MathProcessingError","Math Processing Error"],"]"],
     style: {color: "#CC0000", "font-style":"italic"}  // style for message
   },
 
