@@ -380,7 +380,8 @@ MathJax.ElementJax.mml.Augment({
       return false;
     },
     array: function () {if (this.inferred) {return this.data} else {return [this]}},
-    toString: function () {return this.type+"("+this.data.join(",")+")"}
+    toString: function () {return this.type+"("+this.data.join(",")+")"},
+    getAnnotation: function () { return null; }
   },{
     childrenSpacelike: function () {
       for (var i = 0, m = this.data.length; i < m; i++)
@@ -731,6 +732,10 @@ MathJax.ElementJax.mml.Augment({
         {if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}}
       if (this.data[0]) {this.updateTeXclass(this.data[0])}
       return prev;
+    },
+    getAnnotation: function (name) {
+      if (this.data.length != 1) return null;
+      return this.data[0].getAnnotation(name);
     }
   });
 
@@ -1175,7 +1180,21 @@ MathJax.ElementJax.mml.Augment({
       definitionURL: null,
       encoding: null
     },
-    setTeXclass: MML.mbase.setChildTeXclass
+    setTeXclass: MML.mbase.setChildTeXclass,
+    getAnnotation: function (name) {
+      var encodingList = MathJax.Hub.config.MathMenu.semanticsAnnotations[name];
+      if (encodingList) {
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          var encoding = this.data[i].Get("encoding");
+          if (encoding) {
+            for (var j = 0, n = encodingList.length; j < n; j++) {
+              if (encodingList[j] === encoding) return this.data[i];
+            }
+          }
+        }
+      }
+      return null;
+    }
   });
   MML.annotation = MML.mbase.Subclass({
     type: "annotation", isToken: true,
@@ -1236,7 +1255,11 @@ MathJax.ElementJax.mml.Augment({
       return "";
     },
     linebreakContainer: true,
-    setTeXclass: MML.mbase.setChildTeXclass
+    setTeXclass: MML.mbase.setChildTeXclass,
+    getAnnotation: function (name) {
+      if (this.data.length != 1) return null;
+      return this.data[0].getAnnotation(name);
+    }
   });
   
   MML.chars = MML.mbase.Subclass({

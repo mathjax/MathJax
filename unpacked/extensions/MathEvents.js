@@ -161,6 +161,24 @@
 	  source.items[0].name = jax.sourceMenuTitle;
 	  source.items[0].format = (jax.sourceMenuFormat||"MathML");
           source.items[1].name = INPUT[jax.inputJax].sourceMenuTitle;
+
+          // 
+          // Try and find each known annotation format and enable the menu
+          // items accordingly.
+          //
+          var annotations = source.items[2]; annotations.disabled = true;
+          var annotationItems = annotations.menu.items;
+          annotationList = MathJax.Hub.Config.semanticsAnnotations;
+          for (var i = 0, m = annotationItems.length; i < m; i++) {
+            var name = annotationItems[i].name[1]
+            if (jax.root.getAnnotation(name) !== null) {
+              annotations.disabled = false;
+              annotationItems[i].hidden = false;
+            } else {
+              annotationItems[i].hidden = true;
+            }
+          }
+
           var MathPlayer = MENU.menu.Find("Math Settings","MathPlayer");
           MathPlayer.hidden = !(jax.outputJax === "NativeMML" && HUB.Browser.hasMathPlayer);
           return MENU.menu.Post(event);
