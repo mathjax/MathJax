@@ -300,5 +300,10 @@ MathJax.Extension.tex2jax = {
   
 };
 
+// We register the preprocessors with the following priorities:
+// - mml2jax.js: 5
+// - jsMath2jax.js: 8
+// - asciimath2jax.js, tex2jax.js: 10 (default)
+// See issues 18 and 484 and the other *2jax.js files.
 MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.tex2jax]);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/tex2jax.js");
