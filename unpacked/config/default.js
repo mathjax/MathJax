@@ -961,6 +961,20 @@ MathJax.Hub.Config({
     showFontMenu: false,
     showContext:  false,
     showDiscoverable: false,
+    
+    //
+    // These are the settings for the Annotation menu. If the <math> root has
+    // a <semantics> child that contains one of the following annotation
+    // formats, the source will be available via the "Show Math As" menu.
+    // Each format has a list of possible encodings.
+    //
+    semanticsAnnotations: {
+      "TeX": ["TeX", "LaTeX", "application/x-tex"],
+      "StarMath": ["StarMath 5.0"],
+      "Maple": ["Maple"],
+      "ContentMathML": ["MathML-Content", "application/mathml-content+xml"],
+      "OpenMath": ["OpenMath"]
+    },
 
     //
     //  These are the settings for the Show Source window.  The initial
