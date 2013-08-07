@@ -212,5 +212,5 @@ MathJax.Extension.mml2jax = {
 // - jsMath2jax.js: 8
 // - asciimath2jax.js, tex2jax.js: 10 (default)
 // See issues 18 and 484 and the other *2jax.js files.
-MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.mml2jax,5]);
+MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.mml2jax],5);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
