@@ -380,7 +380,8 @@ MathJax.ElementJax.mml.Augment({
       return false;
     },
     array: function () {if (this.inferred) {return this.data} else {return [this]}},
-    toString: function () {return this.type+"("+this.data.join(",")+")"}
+    toString: function () {return this.type+"("+this.data.join(",")+")"},
+    getAnnotation: function () { return null; }
   },{
     childrenSpacelike: function () {
       for (var i = 0, m = this.data.length; i < m; i++)
@@ -1184,9 +1185,12 @@ MathJax.ElementJax.mml.Augment({
       var encodingList = MathJax.Hub.config.MathMenu.semanticsAnnotations[name];
       if (encodingList) {
         for (var i = 0, m = this.data.length; i < m; i++) {
-          var encoding = this.data[i].attr.encoding;
-          if (encoding && encodingList.indexOf(encoding) !== -1)
-            return this.data[i];
+          var encoding = this.data[i].Get("encoding");
+          if (encoding) {
+            for (var j = 0, n = encodingList.length; j < n; j++) {
+              if (encodingList[j] === encoding) return this.data[i];
+            }
+          }
         }
       }
       return null;
