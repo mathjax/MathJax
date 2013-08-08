@@ -48,16 +48,7 @@
 
   /* set the currentLocale */
   MathJax.Hub.Config({
-    menuSettings: { locale: currentLocale },
-    MathMenu: {
-      showRenderer: true,
-      showMathPlayer: true,
-      showFontMenu: true,
-      showContext:  true,
-      showDiscoverable: true,
-      showLocale: true,
-      showLocaleURL: true
-    }
+    menuSettings: { locale: currentLocale }
   });
   var menu = MathJax.HTML.Cookie.Get("menu");
   menu.locale = currentLocale;
@@ -102,14 +93,23 @@
   message += MathJax.Localization._(["MathMenu","SwitchAnyway"], _M_);
   alert(message);
   }
+  function showAllItems(aMenu)
+  {
+     for (var i = 0, m = aMenu.items.length; i < m; i++) {
+       var item = aMenu.items[i];
+       item.hidden = false;
+       item.disabled = false;
+       if (item.menu) showAllItems(item.menu);
+     }
+  }
+  MathJax.Hub.Register.StartupHook("MathMenu Ready", function () {
+     showAllItems(MathJax.Menu.menu);
+  });
 
-  /* Simulate some error messages... */
+  /* These MathML parsing errors happen only in rare cases, so we fake them... */
   MathJax.Hub.Queue(function() {
     document.getElementById('ErrorParsingMathML').innerHTML = MathJax.Localization._(['MathML','ErrorParsingMathML'], _M_);
     document.getElementById('MathMLSingleElement').innerHTML = MathJax.Localization._(['MathML','MathMLSingleElement'], _M_);
-    document.getElementById('MissingOpenForSub').innerHTML = MathJax.Localization._(['TeX','MissingOpenForSub'], _M_);
-    document.getElementById('MissingBoxFor').innerHTML = MathJax.Localization._(['TeX','MissingBoxFor'], _M_, 'COMMANDNAME');
-    document.getElementById('ExtraClose').innerHTML = MathJax.Localization._(['TeX','ExtraClose'], _M_);
   });
 </script>
 
@@ -152,14 +152,10 @@
     <li>CantCreateXMLParser: <input type="button" onclick="alert(MathJax.Localization._(['MathML','CantCreateXMLParser'], _M_))" value="Show alert box"/></li>
     <li>UnknownNodeType: <math><UNKNOWNNODE/></math></li>
     <li>UnexpectedTextNode: <math>UNEXPECTEDTEXT</math></li>
-    <li>ErrorParsingMathML:
-      <!-- fredw: not sure how to produce this error... -->
-      <math><merror><mtext id="ErrorParsingMathML"></mtext></merror></math>
+    <li>ErrorParsingMathML: <math><merror><mtext id="ErrorParsingMathML"></mtext></merror></math>
     </li>
     <li>ParsingError: <script type="math/mml"></script></li>
-    <li>MathMLSingleElement:
-      <!-- fredw: not sure how to produce this error... -->
-      <math><merror><mtext id="MathMLSingleElement"></mtext></merror></math>
+    <li>MathMLSingleElement: <math><merror><mtext id="MathMLSingleElement"></mtext></merror></math>
     <li>MathMLRootElement: <script type="math/mml"><INVALIDROOT/></script></li>
   </ul>
 </li>
@@ -173,14 +169,25 @@
   </ul>
 </li>
 <li id="MathMenu">MathMenu:
-  <!-- fredw: all the menu items may not be displayed -->
   <ul>
     <li>Right click on one these formulas to display the menu:
       <ul>
-	<li>TeX: \( x \)</li>
-	<li>AsciiMath: `x`</li>
-	<li>MathML: <math><mi>x</mi></math></li>
-	<li>MathProcessingError: <script id="s3"></script></li>
+        <li>TeX: \( x \)</li>
+        <li>AsciiMath: `x`</li>
+        <li>MathML: <math><mi>x</mi></math></li>
+        <li>MathProcessingError: <script id="s3"></script></li>
+        <li>Annotation:
+          <math>
+            <semantics>
+              <mi>x</mi>
+              <annotation encoding="TeX">x (TeX)</annotation>
+              <annotation encoding="StarMath 5.0">x (StarMath)</annotation>
+              <annotation encoding="Maple">x (Maple)</annotation>
+              <annotation-xml encoding="MathML-Content"><ci>x</ci></annotation-xml>
+              <annotation-xml encoding="OpenMath"><OMV name="x"/></annotation-xml>
+            </semantics>
+          </math>
+        </li>
       </ul>
     </li>
     <li>About Box: <input type="button" onclick="MathJax.Menu.About()" value="Show About Box"/></li>
@@ -221,18 +228,12 @@
 <li>MissingScript: \( x^ \)</li>
 <li>ExtraLeftMissingRight: \( \left( \)</li>
 <li>Misplaced: \( & \)</li>
-<li>MissingOpenForSub:
-  <!-- fredw: not sure how to produce this error... -->
-  <math><merror><mtext id="MissingOpenForSub"></mtext></merror></math>
-</li>
+<li>MissingOpenForSub: \( x__ \)</li>
 <li>MissingOpenForSup: \( x^^ \)</li>
 <li>AmbiguousUseOf: \( x \over y \over z \)</li>
 <li>EnvBadEnd: \( \begin{aligned} \end{eqarray} \)</li>
 <li>EnvMissingEnd: \( \begin{aligned} \)</li>
-<li>MissingBoxFor:
-  <!-- fredw: not sure how to produce this error... -->
-  <math><merror><mtext id="MissingBoxFor"></mtext></merror></math>
-</li>
+<li>MissingBoxFor: \( \raise 1pt \)</li>
 <li>MissingCloseBrace: \( \array{ \)</li>
 <li>UndefinedControlSequence: \( \UNDEFINED \)</li>
 <li>DoubleExponent: \( x^3^2 \) </li>
@@ -254,10 +255,6 @@
 <li>BracketMustBeDimension: \(\begin{array} x \\[INVALID] y \end{array}\)</li>
 <li>InvalidEnv: \( \begin{_INVALID_} \end{_INVALID_} \)</li>
 <li>UnknownEnv: \( \begin{UNKNOWN} \end{UNKNOWN} \) </li>
-<li>ExtraClose: 
-  <!-- fredw: not sure how to produce this error... -->
-  <math><merror><mtext id="ExtraClose"></mtext></merror></math>
- </li>
 <li>ExtraCloseLooking: \( \sqrt[}]x \)</li>
 <li>MissingCloseBracket: \( \sqrt[ \)</li>
 <li>MissingOrUnrecognizedDelim: \( \left \)</li>
@@ -319,7 +316,7 @@
 <ul>
 <li>IllegalControlSequenceName: \( \newcommand{_INVALID_}{} \)</li>
 <li>IllegalParamNumber: \( \newcommand{mycommand}[INVALID]{} \)  </li>
-<li>DoubleBackSlash: \( \let INVALID \)</li>
+<li>MissingCS: \( \let INVALID \)</li>
 <li>CantUseHash2: \( \def\mycommand#A \)</li>
 <li>SequentialParam: \( \def\mycommand#2#1 \)</li>
 <li>MissingReplacementString: \( \def\mycommand \)</li>
