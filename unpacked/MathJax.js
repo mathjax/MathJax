@@ -1068,7 +1068,9 @@ MathJax.Localization = {
     en: {menuTitle: "English", isLoaded: true},   // nothing needs to be loaded for this
     de: {menuTitle: "Deutsch"},
     fr: {menuTitle: "Fran\u00E7ais"},
-    it: {menuTitle: "Italiano"}
+    it: {menuTitle: "Italiano"},
+    pt: {menuTitle: "portugus\u00EA", remap: "pt-br"},
+    "pt-br": {menuTitle: "portugu\u00EAs do Brasil"}
   },
 
   //
@@ -1391,11 +1393,30 @@ MathJax.Localization = {
   },
 
   //
+  //  Reset the current language
+  //
+  resetLocale: function(locale) {
+    // Selection algorithm:
+    // 1) Downcase locale name (e.g. "en-US" => "en-us")
+    // 2) Try a parent language (e.g. "en-us" => "en")
+    // 3) Try the fallback specified in the data (e.g. "pt" => "pt-br")
+    // 4) Otherwise don't change the locale.
+    if (!locale) return;
+    locale = locale.toLowerCase();
+    while (!this.strings[locale]) {
+      var dashPos = locale.lastIndexOf("-");
+      if (dashPos === -1) return;
+      locale = locale.substring(0, dashPos);
+    }
+    var remap = this.strings[locale].remap;
+    this.locale = remap ? remap : locale;
+  },
+
+  //
   //  Set the current language
   //
   setLocale: function(locale) {
-    // don't set it if there isn't a definition for it
-    if (this.strings[locale]) {this.locale = locale}
+    this.resetLocale(locale);
     if (MathJax.Menu) {this.loadDomain("MathMenu")}
   },
 
@@ -2283,7 +2304,7 @@ MathJax.Hub.Startup = {
     //    set the locale and the default menu value for the locale
     //
     if (this.params.locale) {
-      MathJax.Localization.locale = this.params.locale;
+      MathJax.Localization.resetLocale(this.params.locale);
       MathJax.Hub.config.menuSettings.locale = this.params.locale;
     }
     //
@@ -2361,7 +2382,7 @@ MathJax.Hub.Startup = {
       ["Get",MathJax.HTML.Cookie,"menu",MathJax.Hub.config.menuSettings],
       [function (config) {
         if (config.menuSettings.locale)
-          {MathJax.Localization.locale = config.menuSettings.locale}
+          {MathJax.Localization.resetLocale(config.menuSettings.locale)}
         var renderer = config.menuSettings.renderer, jax = config.jax;
         if (renderer) {
           var name = "output/"+renderer; jax.sort();
