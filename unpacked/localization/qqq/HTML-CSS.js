@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("qqq","HTML-CSS",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           LoadWebFont: "This is displayed in MathJax message box when the HTML-CSS output is loading a Web font. The first argument is the font name",

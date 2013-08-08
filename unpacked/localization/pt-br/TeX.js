@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("pt-br","TeX",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Sobrou uma chave de abertura ou faltou uma de fechamento",
@@ -58,7 +58,6 @@ MathJax.Localization.addTranslation("pt-br","TeX",{
           BracketMustBeDimension: "O argumento nos colchetes de %1 deve ser uma dimens\u00E3o",
           InvalidEnv: "Nome de ambiente inv\u00E1lido '%1'",
           UnknownEnv: "Ambiente desconhecido '%1'",
-          ExtraClose: "Sobrou uma chave de fechamento",
           ExtraCloseLooking: "Sobrou uma chave de fechamento ao procurar por %1",
           MissingCloseBracket: "N\u00E3o foi encontrado um ']' de fechamento para o argumento de %1",
           MissingOrUnrecognizedDelim: "O delimitador para %1 est\u00E1 ausente ou n\u00E3o foi reconhecido",
@@ -90,7 +89,7 @@ MathJax.Localization.addTranslation("pt-br","TeX",{
           NoClosingChar: "N\u00E3o foi poss\u00EDvel encontrar um %1 de fechamento",
           IllegalControlSequenceName: "Nome ilegal para uma sequ\u00EAncia de controle de %1",
           IllegalParamNumber: "N\u00FAmero ilegal de par\u00E2metros especificado em %1",
-          DoubleBackSlash: "\\ deve ser seguido por uma sequ\u00EAncia de controle",
+          MissingCS: "%1 deve ser seguido por uma sequ\u00EAncia de controle",
           CantUseHash2: "Uso ilegal de # em um modelo para %1",
           SequentialParam: "Os par\u00E2metros para %1 devem ser numerados sequencialmente",
           MissingReplacementString: "Faltou a string de substitui\u00E7\u00E3o para a defini\u00E7\u00E3o de %1",

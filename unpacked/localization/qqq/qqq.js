@@ -22,12 +22,12 @@
  */
 
 MathJax.Localization.addTranslation("qqq",null,{
-  menuTitle: "undefined",
-  version: "undefined",
-  isLoaded: undefined,
+  menuTitle: "Message Documentation",
+  version: "2.3",
+  isLoaded: true,
   domains: {
     "_": {
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           CookieConfig: "This alert message is displayed when the MathJax cookie contains some data with URL or Config properties. These properties may be used to ask MathJax to perform actions during the Configuration phase: either loading a javascript file (URL property) or executing a configuration function (Config property). Note that the character '\\n' is used to specify new lines inside the alert box.",
@@ -50,8 +50,8 @@ MathJax.Localization.addTranslation("qqq",null,{
     "MathMenu": {},
     "TeX": {}
   },
-  plural: undefined,
-  number: undefined
+  plural: function (n) {return 1},
+  number: function (n) {return n}
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/localization/qqq/qqq.js");

@@ -1069,6 +1069,7 @@ MathJax.Localization = {
     de: {menuTitle: "Deutsch"},
     fr: {menuTitle: "Fran\u00E7ais"},
     it: {menuTitle: "Italiano"},
+    pl: {menuTitle: "Polski"},
     pt: {menuTitle: "portugus\u00EA", remap: "pt-br"},
     "pt-br": {menuTitle: "portugu\u00EAs do Brasil"}
   },

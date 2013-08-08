@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("pt-br","MathMenu",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           Show: "Mostrar F\u00F3rmulas Como",
@@ -32,6 +32,12 @@ MathJax.Localization.addTranslation("pt-br","MathMenu",{
           AsciiMathInput: "Entrada AsciiMathML",
           Original: "Forma Original",
           ErrorMessage: "Mensagem de Erro",
+          Annotation: "Annotation",
+          TeX: "TeX",
+          StarMath: "StarMath",
+          Maple: "Maple",
+          ContentMathML: "Content MathML",
+          OpenMath: "OpenMath",
           texHints: "Mostrar dicas de TeX em MathML",
           Settings: "Configura\u00E7\u00E3o das F\u00F3rmulas",
           ZoomTrigger: "Disparador do Zoom",

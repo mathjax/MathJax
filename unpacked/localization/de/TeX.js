@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("de","TeX",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Zus\u00E4tzliche offene oder fehlende schliessende Klammer",
@@ -58,7 +58,6 @@ MathJax.Localization.addTranslation("de","TeX",{
           BracketMustBeDimension: "Das geklammerte Argument f\u00FCr %1 muss eine Dimension sein",
           InvalidEnv: "Ung\u00FCltiger Umgebungsname %1",
           UnknownEnv: "Ung\u00FCltige Umgebung %1",
-          ExtraClose: "Zus\u00E4tzliche geschlossene Klammer",
           ExtraCloseLooking: "Zus\u00E4tzliche geschlossene Klammer w\u00E4hrend der Suche nach %1",
           MissingCloseBracket: "Argument zu %1 wurde nicht mit ']' geschlossen",
           MissingOrUnrecognizedDelim: "Fehlender oder nichterkannter Delimiter bei %1",
@@ -90,7 +89,7 @@ MathJax.Localization.addTranslation("de","TeX",{
           NoClosingChar: "Kann schlie\u00DFende %1 nicht finden",
           IllegalControlSequenceName: "Ung\u00FCltige Befehlsfolge",
           IllegalParamNumber: "Ung\u00FCltige Anzahl von Parametern in %1",
-          DoubleBackSlash: "\\ muss von Befehlsfolge gefolgt werden",
+          MissingCS: "%1 muss von Befehlsfolge gefolgt werden",
           CantUseHash2: "Ung\u00FCltige Verwendung von # im Template von %1",
           SequentialParam: "Parameter von %1 m\u00FCssen durch nummeriert sein",
           MissingReplacementString: "Ersetzende Zeichenkette f\u00FCr Definition von %1 fehlt",
