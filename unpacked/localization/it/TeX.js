@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("it","TeX",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Graffa d'apertura in pi\u00F9 o di chiusura mancante",
@@ -58,7 +58,6 @@ MathJax.Localization.addTranslation("it","TeX",{
           BracketMustBeDimension: "L'argomento tra parentesi per %1 deve essere una dimensione",
           InvalidEnv: "Nome d'ambiente non valido '%1'",
           UnknownEnv: "Ambiente sconosciuto '%1'",
-          ExtraClose: "Graffa di chiusura extra",
           ExtraCloseLooking: "Graffa di chiusura extra durante la ricerca di %1",
           MissingCloseBracket: "Parentesi ] per l'argomento di %1 non trovata",
           MissingOrUnrecognizedDelim: "Delimitatore per %1 mancante o non riconosciuto",
@@ -90,7 +89,7 @@ MathJax.Localization.addTranslation("it","TeX",{
           NoClosingChar: "Impossibile trovare la parentesi di chiusura %1",
           IllegalControlSequenceName: "Nome sequenza di controllo illegale per %1",
           IllegalParamNumber: "Numero di parametri specificato in %1 illegale",
-          DoubleBackSlash: "\\ deve essere seguito da una sequenza di controllo",
+          MissingCS: "%1 deve essere seguito da una sequenza di controllo",
           CantUseHash2: "Uso di # non consentito nel modello di %1",
           SequentialParam: "I parametri per %1 devono essere numerati consecutivamente",
           MissingReplacementString: "Stringa di sostituzione per la definizione di %1 mancante",

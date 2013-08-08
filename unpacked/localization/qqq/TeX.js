@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("qqq","TeX",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "This appears in TeX expressions when open and close braces do not match e.g. \\( { \\)",
@@ -31,12 +31,12 @@ MathJax.Localization.addTranslation("qqq","TeX",{
           MissingScript: "This appears in TeX expressions when a superscript or subscript is missing e.g. \\( x^ \\)",
           ExtraLeftMissingRight: "This appears in TeX expressions when left/right commands do no match e.g. \\( \\left( \\). Do not translate \\left and \\right; they are TeX commands",
           Misplaced: "This appears in TeX expressions when an item is misplaced e.g. \\( & \\) since the ampersand is supposed to be used in tabular expressions. The argument is the misplaced item.",
-          MissingOpenForSub: "This appears in TeX expressions when an a subscript is missing an open brace",
-          MissingOpenForSup: "This appears in TeX expressions when an a supscript is missing an open brace",
+          MissingOpenForSub: "This appears in TeX expressions when a subscript is missing an open brace e.g. \\( x__ \\)",
+          MissingOpenForSup: "This appears in TeX expressions when a supscript is missing an open brace e.g. \\( x^^ \\)",
           AmbiguousUseOf: "This appears in TeX expressions when a command is used in an ambiguous way e.g. \\( x \\over y \\over z \\). The argument is the name of the TeX command",
           EnvBadEnd: "This appears in TeX expressions when environment names do not match e.g. \\( \\begin{aligned} \\end{eqarray} \\). Do not translate \\begin and \\end; they are TeX commands. The first argument is the environment name used for \\begin and the second argument is the environment name used for \\end.",
           EnvMissingEnd: "This appears in TeX expressions when an environment is not closed e.g. \\( \\begin{aligned} \\). Do not translate \\end, it is a TeX command. The first argulent is the environment name e.g. 'aligned'.",
-          MissingBoxFor: "This appears in TeX expressions when a command is missing a TeX box. The argument is the command name.",
+          MissingBoxFor: "This appears in TeX expressions when a command is missing a TeX box e.g. \\( \\raise 1pt \\). The argument is the command name.",
           MissingCloseBrace: "This appears in TeX expressions when a close brace is missing e.g. \\( \\array{ \\)",
           UndefinedControlSequence: "This appears in TeX expressions when an undefined control sequence is used. The argument is the name of the TeX command.",
           DoubleExponent: "This appears in TeX expressions when an ambiguous double exponent is used e.g. x^3^2 should be x^{3^2} or {x^3}^2.",
@@ -58,7 +58,6 @@ MathJax.Localization.addTranslation("qqq","TeX",{
           BracketMustBeDimension: "This happens when a bracket argument of an item is not a dimension e.g. \\begin{array} x \\\\[INVALID] y \\end{array}. The argument is e.g. '\\'",
           InvalidEnv: "This happens with invalid environment name e.g. \\begin{_INVALID_} \\end{_INVALID_} where underscores are forbidden. The argument is the environment name e.g. '_INVALID_'",
           UnknownEnv: "This happens when an unknown environment is used e.g. \\begin{UNKNOWN} \\end{UNKNOWN}. The argument is the environment name e.g. 'UNKNOWN'.",
-          ExtraClose: "This happens in some situations when an extra close brace is found.",
           ExtraCloseLooking: "This happens in some situations when an extra close brace while looking for another character, for example \\( \\sqrt[}]x \\). The argument is the character searched e.g. ']'.",
           MissingCloseBracket: "This error happens when a closing ']' is missing e.g. \\( \\sqrt[ \\). The argument is the command name e.g. '\\sqrt'",
           MissingOrUnrecognizedDelim: "This error happens when a delimiter is missing or unrecognized in a TeX expression e.g. \\( \\left \\). The argument is the command name e.g. '\\left'",
@@ -90,7 +89,7 @@ MathJax.Localization.addTranslation("qqq","TeX",{
           NoClosingChar: "This is used in TeX mhchem expressions when a closing delimiters is missing e.g. \\( \\ce{ ->[ } \\). The argument will be ) or } or ]",
           IllegalControlSequenceName: "This appears when the \\newcommand TeX command is given an illegal control sequence name. The argument is '\\newcommand'.",
           IllegalParamNumber: "This appears when the \\newcommand TeX command is given an illegal number of parameters. The argument is '\\newcommand'.",
-          DoubleBackSlash: "This appears when a TeX definitions is not followed by a control sequence e.g. \\let INVALID.",
+          MissingCS: "This appears when a TeX definitions is not followed by a control sequence e.g. \\let INVALID. The parameter may be commands like  \\let, \\def, \\newcommand, \\global, etc",
           CantUseHash2: "This appears in TeX definitions when the character '#' is used in incorrectly used e.g. \\def\\mycommand#A. The argument is the command used e.g. 'mycommand'.",
           SequentialParam: "This appears in TeX definitions when parameters are not numbered sequentially e.g. \\def\\mycommand#2#1. The argument is the command name e.g. \\def.",
           MissingReplacementString: "This appears in TeX definitions when you don't specify a replacement string e.g. \\def\\mycommand. The argument is the command name e.g. \\def.",

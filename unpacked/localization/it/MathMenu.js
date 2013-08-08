@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("it","MathMenu",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           Show: "Mostra formula come",
@@ -32,6 +32,12 @@ MathJax.Localization.addTranslation("it","MathMenu",{
           AsciiMathInput: "Input AsciiMathML",
           Original: "Modulo originale",
           ErrorMessage: "Messaggio d'errore",
+          Annotation: "Annotation",
+          TeX: "TeX",
+          StarMath: "StarMath",
+          Maple: "Maple",
+          ContentMathML: "Content MathML",
+          OpenMath: "OpenMath",
           texHints: "Aggiungi suggerimenti Tex a MathML",
           Settings: "Impostazioni formule",
           ZoomTrigger: "Attivazione zoom",

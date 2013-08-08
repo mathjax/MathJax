@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fr","MathMenu",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           Show: "Afficher sous forme",
@@ -32,6 +32,12 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
           AsciiMathInput: "de code AsciiMathML",
           Original: "originelle",
           ErrorMessage: "de message d'erreur",
+          Annotation: "Annotation",
+          TeX: "TeX",
+          StarMath: "StarMath",
+          Maple: "Maple",
+          ContentMathML: "MathML de contenu",
+          OpenMath: "OpenMath",
           texHints: "Inclure les donn\u00E9es TeX dans le MathML",
           Settings: "Param\u00E8tres",
           ZoomTrigger: "D\u00E9clenchement du zoom",
@@ -80,6 +86,7 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
           OperaNativeMMLWarning: "Le support MathML d'Opera est limit\u00E9, changer le mode de rendu pourrait entrainer un affichage m\u00E9diocre de certaines expressions.",
           SafariNativeMMLWarning: "Le support MathML natif de votre navigateur ne comporte pas toutes les fonctionnalit\u00E9s requises par MathJax, certaines expressions pourront donc ne pas s'afficher correctement.",
           FirefoxNativeMMLWarning: "Le support MathML natif de votre navigateur ne comporte pas toutes les fonctionnalit\u00E9s requises par MathJax, certaines expressions pourront donc ne pas s'afficher correctement.",
+          MSIESVGWarning: "Le support SVG n'est pas impl\u00E9ment\u00E9 dans Internet Explorer avant IE9 ou lorsqu'il \u00E9mule IE8 ou des versions pr\u00E9c\u00E9dentes. Changer le mode de rendu pourrait entrainer un affichage m\u00E9diocre de certaines expressions.",
           LoadURL: "Charger les donn\u00E9es de traduction \u00E0 partir de cette addresse URL:",
           BadURL: "L'adresse URL doit \u00EAtre un fichier Javascript contenant des donn\u00E9es de traduction MathJax.Les noms de fichier Javascript doivent se terminer par '.js'",
           BadData: "\u00C9chec du chargement des donn\u00E9es de traduction \u00E0 partir de %1",
@@ -91,8 +98,7 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
           IE9warning: "Le menu contextuel de MathJax sera d\u00E9sactiv\u00E9, mais vous pourrez toujours obtenir le menu de MathJax en utilisant la commande Alt-Clic sur une expression.",
           NoOriginalForm: "Aucune forme originelle disponible.",
           Close: "Fermer",
-          EqSource: "Source de l'\u00E9quation MathJax",
-          MSIESVGWarning: "Le support SVG n'est pas impl\u00E9ment\u00E9 dans Internet Explorer avant IE9 ou lorsqu'il \u00E9mule IE8 ou des versions pr\u00E9c\u00E9dentes. Changer le mode de rendu pourrait entrainer un affichage m\u00E9diocre de certaines expressions."
+          EqSource: "Source de l'\u00E9quation MathJax"
         }
 });
 
