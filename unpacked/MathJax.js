@@ -1393,9 +1393,9 @@ MathJax.Localization = {
   },
 
   //
-  //  Set the current language
+  //  Reset the current language
   //
-  setLocale: function(locale) {
+  resetLocale: function(locale) {
     // Selection algorithm:
     // 1) Downcase locale name (e.g. "en-US" => "en-us")
     // 2) Try a parent language (e.g. "en-us" => "en")
@@ -1410,6 +1410,13 @@ MathJax.Localization = {
     }
     var remap = this.strings[locale].remap;
     this.locale = remap ? remap : locale;
+  },
+
+  //
+  //  Set the current language
+  //
+  setLocale: function(locale) {
+    this.resetLocale(locale);
     if (MathJax.Menu) {this.loadDomain("MathMenu")}
   },
 
@@ -2297,7 +2304,7 @@ MathJax.Hub.Startup = {
     //    set the locale and the default menu value for the locale
     //
     if (this.params.locale) {
-      MathJax.Localization.locale = this.params.locale;
+      MathJax.Localization.resetLocale(this.params.locale);
       MathJax.Hub.config.menuSettings.locale = this.params.locale;
     }
     //
@@ -2375,7 +2382,7 @@ MathJax.Hub.Startup = {
       ["Get",MathJax.HTML.Cookie,"menu",MathJax.Hub.config.menuSettings],
       [function (config) {
         if (config.menuSettings.locale)
-          {MathJax.Localization.locale = config.menuSettings.locale}
+          {MathJax.Localization.resetLocale(config.menuSettings.locale)}
         var renderer = config.menuSettings.renderer, jax = config.jax;
         if (renderer) {
           var name = "output/"+renderer; jax.sort();
