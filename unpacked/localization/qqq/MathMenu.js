@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("qqq","MathMenu",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           Show: "'Show Math As' menu item. MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.",
@@ -32,6 +32,12 @@ MathJax.Localization.addTranslation("qqq","MathMenu",{
           AsciiMathInput: "This menu item from 'Show Math As' shows the asciimath code if that was originally in the page source",
           Original: "This menu item from 'Show Math As' shows the code that was originally in the page source but has no registered type. This can happen when extensions add new input formats but fail to provide an adequate format name.",
           ErrorMessage: "This menu item from 'Show Math As' shows the error message if MathJax fails to process the source",
+          Annotation: "This menu item from 'Show Math As' allows to access possible annotations attached to a MathML formula.",
+          TeX: "This is a menu item from the 'Annotation Menu' to show a TeX annotation.",
+          StarMath: "This is a menu item from the 'Annotation Menu' to show a StarMath annotation (StarOffice, OpenOffice, LibreOffice).",
+          Maple: "This is a menu item from the 'Annotation Menu' to show a Maple annotation.",
+          ContentMathML: "This is a menu item from the 'Annotation Menu' to show a Content MathML annotation. The MathML specification defines two versions: 'presentation' MathML (used in MathJax) and 'content' MathML (describes the semantics of the formula).",
+          OpenMath: "This is a menu item from the 'Annotation Menu' to show the OpenMath annotation, an XML representation similar to Content MathML.",
           texHints: "This menu option from 'Show Math As' adds comments to the code produced by 'MathMLCode'",
           Settings: "'Math Settings' menu item.",
           ZoomTrigger: "This menu from 'Math Settings' determines how MathJax's zoom is triggered",

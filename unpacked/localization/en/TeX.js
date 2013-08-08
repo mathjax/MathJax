@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("en","TeX",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Extra open brace or missing close brace",
@@ -58,7 +58,6 @@ MathJax.Localization.addTranslation("en","TeX",{
           BracketMustBeDimension: "Bracket argument to %1 must be a dimension",
           InvalidEnv: "Invalid environment name '%1'",
           UnknownEnv: "Unknown environment '%1'",
-          ExtraClose: "Extra close brace",
           ExtraCloseLooking: "Extra close brace while looking for %1",
           MissingCloseBracket: "Couldn't find closing ']' for argument to %1",
           MissingOrUnrecognizedDelim: "Missing or unrecognized delimiter for %1",
@@ -90,7 +89,7 @@ MathJax.Localization.addTranslation("en","TeX",{
           NoClosingChar: "Can't find closing %1",
           IllegalControlSequenceName: "Illegal control sequence name for %1",
           IllegalParamNumber: "Illegal number of parameters specified in %1",
-          DoubleBackSlash: "\\ must be followed by a control sequence",
+          MissingCS: "%1 must be followed by a control sequence",
           CantUseHash2: "Illegal use of # in template for %1",
           SequentialParam: "Parameters for %1 must be numbered sequentially",
           MissingReplacementString: "Missing replacement string for definition of %1",

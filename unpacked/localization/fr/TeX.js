@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fr","TeX",{
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Accolade ouvrante manquante ou accolade fermante non attendue",
@@ -62,7 +62,6 @@ MathJax.Localization.addTranslation("fr","TeX",{
           BracketMustBeDimension: "L'argument entre crochets de la commande %1 doit \u00EAtre une dimension",
           InvalidEnv: "Nom d'environnement '%1' non valide",
           UnknownEnv: "Environnement '%1' inconnu",
-          ExtraClose: "Accolade fermante non attendue",
           ExtraCloseLooking: "Accolade fermante non attendue lors de la recherche de %1",
           MissingCloseBracket: "Impossible de trouver le crochet fermant pour l'argument de la commande %1",
           MissingOrUnrecognizedDelim: "D\u00E9limiteur manquant ou non reconnu pour la commande %1",
@@ -92,7 +91,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
           InvalidDecimalNumber: "Nombre d\u00E9cimal non valide",
           ModelArg2: "Les valeurs de couleurs pour le mod\u00E8le %1 doivent \u00EAtre comprises entre %2 et %3",
           InvalidNumber: "Nombre non valide",
-          DoubleBackSlash: "\\ doit \u00EAtre suivi d'une s\u00E9quence de contr\u00F4le",
+          MissingCS: "%1 doit \u00EAtre suivi d'une s\u00E9quence de contr\u00F4le",
           SequentialParam: "Les param\u00E8tres de la s\u00E9quence de contr\u00F4le %1 doivent \u00EAtre \u00E9num\u00E9r\u00E9s de fa\u00E7on s\u00E9quentielle",
           MissingReplacementString: "Chaine de caract\u00E8re de remplacement manquante pour la d\u00E9finition %1",
           MismatchUseDef: "L'utilisation de la commande %1 ne correspond pas \u00E0 sa d\u00E9finition",

@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("en",null,{
   menuTitle: "English",
-  version: "2.2",
+  version: "2.3",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.2",
+        version: "2.3",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax has found a user-configuration cookie that includes code to be run. Do you want to run it?\n\n(You should press Cancel unless you set up the cookie yourself.)",
@@ -43,12 +43,12 @@ MathJax.Localization.addTranslation("en",null,{
           MathJaxNotSupported: "Your browser does not support MathJax"
         }
     },
-    "MathMenu": {},
     "FontWarnings": {},
+    "HTML-CSS": {},
     "HelpDialog": {},
-    "TeX": {},
     "MathML": {},
-    "HTML-CSS": {}
+    "MathMenu": {},
+    "TeX": {}
   },
   plural: function (n) {
       if (n === 1) {return 1} // one
