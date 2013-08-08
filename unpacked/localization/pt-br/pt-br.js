@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/de/de.js
+ *  MathJax/localization/pt-br/pt-br.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,34 +21,34 @@
  *
  */
 
-MathJax.Localization.addTranslation("de",null,{
-  menuTitle: "Deutsch",
-  version: "2.2",
-  isLoaded: true,
+MathJax.Localization.addTranslation("pt-br",null,{
+  menuTitle: "portugu\u00EAs do Brasil",
+  version: "undefined",
+  isLoaded: undefined,
   domains: {
     "_": {
         version: "2.2",
         isLoaded: true,
         strings: {
-          CookieConfig: "MathJax hat eine Cookie mit ausf\u00FChrbaren Code gefunden. Soll dieser Code ausgef\u00FChrt werden?\n\n(Klicken Sie 'Abbrechen' falls Sie das Cookie nicht selber akzeptiert haben.)",
-          MathProcessingError: "Mathe Verarbeitungsfehler",
-          MathError: "Mathe Fehler",
-          LoadFile: "Lade %1",
-          Loading: "Laden",
-          LoadFailed: "Datei konnte nicht geladen werden: %1",
-          ProcessMath: "Mathe verarbeiten: %1%%",
-          Processing: "Verarbeiten",
-          TypesetMath: "Mathe wird gesetzt: %1%%",
-          Typesetting: "Setzen",
-          MathJaxNotSupported: "Ihr Webbrowser unterst\u00FCtzt MathJax nicht"
+          CookieConfig: "O MathJax encontrou um cookie com configura\u00E7\u00F5es de usu\u00E1rio que inclui c\u00F3digo a ser executado. Deseja execut\u00E1-lo?\n\n(Voc\u00EA deve pressionar Cancelar a n\u00E3o ser que voc\u00EA mesmo tenha criado o cookie.)",
+          MathProcessingError: "Erro no Processamento das F\u00F3rmulas",
+          MathError: "Erro nas F\u00F3rmulas",
+          LoadFile: "Carregando %1",
+          Loading: "Carregando",
+          LoadFailed: "O arquivo n\u00E3o pode ser carregado: %1",
+          ProcessMath: "Processando F\u00F3rmula: %1%%",
+          Processing: "Processando",
+          TypesetMath: "Realizando a Diagrama\u00E7\u00E3o das F\u00F3rmulas: %1%%",
+          Typesetting: "Realizando a Diagrama\u00E7\u00E3o",
+          MathJaxNotSupported: "Seu navegador n\u00E3o suporta MathJax"
         }
     },
-    "MathMenu": {},
     "FontWarnings": {},
+    "HTML-CSS": {},
     "HelpDialog": {},
-    "TeX": {},
     "MathML": {},
-    "HTML-CSS": {}
+    "MathMenu": {},
+    "TeX": {}
   },
   plural: function (n) {
       if (n === 1) {return 1} // one
@@ -59,4 +59,4 @@ MathJax.Localization.addTranslation("de",null,{
     }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/de/de.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/pt-br/pt-br.js");
