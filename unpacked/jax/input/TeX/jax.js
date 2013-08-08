@@ -158,7 +158,7 @@
     type: "subsup",
     stopError: /*_()*/ ["MissingScript","Missing superscript or subscript argument"],
     supError:  /*_()*/ ["MissingOpenForSup","Missing open brace for superscript"],
-    subError:  /*_()*/ ["MissingOpenForSup","Missing open brace for subscript"],
+    subError:  /*_()*/ ["MissingOpenForSub","Missing open brace for subscript"],
     checkItem: function (item) {
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml") {
@@ -240,7 +240,7 @@
   STACKITEM.position = STACKITEM.Subclass({
     type: "position",
     checkItem: function (item) {
-      if (item.isClose) {TEX.Error(["MissingBoxFor","Missing box for %1",name])}
+      if (item.isClose) {TEX.Error(["MissingBoxFor","Missing box for %1",this.name])}
       if (item.isNotStack) {
         var mml = item.mmlData();
         switch (this.move) {
@@ -1848,7 +1848,6 @@
            case '\\':  this.i++; break;
            case '{':   parens++; break;
            case '}':
-            if (parens == 0) {TEX.Error(["ExtraClose","Extra close brace"])}
             if (--parens == 0) {return this.string.slice(j,this.i-1)}
             break;
           }
