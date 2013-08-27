@@ -1355,7 +1355,7 @@
         //  Handle large operator centering
         //
 	if (values.largeop) {
-	  svg.y = (svg.h - svg.d)/2/scale - SVG.TeX.axis_height;
+	  svg.y = SVG.TeX.axis_height - (svg.h - svg.d)/2/scale;
 	  if (svg.r > svg.w) {svg.ic = svg.r - svg.w; svg.w = svg.r}
 	}
         //
@@ -1770,7 +1770,7 @@
           if (boxes[i].w > WW) {WW = boxes[i].w}
         }}
         var t = SVG.TeX.rule_thickness;
-	var base = boxes[this.base] || {w:0, h:0, d:0, H:0, D:0, l:0, r:0, scale:scale};
+	var base = boxes[this.base] || {w:0, h:0, d:0, H:0, D:0, l:0, r:0, y:0, scale:scale};
 	var x, y, z1, z2, z3, dw, k, delta = 0;
         if (base.ic) {delta = 1.3*base.ic + .05} // adjust faked IC to be more in line with expeted results
 	for (i = 0, m = this.data.length; i < m; i++) {
@@ -1796,7 +1796,7 @@
 		k = Math.max(z1,z2-Math.max(0,box.d));
 	      }
 	      k = Math.max(k,1500/SVG.em);
-	      x += delta/2; y = base.h + box.d + k;
+	      x += delta/2; y = base.y + base.h + box.d + k;
 	      box.h += z3; if (box.h > box.H) {box.H = box.h}
 	    } else if (i == this.under) {
 	      if (accent) {
@@ -1807,7 +1807,7 @@
 		k = Math.max(z1,z2-box.h);
 	      }
 	      k = Math.max(k,1500/SVG.em);
-	      x -= delta/2; y = -(base.d + box.h + k);
+	      x -= delta/2; y = base.y -(base.d + box.h + k);
 	      box.d += z3; if (box.d > box.D) {box.D = box.d}
 	    }
 	    svg.Add(box,x,y);
