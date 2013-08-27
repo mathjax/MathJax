@@ -34,7 +34,7 @@ MathJax.Extension.asciimath2jax = {
   config: {
     delimiters: [['`','`']],   // The star/stop delimiter pairs for asciimath code
 
-    skipTags: ["script","noscript","style","textarea","pre","code"],
+    skipTags: ["script","noscript","style","textarea","pre","code","annotation","annotation-xml"],
                                // The names of the tags whose contents will not be
                                // scanned for math delimiters
 

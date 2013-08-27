@@ -43,7 +43,7 @@ MathJax.Extension.tex2jax = {
                                // balanced within math delimiters (allows for nested
                                // dollar signs).  Set to false to get pre-v2.0 compatibility.
 
-    skipTags: ["script","noscript","style","textarea","pre","code"],
+    skipTags: ["script","noscript","style","textarea","pre","code","annotation","annotation-xml"],
                                // The names of the tags whose contents will not be
                                // scanned for math delimiters
 
