@@ -181,13 +181,24 @@ MathJax.Extension.mml2jax = {
   createPreview: function (math,script) {
     var preview = this.config.preview;
     if (preview === "none") return;
-    if (preview === "alttext") {
-      var text = math.getAttribute("alttext");
-      if (text != null) {preview = [this.filterPreview(text)]} else {preview = null}
-    } 
+    if (preview === "mathml") {preview = math}
+    else if (preview === "alttext" || preview === "altimg") {
+      var alttext = this.filterPreview(math.getAttribute("alttext"));
+      if (preview === "alttext") {
+        if (alttext != null) {preview = MathJax.HTML.TextNode(alttext)} else {preview = null}
+      } else {
+        var src = math.getAttribute("altimg");
+        if (src != null) {
+          // FIXME: use altimg-valign when display="inline"?
+          var style = {width: math.getAttribute("altimg-width"), height: math.getAttribute("altimg-height")};
+          preview = MathJax.HTML.Element("img",{src:src,alt:alttext,style:style});
+        } else {preview = null}
+      }
+    }
     if (preview) {
-      preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
-      script.parentNode.insertBefore(preview,script);
+      var span = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
+      span.appendChild(preview);
+      script.parentNode.insertBefore(span,script);
     }
   },
   
