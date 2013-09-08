@@ -768,11 +768,20 @@ MathJax.fileversion = "2.2";
       //  to be processed.
       //
       create: function (callback,node) {
+        // Accessing sessionStorage throws a SecurityError in Chrome is storage
+        // is disabled, thus breaking MathJax if the exception isn't caught.
+        sessionStorageCheck = function () {
+            try {
+                return typeof(window.sessionStorage);
+            } catch (exc) {
+                return "undefined";
+            }
+        }
         callback = BASE.Callback(callback);
         if (node.nodeName === "STYLE" && node.styleSheet &&
             typeof(node.styleSheet.cssText) !== 'undefined') {
           callback(this.STATUS.OK); // MSIE processes style immediately, but doesn't set its styleSheet!
-        } else if (window.chrome && typeof(window.sessionStorage) !== "undefined" &&
+        } else if (window.chrome && sessionStorageCheck() !== "undefined" &&
                    node.nodeName === "STYLE") {
           callback(this.STATUS.OK); // Same for Chrome 5 (beta), Grrr.
         } else if (isSafari2) {
