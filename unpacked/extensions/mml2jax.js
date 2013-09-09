@@ -29,8 +29,11 @@
 MathJax.Extension.mml2jax = {
   version: "2.2",
   config: {
-    preview: "alttext"      // Use the <math> element's alttext as the 
+    preview: "mathml"       // Use the <math> element as the
                             //   preview.  Set to "none" for no preview,
+                            //   set to "alttext" to use the alttext attribute
+                            //   of the <math> element, set to "altimg" to use
+                            //   an image described by the altimg* attributes
                             //   or set to an array specifying an HTML snippet
                             //   to use a fixed preview for all math
 
