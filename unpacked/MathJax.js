@@ -29,7 +29,7 @@
 
 if (document.getElementById && document.childNodes && document.createElement) {
 
-if (!window.MathJax) {window.MathJax= {}}
+if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}} else {window.MathJax = {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
 MathJax.version = "2.2";
@@ -2334,6 +2334,10 @@ MathJax.Hub.Startup = {
       }
     }
     //
+    //  Perform author configuration from in-line MathJax = {...}
+    //
+    this.queue.Push(["Config",MathJax.Hub,MathJax.AuthorConfig]);
+    //
     //  Run the deprecated configuration script, if any (ignoring return value)
     //  Wait for the startup delay signal
     //  Run the mathjax-config blocks
@@ -2357,7 +2361,7 @@ MathJax.Hub.Startup = {
     return delay;
   },
   //
-  //  Run the scipts of type=text/x-mathajx-config
+  //  Run the scripts of type=text/x-mathjax-config
   //
   ConfigBlocks: function () {
     var scripts = document.getElementsByTagName("script");
@@ -3021,6 +3025,7 @@ MathJax.Hub.Startup = {
   });
   HUB.Browser.Select(MathJax.Message.browsers);
 
+  if (BASE.AuthorConfig && typeof BASE.AuthorConfig.AuthorInit === "function") {BASE.AuthorConfig.AuthorInit()}
   HUB.queue = BASE.Callback.Queue();
   HUB.queue.Push(
     ["Post",STARTUP.signal,"Begin"],
