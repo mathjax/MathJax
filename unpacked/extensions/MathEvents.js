@@ -171,7 +171,7 @@
           annotationList = MathJax.Hub.Config.semanticsAnnotations;
           for (var i = 0, m = annotationItems.length; i < m; i++) {
             var name = annotationItems[i].name[1]
-            if (jax.root.getAnnotation(name) !== null) {
+            if (jax.root && jax.root.getAnnotation(name) !== null) {
               annotations.disabled = false;
               annotationItems[i].hidden = false;
             } else {
