@@ -184,8 +184,11 @@ MathJax.Extension.mml2jax = {
   createPreview: function (math,script) {
     var preview = this.config.preview;
     if (preview === "none") return;
-    if (preview === "mathml") {preview = math}
-    else if (preview === "alttext" || preview === "altimg") {
+    if (preview === "mathml") {
+      // mathml preview does not work with IE < 9, so fallback to alttext.
+      if (this.MathTagBug) {preview = "alttext"} else {preview = math}
+    }
+    if (preview === "alttext" || preview === "altimg") {
       var alttext = this.filterPreview(math.getAttribute("alttext"));
       if (preview === "alttext") {
         if (alttext != null) {preview = MathJax.HTML.TextNode(alttext)} else {preview = null}
