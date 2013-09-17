@@ -184,11 +184,14 @@ MathJax.Extension.mml2jax = {
   createPreview: function (math,script) {
     var preview = this.config.preview;
     if (preview === "none") return;
+    var isNodePreview = false;
     if (preview === "mathml") {
+      isNodePreview = true;
       // mathml preview does not work with IE < 9, so fallback to alttext.
       if (this.MathTagBug) {preview = "alttext"} else {preview = math}
     }
     if (preview === "alttext" || preview === "altimg") {
+      isNodePreview = true;
       var alttext = this.filterPreview(math.getAttribute("alttext"));
       if (preview === "alttext") {
         if (alttext != null) {preview = MathJax.HTML.TextNode(alttext)} else {preview = null}
@@ -202,8 +205,13 @@ MathJax.Extension.mml2jax = {
       }
     }
     if (preview) {
-      var span = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
-      span.appendChild(preview);
+      var span;
+      if (isNodePreview) {
+        span = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
+        span.appendChild(preview);
+      } else {
+        span = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
+      }
       script.parentNode.insertBefore(span,script);
     }
   },
