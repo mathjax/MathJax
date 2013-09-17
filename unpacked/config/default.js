@@ -432,12 +432,15 @@ MathJax.Hub.Config({
     
     //
     //  Controls whether mml2jax inserts MathJax_Preview spans to make a
-    //  preview available, and what preview to use, whrn it locates
-    //  mathematics on the page.  The default is "alttext", which means use
-    //  the <math> tag's alttext attribute as the preview (until it is
-    //  processed by MathJax), if the tag has one.  Set to "none" to
+    //  preview available, and what preview to use, when it locates
+    //  mathematics on the page.  The default is "mathml" which means use
+    //  the <math> tag as the preview (until it is processed by MathJax).
+    //  Set to "alttext", to use the  <math> tag's alttext attribute as the
+    //  preview, if the tag has one.  Set to "none" to
     //  prevent the previews from being inserted (the math will simply
-    //  disappear until it is typeset).  Set to an array containing the
+    //  disappear until it is typeset). Set to "altimg" to use an image
+    //  described by the altimg* attributes of the <math> element.
+    //  Set to an array containing the
     //  description of an HTML snippet in order to use the same preview for
     //  all equations on the page (e.g., you could have it say "[math]" or
     //  load an image).
@@ -445,7 +448,7 @@ MathJax.Hub.Config({
     //  E.g.,     preview: ["[math]"],
     //  or        preview: [["img",{src: "http://myserver.com/images/mypic.jpg"}]]
     //  
-    preview: "alttext"
+    preview: "mathml"
     
   },
   
