@@ -29,8 +29,11 @@
 MathJax.Extension.mml2jax = {
   version: "2.2",
   config: {
-    preview: "alttext"      // Use the <math> element's alttext as the 
+    preview: "mathml"       // Use the <math> element as the
                             //   preview.  Set to "none" for no preview,
+                            //   set to "alttext" to use the alttext attribute
+                            //   of the <math> element, set to "altimg" to use
+                            //   an image described by the altimg* attributes
                             //   or set to an array specifying an HTML snippet
                             //   to use a fixed preview for all math
 
@@ -181,13 +184,35 @@ MathJax.Extension.mml2jax = {
   createPreview: function (math,script) {
     var preview = this.config.preview;
     if (preview === "none") return;
-    if (preview === "alttext") {
-      var text = math.getAttribute("alttext");
-      if (text != null) {preview = [this.filterPreview(text)]} else {preview = null}
-    } 
+    var isNodePreview = false;
+    if (preview === "mathml") {
+      isNodePreview = true;
+      // mathml preview does not work with IE < 9, so fallback to alttext.
+      if (this.MathTagBug) {preview = "alttext"} else {preview = math}
+    }
+    if (preview === "alttext" || preview === "altimg") {
+      isNodePreview = true;
+      var alttext = this.filterPreview(math.getAttribute("alttext"));
+      if (preview === "alttext") {
+        if (alttext != null) {preview = MathJax.HTML.TextNode(alttext)} else {preview = null}
+      } else {
+        var src = math.getAttribute("altimg");
+        if (src != null) {
+          // FIXME: use altimg-valign when display="inline"?
+          var style = {width: math.getAttribute("altimg-width"), height: math.getAttribute("altimg-height")};
+          preview = MathJax.HTML.Element("img",{src:src,alt:alttext,style:style});
+        } else {preview = null}
+      }
+    }
     if (preview) {
-      preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
-      script.parentNode.insertBefore(preview,script);
+      var span;
+      if (isNodePreview) {
+        span = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
+        span.appendChild(preview);
+      } else {
+        span = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
+      }
+      script.parentNode.insertBefore(span,script);
     }
   },
   
