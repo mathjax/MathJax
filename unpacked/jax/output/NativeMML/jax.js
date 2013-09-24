@@ -120,7 +120,8 @@
       }
     },
     settings: HUB.config.menuSettings,
-    ex: 1, // filled in later
+    ex: 1, scale: 1,  // filled in later
+    adjustWidths: [], // array of elements to have their widths adjusted
     
     Config: function () {
       this.SUPER(arguments).Config.call(this);
@@ -258,7 +259,7 @@
           if (ex === 0 || ex === "NaN") {ex = this.defaultEx; mex = this.defaultMEx}
           scale = (mex > 1 ? ex/mex : 1) * this.config.scale;
           scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale));
-          jax.NativeMML.ex = ex;
+          jax.NativeMML.ex = ex; jax.NativeMML.scale = scale/100;
         } else {scale = 100}
         jax.NativeMML.fontSize = scale+"%";
       }
@@ -287,6 +288,7 @@
 	  container = span.firstChild, mspan = container.firstChild;
       span.style.fontSize = jax.NativeMML.fontSize;
       this.ex = jax.NativeMML.ex || this.defaultEx;
+      this.scale = jax.NativeMML.scale || 1;
       //
       //  Convert to MathML (if restarted, remove any partial math)
       //
@@ -814,11 +816,14 @@
         toNativeMML: function (parent) {
           var tag = parent.appendChild(this.NativeMMLelement(this.type));
           this.NativeMMLattributes(tag);
-          if (nMML.widthBug) {tag = tag.appendChild(this.NativeMMLelement("mrow"))}
+          if (nMML.mtdWidthBug) {
+            nMML.adjustWidths.push(tag);
+            tag = tag.appendChild(this.NativeMMLelement("mrow"));
+          }
           for (var i = 0, m = this.data.length; i < m; i++) {
             if (this.data[i]) {this.data[i].toNativeMML(tag)}
              else {tag.appendChild(this.NativeMMLelement("mrow"))}
-           }
+          }
         }
       });
       
@@ -890,6 +895,7 @@
     MML.math.Augment({
       toNativeMML: function (parent) {
         var tag = this.NativeMMLelement(this.type), math = tag;
+        nMML.adjustWidths = [];
         //
         //  Some browsers don't seem to add the xmlns attribute, so do it by hand.
         //
@@ -936,12 +942,22 @@
         //  parent element to match.  Even if we set the <math> width properly,
         //  it doesn't seem to propagate up to the <span> correctly.
         //
-        if (nMML.widthBug && !mtable.nMMLforceWidth && mtable.nMMLlaMatch) {
+        if (nMML.widthBug &&
+            !(mtable.nMMLhasLabels && (mtable.nMMLforceWidth || !mtable.nMMLlaMatch))) {
           //
           //  Convert size to ex's so that it scales properly if the print media
           //    has a different font size.
           //
-          parent.style.width = (math.firstChild.scrollWidth/nMML.ex).toFixed(3) + "ex";
+          parent.style.width = (math.firstChild.scrollWidth/nMML.ex/nMML.scale).toFixed(3) + "ex";
+        }
+        for (var i = 0, m = nMML.adjustWidths.length; i < m; i++) {
+          var tag = nMML.adjustWidths[i];
+          var style = tag.getAttribute("style") || "";
+          if (!style.match(/(^|;)\s*width:/)) {
+            var width = tag.scrollWidth/nMML.ex;
+            if (style !== "") {style += "; "}
+            tag.setAttribute("style",style+"width:"+width+"ex");
+          }
         }
       }
     });
@@ -1130,6 +1146,8 @@
       // In Firefox < 20, the intrinsic width of <mspace> is not computed
       // correctly and thus the element is displayed incorrectly in <mtable>.
       nMML.spaceWidthBug = !browser.versionAtLeast("20.0");
+
+      nMML.mtdWidthBug = true;     // <mtd> widths not properly determined
 
       nMML.tableSpacingBug = true; // mtable@rowspacing/mtable@columnspacing not
                                    // supported.
