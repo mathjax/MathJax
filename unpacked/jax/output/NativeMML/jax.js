@@ -950,6 +950,11 @@
           //
           parent.style.width = (math.firstChild.scrollWidth/nMML.ex/nMML.scale).toFixed(3) + "ex";
         }
+        //
+        //  Firefox gets the widths of <mtd> elements wrong, so run
+        //  through them (now that the math is part of the page) and
+        //  fix them up.  Use ex's so that they print properly (see above).
+        //
         for (var i = 0, m = nMML.adjustWidths.length; i < m; i++) {
           var tag = nMML.adjustWidths[i];
           var style = tag.getAttribute("style") || "";
@@ -959,6 +964,7 @@
             tag.setAttribute("style",style+"width:"+width+"ex");
           }
         }
+        nMML.adjustWidths = []; // clear it so we don't hold onto the DOM elements
       }
     });
 
