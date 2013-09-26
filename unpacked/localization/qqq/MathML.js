@@ -25,16 +25,16 @@ MathJax.Localization.addTranslation("qqq","MathML",{
         version: "2.3",
         isLoaded: true,
         strings: {
-          BadMglyph: "This error is displayed when processing a MathML mglyph element with a bad URL. The argument is the value of the src attribute.",
-          BadMglyphFont: "This error is displayed when processing a MathML mglyph element with a bad font family. The argument is the value of the fontfamily attribute",
+          BadMglyph: "This error is displayed when processing a MathML mglyph element with a bad URL. Parameters:\n* %1 - the value of the src attribute",
+          BadMglyphFont: "Parameters:\n* %1 - font family",
           MathPlayer: "This alert is displayed when the Native MathML output Jax fails to set up MathPlayer. The '\\n' character is used to force new lines in the alert box",
-          CantCreateXMLParser: "This alert is displayed when the MathML input Jax fails to create an XML parser. The '\\n' character is used to force new lines in the alert box",
-          UnknownNodeType: "This error is displayed when an unknown XML node is found in the MathML source. The argument is the node name.",
-          UnexpectedTextNode: "This error is displayed when a text node is found at an unexpected place in the MathML source. The argument is the content of the text node.",
-          ErrorParsingMathML: "This error is displayed when a MathML element fails to be parsed. It can only be produced by old versions of Internet Explorer.",
-          ParsingError: "This error is displayed when an XML parsing error happens. The argument is the error returned by the XML parser.",
-          MathMLSingleElement: "This error is displayed when a MathML input Jax contains more than one <math> root. It can only be produced by very old browsers.",
-          MathMLRootElement: "This error is displayed when a MathML input Jax contains a root other than <math>. The argument is the root name."
+          CantCreateXMLParser: "This alert is displayed when the MathML input Jax fails to create an XML parser.\n\nThe new line character is used to force new lines in the alert box.",
+          UnknownNodeType: "Used as error message. Parameters:\n* %1 - node type",
+          UnexpectedTextNode: "Used as error message. Parameters:\n* %1 - text, enclosed in \"'\"",
+          ErrorParsingMathML: "This error is displayed when a MathML element fails to be parsed.\n\nIt can only be produced by old versions of Internet Explorer.",
+          ParsingError: "This error is displayed when an XML parsing error happens.\n\nThe argument is the error returned by the XML parser.",
+          MathMLSingleElement: "This error is displayed when a MathML input Jax contains more than one \u003Ccode\u003E\u003Cnowiki\u003E\u003Cmath\u003E\u003C/nowiki\u003E\u003C/code\u003E root.\n\nIt can only be produced by very old browsers.",
+          MathMLRootElement: "This error is displayed when a MathML input Jax contains a root other than \u003Ccode\u003E\u003Cnowiki\u003E\u003Cmath\u003E\u003C/nowiki\u003E\u003C/code\u003E.\n\nParameters:\n* %1 - the root name"
         }
 });
 

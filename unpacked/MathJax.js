@@ -1065,13 +1065,22 @@ MathJax.Localization = {
   locale: "en",
   directory: "[MathJax]/localization",
   strings: {
-    en: {menuTitle: "English", isLoaded: true},   // nothing needs to be loaded for this
-    de: {menuTitle: "Deutsch"},
-    fr: {menuTitle: "Fran\u00E7ais"},
-    it: {menuTitle: "Italiano"},
-    pl: {menuTitle: "Polski"},
-    pt: {menuTitle: "portugus\u00EA", remap: "pt-br"},
-    "pt-br": {menuTitle: "portugu\u00EAs do Brasil"}
+    "br": {menuTitle: "brezhoneg"},
+    "de": {menuTitle: "Deutsch"},
+    "en": {menuTitle: "English", isLoaded: true},   // nothing needs to be loaded for this
+    "fi": {menuTitle: "suomi"},
+    "fr": {menuTitle: "fran\u00E7ais"},
+    "he": {menuTitle: "\u05E2\u05D1\u05E8\u05D9\u05EA"},
+    "ia": {menuTitle: "interlingua"},
+    "it": {menuTitle: "italiano"},
+    "ja": {menuTitle: "\u65E5\u672C\u8A9E"},
+    "lb": {menuTitle: "L\u00EBtzebuergesch"},
+    "mk": {menuTitle: "\u043C\u0430\u043A\u0435\u0434\u043E\u043D\u0441\u043A\u0438"},
+    "pl": {menuTitle: "polski"},
+    "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
+    "sv": {menuTitle: "svenska"},
+    "uk": {menuTitle: "\u0443\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"},
+    "zh-hans": {menuTitle: "\u4E2D\u6587\uFF08\u7B80\u4F53\uFF09"}
   },
 
   //

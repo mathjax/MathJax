@@ -26,10 +26,10 @@ MathJax.Localization.addTranslation("pl","HTML-CSS",{
         isLoaded: true,
         strings: {
           LoadWebFont: "\u0141aduj\u0119 czcionk\u0119 %1",
-          CantLoadWebFont: "Nie mog\u0119 za\u0142adowa\u0107 czcionki %1",
-          FirefoxCantLoadWebFont: "Firefox nie potrafi za\u0142adowa\u0107 czcionki ze zdalnego komputera",
-          CantFindFontUsing: "Nie mog\u0119 znale\u017A\u0107 prawid\u0142owej czcionki u\u017Cywaj\u0105c %1",
-          WebFontsNotAvailable: "Czcionki Web nie s\u0105 dost\u0119pne -- u\u017Cywam czcionek obrazkowych"
+          CantLoadWebFont: "Nie mo\u017Cna za\u0142adowa\u0107 czcionki %1",
+          FirefoxCantLoadWebFont: "Firefox nie mo\u017Ce za\u0142adowa\u0107 czcionek ze zdalnego hosta",
+          CantFindFontUsing: "Nie mo\u017Cna znale\u017A\u0107 w\u0142a\u015Bciwej czcionki u\u017Cywaj\u0105c %1",
+          WebFontsNotAvailable: "Czcionki internetowe nie dost\u0119pne - zamiast tego u\u017Cywane s\u0105 czcionki obrazkowe"
         }
 });
 

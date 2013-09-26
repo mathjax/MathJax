@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fr",null,{
-  menuTitle: "Fran\u00E7ais",
+  menuTitle: "fran\u00E7ais",
   version: "2.3",
   isLoaded: true,
   domains: {
