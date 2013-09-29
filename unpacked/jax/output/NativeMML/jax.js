@@ -327,14 +327,14 @@
     },
 
     postTranslate: function (state) {
-      if (!isMSIE && this.config.widthCheckDelay != null) {
+      if (!isMSIE && HUB.config.matchWebFonts) {
         //
         //  Check for changes in the web fonts that might affect the sizes
         //  of math elements.  This is a periodic check that goes on until
         //  a timeout is reached.
         //
-        AJAX.timer.start(AJAX,["checkWidths",this,state.jax[this.id]],
-                         this.config.widthCheckDelay,this.config.widthCheckTimeout);
+        AJAX.timer.start(AJAX,["checkFonts",this,state.jax[this.id]],
+                         this.config.fontCheckDelay,this.config.fontCheckTimeout);
       }
       if (this.forceReflow) {
         //
@@ -355,36 +355,37 @@
     //  sizes of these have been stored in the NativeMML object of the
     //  element jax so that we can check for them here.
     //
-    checkWidths: function (check,scripts) {
+    checkFonts: function (check,scripts) {
       if (check.time(function () {})) return;
-      var adjust = [], mtd = [], size = [], i, m;
+      var adjust = [], mtd = [], size = [], i, m, script;
       //
       //  Add the elements used for testing ex and em sizes
       //
       for (i = 0, m = scripts.length; i < m; i++) {
-        if (!scripts[i].parentNode || !scripts[i].MathJax.elementJax) continue;
-        scripts[i].parentNode.insertBefore(this.EmExSpan.cloneNode(true),scripts[i]);
+        script = scripts[i];
+        if (script.parentNode && script.MathJax.elementJax) {
+          script.parentNode.insertBefore(this.EmExSpan.cloneNode(true),script);
+        }
       }
       //
       //  Check to see if anything has changed
       //
       for (i = 0, m = scripts.length; i < m; i++) {
-        if (!scripts[i].parentNode) continue;
-        var jax = scripts[i].MathJax.elementJax;
-        if (!jax) continue;
+        script = scripts[i]; if (!script.parentNode) continue;
+        var jax = script.MathJax.elementJax; if (!jax) continue;
         var span = document.getElementById(jax.inputID+"-Frame");
         var math = span.getElementsByTagName("math")[0]; if (!math) continue;
         jax = jax.NativeMML;
         //
         //  Check if ex or mex has changed
         //
-        var test = scripts[i].previousSibling;
+        var test = script.previousSibling;
         var ex = test.firstChild.offsetWidth/60;
         var mex = test.lastChild.offsetWidth/60;
         if (ex === 0 || ex === "NaN") {ex = this.defaultEx; mex = this.defaultMEx}
         var newEx = (ex !== jax.ex);
         if (newEx || mex != jax.mex) {
-          scale = (this.config.matchFontHeight && mex > 1 ? ex/mex : 1);
+          var scale = (this.config.matchFontHeight && mex > 1 ? ex/mex : 1);
           scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale) * this.config.scale);
           if (scale/100 !== jax.scale) {size.push([span.style,scale])}
           jax.scale = scale/100; jax.fontScale = scale+"%"; jax.ex = ex; jax.mex = mex;
@@ -414,8 +415,9 @@
       //  Remove markers
       //
       for (i = 0, m = scripts.length; i < m; i++) {
-        if (scripts[i].parentNode && scripts[i].MathJax.elementJax) {
-          scripts[i].parentNode.removeChild(scripts[i].previousSibling);
+        script = scripts[i];
+        if (script.parentNode && script.MathJax.elementJax) {
+          script.parentNode.removeChild(script.previousSibling);
         }
       }
       //
@@ -438,6 +440,9 @@
         style = style.replace(/(($|;)\s*min-width:).*?ex/,"$1 "+mtd[i][1].toFixed(3)+"ex");
         mtd[i][0].setAttribute("style",style);
       }
+      //
+      //  Try again later
+      //
       setTimeout(check,check.delay);
     },
     

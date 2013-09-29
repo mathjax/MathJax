@@ -1741,6 +1741,10 @@ MathJax.Hub = {
     showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
                              //  (since the code for that is a bit delicate)
 
+    matchWebFonts: false,    // true means look for web fonts that may cause changes in the
+                             //   scaling factors for the math (off by default since it
+                             //   uses a loop every time math is rendered).
+
     menuSettings: {
       zoom: "None",        //  when to do MathZoom
       CTRL: false,         //    require CTRL for MathZoom?
@@ -1906,6 +1910,7 @@ MathJax.Hub = {
   
   takeAction: function (action,element,callback) {
     var ec = this.elementCallback(element,callback);
+console.log(element);
     var queue = MathJax.Callback.Queue(["Clear",this.signal]);
     for (var i = 0, m = ec.elements.length; i < m; i++) {
       if (ec.elements[i]) {
@@ -2229,6 +2234,12 @@ MathJax.Hub = {
   },
   
   elementScripts: function (element) {
+    if (element instanceof Array) {
+      var scripts = [];
+      for (var i = 0, m = element.length; i < m; i++)
+        {scripts.push.apply(scripts,this.elementScripts(element[i]))}
+      return scripts;
+    }
     if (typeof(element) === 'string') {element = document.getElementById(element)}
     if (!document.body) {document.body = document.getElementsByTagName("body")[0]}
     if (element == null) {element = document.body}
