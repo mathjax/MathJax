@@ -257,11 +257,12 @@
           ex = test.firstChild.offsetWidth/60;
           mex = test.lastChild.offsetWidth/60;
           if (ex === 0 || ex === "NaN") {ex = this.defaultEx; mex = this.defaultMEx}
-          scale = (mex > 1 ? ex/mex : 1) * this.config.scale;
-          scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale));
-          jax.NativeMML.ex = ex; jax.NativeMML.scale = scale/100;
+          scale = (this.config.matchFontHeight && mex > 1 ? ex/mex : 1);
+          scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale) * this.config.scale);
+          jax.NativeMML.ex = ex;
         } else {scale = 100}
         jax.NativeMML.fontSize = scale+"%";
+        jax.NativeMML.scale = scale/100;
       }
       //
       //  Remove the test spans used for determining scales
@@ -286,9 +287,9 @@
       var jax = script.MathJax.elementJax, math = jax.root;
       var span = document.getElementById(jax.inputID+"-Frame"),
 	  container = span.firstChild, mspan = container.firstChild;
-      span.style.fontSize = jax.NativeMML.fontSize;
       this.ex = jax.NativeMML.ex || this.defaultEx;
       this.scale = jax.NativeMML.scale || 1;
+      if (this.scale !== 1) {span.style.fontSize = jax.NativeMML.fontSize}
       //
       //  Convert to MathML (if restarted, remove any partial math)
       //

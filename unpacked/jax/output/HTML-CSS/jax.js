@@ -534,7 +534,8 @@
           ex = this.defaultEx; em = this.defaultEm;
           if (relwidth) {maxwidth = this.defaultWidth}
         }
-        scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
+        scale = (this.config.matchFontHeight ? ex/this.TeX.x_height/em : 1);
+        scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
         jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
         jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em; this.em = em * scale/100; jax.HTMLCSS.ex = ex;
         jax.HTMLCSS.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/this.em) : 1000000);
@@ -584,7 +585,7 @@
       this.em = MML.mbase.prototype.em = jax.HTMLCSS.em * jax.HTMLCSS.scale; 
       this.outerEm = jax.HTMLCSS.em; this.scale = jax.HTMLCSS.scale;
       this.linebreakWidth = jax.HTMLCSS.lineWidth;
-      span.style.fontSize = jax.HTMLCSS.fontSize;
+      if (this.scale !== 1) {span.style.fontSize = jax.HTMLCSS.fontSize}
       //
       //  Typeset the math
       //
