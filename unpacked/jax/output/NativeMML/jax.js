@@ -253,13 +253,13 @@
         script = scripts[i]; if (!script.parentNode) continue;
         jax = script.MathJax.elementJax; if (!jax) continue;
         if (!isMSIE) {
-          test = script.previousSibling; span = test.previousSibling;
+          test = script.previousSibling;
           ex = test.firstChild.offsetWidth/60;
           mex = test.lastChild.offsetWidth/60;
           if (ex === 0 || ex === "NaN") {ex = this.defaultEx; mex = this.defaultMEx}
           scale = (this.config.matchFontHeight && mex > 1 ? ex/mex : 1);
           scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale) * this.config.scale);
-          jax.NativeMML.ex = ex;
+          jax.NativeMML.ex = ex; jax.NativeMML.mex = mex;
         } else {scale = 100}
         jax.NativeMML.fontSize = scale+"%";
         jax.NativeMML.scale = scale/100;
@@ -269,9 +269,10 @@
       //
       if (!isMSIE) {
         for (i = 0; i < m; i++) {
-          script = scripts[i]; if (!script.parentNode || !script.MathJax.elementJax) continue;
-          test = scripts[i].previousSibling;
-          test.parentNode.removeChild(test);
+          script = scripts[i];
+          if (script.parentNode && script.MathJax.elementJax) {
+            script.parentNode.removeChild(script.previousSibling);
+          }
         }
       }
     },
@@ -326,6 +327,15 @@
     },
 
     postTranslate: function (state) {
+      if (!isMSIE && this.config.widthCheckDelay != null) {
+        //
+        //  Check for changes in the web fonts that might affect the sizes
+        //  of math elements.  This is a periodic check that goes on until
+        //  a timeout is reached.
+        //
+        AJAX.timer.start(AJAX,["checkWidths",this,state.jax[this.id]],
+                         this.config.widthCheckDelay,this.config.widthCheckTimeout);
+      }
       if (this.forceReflow) {
         //
         //  Firefox messes up some mtable's when they are dynamically created
@@ -334,6 +344,101 @@
         var sheet = (document.styleSheets||[])[0]||{};
         sheet.disabled = true; sheet.disabled = false;
       }
+    },
+    
+    //
+    //  Check to see if web fonts have been loaded that change the ex size
+    //  of the surrounding font, the ex size within the math, or the widths
+    //  of math elements.  We do this by rechecking the ex and mex sizes
+    //  (to see if the font scaling needs adjusting) and by checking the
+    //  size of the inner mrow of math elements and mtd elements.  The
+    //  sizes of these have been stored in the NativeMML object of the
+    //  element jax so that we can check for them here.
+    //
+    checkWidths: function (check,scripts) {
+      if (check.time(function () {})) return;
+      var adjust = [], mtd = [], size = [], i, m;
+      //
+      //  Add the elements used for testing ex and em sizes
+      //
+      for (i = 0, m = scripts.length; i < m; i++) {
+        if (!scripts[i].parentNode || !scripts[i].MathJax.elementJax) continue;
+        scripts[i].parentNode.insertBefore(this.EmExSpan.cloneNode(true),scripts[i]);
+      }
+      //
+      //  Check to see if anything has changed
+      //
+      for (i = 0, m = scripts.length; i < m; i++) {
+        if (!scripts[i].parentNode) continue;
+        var jax = scripts[i].MathJax.elementJax;
+        if (!jax) continue;
+        var span = document.getElementById(jax.inputID+"-Frame");
+        var math = span.getElementsByTagName("math")[0]; if (!math) continue;
+        jax = jax.NativeMML;
+        //
+        //  Check if ex or mex has changed
+        //
+        var test = scripts[i].previousSibling;
+        var ex = test.firstChild.offsetWidth/60;
+        var mex = test.lastChild.offsetWidth/60;
+        if (ex === 0 || ex === "NaN") {ex = this.defaultEx; mex = this.defaultMEx}
+        var newEx = (ex !== jax.ex);
+        if (newEx || mex != jax.mex) {
+          scale = (this.config.matchFontHeight && mex > 1 ? ex/mex : 1);
+          scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale) * this.config.scale);
+          if (scale/100 !== jax.scale) {size.push([span.style,scale])}
+          jax.scale = scale/100; jax.fontScale = scale+"%"; jax.ex = ex; jax.mex = mex;
+        }
+        
+        //
+        //  Check width of math elements
+        //
+        if ("scrollWidth" in jax && (newEx || jax.scrollWidth !== math.firstChild.scrollWidth)) {
+          jax.scrollWidth = math.firstChild.scrollWidth;
+          adjust.push([math.parentNode.style,jax.scrollWidth/jax.ex/jax.scale]);
+        }
+        //
+        //  Check widths of mtd elements
+        //
+        if (math.MathJaxMtds) {
+          for (j = 0, n = math.MathJaxMtds.length; j < n; j++) {
+            if (!math.MathJaxMtds[j].parentNode) continue;
+            if (newEx || math.MathJaxMtds[j].firstChild.scrollWidth !== jax.mtds[j]) {
+              jax.mtds[j] = math.MathJaxMtds[j].firstChild.scrollWidth;
+              mtd.push([math.MathJaxMtds[j],jax.mtds[j]/jax.ex]);
+            }
+          }
+        }
+      }
+      //
+      //  Remove markers
+      //
+      for (i = 0, m = scripts.length; i < m; i++) {
+        if (scripts[i].parentNode && scripts[i].MathJax.elementJax) {
+          scripts[i].parentNode.removeChild(scripts[i].previousSibling);
+        }
+      }
+      //
+      //  Adjust scaling factor
+      //
+      for (i = 0, m = size.length; i < m; i++) {
+        size[i][0].fontSize = size[i][1] + "%";
+      }
+      //
+      //  Adjust width of spans containing math elements that have changed
+      //
+      for (i = 0, m = adjust.length; i < m; i++) {
+        adjust[i][0].width = adjust[i][1].toFixed(3)+"ex";
+      }
+      //
+      //  Adjust widths of mtd elements that have changed
+      //
+      for (i = 0, m = mtd.length; i < m; i++) {
+        var style = mtd[i][0].getAttribute("style");
+        style = style.replace(/(($|;)\s*min-width:).*?ex/,"$1 "+mtd[i][1].toFixed(3)+"ex");
+        mtd[i][0].setAttribute("style",style);
+      }
+      setTimeout(check,check.delay);
     },
     
     //
@@ -605,7 +710,7 @@
     });
 
     if (!isMSIE) {
-      var SPLIT = MathJax.Hub.SplitList;
+      var SPLIT = HUB.SplitList;
       MML.mtable.Augment({
         toNativeMML: function (parent) {
           var i, m;
@@ -834,14 +939,13 @@
           if (nMML.spaceWidthBug && this.width) {
             var mspace = parent.lastChild;
             var width = mspace.getAttribute("width");
-            var style = mspace.getAttribute("style") || "";
-            if (style != "") {style += ";"}
+            var style = (mspace.getAttribute("style") || "").replace(/;?\s*/,"; ");
             mspace.setAttribute("style",style+"width:"+width);
           }
         }
       });
 
-      var fontDir = MathJax.Ajax.fileURL(MathJax.OutputJax.fontDir+"/HTML-CSS/TeX/otf");
+      var fontDir = AJAX.fileURL(MathJax.OutputJax.fontDir+"/HTML-CSS/TeX/otf");
 
       /*
        *  Add fix for mathvariant issues in FF
@@ -895,7 +999,7 @@
     
     MML.math.Augment({
       toNativeMML: function (parent) {
-        var tag = this.NativeMMLelement(this.type), math = tag;
+        var tag = this.NativeMMLelement(this.type), math = tag, jax;
         nMML.adjustWidths = [];
         //
         //  Some browsers don't seem to add the xmlns attribute, so do it by hand.
@@ -950,22 +1054,37 @@
           //    has a different font size.
           //
           parent.style.width = (math.firstChild.scrollWidth/nMML.ex/nMML.scale).toFixed(3) + "ex";
+          //
+          //  Save size for later when we check if Web fonts have arrived
+          //
+          jax = HUB.getJaxFor(parent);
+          if (jax) {jax.NativeMML.scrollWidth = math.firstChild.scrollWidth}
         }
-        //
-        //  Firefox gets the widths of <mtd> elements wrong, so run
-        //  through them (now that the math is part of the page) and
-        //  fix them up.  Use ex's so that they print properly (see above).
-        //
-        for (var i = 0, m = nMML.adjustWidths.length; i < m; i++) {
-          var tag = nMML.adjustWidths[i];
-          var style = tag.getAttribute("style") || "";
-          if (!style.match(/(^|;)\s*width:/)) {
-            var width = tag.scrollWidth/nMML.ex;
-            if (style !== "") {style += "; "}
-            tag.setAttribute("style",style+"width:"+width+"ex");
+        if (nMML.adjustWidths.length) {
+          //
+          //  Firefox gets the widths of <mtd> elements wrong, so run
+          //  through them (now that the math is part of the page) and
+          //  fix them up.  Use ex's so that they print properly (see above).
+          //
+          var mtd = [];
+          for (var i = 0, m = nMML.adjustWidths.length; i < m; i++) {
+            var tag = nMML.adjustWidths[i];
+            var style = tag.getAttribute("style") || "";
+            if (!style.match(/(^|;)\s*min-width:/)) {
+              mtd.push(tag.scrollWidth);
+              var width = (tag.scrollWidth/nMML.ex).toFixed(3)+"ex";
+              style = style.replace(/;?\s*$/,"; ");
+              tag.setAttribute("style",style+"min-width:"+width);
+            }
           }
+          //
+          //  Save the lists so that we can check them later for web font downloads
+          //
+          if (!jax) {jax = HUB.getJaxFor(parent)}
+          if (jax) {jax.NativeMML.mtds = mtd}
+          math.MathJaxMtds = nMML.adjustWidths;
+          nMML.adjustWidths = []; // clear it so we don't hold onto the DOM elements
         }
-        nMML.adjustWidths = []; // clear it so we don't hold onto the DOM elements
       }
     });
 

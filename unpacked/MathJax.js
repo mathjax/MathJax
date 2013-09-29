@@ -789,7 +789,7 @@ MathJax.fileversion = "2.2";
         check = BASE.Callback(check);
         check.execute = this.execute; check.time = this.time;
         check.STATUS = AJAX.STATUS; check.timeout = timeout || AJAX.timeout;
-        check.delay = check.total = 0;
+        check.delay = check.total = delay || 0;
         if (delay) {setTimeout(check,delay)} else {check()}
       },
       //
