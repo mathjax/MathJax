@@ -725,7 +725,7 @@ MathJax.fileversion = "2.2";
       //
       //  Create a SCRIPT tag to load the file
       //
-        JS: function (file,callback) {
+      JS: function (file,callback) {
         var script = document.createElement("script");
         var timeout = BASE.Callback(["loadTimeout",this,file]);
         this.loading[file] = {
@@ -772,9 +772,9 @@ MathJax.fileversion = "2.2";
         if (node.nodeName === "STYLE" && node.styleSheet &&
             typeof(node.styleSheet.cssText) !== 'undefined') {
           callback(this.STATUS.OK); // MSIE processes style immediately, but doesn't set its styleSheet!
-        } else if (window.chrome && typeof(window.sessionStorage) !== "undefined" &&
-                   node.nodeName === "STYLE") {
-          callback(this.STATUS.OK); // Same for Chrome 5 (beta), Grrr.
+        } else if (window.chrome && node.nodeName === "LINK") {
+          callback(this.STATUS.OK); // Chrome doesn't give access to cssRules for stylesheet in
+                                    //   a link node, so we can't detect when it is loaded.
         } else if (isSafari2) {
           this.timer.start(this,[this.timer.checkSafari2,sheets++,callback],this.styleDelay);
         } else {
