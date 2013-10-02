@@ -1910,7 +1910,6 @@ MathJax.Hub = {
   
   takeAction: function (action,element,callback) {
     var ec = this.elementCallback(element,callback);
-console.log(element);
     var queue = MathJax.Callback.Queue(["Clear",this.signal]);
     for (var i = 0, m = ec.elements.length; i < m; i++) {
       if (ec.elements[i]) {
