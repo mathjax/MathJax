@@ -1741,10 +1741,6 @@ MathJax.Hub = {
     showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
                              //  (since the code for that is a bit delicate)
 
-    matchWebFonts: false,    // true means look for web fonts that may cause changes in the
-                             //   scaling factors for the math (off by default since it
-                             //   uses a loop every time math is rendered).
-
     menuSettings: {
       zoom: "None",        //  when to do MathZoom
       CTRL: false,         //    require CTRL for MathZoom?

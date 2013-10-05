@@ -627,16 +627,6 @@
 
     postTranslate: function (state,partial) {
       var scripts = state.jax[this.id];
-      if (!partial && HUB.config.matchWebFonts && this.config.matchFontHeight) {
-        //
-        //  Check for changes in the web fonts that might affect the font
-        //  size for math elements.  This is a periodic check that goes on
-        //  until a timeout is reached.
-        //
-        AJAX.timer.start(AJAX,["checkFonts",this,state.jax[this.id]],
-                         this.config.fontCheckDelay,this.config.fontCheckTimeout);
-        
-      }
       if (!this.hideProcessedMath) return;
       //
       //  Reveal this chunk of math
@@ -671,57 +661,6 @@
       state.HTMLCSSlast = state.HTMLCSSeqn;
     },
     
-    checkFonts: function (check,scripts) {
-      if (check.time(function () {})) return;
-      var size = [], i, m;
-      //
-      //  Add the elements used for testing ex and em sizes
-      //
-      for (i = 0, m = scripts.length; i < m; i++) {
-        script = scripts[i];
-        if (script.parentNode && script.MathJax.elementJax) {
-          script.parentNode.insertBefore(this.EmExSpan.cloneNode(true),script);
-        }
-      }
-      //
-      //  Check to see if anything has changed
-      //
-      for (i = 0, m = scripts.length; i < m; i++) {
-        script = scripts[i]; if (!script.parentNode) continue;
-        var jax = script.MathJax.elementJax; if (!jax) continue;
-        var span = document.getElementById(jax.inputID+"-Frame");
-        //
-        //  Check if ex or mex has changed
-        //
-        var test = script.previousSibling, div = test.previousSibling;
-        var ex = test.firstChild.offsetHeight/60;
-        var em = test.lastChild.lastChild.offsetHeight/60;
-        if (ex === 0 || ex === "NaN") {ex = this.defaultEx; em = this.defaultEm}
-        if (ex !== jax.HTMLCSS.ex || em !== jax.HTMLCSS.em) {
-          var scale = ex/this.TeX.x_height/em;
-          scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
-          if (scale/100 !== jax.scale) {size.push(script); scripts[i] = {}}
-        }
-      }
-      //
-      //  Remove markers
-      //
-      for (i = 0, m = scripts.length; i < m; i++) {
-        script = scripts[i];
-        if (script.parentNode && script.MathJax.elementJax) {
-          script.parentNode.removeChild(script.previousSibling);
-        }
-      }
-      //
-      //  Rerender the changed items
-      //
-      if (size.length) {MathJax.Hub.Queue(["Rerender",MathJax.Hub,[size],{}])}
-      //
-      //  Try again later
-      //
-      setTimeout(check,check.delay);
-    },
-
     getJaxFromMath: function (math) {
       if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");

@@ -37,10 +37,6 @@ MathJax.OutputJax.NativeMML = MathJax.OutputJax({
     minScaleAdjust: 50,      // minimum scaling to adjust to surrounding text
                              //  (since the code for that is a bit delicate)
 
-    fontCheckDelay: 500,          // initial delay for the first width check for web fonts
-                                  //  (set to null to prevent the width checks)
-    fontCheckTimeout: 15 * 1000,  // how long to keep looking for width changes (15 seconds)
-
     styles: {
       "DIV.MathJax_MathML": {
         "text-align": "center",
