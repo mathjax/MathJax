@@ -319,14 +319,14 @@
         //
         state.SVGeqn += (state.i - state.SVGi); state.SVGi = state.i;
         if (state.SVGeqn >= state.SVGlast + state.SVGchunk) {
-          this.postTranslate(state);
+          this.postTranslate(state,true);
           state.SVGchunk = Math.floor(state.SVGchunk*this.config.EqnChunkFactor);
           state.SVGdelay = true;  // delay if there are more scripts
         }
       }
     },
 
-    postTranslate: function (state) {
+    postTranslate: function (state,partial) {
       var scripts = state.jax[this.id];
       if (!this.hideProcessedMath) return;
       //
