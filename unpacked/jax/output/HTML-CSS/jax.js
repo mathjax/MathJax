@@ -534,7 +534,8 @@
           ex = this.defaultEx; em = this.defaultEm;
           if (relwidth) {maxwidth = this.defaultWidth}
         }
-        scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
+        scale = (this.config.matchFontHeight ? ex/this.TeX.x_height/em : 1);
+        scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
         jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
         jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em; this.em = em * scale/100; jax.HTMLCSS.ex = ex;
         jax.HTMLCSS.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/this.em) : 1000000);
@@ -584,7 +585,7 @@
       this.em = MML.mbase.prototype.em = jax.HTMLCSS.em * jax.HTMLCSS.scale; 
       this.outerEm = jax.HTMLCSS.em; this.scale = jax.HTMLCSS.scale;
       this.linebreakWidth = jax.HTMLCSS.lineWidth;
-      span.style.fontSize = jax.HTMLCSS.fontSize;
+      if (this.scale !== 1) {span.style.fontSize = jax.HTMLCSS.fontSize}
       //
       //  Typeset the math
       //
@@ -617,14 +618,14 @@
         //
         state.HTMLCSSeqn += (state.i - state.HTMLCSSi); state.HTMLCSSi = state.i;
         if (state.HTMLCSSeqn >= state.HTMLCSSlast + state.HTMLCSSchunk) {
-          this.postTranslate(state);
+          this.postTranslate(state,true);
           state.HTMLCSSchunk = Math.floor(state.HTMLCSSchunk*this.config.EqnChunkFactor);
           state.HTMLCSSdelay = true;  // delay if there are more scripts
         }
       }
     },
 
-    postTranslate: function (state) {
+    postTranslate: function (state,partial) {
       var scripts = state.jax[this.id];
       if (!this.hideProcessedMath) return;
       //
@@ -650,7 +651,7 @@
       }
       if (this.forceReflow) {
         //  WebKit can misplace some elements that should wrap to the next line
-        //  but gets them right ona reflow, so force reflow by toggling a stylesheet
+        //  but gets them right on a reflow, so force reflow by toggling a stylesheet
         var sheet = (document.styleSheets||[])[0]||{};
         sheet.disabled = true; sheet.disabled = false;
       }
@@ -659,7 +660,7 @@
       //
       state.HTMLCSSlast = state.HTMLCSSeqn;
     },
-
+    
     getJaxFromMath: function (math) {
       if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
