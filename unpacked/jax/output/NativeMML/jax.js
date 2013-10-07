@@ -120,7 +120,8 @@
       }
     },
     settings: HUB.config.menuSettings,
-    ex: 1, // filled in later
+    ex: 1, scale: 1,  // filled in later
+    adjustWidths: [], // array of elements to have their widths adjusted
     
     Config: function () {
       this.SUPER(arguments).Config.call(this);
@@ -252,24 +253,26 @@
         script = scripts[i]; if (!script.parentNode) continue;
         jax = script.MathJax.elementJax; if (!jax) continue;
         if (!isMSIE) {
-          test = script.previousSibling; span = test.previousSibling;
+          test = script.previousSibling;
           ex = test.firstChild.offsetWidth/60;
           mex = test.lastChild.offsetWidth/60;
           if (ex === 0 || ex === "NaN") {ex = this.defaultEx; mex = this.defaultMEx}
-          scale = (mex > 1 ? ex/mex : 1) * this.config.scale;
-          scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale));
-          jax.NativeMML.ex = ex;
+          scale = (this.config.matchFontHeight && mex > 1 ? ex/mex : 1);
+          scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale) * this.config.scale);
+          jax.NativeMML.ex = ex; jax.NativeMML.mex = mex;
         } else {scale = 100}
         jax.NativeMML.fontSize = scale+"%";
+        jax.NativeMML.scale = scale/100;
       }
       //
       //  Remove the test spans used for determining scales
       //
       if (!isMSIE) {
         for (i = 0; i < m; i++) {
-          script = scripts[i]; if (!script.parentNode || !script.MathJax.elementJax) continue;
-          test = scripts[i].previousSibling;
-          test.parentNode.removeChild(test);
+          script = scripts[i];
+          if (script.parentNode && script.MathJax.elementJax) {
+            script.parentNode.removeChild(script.previousSibling);
+          }
         }
       }
     },
@@ -285,8 +288,9 @@
       var jax = script.MathJax.elementJax, math = jax.root;
       var span = document.getElementById(jax.inputID+"-Frame"),
 	  container = span.firstChild, mspan = container.firstChild;
-      span.style.fontSize = jax.NativeMML.fontSize;
       this.ex = jax.NativeMML.ex || this.defaultEx;
+      this.scale = jax.NativeMML.scale || 1;
+      if (this.scale !== 1) {span.style.fontSize = jax.NativeMML.fontSize}
       //
       //  Convert to MathML (if restarted, remove any partial math)
       //
@@ -608,7 +612,7 @@
     });
 
     if (!isMSIE) {
-      var SPLIT = MathJax.Hub.SplitList;
+      var SPLIT = HUB.SplitList;
       MML.mtable.Augment({
         toNativeMML: function (parent) {
           var i, m;
@@ -820,11 +824,14 @@
         toNativeMML: function (parent) {
           var tag = parent.appendChild(this.NativeMMLelement(this.type));
           this.NativeMMLattributes(tag);
-          if (nMML.widthBug) {tag = tag.appendChild(this.NativeMMLelement("mrow"))}
+          if (nMML.mtdWidthBug) {
+            nMML.adjustWidths.push(tag);
+            tag = tag.appendChild(this.NativeMMLelement("mrow"));
+          }
           for (var i = 0, m = this.data.length; i < m; i++) {
             if (this.data[i]) {this.data[i].toNativeMML(tag)}
              else {tag.appendChild(this.NativeMMLelement("mrow"))}
-           }
+          }
         }
       });
       
@@ -834,14 +841,13 @@
           if (nMML.spaceWidthBug && this.width) {
             var mspace = parent.lastChild;
             var width = mspace.getAttribute("width");
-            var style = mspace.getAttribute("style") || "";
-            if (style != "") {style += ";"}
+            var style = (mspace.getAttribute("style") || "").replace(/;?\s*/,"; ");
             mspace.setAttribute("style",style+"width:"+width);
           }
         }
       });
 
-      var fontDir = MathJax.Ajax.fileURL(MathJax.OutputJax.fontDir+"/HTML-CSS/TeX/otf");
+      var fontDir = AJAX.fileURL(MathJax.OutputJax.fontDir+"/HTML-CSS/TeX/otf");
 
       /*
        *  Add fix for mathvariant issues in FF
@@ -895,7 +901,8 @@
     
     MML.math.Augment({
       toNativeMML: function (parent) {
-        var tag = this.NativeMMLelement(this.type), math = tag;
+        var tag = this.NativeMMLelement(this.type), math = tag, jax;
+        nMML.adjustWidths = [];
         //
         //  Some browsers don't seem to add the xmlns attribute, so do it by hand.
         //
@@ -942,12 +949,43 @@
         //  parent element to match.  Even if we set the <math> width properly,
         //  it doesn't seem to propagate up to the <span> correctly.
         //
-        if (nMML.widthBug && !mtable.nMMLforceWidth && mtable.nMMLlaMatch) {
+        if (nMML.widthBug &&
+            !(mtable.nMMLhasLabels && (mtable.nMMLforceWidth || !mtable.nMMLlaMatch))) {
           //
           //  Convert size to ex's so that it scales properly if the print media
           //    has a different font size.
           //
-          parent.style.width = (math.firstChild.scrollWidth/nMML.ex).toFixed(3) + "ex";
+          parent.style.width = (math.firstChild.scrollWidth/nMML.ex/nMML.scale).toFixed(3) + "ex";
+          //
+          //  Save size for later when we check if Web fonts have arrived
+          //
+          jax = HUB.getJaxFor(parent);
+          if (jax) {jax.NativeMML.scrollWidth = math.firstChild.scrollWidth}
+        }
+        if (nMML.adjustWidths.length) {
+          //
+          //  Firefox gets the widths of <mtd> elements wrong, so run
+          //  through them (now that the math is part of the page) and
+          //  fix them up.  Use ex's so that they print properly (see above).
+          //
+          var mtd = [];
+          for (var i = 0, m = nMML.adjustWidths.length; i < m; i++) {
+            var tag = nMML.adjustWidths[i];
+            var style = tag.getAttribute("style") || "";
+            if (!style.match(/(^|;)\s*min-width:/)) {
+              mtd.push(tag.scrollWidth);
+              var width = (tag.scrollWidth/nMML.ex).toFixed(3)+"ex";
+              style = style.replace(/;?\s*$/,"; ");
+              tag.setAttribute("style",style+"min-width:"+width);
+            }
+          }
+          //
+          //  Save the lists so that we can check them later for web font downloads
+          //
+          if (!jax) {jax = HUB.getJaxFor(parent)}
+          if (jax) {jax.NativeMML.mtds = mtd}
+          math.MathJaxMtds = nMML.adjustWidths;
+          nMML.adjustWidths = []; // clear it so we don't hold onto the DOM elements
         }
       }
     });
@@ -1270,6 +1308,8 @@
       // In Firefox < 20, the intrinsic width of <mspace> is not computed
       // correctly and thus the element is displayed incorrectly in <mtable>.
       nMML.spaceWidthBug = !browser.versionAtLeast("20.0");
+
+      nMML.mtdWidthBug = true;     // <mtd> widths not properly determined
 
       nMML.tableSpacingBug = true; // mtable@rowspacing/mtable@columnspacing not
                                    // supported.
