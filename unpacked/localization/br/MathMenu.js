@@ -57,7 +57,9 @@ MathJax.Localization.addTranslation("br","MathMenu",{
           eotffonts: "fonto\u00F9 eot",
           svgfonts: "Fonto\u00F9 svg",
           LoadURL: "Karga\u00F1 roadenno\u00F9 trei\u00F1 eus an URL-ma\u00F1 :",
-          Close: "Serri\u00F1"
+          Close: "Serri\u00F1",
+          Original: "Furmskrid orin",
+          Settings: "Arventenno\u00F9 ar matematiko\u00F9"
         }
 });
 

@@ -25,7 +25,8 @@ MathJax.Localization.addTranslation("sv","HTML-CSS",{
         version: "2.3",
         isLoaded: true,
         strings: {
-
+          FirefoxCantLoadWebFont: "Firefox kan inte l\u00E4sa in webbteckensnitt fr\u00E5n en fj\u00E4rrstyrd v\u00E4rd",
+          CantFindFontUsing: "Kan inte hitta ett giltigt teckensnitt med %1"
         }
 });
 

@@ -25,7 +25,35 @@ MathJax.Localization.addTranslation("sv","TeX",{
         version: "2.3",
         isLoaded: true,
         strings: {
-
+          MissingLeftExtraRight: "Saknar \\left eller en extra \\right",
+          ExtraLeftMissingRight: "Extra \\left eller en \\right saknas",
+          Misplaced: "Felplacerad %1",
+          AmbiguousUseOf: "Tvetydig anv\u00E4ndning av %1",
+          EnvBadEnd: "\\begin{%1} slutade med \\end{%2}",
+          EnvMissingEnd: "Saknar \\end{%1}",
+          MissingBoxFor: "Saknad l\u00E5da f\u00F6r %1",
+          MissingCloseBrace: "Avslutande klammerparentes saknas",
+          UndefinedControlSequence: "Odefinierad kontrollsekvens %1",
+          DoubleExponent: "Dubbel exponent: anv\u00E4nd klammerparentes f\u00F6r att klarg\u00F6ra",
+          MultipleCommand: "Flera %1",
+          IntegerArg: "Argumentet till %1 m\u00E5ste vara ett heltal",
+          NotMathMLToken: "%1 \u00E4r inte ett nyckelelement",
+          InvalidMathMLAttr: "Ogiltig MathML-attribut: %1",
+          UnknownAttrForElement: "%1 \u00E4r inte en igenk\u00E4nd attribut f\u00F6r %2",
+          MissingArgFor: "Argument saknas f\u00F6r %1",
+          UnknownEnv: "Ok\u00E4nd milj\u00F6 '%1'",
+          MissingCloseBracket: "Kunde inte hitta avslutande ']' f\u00F6r argumentet till %1",
+          TokenNotFoundForCommand: "Kunde inte hitta %1 f\u00F6r %2",
+          CommandNotAllowedInEnv: "%1 till\u00E5ts inte i milj\u00F6n %2",
+          MultipleLabel: "Etiketten '%1' definierades flera g\u00E5nger",
+          IllegalAlign: "Ogiltig justering anges i %1",
+          MultipleBBoxProperty: "%1 anges tv\u00E5 g\u00E5nger i %2",
+          ExtraEndMissingBegin: "Extra %1 eller en \\begingroup saknas",
+          InvalidDecimalNumber: "Ogiltig decimaltal",
+          InvalidNumber: "Ogiltigt nummer",
+          NoClosingChar: "Kan inte hitta avslutande %1",
+          IllegalControlSequenceName: "Ogiltigt kontrollsekvensnamn f\u00F6r %1",
+          IllegalParamNumber: "Ogiltigt antal parenteser anges i %1"
         }
 });
 

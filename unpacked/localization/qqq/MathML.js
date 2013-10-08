@@ -27,7 +27,7 @@ MathJax.Localization.addTranslation("qqq","MathML",{
         strings: {
           BadMglyph: "This error is displayed when processing a MathML mglyph element with a bad URL. Parameters:\n* %1 - the value of the src attribute",
           BadMglyphFont: "Parameters:\n* %1 - font family",
-          MathPlayer: "This alert is displayed when the Native MathML output Jax fails to set up MathPlayer. The '\\n' character is used to force new lines in the alert box",
+          MathPlayer: "This alert is displayed when the Native MathML output Jax fails to set up MathPlayer.\n\nThe new line character is used to force new lines in the alert box.",
           CantCreateXMLParser: "This alert is displayed when the MathML input Jax fails to create an XML parser.\n\nThe new line character is used to force new lines in the alert box.",
           UnknownNodeType: "Used as error message. Parameters:\n* %1 - node type",
           UnexpectedTextNode: "Used as error message. Parameters:\n* %1 - text, enclosed in \"'\"",

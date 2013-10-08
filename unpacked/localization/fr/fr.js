@@ -30,7 +30,7 @@ MathJax.Localization.addTranslation("fr",null,{
         version: "2.3",
         isLoaded: true,
         strings: {
-          CookieConfig: "MathJax a trouv\u00E9 un cookie de configuration utilisateur qui inclut du code ex\u00E9cutable. Souhaitez vous l'ex\u00E9cuter?\n\n(Choisissez Annuler sauf si vous avez cr\u00E9\u00E9 ce cookie vous-m\u00EAme)",
+          CookieConfig: "MathJax a trouv\u00E9 un t\u00E9moin (cookie) de configuration utilisateur qui inclut du code ex\u00E9cutable. Souhaitez vous l\u2019ex\u00E9cuter ?\n\n(Choisissez Annuler sauf si vous avez cr\u00E9\u00E9 ce t\u00E9moin vous-m\u00EAme)",
           MathProcessingError: "Erreur de traitement de la formule math\u00E9matique",
           MathError: "Erreur dans la formule math\u00E9matique",
           LoadFile: "T\u00E9l\u00E9chargement de %1",

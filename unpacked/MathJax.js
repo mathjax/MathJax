@@ -1065,19 +1065,30 @@ MathJax.Localization = {
   locale: "en",
   directory: "[MathJax]/localization",
   strings: {
+    // Currently, this list is not modified by the MathJax-i18n script. You can
+    // run the following command in MathJax/unpacked/localization to update it:
+    // find -name *.js | xargs grep menuTitle\: | | grep -v qqq | sed "s/^\.\/\(.*\)\/.*\.js\:  /    \"\1\"\: \{/" | sed "s/,$/\},/" | sed "s/\"English\"/\"English\", isLoaded: true/" > tmp ; sort tmp > tmp2 ; sed "$ s/,$//" tmp2 ; rm tmp*
     "br": {menuTitle: "brezhoneg"},
+    "cdo": {menuTitle: "M\u00ECng-d\u0115\u0324ng-ng\u1E73\u0304"},
+    "cs": {menuTitle: "\u010Desky"},
     "de": {menuTitle: "Deutsch"},
-    "en": {menuTitle: "English", isLoaded: true},   // nothing needs to be loaded for this
+    "en": {menuTitle: "English", isLoaded: true},
+    "es": {menuTitle: "espa\u00F1ol"},
     "fi": {menuTitle: "suomi"},
     "fr": {menuTitle: "fran\u00E7ais"},
+    "gl": {menuTitle: "galego"},
     "he": {menuTitle: "\u05E2\u05D1\u05E8\u05D9\u05EA"},
     "ia": {menuTitle: "interlingua"},
     "it": {menuTitle: "italiano"},
     "ja": {menuTitle: "\u65E5\u672C\u8A9E"},
+    "ko": {menuTitle: "\uD55C\uAD6D\uC5B4"},
     "lb": {menuTitle: "L\u00EBtzebuergesch"},
     "mk": {menuTitle: "\u043C\u0430\u043A\u0435\u0434\u043E\u043D\u0441\u043A\u0438"},
+    "nl": {menuTitle: "Nederlands"},
     "pl": {menuTitle: "polski"},
     "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
+    "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
+    "sl": {menuTitle: "sloven\u0161\u010Dina"},
     "sv": {menuTitle: "svenska"},
     "uk": {menuTitle: "\u0443\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"},
     "zh-hans": {menuTitle: "\u4E2D\u6587\uFF08\u7B80\u4F53\uFF09"}
