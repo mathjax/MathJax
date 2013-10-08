@@ -71,7 +71,7 @@ MathJax.Localization.addTranslation("en","TeX",{
           CommandAtTheBeginingOfLine: "%1 must come at the beginning of the line",
           IllegalAlign: "Illegal alignment specified in %1",
           BadMathStyleFor: "Bad math style for %1",
-          PositiveIntegerArg: "Argument to %1 must me a positive integer",
+          PositiveIntegerArg: "Argument to %1 must be a positive integer",
           ErroneousNestingEq: "Erroneous nesting of equation structures",
           MultlineRowsOneCol: "The rows within the %1 environment must have exactly one column",
           MultipleBBoxProperty: "%1 specified twice in %2",

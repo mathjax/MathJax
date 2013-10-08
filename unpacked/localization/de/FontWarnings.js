@@ -26,12 +26,12 @@ MathJax.Localization.addTranslation("de","FontWarnings",{
         isLoaded: true,
         strings: {
           webFont: "MathJax nutz web-basierte Fonts zur Darstellung der Mathematik auf dieser Seite. Da diese heruntergeladen werden m\u00FCssen, l\u00E4dt die Seite schneller, wenn Mathe-Fonts auf dem System installiert sind.",
-          imageFonts: "MathJax nutzt Bild-Fonts stall lokaler Fonts oder Webfonts. Das Laden dauert l\u00E4nger als erwartet und Drucken wird evtl. nicht in bester Qualit\u00E4t m\u00F6glich sein.",
-          noFonts: "MathJax kann keine Fonts zur Darstellung der Mathematik finden und Bild-Fonts sind nicht verf\u00FCgbar. MathJax weicht auf generische Unicode-Zeichen aus in der Hoffnung, der Browser kann diese darstellen. Einige oder alle Zeichen k\u00F6nnten nicht korrekt dargestellt werden.",
-          webFonts: "Die meisten modernen Browser k\u00F6nnen Fonts aus dem Web laden. Um die Qualit\u00E4t der Mathematik auf dieser Seite zu verbessern, sollten Sie ein Update auf eine aktuelle Version des Browsers vornehmen (oder einen aktuellen Browser installieren).",
-          fonts: "MathJax kann [STIX Fonts](%1) oder [MathJax TeX Fonts](%2) verwenden. Herunterladen und installieren dieser Fonts wird Ihre MathJax-Erfahrung verbessern.",
-          STIXPage: "Diese Seite ist optimiert fuer [STIX Fonts](%1). Herunterladen und installieren dieser Fonts wird Ihre MathJax-Erfahrung verbessern.",
-          TeXPage: "Diese Seite ist optimiert fuer [MathJax TeX Fonts](%1). Herunterladen und installieren dieser Fonts wird Ihre MathJax-Erfahrung verbessern."
+          imageFonts: "MathJax verwendet die Bildschriften anstatt der lokalen oder webbasierten Schriften. Das Rendern dauert l\u00E4nger als gew\u00F6hnlich und die Inhalte werden m\u00F6glicherweise nicht mit der vollen Aufl\u00F6sung deines Druckers ausgedruckt.",
+          noFonts: "MathJax konnte keine Schriftart zur Anzeige der Inhalte finden und Bildschriften sind nicht verf\u00FCgbar. Es wird auf allgemeine Unicode-Zeichen zur\u00FCckgegriffen in der Hoffnung, dass dein Browser in der Lage ist, sie darzustellen. Einige Zeichen werden m\u00F6glicherweise nicht richtig oder gar nicht angezeigt.",
+          webFonts: "Die meisten modernen Browser erlauben den Download von Schriften \u00FCber das Web. Eine Aktualisierung auf eine aktuellere Version deines Browsers (oder dessen Wechsel) kann die Qualit\u00E4t der Inhalte auf dieser Seite verbessern.",
+          fonts: "MathJax kann entweder die [STIX-](%1) oder [MathJax-TeX-Schriften](%2) verwenden. Lade eine dieser Schriften herunter und installiere sie, um dein MathJax-Erlebnis zu steigern.",
+          STIXPage: "Diese Seite wurde konzipiert, um die [STIX-Schriften](%1) zu verwenden. Lade sie herunter und installiere sie, um dein MathJax-Erlebnis zu steigern.",
+          TeXPage: "Diese Seite wurde konzipiert, um die [MathJax-TeX-Schriften](%1) zu verwenden. Lade sie herunter und installiere sie, um dein MathJax-Erlebnis zu steigern."
         }
 });
 

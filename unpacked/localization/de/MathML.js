@@ -26,15 +26,15 @@ MathJax.Localization.addTranslation("de","MathML",{
         isLoaded: true,
         strings: {
           BadMglyph: "Schlechter mglyph: %1",
-          BadMglyphFont: "Schlechter Font: %1",
-          MathPlayer: "MathJax konnnte MathPlayer nicht einrichten.\n\nFalls MathPlayer nicht installiert ist,  muss es erst installiert werden.\nEventuell blockieren die Sicherheitsoptionen ActiveX; \u00FCberpr\u00FCfen Sie unter \n'Internetoptionen' -> 'Sicherheit' -> 'Stufe Anpassen',\nob ActiveX aktiviert ist.\n\nBei der jetzigen Konfiguration wird MathJax nur Fehlermeldungen anzeigen.",
-          CantCreateXMLParser: "MathJax kann keinen XML-Parser f\u00FCr MathML erzeugen. \u00DCberpr\u00FCfen Sie die Einstellungen unter\n'Internetoptionen'-> 'Werkzeuge' -> 'Sicherheit' -> 'Stufe Anpassen'\nund aktivieren sie ActiveX.\n\nMathJax kann sonst kein MathML verarbeiten.",
+          BadMglyphFont: "Ung\u00FCltige Schriftart: %1",
+          MathPlayer: "MathJax konnte MathPlayer nicht einrichten.\n\nFalls MathPlayer nicht installiert ist, musst du ihn zuerst installieren.\nAnderenfalls verhindern deine Sicherheitseinstellungen, dass\nActiveX-Steuerelemente ausgef\u00FChrt werden k\u00F6nnen. Verwende die\nInternetoptionen unter dem Werkzeugmen\u00FC und w\u00E4hle die Registerkarte\n\u201ESicherheit\u201C. Klicke dann auf \u201EStufe anpassen\u201C. \u00DCberpr\u00FCfe, ob die\nEinstellungen f\u00FCr \u201EActiveX-Steuerelemente ausf\u00FChren\u201C und \u201EBin\u00E4r- und\nSkriptverhalten\u201C aktiviert sind.\n\nDerzeit wirst du Fehlermeldungen sehen anstatt gesetzte Inhalte.",
+          CantCreateXMLParser: "MathJax konnte keinen XML-Parser f\u00FCr MathML erstellen.\n\u00DCberpr\u00FCfe, ob die Sicherheitseinstellung\n\u201EActiveX-Steuerelemente ausf\u00FChren, die f\u00FCr Skripting\nsicher sind\u201C aktiviert ist (verwende zur \u00DCberpr\u00FCfung\ndie Internetoptionen im Werkzeugmen\u00FC, w\u00E4hle die\nRegisterkarte \u201ESicherheit\u201C und klicke auf \u201EStufe\nanpassen\u201C).\n\nMathML-Gleichungen k\u00F6nnen von MathJax nicht\nverarbeitet werden.",
           UnknownNodeType: "Unbekannter Knotentyp: %1",
-          UnexpectedTextNode: "Unbekannter Textknoten: %1",
+          UnexpectedTextNode: "Unerwarteter Textknoten: %1",
           ErrorParsingMathML: "Fehler beim Parsen von MathML",
           ParsingError: "Fehler beim Parsen von MathML: %1",
-          MathMLSingleElement: "MathML muss ein einzelnes <math> Element sein",
-          MathMLRootElement: "MathML muss ein einzelnes <math> Element sein, nicht %1"
+          MathMLSingleElement: "MathML muss von einem einzelnen Element gebildet werden",
+          MathMLRootElement: "MathML muss von einem \u003Cmath\u003E-Element gebildet werden, nicht %1"
         }
 });
 

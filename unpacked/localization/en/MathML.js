@@ -34,7 +34,7 @@ MathJax.Localization.addTranslation("en","MathML",{
           ErrorParsingMathML: "Error parsing MathML",
           ParsingError: "Error parsing MathML: %1",
           MathMLSingleElement: "MathML must be formed by a single element",
-          MathMLRootElement: "MathML must be formed by a <math> element, not %1"
+          MathMLRootElement: "MathML must be formed by a \u003Cmath\u003E element, not %1"
         }
 });
 

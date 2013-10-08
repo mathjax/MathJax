@@ -34,7 +34,7 @@ MathJax.Localization.addTranslation("pt-br","MathML",{
           ErrorParsingMathML: "Erro ao interpretar MathML",
           ParsingError: "Erro ao interpretar MathML: %1",
           MathMLSingleElement: "MathML deve ser formado por um \u00FAnico elemento",
-          MathMLRootElement: "MathML deve ser formado por um elemento <math>, n\u00E3o %1"
+          MathMLRootElement: "MathML deve ser formado por um elemento \u003Cmath\u003E, n\u00E3o %1"
         }
 });
 

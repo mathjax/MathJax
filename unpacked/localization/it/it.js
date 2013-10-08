@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("it",null,{
-  menuTitle: "Italiano",
+  menuTitle: "italiano",
   version: "2.3",
   isLoaded: true,
   domains: {
