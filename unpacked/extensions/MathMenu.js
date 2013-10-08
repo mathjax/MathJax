@@ -1086,7 +1086,14 @@
           ITEM.RADIO(["TeXWeb","TeX (web)"],       "font", {action: MENU.Font}),
           ITEM.RADIO(["TeXImage","TeX (image)"],   "font", {action: MENU.Font}),
           ITEM.RULE(),
-          ITEM.RADIO(["STIXlocal","STIX (local)"], "font", {action: MENU.Font})
+          ITEM.RADIO(["STIXlocal","STIX (local)"], "font", {action: MENU.Font}),
+          ITEM.RADIO(["STIXWeb","STIX (web)"], "font", {action: MENU.Font}),
+          ITEM.RULE(),
+          ITEM.RADIO(["AsanaMathWeb","Asana Math (web)"], "font", {action: MENU.Font}),
+          ITEM.RADIO(["GyrePagellaWeb","Gyre Pagella (web)"], "font", {action: MENU.Font}),
+          ITEM.RADIO(["GyreTermesWeb","Gyre Termes (web)"], "font", {action: MENU.Font}),
+          ITEM.RADIO(["LatinModernWeb","Latin Modern (web)"], "font", {action: MENU.Font}),
+          ITEM.RADIO(["NeoEulerWeb","Neo Euler (web)"], "font", {action: MENU.Font})
         ),
         ITEM.SUBMENU(["ContextMenu","Contextual Menu"],    {hidden:!CONFIG.showContext},
           ITEM.RADIO("MathJax", "context"),
