@@ -41,7 +41,13 @@
 
     FontInfo: {
       STIX: {family: "STIXSizeOneSym", testString: "() {} []"},
-      TeX:  {family: "MathJax_Size1",  testString: "() {} []"}
+      TeX:  {family: "MathJax_Size1",  testString: "() {} []"},
+      "STIX-Web":  {family: "STIXWeb_Size1",  testString: "() {} []"},
+      "Asana-Math":  {family: "AsanaMath_Size1",  testString: "() {} []"},
+      "Gyre-Pagella":  {family: "GyrePagella_Size1",  testString: "() {} []"},
+      "Gyre-Termes":  {family: "GyreTermes_Size1",  testString: "() {} []"},
+      "Latin-Modern":  {family: "LatinModern_Size1",  testString: "() {} []"},
+      "Neo-Euler":  {family: "NeoEuler_Size1",  testString: "() {} []"}
     },
     comparisonFont: ["sans-serif","monospace","script","Times","Courier","Arial","Helvetica"],
     testSize: ["40px","50px","60px","30px","20px"],
@@ -323,21 +329,16 @@
       if (this.adjustAvailableFonts) {this.adjustAvailableFonts(this.config.availableFonts)}
       if (settings.scale) {this.config.scale = settings.scale}
       if (settings.font && settings.font !== "Auto") {
-        if (settings.font === "TeX (local)") {
-          this.config.availableFonts = ["TeX"];
-          this.config.preferredFont = this.config.webFont = "TeX";
-        } else if (settings.font === "STIX (local)") {
-          this.config.availableFonts = ["STIX"];
-          this.config.preferredFont = "STIX";
-          this.config.webFont = "TeX";
-        } else if (settings.font === "TeX (web)") {
-          this.config.availableFonts = [];
-          this.config.preferredFont = "";
-          this.config.webFont = "TeX";
-        } else if (settings.font === "TeX (image)") {
-          this.config.availableFonts = [];
-          this.config.preferredFont = this.config.webFont = "";
-        }
+        if (settings.font === "TeXLocal") {this.config.availableFonts = ["TeX"]; this.config.preferredFont = "TeX"; this.config.webFont = "TeX"}
+        else if (settings.font === "TeXWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "TeX"}
+        else if (settings.font === "TeXimage") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = ""}
+        else if (settings.font === "STIXlocal") {this.config.availableFonts = ["STIX"]; this.config.preferredFont = "STIX"; this.config.webFont = "STIX-Web"}
+        else if (settings.font === "STIXWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "STIX-Web"}
+        else if (settings.font === "AsanaMathWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Asana-Math"}
+        else if (settings.font === "GyrePagellaWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Gyre-Pagella"}
+        else if (settings.font === "GyreTermesWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Gyre-Termes"}
+        else if (settings.font === "LatinModernWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Latin-Modern"}
+        else if (settings.font === "NeoEulerWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Neo-Euler"}
       }
       var font = this.Font.findFont(this.config.availableFonts,this.config.preferredFont);
       if (!font && this.allowWebFonts) {font = this.config.webFont; if (font) {this.webFonts = true}}

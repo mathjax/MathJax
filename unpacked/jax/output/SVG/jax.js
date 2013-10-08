@@ -98,7 +98,17 @@
       var settings = HUB.config.menuSettings;
       if (settings.scale) {this.config.scale = settings.scale}
       this.SUPER(arguments).Config.apply(this,arguments);
-      this.fontInUse = this.config.font; this.fontDir += "/" + this.config.font;
+      this.fontInUse = this.config.font;
+      if (settings.font && settings.font !== "Auto") {
+        if (settings.font === "TeXWeb") {this.fontInUse = "TeX"}
+        else if (settings.font === "STIXWeb") {this.fontInUse = "STIX-Web"}
+        else if (settings.font === "AsanaMathWeb") {this.fontInUse = "Asana-Math"}
+        else if (settings.font === "GyrePagellaWeb") {this.fontInUse = "Gyre-Pagella"}
+        else if (settings.font === "GyreTermesWeb") {this.fontInUse = "Gyre-Termes"}
+        else if (settings.font === "LatinModernWeb") {this.fontInUse = "Latin-Modern"}
+        else if (settings.font === "NeoEulerWeb") {this.fontInUse = "Neo-Euler"}
+      }
+      this.fontDir += "/" + this.fontInUse;
       if (!this.require) {this.require = []}
       this.require.push(this.fontDir+"/fontdata.js");
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
