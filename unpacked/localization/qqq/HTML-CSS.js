@@ -25,10 +25,10 @@ MathJax.Localization.addTranslation("qqq","HTML-CSS",{
         version: "2.3",
         isLoaded: true,
         strings: {
-          LoadWebFont: "This is displayed in MathJax message box when the HTML-CSS output is loading a Web font. The first argument is the font name",
+          LoadWebFont: "This is displayed in MathJax message box when the HTML-CSS output is loading a Web font.\n\nParameters:\n* %1 - the font name",
           CantLoadWebFont: "This is displayed in MathJax message box when the HTML-CSS output fails to load a Web font. The first argument is the font name",
           FirefoxCantLoadWebFont: "This is displayed in MathJax message box when the HTML-CSS output fails to load a Web font in Firefox",
-          CantFindFontUsing: "This is displayed in MathJax message box when the HTML-CSS output fails to load a Web font from a given list. The first argument is a list of fonts tried.",
+          CantFindFontUsing: "This is displayed in MathJax message box when the HTML-CSS output fails to load a Web font from a given list.\n\nParameters:\n* %1 - a list of fonts tried, comma-separated",
           WebFontsNotAvailable: "This is displayed in MathJax message box when the HTML-CSS fails to load Web fonts"
         }
 });

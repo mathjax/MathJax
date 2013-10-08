@@ -26,10 +26,10 @@ MathJax.Localization.addTranslation("de","HTML-CSS",{
         isLoaded: true,
         strings: {
           LoadWebFont: "Lade Webfont %1",
-          CantLoadWebFont: "Kann Webfont %1 nicht laden",
-          FirefoxCantLoadWebFont: "Firefox kann Webfonts nicht von entferntem Computer laden",
-          CantFindFontUsing: "Kein g\u00FCltiger Font fuer %1 verf\u00FCgbar",
-          WebFontsNotAvailable: "Webfonts nicht verf\u00FCgbar -- benutze Bildfont"
+          CantLoadWebFont: "Webschriftart %1 konnte nicht geladen werden",
+          FirefoxCantLoadWebFont: "Firefox kann keine Webschriften von einem Remotehost laden",
+          CantFindFontUsing: "Es konnte keine g\u00FCltige Schriftart aus %1 gefunden werden",
+          WebFontsNotAvailable: "Webschriften sind nicht verf\u00FCgbar. Verwende stattdessen Bildschriften."
         }
 });
 

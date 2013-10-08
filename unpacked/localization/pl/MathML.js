@@ -34,7 +34,7 @@ MathJax.Localization.addTranslation("pl","MathML",{
           ErrorParsingMathML: "B\u0142\u0105d podczas przetwarzania MathML",
           ParsingError: "B\u0142\u0105d podczas przetwarzania MathML: %1",
           MathMLSingleElement: "MathML musi by\u0107 zamkni\u0119ty w pojedynczym elemencie",
-          MathMLRootElement: "MathML musi by\u0107 zamkni\u0119ty w elemencie <math>, a nie %1"
+          MathMLRootElement: "MathML musi by\u0107 zamkni\u0119ty w elemencie \u003Cmath\u003E, a nie %1"
         }
 });
 
