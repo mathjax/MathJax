@@ -725,7 +725,7 @@ MathJax.fileversion = "2.2";
       //
       //  Create a SCRIPT tag to load the file
       //
-        JS: function (file,callback) {
+      JS: function (file,callback) {
         var script = document.createElement("script");
         var timeout = BASE.Callback(["loadTimeout",this,file]);
         this.loading[file] = {
@@ -772,9 +772,9 @@ MathJax.fileversion = "2.2";
         if (node.nodeName === "STYLE" && node.styleSheet &&
             typeof(node.styleSheet.cssText) !== 'undefined') {
           callback(this.STATUS.OK); // MSIE processes style immediately, but doesn't set its styleSheet!
-        } else if (window.chrome && typeof(window.sessionStorage) !== "undefined" &&
-                   node.nodeName === "STYLE") {
-          callback(this.STATUS.OK); // Same for Chrome 5 (beta), Grrr.
+        } else if (window.chrome && node.nodeName === "LINK") {
+          callback(this.STATUS.OK); // Chrome doesn't give access to cssRules for stylesheet in
+                                    //   a link node, so we can't detect when it is loaded.
         } else if (isSafari2) {
           this.timer.start(this,[this.timer.checkSafari2,sheets++,callback],this.styleDelay);
         } else {
@@ -789,7 +789,7 @@ MathJax.fileversion = "2.2";
         check = BASE.Callback(check);
         check.execute = this.execute; check.time = this.time;
         check.STATUS = AJAX.STATUS; check.timeout = timeout || AJAX.timeout;
-        check.delay = check.total = 0;
+        check.delay = check.total = delay || 0;
         if (delay) {setTimeout(check,delay)} else {check()}
       },
       //
@@ -2260,6 +2260,12 @@ MathJax.Hub = {
   },
   
   elementScripts: function (element) {
+    if (element instanceof Array) {
+      var scripts = [];
+      for (var i = 0, m = element.length; i < m; i++)
+        {scripts.push.apply(scripts,this.elementScripts(element[i]))}
+      return scripts;
+    }
     if (typeof(element) === 'string') {element = document.getElementById(element)}
     if (!document.body) {document.body = document.getElementsByTagName("body")[0]}
     if (element == null) {element = document.body}
