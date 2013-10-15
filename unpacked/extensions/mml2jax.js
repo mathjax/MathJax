@@ -49,15 +49,16 @@ MathJax.Extension.mml2jax = {
     }
     if (typeof(element) === "string") {element = document.getElementById(element)}
     if (!element) {element = document.body}
+    var mathArray = [];
     //
     //  Handle all math tags with no namespaces
     //
-    this.ProcessMathArray(element.getElementsByTagName("math"));
+    mathArray.push.apply(mathArray,element.getElementsByTagName("math"));
     //
     //  Handle math with namespaces in XHTML
     //
     if (element.getElementsByTagNameNS)
-      {this.ProcessMathArray(element.getElementsByTagNameNS(this.MMLnamespace,"math"))}
+      {mathArray.push.apply(mathArray,element.getElementsByTagNameNS(this.MMLnamespace,"math"))}
     //
     //  Handle math with namespaces in HTML
     //
@@ -70,7 +71,7 @@ MathJax.Extension.mml2jax = {
         for (i = 0, m = document.namespaces.length; i < m; i++) {
           var ns = document.namespaces[i];
           if (ns.urn === this.MMLnamespace)
-            {this.ProcessMathArray(element.getElementsByTagName(ns.name+":math"))}
+            {mathArray.push.apply(mathArray,element.getElementsByTagName(ns.name+":math"))}
         }
       } catch (err) {}
     } else {
@@ -82,28 +83,30 @@ MathJax.Extension.mml2jax = {
         for (i = 0, m = html.attributes.length; i < m; i++) {
           var attr = html.attributes[i];
           if (attr.nodeName.substr(0,6) === "xmlns:" && attr.nodeValue === this.MMLnamespace)
-            {this.ProcessMathArray(element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
+            {mathArray.push.apply(mathArray,element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
         }
       }
     }
+    this.ProcessMathArray(mathArray);
   },
   
   ProcessMathArray: function (math) {
-    var i;
-    if (math.length) {
+    var i, m = math.length;
+    if (m) {
       if (this.MathTagBug) {
-        for (i = math.length-1; i >= 0; i--) {
+        for (i = 0; i < m; i++) {
           if (math[i].nodeName === "MATH") {this.ProcessMathFlattened(math[i])}
                                       else {this.ProcessMath(math[i])}
         }
       } else {
-        for (i = math.length-1; i >= 0; i--) {this.ProcessMath(math[i])}
+        for (i = 0; i < m; i++) {this.ProcessMath(math[i])}
       }
     }
   },
   
   ProcessMath: function (math) {
     var parent = math.parentNode;
+    if (!parent || parent.className === MathJax.Hub.config.preRemoveClass) return;
     var script = document.createElement("script");
     script.type = "math/mml";
     parent.insertBefore(script,math);
@@ -123,6 +126,7 @@ MathJax.Extension.mml2jax = {
   
   ProcessMathFlattened: function (math) {
     var parent = math.parentNode;
+    if (!parent || parent.className === MathJax.Hub.config.preRemoveClass) return;
     var script = document.createElement("script");
     script.type = "math/mml";
     parent.insertBefore(script,math);
@@ -188,7 +192,7 @@ MathJax.Extension.mml2jax = {
     if (preview === "mathml") {
       isNodePreview = true;
       // mathml preview does not work with IE < 9, so fallback to alttext.
-      if (this.MathTagBug) {preview = "alttext"} else {preview = math}
+      if (this.MathTagBug) {preview = "alttext"} else {preview = math.cloneNode(false)}
     }
     if (preview === "alttext" || preview === "altimg") {
       isNodePreview = true;
