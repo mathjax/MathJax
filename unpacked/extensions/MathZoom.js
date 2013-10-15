@@ -106,7 +106,7 @@
     //  Zoom on double click
     //
     DblClick: function (event,math) {
-      if (this.settings.zoom === "Double-Click") {return this.Zoom(event,math)}
+      if (this.settings.zoom === "Double-Click" || this.settings.zoom === "DoubleClick") {return this.Zoom(event,math)}
     },
     
     //
