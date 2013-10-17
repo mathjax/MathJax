@@ -1067,13 +1067,19 @@ MathJax.Localization = {
   strings: {
     // Currently, this list is not modified by the MathJax-i18n script. You can
     // run the following command in MathJax/unpacked/localization to update it:
-    // find -name *.js | xargs grep menuTitle\: | | grep -v qqq | sed "s/^\.\/\(.*\)\/.*\.js\:  /    \"\1\"\: \{/" | sed "s/,$/\},/" | sed "s/\"English\"/\"English\", isLoaded: true/" > tmp ; sort tmp > tmp2 ; sed "$ s/,$//" tmp2 ; rm tmp*
+    //
+    // find -name *.js | xargs grep menuTitle\: | grep -v qqq | sed "s/^\.\/\(.*\)\/.*\.js\:  /    \"\1\"\: \{/" | sed "s/,$/\},/" | sed "s/\"English\"/\"English\", isLoaded: true/" > tmp ; sort tmp > tmp2 ; sed "$ s/,$//" tmp2 ; rm tmp*
+    //
+    // This only takes languages with localization data so you must also add
+    // the languages that use a remap but are not translated at all.
+    //
     "br": {menuTitle: "brezhoneg"},
     "cdo": {menuTitle: "M\u00ECng-d\u0115\u0324ng-ng\u1E73\u0304"},
     "cs": {menuTitle: "\u010Desky"},
     "de": {menuTitle: "Deutsch"},
     "en": {menuTitle: "English", isLoaded: true},
     "es": {menuTitle: "espa\u00F1ol"},
+    "fa": {menuTitle: "\u0641\u0627\u0631\u0633\u06CC"},
     "fi": {menuTitle: "suomi"},
     "fr": {menuTitle: "fran\u00E7ais"},
     "gl": {menuTitle: "galego"},
@@ -1087,6 +1093,7 @@ MathJax.Localization = {
     "nl": {menuTitle: "Nederlands"},
     "pl": {menuTitle: "polski"},
     "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
+    "pt": {menuTitle: "portugus\u00EA"},
     "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
     "sl": {menuTitle: "sloven\u0161\u010Dina"},
     "sv": {menuTitle: "svenska"},

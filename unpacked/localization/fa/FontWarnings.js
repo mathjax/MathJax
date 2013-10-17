@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/nl/nl.js
+ *  MathJax/localization/fa/FontWarnings.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,35 +21,12 @@
  *
  */
 
-MathJax.Localization.addTranslation("nl",null,{
-  menuTitle: "Nederlands",
-  version: "2.3",
-  isLoaded: true,
-  domains: {
-    "_": {
+MathJax.Localization.addTranslation("fa","FontWarnings",{
         version: "2.3",
         isLoaded: true,
         strings: {
-          LoadFile: "Bezig met laden van %1",
-          Loading: "Bezig met laden",
-          Processing: "Bezig met verwerken",
-          MathJaxNotSupported: "Uw browser ondersteunt MathJax niet."
+
         }
-    },
-    "FontWarnings": {},
-    "HTML-CSS": {},
-    "HelpDialog": {},
-    "MathML": {},
-    "MathMenu": {},
-    "TeX": {}
-  },
-  plural: function (n) {
-      if (n === 1) {return 1} // one
-      return 2; // other
-    },
-  number: function (n) {
-      return n;
-    }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/nl/nl.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/fa/FontWarnings.js");

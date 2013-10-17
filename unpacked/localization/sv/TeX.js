@@ -32,9 +32,9 @@ MathJax.Localization.addTranslation("sv","TeX",{
           EnvBadEnd: "\\begin{%1} slutade med \\end{%2}",
           EnvMissingEnd: "Saknar \\end{%1}",
           MissingBoxFor: "Saknad l\u00E5da f\u00F6r %1",
-          MissingCloseBrace: "Avslutande klammerparentes saknas",
+          MissingCloseBrace: "H\u00F6gerparentes saknas",
           UndefinedControlSequence: "Odefinierad kontrollsekvens %1",
-          DoubleExponent: "Dubbel exponent: anv\u00E4nd klammerparentes f\u00F6r att klarg\u00F6ra",
+          DoubleExponent: "Dubbel exponent: anv\u00E4nd parenteser f\u00F6r att klarg\u00F6ra",
           MultipleCommand: "Flera %1",
           IntegerArg: "Argumentet till %1 m\u00E5ste vara ett heltal",
           NotMathMLToken: "%1 \u00E4r inte ett nyckelelement",
@@ -53,7 +53,10 @@ MathJax.Localization.addTranslation("sv","TeX",{
           InvalidNumber: "Ogiltigt nummer",
           NoClosingChar: "Kan inte hitta avslutande %1",
           IllegalControlSequenceName: "Ogiltigt kontrollsekvensnamn f\u00F6r %1",
-          IllegalParamNumber: "Ogiltigt antal parenteser anges i %1"
+          IllegalParamNumber: "Ogiltigt antal parenteser anges i %1",
+          ExtraOpenMissingClose: "Extra v\u00E4nsterparentes eller h\u00F6gerparentes saknas",
+          ExtraCloseMissingOpen: "Extra h\u00F6gerparentes eller v\u00E4nsterparentes saknas",
+          ExtraCloseLooking: "Extra h\u00F6gerparentes n\u00E4r %1 s\u00F6ktes"
         }
 });
 
