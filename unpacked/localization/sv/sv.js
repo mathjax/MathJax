@@ -38,7 +38,8 @@ MathJax.Localization.addTranslation("sv",null,{
           LoadFailed: "Misslyckades att l\u00E4sa in: %1",
           ProcessMath: "Bearbetar matematik: %1 %%",
           Processing: "Bearbetar",
-          MathJaxNotSupported: "Din webbl\u00E4sare st\u00F6der inte MathJax"
+          MathJaxNotSupported: "Din webbl\u00E4sare st\u00F6der inte MathJax",
+          Typesetting: "S\u00E4ttning"
         }
     },
     "FontWarnings": {},

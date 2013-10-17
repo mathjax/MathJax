@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/nl/nl.js
+ *  MathJax/localization/pt/HTML-CSS.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,35 +21,16 @@
  *
  */
 
-MathJax.Localization.addTranslation("nl",null,{
-  menuTitle: "Nederlands",
-  version: "2.3",
-  isLoaded: true,
-  domains: {
-    "_": {
+MathJax.Localization.addTranslation("pt","HTML-CSS",{
         version: "2.3",
         isLoaded: true,
         strings: {
-          LoadFile: "Bezig met laden van %1",
-          Loading: "Bezig met laden",
-          Processing: "Bezig met verwerken",
-          MathJaxNotSupported: "Uw browser ondersteunt MathJax niet."
+          LoadWebFont: "Carregando fonte baseada em web %1",
+          CantLoadWebFont: "N\u00E3o foi poss\u00EDvel carregar a fonte baseada em web %1",
+          FirefoxCantLoadWebFont: "O Firefox N\u00E3o pode carregar fontes baseadas em web a partir de um host remoto",
+          CantFindFontUsing: "N\u00E3o \u00E9 poss\u00EDvel encontrar uma fonte v\u00E1lida usando %1",
+          WebFontsNotAvailable: "Fontes baseadas em web n\u00E3o est\u00E3o dispon\u00EDveis -- usando fontes feitas com imagens em vez disso"
         }
-    },
-    "FontWarnings": {},
-    "HTML-CSS": {},
-    "HelpDialog": {},
-    "MathML": {},
-    "MathMenu": {},
-    "TeX": {}
-  },
-  plural: function (n) {
-      if (n === 1) {return 1} // one
-      return 2; // other
-    },
-  number: function (n) {
-      return n;
-    }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/nl/nl.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/pt/HTML-CSS.js");
