@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/es/es.js
+ *  MathJax/localization/pt/pt.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,8 +21,8 @@
  *
  */
 
-MathJax.Localization.addTranslation("es",null,{
-  menuTitle: "espa\u00F1ol",
+MathJax.Localization.addTranslation("pt",null,{
+  menuTitle: "portugus\u00EA",
   version: "2.3",
   isLoaded: true,
   domains: {
@@ -30,17 +30,17 @@ MathJax.Localization.addTranslation("es",null,{
         version: "2.3",
         isLoaded: true,
         strings: {
-          MathProcessingError: "Error de procesamiento de matem\u00E1ticas",
-          MathError: "Error de matem\u00E1ticas",
-          LoadFile: "Cargando %1",
-          Loading: "Cargando",
-          LoadFailed: "Fall\u00F3 la carga del archivo: %1",
-          ProcessMath: "Procesando matem\u00E1ticas: %1 %%",
-          Processing: "Procesando",
-          TypesetMath: "Composici\u00F3n tipogr\u00E1fica en curso: %1 %%",
-          Typesetting: "Composici\u00F3n tipogr\u00E1fica",
-          MathJaxNotSupported: "El navegador no admite MathJax",
-          CookieConfig: "MathJax ha encontrado una cookie de configuraci\u00F3n de usuario que incluye c\u00F3digo para ser ejecutado.\u00BFQuieres ejecutarlo?\n\\n\n(Pulse Cancelar al menos que configure la cookie)."
+          CookieConfig: "O MathJax encontrou um cookie com configura\u00E7\u00F5es de utilizador que inclui c\u00F3digo a ser executado. Deseja execut\u00E1-lo?\n\n(Escolha Cancelar a n\u00E3o ser que voc\u00EA mesmo tenha criado o cookie.)",
+          MathProcessingError: "Erro no processamento das f\u00F3rmulas",
+          MathError: "Erro de matem\u00E1tica",
+          LoadFile: "A carregar %1",
+          Loading: "A carregar",
+          LoadFailed: "O ficheiro n\u00E3o pode ser carregado: %1",
+          ProcessMath: "Processando f\u00F3rmula: %1%%",
+          Processing: "Processando",
+          TypesetMath: "Formatando f\u00F3rmulas: %1%%",
+          Typesetting: "Formatando",
+          MathJaxNotSupported: "O seu navegador n\u00E3o suporta MathJax"
         }
     },
     "FontWarnings": {},
@@ -51,12 +51,12 @@ MathJax.Localization.addTranslation("es",null,{
     "TeX": {}
   },
   plural: function (n) {
-      if (n === 1) return 1; // one
+      if (n === 1) {return 1} // one
       return 2; // other
     },
   number: function (n) {
-      return n;
+      return String(n).replace(".", ","); // replace dot by comma
     }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/es/es.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/pt/pt.js");
