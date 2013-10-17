@@ -23,6 +23,7 @@
 
 MathJax.Localization.addTranslation("fa",null,{
   menuTitle: "\u0641\u0627\u0631\u0633\u06CC",
+  fontDirection: "rtl",
   version: "2.3",
   isLoaded: true,
   domains: {
