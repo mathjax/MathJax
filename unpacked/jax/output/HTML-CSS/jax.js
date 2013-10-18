@@ -223,7 +223,6 @@
           "word-wrap":       "normal",
           "white-space":     "nowrap",
           "float":           "none",
-          "direction":       "ltr",
           border: 0, padding: 0, margin: 0
         },
 
@@ -1723,6 +1722,11 @@
 	return span;
       },
 
+      HTMLhandleDir: function (span) {
+        span.style.direction = this.Get("dir");
+	return span;
+      },
+
       HTMLhandleColor: function (span) {
 	var values = this.getValues("mathcolor","color");
 	if (this.mathbackground) {values.mathbackground = this.mathbackground}
@@ -1973,6 +1977,7 @@
         }
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
 	return span;
       }
     });
@@ -1987,6 +1992,7 @@
 	if (this.data.join("").length !== 1) {delete span.bbox.skew}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
 	return span;
       }
     });
@@ -2061,6 +2067,7 @@
         //
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
 	return span;
       },
       CoreParent: function () {
@@ -2157,6 +2164,7 @@
         if (this.data.join("").length !== 1) {delete span.bbox.skew}
         this.HTMLhandleSpace(span);
         this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
         return span;
       }
     });
@@ -2296,6 +2304,7 @@
 	}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
 	return span;
       },
       HTMLstretchH: MML.mbase.HTMLstretchH,
@@ -2689,6 +2698,10 @@
 	//  Add color (if any)
 	//
 	this.HTMLhandleColor(span);
+        //
+        //  Add direction (if any)
+        //
+        this.HTMLhandleDir(span);
 	//
 	//  Make math span be the correct height and depth
 	//

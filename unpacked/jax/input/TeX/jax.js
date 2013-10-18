@@ -2099,7 +2099,8 @@
     formatError: function (err,math,display,script) {
       var message = err.message.replace(/\n.*/,"");
       HUB.signal.Post(["TeX Jax - parse error",message,math,display,script]);
-      return MML.merror(message);
+      var mml = MML.merror(message);
+      return (MathJax.Localization.fontDirection() ? MML.mstyle(mml).With({dir: "rtl"}) : mml);
     },
 
     //

@@ -41,6 +41,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       this.HTMLhandleVariant(span,this.HTMLgetVariant(),values.lquote+text+values.rquote);
       this.HTMLhandleSpace(span);
       this.HTMLhandleColor(span);
+      this.HTMLhandleDir(span);
       return span;
     },
     HTMLquoteRegExp: function (string) {
