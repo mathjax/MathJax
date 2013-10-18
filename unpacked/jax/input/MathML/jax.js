@@ -77,7 +77,9 @@
         mml = this.TeXAtom(match[2]);
       } else if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase))) {
         MathJax.Hub.signal.Post(["MathML Jax - unknown node type",type]);
-        return MML.merror(_("UnknownNodeType","Unknown node type: %1",type));
+        var err = MML.merror(_("UnknownNodeType","Unknown node type: %1",type));
+        if (MathJax.Localization.fontDirection()) {err = MML.mstyle(err).With({dir: "rtl"})};
+        return err;
       } else {
         mml = MML[type]();
       }
