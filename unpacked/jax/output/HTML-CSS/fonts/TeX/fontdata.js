@@ -66,7 +66,8 @@
         "MathJax_SansSerif-bold":   "SansSerif/Bold/Main.js",
         "MathJax_SansSerif-italic": "SansSerif/Italic/Main.js",
         "MathJax_Script":           "Script/Regular/Main.js",
-        "MathJax_Typewriter":       "Typewriter/Regular/Main.js"
+        "MathJax_Typewriter":       "Typewriter/Regular/Main.js",
+        "MathJax_Caligraphic-bold": "Caligraphic/Bold/Main.js"
       },
       
       VARIANT: {
@@ -132,7 +133,10 @@
                      0x210F:[0x210F,MML.VARIANT.NORMAL]  // \hslash
                    }},
         "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
-        "-smallOp": {fonts:[SIZE1,MAIN]}
+        "-smallOp": {fonts:[SIZE1,MAIN]},
+        "-tex-caligraphic-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"],
+                                  offsetA: 0x41, variantA: "bold-italic"},
+        "-tex-oldstyle-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"]}
       },
       
       RANGES: [
@@ -1590,7 +1594,7 @@
           HTMLCSS.FONTDATA.REMAP[0x2CB] = 0x60; // grave
           HTMLCSS.FONTDATA.REMAP[0x2DA] = 0xB0; // ring above
           
-          var testString = HTMLCSS.msieCheckGreek =
+          var testString =
             String.fromCharCode(0x393)+" "+String.fromCharCode(0x3A5)+" "+String.fromCharCode(0x39B);
 
           HTMLCSS.FONTDATA.RANGES.push({name: "IEgreek", low: 0x03B1, high: 0x03C9, offset: "IEG", add: 32});
@@ -1762,6 +1766,20 @@
             };
             
           }
+
+          if (HTMLCSS.Font.testFont({family:"MathJax_Greek", weight:"bold", style:"italic", testString: testString})) {
+            HTMLCSS.Augment({
+              FONTDATA: {
+                VARIANT: {
+                  "bold-italic": {offsetG: 0x391,
+                                  variantG: "-Greek-Bold-Italic"},
+                  "-Greek-Bold-Italic": {fonts:["MathJax_Greek-bold-italic"]}
+                },
+                FONTS: {"MathJax_Greek-bold-italic": "Greek/BoldItalic/Main.js"}
+              }
+            });
+          }
+
         }
 
         if (HTMLCSS.msieIE6) {
@@ -1918,8 +1936,19 @@
             0xE2F0: [720,69,644,38,947],       // stix-lowercase u italic slashed
             0xE2F1: [587,85,894,96,797]        // stix-lowercase u bold italic slashed
           };
-          
+
         }
+
+        if (!browser.versionAtLeast("5.0")) {
+          HTMLCSS.Augment({
+            FONTDATA: {
+              VARIANT: {
+                "-tex-caligraphic-bold": {remap: {0x54: [0xE2F0,"-WinChrome"]}}
+              }
+            }
+          });
+        }
+
       }
 
     });
