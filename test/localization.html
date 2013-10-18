@@ -8,6 +8,7 @@
   var _M_ = 'MISSING TRANSLATION';
 </script>
 <script type="text/x-mathjax-config">
+  MathJax.Localization.strings.en.isLoaded = false;
   MathJax.Hub.Config({
     TeX: {
       noErrors: { disabled: true },
@@ -19,12 +20,11 @@
     }
   });
 
-  /* Create the list of locales. We exclude 'en' as it behaves differently than
-     the others and we don't want to copy the en strings again here. */
+  /* Create the list of locales. */
   var locales = {};
   var i = 0;
   for (l in MathJax.Localization.strings) {
-    if (!MathJax.Localization.strings.hasOwnProperty(l) || l == "en") continue;
+    if (!MathJax.Localization.strings.hasOwnProperty(l)) continue;
     var option = document.createElement('option');
     option.appendChild(document.createTextNode(l));
     document.form.locale.appendChild(option);
