@@ -64,7 +64,8 @@
         "MathJax_SansSerif-bold":   "SansSerif/Bold/Main.js",
         "MathJax_SansSerif-italic": "SansSerif/Italic/Main.js",
         "MathJax_Script":           "Script/Regular/Main.js",
-        "MathJax_Typewriter":       "Typewriter/Regular/Main.js"
+        "MathJax_Typewriter":       "Typewriter/Regular/Main.js",
+        "MathJax_Caligraphic-bold": "Caligraphic/Bold/Main.js"
       },
       
       VARIANT: {
@@ -130,7 +131,10 @@
                      0x210F:[0x210F,MML.VARIANT.NORMAL]  // \hslash
                    }},
         "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
-        "-smallOp": {fonts:[SIZE1,MAIN]}
+        "-smallOp": {fonts:[SIZE1,MAIN]},
+        "-tex-caligraphic-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"], bold:true,
+                                  offsetA: 0x41, variantA: "bold-italic"},
+        "-tex-oldstyle-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"], bold:true}
       },
       
       RANGES: [
