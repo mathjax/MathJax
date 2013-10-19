@@ -1897,7 +1897,6 @@
           delete HTMLCSS.FONTDATA.REMAPACCENT["\u2192"];
         }
         if (browser.isPC && !MathJax.Hub.Browser.versionAtLeast("5.0")) {
-          // FIXME:  patch caligraphic bold, too
           var WinChrome = "-WinChrome";
           HTMLCSS.Augment({
             FONTDATA: {
@@ -1906,7 +1905,7 @@
                 bold:   {remap: {0xE2F1: [0x3E,WinChrome]}},
                 italic: {remap: {0x64:   [0x64,WinChrome]}},
                 "-tex-caligraphic": {remap: {0x54: [0x54,WinChrome]}},
-                "-tex-caligraphic-bold": {remap: {0x54: [0xE2F0,"-WinChrome"]}},
+                "-tex-caligraphic-bold": {remap: {0x54: [0xE2F0,WinChrome]}},
                 "-largeOp": {remap: {0x2A00: [0x2A00,WinChrome]}},
                 "-smallOp": {remap: {0x22C3: [0x22C3,WinChrome]}},
                 "-WinChrome": {fonts:["MathJax_WinChrome"]}
