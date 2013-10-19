@@ -134,9 +134,9 @@
                    }},
         "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
         "-smallOp": {fonts:[SIZE1,MAIN]},
-        "-tex-caligraphic-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"],
+        "-tex-caligraphic-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"], bold:true,
                                   offsetA: 0x41, variantA: "bold-italic"},
-        "-tex-oldstyle-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"]}
+        "-tex-oldstyle-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"], bold:true}
       },
       
       RANGES: [
@@ -1906,6 +1906,7 @@
                 bold:   {remap: {0xE2F1: [0x3E,WinChrome]}},
                 italic: {remap: {0x64:   [0x64,WinChrome]}},
                 "-tex-caligraphic": {remap: {0x54: [0x54,WinChrome]}},
+                "-tex-caligraphic-bold": {remap: {0x54: [0xE2F0,"-WinChrome"]}},
                 "-largeOp": {remap: {0x2A00: [0x2A00,WinChrome]}},
                 "-smallOp": {remap: {0x22C3: [0x22C3,WinChrome]}},
                 "-WinChrome": {fonts:["MathJax_WinChrome"]}
@@ -1937,16 +1938,6 @@
             0xE2F1: [587,85,894,96,797]        // stix-lowercase u bold italic slashed
           };
 
-        }
-
-        if (!browser.versionAtLeast("5.0")) {
-          HTMLCSS.Augment({
-            FONTDATA: {
-              VARIANT: {
-                "-tex-caligraphic-bold": {remap: {0x54: [0xE2F0,"-WinChrome"]}}
-              }
-            }
-          });
         }
 
       }

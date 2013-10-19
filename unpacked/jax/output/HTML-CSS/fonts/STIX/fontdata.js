@@ -107,11 +107,11 @@
         "-largeOp": {fonts:[SIZE1,"STIXIntegralsD",NONUNI,GENERAL]},
         "-smallOp": {},
         "-tex-caligraphic-bold": {
-          fonts:["STIXGeneral-bold-italic","STIXNonUnicode-bold-italic","STIXNonUnicode","STIXGeneral","STIXSizeOneSym"],
+          fonts:["STIXGeneral-bold-italic","STIXNonUnicode-bold-italic","STIXNonUnicode","STIXGeneral","STIXSizeOneSym"], bold:true,
           offsetA: 0xE247, noLowerCase: 1
         },
         "-tex-oldstyle-bold": {
-          fonts:["STIXGeneral-bold","STIXNonUnicode-bold","STIXGeneral","STIXSizeOneSym"], offsetN: 0xE263,
+          fonts:["STIXGeneral-bold","STIXNonUnicode-bold","STIXGeneral","STIXSizeOneSym"], bold:true, offsetN: 0xE263,
           remap: {0xE264: 0xE267, 0xE265: 0xE26B, 0xE266: 0xE26F,
                   0xE267: 0xE273, 0xE268: 0xE277, 0xE269: 0xE27B,
                   0xE26A: 0xE27F, 0xE26B: 0xE283, 0xE26C: 0xE287}
