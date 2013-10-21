@@ -1724,8 +1724,9 @@
       },
 
       HTMLhandleDir: function (span) {
-        span.style.direction = this.Get("dir");
-	return span;
+        var dir = this.Get("dir",true); // only get value if not the default
+        if (dir) {span.dir = dir}
+        return span;
       },
 
       HTMLhandleColor: function (span) {
@@ -2305,7 +2306,6 @@
 	}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
-        this.HTMLhandleDir(span);
 	return span;
       },
       HTMLstretchH: MML.mbase.HTMLstretchH,
@@ -2699,10 +2699,6 @@
 	//  Add color (if any)
 	//
 	this.HTMLhandleColor(span);
-        //
-        //  Add direction (if any)
-        //
-        this.HTMLhandleDir(span);
 	//
 	//  Make math span be the correct height and depth
 	//

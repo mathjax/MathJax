@@ -223,7 +223,19 @@ MathJax.ElementJax.mml.Augment({
     "fontfamily", "fontsize", "fontweight", "fontstyle",
     "color", "background",
     "id", "class", "href", "style"
-  ]
+  ],
+  Error: function (message,def) {
+    var mml = this.merror(message),
+        dir = MathJax.Localization.fontDirection(),
+        font = MathJax.Localization.fontFamily();
+    if (def) {mml = mml.With(def)}
+    if (dir || font) {
+      mml = this.mstyle(mml);
+      if (dir) {mml.dir = dir}
+      if (font) {mml.style.fontFamily = "font-family: "+font}
+    }
+    return mml;
+  }
 });
 
 (function (MML) {

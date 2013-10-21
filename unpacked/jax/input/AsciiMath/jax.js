@@ -1292,8 +1292,7 @@ junk = null;
     formatError: function (err,math,script) {
       var message = err.message.replace(/\n.*/,"");
       MathJax.Hub.signal.Post(["AsciiMath Jax - parse error",message,math,script]);
-      var mml = MML.merror(message);
-      return (MathJax.Localization.fontDirection() ? MML.mstyle(mml).With({dir: "rtl"}) : mml);
+      return MML.Error(message);
     },
     Error: function (message) {
       throw MathJax.Hub.Insert(Error(message),{asciimathError: true});
