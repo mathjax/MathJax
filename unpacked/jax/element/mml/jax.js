@@ -223,7 +223,19 @@ MathJax.ElementJax.mml.Augment({
     "fontfamily", "fontsize", "fontweight", "fontstyle",
     "color", "background",
     "id", "class", "href", "style"
-  ]
+  ],
+  Error: function (message,def) {
+    var mml = this.merror(message),
+        dir = MathJax.Localization.fontDirection(),
+        font = MathJax.Localization.fontFamily();
+    if (def) {mml = mml.With(def)}
+    if (dir || font) {
+      mml = this.mstyle(mml);
+      if (dir) {mml.dir = dir}
+      if (font) {mml.style.fontFamily = "font-family: "+font}
+    }
+    return mml;
+  }
 });
 
 (function (MML) {
@@ -232,7 +244,8 @@ MathJax.ElementJax.mml.Augment({
     type: "base", isToken: false,
     defaults: {
       mathbackground: MML.INHERIT,
-      mathcolor: MML.INHERIT
+      mathcolor: MML.INHERIT,
+      dir: MML.INHERIT,
     },
     noInherit: {},
     noInheritAttribute: {
@@ -428,7 +441,8 @@ MathJax.ElementJax.mml.Augment({
       mathvariant: MML.AUTO,
       mathsize: MML.INHERIT,
       mathbackground: MML.INHERIT,
-      mathcolor: MML.INHERIT
+      mathcolor: MML.INHERIT,
+      dir: MML.INHERIT
     },
     autoDefault: function (name) {
       if (name === "mathvariant") {
@@ -458,7 +472,8 @@ MathJax.ElementJax.mml.Augment({
       mathvariant: MML.INHERIT,
       mathsize: MML.INHERIT,
       mathbackground: MML.INHERIT,
-      mathcolor: MML.INHERIT
+      mathcolor: MML.INHERIT,
+      dir: MML.INHERIT
     }
   });
   
@@ -469,6 +484,7 @@ MathJax.ElementJax.mml.Augment({
       mathsize: MML.INHERIT,
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
+      dir: MML.INHERIT,
       form: MML.AUTO,
       fence: MML.AUTO,
       separator: MML.AUTO,
@@ -630,7 +646,8 @@ MathJax.ElementJax.mml.Augment({
       mathvariant: MML.INHERIT,
       mathsize: MML.INHERIT,
       mathbackground: MML.INHERIT,
-      mathcolor: MML.INHERIT
+      mathcolor: MML.INHERIT,
+      dir: MML.INHERIT
     }
   });
 
@@ -665,6 +682,7 @@ MathJax.ElementJax.mml.Augment({
       mathsize: MML.INHERIT,
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
+      dir: MML.INHERIT,
       lquote: '"',
       rquote: '"'
     }
@@ -810,6 +828,7 @@ MathJax.ElementJax.mml.Augment({
       scriptminsize: "8pt",
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
+      dir: MML.INHERIT,
       infixlinebreakstyle: MML.LINEBREAKSTYLE.BEFORE,
       decimalseparator: "."
     },
@@ -1226,6 +1245,7 @@ MathJax.ElementJax.mml.Augment({
       mathsize: MML.SIZE.NORMAL,
       mathcolor: "", // should be "black", but allow it to inherit from surrounding text
       mathbackground: MML.COLOR.TRANSPARENT,
+      dir: "ltr",
       scriptlevel: 0,
       displaystyle: MML.AUTO,
       display: "inline",

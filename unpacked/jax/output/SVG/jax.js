@@ -1465,7 +1465,7 @@
         if (this.Parent().type === "merror") {
 	  //  *** FIXME:  Make color, style, scale configurable
           svg = this.SVG(); this.SVGhandleSpace(svg);
-          text = BBOX.G(); text.Add(BBOX.TEXT(.9*scale,this.data.join(""),{fill:"#C00"}));
+          text = BBOX.G(); text.Add(BBOX.TEXT(.9*scale,this.data.join(""),{fill:"#C00",direction:this.Get("dir")}));
           svg.Add(BBOX.RECT(text.h+100,text.d+100,text.w+200,{fill:"#FF8",stroke:"#C00","stroke-width":50}),0,0);
           svg.Add(text,150,0); svg.H += 150; svg.D += 50;
           svg.Clean();
@@ -1473,7 +1473,7 @@
           return svg;
 	} else if (SVG.config.mtextFontInherit) {
           svg = this.SVG(); this.SVGhandleSpace(svg);
-          var variant = this.SVGgetVariant(), def = {};
+          var variant = this.SVGgetVariant(), def = {direction:this.Get("dir")};
           if (variant.bold)   {def["font-weight"] = "bold"}
           if (variant.italic) {def["font-style"] = "italic"}
           svg.Add(BBOX.TEXT(scale,this.data.join(""),def)); svg.Clean();

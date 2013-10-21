@@ -77,7 +77,7 @@
         mml = this.TeXAtom(match[2]);
       } else if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase))) {
         MathJax.Hub.signal.Post(["MathML Jax - unknown node type",type]);
-        return MML.merror(_("UnknownNodeType","Unknown node type: %1",type));
+        return MML.Error(_("UnknownNodeType","Unknown node type: %1",type));
       } else {
         mml = MML[type]();
       }
@@ -267,7 +267,7 @@
     formatError: function (err,math,script) {
       var message = err.message.replace(/\n.*/,"");
       MathJax.Hub.signal.Post(["MathML Jax - parse error",message,math,script]);
-      return MML.merror(message);
+      return MML.Error(message);
     },
     Error: function (message) {
       //

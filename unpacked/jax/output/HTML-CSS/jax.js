@@ -1723,6 +1723,12 @@
 	return span;
       },
 
+      HTMLhandleDir: function (span) {
+        var dir = this.Get("dir",true); // only get value if not the default
+        if (dir) {span.dir = dir}
+        return span;
+      },
+
       HTMLhandleColor: function (span) {
 	var values = this.getValues("mathcolor","color");
 	if (this.mathbackground) {values.mathbackground = this.mathbackground}
@@ -1973,6 +1979,7 @@
         }
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
 	return span;
       }
     });
@@ -1987,6 +1994,7 @@
 	if (this.data.join("").length !== 1) {delete span.bbox.skew}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
 	return span;
       }
     });
@@ -2061,6 +2069,7 @@
         //
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
 	return span;
       },
       CoreParent: function () {
@@ -2157,6 +2166,7 @@
         if (this.data.join("").length !== 1) {delete span.bbox.skew}
         this.HTMLhandleSpace(span);
         this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
         return span;
       }
     });
