@@ -36,7 +36,7 @@ MathJax.Localization.addTranslation("de","MathMenu",{
           TeX: "TeX",
           StarMath: "StarMath",
           Maple: "Maple",
-          ContentMathML: "Inhalts-MathML",
+          ContentMathML: "Content MathML",
           OpenMath: "OpenMath",
           texHints: "TeX-Hinweise in MathML anzeigen",
           Settings: "Math-Einstellungen",

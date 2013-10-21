@@ -69,7 +69,8 @@ MathJax.Localization.addTranslation("nl","MathMenu",{
           PercentScale: "De schaal moet een percentage zijn, bijvoorbeeld 120%%.",
           IE9warning: "Het contextuele menu van MathJax wordt uitgeschakeld, maar u kunt via Alt-klik op een expressie klikken om het MathJaxmenu weer te geven.",
           NoOriginalForm: "Geen oorspronkelijke vorm beschikbaar",
-          Close: "Sluiten"
+          Close: "Sluiten",
+          Browser: "Browser"
         }
 });
 
