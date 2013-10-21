@@ -26,7 +26,7 @@
  */
 
 (function (SVG,MML,AJAX,HUB) {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",

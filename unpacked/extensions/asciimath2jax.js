@@ -30,7 +30,7 @@
  */
 
 MathJax.Extension.asciimath2jax = {
-  version: "2.2",
+  version: "2.3",
   config: {
     delimiters: [['`','`']],   // The star/stop delimiter pairs for asciimath code
 

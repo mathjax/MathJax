@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -61,6 +61,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       for (var i = 0, m = nl.length; i < m; i++) notation[nl[i]] = true;
       if (notation[MML.NOTATION.UPDIAGONALARROW]) notation[MML.NOTATION.UPDIAGONALSTRIKE] = false;
 
+      var line;
       for (var n in notation) {
         if (!notation.hasOwnProperty(n) || !notation[n]) continue;
         switch (n) {
@@ -117,8 +118,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             break;
 
           case MML.NOTATION.VERTICALSTRIKE:
-            var vline = HTMLCSS.createRule(stack,H+D-t/2,0,t);
-            HTMLCSS.addBox(stack,vline); HTMLCSS.placeBox(vline,p+t+base.bbox.w/2,-D,true);
+            line = HTMLCSS.createRule(stack,H+D-t/2,0,t);
+            HTMLCSS.addBox(stack,line); HTMLCSS.placeBox(line,p+t+base.bbox.w/2,-D,true);
             break;
             
           case MML.NOTATION.TOP:
@@ -130,14 +131,14 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             break;
             
           case MML.NOTATION.HORIZONTALSTRIKE:
-            var hline = HTMLCSS.createRule(stack,t,0,W-t/2);
-            HTMLCSS.addBox(stack,hline); HTMLCSS.placeBox(hline,0,(H+D)/2-D,true);
+            line = HTMLCSS.createRule(stack,t,0,W-t/2);
+            HTMLCSS.addBox(stack,line); HTMLCSS.placeBox(line,0,(H+D)/2-D,true);
             break;
 
           case MML.NOTATION.UPDIAGONALSTRIKE:
             if (HTMLCSS.useVML) {
               if (!vml) {vml = this.HTMLvml(stack,H,D,W,t,values.mathcolor)}
-              var line = this.HTMLvmlElement(vml,"line",{from: "0,"+this.HTMLpx(H+D-t), to: this.HTMLpx(W)+",0"});
+              line = this.HTMLvmlElement(vml,"line",{from: "0,"+this.HTMLpx(H+D-t), to: this.HTMLpx(W)+",0"});
             } else {
               if (!svg) {svg = this.HTMLsvg(stack,H,D,W,t,values.mathcolor)}
               this.HTMLsvgElement(svg.firstChild,"line",{
@@ -149,7 +150,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           case MML.NOTATION.UPDIAGONALARROW:
             if (HTMLCSS.useVML) {
               if (!vml) {vml = this.HTMLvml(stack,H,D,W,t,values.mathcolor)}
-              var line = this.HTMLvmlElement(vml,"line",{from: "0,"+this.HTMLpx(H+D-t), to: this.HTMLpx(W)+","+this.HTMLpx(t)});
+              line = this.HTMLvmlElement(vml,"line",{from: "0,"+this.HTMLpx(H+D-t), to: this.HTMLpx(W)+","+this.HTMLpx(t)});
               this.HTMLvmlElement(line,"stroke",{endarrow:"classic"});
             } else {
               if (!svg) {svg = this.HTMLsvg(stack,H,D,W,t,values.mathcolor)}

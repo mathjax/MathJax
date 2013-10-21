@@ -44,7 +44,7 @@
 //  The configuration defaults, augmented by the user settings
 //
 MathJax.Extension["TeX/noUndefined"] = {
-  version: "2.2",
+  version: "2.3",
   config: MathJax.Hub.CombineConfig("TeX.noUndefined",{
     disabled: false,      // set to true to return to original error messages
     attributes: {

@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -116,7 +116,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
 
       // perform some reduction e.g. eliminate duplicate notations.
       var nl = MathJax.Hub.SplitList(values.notation), notation = {};
-      for (var i = 0, m = nl.length; i < m; i++) notation[nl[i]] = true;
+      for (i = 0, m = nl.length; i < m; i++) notation[nl[i]] = true;
       if (notation[MML.NOTATION.UPDIAGONALARROW]) notation[MML.NOTATION.UPDIAGONALSTRIKE] = false;
       
       for (var n in notation) {

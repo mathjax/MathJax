@@ -902,6 +902,7 @@
     MML.math.Augment({
       toNativeMML: function (parent) {
         var tag = this.NativeMMLelement(this.type), math = tag, jax;
+        var i, m;
         nMML.adjustWidths = [];
         //
         //  Some browsers don't seem to add the xmlns attribute, so do it by hand.
@@ -916,7 +917,7 @@
         //
         //  Add the children
         //
-        for (var i = 0, m = this.data.length; i < m; i++) {
+        for (i = 0, m = this.data.length; i < m; i++) {
           if (this.data[i]) {this.data[i].toNativeMML(tag)}
             else {tag.appendChild(this.NativeMMLelement("mrow"))}
         }
@@ -969,8 +970,8 @@
           //  fix them up.  Use ex's so that they print properly (see above).
           //
           var mtd = [];
-          for (var i = 0, m = nMML.adjustWidths.length; i < m; i++) {
-            var tag = nMML.adjustWidths[i];
+          for (i = 0, m = nMML.adjustWidths.length; i < m; i++) {
+            tag = nMML.adjustWidths[i];
             var style = tag.getAttribute("style") || "";
             if (!style.match(/(^|;)\s*min-width:/)) {
               mtd.push(tag.scrollWidth);
@@ -1215,11 +1216,11 @@
         //
         // Process the postscript pairs
         //
-        var m = this.data.length, i;
+        var m = this.data.length, i, msubsup;
         for (i = 1; i < m; i+=2) {
           if (this.data[i].type === "mprescripts") break;
 
-          var msubsup = this.NativeMMLelement("msubsup");
+          msubsup = this.NativeMMLelement("msubsup");
           msubsup.appendChild(base);
 
           //
@@ -1243,7 +1244,7 @@
         // Process the prescript pairs
         //
         for (i++; i < m; i+=2) {
-          var msubsup = this.NativeMMLelement("msubsup");
+          msubsup = this.NativeMMLelement("msubsup");
           msubsup.appendChild(this.NativeMMLelement("mrow"));
 
           //

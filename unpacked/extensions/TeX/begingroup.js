@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/begingroup"] = {
-  version: "2.2"
+  version: "2.3"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
