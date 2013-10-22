@@ -245,7 +245,7 @@ MathJax.ElementJax.mml.Augment({
     defaults: {
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
-      dir: MML.INHERIT,
+      dir: MML.INHERIT
     },
     noInherit: {},
     noInheritAttribute: {
