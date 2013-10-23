@@ -523,7 +523,7 @@
         0x27EA: EXTRAV,
         0x27EB: EXTRAV,
         0x27EE: {alias: 0x28, dir: V},
-        0x27EF: {alias: 0x28, dir: V},
+        0x27EF: {alias: 0x29, dir: V},
         0x27F5: {alias: 0x2190, dir: H},
         0x27F6: {alias: 0x2192, dir: H},
         0x27F7: {alias: 0x2194, dir: H},

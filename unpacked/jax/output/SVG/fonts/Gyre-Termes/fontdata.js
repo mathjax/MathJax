@@ -116,8 +116,7 @@
           "sans-serif": {
             fonts: [SANSSERIF],
             offsetA: 0x1D5A0,
-            offsetN: 0x1D7E2,
-            offsetG: 0xE17D
+            offsetN: 0x1D7E2
           },
           "bold-sans-serif": {
             fonts: [SANSSERIF], bold:true,
@@ -127,14 +126,11 @@
           },
           "sans-serif-italic": {
              fonts: [SANSSERIF], italic: true,
-             offsetA: 0x1D608,
-             offsetN: 0xE1B4,
-             offsetG: 0xE1BF
+             offsetA: 0x1D608
           },
           "sans-serif-bold-italic": {
              fonts: [SANSSERIF], bold:true, italic: true,
              offsetA: 0x1D63C,
-             offsetN: 0xE1F6,
              offsetG: 0x1D790
           },
           "monospace": {
@@ -159,7 +155,7 @@
            remap: {0x03F5: 52, 0x03D1: 53, 0x03F0: 54, 0x03D5: 55, 0x03F1: 56, 0x03D6: 57, 0x03F4: 17}}
       ],
 
-      RULECHAR: 0x2212,
+      RULECHAR: 0x0305,
 
       REMAP: {
       },
@@ -183,6 +179,7 @@
           HW: [[816,MAIN], [976,SIZE1], [1168,SIZE2], [1398,SIZE3], [1674,SIZE4], [2005,SIZE5], [2404,SIZE6], [2780,SIZE6,1.157]],
           stretch: {bot:[0x23A0,SYMBOLS], ext:[0x239F,SYMBOLS], top:[0x239E,SYMBOLS]}
         },
+        0x2D: {alias: 0x305, dir: H},
         0x2F:
         {
           dir: V,
@@ -211,6 +208,8 @@
           HW: [[836,MAIN], [998,SIZE1], [1190,SIZE2], [1422,SIZE3], [1698,SIZE4], [2032,SIZE5], [2432,SIZE6], [2780,SIZE6,1.143]],
           stretch: {bot:[0x23A6,SYMBOLS], ext:[0x23A5,SYMBOLS], top:[0x23A4,SYMBOLS]}
         },
+        0x5E: {alias: 0x302, dir: H},
+        0x5F: {alias: 0x332, dir: H},
         0x7B:
         {
           dir: V,
@@ -229,6 +228,10 @@
           HW: [[820,MAIN], [980,SIZE1], [1172,SIZE2], [1402,SIZE3], [1678,SIZE4], [2009,SIZE5], [2408,SIZE6], [2780,SIZE6,1.155]],
           stretch: {bot:[0x23AD,SYMBOLS], ext:[0xE007,SIZE6], mid:[0x23AC,SYMBOLS], top:[0x23AB,SYMBOLS]}
         },
+        0xAF: {alias: 0x332, dir: H},
+        0x2C6: {alias: 0x302, dir: H},
+        0x2C9: {alias: 0x305, dir: H},
+        0x2DC: {alias: 0x303, dir: H},
         0x302:
         {
           dir: H,
@@ -245,135 +248,50 @@
           HW: [[333,MARKS], [500,SIZE1]],
           stretch: {left:[0xE0FB,SIZE6], rep:[0xE0FC,SIZE6], right:[0xE0FD,SIZE6]}
         },
-        0x306:
-        {
-          dir: H,
-          HW: [[350,MAIN], [620,SIZE1], [740,SIZE2], [885,SIZE3], [1058,SIZE4], [1266,SIZE5], [1515,SIZE6]]
-        },
+        0x306: EXTRAH,
         0x30C:
         {
           dir: H,
           HW: [[342,MAIN], [608,SIZE1], [727,SIZE2], [870,SIZE3], [1041,SIZE4], [1249,SIZE5], [1496,SIZE6]]
         },
-        0x311:
-        {
-          dir: H,
-          HW: [[350,MARKS], [620,SIZE1], [740,SIZE2], [885,SIZE3], [1058,SIZE4], [1266,SIZE5], [1515,SIZE6]]
-        },
-        0x32C:
-        {
-          dir: H,
-          HW: [[342,MARKS], [608,SIZE1], [727,SIZE2], [870,SIZE3], [1041,SIZE4], [1249,SIZE5], [1496,SIZE6]]
-        },
-        0x32D:
-        {
-          dir: H,
-          HW: [[342,MARKS], [608,SIZE1], [727,SIZE2], [870,SIZE3], [1041,SIZE4], [1249,SIZE5], [1496,SIZE6]]
-        },
-        0x32E:
-        {
-          dir: H,
-          HW: [[350,MARKS], [620,SIZE1], [740,SIZE2], [885,SIZE3], [1058,SIZE4], [1266,SIZE5], [1515,SIZE6]]
-        },
-        0x32F:
-        {
-          dir: H,
-          HW: [[350,MARKS], [620,SIZE1], [740,SIZE2], [885,SIZE3], [1058,SIZE4], [1266,SIZE5], [1515,SIZE6]]
-        },
-        0x330:
-        {
-          dir: H,
-          HW: [[334,MARKS], [601,SIZE1], [720,SIZE2], [863,SIZE3], [1037,SIZE4], [1241,SIZE5], [1491,SIZE6]]
-        },
+        0x311: EXTRAH,
+        0x32C: EXTRAH,
+        0x32D: EXTRAH,
+        0x32E: EXTRAH,
+        0x32F: EXTRAH,
+        0x330: EXTRAH,
         0x332:
         {
           dir: H,
           HW: [[333,MARKS], [500,SIZE1]],
           stretch: {left:[0xE0F5,SIZE6], rep:[0xE0F6,SIZE6], right:[0xE0F7,SIZE6]}
         },
-        0x333:
-        {
-          dir: H,
-          HW: [[333,MARKS], [500,SIZE1]],
-          stretch: {left:[0xE0F8,SIZE6], rep:[0xE0F9,SIZE6], right:[0xE0FA,SIZE6]}
-        },
-        0x33F:
-        {
-          dir: H,
-          HW: [[333,MARKS], [500,SIZE1]],
-          stretch: {left:[0xE0FE,SIZE6], rep:[0xE0FF,SIZE6], right:[0xE100,SIZE6]}
-        },
+        0x333: EXTRAH,
+        0x33F: EXTRAH,
+        0x2015: {alias: 0x305, dir: H},
         0x2016:
         {
           dir: V,
           HW: [[800,MARKS], [960,SIZE1], [1152,SIZE2], [1382,SIZE3], [1658,SIZE4], [1990,SIZE5], [2388,SIZE6]],
           stretch: {bot:[0xE12A,SIZE6], ext:[0xE12B,SIZE6], top:[0xE12C,SIZE6]}
         },
+        0x2017: {alias: 0x305, dir: H},
+        0x203E: {alias: 0x305, dir: H},
         0x2044:
         {
           dir: V,
           HW: [[800,MARKS], [1048,SIZE1], [1372,SIZE2], [1798,SIZE3], [2356,SIZE4], [3086,SIZE5], [4043,SIZE6]]
         },
-        0x20D0:
-        {
-          dir: H,
-          HW: [[376,MARKS], [500,SIZE1]],
-          stretch: {left:[0xE008,SIZE6], rep:[0xE009,SIZE6], right:[0xE00A,SIZE6]}
-        },
-        0x20D1:
-        {
-          dir: H,
-          HW: [[376,MARKS], [500,SIZE1]],
-          stretch: {left:[0xE00B,SIZE6], rep:[0xE00C,SIZE6], right:[0xE00D,SIZE6]}
-        },
-        0x20D6:
-        {
-          dir: H,
-          HW: [[386,MARKS], [510,SIZE1]],
-          stretch: {left:[0xE00E,SIZE6], rep:[0xE00F,SIZE6], right:[0xE010,SIZE6]}
-        },
-        0x20D7:
-        {
-          dir: H,
-          HW: [[386,MAIN], [510,SIZE1]],
-          stretch: {left:[0xE011,SIZE6], rep:[0xE012,SIZE6], right:[0xE013,SIZE6]}
-        },
-        0x20E1:
-        {
-          dir: H,
-          HW: [[458,MARKS], [582,SIZE1]],
-          stretch: {left:[0xE014,SIZE6], rep:[0xE015,SIZE6], right:[0xE016,SIZE6]}
-        },
-        0x20E9:
-        {
-          dir: H,
-          HW: [[375,MARKS], [750,SIZE1], [1125,SIZE2], [1500,SIZE3], [1875,SIZE4], [2250,SIZE5], [2625,SIZE6]],
-          stretch: {left:[0xE11B,SIZE6], rep:[0xE11C,SIZE6], right:[0xE11D,SIZE6]}
-        },
-        0x20EC:
-        {
-          dir: H,
-          HW: [[376,MARKS], [500,SIZE1]],
-          stretch: {left:[0xE017,SIZE6], rep:[0xE018,SIZE6], right:[0xE019,SIZE6]}
-        },
-        0x20ED:
-        {
-          dir: H,
-          HW: [[376,MARKS], [500,SIZE1]],
-          stretch: {left:[0xE01A,SIZE6], rep:[0xE01B,SIZE6], right:[0xE01C,SIZE6]}
-        },
-        0x20EE:
-        {
-          dir: H,
-          HW: [[386,MARKS], [510,SIZE1]],
-          stretch: {left:[0xE01D,SIZE6], rep:[0xE01E,SIZE6], right:[0xE01F,SIZE6]}
-        },
-        0x20EF:
-        {
-          dir: H,
-          HW: [[386,MARKS], [510,SIZE1]],
-          stretch: {left:[0xE020,SIZE6], rep:[0xE021,SIZE6], right:[0xE022,SIZE6]}
-        },
+        0x20D0: EXTRAH,
+        0x20D1: EXTRAH,
+        0x20D6: EXTRAH,
+        0x20D7: EXTRAH,
+        0x20E1: EXTRAH,
+        0x20E9: EXTRAH,
+        0x20EC: EXTRAH,
+        0x20ED: EXTRAH,
+        0x20EE: EXTRAH,
+        0x20EF: EXTRAH,
         0x2140:
         {
           dir: V,
@@ -415,283 +333,64 @@
           HW: [[880,MAIN], [1200,SIZE1]],
           stretch: {bot:[0xE03A,SIZE6], ext:[0xE03B,SIZE6], top:[0xE03C,SIZE6]}
         },
-        0x2196:
-        {
-          dir: V,
-          HW: [[506,MAIN], [733,SIZE1]]
-        },
-        0x2197:
-        {
-          dir: V,
-          HW: [[506,MAIN], [733,SIZE1]]
-        },
-        0x2198:
-        {
-          dir: V,
-          HW: [[506,MAIN], [733,SIZE1]]
-        },
-        0x2199:
-        {
-          dir: V,
-          HW: [[506,MAIN], [733,SIZE1]]
-        },
-        0x219A:
-        {
-          dir: H,
-          HW: [[690,MAIN], [1010,SIZE1]],
-          stretch: {left:[0xE02F,SIZE6], rep:[0xE030,SIZE6], mid:[0xE031,SIZE6], right:[0xE032,SIZE6]}
-        },
-        0x219B:
-        {
-          dir: H,
-          HW: [[690,MAIN], [1010,SIZE1]],
-          stretch: {left:[0xE033,SIZE6], rep:[0xE034,SIZE6], mid:[0xE035,SIZE6], right:[0xE036,SIZE6]}
-        },
-        0x219E:
-        {
-          dir: H,
-          HW: [[870,MAIN], [1190,SIZE1]],
-          stretch: {left:[0xE041,SIZE6], rep:[0xE042,SIZE6], right:[0xE043,SIZE6]}
-        },
-        0x219F:
-        {
-          dir: V,
-          HW: [[870,ARROWS], [1190,SIZE1]],
-          stretch: {bot:[0xE047,SIZE6], ext:[0xE048,SIZE6], top:[0xE049,SIZE6]}
-        },
-        0x21A0:
-        {
-          dir: H,
-          HW: [[870,MAIN], [1190,SIZE1]],
-          stretch: {left:[0xE044,SIZE6], rep:[0xE045,SIZE6], right:[0xE046,SIZE6]}
-        },
-        0x21A1:
-        {
-          dir: V,
-          HW: [[870,ARROWS], [1190,SIZE1]],
-          stretch: {bot:[0xE04A,SIZE6], ext:[0xE04B,SIZE6], top:[0xE04C,SIZE6]}
-        },
-        0x21A2:
-        {
-          dir: H,
-          HW: [[880,MAIN], [1200,SIZE1]],
-          stretch: {left:[0xE04D,SIZE6], rep:[0xE04E,SIZE6], right:[0xE04F,SIZE6]}
-        },
-        0x21A3:
-        {
-          dir: H,
-          HW: [[880,MAIN], [1200,SIZE1]],
-          stretch: {left:[0xE050,SIZE6], rep:[0xE051,SIZE6], right:[0xE052,SIZE6]}
-        },
+        0x2196: EXTRAV,
+        0x2197: EXTRAV,
+        0x2198: EXTRAV,
+        0x2199: EXTRAV,
+        0x219A: EXTRAH,
+        0x219B: EXTRAH,
+        0x219E: EXTRAH,
+        0x219F: EXTRAV,
+        0x21A0: EXTRAH,
+        0x21A1: EXTRAV,
+        0x21A2: EXTRAH,
+        0x21A3: EXTRAH,
         0x21A4:
         {
           dir: H,
           HW: [[690,ARROWS], [1010,SIZE1]],
           stretch: {left:[0xE053,SIZE6], rep:[0xE054,SIZE6], right:[0xE055,SIZE6]}
         },
-        0x21A5:
-        {
-          dir: V,
-          HW: [[690,ARROWS], [1010,SIZE1]],
-          stretch: {bot:[0xE059,SIZE6], ext:[0xE05A,SIZE6], top:[0xE05B,SIZE6]}
-        },
+        0x21A5: EXTRAV,
         0x21A6:
         {
           dir: H,
           HW: [[690,MAIN], [1010,SIZE1]],
           stretch: {left:[0xE056,SIZE6], rep:[0xE057,SIZE6], right:[0xE058,SIZE6]}
         },
-        0x21A7:
-        {
-          dir: V,
-          HW: [[690,ARROWS], [1010,SIZE1]],
-          stretch: {bot:[0xE05C,SIZE6], ext:[0xE05D,SIZE6], top:[0xE05E,SIZE6]}
-        },
-        0x21A9:
-        {
-          dir: H,
-          HW: [[716,MAIN], [1036,SIZE1]],
-          stretch: {left:[0xE062,SIZE6], rep:[0xE063,SIZE6], right:[0xE064,SIZE6]}
-        },
-        0x21AA:
-        {
-          dir: H,
-          HW: [[716,MAIN], [1036,SIZE1]],
-          stretch: {left:[0xE05F,SIZE6], rep:[0xE060,SIZE6], right:[0xE061,SIZE6]}
-        },
-        0x21AB:
-        {
-          dir: H,
-          HW: [[716,MAIN], [1036,SIZE1]],
-          stretch: {left:[0xE068,SIZE6], rep:[0xE069,SIZE6], right:[0xE06A,SIZE6]}
-        },
-        0x21AC:
-        {
-          dir: H,
-          HW: [[716,MAIN], [1036,SIZE1]],
-          stretch: {left:[0xE065,SIZE6], rep:[0xE066,SIZE6], right:[0xE067,SIZE6]}
-        },
-        0x21AD:
-        {
-          dir: H,
-          HW: [[880,MAIN], [1200,SIZE1]]
-        },
-        0x21AE:
-        {
-          dir: H,
-          HW: [[880,MAIN], [1200,SIZE1]],
-          stretch: {left:[0xE03D,SIZE6], rep:[0xE03E,SIZE6], mid:[0xE03F,SIZE6], right:[0xE040,SIZE6]}
-        },
-        0x21B0:
-        {
-          dir: V,
-          HW: [[696,MAIN], [888,SIZE1]]
-        },
-        0x21B1:
-        {
-          dir: V,
-          HW: [[696,MAIN], [888,SIZE1]]
-        },
-        0x21B2:
-        {
-          dir: V,
-          HW: [[696,ARROWS], [888,SIZE1]]
-        },
-        0x21B3:
-        {
-          dir: V,
-          HW: [[696,ARROWS], [888,SIZE1]]
-        },
-        0x21B6:
-        {
-          dir: H,
-          HW: [[639,MAIN], [879,SIZE1]]
-        },
-        0x21B7:
-        {
-          dir: H,
-          HW: [[639,MAIN], [879,SIZE1]]
-        },
-        0x21BC:
-        {
-          dir: H,
-          HW: [[680,MAIN], [1000,SIZE1]],
-          stretch: {left:[0xE06B,SIZE6], rep:[0xE06C,SIZE6], right:[0xE06D,SIZE6]}
-        },
-        0x21BD:
-        {
-          dir: H,
-          HW: [[680,MAIN], [1000,SIZE1]],
-          stretch: {left:[0xE071,SIZE6], rep:[0xE072,SIZE6], right:[0xE073,SIZE6]}
-        },
-        0x21BE:
-        {
-          dir: V,
-          HW: [[680,MAIN], [1000,SIZE1]],
-          stretch: {bot:[0xE077,SIZE6], ext:[0xE078,SIZE6], top:[0xE079,SIZE6]}
-        },
-        0x21BF:
-        {
-          dir: V,
-          HW: [[680,MAIN], [1000,SIZE1]],
-          stretch: {bot:[0xE07D,SIZE6], ext:[0xE07E,SIZE6], top:[0xE07F,SIZE6]}
-        },
-        0x21C0:
-        {
-          dir: H,
-          HW: [[680,MAIN], [1000,SIZE1]],
-          stretch: {left:[0xE06E,SIZE6], rep:[0xE06F,SIZE6], right:[0xE070,SIZE6]}
-        },
-        0x21C1:
-        {
-          dir: H,
-          HW: [[680,MAIN], [1000,SIZE1]],
-          stretch: {left:[0xE074,SIZE6], rep:[0xE075,SIZE6], right:[0xE076,SIZE6]}
-        },
-        0x21C2:
-        {
-          dir: V,
-          HW: [[680,MAIN], [1000,SIZE1]],
-          stretch: {bot:[0xE07A,SIZE6], ext:[0xE07B,SIZE6], top:[0xE07C,SIZE6]}
-        },
-        0x21C3:
-        {
-          dir: V,
-          HW: [[680,MAIN], [1000,SIZE1]],
-          stretch: {bot:[0xE080,SIZE6], ext:[0xE081,SIZE6], top:[0xE082,SIZE6]}
-        },
-        0x21C4:
-        {
-          dir: H,
-          HW: [[700,MAIN], [1020,SIZE1]],
-          stretch: {left:[0xE083,SIZE6], rep:[0xE084,SIZE6], right:[0xE085,SIZE6]}
-        },
-        0x21C5:
-        {
-          dir: V,
-          HW: [[700,ARROWS], [1020,SIZE1]],
-          stretch: {bot:[0xE089,SIZE6], ext:[0xE08A,SIZE6], top:[0xE08B,SIZE6]}
-        },
-        0x21C6:
-        {
-          dir: H,
-          HW: [[700,MAIN], [1020,SIZE1]],
-          stretch: {left:[0xE086,SIZE6], rep:[0xE087,SIZE6], right:[0xE088,SIZE6]}
-        },
-        0x21C7:
-        {
-          dir: H,
-          HW: [[690,MAIN], [1010,SIZE1]],
-          stretch: {left:[0xE08F,SIZE6], rep:[0xE090,SIZE6], right:[0xE091,SIZE6]}
-        },
-        0x21C8:
-        {
-          dir: V,
-          HW: [[690,MAIN], [1010,SIZE1]],
-          stretch: {bot:[0xE095,SIZE6], ext:[0xE096,SIZE6], top:[0xE097,SIZE6]}
-        },
-        0x21C9:
-        {
-          dir: H,
-          HW: [[690,MAIN], [1010,SIZE1]],
-          stretch: {left:[0xE092,SIZE6], rep:[0xE093,SIZE6], right:[0xE094,SIZE6]}
-        },
-        0x21CA:
-        {
-          dir: V,
-          HW: [[690,MAIN], [1010,SIZE1]],
-          stretch: {bot:[0xE098,SIZE6], ext:[0xE099,SIZE6], top:[0xE09A,SIZE6]}
-        },
-        0x21CB:
-        {
-          dir: H,
-          HW: [[680,MAIN], [1000,SIZE1]],
-          stretch: {left:[0xE0A1,SIZE6], rep:[0xE0A2,SIZE6], right:[0xE0A3,SIZE6]}
-        },
-        0x21CC:
-        {
-          dir: H,
-          HW: [[680,MAIN], [1000,SIZE1]],
-          stretch: {left:[0xE0A4,SIZE6], rep:[0xE0A5,SIZE6], right:[0xE0A6,SIZE6]}
-        },
-        0x21CD:
-        {
-          dir: H,
-          HW: [[690,MAIN], [1010,SIZE1]],
-          stretch: {left:[0xE0B9,SIZE6], rep:[0xE0BA,SIZE6], mid:[0xE0BB,SIZE6], right:[0xE0BC,SIZE6]}
-        },
-        0x21CE:
-        {
-          dir: H,
-          HW: [[880,MAIN], [1200,SIZE1]],
-          stretch: {left:[0xE0C1,SIZE6], rep:[0xE0C2,SIZE6], mid:[0xE0C3,SIZE6], right:[0xE0C4,SIZE6]}
-        },
-        0x21CF:
-        {
-          dir: H,
-          HW: [[690,MAIN], [1010,SIZE1]],
-          stretch: {left:[0xE0BD,SIZE6], rep:[0xE0BE,SIZE6], mid:[0xE0BF,SIZE6], right:[0xE0C0,SIZE6]}
-        },
+        0x21A7: EXTRAV,
+        0x21A9: EXTRAH,
+        0x21AA: EXTRAH,
+        0x21AB: EXTRAH,
+        0x21AC: EXTRAH,
+        0x21AD: EXTRAH,
+        0x21AE: EXTRAH,
+        0x21B0: EXTRAV,
+        0x21B1: EXTRAV,
+        0x21B2: EXTRAV,
+        0x21B3: EXTRAV,
+        0x21B6: EXTRAH,
+        0x21B7: EXTRAH,
+        0x21BC: EXTRAH,
+        0x21BD: EXTRAH,
+        0x21BE: EXTRAV,
+        0x21BF: EXTRAV,
+        0x21C0: EXTRAH,
+        0x21C1: EXTRAH,
+        0x21C2: EXTRAV,
+        0x21C3: EXTRAV,
+        0x21C4: EXTRAH,
+        0x21C5: EXTRAV,
+        0x21C6: EXTRAH,
+        0x21C7: EXTRAH,
+        0x21C8: EXTRAV,
+        0x21C9: EXTRAH,
+        0x21CA: EXTRAV,
+        0x21CB: EXTRAH,
+        0x21CC: EXTRAH,
+        0x21CD: EXTRAH,
+        0x21CE: EXTRAH,
+        0x21CF: EXTRAH,
         0x21D0:
         {
           dir: H,
@@ -728,111 +427,31 @@
           HW: [[880,MAIN], [1200,SIZE1]],
           stretch: {bot:[0xE0B6,SIZE6], ext:[0xE0B7,SIZE6], top:[0xE0B8,SIZE6]}
         },
-        0x21D6:
-        {
-          dir: V,
-          HW: [[560,ARROWS], [787,SIZE1]]
-        },
-        0x21D7:
-        {
-          dir: V,
-          HW: [[560,ARROWS], [787,SIZE1]]
-        },
-        0x21D8:
-        {
-          dir: V,
-          HW: [[560,ARROWS], [787,SIZE1]]
-        },
-        0x21D9:
-        {
-          dir: V,
-          HW: [[560,ARROWS], [787,SIZE1]]
-        },
-        0x21DA:
-        {
-          dir: H,
-          HW: [[870,MAIN], [1190,SIZE1]],
-          stretch: {left:[0xE0CB,SIZE6], rep:[0xE0CC,SIZE6], right:[0xE0CD,SIZE6]}
-        },
-        0x21DB:
-        {
-          dir: H,
-          HW: [[870,MAIN], [1190,SIZE1]],
-          stretch: {left:[0xE0CE,SIZE6], rep:[0xE0CF,SIZE6], right:[0xE0D0,SIZE6]}
-        },
-        0x21DC:
-        {
-          dir: H,
-          HW: [[690,ARROWS], [1010,SIZE1]]
-        },
-        0x21DD:
-        {
-          dir: H,
-          HW: [[690,MAIN], [1010,SIZE1]]
-        },
-        0x21E6:
-        {
-          dir: H,
-          HW: [[913,ARROWS], [1233,SIZE1]],
-          stretch: {left:[0xE0D1,SIZE6], rep:[0xE0D2,SIZE6], right:[0xE0D3,SIZE6]}
-        },
-        0x21E7:
-        {
-          dir: V,
-          HW: [[913,ARROWS], [1233,SIZE1]],
-          stretch: {bot:[0xE0D7,SIZE6], ext:[0xE0D8,SIZE6], top:[0xE0D9,SIZE6]}
-        },
-        0x21E8:
-        {
-          dir: H,
-          HW: [[913,ARROWS], [1233,SIZE1]],
-          stretch: {left:[0xE0D4,SIZE6], rep:[0xE0D5,SIZE6], right:[0xE0D6,SIZE6]}
-        },
-        0x21E9:
-        {
-          dir: V,
-          HW: [[913,ARROWS], [1233,SIZE1]],
-          stretch: {bot:[0xE0DA,SIZE6], ext:[0xE0DB,SIZE6], top:[0xE0DC,SIZE6]}
-        },
-        0x21F3:
-        {
-          dir: V,
-          HW: [[930,ARROWS], [1250,SIZE1]],
-          stretch: {bot:[0xE0DD,SIZE6], ext:[0xE0DE,SIZE6], top:[0xE0DF,SIZE6]}
-        },
-        0x21F5:
-        {
-          dir: V,
-          HW: [[700,ARROWS], [1020,SIZE1]],
-          stretch: {bot:[0xE08C,SIZE6], ext:[0xE08D,SIZE6], top:[0xE08E,SIZE6]}
-        },
-        0x21F6:
-        {
-          dir: H,
-          HW: [[690,ARROWS], [1010,SIZE1]],
-          stretch: {left:[0xE09B,SIZE6], rep:[0xE09C,SIZE6], right:[0xE09D,SIZE6]}
-        },
-        0x220F:
-        {
-          dir: V,
-          HW: [[954,OPERATORS], [1374,SIZE1]]
-        },
-        0x2210:
-        {
-          dir: V,
-          HW: [[954,OPERATORS], [1374,SIZE1]]
-        },
-        0x2211:
-        {
-          dir: V,
-          HW: [[954,OPERATORS], [1374,SIZE1]]
-        },
+        0x21D6: EXTRAV,
+        0x21D7: EXTRAV,
+        0x21D8: EXTRAV,
+        0x21D9: EXTRAV,
+        0x21DA: EXTRAH,
+        0x21DB: EXTRAH,
+        0x21DC: EXTRAH,
+        0x21DD: EXTRAH,
+        0x21E6: EXTRAH,
+        0x21E7: EXTRAV,
+        0x21E8: EXTRAH,
+        0x21E9: EXTRAV,
+        0x21F3: EXTRAV,
+        0x21F5: EXTRAV,
+        0x21F6: EXTRAH,
+        0x220F: EXTRAV,
+        0x2210: EXTRAV,
+        0x2211: EXTRAV,
         0x2212:
         {
           dir: H,
           HW: [[500,MAIN]],
           stretch: {left:[0xE127,SIZE6], rep:[0xE128,SIZE6], right:[0xE129,SIZE6]}
         },
+        0x2215: {alias: 0x2044, dir: V},
         0x221A:
         {
           dir: V,
@@ -851,106 +470,25 @@
           HW: [[800,MAIN], [960,SIZE1], [1152,SIZE2], [1382,SIZE3], [1658,SIZE4], [1990,SIZE5], [2388,SIZE6]],
           stretch: {bot:[0xE12A,SIZE6], ext:[0xE12B,SIZE6], top:[0xE12C,SIZE6]}
         },
-        0x222B:
-        {
-          dir: V,
-          HW: [[1092,MAIN], [2025,SIZE1]],
-          stretch: {top:[0xE135,SIZE6], ext:[0x23AE,SYMBOLS], bot:[0xE136,SIZE6]}
-        },
-        0x222C:
-        {
-          dir: V,
-          HW: [[1092,OPERATORS], [2025,SIZE1]],
-          stretch: {top:[0xE137,SIZE6], ext:[0xE138,SIZE6], bot:[0xE139,SIZE6]}
-        },
-        0x222D:
-        {
-          dir: V,
-          HW: [[1092,OPERATORS], [2025,SIZE1]],
-          stretch: {top:[0xE13A,SIZE6], ext:[0xE13B,SIZE6], bot:[0xE13C,SIZE6]}
-        },
-        0x222E:
-        {
-          dir: V,
-          HW: [[1092,OPERATORS,null,0x222F], [2025,SIZE1]]
-        },
-        0x222F:
-        {
-          dir: V,
-          HW: [[1092,OPERATORS], [2025,SIZE1]]
-        },
-        0x2230:
-        {
-          dir: V,
-          HW: [[1092,OPERATORS], [2025,SIZE1]]
-        },
-        0x2231:
-        {
-          dir: V,
-          HW: [[1092,OPERATORS], [2025,SIZE1]]
-        },
-        0x2232:
-        {
-          dir: V,
-          HW: [[1092,OPERATORS], [2025,SIZE1]]
-        },
-        0x2233:
-        {
-          dir: V,
-          HW: [[1092,OPERATORS], [2025,SIZE1]]
-        },
-        0x2261:
-        {
-          dir: H,
-          HW: [[500,MAIN]],
-          stretch: {left:[0xE12D,SIZE6], rep:[0xE12E,SIZE6], right:[0xE12F,SIZE6]}
-        },
-        0x2263:
-        {
-          dir: H,
-          HW: [[500,OPERATORS]],
-          stretch: {left:[0xE130,SIZE6], rep:[0xE131,SIZE6], right:[0xE132,SIZE6]}
-        },
-        0x22A2:
-        {
-          dir: V,
-          HW: [[650,MAIN], [800,SIZE1]]
-        },
-        0x22A3:
-        {
-          dir: V,
-          HW: [[650,MAIN], [800,SIZE1]]
-        },
-        0x22A4:
-        {
-          dir: V,
-          HW: [[650,MAIN], [800,SIZE1]]
-        },
-        0x22A5:
-        {
-          dir: V,
-          HW: [[650,MAIN], [800,SIZE1]]
-        },
-        0x22C0:
-        {
-          dir: V,
-          HW: [[888,OPERATORS], [1165,SIZE1]]
-        },
-        0x22C1:
-        {
-          dir: V,
-          HW: [[888,OPERATORS], [1165,SIZE1]]
-        },
-        0x22C2:
-        {
-          dir: V,
-          HW: [[898,OPERATORS], [1170,SIZE1]]
-        },
-        0x22C3:
-        {
-          dir: V,
-          HW: [[898,OPERATORS], [1170,SIZE1]]
-        },
+        0x222B: EXTRAV,
+        0x222C: EXTRAV,
+        0x222D: EXTRAV,
+        0x222E: EXTRAV,
+        0x222F: EXTRAV,
+        0x2230: EXTRAV,
+        0x2231: EXTRAV,
+        0x2232: EXTRAV,
+        0x2233: EXTRAV,
+        0x2261: EXTRAH,
+        0x2263: EXTRAH,
+        0x22A2: EXTRAV,
+        0x22A3: EXTRAV,
+        0x22A4: EXTRAV,
+        0x22A5: EXTRAV,
+        0x22C0: EXTRAV,
+        0x22C1: EXTRAV,
+        0x22C2: EXTRAV,
+        0x22C3: EXTRAV,
         0x2308:
         {
           dir: V,
@@ -985,36 +523,35 @@
           dir: V,
           HW: [[812,SYMBOLS], [1060,SIZE1], [1382,SIZE2], [1806,SIZE3], [2364,SIZE4], [3092,SIZE5], [4048,SIZE6]]
         },
-        0x23B4:
+        0x23AA:
         {
-          dir: H,
-          HW: [[375,MAIN], [750,SIZE1], [1125,SIZE2], [1500,SIZE3], [1875,SIZE4], [2250,SIZE5], [2625,SIZE6]],
-          stretch: {left:[0xE11B,SIZE6], rep:[0xE11C,SIZE6], right:[0xE11D,SIZE6]}
+          dir: V,
+          HW: [[596,SYMBOLS]],
+          stretch: {ext:[0x23AA,SYMBOLS]}
         },
-        0x23B5:
+        0x23AF: {alias: 0x305, dir: H},
+        0x23B0:
         {
-          dir: H,
-          HW: [[375,MAIN], [750,SIZE1], [1125,SIZE2], [1500,SIZE3], [1875,SIZE4], [2250,SIZE5], [2625,SIZE6]],
-          stretch: {left:[0xE11E,SIZE6], rep:[0xE11F,SIZE6], right:[0xE120,SIZE6]}
+          dir: V,
+          HW: [[607,SYMBOLS,null,0x23A7]],
+          stretch: {top:[0x23A7,SYMBOLS], ext:[0x23AA,SYMBOLS], bot:[0x23AD,SYMBOLS]}
         },
+        0x23B1:
+        {
+          dir: V,
+          HW: [[607,SYMBOLS,null,0x23AB]],
+          stretch: {top:[0x23AB,SYMBOLS], ext:[0x23AA,SYMBOLS], bot:[0x23A9,SYMBOLS]}
+        },
+        0x23B4: EXTRAH,
+        0x23B5: EXTRAH,
         0x23D0:
         {
           dir: V,
           HW: [[800,MAIN,null,0x7C], [1350,MAIN,1.688,0x7C], [1827,MAIN,2.283,0x7C], [2303,MAIN,2.879,0x7C], [2780,MAIN,3.474,0x7C]],
           stretch: {ext:[0x7C,MAIN]}
         },
-        0x23DC:
-        {
-          dir: H,
-          HW: [[514,MAIN], [1014,SIZE1], [1514,SIZE2], [2013,SIZE3], [2514,SIZE4], [3014,SIZE5], [3514,SIZE6]],
-          stretch: {left:[0xE115,SIZE6], rep:[0xE116,SIZE6], right:[0xE117,SIZE6]}
-        },
-        0x23DD:
-        {
-          dir: H,
-          HW: [[514,MAIN], [1014,SIZE1], [1514,SIZE2], [2013,SIZE3], [2514,SIZE4], [3014,SIZE5], [3514,SIZE6]],
-          stretch: {left:[0xE118,SIZE6], rep:[0xE119,SIZE6], right:[0xE11A,SIZE6]}
-        },
+        0x23DC: EXTRAH,
+        0x23DD: EXTRAH,
         0x23DE:
         {
           dir: H,
@@ -1027,36 +564,12 @@
           HW: [[520,MAIN], [1018,SIZE1], [1519,SIZE2], [2019,SIZE3], [2519,SIZE4], [3019,SIZE5], [3519,SIZE6]],
           stretch: {left:[0xE111,SIZE6], rep:[0xE112,SIZE6], mid:[0xE113,SIZE6], right:[0xE114,SIZE6]}
         },
-        0x23E0:
-        {
-          dir: H,
-          HW: [[562,MAIN], [1066,SIZE1], [1568,SIZE2], [2072,SIZE3], [2576,SIZE4], [3080,SIZE5], [3584,SIZE6]],
-          stretch: {left:[0xE121,SIZE6], rep:[0xE122,SIZE6], right:[0xE123,SIZE6]}
-        },
-        0x23E1:
-        {
-          dir: H,
-          HW: [[562,MAIN], [1066,SIZE1], [1568,SIZE2], [2072,SIZE3], [2576,SIZE4], [3080,SIZE5], [3584,SIZE6]],
-          stretch: {left:[0xE124,SIZE6], rep:[0xE125,SIZE6], right:[0xE126,SIZE6]}
-        },
-        0x27A1:
-        {
-          dir: H,
-          HW: [[870,MISC], [1190,SIZE1]],
-          stretch: {left:[0xE0E6,SIZE6], rep:[0xE0E7,SIZE6], right:[0xE0E8,SIZE6]}
-        },
-        0x27E6:
-        {
-          dir: V,
-          HW: [[836,SYMBOLS], [998,SIZE1], [1190,SIZE2], [1422,SIZE3], [1698,SIZE4], [2032,SIZE5], [2432,SIZE6]],
-          stretch: {bot:[0xE107,SIZE6], ext:[0xE108,SIZE6], top:[0xE109,SIZE6]}
-        },
-        0x27E7:
-        {
-          dir: V,
-          HW: [[836,SYMBOLS], [998,SIZE1], [1190,SIZE2], [1422,SIZE3], [1698,SIZE4], [2032,SIZE5], [2432,SIZE6]],
-          stretch: {bot:[0xE10A,SIZE6], ext:[0xE10B,SIZE6], top:[0xE10C,SIZE6]}
-        },
+        0x23E0: EXTRAH,
+        0x23E1: EXTRAH,
+        0x2500: {alias: 0x305, dir: H},
+        0x27A1: EXTRAH,
+        0x27E6: EXTRAV,
+        0x27E7: EXTRAV,
         0x27E8:
         {
           dir: V,
@@ -1067,16 +580,8 @@
           dir: V,
           HW: [[812,MAIN], [1060,SIZE1], [1382,SIZE2], [1806,SIZE3], [1827,SIZE3,1.012], [2364,SIZE4], [3092,SIZE5], [4048,SIZE6]]
         },
-        0x27EA:
-        {
-          dir: V,
-          HW: [[812,SYMBOLS], [1060,SIZE1], [1382,SIZE2], [1806,SIZE3], [2364,SIZE4], [3092,SIZE5], [4048,SIZE6]]
-        },
-        0x27EB:
-        {
-          dir: V,
-          HW: [[812,SYMBOLS], [1060,SIZE1], [1382,SIZE2], [1806,SIZE3], [2364,SIZE4], [3092,SIZE5], [4048,SIZE6]]
-        },
+        0x27EA: EXTRAV,
+        0x27EB: EXTRAV,
         0x27EE:
         {
           dir: V,
@@ -1089,6 +594,16 @@
           HW: [[814,MAIN], [974,SIZE1], [1166,SIZE2], [1396,SIZE3], [1672,SIZE4], [2004,SIZE5], [2402,SIZE6]],
           stretch: {bot:[0xE104,SIZE6], ext:[0xE105,SIZE6], top:[0xE106,SIZE6]}
         },
+        0x27F5: {alias: 0x2190, dir: H},
+        0x27F6: {alias: 0x2192, dir: H},
+        0x27F7: {alias: 0x2194, dir: H},
+        0x27F8: {alias: 0x21D0, dir: H},
+        0x27F9: {alias: 0x21D2, dir: H},
+        0x27FA: {alias: 0x21D4, dir: H},
+        0x27FB: {alias: 0x21A4, dir: H},
+        0x27FC: {alias: 0x21A6, dir: H},
+        0x27FD: {alias: 0x2906, dir: H},
+        0x27FE: {alias: 0x2907, dir: H},
         0x2906:
         {
           dir: H,
@@ -1101,98 +616,27 @@
           HW: [[870,ARROWS], [1190,SIZE1]],
           stretch: {left:[0xE0C8,SIZE6], rep:[0xE0C9,SIZE6], right:[0xE0CA,SIZE6]}
         },
-        0x2A00:
-        {
-          dir: V,
-          HW: [[876,OPERATORS], [1132,SIZE1]]
-        },
-        0x2A01:
-        {
-          dir: V,
-          HW: [[876,OPERATORS], [1132,SIZE1]]
-        },
-        0x2A02:
-        {
-          dir: V,
-          HW: [[876,OPERATORS], [1132,SIZE1]]
-        },
-        0x2A03:
-        {
-          dir: V,
-          HW: [[898,OPERATORS], [1170,SIZE1]]
-        },
-        0x2A04:
-        {
-          dir: V,
-          HW: [[898,OPERATORS], [1170,SIZE1]]
-        },
-        0x2A05:
-        {
-          dir: V,
-          HW: [[880,OPERATORS], [1152,SIZE1]]
-        },
-        0x2A06:
-        {
-          dir: V,
-          HW: [[880,OPERATORS], [1152,SIZE1]]
-        },
-        0x2A09:
-        {
-          dir: V,
-          HW: [[716,OPERATORS], [906,SIZE1]]
-        },
-        0x2A0C:
-        {
-          dir: V,
-          HW: [[1092,OPERATORS], [2025,SIZE1]]
-        },
-        0x2A11:
-        {
-          dir: V,
-          HW: [[1092,OPERATORS], [2025,SIZE1]]
-        },
-        0x2B04:
-        {
-          dir: H,
-          HW: [[931,SHAPES], [1251,SIZE1]],
-          stretch: {left:[0xE0E0,SIZE6], rep:[0xE0E1,SIZE6], right:[0xE0E2,SIZE6]}
-        },
-        0x2B05:
-        {
-          dir: H,
-          HW: [[870,SHAPES], [1190,SIZE1]],
-          stretch: {left:[0xE0E3,SIZE6], rep:[0xE0E4,SIZE6], right:[0xE0E5,SIZE6]}
-        },
-        0x2B06:
-        {
-          dir: V,
-          HW: [[870,SHAPES], [1190,SIZE1]],
-          stretch: {bot:[0xE0E9,SIZE6], ext:[0xE0EA,SIZE6], top:[0xE0EB,SIZE6]}
-        },
-        0x2B07:
-        {
-          dir: V,
-          HW: [[870,SHAPES], [1190,SIZE1]],
-          stretch: {bot:[0xE0EC,SIZE6], ext:[0xE0ED,SIZE6], top:[0xE0EE,SIZE6]}
-        },
-        0x2B0C:
-        {
-          dir: H,
-          HW: [[880,SHAPES], [1200,SIZE1]],
-          stretch: {left:[0xE0EF,SIZE6], rep:[0xE0F0,SIZE6], right:[0xE0F1,SIZE6]}
-        },
-        0x2B0D:
-        {
-          dir: V,
-          HW: [[880,SHAPES], [1200,SIZE1]],
-          stretch: {bot:[0xE0F2,SIZE6], ext:[0xE0F3,SIZE6], top:[0xE0F4,SIZE6]}
-        },
-        0x2B31:
-        {
-          dir: H,
-          HW: [[690,SHAPES], [1010,SIZE1]],
-          stretch: {left:[0xE09E,SIZE6], rep:[0xE09F,SIZE6], right:[0xE0A0,SIZE6]}
-        }
+        0x2A00: EXTRAV,
+        0x2A01: EXTRAV,
+        0x2A02: EXTRAV,
+        0x2A03: EXTRAV,
+        0x2A04: EXTRAV,
+        0x2A05: EXTRAV,
+        0x2A06: EXTRAV,
+        0x2A09: EXTRAV,
+        0x2A0C: EXTRAV,
+        0x2A11: EXTRAV,
+        0x2B04: EXTRAH,
+        0x2B05: EXTRAH,
+        0x2B06: EXTRAV,
+        0x2B07: EXTRAV,
+        0x2B0C: EXTRAH,
+        0x2B0D: EXTRAV,
+        0x2B31: EXTRAH,
+        0x3008: {alias: 0x27E8, dir: V},
+        0x3009: {alias: 0x27E9, dir: V},
+        0xFE37: {alias: 0x23DE, dir: H},
+        0xFE38: {alias: 0x23DF, dir: H}
       }
 
     }

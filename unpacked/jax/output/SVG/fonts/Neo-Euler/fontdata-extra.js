@@ -48,7 +48,126 @@
       MONOSPACE = "NeoEulerMathJax_Normal";
 
   var delim = {
-
+      0x2044:
+      {
+        dir: V,
+        HW: [[912,MARKS], [1199,SIZE1], [1799,SIZE2], [2399,SIZE3], [2999,SIZE4]]
+      },
+      0x20E1:
+      {
+        dir: H,
+        HW: [[449,MARKS]],
+        stretch: {left:[0x20D6,MARKS], rep:[0xE004,SIZE5], right:[0x20D7,MAIN]}
+      },
+      0x20EE:
+      {
+        dir: H,
+        HW: [[418,MARKS]],
+        stretch: {left:[0x20EE,MARKS], rep:[0xE005,SIZE5]}
+      },
+      0x20EF:
+      {
+        dir: H,
+        HW: [[418,MARKS]],
+        stretch: {rep:[0xE005,SIZE5], right:[0x20EF,MARKS]}
+      },
+      0x220F:
+      {
+        dir: V,
+        HW: [[1000,OPERATORS], [1400,SIZE1]]
+      },
+      0x2210:
+      {
+        dir: V,
+        HW: [[1000,OPERATORS], [1400,SIZE1]]
+      },
+      0x2211:
+      {
+        dir: V,
+        HW: [[1000,OPERATORS], [1400,SIZE1]]
+      },
+      0x2227:
+      {
+        dir: V,
+        HW: [[718,MAIN], [998,SIZE1], [1395,SIZE2]]
+      },
+      0x2228:
+      {
+        dir: V,
+        HW: [[700,MAIN], [998,SIZE1], [1395,SIZE2]]
+      },
+      0x2229:
+      {
+        dir: V,
+        HW: [[600,MAIN], [965,SIZE1], [1358,SIZE2]]
+      },
+      0x222A:
+      {
+        dir: V,
+        HW: [[600,MAIN], [965,SIZE1], [1358,SIZE2]]
+      },
+      0x222B:
+      {
+        dir: V,
+        HW: [[1111,MAIN], [2222,SIZE1]]
+      },
+      0x222C:
+      {
+        dir: V,
+        HW: [[1111,OPERATORS], [2222,SIZE1]]
+      },
+      0x222D:
+      {
+        dir: V,
+        HW: [[1111,OPERATORS], [2222,SIZE1]]
+      },
+      0x222E:
+      {
+        dir: V,
+        HW: [[1111,OPERATORS], [2222,SIZE1]]
+      },
+      0x228E:
+      {
+        dir: V,
+        HW: [[600,MAIN], [965,SIZE1], [1358,SIZE2]]
+      },
+      0x22C0:
+      {
+        dir: V,
+        HW: [[718,OPERATORS], [998,SIZE1], [1395,SIZE2]]
+      },
+      0x22C1:
+      {
+        dir: V,
+        HW: [[700,OPERATORS], [998,SIZE1], [1395,SIZE2]]
+      },
+      0x22C2:
+      {
+        dir: V,
+        HW: [[600,OPERATORS], [965,SIZE1], [1358,SIZE2]]
+      },
+      0x22C3:
+      {
+        dir: V,
+        HW: [[600,OPERATORS], [965,SIZE1], [1358,SIZE2]]
+      },
+      0x23DC:
+      {
+        dir: H,
+        HW: [[925,MAIN], [1199,SIZE1], [1799,SIZE2], [2399,SIZE3], [2999,SIZE4]],
+        stretch: {left:[0xE009,SIZE5], rep:[0xE00A,SIZE5], right:[0xE00B,SIZE5]}
+      },
+      0x23DD:
+      {
+        dir: H,
+        HW: [[925,MAIN], [1199,SIZE1], [1799,SIZE2], [2399,SIZE3], [2999,SIZE4]],
+        stretch: {left:[0xE00C,SIZE5], rep:[0xE00D,SIZE5], right:[0xE00E,SIZE5]}
+      },
+      0x2A0C:
+      {
+        dir: V,
+        HW: [[1111,OPERATORS], [2222,SIZE1]]
+      }
   };
   
   for (var id in delim) {if (delim.hasOwnProperty(id)) {DELIMITERS[id] = delim[id]}};

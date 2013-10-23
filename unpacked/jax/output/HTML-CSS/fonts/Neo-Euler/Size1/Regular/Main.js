@@ -20,7 +20,7 @@
 MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['NeoEulerMathJax_Size1'] = {
   directory: 'Size1/Regular',
   family: 'NeoEulerMathJax_Size1',
-  testString: '\u00A0\u2016\u2044\u220F\u2210\u2211\u2215\u221A\u2223\u2225\u2227\u2228\u2229\u222A\u222B',
+  testString: '\u00A0\u2016\u2044\u21D0\u21D2\u21D4\u220F\u2210\u2211\u2215\u221A\u2223\u2225\u2227\u2228',
   0x20: [0,0,333,0,0],
   0x28: [999,199,456,153,426],
   0x29: [999,199,457,30,304],
@@ -34,6 +34,9 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['NeoEulerMathJax_Size1'] = {
   0xA0: [0,0,333,0,0],
   0x2016: [1297,208,403,86,316],
   0x2044: [999,200,577,55,524],
+  0x21D0: [598,98,1700,55,1622],
+  0x21D2: [598,98,1700,55,1622],
+  0x21D4: [598,98,1700,33,1665],
   0x220F: [1200,200,1411,56,1354],
   0x2210: [1200,200,1411,56,1354],
   0x2211: [1200,200,1444,56,1361],
