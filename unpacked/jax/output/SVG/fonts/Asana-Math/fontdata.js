@@ -116,8 +116,7 @@
           "sans-serif": {
             fonts: [SANSSERIF],
             offsetA: 0x1D5A0,
-            offsetN: 0x1D7E2,
-            offsetG: 0xE17D
+            offsetN: 0x1D7E2
           },
           "bold-sans-serif": {
             fonts: [SANSSERIF], bold:true,
@@ -127,14 +126,11 @@
           },
           "sans-serif-italic": {
              fonts: [SANSSERIF], italic: true,
-             offsetA: 0x1D608,
-             offsetN: 0xE1B4,
-             offsetG: 0xE1BF
+             offsetA: 0x1D608
           },
           "sans-serif-bold-italic": {
              fonts: [SANSSERIF], bold:true, italic: true,
              offsetA: 0x1D63C,
-             offsetN: 0xE1F6,
              offsetG: 0x1D790
           },
           "monospace": {
@@ -143,7 +139,7 @@
              offsetN: 0x1D7F6
           },
         "-Asana-Math-variant": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1]},
-          "-tex-caligraphic": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1], italic: true},
+          "-tex-caligraphic": {offsetA: 0xE20A, noLowerCase: 1, fonts: [VARIANTS,MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,NONUNICODE,SIZE1], italic: true},
           "-tex-oldstyle": {offsetN: 0xE200, fonts: [VARIANTS,MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,NONUNICODE,SIZE1]},
           "-tex-mathit": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1], italic:true, noIC:true},
           "-largeOp": {fonts:[SIZE1,MAIN]},
@@ -159,12 +155,34 @@
            remap: {0x03F5: 52, 0x03D1: 53, 0x03F0: 54, 0x03D5: 55, 0x03F1: 56, 0x03D6: 57, 0x03F4: 17}}
       ],
 
-      RULECHAR: 0x2212,
+      RULECHAR: 0x0305,
 
       REMAP: {
+        0x25C2: 0x25C0,
+        0x25C3: 0x25C1,
+        0xFE38: 0x23DF,
+        0x3008: 0x27E8,
+        0x3009: 0x27E9,
+        0x25AA: 0x25A0,
+        0x00AF: 0x0304,
+        0x20F0: 0x002A,
+        0x2758: 0x2223,
+        0x03D2: 0x03A5,
+        0x25B4: 0x25B2,
+        0x25B5: 0x25B3,
+        0xFE37: 0x23DE,
+        0x25B8: 0x25B6,
+        0x02B9: 0x2032,
+        0x25BE: 0x25BC,
+        0x25BF: 0x25BD
       },
 
       REMAPACCENT: {
+        "\u2192": "\u20D7",
+        "\u2032": "\u0300",
+        "\u007E": "\u0303",
+        "\u2035": "\u0301",
+        "\u005E": "\u0302"
       },
 
       REMAPACCENTUNDER: {
@@ -183,10 +201,13 @@
           HW: [[941,MAIN], [1471,SIZE1], [2041,SIZE2], [2552,SIZE3], [2615,SIZE3,1.025]],
           stretch: {bot:[0x23A0,SYMBOLS], ext:[0x239F,SYMBOLS], top:[0x239E,SYMBOLS]}
         },
-        0x2F:
+        0x2D: {alias: 0x305, dir: H},
+        0x2F: {alias: 0x2044, dir: H},
+        0x3D:
         {
-          dir: V,
-          HW: [[883,MAIN], [1270,MAIN,1.439], [1719,MAIN,1.946], [2167,MAIN,2.454], [2615,MAIN,2.961]]
+          dir: H,
+          HW: [[539,MAIN]],
+          stretch: {rep:[0x3D,MAIN]}
         },
         0x5B:
         {
@@ -205,6 +226,8 @@
           HW: [[910,MAIN], [1476,SIZE1], [2045,SIZE2], [2556,SIZE3], [2615,SIZE3,1.023]],
           stretch: {bot:[0x23A6,SYMBOLS], ext:[0x23A5,SYMBOLS], top:[0x23A4,SYMBOLS]}
         },
+        0x5E: {alias: 0x302, dir: H},
+        0x5F: {alias: 0x332, dir: H},
         0x7B:
         {
           dir: V,
@@ -223,6 +246,11 @@
           HW: [[901,MAIN], [1471,SIZE1], [2041,SIZE2], [2552,SIZE3], [2615,SIZE3,1.025]],
           stretch: {bot:[0x23AD,SYMBOLS], ext:[0x23AA,SYMBOLS], mid:[0x23AC,SYMBOLS], top:[0x23AB,SYMBOLS]}
         },
+        0x7E: {alias: 0x303, dir: H},
+        0xAF: {alias: 0x305, dir: H},
+        0x2C6: {alias: 0x302, dir: H},
+        0x2C9: {alias: 0x305, dir: H},
+        0x2DC: {alias: 0x303, dir: H},
         0x302:
         {
           dir: H,
@@ -239,11 +267,7 @@
           HW: [[433,MARKS], [511,SIZE1], [675,SIZE2], [1127,SIZE3]],
           stretch: {rep:[0xE001,SIZE6], right:[0xE001,SIZE6]}
         },
-        0x306:
-        {
-          dir: H,
-          HW: [[282,MAIN], [384,SIZE1], [542,SIZE2], [922,SIZE3], [1762,SIZE4]]
-        },
+        0x306: EXTRAH,
         0x30C:
         {
           dir: H,
@@ -255,89 +279,32 @@
           HW: [[433,MARKS], [511,SIZE1], [675,SIZE2], [1127,SIZE3]],
           stretch: {rep:[0xE002,SIZE6], right:[0xE002,SIZE6]}
         },
-        0x333:
-        {
-          dir: H,
-          HW: [[433,MARKS], [511,SIZE1], [675,SIZE2], [1127,SIZE3]],
-          stretch: {rep:[0xE003,SIZE6], right:[0xE003,SIZE6]}
-        },
-        0x33F:
-        {
-          dir: H,
-          HW: [[433,MARKS], [511,SIZE1], [675,SIZE2], [1127,SIZE3]],
-          stretch: {rep:[0xE004,SIZE6], right:[0xE004,SIZE6]}
-        },
+        0x333: EXTRAH,
+        0x33F: EXTRAH,
+        0x2015: {alias: 0x305, dir: H},
         0x2016:
         {
           dir: V,
           HW: [[885,MARKS], [1275,SIZE1], [1555,SIZE2], [1897,SIZE3], [2315,SIZE4]],
           stretch: {ext:[0xE005,SIZE6], top:[0xE005,SIZE6]}
         },
+        0x2017: {alias: 0x305, dir: H},
+        0x203E: {alias: 0x305, dir: H},
         0x2044:
         {
           dir: V,
-          HW: [[837,MARKS], [1205,SIZE1], [1471,SIZE2], [1795,SIZE3], [2189,SIZE4]]
+          HW: [[837,MARKS], [1205,SIZE1], [1471,SIZE2], [1795,SIZE3], [2189,SIZE4], [2615,SIZE4,1.195]]
         },
-        0x2045:
-        {
-          dir: V,
-          HW: [[910,MARKS], [1344,SIZE1], [1862,SIZE2], [2328,SIZE3]],
-          stretch: {bot:[0xE006,SIZE6], ext:[0xE007,SIZE6], mid:[0xE008,SIZE6], top:[0xE009,SIZE6]}
-        },
-        0x2046:
-        {
-          dir: V,
-          HW: [[910,MARKS], [1344,SIZE1], [1862,SIZE2], [2328,SIZE3]],
-          stretch: {bot:[0xE00A,SIZE6], ext:[0xE00B,SIZE6], mid:[0xE00C,SIZE6], top:[0xE00D,SIZE6]}
-        },
-        0x20D0:
-        {
-          dir: H,
-          HW: [[558,MARKS]],
-          stretch: {left:[0x20D0,MARKS], rep:[0xE00E,SIZE6]}
-        },
-        0x20D1:
-        {
-          dir: H,
-          HW: [[558,MARKS]],
-          stretch: {rep:[0xE00E,SIZE6], right:[0x20D1,MARKS]}
-        },
-        0x20D6:
-        {
-          dir: H,
-          HW: [[558,MARKS], [807,SIZE1], [1127,SIZE2], [1878,SIZE3], [3579,SIZE4]],
-          stretch: {left:[0x20D6,MARKS], rep:[0xE00E,SIZE6]}
-        },
-        0x20D7:
-        {
-          dir: H,
-          HW: [[558,MAIN], [807,SIZE1], [1127,SIZE2], [1878,SIZE3], [3579,SIZE4]],
-          stretch: {rep:[0xE00E,SIZE6], right:[0x20D7,MAIN]}
-        },
-        0x20E1:
-        {
-          dir: H,
-          HW: [[557,MARKS]],
-          stretch: {left:[0x20D6,MARKS], rep:[0xE00E,SIZE6], right:[0x20D7,MAIN]}
-        },
-        0x20E9:
-        {
-          dir: H,
-          HW: [[630,MARKS]],
-          stretch: {left:[0xE00F,SIZE6], rep:[0xE010,SIZE6], right:[0xE011,SIZE6]}
-        },
-        0x20EE:
-        {
-          dir: H,
-          HW: [[557,MARKS]],
-          stretch: {left:[0x20EE,MARKS], rep:[0xE012,SIZE6]}
-        },
-        0x20EF:
-        {
-          dir: H,
-          HW: [[557,MARKS]],
-          stretch: {rep:[0xE012,SIZE6], right:[0x20EF,MARKS]}
-        },
+        0x2045: EXTRAV,
+        0x2046: EXTRAV,
+        0x20D0: EXTRAH,
+        0x20D1: EXTRAH,
+        0x20D6: EXTRAH,
+        0x20D7: EXTRAH,
+        0x20E1: EXTRAH,
+        0x20E9: EXTRAH,
+        0x20EE: EXTRAH,
+        0x20EF: EXTRAH,
         0x2190:
         {
           dir: H,
@@ -368,6 +335,12 @@
           HW: [[884,MAIN]],
           stretch: {left:[0xE013,SIZE6], rep:[0x23AF,SYMBOLS], right:[0xE017,SIZE6]}
         },
+        0x2195:
+        {
+          dir: V,
+          HW: [[884,MAIN]],
+          stretch: {top:[0x2191,MAIN], ext:[0xE015,SIZE6], bot:[0x2193,MAIN]}
+        },
         0x21A4:
         {
           dir: H,
@@ -380,18 +353,8 @@
           HW: [[942,MAIN]],
           stretch: {left:[0xE019,SIZE6], rep:[0x23AF,SYMBOLS], right:[0xE017,SIZE6]}
         },
-        0x21A9:
-        {
-          dir: H,
-          HW: [[884,MAIN]],
-          stretch: {left:[0xE013,SIZE6], rep:[0x23AF,SYMBOLS], right:[0xE01A,SIZE6]}
-        },
-        0x21AA:
-        {
-          dir: H,
-          HW: [[884,MAIN]],
-          stretch: {left:[0xE01B,SIZE6], rep:[0x23AF,SYMBOLS], right:[0xE017,SIZE6]}
-        },
+        0x21A9: EXTRAH,
+        0x21AA: EXTRAH,
         0x21D0:
         {
           dir: H,
@@ -422,21 +385,21 @@
           HW: [[895,MAIN]],
           stretch: {left:[0xE01C,SIZE6], rep:[0xE01D,SIZE6], right:[0xE021,SIZE6]}
         },
+        0x21D5:
+        {
+          dir: V,
+          HW: [[884,MAIN,null,0x2195]],
+          stretch: {top:[0x21D1,MAIN], ext:[0xE01F,SIZE6], bot:[0x21D3,MAIN]}
+        },
         0x220F:
         {
           dir: V,
           HW: [[937,OPERATORS], [1349,SIZE1], [1942,SIZE2], [2797,SIZE3]]
         },
-        0x2210:
-        {
-          dir: V,
-          HW: [[937,OPERATORS], [1349,SIZE1], [1942,SIZE2], [2797,SIZE3]]
-        },
-        0x2211:
-        {
-          dir: V,
-          HW: [[930,OPERATORS], [1339,SIZE1], [1928,SIZE2], [2776,SIZE3]]
-        },
+        0x2210: EXTRAV,
+        0x2211: EXTRAV,
+        0x2212: {alias: 0x305, dir: H},
+        0x2215: {alias: 0x2044, dir: V},
         0x221A:
         {
           dir: V,
@@ -455,77 +418,20 @@
           HW: [[885,MAIN]],
           stretch: {ext:[0x2225,MAIN], top:[0x2225,MAIN]}
         },
-        0x2229:
-        {
-          dir: V,
-          HW: [[603,MAIN], [1559,SIZE1], [2245,SIZE2], [2588,SIZE3]]
-        },
-        0x222B:
-        {
-          dir: V,
-          HW: [[1327,MAIN], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]],
-          stretch: {bot:[0x2321,SYMBOLS], ext:[0x23AE,SYMBOLS], top:[0x2320,SYMBOLS]}
-        },
-        0x222C:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x222D:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x222E:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x222F:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2230:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2231:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2232:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2233:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x22C0:
-        {
-          dir: V,
-          HW: [[939,OPERATORS], [1559,SIZE1], [2588,SIZE2]]
-        },
-        0x22C1:
-        {
-          dir: V,
-          HW: [[939,OPERATORS], [1559,SIZE1], [2588,SIZE2]]
-        },
-        0x22C2:
-        {
-          dir: V,
-          HW: [[939,OPERATORS], [1559,SIZE1], [2588,SIZE2]]
-        },
-        0x22C3:
-        {
-          dir: V,
-          HW: [[939,OPERATORS], [1559,SIZE1], [2245,SIZE2], [2588,SIZE3]]
-        },
+        0x2229: EXTRAV,
+        0x222B: EXTRAV,
+        0x222C: EXTRAV,
+        0x222D: EXTRAV,
+        0x222E: EXTRAV,
+        0x222F: EXTRAV,
+        0x2230: EXTRAV,
+        0x2231: EXTRAV,
+        0x2232: EXTRAV,
+        0x2233: EXTRAV,
+        0x22C0: EXTRAV,
+        0x22C1: EXTRAV,
+        0x22C2: EXTRAV,
+        0x22C3: EXTRAV,
         0x2308:
         {
           dir: V,
@@ -550,36 +456,32 @@
           HW: [[885,MAIN], [1470,SIZE1], [2041,SIZE2], [2552,SIZE3], [2615,SIZE3,1.025]],
           stretch: {bot:[0x23A6,SYMBOLS], ext:[0x23A5,SYMBOLS]}
         },
-        0x23B4:
+        0x2329: {alias: 0x27E8, dir: V},
+        0x232A: {alias: 0x27E9, dir: V},
+        0x23AA:
+        {
+          dir: V,
+          HW: [[688,SYMBOLS]],
+          stretch: {ext:[0x23AA,SYMBOLS]}
+        },
+        0x23AF:
         {
           dir: H,
-          HW: [[602,MAIN], [978,SIZE1], [1353,SIZE2], [1690,SIZE3]],
-          stretch: {left:[0xE00F,SIZE6], rep:[0xE010,SIZE6], right:[0xE011,SIZE6]}
+          HW: [[638,SYMBOLS]],
+          stretch: {rep:[0x23AF,SYMBOLS]}
         },
-        0x23B5:
-        {
-          dir: H,
-          HW: [[602,MAIN], [978,SIZE1], [1353,SIZE2], [1690,SIZE3]],
-          stretch: {left:[0xE023,SIZE6], rep:[0xE024,SIZE6], right:[0xE025,SIZE6]}
-        },
+        0x23B0: {alias: 0x27C6, dir: V},
+        0x23B1: {alias: 0x27C5, dir: V},
+        0x23B4: EXTRAH,
+        0x23B5: EXTRAH,
         0x23D0:
         {
           dir: V,
           HW: [[885,MAIN,null,0x7C], [1270,MAIN,1.435,0x7C], [1719,MAIN,1.942,0x7C], [2167,MAIN,2.448,0x7C], [2615,MAIN,2.955,0x7C]],
           stretch: {ext:[0x7C,MAIN]}
         },
-        0x23DC:
-        {
-          dir: H,
-          HW: [[942,MAIN], [973,SIZE1], [1349,SIZE2], [1686,SIZE3]],
-          stretch: {left:[0xE026,SIZE6], rep:[0xE027,SIZE6], right:[0xE028,SIZE6]}
-        },
-        0x23DD:
-        {
-          dir: H,
-          HW: [[942,MAIN], [973,SIZE1], [1349,SIZE2], [1686,SIZE3]],
-          stretch: {left:[0xE029,SIZE6], rep:[0xE02A,SIZE6], right:[0xE02B,SIZE6]}
-        },
+        0x23DC: EXTRAH,
+        0x23DD: EXTRAH,
         0x23DE:
         {
           dir: H,
@@ -592,16 +494,10 @@
           HW: [[902,MAIN], [1471,SIZE1], [2041,SIZE2], [2552,SIZE3]],
           stretch: {left:[0xE029,SIZE6], rep:[0xE02A,SIZE6], mid:[0xE02D,SIZE6], right:[0xE02B,SIZE6]}
         },
-        0x23E0:
-        {
-          dir: H,
-          HW: [[900,MAIN], [1360,SIZE1], [2056,SIZE2], [3108,SIZE3]]
-        },
-        0x23E1:
-        {
-          dir: H,
-          HW: [[900,MAIN], [1360,SIZE1], [2056,SIZE2], [3108,SIZE3]]
-        },
+        0x23E0: EXTRAH,
+        0x23E1: EXTRAH,
+        0x2500: {alias: 0x305, dir: H},
+        0x2758: {alias: 0x2223, dir: V},
         0x27C5:
         {
           dir: V,
@@ -612,16 +508,8 @@
           dir: V,
           HW: [[910,SYMBOLS], [1020,SIZE1], [1531,SIZE2], [2041,SIZE3], [2552,SIZE4], [3063,SIZE5]]
         },
-        0x27E6:
-        {
-          dir: V,
-          HW: [[910,SYMBOLS], [1025,SIZE1], [1535,SIZE2], [2045,SIZE3], [2556,SIZE4]]
-        },
-        0x27E7:
-        {
-          dir: V,
-          HW: [[910,SYMBOLS], [1025,SIZE1], [1535,SIZE2], [2045,SIZE3], [2556,SIZE4]]
-        },
+        0x27E6: EXTRAV,
+        0x27E7: EXTRAV,
         0x27E8:
         {
           dir: V,
@@ -632,16 +520,20 @@
           dir: V,
           HW: [[885,MAIN], [1020,SIZE1], [1270,SIZE1,1.244], [2041,SIZE2], [2552,SIZE3], [2615,SIZE3,1.025]]
         },
-        0x27EA:
-        {
-          dir: V,
-          HW: [[885,SYMBOLS], [1020,SIZE1], [2041,SIZE2], [2552,SIZE3]]
-        },
-        0x27EB:
-        {
-          dir: V,
-          HW: [[885,SYMBOLS], [1020,SIZE1], [2041,SIZE2], [2552,SIZE3]]
-        },
+        0x27EA: EXTRAV,
+        0x27EB: EXTRAV,
+        0x27EE: {alias: 0x28, dir: V},
+        0x27EF: {alias: 0x28, dir: V},
+        0x27F5: {alias: 0x2190, dir: H},
+        0x27F6: {alias: 0x2192, dir: H},
+        0x27F7: {alias: 0x2194, dir: H},
+        0x27F8: {alias: 0x21D0, dir: H},
+        0x27F9: {alias: 0x21D2, dir: H},
+        0x27FA: {alias: 0x21D4, dir: H},
+        0x27FB: {alias: 0x21A4, dir: H},
+        0x27FC: {alias: 0x21A6, dir: H},
+        0x27FD: {alias: 0x2906, dir: H},
+        0x27FE: {alias: 0x2907, dir: H},
         0x2906:
         {
           dir: H,
@@ -654,151 +546,39 @@
           HW: [[884,ARROWS]],
           stretch: {left:[0xE02F,SIZE6], rep:[0xE01D,SIZE6], right:[0xE021,SIZE6]}
         },
-        0x29FC:
-        {
-          dir: V,
-          HW: [[953,SYMBOLS], [1372,SIZE1], [1893,SIZE2], [2366,SIZE3]]
-        },
-        0x29FD:
-        {
-          dir: V,
-          HW: [[953,SYMBOLS], [1372,SIZE1], [1893,SIZE2], [2366,SIZE3]]
-        },
-        0x2A00:
-        {
-          dir: V,
-          HW: [[1146,OPERATORS], [1650,SIZE1], [2376,SIZE2]]
-        },
-        0x2A01:
-        {
-          dir: V,
-          HW: [[1149,OPERATORS], [1650,SIZE1], [2376,SIZE2]]
-        },
-        0x2A02:
-        {
-          dir: V,
-          HW: [[1149,OPERATORS], [1650,SIZE1], [2376,SIZE2]]
-        },
-        0x2A03:
-        {
-          dir: V,
-          HW: [[939,OPERATORS], [1559,SIZE1], [2588,SIZE2]]
-        },
-        0x2A04:
-        {
-          dir: V,
-          HW: [[939,OPERATORS], [1559,SIZE1], [2588,SIZE2]]
-        },
-        0x2A05:
-        {
-          dir: V,
-          HW: [[926,OPERATORS], [1537,SIZE1], [2552,SIZE2]]
-        },
-        0x2A06:
-        {
-          dir: V,
-          HW: [[926,OPERATORS], [1537,SIZE1], [2552,SIZE2]]
-        },
-        0x2A07:
-        {
-          dir: V,
-          HW: [[939,OPERATORS], [1559,SIZE1], [2588,SIZE2]]
-        },
-        0x2A08:
-        {
-          dir: V,
-          HW: [[939,OPERATORS], [1559,SIZE1], [2588,SIZE2]]
-        },
-        0x2A09:
-        {
-          dir: V,
-          HW: [[926,OPERATORS], [1333,SIZE1], [1920,SIZE2]]
-        },
-        0x2A0C:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A0D:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A0E:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A0F:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A10:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A11:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A12:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A13:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A14:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A15:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A16:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A17:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A18:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A19:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A1A:
-        {
-          dir: V,
-          HW: [[1327,OPERATORS], [1964,SIZE1], [2711,SIZE2], [3470,SIZE3]]
-        },
-        0x2A1B:
-        {
-          dir: V,
-          HW: [[1436,OPERATORS], [2125,SIZE1], [2933,SIZE2], [3754,SIZE3]]
-        },
-        0x2A1C:
-        {
-          dir: V,
-          HW: [[1436,OPERATORS], [2125,SIZE1], [2933,SIZE2], [3754,SIZE3]]
-        }
+        0x29FC: EXTRAV,
+        0x29FD: EXTRAV,
+        0x2A00: EXTRAV,
+        0x2A01: EXTRAV,
+        0x2A02: EXTRAV,
+        0x2A03: EXTRAV,
+        0x2A04: EXTRAV,
+        0x2A05: EXTRAV,
+        0x2A06: EXTRAV,
+        0x2A07: EXTRAV,
+        0x2A08: EXTRAV,
+        0x2A09: EXTRAV,
+        0x2A0C: EXTRAV,
+        0x2A0D: EXTRAV,
+        0x2A0E: EXTRAV,
+        0x2A0F: EXTRAV,
+        0x2A10: EXTRAV,
+        0x2A11: EXTRAV,
+        0x2A12: EXTRAV,
+        0x2A13: EXTRAV,
+        0x2A14: EXTRAV,
+        0x2A15: EXTRAV,
+        0x2A16: EXTRAV,
+        0x2A17: EXTRAV,
+        0x2A18: EXTRAV,
+        0x2A19: EXTRAV,
+        0x2A1A: EXTRAV,
+        0x2A1B: EXTRAV,
+        0x2A1C: EXTRAV,
+        0x3008: {alias: 0x27E8, dir: V},
+        0x3009: {alias: 0x27E9, dir: V},
+        0xFE37: {alias: 0x23DE, dir: H},
+        0xFE38: {alias: 0x23DF, dir: H}
       }
 
     }
@@ -806,11 +586,11 @@
   MathJax.Hub.Register.LoadHook(SVG.fontDir+"/Size6/Regular/Main.js",function () {
     var u;
     u = SVG.FONTDATA.DELIMITERS[0x23DE].stretch.rep[0];
-    SVG.FONTDATA.FONTS[SIZE6][u][0] += 200;  // adjust height for brace extender
-    SVG.FONTDATA.FONTS[SIZE6][u][1] += 200;  // adjust depth for brace extender
+    SVG.FONTDATA.FONTS[SIZE6][u][0] += 100;  // adjust height for brace extender
+    SVG.FONTDATA.FONTS[SIZE6][u][1] += 100;  // adjust depth for brace extender
     u = SVG.FONTDATA.DELIMITERS[0x23DF].stretch.rep[0];
-    SVG.FONTDATA.FONTS[SIZE6][u][0] += 200;  // adjust height for brace extender
-    SVG.FONTDATA.FONTS[SIZE6][u][1] += 200;  // adjust depth for brace extender
+    SVG.FONTDATA.FONTS[SIZE6][u][0] += 100;  // adjust height for brace extender
+    SVG.FONTDATA.FONTS[SIZE6][u][1] += 100;  // adjust depth for brace extender
   });
   MathJax.Hub.Register.LoadHook(SVG.fontDir+"/Size1/Regular/Main.js",function () {
     var i;
