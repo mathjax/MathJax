@@ -490,7 +490,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  mrows for nesting, but can leave these unbalanced.
       //
       if (values.texClass === MML.TEXCLASS.OPEN) {info.nest++}
-      if (values.texClass === MML.TEXCLASS.CLOSE) {info.nest--}
+      if (values.texClass === MML.TEXCLASS.CLOSE && info.nest) {info.nest--}
       //
       //  Get the default penalty for this location
       //
