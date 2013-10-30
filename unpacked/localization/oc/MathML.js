@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/nl/HTML-CSS.js
+ *  MathJax/localization/oc/MathML.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,16 +21,12 @@
  *
  */
 
-MathJax.Localization.addTranslation("nl","HTML-CSS",{
+MathJax.Localization.addTranslation("oc","MathML",{
         version: "2.3",
         isLoaded: true,
         strings: {
-          LoadWebFont: "Web-lettertype %1 aan het laden",
-          CantLoadWebFont: "Het weblettertype %1 kan niet geladen worden.",
-          FirefoxCantLoadWebFont: "Firefox kan geen web-lettertypes laden van een externe host",
-          CantFindFontUsing: "Kan met gebruik van %1 geen geldig lettertype vinden",
-          WebFontsNotAvailable: "Web-lettertypes niet beschikbaar. In plaats daarvan worden beeld-lettertypes gebruikt"
+
         }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/nl/HTML-CSS.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/oc/MathML.js");

@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/nl/nl.js
+ *  MathJax/localization/da/da.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,8 +21,8 @@
  *
  */
 
-MathJax.Localization.addTranslation("nl",null,{
-  menuTitle: "Nederlands",
+MathJax.Localization.addTranslation("da",null,{
+  menuTitle: "dansk",
   version: "2.3",
   isLoaded: true,
   domains: {
@@ -30,17 +30,17 @@ MathJax.Localization.addTranslation("nl",null,{
         version: "2.3",
         isLoaded: true,
         strings: {
-          LoadFile: "Bezig met laden van %1",
-          Loading: "Bezig met laden",
-          Processing: "Bezig met verwerken",
-          MathJaxNotSupported: "Uw browser ondersteunt MathJax niet",
-          CookieConfig: "MathJax heeft een gebruikersconfiguratie cookie aangetroffen dat code bevat die uitgevoerd moet worden. Wilt u deze uitvoeren?\n\\n\n(U zou op annuleren moeten drukken tenzij u het cookie zelf ingesteld heeft.)",
-          MathProcessingError: "Wiskunde verwerkingsfout",
-          MathError: "Wiskunde fout",
-          LoadFailed: "Bestand kan niet geladen worden: %1",
-          ProcessMath: "Berekening verwerken: %1",
-          TypesetMath: "Berekening opmaken: %1",
-          Typesetting: "Opmaken"
+          CookieConfig: "MathJax har fundet en cookie med brugerkonfiguration, der indeholder kode til at k\u00F8re. Vil du k\u00F8re det?\n\n(Du b\u00F8r trykke p\u00E5 Annuller, medmindre du oprettede cookien selv.)",
+          MathProcessingError: "Fejl under bearbejdning af matematik",
+          MathError: "Matematikfejl",
+          LoadFile: "Indl\u00E6ser %1",
+          Loading: "Indl\u00E6ser",
+          LoadFailed: "Kunne ikke indl\u00E6se filen: %1",
+          ProcessMath: "Bearbejder matematik: %1%%",
+          Processing: "Bearbejder",
+          TypesetMath: "Ops\u00E6tter matematik: %1%%",
+          Typesetting: "Ops\u00E6tter",
+          MathJaxNotSupported: "Din browser underst\u00F8tter ikke MathJax"
         }
     },
     "FontWarnings": {},
@@ -51,7 +51,7 @@ MathJax.Localization.addTranslation("nl",null,{
     "TeX": {}
   },
   plural: function (n) {
-      if (n === 1) {return 1} // one
+      if (n === 1) return 1; // one
       return 2; // other
     },
   number: function (n) {
@@ -59,4 +59,4 @@ MathJax.Localization.addTranslation("nl",null,{
     }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/nl/nl.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/da/da.js");

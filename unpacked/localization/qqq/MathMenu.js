@@ -25,21 +25,21 @@ MathJax.Localization.addTranslation("qqq","MathMenu",{
         version: "2.3",
         isLoaded: true,
         strings: {
-          Show: "'Show Math As' menu item. MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.\n\nFollowed by the following menu subitems:\n* {{msg-mathjax|Mathmenu-MathMLcode}}\n* {{msg-mathjax|Mathmenu-Original}}\n* {{msg-mathjax|Mathmenu-Annotation}}\n* {{msg-mathjax|Mathmenu-texHints}} - checkbox label",
-          MathMLcode: "This menu item from 'Show Math As' shows the MathML code that MathJax has produced internally (sanitized, indented etc.)\n\nThe parent menu item is {{msg-mathjax|Mathmenu-Show}}.",
-          OriginalMathML: "This menu item from 'Show Math As' shows the MathML code if that was originally in the page source",
-          TeXCommands: "This menu item from 'Show Math As' shows the TeX code if that was originally in the page source",
-          AsciiMathInput: "This menu item from 'Show Math As' shows the asciimath code if that was originally in the page source",
-          Original: "This menu item from 'Show Math As' shows the code that was originally in the page source but has no registered type.\n\nThis can happen when extensions add new input formats but fail to provide an adequate format name.\n\nThe parent menu item is {{msg-mathjax|Mathmenu-Show}}.",
-          ErrorMessage: "This menu item from 'Show Math As' shows the error message if MathJax fails to process the source.\n{{Identical|Error message}}",
-          Annotation: "This menu item from 'Show Math As' allows to access possible annotations attached to a MathML formula.\n{{Identical|Annotation}}",
+          Show: "'Show math as' menu item. MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.\n\nFollowed by the following menu subitems:\n* {{msg-mathjax|Mathmenu-MathMLcode}}\n* {{msg-mathjax|Mathmenu-Original}}\n* {{msg-mathjax|Mathmenu-Annotation}}\n* {{msg-mathjax|Mathmenu-texHints}} - checkbox label",
+          MathMLcode: "This menu item from 'Show math as' shows the MathML code that MathJax has produced internally (sanitized, indented etc.)\n\nThe parent menu item is {{msg-mathjax|Mathmenu-Show}}.",
+          OriginalMathML: "This menu item from 'Show math as' shows the MathML code if that was originally in the page source",
+          TeXCommands: "This menu item from 'Show math as' shows the TeX code if that was originally in the page source",
+          AsciiMathInput: "This menu item from 'Show math as' shows the asciimath code if that was originally in the page source",
+          Original: "This menu item from 'Show math as' shows the code that was originally in the page source but has no registered type.\n\nThis can happen when extensions add new input formats but fail to provide an adequate format name.\n\nThe parent menu item is {{msg-mathjax|Mathmenu-Show}}.",
+          ErrorMessage: "This menu item from 'Show math as' shows the error message if MathJax fails to process the source.\n{{Identical|Error message}}",
+          Annotation: "This menu item from 'Show math as' allows to access possible annotations attached to a MathML formula.\n{{Identical|Annotation}}",
           TeX: "This is a menu item from the 'Annotation Menu' to show a TeX annotation.",
           StarMath: "This is a menu item from the 'Annotation Menu' to show a StarMath annotation (StarOffice, OpenOffice, LibreOffice).\n\nProgramming language used in MathJax.",
           Maple: "This is a menu item from the 'Annotation Menu' to show a Maple annotation.",
           ContentMathML: "This is a menu item from the 'Annotation Menu' to show a Content MathML annotation.\n\nThe MathML specification defines two versions: 'presentation' MathML (used in MathJax) and 'content' MathML (describes the semantics of the formula).",
           OpenMath: "This is a menu item from the 'Annotation Menu' to show the OpenMath annotation, an XML representation similar to Content MathML.",
-          texHints: "This menu option from 'Show Math As' adds comments to the code produced by 'MathMLCode'.\n\nUsed as checkbox label in the menu.",
-          Settings: "'Math Settings' menu item.",
+          texHints: "This menu option from 'Show math as' adds comments to the code produced by 'MathMLCode'.\n\nUsed as checkbox label in the menu.",
+          Settings: "'Math settings' menu item.",
           ZoomTrigger: "This menu from 'Math Settings' determines how MathJax's zoom is triggered.\n\nFollowed by the following menu items:\n* {{msg-mathjax|Mathmenu-Hover}}\n* {{msg-mathjax|Mathmenu-Click}}\n* {{msg-mathjax|Mathmenu-DoubleClick}}\n* {{msg-mathjax|Mathmenu-NoZoom}}\n* {{msg-mathjax|Mathmenu-TriggerRequires}} - label for the following checkboxes\n* {{msg-mathjax|Mathmenu-Option}} - checkbox label, for Mac\n* {{msg-mathjax|Mathmenu-Alt}} - checkbox label, for Windows\n* {{msg-mathjax|Mathmenu-Command}} - checkbox label, for Mac\n* {{msg-mathjax|Mathmenu-Control}} - checkbox label, for non-mac\n* {{msg-mathjax|Mathmenu-Shift}} - checkbox label",
           Hover: "This menu option from 'ZoomTrigger' indicates that the zoom is triggered when the mouse pass over a formula.",
           Click: "This menu option from 'ZoomTrigger' indicates that the zoom is triggered when one clicks on a formula.\n{{Identical|Click}}",
@@ -97,8 +97,8 @@ MathJax.Localization.addTranslation("qqq","MathMenu",{
           IE8warning: "This this the confirm message displayed for when the user chooses to let MathPlayer control the contextual menu (IE8)",
           IE9warning: "This this the alert message displayed for when the user chooses to let MathPlayer control the contextual menu (IE9)",
           NoOriginalForm: "This is the alert box displayed when there are missing source formats for 'Show math as'",
-          Close: "Closing button in the 'Show Math As' window.\n{{Identical|Close}}",
-          EqSource: "This is the title of the 'Show Math As' button.\n\nUsed in the \u003Ccode\u003E\u003Cnowiki\u003E\u003Ctitle\u003E\u003C/nowiki\u003E\u003C/code\u003E tag of the new window."
+          Close: "Closing button in the 'Show math as' window.\n{{Identical|Close}}",
+          EqSource: "This is the title of the 'Show math as' button.\n\nUsed in the \u003Ccode\u003E\u003Cnowiki\u003E\u003Ctitle\u003E\u003C/nowiki\u003E\u003C/code\u003E tag of the new window."
         }
 });
 
