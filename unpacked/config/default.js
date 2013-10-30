@@ -702,6 +702,10 @@ MathJax.Hub.Config({
     EqnChunkFactor: 1.5,
     EqnChunkDelay: 100,
 
+    //  This option indicates whether MathJax should try to correct the
+    //  x-height of equations to match the size of the surrounding text.
+    matchFontHeight: true,
+
     //
     //  These settings control automatic line breaking.  It is off by
     //  default, so only explicit line breaks are performed (via
@@ -781,6 +785,10 @@ MathJax.Hub.Config({
     //
     minScaleAdjust: 50,
     
+    //  This option indicates whether MathJax should try to correct the
+    //  x-height of equations to match the size of the surrounding text.
+    matchFontHeight: true,
+
     //
     //  This allows you to define or modify the styles used to display
     //  various math elements created by MathJax.
@@ -873,6 +881,10 @@ MathJax.Hub.Config({
     EqnChunk: 50,
     EqnChunkFactor: 1.5,
     EqnChunkDelay: 100,
+
+    //  This option indicates whether MathJax should try to correct the
+    //  x-height of equations to match the size of the surrounding text.
+    matchFontHeight: true,
 
     //
     //  These settings control automatic line breaking.  It is off by
