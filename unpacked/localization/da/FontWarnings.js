@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/nl/HTML-CSS.js
+ *  MathJax/localization/da/FontWarnings.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,16 +21,14 @@
  *
  */
 
-MathJax.Localization.addTranslation("nl","HTML-CSS",{
+MathJax.Localization.addTranslation("da","FontWarnings",{
         version: "2.3",
         isLoaded: true,
         strings: {
-          LoadWebFont: "Web-lettertype %1 aan het laden",
-          CantLoadWebFont: "Het weblettertype %1 kan niet geladen worden.",
-          FirefoxCantLoadWebFont: "Firefox kan geen web-lettertypes laden van een externe host",
-          CantFindFontUsing: "Kan met gebruik van %1 geen geldig lettertype vinden",
-          WebFontsNotAvailable: "Web-lettertypes niet beschikbaar. In plaats daarvan worden beeld-lettertypes gebruikt"
+          webFont: "MathJax bruger web-baserede skrifttyper til at vise det matematiske p\u00E5 denne side.  Dette tager tid at hente, s\u00E5 siden ville blive hurtigere, hvis du installerede matematiske skrifttyper direkte i dit systems skrifttypemappe.",
+          STIXPage: "Denne side er designet til at bruge [STIX fonts](%1). Hent og install\u00E9r disse skrifttyper for at forbedre oplevelsen med MathJax.",
+          TeXPage: "Denne side er designet til at bruge [MathJax TeX fonts](%1).  Hent og install\u00E9r disse skrifttyper for at forbedre oplevelsen med MathJax."
         }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/nl/HTML-CSS.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/da/FontWarnings.js");

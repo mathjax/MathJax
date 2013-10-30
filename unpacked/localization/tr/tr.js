@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/nl/HTML-CSS.js
+ *  MathJax/localization/tr/tr.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,16 +21,37 @@
  *
  */
 
-MathJax.Localization.addTranslation("nl","HTML-CSS",{
+MathJax.Localization.addTranslation("tr",null,{
+  menuTitle: "T\u00FCrk\u00E7e",
+  version: "2.3",
+  isLoaded: true,
+  domains: {
+    "_": {
         version: "2.3",
         isLoaded: true,
         strings: {
-          LoadWebFont: "Web-lettertype %1 aan het laden",
-          CantLoadWebFont: "Het weblettertype %1 kan niet geladen worden.",
-          FirefoxCantLoadWebFont: "Firefox kan geen web-lettertypes laden van een externe host",
-          CantFindFontUsing: "Kan met gebruik van %1 geen geldig lettertype vinden",
-          WebFontsNotAvailable: "Web-lettertypes niet beschikbaar. In plaats daarvan worden beeld-lettertypes gebruikt"
+          MathProcessingError: "Matematik i\u015Fleme hatas\u0131",
+          MathError: "Matematik hatas\u0131",
+          LoadFile: "%1 Y\u00FCkleniyor",
+          Loading: "Y\u00FCkleniyor",
+          LoadFailed: "Dosya y\u00FCklenemedi: %1",
+          ProcessMath: "Matematik i\u015Fleme: %%%1",
+          MathJaxNotSupported: "Taray\u0131c\u0131n\u0131z MathJax'i desteklemiyor"
         }
+    },
+    "FontWarnings": {},
+    "HTML-CSS": {},
+    "HelpDialog": {},
+    "MathML": {},
+    "MathMenu": {},
+    "TeX": {}
+  },
+  plural: function (n) {
+      return 1; // other
+    },
+  number: function (n) {
+      return n;
+    }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/nl/HTML-CSS.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/tr/tr.js");

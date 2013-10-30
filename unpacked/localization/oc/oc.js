@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/nl/HTML-CSS.js
+ *  MathJax/localization/oc/oc.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,16 +21,38 @@
  *
  */
 
-MathJax.Localization.addTranslation("nl","HTML-CSS",{
+MathJax.Localization.addTranslation("oc",null,{
+  menuTitle: "occitan",
+  version: "2.3",
+  isLoaded: true,
+  domains: {
+    "_": {
         version: "2.3",
         isLoaded: true,
         strings: {
-          LoadWebFont: "Web-lettertype %1 aan het laden",
-          CantLoadWebFont: "Het weblettertype %1 kan niet geladen worden.",
-          FirefoxCantLoadWebFont: "Firefox kan geen web-lettertypes laden van een externe host",
-          CantFindFontUsing: "Kan met gebruik van %1 geen geldig lettertype vinden",
-          WebFontsNotAvailable: "Web-lettertypes niet beschikbaar. In plaats daarvan worden beeld-lettertypes gebruikt"
+          LoadFile: "Telecargament de %1",
+          Loading: "Cargament",
+          LoadFailed: "Frac\u00E0s del telecargament de %1",
+          ProcessMath: "Tractament de las formulas : %1%%",
+          Processing: "Tractament",
+          TypesetMath: "Composicion de las formulas : %1%%",
+          Typesetting: "Composicion"
         }
+    },
+    "FontWarnings": {},
+    "HTML-CSS": {},
+    "HelpDialog": {},
+    "MathML": {},
+    "MathMenu": {},
+    "TeX": {}
+  },
+  plural: function (n) {
+      if (n === 1) return 1; // one
+      return 2; // other
+    },
+  number: function (n) {
+      return n;
+    }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/nl/HTML-CSS.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/oc/oc.js");
