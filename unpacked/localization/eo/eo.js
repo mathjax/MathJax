@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/cs/cs.js
+ *  MathJax/localization/eo/eo.js
  *
  *  Copyright (c) 2009-2013 The MathJax Consortium
  *
@@ -21,8 +21,8 @@
  *
  */
 
-MathJax.Localization.addTranslation("cs",null,{
-  menuTitle: "\u010Desky",
+MathJax.Localization.addTranslation("eo",null,{
+  menuTitle: "Esperanto",
   version: "2.3",
   isLoaded: true,
   domains: {
@@ -30,17 +30,13 @@ MathJax.Localization.addTranslation("cs",null,{
         version: "2.3",
         isLoaded: true,
         strings: {
-          MathProcessingError: "Chyba zpracov\u00E1n\u00ED matematiky",
-          MathError: "Chyba matematiky",
-          LoadFile: "Na\u010D\u00EDt\u00E1 se %1",
-          Loading: "Na\u010D\u00EDt\u00E1 se",
-          LoadFailed: "Nepoda\u0159ilo se na\u010D\u00EDst soubor: %1",
-          ProcessMath: "Zpracov\u00E1v\u00E1 se matematika: %1 %%",
-          Processing: "Zpracov\u00E1v\u00E1 se",
-          TypesetMath: "S\u00E1z\u00ED se matematika: %1 %%",
-          Typesetting: "S\u00E1z\u00ED se",
-          MathJaxNotSupported: "V\u00E1\u0161 prohl\u00ED\u017Ee\u010D nepodporuje MathJax",
-          CookieConfig: "MathJax nalezl cookie u\u017Eivatelsk\u00E9 konfigurace obsahuj\u00EDc\u00ED spustiteln\u00FD k\u00F3d. Chcete ho spustit?\n\n(Pokud jste cookie nenastavili sami, m\u011Bli byste stisknout Storno.)"
+          Loading: "\u015Cargado",
+          LoadFailed: "\u015Cargado de dosiero malsukcesis: %1",
+          ProcessMath: "Prilaborado de formulo: %1 %%",
+          Processing: "Prilaborado",
+          TypesetMath: "Kompostado de formulo: %1 %%",
+          Typesetting: "Kompostado",
+          MathJaxNotSupported: "Via krozilo ne subtenas Mathjax."
         }
     },
     "FontWarnings": {},
@@ -52,12 +48,11 @@ MathJax.Localization.addTranslation("cs",null,{
   },
   plural: function (n) {
       if (n === 1) return 1; // one
-      if (2 <= n && n <= 4) return 2; // few
-      return 3; // other
+      return 2; // other
     },
   number: function (n) {
       return n;
     }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/cs/cs.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/eo/eo.js");

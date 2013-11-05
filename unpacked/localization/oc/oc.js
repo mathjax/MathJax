@@ -36,7 +36,10 @@ MathJax.Localization.addTranslation("oc",null,{
           ProcessMath: "Tractament de las formulas : %1%%",
           Processing: "Tractament",
           TypesetMath: "Composicion de las formulas : %1%%",
-          Typesetting: "Composicion"
+          Typesetting: "Composicion",
+          MathProcessingError: "Error de tractament de la formula matematica",
+          MathError: "Error dins la formula matematica",
+          MathJaxNotSupported: "V\u00F2stre navigador sup\u00F2rta pas MathJax"
         }
     },
     "FontWarnings": {},
