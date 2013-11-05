@@ -94,7 +94,8 @@ MathJax.Localization.addTranslation("da","TeX",{
           MissingReplacementString: "Manglende erstatningsstreng til definition af %1",
           MismatchUseDef: "Brug af %1 stemmer ikke overens med dens definition",
           RunawayArgument: "L\u00F8bsk argument for %1?",
-          NoClosingDelim: "Kan ikke finde afsluttende skilletegn for %1"
+          NoClosingDelim: "Kan ikke finde afsluttende skilletegn for %1",
+          MissingBoxFor: "Manglende boks for %1"
         }
 });
 
