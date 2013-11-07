@@ -181,6 +181,13 @@
       },
 
       REMAPACCENT: {
+        "\u007E": "\u0303",
+        "\u2192": "\u20D7",
+        "\u0060": "\u0300",
+        "\u005E": "\u0302",
+        "\u00B4": "\u0301",
+        "\u2032": "\u0301",
+        "\u2035": "\u0300"
       },
 
       REMAPACCENTUNDER: {
@@ -248,6 +255,7 @@
           HW: [[1000,MAIN], [1100,SIZE1], [1200,SIZE2], [1450,SIZE3], [1800,SIZE4], [2100,SIZE5], [2400,SIZE6], [3000,SIZE7]],
           stretch: {bot:[0x23AD,SYMBOLS], ext:[0xE007,SIZE7], mid:[0x23AC,SYMBOLS], top:[0x23AB,SYMBOLS]}
         },
+        0x7E: {alias: 0x303, dir: H},
         0xAF: {alias: 0x332, dir: H},
         0x2C6: {alias: 0x302, dir: H},
         0x2C9: {alias: 0x305, dir: H},
@@ -292,7 +300,7 @@
         0x2016:
         {
           dir: V,
-          HW: [[1000,MARKS], [1202,SIZE1], [1444,SIZE2], [1734,SIZE3], [2084,SIZE4], [2502,SIZE5], [3004,SIZE6], [3606,SIZE7]],
+          HW: [[1000,MAIN], [1202,SIZE1], [1444,SIZE2], [1734,SIZE3], [2084,SIZE4], [2502,SIZE5], [3004,SIZE6], [3606,SIZE7]],
           stretch: {bot:[0xE12A,SIZE7], ext:[0xE12B,SIZE7], top:[0xE12C,SIZE7]}
         },
         0x2017: {alias: 0x305, dir: H},
@@ -300,7 +308,7 @@
         0x2044:
         {
           dir: V,
-          HW: [[1000,MARKS], [1310,SIZE1], [1716,SIZE2], [2248,SIZE3], [2944,SIZE4], [3858,SIZE5], [5054,SIZE6], [6620,SIZE7]]
+          HW: [[1000,MAIN], [1310,SIZE1], [1716,SIZE2], [2248,SIZE3], [2944,SIZE4], [3858,SIZE5], [5054,SIZE6], [6620,SIZE7]]
         },
         0x20D0: EXTRAH,
         0x20D1: EXTRAH,

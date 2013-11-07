@@ -178,6 +178,13 @@
       },
 
       REMAPACCENT: {
+        "\u007E": "\u0303",
+        "\u2192": "\u20D7",
+        "\u0060": "\u0300",
+        "\u005E": "\u0302",
+        "\u00B4": "\u0301",
+        "\u2032": "\u0301",
+        "\u2035": "\u0300"
       },
 
       REMAPACCENTUNDER: {
@@ -225,7 +232,6 @@
           HW: [[0.866,MAIN], [1.199,SIZE1], [1.799,SIZE2], [1.961,SIZE2,1.090], [2.399,SIZE3], [2.999,SIZE4]],
           stretch: {bot:[0x23A6,SYMBOLS], ext:[0x23A5,SYMBOLS], top:[0x23A4,SYMBOLS]}
         },
-        0x5E: {alias: 0x23DC, dir: H},
         0x5F: {alias: 0xAF, dir: H},
         0x7B:
         {
@@ -245,7 +251,6 @@
           HW: [[0.908,MAIN], [1.199,SIZE1], [1.799,SIZE2], [1.961,SIZE2,1.090], [2.399,SIZE3], [2.999,SIZE4]],
           stretch: {bot:[0x23AD,SYMBOLS], ext:[0x23AA,SYMBOLS], mid:[0x23AC,SYMBOLS], top:[0x23AB,SYMBOLS]}
         },
-        0x7E: {alias: 0x23DC, dir: H},
         0xAF:
         {
           dir: H,
@@ -253,17 +258,12 @@
           stretch: {rep:[0xAF,MAIN]}
         },
         0xC9: {alias: 0xAF, dir: H},
-        0x2C6: {alias: 0x23DC, dir: H},
-        0x2DC: {alias: 0x23DC, dir: H},
-        0x302: {alias: 0x23DC, dir: H},
-        0x303: {alias: 0x23DC, dir: H},
-        0x30C: {alias: 0x23DD, dir: H},
         0x332: {alias: 0xAF, dir: H},
         0x2015: {alias: 0xAF, dir: H},
         0x2016:
         {
           dir: V,
-          HW: [[0.905,MARKS], [1.505,SIZE1], [2.105,SIZE2], [2.706,SIZE3], [3.306,SIZE4]],
+          HW: [[0.905,MAIN], [1.505,SIZE1], [2.105,SIZE2], [2.706,SIZE3], [3.306,SIZE4]],
           stretch: {bot:[0xE002,SIZE5], ext:[0xE003,SIZE5]}
         },
         0x2017: {alias: 0xAF, dir: H},
@@ -314,7 +314,7 @@
         {
           dir: H,
           HW: [[0.640,MAIN]],
-          stretch: {top:[0x21D1,MAIN], ext:[0x2016,MARKS]}
+          stretch: {top:[0x21D1,MAIN], ext:[0x2016,MAIN]}
         },
         0x21D2:
         {
@@ -325,7 +325,7 @@
         {
           dir: H,
           HW: [[0.640,MAIN]],
-          stretch: {ext:[0x2016,MARKS], bot:[0x21D3,MAIN]}
+          stretch: {ext:[0x2016,MAIN], bot:[0x21D3,MAIN]}
         },
         0x21D4:
         {
@@ -336,7 +336,7 @@
         {
           dir: H,
           HW: [[0.640,MAIN]],
-          stretch: {top:[0x21D1,MAIN], ext:[0x2016,MARKS], bot:[0x21D3,MAIN]}
+          stretch: {top:[0x21D1,MAIN], ext:[0x2016,MAIN], bot:[0x21D3,MAIN]}
         },
         0x220F: EXTRAV,
         0x2210: EXTRAV,

@@ -526,19 +526,19 @@
       {
         dir: V,
         HW: [[1092,MAIN], [2025,SIZE1]],
-        stretch: {top:[0xE138,SIZE6], ext:[0x23AE,SYMBOLS], bot:[0xE139,SIZE6]}
+        stretch: {top:[0xE135,SIZE6], ext:[0x23AE,SYMBOLS], bot:[0xE136,SIZE6]}
       },
       0x222C:
       {
         dir: V,
         HW: [[1092,OPERATORS], [2025,SIZE1]],
-        stretch: {top:[0xE13A,SIZE6], ext:[0xE13B,SIZE6], bot:[0xE13C,SIZE6]}
+        stretch: {top:[0xE137,SIZE6], ext:[0xE138,SIZE6], bot:[0xE139,SIZE6]}
       },
       0x222D:
       {
         dir: V,
         HW: [[1092,OPERATORS], [2025,SIZE1]],
-        stretch: {top:[0xE135,SIZE6], ext:[0xE136,SIZE6], bot:[0xE137,SIZE6]}
+        stretch: {top:[0xE13A,SIZE6], ext:[0xE13B,SIZE6], bot:[0xE13C,SIZE6]}
       },
       0x222E:
       {

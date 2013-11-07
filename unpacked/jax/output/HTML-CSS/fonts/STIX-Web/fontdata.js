@@ -361,8 +361,8 @@
         0x2016:
         {
           dir: V,
-          HW: [[0.879,MARKS]],
-          stretch: {bot:[0x2016,MARKS], ext:[0x2016,MARKS]}
+          HW: [[0.879,MAIN]],
+          stretch: {bot:[0x2016,MAIN], ext:[0x2016,MAIN]}
         },
         0x2017: {alias: 0x23AF, dir: H},
         0x203E:
@@ -681,7 +681,7 @@
         0x29F9:
         {
           dir: V,
-          HW: [[1.020,SYMBOLS], [1.845,SIZE1]]
+          HW: [[1.020,MAIN], [1.845,SIZE1]]
         },
         0x2A00: EXTRAV,
         0x2A01: EXTRAV,

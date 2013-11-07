@@ -141,7 +141,7 @@
         "-Asana-Math-variant": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1]},
           "-tex-caligraphic": {offsetA: 0xE20A, noLowerCase: 1, fonts: [VARIANTS,MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,NONUNICODE,SIZE1], italic: true},
           "-tex-oldstyle": {offsetN: 0xE200, fonts: [VARIANTS,MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,NONUNICODE,SIZE1]},
-          "-tex-caligraphic-bold": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1], italic: true, bold: true},
+          "-tex-caligraphic-bold": {offsetA: 0xE224, noLowerCase: 1, fonts: [VARIANTS,MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,NONUNICODE,SIZE1], italic: true, bold: true},
           "-tex-oldstyle-bold": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1], bold: true},
           "-tex-mathit": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1], italic:true, noIC:true},
           "-largeOp": {fonts:[SIZE1,MAIN]},
@@ -180,11 +180,13 @@
       },
 
       REMAPACCENT: {
-        "\u2192": "\u20D7",
-        "\u2032": "\u0300",
         "\u007E": "\u0303",
-        "\u2035": "\u0301",
-        "\u005E": "\u0302"
+        "\u2192": "\u20D7",
+        "\u0060": "\u0300",
+        "\u005E": "\u0302",
+        "\u00B4": "\u0301",
+        "\u2032": "\u0301",
+        "\u2035": "\u0300"
       },
 
       REMAPACCENTUNDER: {
@@ -287,7 +289,7 @@
         0x2016:
         {
           dir: V,
-          HW: [[885,MARKS], [1275,SIZE1], [1555,SIZE2], [1897,SIZE3], [2315,SIZE4]],
+          HW: [[885,MAIN], [1275,SIZE1], [1555,SIZE2], [1897,SIZE3], [2315,SIZE4]],
           stretch: {ext:[0xE005,SIZE6], top:[0xE005,SIZE6]}
         },
         0x2017: {alias: 0x305, dir: H},
@@ -295,7 +297,7 @@
         0x2044:
         {
           dir: V,
-          HW: [[837,MARKS], [1205,SIZE1], [1471,SIZE2], [1795,SIZE3], [2189,SIZE4], [2615,SIZE4,1.195]]
+          HW: [[837,MAIN], [1205,SIZE1], [1471,SIZE2], [1795,SIZE3], [2189,SIZE4], [2615,SIZE4,1.195]]
         },
         0x2045: EXTRAV,
         0x2046: EXTRAV,
