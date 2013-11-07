@@ -1086,7 +1086,7 @@
           ITEM.RADIO(["TeXWeb","TeX (web)"],       "font", {action: MENU.Font}),
           ITEM.RADIO(["TeXImage","TeX (image)"],   "font", {action: MENU.Font}),
           ITEM.RULE(),
-          ITEM.RADIO(["STIXlocal","STIX (local)"], "font", {action: MENU.Font}),
+          ITEM.RADIO(["STIXLocal","STIX (local)"], "font", {action: MENU.Font}),
           ITEM.RADIO(["STIXWeb","STIX (web)"], "font", {action: MENU.Font}),
           ITEM.RULE(),
           ITEM.RADIO(["AsanaMathWeb","Asana Math (web)"], "font", {action: MENU.Font}),
