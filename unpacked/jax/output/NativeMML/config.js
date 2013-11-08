@@ -38,7 +38,7 @@ MathJax.OutputJax.NativeMML = MathJax.OutputJax({
                              //  (since the code for that is a bit delicate)
 
     styles: {
-      "DIV.MathJax_MathML": {
+      "div.MathJax_MathML": {
         "text-align": "center",
         margin: ".75em 0px"
       }
