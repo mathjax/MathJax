@@ -1,0 +1,19 @@
+/*
+ *  /MathJax/localization/nl/nl.js
+ *
+ *  Copyright (c) 2009-2013 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+MathJax.Localization.addTranslation("nl",null,{menuTitle:"Nederlands",version:"2.3",isLoaded:true,domains:{_:{version:"2.3",isLoaded:true,strings:{LoadFile:"Bezig met laden van %1",Loading:"Bezig met laden",Processing:"Bezig met verwerken",MathJaxNotSupported:"Uw browser ondersteunt MathJax niet",CookieConfig:"MathJax heeft een gebruikersconfiguratie cookie aangetroffen dat code bevat die uitgevoerd moet worden. Wilt u deze uitvoeren?\n\\n\n(U zou op annuleren moeten drukken tenzij u het cookie zelf ingesteld heeft.)",MathProcessingError:"Wiskunde verwerkingsfout",MathError:"Wiskunde fout",LoadFailed:"Bestand kan niet geladen worden: %1",ProcessMath:"Berekening verwerken: %1",TypesetMath:"Berekening opmaken: %1",Typesetting:"Opmaken"}},FontWarnings:{},"HTML-CSS":{},HelpDialog:{},MathML:{},MathMenu:{},TeX:{}},plural:function(a){if(a===1){return 1}return 2},number:function(a){return a}});MathJax.Ajax.loadComplete("[MathJax]/localization/nl/nl.js");
