@@ -41,7 +41,13 @@
 
     FontInfo: {
       STIX: {family: "STIXSizeOneSym", testString: "() {} []"},
-      TeX:  {family: "MathJax_Size1",  testString: "() {} []"}
+      TeX:  {family: "MathJax_Size1",  testString: "() {} []"},
+      "STIX-Web":  {family: "STIXWeb_Size1",  testString: "() {} []"},
+      "Asana-Math":  {family: "AsanaMath_Size1",  testString: "() {} []"},
+      "Gyre-Pagella":  {family: "GyrePagella_Size1",  testString: "() {} []"},
+      "Gyre-Termes":  {family: "GyreTermes_Size1",  testString: "() {} []"},
+      "Latin-Modern":  {family: "LatinModern_Size1",  testString: "() {} []"},
+      "Neo-Euler":  {family: "NeoEuler_Size1",  testString: "() {} []"}
     },
     comparisonFont: ["sans-serif","monospace","script","Times","Courier","Arial","Helvetica"],
     testSize: ["40px","50px","60px","30px","20px"],
@@ -323,21 +329,16 @@
       if (this.adjustAvailableFonts) {this.adjustAvailableFonts(this.config.availableFonts)}
       if (settings.scale) {this.config.scale = settings.scale}
       if (settings.font && settings.font !== "Auto") {
-        if (settings.font === "TeX (local)") {
-          this.config.availableFonts = ["TeX"];
-          this.config.preferredFont = this.config.webFont = "TeX";
-        } else if (settings.font === "STIX (local)") {
-          this.config.availableFonts = ["STIX"];
-          this.config.preferredFont = "STIX";
-          this.config.webFont = "TeX";
-        } else if (settings.font === "TeX (web)") {
-          this.config.availableFonts = [];
-          this.config.preferredFont = "";
-          this.config.webFont = "TeX";
-        } else if (settings.font === "TeX (image)") {
-          this.config.availableFonts = [];
-          this.config.preferredFont = this.config.webFont = "";
-        }
+        if (settings.font === "TeXLocal") {this.config.availableFonts = ["TeX"]; this.config.preferredFont = "TeX"; this.config.webFont = "TeX"}
+        else if (settings.font === "TeXWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "TeX"}
+        else if (settings.font === "TeXimage") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = ""}
+        else if (settings.font === "STIXlocal") {this.config.availableFonts = ["STIX"]; this.config.preferredFont = "STIX"; this.config.webFont = "STIX-Web"}
+        else if (settings.font === "STIXWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "STIX-Web"}
+        else if (settings.font === "AsanaMathWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Asana-Math"}
+        else if (settings.font === "GyrePagellaWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Gyre-Pagella"}
+        else if (settings.font === "GyreTermesWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Gyre-Termes"}
+        else if (settings.font === "LatinModernWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Latin-Modern"}
+        else if (settings.font === "NeoEulerWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Neo-Euler"}
       }
       var font = this.Font.findFont(this.config.availableFonts,this.config.preferredFont);
       if (!font && this.allowWebFonts) {font = this.config.webFont; if (font) {this.webFonts = true}}
@@ -534,7 +535,8 @@
           ex = this.defaultEx; em = this.defaultEm;
           if (relwidth) {maxwidth = this.defaultWidth}
         }
-        scale = Math.floor(Math.max(this.config.minScaleAdjust/100,(ex/this.TeX.x_height)/em) * this.config.scale);
+        scale = (this.config.matchFontHeight ? ex/this.TeX.x_height/em : 1);
+        scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
         jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
         jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em; this.em = em * scale/100; jax.HTMLCSS.ex = ex;
         jax.HTMLCSS.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/this.em) : 1000000);
@@ -584,7 +586,7 @@
       this.em = MML.mbase.prototype.em = jax.HTMLCSS.em * jax.HTMLCSS.scale; 
       this.outerEm = jax.HTMLCSS.em; this.scale = jax.HTMLCSS.scale;
       this.linebreakWidth = jax.HTMLCSS.lineWidth;
-      span.style.fontSize = jax.HTMLCSS.fontSize;
+      if (this.scale !== 1) {span.style.fontSize = jax.HTMLCSS.fontSize}
       //
       //  Typeset the math
       //
@@ -617,14 +619,14 @@
         //
         state.HTMLCSSeqn += (state.i - state.HTMLCSSi); state.HTMLCSSi = state.i;
         if (state.HTMLCSSeqn >= state.HTMLCSSlast + state.HTMLCSSchunk) {
-          this.postTranslate(state);
+          this.postTranslate(state,true);
           state.HTMLCSSchunk = Math.floor(state.HTMLCSSchunk*this.config.EqnChunkFactor);
           state.HTMLCSSdelay = true;  // delay if there are more scripts
         }
       }
     },
 
-    postTranslate: function (state) {
+    postTranslate: function (state,partial) {
       var scripts = state.jax[this.id];
       if (!this.hideProcessedMath) return;
       //
@@ -650,7 +652,7 @@
       }
       if (this.forceReflow) {
         //  WebKit can misplace some elements that should wrap to the next line
-        //  but gets them right ona reflow, so force reflow by toggling a stylesheet
+        //  but gets them right on a reflow, so force reflow by toggling a stylesheet
         var sheet = (document.styleSheets||[])[0]||{};
         sheet.disabled = true; sheet.disabled = false;
       }
@@ -659,7 +661,7 @@
       //
       state.HTMLCSSlast = state.HTMLCSSeqn;
     },
-
+    
     getJaxFromMath: function (math) {
       if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
@@ -1721,6 +1723,12 @@
 	return span;
       },
 
+      HTMLhandleDir: function (span) {
+        var dir = this.Get("dir",true); // only get value if not the default
+        if (dir) {span.dir = dir}
+        return span;
+      },
+
       HTMLhandleColor: function (span) {
 	var values = this.getValues("mathcolor","color");
 	if (this.mathbackground) {values.mathbackground = this.mathbackground}
@@ -1971,6 +1979,7 @@
         }
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
 	return span;
       }
     });
@@ -1985,6 +1994,7 @@
 	if (this.data.join("").length !== 1) {delete span.bbox.skew}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
 	return span;
       }
     });
@@ -2059,6 +2069,7 @@
         //
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
 	return span;
       },
       CoreParent: function () {
@@ -2155,6 +2166,7 @@
         if (this.data.join("").length !== 1) {delete span.bbox.skew}
         this.HTMLhandleSpace(span);
         this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
         return span;
       }
     });

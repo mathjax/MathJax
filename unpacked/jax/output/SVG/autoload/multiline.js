@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -163,13 +163,18 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         if (this.data[i]) {
           if (this.data[i].SVGbetterBreak(info,state)) {
             better = true; index = [i].concat(info.index); W = info.W; w = info.w;
-            if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
+            if (info.penalty === PENALTY.newline) {
+              info.index = index;
+              if (info.nest) {info.nest--}
+              return true;
+            }
           }
           scanW = (broken ? info.scanW : this.SVGaddWidth(i,info,scanW));
         }
         info.index = []; i++; broken = false;
       }
-      info.nest--; info.index = index;
+      if (info.nest) {info.nest--}
+      info.index = index;
       if (better) {info.W = W}
       return better;
     },
@@ -365,13 +370,18 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         if (this.data[k]) {
           if (this.data[k].SVGbetterBreak(info,state)) {
             better = true; index = [i].concat(info.index); W = info.W; w = info.w;
-            if (info.penalty === PENALTY.newline) {info.index = index; info.nest--; return true}
+            if (info.penalty === PENALTY.newline) {
+              info.index = index;
+              if (info.nest) {info.nest--}
+              return true;
+            }
           }
           scanW = (broken ? info.scanW : this.SVGaddWidth(i,info,scanW));
         }
         info.index = []; i++; broken = false;
       }
-      info.nest--; info.index = index;
+      if (info.nest) {info.nest--}
+      info.index = index;
       if (better) {info.W = W; info.w = w}
       return better;
     },
@@ -490,7 +500,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  mrows for nesting, but can leave these unbalanced.
       //
       if (values.texClass === MML.TEXCLASS.OPEN) {info.nest++}
-      if (values.texClass === MML.TEXCLASS.CLOSE) {info.nest--}
+      if (values.texClass === MML.TEXCLASS.CLOSE && info.nest) {info.nest--}
       //
       //  Get the default penalty for this location
       //

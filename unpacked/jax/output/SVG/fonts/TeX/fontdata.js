@@ -26,7 +26,7 @@
  */
 
 (function (SVG,MML,AJAX,HUB) {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -64,7 +64,8 @@
         "MathJax_SansSerif-bold":   "SansSerif/Bold/Main.js",
         "MathJax_SansSerif-italic": "SansSerif/Italic/Main.js",
         "MathJax_Script":           "Script/Regular/Main.js",
-        "MathJax_Typewriter":       "Typewriter/Regular/Main.js"
+        "MathJax_Typewriter":       "Typewriter/Regular/Main.js",
+        "MathJax_Caligraphic-bold": "Caligraphic/Bold/Main.js"
       },
       
       VARIANT: {
@@ -130,7 +131,10 @@
                      0x210F:[0x210F,MML.VARIANT.NORMAL]  // \hslash
                    }},
         "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
-        "-smallOp": {fonts:[SIZE1,MAIN]}
+        "-smallOp": {fonts:[SIZE1,MAIN]},
+        "-tex-caligraphic-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"], bold:true,
+                                  offsetA: 0x41, variantA: "bold-italic"},
+        "-tex-oldstyle-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold","MathJax_Main","MathJax_Math","MathJax_Size1"], bold:true}
       },
       
       RANGES: [
@@ -178,7 +182,7 @@
         0x210D: [0x0048,MML.VARIANT.DOUBLESTRUCK],
         0x210E: [0x0068,MML.VARIANT.ITALIC],
         0x2110: [0x004A,MML.VARIANT.SCRIPT],
-        0x2111: [0x004A,MML.VARIANT.FRAKTUR],
+        0x2111: [0x0049,MML.VARIANT.FRAKTUR],
         0x2112: [0x004C,MML.VARIANT.SCRIPT],
         0x2115: [0x004E,MML.VARIANT.DOUBLESTRUCK],
         0x2119: [0x0050,MML.VARIANT.DOUBLESTRUCK],

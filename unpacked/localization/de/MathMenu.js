@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/de/MathMenu.js
  *
- *  Copyright (c) 2013 The MathJax Consortium
+ *  Copyright (c) 2009-2013 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,172 +22,84 @@
  */
 
 MathJax.Localization.addTranslation("de","MathMenu",{
-  version: "2.2",
-  isLoaded: true,
-  strings: {
-
-    Show: "Zeige Mathe als",                 // "Show Math As", 
-      MathMLcode:     "MathML Code",
-      OriginalMathML: "Original MathML",
-      TeXCommands:    "Original TeX",          // "TeX Commands",
-      AsciiMathInput: "Original AsciiMathML",  // "AsciiMathML input"
-      Original:       "Originalform",          // "Original Form",
-      ErrorMessage:   "Fehlermeldung",         // "Error Message",
-      texHints:       "TeX Tipps in MathML", // "Show TeX hints in MathML", 
-    Settings: "Einstellungen",               // "Math Settings", 
-      ZoomTrigger: "Zoom ausl\u00F6sen",           // "Zoom Trigger",
-        Hover:       "Hover",
-        Click:       "Klick",                    // "Click",
-        DoubleClick: "Doppelklick",              // "Double-Click",
-        NoZoom:      "Kein Zoom",                // "No Zoom",
-      TriggerRequires: "Ausl\u00F6ser ben\u00F6tigt:", // "Trigger Requires:",
-        Option:      "Option",
-        Alt:         "Alt",
-        Command:     "Command",
-        Control:     "Steuerung",                // "Control",
-        Shift:       "Shift",
-      ZoomFactor:    "Zoomfaktor",             // "Zoom Factor",
-      Renderer: "Mathe Renderer",              // "Math Renderer",
-      MPHandles: "An MathPlayer \u00FCbergeben:",  // "Let MathPlayer Handle:",
-        MenuEvents:    "Men\u00FC Events",          // "Menu Events", 
-        MouseEvents:   "Maus Events",            // "Mouse Events",
-        MenuAndMouse:  "Maus und Men\u00FC Events",  // "Mouse and Menu Events",
-      FontPrefs:  "Font Einstellungen",        // "Font Preferences", 
-        ForHTMLCSS: "F\u00FCr HTML-CSS",         // "For HTML-CSS:",
-          Auto:         "Auto",
-          TeXLocal:     "TeX (lokal)",             // "TeX (local)",
-          TeXWeb:       "TeX (Web)",               // "TeX (web)",
-          TeXImage:     "TeX (Bild)",              // "TeX (image)",
-          STIXLocal:    "STIX (lokal)",            // "STIX (local)",
-      ContextMenu: "Kontextmen\u00FC ",         // "Contextual Menu",
-        Browser:        "Browser",
-      Scale: "Alle Mathe skalieren ...",       // "Scale All Math ...",
-      Discoverable: "Highlight durch Hovern",  // "Highlight on Hover",
-    Locale: "Sprache",                       // "Language",
-      LoadLocale: "Von URL laden ...",         // "Load from URL ...",
-    About: "\u00DCber MathJax",              // "About MathJax", 
-    Help:  "MathJax Hilfe",                  // "MathJax Help",
-
-
-/* About MathJax dialogue  */ 
-
-    localTeXfonts:  "Lokale TeX-Fonts verwendet",         // "using local TeX fonts",
-    webTeXfonts:    "Web TeX-Fonts verwendet",            // "using web TeX font",
-    imagefonts:     "Bild-Fonts verwendet",               // "using Image fonts",
-    localSTIXfonts: "Lokale STIX-Fonts verwendet",        // "using local STIX fonts",
-    webSVGfonts:    "Web SVG-fonts verwendet",            // "using web SVG fonts",
-    genericfonts:   "Generische Unicode-Fonts verwendet", // "using generic unicode fonts",
-      
-    wofforotffonts: "WOFF- oder OTF-Fonts", // "woff or otf fonts", 
-    eotffonts:      "EOT-Fonts",            // "eot fonts",
-    svgfonts:       "SVG-Fonts",            // "svg fonts",
-
-
-/* Warnings when switching to MathML mode */
-
-    WebkitNativeMMLWarning:
-      "Ihr Browser scheint MathML nicht zu unterst\u00FCtzen, " +
-      "so dass ein Wechsel zur MathML-Ausgabe die Mathematik " +
-      "auf der Seite unlesbar machen k\u00F6nnte.",
-//    "Your browser doesn't seem to support MathML natively, " +
-//    "so switching to MathML output may cause the mathematics " +
-//    "on the page to become unreadable.",
-
-    MSIENativeMMLWarning:
-      "Internet Explorer ben\u00F6tigt das MathPlayer Plugin, " +
-      "um MathML-Ausgabe darstellen zu k\u00F6nnen.",
-//    "Internet Explorer requires the MathPlayer plugin " +
-//    "in order to process MathML output.",
-      
-    OperaNativeMMLWarning:
-      "Opera's MathML unterst\u00FCtzung ist beschr\u00E4nkt, so dass beim Wechsel " +
-      "zur MathML-Ausgabe einige Ausdr\u00FCcke schlecht gerendert werden.",
-//    "Opera's support for MathML is limited, so switching to " +
-//    "MathML output may cause some expressions to render poorly.",
-
-    SafariNativeMMLWarning:
-       "Die MathML-Unterst\u00FCtzung Ihres Browsers beherrscht nicht alle " +
-       "MathJax-Features, so dass einige Ausdr\u00FCcke schlecht gerendert werden.",
-//     "Your browser's native MathML does not implement all the features " +
-//     "used by MathJax, so some expressions may not render properly.",
-
-    FirefoxNativeMMLWarning:
-       "Die MathML-Unterst\u00FCtzung Ihres Browsers beherrscht nicht alle " +
-       "MathJax-Features, so dass einige Ausdr\u00FCcke schlecht gerendert werden.",
-//     "Your browser's native MathML does not implement all the features " +
-//     "used by MathJax, so some expressions may not render properly.",
-      
-
-/* Warning when switching to SVG mode */
-
-    MSIESVGWarning:
-      "Internet Explorer unterst\u00FCtzt SVG erst ab IE9 und " + 
-      "nicht im IE8-Emulationsmodus. Beim Wechsel zur " +
-      "SVG-Ausgabe wird die Mathematik nicht richtig dargestellt.",
-//    "SVG is not implemented in Internet Explorer prior to " +
-//    "IE9 or when it is emulating IE8 or below. " +
-//    "Switching to SVG output will cause the mathematics to "
-//    "not display properly.",
-      
-    LoadURL:
-      "Sprachschema von URL laden:",
-//    "Load translation data from this URL:",
-      
-    BadURL:
-      "URL muss eine JavaScript-Datei f\u00FCr MathJax Sprachschema verlinken. " +
-      "JavaScript Dateinamen sollten auf '.js' enden.",
-//    "The URL should be for a javascript file that defines MathJax translation data.  " +
-//    "Javascript file names should end with '.js'",
-
-    BadData:
-     "Fehler beim Laden des Sprachschema von %1",
-//   "Failed to load translation data from %1",
-     
-    SwitchAnyway:
-      "Renderer trotzdem \u00E4ndern?\n\n" +
-      "(Mit OK wechseln, mit ABBRECHEN den akt\u00FCllen Renderer verwenden)", 
-//    "Switch the renderer anyway?\n\n" +
-//    "(Press OK to switch, CANCEL to continue with the current renderer)",
-
-    ScaleMath:
-      "Alle Mathematik skalieren (relativ zum umgebenden Text)",
-//    "Scale all mathematics (compared to surrounding text) by",
-
-    NonZeroScale:
-      "Skalierung darf nicht Null sein",
-//    "The scale should not be zero",
-
-    PercentScale:
-      "Skalierung muss in Prozent sein (z.B. 120%%)",
-//    "The scale should be a percentage (e.g., 120%%)",
-
-    IE8warning:
-      "Dies Deaktiviert das MathJax Men\u00FC und den MathJax Zoom. " +
-      "Alt+Klick auf eine Formel zeigt weiter das MathJax-Men\u00FC.\n\n" +
-      "Wirklich MathPlayer Einstellungen \u00E4ndern?",
-//    "This will disable the MathJax menu and zoom features, " +
-//    "but you can Alt-Click on an expression to obtain the MathJax " +
-//    "menu instead.\n\nReally change the MathPlayer settings?",
-
-    IE9warning:
-      "Das MathJax Men\u00FC wird deaktiviert und kann nur durch " +
-      "Alt+Klick auf eine Formel angezeigt werden.",
-//    "The MathJax contextual menu will be disabled, but you can " +
-//    "Alt-Click on an expression to obtain the MathJax menu instead.",
-
-    NoOriginalForm:
-      "Keine Originalform verf\u00FCgbar",
-//    "No original form available",
-
-    Close:
-      "Schliessen",
-//    "Close",
-
-    EqSource:
-      "Original MathJax Formel"
-//    "MathJax Equation Source"
-
-  }
+        version: "2.3",
+        isLoaded: true,
+        strings: {
+          Show: "Zeige Mathe als",
+          MathMLcode: "MathML-Code",
+          OriginalMathML: "Original-MathML",
+          TeXCommands: "TeX-Befehle",
+          AsciiMathInput: "AsciiMathML-Eingabe",
+          Original: "Originalformel",
+          ErrorMessage: "Fehlermeldung",
+          Annotation: "Anmerkung",
+          TeX: "TeX",
+          StarMath: "StarMath",
+          Maple: "Maple",
+          ContentMathML: "Content MathML",
+          OpenMath: "OpenMath",
+          texHints: "TeX-Hinweise in MathML anzeigen",
+          Settings: "Math-Einstellungen",
+          ZoomTrigger: "Zoomausl\u00F6ser",
+          Hover: "\u00DCberfahren",
+          Click: "Klick",
+          DoubleClick: "Doppelklick",
+          NoZoom: "Kein Zoom",
+          TriggerRequires: "Ausl\u00F6ser ben\u00F6tigt:",
+          Option: "Option",
+          Alt: "Alt",
+          Command: "\u2318",
+          Control: "Strg",
+          Shift: "Umschalt",
+          ZoomFactor: "Vergr\u00F6\u00DFerungsfaktor",
+          Renderer: "Math-Renderer",
+          MPHandles: "MathPlayer darf verwalten:",
+          MenuEvents: "Men\u00FCereignisse",
+          MouseEvents: "Mausereignisse",
+          MenuAndMouse: "Maus- und Men\u00FCereignisse",
+          FontPrefs: "Schrifteinstellungen",
+          ForHTMLCSS: "F\u00FCr HTML-CSS:",
+          Auto: "Automatisch",
+          TeXLocal: "TeX (Lokal)",
+          TeXWeb: "TeX (Web)",
+          TeXImage: "TeX (Bild)",
+          STIXLocal: "STIX (Lokal)",
+          ContextMenu: "Kontextmen\u00FC",
+          Browser: "Browser",
+          Scale: "Alle Inhalte skalieren \u2026",
+          Discoverable: "Beim \u00DCberfahren hervorheben",
+          Locale: "Sprache",
+          LoadLocale: "Lade von URL \u2026",
+          About: "\u00DCber MathJax",
+          Help: "MathJax-Hilfe",
+          localTeXfonts: "Lokale TeX-Schriften verwenden",
+          webTeXfonts: "Web-TeX-Schriftart verwenden",
+          imagefonts: "Bildschriften verwenden",
+          localSTIXfonts: "Lokale STIX-Schriften verwenden",
+          webSVGfonts: "Web-SVG-Schriften verwenden",
+          genericfonts: "Allgemeine Unicode-Schriften verwenden",
+          wofforotffonts: "WOFF- oder OTF-Schriften",
+          eotffonts: "EOT-Schriften",
+          svgfonts: "SVG-Schriften",
+          WebkitNativeMMLWarning: "Dein Browser scheint kein natives MathML zu unterst\u00FCtzen. Ein Wechsel auf MathML-Ausgabe kann dazu f\u00FChren, dass die Inhalte auf der Seite unlesbar werden.",
+          MSIENativeMMLWarning: "Um die MathML-Ausgabe verarbeiten zu k\u00F6nnen, ben\u00F6tigt der Internet Explorer das MathPlayer-Plugin.",
+          OperaNativeMMLWarning: "Die Unterst\u00FCtzung f\u00FCr MathML bei Opera ist beschr\u00E4nkt. Deshalb kann ein Wechsel auf MathML-Ausgabe verursachen, dass einige Ausdr\u00FCcke nur schlecht gerendert werden k\u00F6nnen.",
+          SafariNativeMMLWarning: "Das native MathML deines Browsers implementiert nicht alle Funktionen, die von MathJax verwendet werden. Deshalb k\u00F6nnen einige Ausdr\u00FCcke nicht richtig gerendert werden.",
+          FirefoxNativeMMLWarning: "Das native MathML deines Browsers implementiert nicht alle Funktionen, die von MathJax verwendet werden. Deshalb k\u00F6nnen einige Ausdr\u00FCcke nicht richtig gerendert werden.",
+          MSIESVGWarning: "SVG ist nicht implementiert in Internet Explorer \u00E4lter als IE9 oder wenn IE8 und niedriger emuliert werden. Der Wechsel auf SVG-Ausgabe hat zur Folge, dass die Inhalte nicht richtig dargestellt werden.",
+          LoadURL: "\u00DCbersetzungsdaten von dieser URL laden:",
+          BadURL: "Die URL sollte f\u00FCr eine JavaScript-Datei sein, die MathJax-\u00DCbersetzungsdaten definiert. JavaScript-Dateinamen sollten enden mit \u201E.js\u201C.",
+          BadData: "\u00DCbersetzungsdaten konnten nicht von %1 geladen werden",
+          SwitchAnyway: "Renderer wechseln?\n\n(OK w\u00E4hlen zum Wechseln, ABBRECHEN zum Fortfahren mit dem aktuellen Renderer)",
+          ScaleMath: "Alle Inhalte skalieren (verglichen mit dem umflie\u00DFenden Text) um",
+          NonZeroScale: "Der Wert sollte nicht null sein",
+          PercentScale: "Der Wert sollte ein Prozentsatz sein (z.\u0026nbsp;B. 120%%)",
+          IE8warning: "Dies deaktiviert das MathJax-Men\u00FC und die Zoomfunktionen, aber du kannst bei einem Ausdruck w\u00E4hrend des Mausklicks die Alt-Taste gedr\u00FCckt halten, um stattdessen das MathJax-Men\u00FC zu erhalten.\n\nMathPlayer-Einstellungen wirklich \u00E4ndern?",
+          IE9warning: "Das MathJax-Kontextmen\u00FC wird deaktiviert, aber du kannst bei einem Ausdruck w\u00E4hrend des Mausklicks die Alt-Taste gedr\u00FCckt halten, um stattdessen das MathJax-Men\u00FC zu erhalten.",
+          NoOriginalForm: "Keine Originalformel verf\u00FCgbar",
+          Close: "Schlie\u00DFen",
+          EqSource: "MathJax-Gleichungsquelle"
+        }
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/localization/de/MathMenu.js");

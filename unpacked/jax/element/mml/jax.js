@@ -30,7 +30,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.2",
+  version: "2.3",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -132,6 +132,7 @@ MathJax.ElementJax.mml.Augment({
     BOTTOM: "bottom",
     UPDIAGONALSTRIKE: "updiagonalstrike",
     DOWNDIAGONALSTRIKE: "downdiagonalstrike",
+    UPDIAGONALARROW: "updiagonalarrow",
     VERTICALSTRIKE: "verticalstrike",
     HORIZONTALSTRIKE: "horizontalstrike",
     MADRUWB: "madruwb"
@@ -222,7 +223,19 @@ MathJax.ElementJax.mml.Augment({
     "fontfamily", "fontsize", "fontweight", "fontstyle",
     "color", "background",
     "id", "class", "href", "style"
-  ]
+  ],
+  Error: function (message,def) {
+    var mml = this.merror(message),
+        dir = MathJax.Localization.fontDirection(),
+        font = MathJax.Localization.fontFamily();
+    if (def) {mml = mml.With(def)}
+    if (dir || font) {
+      mml = this.mstyle(mml);
+      if (dir) {mml.dir = dir}
+      if (font) {mml.style.fontFamily = "font-family: "+font}
+    }
+    return mml;
+  }
 });
 
 (function (MML) {
@@ -231,7 +244,8 @@ MathJax.ElementJax.mml.Augment({
     type: "base", isToken: false,
     defaults: {
       mathbackground: MML.INHERIT,
-      mathcolor: MML.INHERIT
+      mathcolor: MML.INHERIT,
+      dir: MML.INHERIT
     },
     noInherit: {},
     noInheritAttribute: {
@@ -379,7 +393,8 @@ MathJax.ElementJax.mml.Augment({
       return false;
     },
     array: function () {if (this.inferred) {return this.data} else {return [this]}},
-    toString: function () {return this.type+"("+this.data.join(",")+")"}
+    toString: function () {return this.type+"("+this.data.join(",")+")"},
+    getAnnotation: function () { return null; }
   },{
     childrenSpacelike: function () {
       for (var i = 0, m = this.data.length; i < m; i++)
@@ -426,7 +441,8 @@ MathJax.ElementJax.mml.Augment({
       mathvariant: MML.AUTO,
       mathsize: MML.INHERIT,
       mathbackground: MML.INHERIT,
-      mathcolor: MML.INHERIT
+      mathcolor: MML.INHERIT,
+      dir: MML.INHERIT
     },
     autoDefault: function (name) {
       if (name === "mathvariant") {
@@ -456,7 +472,8 @@ MathJax.ElementJax.mml.Augment({
       mathvariant: MML.INHERIT,
       mathsize: MML.INHERIT,
       mathbackground: MML.INHERIT,
-      mathcolor: MML.INHERIT
+      mathcolor: MML.INHERIT,
+      dir: MML.INHERIT
     }
   });
   
@@ -467,6 +484,7 @@ MathJax.ElementJax.mml.Augment({
       mathsize: MML.INHERIT,
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
+      dir: MML.INHERIT,
       form: MML.AUTO,
       fence: MML.AUTO,
       separator: MML.AUTO,
@@ -628,7 +646,8 @@ MathJax.ElementJax.mml.Augment({
       mathvariant: MML.INHERIT,
       mathsize: MML.INHERIT,
       mathbackground: MML.INHERIT,
-      mathcolor: MML.INHERIT
+      mathcolor: MML.INHERIT,
+      dir: MML.INHERIT
     }
   });
 
@@ -663,6 +682,7 @@ MathJax.ElementJax.mml.Augment({
       mathsize: MML.INHERIT,
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
+      dir: MML.INHERIT,
       lquote: '"',
       rquote: '"'
     }
@@ -730,6 +750,10 @@ MathJax.ElementJax.mml.Augment({
         {if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}}
       if (this.data[0]) {this.updateTeXclass(this.data[0])}
       return prev;
+    },
+    getAnnotation: function (name) {
+      if (this.data.length != 1) return null;
+      return this.data[0].getAnnotation(name);
     }
   });
 
@@ -804,6 +828,7 @@ MathJax.ElementJax.mml.Augment({
       scriptminsize: "8pt",
       mathbackground: MML.INHERIT,
       mathcolor: MML.INHERIT,
+      dir: MML.INHERIT,
       infixlinebreakstyle: MML.LINEBREAKSTYLE.BEFORE,
       decimalseparator: "."
     },
@@ -1174,7 +1199,21 @@ MathJax.ElementJax.mml.Augment({
       definitionURL: null,
       encoding: null
     },
-    setTeXclass: MML.mbase.setChildTeXclass
+    setTeXclass: MML.mbase.setChildTeXclass,
+    getAnnotation: function (name) {
+      var encodingList = MathJax.Hub.config.MathMenu.semanticsAnnotations[name];
+      if (encodingList) {
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          var encoding = this.data[i].Get("encoding");
+          if (encoding) {
+            for (var j = 0, n = encodingList.length; j < n; j++) {
+              if (encodingList[j] === encoding) return this.data[i];
+            }
+          }
+        }
+      }
+      return null;
+    }
   });
   MML.annotation = MML.mbase.Subclass({
     type: "annotation", isToken: true,
@@ -1206,6 +1245,7 @@ MathJax.ElementJax.mml.Augment({
       mathsize: MML.SIZE.NORMAL,
       mathcolor: "", // should be "black", but allow it to inherit from surrounding text
       mathbackground: MML.COLOR.TRANSPARENT,
+      dir: "ltr",
       scriptlevel: 0,
       displaystyle: MML.AUTO,
       display: "inline",
@@ -1235,7 +1275,11 @@ MathJax.ElementJax.mml.Augment({
       return "";
     },
     linebreakContainer: true,
-    setTeXclass: MML.mbase.setChildTeXclass
+    setTeXclass: MML.mbase.setChildTeXclass,
+    getAnnotation: function (name) {
+      if (this.data.length != 1) return null;
+      return this.data[0].getAnnotation(name);
+    }
   });
   
   MML.chars = MML.mbase.Subclass({

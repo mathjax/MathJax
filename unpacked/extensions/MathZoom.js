@@ -26,7 +26,7 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
   
   var CONFIG = HUB.CombineConfig("MathZoom",{
     styles: {
@@ -106,7 +106,7 @@
     //  Zoom on double click
     //
     DblClick: function (event,math) {
-      if (this.settings.zoom === "Double-Click") {return this.Zoom(event,math)}
+      if (this.settings.zoom === "Double-Click" || this.settings.zoom === "DoubleClick") {return this.Zoom(event,math)}
     },
     
     //

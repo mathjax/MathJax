@@ -32,13 +32,12 @@
  */
 
 MathJax.Extension["TeX/cancel"] = {
-  version: "2.2",
+  version: "2.3",
 
   //
   //  The attributes allowed in \enclose{notation}[attributes]{math}
   //
   ALLOWED: {
-    arrow: 1,
     color: 1, mathcolor: 1,
     background: 1, mathbackground: 1,
     padding: 1,
@@ -97,7 +96,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var value = this.ParseArg(name),
           attr = this.GetBrackets(name,""),
           math = this.ParseArg(name);
-      var def = CANCEL.setAttributes({notation: MML.NOTATION.UPDIAGONALSTRIKE, arrow:true},attr);
+      var def = CANCEL.setAttributes({notation: MML.NOTATION.UPDIAGONALSTRIKE+" "+MML.NOTATION.UPDIAGONALARROW},attr);
       value = MML.mpadded(value).With({depth:"-.1em",height:"+.1em",voffset:".1em"});
       this.Push(MML.msup(MML.menclose(math).With(def),value));
     }

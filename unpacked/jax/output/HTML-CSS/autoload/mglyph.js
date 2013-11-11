@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"],
       LOCALE = MathJax.Localization;
@@ -45,7 +45,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             } else {
               if (values.alt === "")
                 {values.alt = LOCALE._(["MathML","BadMglyphFont"],"Bad font: %1",font.family)}
-              err = MML.merror(values.alt).With({mathsize:"75%"});
+              err = MML.Error(values.alt,{mathsize:"75%"});
               this.Append(err); err.toHTML(span); this.data.pop();
               span.bbox = err.HTMLspanElement().bbox;
             }
@@ -62,9 +62,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           MathJax.Hub.RestartAfter(img.onload);
         }
         if (this.img.status !== "OK") {
-          err = MML.merror(
-            LOCALE._(["MathML","BadMglyph"],"Bad mglyph: %1",values.src)
-          ).With({mathsize:"75%"});
+          err = MML.Error(
+            LOCALE._(["MathML","BadMglyph"],"Bad mglyph: %1",values.src),
+            {mathsize:"75%"});
           this.Append(err); err.toHTML(span); this.data.pop();
           span.bbox = err.HTMLspanElement().bbox;
         } else {

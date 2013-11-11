@@ -27,7 +27,7 @@
 
 MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   id: "HTML-CSS",
-  version: "2.2",
+  version: "2.3",
   directory: MathJax.OutputJax.directory + "/HTML-CSS",
   extensionDir: MathJax.OutputJax.extensionDir + "/HTML-CSS",
   autoloadDir: MathJax.OutputJax.directory + "/HTML-CSS/autoload",
@@ -35,6 +35,7 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   webfontDir: MathJax.OutputJax.fontDir + "/HTML-CSS",      // font name added later
   
   config: {
+    matchFontHeight: true,          // try to match math font height to surrounding font?
     scale: 100, minScaleAdjust: 50, // global math scaling factor, and minimum adjusted scale factor
     availableFonts: ["STIX","TeX"], // list of local fonts to check for
     preferredFont: "TeX",           // preferred local font (TeX or STIX)

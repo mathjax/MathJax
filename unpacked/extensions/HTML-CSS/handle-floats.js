@@ -37,7 +37,7 @@
 
 
 MathJax.Extension["HTML-CSS/handle-floats"] = {
-  version: "2.2"
+  version: "2.3"
 };
 
 //

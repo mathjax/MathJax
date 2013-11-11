@@ -27,13 +27,16 @@
  *  limitations under the License.
  */
 
+if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}} else {window.MathJax = {}}
+
+// MathJax.isPacked = true; // This line is uncommented by the packer.
+
 if (document.getElementById && document.childNodes && document.createElement) {
 
-if (!window.MathJax) {window.MathJax= {}}
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "2.2";
-MathJax.fileversion = "2.2";
+MathJax.version = "2.3";
+MathJax.fileversion = "2.3";
 
 /**********************************************************/
 
@@ -725,7 +728,7 @@ MathJax.fileversion = "2.2";
       //
       //  Create a SCRIPT tag to load the file
       //
-        JS: function (file,callback) {
+      JS: function (file,callback) {
         var script = document.createElement("script");
         var timeout = BASE.Callback(["loadTimeout",this,file]);
         this.loading[file] = {
@@ -772,9 +775,9 @@ MathJax.fileversion = "2.2";
         if (node.nodeName === "STYLE" && node.styleSheet &&
             typeof(node.styleSheet.cssText) !== 'undefined') {
           callback(this.STATUS.OK); // MSIE processes style immediately, but doesn't set its styleSheet!
-        } else if (window.chrome && typeof(window.sessionStorage) !== "undefined" &&
-                   node.nodeName === "STYLE") {
-          callback(this.STATUS.OK); // Same for Chrome 5 (beta), Grrr.
+        } else if (window.chrome && node.nodeName === "LINK") {
+          callback(this.STATUS.OK); // Chrome doesn't give access to cssRules for stylesheet in
+                                    //   a link node, so we can't detect when it is loaded.
         } else if (isSafari2) {
           this.timer.start(this,[this.timer.checkSafari2,sheets++,callback],this.styleDelay);
         } else {
@@ -789,7 +792,7 @@ MathJax.fileversion = "2.2";
         check = BASE.Callback(check);
         check.execute = this.execute; check.time = this.time;
         check.STATUS = AJAX.STATUS; check.timeout = timeout || AJAX.timeout;
-        check.delay = check.total = 0;
+        check.delay = check.total = delay || 0;
         if (delay) {setTimeout(check,delay)} else {check()}
       },
       //
@@ -1065,9 +1068,44 @@ MathJax.Localization = {
   locale: "en",
   directory: "[MathJax]/localization",
   strings: {
-    en: {menuTitle: "English", isLoaded: true},   // nothing needs to be loaded for this
-    de: {menuTitle: "Deutsch"},
-    fr: {menuTitle: "Fran\u00E7ais"}
+    // Currently, this list is not modified by the MathJax-i18n script. You can
+    // run the following command in MathJax/unpacked/localization to update it:
+    //
+    // find -name *.js | xargs grep menuTitle\: | grep -v qqq | sed "s/^\.\/\(.*\)\/.*\.js\:  /    \"\1\"\: \{/" | sed "s/,$/\},/" | sed "s/\"English\"/\"English\", isLoaded: true/" > tmp ; sort tmp > tmp2 ; sed "$ s/,$//" tmp2 ; rm tmp*
+    //
+    // This only takes languages with localization data so you must also add
+    // the languages that use a remap but are not translated at all.
+    //
+    "br": {menuTitle: "brezhoneg"},
+    "cdo": {menuTitle: "M\u00ECng-d\u0115\u0324ng-ng\u1E73\u0304"},
+    "cs": {menuTitle: "\u010Desky"},
+    "da": {menuTitle: "dansk"},
+    "de": {menuTitle: "Deutsch"},
+    "en": {menuTitle: "English", isLoaded: true},
+    "eo": {menuTitle: "Esperanto"},
+    "es": {menuTitle: "espa\u00F1ol"},
+    "fa": {menuTitle: "\u0641\u0627\u0631\u0633\u06CC"},
+    "fi": {menuTitle: "suomi"},
+    "fr": {menuTitle: "fran\u00E7ais"},
+    "gl": {menuTitle: "galego"},
+    "he": {menuTitle: "\u05E2\u05D1\u05E8\u05D9\u05EA"},
+    "ia": {menuTitle: "interlingua"},
+    "it": {menuTitle: "italiano"},
+    "ja": {menuTitle: "\u65E5\u672C\u8A9E"},
+    "ko": {menuTitle: "\uD55C\uAD6D\uC5B4"},
+    "lb": {menuTitle: "L\u00EBtzebuergesch"},
+    "mk": {menuTitle: "\u043C\u0430\u043A\u0435\u0434\u043E\u043D\u0441\u043A\u0438"},
+    "nl": {menuTitle: "Nederlands"},
+    "oc": {menuTitle: "occitan"},
+    "pl": {menuTitle: "polski"},
+    "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
+    "pt": {menuTitle: "portugus\u00EA"},
+    "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
+    "sl": {menuTitle: "sloven\u0161\u010Dina"},
+    "sv": {menuTitle: "svenska"},
+    "tr": {menuTitle: "T\u00FCrk\u00E7e"},
+    "uk": {menuTitle: "\u0443\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"},
+    "zh-hans": {menuTitle: "\u4E2D\u6587\uFF08\u7B80\u4F53\uFF09"}
   },
 
   //
@@ -1390,11 +1428,30 @@ MathJax.Localization = {
   },
 
   //
+  //  Reset the current language
+  //
+  resetLocale: function(locale) {
+    // Selection algorithm:
+    // 1) Downcase locale name (e.g. "en-US" => "en-us")
+    // 2) Try a parent language (e.g. "en-us" => "en")
+    // 3) Try the fallback specified in the data (e.g. "pt" => "pt-br")
+    // 4) Otherwise don't change the locale.
+    if (!locale) return;
+    locale = locale.toLowerCase();
+    while (!this.strings[locale]) {
+      var dashPos = locale.lastIndexOf("-");
+      if (dashPos === -1) return;
+      locale = locale.substring(0, dashPos);
+    }
+    var remap = this.strings[locale].remap;
+    this.locale = remap ? remap : locale;
+  },
+
+  //
   //  Set the current language
   //
   setLocale: function(locale) {
-    // don't set it if there isn't a definition for it
-    if (this.strings[locale]) {this.locale = locale}
+    this.resetLocale(locale);
     if (MathJax.Menu) {this.loadDomain("MathMenu")}
   },
 
@@ -2228,6 +2285,12 @@ MathJax.Hub = {
   },
   
   elementScripts: function (element) {
+    if (element instanceof Array) {
+      var scripts = [];
+      for (var i = 0, m = element.length; i < m; i++)
+        {scripts.push.apply(scripts,this.elementScripts(element[i]))}
+      return scripts;
+    }
     if (typeof(element) === 'string') {element = document.getElementById(element)}
     if (!document.body) {document.body = document.getElementsByTagName("body")[0]}
     if (element == null) {element = document.body}
@@ -2282,7 +2345,7 @@ MathJax.Hub.Startup = {
     //    set the locale and the default menu value for the locale
     //
     if (this.params.locale) {
-      MathJax.Localization.locale = this.params.locale;
+      MathJax.Localization.resetLocale(this.params.locale);
       MathJax.Hub.config.menuSettings.locale = this.params.locale;
     }
     //
@@ -2311,6 +2374,10 @@ MathJax.Hub.Startup = {
       }
     }
     //
+    //  Perform author configuration from in-line MathJax = {...}
+    //
+    this.queue.Push(["Config",MathJax.Hub,MathJax.AuthorConfig]);
+    //
     //  Run the deprecated configuration script, if any (ignoring return value)
     //  Wait for the startup delay signal
     //  Run the mathjax-config blocks
@@ -2334,7 +2401,7 @@ MathJax.Hub.Startup = {
     return delay;
   },
   //
-  //  Run the scipts of type=text/x-mathajx-config
+  //  Run the scripts of type=text/x-mathjax-config
   //
   ConfigBlocks: function () {
     var scripts = document.getElementsByTagName("script");
@@ -2360,7 +2427,7 @@ MathJax.Hub.Startup = {
       ["Get",MathJax.HTML.Cookie,"menu",MathJax.Hub.config.menuSettings],
       [function (config) {
         if (config.menuSettings.locale)
-          {MathJax.Localization.locale = config.menuSettings.locale}
+          {MathJax.Localization.resetLocale(config.menuSettings.locale)}
         var renderer = config.menuSettings.renderer, jax = config.jax;
         if (renderer) {
           var name = "output/"+renderer; jax.sort();
@@ -2645,7 +2712,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "Jax",
-    version: "2.2",
+    version: "2.3",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -2654,7 +2721,7 @@ MathJax.Hub.Startup = {
 
   BASE.InputJax = JAX.Subclass({
     elementJax: "mml",  // the element jax to load for this input jax
-    sourceMenuTitle: /*_(MathMenu)*/ ["OriginalForm","Original Form"],
+    sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"],
     copyTranslate: true,
     Process: function (script,state) {
       var queue = CALLBACK.Queue(), file;
@@ -2691,7 +2758,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "InputJax",
-    version: "2.2",
+    version: "2.3",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -2724,7 +2791,7 @@ MathJax.Hub.Startup = {
     Remove: function (jax) {}
   },{
     id: "OutputJax",
-    version: "2.2",
+    version: "2.3",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
@@ -2808,7 +2875,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "2.2",
+    version: "2.3",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -2832,7 +2899,7 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.2", config: {},
+    id: "Error", version: "2.3", config: {},
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
@@ -2849,8 +2916,8 @@ MathJax.Hub.Startup = {
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.2", config: {},
-    sourceMenuTitle: /*_(MathMenu)*/ ["OriginalForm","Original Form"]
+    id: "Error", version: "2.3", config: {},
+    sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"]
   };
   
 })("MathJax");
@@ -2998,6 +3065,7 @@ MathJax.Hub.Startup = {
   });
   HUB.Browser.Select(MathJax.Message.browsers);
 
+  if (BASE.AuthorConfig && typeof BASE.AuthorConfig.AuthorInit === "function") {BASE.AuthorConfig.AuthorInit()}
   HUB.queue = BASE.Callback.Queue();
   HUB.queue.Push(
     ["Post",STARTUP.signal,"Begin"],

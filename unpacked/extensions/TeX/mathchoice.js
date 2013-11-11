@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
 
   var MML = MathJax.ElementJax.mml;
   var TEX = MathJax.InputJax.TeX;
@@ -75,7 +75,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       }
       return span;
     },
-    toSVG: function () {return this.Core().toSVG()}
+    toSVG: function () {
+      var svg = this.Core().toSVG();
+      this.SVGsaveData(svg);
+      return svg;
+    }
   });
   
   MathJax.Hub.Startup.signal.Post("TeX mathchoice Ready");

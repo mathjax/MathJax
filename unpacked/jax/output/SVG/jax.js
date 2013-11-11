@@ -98,7 +98,17 @@
       var settings = HUB.config.menuSettings;
       if (settings.scale) {this.config.scale = settings.scale}
       this.SUPER(arguments).Config.apply(this,arguments);
-      this.fontInUse = this.config.font; this.fontDir += "/" + this.config.font;
+      this.fontInUse = this.config.font;
+      if (settings.font && settings.font !== "Auto") {
+        if (settings.font === "TeXWeb") {this.fontInUse = "TeX"}
+        else if (settings.font === "STIXWeb") {this.fontInUse = "STIX-Web"}
+        else if (settings.font === "AsanaMathWeb") {this.fontInUse = "Asana-Math"}
+        else if (settings.font === "GyrePagellaWeb") {this.fontInUse = "Gyre-Pagella"}
+        else if (settings.font === "GyreTermesWeb") {this.fontInUse = "Gyre-Termes"}
+        else if (settings.font === "LatinModernWeb") {this.fontInUse = "Latin-Modern"}
+        else if (settings.font === "NeoEulerWeb") {this.fontInUse = "Neo-Euler"}
+      }
+      this.fontDir += "/" + this.fontInUse;
       if (!this.require) {this.require = []}
       this.require.push(this.fontDir+"/fontdata.js");
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
@@ -319,14 +329,14 @@
         //
         state.SVGeqn += (state.i - state.SVGi); state.SVGi = state.i;
         if (state.SVGeqn >= state.SVGlast + state.SVGchunk) {
-          this.postTranslate(state);
+          this.postTranslate(state,true);
           state.SVGchunk = Math.floor(state.SVGchunk*this.config.EqnChunkFactor);
           state.SVGdelay = true;  // delay if there are more scripts
         }
       }
     },
 
-    postTranslate: function (state) {
+    postTranslate: function (state,partial) {
       var scripts = state.jax[this.id];
       if (!this.hideProcessedMath) return;
       //
@@ -1355,7 +1365,7 @@
         //  Handle large operator centering
         //
 	if (values.largeop) {
-	  svg.y = (svg.h - svg.d)/2/scale - SVG.TeX.axis_height;
+	  svg.y = SVG.TeX.axis_height - (svg.h - svg.d)/2/scale;
 	  if (svg.r > svg.w) {svg.ic = svg.r - svg.w; svg.w = svg.r}
 	}
         //
@@ -1455,7 +1465,7 @@
         if (this.Parent().type === "merror") {
 	  //  *** FIXME:  Make color, style, scale configurable
           svg = this.SVG(); this.SVGhandleSpace(svg);
-          text = BBOX.G(); text.Add(BBOX.TEXT(.9*scale,this.data.join(""),{fill:"#C00"}));
+          text = BBOX.G(); text.Add(BBOX.TEXT(.9*scale,this.data.join(""),{fill:"#C00",direction:this.Get("dir")}));
           svg.Add(BBOX.RECT(text.h+100,text.d+100,text.w+200,{fill:"#FF8",stroke:"#C00","stroke-width":50}),0,0);
           svg.Add(text,150,0); svg.H += 150; svg.D += 50;
           svg.Clean();
@@ -1463,7 +1473,7 @@
           return svg;
 	} else if (SVG.config.mtextFontInherit) {
           svg = this.SVG(); this.SVGhandleSpace(svg);
-          var variant = this.SVGgetVariant(), def = {};
+          var variant = this.SVGgetVariant(), def = {direction:this.Get("dir")};
           if (variant.bold)   {def["font-weight"] = "bold"}
           if (variant.italic) {def["font-style"] = "italic"}
           svg.Add(BBOX.TEXT(scale,this.data.join(""),def)); svg.Clean();
@@ -1770,7 +1780,7 @@
           if (boxes[i].w > WW) {WW = boxes[i].w}
         }}
         var t = SVG.TeX.rule_thickness;
-	var base = boxes[this.base] || {w:0, h:0, d:0, H:0, D:0, l:0, r:0, scale:scale};
+	var base = boxes[this.base] || {w:0, h:0, d:0, H:0, D:0, l:0, r:0, y:0, scale:scale};
 	var x, y, z1, z2, z3, dw, k, delta = 0;
         if (base.ic) {delta = 1.3*base.ic + .05} // adjust faked IC to be more in line with expeted results
 	for (i = 0, m = this.data.length; i < m; i++) {
@@ -1796,7 +1806,7 @@
 		k = Math.max(z1,z2-Math.max(0,box.d));
 	      }
 	      k = Math.max(k,1500/SVG.em);
-	      x += delta/2; y = base.h + box.d + k;
+	      x += delta/2; y = base.y + base.h + box.d + k;
 	      box.h += z3; if (box.h > box.H) {box.H = box.h}
 	    } else if (i == this.under) {
 	      if (accent) {
@@ -1807,7 +1817,7 @@
 		k = Math.max(z1,z2-box.h);
 	      }
 	      k = Math.max(k,1500/SVG.em);
-	      x -= delta/2; y = -(base.d + box.h + k);
+	      x -= delta/2; y = base.y -(base.d + box.h + k);
 	      box.d += z3; if (box.d > box.D) {box.D = box.d}
 	    }
 	    svg.Add(box,x,y);

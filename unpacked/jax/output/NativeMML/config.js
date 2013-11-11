@@ -27,16 +27,18 @@
 
 MathJax.OutputJax.NativeMML = MathJax.OutputJax({
   id: "NativeMML",
-  version: "2.2",
+  version: "2.3",
   directory: MathJax.OutputJax.directory + "/NativeMML",
   extensionDir: MathJax.OutputJax.extensionDir + "/NativeMML",
   
   config: {
+    matchFontHeight: true,   // try to match math font height to surrounding font?
     scale: 100,              // scaling factor for all math
     minScaleAdjust: 50,      // minimum scaling to adjust to surrounding text
                              //  (since the code for that is a bit delicate)
+
     styles: {
-      "DIV.MathJax_MathML": {
+      "div.MathJax_MathML": {
         "text-align": "center",
         margin: ".75em 0px"
       }

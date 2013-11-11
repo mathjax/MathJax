@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX,
@@ -74,9 +74,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           MathJax.Hub.RestartAfter(img.onload);
         }
         if (this.img.status !== "OK") {
-          err = MML.merror(
-            LOCALE._(["MathML","BadMglyph"],"Bad mglyph: %1",values.src)
-          ).With({mathsize:"75%"});
+          err = MML.Error(
+            LOCALE._(["MathML","BadMglyph"],"Bad mglyph: %1",values.src),
+            {mathsize:"75%"});
           this.Append(err); svg = err.toSVG(); this.data.pop();
         } else {
           var mu = this.SVGgetMu(svg);

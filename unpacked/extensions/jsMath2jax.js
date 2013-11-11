@@ -34,7 +34,7 @@
  */
 
 MathJax.Extension.jsMath2jax = {
-  version: "2.2",
+  version: "2.3",
   
   config: {
     preview: "TeX"    // Set to "none" to prevent preview strings from being inserted
@@ -93,5 +93,10 @@ MathJax.Extension.jsMath2jax = {
   
 };
 
+// We register the preprocessors with the following priorities:
+// - mml2jax.js: 5
+// - jsMath2jax.js: 8
+// - asciimath2jax.js, tex2jax.js: 10 (default)
+// See issues 18 and 484 and the other *2jax.js files.
 MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.jsMath2jax],8);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/jsMath2jax.js");

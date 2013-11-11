@@ -158,7 +158,7 @@
     type: "subsup",
     stopError: /*_()*/ ["MissingScript","Missing superscript or subscript argument"],
     supError:  /*_()*/ ["MissingOpenForSup","Missing open brace for superscript"],
-    subError:  /*_()*/ ["MissingOpenForSup","Missing open brace for subscript"],
+    subError:  /*_()*/ ["MissingOpenForSub","Missing open brace for subscript"],
     checkItem: function (item) {
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml") {
@@ -240,7 +240,7 @@
   STACKITEM.position = STACKITEM.Subclass({
     type: "position",
     checkItem: function (item) {
-      if (item.isClose) {TEX.Error(["MissingBoxFor","Missing box for %1",name])}
+      if (item.isClose) {TEX.Error(["MissingBoxFor","Missing box for %1",this.name])}
       if (item.isNotStack) {
         var mml = item.mmlData();
         switch (this.move) {
@@ -992,7 +992,7 @@
         Bmatrix:      ['Array',null,'\\{','\\}','c'],
         vmatrix:      ['Array',null,'\\vert','\\vert','c'],
         Vmatrix:      ['Array',null,'\\Vert','\\Vert','c'],
-        cases:        ['Array',null,'\\{','.','ll',null,".1em"],
+        cases:        ['Array',null,'\\{','.','ll',null,".2em",'T'],
 
         equation:     [null,'Equation'],
         'equation*':  [null,'Equation'],
@@ -1435,7 +1435,7 @@
       while (attr !== "") {
         match = attr.match(/^([a-z]+)\s*=\s*(\'[^']*'|"[^"]*"|[^ ]*)\s*/i);
         if (!match)
-          {TEX.Error("InvalidMathMLAttr","Invalid MathML attribute: %1",attr)}
+          {TEX.Error(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr])}
         if (!MML[type].prototype.defaults[match[1]] && !this.MmlTokenAllow[match[1]]) {
           TEX.Error(["UnknownAttrForElement",
                      "%1 is not a recognized attribute for %2",
@@ -1757,6 +1757,7 @@
       if (open)  {array.open  = this.convertDelimiter(open)}
       if (close) {array.close = this.convertDelimiter(close)}
       if (style === "D") {array.arraydef.displaystyle = true}
+         else if (style) {array.arraydef.displaystyle = false}
       if (style === "S") {array.arraydef.scriptlevel = 1} // FIXME: should use mstyle?
       if (raggedHeight)  {array.arraydef.useHeight = false}
       this.Push(begin);
@@ -1847,7 +1848,6 @@
            case '\\':  this.i++; break;
            case '{':   parens++; break;
            case '}':
-            if (parens == 0) {TEX.Error(["ExtraClose","Extra close brace"])}
             if (--parens == 0) {return this.string.slice(j,this.i-1)}
             break;
           }
@@ -2099,7 +2099,7 @@
     formatError: function (err,math,display,script) {
       var message = err.message.replace(/\n.*/,"");
       HUB.signal.Post(["TeX Jax - parse error",message,math,display,script]);
-      return MML.merror(message);
+      return MML.Error(message);
     },
 
     //

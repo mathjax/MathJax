@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "2.2",
+  version: "2.3",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
@@ -43,7 +43,7 @@ MathJax.Extension.tex2jax = {
                                // balanced within math delimiters (allows for nested
                                // dollar signs).  Set to false to get pre-v2.0 compatibility.
 
-    skipTags: ["script","noscript","style","textarea","pre","code"],
+    skipTags: ["script","noscript","style","textarea","pre","code","annotation","annotation-xml"],
                                // The names of the tags whose contents will not be
                                // scanned for math delimiters
 
@@ -300,5 +300,10 @@ MathJax.Extension.tex2jax = {
   
 };
 
+// We register the preprocessors with the following priorities:
+// - mml2jax.js: 5
+// - jsMath2jax.js: 8
+// - asciimath2jax.js, tex2jax.js: 10 (default)
+// See issues 18 and 484 and the other *2jax.js files.
 MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.tex2jax]);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/tex2jax.js");

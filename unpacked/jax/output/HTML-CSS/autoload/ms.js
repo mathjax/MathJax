@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -41,6 +41,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       this.HTMLhandleVariant(span,this.HTMLgetVariant(),values.lquote+text+values.rquote);
       this.HTMLhandleSpace(span);
       this.HTMLhandleColor(span);
+      this.HTMLhandleDir(span);
       return span;
     },
     HTMLquoteRegExp: function (string) {

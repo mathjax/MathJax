@@ -25,7 +25,7 @@
  */
 
 (function (SVG) {
-  var VERSION = "2.2";
+  var VERSION = "2.3";
   
   var DELIMITERS = SVG.FONTDATA.DELIMITERS;
 

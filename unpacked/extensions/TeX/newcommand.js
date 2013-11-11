@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/newcommand"] = {
-  version: "2.2"
+  version: "2.3"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -141,8 +141,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     GetCSname: function (cmd) {
       var c = this.GetNext();
       if (c !== "\\") {
-        TEX.Error(["DoubleBackSlash",
-                   "\\ must be followed by a control sequence"])
+        TEX.Error(["MissingCS",
+                   "%1 must be followed by a control sequence", cmd])
       }
       var cs = this.trimSpaces(this.GetArgument(cmd));
       return cs.substr(1);

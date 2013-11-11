@@ -27,10 +27,13 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "2.2",
+  version: "2.3",
   config: {
-    preview: "alttext"      // Use the <math> element's alttext as the 
+    preview: "mathml"       // Use the <math> element as the
                             //   preview.  Set to "none" for no preview,
+                            //   set to "alttext" to use the alttext attribute
+                            //   of the <math> element, set to "altimg" to use
+                            //   an image described by the altimg* attributes
                             //   or set to an array specifying an HTML snippet
                             //   to use a fixed preview for all math
 
@@ -46,15 +49,16 @@ MathJax.Extension.mml2jax = {
     }
     if (typeof(element) === "string") {element = document.getElementById(element)}
     if (!element) {element = document.body}
+    var mathArray = [];
     //
     //  Handle all math tags with no namespaces
     //
-    this.ProcessMathArray(element.getElementsByTagName("math"));
+    mathArray.push.apply(mathArray,element.getElementsByTagName("math"));
     //
     //  Handle math with namespaces in XHTML
     //
     if (element.getElementsByTagNameNS)
-      {this.ProcessMathArray(element.getElementsByTagNameNS(this.MMLnamespace,"math"))}
+      {mathArray.push.apply(mathArray,element.getElementsByTagNameNS(this.MMLnamespace,"math"))}
     //
     //  Handle math with namespaces in HTML
     //
@@ -67,7 +71,7 @@ MathJax.Extension.mml2jax = {
         for (i = 0, m = document.namespaces.length; i < m; i++) {
           var ns = document.namespaces[i];
           if (ns.urn === this.MMLnamespace)
-            {this.ProcessMathArray(element.getElementsByTagName(ns.name+":math"))}
+            {mathArray.push.apply(mathArray,element.getElementsByTagName(ns.name+":math"))}
         }
       } catch (err) {}
     } else {
@@ -79,28 +83,30 @@ MathJax.Extension.mml2jax = {
         for (i = 0, m = html.attributes.length; i < m; i++) {
           var attr = html.attributes[i];
           if (attr.nodeName.substr(0,6) === "xmlns:" && attr.nodeValue === this.MMLnamespace)
-            {this.ProcessMathArray(element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
+            {mathArray.push.apply(mathArray,element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
         }
       }
     }
+    this.ProcessMathArray(mathArray);
   },
   
   ProcessMathArray: function (math) {
-    var i;
-    if (math.length) {
+    var i, m = math.length;
+    if (m) {
       if (this.MathTagBug) {
-        for (i = math.length-1; i >= 0; i--) {
+        for (i = 0; i < m; i++) {
           if (math[i].nodeName === "MATH") {this.ProcessMathFlattened(math[i])}
                                       else {this.ProcessMath(math[i])}
         }
       } else {
-        for (i = math.length-1; i >= 0; i--) {this.ProcessMath(math[i])}
+        for (i = 0; i < m; i++) {this.ProcessMath(math[i])}
       }
     }
   },
   
   ProcessMath: function (math) {
     var parent = math.parentNode;
+    if (!parent || parent.className === MathJax.Hub.config.preRemoveClass) return;
     var script = document.createElement("script");
     script.type = "math/mml";
     parent.insertBefore(script,math);
@@ -120,6 +126,7 @@ MathJax.Extension.mml2jax = {
   
   ProcessMathFlattened: function (math) {
     var parent = math.parentNode;
+    if (!parent || parent.className === MathJax.Hub.config.preRemoveClass) return;
     var script = document.createElement("script");
     script.type = "math/mml";
     parent.insertBefore(script,math);
@@ -181,13 +188,35 @@ MathJax.Extension.mml2jax = {
   createPreview: function (math,script) {
     var preview = this.config.preview;
     if (preview === "none") return;
-    if (preview === "alttext") {
-      var text = math.getAttribute("alttext");
-      if (text != null) {preview = [this.filterPreview(text)]} else {preview = null}
-    } 
+    var isNodePreview = false;
+    if (preview === "mathml") {
+      isNodePreview = true;
+      // mathml preview does not work with IE < 9, so fallback to alttext.
+      if (this.MathTagBug) {preview = "alttext"} else {preview = math.cloneNode(false)}
+    }
+    if (preview === "alttext" || preview === "altimg") {
+      isNodePreview = true;
+      var alttext = this.filterPreview(math.getAttribute("alttext"));
+      if (preview === "alttext") {
+        if (alttext != null) {preview = MathJax.HTML.TextNode(alttext)} else {preview = null}
+      } else {
+        var src = math.getAttribute("altimg");
+        if (src != null) {
+          // FIXME: use altimg-valign when display="inline"?
+          var style = {width: math.getAttribute("altimg-width"), height: math.getAttribute("altimg-height")};
+          preview = MathJax.HTML.Element("img",{src:src,alt:alttext,style:style});
+        } else {preview = null}
+      }
+    }
     if (preview) {
-      preview = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
-      script.parentNode.insertBefore(preview,script);
+      var span;
+      if (isNodePreview) {
+        span = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
+        span.appendChild(preview);
+      } else {
+        span = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
+      }
+      script.parentNode.insertBefore(span,script);
     }
   },
   
@@ -207,5 +236,10 @@ MathJax.Extension.mml2jax = {
 
 };
 
-MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.mml2jax]);
+// We register the preprocessors with the following priorities:
+// - mml2jax.js: 5
+// - jsMath2jax.js: 8
+// - asciimath2jax.js, tex2jax.js: 10 (default)
+// See issues 18 and 484 and the other *2jax.js files.
+MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.mml2jax],5);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");
