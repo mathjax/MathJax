@@ -35,7 +35,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 
 if (!MathJax.Hub) {  // skip if already loaded
   
-MathJax.version = "2.3-beta";
+MathJax.version = "2.3";
 MathJax.fileversion = "2.3";
 
 /**********************************************************/
@@ -1079,8 +1079,10 @@ MathJax.Localization = {
     "br": {menuTitle: "brezhoneg"},
     "cdo": {menuTitle: "M\u00ECng-d\u0115\u0324ng-ng\u1E73\u0304"},
     "cs": {menuTitle: "\u010Desky"},
+    "da": {menuTitle: "dansk"},
     "de": {menuTitle: "Deutsch"},
     "en": {menuTitle: "English", isLoaded: true},
+    "eo": {menuTitle: "Esperanto"},
     "es": {menuTitle: "espa\u00F1ol"},
     "fa": {menuTitle: "\u0641\u0627\u0631\u0633\u06CC"},
     "fi": {menuTitle: "suomi"},
@@ -1094,12 +1096,14 @@ MathJax.Localization = {
     "lb": {menuTitle: "L\u00EBtzebuergesch"},
     "mk": {menuTitle: "\u043C\u0430\u043A\u0435\u0434\u043E\u043D\u0441\u043A\u0438"},
     "nl": {menuTitle: "Nederlands"},
+    "oc": {menuTitle: "occitan"},
     "pl": {menuTitle: "polski"},
     "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
     "pt": {menuTitle: "portugus\u00EA"},
     "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
     "sl": {menuTitle: "sloven\u0161\u010Dina"},
     "sv": {menuTitle: "svenska"},
+    "tr": {menuTitle: "T\u00FCrk\u00E7e"},
     "uk": {menuTitle: "\u0443\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"},
     "zh-hans": {menuTitle: "\u4E2D\u6587\uFF08\u7B80\u4F53\uFF09"}
   },
