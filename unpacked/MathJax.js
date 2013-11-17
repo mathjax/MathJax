@@ -2943,7 +2943,9 @@ MathJax.Hub.Startup = {
           if (KV) {STARTUP.params[unescape(KV[1])] = unescape(KV[2])}
         }
       }
-      CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'');
+      CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'')
+        .replace(/^(https?:\/\/(cdn.mathjax.org|c328740.ssl.cf1.rackcdn.com)\/mathjax\/)(latest)/,
+                 "$1"+BASE.version+"-$3");
       break;
     }
   }
