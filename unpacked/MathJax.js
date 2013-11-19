@@ -27,16 +27,26 @@
  *  limitations under the License.
  */
 
-if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}} else {window.MathJax = {}}
+
+//
+//  Check if browser can support MathJax (no one fails this nowadays)
+//
+if (document.getElementById && document.childNodes && document.createElement) {
+//
+//  Skip if MathJax is already loaded
+//
+if (!(window.MathJax && MathJax.Hub)) {
+  
+//
+//  Get author configuration from MathJax variable, if any
+//
+if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
+               else {window.MathJax = {}}
 
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
-if (document.getElementById && document.childNodes && document.createElement) {
-
-if (!MathJax.Hub) {  // skip if already loaded
-  
 MathJax.version = "2.3";
-MathJax.fileversion = "2.3";
+MathJax.fileversion = "2.3.1";
 
 /**********************************************************/
 
