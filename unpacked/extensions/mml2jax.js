@@ -53,12 +53,11 @@ MathJax.Extension.mml2jax = {
     //
     //  Handle all math tags with no namespaces
     //
-    mathArray.push.apply(mathArray,element.getElementsByTagName("math"));
+    this.PushMathElements(mathArray,element,"math");
     //
     //  Handle math with namespaces in XHTML
     //
-    if (element.getElementsByTagNameNS)
-      {mathArray.push.apply(mathArray,element.getElementsByTagNameNS(this.MMLnamespace,"math"))}
+    this.PushMathElements(mathArray,element,"math",this.MMLnamespace);
     //
     //  Handle math with namespaces in HTML
     //
@@ -71,7 +70,7 @@ MathJax.Extension.mml2jax = {
         for (i = 0, m = document.namespaces.length; i < m; i++) {
           var ns = document.namespaces[i];
           if (ns.urn === this.MMLnamespace)
-            {mathArray.push.apply(mathArray,element.getElementsByTagName(ns.name+":math"))}
+            {this.PushMathElements(mathArray,element,ns.name+":math")}
         }
       } catch (err) {}
     } else {
@@ -83,11 +82,26 @@ MathJax.Extension.mml2jax = {
         for (i = 0, m = html.attributes.length; i < m; i++) {
           var attr = html.attributes[i];
           if (attr.nodeName.substr(0,6) === "xmlns:" && attr.nodeValue === this.MMLnamespace)
-            {mathArray.push.apply(mathArray,element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
+            {this.PushMathElements(mathArray,element,attr.nodeName.substr(6)+":math")}
         }
       }
     }
     this.ProcessMathArray(mathArray);
+  },
+  
+  PushMathElements: function (array,element,name,namespace) {
+    var math, preview = MathJax.Hub.config.preRemoveClass;
+    if (namespace) {
+      if (!element.getElementsByTagNameNS) return;
+      math = element.getElementsByTagNameNS(namespace,name);
+    } else {
+      math = element.getElementsByTagName(name);
+    }
+    for (var i = 0, m = math.length; i < m; i++) {
+      var parent = math[i].parentNode;
+      if (parent && parent.className !== preview && !math[i].prefix === !namespace)
+        {array.push(math[i])}
+    }
   },
   
   ProcessMathArray: function (math) {
