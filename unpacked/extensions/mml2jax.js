@@ -53,12 +53,12 @@ MathJax.Extension.mml2jax = {
     //
     //  Handle all math tags with no namespaces
     //
-    mathArray.push.apply(mathArray,element.getElementsByTagName("math"));
+    mathArray.push.apply(mathArray,this.toArray(element.getElementsByTagName("math")));
     //
     //  Handle math with namespaces in XHTML
     //
     if (element.getElementsByTagNameNS)
-      {mathArray.push.apply(mathArray,element.getElementsByTagNameNS(this.MMLnamespace,"math"))}
+      {mathArray.push.apply(mathArray,this.toArray(element.getElementsByTagNameNS(this.MMLnamespace,"math")))}
     //
     //  Handle math with namespaces in HTML
     //
@@ -71,7 +71,7 @@ MathJax.Extension.mml2jax = {
         for (i = 0, m = document.namespaces.length; i < m; i++) {
           var ns = document.namespaces[i];
           if (ns.urn === this.MMLnamespace)
-            {mathArray.push.apply(mathArray,element.getElementsByTagName(ns.name+":math"))}
+            {mathArray.push.apply(mathArray,this.toArray(element.getElementsByTagName(ns.name+":math")))}
         }
       } catch (err) {}
     } else {
@@ -83,11 +83,19 @@ MathJax.Extension.mml2jax = {
         for (i = 0, m = html.attributes.length; i < m; i++) {
           var attr = html.attributes[i];
           if (attr.nodeName.substr(0,6) === "xmlns:" && attr.nodeValue === this.MMLnamespace)
-            {mathArray.push.apply(mathArray,element.getElementsByTagName(attr.nodeName.substr(6)+":math"))}
+            {mathArray.push.apply(mathArray,this.toArray(element.getElementsByTagName(attr.nodeName.substr(6)+":math")))}
         }
       }
     }
     this.ProcessMathArray(mathArray);
+  },
+  toArray: function (nodes) {
+    // Before IE9, getElementsByTagName() returns a nodeList instead of an array as required by
+    // push.apply(array, array).
+    var nodeArray = [];
+    for (var i = 0; i < nodes.length; i++)
+      nodeArray.push(nodes[i]);
+    return nodeArray;
   },
   
   ProcessMathArray: function (math) {
