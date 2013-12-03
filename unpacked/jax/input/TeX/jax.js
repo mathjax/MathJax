@@ -935,6 +935,8 @@
         textrm:            ['Macro','\\mathord{\\rm\\text{#1}}',1],
         textit:            ['Macro','\\mathord{\\it{\\text{#1}}}',1],
         textbf:            ['Macro','\\mathord{\\bf{\\text{#1}}}',1],
+        textsf:            ['Macro','\\mathord{\\sf{\\text{#1}}}',1],
+        texttt:            ['Macro','\\mathord{\\tt{\\text{#1}}}',1],
         pmb:               ['Macro','\\rlap{#1}\\kern1px{#1}',1],
         TeX:               ['Macro','T\\kern-.14em\\lower.5ex{E}\\kern-.115em X'],
         LaTeX:             ['Macro','L\\kern-.325em\\raise.21em{\\scriptstyle{A}}\\kern-.17em\\TeX'],
