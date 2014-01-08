@@ -42,12 +42,12 @@
     FontInfo: {
       STIX: {family: "STIXSizeOneSym", testString: "() {} []"},
       TeX:  {family: "MathJax_Size1",  testString: "() {} []"},
-      "STIX-Web":  {family: "STIXWeb_Size1",  testString: "() {} []"},
-      "Asana-Math":  {family: "AsanaMath_Size1",  testString: "() {} []"},
-      "Gyre-Pagella":  {family: "GyrePagella_Size1",  testString: "() {} []"},
-      "Gyre-Termes":  {family: "GyreTermes_Size1",  testString: "() {} []"},
-      "Latin-Modern":  {family: "LatinModern_Size1",  testString: "() {} []"},
-      "Neo-Euler":  {family: "NeoEuler_Size1",  testString: "() {} []"}
+      "STIX-Web":  {family: "STIXMathJax_Size1-Regular",  testString: "() {} []"},
+      "Asana-Math":  {family: "AsanaMathJax_Size1-Regular",  testString: "() {} []"},
+      "Gyre-Pagella":  {family: "GyrePagellaMathJax_Size1-Regular",  testString: "() {} []"},
+      "Gyre-Termes":  {family: "GyreTermesMathJax_Size1-Regular",  testString: "() {} []"},
+      "Latin-Modern":  {family: "LatinModernMathJax_Size1-Regular",  testString: "() {} []"},
+      "Neo-Euler":  {family: "NeoEulerMathJax_Size1-Regular'",  testString: "() {} []"}
     },
     comparisonFont: ["sans-serif","monospace","script","Times","Courier","Arial","Helvetica"],
     testSize: ["40px","50px","60px","30px","20px"],
