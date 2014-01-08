@@ -1327,7 +1327,7 @@
         //
         //  Get the variant, and check for operator size
         //
-        var scale = this.SVGgetScale(), variant = this.SVGgetVariant();
+        var scale = svg.scale = this.SVGgetScale(), variant = this.SVGgetVariant();
 	var values = this.getValues("largeop","displaystyle");
 	if (values.largeop)
 	  {variant = SVG.FONTDATA.VARIANT[values.displaystyle ? "-largeOp" : "-smallOp"]}
@@ -1425,7 +1425,7 @@
       SVGstretchV: function (h,d) {
         var svg = this.svg || this.toSVG();
 	var values = this.getValues("symmetric","maxsize","minsize");
-	var axis = SVG.TeX.axis_height, mu = this.SVGgetMu(svg), H;
+	var axis = SVG.TeX.axis_height*svg.scale, mu = this.SVGgetMu(svg), H;
 	if (values.symmetric) {H = 2*Math.max(h-axis,d+axis)} else {H = h + d}
 	values.maxsize = SVG.length2em(values.maxsize,mu,svg.h+svg.d);
 	values.minsize = SVG.length2em(values.minsize,mu,svg.h+svg.d);
@@ -1496,7 +1496,7 @@
 	var values = this.getValues("height","depth","width");
 	values.mathbackground = this.mathbackground;
 	if (this.background && !this.mathbackground) {values.mathbackground = this.background}
-        var svg = this.SVG(), mu = this.SVGgetMu(svg);
+        var svg = this.SVG(), mu = this.SVGgetMu(svg); 
 	svg.h = SVG.length2em(values.height,mu) / svg.scale;
         svg.d = SVG.length2em(values.depth,mu)  / svg.scale;
 	svg.w = svg.r = SVG.length2em(values.width,mu) / svg.scale;

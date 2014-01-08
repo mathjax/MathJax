@@ -2121,7 +2121,7 @@
 	this.HTMLremoveColor();
 	var values = this.getValues("symmetric","maxsize","minsize");
 	var span = this.HTMLspanElement(), mu = this.HTMLgetMu(span), H;
-	var axis = HTMLCSS.TeX.axis_height, scale = span.scale;
+	var scale = span.scale, axis = HTMLCSS.TeX.axis_height * scale;
 	if (values.symmetric) {H = 2*Math.max(h-axis,d+axis)} else {H = h + d}
 	values.maxsize = HTMLCSS.length2em(values.maxsize,mu,span.bbox.h+span.bbox.d);
 	values.minsize = HTMLCSS.length2em(values.minsize,mu,span.bbox.h+span.bbox.d);
