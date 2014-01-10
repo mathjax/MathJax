@@ -1580,7 +1580,7 @@ MathJax.Message = {
     }
     if (!this.div) {
       var frame = document.body;
-      if (MathJax.Hub.Browser.isMSIE) {
+      if (MathJax.Hub.Browser.isMSIE && window.attachEvent) {
         frame = this.frame = this.addDiv(document.body); frame.removeAttribute("id");
         frame.style.position = "absolute";
         frame.style.border = frame.style.margin = frame.style.padding = "0px";
@@ -2961,17 +2961,17 @@ MathJax.Hub.Startup = {
   }
   BASE.Ajax.config = CONFIG;
 
+  var AGENT = navigator.userAgent;
   var BROWSERS = {
     isMac:       (navigator.platform.substr(0,3) === "Mac"),
     isPC:        (navigator.platform.substr(0,3) === "Win"),
-    isMSIE:      (window.ActiveXObject != null && window.clipboardData != null),
-    isFirefox:   (navigator.userAgent.match(/Gecko/) != null &&
-                  navigator.userAgent.match(/KHTML/) == null),
-    isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null &&
+    isMSIE:      ("ActiveXObject" in window && "clipboardData" in window),
+    isFirefox:   (AGENT.match(/Gecko\//) && !AGENT.match(/like Gecko/)),
+    isSafari:    (AGENT.match(/ (Apple)?WebKit\//) != null &&
                      (!window.chrome || window.chrome.loadTimes == null)),
     isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
     isOpera:     (window.opera != null && window.opera.version != null),
-    isKonqueror: (window.hasOwnProperty && window.hasOwnProperty("konqueror") && navigator.vendor == "KDE"),
+    isKonqueror: ("konqueror" in window && navigator.vendor == "KDE"),
     versionAtLeast: function (v) {
       var bv = (this.version).split('.'); v = (new String(v)).split('.');
       for (var i = 0, m = v.length; i < m; i++)
@@ -2985,7 +2985,7 @@ MathJax.Hub.Startup = {
     }
   };
 
-  var AGENT = navigator.userAgent
+  var xAGENT = AGENT
     .replace(/^Mozilla\/(\d+\.)+\d+ /,"")                                   // remove initial Mozilla, which is never right
     .replace(/[a-z][-a-z0-9._: ]+\/\d+[^ ]*-[^ ]*\.([a-z][a-z])?\d+ /i,"")  // remove linux version
     .replace(/Gentoo |Ubuntu\/(\d+\.)*\d+ (\([^)]*\) )?/,"");               // special case for these
@@ -2997,11 +2997,11 @@ MathJax.Hub.Startup = {
       if (browser === "Mac" || browser === "PC") continue;
       HUB.Browser = HUB.Insert(new String(browser),BROWSERS);
       var VERSION = new RegExp(
-        ".*(Version)/((?:\\d+\\.)+\\d+)|" +                                       // for Safari and Opera10
+        ".*(Version/| Trident/.*; rv:)((?:\\d+\\.)+\\d+)|" +                                       // for Safari and Opera10
         ".*("+browser+")"+(browser == "MSIE" ? " " : "/")+"((?:\\d+\\.)*\\d+)|"+  // for one of the main browser
         "(?:^|\\(| )([a-z][-a-z0-9._: ]+|(?:Apple)?WebKit)/((?:\\d+\\.)+\\d+)");  // for unrecognized browser
-      var MATCH = VERSION.exec(AGENT) || ["","","","unknown","0.0"];
-      HUB.Browser.name = (MATCH[1] == "Version" ? browser : (MATCH[3] || MATCH[5]));
+      var MATCH = VERSION.exec(xAGENT) || ["","","","unknown","0.0"];
+      HUB.Browser.name = (MATCH[1] != "" ? browser : (MATCH[3] || MATCH[5]));
       HUB.Browser.version = MATCH[2] || MATCH[4] || MATCH[6];
       break;
     }
@@ -3025,9 +3025,9 @@ MathJax.Hub.Startup = {
       browser.noContextMenu = browser.isMobile;
     },
     Firefox: function (browser) {
-      if ((browser.version === "0.0" || navigator.userAgent.match(/Firefox/) == null) &&
+      if ((browser.version === "0.0" || AGENT.match(/Firefox/) == null) &&
            navigator.product === "Gecko") {
-        var rv = navigator.userAgent.match(/[\/ ]rv:(\d+\.\d.*?)[\) ]/);
+        var rv = AGENT.match(/[\/ ]rv:(\d+\.\d.*?)[\) ]/);
         if (rv) {browser.version = rv[1]}
         else {
           var date = (navigator.buildID||navigator.productSub||"0").substr(0,8);
@@ -3044,8 +3044,8 @@ MathJax.Hub.Startup = {
         }
       }
       browser.isMobile = (navigator.appVersion.match(/Android/i) != null ||
-                          navigator.userAgent.match(/ Fennec\//) != null ||
-                          navigator.userAgent.match(/Mobile/) != null);
+                          AGENT.match(/ Fennec\//) != null ||
+                          AGENT.match(/Mobile/) != null);
     },
     Opera: function (browser) {browser.version = opera.version()},
     MSIE: function (browser) {
