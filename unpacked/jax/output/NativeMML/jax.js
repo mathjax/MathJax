@@ -974,8 +974,9 @@
             tag = nMML.adjustWidths[i];
             var style = tag.getAttribute("style") || "";
             if (!style.match(/(^|;)\s*min-width:/)) {
-              mtd.push(tag.scrollWidth);
-              var width = (tag.scrollWidth/nMML.ex).toFixed(3)+"ex";
+              var width = tag.firstChild.scrollWidth;
+              mtd.push(width);
+              width = (width/nMML.ex).toFixed(3)+"ex";
               style = style.replace(/;?\s*$/,"; ");
               tag.setAttribute("style",style+"min-width:"+width);
             }
