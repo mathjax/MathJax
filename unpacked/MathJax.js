@@ -2997,7 +2997,7 @@ MathJax.Hub.Startup = {
       if (browser === "Mac" || browser === "PC") continue;
       HUB.Browser = HUB.Insert(new String(browser),BROWSERS);
       var VERSION = new RegExp(
-        ".*(Version/| Trident/.*; rv:)((?:\\d+\\.)+\\d+)|" +                                       // for Safari and Opera10
+        ".*(Version/| Trident/.*; rv:)((?:\\d+\\.)+\\d+)|" +                      // for Safari, Opera10, and IE11+
         ".*("+browser+")"+(browser == "MSIE" ? " " : "/")+"((?:\\d+\\.)*\\d+)|"+  // for one of the main browser
         "(?:^|\\(| )([a-z][-a-z0-9._: ]+|(?:Apple)?WebKit)/((?:\\d+\\.)+\\d+)");  // for unrecognized browser
       var MATCH = VERSION.exec(xAGENT) || ["","","","unknown","0.0"];
