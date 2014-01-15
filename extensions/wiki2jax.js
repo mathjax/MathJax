@@ -20,7 +20,7 @@ MathJax.Extension.wiki2jax = {
       this.configured = true;
     }
     var that = this;
-    $('span.tex, img.tex, strong.error', element || document).each(function(i, span) {
+    $('span.tex, img.tex, strong.texerror', element || document).each(function(i, span) {
 		that.ConvertMath(span);
 	});
   },
