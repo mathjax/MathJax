@@ -1,22 +1,154 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>MathJax AsciiMath Test Page</title>
-<!-- Copyright (c) 2012-2013 The MathJax Consortium -->
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-<script type="text/javascript" src="../MathJax.js?config=AM_HTMLorMML-full"></script>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	
+      
+  </head>
 
-</head>
-<body>
+  <body>
+    
 
-<p>
-When `a != 0`, there are two solutions to `ax^2 + bx + c = 0` and they are
-</p>
-<p style="text-align:center">
-`x = (-b +- sqrt(b^2-4ac))/(2a) .`
-</p>
+<table id="examples" border="5" cellpadding="10">
+<tbody><tr>
+<th>Type this</th>
+<th>See that</th>
+<th>Comment</th>
+</tr>
 
-</body>
+<tr>
+<td><pre>`x^2+y_1+z_12^34`</pre></td>
+<td>`x^2+y_1+z_12^34`</td>
+
+    
+<td>subscripts as in TeX, but numbers are treated as a unit</td>
+</tr>
+<tr>
+    <td><pre>`sin^-1(x)`</pre></td>
+
+    <td>`sin^-1(x)`</td>
+<td>function names are treated as constants</td>
+</tr>
+<tr>
+
+    <td><pre>`d/dxf(x)=lim_(h-&gt;0)(f(x+h)-f(x))/h`</pre></td>
+<td>`d/dxf(x)=lim_(h-&gt;0)(f(x+h)-f(x))/h`</td>
+
+<td>complex subscripts are bracketed, displayed under lim</td>
+</tr>
+<tr>
+    <td><pre>`\frac{d}{dx}f(x)=\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}`</pre></td>
+<td>`\frac{d}{dx}f(x)=\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}`</td>
+
+    <td>standard LaTeX notation is an alternative</td>
+</tr>
+<tr>
+    <td><pre>`f(x)=sum_(n=0)^oo(f^((n))(a))/(n!)(x-a)^n`</pre></td>
+
+    <td>`f(x)=sum_(n=0)^oo(f^((n))(a))/(n!)(x-a)^n`</td>
+
+<td>f^((n))(a) must be bracketed</td>
+</tr>
+<tr>
+    <td><pre>`f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(a)}{n!}(x-a)^n`</pre></td>
+<td>`f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(a)}{n!}(x-a)^n`</td>
+<td>standard LaTeX produces the same result</td>
+</tr>
+<tr>
+    <td><pre>`int_0^1f(x)dx`</pre></td>
+<td>`int_0^1f(x)dx`</td>
+
+<td>subscripts must come before superscripts</td>
+</tr>
+<tr>
+    <td><pre>`[[a,b],[c,d]]((n),(k))`</pre></td>
+<td>`[[a,b],[c,d]]((n),(k))`</td>
+
+    <td>matrices and column vectors are simple to type</td>
+</tr>
+<tr>
+    <td><pre>`x/x={(1,if x!=0),(text{undefined},if x=0):}`</pre></td>
+<td>`x/x={(1,if x!=0),(text{undefined},if x=0):}`</td>
+
+    <td>piecewise defined functions are based on matrix notation</td>
+
+</tr>
+<tr>
+    <td><pre>`a//b`</pre></td>
+<td>`a//b`</td>
+
+    <td>use // for inline fractions</td>
+</tr>
+<tr>
+    <td><pre>`(a/b)/(c/d)`</pre></td>
+<td>`(a/b)/(c/d)`</td>
+
+    <td>with brackets, multiple fraction work as expected</td>
+</tr>
+
+<tr>
+    <td><pre>`a/b/c/d`</pre></td>
+<td>`a/b/c/d`</td>
+
+    <td>without brackets the parser chooses this particular expression</td>
+</tr>
+<tr>
+    <td><pre>`((a*b))/c`</pre></td>
+<td>`((a*b))/c`</td>
+    <td>only one level of brackets is removed; * gives standard product</td>
+</tr>
+<tr>
+
+    <td><pre>`sqrt sqrt root3x`</pre></td>
+        <td>`sqrt sqrt root3x`</td>
+<td>spaces are optional, only serve to split strings that should not match</td>
+</tr>
+<tr>
+    <td><pre>`&lt;&lt; a,b &gt;&gt; and {:(x,y),(u,v):}`</pre></td>
+    <td>`&lt;&lt; a,b &gt;&gt; and {:(x,y),(u,v):}`</td>
+<td>angle brackets and invisible brackets</td>
+</tr>
+<tr>
+    <td><pre>`(a,b]={x in RR | a &lt; x &lt;= b}`</pre></td>
+<td>`(a,b]={x in RR | a &lt; x &lt;= b}`</td>
+
+<td>grouping brackets don't have to match</td>
+</tr>
+<tr>
+    <td><pre>`abc-123.45^-1.1`</pre></td>
+<td>`abc-123.45^-1.1`</td>
+
+    <td>non-tokens are split into single characters,<br>
+but decimal numbers are parsed with possible sign</td>
+</tr>
+
+<tr>
+
+    <td><pre>`hat(ab) bar(xy) ulA vec v dotx ddot y`</pre></td>
+    <td>`hat(ab) bar(xy) ulA vec v dotx ddot y`</td>
+
+    <td>accents can be used on any expression (work well in IE)</td>
+</tr>
+<tr>
+    <td><pre>`bb{AB3}.bbb(AB].cc(AB).fr{AB}.tt[AB].sf(AB)`</pre></td>
+    <td>`bb{AB3}.bbb(AB].cc(AB).fr{AB}.tt[AB].sf(AB)`</td>
+<td>font commands; can use any brackets around argument</td>
+</tr>
+<tr>
+
+    <td><pre>`stackrel"def"= or \stackrel{\Delta}{=}" "("or ":=)`</pre></td>
+<td>`stackrel"def"= or \stackrel{\Delta}{=}" "("or ":=)`</td>
+<td>symbols can be stacked</td>
+</tr>
+<tr>
+    <td><pre>`{::}_(\ 92)^238U`</pre></td>
+
+    <td>`{::}_(\ 92)^238U`</td>
+<td>prescripts simulated by subsuperscripts</td>
+</tr>
+</tbody></table>
+  </body>
+
 </html>
