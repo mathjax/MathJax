@@ -274,7 +274,7 @@
         ".MathJax_Processed": {display:"none!important"},
         
         ".MathJax_ExBox": {
-          display:"block!importatn", overflow:"hidden",
+          display:"block!important", overflow:"hidden",
           width:"1px", height:"60ex"
         },
         ".MathJax .MathJax_EmBox": {
