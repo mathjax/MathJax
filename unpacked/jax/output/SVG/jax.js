@@ -57,7 +57,7 @@
 
         ".MathJax_SVG_Display": {
           position: "relative",
-          display: "block",
+          display: "block!important",
           width: "100%"
         },
         
@@ -75,12 +75,12 @@
 
         ".MathJax_SVG_Processing": {
           visibility: "hidden", position:"absolute", top:0, left:0,
-          width:0, height: 0, overflow:"hidden", display:"block"
+          width:0, height: 0, overflow:"hidden", display:"block!important"
         },
         ".MathJax_SVG_Processed": {display:"none!important"},
         
         ".MathJax_SVG_ExBox": {
-          display:"block", overflow:"hidden",
+          display:"block!important", overflow:"hidden",
           width:"1px", height:"60ex"
         },
         

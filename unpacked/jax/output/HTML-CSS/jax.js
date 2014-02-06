@@ -229,7 +229,7 @@
 
         ".MathJax_Display": {
           position: "relative",
-          display: "block",
+          display: "block!important",
           width: "100%"
         },
 
@@ -239,8 +239,8 @@
           "text-decoration": "none"
         },
         "img.MathJax_strut": {
-          border:"0 !important", padding:"0 !important", margin: "0 !important",
-          "vertical-align": "0 !important"
+          border:"0!important", padding:"0!important", margin:"0!important",
+          "vertical-align": "0!important"
         },
         
 	".MathJax span": {
@@ -251,12 +251,12 @@
 	},
 
         ".MathJax nobr": {
-          "white-space": "nowrap ! important"
+          "white-space": "nowrap!important"
         },
         
         ".MathJax img": {
-          display: "inline ! important",
-          "float": "none ! important"
+          display: "inline!important",
+          "float": "none!important"
         },
         
         ".MathJax *": {
@@ -274,11 +274,11 @@
         ".MathJax_Processed": {display:"none!important"},
         
         ".MathJax_ExBox": {
-          display:"block", overflow:"hidden",
+          display:"block!importatn", overflow:"hidden",
           width:"1px", height:"60ex"
         },
         ".MathJax .MathJax_EmBox": {
-          display:"block", overflow:"hidden",
+          display:"block!important", overflow:"hidden",
           width:"1px", height:"60em"
         },
         
