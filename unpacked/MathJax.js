@@ -2554,26 +2554,28 @@ MathJax.Hub.Startup = {
   //  if needed later on.
   //
   MenuZoom: function () {
-    if (!MathJax.Extension.MathMenu) {
-      setTimeout(
-        function () {
-          MathJax.Callback.Queue(
-            ["Require",MathJax.Ajax,"[MathJax]/extensions/MathMenu.js",{}],
-            ["loadDomain",MathJax.Localization,"MathMenu"]
-          )
-        },1000
-      );
-    } else {
-      setTimeout(
-        MathJax.Callback(["loadDomain",MathJax.Localization,"MathMenu"]),
-        1000
-      );
-    }
-    if (!MathJax.Extension.MathZoom) {
-      setTimeout(
-        MathJax.Callback(["Require",MathJax.Ajax,"[MathJax]/extensions/MathZoom.js",{}]),
-        2000
-      );
+    if (MathJax.Hub.config.showMathMenu) {
+      if (!MathJax.Extension.MathMenu) {
+        setTimeout(
+          function () {
+            MathJax.Callback.Queue(
+              ["Require",MathJax.Ajax,"[MathJax]/extensions/MathMenu.js",{}],
+              ["loadDomain",MathJax.Localization,"MathMenu"]
+            )
+          },1000
+        );
+      } else {
+        setTimeout(
+          MathJax.Callback(["loadDomain",MathJax.Localization,"MathMenu"]),
+          1000
+        );
+      }
+      if (!MathJax.Extension.MathZoom) {
+        setTimeout(
+          MathJax.Callback(["Require",MathJax.Ajax,"[MathJax]/extensions/MathZoom.js",{}]),
+          2000
+        );
+      }
     }
   },
   
