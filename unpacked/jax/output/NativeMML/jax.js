@@ -101,6 +101,8 @@
           "white-space":     "nowrap",
           "float":           "none",
           "direction":       "ltr",
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           border: 0, padding: 0, margin: 0
         },
         
@@ -115,6 +117,7 @@
         ".MathJax_mmlExBox": {
           display:"block!important", overflow:"hidden",
           height:"1px", width:"60ex",
+          "min-height": 0, "max-height":"none",
           padding:0, border: 0, margin: 0
         }
       }
