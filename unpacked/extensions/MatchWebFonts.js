@@ -28,7 +28,7 @@
  */
 
 (function (HUB,AJAX) {
-  var VERSION = "2.3";
+  var VERSION = "2.3.1";
   
   var CONFIG = MathJax.Hub.CombineConfig("MatchWebFonts",{
     matchFor: {
@@ -98,9 +98,10 @@
         //
         //  Remove markers
         //
+        scripts = scripts.concat(size);  // some scripts have been moved to the size array
         for (i = 0, m = scripts.length; i < m; i++) {
           script = scripts[i];
-          if (script.parentNode && script.MathJax.elementJax) {
+          if (script && script.parentNode && script.MathJax.elementJax) {
             script.parentNode.removeChild(script.previousSibling);
           }
         }
@@ -164,6 +165,7 @@
         //
         //  Remove markers
         //
+        scripts = scripts.concat(size);  // some scripts have been moved to the size array
         for (i = 0, m = scripts.length; i < m; i++) {
           script = scripts[i];
           if (script.parentNode && script.MathJax.elementJax) {
@@ -303,7 +305,7 @@
     });
   });
   
-  HUB.Startup.signal.Post("MathWebFont Extension Ready");
+  HUB.Startup.signal.Post("MatchWebFonts Extension Ready");
   AJAX.loadComplete("[MathJax]/extensions/MatchWebFonts.js");
 
 })(MathJax.Hub,MathJax.Ajax);
