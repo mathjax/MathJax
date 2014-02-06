@@ -84,19 +84,22 @@
         this.div.style.fontStyle  = (font.style||"normal");
       }
       var W = this.getComparisonWidths(font.testString,font.noStyleChar);
+      var found = false;
       if (W) {
         this.div.style.fontFamily = "'"+font.family+"',"+this.comparisonFont[0];
         if (this.div.offsetWidth == W[0]) {
           this.div.style.fontFamily = "'"+font.family+"',"+this.comparisonFont[W[2]];
-          if (this.div.offsetWidth == W[1]) {return false}
+          if (this.div.offsetWidth == W[1]) {found = true}
         }
-        if (this.div.offsetWidth != W[3] || this.div.offsetHeight != W[4]) {
-          if (font.noStyleChar || !HTMLCSS.FONTDATA || !HTMLCSS.FONTDATA.hasStyleChar) {return true}
-          for (var i = 0, m = this.testSize.length; i < m; i++)
-            {if (this.testStyleChar(font,this.testSize[i])) {return true}}
+        if (!found && (this.div.offsetWidth != W[3] || this.div.offsetHeight != W[4])) {
+          if (!font.noStyleChar && HTMLCSS.FONTDATA && HTMLCSS.FONTDATA.hasStyleChar) {
+            for (var i = 0, m = this.testSize.length; i < m; i++)
+              {if (this.testStyleChar(font,this.testSize[i])) {found = true; m = 0}}
+          } else {found = true}
         }
       }
-      return false;
+      if (HTMLCSS.safariTextNodeBug) {this.div.innerHTML = ""} else {this.text.nodeValue = ""}
+      return found;
     },
 
     styleChar:   "\uEFFD", // width encodes style
