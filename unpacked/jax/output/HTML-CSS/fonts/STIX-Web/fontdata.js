@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-    var VERSION = "2.3";
+  var VERSION = "2.3";
 
   var ALPHABETSBOLDITALIC = "STIXMathJax_Alphabets-bold-italic",
       ALPHABETSBOLD = "STIXMathJax_Alphabets-bold",
@@ -241,7 +241,13 @@
       },
 
       REMAPACCENT: {
-        "\u2192": "\u20D7"
+        "\u007E": "\u0303",
+        "\u2192": "\u20D7",
+        "\u0060": "\u0300",
+        "\u005E": "\u0302",
+        "\u00B4": "\u0301",
+        "\u2032": "\u0301",
+        "\u2035": "\u0300"
       },
 
       REMAPACCENTUNDER: {
