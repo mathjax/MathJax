@@ -46,7 +46,7 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
 MathJax.version = "2.3";
-MathJax.fileversion = "2.3.1";
+MathJax.fileversion = "2.3.2";
 
 /**********************************************************/
 
@@ -543,7 +543,7 @@ MathJax.fileversion = "2.3.1";
     call: function () {this.callback(this); this.Process()},
     
     //
-    //  A listener calls this to register intrest in the signal (so it will be called
+    //  A listener calls this to register interest in the signal (so it will be called
     //  when posts occur).  If ignorePast is true, it will not be sent the post history.
     //
     Interest: function (callback,ignorePast,priority) {
@@ -580,7 +580,7 @@ MathJax.fileversion = "2.3.1";
     //
     //  Execute the message hooks for the given message
     //
-    ExecuteHooks: function (msg,more) {
+    ExecuteHooks: function (msg) {
       var type = ((msg instanceof Array) ? msg[0] : msg);
       if (!this.hooks[type]) {return null}
       return this.hooks[type].Execute(msg);
