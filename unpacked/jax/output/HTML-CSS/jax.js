@@ -227,17 +227,23 @@
           "white-space":     "nowrap",
           "float":           "none",
           "direction":       "ltr",
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           border: 0, padding: 0, margin: 0
         },
 
         ".MathJax_Display": {
           position: "relative",
           display: "block!important",
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           width: "100%"
         },
 
         ".MathJax img, .MathJax nobr, .MathJax a": {
-          border: 0, padding: 0, margin: 0, "max-width": "none", "max-height": "none",
+          border: 0, padding: 0, margin: 0,
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           "vertical-align": 0, "line-height": "normal",
           "text-decoration": "none"
         },
@@ -278,11 +284,13 @@
         
         ".MathJax_ExBox": {
           display:"block!important", overflow:"hidden",
-          width:"1px", height:"60ex"
+          width:"1px", height:"60ex",
+          "min-height": 0, "max-height":"none"
         },
         ".MathJax .MathJax_EmBox": {
           display:"block!important", overflow:"hidden",
-          width:"1px", height:"60em"
+          width:"1px", height:"60em",
+          "min-height": 0, "max-height":"none"
         },
         
         ".MathJax .MathJax_HitBox": {

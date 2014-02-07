@@ -52,12 +52,16 @@
           "white-space":     "nowrap",
           "float":           "none",
           "direction":       "ltr",
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           border: 0, padding: 0, margin: 0
         },
 
         ".MathJax_SVG_Display": {
           position: "relative",
           display: "block!important",
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           width: "100%"
         },
         
@@ -81,7 +85,9 @@
         
         ".MathJax_SVG_ExBox": {
           display:"block!important", overflow:"hidden",
-          width:"1px", height:"60ex"
+          width:"1px", height:"60ex",
+          "min-height": 0, "max-height":"none",
+          padding:0, border: 0, margin: 0
         },
         
         "#MathJax_SVG_Tooltip": {
