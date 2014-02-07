@@ -2359,21 +2359,6 @@ MathJax.Hub.Startup = {
       MathJax.Hub.config.menuSettings.locale = this.params.locale;
     }
     //
-    //  Check for user cookie configuration
-    //
-    var user = MathJax.HTML.Cookie.Get("user");
-    if (user.URL || user.Config) {
-      if (confirm(
-        MathJax.Localization._("CookieConfig",
-          "MathJax has found a user-configuration cookie that includes code to "+
-          "be run. Do you want to run it?\n\n"+
-          "(You should press Cancel unless you set up the cookie yourself.)")
-      )) {
-        if (user.URL) {this.queue.Push(["Require",MathJax.Ajax,user.URL])}
-        if (user.Config) {this.queue.Push(new Function(user.Config))}
-      } else {MathJax.HTML.Cookie.Set("user",{})}
-    }
-    //
     //  Run the config files, if any are given in the parameter list
     //
     if (this.params.config) {
