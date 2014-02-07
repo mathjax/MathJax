@@ -105,15 +105,15 @@
         },
         
         "span.MathJax_MathML": {
-          display: "inline"
+          display: "inline!important"
         },
         
         "div.MathJax_MathML": {
-          display: "block"
+          display: "block!important"
         },
         
         ".MathJax_mmlExBox": {
-          display:"block", overflow:"hidden",
+          display:"block!important", overflow:"hidden",
           height:"1px", width:"60ex",
           padding:0, border: 0, margin: 0
         }
