@@ -290,7 +290,7 @@
       var jax = script.MathJax.elementJax, math = jax.root,
           span = document.getElementById(jax.inputID+"-Frame"),
           div = (jax.SVG.display ? (span||{}).parentNode : span);
-      if (!span || !div) return;
+      if (!div) return;
       //
       //  Set the font metrics
       //
