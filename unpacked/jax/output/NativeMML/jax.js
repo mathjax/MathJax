@@ -289,8 +289,8 @@
       //  Get the jax and the container and set the size
       //
       var jax = script.MathJax.elementJax, math = jax.root;
-      var span = document.getElementById(jax.inputID+"-Frame"),
-	  container = span.firstChild, mspan = container.firstChild;
+      var span = document.getElementById(jax.inputID+"-Frame"); if (!span) return;
+      var container = span.firstChild, mspan = container.firstChild;
       this.ex = jax.NativeMML.ex || this.defaultEx;
       this.scale = jax.NativeMML.scale || 1;
       if (this.scale !== 1) {span.style.fontSize = jax.NativeMML.fontSize}
