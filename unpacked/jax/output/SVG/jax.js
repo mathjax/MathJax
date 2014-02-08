@@ -1929,6 +1929,17 @@
           svg.Add(box); svg.Clean();
           this.SVGsaveData(svg);
           //
+          //  If this element is not the top-level math element
+          //    remove the transform and return the svg object
+          //    (issue #614).
+          //
+          if (!span) {
+            svg.element = svg.element.firstChild;  // remove <svg> element
+            svg.element.removeAttribute("transform");
+            svg.removable = true;
+            return svg;
+          }
+          //
           //  Style the <svg> to get the right size and placement
           //
           var l = Math.max(-svg.l,0), r = Math.max(svg.r-svg.w,0);
