@@ -761,8 +761,10 @@
         var H = (w.outerHeight-w.innerHeight)||30, W = (w.outerWidth-w.innerWidth)||30, x, y;
         W = Math.max(100,Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25));
         H = Math.max(40,Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25));
+        if (MENU.prototype.msieHeightBug) {H += 35}; // for title bar in XP
         w.resizeTo(W,H);
-        if (event && event.screenX != null) {
+        var X; try {X = event.screenX} catch (e) {}; // IE8 throws an error accessing screenX
+        if (event && X != null) {
           x = Math.max(0,Math.min(event.screenX-Math.floor(W/2), screen.width-W-20));
           y = Math.max(0,Math.min(event.screenY-Math.floor(H/2), screen.height-H-20));
           w.moveTo(x,y);
@@ -955,9 +957,11 @@
       var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
       MENU.Augment({
         margin: 20,
-        msieBackgroundBug: (document.documentMode < 9),
+        msieBackgroundBug: ((document.documentMode||0) < 9),
         msieFixedPositionBug: (quirks || !isIE8),
-        msieAboutBug: quirks
+        msieAboutBug: quirks,
+        msieHeightBug: ((document.documentMode||0) < 9)
+           // height of window doesn't include title bar in XP
       });
       if (isIE9) {
         delete CONFIG.styles["#MathJax_About"].filter;
