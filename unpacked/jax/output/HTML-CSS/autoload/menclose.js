@@ -182,6 +182,27 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
               });
             }
             break;
+            
+          case MML.NOTATION.PHASORANGLE:
+            W -= 2*p; p = (H+D)/2; W += p;
+            if (HTMLCSS.useVML) {
+              if (!vml) {vml = this.HTMLvml(stack,H,D,W,t,values.mathcolor)}
+              this.HTMLvmlElement(vml,"shape",{
+                style: {width:this.HTMLpx(W), height:this.HTMLpx(H+D)},
+                path: "m "+this.HTMLpt(p+t/2,t/2)+
+                      " l "+this.HTMLpt(t/2,H+D-t)+" "+this.HTMLpt(W-t/2,H+D-t)+" e",
+                coordsize: this.HTMLpt(W,H+D)
+              });
+              
+            } else {
+              if (!svg) {svg = this.HTMLsvg(stack,H,D,W,t,values.mathcolor)}
+              this.HTMLsvgElement(svg.firstChild,"path",{
+                d: "M "+this.HTMLpx(p)+",1" +
+                   "L 1,"+this.HTMLpx(H+D-t)+" L "+this.HTMLpx(W)+","+this.HTMLpx(H+D-t)
+              });
+              HTMLCSS.placeBox(svg.parentNode,0,-D,true);
+            }
+            break;
 
           case MML.NOTATION.MADRUWB:
             frame.style.borderBottom = SOLID;
