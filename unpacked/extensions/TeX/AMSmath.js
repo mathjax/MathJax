@@ -453,6 +453,15 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
+      for (var i = 0, m = this.data.length; i < m; i++) {
+        if (this.data[i] && this.data[i].type !== "mspace") {
+          if (this.data[i].isEmbellished()) {
+            var core = this.data[i].CoreMO();
+            core.form = MML.FORM.INFIX; core.lspace = 0;
+          }
+          break;
+        }
+      }
       var mtd = MML.mtd.apply(MML,this.data);
       if (this.data.shove) {mtd.columnalign = this.data.shove}
       this.row.push(mtd);
@@ -498,6 +507,21 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.save = {notags: stack.global.notags, notag: stack.global.notag};
       stack.global.notags = (taggable ? null : name);
       stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
+    },
+    EndEntry: function () {
+      if (this.row.length > 0) {
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          if (this.data[i] && this.data[i].type !== "mspace") {
+            if (this.data[i].isEmbellished()) {
+              var core = this.data[i].CoreMO();
+              core.form = MML.FORM.INFIX; core.lspace = 0;
+            }
+            break;
+          }
+        }
+      }
+      this.row.push(MML.mtd.apply(MML,this.data));
+      this.data = [];
     },
     EndRow: function () {
       var mtr = MML.mtr;
