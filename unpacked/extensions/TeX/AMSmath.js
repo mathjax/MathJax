@@ -438,6 +438,24 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       }
       delete global.tag; delete global.tagID; delete global.label;
       return tag;
+    },
+
+    /*
+     *  Set the initial <mo> to have form="infix" and lspace="0",
+     *  skipping any initial space or empty braces (TeXAtom with child
+     *  being an empty inferred row).
+     */
+    fixInitialMO: function (data) {
+      for (var i = 0, m = data.length; i < m; i++) {
+        if (data[i] && (data[i].type !== "mspace" &&
+           (data[i].type !== "texatom" || !data[i].data[0] || data[i].data[0].data.length))) {
+          if (data[i].isEmbellished()) {
+            var core = data[i].CoreMO();
+            core.form = MML.FORM.INFIX; core.lspace = 0;
+          }
+          break;
+        }
+      }
     }
   });
   
@@ -453,15 +471,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
-      for (var i = 0, m = this.data.length; i < m; i++) {
-        if (this.data[i] && this.data[i].type !== "mspace") {
-          if (this.data[i].isEmbellished()) {
-            var core = this.data[i].CoreMO();
-            core.form = MML.FORM.INFIX; core.lspace = 0;
-          }
-          break;
-        }
-      }
+      if (this.table.length) {this.fixInitialMO(this.data)}
       var mtd = MML.mtd.apply(MML,this.data);
       if (this.data.shove) {mtd.columnalign = this.data.shove}
       this.row.push(mtd);
@@ -509,17 +519,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
-      if (this.row.length > 0) {
-        for (var i = 0, m = this.data.length; i < m; i++) {
-          if (this.data[i] && this.data[i].type !== "mspace") {
-            if (this.data[i].isEmbellished()) {
-              var core = this.data[i].CoreMO();
-              core.form = MML.FORM.INFIX; core.lspace = 0;
-            }
-            break;
-          }
-        }
-      }
+      if (this.row.length) {this.fixInitialMO(this.data)}
       this.row.push(MML.mtd.apply(MML,this.data));
       this.data = [];
     },
