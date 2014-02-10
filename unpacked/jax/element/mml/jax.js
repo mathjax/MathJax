@@ -518,7 +518,7 @@ MathJax.ElementJax.mml.Augment({
       lspace: MML.LENGTH.THICKMATHSPACE,
       rspace: MML.LENGTH.THICKMATHSPACE,
       stretchy: false,
-      symmetric: true,
+      symmetric: false,
       maxsize: MML.SIZE.INFINITY,
       minsize: '0em', //'1em',
       largeop: false,
