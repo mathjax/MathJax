@@ -82,7 +82,7 @@
           "bold": {fonts: [MAIN,NORMAL,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,VARIANTS,NONUNICODE,SIZE1], bold:true
 , offsetA: 0x1D400, offsetG: 0x1D6A8, offsetN: 0x1D7CE},
           "italic": {fonts: [MAIN,NORMAL,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,VARIANTS,NONUNICODE,SIZE1], italic:true},
-          "bolditalic": {fonts: [MAIN,NORMAL,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,VARIANTS,NONUNICODE,SIZE1], bold: true, italic:true},
+          "bold-italic": {fonts: [MAIN,NORMAL,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,VARIANTS,NONUNICODE,SIZE1], bold: true, italic:true},
           "double-struck": {
             fonts: [DOUBLESTRUCK],
             offsetA: 0x1D538,

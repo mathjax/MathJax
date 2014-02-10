@@ -42,12 +42,19 @@
     FontInfo: {
       STIX: {family: "STIXSizeOneSym", testString: "() {} []"},
       TeX:  {family: "MathJax_Size1",  testString: "() {} []"},
-      "STIX-Web":  {family: "STIXWeb_Size1",  testString: "() {} []"},
-      "Asana-Math":  {family: "AsanaMath_Size1",  testString: "() {} []"},
-      "Gyre-Pagella":  {family: "GyrePagella_Size1",  testString: "() {} []"},
-      "Gyre-Termes":  {family: "GyreTermes_Size1",  testString: "() {} []"},
-      "Latin-Modern":  {family: "LatinModern_Size1",  testString: "() {} []"},
-      "Neo-Euler":  {family: "NeoEuler_Size1",  testString: "() {} []"}
+      //
+      //  These are the new web fonts.  The strange use of single quotes is because the
+      //  testing routine adds quotes at the beginning and ending, so for this list of
+      //  names, we need to take those into account.  We need a list because the names are
+      //  not handled consistently between Mac and Windows in the font data, as they are
+      //  in the TeX and original STIX fonts (sigh).
+      //
+      "STIX-Web":     {family: "STIX MathJax Size1','STIXMathJax_Size1-Regular",  testString: "() {} []"},
+      "Asana-Math":   {family: "Asana MathJax Size1','AsanaMathJax_Size1-Regular'",  testString: "() {} []"},
+      "Gyre-Pagella": {family: "Gyre Pagella MathJax Size1','GyrePagellaMathJax_Size1-Regular",  testString: "() {} []"},
+      "Gyre-Termes":  {family: "Gyre Termes MathJax Size1','GyreTermesMathJax_Size1-Regular",  testString: "() {} []"},
+      "Latin-Modern": {family: "Latin Modern MathJax Size1','LatinModernMathJax_Size1-Regular",  testString: "() {} []"},
+      "Neo-Euler":    {family: "Neo Euler MathJax Size1','NeoEulerMathJax_Size1-Regular",  testString: "() {} []"}
     },
     comparisonFont: ["sans-serif","monospace","script","Times","Courier","Arial","Helvetica"],
     testSize: ["40px","50px","60px","30px","20px"],
