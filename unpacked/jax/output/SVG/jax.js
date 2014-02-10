@@ -1485,7 +1485,7 @@
           if (variant.italic) {def["font-style"] = "italic"}
           variant = this.Get("mathvariant");
           if (variant === "monospace") {def["class"] = "MJX-monospace"}
-            else if (variant.match(/sans-serif/)) {def["class"] = " MJX-sans-serif"}
+            else if (variant.match(/sans-serif/)) {def["class"] = "MJX-sans-serif"}
           svg.Add(BBOX.TEXT(scale,this.data.join(""),def)); svg.Clean();
           this.SVGhandleColor(svg);
           this.SVGsaveData(svg);
