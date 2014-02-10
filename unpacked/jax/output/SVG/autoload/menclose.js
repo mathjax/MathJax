@@ -177,6 +177,11 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           case MML.NOTATION.DOWNDIAGONALSTRIKE:
             svg.Add(BBOX.DLINE(H,D,W,t,values.mathcolor,"down"));
             break;
+            
+          case MML.NOTATION.PHASORANGLE:
+            borders[2] = true; W -= 2*p; p = (H+D)/2; W += p;
+            svg.Add(BBOX.DLINE(H,D,p,t,values.mathcolor,"up"));
+            break;
 
           case MML.NOTATION.MADRUWB:
             borders[1] = borders[2] = true;
