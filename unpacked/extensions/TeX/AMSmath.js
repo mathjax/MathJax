@@ -448,7 +448,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     fixInitialMO: function (data) {
       for (var i = 0, m = data.length; i < m; i++) {
         if (data[i] && (data[i].type !== "mspace" &&
-           (data[i].type !== "texatom" || !data[i].data[0] || data[i].data[0].data.length))) {
+           (data[i].type !== "texatom" || (data[i].data[0] && data[i].data[0].data.length)))) {
           if (data[i].isEmbellished()) {
             var core = data[i].CoreMO();
             core.form = MML.FORM.INFIX; core.lspace = 0;
