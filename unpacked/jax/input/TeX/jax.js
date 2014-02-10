@@ -424,6 +424,7 @@
         '%':   'Comment',
         '&':   'Entry',
         '#':   'Hash',
+        '\u00A0': 'Space',
         '\u2019': 'Prime'
       },
       
@@ -946,6 +947,7 @@
         not:                'Not',
         dots:               'Dots',
         space:              'Tilde',
+        '\u00A0':           'Tilde',
         
 
         //  LaTeX
@@ -1807,7 +1809,7 @@
      *   Check if the next character is a space
      */
     nextIsSpace: function () {
-      return this.string.charAt(this.i).match(/[ \n\r\t]/);
+      return this.string.charAt(this.i).match(/\s/);
     },
     
     /*
