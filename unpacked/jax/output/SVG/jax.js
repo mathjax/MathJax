@@ -1483,6 +1483,9 @@
           var variant = this.SVGgetVariant(), def = {direction:this.Get("dir")};
           if (variant.bold)   {def["font-weight"] = "bold"}
           if (variant.italic) {def["font-style"] = "italic"}
+          variant = this.Get("mathvariant");
+          if (variant === "monospace") {def["class"] = "MJX-monospace"}
+            else if (variant.match(/sans-serif/)) {def["class"] = "MJX-sans-serif"}
           svg.Add(BBOX.TEXT(scale,this.data.join(""),def)); svg.Clean();
           this.SVGhandleColor(svg);
           this.SVGsaveData(svg);

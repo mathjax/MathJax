@@ -2170,8 +2170,12 @@
         span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); 
         var variant = this.HTMLgetVariant();
         //  Avoid setting the font style for error text or if mtextFontInherit is set
-        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror")
-          {variant = {bold:variant.bold, italic:variant.italic, fontInherit: true}}
+        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror") {
+          var vname = this.Get("mathvariant");
+          if (vname === "monospace") {span.className += " MJX-monospace"}
+            else if (vname.match(/sans-serif/)) {span.className += " MJX-sans-serif"}
+          variant = {bold:variant.bold, italic:variant.italic, fontInherit: true};
+        }
         for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
         if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
