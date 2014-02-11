@@ -601,8 +601,12 @@ MathJax.ElementJax.mml.Augment({
     isEmbellished: function () {return true},
     hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)},
     setTeXclass: function (prev) {
-      this.getValues("lspace","rspace"); // sets useMMLspacing
+      var values = this.getValues("form","lspace","rspace","fence"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
+      if (values.fence && !this.texClass) {
+        if (values.form === MML.FORM.PREFIX) {this.texClass = MML.TEXCLASS.OPEN}
+        if (values.form === MML.FORM.POSTFIX) {this.texClass = MML.TEXCLASS.CLOSE}
+      }
       this.texClass = this.Get("texClass");
       if (this.data.join("") === "\u2061") {
         // force previous node to be texClass OP, and skip this node
@@ -908,7 +912,11 @@ MathJax.ElementJax.mml.Augment({
       values.separators = values.separators.replace(/[ \t\n\r]/g,"");
       // create a fake node for the open item
       if (values.open !== "") {
-        this.SetData("open",MML.mo(values.open).With({stretchy:true, texClass:MML.TEXCLASS.OPEN}));
+        this.SetData("open",MML.mo(values.open).With({
+          fence:true, form:MML.FORM.PREFIX, texClass:MML.TEXCLASS.OPEN
+        }));
+        //  Clear flag for using MML spacing even though form is specified
+        this.data.open.useMMLspacing &= ~this.data.open.SPACE_ATTR.form;
         prev = this.data.open.setTeXclass(prev);
       }
       // get the separators
@@ -922,7 +930,7 @@ MathJax.ElementJax.mml.Augment({
       for (var i = 1, m = this.data.length; i < m; i++) {
         if (this.data[i]) {
           if (values.separators !== "") {
-            this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)));
+            this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}));
             prev = this.data["sep"+i].setTeXclass(prev);
           }
           prev = this.data[i].setTeXclass(prev);
@@ -930,7 +938,11 @@ MathJax.ElementJax.mml.Augment({
       }
       // create fake node for the close item
       if (values.close !== "") {
-        this.SetData("close",MML.mo(values.close).With({stretchy:true, texClass:MML.TEXCLASS.CLOSE}));
+        this.SetData("close",MML.mo(values.close).With({
+          fence:true, form:MML.FORM.POSTFIX, texClass:MML.TEXCLASS.CLOSE
+        }));
+        //  Clear flag for using MML spacing even though form is specified
+        this.data.close.useMMLspacing &= ~this.data.close.SPACE_ATTR.form;
         prev = this.data.close.setTeXclass(prev);
       }
       // get the data from the open item
@@ -1693,8 +1705,13 @@ MathJax.ElementJax.mml.Augment({
   //  These are not in the W3C table, but FF works this way,
   //  and it makes sense, so add it here
   //
-  MML.mo.prototype.OPTABLE.infix["^"] = MO.WIDEREL;
-  MML.mo.prototype.OPTABLE.infix["_"] = MO.WIDEREL;
+  var OPTABLE = MML.mo.prototype.OPTABLE;
+  OPTABLE.infix["^"] = MO.WIDEREL;
+  OPTABLE.infix["_"] = MO.WIDEREL;
+  OPTABLE.prefix["\u2223"] = MO.OPEN;
+  OPTABLE.prefix["\u2225"] = MO.OPEN;
+  OPTABLE.postfix["\u2223"] = MO.CLOSE;
+  OPTABLE.postfix["\u2225"] = MO.CLOSE;
   
 })(MathJax.ElementJax.mml);
 
