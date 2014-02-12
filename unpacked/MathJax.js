@@ -1135,7 +1135,7 @@ MathJax.Localization = {
       var result = [], match, last = 0;
       regex.lastIndex = 0;
       while (match = regex.exec(string)) {
-        result.push(string.substr(last,match.index));
+        result.push(string.substr(last,match.index-last));
         result.push.apply(result,match.slice(1));
         last = match.index + match[0].length;
       }
