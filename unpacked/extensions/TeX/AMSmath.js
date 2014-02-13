@@ -209,7 +209,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle \DeclareMathOperator
      */
     HandleDeclareOp: function (name) {
-      var limits = (this.GetStar() ? "\\limits" : "");
+      var limits = (this.GetStar() ? "" : "\\nolimits");
       var cs = this.trimSpaces(this.GetArgument(name));
       if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
       var op = this.GetArgument(name);
@@ -218,7 +218,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     HandleOperatorName: function (name) {
-      var limits = (this.GetStar() ? "\\limits" : "\\nolimits");
+      var limits = (this.GetStar() ? "" : "\\nolimits");
       var op = this.trimSpaces(this.GetArgument(name));
       op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
       this.string = '\\mathop{\\rm '+op+'}'+limits+" "+this.string.slice(this.i);
