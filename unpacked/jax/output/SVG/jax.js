@@ -60,6 +60,7 @@
         ".MathJax_SVG_Display": {
           position: "relative",
           display: "block!important",
+          "text-indent": 0,
           "max-width": "none", "max-height": "none",
           "min-width": 0, "min-height": 0,
           width: "100%"
