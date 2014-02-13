@@ -391,7 +391,9 @@ MathJax.fileversion = "2.3.2";
     //
     Init: function (reset) {
       this.hooks = [];
+      this.remove = []; // used when hooks are removed during execution of list
       this.reset = reset;
+      this.running = false;
     },
     //
     //  Add a callback to the list, in priority order (default priority is 10)
@@ -407,25 +409,42 @@ MathJax.fileversion = "2.3.2";
     },
     Remove: function (hook) {
       for (var i = 0, m = this.hooks.length; i < m; i++) {
-        if (this.hooks[i] === hook) {this.hooks.splice(i,1); return}
+        if (this.hooks[i] === hook) {
+          if (this.running) {this.remove.push(i)}
+            else {this.hooks.splice(i,1)}
+          return;
+        }
       }
     },
     //
     //  Execute the list of callbacks, resetting them if requested.
     //  If any return callbacks, return a callback that will be 
     //  executed when they all have completed.
+    //  Remove any hooks that requested being removed during processing.
     //
     Execute: function () {
       var callbacks = [{}];
+      this.running = true;
       for (var i = 0, m = this.hooks.length; i < m; i++) {
         if (this.reset) {this.hooks[i].reset()}
         var result = this.hooks[i].apply(window,arguments);
         if (ISCALLBACK(result) && !result.called) {callbacks.push(result)}
       }
+      this.running = false;
+      if (this.remove.length) {this.RemovePending()}
       if (callbacks.length === 1) {return null}
       if (callbacks.length === 2) {return callbacks[1]}
       return AFTER.apply({},callbacks);
+    },
+    //
+    //  Remove hooks that asked to be removed during execution of list
+    //
+    RemovePending: function () {
+      this.remove = this.remove.sort();
+      for (var i = this.remove.length-1; i >= 0; i--) {this.hooks.splice(i,1)}
+      this.remove = [];
     }
+
   });
   
   //
@@ -450,7 +469,7 @@ MathJax.fileversion = "2.3.2";
     //  Create the queue and push any commands that are specified
     //
     Init: function () {
-      this.pending = 0; this.running = 0;
+      this.pending = this.running = 0;
       this.queue = [];
       this.Push.apply(this,arguments);
     },
@@ -505,6 +524,8 @@ MathJax.fileversion = "2.3.2";
       this.name = name;
       this.posted = [];              // the messages posted so far
       this.listeners = HOOKS(true);  // those with interest in this signal
+      this.posting = false;
+      this.callback = null;
     },
     //
     // Post a message to the signal listeners, with callback for when complete
@@ -519,7 +540,7 @@ MathJax.fileversion = "2.3.2";
         this.Suspend(); this.posting = true;
         var result = this.listeners.Execute(message);
         if (ISCALLBACK(result) && !result.called) {WAITFOR(result,this)}
-        this.Resume(); delete this.posting;
+        this.Resume(); this.posting = false;
         if (!this.pending) {this.call()}
       }
       return callback;
@@ -575,6 +596,7 @@ MathJax.fileversion = "2.3.2";
       this.hooks[msg].Add(callback,priority);
       for (var i = 0, m = this.posted.length; i < m; i++)
         {if (this.posted[i] == msg) {callback.reset(); callback(this.posted[i])}}
+      callback.msg = msg; // keep track so we can remove it
       return callback;
     },
     //
@@ -584,6 +606,12 @@ MathJax.fileversion = "2.3.2";
       var type = ((msg instanceof Array) ? msg[0] : msg);
       if (!this.hooks[type]) {return null}
       return this.hooks[type].Execute(msg);
+    },
+    //
+    //  Remove a hook safely
+    //
+    RemoveHook: function (hook) {
+      this.hooks[hook.msg].Remove(hook);
     }
     
   },{
@@ -718,6 +746,13 @@ MathJax.fileversion = "2.3.2";
     addHook: function (file,callback,priority) {
       if (!this.loadHooks[file]) {this.loadHooks[file] = MathJax.Callback.Hooks()}
       this.loadHooks[file].Add(callback,priority);
+      callback.file = file;
+    },
+    removeHook: function (hook) {
+      if (this.loadHooks[hook.file]) {
+        this.loadHooks[hook.file].Remove(hook);
+        if (!this.loadHooks[hook.file].hooks.length) {delete this.loadHooks[hook.file]}
+      }
     },
     
     //
@@ -1855,10 +1890,16 @@ MathJax.Hub = {
   },
   
   Register: {
-    PreProcessor: function () {MathJax.Hub.preProcessors.Add.apply(MathJax.Hub.preProcessors,arguments)},
+    PreProcessor: function () {return MathJax.Hub.preProcessors.Add.apply(MathJax.Hub.preProcessors,arguments)},
     MessageHook: function () {return MathJax.Hub.signal.MessageHook.apply(MathJax.Hub.signal,arguments)},
     StartupHook: function () {return MathJax.Hub.Startup.signal.MessageHook.apply(MathJax.Hub.Startup.signal,arguments)},
     LoadHook: function () {return MathJax.Ajax.LoadHook.apply(MathJax.Ajax,arguments)}
+  },
+  UnRegister: {
+    PreProcessor: function (hook) {MathJax.Hub.preProcessors.Remove(hook)},
+    MessageHook: function (hook) {MathJax.Hub.signal.RemoveHook(hook)},
+    StartupHook: function (hook) {MathJax.Hub.Startup.signal.RemoveHook(hook)},
+    LoadHook: function (hook) {MathJax.Ajax.removeHook(hook)}
   },
   
   getAllJax: function (element) {
