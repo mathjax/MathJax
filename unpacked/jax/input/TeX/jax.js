@@ -1672,6 +1672,7 @@
       } else {
         if (n) {this.Push(MML.mspace().With({depth:n}))}
         this.Push(MML.mo().With({linebreak:MML.LINEBREAK.NEWLINE}));
+        this.Push(MML.mo());  // make sure we don't look like an embellished operator (#707)
       }
     },
     emPerInch: 7.2,
