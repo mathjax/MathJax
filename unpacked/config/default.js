@@ -570,6 +570,14 @@ MathJax.Hub.Config({
   //
   AsciiMath: {
     //
+    //  Determines whether the unicode positions for phi and varphi are
+    //  to be swapped or not.  (Unicode originally had these reversed, and
+    //  many fonts have them reversed as well.)  When set to true, phi
+    //  and varphi will correspond to the LaTeX macros of the same name.
+    //
+    fixphi: true,
+    
+    //
     //  Determines whether limits are placed above and below operators,
     //  or next to them.  (AsciiMath doesn't have separate in-line and
     //  display modes like TeX and MathML do, so this is the only control
