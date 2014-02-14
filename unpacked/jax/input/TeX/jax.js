@@ -1535,7 +1535,7 @@
     MakeBig: function (name,mclass,size) {
       size *= TEXDEF.p_height;
       size = String(size).replace(/(\.\d\d\d).+/,'$1')+"em";
-      var delim = this.GetDelimiter(name);
+      var delim = this.GetDelimiter(name,true);
       this.Push(MML.TeXAtom(MML.mo(delim).With({
         minsize: size, maxsize: size,
         fence: true, stretchy: true, symmetric: true
@@ -1890,11 +1890,12 @@
     /*
      *  Get the name of a delimiter (check it in the delimiter list).
      */
-    GetDelimiter: function (name) {
+    GetDelimiter: function (name,braceOK) {
       while (this.nextIsSpace()) {this.i++}
-      var c = this.string.charAt(this.i);
-      if (this.i < this.string.length) {
-        this.i++; if (c == "\\") {c += this.GetCS(name)}
+      var c = this.string.charAt(this.i); this.i++;
+      if (this.i <= this.string.length) {
+        if (c == "\\") {c += this.GetCS(name)}
+        else if (c === "{" && braceOK) {this.i--; c = this.GetArgument(name)}
         if (TEXDEF.delimiter[c] != null) {return this.convertDelimiter(c)}
       }
       TEX.Error(["MissingOrUnrecognizedDelim",
