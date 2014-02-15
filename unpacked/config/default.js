@@ -76,15 +76,30 @@ MathJax.Hub.Config({
   //  A comma-separated list of input and output jax to initialize at startup.
   //  Their main code is loaded only when they are actually used, so it is not
   //  inefficient to include jax that may not actually be used on the page.  These
-  //  are found in the MathJax/jax directory.
+  //  are found in the MathJax/jax directory.  The choices include
   //  
-  jax: ["input/TeX","output/HTML-CSS"],
+  //      input/TeX
+  //      input/MathML
+  //      input/AsciiMath
+  //      
+  //      output/HTML-CSS
+  //      output/NativeMML
+  //      output/SVG
+  // 
+  //   If you change the input jax, you may need to include the appropriate
+  //   preprocessor in the extensions array below.
+  //  
+  jax: ["input/TeX", "output/HTML-CSS"],
   
   //
   //  A comma-separated list of extensions to load at startup.  The default
   //  directory is MathJax/extensions.
   //  
   //  Example:    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+  //  
+  //  You may wish to include "mml2jax.js" if you are using "input/MathML" in the
+  //  jax array above, and "asciimath2jax.js" if you using "input/AsciiMath".
+  //  Include "jsmath2jax.js" if you are converting from using jsMath to MathJax.
   //
   extensions: ["tex2jax.js"],
   
@@ -195,7 +210,7 @@ MathJax.Hub.Config({
   //  reposition the browser to the #hash location from the page URL after
   //  typesetting for the page.
   //  
-  positionToHash: false,
+  positionToHash: true,
   
   //
   //  These control whether to attach the MathJax contextual menu to the
