@@ -252,7 +252,7 @@
         },
         0x21D1: // \Uparrow
         {
-          dir: V, HW: [[.818,GENERAL]], stretch: {top:[0x21D1,GENERAL], ext:[0x2225,GENERAL,.1]}
+          dir: V, HW: [[.818,GENERAL]], stretch: {top:[0x21D1,GENERAL], ext:[0x2225,GENERAL,.082]}
         },
         0x21D2: // right double arrow
         {
@@ -260,7 +260,7 @@
         },
         0x21D3: // \Downarrow
         {
-          dir: V, HW: [[.818,GENERAL]], stretch: {ext:[0x2225,GENERAL,.1], bot:[0x21D3,GENERAL]}
+          dir: V, HW: [[.818,GENERAL]], stretch: {ext:[0x2225,GENERAL,.082], bot:[0x21D3,GENERAL]}
         },
         0x21D4: // left-right double arrow
         {
@@ -270,7 +270,7 @@
         0x21D5: // \Updownarrow
         {
           dir: V, HW: [[.818,GENERAL]],
-          stretch: {top:[0x21D1,GENERAL], ext:[0x2225,GENERAL,.1], bot:[0x21D3,GENERAL]}
+          stretch: {top:[0x21D1,GENERAL], ext:[0x2225,GENERAL,.082], bot:[0x21D3,GENERAL]}
         },
         0x221A: // \surd
         {
