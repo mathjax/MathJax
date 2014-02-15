@@ -29,7 +29,7 @@ MathJax.Extension["TeX/AMScd"] = {
   config: MathJax.Hub.CombineConfig("TeX.CD",{
     colspace: "5pt",
     rowspace: "5pt",
-    harrowsize: "2.25em",
+    harrowsize: "2.75em",
     varrowsize: "1.75em",
     hideHorizontalLabels: false
   })
@@ -80,7 +80,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
       var mml;
       var hdef = {minsize: top.minw, stretchy:true},
-          vdef = {minsize: top.minh, stretchy:true, symmetric:true};
+          vdef = {minsize: top.minh, stretchy:true, symmetric:true, lspace:0, rspace:0};
 
       if (c === ".") {}
       else if (c === "|") {mml = this.mmlToken(MML.mo("\u2225").With(vdef))}
@@ -130,6 +130,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.CD_cell(name);
     },
     CD_cell: function (name) {
+      var top = this.stack.Top();
+      if ((top.table||[]).length % 2 === 0 && (top.row||[]).length === 0) {
+        //
+        // Add a strut to the first cell in even rows to get
+        // better spacing of arrow rows.
+        // 
+        this.Push(MML.mpadded().With({height:"8.5pt",depth:"2pt"}));
+      }
       this.Push(STACKITEM.cell().With({isEntry:true, name:name}));
     },
 
