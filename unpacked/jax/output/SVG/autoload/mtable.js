@@ -72,8 +72,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
                 HD = mo.SVGdata.h + mo.SVGdata.d;
                 if (HD) {
                   min = SVG.length2em(min,mu,HD);
-                  if (min*mo.SVGdata.h/HD > H[j]) {H[j] = min*mo.SVGdata.h/HD}
-                  if (min*mo.SVGdata.d/HD > D[j]) {D[j] = min*mo.SVGdata.d/HD}
+                  if (min*mo.SVGdata.h/HD > H[i]) {H[i] = min*mo.SVGdata.h/HD}
+                  if (min*mo.SVGdata.d/HD > D[i]) {D[i] = min*mo.SVGdata.d/HD}
                 }
               } else if (mo.SVGcanStretch("Horizontal")) {
                 min = SVG.length2em(min,mu,mo.SVGdata.w);
