@@ -66,7 +66,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
 
     CD_arrow: function (name) {
-      var c = this.string[this.i];
+      var c = this.string.charAt(this.i);
       if (!c.match(/[><VA.|=]/)) {return this.Other(name)} else {this.i++}
 
       var top = this.stack.Top();
