@@ -41,16 +41,17 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var stack = HTMLCSS.createStack(span);
       var scale = this.HTMLgetScale(), mu = this.HTMLgetMu(span), LABEL = -1;
 
-      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row, cell, mo, entries = [];
-      var LHD = HTMLCSS.FONTDATA.baselineskip * scale * values.useHeight, HD,
-          LH = HTMLCSS.FONTDATA.lineH * scale, LD = HTMLCSS.FONTDATA.lineD * scale;
+      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1,
+          m, M, s, row, cell, mo, entries = [], HD;
+      var LH = HTMLCSS.FONTDATA.lineH * scale * values.useHeight,
+          LD = HTMLCSS.FONTDATA.lineD * scale * values.useHeight;
 
       //
       //  Create cells and measure columns and rows
       //
       for (i = 0, m = this.data.length; i < m; i++) {
         row = this.data[i]; s = (row.type === "mlabeledtr" ? LABEL : 0);
-        A[i] = []; H[i] = D[i] = 0;
+        A[i] = []; H[i] = LH; D[i] = LD;
         for (j = s, M = row.data.length + s; j < M; j++) {
           if (W[j] == null) {
             if (j > J) {J = j}
@@ -90,8 +91,6 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           if (A[i][j].bbox.w > W[j]) {W[j] = A[i][j].bbox.w}
         }
       }
-      if (H[0]+D[0]) {H[0] = Math.max(H[0],LH)}
-      if (H[A.length-1]+D[A.length-1]) {D[A.length-1] = Math.max(D[A.length-1],LD)}
 
       //
       //  Determine spacing and alignment
@@ -146,7 +145,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Determine array total height
       //
       HD = H[0] + D[A.length-1];
-      for (i = 0, m = A.length-1; i < m; i++) {HD += Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i])}
+      for (i = 0, m = A.length-1; i < m; i++) {HD += Math.max(0,D[i]+H[i+1]+RSPACE[i])}
       //
       //  Determine frame and line sizes
       //
@@ -179,7 +178,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         Y = 0; fY = -(HD + fy) + H[0];
         for (i = 0, m = n-1; i < m; i++) {
           // FIXME:  Should handle values.align for final row
-          var dY = Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i]);
+          var dY = Math.max(0,D[i]+H[i+1]+RSPACE[i]);
           Y += dY; fY += dY;
         }
       } else {
@@ -290,7 +289,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             align = (cell.columnalign||RCALIGN[i][j]||CALIGN[j]);
             HTMLCSS.alignBox(A[i][j],align,y+dy);
           }
-          if (i < A.length-1) {y -= Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i])}
+          if (i < A.length-1) {y -= Math.max(0,D[i]+H[i+1]+RSPACE[i])}
         }
         y = Y;
       }
@@ -399,7 +398,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       y = Y;
       for (i = 0, m = A.length-1; i < m; i++) {
-        dy = Math.max(LHD,D[i]+H[i+1]+RSPACE[i]);
+        dy = Math.max(0,D[i]+H[i+1]+RSPACE[i]);
         if (RLINES[i] !== "none") {
           line = HTMLCSS.createRule(stack,1.25/HTMLCSS.em,0,fW); HTMLCSS.addBox(stack,line);
           line.bbox = {h:1.25/HTMLCSS.em, d:0, w:fW, rw:fW, lw:0};
