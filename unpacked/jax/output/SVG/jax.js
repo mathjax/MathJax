@@ -893,7 +893,9 @@
       {
         var svg = this.svg[i], mml = svg.mml;
         if (mml) {
-          svg = mml.SVGstretchV(this.sh,this.sd);
+          if (mml.SVGdata.h !== this.sh || mml.SVGdata.d !== this.sd) {
+            svg = mml.SVGstretchV(this.sh,this.sd);
+          }
           mml.SVGdata.HW = this.sh; mml.SVGdata.D = this.sd;
         }
         if (svg.ic) {this.ic = svg.ic} else {delete this.ic}
@@ -1995,12 +1997,12 @@
     });
 
     MML.TeXAtom.Augment({
-      toSVG: function () {
+      toSVG: function (HW,D) {
         this.SVGgetStyles();
         var svg = this.SVG();
         this.SVGhandleSpace(svg);
 	if (this.data[0] != null) {
-          var box = this.data[0].toSVG(), y = 0;
+          var box = this.data[0].SVGdataStretched(0,HW,D), y = 0;
           if (this.texClass === MML.TEXCLASS.VCENTER) {
 	    // FIXME: should the axis height be scaled?
 	    y = SVG.TeX.axis_height - (box.h+box.d)/2 + box.d;

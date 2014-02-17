@@ -1614,9 +1614,13 @@
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span)}}
 	var stretchy = this.HTMLcomputeBBox(span);
-	var h = span.bbox.h, d = span.bbox.d;
-	for (i = 0, m = stretchy.length; i < m; i++) {stretchy[i].HTMLstretchV(span,h,d)}
-	if (stretchy.length) {this.HTMLcomputeBBox(span,true)}
+	var h = span.bbox.h, d = span.bbox.d, stretched = false;
+	for (i = 0, m = stretchy.length; i < m; i++) {
+          var bbox = stretchy[i].HTMLspanElement().bbox;
+          if (bbox.h !== h || bbox.d !== d)
+            {stretchy[i].HTMLstretchV(span,h,d); stretched = true}
+        }
+	if (stretched) {this.HTMLcomputeBBox(span,true)}
         if (this.HTMLlineBreaks(span)) {span = this.HTMLmultiline(span)}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
@@ -2740,23 +2744,31 @@
     });
 
     MML.TeXAtom.Augment({
-      toHTML: function (span) {
+      toHTML: function (span,HW,D) {
 	span = this.HTMLcreateSpan(span);
 	if (this.data[0] != null) {
 	  if (this.texClass === MML.TEXCLASS.VCENTER) {
 	    var stack = HTMLCSS.createStack(span);
 	    var box = HTMLCSS.createBox(stack);
-	    HTMLCSS.Measured(this.data[0].toHTML(box),box);
+            var child = this.data[0].toHTML(box);
+            if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(box,HW,D),box)}
+            else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(box,HW),box)}
+            else {HTMLCSS.Measured(child,box)}
 	    // FIXME: should the axis height be scaled?
 	    HTMLCSS.placeBox(box,0,HTMLCSS.TeX.axis_height-(box.bbox.h+box.bbox.d)/2+box.bbox.d);
 	  } else {
-	    span.bbox = this.data[0].toHTML(span).bbox;
+	    var html = this.data[0].toHTML(span,HW,D);
+            if (D != null) {html = this.data[0].HTMLstretchV(box,HW,D)}
+            else if (HW != null) {html = this.data[0].HTMLstretchH(box,HW)}
+            span.bbox = html.bbox;
 	  }
 	}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
 	return span;
-      }
+      },
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
     });
     
     //
