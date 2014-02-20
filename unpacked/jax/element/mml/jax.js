@@ -275,7 +275,7 @@ MathJax.ElementJax.mml.Augment({
     SetData: function (i,item) {
       if (item != null) {
         if (!(item instanceof MML.mbase))
-          {item = (this.isToken ? MML.chars(item) : MML.mtext(item))}
+          {item = (this.isToken || this.isChars ? MML.chars(item) : MML.mtext(item))}
         item.parent = this;
         item.setInherit(this.inheritFromMe ? this : this.inherit);
       }
@@ -1247,7 +1247,7 @@ MathJax.ElementJax.mml.Augment({
     }
   });
   MML.annotation = MML.mbase.Subclass({
-    type: "annotation", isToken: true,
+    type: "annotation", isChars: true,
     linebreakContainer: true,
     defaults: {
       definitionURL: null,
