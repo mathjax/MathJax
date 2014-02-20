@@ -1557,7 +1557,9 @@ MathJax.Message = {
   
   browsers: {
     MSIE: function (browser) {
-      MathJax.Hub.config.styles["#MathJax_Message"].position = "absolute";
+      MathJax.Message.msieFixedPositionBug = ((document.documentMode||0) < 7);
+      if (MathJax.Message.msieFixedPositionBug) 
+        {MathJax.Hub.config.styles["#MathJax_Message"].position = "absolute"}
       MathJax.Message.quirks = (document.compatMode === "BackCompat");
     },
     Chrome: function (browser) {
@@ -1580,7 +1582,7 @@ MathJax.Message = {
     }
     if (!this.div) {
       var frame = document.body;
-      if (MathJax.Hub.Browser.isMSIE && window.attachEvent) {
+      if (this.msieFixedPositionBug && window.attachEvent) {
         frame = this.frame = this.addDiv(document.body); frame.removeAttribute("id");
         frame.style.position = "absolute";
         frame.style.border = frame.style.margin = frame.style.padding = "0px";
