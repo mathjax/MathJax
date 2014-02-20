@@ -751,10 +751,27 @@ MathJax.ElementJax.mml.Augment({
       return this.SUPER(arguments).toString.call(this);
     },
     setTeXclass: function (prev) {
-      for (var i = 0, m = this.data.length; i < m; i++)
-        {if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}}
-      if (this.data[0]) {this.updateTeXclass(this.data[0])}
-      return prev;
+      var i, m = this.data.length;
+      if (this.open || this.close) {
+        //
+        // <mrow> came from \left...\right
+        // so treat as subexpression (tex class INNER)
+        //
+        this.getPrevClass(prev);
+        for (i = 0; i < m; i++)
+          {if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}}
+        this.texClass = MML.TEXCLASS.INNER;
+        return this;
+      } else {
+        //
+        //  Normal <mrow>, so treat as
+        //  thorugh mrow is not there
+        //
+        for (i = 0; i < m; i++)
+          {if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}}
+        if (this.data[0]) {this.updateTeXclass(this.data[0])}
+        return prev;
+      }
     },
     getAnnotation: function (name) {
       if (this.data.length != 1) return null;
@@ -947,6 +964,7 @@ MathJax.ElementJax.mml.Augment({
       }
       // get the data from the open item
       this.updateTeXclass(this.data.open);
+      this.texClass = MML.TEXCLASS.INNER;
       return prev;
     }
   });
