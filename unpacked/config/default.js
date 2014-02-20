@@ -593,6 +593,14 @@ MathJax.Hub.Config({
     fixphi: true,
     
     //
+    //  Determines whether the MathML should be marked so that the HTML-CSS
+    //  and SVG output jax will use MathML spacing rules rather than TeX
+    //  spacing rules.  Since AsciiMath was designed for MathML output, the
+    //  MathML rules are used by default.
+    //
+    useMathMLspacing: true,
+    
+    //
     //  Determines whether limits are placed above and below operators,
     //  or next to them.  (AsciiMath doesn't have separate in-line and
     //  display modes like TeX and MathML do, so this is the only control
