@@ -1630,18 +1630,20 @@
     MML.mfrac.Augment({
       toSVG: function () {
         this.SVGgetStyles();
-        var svg = this.SVG(); this.SVGhandleSpace(svg);
+        var svg = this.SVG();
+        var frac = BBOX(); this.SVGhandleSpace(frac);
         var num = this.SVGchildSVG(0), den = this.SVGchildSVG(1);
 	var values = this.getValues("displaystyle","linethickness","numalign","denomalign","bevelled");
-	var scale = svg.scale = this.SVGgetScale(), isDisplay = values.displaystyle;
+	var scale = svg.scale = frac.scale = this.SVGgetScale(),
+            isDisplay = values.displaystyle;
 	var a = SVG.TeX.axis_height * scale;
 	if (values.bevelled) {
 	  var delta = (isDisplay ? 400 : 150);
 	  var H = Math.max(num.h+num.d,den.h+den.d)+2*delta;
           var bevel = SVG.createDelimiter(0x2F,H);
-          svg.Add(num,0,(num.d-num.h)/2+a+delta);
-          svg.Add(bevel,num.w-delta/2,(bevel.d-bevel.h)/2+a);
-	  svg.Add(den,num.w+bevel.w-delta,(den.d-den.h)/2+a-delta);
+          frac.Add(num,0,(num.d-num.h)/2+a+delta);
+          frac.Add(bevel,num.w-delta/2,(bevel.d-bevel.h)/2+a);
+	  frac.Add(den,num.w+bevel.w-delta,(den.d-den.h)/2+a-delta);
 	} else {
 	  var W = Math.max(num.w,den.w);
 	  var t = SVG.thickness2em(values.linethickness,scale), p,q, u,v;
@@ -1653,27 +1655,30 @@
 	    p = Math.max((isDisplay ? 7 : 3) * SVG.TeX.rule_thickness, 2*mt); // force to at least 2 px
 	    q = (u - num.d) - (den.h - v);
 	    if (q < p) {u += (p - q)/2; v += (p - q)/2}
-            svg.w = W; t = 0;
+            frac.w = W; t = 0;
 	  } else {// \over
 	    p = Math.max((isDisplay ? 2 : 0) * mt + t, t/2 + 1.5*mt);  // force to be at least 1.5px
 	    q = (u - num.d) - (a + t/2); if (q < p) {u += p - q}
 	    q = (a - t/2) - (den.h - v); if (q < p) {v += p - q}
-	    svg.Add(BBOX.RECT(t/2,t/2,W+2*t),0,a);
+	    frac.Add(BBOX.RECT(t/2,t/2,W+2*t),0,a);
 	  }
-          svg.Align(num,values.numalign,t,u);
-          svg.Align(den,values.denomalign,t,-v);
+          frac.Align(num,values.numalign,t,u);
+          frac.Align(den,values.denomalign,t,-v);
 	}
-        svg.Clean();
+        frac.Clean(); svg.Add(frac,0,0); svg.Clean();
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
 	return svg;
       },
       SVGcanStretch: function (direction) {return false},
       SVGhandleSpace: function (svg) {
-	if (!this.texWithDelims) {
-	  svg.x = (this.useMMLspacing ? 0 : SVG.length2em(this.texSpacing()||0)) + 120;
-          svg.X = 120;
-	}
+      	if (!this.texWithDelims && !this.useMMLspacing) {
+          //
+          //  Add nulldelimiterspace around the fraction
+          //   (TeXBook pg 150 and Appendix G rule 15e)
+          //
+          svg.x = svg.X = SVG.TeX.nulldelimiterspace;
+        }
       }
     });
 
