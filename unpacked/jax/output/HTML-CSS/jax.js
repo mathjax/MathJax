@@ -2373,10 +2373,15 @@
       },
       HTMLcanStretch: function (direction) {return false},
       HTMLhandleSpace: function (span) {
-	if (!this.texWithDelims) {
-	  var space = (this.useMMLspacing ? 0 : HTMLCSS.length2em(this.texSpacing()||0)) + .12;
-	  span.style.paddingLeft  = HTMLCSS.Em(space);
-	  span.style.paddingRight = HTMLCSS.Em(.12);
+	if (!this.texWithDelims && !this.useMMLspacing) {
+          //
+          //  Add nulldelimiterspace around the fraction
+          //  (TeXBook pg 150 and Appendix G rule 15e)
+          //
+          var space = HTMLCSS.TeX.nulldelimiterspace;
+          var style = span.firstChild.style;
+          style.marginLeft = style.marginRight = HTMLCSS.Em(space);
+          span.bbox.w += 2*space; span.bbox.r += 2*space;
 	}
       }
     });
