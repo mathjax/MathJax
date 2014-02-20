@@ -279,6 +279,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
               mo = cell.CoreMO();
               var symmetric = mo.symmetric; mo.symmetric = false;
               A[i][j].bbox = cell.HTMLstretchV(C[j],H[i],D[i]).bbox; A[i][j].HH = null;
+              if (A[i][j].bbox.h > H[i]) {A[i][j].bbox.H = A[i][j].bbox.h; A[i][j].bbox.h = H[i]}
+              if (A[i][j].bbox.d > D[i]) {A[i][j].bbox.D = A[i][j].bbox.d; A[i][j].bbox.d = D[i]}
               mo.symmetric = symmetric;
             }
             align = cell.rowalign||this.data[i].rowalign||RALIGN[i];
