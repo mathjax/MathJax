@@ -2885,7 +2885,7 @@
         HTMLCSS.Augment({
           Em: HTMLCSS.EmRounded,   // vertical alignment needs help (since around v20)
           cloneNodeBug: true,      // Chrome gets heights wrong with the cloned ones
-          rfuzz: .011,
+          rfuzz: -.02,
           AccentBug: true,
           AdjustSurd: true,
           FontFaceBug: (browser.version.substr(0,3) === "32."), // Chrome 32 fails on bold-italic (#735)
