@@ -38,10 +38,10 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       if (space == null) {space = ""}
       var tag = this.type, attr = this.toMathMLattributes();
       if (tag === "mspace") {return space + "<"+tag+attr+" />"}
-      var data = []; var SPACE = (this.isToken ? "" : space+(inferred ? "" : "  "));
+      var data = [], SPACE = (this.isToken ? "" : space+(inferred ? "" : "  "));
       for (var i = 0, m = this.data.length; i < m; i++) {
         if (this.data[i]) {data.push(this.data[i].toMathML(SPACE))}
-          else if (!this.isToken) {data.push(SPACE+"<mrow />")}
+          else if (!this.isToken && !this.isChars) {data.push(SPACE+"<mrow />")}
       }
       if (this.isToken) {return space + "<"+tag+attr+">"+data.join("")+"</"+tag+">"}
       if (inferred) {return data.join("\n")}
