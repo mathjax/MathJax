@@ -241,8 +241,8 @@
     if (HUB.Browser.isMSIE) {
       if (CONFIG.messageStyle.position === "fixed") {
         MathJax.Message.Init();  // make sure MathJax_MSIE_frame exists
-        frame = document.getElementById("MathJax_MSIE_Frame");
-        CONFIG.messageStyle.position = "absolute";
+        frame = document.getElementById("MathJax_MSIE_Frame") || frame;
+        if (frame !== document.body) {CONFIG.messageStyle.position = "absolute"}
       }
     } else {delete CONFIG.messageStyle.filter}
     CONFIG.messageStyle.maxWidth = (document.body.clientWidth-75) + "px";
