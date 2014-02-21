@@ -160,7 +160,11 @@
   //
   var document = {
     getElementById: true,
-    createElementNS: function (ns,type) {return MML[type]()},
+    createElementNS: function (ns,type) {
+      var node = MML[type]();
+      if (type === "mo" && ASCIIMATH.config.useMathMLspacing) {node.useMMLspacing = 0x80}
+      return node;
+    },
     createTextNode: function (text) {return MML.chars(text).With({nodeValue:text})},
     createDocumentFragment: function () {return DOCFRAG()}
   };

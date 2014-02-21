@@ -36,6 +36,7 @@ MathJax.InputJax.AsciiMath = MathJax.InputJax({
   
   config: {
     fixphi: true,                     // switch phi and varphi unicode values
+    useMathMLspacing: true,           // use MathML spacing rather than TeX spacing?
     displaystyle: true,               // put limits above and below operators
     decimalsign: "."                  // can change to "," but watch out for "(1,2)"
   }
