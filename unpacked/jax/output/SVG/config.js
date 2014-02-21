@@ -64,6 +64,19 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
         margin:       "1em 0em"
       },
       
+      //
+      //  For mtextFontInherit version of \texttt{}
+      //
+      ".MathJax_SVG .MJX-monospace": {
+        "font-family": "monospace"
+      },
+      
+      //
+      //  For mtextFontInherit version of \textsf{}
+      //
+      ".MathJax_SVG .MJX-sans-serif": {
+        "font-family": "sans-serif"
+      },
       "#MathJax_SVG_Tooltip": {
         "background-color": "InfoBackground", color: "InfoText",
         border: "1px solid black",

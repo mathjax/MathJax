@@ -46,7 +46,7 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
 MathJax.version = "2.3";
-MathJax.fileversion = "2.3.1";
+MathJax.fileversion = "2.3.2";
 
 /**********************************************************/
 
@@ -543,7 +543,7 @@ MathJax.fileversion = "2.3.1";
     call: function () {this.callback(this); this.Process()},
     
     //
-    //  A listener calls this to register intrest in the signal (so it will be called
+    //  A listener calls this to register interest in the signal (so it will be called
     //  when posts occur).  If ignorePast is true, it will not be sent the post history.
     //
     Interest: function (callback,ignorePast,priority) {
@@ -580,7 +580,7 @@ MathJax.fileversion = "2.3.1";
     //
     //  Execute the message hooks for the given message
     //
-    ExecuteHooks: function (msg,more) {
+    ExecuteHooks: function (msg) {
       var type = ((msg instanceof Array) ? msg[0] : msg);
       if (!this.hooks[type]) {return null}
       return this.hooks[type].Execute(msg);
@@ -1135,7 +1135,7 @@ MathJax.Localization = {
       var result = [], match, last = 0;
       regex.lastIndex = 0;
       while (match = regex.exec(string)) {
-        result.push(string.substr(last,match.index));
+        result.push(string.substr(last,match.index-last));
         result.push.apply(result,match.slice(1));
         last = match.index + match[0].length;
       }
@@ -1557,7 +1557,9 @@ MathJax.Message = {
   
   browsers: {
     MSIE: function (browser) {
-      MathJax.Hub.config.styles["#MathJax_Message"].position = "absolute";
+      MathJax.Message.msieFixedPositionBug = ((document.documentMode||0) < 7);
+      if (MathJax.Message.msieFixedPositionBug) 
+        {MathJax.Hub.config.styles["#MathJax_Message"].position = "absolute"}
       MathJax.Message.quirks = (document.compatMode === "BackCompat");
     },
     Chrome: function (browser) {
@@ -1580,7 +1582,7 @@ MathJax.Message = {
     }
     if (!this.div) {
       var frame = document.body;
-      if (MathJax.Hub.Browser.isMSIE) {
+      if (this.msieFixedPositionBug && window.attachEvent) {
         frame = this.frame = this.addDiv(document.body); frame.removeAttribute("id");
         frame.style.position = "absolute";
         frame.style.border = frame.style.margin = frame.style.padding = "0px";
@@ -2359,21 +2361,6 @@ MathJax.Hub.Startup = {
       MathJax.Hub.config.menuSettings.locale = this.params.locale;
     }
     //
-    //  Check for user cookie configuration
-    //
-    var user = MathJax.HTML.Cookie.Get("user");
-    if (user.URL || user.Config) {
-      if (confirm(
-        MathJax.Localization._("CookieConfig",
-          "MathJax has found a user-configuration cookie that includes code to "+
-          "be run. Do you want to run it?\n\n"+
-          "(You should press Cancel unless you set up the cookie yourself.)")
-      )) {
-        if (user.URL) {this.queue.Push(["Require",MathJax.Ajax,user.URL])}
-        if (user.Config) {this.queue.Push(new Function(user.Config))}
-      } else {MathJax.HTML.Cookie.Set("user",{})}
-    }
-    //
     //  Run the config files, if any are given in the parameter list
     //
     if (this.params.config) {
@@ -2554,26 +2541,28 @@ MathJax.Hub.Startup = {
   //  if needed later on.
   //
   MenuZoom: function () {
-    if (!MathJax.Extension.MathMenu) {
-      setTimeout(
-        function () {
-          MathJax.Callback.Queue(
-            ["Require",MathJax.Ajax,"[MathJax]/extensions/MathMenu.js",{}],
-            ["loadDomain",MathJax.Localization,"MathMenu"]
-          )
-        },1000
-      );
-    } else {
-      setTimeout(
-        MathJax.Callback(["loadDomain",MathJax.Localization,"MathMenu"]),
-        1000
-      );
-    }
-    if (!MathJax.Extension.MathZoom) {
-      setTimeout(
-        MathJax.Callback(["Require",MathJax.Ajax,"[MathJax]/extensions/MathZoom.js",{}]),
-        2000
-      );
+    if (MathJax.Hub.config.showMathMenu) {
+      if (!MathJax.Extension.MathMenu) {
+        setTimeout(
+          function () {
+            MathJax.Callback.Queue(
+              ["Require",MathJax.Ajax,"[MathJax]/extensions/MathMenu.js",{}],
+              ["loadDomain",MathJax.Localization,"MathMenu"]
+            )
+          },1000
+        );
+      } else {
+        setTimeout(
+          MathJax.Callback(["loadDomain",MathJax.Localization,"MathMenu"]),
+          1000
+        );
+      }
+      if (!MathJax.Extension.MathZoom) {
+        setTimeout(
+          MathJax.Callback(["Require",MathJax.Ajax,"[MathJax]/extensions/MathZoom.js",{}]),
+          2000
+        );
+      }
     }
   },
   
@@ -2954,24 +2943,24 @@ MathJax.Hub.Startup = {
         }
       }
       CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'')
-        .replace(/^(https?:\/\/(cdn.mathjax.org|c328740.ssl.cf1.rackcdn.com)\/mathjax\/)(latest)/,
-                 "$1"+BASE.version+"-$3");
+        .replace(/^(https?:\/\/(cdn.mathjax.org|[0-9a-f]+(-[0-9a-f]+)?.ssl.cf1.rackcdn.com)\/mathjax\/)(latest)/,
+                 "$1"+BASE.version+"-$4");
       break;
     }
   }
   BASE.Ajax.config = CONFIG;
 
+  var AGENT = navigator.userAgent;
   var BROWSERS = {
     isMac:       (navigator.platform.substr(0,3) === "Mac"),
     isPC:        (navigator.platform.substr(0,3) === "Win"),
-    isMSIE:      (window.ActiveXObject != null && window.clipboardData != null),
-    isFirefox:   (navigator.userAgent.match(/Gecko/) != null &&
-                  navigator.userAgent.match(/KHTML/) == null),
-    isSafari:    (navigator.userAgent.match(/ (Apple)?WebKit\//) != null &&
+    isMSIE:      ("ActiveXObject" in window && "clipboardData" in window),
+    isFirefox:   (AGENT.match(/Gecko\//) && !AGENT.match(/like Gecko/)),
+    isSafari:    (AGENT.match(/ (Apple)?WebKit\//) != null &&
                      (!window.chrome || window.chrome.loadTimes == null)),
     isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
     isOpera:     (window.opera != null && window.opera.version != null),
-    isKonqueror: (window.hasOwnProperty && window.hasOwnProperty("konqueror") && navigator.vendor == "KDE"),
+    isKonqueror: ("konqueror" in window && navigator.vendor == "KDE"),
     versionAtLeast: function (v) {
       var bv = (this.version).split('.'); v = (new String(v)).split('.');
       for (var i = 0, m = v.length; i < m; i++)
@@ -2985,7 +2974,7 @@ MathJax.Hub.Startup = {
     }
   };
 
-  var AGENT = navigator.userAgent
+  var xAGENT = AGENT
     .replace(/^Mozilla\/(\d+\.)+\d+ /,"")                                   // remove initial Mozilla, which is never right
     .replace(/[a-z][-a-z0-9._: ]+\/\d+[^ ]*-[^ ]*\.([a-z][a-z])?\d+ /i,"")  // remove linux version
     .replace(/Gentoo |Ubuntu\/(\d+\.)*\d+ (\([^)]*\) )?/,"");               // special case for these
@@ -2997,11 +2986,11 @@ MathJax.Hub.Startup = {
       if (browser === "Mac" || browser === "PC") continue;
       HUB.Browser = HUB.Insert(new String(browser),BROWSERS);
       var VERSION = new RegExp(
-        ".*(Version)/((?:\\d+\\.)+\\d+)|" +                                       // for Safari and Opera10
+        ".*(Version/| Trident/.*; rv:)((?:\\d+\\.)+\\d+)|" +                      // for Safari, Opera10, and IE11+
         ".*("+browser+")"+(browser == "MSIE" ? " " : "/")+"((?:\\d+\\.)*\\d+)|"+  // for one of the main browser
         "(?:^|\\(| )([a-z][-a-z0-9._: ]+|(?:Apple)?WebKit)/((?:\\d+\\.)+\\d+)");  // for unrecognized browser
-      var MATCH = VERSION.exec(AGENT) || ["","","","unknown","0.0"];
-      HUB.Browser.name = (MATCH[1] == "Version" ? browser : (MATCH[3] || MATCH[5]));
+      var MATCH = VERSION.exec(xAGENT) || ["","","","unknown","0.0"];
+      HUB.Browser.name = (MATCH[1] != "" ? browser : (MATCH[3] || MATCH[5]));
       HUB.Browser.version = MATCH[2] || MATCH[4] || MATCH[6];
       break;
     }
@@ -3025,9 +3014,9 @@ MathJax.Hub.Startup = {
       browser.noContextMenu = browser.isMobile;
     },
     Firefox: function (browser) {
-      if ((browser.version === "0.0" || navigator.userAgent.match(/Firefox/) == null) &&
+      if ((browser.version === "0.0" || AGENT.match(/Firefox/) == null) &&
            navigator.product === "Gecko") {
-        var rv = navigator.userAgent.match(/[\/ ]rv:(\d+\.\d.*?)[\) ]/);
+        var rv = AGENT.match(/[\/ ]rv:(\d+\.\d.*?)[\) ]/);
         if (rv) {browser.version = rv[1]}
         else {
           var date = (navigator.buildID||navigator.productSub||"0").substr(0,8);
@@ -3044,8 +3033,8 @@ MathJax.Hub.Startup = {
         }
       }
       browser.isMobile = (navigator.appVersion.match(/Android/i) != null ||
-                          navigator.userAgent.match(/ Fennec\//) != null ||
-                          navigator.userAgent.match(/Mobile/) != null);
+                          AGENT.match(/ Fennec\//) != null ||
+                          AGENT.match(/Mobile/) != null);
     },
     Opera: function (browser) {browser.version = opera.version()},
     MSIE: function (browser) {

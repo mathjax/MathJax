@@ -101,20 +101,23 @@
           "white-space":     "nowrap",
           "float":           "none",
           "direction":       "ltr",
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           border: 0, padding: 0, margin: 0
         },
         
         "span.MathJax_MathML": {
-          display: "inline"
+          display: "inline!important"
         },
         
         "div.MathJax_MathML": {
-          display: "block"
+          display: "block!important"
         },
         
         ".MathJax_mmlExBox": {
-          display:"block", overflow:"hidden",
+          display:"block!important", overflow:"hidden",
           height:"1px", width:"60ex",
+          "min-height": 0, "max-height":"none",
           padding:0, border: 0, margin: 0
         }
       }
@@ -286,8 +289,8 @@
       //  Get the jax and the container and set the size
       //
       var jax = script.MathJax.elementJax, math = jax.root;
-      var span = document.getElementById(jax.inputID+"-Frame"),
-	  container = span.firstChild, mspan = container.firstChild;
+      var span = document.getElementById(jax.inputID+"-Frame"); if (!span) return;
+      var container = span.firstChild, mspan = container.firstChild;
       this.ex = jax.NativeMML.ex || this.defaultEx;
       this.scale = jax.NativeMML.scale || 1;
       if (this.scale !== 1) {span.style.fontSize = jax.NativeMML.fontSize}
@@ -974,8 +977,9 @@
             tag = nMML.adjustWidths[i];
             var style = tag.getAttribute("style") || "";
             if (!style.match(/(^|;)\s*min-width:/)) {
-              mtd.push(tag.scrollWidth);
-              var width = (tag.scrollWidth/nMML.ex).toFixed(3)+"ex";
+              var width = tag.firstChild.scrollWidth;
+              mtd.push(width);
+              width = (width/nMML.ex).toFixed(3)+"ex";
               style = style.replace(/;?\s*$/,"; ");
               tag.setAttribute("style",style+"min-width:"+width);
             }

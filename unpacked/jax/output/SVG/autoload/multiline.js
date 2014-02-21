@@ -86,10 +86,13 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Start with a fresh SVG element
       //  and make it full width if we are breaking to a specific width
+      //    in the top-level math element
       //
       svg = this.SVG();
-      if (SVG.linebreakWidth < SVG.BIGDIMEN) {svg.w = SVG.linebreakWidth}
-        else {svg.w = SVG.cwidth/SVG.em * 1000}
+      if (isTop && parent.type !== "mtd") {
+        if (SVG.linebreakWidth < SVG.BIGDIMEN) {svg.w = SVG.linebreakWidth}
+          else {svg.w = SVG.cwidth/SVG.em * 1000}
+      }
 
       var state = {
             n: 0, Y: 0,
@@ -504,7 +507,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Get the default penalty for this location
       //
-      var W = info.scanW, mo = (info.embellished||this); delete info.embellished;
+      var W = info.scanW, mo = info.embellished; delete info.embellished;
+      if (!mo || !mo.SVGdata) {mo = this}
       var svg = mo.SVGdata, w = svg.w + svg.x;
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
       if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)

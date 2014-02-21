@@ -42,12 +42,19 @@
     FontInfo: {
       STIX: {family: "STIXSizeOneSym", testString: "() {} []"},
       TeX:  {family: "MathJax_Size1",  testString: "() {} []"},
-      "STIX-Web":  {family: "STIXWeb_Size1",  testString: "() {} []"},
-      "Asana-Math":  {family: "AsanaMath_Size1",  testString: "() {} []"},
-      "Gyre-Pagella":  {family: "GyrePagella_Size1",  testString: "() {} []"},
-      "Gyre-Termes":  {family: "GyreTermes_Size1",  testString: "() {} []"},
-      "Latin-Modern":  {family: "LatinModern_Size1",  testString: "() {} []"},
-      "Neo-Euler":  {family: "NeoEuler_Size1",  testString: "() {} []"}
+      //
+      //  These are the new web fonts.  The strange use of single quotes is because the
+      //  testing routine adds quotes at the beginning and ending, so for this list of
+      //  names, we need to take those into account.  We need a list because the names are
+      //  not handled consistently between Mac and Windows in the font data, as they are
+      //  in the TeX and original STIX fonts (sigh).
+      //
+      "STIX-Web":     {family: "STIX MathJax Size1','STIXMathJax_Size1-Regular",  testString: "() {} []"},
+      "Asana-Math":   {family: "Asana MathJax Size1','AsanaMathJax_Size1-Regular'",  testString: "() {} []"},
+      "Gyre-Pagella": {family: "Gyre Pagella MathJax Size1','GyrePagellaMathJax_Size1-Regular",  testString: "() {} []"},
+      "Gyre-Termes":  {family: "Gyre Termes MathJax Size1','GyreTermesMathJax_Size1-Regular",  testString: "() {} []"},
+      "Latin-Modern": {family: "Latin Modern MathJax Size1','LatinModernMathJax_Size1-Regular",  testString: "() {} []"},
+      "Neo-Euler":    {family: "Neo Euler MathJax Size1','NeoEulerMathJax_Size1-Regular",  testString: "() {} []"}
     },
     comparisonFont: ["sans-serif","monospace","script","Times","Courier","Arial","Helvetica"],
     testSize: ["40px","50px","60px","30px","20px"],
@@ -84,19 +91,22 @@
         this.div.style.fontStyle  = (font.style||"normal");
       }
       var W = this.getComparisonWidths(font.testString,font.noStyleChar);
+      var found = null;
       if (W) {
         this.div.style.fontFamily = "'"+font.family+"',"+this.comparisonFont[0];
         if (this.div.offsetWidth == W[0]) {
           this.div.style.fontFamily = "'"+font.family+"',"+this.comparisonFont[W[2]];
-          if (this.div.offsetWidth == W[1]) {return false}
+          if (this.div.offsetWidth == W[1]) {found = false}
         }
-        if (this.div.offsetWidth != W[3] || this.div.offsetHeight != W[4]) {
-          if (font.noStyleChar || !HTMLCSS.FONTDATA || !HTMLCSS.FONTDATA.hasStyleChar) {return true}
-          for (var i = 0, m = this.testSize.length; i < m; i++)
-            {if (this.testStyleChar(font,this.testSize[i])) {return true}}
+        if (found === null && (this.div.offsetWidth != W[3] || this.div.offsetHeight != W[4])) {
+          if (!font.noStyleChar && HTMLCSS.FONTDATA && HTMLCSS.FONTDATA.hasStyleChar) {
+            for (var i = 0, m = this.testSize.length; i < m; i++)
+              {if (this.testStyleChar(font,this.testSize[i])) {found = true; m = 0}}
+          } else {found = true}
         }
       }
-      return false;
+      if (HTMLCSS.safariTextNodeBug) {this.div.innerHTML = ""} else {this.text.nodeValue = ""}
+      return found;
     },
 
     styleChar:   "\uEFFD", // width encodes style
@@ -224,23 +234,30 @@
           "white-space":     "nowrap",
           "float":           "none",
           "direction":       "ltr",
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           border: 0, padding: 0, margin: 0
         },
 
         ".MathJax_Display": {
           position: "relative",
-          display: "block",
+          display: "block!important",
+          "text-indent": 0,
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           width: "100%"
         },
 
         ".MathJax img, .MathJax nobr, .MathJax a": {
-          border: 0, padding: 0, margin: 0, "max-width": "none", "max-height": "none",
+          border: 0, padding: 0, margin: 0,
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           "vertical-align": 0, "line-height": "normal",
           "text-decoration": "none"
         },
         "img.MathJax_strut": {
-          border:"0 !important", padding:"0 !important", margin: "0 !important",
-          "vertical-align": "0 !important"
+          border:"0!important", padding:"0!important", margin:"0!important",
+          "vertical-align": "0!important"
         },
         
 	".MathJax span": {
@@ -251,12 +268,12 @@
 	},
 
         ".MathJax nobr": {
-          "white-space": "nowrap ! important"
+          "white-space": "nowrap!important"
         },
         
         ".MathJax img": {
-          display: "inline ! important",
-          "float": "none ! important"
+          display: "inline!important",
+          "float": "none!important"
         },
         
         ".MathJax *": {
@@ -274,12 +291,14 @@
         ".MathJax_Processed": {display:"none!important"},
         
         ".MathJax_ExBox": {
-          display:"block", overflow:"hidden",
-          width:"1px", height:"60ex"
+          display:"block!important", overflow:"hidden",
+          width:"1px", height:"60ex",
+          "min-height": 0, "max-height":"none"
         },
         ".MathJax .MathJax_EmBox": {
-          display:"block", overflow:"hidden",
-          width:"1px", height:"60em"
+          display:"block!important", overflow:"hidden",
+          width:"1px", height:"60em",
+          "min-height": 0, "max-height":"none"
         },
         
         ".MathJax .MathJax_HitBox": {
@@ -579,7 +598,8 @@
       //
       var jax = script.MathJax.elementJax, math = jax.root,
           span = document.getElementById(jax.inputID+"-Frame"),
-          div = (jax.HTMLCSS.display ? span.parentNode : span);
+          div = (jax.HTMLCSS.display ? (span||{}).parentNode : span);
+      if (!div) return;
       //
       //  Set the font metrics
       //
@@ -1337,24 +1357,16 @@
           }
         }
         if (variant.remap && variant.remap[n]) {
-          if (variant.remap[n] instanceof Array) {
-            var remap = variant.remap[n];
-            n = remap[0]; variant = this.FONTDATA.VARIANT[remap[1]];
-          } else if (typeof(variant.remap[n]) === "string") {
-            text = variant.remap[n]+text.substr(i+1);
-            i = 0; m = text.length; n = text.charCodeAt(0);
-          } else {
-            n = variant.remap[n];
-            if (variant.remap.variant) {variant = this.FONTDATA.VARIANT[variant.remap.variant]}
-          }
-        }
-        if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
+          n = variant.remap[n];
+          if (variant.remap.variant) {variant = this.FONTDATA.VARIANT[variant.remap.variant]}
+        } else if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
           n = this.FONTDATA.REMAP[n];
-          if (n instanceof Array) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]}
-          if (typeof(n) === "string") {
-            text = n+text.substr(i+1);
-            i = 0; m = text.length; n = n.charCodeAt(0);
-          }
+        }
+        if (n instanceof Array) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]} 
+        if (typeof(n) === "string") {
+          text = n+text.substr(i+1);
+          m = text.length; i = -1;
+          continue;
         }
         font = this.lookupChar(variant,n); c = font[n];
         if (force || (!this.checkFont(font,SPAN.style) && !c[5].img)) {
@@ -1602,9 +1614,13 @@
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span)}}
 	var stretchy = this.HTMLcomputeBBox(span);
-	var h = span.bbox.h, d = span.bbox.d;
-	for (i = 0, m = stretchy.length; i < m; i++) {stretchy[i].HTMLstretchV(span,h,d)}
-	if (stretchy.length) {this.HTMLcomputeBBox(span,true)}
+	var h = span.bbox.h, d = span.bbox.d, stretched = false;
+	for (i = 0, m = stretchy.length; i < m; i++) {
+          var bbox = stretchy[i].HTMLspanElement().bbox;
+          if (bbox.h !== h || bbox.d !== d)
+            {stretchy[i].HTMLstretchV(span,h,d); stretched = true}
+        }
+	if (stretched) {this.HTMLcomputeBBox(span,true)}
         if (this.HTMLlineBreaks(span)) {span = this.HTMLmultiline(span)}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
@@ -2158,8 +2174,12 @@
         span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); 
         var variant = this.HTMLgetVariant();
         //  Avoid setting the font style for error text or if mtextFontInherit is set
-        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror")
-          {variant = {bold:variant.bold, italic:variant.italic, fontInherit: true}}
+        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror") {
+          var vname = this.Get("mathvariant");
+          if (vname === "monospace") {span.className += " MJX-monospace"}
+            else if (vname.match(/sans-serif/)) {span.className += " MJX-sans-serif"}
+          variant = {bold:variant.bold, italic:variant.italic, fontInherit: true};
+        }
         for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
         if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
@@ -2357,10 +2377,15 @@
       },
       HTMLcanStretch: function (direction) {return false},
       HTMLhandleSpace: function (span) {
-	if (!this.texWithDelims) {
-	  var space = (this.useMMLspacing ? 0 : HTMLCSS.length2em(this.texSpacing()||0)) + .12;
-	  span.style.paddingLeft  = HTMLCSS.Em(space);
-	  span.style.paddingRight = HTMLCSS.Em(.12);
+	if (!this.texWithDelims && !this.useMMLspacing) {
+          //
+          //  Add nulldelimiterspace around the fraction
+          //  (TeXBook pg 150 and Appendix G rule 15e)
+          //
+          var space = HTMLCSS.TeX.nulldelimiterspace;
+          var style = span.firstChild.style;
+          style.marginLeft = style.marginRight = HTMLCSS.Em(space);
+          span.bbox.w += 2*space; span.bbox.r += 2*space;
 	}
       }
     });
@@ -2724,23 +2749,31 @@
     });
 
     MML.TeXAtom.Augment({
-      toHTML: function (span) {
+      toHTML: function (span,HW,D) {
 	span = this.HTMLcreateSpan(span);
 	if (this.data[0] != null) {
 	  if (this.texClass === MML.TEXCLASS.VCENTER) {
 	    var stack = HTMLCSS.createStack(span);
 	    var box = HTMLCSS.createBox(stack);
-	    HTMLCSS.Measured(this.data[0].toHTML(box),box);
+            var child = this.data[0].toHTML(box);
+            if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(box,HW,D),box)}
+            else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(box,HW),box)}
+            else {HTMLCSS.Measured(child,box)}
 	    // FIXME: should the axis height be scaled?
 	    HTMLCSS.placeBox(box,0,HTMLCSS.TeX.axis_height-(box.bbox.h+box.bbox.d)/2+box.bbox.d);
 	  } else {
-	    span.bbox = this.data[0].toHTML(span).bbox;
+	    var html = this.data[0].toHTML(span,HW,D);
+            if (D != null) {html = this.data[0].HTMLstretchV(box,HW,D)}
+            else if (HW != null) {html = this.data[0].HTMLstretchH(box,HW)}
+            span.bbox = html.bbox;
 	  }
 	}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
 	return span;
-      }
+      },
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
     });
     
     //
@@ -2869,9 +2902,10 @@
         HTMLCSS.Augment({
           Em: HTMLCSS.EmRounded,   // vertical alignment needs help (since around v20)
           cloneNodeBug: true,      // Chrome gets heights wrong with the cloned ones
-          rfuzz: .011,
+          rfuzz: -.02,
           AccentBug: true,
           AdjustSurd: true,
+          FontFaceBug: (browser.version.substr(0,3) === "32."), // Chrome 32 fails on bold-italic (#735)
           negativeBBoxes: true,
           safariNegativeSpaceBug: true,
           safariWebFontSerif: [""],

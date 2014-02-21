@@ -75,6 +75,20 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
         "font-size":  "90%"
       },
       
+      //
+      //  For mtextFontInherit version of \texttt{}
+      //
+      ".MathJax .MJX-monospace": {
+        "font-family": "monospace"
+      },
+      
+      //
+      //  For mtextFontInherit version of \textsf{}
+      //
+      ".MathJax .MJX-sans-serif": {
+        "font-family": "sans-serif"
+      },
+      
       "#MathJax_Tooltip": {
         "background-color": "InfoBackground", color: "InfoText",
         border: "1px solid black",
