@@ -440,8 +440,10 @@
     //  Preload images so they show up with the menu
     //
     getImages: function () {
-      var menu = new Image();
-      menu.src = CONFIG.button.src;
+      if (SETTINGS.discoverable) {
+        var menu = new Image();
+        menu.src = CONFIG.button.src;
+      }
     }
 
   };
