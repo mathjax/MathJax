@@ -95,7 +95,7 @@
     MML.mbase.Augment({
       firstChild: null,
       lastChild: null,
-      nodeValue: "",
+      nodeValue: null,
       nextSibling: null,
       Init: function () {
         var obj = MBASEINIT.apply(this,arguments) || this;
@@ -117,7 +117,6 @@
           if (!this.firstChild) {this.firstChild = node}
           this.Append(node);
           this.lastChild = node;
-          this.nodeValue += node.nodeValue;
         }
         return node;
       },
@@ -132,9 +131,6 @@
             else {this.lastChild = this.childNodes[this.childNodes.length-1]}
         }
         if (i) {this.childNodes[i-1].nextSibling = node.nextSibling}
-        this.nodeValue = "";
-        for (i = 0, m = this.childNodes.length; i < m; i++)
-          {this.nodeValue += this.childNodes[i].nodeValue}
         node.nextSibling = node.parent = null;
         return node;
       },
@@ -145,9 +141,6 @@
         if (i) {this.childNodes[i-1].nextSibling = node} else {this.firstChild = node}
         if (i >= m-1) {this.lastChild = node}
         this.SetData(i,node); node.nextSibling = old.nextSibling;
-        this.nodeValue = "";
-        for (i = 0, m = this.childNodes.length; i < m; i++)
-          {this.nodeValue += this.childNodes[i].nodeValue}
         old.nextSibling = old.parent = null;
         return old;
       },
