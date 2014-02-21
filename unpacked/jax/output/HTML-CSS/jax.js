@@ -450,6 +450,23 @@
     //
     InitializeHTML: function () {
       this.PreloadWebFonts();
+      this.getDefaultExEm();
+      //
+      //  If the defaultEm size is zero, it might be that a web font hasn't
+      //  arrived yet, so try to wait for it, but don't wait too long.
+      //
+      if (this.defaultEm) return;
+      var ready = MathJax.Callback();
+      AJAX.timer.start(AJAX,function (check) {
+        if (check.time(ready)) {HUB.signal.Post("HTML-CSS Jax - no default em size"); return}
+        HTMLCSS.getDefaultExEm();
+        if (HTMLCSS.defaultEm) {ready()} else {setTimeout(check,check.delay)}
+      },this.defaultEmDelay,this.defaultEmTimeout);
+      return ready;
+    },
+    defaultEmDelay: 100,      // initial delay when checking for defaultEm
+    defaultEmTimeout: 1000,   // when to stop looking for defaultEm
+    getDefaultExEm: function () {
       //
       //  Get the default sizes (need styles in place to do this)
       //
