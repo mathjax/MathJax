@@ -370,7 +370,7 @@
       if (this.adjustAvailableFonts) {this.adjustAvailableFonts(config.availableFonts)}
       if (settings.scale) {config.scale = settings.scale}
       if (font && font !== "Auto" && this.fontName[font]) {
-        config.availableFonts = [];
+        config.availableFonts = []; delete config.fonts;
         if (this.fontName[font] instanceof Array) {
           config.preferredFont = this.fontName[font][0];
           config.webFont = this.fontName[font][1];
@@ -378,6 +378,11 @@
           config.preferredFont = config.webFont = this.fontName[font];
         }
         if (config.preferredFont) {config.availableFonts[0] = config.preferredFont}
+      }
+      if (config.fonts) {
+        config.availableFonts = config.fonts;
+        config.preferredFont = config.webFont = config.fonts[0];
+        if (config.webFont === "STIX") {config.webFont += "-Web"}
       }
       font = this.Font.findFont(config.availableFonts,config.preferredFont);
       if (!font && this.allowWebFonts) {font = config.webFont; if (font) {this.webFonts = true}}
