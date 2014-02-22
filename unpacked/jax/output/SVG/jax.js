@@ -102,18 +102,15 @@
     hideProcessedMath: true,           // use display:none until all math is processed
 
     Config: function () {
-      var settings = HUB.config.menuSettings;
-      if (settings.scale) {this.config.scale = settings.scale}
       this.SUPER(arguments).Config.apply(this,arguments);
-      this.fontInUse = this.config.font;
-      if (settings.font && settings.font !== "Auto") {
-        if (settings.font === "TeXWeb") {this.fontInUse = "TeX"}
-        else if (settings.font === "STIXWeb") {this.fontInUse = "STIX-Web"}
-        else if (settings.font === "AsanaMathWeb") {this.fontInUse = "Asana-Math"}
-        else if (settings.font === "GyrePagellaWeb") {this.fontInUse = "Gyre-Pagella"}
-        else if (settings.font === "GyreTermesWeb") {this.fontInUse = "Gyre-Termes"}
-        else if (settings.font === "LatinModernWeb") {this.fontInUse = "Latin-Modern"}
-        else if (settings.font === "NeoEulerWeb") {this.fontInUse = "Neo-Euler"}
+      var settings = HUB.config.menuSettings, config = this.config, font = settings.font;
+      if (settings.scale) {config.scale = settings.scale}
+      if (font && font !== "Auto") {
+        font = font.replace(/(Local|Web|Image)$/i,"");
+        font = font.replace(/([a-z])([A-Z])/,"$1-$2");
+        this.fontInUse = font;
+      } else {
+        this.fontInUse = config.font || "TeX";
       }
       this.fontDir += "/" + this.fontInUse;
       if (!this.require) {this.require = []}
