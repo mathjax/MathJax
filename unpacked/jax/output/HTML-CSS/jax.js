@@ -60,15 +60,22 @@
     testSize: ["40px","50px","60px","30px","20px"],
 
     Init: function () {
-      this.div = MathJax.HTML.addElement(document.body,"div",{
-        id: "MathJax_Font_Test",
-        style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
-                padding:0, border:0, margin:0, whiteSpace:"nowrap",
-                textAlign:"left", textIndent:0, textTransform:"none",
-                lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
-                fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal",
-                fontSizeAdjust:"none"}
-      },[""]);
+      //
+      //  Wrap the Font_Test DIV in a 0x0 DIV so that it takes no room
+      //
+      this.div = MathJax.HTML.addElement(document.body,"div",{style: {
+          position:"absolute", width:0, height:0, overflow:"hidden",
+          padding:0, border:0, margin:0
+        }},[["div",{
+          id: "MathJax_Font_Test",
+          style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
+                  padding:0, border:0, margin:0, whiteSpace:"nowrap",
+                  textAlign:"left", textIndent:0, textTransform:"none",
+                  lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
+                  fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal",
+                  fontSizeAdjust:"none"}
+          },[""]]]
+      ).firstChild;
       this.text = this.div.firstChild;
     },
 
