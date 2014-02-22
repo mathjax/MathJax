@@ -38,24 +38,6 @@
    
   var FONTTEST = MathJax.Object.Subclass({
     timeout:  (isMobile? 15:8)*1000,   // timeout for loading web fonts
-
-    FontInfo: {
-      STIX: {family: "STIXSizeOneSym", testString: "() {} []"},
-      TeX:  {family: "MathJax_Size1",  testString: "() {} []"},
-      //
-      //  These are the new web fonts.  The strange use of single quotes is because the
-      //  testing routine adds quotes at the beginning and ending, so for this list of
-      //  names, we need to take those into account.  We need a list because the names are
-      //  not handled consistently between Mac and Windows in the font data, as they are
-      //  in the TeX and original STIX fonts (sigh).
-      //
-      "STIX-Web":     {family: "STIX MathJax Size1','STIXMathJax_Size1-Regular",  testString: "() {} []"},
-      "Asana-Math":   {family: "Asana MathJax Size1','AsanaMathJax_Size1-Regular'",  testString: "() {} []"},
-      "Gyre-Pagella": {family: "Gyre Pagella MathJax Size1','GyrePagellaMathJax_Size1-Regular",  testString: "() {} []"},
-      "Gyre-Termes":  {family: "Gyre Termes MathJax Size1','GyreTermesMathJax_Size1-Regular",  testString: "() {} []"},
-      "Latin-Modern": {family: "Latin Modern MathJax Size1','LatinModernMathJax_Size1-Regular",  testString: "() {} []"},
-      "Neo-Euler":    {family: "Neo Euler MathJax Size1','NeoEulerMathJax_Size1-Regular",  testString: "() {} []"}
-    },
     comparisonFont: ["sans-serif","monospace","script","Times","Courier","Arial","Helvetica"],
     testSize: ["40px","50px","60px","30px","20px"],
 
@@ -88,7 +70,12 @@
       return null;
     },
 
-    testCollection: function (name) {return this.testFont(this.FontInfo[name])},
+    testCollection: function (name) {
+      var font = {testString: "() {} []"};
+      font.family = {TeX:"MathJax_Size1", STIX:"STIXSizeOneSym"}[name] ||
+                     name.replace(/-(Math)?/,"")+"MathJax_Size1";
+      return this.testFont(font);
+    },
 
     testFont: function (font) {
       if (font.isWebFont && HTMLCSS.FontFaceBug) {
@@ -97,12 +84,27 @@
         this.div.style.fontWeight = (font.weight||"normal");
         this.div.style.fontStyle  = (font.style||"normal");
       }
+      //
+      //  Hack:  Fix up web font names for local access.
+      //  (The names for Windows and Mac are different, unlike in the STIX and
+      //  TeX fonts, so we have to work out a list of names here.)
+      //
+      //  This should be removed when the web fonts are fixed.  FIXME
+      //
+      var family = font.familyFixed || font.family;
+      if (!family.match(/$(STIX|MathJax)|'/)) {
+        family = family.replace(/_/g," ").replace(/([a-z])([A-Z])/g,"$1 $2") + "','" + family + "-";
+        if (font.weight) {family += "Bold"}; if (font.style) {family += "Italic"}
+        if (!font.weight && !font.style) {family += "Regular"}
+        font.familyFixed = family = "'"+family+"'"
+      }
+
       var W = this.getComparisonWidths(font.testString,font.noStyleChar);
       var found = null;
       if (W) {
-        this.div.style.fontFamily = "'"+font.family+"',"+this.comparisonFont[0];
+        this.div.style.fontFamily = family+","+this.comparisonFont[0];
         if (this.div.offsetWidth == W[0]) {
-          this.div.style.fontFamily = "'"+font.family+"',"+this.comparisonFont[W[2]];
+          this.div.style.fontFamily = family+","+this.comparisonFont[W[2]];
           if (this.div.offsetWidth == W[1]) {found = false}
         }
         if (found === null && (this.div.offsetWidth != W[3] || this.div.offsetHeight != W[4])) {
@@ -763,8 +765,14 @@
     initHTML: function (math,span) {},
     initFont: function (name) {
       var FONTS = HTMLCSS.FONTDATA.FONTS, AVAIL = HTMLCSS.config.availableFonts;
-      if (AVAIL && AVAIL.length && HTMLCSS.Font.testFont(FONTS[name]))
-        {FONTS[name].available = true; return null}
+      if (AVAIL && AVAIL.length && HTMLCSS.Font.testFont(FONTS[name])) {
+        FONTS[name].available = true;
+        if (FONTS[name].familyFixed) {
+          FONTS[name].family = FONTS[name].familyFixed;
+          delete FONTS[name].familyFixed;
+        }
+        return null;
+      }
       if (!this.allowWebFonts) {return null}
       FONTS[name].isWebFont = true;
       if (HTMLCSS.FontFaceBug) {
