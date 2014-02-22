@@ -350,27 +350,38 @@
     maxStretchyParts: 1000,            // limit the number of parts allowed for
                                        // stretchy operators. See issue 366.
 
+    fontName: {
+      TeXLocal:       "TeX",
+      TeXWeb:         ["","TeX"],
+      TeXImage:       ["",""],
+      STIXLocal:      ["STIX","STIX-Web"],
+      STIXWeb:        "STIX-Web",
+      AsanaMathWeb:   "Asana-Math",
+      GyrePagellaWeb: "Gyre-Pagella",
+      GyreTermesWeb:  "Gyre-Termes",
+      LatinModernWeb: "Latin-Modern",
+      NeoEulerWeb:    "Neo-Euler"
+    },
+    
     Config: function () {
       if (!this.require) {this.require = []}
-      this.Font = FONTTEST();
-      this.SUPER(arguments).Config.call(this); var settings = this.settings;
-      if (this.adjustAvailableFonts) {this.adjustAvailableFonts(this.config.availableFonts)}
-      if (settings.scale) {this.config.scale = settings.scale}
-      if (settings.font && settings.font !== "Auto") {
-        if (settings.font === "TeXLocal") {this.config.availableFonts = ["TeX"]; this.config.preferredFont = "TeX"; this.config.webFont = "TeX"}
-        else if (settings.font === "TeXWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "TeX"}
-        else if (settings.font === "TeXimage") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = ""}
-        else if (settings.font === "STIXlocal") {this.config.availableFonts = ["STIX"]; this.config.preferredFont = "STIX"; this.config.webFont = "STIX-Web"}
-        else if (settings.font === "STIXWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "STIX-Web"}
-        else if (settings.font === "AsanaMathWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Asana-Math"}
-        else if (settings.font === "GyrePagellaWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Gyre-Pagella"}
-        else if (settings.font === "GyreTermesWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Gyre-Termes"}
-        else if (settings.font === "LatinModernWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Latin-Modern"}
-        else if (settings.font === "NeoEulerWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Neo-Euler"}
+      this.Font = FONTTEST(); this.SUPER(arguments).Config.call(this);
+      var settings = this.settings, config = this.config, font = settings.font;
+      if (this.adjustAvailableFonts) {this.adjustAvailableFonts(config.availableFonts)}
+      if (settings.scale) {config.scale = settings.scale}
+      if (font && font !== "Auto" && this.fontName[font]) {
+        config.availableFonts = [];
+        if (this.fontName[font] instanceof Array) {
+          config.preferredFont = this.fontName[font][0];
+          config.webFont = this.fontName[font][1];
+        } else {
+          config.preferredFont = config.webFont = this.fontName[font];
+        }
+        if (config.preferredFont) {config.availableFonts[0] = config.preferredFont}
       }
-      var font = this.Font.findFont(this.config.availableFonts,this.config.preferredFont);
-      if (!font && this.allowWebFonts) {font = this.config.webFont; if (font) {this.webFonts = true}}
-      if (!font && this.config.imageFont) {font = this.config.imageFont; this.imgFonts = true}
+      font = this.Font.findFont(config.availableFonts,config.preferredFont);
+      if (!font && this.allowWebFonts) {font = config.webFont; if (font) {this.webFonts = true}}
+      if (!font && this.config.imageFont) {font = config.imageFont; this.imgFonts = true}
       if (font) {
         this.fontInUse = font; this.fontDir += "/" + font; this.webfontDir += "/" + font;
         this.require.push(this.fontDir+"/fontdata.js");
@@ -459,6 +470,8 @@
       //  Opera doesn't display large chunks of the STIX fonts, and
       //  Safari/Windows doesn't display Plane1,
       //  so disable STIX for these browsers.
+      //
+      //  ### FIXME ### Do we need to disable the other web fonts for these?
       //
       for (var i = 0, m = fonts.length; i < m; i++)
         {if (fonts[i] === "STIX") {fonts.splice(i,1); m--; i--;}}
