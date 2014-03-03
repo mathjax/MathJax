@@ -74,6 +74,7 @@
       var font = {testString: "() {} []"};
       font.family = {TeX:"MathJax_Size1", STIX:"STIXSizeOneSym"}[name] ||
                      name.replace(/-(Math)?/,"")+"MathJax_Size1";
+      if (name === "STIX") {font.noStyleChar = true}
       return this.testFont(font);
     },
 
@@ -92,7 +93,7 @@
       //  This should be removed when the web fonts are fixed.  FIXME
       //
       var family = font.familyFixed || font.family;
-      if (!family.match(/$(STIX|MathJax)|'/)) {
+      if (!family.match(/^(STIX|MathJax)|'/)) {
         family = family.replace(/_/g," ").replace(/([a-z])([A-Z])/g,"$1 $2") + "','" + family + "-";
         if (font.weight) {family += "Bold"}; if (font.style) {family += "Italic"}
         if (!font.weight && !font.style) {family += "Regular"}
