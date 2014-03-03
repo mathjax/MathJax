@@ -40,6 +40,12 @@
     timeout:  (isMobile? 15:8)*1000,   // timeout for loading web fonts
     comparisonFont: ["sans-serif","monospace","script","Times","Courier","Arial","Helvetica"],
     testSize: ["40px","50px","60px","30px","20px"],
+    //
+    //  Fedora aliases STIXSizeOneSym to STIX Word, so MathJax thinks STIX is
+    //  available, but the fonts aren't actually correct.  This is to test if
+    //  STIXSizeOneSym has letters in it (so is actually STIX Word).
+    //  
+    FedoraSTIXcheck: {family:"STIXSizeOneSym", testString:"abcABC", noStyleChar:true},
 
     Init: function () {
       //
@@ -62,12 +68,17 @@
     },
 
     findFont: function (fonts,pref) {
-      if (pref && this.testCollection(pref)) {return pref}
-      for (var i = 0, m = fonts.length; i < m; i++) {
-        if (fonts[i] === pref) continue;
-        if (this.testCollection(fonts[i])) {return fonts[i]}
+      var found = null;
+      if (pref && this.testCollection(pref)) {
+        found = pref;
+      } else {
+        for (var i = 0, m = fonts.length; i < m; i++) {
+          if (fonts[i] === pref) continue;
+          if (this.testCollection(fonts[i])) {found = fonts[i]; break}
+        }
       }
-      return null;
+      if (found === "STIX" && this.testFont(this.FedoraSTIXcheck)) {found = null}
+      return found;
     },
 
     testCollection: function (name) {
