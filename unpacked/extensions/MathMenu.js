@@ -48,7 +48,7 @@
   
   var CONFIG = HUB.CombineConfig("MathMenu",{
     delay: 150,                                    // the delay for submenus
-    closeImg: AJAX.fileURL(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
+    closeImg: AJAX.urlRev(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
     showMathPlayer: true,                          //  show the "MathPlayer" menu?

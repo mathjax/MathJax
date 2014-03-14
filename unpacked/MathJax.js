@@ -47,6 +47,8 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 MathJax.version = "2.3";
 MathJax.fileversion = "2.3.2";
+MathJax.cdnVersion = "2.3";      // specifies a revision to break caching
+MathJax.cdnFileVersions = {}; // can be used to specify revisions for individual files
 
 /**********************************************************/
 
@@ -659,6 +661,23 @@ MathJax.fileversion = "2.3.2";
     //  Return a complete URL to a file (replacing the root pattern)
     //
     fileURL: function (file) {return file.replace(this.rootPattern,this.config.root)},
+    //
+    //  Remove root if URL includes it
+    //
+    fileName: function (url) {
+      var root = this.config.root;
+      if (url.substr(0,root.length) == root) {url = "["+BASENAME+"]"+url.substr(root.length)}
+      return url;
+    },
+    //
+    //  Cache-breaking revision number for file
+    //
+    fileRev: function (file) {
+      var rev = BASE.cdnFileVersions[name] || BASE.cdnVersion;
+      if (rev) {rev = "?rev="+rev}
+      return rev;
+    },
+    urlRev: function (file) {return this.fileURL(file)+this.fileRev(file)},
     
     //
     //  Load a file if it hasn't been already.
@@ -739,6 +758,7 @@ MathJax.fileversion = "2.3.2";
       //  Create a SCRIPT tag to load the file
       //
       JS: function (file,callback) {
+        var name = this.fileName(file);
         var script = document.createElement("script");
         var timeout = BASE.Callback(["loadTimeout",this,file]);
         this.loading[file] = {
@@ -747,23 +767,27 @@ MathJax.fileversion = "2.3.2";
           status: this.STATUS.OK,
           script: script
         };
+        //
         // Add this to the structure above after it is created to prevent recursion
         //  when loading the initial localization file (before loading messsage is available)
-        this.loading[file].message = BASE.Message.File(file);
+        //
+        this.loading[file].message = BASE.Message.File(name);
         script.onerror = timeout;  // doesn't work in IE and no apparent substitute
         script.type = "text/javascript";
-        script.src = file;
+        script.src = file+this.fileRev(name);
         this.head.appendChild(script);
       },
       //
       //  Create a LINK tag to load the style sheet
       //
       CSS: function (file,callback) {
+        var name = this.fileName(file);
         var link = document.createElement("link");
-        link.rel = "stylesheet"; link.type = "text/css"; link.href = file;
+        link.rel = "stylesheet"; link.type = "text/css";
+        link.href = file+this.fileRev(name);
         this.loading[file] = {
           callback: callback,
-          message: BASE.Message.File(file),
+          message: BASE.Message.File(name),
           status: this.STATUS.OK
         };
         this.head.appendChild(link);
@@ -1766,8 +1790,6 @@ MathJax.Message = {
   },
   
   File: function (file) {
-    var root = MathJax.Ajax.config.root;
-    if (file.substr(0,root.length) === root) {file = "[MathJax]"+file.substr(root.length)}
     return this.Set(["LoadFile","Loading %1",file],null,null);
   },
   

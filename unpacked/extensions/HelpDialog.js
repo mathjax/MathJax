@@ -34,7 +34,7 @@
   var MENU = MathJax.Menu;
 
   var CONFIG = HUB.CombineConfig("HelpDialog",{
-    closeImg: AJAX.fileURL(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
+    closeImg: AJAX.urlRev(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     styles: {
       "#MathJax_Help": {

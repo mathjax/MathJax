@@ -45,7 +45,7 @@
     button: {
       x: -4, y: -3,          // menu button offsets
       wx: -2,                // button offset for full-width equations
-      src: AJAX.fileURL(OUTPUT.imageDir+"/MenuArrow-15.png")  // button image
+      src: AJAX.urlRev(OUTPUT.imageDir+"/MenuArrow-15.png")  // button image
     },
     fadeinInc: .2,           // increment for fade-in
     fadeoutInc: .05,         // increment for fade-out
