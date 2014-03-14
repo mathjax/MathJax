@@ -105,7 +105,8 @@
       //
       var family = font.familyFixed || font.family;
       if (!family.match(/^(STIX|MathJax)|'/)) {
-        family = family.replace(/_/g," ").replace(/([a-z])([A-Z])/g,"$1 $2") + "','" + family + "-";
+        family = family.replace(/_/g," ").replace(/([a-z])([A-Z])/g,"$1 $2").replace(/ Jax/,"Jax")
+               + "','" + family + "','" + family + "-";
         if (font.weight) {family += "Bold"}; if (font.style) {family += "Italic"}
         if (!font.weight && !font.style) {family += "Regular"}
         font.familyFixed = family = "'"+family+"'"
