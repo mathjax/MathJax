@@ -483,26 +483,26 @@
       return this.length2em(length,mu,thick);
     },
 
-    getPadding: function (span) {
+    getPadding: function (styles) {
       var padding = {top:0, right:0, bottom:0, left:0}, has = false;
       for (var id in padding) {if (padding.hasOwnProperty(id)) {
-        var pad = span.style["padding"+id.charAt(0).toUpperCase()+id.substr(1)];
+        var pad = styles["padding"+id.charAt(0).toUpperCase()+id.substr(1)];
         if (pad) {padding[id] = this.length2em(pad); has = true;}
       }}
       return (has ? padding : false);
     },
-    getBorders: function (span) {
+    getBorders: function (styles) {
       var border = {top:0, right:0, bottom:0, left:0}, has = false;
       for (var id in border) {if (border.hasOwnProperty(id)) {
         var ID = "border"+id.charAt(0).toUpperCase()+id.substr(1);
-        var style = span.style[ID+"Style"];
-        if (style) {
+        var style = styles[ID+"Style"];
+        if (style && style !== "none") {
           has = true;
-          border[id] = this.length2em(span.style[ID+"Width"]);
-          border[id+"Style"] = span.style[ID+"Style"];
-          border[id+"Color"] = span.style[ID+"Color"];
+          border[id] = this.length2em(styles[ID+"Width"]);
+          border[id+"Style"] = styles[ID+"Style"];
+          border[id+"Color"] = styles[ID+"Color"];
           if (border[id+"Color"] === "initial") {border[id+"Color"] = ""}
-        }
+        } else {delete border[id]}
       }}
       return (has ? border : false);
     },
@@ -1105,16 +1105,22 @@
         if (this.style) {
           var span = HTML.Element("span");
           span.style.cssText = this.style;
-          this.styles = {border:SVG.getBorders(span), padding:SVG.getPadding(span)}
-          if (span.style.fontSize) {this.styles.fontSize = span.style.fontSize}
-          if (span.style.color) {this.styles.color = span.style.color}
-          if (span.style.backgroundColor) {this.styles.background = span.style.backgroundColor}
-          if (span.style.fontStyle)  {this.styles.fontStyle = span.style.fontStyle}
-          if (span.style.fontWeight) {this.styles.fontWeight = span.style.fontWeight}
-          if (span.style.fontFamily) {this.styles.fontFamily = span.style.fontFamily}
-          if (this.styles.fontWeight && this.styles.fontWeight.match(/^\d+$/))
-            {this.styles.fontWeight = (parseInt(this.styles.fontWeight) > 600 ? "bold" : "normal")}
+          this.styles = this.SVGprocessStyles(span.style);
         }
+      },
+      SVGprocessStyles: function (style) {
+        var styles = {border:SVG.getBorders(style), padding:SVG.getPadding(style)};
+        if (!styles.border) {delete styles.border}
+        if (!styles.padding) {delete styles.padding}
+        if (style.fontSize) {styles.fontSize = style.fontSize}
+        if (style.color) {styles.color = style.color}
+        if (style.backgroundColor) {styles.background = style.backgroundColor}
+        if (style.fontStyle)  {styles.fontStyle = style.fontStyle}
+        if (style.fontWeight) {styles.fontWeight = style.fontWeight}
+        if (style.fontFamily) {styles.fontFamily = style.fontFamily}
+        if (styles.fontWeight && styles.fontWeight.match(/^\d+$/))
+          {styles.fontWeight = (parseInt(styles.fontWeight) > 600 ? "bold" : "normal")}
+        return styles;
       },
             
       SVGhandleSpace: function (svg) {
@@ -1470,19 +1476,10 @@
 
     MML.mtext.Augment({
       toSVG: function () {
-        this.SVGgetStyles();
-        var svg, text, scale = this.SVGgetScale();
-        if (this.Parent().type === "merror") {
-	  //  *** FIXME:  Make color, style, scale configurable
-          svg = this.SVG(); this.SVGhandleSpace(svg);
-          text = BBOX.G(); text.Add(BBOX.TEXT(.9*scale,this.data.join(""),{fill:"#C00",direction:this.Get("dir")}));
-          svg.Add(BBOX.RECT(text.h+100,text.d+100,text.w+200,{fill:"#FF8",stroke:"#C00","stroke-width":50}),0,0);
-          svg.Add(text,150,0); svg.H += 150; svg.D += 50;
-          svg.Clean();
-          this.SVGsaveData(svg);
-          return svg;
-	} else if (SVG.config.mtextFontInherit) {
-          svg = this.SVG(); this.SVGhandleSpace(svg);
+        if (SVG.config.mtextFontInherit || this.Parent().type === "merror") {
+          this.SVGgetStyles();
+          var svg = this.SVG(), scale = this.SVGgetScale();
+          this.SVGhandleSpace(svg);
           var variant = this.SVGgetVariant(), def = {direction:this.Get("dir")};
           if (variant.bold)   {def["font-weight"] = "bold"}
           if (variant.italic) {def["font-style"] = "italic"}
@@ -1495,6 +1492,34 @@
           return svg;
         } else {
           return this.SUPER(arguments).toSVG.call(this);
+        }
+      }
+    });
+    
+    MML.merror.Augment({
+      toSVG: function (HW,D) {
+        this.SVGgetStyles();
+        var svg = this.SVG(), scale = SVG.length2em(this.styles.fontSize||1)/1000;
+        this.SVGhandleSpace(svg);
+        var def = (scale !== 1 ? {transform:"scale("+scale+")"} : {});
+        var bbox = BBOX(def);
+        bbox.Add(this.SVGchildSVG(0)); bbox.Clean();
+        if (scale !== 1) {
+          bbox.removeable = false;
+          var adjust = ["w","h","d","l","r","D","H"];
+          for (var i = 0, m = adjust.length; i < m; i++) {bbox[adjust[i]] *= scale}
+        }
+        svg.Add(bbox); svg.Clean();
+        this.SVGhandleColor(svg);
+        this.SVGsaveData(svg);
+        return svg;
+      },
+      SVGgetStyles: function () {
+        var span = HTML.Element("span",{style: SVG.config.merrorStyle});
+        this.styles = this.SVGprocessStyles(span.style);
+        if (this.style) {
+          span.style.cssText = this.style;
+          HUB.Insert(this.styles,this.SVGprocessStyles(span.style));
         }
       }
     });

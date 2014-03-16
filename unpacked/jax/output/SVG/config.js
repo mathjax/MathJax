@@ -58,6 +58,11 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
                          // use "nn%" for a portion of the window size
     },
     
+    merrorStyle: {
+      fontSize:"90%", color:"#C00", background:"#FF8",
+      border: "1px solid #C00", padding:"3px"
+    },
+    
     styles: {
       ".MathJax_SVG_Display": {
         "text-align": "center",
