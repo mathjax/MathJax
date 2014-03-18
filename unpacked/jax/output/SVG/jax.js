@@ -1168,8 +1168,8 @@
         //
         //  Adjust size by padding and dashed borders (left is taken care of above)
         //
-        if (padding) {svg.w += padding.right; svg.h += padding.top; svg.d += padding.bottom}
-        if (borders) {svg.w += borders.right; svg.h += borders.top; svg.d += borders.bottom}
+        if (padding) {svg.w += padding.right||0; svg.h += padding.top||0; svg.d += padding.bottom||0}
+        if (borders) {svg.w += borders.right||0; svg.h += borders.top||0; svg.d += borders.bottom||0}
         //
         //  Add background color
         //
