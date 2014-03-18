@@ -58,22 +58,12 @@ MathJax.cdnFileVersions = {}; // can be used to specify revisions for individual
 
   var PROTO = [];  // a static object used to indicate when a prototype is being created
   var OBJECT = function (def) {
-    var obj = def.constructor; if (!obj) {obj = new Function("")}
+    var obj = def.constructor; if (!obj) {obj = function () {}}
     for (var id in def) {if (id !== 'constructor' && def.hasOwnProperty(id)) {obj[id] = def[id]}}
     return obj;
   };
   var CONSTRUCTOR = function () {
-    return new Function ("return arguments.callee.Init.call(this,arguments)");
-  };
-  //
-  //  Test for Safari 2.x bug (can't replace prototype for result of new Function()).
-  //  (We don't use this version for everyone since it is a closure and we don't need that).
-  //
-  var BUGTEST = CONSTRUCTOR(); BUGTEST.prototype = {bug_test: 1};
-  if (!BUGTEST.prototype.bug_test) {
-    CONSTRUCTOR = function () {
-      return function () {return arguments.callee.Init.call(this,arguments)};
-    };
+    return function () {return arguments.callee.Init.call(this,arguments)};
   };
 
   BASE.Object = OBJECT({
@@ -151,26 +141,17 @@ MathJax.cdnFileVersions = {}; // can be used to specify revisions for individual
       },
 
       wrap: function (id,f) {
-	if (typeof(f) === 'function' && f.toString().match(/\.\s*SUPER\s*\(/)) {
-	  var fn = new Function(this.wrapper);
-	  fn.label = id; fn.original = f; f = fn;
-	  fn.toString = this.stringify;
-	}
-	return f;
-      },
-
-      wrapper: function () {
-	var fn = arguments.callee;
-	this.SUPER = fn.SUPER[fn.label];
-	try {var result = fn.original.apply(this,arguments)}
-	  catch (err) {delete this.SUPER; throw err}
-	delete this.SUPER;
-	return result;
-      }.toString().replace(/^\s*function\s*\(\)\s*\{\s*/i,"").replace(/\s*\}\s*$/i,""),
-
-      toString: function () {
-	return this.original.toString.apply(this.original,arguments);
+        if (typeof(f) !== 'function' || !f.toString().match(/\.\s*SUPER\s*\(/)) {return f}
+        var fn = function () {
+          this.SUPER = fn.SUPER[id];
+          try {var result = f.apply(this,arguments)} catch (err) {delete this.SUPER; throw err}
+          delete this.SUPER;
+          return result;
+        }
+        fn.toString = function () {return f.toString.apply(f,arguments)}
+        return fn;
       }
+
     })
   });
 
@@ -234,7 +215,7 @@ MathJax.cdnFileVersions = {}; // can be used to specify revisions for individual
   //  Create a callback from an associative array
   //
   var CALLBACK = function (data) {
-    var cb = new Function("return arguments.callee.execute.apply(arguments.callee,arguments)");
+    var cb = function () {return arguments.callee.execute.apply(arguments.callee,arguments)};
     for (var id in CALLBACK.prototype) {
       if (CALLBACK.prototype.hasOwnProperty(id)) {
         if (typeof(data[id]) !== 'undefined') {cb[id] = data[id]}
@@ -261,40 +242,45 @@ MathJax.cdnFileVersions = {}; // can be used to specify revisions for individual
   var ISCALLBACK = function (f) {
     return (typeof(f) === "function" && f.isCallback);
   }
+
   //
   //  Evaluate a string in global context
   //
   var EVAL = function (code) {return eval.call(window,code)}
-  EVAL("var __TeSt_VaR__ = 1"); // check if it works in global context
-  if (window.__TeSt_VaR__) {
-    try { delete window.__TeSt_VaR__; } // NOTE IE9 throws when in IE7 mode
-    catch (error) { window.__TeSt_VaR__ = null; } 
-  } else {
-    if (window.execScript) {
-      // IE
-      EVAL = function (code) {
-        BASE.__code = code;
-        code = "try {"+BASENAME+".__result = eval("+BASENAME+".__code)} catch(err) {"+BASENAME+".__result = err}";
-        window.execScript(code);
-        var result = BASE.__result; delete BASE.__result; delete BASE.__code;
-        if (result instanceof Error) {throw result}
-        return result;
-      }
+  var TESTEVAL = function () {
+    EVAL("var __TeSt_VaR__ = 1"); // check if it works in global context
+    if (window.__TeSt_VaR__) {
+      try { delete window.__TeSt_VaR__; } // NOTE IE9 throws when in IE7 mode
+      catch (error) { window.__TeSt_VaR__ = null; } 
     } else {
-      // Safari2
-      EVAL = function (code) {
-        BASE.__code = code;
-        code = "try {"+BASENAME+".__result = eval("+BASENAME+".__code)} catch(err) {"+BASENAME+".__result = err}";
-        var head = (document.getElementsByTagName("head"))[0]; if (!head) {head = document.body}
-        var script = document.createElement("script");
-        script.appendChild(document.createTextNode(code));
-        head.appendChild(script); head.removeChild(script);
-        var result = BASE.__result; delete BASE.__result; delete BASE.__code;
-        if (result instanceof Error) {throw result}
-        return result;
+      if (window.execScript) {
+        // IE
+        EVAL = function (code) {
+          BASE.__code = code;
+          code = "try {"+BASENAME+".__result = eval("+BASENAME+".__code)} catch(err) {"+BASENAME+".__result = err}";
+          window.execScript(code);
+          var result = BASE.__result; delete BASE.__result; delete BASE.__code;
+          if (result instanceof Error) {throw result}
+          return result;
+        }
+      } else {
+        // Safari2
+        EVAL = function (code) {
+          BASE.__code = code;
+          code = "try {"+BASENAME+".__result = eval("+BASENAME+".__code)} catch(err) {"+BASENAME+".__result = err}";
+          var head = (document.getElementsByTagName("head"))[0]; if (!head) {head = document.body}
+          var script = document.createElement("script");
+          script.appendChild(document.createTextNode(code));
+          head.appendChild(script); head.removeChild(script);
+          var result = BASE.__result; delete BASE.__result; delete BASE.__code;
+          if (result instanceof Error) {throw result}
+          return result;
+        }
       }
     }
+    TESTEVAL = null;
   }
+
   //
   //  Create a callback from various types of data
   //
@@ -319,6 +305,7 @@ MathJax.cdnFileVersions = {}; // can be used to specify revisions for individual
         return CALLBACK({hook: args[1], object: args[0], data: args.slice(2)});
       }
     } else if (typeof(args) === 'string') {
+      if (TESTEVAL) TESTEVAL();
       return CALLBACK({hook: EVAL, data: [args]});
     } else if (args instanceof Object) {
       return CALLBACK(args);
