@@ -953,6 +953,17 @@ MathJax.Hub.Config({
     },
 
     //
+    //  These are the styles used for merror elements in SVG output.  Note
+    //  that only a limited number of style attributes are supported by
+    //  SVG, but you can at least change the colors and borders.
+    //  
+    //
+    merrorStyle: {
+      fontSize:"90%", color:"#C00", background:"#FF8",
+      border: "1px solid #C00", padding:"3px"
+    },
+
+    //
     //  This allows you to define or modify the styles used to display
     //  various math elements created by MathJax.
     //  
