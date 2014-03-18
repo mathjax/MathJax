@@ -214,18 +214,22 @@
       var type = HTMLCSS.allowWebFonts;
       var FONT = HTMLCSS.FONTDATA.FONTS[name];
       if (HTMLCSS.msieFontCSSBug && !FONT.family.match(/-Web$/)) {FONT.family += "-Web"}
-      var dir = AJAX.fileURL(HTMLCSS.webfontDir+"/"+type);
+      var webfonts = HTMLCSS.webfontDir+"/"+type;
+      var dir = AJAX.fileURL(webfonts);
       var fullname = name.replace(/-b/,"-B").replace(/-i/,"-I").replace(/-Bold-/,"-Bold");
       if (!fullname.match(/-/)) {fullname += "-Regular"}
       if (type === "svg") {fullname += ".svg#"+fullname} else {fullname += "."+type}
+      var rev = AJAX.fileRev(webfonts+"/"+fullname.replace(/#.*/,""));
       var def = {
         "font-family": FONT.family,
-        src: "url('"+dir+"/"+fullname+"')"
+        src: "url('"+dir+"/"+fullname+rev+"')"
       };
       if (type === "otf") {
+        fullname = fullname.replace(/otf$/,"woff");
+        rev = AJAX.fileRev(webfonts+"/"+fullname);
         def.src += " format('opentype')";
         dir = AJAX.fileURL(HTMLCSS.webfontDir+"/woff");  // add woff fonts as well
-        def.src = "url('"+dir+"/"+fullname.replace(/otf$/,"woff")+"') format('woff'), "+def.src;
+        def.src = "url('"+dir+"/"+fullname+rev+"') format('woff'), "+def.src;
       } else if (type !== "eot") {def.src += " format('"+type+"')"}
       if (!(HTMLCSS.FontFaceBug && FONT.isWebFont)) {
         if (name.match(/-bold/)) {def["font-weight"] = "bold"}

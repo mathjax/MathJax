@@ -61,10 +61,10 @@
         if (c[4] != c[2]) {style.marginRight = this.Em((c[2]-c[4])/1000)}
         if (this.msieIE6) {
           style.filter = "progid:DXImageTransform.Microsoft." +
-            "AlphaImageLoader(src='"+AJAX.fileURL(file)+"', sizingMethod='scale')";
+            "AlphaImageLoader(src='"+AJAX.urlRev(file)+"', sizingMethod='scale')";
           file = this.directory+"/blank.gif"
         }
-        this.addElement(span,"img",{src:AJAX.fileURL(file), style:style, isMathJax:true});
+        this.addElement(span,"img",{src:AJAX.urlRev(file), style:style, isMathJax:true});
         return "";
       },
       
