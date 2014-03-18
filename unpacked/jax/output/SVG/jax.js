@@ -930,13 +930,17 @@
   BBOX.HLINE = BBOX.Subclass({
     type: "line", removeable: false,
     Init: function (w,t,dash,color,def) {
-      if (def == null) {def = {}}
+      if (def == null) {def = {"stroke-linecap":"square"}}
       if (color && color !== "") {def.stroke = color}
       def["stroke-width"] = t.toFixed(2).replace(/\.?0+$/,"");
-      def.x1 = 0; def.y1 = def.y2 = t/2; def.x2 = Math.floor(w);
+      def.x1 = def.y1 = def.y2 = Math.floor(t/2); def.x2 = Math.floor(w-t/2);
       if (dash === "dashed") {
-        var n = Math.floor(w/(6*t)), m = Math.floor(w/(2*n+1));
+        var n = Math.floor(Math.max(0,w-t)/(6*t)), m = Math.floor(Math.max(0,w-t)/(2*n+1));
         def["stroke-dasharray"] = m+" "+m;
+      }
+      if (dash === "dotted") {
+        def["stroke-dasharray"] = [1,Math.max(150,Math.floor(2*t))].join(" ");
+        def["stroke-linecap"] = "round";
       }
       this.SUPER(arguments).Init.call(this,def);
       this.w = this.r = w; this.l = 0; this.h = this.H = t; this.d = this.D = 0;
@@ -946,13 +950,17 @@
   BBOX.VLINE = BBOX.Subclass({
     type: "line", removeable: false,
     Init: function (h,t,dash,color,def) {
-      if (def == null) {def = {}}
+      if (def == null) {def = {"stroke-linecap":"square"}}
       if (color && color !== "") {def.stroke = color}
       def["stroke-width"] = t.toFixed(2).replace(/\.?0+$/,"");
-      def.x1 = def.x2 = t/2; def.y1 = 0; def.y2 = Math.floor(h);
+      def.x1 = def.x2 = def.y1 = Math.floor(t/2); def.y2 = Math.floor(h-t/2);
       if (dash === "dashed") {
-        var n = Math.floor(h/(6*t)), m = Math.floor(h/(2*n+1));
+        var n = Math.floor(Math.max(0,h-t)/(6*t)), m = Math.floor(Math.max(0,h-t)/(2*n+1));
         def["stroke-dasharray"] = m+" "+m;
+      }
+      if (dash === "dotted") {
+        def["stroke-dasharray"] = [1,Math.max(150,Math.floor(2*t))].join(" ");
+        def["stroke-linecap"] = "round";
       }
       this.SUPER(arguments).Init.call(this,def);
       this.w = this.r = t; this.l = 0; this.h = this.H = h; this.d = this.D = 0;
