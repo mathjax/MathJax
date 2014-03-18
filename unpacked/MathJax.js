@@ -642,31 +642,46 @@ MathJax.cdnFileVersions = {}; // can be used to specify revisions for individual
     SCRIPTS = [];
   };
   
+  var PATH = {};
+  PATH[BASENAME] = "";  // empty path gets the root URL
+  
   BASE.Ajax = {
     loaded: {},         // files already loaded
     loading: {},        // files currently in process of loading
     loadHooks: {},      // hooks to call when files are loaded
     timeout: 15*1000,   // timeout for loading of files (15 seconds)
     styleDelay: 1,      // delay to use before styles are available
-    config: {root: ""}, // URL of root directory to load from
+    config: {
+      root: "",         // URL of root directory to load from
+      path: PATH        // paths to named URL's (e.g., [MathJax]/...)
+    },
 
     STATUS: {
       OK: 1,         // file is loading or did load OK
       ERROR: -1      // file timed out during load
     },
-    
-    rootPattern: new RegExp("^\\["+BASENAME+"\\]"),
-    
+
     //
-    //  Return a complete URL to a file (replacing the root pattern)
+    //  Return a complete URL to a file (replacing any root names)
     //
-    fileURL: function (file) {return file.replace(this.rootPattern,this.config.root)},
+    fileURL: function (file) {
+      var match = file.match(/^\[([-._a-z0-9]+)\]/i);
+      if (match && match[1] in PATH)
+        {file = (PATH[match[1]]||this.config.root) + file.substr(match[1].length+2)}
+      return file;
+    },
     //
-    //  Remove root if URL includes it
+    //  Replace root names if URL includes one
     //
     fileName: function (url) {
       var root = this.config.root;
-      if (url.substr(0,root.length) == root) {url = "["+BASENAME+"]"+url.substr(root.length)}
+      if (url.substr(0,root.length) === root) {url = "["+BASENAME+"]"+url.substr(root.length)}
+      else {
+        for (var id in PATH) {if (PATH.hasOwnProperty(id) && PATH[id]) {
+          if (url.substr(0,PATH[id].length) === PATH[id])
+            {url = "["+id+"]"+url.substr(PATH[id].length); break}
+        }}
+      }
       return url;
     },
     //
@@ -983,7 +998,7 @@ MathJax.cdnFileVersions = {}; // can be used to specify revisions for individual
       return string;
     }
   };
-
+  
 })("MathJax");
 
 /**********************************************************/
@@ -2967,10 +2982,10 @@ MathJax.Hub.Startup = {
       CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'')
         .replace(/^(https?:\/\/(cdn.mathjax.org|[0-9a-f]+(-[0-9a-f]+)?.ssl.cf1.rackcdn.com)\/mathjax\/)(latest)/,
                  "$1"+BASE.version+"-$4");
+      BASE.Ajax.config.root = CONFIG.root;
       break;
     }
   }
-  BASE.Ajax.config = CONFIG;
 
   var AGENT = navigator.userAgent;
   var BROWSERS = {
