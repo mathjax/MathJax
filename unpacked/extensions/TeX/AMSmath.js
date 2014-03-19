@@ -448,8 +448,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         tag.id = ID; if (global.label) {AMS.eqlabels[global.label].id = ID}
       }
       AMS.eqIDs[tag.id] = 1;
-      delete global.tag; delete global.tagID; delete global.label;
+      this.clearTag();
       return tag;
+    },
+    clearTag: function () {
+      var global = this.global;
+      delete global.tag; delete global.tagID; delete global.label;
     },
 
     /*
@@ -541,7 +545,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (this.global.tag && !this.global.notags) {
         this.row = [this.getTag()].concat(this.row);
         mtr = MML.mlabeledtr;
-      }
+      } else {this.clearTag()}
       if (this.numbered) {delete this.global.notag}
       this.table.push(mtr.apply(MML,this.row)); this.row = [];
     },
