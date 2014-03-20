@@ -101,6 +101,10 @@
 
     hideProcessedMath: true,           // use display:none until all math is processed
 
+    fontNames: ["TeX","STIX","STIX-Web","Asana-Math",
+                "Gyre-Termes","Gyre-Pagella","Latin-Modern","Neo-Euler"],
+
+
     Config: function () {
       this.SUPER(arguments).Config.apply(this,arguments);
       var settings = HUB.config.menuSettings, config = this.config, font = settings.font;
@@ -112,6 +116,7 @@
       } else {
         this.fontInUse = config.font || "TeX";
       }
+      if (this.fontNames.indexOf(this.fontInUse) < 0) {this.fontInUse = "TeX"}
       this.fontDir += "/" + this.fontInUse;
       if (!this.require) {this.require = []}
       this.require.push(this.fontDir+"/fontdata.js");
