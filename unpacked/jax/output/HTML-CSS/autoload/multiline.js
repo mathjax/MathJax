@@ -369,7 +369,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           span.style.paddingLeft = "";
           if (color) {this.HTMLremoveColor(span); this.HTMLhandleColor(span)}
         }
-        if (state.first) {state.nextIsFirst = true} else {delete state.nextIsFirst}
+        if (state.first && span.bbox.w === 0) {state.nextIsFirst = true}
+          else {delete state.nextIsFirst}
         //
         //  Update bounding box
         //

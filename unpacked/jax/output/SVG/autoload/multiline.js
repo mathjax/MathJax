@@ -336,7 +336,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         if (state.last && svg.X) {svg.X = 0}
         line.Add(svg,line.w,0,true);
       }
-      if (state.first) {state.nextIsFirst = true} else {delete state.nextIsFirst}
+      if (state.first && svg.w === 0) {state.nextIsFirst = true}
+        else {delete state.nextIsFirst}
     }
   });
       
