@@ -93,6 +93,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       svg.Clean();
       this.SVGhandleColor(svg);
       this.SVGsaveData(svg);
+      var data = this.SVGdata;
+      data.dx = dx; data.s = s; data.u = u, data.v = v; data.delta = delta;      
       return svg;
     },
     SVGgetScripts: function (s) {

@@ -469,13 +469,84 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       }
       //
       //  If this is the end, check for super and subscripts, and move those
-      //  by moving the stack tht contains them, and shifting by the amount of the
+      //  by moving the stack that contains them, and shifting by the amount of the
       //  base that has been removed.  Remove the empty base box from the stack.
       //
       if (end.length === 0) {
         var sup = this.data[this.sup], sub = this.data[this.sub], w = svg.w, data;
         if (sup) {data = sup.SVGdata; svg.Add(sup.toSVG(),w+(data.dx||0),data.dy)}
         if (sub) {data = sub.SVGdata; svg.Add(sub.toSVG(),w+(data.dx||0),data.dy)}
+      }
+    }
+
+  });
+  
+  /**************************************************************************/
+
+  MML.mmultiscripts.Augment({
+    SVGbetterBreak: function (info,state) {
+      if (!this.data[this.base]) {return false}
+      //
+      //  Get the current breakpoint position and other data
+      //
+      var index = info.index.slice(0), i = info.index.shift(),
+          W, w, scanW, broken = (info.index.length > 0), better = false;
+      if (!broken) {info.W += info.w; info.w = 0}
+      info.scanW = info.W;
+      //
+      //  The width of the postscripts
+      //
+      var dw = this.SVGdata.w - this.data[this.base].SVGdata.w - this.SVGdata.dx;
+      //
+      //  Add in the prescripts
+      //  
+      info.scanW += this.SVGdata.dx; scanW = info.scanW;
+      //
+      //  Check if the base can be broken (but don't break between prescripts and base)
+      //
+      if (this.data[this.base].SVGbetterBreak(info,state)) {
+        better = true; index = [this.base].concat(info.index); W = info.W; w = info.w;
+        if (info.penalty === PENALTY.newline) {better = broken = true}
+      }
+      //
+      //  Add in the base if it is unbroken, and add the postscripts
+      //
+      if (!broken) {this.SVGaddWidth(this.base,info,scanW)}
+      info.scanW += dw; info.W = info.scanW;
+      info.index = []; if (better) {info.W = W; info.w = w; info.index = index}
+      return better;
+    },
+    
+    SVGmoveLine: function (start,end,svg,state,values) {
+      var dx, data = this.SVGdata;
+      //
+      //  If this is the start, move the prescripts, if any.
+      //
+      if (start.length < 1) {
+        this.scriptBox = this.SVGgetScripts(this.SVGdata.s);
+        var presub = this.scriptBox[2], presup = this.scriptBox[3]; dx = svg.w + data.dx;
+        if (presup) {svg.Add(presup,dx+data.delta-presup.w,data.u)}
+        if (presub) {svg.Add(presub,dx-presub.w,-data.v)}
+      }
+      //
+      //  Move the proper part of the base
+      //
+      if (this.data[this.base]) {
+        if (start.length > 1) {
+          this.data[this.base].SVGmoveSlice(start.slice(1),end.slice(1),svg,state,values,"paddingLeft");
+        } else {
+          if (end.length <= 1) {this.data[this.base].SVGmove(svg,state,values)}
+            else {this.data[this.base].SVGmoveSlice([],end.slice(1),svg,state,values,"paddingRight")}
+        }
+      }
+      //
+      //  If this is the end, move the postscripts, if any.
+      //
+      if (end.length === 0) {
+        var sub = this.scriptBox[0], sup = this.scriptBox[1]; dx = svg.w + data.s;
+        if (sup) {svg.Add(sup,dx,data.u)}
+        if (sub) {svg.Add(sub,dx-data.delta,-data.v)}
+        delete this.scriptBox;
       }
     }
 
@@ -579,8 +650,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //    use it to modify the default penalty
       //
       var linebreak = PENALTY[linebreakValue];
-      if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit*1000)
-        {linebreak = [(w+PENALTY.spaceoffset)*PENALTY.spacefactor]}
+      if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit*1000 &&
+          !this.mathbackground && !this.backrgound)
+        {linebreak = [(w/1000+PENALTY.spaceoffset)*PENALTY.spacefactor]}
       if (!(linebreak instanceof Array)) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}
