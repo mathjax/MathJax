@@ -366,15 +366,15 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         //
         if (state.last) {span.style.paddingRight = ""}
         if (state.first || state.nextIsFirst) {
-          delete state.nextIsFirst;
           span.style.paddingLeft = "";
           if (color) {this.HTMLremoveColor(span); this.HTMLhandleColor(span)}
         }
+        if (state.first) {state.nextIsFirst = true} else {delete state.nextIsFirst}
         //
         //  Update bounding box
         //
         this.HTMLcombineBBoxes(this,line.bbox);
-      } else if (state.first) {state.nextIsFirst = true} else {delete state.nextIsFirst}
+      }
     }
   });
 
