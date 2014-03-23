@@ -108,6 +108,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       }
       this.HTMLhandleSpace(span);
       this.HTMLhandleColor(span);
+      var bbox = span.bbox;
+      bbox.dx = dx; bbox.s = s; bbox.u = u; bbox.v = v; bbox.delta = delta;
+      bbox.px = dx+base.bbox.w;
       return span;
     },
     HTMLgetScripts: function (stack,s) {
@@ -143,6 +146,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (BOX[j]) {
           BOX[j].bbox.w += s;
           BOX[j].bbox.rw = Math.max(BOX[j].bbox.w,BOX[j].bbox.rw);
+          BOX[j].bbox.name = (["sub","sup","presub","presup"])[j];
           this.HTMLcleanBBox(BOX[j].bbox);
         }
       }
