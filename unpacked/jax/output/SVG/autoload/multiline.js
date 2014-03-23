@@ -328,14 +328,16 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
            (state.last && values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER)) {
         //
         //  Recreate output
-        //  Remove padding (if first, remove at right, if last remove at left)
+        //  Remove padding (if first, remove at leftt, if last remove at right)
         //  Add to line
         //
         var svg = this.toSVG(this.SVGdata.HW,this.SVGdata.D);
-        if (state.last) {svg.x = 0}
-        if (state.first || state.nextIsFirst) {delete state.nextIsFirst; if (svg.X) {svg.X = 0}}
+        if (state.first || state.nextIsFirst) {svg.x = 0}
+        if (state.last && svg.X) {svg.X = 0}
         line.Add(svg,line.w,0,true);
-      } else if (state.first) {state.nextIsFirst = true} else {delete state.nextIsFirst}
+      }
+      if (state.first && svg.w === 0) {state.nextIsFirst = true}
+        else {delete state.nextIsFirst}
     }
   });
       
