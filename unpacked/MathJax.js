@@ -246,7 +246,14 @@ MathJax.cdnFileVersions = {}; // can be used to specify revisions for individual
   //
   //  Evaluate a string in global context
   //
-  var EVAL = function (code) {return eval.call(window,code)}
+  var EVAL = function (code) {
+    try {
+      return eval.call(window, code);
+    }
+    catch(ex) {
+      return eval.call(window, undefined);
+    }
+  };
   var TESTEVAL = function () {
     EVAL("var __TeSt_VaR__ = 1"); // check if it works in global context
     if (window.__TeSt_VaR__) {
