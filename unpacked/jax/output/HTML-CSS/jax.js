@@ -2391,6 +2391,7 @@
           style.marginLeft = style.marginRight = HTMLCSS.Em(space);
           span.bbox.w += 2*space; span.bbox.r += 2*space;
 	}
+        this.SUPER(arguments).HTMLhandleSpace.call(this,span);
       }
     });
 
@@ -2551,7 +2552,7 @@
           if (stretch[i]) {box.bbox = this.data[i].HTMLstretchH(box,W).bbox}
           if (box.bbox.w > WW) {WW = box.bbox.w}
         }}
-	var t = HTMLCSS.TeX.rule_thickness, factor = HTMLCSS.FONTDATA.TeX_factor;
+	var t = HTMLCSS.TeX.rule_thickness * this.mscale, factor = HTMLCSS.FONTDATA.TeX_factor;
 	var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()};
 	var x, y, z1, z2, z3, dw, k, delta = 0;
         if (base.bbox.ic) {delta = 1.3*base.bbox.ic + .05} // adjust faked IC to be more in line with expeted results
