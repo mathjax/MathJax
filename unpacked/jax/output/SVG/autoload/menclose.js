@@ -99,7 +99,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     toSVG: function (HW,DD) {
       this.SVGgetStyles();
 
-      var svg = this.SVG();
+      var svg = this.SVG(), scale = this.SVGgetScale(svg);
       this.SVGhandleSpace(svg);
       var base = this.SVGdataStretched(0,HW,DD);
 
@@ -107,9 +107,10 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (values.color && !this.mathcolor) {values.mathcolor = values.color}
       if (values.thickness == null) {values.thickness = ".075em"}
       if (values.padding == null)   {values.padding   = ".2em"}
-      var mu = this.SVGgetMu(svg), scale = this.SVGgetScale();
+      var mu = this.SVGgetMu(svg);
       var p = SVG.length2em(values.padding,mu,1/SVG.em) * scale;  // padding for enclosure
-      var t = SVG.length2em(values.thickness,mu,1/SVG.em);        // thickness of lines (not scaled, see issue #414)
+      var t = SVG.length2em(values.thickness,mu,1/SVG.em);        // thickness of lines
+      t = Math.max(1/SVG.em,t);  // see issue #414
       var H = base.h+p+t, D = base.d+p+t, W = base.w+2*(p+t);
       var dx = 0, w, h, i, m, borders = [false,false,false,false];
       if (!values.mathcolor) {values.mathcolor = "black"}

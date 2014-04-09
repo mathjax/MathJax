@@ -96,7 +96,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
 
       var state = {
             n: 0, Y: 0,
-            scale: this.SVGgetScale(),
+            scale: this.scale,
             isTop: isTop,
             values: {},
             VALUES: VALUES
