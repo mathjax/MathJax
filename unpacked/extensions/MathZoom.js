@@ -137,24 +137,26 @@
       //
       //  Create the DOM elements for the zoom box
       //
-      var Mw = Math.floor(.85*document.body.clientWidth),
-          Mh = Math.floor(.85*Math.max(document.body.clientHeight,document.documentElement.clientHeight));
+      var container = this.findContainer(math);
+      var Mw = Math.floor(.85*container.clientWidth),
+          Mh = Math.max(document.body.clientHeight,document.documentElement.clientHeight);
+      if (this.getOverflow(container) !== "visible") {Mh = Math.min(container.clientHeight,Mh)}
+      Mh = Math.floor(.85*Mh);
       var div = HTML.Element(
         "span",{id:"MathJax_ZoomFrame"},[
           ["span",{id:"MathJax_ZoomOverlay", onmousedown:this.Remove}],
           ["span",{
             id:"MathJax_Zoom", onclick:this.Remove,
-            style:{
-              visibility:"hidden", fontSize:this.settings.zscale,
-              "max-width":Mw+"px", "max-height":Mh+"px"
-            }
+            style:{visibility:"hidden", fontSize:this.settings.zscale}
           },[["span",{style:{display:"inline-block", "white-space":"nowrap"}}]]
         ]]
       );
       var zoom = div.lastChild, span = zoom.firstChild, overlay = div.firstChild;
       math.parentNode.insertBefore(div,math); math.parentNode.insertBefore(math,div); // put div after math
       if (span.addEventListener) {span.addEventListener("mousedown",this.Remove,true)}
-      
+      var eW = zoom.offsetWidth; Mw -= eW; Mh -= eW;
+      zoom.style.maxWidth = Mw+"px"; zoom.style.maxHeight = Mh+"px";
+
       if (this.msieTrapEventBug) {
         var trap = HTML.Element("span",{id:"MathJax_ZoomEventTrap", onmousedown:this.Remove});
         div.insertBefore(trap,zoom);
@@ -187,7 +189,7 @@
         if (zoom.offsetWidth  > Mw) {zoom.style.width  = Mw+"px"; zoom.style.height = (bbox.zH+this.scrollSize)+"px"}
       }
       if (this.operaPositionBug) {zoom.style.width = Math.min(Mw,bbox.zW)+"px"}  // Opera gets width as 0?
-      if (zoom.offsetWidth && zoom.offsetWidth < Mw && zoom.offsetHeight < Mh)
+      if (zoom.offsetWidth > eW && zoom.offsetWidth < Mw && zoom.offsetHeight < Mh)
          {zoom.style.overflow = "visible"}  // don't show scroll bars if we don't need to
       this.Position(zoom,bbox);
       if (this.msieTrapEventBug) {
@@ -223,7 +225,7 @@
       var XY = this.Resize(), x = XY.x, y = XY.y, W = bbox.mW;
       var dx = -W-Math.floor((zoom.offsetWidth-W)/2), dy = bbox.Y;
       zoom.style.left = Math.max(dx,10-x)+"px"; zoom.style.top = Math.max(dy,10-y)+"px";
-      if (!ZOOM.msiePositionBug) {ZOOM.SetWH()} // refigure overlay width/height
+      this.Resize(); // refigure overlay position and size
     },
     
     //
@@ -233,13 +235,8 @@
       if (ZOOM.onresize) {ZOOM.onresize(event)}
       var div = document.getElementById("MathJax_ZoomFrame"),
           overlay = document.getElementById("MathJax_ZoomOverlay");
-      var xy = ZOOM.getXY(div);
-      var obj = div.parentNode, overflow = ZOOM.getOverflow(obj);
-      while (obj.parentNode && obj !== document.body && overflow === "visible") {
-        obj = obj.parentNode
-        overflow = ZOOM.getOverflow(obj);
-      }
-      if (overflow !== "visible") {
+      var xy = ZOOM.getXY(div), obj = ZOOM.findContainer(div);
+      if (ZOOM.getOverflow(obj) !== "visible") {
         overlay.scroll_parent = obj;  // Save this for future reference.
         var XY = ZOOM.getXY(obj);     // Remove container position
         xy.x -= XY.x; xy.y -= XY.y;
@@ -247,7 +244,7 @@
         xy.x -= XY.x; xy.y -= XY.y;
       }
       overlay.style.left = (-xy.x)+"px"; overlay.style.top = (-xy.y)+"px";
-      if (ZOOM.msiePositionBug) {setTimeout(ZOOM.SetWH,0)} else {ZOOM.SetWH()}
+      setTimeout(ZOOM.SetWH,0);
       return xy;
     },
     SetWH: function () {
@@ -256,6 +253,12 @@
       var doc = overlay.scroll_parent || document.documentElement || document.body;
       overlay.style.width = doc.scrollWidth + "px";
       overlay.style.height = Math.max(doc.clientHeight,doc.scrollHeight) + "px";
+    },
+    findContainer: function (obj) {
+      var obj = obj.parentNode;
+      while (obj.parentNode && obj !== document.body && ZOOM.getOverflow(obj) === "visible")
+        {obj = obj.parentNode}
+      return obj;
     },
     //
     //  Look up CSS properties (use getComputeStyle if available, or currentStyle if not)
