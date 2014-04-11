@@ -41,8 +41,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (values.padding == null)   {values.padding   = ".2em"}
       span = this.HTMLcreateSpan(span);
       var mu = this.HTMLgetMu(span), scale = this.HTMLgetScale();
-      var p = HTMLCSS.length2em(values.padding,mu,1/HTMLCSS.em) * scale;  // padding for enclosure
-      var t = HTMLCSS.length2em(values.thickness,mu,1/HTMLCSS.em);        // thickness of lines (not scaled, see issue #414)
+      var p = HTMLCSS.length2em(values.padding,mu,1/HTMLCSS.em) * scale;   // padding for enclosure
+      var t = HTMLCSS.length2em(values.thickness,mu,1/HTMLCSS.em) * scale; // thickness of lines
+      t = Math.max(1/HTMLCSS.em,t); // see issue #414
       var SOLID = HTMLCSS.Em(t)+" solid";
 
       var stack = HTMLCSS.createStack(span);
@@ -154,7 +155,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
               this.HTMLvmlElement(line,"stroke",{endarrow:"classic"});
             } else {
               if (!svg) {svg = this.HTMLsvg(stack,H,D,W,t,values.mathcolor)}
-              var l = Math.sqrt(W*W + (H+D)*(H+D)), f = 1/l * 10*scale/HTMLCSS.em * t/.075;
+              var l = Math.sqrt(W*W + (H+D)*(H+D)), f = 1/l * 10*this.scale/HTMLCSS.em * t/.075;
               w = W * f; h = (H+D) * f; var x = W - t/2, y = t/2;
               if (y+h-.4*w < 0) {y = .4*w-h}
               this.HTMLsvgElement(svg.firstChild,"line",{

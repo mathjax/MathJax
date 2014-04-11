@@ -92,7 +92,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var stack = HTMLCSS.createStack(span);
       var state = {
             n: 0, Y: 0,
-            scale: this.HTMLgetScale(),
+            scale: this.scale,
             isTop: isTop,
             values: {},
             VALUES: VALUES

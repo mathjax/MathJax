@@ -1901,7 +1901,8 @@
 	} else {
 	  var space = this.texSpacing();
 	  if (space !== "") {
-	    space = HTMLCSS.length2em(space,this.HTMLgetScale())/(span.scale||1);
+            this.HTMLgetScale();
+	    space = HTMLCSS.length2em(space,this.scale)/(span.scale||1)*this.mscale;
 	    if (span.style.paddingLeft) {space += HTMLCSS.unEm(span.style.paddingLeft)}
 	    span.style.paddingLeft = HTMLCSS.Em(space);
 	  }
@@ -1909,6 +1910,7 @@
       },
 
       HTMLgetScale: function () {
+        if (this.scale) {return this.scale * this.mscale}
 	var scale = 1, values = this.getValues("mathsize","scriptlevel","fontsize");
 	if (this.style) {
 	  var span = this.HTMLspanElement();
@@ -1921,8 +1923,8 @@
 	  values.scriptminsize = HTMLCSS.length2em(this.Get("scriptminsize"));
 	  if (scale < values.scriptminsize) {scale = values.scriptminsize}
 	}
-	if (this.isToken) {scale *= HTMLCSS.length2em(values.mathsize)}
-	return scale;
+        this.scale = scale; this.mscale = HTMLCSS.length2em(values.mathsize);
+	return scale * this.mscale;
       },
       HTMLgetMu: function (span) {
 	var mu = 1, values = this.getValues("scriptlevel","scriptsizemultiplier");
@@ -2057,7 +2059,7 @@
 	if (bbox.skew && text.length !== 1) {delete bbox.skew}
         if (bbox.rw > bbox.w && text.length === 1 && !variant.noIC) {
           bbox.ic = bbox.rw - bbox.w;
-          HTMLCSS.createBlank(span,bbox.ic);
+          HTMLCSS.createBlank(span,bbox.ic/this.mscale);
           bbox.w = bbox.rw;
         }
 	this.HTMLhandleSpace(span);
@@ -2129,7 +2131,8 @@
         //  Handle large operator centering
         //
 	if (values.largeop) {
-	  var p = (span.bbox.h - span.bbox.d)/2 - HTMLCSS.TeX.axis_height*span.scale;
+          var a = HTMLCSS.TeX.axis_height * this.scale * this.mscale
+	  var p = (span.bbox.h - span.bbox.d)/2 - a;
 	  if (HTMLCSS.safariVerticalAlignBug && span.lastChild.nodeName === "IMG") {
 	    span.lastChild.style.verticalAlign =
 	      HTMLCSS.Em(HTMLCSS.unEm(span.lastChild.style.verticalAlign||0)/HTMLCSS.em-p/span.scale);
@@ -2143,7 +2146,7 @@
 	  span.bbox.h -= p; span.bbox.d += p;
 	  if (span.bbox.rw > span.bbox.w) {
 	    span.bbox.ic = span.bbox.rw-span.bbox.w;
-	    HTMLCSS.createBlank(span,span.bbox.ic);
+	    HTMLCSS.createBlank(span,span.bbox.ic/this.mscale);
 	    span.bbox.w = span.bbox.rw;
 	  }
 	}
@@ -2204,7 +2207,7 @@
 	this.HTMLremoveColor();
 	var values = this.getValues("symmetric","maxsize","minsize");
 	var span = this.HTMLspanElement(), mu = this.HTMLgetMu(span), H;
-	var axis = HTMLCSS.TeX.axis_height, scale = span.scale;
+	var scale = this.HTMLgetScale(), axis = HTMLCSS.TeX.axis_height * scale;
 	if (values.symmetric) {H = 2*Math.max(h-axis,d+axis)} else {H = h + d}
 	values.maxsize = HTMLCSS.length2em(values.maxsize,mu,span.bbox.h+span.bbox.d);
 	values.minsize = HTMLCSS.length2em(values.minsize,mu,span.bbox.h+span.bbox.d);
@@ -2280,12 +2283,12 @@
       toHTML: function (span) {
 	span = this.HTMLcreateSpan(span);
 	var values = this.getValues("height","depth","width");
-        var mu = this.HTMLgetMu(span);
+        var mu = this.HTMLgetMu(span); this.HTMLgetScale();
 	values.mathbackground = this.mathbackground;
 	if (this.background && !this.mathbackground) {values.mathbackground = this.background}
-	var h = HTMLCSS.length2em(values.height,mu),
-            d = HTMLCSS.length2em(values.depth,mu),
-	    w = HTMLCSS.length2em(values.width,mu);
+	var h = HTMLCSS.length2em(values.height,mu) * this.mscale,
+            d = HTMLCSS.length2em(values.depth,mu) * this.mscale,
+	    w = HTMLCSS.length2em(values.width,mu) * this.mscale;
        HTMLCSS.createSpace(span,h,d,w,values.mathbackground,true);
        return span;
       }
@@ -2323,9 +2326,10 @@
           else {HTMLCSS.Measured(child,box)}
 	  var values = this.getValues("height","depth","width","lspace","voffset"),
               x = 0, y = 0, mu = this.HTMLgetMu(span);
+          this.HTMLgetScale();
 	  if (values.lspace)  {x = this.HTMLlength2em(box,values.lspace,mu)}
 	  if (values.voffset) {y = this.HTMLlength2em(box,values.voffset,mu)}
-	  HTMLCSS.placeBox(box,x,y);
+	  HTMLCSS.placeBox(box,x,y); x /= this.mscale; y /= this.mscale;
 	  span.bbox = {
 	    h: box.bbox.h, d: box.bbox.d, w: box.bbox.w, exactW: true,
 	    lw: Math.min(0,box.bbox.lw+x), rw: Math.max(box.bbox.w,box.bbox.rw+x),
@@ -2350,7 +2354,7 @@
 	if (m == null) {m = -HTMLCSS.BIGDIMEN}
 	var match = String(length).match(/width|height|depth/);
 	var size = (match ? span.bbox[match[0].charAt(0)] : (d ? span.bbox[d] : 0));
-	var v = HTMLCSS.length2em(length,mu,size);
+	var v = HTMLCSS.length2em(length,mu,size/this.mscale) * this.mscale;
 	if (d && String(length).match(/^\s*[-+]/))
 	  {return Math.max(m,span.bbox[d]+v)} else {return v}
       },
@@ -2418,7 +2422,7 @@
 	  HTMLCSS.placeBox(den,num.bbox.w+bevel.bbox.w-delta,(den.bbox.d-den.bbox.h)/2+a-delta);
 	} else {
 	  var W = Math.max(num.bbox.w,den.bbox.w);
-	  var t = HTMLCSS.thickness2em(values.linethickness,scale), p,q, u,v;
+	  var t = HTMLCSS.thickness2em(values.linethickness,this.scale)*this.mscale, p,q, u,v;
 	  var mt = HTMLCSS.TeX.min_rule_thickness/this.em;
 	  if (isDisplay) {u = HTMLCSS.TeX.num1; v = HTMLCSS.TeX.denom1}
 	    else {u = (t === 0 ? HTMLCSS.TeX.num3 : HTMLCSS.TeX.num2); v = HTMLCSS.TeX.denom2}
@@ -2449,11 +2453,12 @@
           //  Add nulldelimiterspace around the fraction
           //  (TeXBook pg 150 and Appendix G rule 15e)
           //
-          var space = HTMLCSS.TeX.nulldelimiterspace;
+          var space = HTMLCSS.TeX.nulldelimiterspace * this.mscale;
           var style = span.firstChild.style;
           style.marginLeft = style.marginRight = HTMLCSS.Em(space);
           span.bbox.w += 2*space; span.bbox.r += 2*space;
 	}
+        this.SUPER(arguments).HTMLhandleSpace.call(this,span);
       }
     });
 
@@ -2614,7 +2619,7 @@
           if (stretch[i]) {box.bbox = this.data[i].HTMLstretchH(box,W).bbox}
           if (box.bbox.w > WW) {WW = box.bbox.w}
         }}
-	var t = HTMLCSS.TeX.rule_thickness, factor = HTMLCSS.FONTDATA.TeX_factor;
+	var t = HTMLCSS.TeX.rule_thickness * this.mscale, factor = HTMLCSS.FONTDATA.TeX_factor;
 	var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()};
 	var x, y, z1, z2, z3, dw, k, delta = 0;
         if (base.bbox.ic) {delta = 1.3*base.bbox.ic + .05} // adjust faked IC to be more in line with expeted results
@@ -2688,13 +2693,11 @@
 	if (sup) {sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw)}
 	if (sub) {sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw)}
 	HTMLCSS.placeBox(base,0,0);
-        var sscale;
+        var sscale = scale;
         if (sup) {
           sscale = this.data[this.sup].HTMLgetScale();
         } else if (sub) {
           sscale = this.data[this.sub].HTMLgetScale();
-        } else {
-          sscale = this.HTMLgetScale();
         }
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
@@ -2826,8 +2829,8 @@
             if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(box,HW,D),box)}
             else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(box,HW),box)}
             else {HTMLCSS.Measured(child,box)}
-	    // FIXME: should the axis height be scaled?
-	    HTMLCSS.placeBox(box,0,HTMLCSS.TeX.axis_height-(box.bbox.h+box.bbox.d)/2+box.bbox.d);
+            var a = HTMLCSS.TeX.axis_height * this.HTMLgetScale();
+	    HTMLCSS.placeBox(box,0,a-(box.bbox.h+box.bbox.d)/2+box.bbox.d);
 	  } else {
 	    var html = this.data[0].toHTML(span,HW,D);
             if (D != null) {html = this.data[0].HTMLstretchV(box,HW,D)}

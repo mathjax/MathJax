@@ -32,8 +32,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
   MML.mmultiscripts.Augment({
     toSVG: function (HW,D) {
       this.SVGgetStyles();
-      var svg = this.SVG(); this.SVGhandleSpace(svg);
-      var scale = this.SVGgetScale();
+      var svg = this.SVG(), scale = this.SVGgetScale(svg); this.SVGhandleSpace(svg);
       var base = (this.data[this.base] ? this.SVGdataStretched(this.base,HW,D) : SVG.BBOX.G().Clean());
       var x_height = SVG.TeX.x_height * scale,
           s = SVG.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?

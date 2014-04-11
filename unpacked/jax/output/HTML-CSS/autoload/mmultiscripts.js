@@ -46,10 +46,12 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var BOX = this.HTMLgetScripts(stack,s);
       var sub = BOX[0], sup = BOX[1], presub = BOX[2], presup = BOX[3];
 
+      //
       // <mmultiscripts> children other than the base can be <none/>,
       // <mprescripts/>, <mrow></mrow> etc so try to get HTMLgetScale from the
       // first element with a spanID. See issue 362.
-      var sscale = this.HTMLgetScale();
+      //
+      var sscale = scale;
       for (var i = 1; i < this.data.length; i++) {
         if (this.data[i] && this.data[i].spanID) {
           sscale = this.data[i].HTMLgetScale();
