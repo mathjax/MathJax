@@ -772,7 +772,10 @@
       this.outerEm = em / jax.HTMLCSS.scale;
       emex.parentNode.removeChild(emex);
 
+      this.zoomScale = parseInt(HUB.config.menuSettings.zscale) / 100;
       this.idPostfix = "-zoom"; jax.root.toHTML(span,span); this.idPostfix = "";
+      this.zoomScale = 1;
+      
       var width = jax.root.HTMLspanElement().bbox.width;
       if (width) {
         //  Handle full-width displayed equations
@@ -954,7 +957,7 @@
       if (length === MML.SIZE.BIG)    {return 2}
       if (length === MML.SIZE.SMALL)  {return .71}
       if (length === "infinity")      {return HTMLCSS.BIGDIMEN}
-      var factor = this.FONTDATA.TeX_factor;
+      var factor = this.FONTDATA.TeX_factor, emFactor = (HTMLCSS.zoomScale||1) / HTMLCSS.em;
       if (length.match(/mathspace$/)) {return HTMLCSS.MATHSPACE[length]*factor}
       var match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
       var m = parseFloat(match[1]||"1"), unit = match[2];
@@ -962,12 +965,12 @@
       if (unit === "em") {return m * factor}
       if (unit === "ex") {return m * HTMLCSS.TeX.x_height * factor}
       if (unit === "%")  {return m / 100 * size}
-      if (unit === "px") {return m / HTMLCSS.em}
-      if (unit === "pt") {return m / 10 * factor}                        // 10 pt to an em
-      if (unit === "pc") {return m * 1.2 * factor}                       // 12 pt to a pc
-      if (unit === "in") {return m * this.pxPerInch / HTMLCSS.em}
-      if (unit === "cm") {return m * this.pxPerInch / HTMLCSS.em / 2.54} // 2.54 cm to an inch
-      if (unit === "mm") {return m * this.pxPerInch / HTMLCSS.em / 25.4} // 10 mm to a cm
+      if (unit === "px") {return m * emFactor}
+      if (unit === "pt") {return m / 10 * factor}                      // 10 pt to an em
+      if (unit === "pc") {return m * 1.2 * factor}                     // 12 pt to a pc
+      if (unit === "in") {return m * this.pxPerInch * emFactor}
+      if (unit === "cm") {return m * this.pxPerInch * emFactor / 2.54} // 2.54 cm to an inch
+      if (unit === "mm") {return m * this.pxPerInch * emFactor / 25.4} // 10 mm to a cm
       if (unit === "mu") {return m / 18 * factor * mu} // 18mu to an em for the scriptlevel
       return m*factor*size;  // relative to given size (or 1em as default)
     },
