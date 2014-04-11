@@ -189,7 +189,7 @@
         if (zoom.offsetWidth  > Mw) {zoom.style.width  = Mw+"px"; zoom.style.height = (bbox.zH+this.scrollSize)+"px"}
       }
       if (this.operaPositionBug) {zoom.style.width = Math.min(Mw,bbox.zW)+"px"}  // Opera gets width as 0?
-      if (zoom.offsetWidth > eW && zoom.offsetWidth < Mw && zoom.offsetHeight < Mh)
+      if (zoom.offsetWidth > eW && zoom.offsetWidth-eW < Mw && zoom.offsetHeight-eW < Mh)
          {zoom.style.overflow = "visible"}  // don't show scroll bars if we don't need to
       this.Position(zoom,bbox);
       if (this.msieTrapEventBug) {
@@ -225,7 +225,7 @@
       var XY = this.Resize(), x = XY.x, y = XY.y, W = bbox.mW;
       var dx = -W-Math.floor((zoom.offsetWidth-W)/2), dy = bbox.Y;
       zoom.style.left = Math.max(dx,10-x)+"px"; zoom.style.top = Math.max(dy,10-y)+"px";
-      this.Resize(); // refigure overlay position and size
+      setTimeout(ZOOM.Resize); // refigure overlay position and size
     },
     
     //
@@ -244,7 +244,7 @@
         xy.x -= XY.x; xy.y -= XY.y;
       }
       overlay.style.left = (-xy.x)+"px"; overlay.style.top = (-xy.y)+"px";
-      setTimeout(ZOOM.SetWH,0);
+      if (ZOOM.msiePositionBug) {setTimeout(ZOOM.SetWH,0)} else {ZOOM.SetWH()}
       return xy;
     },
     SetWH: function () {
