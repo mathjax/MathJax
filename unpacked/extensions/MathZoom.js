@@ -154,7 +154,7 @@
       var zoom = div.lastChild, span = zoom.firstChild, overlay = div.firstChild;
       math.parentNode.insertBefore(div,math); math.parentNode.insertBefore(math,div); // put div after math
       if (span.addEventListener) {span.addEventListener("mousedown",this.Remove,true)}
-      var eW = zoom.offsetWidth; Mw -= eW; Mh -= eW;
+      var eW = zoom.offsetWidth || zoom.clientWidth; Mw -= eW; Mh -= eW;
       zoom.style.maxWidth = Mw+"px"; zoom.style.maxHeight = Mh+"px";
 
       if (this.msieTrapEventBug) {
