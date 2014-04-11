@@ -222,10 +222,12 @@
     //  Set the position of the zoom box and overlay
     //
     Position: function (zoom,bbox) {
+      zoom.style.display = "none"; // avoids getting excessive width in Resize()
       var XY = this.Resize(), x = XY.x, y = XY.y, W = bbox.mW;
+      zoom.style.display = "";
       var dx = -W-Math.floor((zoom.offsetWidth-W)/2), dy = bbox.Y;
       zoom.style.left = Math.max(dx,10-x)+"px"; zoom.style.top = Math.max(dy,10-y)+"px";
-      setTimeout(ZOOM.Resize); // refigure overlay position and size
+      if (!ZOOM.msiePositionBug) {ZOOM.SetWH()} // refigure overlay width/height
     },
     
     //
@@ -249,10 +251,11 @@
     },
     SetWH: function () {
       var overlay = document.getElementById("MathJax_ZoomOverlay");
-      overlay.style.width = overlay.style.height = "1px"; // so scrollWidth/Height will be right below
+      overlay.style.display = "none"; // so scrollWidth/Height will be right below
       var doc = overlay.scroll_parent || document.documentElement || document.body;
       overlay.style.width = doc.scrollWidth + "px";
       overlay.style.height = Math.max(doc.clientHeight,doc.scrollHeight) + "px";
+      overlay.style.display = "";
     },
     findContainer: function (obj) {
       var obj = obj.parentNode;

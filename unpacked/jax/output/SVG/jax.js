@@ -425,6 +425,13 @@
       if (this.operaZoomRefresh)
         {setTimeout(function () {span.firstChild.style.border="1px solid transparent"},1)}
       //
+      // WebKit bug (issue #749)
+      //  
+      if (span.offsetWidth < span.firstChild.offsetWidth) {
+        span.style.minWidth = span.firstChild.offsetWidth + "px";
+        math.style.minWidth = math.firstChild.offsetWidth + "px";
+      }
+      //
       //  Get height and width of zoomed math and original math
       //
       span.style.position = math.style.position = "absolute";
