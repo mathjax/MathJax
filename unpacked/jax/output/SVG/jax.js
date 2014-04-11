@@ -417,12 +417,20 @@
       emex.parentNode.removeChild(emex);
 
       span.appendChild(this.textSVG);
-      this.mathDIV = span;
+      this.mathDIV = span; this.zoomScale = parseInt(HUB.config.menuSettings.zscale) / 100;
       this.idPostfix = "-zoom"; jax.root.toSVG(span,span); this.idPostfix = "";
+      this.zoomScale = 1;
       span.removeChild(this.textSVG);
       
       if (this.operaZoomRefresh)
         {setTimeout(function () {span.firstChild.style.border="1px solid transparent"},1)}
+      //
+      // WebKit bug (issue #749)
+      //  
+      if (span.offsetWidth < span.firstChild.offsetWidth) {
+        span.style.minWidth = span.firstChild.offsetWidth + "px";
+        math.style.minWidth = math.firstChild.offsetWidth + "px";
+      }
       //
       //  Get height and width of zoomed math and original math
       //
@@ -465,18 +473,19 @@
       if (length === MML.SIZE.SMALL)  {return  710}
       if (length === "infinity")      {return SVG.BIGDIMEN}
       if (length.match(/mathspace$/)) {return 1000*SVG.MATHSPACE[length]}
+      var emFactor = (this.zoomScale || 1) / SVG.em;
       var match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
       var m = parseFloat(match[1]||"1") * 1000, unit = match[2];
       if (size == null) {size = 1000};  if (mu == null) {mu = 1}
       if (unit === "em") {return m}
       if (unit === "ex") {return m * SVG.TeX.x_height/1000}
       if (unit === "%")  {return m / 100 * size / 1000}
-      if (unit === "px") {return m / SVG.em}
-      if (unit === "pt") {return m / 10}                             // 10 pt to an em
-      if (unit === "pc") {return m * 1.2}                            // 12 pt to a pc
-      if (unit === "in") {return m * this.pxPerInch / SVG.em}
-      if (unit === "cm") {return m * this.pxPerInch / SVG.em / 2.54} // 2.54 cm to an inch
-      if (unit === "mm") {return m * this.pxPerInch / SVG.em / 25.4} // 10 mm to a cm
+      if (unit === "px") {return m * emFactor}
+      if (unit === "pt") {return m / 10}                               // 10 pt to an em
+      if (unit === "pc") {return m * 1.2}                              // 12 pt to a pc
+      if (unit === "in") {return m * this.pxPerInch * emFactor}
+      if (unit === "cm") {return m * this.pxPerInch * emFactor / 2.54} // 2.54 cm to an inch
+      if (unit === "mm") {return m * this.pxPerInch * emFactor / 25.4} // 10 mm to a cm
       if (unit === "mu") {return m / 18 * mu}
       return m*size / 1000;  // relative to given size (or 1em as default)
     },
