@@ -1286,18 +1286,21 @@
       },
       
       SVGgetScale: function (svg) {
-        if (this.mscale) {return this.scale * this.mscale}
-	var scale = 1,
-            values = this.getValues("mathsize","scriptlevel","fontsize");
-        if ((this.styles||{}).fontSize && !values.fontsize) {values.fontsize = this.styles.fontSize}
-	if (values.fontsize && !this.mathsize) {values.mathsize = values.fontsize}
-	if (values.scriptlevel !== 0) {
-	  if (values.scriptlevel > 2) {values.scriptlevel = 2}
-	  scale = Math.pow(this.Get("scriptsizemultiplier"),values.scriptlevel);
-	  values.scriptminsize = SVG.length2em(this.Get("scriptminsize"))/1000;
-	  if (scale < values.scriptminsize) {scale = values.scriptminsize}
-	}
-        this.scale = scale; this.mscale = SVG.length2em(values.mathsize)/1000;
+        var scale = 1;
+        if (this.mscale) {
+          scale = this.scale;
+        } else {
+          var values = this.getValues("mathsize","scriptlevel","fontsize");
+          if ((this.styles||{}).fontSize && !values.fontsize) {values.fontsize = this.styles.fontSize}
+          if (values.fontsize && !this.mathsize) {values.mathsize = values.fontsize}
+          if (values.scriptlevel !== 0) {
+            if (values.scriptlevel > 2) {values.scriptlevel = 2}
+            scale = Math.pow(this.Get("scriptsizemultiplier"),values.scriptlevel);
+            values.scriptminsize = SVG.length2em(this.Get("scriptminsize"))/1000;
+            if (scale < values.scriptminsize) {scale = values.scriptminsize}
+          }
+          this.scale = scale; this.mscale = SVG.length2em(values.mathsize)/1000;
+        }
         if (svg) {svg.scale = scale; if (this.isToken) {svg.scale *= this.mscale}}
 	return scale * this.mscale;
       },
