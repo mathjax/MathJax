@@ -972,7 +972,7 @@
       if (unit === "cm") {return m * this.pxPerInch * emFactor / 2.54} // 2.54 cm to an inch
       if (unit === "mm") {return m * this.pxPerInch * emFactor / 25.4} // 10 mm to a cm
       if (unit === "mu") {return m / 18 * factor * mu} // 18mu to an em for the scriptlevel
-      return m*factor*size;  // relative to given size (or 1em as default)
+      return m*size;  // relative to given size (or 1em as default)
     },
     thickness2em: function (length,mu) {
       var thick = HTMLCSS.TeX.rule_thickness;
