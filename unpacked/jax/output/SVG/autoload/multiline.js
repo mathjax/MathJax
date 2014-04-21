@@ -222,7 +222,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       if (state.n > 0) {
         var LHD = SVG.FONTDATA.baselineskip * state.scale;
-        var leading = (state.values.lineleading == null ? state.VALUES : state.values).lineleading;
+        var leading = (state.values.lineleading == null ? state.VALUES : state.values).lineleading * state.scale;
         state.Y -= Math.max(LHD,state.d + line.h + leading);
       }
       //
@@ -255,7 +255,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       else if (state.isLast) {shift = prev.indentshiftlast || def.indentshiftlast}
       else                   {shift = prev.indentshift || def.indentshift}
       if (shift === MML.INDENTSHIFT.INDENTSHIFT) {shift = prev.indentshift || def.indentshift}
-      if (shift === MML.INDENTSHIFT.AUTO || shift === "") {shift = (state.isTSop ? this.displayIndent : "0")}
+      if (shift === "auto" || shift === "") {shift = (state.isTSop ? this.displayIndent : "0")}
       return SVG.length2em(shift,0);
     },
     

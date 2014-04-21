@@ -90,6 +90,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       this.HTMLremoveColor(span);
       var stack = HTMLCSS.createStack(span);
+      this.HTMLgetScale();
       var state = {
             n: 0, Y: 0,
             scale: this.scale || 1,
@@ -219,7 +220,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       if (state.n > 0) {
         var LHD = HTMLCSS.FONTDATA.baselineskip * state.scale;
-        var leading = (state.values.lineleading == null ? state.VALUES : state.values).lineleading;
+        var leading = (state.values.lineleading == null ? state.VALUES : state.values).lineleading * state.scale;
         state.Y -= Math.max(LHD,state.d + line.bbox.h + leading);
       }
       //
@@ -252,7 +253,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       else if (state.isLast) {shift = prev.indentshiftlast || def.indentshiftlast}
       else                   {shift = prev.indentshift || def.indentshift}
       if (shift === MML.INDENTSHIFT.INDENTSHIFT) {shift = prev.indentshift || def.indentshift}
-      if (shift === MML.INDENTSHIFT.AUTO || shift === "") {shift = (state.isTSop ? this.displayIndent : "0")}
+      if (shift === "auto" || shift === "") {shift = (state.isTSop ? this.displayIndent : "0")}
       return HTMLCSS.length2em(shift,0);
     },
     
