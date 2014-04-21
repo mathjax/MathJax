@@ -917,7 +917,7 @@
         leqalignno:        ['Matrix',null,null,"right left right",MML.LENGTH.THICKMATHSPACE+" 3em",".5em",'D'],
 
         //  TeX substitution macros
-        bmod:              ['Macro','\\mathbin{\\mmlToken{mo}{mod}}'],
+        bmod:              ['Macro','\\mmlToken{mo}[lspace="thickmathspace" rspace="thickmathspace"]{mod}'],
         pmod:              ['Macro','\\pod{\\mmlToken{mi}{mod}\\kern 6mu #1}',1],
         mod:               ['Macro','\\mathchoice{\\kern18mu}{\\kern12mu}{\\kern12mu}{\\kern12mu}\\mmlToken{mi}{mod}\\,\\,#1',1],
         pod:               ['Macro','\\mathchoice{\\kern18mu}{\\kern8mu}{\\kern8mu}{\\kern8mu}(#1)',1],
