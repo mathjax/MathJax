@@ -1196,10 +1196,12 @@ ASCIIMATH.Augment({
       // Old versions use the "decimal" option, so take it into account if it
       // is defined by the user. See issue 384.
       decimalsign  = (ASCIIMATH.config.decimal || ASCIIMATH.config.decimalsign);
-      // fix pi and var phi, if requested
-      for (var i = 0, m = AMsymbols.length; i < m; i++) {
-        if (AMsymbols[i].input === "phi")    {AMsymbols[i].output = "\u03D5"}
-        if (AMsymbols[i].input === "varphi") {AMsymbols[i].output = "\u03C6"; i = m}
+      // fix phi and varphi, if requested
+      if (ASCIIMATH.config.fixphi) {
+        for (var i = 0, m = AMsymbols.length; i < m; i++) {
+          if (AMsymbols[i].input === "phi")    {AMsymbols[i].output = "\u03D5"}
+          if (AMsymbols[i].input === "varphi") {AMsymbols[i].output = "\u03C6"; i = m}
+        }
       }
       INITASCIIMATH();
       AMinitSymbols();
