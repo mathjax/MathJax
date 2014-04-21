@@ -96,7 +96,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
 
       var state = {
             n: 0, Y: 0,
-            scale: this.scale,
+            scale: this.scale || 1,
             isTop: isTop,
             values: {},
             VALUES: VALUES
@@ -115,7 +115,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Break the expression at its best line breaks
       //
       while (this.SVGbetterBreak(end,state) && 
-             (end.scanW >= SVG.linebreakWidth || end.penalty == PENALTY.newline)) {
+             (end.scanW >= SVG.linebreakWidth || end.penalty === PENALTY.newline)) {
         this.SVGaddLine(svg,start,end.index,state,end.values,broken);
         start = end.index.slice(0); broken = true;
         align = this.SVGgetAlign(state,end.values);
@@ -255,7 +255,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       else if (state.isLast) {shift = prev.indentshiftlast || def.indentshiftlast}
       else                   {shift = prev.indentshift || def.indentshift}
       if (shift === MML.INDENTSHIFT.INDENTSHIFT) {shift = prev.indentshift || def.indentshift}
-      if (shift === "auto" || shift === "") {shift = (state.isTSop ? this.displayIndent : "0")}
+      if (shift === MML.INDENTSHIFT.AUTO || shift === "") {shift = (state.isTSop ? this.displayIndent : "0")}
       return SVG.length2em(shift,0);
     },
     
@@ -584,7 +584,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (!mo || !mo.SVGdata) {mo = this}
       var svg = mo.SVGdata, w = svg.w + svg.x;
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
-      if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)
+      if (W - info.shift === 0 && values.linebreak !== MML.LINEBREAK.NEWLINE)
+        {return false} // don't break at zero width (FIXME?)
       var offset = SVG.linebreakWidth - W;
       // adjust offest for explicit first-line indent and align
       if (state.n === 0 && (values.indentshiftfirst !== state.VALUES.indentshiftfirst ||

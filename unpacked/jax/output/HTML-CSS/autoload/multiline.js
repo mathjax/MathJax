@@ -92,7 +92,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var stack = HTMLCSS.createStack(span);
       var state = {
             n: 0, Y: 0,
-            scale: this.scale,
+            scale: this.scale || 1,
             isTop: isTop,
             values: {},
             VALUES: VALUES
@@ -108,7 +108,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           broken = false;
           
       while (this.HTMLbetterBreak(end,state) && 
-             (end.scanW >= HTMLCSS.linebreakWidth || end.penalty == PENALTY.newline)) {
+             (end.scanW >= HTMLCSS.linebreakWidth || end.penalty === PENALTY.newline)) {
         this.HTMLaddLine(stack,start,end.index,state,end.values,broken);
         start = end.index.slice(0); broken = true;
         align = this.HTMLgetAlign(state,end.values);
@@ -252,7 +252,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       else if (state.isLast) {shift = prev.indentshiftlast || def.indentshiftlast}
       else                   {shift = prev.indentshift || def.indentshift}
       if (shift === MML.INDENTSHIFT.INDENTSHIFT) {shift = prev.indentshift || def.indentshift}
-      if (shift === "auto" || shift === "") {shift = (state.isTSop ? this.displayIndent : "0")}
+      if (shift === MML.INDENTSHIFT.AUTO || shift === "") {shift = (state.isTSop ? this.displayIndent : "0")}
       return HTMLCSS.length2em(shift,0);
     },
     
@@ -655,7 +655,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var span = mo.HTMLspanElement(), w = span.bbox.w;
       if (span.style.paddingLeft) {w += HTMLCSS.unEm(span.style.paddingLeft)}
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
-      if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)
+      if (W - info.shift === 0 && values.linebreak !== MML.LINEBREAK.NEWLINE)
+        {return false} // don't break at zero width (FIXME?)
       var offset = HTMLCSS.linebreakWidth - W;
       // Adjust offest for explicit first-line indent and align
       if (state.n === 0 && (values.indentshiftfirst !== state.VALUES.indentshiftfirst ||
