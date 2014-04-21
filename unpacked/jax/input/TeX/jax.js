@@ -44,7 +44,7 @@
     Push: function () {
       var i, m, item, top;
       for (i = 0, m = arguments.length; i < m; i++) {
-        item = arguments[i];
+        item = arguments[i]; if (!item) continue;
         if (item instanceof MML.mbase) {item = STACKITEM.mml(item)}
         item.global = this.global;
         top = (this.data.length ? this.Top().checkItem(item) : true);
@@ -951,8 +951,8 @@
         
 
         //  LaTeX
-        begin:              'Begin',
-        end:                'End',
+        begin:              'BeginEnd',
+        end:                'BeginEnd',
 
         newcommand:        ['Extension','newcommand'],
         renewcommand:      ['Extension','newcommand'],
@@ -1713,25 +1713,30 @@
     *   LaTeX environments
     */
 
-    Begin: function (name) {
-      var env = this.GetArgument(name);
-      if (env.match(/[^a-z*]/i))
-        {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
+    BeginEnd: function (name) {
+      var env = this.GetArgument(name), isEnd = false;
+      if (env.match(/^\\end\\/)) {isEnd = true; env = env.substr(5)} // special \end{} for \newenvironment environments
+      if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
       var cmd = this.envFindName(env);
-      if (!cmd)
-        {TEX.Error(["UnknownEnv","Unknown environment '%1'",env])}
-      if (++this.macroCount > TEX.config.MAXMACROS) {
-        TEX.Error(["MaxMacroSub2",
-                   "MathJax maximum substitution count exceeded; " +
-                   "is there a recursive latex environment?"]);
-      }
+      if (!cmd) {TEX.Error(["UnknownEnv","Unknown environment '%1'",env])}
       if (!(cmd instanceof Array)) {cmd = [cmd]}
-      var mml = STACKITEM.begin().With({name: env, end: cmd[1], parse:this});
-      if (cmd[0] && this[cmd[0]]) {mml = this[cmd[0]].apply(this,[mml].concat(cmd.slice(2)))}
+      var end = (cmd[1] instanceof Array ? cmd[1][0] : cmd[1]);
+      mml = STACKITEM.begin().With({name: env, end: end, parse:this});
+      if (name === "\\end") {
+        if (!isEnd && cmd[1] instanceof Array && this[cmd[1][1]]) {
+          mml = this[cmd[1][1]].apply(this,[mml].concat(cmd.slice(2)));
+        } else {
+          mml = STACKITEM.end().With({name: env});
+        }
+      } else {
+        if (++this.macroCount > TEX.config.MAXMACROS) {
+          TEX.Error(["MaxMacroSub2",
+                     "MathJax maximum substitution count exceeded; " +
+                     "is there a recursive latex environment?"]);
+        }
+        if (cmd[0] && this[cmd[0]]) {mml = this[cmd[0]].apply(this,[mml].concat(cmd.slice(2)))}
+      }
       this.Push(mml);
-    },
-    End: function (name) {
-      this.Push(STACKITEM.end().With({name: this.GetArgument(name)}));
     },
     envFindName: function (name) {return TEXDEF.environment[name]},
     
