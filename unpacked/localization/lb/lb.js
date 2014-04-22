@@ -30,12 +30,12 @@ MathJax.Localization.addTranslation("lb",null,{
         version: "2.3",
         isLoaded: true,
         strings: {
+          MathError: "Math Feeler",
           LoadFile: "%1 lueden",
           Loading: "Lueden",
           LoadFailed: "De Fichier konnt net geluede ginn: %1",
-          MathJaxNotSupported: "\u00C4re browser \u00EBnnerst\u00EBtzt MathJax net",
-          MathError: "Math Feeler",
-          Processing: "Verschaffen"
+          Processing: "Verschaffen",
+          MathJaxNotSupported: "\u00C4re browser \u00EBnnerst\u00EBtzt MathJax net"
         }
     },
     "FontWarnings": {},

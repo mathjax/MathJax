@@ -36,6 +36,7 @@ MathJax.Localization.addTranslation("da","TeX",{
           AmbiguousUseOf: "Flertydig brug af %1",
           EnvBadEnd: "\\begin{%1} sluttede med \\end{%2}",
           EnvMissingEnd: "Manglende \\end{%1}",
+          MissingBoxFor: "Manglende boks for %1",
           MissingCloseBrace: "Manglende h\u00F8jreklammeparentes",
           UndefinedControlSequence: "Udefineret kontrolsekvens %1",
           DoubleExponent: "Dobbelt eksponent: brug klammeparenteser til at tydeligg\u00F8re",
@@ -94,8 +95,7 @@ MathJax.Localization.addTranslation("da","TeX",{
           MissingReplacementString: "Manglende erstatningsstreng til definition af %1",
           MismatchUseDef: "Brug af %1 stemmer ikke overens med dens definition",
           RunawayArgument: "L\u00F8bsk argument for %1?",
-          NoClosingDelim: "Kan ikke finde afsluttende skilletegn for %1",
-          MissingBoxFor: "Manglende boks for %1"
+          NoClosingDelim: "Kan ikke finde afsluttende skilletegn for %1"
         }
 });
 

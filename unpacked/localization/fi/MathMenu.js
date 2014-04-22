@@ -78,7 +78,8 @@ MathJax.Localization.addTranslation("fi","MathMenu",{
           genericfonts: "k\u00E4ytt\u00E4en geneerisi\u00E4 unicode-kirjasimia",
           wofforotffonts: "woff- tai otf-kirjasimia",
           eotffonts: "eot-kirjasimia",
-          svgfonts: "svg-kirjasimia"
+          svgfonts: "svg-kirjasimia",
+          Close: "Sulje"
         }
 });
 
