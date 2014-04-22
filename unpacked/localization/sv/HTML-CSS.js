@@ -25,8 +25,11 @@ MathJax.Localization.addTranslation("sv","HTML-CSS",{
         version: "2.3",
         isLoaded: true,
         strings: {
+          LoadWebFont: "L\u00E4ser in webbtypsnittet %1",
+          CantLoadWebFont: "Kan inte l\u00E4sa in webbtypsnittet %1",
           FirefoxCantLoadWebFont: "Firefox kan inte l\u00E4sa in webbteckensnitt fr\u00E5n en fj\u00E4rrstyrd v\u00E4rd",
-          CantFindFontUsing: "Kan inte hitta ett giltigt teckensnitt med %1"
+          CantFindFontUsing: "Kan inte hitta ett giltigt teckensnitt med %1",
+          WebFontsNotAvailable: "Webbtypsnitt \u00E4r inte tillg\u00E4ngliga. Anv\u00E4nder bildtypsnitt ist\u00E4llet"
         }
 });
 
