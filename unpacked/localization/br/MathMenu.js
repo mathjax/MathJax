@@ -29,11 +29,13 @@ MathJax.Localization.addTranslation("br","MathMenu",{
           MathMLcode: "Kod MathML",
           OriginalMathML: "MathML orin",
           TeXCommands: "Urzhio\u00F9 TeX",
+          Original: "Furmskrid orin",
           ErrorMessage: "Kemennadenn fazi",
           Annotation: "Notenn",
           TeX: "TeX",
           StarMath: "StarMath",
           OpenMath: "OpenMath",
+          Settings: "Arventenno\u00F9 ar matematiko\u00F9",
           Click: "Klika\u00F1",
           DoubleClick: "Daouglika\u00F1",
           NoZoom: "Zoum ebet",
@@ -47,6 +49,12 @@ MathJax.Localization.addTranslation("br","MathMenu",{
           TeXWeb: "TeX (web)",
           TeXImage: "TeX (skeudenn)",
           STIXLocal: "STIX (lec'hel)",
+          STIXWeb: "STIX (web)",
+          AsanaMathWeb: "Asana Math (web)",
+          GyrePagellaWeb: "Gyre Pagella (web)",
+          GyreTermesWeb: "Gyre Termes (web)",
+          LatinModernWeb: "Latin Modern (web)",
+          NeoEulerWeb: "Neo Euler (web)",
           ContextMenu: "La\u00F1ser kemperzhel",
           Browser: "Merdeer",
           Locale: "Yezh",
@@ -58,8 +66,7 @@ MathJax.Localization.addTranslation("br","MathMenu",{
           svgfonts: "Fonto\u00F9 svg",
           LoadURL: "Karga\u00F1 roadenno\u00F9 trei\u00F1 eus an URL-ma\u00F1 :",
           Close: "Serri\u00F1",
-          Original: "Furmskrid orin",
-          Settings: "Arventenno\u00F9 ar matematiko\u00F9"
+          EqSource: "Tarzh kevatalenn MathJax"
         }
 });
 
