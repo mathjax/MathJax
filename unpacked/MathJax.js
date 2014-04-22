@@ -1396,7 +1396,7 @@ MathJax.Localization = {
   //  directory and file.
   //
   loadFile: function (file,data,callback) {
-    callback = MathJax.Callback(callback||{});
+    callback = MathJax.Callback(callback);
     file = (data.file || file);  // the data's file name or the default name
     if (!file.match(/\.js$/)) {file += ".js"} // add .js if needed
     //
@@ -1435,7 +1435,7 @@ MathJax.Localization = {
         if (load) {
           return MathJax.Callback.Queue(
             load,["loadDomain",this,domain] // call again to load domain
-          ).Push(callback);
+          ).Push(callback||{});
         }
       }
       if (localeData.domains && domain in localeData.domains) {

@@ -200,7 +200,7 @@
         SIGNAL.Post(["post",MENU.jax]);
         MENU.isRTL = (MathJax.Localization.fontDirection() === "rtl");
       }
-      var menu = HTML.addElement(div,"div",{
+      var menu = HTML.Element("div",{
         onmouseup: MENU.Mouseup, ondblclick: FALSE,
         ondragstart: FALSE, onselectstart: FALSE, oncontextmenu: FALSE,
         menuItem: this, className: "MathJax_Menu"
@@ -214,6 +214,8 @@
           ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close, onmouseup: FALSE
         },[["img",{src: CONFIG.closeImg, style:{width:"100%",height:"100%"}}]]);
       }
+      
+      div.appendChild(menu);
       this.posted = true;
       
       menu.style.width = (menu.offsetWidth+2) + "px";
