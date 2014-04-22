@@ -1107,14 +1107,16 @@ MathJax.Localization = {
     // Currently, this list is not modified by the MathJax-i18n script. You can
     // run the following command in MathJax/unpacked/localization to update it:
     //
-    // find -name *.js | xargs grep menuTitle\: | grep -v qqq | sed "s/^\.\/\(.*\)\/.*\.js\:  /    \"\1\"\: \{/" | sed "s/,$/\},/" | sed "s/\"English\"/\"English\", isLoaded: true/" > tmp ; sort tmp > tmp2 ; sed "$ s/,$//" tmp2 ; rm tmp*
+    // find . -name "*.js" | xargs grep menuTitle\: | grep -v qqq | sed 's/^\.\/\(.*\)\/.*\.js\:  /    "\1"\: \{/' | sed 's/,$/\},/' | sed 's/"English"/"English", isLoaded: true/' > tmp ; sort tmp > tmp2 ; sed '$ s/,$//' tmp2 ; rm tmp*
     //
     // This only takes languages with localization data so you must also add
     // the languages that use a remap but are not translated at all.
     //
+    "ast": {menuTitle: "asturianu"},
     "br": {menuTitle: "brezhoneg"},
+    "ca": {menuTitle: "catal\u00E0"},
     "cdo": {menuTitle: "M\u00ECng-d\u0115\u0324ng-ng\u1E73\u0304"},
-    "cs": {menuTitle: "\u010Desky"},
+    "cs": {menuTitle: "\u010De\u0161tina"},
     "da": {menuTitle: "dansk"},
     "de": {menuTitle: "Deutsch"},
     "en": {menuTitle: "English", isLoaded: true},
@@ -1128,19 +1130,21 @@ MathJax.Localization = {
     "ia": {menuTitle: "interlingua"},
     "it": {menuTitle: "italiano"},
     "ja": {menuTitle: "\u65E5\u672C\u8A9E"},
+    "kn": {menuTitle: "\u0C95\u0CA8\u0CCD\u0CA8\u0CA1"},
     "ko": {menuTitle: "\uD55C\uAD6D\uC5B4"},
     "lb": {menuTitle: "L\u00EBtzebuergesch"},
     "mk": {menuTitle: "\u043C\u0430\u043A\u0435\u0434\u043E\u043D\u0441\u043A\u0438"},
     "nl": {menuTitle: "Nederlands"},
     "oc": {menuTitle: "occitan"},
     "pl": {menuTitle: "polski"},
-    "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
     "pt": {menuTitle: "portugus\u00EA"},
+    "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
     "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
     "sl": {menuTitle: "sloven\u0161\u010Dina"},
     "sv": {menuTitle: "svenska"},
     "tr": {menuTitle: "T\u00FCrk\u00E7e"},
     "uk": {menuTitle: "\u0443\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"},
+    "vi": {menuTitle: "Ti\u1EBFng Vi\u1EC7t"},
     "zh-hans": {menuTitle: "\u4E2D\u6587\uFF08\u7B80\u4F53\uFF09"}
   },
 
