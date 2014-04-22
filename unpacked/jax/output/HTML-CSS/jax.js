@@ -2978,7 +2978,7 @@
           rfuzz: -.02,
           AccentBug: true,
           AdjustSurd: true,
-          FontFaceBug: (browser.version.substr(0,3) === "32."), // Chrome 32 fails on bold-italic (#735)
+          FontFaceBug: browser.versionAtLeast("32.0"), // Chrome 32 fails on bold-italic (#735)
           negativeBBoxes: true,
           safariNegativeSpaceBug: true,
           safariWebFontSerif: [""],
