@@ -5,7 +5,7 @@
 MathJax is an open-source JavaScript display engine for LaTeX, MathML, and
 AsciiMath notation that works in all modern browsers.  It was designed with
 the goal of consolidating the recent advances in web technologies into a
-single, definitive, math-on-the-web platform supporting the major browsers
+single, definitive, chabge math-on-the-web platform supporting the major browsers
 and operating systems.  It requires no setup on the part of the user (no
 plugins to download or software to install), so the page author can write
 web documents that include mathematics and be confident that users will be
