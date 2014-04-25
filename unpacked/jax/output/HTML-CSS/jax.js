@@ -1687,7 +1687,7 @@
 	var h = span.bbox.h, d = span.bbox.d, stretched = false;
 	for (i = 0, m = stretchy.length; i < m; i++) {
           var bbox = stretchy[i].HTMLspanElement().bbox;
-          if (bbox.h !== h || bbox.d !== d)
+          if (stretchy[i].forceStretch || bbox.h !== h || bbox.d !== d)
             {stretchy[i].HTMLstretchV(span,h,d); stretched = true}
         }
 	if (stretched) {this.HTMLcomputeBBox(span,true)}
@@ -2204,7 +2204,9 @@
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {c = HTMLCSS.FONTDATA.REMAPACCENTUNDER[c]||c}
         }
 	c = HTMLCSS.FONTDATA.DELIMITERS[c.charCodeAt(0)];
-	return (c && c.dir == direction.substr(0,1));
+        var stretch = (c && c.dir === direction.substr(0,1));
+        this.forceStretch = (stretch && (this.Get("minsize",true) || this.Get("maxsize",true)));
+	return stretch;
       },
       HTMLstretchV: function (box,h,d) {
 	this.HTMLremoveColor();

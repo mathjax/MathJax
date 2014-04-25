@@ -904,7 +904,7 @@
       {
         var svg = this.svg[i], mml = svg.mml;
         if (mml) {
-          if (mml.SVGdata.h !== this.sh || mml.SVGdata.d !== this.sd) {
+          if (mml.forceStretch || mml.SVGdata.h !== this.sh || mml.SVGdata.d !== this.sd) {
             svg = mml.SVGstretchV(this.sh,this.sd);
           }
           mml.SVGdata.HW = this.sh; mml.SVGdata.D = this.sd;
@@ -1466,6 +1466,7 @@
 	c = SVG.FONTDATA.DELIMITERS[c.charCodeAt(0)];
         var can = (c && c.dir == direction.substr(0,1));
         if (!can) {delete this.svg}
+        this.forceStretch = can && (this.Get("minsize",true) || this.Get("maxsize",true));
         return can;
       },
       SVGstretchV: function (h,d) {
