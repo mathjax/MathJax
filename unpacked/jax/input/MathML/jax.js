@@ -36,12 +36,12 @@
 
   MATHML.Parse = MathJax.Object.Subclass({
 
-    Init: function (string) {this.Parse(string)},
+    Init: function (string,script) {this.Parse(string,script)},
     
     //
     //  Parse the MathML and check for errors
     //
-    Parse: function (math) {
+    Parse: function (math,script) {
       var doc;
       if (typeof math !== "string") {doc = math.parentNode} else {
         doc = MATHML.ParseXML(this.preProcessMath.call(this,math));
@@ -63,7 +63,9 @@
             "MathML must be formed by a <math> element, not %1",
             "<"+doc.firstChild.nodeName+">"]);
       }
-      this.mml = this.MakeMML(doc.firstChild);
+      var data = {math:doc.firstChild, script:script};
+      MATHML.DOMfilterHooks.Execute(data);
+      this.mml = this.MakeMML(data.math);
     },
     
     //
@@ -238,8 +240,9 @@
   MATHML.Augment({
     sourceMenuTitle: /*_(MathMenu)*/ ["OriginalMathML","Original MathML"],
     
-    prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run before processing MathML
-    postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run after processing MathML
+    prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run on MathML string before processing MathML
+    DOMfilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run on MathML DOM before processing
+    postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run on internal jax format after processing MathML
 
     Translate: function (script) {
       if (!this.ParseXML) {this.ParseXML = this.createParser()}
@@ -254,7 +257,7 @@
         data.math = math; this.prefilterHooks.Execute(data); math = data.math;
       }
       try {
-        mml = MATHML.Parse(math).mml;
+        mml = MATHML.Parse(math,script).mml;
       } catch(err) {
         if (!err.mathmlError) {throw err}
         mml = this.formatError(err,math,script);
