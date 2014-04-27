@@ -74,7 +74,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
             keyvalue[1] = keyvalue[1].replace(/^"(.*)"$/,"$1");
             if (keyvalue[1] === "true") {keyvalue[1] = true}
             if (keyvalue[1] === "false") {keyvalue[1] = false}
-            def[keyvalue[0]] = keyvalue[1];
+            if (keyvalue[0] === "arrow" && keyvalue[1])
+              {def.notation = def.notation + " updiagonalarrow"} else
+              {def[keyvalue[0]] = keyvalue[1]}
           }
         }
       }
