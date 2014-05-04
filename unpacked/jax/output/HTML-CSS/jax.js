@@ -380,6 +380,16 @@
       NeoEulerWeb:    "Neo-Euler"
     },
     
+    fontInUse: "generic",
+    FONTDATA: {
+      TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
+      FONTS: {},
+      VARIANT: {
+        "normal": {fonts:[]}, "-generic-variant": {fonts:[]},
+        "-largeOp": {fonts:[]}, "-smallOp": {fonts:[]}
+      }, RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
+    },
+
     Config: function () {
       if (!this.require) {this.require = []}
       this.Font = FONTTEST(); this.SUPER(arguments).Config.call(this);
@@ -414,15 +424,6 @@
       } else {
         MESSAGE(["CantFindFontUsing","Can't find a valid font using %1",
                 "["+this.config.availableFonts.join(", ")+"]"],null,3000);
-        this.fontInUse = "generic";
-        this.FONTDATA = {
-          TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
-          FONTS: {},
-          VARIANT: {
-            "normal": {fonts:[]}, "-generic-variant": {fonts:[]},
-            "-largeOp": {fonts:[]}, "-smallOp": {fonts:[]}
-          }, RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
-        };
         HUB.Startup.signal.Post("HTML-CSS Jax - no valid font");
       }
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
