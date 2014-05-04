@@ -94,7 +94,7 @@ MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
     MATHML.ctopXSLT.importStylesheet(MATHML.ParseXML(ctopStylesheet));
   } else if (MathJax.Hub.Browser.isMSIE) {
     // nonstandard methods for Internet Explorer
-    if (MathJax.Hub.Browser.versionAtLeast("9.0")) {
+    if (MathJax.Hub.Browser.versionAtLeast("9.0") || (document.documentMode||0) >= 9) {
       // For Internet Explorer >= 9, use createProcessor
       ctop = new ActiveXObject("Msxml2.FreeThreadedDOMDocument");
       ctop.loadXML(ctopStylesheet);
