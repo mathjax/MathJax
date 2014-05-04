@@ -2460,7 +2460,7 @@
           //  (TeXBook pg 150 and Appendix G rule 15e)
           //
           var space = HTMLCSS.TeX.nulldelimiterspace * this.mscale;
-          var style = span.firstChild.style;
+          var style = span.childNodes[HTMLCSS.msiePaddingWidthBug ? 1 : 0].style;
           style.marginLeft = style.marginRight = HTMLCSS.Em(space);
           span.bbox.w += 2*space; span.bbox.r += 2*space;
 	}
