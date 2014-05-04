@@ -1565,7 +1565,8 @@
 	var values = this.getValues("height","depth","width");
 	values.mathbackground = this.mathbackground;
 	if (this.background && !this.mathbackground) {values.mathbackground = this.background}
-        var svg = this.SVG(), scale = this.SVGgetScale(svg), mu = this.SVGgetMu(svg); 
+        var svg = this.SVG(); this.SVGgetScale(svg);
+        var scale = this.mscale, mu = this.SVGgetMu(svg); 
 	svg.h = SVG.length2em(values.height,mu) * scale;
         svg.d = SVG.length2em(values.depth,mu)  * scale;
 	svg.w = svg.r = SVG.length2em(values.width,mu) * scale;
