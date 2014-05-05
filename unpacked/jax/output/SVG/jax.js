@@ -1290,7 +1290,8 @@
         if (this.mscale) {
           scale = this.scale;
         } else {
-          var values = this.getValues("mathsize","scriptlevel","fontsize");
+          var values = this.getValues("scriptlevel","fontsize");
+          values.mathsize = (this.isToken ? this : this.Parent()).Get("mathsize");
           if ((this.styles||{}).fontSize && !values.fontsize) {values.fontsize = this.styles.fontSize}
           if (values.fontsize && !this.mathsize) {values.mathsize = values.fontsize}
           if (values.scriptlevel !== 0) {

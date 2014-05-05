@@ -1915,7 +1915,8 @@
 
       HTMLgetScale: function () {
         if (this.scale) {return this.scale * this.mscale}
-	var scale = 1, values = this.getValues("mathsize","scriptlevel","fontsize");
+	var scale = 1, values = this.getValues("scriptlevel","fontsize");
+        values.mathsize = (this.isToken ? this : this.Parent()).Get("mathsize");
 	if (this.style) {
 	  var span = this.HTMLspanElement();
 	  if (span.style.fontSize != "") {values.fontsize = span.style.fontSize}
