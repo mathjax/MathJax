@@ -846,20 +846,19 @@
     getW: function (span) {
       var W, H, w = (span.bbox||{}).w, start = span;
       if (span.bbox && span.bbox.exactW) {return w}
-      if ((span.bbox && w >= 0 && !this.initialSkipBug) || this.negativeBBoxes || !span.firstChild) {
+      if ((span.bbox && w >= 0 && !this.initialSkipBug && !this.msieItalicWidthBug) ||
+           this.negativeBBoxes || !span.firstChild) {
         W = span.offsetWidth; H = span.parentNode.offsetHeight;
       } else if (span.bbox && w < 0 && this.msieNegativeBBoxBug) {
         W = -span.offsetWidth, H = span.parentNode.offsetHeight;
       } else {
         // IE can't deal with a space at the beginning, so put something else first
-        if (this.initialSkipBug) {
-          var position = span.style.position; span.style.position = "absolute";
-          start = this.startMarker; span.insertBefore(start,span.firstChild)
-        }
+        var position = span.style.position; span.style.position = "absolute";
+        start = this.startMarker; span.insertBefore(start,span.firstChild)
         span.appendChild(this.endMarker);
         W = this.endMarker.offsetLeft - start.offsetLeft;
         span.removeChild(this.endMarker);
-        if (this.initialSkipBug) {span.removeChild(start); span.style.position = position}
+        span.removeChild(start); span.style.position = position
       }
       if (H != null) {span.parentNode.HH = H/this.em}
       return W/this.em;
@@ -2902,6 +2901,7 @@
           msieClipRectBug: !isIE8,
           msieNegativeSpaceBug: quirks,
           cloneNodeBug: (isIE8 && browser.version === "8.0"),
+          msieItalicWidthBug: true,          // can't measure boxes ending in italics correctly
           initialSkipBug: (mode < 8),        // confused by initial left-margin values
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
           msieIE6: !isIE7,
