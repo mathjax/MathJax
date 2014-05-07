@@ -40,7 +40,7 @@
     fontCheckTimeout: 15 * 1000,  // how long to keep looking for fonts (15 seconds)
   });
   
-  var MATCH = MathJax.Extension.MatchWebFonts = {
+  MathJax.Extension.MatchWebFonts = {
     version: VERSION,
     config: CONFIG
   };
@@ -81,7 +81,6 @@
         for (i = 0, m = scripts.length; i < m; i++) {
           script = scripts[i]; if (!script.parentNode) continue; retry = true;
           var jax = script.MathJax.elementJax; if (!jax) continue;
-          var span = document.getElementById(jax.inputID+"-Frame");
           //
           //  Check if ex or mex has changed
           //
@@ -153,13 +152,12 @@
         for (i = 0, m = scripts.length; i < m; i++) {
           script = scripts[i]; if (!script.parentNode) continue; retry = true;
           var jax = script.MathJax.elementJax; if (!jax) continue;
-          var span = document.getElementById(jax.inputID+"-Frame");
           //
           //  Check if ex or mex has changed
           //
           var test = script.previousSibling;
           var ex = test.firstChild.offsetHeight/60;
-          if (ex === 0 || ex === "NaN") {ex = this.defaultEx; em = this.defaultEm}
+          if (ex === 0 || ex === "NaN") {ex = this.defaultEx}
           if (ex !== jax.SVG.ex) {size.push(script); scripts[i] = {}}
         }
         //
@@ -259,7 +257,7 @@
           //  Check widths of mtd elements
           //
           if (math.MathJaxMtds) {
-            for (j = 0, n = math.MathJaxMtds.length; j < n; j++) {
+            for (var j = 0, n = math.MathJaxMtds.length; j < n; j++) {
               if (!math.MathJaxMtds[j].parentNode) continue;
               if (newEx || math.MathJaxMtds[j].firstChild.scrollWidth !== jax.mtds[j]) {
                 jax.mtds[j] = math.MathJaxMtds[j].firstChild.scrollWidth;

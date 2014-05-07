@@ -258,7 +258,7 @@
       overlay.style.display = "";
     },
     findContainer: function (obj) {
-      var obj = obj.parentNode;
+      obj = obj.parentNode;
       while (obj.parentNode && obj !== document.body && ZOOM.getOverflow(obj) === "visible")
         {obj = obj.parentNode}
       return obj;
