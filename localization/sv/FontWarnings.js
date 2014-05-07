@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("sv","FontWarnings",{version:"2.3",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/sv/FontWarnings.js");
+MathJax.Localization.addTranslation("sv","FontWarnings",{version:"2.4-beta",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/sv/FontWarnings.js");

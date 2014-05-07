@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("tr","MathMenu",{version:"2.3",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/tr/MathMenu.js");
+MathJax.Localization.addTranslation("tr","MathMenu",{version:"2.4-beta",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/tr/MathMenu.js");

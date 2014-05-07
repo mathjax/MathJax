@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("tr","TeX",{version:"2.3",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/tr/TeX.js");
+MathJax.Localization.addTranslation("tr","TeX",{version:"2.4-beta",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/tr/TeX.js");
