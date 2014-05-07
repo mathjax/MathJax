@@ -1201,7 +1201,14 @@
     },
     alignBox: function (span,align,y) {
       this.placeBox(span,0,y); // set y position (and left aligned)
-      if (this.msiePlaceBoxBug) {span.removeChild(span.lastChild.previousSibling)}
+      if (this.msiePlaceBoxBug) {
+        //
+        //  placeBox() adds an extra &nbsp;, so remove it here.
+        //
+        var node = span.lastChild;
+        while (node && node.nodeName !== "#text") {node = node.previousSibling}
+        if (node) {span.removeChild(node)}
+      }
       var bbox = span.bbox; if (bbox.isMultiline) return;
       var isRelative = bbox.width != null && !bbox.isFixed;
       var r = 0, c = -bbox.w/2, l = "50%";
