@@ -2616,6 +2616,7 @@
 			   this.data[i].HTMLcanStretch("Horizontal"));
 	    } else {
 	      stretch[i] = this.data[i].HTMLcanStretch("Horizontal");
+              children[i].style.paddingLeft = children[i].style.paddingRight = "";
 	    }
           }
         }
@@ -2630,7 +2631,11 @@
 	if (D == null && HW != null) {W = HW} else if (W == -HTMLCSS.BIGDIMEN) {W = WW}
         for (i = WW = 0, m = this.data.length; i < m; i++) {if (this.data[i]) {
           box = boxes[i];
-          if (stretch[i]) {box.bbox = this.data[i].HTMLstretchH(box,W).bbox}
+          if (stretch[i]) {
+            box.bbox = this.data[i].HTMLstretchH(box,W).bbox;
+            if (i !== this.base)
+              {children[i].style.paddingLeft = children[i].style.paddingRight = ""}
+          }
           if (box.bbox.w > WW) {WW = box.bbox.w}
         }}
 	var t = HTMLCSS.TeX.rule_thickness * this.mscale, factor = HTMLCSS.FONTDATA.TeX_factor;
