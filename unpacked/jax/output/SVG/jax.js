@@ -375,6 +375,20 @@
       //
       state.SVGlast = state.SVGeqn;
     },
+    
+    clearGlyphs: function (reset) {
+      if (this.config.useFontCache) {
+        if (this.config.useGlobalCache) {
+          DEFS = document.getElementById("MathJax_SVG_Glyphs");
+          DEFS.innerHTML = "";
+        } else {
+          DEFS = this.Element("defs");
+          DEFN++;
+        }
+        GLYPHS = {};
+        if (reset) {DEFN = 0}
+      }
+    },
 
     //
     //  Return the containing HTML element rather than the SVG element, since
@@ -464,6 +478,10 @@
     },
     Percent: function (m) {
       return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
+    },
+    Fixed: function (m,n) {
+      if (Math.abs(m) < .0006) {return "0"}
+      return m.toFixed(n||3).replace(/\.?0+$/,"");
     },
     length2em: function (length,mu,size) {
       if (typeof(length) !== "string") {length = length.toString()}
@@ -929,7 +947,7 @@
     type: "rect", removeable: false,
     Init: function (h,d,w,t,dash,color,def) {
       if (def == null) {def = {}}; def.fill = "none";
-      def["stroke-width"] = t.toFixed(2).replace(/\.?0+$/,"");
+      def["stroke-width"] = SVG.Fixed(t,2);
       def.width = Math.floor(w-t); def.height = Math.floor(h+d-t);
       def.transform = "translate("+Math.floor(t/2)+","+Math.floor(-d+t/2)+")";
       if (dash === "dashed")
@@ -945,7 +963,7 @@
     Init: function (w,t,dash,color,def) {
       if (def == null) {def = {"stroke-linecap":"square"}}
       if (color && color !== "") {def.stroke = color}
-      def["stroke-width"] = t.toFixed(2).replace(/\.?0+$/,"");
+      def["stroke-width"] = SVG.Fixed(t,2);
       def.x1 = def.y1 = def.y2 = Math.floor(t/2); def.x2 = Math.floor(w-t/2);
       if (dash === "dashed") {
         var n = Math.floor(Math.max(0,w-t)/(6*t)), m = Math.floor(Math.max(0,w-t)/(2*n+1));
@@ -965,7 +983,7 @@
     Init: function (h,t,dash,color,def) {
       if (def == null) {def = {"stroke-linecap":"square"}}
       if (color && color !== "") {def.stroke = color}
-      def["stroke-width"] = t.toFixed(2).replace(/\.?0+$/,"");
+      def["stroke-width"] = SVG.Fixed(t,2);
       def.x1 = def.x2 = def.y1 = Math.floor(t/2); def.y2 = Math.floor(h-t/2);
       if (dash === "dashed") {
         var n = Math.floor(Math.max(0,h-t)/(6*t)), m = Math.floor(Math.max(0,h-t)/(2*n+1));
@@ -1006,21 +1024,31 @@
     }
   });
   
-  var GLYPHS, DEFS; // data for which glyphs are used
+  var GLYPHS, DEFS, DEFN = 0; // data for which glyphs are used
 
   BBOX.GLYPH = BBOX.Subclass({
     type: "path", removeable: false,
     Init: function (scale,id,h,d,w,l,r,p) {
       var def, t = SVG.config.blacker;
-      if (!GLYPHS[id]) {
-        def = {id:id, "stroke-width":t};
+      var cache = SVG.config.useFontCache;
+      var transform = (scale === 1 ? null : "scale("+SVG.Fixed(scale)+")");
+      if (!cache || !GLYPHS[id]) {
+        def = {"stroke-width":t};
+        if (cache) {
+          if (!SVG.config.useGlobalCache) {id = "D"+DEFN+"-"+id}
+          def.id = id;
+        } else if (transform) {
+          def.transform = transform;
+        }
         if (p !== "") {def.d = "M"+p+"Z"}
         this.SUPER(arguments).Init.call(this,def);
-        DEFS.appendChild(this.element); GLYPHS[id] = true;
+        if (cache) {DEFS.appendChild(this.element); GLYPHS[id] = true;}
       }
-      def = {}; if (scale !== 1) {def.transform = "scale("+scale+")"}
-      this.element = SVG.Element("use",def);
-      this.element.setAttributeNS(XLINKNS,"href","#"+id);
+      if (cache) {
+        def = {}; if (transform) {def.transform = transform}
+        this.element = SVG.Element("use",def);
+        this.element.setAttributeNS(XLINKNS,"href","#"+id);
+      }
       this.h = (h+t) * scale; this.d = (d+t) * scale; this.w = (w+t/2) *scale;
       this.l = (l+t/2) * scale; this.r = (r+t/2) * scale;
       this.H = Math.max(0,this.h); this.D = Math.max(0,this.d);
@@ -1976,6 +2004,14 @@
     MML.math.Augment({
       SVG: BBOX.Subclass({type:"svg", removeable: false}),
       toSVG: function (span,div) {
+        //
+        //  Clear the font cache, if necessary
+        //
+        var CONFIG = SVG.config;
+        if (span && CONFIG.useFontCache && !CONFIG.useGlobalCache) {SVG.clearGlyphs()}
+        //
+        //  All the data should be in an inferrerd row
+        //
         if (this.data[0]) {
           this.SVGgetStyles();
 	  MML.mbase.prototype.displayAlign = HUB.config.displayAlign;
@@ -1990,7 +2026,9 @@
           }).With({removeable: false});
           box.Add(this.data[0].toSVG(),0,0,true); box.Clean();
           this.SVGhandleColor(box);
-          var svg = this.SVG(); svg.element.setAttribute("xmlns:xlink",XLINKNS);
+          var svg = this.SVG();
+          svg.element.setAttribute("xmlns:xlink",XLINKNS);
+          if (CONFIG.useFontCache && !CONFIG.useGlobalCache) {svg.element.appendChild(DEFS)}
           svg.Add(box); svg.Clean();
           this.SVGsaveData(svg);
           //
@@ -2013,7 +2051,8 @@
           svg.element.setAttribute("height",SVG.Ex(svg.H+svg.D+2*SVG.em));
           style.verticalAlign = SVG.Ex(-svg.D-3*SVG.em); // remove 2 extra pixels added below plus padding
           style.marginLeft = SVG.Ex(-l); style.marginRight = SVG.Ex(-r);
-          svg.element.setAttribute("viewBox",(-l)+" "+(-svg.H-SVG.em)+" "+(l+svg.w+r)+" "+(svg.H+svg.D+2*SVG.em));
+          svg.element.setAttribute("viewBox",SVG.Fixed(-l,1)+" "+SVG.Fixed(-svg.H-SVG.em,1)+" "+
+                                             SVG.Fixed(l+svg.w+r,1)+" "+SVG.Fixed(svg.H+svg.D+2*SVG.em,1));
           svg.element.style.margin="1px 0px"; // 1px above and below to prevent lines from touching
           //
           //  If there is extra height or depth, hide that
