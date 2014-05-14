@@ -166,7 +166,7 @@
       this.linebreakSpan = HTML.Element("span",null,
         [["hr",{style: {width:"auto", size:1, padding:0, border:0, margin:0}}]]);
 
-     // Set up styles
+      // Set up styles
       return AJAX.Styles(this.config.styles,["InitializeSVG",this]);
     },
     
@@ -381,7 +381,7 @@
     //  most browsers can't position to an SVG element properly.
     //
     hashCheck: function (target) {
-      if (target && target.nodeName === "g")
+      if (target && target.nodeName.toLowerCase() === "g")
         {do {target = target.parentNode} while (target && target.firstChild.nodeName !== "svg")}
       return target;
     },
@@ -815,8 +815,8 @@
       if (dx) {svg.x += dx}; if (dy) {svg.y += dy};
       if (svg.element) {
         if (svg.removeable && svg.element.childNodes.length === 1 && svg.n === 1) {
-          var child = svg.element.firstChild;
-          if (child.nodeName === "use" || child.nodeName === "rect") {
+          var child = svg.element.firstChild, nodeName = child.nodeName.toLowerCase();
+          if (nodeName === "use" || nodeName === "rect") {
             svg.element = child; svg.scale = svg.childScale;
             var x = svg.childX, y = svg.childY;
             svg.x += x; svg.y += y;
@@ -828,13 +828,12 @@
         if (Math.abs(svg.x) < 1 && Math.abs(svg.y) < 1) {
           svg.remove = svg.removeable;
         } else {
-          if (svg.element.nodeName === "g") {
+          nodeName = svg.element.nodeName.toLowerCase();
+          if (nodeName === "g") {
             if (!svg.element.firstChild) {svg.remove = svg.removeable}
               else {svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")")}
-          } else if (svg.element.nodeName === "line" ||
-                     svg.element.nodeName === "polygon" ||
-                     svg.element.nodeName === "path" ||
-                     svg.element.nodeName === "a") {
+          } else if (nodeName === "line" || nodeName === "polygon" ||
+                     nodeName === "path" || nodeName === "a") {
             svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")");
           } else {
             svg.element.setAttribute("x",Math.floor(svg.x/svg.scale));
@@ -1197,7 +1196,8 @@
         //  Add background color
         //
 	if (values.background !== MML.COLOR.TRANSPARENT) {
-          if (svg.element.nodeName !== "g" && svg.element.nodeName !== "svg") {
+          var nodeName = svg.element.nodeName.toLowerCase();
+          if (nodeName !== "g" && nodeName !== "svg") {
             var g = SVG.Element("g"); g.appendChild(svg.element);
             svg.element = g; svg.removeable = true;
           }
