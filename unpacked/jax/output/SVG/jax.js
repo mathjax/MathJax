@@ -2009,8 +2009,8 @@
           //
           var l = Math.max(-svg.l,0), r = Math.max(svg.r-svg.w,0);
           var style = svg.element.style;
-          style.width = SVG.Ex(l+svg.w+r);
-          style.height = SVG.Ex(svg.H+svg.D+2*SVG.em);
+          svg.element.setAttribute("width",SVG.Ex(l+svg.w+r));
+          svg.element.setAttribute("height",SVG.Ex(svg.H+svg.D+2*SVG.em));
           style.verticalAlign = SVG.Ex(-svg.D-3*SVG.em); // remove 2 extra pixels added below plus padding
           style.marginLeft = SVG.Ex(-l); style.marginRight = SVG.Ex(-r);
           svg.element.setAttribute("viewBox",(-l)+" "+(-svg.H-SVG.em)+" "+(l+svg.w+r)+" "+(svg.H+svg.D+2*SVG.em));
