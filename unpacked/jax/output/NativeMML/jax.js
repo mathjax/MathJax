@@ -195,17 +195,19 @@
           //
           //  If that fails, give an alert about security settings
           //
-          alert(MathJax.Localization._(["MathML", "MathPlayer"],
-                "MathJax was not able to set up MathPlayer.\n\n"+
-                "If MathPlayer is not installed, you need to install it first.\n"+
-                "Otherwise, your security settings may be preventing ActiveX     \n"+
-                "controls from running.  Use the Internet Options item under\n"+
-                "the Tools menu and select the Security tab, then press the\n"+
-                "Custom Level button. Check that the settings for\n"+
-                "'Run ActiveX Controls', and 'Binary and script behaviors'\n"+
-                "are enabled.\n\n"+
-                "Currently you will see error messages rather than\n"+
-                "typeset mathematics."));
+          if (!this.config.noMathPlayerWarning) {
+	    alert(MathJax.Localization._(["MathML", "MathPlayer"],
+	          "MathJax was not able to set up MathPlayer.\n\n"+
+	          "If MathPlayer is not installed, you need to install it first.\n"+
+	          "Otherwise, your security settings may be preventing ActiveX     \n"+
+	          "controls from running.  Use the Internet Options item under\n"+
+	          "the Tools menu and select the Security tab, then press the\n"+
+	          "Custom Level button. Check that the settings for\n"+
+	          "'Run ActiveX Controls', and 'Binary and script behaviors'\n"+
+	          "are enabled.\n\n"+
+	          "Currently you will see error messages rather than\n"+
+	          "typeset mathematics."));
+          }
         }
       } else {
         //

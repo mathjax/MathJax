@@ -904,7 +904,7 @@
       {
         var svg = this.svg[i], mml = svg.mml;
         if (mml) {
-          if (mml.SVGdata.h !== this.sh || mml.SVGdata.d !== this.sd) {
+          if (mml.forceStretch || mml.SVGdata.h !== this.sh || mml.SVGdata.d !== this.sd) {
             svg = mml.SVGstretchV(this.sh,this.sd);
           }
           mml.SVGdata.HW = this.sh; mml.SVGdata.D = this.sd;
@@ -1290,7 +1290,8 @@
         if (this.mscale) {
           scale = this.scale;
         } else {
-          var values = this.getValues("mathsize","scriptlevel","fontsize");
+          var values = this.getValues("scriptlevel","fontsize");
+          values.mathsize = (this.isToken ? this : this.Parent()).Get("mathsize");
           if ((this.styles||{}).fontSize && !values.fontsize) {values.fontsize = this.styles.fontSize}
           if (values.fontsize && !this.mathsize) {values.mathsize = values.fontsize}
           if (values.scriptlevel !== 0) {
@@ -1466,6 +1467,7 @@
 	c = SVG.FONTDATA.DELIMITERS[c.charCodeAt(0)];
         var can = (c && c.dir == direction.substr(0,1));
         if (!can) {delete this.svg}
+        this.forceStretch = can && (this.Get("minsize",true) || this.Get("maxsize",true));
         return can;
       },
       SVGstretchV: function (h,d) {
@@ -1564,7 +1566,8 @@
 	var values = this.getValues("height","depth","width");
 	values.mathbackground = this.mathbackground;
 	if (this.background && !this.mathbackground) {values.mathbackground = this.background}
-        var svg = this.SVG(), scale = this.SVGgetScale(svg), mu = this.SVGgetMu(svg); 
+        var svg = this.SVG(); this.SVGgetScale(svg);
+        var scale = this.mscale, mu = this.SVGgetMu(svg); 
 	svg.h = SVG.length2em(values.height,mu) * scale;
         svg.d = SVG.length2em(values.depth,mu)  * scale;
 	svg.w = svg.r = SVG.length2em(values.width,mu) * scale;

@@ -610,7 +610,7 @@ MathJax.ElementJax.mml.Augment({
       this.texClass = this.Get("texClass");
       if (this.data.join("") === "\u2061") {
         // force previous node to be texClass OP, and skip this node
-        if (prev) prev.texClass = MML.TEXCLASS.OP;
+        if (prev) {prev.texClass = MML.TEXCLASS.OP; prev.fnOP = true}
         this.texClass = this.prevClass = MML.TEXCLASS.NONE;
         return prev;
       }
@@ -752,7 +752,7 @@ MathJax.ElementJax.mml.Augment({
     },
     setTeXclass: function (prev) {
       var i, m = this.data.length;
-      if (this.open || this.close) {
+      if ((this.open || this.close) && (!prev || !prev.fnOP)) {
         //
         // <mrow> came from \left...\right
         // so treat as subexpression (tex class INNER)

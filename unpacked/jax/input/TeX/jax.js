@@ -1490,7 +1490,7 @@
     
     Lap: function (name) {
       var mml = MML.mpadded(this.ParseArg(name)).With({width: 0});
-      if (name === "\\llap") {mml.lspace = "-1 width"}
+      if (name === "\\llap") {mml.lspace = "-1width"}
       this.Push(MML.TeXAtom(mml));
     },
     
@@ -1721,7 +1721,7 @@
       if (!cmd) {TEX.Error(["UnknownEnv","Unknown environment '%1'",env])}
       if (!(cmd instanceof Array)) {cmd = [cmd]}
       var end = (cmd[1] instanceof Array ? cmd[1][0] : cmd[1]);
-      mml = STACKITEM.begin().With({name: env, end: end, parse:this});
+      var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       if (name === "\\end") {
         if (!isEnd && cmd[1] instanceof Array && this[cmd[1][1]]) {
           mml = this[cmd[1][1]].apply(this,[mml].concat(cmd.slice(2)));

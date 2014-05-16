@@ -380,6 +380,16 @@
       NeoEulerWeb:    "Neo-Euler"
     },
     
+    fontInUse: "generic",
+    FONTDATA: {
+      TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
+      FONTS: {},
+      VARIANT: {
+        "normal": {fonts:[]}, "-generic-variant": {fonts:[]},
+        "-largeOp": {fonts:[]}, "-smallOp": {fonts:[]}
+      }, RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
+    },
+
     Config: function () {
       if (!this.require) {this.require = []}
       this.Font = FONTTEST(); this.SUPER(arguments).Config.call(this);
@@ -414,15 +424,6 @@
       } else {
         MESSAGE(["CantFindFontUsing","Can't find a valid font using %1",
                 "["+this.config.availableFonts.join(", ")+"]"],null,3000);
-        this.fontInUse = "generic";
-        this.FONTDATA = {
-          TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
-          FONTS: {},
-          VARIANT: {
-            "normal": {fonts:[]}, "-generic-variant": {fonts:[]},
-            "-largeOp": {fonts:[]}, "-smallOp": {fonts:[]}
-          }, RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
-        };
         HUB.Startup.signal.Post("HTML-CSS Jax - no valid font");
       }
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
@@ -845,20 +846,19 @@
     getW: function (span) {
       var W, H, w = (span.bbox||{}).w, start = span;
       if (span.bbox && span.bbox.exactW) {return w}
-      if ((span.bbox && w >= 0 && !this.initialSkipBug) || this.negativeBBoxes || !span.firstChild) {
+      if ((span.bbox && w >= 0 && !this.initialSkipBug && !this.msieItalicWidthBug) ||
+           this.negativeBBoxes || !span.firstChild) {
         W = span.offsetWidth; H = span.parentNode.offsetHeight;
       } else if (span.bbox && w < 0 && this.msieNegativeBBoxBug) {
         W = -span.offsetWidth, H = span.parentNode.offsetHeight;
       } else {
         // IE can't deal with a space at the beginning, so put something else first
-        if (this.initialSkipBug) {
-          var position = span.style.position; span.style.position = "absolute";
-          start = this.startMarker; span.insertBefore(start,span.firstChild)
-        }
+        var position = span.style.position; span.style.position = "absolute";
+        start = this.startMarker; span.insertBefore(start,span.firstChild)
         span.appendChild(this.endMarker);
         W = this.endMarker.offsetLeft - start.offsetLeft;
         span.removeChild(this.endMarker);
-        if (this.initialSkipBug) {span.removeChild(start); span.style.position = position}
+        span.removeChild(start); span.style.position = position
       }
       if (H != null) {span.parentNode.HH = H/this.em}
       return W/this.em;
@@ -1201,6 +1201,14 @@
     },
     alignBox: function (span,align,y) {
       this.placeBox(span,0,y); // set y position (and left aligned)
+      if (this.msiePlaceBoxBug) {
+        //
+        //  placeBox() adds an extra &nbsp;, so remove it here.
+        //
+        var node = span.lastChild;
+        while (node && node.nodeName !== "#text") {node = node.previousSibling}
+        if (node) {span.removeChild(node)}
+      }
       var bbox = span.bbox; if (bbox.isMultiline) return;
       var isRelative = bbox.width != null && !bbox.isFixed;
       var r = 0, c = -bbox.w/2, l = "50%";
@@ -1687,7 +1695,7 @@
 	var h = span.bbox.h, d = span.bbox.d, stretched = false;
 	for (i = 0, m = stretchy.length; i < m; i++) {
           var bbox = stretchy[i].HTMLspanElement().bbox;
-          if (bbox.h !== h || bbox.d !== d)
+          if (stretchy[i].forceStretch || bbox.h !== h || bbox.d !== d)
             {stretchy[i].HTMLstretchV(span,h,d); stretched = true}
         }
 	if (stretched) {this.HTMLcomputeBBox(span,true)}
@@ -1914,7 +1922,8 @@
 
       HTMLgetScale: function () {
         if (this.scale) {return this.scale * this.mscale}
-	var scale = 1, values = this.getValues("mathsize","scriptlevel","fontsize");
+	var scale = 1, values = this.getValues("scriptlevel","fontsize");
+        values.mathsize = (this.isToken ? this : this.Parent()).Get("mathsize");
 	if (this.style) {
 	  var span = this.HTMLspanElement();
 	  if (span.style.fontSize != "") {values.fontsize = span.style.fontSize}
@@ -2204,7 +2213,9 @@
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {c = HTMLCSS.FONTDATA.REMAPACCENTUNDER[c]||c}
         }
 	c = HTMLCSS.FONTDATA.DELIMITERS[c.charCodeAt(0)];
-	return (c && c.dir == direction.substr(0,1));
+        var stretch = (c && c.dir === direction.substr(0,1));
+        this.forceStretch = (stretch && (this.Get("minsize",true) || this.Get("maxsize",true)));
+	return stretch;
       },
       HTMLstretchV: function (box,h,d) {
 	this.HTMLremoveColor();
@@ -2457,7 +2468,7 @@
           //  (TeXBook pg 150 and Appendix G rule 15e)
           //
           var space = HTMLCSS.TeX.nulldelimiterspace * this.mscale;
-          var style = span.firstChild.style;
+          var style = span.childNodes[HTMLCSS.msiePaddingWidthBug ? 1 : 0].style;
           style.marginLeft = style.marginRight = HTMLCSS.Em(space);
           span.bbox.w += 2*space; span.bbox.r += 2*space;
 	}
@@ -2898,6 +2909,7 @@
           msieClipRectBug: !isIE8,
           msieNegativeSpaceBug: quirks,
           cloneNodeBug: (isIE8 && browser.version === "8.0"),
+          msieItalicWidthBug: true,          // can't measure boxes ending in italics correctly
           initialSkipBug: (mode < 8),        // confused by initial left-margin values
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
           msieIE6: !isIE7,

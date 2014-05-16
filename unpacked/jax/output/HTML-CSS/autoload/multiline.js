@@ -570,8 +570,11 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     },
     
     HTMLmoveLine: function (start,end,span,state,values) {
-      var SPAN = this.HTMLspanElement(), data = SPAN.bbox, base = data,
-          stack = SPAN.firstChild, box = stack.firstChild, dx, BOX = {};
+      var SPAN = this.HTMLspanElement(), data = SPAN.bbox,
+          stack = SPAN.firstChild, BOX = {};
+      if (HTMLCSS.msiePaddingWidthBug) {stack = stack.nextSibling}
+      var box = stack.firstChild;
+      
       //
       //  Get the boxes for the scripts (if any)
       //
