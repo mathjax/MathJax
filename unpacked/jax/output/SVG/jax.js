@@ -1032,14 +1032,10 @@
       var def, t = SVG.config.blacker;
       var cache = SVG.config.useFontCache;
       var transform = (scale === 1 ? null : "scale("+SVG.Fixed(scale)+")");
+      if (cache && !SVG.config.useGlobalCache) {id = "E"+DEFN+"-"+id}
       if (!cache || !GLYPHS[id]) {
         def = {"stroke-width":t};
-        if (cache) {
-          if (!SVG.config.useGlobalCache) {id = "D"+DEFN+"-"+id}
-          def.id = id;
-        } else if (transform) {
-          def.transform = transform;
-        }
+        if (cache) {def.id = id} else if (transform) {def.transform = transform}
         if (p !== "") {def.d = "M"+p+"Z"}
         this.SUPER(arguments).Init.call(this,def);
         if (cache) {DEFS.appendChild(this.element); GLYPHS[id] = true;}
