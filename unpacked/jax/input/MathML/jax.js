@@ -282,8 +282,11 @@
     parseDOM: function (string) {return this.parser.parseFromString(string,"text/xml")},
     parseMS: function (string) {return (this.parser.loadXML(string) ? this.parser : null)},
     parseDIV: function (string) {
-      this.div.innerHTML = string.replace(/<([a-z]+)([^>]*)\/>/g,"<$1$2></$1>");
-      return this.div;
+      this.div.innerHTML = 
+        "<div>"+string.replace(/<([a-z]+)([^>]*)\/>/g,"<$1$2></$1>")+"</div>";
+      var doc = this.div.firstChild;
+      this.div.innerHTML = "";
+      return doc;
     },
     parseError: function (string) {return null},
     createMSParser: function() {
