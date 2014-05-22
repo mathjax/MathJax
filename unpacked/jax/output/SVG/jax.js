@@ -1840,7 +1840,7 @@
               boxes[i] = this.SVGdataStretched(i,HW,D);
 	      stretch[i] = (D != null || HW == null) && this.data[i].SVGcanStretch("Horizontal");
 	    } else {
-              boxes[i] = this.data[i].toSVG();
+              boxes[i] = this.data[i].toSVG(); boxes[i].x = 0; delete boxes[i].X;
 	      stretch[i] = this.data[i].SVGcanStretch("Horizontal");
 	    }
 	    if (boxes[i].w > WW) {WW = boxes[i].w}
@@ -1849,7 +1849,10 @@
 	}
 	if (D == null && HW != null) {W = HW} else if (W == -SVG.BIGDIMEN) {W = WW}
         for (i = WW = 0, m = this.data.length; i < m; i++) {if (this.data[i]) {
-          if (stretch[i]) {boxes[i] = this.data[i].SVGstretchH(W)}
+          if (stretch[i]) {
+            boxes[i] = this.data[i].SVGstretchH(W);
+            if (i !== this.base) {boxes[i].x = 0; delete boxes[i].X}
+          }
           if (boxes[i].w > WW) {WW = boxes[i].w}
         }}
         var t = SVG.TeX.rule_thickness * this.mscale;
