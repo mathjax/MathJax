@@ -1079,7 +1079,8 @@ MathJax.HTML = {
     Get: function (name,obj) {
       if (!obj) {obj = {}}
       var pattern = new RegExp("(?:^|;\\s*)"+this.prefix+"\\."+name+"=([^;]*)(?:;|$)");
-      var match = pattern.exec(document.cookie);
+      var match;
+      try {match = pattern.exec(document.cookie)} catch (err) {}; // ignore errors reading cookies
       if (match && match[1] !== "") {
         var keys = unescape(match[1]).split('&;');
         for (var i = 0, m = keys.length; i < m; i++) {
