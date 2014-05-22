@@ -153,8 +153,8 @@
       this.textSVG = this.Element("svg");
       
       // Global defs for font glyphs
-      DEFS = this.addElement(this.addElement(this.hiddenDiv.parentNode,"svg"),"defs",{id:"MathJax_SVG_glyphs"});
-      GLYPHS = {};
+      BBOX.GLYPH.defs = this.addElement(this.addElement(this.hiddenDiv.parentNode,"svg"),
+                                          "defs",{id:"MathJax_SVG_glyphs"});
 
        // Used in preTranslate to get scaling factors
       this.ExSpan = HTML.Element("span",
@@ -298,7 +298,8 @@
       //
       var jax = script.MathJax.elementJax, math = jax.root,
           span = document.getElementById(jax.inputID+"-Frame"),
-          div = (jax.SVG.display ? (span||{}).parentNode : span);
+          div = (jax.SVG.display ? (span||{}).parentNode : span),
+          localCache = (SVG.config.useFontCache && !SVG.config.useGlobalCache);
       if (!div) return;
       //
       //  Set the font metrics
@@ -310,10 +311,12 @@
       //
       this.mathDiv = div;
       span.appendChild(this.textSVG);
+      if (localCache) {SVG.resetGlyphs()}
       this.initSVG(math,span);
       math.setTeXclass();
       try {math.toSVG(span,div)} catch (err) {
         if (err.restart) {while (span.firstChild) {span.removeChild(span.firstChild)}}
+        if (localCache) {BBOX.GLYPH.n--}
         throw err;
       }
       span.removeChild(this.textSVG);
@@ -376,17 +379,18 @@
       state.SVGlast = state.SVGeqn;
     },
     
-    clearGlyphs: function (reset) {
+    resetGlyphs: function (reset) {
       if (this.config.useFontCache) {
+        var GLYPH = BBOX.GLYPH;
         if (this.config.useGlobalCache) {
-          DEFS = document.getElementById("MathJax_SVG_Glyphs");
-          DEFS.innerHTML = "";
+          GLYPH.defs = document.getElementById("MathJax_SVG_Glyphs");
+          GLYPH.defs.innerHTML = "";
         } else {
-          DEFS = this.Element("defs");
-          DEFN++;
+          GLYPH.defs = this.Element("defs");
+          GLYPH.n++;
         }
-        GLYPHS = {};
-        if (reset) {DEFN = 0}
+        GLYPH.glyphs = {};
+        if (reset) {GLYPH.n = 0}
       }
     },
 
@@ -1024,21 +1028,19 @@
     }
   });
   
-  var GLYPHS, DEFS, DEFN = 0; // data for which glyphs are used
-
   BBOX.GLYPH = BBOX.Subclass({
     type: "path", removeable: false,
     Init: function (scale,id,h,d,w,l,r,p) {
-      var def, t = SVG.config.blacker;
+      var def, t = SVG.config.blacker, GLYPH = BBOX.GLYPH;
       var cache = SVG.config.useFontCache;
       var transform = (scale === 1 ? null : "scale("+SVG.Fixed(scale)+")");
-      if (cache && !SVG.config.useGlobalCache) {id = "E"+DEFN+"-"+id}
-      if (!cache || !GLYPHS[id]) {
+      if (cache && !SVG.config.useGlobalCache) {id = "E"+GLYPH.n+"-"+id}
+      if (!cache || !GLYPH.glyphs[id]) {
         def = {"stroke-width":t};
         if (cache) {def.id = id} else if (transform) {def.transform = transform}
         if (p !== "") {def.d = "M"+p+"Z"}
         this.SUPER(arguments).Init.call(this,def);
-        if (cache) {DEFS.appendChild(this.element); GLYPHS[id] = true;}
+        if (cache) {GLYPH.defs.appendChild(this.element); GLYPH.glyphs[id] = true;}
       }
       if (cache) {
         def = {}; if (transform) {def.transform = transform}
@@ -1050,6 +1052,10 @@
       this.H = Math.max(0,this.h); this.D = Math.max(0,this.d);
       this.x = this.y = 0; this.scale = scale;
     }
+  },{
+    glyphs: {},            // which glpyhs have been used
+    defs: null,            // the SVG <defs> element where glyphs are stored
+    n: 0                   // the ID for local <defs> for self-contained SVG elements
   });
   
   HUB.Register.StartupHook("mml Jax Ready",function () {
@@ -2000,11 +2006,7 @@
     MML.math.Augment({
       SVG: BBOX.Subclass({type:"svg", removeable: false}),
       toSVG: function (span,div) {
-        //
-        //  Clear the font cache, if necessary
-        //
         var CONFIG = SVG.config;
-        if (span && CONFIG.useFontCache && !CONFIG.useGlobalCache) {SVG.clearGlyphs()}
         //
         //  All the data should be in an inferrerd row
         //
@@ -2024,7 +2026,8 @@
           this.SVGhandleColor(box);
           var svg = this.SVG();
           svg.element.setAttribute("xmlns:xlink",XLINKNS);
-          if (CONFIG.useFontCache && !CONFIG.useGlobalCache) {svg.element.appendChild(DEFS)}
+          if (CONFIG.useFontCache && !CONFIG.useGlobalCache)
+            {svg.element.appendChild(BBOX.GLYPH.defs)}
           svg.Add(box); svg.Clean();
           this.SVGsaveData(svg);
           //
