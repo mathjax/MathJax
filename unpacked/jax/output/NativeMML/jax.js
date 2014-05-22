@@ -432,6 +432,7 @@
     Zoom: function (jax,span,math,Mw,Mh) {
       jax.root.toNativeMML(span);
       if (this.msieIE8HeightBug) {span.style.position = "absolute"}
+      if (nMML.widthBug) {span.style.width = span.parentNode.style.width = ""}
       var mW = math.offsetWidth  || math.scrollWidth,
           mH = math.offsetHeight || math.scrollHeight;
       var zW = span.offsetWidth, zH = span.offsetHeight;

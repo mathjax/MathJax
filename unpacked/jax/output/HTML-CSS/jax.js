@@ -777,7 +777,7 @@
       this.idPostfix = "-zoom"; jax.root.toHTML(span,span); this.idPostfix = "";
       this.zoomScale = 1;
       
-      var width = jax.root.HTMLspanElement().bbox.width;
+      var width = jax.root.HTMLspanElement().bbox.width, cwidth;
       if (width) {
         //  Handle full-width displayed equations
         //  FIXME: this is a hack for now
@@ -785,7 +785,10 @@
         var id = (jax.root.id||"MathJax-Span-"+jax.root.spanID)+"-zoom";
         var child = document.getElementById(id).firstChild;
         while (child && child.style.width !== width) {child = child.nextSibling}
-        if (child) {child.style.width = "100%"}
+        if (child) {
+          var cwidth = child.offsetWidth; child.style.width = "100%";
+          if (cwidth > Mw) {span.style.width = (cwidth+100)+"px"}
+        }
       }
       //
       //  Get height and width of zoomed math and original math
