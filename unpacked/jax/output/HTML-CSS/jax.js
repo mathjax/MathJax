@@ -384,10 +384,8 @@
     FONTDATA: {
       TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
       FONTS: {},
-      VARIANT: {
-        "normal": {fonts:[]}, "-generic-variant": {fonts:[]},
-        "-largeOp": {fonts:[]}, "-smallOp": {fonts:[]}
-      }, RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
+      VARIANT: {"normal": {fonts:[]}, "-generic-variant": {}, "-largeOp": {}, "-smallOp": {}},
+      RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
     },
 
     Config: function () {
