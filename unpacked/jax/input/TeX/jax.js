@@ -2061,6 +2061,7 @@
     },
     
     sourceMenuTitle: /*_(MathMenu)*/ ["TeXCommands","TeX Commands"],
+    annotationEncoding: "application/x-tex",
 
     prefilterHooks: MathJax.Callback.Hooks(true),    // hooks to run before processing TeX
     postfilterHooks: MathJax.Callback.Hooks(true),   // hooks to run after processing TeX
@@ -2087,7 +2088,6 @@
       this.prefilterHooks.Execute(data); math = data.math;
       try {
         mml = TEX.Parse(math).mml();
-//        mml = MML.semantics(mml,MML.annotation(math).With({encoding:"application/x-tex"}));
       } catch(err) {
         if (!err.texError) {throw err}
         mml = this.formatError(err,math,display,script);

@@ -299,7 +299,7 @@
       //
       //  Convert to MathML (if restarted, remove any partial math)
       //
-      try {math.toNativeMML(mspan)} catch (err) {
+      try {math.toNativeMML(mspan,jax)} catch (err) {
         if (err.restart) {while (mspan.firstChild) {mspan.removeChild(mspan.firstChild)}}
         throw err;
       }
@@ -906,8 +906,9 @@
     }
     
     MML.math.Augment({
-      toNativeMML: function (parent) {
-        var tag = this.NativeMMLelement(this.type), math = tag, jax;
+      toNativeMML: function (parent,jax) {
+        var tag = this.NativeMMLelement(this.type), math = tag;
+        var annotate = (jax ? MathJax.InputJax[jax.inputJax].annotationEncoding : null);
         var i, m;
         nMML.adjustWidths = [];
         //
@@ -920,6 +921,17 @@
         //    (the math element doesn't always have an accurate one, see below)
         //
         if (nMML.widthBug) {tag = tag.appendChild(this.NativeMMLelement("mrow"))}
+        //
+        //  Addannotation if the input jax provides an annotation encoding
+        //
+        if (annotate) {
+          tag = tag.appendChild(this.NativeMMLelement("semantics"))
+          tag.appendChild(this.NativeMMLelement("mrow"));
+          var annotation = tag.appendChild(this.NativeMMLelement("annotation"));
+          annotation.appendChild(document.createTextNode(jax.originalText));
+          annotation.setAttribute("encoding",annotate);
+          tag = tag.firstChild; // mrow
+        }
         //
         //  Add the children
         //
@@ -966,7 +978,6 @@
           //
           //  Save size for later when we check if Web fonts have arrived
           //
-          jax = HUB.getJaxFor(parent);
           if (jax) {jax.NativeMML.scrollWidth = math.firstChild.scrollWidth}
         }
         if (nMML.adjustWidths.length) {
