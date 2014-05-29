@@ -1276,6 +1276,7 @@ junk = null;
   
   ASCIIMATH.Augment({
     sourceMenuTitle: /*_(MathMenu)*/ ["AsciiMathInput","AsciiMath Input"],
+    annotationEncoding: "text/x-asciimath",
 
     prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run before processing AsciiMath
     postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run after processing AsciiMath
