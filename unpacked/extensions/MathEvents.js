@@ -160,6 +160,7 @@
 	  source.items[0].name = jax.sourceMenuTitle;
 	  source.items[0].format = (jax.sourceMenuFormat||"MathML");
           source.items[1].name = INPUT[jax.inputJax].sourceMenuTitle;
+          source.items[5].disabled = !INPUT[jax.inputJax].annotationEncoding;
 
           // 
           // Try and find each known annotation format and enable the menu

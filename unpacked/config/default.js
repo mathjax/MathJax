@@ -243,7 +243,8 @@ MathJax.Hub.Config({
     context: "MathJax",  //  or "Browser" for pass-through to browser menu
     mpContext: false,    //  true means pass menu events to MathPlayer in IE
     mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
-    texHints: true       //  include class names for TeXAtom elements
+    texHints: true,      //  include class names for TeXAtom elements
+    semantics: false     //  add semantics tag with original form in MathML output
   },
   
   //
