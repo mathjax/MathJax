@@ -122,6 +122,7 @@
         }
       }
     },
+    handlesVariants: false, // true if native support for mathvariants
     settings: HUB.config.menuSettings,
     ex: 1, scale: 1,  // filled in later
     adjustWidths: [], // array of elements to have their widths adjusted
@@ -856,53 +857,62 @@
       var fontDir = AJAX.fileURL(MathJax.OutputJax.fontDir+"/HTML-CSS/TeX/otf");
 
       /*
-       *  Add fix for mathvariant issues in FF
+       *  Add fix for mathvariant issues
        */
       nMML.Augment({
-	config: {
-	  styles: {
-	    '[mathvariant="double-struck"]':          {"font-family":"MathJax_AMS, MathJax_AMS-WEB"},
-	    '[mathvariant="script"]':                 {"font-family":"MathJax_Script, MathJax_Script-WEB"},
-	    '[mathvariant="fraktur"]':                {"font-family":"MathJax_Fraktur, MathJax_Fraktur-WEB"},
-	    '[mathvariant="bold-script"]':            {"font-family":"MathJax_Script, MathJax_Caligraphic-WEB", "font-weight":"bold"},
-	    '[mathvariant="bold-fraktur"]':           {"font-family":"MathJax_Fraktur, MathJax_Fraktur-WEB", "font-weight":"bold"},
-	    '[mathvariant="monospace"]':              {"font-family":"monospace"},
-	    '[mathvariant="sans-serif"]':             {"font-family":"sans-serif"},
-	    '[mathvariant="bold-sans-serif"]':        {"font-family":"sans-serif", "font-weight":"bold"},
-	    '[mathvariant="sans-serif-italic"]':      {"font-family":"sans-serif", "font-style":"italic"},
-	    '[mathvariant="sans-serif-bold-italic"]': {"font-family":"sans-serif", "font-style":"italic", "font-weight":"bold"},
-	    '[class="MJX-tex-oldstyle"]':             {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB"},
-	    '[class="MJX-tex-oldstyle-bold"]':        {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB", "font-weight":"bold"},
-	    '[class="MJX-tex-caligraphic"]':          {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB"},
-	    '[class="MJX-tex-caligraphic-bold"]':     {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB", "font-weight":"bold"},
+        config: {
+          styles: {
+            '[class="MJX-tex-oldstyle"]':             {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB"},
+            '[class="MJX-tex-oldstyle-bold"]':        {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB", "font-weight":"bold"},
+            '[class="MJX-tex-caligraphic"]':          {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB"},
+            '[class="MJX-tex-caligraphic-bold"]':     {"font-family":"MathJax_Caligraphic, MathJax_Caligraphic-WEB", "font-weight":"bold"},
 
-	    '@font-face /*1*/': {
-	      "font-family": "MathJax_AMS-WEB",
-	      "src": "url('"+fontDir+"/MathJax_AMS-Regular.otf')"
-	    },
-	    '@font-face /*2*/': {
-	      "font-family": "MathJax_Script-WEB",
-	      "src": "url('"+fontDir+"/MathJax_Script-Regular.otf')"
-	    },
-	    '@font-face /*3*/': {
-	      "font-family": "MathJax_Fraktur-WEB",
-	      "src": "url('"+fontDir+"/MathJax_Fraktur-Regular.otf')"
-	    },
-	    '@font-face /*4*/': {
-	      "font-family": "MathJax_Caligraphic-WEB",
-	      "src": "url('"+fontDir+"/MathJax_Caligraphic-Regular.otf')"
-	    },
-	    '@font-face /*5*/': {
-	      "font-family": "MathJax_Fraktur-WEB", "font-weight":"bold",
-	      "src": "url('"+fontDir+"/MathJax_Fraktur-Bold.otf')"
-	    },
-	    '@font-face /*6*/': {
-	      "font-family": "MathJax_Caligraphic-WEB", "font-weight":"bold",
-	      "src": "url('"+fontDir+"/MathJax_Caligraphic-Bold.otf')"
-	    }
-	  }
-	}
+            '@font-face /*1*/': {
+              "font-family": "MathJax_Caligraphic-WEB",
+              "src": "url('"+fontDir+"/MathJax_Caligraphic-Regular.otf')"
+            },
+            '@font-face /*2*/': {
+              "font-family": "MathJax_Caligraphic-WEB", "font-weight":"bold",
+              "src": "url('"+fontDir+"/MathJax_Caligraphic-Bold.otf')"
+            }
+          }
+        }
       });
+      if (!this.handlesVariants) {
+        nMML.Augment({
+          config: {
+            styles: {
+              '[mathvariant="double-struck"]':          {"font-family":"MathJax_AMS, MathJax_AMS-WEB"},
+              '[mathvariant="script"]':                 {"font-family":"MathJax_Script, MathJax_Script-WEB"},
+              '[mathvariant="fraktur"]':                {"font-family":"MathJax_Fraktur, MathJax_Fraktur-WEB"},
+              '[mathvariant="bold-script"]':            {"font-family":"MathJax_Script, MathJax_Caligraphic-WEB", "font-weight":"bold"},
+              '[mathvariant="bold-fraktur"]':           {"font-family":"MathJax_Fraktur, MathJax_Fraktur-WEB", "font-weight":"bold"},
+              '[mathvariant="monospace"]':              {"font-family":"monospace"},
+              '[mathvariant="sans-serif"]':             {"font-family":"sans-serif"},
+              '[mathvariant="bold-sans-serif"]':        {"font-family":"sans-serif", "font-weight":"bold"},
+              '[mathvariant="sans-serif-italic"]':      {"font-family":"sans-serif", "font-style":"italic"},
+              '[mathvariant="sans-serif-bold-italic"]': {"font-family":"sans-serif", "font-style":"italic", "font-weight":"bold"},
+
+              '@font-face /*3*/': {
+                "font-family": "MathJax_AMS-WEB",
+                "src": "url('"+fontDir+"/MathJax_AMS-Regular.otf')"
+              },
+              '@font-face /*4*/': {
+                "font-family": "MathJax_Script-WEB",
+                "src": "url('"+fontDir+"/MathJax_Script-Regular.otf')"
+              },
+              '@font-face /*5*/': {
+                "font-family": "MathJax_Fraktur-WEB",
+                "src": "url('"+fontDir+"/MathJax_Fraktur-Regular.otf')"
+              },
+              '@font-face /*6*/': {
+                "font-family": "MathJax_Fraktur-WEB", "font-weight":"bold",
+                "src": "url('"+fontDir+"/MathJax_Fraktur-Bold.otf')"
+              }
+            }
+          }
+        });
+      }
     }
     
     MML.math.Augment({
@@ -1309,15 +1319,16 @@
       nMML.mmultiscriptsBug = true;
     },
     Firefox: function (browser) {
+      var is29 = browser.versionAtLeast("29.0");
       nMML.ffTableWidthBug = !browser.versionAtLeast("13.0"); // <mtable width="xx"> not implemented
-      nMML.forceReflow = true;   // <mtable> with alignments set don't display properly without a reflow
-      nMML.widthBug = true;      // <math> elements don't always get the correct width
+      nMML.forceReflow = !is29;    // <mtable> with alignments set don't display properly without a reflow
+      nMML.widthBug = !is29;       // <math> elements don't always get the correct width
+      nMML.mtdWidthBug = !is29;    // <mtd> widths not properly determined
+      nMML.handlesVariants = is29; // FF >=29 handles all math variants
 
       // In Firefox < 20, the intrinsic width of <mspace> is not computed
       // correctly and thus the element is displayed incorrectly in <mtable>.
       nMML.spaceWidthBug = !browser.versionAtLeast("20.0");
-
-      nMML.mtdWidthBug = true;     // <mtd> widths not properly determined
 
       nMML.tableSpacingBug = true; // mtable@rowspacing/mtable@columnspacing not
                                    // supported.
