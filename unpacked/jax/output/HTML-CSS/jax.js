@@ -1392,7 +1392,10 @@
           span.style.top = this.Em(-h);
         } else {
           span.style.verticalAlign = this.Em(h);
-          if (HTMLCSS.ffVerticalAlignBug) {HTMLCSS.createRule(span.parentNode,span.bbox.h,0,0)}
+	  if (HTMLCSS.ffVerticalAlignBug) {
+	    HTMLCSS.createRule(span.parentNode,span.bbox.h,0,0);
+	    delete span.parentNode.bbox;
+	  }
         }
       }
     },
@@ -2934,7 +2937,7 @@
               (HUB.config.root+"/").substr(0,root.length) === root) {webFonts = "otf"}
         }
         HTMLCSS.Augment({
-          ffVerticalAlignBug: true,
+          ffVerticalAlignBug: !browser.versionAtLeast("20.0"),  // not sure when this bug was fixed
           AccentBug: true,
           allowWebFonts: webFonts
         });
