@@ -1325,8 +1325,15 @@
       },
       
       SVGcanStretch: function (direction) {
-	if (this.isEmbellished()) {return this.Core().SVGcanStretch(direction)}
-	return false;
+        var can = false;
+	if (this.isEmbellished()) {
+          var core = this.Core();
+          if (core && core !== this) {
+            can = core.SVGcanStretch(direction);
+            if (can && core.forceStretch) {this.forceStretch = true}
+          }
+        }
+        return can;
       },
       SVGstretchV: function (h,d) {return this.toSVG(h,d)},
       SVGstretchH: function (w) {return this.toSVG(w)},
@@ -1425,7 +1432,7 @@
       CoreParent: function () {
         var parent = this;
         while (parent && parent.isEmbellished() &&
-               parent.CoreMO() === this && !parent.isa(MML.math))  {parent = parent.Parent()}
+               parent.CoreMO() === this && !parent.isa(MML.math)) {parent = parent.Parent()}
         return parent;
       },
       CoreText: function (parent) {
@@ -1486,6 +1493,7 @@
 	this.SVGhandleColor(svg);
         delete this.svg.element;
         this.SVGsaveData(svg);
+        svg.stretched = true;
 	return svg;
       },
       SVGstretchH: function (w) {
@@ -1502,6 +1510,7 @@
 	this.SVGhandleColor(svg);
         delete this.svg.element;
         this.SVGsaveData(svg);
+        svg.stretched = true;
 	return svg;
       }
     });
