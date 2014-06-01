@@ -775,7 +775,7 @@
       this.idPostfix = "-zoom"; jax.root.toHTML(span,span); this.idPostfix = "";
       this.zoomScale = 1;
       
-      var width = jax.root.HTMLspanElement().bbox.width, cwidth;
+      var width = jax.root.HTMLspanElement().bbox.width;
       if (width) {
         //  Handle full-width displayed equations
         //  FIXME: this is a hack for now
