@@ -1852,7 +1852,8 @@ MathJax.Hub = {
       locale: "en",        //  the language to use for messages
       mpContext: false,    //  true means pass menu events to MathPlayer in IE
       mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
-      texHints: true       //  include class names for TeXAtom elements
+      texHints: true,      //  include class names for TeXAtom elements
+      semantics: false     //  add semantics tag with original form in MathML output
     },
     
     errorSettings: {
