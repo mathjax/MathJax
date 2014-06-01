@@ -1253,8 +1253,8 @@
      *  Handle other characters (as <mo> elements)
      */
     Other: function (c) {
-      var def = {stretchy: false}, mo;
-      if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
+      var def, mo;
+      if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
       if (TEXDEF.remap[c]) {
         c = TEXDEF.remap[c];
         if (c instanceof Array) {def = c[1]; c = c[0]}
@@ -1262,6 +1262,7 @@
       } else {
         mo = MML.mo(c).With(def);
       }
+      if (mo.autoDefault("stretchy",true)) {mo.stretchy = false}
       if (mo.autoDefault("texClass",true) == "") {mo = MML.TeXAtom(mo)}
       this.Push(this.mmlToken(mo));
     },
