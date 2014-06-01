@@ -2974,7 +2974,7 @@ MathJax.Hub.Startup = {
       }
       CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'')
         // convert rackspace to cdn.mathjax.org now that it supports https protocol
-        .replace(/^(https?:)\/\/[0-9a-f]+(-[0-9a-f]+)?.ssl.cf1.rackcdn.com\//,"$1//beta.mathjax.org/");
+        .replace(/^(https?:)\/\/[0-9a-f]+(-[0-9a-f]+)?.ssl.cf1.rackcdn.com\//,"$1//cdn.mathjax.org/");
       BASE.Ajax.config.root = CONFIG.root;
       break;
     }
