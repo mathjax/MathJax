@@ -47,8 +47,8 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 MathJax.version = "2.4-beta";
 MathJax.fileversion = "2.4-beta";
-MathJax.cdnVersion = "2.4-beta";  // specifies a revision to break caching
-MathJax.cdnFileVersions = {};     // can be used to specify revisions for individual files
+MathJax.cdnVersion = "2.4-beta-2";  // specifies a revision to break caching
+MathJax.cdnFileVersions = {};       // can be used to specify revisions for individual files
 
 /**********************************************************/
 
@@ -2973,8 +2973,8 @@ MathJax.Hub.Startup = {
         }
       }
       CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'')
-        .replace(/^(https?:\/\/(cdn.mathjax.org|[0-9a-f]+(-[0-9a-f]+)?.ssl.cf1.rackcdn.com)\/mathjax\/)(latest)/,
-                 "$1"+BASE.version+"-$4");
+        // convert rackspace to cdn.mathjax.org now that it supports https protocol
+        .replace(/^(https?:)\/\/[0-9a-f]+(-[0-9a-f]+)?.ssl.cf1.rackcdn.com\//,"$1//beta.mathjax.org/");
       BASE.Ajax.config.root = CONFIG.root;
       break;
     }
