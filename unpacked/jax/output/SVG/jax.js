@@ -383,7 +383,7 @@
       if (this.config.useFontCache) {
         var GLYPH = BBOX.GLYPH;
         if (this.config.useGlobalCache) {
-          GLYPH.defs = document.getElementById("MathJax_SVG_Glyphs");
+          GLYPH.defs = document.getElementById("MathJax_SVG_glyphs");
           GLYPH.defs.innerHTML = "";
         } else {
           GLYPH.defs = this.Element("defs");
