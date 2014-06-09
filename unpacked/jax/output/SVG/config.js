@@ -84,6 +84,10 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
       ".MathJax_SVG .MJX-sans-serif": {
         "font-family": "sans-serif"
       },
+      
+      //
+      //  For tooltips
+      //
       "#MathJax_SVG_Tooltip": {
         "background-color": "InfoBackground", color: "InfoText",
         border: "1px solid black",
