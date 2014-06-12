@@ -30,7 +30,7 @@
 
 MathJax.InputJax.AsciiMath = MathJax.InputJax({
   id: "AsciiMath",
-  version: "2.4-beta",
+  version: "2.4.0",
   directory: MathJax.InputJax.directory + "/AsciiMath",
   extensionDir: MathJax.InputJax.extensionDir + "/AsciiMath",
   

@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-    var VERSION = "2.4-beta";
+    var VERSION = "2.4.0";
 
   var ALPHABETS = "LatinModernMathJax_Alphabets",
       ARROWS = "LatinModernMathJax_Arrows",

@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("sv","HTML-CSS",{
-        version: "2.4-beta",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           LoadWebFont: "L\u00E4ser in webbtypsnittet %1",

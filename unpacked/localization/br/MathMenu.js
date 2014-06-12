@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("br","MathMenu",{
-        version: "2.4-beta",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           Show: "Diskouez ar formulenn evel",

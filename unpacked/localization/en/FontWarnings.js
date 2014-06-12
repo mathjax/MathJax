@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("en","FontWarnings",{
-        version: "2.4-beta",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax is using web-based fonts to display the mathematics on this page.  These take time to download, so the page would render faster if you installed math fonts directly in your system's font folder.",

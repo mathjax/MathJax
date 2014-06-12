@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("br","HTML-CSS",{version:"2.4-beta",isLoaded:true,strings:{LoadWebFont:"O karga\u00F1 ar font web  %1",CantLoadWebFont:"Ne c'haller ket karga\u00F1 ar font web %1",CantFindFontUsing:"Ne c'haller ket kavout ur font dereat e-touez %1"}});MathJax.Ajax.loadComplete("[MathJax]/localization/br/HTML-CSS.js");
+MathJax.Localization.addTranslation("br","HTML-CSS",{version:"2.4.0",isLoaded:true,strings:{LoadWebFont:"O karga\u00F1 ar font web  %1",CantLoadWebFont:"Ne c'haller ket karga\u00F1 ar font web %1",CantFindFontUsing:"Ne c'haller ket kavout ur font dereat e-touez %1"}});MathJax.Ajax.loadComplete("[MathJax]/localization/br/HTML-CSS.js");

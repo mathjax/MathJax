@@ -50,7 +50,7 @@
  */
 
 (function (HUB,BROWSER) {
-  var VERSION = "2.4-beta";
+  var VERSION = "2.4.0";
   
   var CONFIG = MathJax.Hub.CombineConfig("MMLorHTML",{
     prefer: {

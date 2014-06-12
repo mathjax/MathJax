@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  var VERSION = "2.4-beta";
+  var VERSION = "2.4.0";
 
   var MML = MathJax.ElementJax.mml;
   var TEX = MathJax.InputJax.TeX;

@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-    var VERSION = "2.4-beta";
+    var VERSION = "2.4.0";
 
   var ALPHABETS = "NeoEulerMathJax_Alphabets",
       ARROWS = "NeoEulerMathJax_Arrows",

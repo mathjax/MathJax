@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("sv","TeX",{
-        version: "2.4-beta",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Extra v\u00E4nsterparentes eller h\u00F6gerparentes saknas",

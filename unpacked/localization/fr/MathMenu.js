@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fr","MathMenu",{
-        version: "2.4-beta",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           Show: "Afficher sous forme",

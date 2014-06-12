@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("eo","MathML",{version:"2.4-beta",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/eo/MathML.js");
+MathJax.Localization.addTranslation("eo","MathML",{version:"2.4.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/eo/MathML.js");

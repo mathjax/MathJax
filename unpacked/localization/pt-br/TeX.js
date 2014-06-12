@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("pt-br","TeX",{
-        version: "2.4-beta",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Sobrou uma chave de abertura ou faltou uma de fechamento",

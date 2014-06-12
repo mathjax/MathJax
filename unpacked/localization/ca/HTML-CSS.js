@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("ca","HTML-CSS",{
-        version: "2.4-beta",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           LoadWebFont: "Carregant font web %1",

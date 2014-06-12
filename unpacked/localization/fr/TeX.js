@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fr","TeX",{
-        version: "2.4-beta",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Accolade ouvrante non attendue ou accolade fermante manquante",
