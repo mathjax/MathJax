@@ -18,7 +18,7 @@ There are lots and lots of ways to get involved, this document covers:
 
 ## Reporting An Issue
 
-If you're about to raise an issue because think you've found a problem with MathJax, or you'd like to make a request for a new feature in the codebase, or any other reason… please read this first.
+If you're about to raise an issue because you think you've found a problem with MathJax, or you'd like to make a request for a new feature in the codebase, or any other reason… please read this first.
 
 The GitHub issue tracker is the preferred channel for [bug reports](#bug-reports),
 [feature requests](#feature-requests), [change requests](#change-requests) and [submitting pull
@@ -52,7 +52,7 @@ Guidelines for bug reports:
 
 A good bug report shouldn't leave others needing to chase you up for more information. Be sure to include the details of your environment.
 
-Here is a [real example]()
+Here is a [real example](https://github.com/mathjax/MathJax/issues/820)
 
 Template Example ([click to use](https://github.com/MathJax/MathJax/issues/new?title=Bug%3A&body=%23%23%23%20Issue%20Summary%0A%0A%23%23%23%20Steps%20to%20Reproduce%0A%0A1.%20This%20is%20the%20first%20step%0A%0AThis%20is%20a%20bug%20because...%0A%0A%23%23%23%20Technical%20details%0A%0A*%20MathJax%20Version%3A%20master%20-%20latest%20commit%3A%20%20INSERT%20COMMIT%20REF%0A*%20Client%20OS%3A%20%0A*%20Browser%3A%20%0A*%20)):
 ```
@@ -108,7 +108,6 @@ Pull requests are awesome. If you're looking to raise a PR for something which d
 If you're not completely clear on how to submit / update / *do* Pull Requests, please check out our [source control policies](https://github.com/mathjax/MathJax/wiki/Source-control-policies). For more insights, chech the excellent in depth [Git Workflow guide](https://github.com/TryGhost/Ghost/wiki/Git-Workflow) from Ghost, in particular
 
 * [Ghost Workflow guide: commit messages](https://github.com/TryGhost/Ghost/wiki/Git-workflow#commit-messages)
-* [Ghost Workflow guide: cleaning-up history](https://github.com/TryGhost/Ghost/wiki/Git-workflow#wiki-clean-up-history)
 
 ### Testing and Quality Assurance
 
@@ -116,7 +115,7 @@ Never underestimate just how useful quality assurance is. If you're looking to g
 
 If you want to get involved with testing MathJax, there is a set of QA Documentation [in our testing framework](https://github.com/MathJax/MathJax-testing).
 
-Essentially though, [check out the latest develop](#contribute-to-core), take it for a spin, and if you find anything odd, please follow the [bug report guidelines](#bug-reports) and let us know!
+Essentially though, [check out the latest develop branch](#contribute-to-core), take it for a spin, and if you find anything odd, please follow the [bug report guidelines](#bug-reports) and let us know!
 
 #### Checking out a Pull Request
 
