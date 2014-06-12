@@ -1334,7 +1334,7 @@
       nMML.ffTableWidthBug = !browser.versionAtLeast("13.0"); // <mtable width="xx"> not implemented
       nMML.forceReflow = !is29;    // <mtable> with alignments set don't display properly without a reflow
       nMML.widthBug = !is29;       // <math> elements don't always get the correct width
-      nMML.mtdWidthBug = !is29;    // <mtd> widths not properly determined
+      nMML.mtdWidthBug = true;     // <mtd> widths not properly determined
       nMML.handlesVariants = is29; // FF >=29 handles all math variants
 
       // In Firefox < 20, the intrinsic width of <mspace> is not computed
