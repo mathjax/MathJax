@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/qqq/MathMenu.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("qqq","MathMenu",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           Show: "'Show math as' menu item. MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.\n\nFollowed by the following menu subitems:\n* {{msg-mathjax|Mathmenu-MathMLcode}}\n* {{msg-mathjax|Mathmenu-Original}}\n* {{msg-mathjax|Mathmenu-Annotation}}\n* {{msg-mathjax|Mathmenu-texHints}} - checkbox label",

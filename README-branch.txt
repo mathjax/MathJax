@@ -1,1 +1,1 @@
-This is release branch v2.3 of MathJax.
+This is release branch v2.4 of MathJax.

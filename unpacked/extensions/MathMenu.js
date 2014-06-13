@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2013 The MathJax Consortium
+ *  Copyright (c) 2010-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.3";
+  var VERSION = "2.4.0";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -717,7 +717,7 @@
       var MML = MathJax.ElementJax.mml;
       if (MML && typeof(MML.mbase.prototype.toMathML) !== "undefined") {
         // toMathML() can call MathJax.Hub.RestartAfter, so trap errors and check
-        try {MENU.ShowSource.Text(MENU.jax.root.toMathML(),event)} catch (err) {
+        try {MENU.ShowSource.Text(MENU.jax.root.toMathML("",MENU.jax),event)} catch (err) {
           if (!err.restart) {throw err}
           CALLBACK.After([this,MENU.ShowSource,EVENT],err.restart);
         }
@@ -1060,7 +1060,8 @@
         ITEM.COMMAND(["Original","Original Form"],  MENU.ShowSource, {nativeTouch: true}),
         ITEM.SUBMENU(["Annotation","Annotation"], {disabled:true}),
         ITEM.RULE(),
-        ITEM.CHECKBOX(["texHints","Show TeX hints in MathML"], "texHints")
+        ITEM.CHECKBOX(["texHints","Show TeX hints in MathML"], "texHints"),
+        ITEM.CHECKBOX(["semantics","Add original form as annotation"], "semantics")
       ),
       ITEM.RULE(),
       ITEM.SUBMENU(["Settings","Math Settings"],

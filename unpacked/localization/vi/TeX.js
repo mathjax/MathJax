@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/vi/TeX.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("vi","TeX",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "D\u1EA5u ngo\u1EB7c m\u1EDF c\u00F2n d\u01B0 ho\u1EB7c d\u1EA5u ngo\u1EB7c \u0111\u00F3ng b\u1ECB thi\u1EBFu",

@@ -1,7 +1,7 @@
 /*
  *  /MathJax/localization/lb/lb.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("lb",null,{menuTitle:"L\u00EBtzebuergesch",version:"2.3",isLoaded:true,domains:{_:{version:"2.3",isLoaded:true,strings:{LoadFile:"%1 lueden",Loading:"Lueden",LoadFailed:"De Fichier konnt net geluede ginn: %1",MathJaxNotSupported:"\u00C4re browser \u00EBnnerst\u00EBtzt MathJax net",MathError:"Math Feeler",Processing:"Verschaffen"}},FontWarnings:{},"HTML-CSS":{},HelpDialog:{},MathML:{},MathMenu:{},TeX:{}},plural:function(a){if(a===1){return 1}return 2},number:function(a){return a}});MathJax.Ajax.loadComplete("[MathJax]/localization/lb/lb.js");
+MathJax.Localization.addTranslation("lb",null,{menuTitle:"L\u00EBtzebuergesch",version:"2.4.0",isLoaded:true,domains:{_:{version:"2.4.0",isLoaded:true,strings:{MathError:"Math Feeler",LoadFile:"%1 lueden",Loading:"Lueden",LoadFailed:"De Fichier konnt net geluede ginn: %1",Processing:"Verschaffen",MathJaxNotSupported:"\u00C4re browser \u00EBnnerst\u00EBtzt MathJax net"}},FontWarnings:{},"HTML-CSS":{},HelpDialog:{},MathML:{},MathMenu:{},TeX:{}},plural:function(a){if(a===1){return 1}return 2},number:function(a){return a}});MathJax.Ajax.loadComplete("[MathJax]/localization/lb/lb.js");

@@ -1,7 +1,7 @@
 /*
  *  /MathJax/localization/da/HTML-CSS.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("da","HTML-CSS",{version:"2.3",isLoaded:true,strings:{LoadWebFont:"Indl\u00E6ser webskrifftype %1",CantLoadWebFont:"Kan ikke indl\u00E6se webskrifttype %1",FirefoxCantLoadWebFont:"Firefox kan ikke indl\u00E6se webskrifttyper fra en fjernstyret v\u00E6rt",CantFindFontUsing:"Kunne ikke finde en gyldig skrifttype ved hj\u00E6lp af %1",WebFontsNotAvailable:"Webskrifttyper er ikke tilg\u00E6ngelig. Brug billede skrifttyper i stedet"}});MathJax.Ajax.loadComplete("[MathJax]/localization/da/HTML-CSS.js");
+MathJax.Localization.addTranslation("da","HTML-CSS",{version:"2.4.0",isLoaded:true,strings:{LoadWebFont:"Indl\u00E6ser webskrifftype %1",CantLoadWebFont:"Kan ikke indl\u00E6se webskrifttype %1",FirefoxCantLoadWebFont:"Firefox kan ikke indl\u00E6se webskrifttyper fra en fjernstyret v\u00E6rt",CantFindFontUsing:"Kunne ikke finde en gyldig skrifttype ved hj\u00E6lp af %1",WebFontsNotAvailable:"Webskrifttyper er ikke tilg\u00E6ngelig. Brug billede skrifttyper i stedet"}});MathJax.Ajax.loadComplete("[MathJax]/localization/da/HTML-CSS.js");

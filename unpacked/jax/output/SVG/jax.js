@@ -11,7 +11,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2013 The MathJax Consortium
+ *  Copyright (c) 2011-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -1325,8 +1325,15 @@
       },
       
       SVGcanStretch: function (direction) {
-	if (this.isEmbellished()) {return this.Core().SVGcanStretch(direction)}
-	return false;
+        var can = false;
+	if (this.isEmbellished()) {
+          var core = this.Core();
+          if (core && core !== this) {
+            can = core.SVGcanStretch(direction);
+            if (can && core.forceStretch) {this.forceStretch = true}
+          }
+        }
+        return can;
       },
       SVGstretchV: function (h,d) {return this.toSVG(h,d)},
       SVGstretchH: function (w) {return this.toSVG(w)},
@@ -1425,7 +1432,7 @@
       CoreParent: function () {
         var parent = this;
         while (parent && parent.isEmbellished() &&
-               parent.CoreMO() === this && !parent.isa(MML.math))  {parent = parent.Parent()}
+               parent.CoreMO() === this && !parent.isa(MML.math)) {parent = parent.Parent()}
         return parent;
       },
       CoreText: function (parent) {
@@ -1486,6 +1493,7 @@
 	this.SVGhandleColor(svg);
         delete this.svg.element;
         this.SVGsaveData(svg);
+        svg.stretched = true;
 	return svg;
       },
       SVGstretchH: function (w) {
@@ -1502,6 +1510,7 @@
 	this.SVGhandleColor(svg);
         delete this.svg.element;
         this.SVGsaveData(svg);
+        svg.stretched = true;
 	return svg;
       }
     });
@@ -1840,7 +1849,7 @@
               boxes[i] = this.SVGdataStretched(i,HW,D);
 	      stretch[i] = (D != null || HW == null) && this.data[i].SVGcanStretch("Horizontal");
 	    } else {
-              boxes[i] = this.data[i].toSVG();
+              boxes[i] = this.data[i].toSVG(); boxes[i].x = 0; delete boxes[i].X;
 	      stretch[i] = this.data[i].SVGcanStretch("Horizontal");
 	    }
 	    if (boxes[i].w > WW) {WW = boxes[i].w}
@@ -1849,7 +1858,10 @@
 	}
 	if (D == null && HW != null) {W = HW} else if (W == -SVG.BIGDIMEN) {W = WW}
         for (i = WW = 0, m = this.data.length; i < m; i++) {if (this.data[i]) {
-          if (stretch[i]) {boxes[i] = this.data[i].SVGstretchH(W)}
+          if (stretch[i]) {
+            boxes[i] = this.data[i].SVGstretchH(W);
+            if (i !== this.base) {boxes[i].x = 0; delete boxes[i].X}
+          }
           if (boxes[i].w > WW) {WW = boxes[i].w}
         }}
         var t = SVG.TeX.rule_thickness * this.mscale;

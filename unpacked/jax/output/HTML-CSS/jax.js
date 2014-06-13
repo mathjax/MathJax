@@ -11,7 +11,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -384,10 +384,8 @@
     FONTDATA: {
       TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
       FONTS: {},
-      VARIANT: {
-        "normal": {fonts:[]}, "-generic-variant": {fonts:[]},
-        "-largeOp": {fonts:[]}, "-smallOp": {fonts:[]}
-      }, RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
+      VARIANT: {"normal": {fonts:[]}, "-generic-variant": {}, "-largeOp": {}, "-smallOp": {}},
+      RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
     },
 
     Config: function () {
@@ -785,7 +783,10 @@
         var id = (jax.root.id||"MathJax-Span-"+jax.root.spanID)+"-zoom";
         var child = document.getElementById(id).firstChild;
         while (child && child.style.width !== width) {child = child.nextSibling}
-        if (child) {child.style.width = "100%"}
+        if (child) {
+          var cwidth = child.offsetWidth; child.style.width = "100%";
+          if (cwidth > Mw) {span.style.width = (cwidth+100)+"px"}
+        }
       }
       //
       //  Get height and width of zoomed math and original math
@@ -1391,7 +1392,10 @@
           span.style.top = this.Em(-h);
         } else {
           span.style.verticalAlign = this.Em(h);
-          if (HTMLCSS.ffVerticalAlignBug) {HTMLCSS.createRule(span.parentNode,span.bbox.h,0,0)}
+	  if (HTMLCSS.ffVerticalAlignBug) {
+	    HTMLCSS.createRule(span.parentNode,span.bbox.h,0,0);
+	    delete span.parentNode.bbox;
+	  }
         }
       }
     },
@@ -2616,6 +2620,7 @@
 			   this.data[i].HTMLcanStretch("Horizontal"));
 	    } else {
 	      stretch[i] = this.data[i].HTMLcanStretch("Horizontal");
+              children[i].style.paddingLeft = children[i].style.paddingRight = "";
 	    }
           }
         }
@@ -2630,7 +2635,11 @@
 	if (D == null && HW != null) {W = HW} else if (W == -HTMLCSS.BIGDIMEN) {W = WW}
         for (i = WW = 0, m = this.data.length; i < m; i++) {if (this.data[i]) {
           box = boxes[i];
-          if (stretch[i]) {box.bbox = this.data[i].HTMLstretchH(box,W).bbox}
+          if (stretch[i]) {
+            box.bbox = this.data[i].HTMLstretchH(box,W).bbox;
+            if (i !== this.base)
+              {children[i].style.paddingLeft = children[i].style.paddingRight = ""}
+          }
           if (box.bbox.w > WW) {WW = box.bbox.w}
         }}
 	var t = HTMLCSS.TeX.rule_thickness * this.mscale, factor = HTMLCSS.FONTDATA.TeX_factor;
@@ -2928,7 +2937,7 @@
               (HUB.config.root+"/").substr(0,root.length) === root) {webFonts = "otf"}
         }
         HTMLCSS.Augment({
-          ffVerticalAlignBug: true,
+          ffVerticalAlignBug: !browser.versionAtLeast("20.0"),  // not sure when this bug was fixed
           AccentBug: true,
           allowWebFonts: webFonts
         });

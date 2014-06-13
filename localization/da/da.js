@@ -1,7 +1,7 @@
 /*
  *  /MathJax/localization/da/da.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("da",null,{menuTitle:"dansk",version:"2.3",isLoaded:true,domains:{_:{version:"2.3",isLoaded:true,strings:{CookieConfig:"MathJax har fundet en cookie med brugerkonfiguration, der indeholder kode til at k\u00F8re. Vil du k\u00F8re det?\n\n(Du b\u00F8r trykke p\u00E5 Annuller, medmindre du oprettede cookien selv.)",MathProcessingError:"Fejl under bearbejdning af matematik",MathError:"Matematikfejl",LoadFile:"Indl\u00E6ser %1",Loading:"Indl\u00E6ser",LoadFailed:"Kunne ikke indl\u00E6se filen: %1",ProcessMath:"Bearbejder matematik: %1%%",Processing:"Bearbejder",TypesetMath:"Ops\u00E6tter matematik: %1%%",Typesetting:"Ops\u00E6tter",MathJaxNotSupported:"Din browser underst\u00F8tter ikke MathJax"}},FontWarnings:{},"HTML-CSS":{},HelpDialog:{},MathML:{},MathMenu:{},TeX:{}},plural:function(a){if(a===1){return 1}return 2},number:function(a){return a}});MathJax.Ajax.loadComplete("[MathJax]/localization/da/da.js");
+MathJax.Localization.addTranslation("da",null,{menuTitle:"dansk",version:"2.4.0",isLoaded:true,domains:{_:{version:"2.4.0",isLoaded:true,strings:{CookieConfig:"MathJax har fundet en cookie med brugerkonfiguration, der indeholder kode til at k\u00F8re. Vil du k\u00F8re det?\n\n(Du b\u00F8r trykke p\u00E5 Annuller, medmindre du oprettede cookien selv.)",MathProcessingError:"Fejl under bearbejdning af matematik",MathError:"Matematikfejl",LoadFile:"Indl\u00E6ser %1",Loading:"Indl\u00E6ser",LoadFailed:"Kunne ikke indl\u00E6se filen: %1",ProcessMath:"Bearbejder matematik: %1%%",Processing:"Bearbejder",TypesetMath:"Ops\u00E6tter matematik: %1%%",Typesetting:"Ops\u00E6tter",MathJaxNotSupported:"Din browser underst\u00F8tter ikke MathJax"}},FontWarnings:{},"HTML-CSS":{},HelpDialog:{},MathML:{},MathMenu:{},TeX:{}},plural:function(a){if(a===1){return 1}return 2},number:function(a){return a}});MathJax.Ajax.loadComplete("[MathJax]/localization/da/da.js");

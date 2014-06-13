@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2013 The MathJax Consortium
+ *  Copyright (c) 2011-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,LOCALE,OUTPUT,INPUT) {
-  var VERSION = "2.3";
+  var VERSION = "2.4.0";
   
   var EXTENSION = MathJax.Extension;
   var ME = EXTENSION.MathEvents = {version: VERSION};
@@ -160,6 +160,7 @@
 	  source.items[0].name = jax.sourceMenuTitle;
 	  source.items[0].format = (jax.sourceMenuFormat||"MathML");
           source.items[1].name = INPUT[jax.inputJax].sourceMenuTitle;
+          source.items[5].disabled = !INPUT[jax.inputJax].annotationEncoding;
 
           // 
           // Try and find each known annotation format and enable the menu

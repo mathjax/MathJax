@@ -9,7 +9,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.3",
+  version: "2.4.0",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -118,11 +118,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     environment: {
-      align:         ['AMSarray',null,true,true,  'rlrlrlrlrlrl',COLS([5/18,2,5/18,2,5/18,2,5/18,2,5/18,2,5/18])],
-      'align*':      ['AMSarray',null,false,true, 'rlrlrlrlrlrl',COLS([5/18,2,5/18,2,5/18,2,5/18,2,5/18,2,5/18])],
+      align:         ['AMSarray',null,true,true,  'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0])],
+      'align*':      ['AMSarray',null,false,true, 'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0])],
       multline:      ['Multline',null,true],
       'multline*':   ['Multline',null,false],
-      split:         ['AMSarray',null,false,false,'rl',COLS([5/18])],
+      split:         ['AMSarray',null,false,false,'rl',COLS([0])],
       gather:        ['AMSarray',null,true,true,  'c'],
       'gather*':     ['AMSarray',null,false,true, 'c'],
       
@@ -130,7 +130,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       'alignat*':    ['AlignAt',null,false,true],
       alignedat:     ['AlignAt',null,false,false],
 
-      aligned:       ['AlignedArray',null,null,null,'rlrlrlrlrlrl',COLS([5/18,2,5/18,2,5/18,2,5/18,2,5/18,2,5/18]),".5em",'D'],
+      aligned:       ['AlignedArray',null,null,null,'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0]),".5em",'D'],
       gathered:      ['AlignedArray',null,null,null,'c',null,".5em",'D'],
 
       subarray:      ['Array',null,null,null,null,COLS([0,0,0,0]),"0.1em",'S',1],
@@ -467,7 +467,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
            (data[i].type !== "texatom" || (data[i].data[0] && data[i].data[0].data.length)))) {
           if (data[i].isEmbellished()) {
             var core = data[i].CoreMO();
-            core.form = MML.FORM.INFIX; core.lspace = 0;
+            core.form = MML.FORM.INFIX; core.lspace = MML.LENGTH.MEDIUMMATHSPACE;
           }
           break;
         }

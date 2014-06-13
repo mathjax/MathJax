@@ -12,7 +12,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -243,7 +243,8 @@ MathJax.Hub.Config({
     context: "MathJax",  //  or "Browser" for pass-through to browser menu
     mpContext: false,    //  true means pass menu events to MathPlayer in IE
     mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
-    texHints: true       //  include class names for TeXAtom elements
+    texHints: true,      //  include class names for TeXAtom elements
+    semantics: false     //  add semantics tag with original form in MathML output
   },
   
   //

@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/en/FontWarnings.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("en","FontWarnings",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax is using web-based fonts to display the mathematics on this page.  These take time to download, so the page would render faster if you installed math fonts directly in your system's font folder.",

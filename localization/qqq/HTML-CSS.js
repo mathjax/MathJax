@@ -1,7 +1,7 @@
 /*
  *  /MathJax/localization/qqq/HTML-CSS.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("qqq","HTML-CSS",{version:"2.3",isLoaded:true,strings:{LoadWebFont:"This is displayed in MathJax message box when the HTML-CSS output is loading a Web font.\n\nParameters:\n* %1 - the font name",CantLoadWebFont:"This is displayed in MathJax message box when the HTML-CSS output fails to load a Web font. The first argument is the font name",FirefoxCantLoadWebFont:"This is displayed in MathJax message box when the HTML-CSS output fails to load a Web font in Firefox",CantFindFontUsing:"This is displayed in MathJax message box when the HTML-CSS output fails to load a Web font from a given list.\n\nParameters:\n* %1 - a list of fonts tried, comma-separated",WebFontsNotAvailable:"This is displayed in MathJax message box when the HTML-CSS fails to load Web fonts"}});MathJax.Ajax.loadComplete("[MathJax]/localization/qqq/HTML-CSS.js");
+MathJax.Localization.addTranslation("qqq","HTML-CSS",{version:"2.4.0",isLoaded:true,strings:{LoadWebFont:"This is displayed in MathJax message box when the HTML-CSS output is loading a Web font.\n\nParameters:\n* %1 - the font name",CantLoadWebFont:"This is displayed in MathJax message box when the HTML-CSS output fails to load a Web font. The first argument is the font name",FirefoxCantLoadWebFont:"This is displayed in MathJax message box when the HTML-CSS output fails to load a Web font in Firefox",CantFindFontUsing:"This is displayed in MathJax message box when the HTML-CSS output fails to load a Web font from a given list.\n\nParameters:\n* %1 - a list of fonts tried, comma-separated",WebFontsNotAvailable:"This is displayed in MathJax message box when the HTML-CSS fails to load Web fonts"}});MathJax.Ajax.loadComplete("[MathJax]/localization/qqq/HTML-CSS.js");

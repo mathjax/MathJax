@@ -1,7 +1,7 @@
 /*
  *  /MathJax/localization/pl/HTML-CSS.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("pl","HTML-CSS",{version:"2.3",isLoaded:true,strings:{LoadWebFont:"\u0141aduj\u0119 czcionk\u0119 %1",CantLoadWebFont:"Nie mo\u017Cna za\u0142adowa\u0107 czcionki %1",FirefoxCantLoadWebFont:"Firefox nie mo\u017Ce za\u0142adowa\u0107 czcionek ze zdalnego hosta",CantFindFontUsing:"Nie mo\u017Cna znale\u017A\u0107 w\u0142a\u015Bciwej czcionki u\u017Cywaj\u0105c %1",WebFontsNotAvailable:"Czcionki internetowe nie dost\u0119pne - zamiast tego u\u017Cywane s\u0105 czcionki obrazkowe"}});MathJax.Ajax.loadComplete("[MathJax]/localization/pl/HTML-CSS.js");
+MathJax.Localization.addTranslation("pl","HTML-CSS",{version:"2.4.0",isLoaded:true,strings:{LoadWebFont:"\u0141aduj\u0119 czcionk\u0119 %1",CantLoadWebFont:"Nie mo\u017Cna za\u0142adowa\u0107 czcionki %1",FirefoxCantLoadWebFont:"Firefox nie mo\u017Ce za\u0142adowa\u0107 czcionek ze zdalnego hosta",CantFindFontUsing:"Nie mo\u017Cna znale\u017A\u0107 w\u0142a\u015Bciwej czcionki u\u017Cywaj\u0105c %1",WebFontsNotAvailable:"Czcionki internetowe nie dost\u0119pne - zamiast tego u\u017Cywane s\u0105 czcionki obrazkowe"}});MathJax.Ajax.loadComplete("[MathJax]/localization/pl/HTML-CSS.js");

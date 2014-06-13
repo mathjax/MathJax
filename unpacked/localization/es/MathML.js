@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/es/MathML.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("es","MathML",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           BadMglyph: "\u00ABmglyph\u00BB da\u00F1ado: %1",

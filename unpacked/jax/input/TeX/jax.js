@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -1253,8 +1253,8 @@
      *  Handle other characters (as <mo> elements)
      */
     Other: function (c) {
-      var def = {stretchy: false}, mo;
-      if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
+      var def, mo;
+      if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
       if (TEXDEF.remap[c]) {
         c = TEXDEF.remap[c];
         if (c instanceof Array) {def = c[1]; c = c[0]}
@@ -1262,6 +1262,7 @@
       } else {
         mo = MML.mo(c).With(def);
       }
+      if (mo.autoDefault("stretchy",true)) {mo.stretchy = false}
       if (mo.autoDefault("texClass",true) == "") {mo = MML.TeXAtom(mo)}
       this.Push(this.mmlToken(mo));
     },
@@ -2061,6 +2062,7 @@
     },
     
     sourceMenuTitle: /*_(MathMenu)*/ ["TeXCommands","TeX Commands"],
+    annotationEncoding: "application/x-tex",
 
     prefilterHooks: MathJax.Callback.Hooks(true),    // hooks to run before processing TeX
     postfilterHooks: MathJax.Callback.Hooks(true),   // hooks to run after processing TeX
@@ -2087,7 +2089,6 @@
       this.prefilterHooks.Execute(data); math = data.math;
       try {
         mml = TEX.Parse(math).mml();
-//        mml = MML.semantics(mml,MML.annotation(math).With({encoding:"application/x-tex"}));
       } catch(err) {
         if (!err.texError) {throw err}
         mml = this.formatError(err,math,display,script);

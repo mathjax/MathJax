@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/zh-hans/TeX.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("zh-hans","TeX",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u6709\u591A\u4F59\u7684\u5DE6\u62EC\u53F7\u6216\u7F3A\u5C11\u53F3\u62EC\u53F7",
