@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/qqq/MathMenu.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@
  */
 
 MathJax.Localization.addTranslation("qqq","MathMenu",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           Show: "'Show math as' menu item. MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.\n\nFollowed by the following menu subitems:\n* {{msg-mathjax|Mathmenu-MathMLcode}}\n* {{msg-mathjax|Mathmenu-Original}}\n* {{msg-mathjax|Mathmenu-Annotation}}\n* {{msg-mathjax|Mathmenu-texHints}} - checkbox label",
           MathMLcode: "This menu item from 'Show math as' shows the MathML code that MathJax has produced internally (sanitized, indented etc.)\n\nThe parent menu item is {{msg-mathjax|Mathmenu-Show}}.",
-          OriginalMathML: "This menu item from 'Show math as' shows the MathML code if that was originally in the page source",
+          OriginalMathML: "This menu item from 'Show math as' shows the MathML code as if that was originally in the page source",
           TeXCommands: "This menu item from 'Show math as' shows the TeX code if that was originally in the page source",
           AsciiMathInput: "This menu item from 'Show math as' shows the asciimath code if that was originally in the page source",
           Original: "This menu item from 'Show math as' shows the code that was originally in the page source but has no registered type.\n\nThis can happen when extensions add new input formats but fail to provide an adequate format name.\n\nThe parent menu item is {{msg-mathjax|Mathmenu-Show}}.",
@@ -45,12 +45,12 @@ MathJax.Localization.addTranslation("qqq","MathMenu",{
           Click: "This menu option from 'ZoomTrigger' indicates that the zoom is triggered when one clicks on a formula.\n{{Identical|Click}}",
           DoubleClick: "This menu option from 'ZoomTrigger' indicates that the zoom is triggered when one double-clicks on a formula.",
           NoZoom: "This menu option from 'ZoomTrigger' indicates that the zoom is never triggered.",
-          TriggerRequires: "This menu text from 'ZoomTrigger' describes if the ZoomTrigger requires additional keys.\n\nThe label is followed by the following menu items:\n* {{msg-mathjax|Mathmenu-Option}} - checkbox label, for Mac\n* {{msg-mathjax|Mathmenu-Alt}} - checkbox label, for Windows\n* {{msg-mathjax|Mathmenu-Command}} - checkbox label, for Mac\n* {{msg-mathjax|Mathmenu-Control}} - checkbox label, for non-Mac\n* {{msg-mathjax|Mathmenu-Shift}} - checkbox label",
-          Option: "This menu option from 'ZoomTrigger' indicates that the OPTION key is needed (Apple-style).\n{{Identical|Options}}",
-          Alt: "This menu option from 'ZoomTrigger' indicates that the ALT key is needed (Windows-style)",
-          Command: "This menu option from 'ZoomTrigger' indicates that the COMMAND key is needed (Apple-style)",
-          Control: "This menu option from 'ZoomTrigger' indicates that the CONTROL key is needed\n\n\"Control key\" is also known as \"Ctrl key\".",
-          Shift: "This menu option from 'ZoomTrigger' indicates that the SHIFT key is needed",
+          TriggerRequires: "This menu text from {{msg-mathjax|Mathmenu-ZoomTrigger}} describes if the ZoomTrigger requires additional keys.\n\nThe label is followed by the following menu items:\n* {{msg-mathjax|Mathmenu-Option}} - checkbox label, for Mac\n* {{msg-mathjax|Mathmenu-Alt}} - checkbox label, for Windows\n* {{msg-mathjax|Mathmenu-Command}} - checkbox label, for Mac\n* {{msg-mathjax|Mathmenu-Control}} - checkbox label, for non-Mac\n* {{msg-mathjax|Mathmenu-Shift}} - checkbox label",
+          Option: "This menu option from {{msg-mathjax|Mathmenu-ZoomTrigger}} indicates that the OPTION key is needed (Apple-style).\n{{Identical|Options}}",
+          Alt: "This menu option from {{msg-mathjax|Mathmenu-ZoomTrigger}} indicates that the ALT key is needed (Windows-style)",
+          Command: "This menu option from {{msg-mathjax|Mathmenu-ZoomTrigger}} indicates that the COMMAND key is needed (Apple-style).\n{{Identical|Command}}",
+          Control: "This menu option from {{msg-mathjax|Mathmenu-ZoomTrigger}} indicates that the CONTROL key is needed\n\n\"Control key\" is also known as \"Ctrl key\".",
+          Shift: "This menu option from {{msg-mathjax|Mathmenu-ZoomTrigger}} indicates that the SHIFT key is needed",
           ZoomFactor: "Used as menu item which has the following sub menu items: 125%%, 133%%, 150%%, 175%%, 200%%, 250%%, 300%%, 400%%",
           Renderer: "Used as menu item which has the following sub menu items:\n* HTML-CSS\n* MathML\n* SVG",
           MPHandles: "Used as label in the menu.\n\nFollowed by the following menu items:\n* {{msg-mathjax|Mathmenu-MenuEvents}}\n* {{msg-mathjax|Mathmenu-MouseEvents}}\n* {{msg-mathjax|Mathmenu-MenuAndMouse}}",
@@ -60,10 +60,16 @@ MathJax.Localization.addTranslation("qqq","MathMenu",{
           FontPrefs: "This menu item from 'Math Settings' allows selection of the font to use (and is mostly for development purposes) e.g. STIX",
           ForHTMLCSS: "Used as label in the menu.\n\nFollowed by the following radio box label:\n* {{msg-mathjax|Mathmenu-Auto}}",
           Auto: "{{Identical|Automatic}}",
-          TeXLocal: "Used as label for the radio box in the menu.",
-          TeXWeb: "Used as label for the radio box in the menu.",
-          TeXImage: "Used as label for the radio box in the menu.",
-          STIXLocal: "Used as label for the radio box in the menu.",
+          TeXLocal: "Used as label for the radio box in the menu.\n{{Related|Mathmenu-fonts}}",
+          TeXWeb: "Used as label for the radio box in the menu.\n{{Related|Mathmenu-fonts}}",
+          TeXImage: "Used as label for the radio box in the menu.\n{{Related|Mathmenu-fonts}}",
+          STIXLocal: "Used as label for the radio box in the menu.\n{{Related|Mathmenu-fonts}}",
+          STIXWeb: "{{Related|Mathmenu-fonts}}",
+          AsanaMathWeb: "{{Related|Mathmenu-fonts}}",
+          GyrePagellaWeb: "{{Related|Mathmenu-fonts}}",
+          GyreTermesWeb: "{{Related|Mathmenu-fonts}}",
+          LatinModernWeb: "{{Related|Mathmenu-fonts}}",
+          NeoEulerWeb: "{{Related|Mathmenu-fonts}}",
           ContextMenu: "Used as menu item.\n\nFollowed by the following sub menu items:\n* MathJax - radio box label\n* {{msg-mathjax|Mathmenu-Browser}} - radio box label",
           Browser: "Used as menu item.\n\nThe parent menu item is {{msg-mathjax|Mathmenu-ContextMenu}}.",
           Scale: "This menu item from 'Math Settings' allows users to set a scaling factor for the MathJax output (relative to the surrounding content).",
@@ -87,16 +93,16 @@ MathJax.Localization.addTranslation("qqq","MathMenu",{
           SafariNativeMMLWarning: "This is the Safari warning displayed when a user changes the rendering output to native MathML via the MathJax menu.",
           FirefoxNativeMMLWarning: "This is the Firefox warning displayed when a user changes the rendering output to native MathML via the MathJax menu.",
           MSIESVGWarning: "This is the IE warning displayed when a user changes the rendering output to SVG via the MathJax menu and uses an versions of IE.",
-          SwitchAnyway: "This is appended at the end of switch warnings.\n\nUsed for JavaScript \u003Ccode\u003Econfirm()\u003C/code\u003E.",
           LoadURL: "This is the prompt message for the 'LoadLocale' menu entry",
           BadURL: "This is the alert message when a bad URL is specified for 'LoadLocale'.",
           BadData: "This is the alert message when the translation data specified 'LoadLocale' fails to be loaded. The argument is the URL specified.",
+          SwitchAnyway: "This is appended at the end of switch warnings.\n\nUsed for JavaScript \u003Ccode\u003Econfirm()\u003C/code\u003E.",
           ScaleMath: "This is the prompt message for the 'Scale all math' menu entry.\n\nUsed for JavaScript \u003Ccode\u003Eprompt()\u003C/code\u003E.",
           NonZeroScale: "This is the alert message when the scale specified to 'ScaleMath' is zero",
           PercentScale: "This is the alert message when the scale specified to 'ScaleMath' is not a percentage",
           IE8warning: "This this the confirm message displayed for when the user chooses to let MathPlayer control the contextual menu (IE8)",
           IE9warning: "This this the alert message displayed for when the user chooses to let MathPlayer control the contextual menu (IE9)",
-          NoOriginalForm: "This is the alert box displayed when there are missing source formats for 'Show math as'",
+          NoOriginalForm: "This is the alert box displayed when there are missing source formats for {{Msg-mathjax|Mathmenu-Show}}; see also {{Msg-mathjax|Mathmenu-Original}}.",
           Close: "Closing button in the 'Show math as' window.\n{{Identical|Close}}",
           EqSource: "This is the title of the 'Show math as' button.\n\nUsed in the \u003Ccode\u003E\u003Cnowiki\u003E\u003Ctitle\u003E\u003C/nowiki\u003E\u003C/code\u003E tag of the new window."
         }

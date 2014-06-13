@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/fr/HelpDialog.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@
  */
 
 MathJax.Localization.addTranslation("fr","HelpDialog",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           Help: "Aide MathJax",
-          MathJax: "*MathJax* est une biblioth\u00E8que JavaScript qui permet aux auteurs de pages d\u2019inclure des maths dans leurs pages web. En tant que lecteur, vous n\u2019avez rien besoin de faire pour que cela fonctionne.",
+          MathJax: "*MathJax* est une biblioth\u00E8que JavaScript qui permet aux auteurs de pages d\u2019inclure des math\u00E9matiques dans leurs pages web. En tant que lecteur, vous n\u2019avez rien besoin de faire pour que cela fonctionne.",
           Browsers: "*Navigateurs*: MathJax fonctionne avec tous les navigateurs modernes y compris Internet Explorer 6, Firefox 3, Chrome 0.2, Safari 2, Opera 9.6 et leurs versions sup\u00E9rieures ainsi que la plupart des navigateurs pour mobiles et tablettes.",
-          Menu: "*Math Menu*: MathJax ajoute un menu contextuel aux \u00E9quations. Cliquez-droit ou CTRL-cliquez sur n\u2019importe quelle formule math\u00E9matique pour acc\u00E9der au menu.",
+          Menu: "*Menu math*: MathJax ajoute un menu contextuel aux \u00E9quations. Cliquez-droit ou Ctrl-cliquez sur n\u2019importe quelle formule math\u00E9matique pour acc\u00E9der au menu.",
           ShowMath: "*Afficher les maths comme* vous permet d\u2019afficher le balisage source de la formule pour copier-coller (comme MathML ou dans son format d\u2019origine).",
           Settings: "*Param\u00E8tres* vous donne le contr\u00F4le sur les fonctionnalit\u00E9s de MathJax, comme la taille des math\u00E9matiques, et le m\u00E9canisme utilis\u00E9 pour afficher les \u00E9quations.",
           Language: "*Langue* vous laisse s\u00E9lectionner la langue utilis\u00E9e par MathJax pour ses menus et ses messages d\u2019avertissement.",

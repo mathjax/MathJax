@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/pl/pl.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("pl",null,{
   menuTitle: "polski",
-  version: "2.3",
+  version: "2.4.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax znalaz\u0142 konfiguracj\u0119 zapisan\u0105 w ciasteczku, kt\u00F3ra zawiera kod do uruchomienia. Czy chcesz go uruchomi\u0107?\n\n(Powiniene\u015B nacisn\u0105\u0107 Anuluj, je\u015Bli to nie Ty stworzy\u0142e\u015B t\u0119 konfiguracj\u0119.)",
@@ -40,7 +40,7 @@ MathJax.Localization.addTranslation("pl",null,{
           Processing: "Przetwarzam",
           TypesetMath: "Przetwarzam wzory matematyczne: %1%%",
           Typesetting: "Przetwarzam",
-          MathJaxNotSupported: "MathJax nie obs\u0142uguje Twojej przegl\u0105darki"
+          MathJaxNotSupported: "Twoja przegl\u0105darka nie obs\u0142uguje MathJax"
         }
     },
     "FontWarnings": {},
@@ -52,11 +52,11 @@ MathJax.Localization.addTranslation("pl",null,{
   },
   plural: function (n) {
       if (n == 1) {
-        return 0;
-      } else if (n % 10 >=2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) {
         return 1;
-      } else {
+      } else if (n % 10 >=2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) {
         return 2;
+      } else {
+        return 3;
       }
     },
   number: function (n) {

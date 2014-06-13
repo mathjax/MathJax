@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/sv/MathMenu.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("sv","MathMenu",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           MathMLcode: "MathML-kod",
@@ -42,16 +42,33 @@ MathJax.Localization.addTranslation("sv","MathMenu",{
           Command: "Command",
           Control: "Ctrl",
           Shift: "Shift",
+          MenuEvents: "Menyh\u00E4ndelser",
+          MouseEvents: "Mush\u00E4ndelser",
+          MenuAndMouse: "Mus- och menyh\u00E4ndelser",
+          FontPrefs: "Teckensnittsinst\u00E4llningar",
+          ForHTMLCSS: "F\u00F6r HTML-CSS:",
+          Auto: "Auto",
           TeXLocal: "TeX (lokal)",
           TeXWeb: "TeX (webb)",
           TeXImage: "TeX (bild)",
           STIXLocal: "STIX (lokal)",
+          STIXWeb: "STIX (webb)",
+          AsanaMathWeb: "Asana Math (webb)",
+          GyrePagellaWeb: "Gyre Pagella (webb)",
+          GyreTermesWeb: "Gyre Termes (webb)",
+          LatinModernWeb: "Latin Modern (webb)",
+          NeoEulerWeb: "Neo Euler (webb)",
+          Browser: "Webbl\u00E4sare",
+          Discoverable: "Markera vid hovring",
           Locale: "Spr\u00E5k",
           LoadLocale: "L\u00E4s in fr\u00E5n URL ...",
           About: "Om MathJax",
           Help: "Hj\u00E4lp f\u00F6r MathJax",
           eotffonts: "eot-teckensnitt",
           svgfonts: "svg-teckensnitt",
+          MSIENativeMMLWarning: "Internet Explorer kr\u00E4ver insticksmodulen MathPlayer f\u00F6r att kunna bearbeta utmatning f\u00F6r MathML.",
+          NonZeroScale: "Skalan b\u00F6r inte vara noll",
+          PercentScale: "Skalan b\u00F6r vara en procentsats (t.ex. 120%%)",
           Close: "St\u00E4ng"
         }
 });

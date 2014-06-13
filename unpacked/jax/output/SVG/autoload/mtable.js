@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2013 The MathJax Consortium
+ *  Copyright (c) 2011-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.3";
+  var VERSION = "2.4.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -33,7 +33,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
   MML.mtable.Augment({
     toSVG: function (span) {
       this.SVGgetStyles();
-      var svg = this.SVG();
+      var svg = this.SVG(), scale = this.SVGgetScale(svg);
       if (this.data.length === 0) {this.SVGsaveData(svg);return svg}
       var values = this.getValues("columnalign","rowalign","columnspacing","rowspacing",
                                   "columnwidth","equalcolumns","equalrows",
@@ -42,19 +42,20 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Handle relative width as fixed width in relation to container
       if (values.width.match(/%$/))
         {svg.width = values.width = Math.floor(SVG.cwidth*parseFloat(values.width)/100)+"px"}
-      var scale = this.SVGgetScale(), mu = this.SVGgetMu(svg);
+      var mu = this.SVGgetMu(svg);
       var LABEL = -1;
 
-      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1, m, M, s, row, cell, mo;
-      var LHD = SVG.FONTDATA.baselineskip * scale * values.useHeight, HD,
-          LH = SVG.FONTDATA.lineH * scale, LD = SVG.FONTDATA.lineD * scale;
+      var H = [], D = [], W = [], A = [], C = [], i, j, J = -1,
+          m, M, s, row, cell, mo, HD;
+      var LH = SVG.FONTDATA.lineH * scale * values.useHeight,
+          LD = SVG.FONTDATA.lineD * scale * values.useHeight;
 
       //
       //  Create cells and measure columns and rows
       //
       for (i = 0, m = this.data.length; i < m; i++) {
         row = this.data[i]; s = (row.type === "mlabeledtr" ? LABEL : 0);
-        A[i] = []; H[i] = D[i] = 0;
+        A[i] = []; H[i] = LH; D[i] = LD;
         for (j = s, M = row.data.length + s; j < M; j++) {
           if (W[j] == null) {
             if (j > J) {J = j}
@@ -72,8 +73,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
                 HD = mo.SVGdata.h + mo.SVGdata.d;
                 if (HD) {
                   min = SVG.length2em(min,mu,HD);
-                  if (min*mo.SVGdata.h/HD > H[j]) {H[j] = min*mo.SVGdata.h/HD}
-                  if (min*mo.SVGdata.d/HD > D[j]) {D[j] = min*mo.SVGdata.d/HD}
+                  if (min*mo.SVGdata.h/HD > H[i]) {H[i] = min*mo.SVGdata.h/HD}
+                  if (min*mo.SVGdata.d/HD > D[i]) {D[i] = min*mo.SVGdata.d/HD}
                 }
               } else if (mo.SVGcanStretch("Horizontal")) {
                 min = SVG.length2em(min,mu,mo.SVGdata.w);
@@ -86,8 +87,6 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           if (A[i][j].w > W[j]) {W[j] = A[i][j].w}
         }
       }
-      if (H[0]+D[0]) {H[0] = Math.max(H[0],LH)}
-      if (H[A.length-1]+D[A.length-1]) {D[A.length-1] = Math.max(D[A.length-1],LD)}
 
       //
       //  Determine spacing and alignment
@@ -143,7 +142,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       HD = H[0] + D[A.length-1];
       for (i = 0, m = A.length-1; i < m; i++)
-        {HD += Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i])}
+        {HD += Math.max(0,D[i]+H[i+1]+RSPACE[i])}
       //
       //  Determine frame and line sizes
       //
@@ -176,7 +175,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         Y = 0; fY = -(HD + fy) + H[0];
         for (i = 0, m = n-1; i < m; i++) {
           // FIXME:  Should handle values.align for final row
-          var dY = Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i]);
+          var dY = Math.max(0,D[i]+H[i+1]+RSPACE[i]);
           Y += dY; fY += dY;
         }
       } else {
@@ -274,7 +273,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
             align = (cell.columnalign||RCALIGN[i][j]||CALIGN[j])
             C[j].Align(A[i][j],align,0,y+dy);
           }
-          if (i < A.length-1) {y -= Math.max((H[i]+D[i] ? LHD : 0),D[i]+H[i+1]+RSPACE[i])}
+          if (i < A.length-1) {y -= Math.max(0,D[i]+H[i+1]+RSPACE[i])}
         }
         y = Y;
       }
@@ -307,7 +306,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       y = Y - lw/2;
       for (i = 0, m = A.length-1; i < m; i++) {
-        dy = Math.max(LHD,D[i]+H[i+1]+RSPACE[i]);
+        dy = Math.max(0,D[i]+H[i+1]+RSPACE[i]);
         if (RLINES[i] !== "none")
           {svg.Add(BBOX.HLINE(fW,lw,RLINES[i]),0,y-D[i]-(dy-D[i]-H[i+1])/2)}
         y -= dy;

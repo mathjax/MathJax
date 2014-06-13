@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2013 The MathJax Consortium
+ *  Copyright (c) 2010-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -157,7 +157,7 @@
         var child = node.childNodes[i];
         if (child.nodeName === "#comment") continue;
         if (child.nodeName === "#text") {
-          if (mml.isToken && !mml.mmlSelfClosing) {
+          if ((mml.isToken || mml.isChars) && !mml.mmlSelfClosing) {
             var text = child.nodeValue.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
             mml.Append(MML.chars(this.trimSpace(text)));
           } else if (child.nodeValue.match(/\S/)) {

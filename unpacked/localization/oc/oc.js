@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/oc/oc.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,13 +23,15 @@
 
 MathJax.Localization.addTranslation("oc",null,{
   menuTitle: "occitan",
-  version: "2.3",
+  version: "2.4.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
+          MathProcessingError: "Error de tractament de la formula matematica",
+          MathError: "Error dins la formula matematica",
           LoadFile: "Telecargament de %1",
           Loading: "Cargament",
           LoadFailed: "Frac\u00E0s del telecargament de %1",
@@ -37,8 +39,6 @@ MathJax.Localization.addTranslation("oc",null,{
           Processing: "Tractament",
           TypesetMath: "Composicion de las formulas : %1%%",
           Typesetting: "Composicion",
-          MathProcessingError: "Error de tractament de la formula matematica",
-          MathError: "Error dins la formula matematica",
           MathJaxNotSupported: "V\u00F2stre navigador sup\u00F2rta pas MathJax"
         }
     },

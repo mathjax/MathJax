@@ -12,7 +12,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -76,15 +76,30 @@ MathJax.Hub.Config({
   //  A comma-separated list of input and output jax to initialize at startup.
   //  Their main code is loaded only when they are actually used, so it is not
   //  inefficient to include jax that may not actually be used on the page.  These
-  //  are found in the MathJax/jax directory.
+  //  are found in the MathJax/jax directory.  The choices include
   //  
-  jax: ["input/TeX","output/HTML-CSS"],
+  //      input/TeX
+  //      input/MathML
+  //      input/AsciiMath
+  //      
+  //      output/HTML-CSS
+  //      output/NativeMML
+  //      output/SVG
+  // 
+  //   If you change the input jax, you may need to include the appropriate
+  //   preprocessor in the extensions array below.
+  //  
+  jax: ["input/TeX", "output/HTML-CSS"],
   
   //
   //  A comma-separated list of extensions to load at startup.  The default
   //  directory is MathJax/extensions.
   //  
   //  Example:    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+  //  
+  //  You may wish to include "mml2jax.js" if you are using "input/MathML" in the
+  //  jax array above, and "asciimath2jax.js" if you using "input/AsciiMath".
+  //  Include "jsmath2jax.js" if you are converting from using jsMath to MathJax.
   //
   extensions: ["tex2jax.js"],
   
@@ -195,7 +210,7 @@ MathJax.Hub.Config({
   //  reposition the browser to the #hash location from the page URL after
   //  typesetting for the page.
   //  
-  positionToHash: false,
+  positionToHash: true,
   
   //
   //  These control whether to attach the MathJax contextual menu to the
@@ -228,7 +243,8 @@ MathJax.Hub.Config({
     context: "MathJax",  //  or "Browser" for pass-through to browser menu
     mpContext: false,    //  true means pass menu events to MathPlayer in IE
     mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
-    texHints: true       //  include class names for TeXAtom elements
+    texHints: true,      //  include class names for TeXAtom elements
+    semantics: false     //  add semantics tag with original form in MathML output
   },
   
   //
@@ -569,6 +585,22 @@ MathJax.Hub.Config({
   //  These parameters control the AsciiMath input jax.
   //
   AsciiMath: {
+    //
+    //  Determines whether the unicode positions for phi and varphi are
+    //  to be swapped or not.  (Unicode originally had these reversed, and
+    //  many fonts have them reversed as well.)  When set to true, phi
+    //  and varphi will correspond to the LaTeX macros of the same name.
+    //
+    fixphi: true,
+    
+    //
+    //  Determines whether the MathML should be marked so that the HTML-CSS
+    //  and SVG output jax will use MathML spacing rules rather than TeX
+    //  spacing rules.  Since AsciiMath was designed for MathML output, the
+    //  MathML rules are used by default.
+    //
+    useMathMLspacing: true,
+    
     //
     //  Determines whether limits are placed above and below operators,
     //  or next to them.  (AsciiMath doesn't have separate in-line and
@@ -919,6 +951,17 @@ MathJax.Hub.Config({
       //  of previews or inclusion of mathematics during typesetting.
       //  
       width: "container"
+    },
+
+    //
+    //  These are the styles used for merror elements in SVG output.  Note
+    //  that only a limited number of style attributes are supported by
+    //  SVG, but you can at least change the colors and borders.
+    //  
+    //
+    merrorStyle: {
+      fontSize:"90%", color:"#C00", background:"#FF8",
+      border: "1px solid #C00", padding:"3px"
     },
 
     //

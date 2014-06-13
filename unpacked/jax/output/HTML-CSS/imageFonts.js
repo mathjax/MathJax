@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 (function (HUB,HTMLCSS,AJAX) {
-  var VERSION = "2.3";
+  var VERSION = "2.4.0";
   
   HUB.Register.LoadHook(HTMLCSS.fontDir + "/fontdata.js",function () {
 
@@ -61,10 +61,10 @@
         if (c[4] != c[2]) {style.marginRight = this.Em((c[2]-c[4])/1000)}
         if (this.msieIE6) {
           style.filter = "progid:DXImageTransform.Microsoft." +
-            "AlphaImageLoader(src='"+AJAX.fileURL(file)+"', sizingMethod='scale')";
+            "AlphaImageLoader(src='"+AJAX.urlRev(file)+"', sizingMethod='scale')";
           file = this.directory+"/blank.gif"
         }
-        this.addElement(span,"img",{src:AJAX.fileURL(file), style:style, isMathJax:true});
+        this.addElement(span,"img",{src:AJAX.urlRev(file), style:style, isMathJax:true});
         return "";
       },
       

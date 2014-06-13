@@ -1,7 +1,7 @@
 /*
  *  /MathJax/jax/output/NativeMML/config.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.OutputJax.NativeMML=MathJax.OutputJax({id:"NativeMML",version:"2.3",directory:MathJax.OutputJax.directory+"/NativeMML",extensionDir:MathJax.OutputJax.extensionDir+"/NativeMML",config:{matchFontHeight:true,scale:100,minScaleAdjust:50,styles:{"div.MathJax_MathML":{"text-align":"center",margin:".75em 0px"}}}});if(!MathJax.Hub.config.delayJaxRegistration){MathJax.OutputJax.NativeMML.Register("jax/mml")}MathJax.OutputJax.NativeMML.loadComplete("config.js");
+MathJax.OutputJax.NativeMML=MathJax.OutputJax({id:"NativeMML",version:"2.4.0",directory:MathJax.OutputJax.directory+"/NativeMML",extensionDir:MathJax.OutputJax.extensionDir+"/NativeMML",config:{matchFontHeight:true,scale:100,minScaleAdjust:50,styles:{"div.MathJax_MathML":{"text-align":"center",margin:".75em 0px"}}}});if(!MathJax.Hub.config.delayJaxRegistration){MathJax.OutputJax.NativeMML.Register("jax/mml")}MathJax.OutputJax.NativeMML.loadComplete("config.js");

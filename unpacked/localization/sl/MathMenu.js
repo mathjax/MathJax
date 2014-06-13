@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/sl/MathMenu.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("sl","MathMenu",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           Show: "Prika\u017Ei matematiko kot",
@@ -64,6 +64,12 @@ MathJax.Localization.addTranslation("sl","MathMenu",{
           TeXWeb: "TeX (splet)",
           TeXImage: "TeX (slika)",
           STIXLocal: "STIX (lokalno)",
+          STIXWeb: "STIX (splet)",
+          AsanaMathWeb: "Asana Math (splet)",
+          GyrePagellaWeb: "Gyre Pagella (splet)",
+          GyreTermesWeb: "Gyre Termes (splet)",
+          LatinModernWeb: "Latin Modern (splet)",
+          NeoEulerWeb: "Neo Euler (splet)",
           ContextMenu: "Kontekstni meni",
           Browser: "Brskalnik",
           Scale: "Umeri vso matematiko ...",

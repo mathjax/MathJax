@@ -1,7 +1,7 @@
 /*
  *  /MathJax/localization/br/HTML-CSS.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("br","HTML-CSS",{version:"2.3",isLoaded:true,strings:{LoadWebFont:"O karga\u00F1 ar font web  %1",CantLoadWebFont:"Ne c'haller ket karga\u00F1 ar font web %1",CantFindFontUsing:"Ne c'haller ket kavout ur font dereat e-touez %1"}});MathJax.Ajax.loadComplete("[MathJax]/localization/br/HTML-CSS.js");
+MathJax.Localization.addTranslation("br","HTML-CSS",{version:"2.4.0",isLoaded:true,strings:{LoadWebFont:"O karga\u00F1 ar font web  %1",CantLoadWebFont:"Ne c'haller ket karga\u00F1 ar font web %1",CantFindFontUsing:"Ne c'haller ket kavout ur font dereat e-touez %1"}});MathJax.Ajax.loadComplete("[MathJax]/localization/br/HTML-CSS.js");

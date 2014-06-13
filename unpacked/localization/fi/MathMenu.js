@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/fi/MathMenu.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fi","MathMenu",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           MathMLcode: "MathML-koodi",
@@ -78,7 +78,8 @@ MathJax.Localization.addTranslation("fi","MathMenu",{
           genericfonts: "k\u00E4ytt\u00E4en geneerisi\u00E4 unicode-kirjasimia",
           wofforotffonts: "woff- tai otf-kirjasimia",
           eotffonts: "eot-kirjasimia",
-          svgfonts: "svg-kirjasimia"
+          svgfonts: "svg-kirjasimia",
+          Close: "Sulje"
         }
 });
 

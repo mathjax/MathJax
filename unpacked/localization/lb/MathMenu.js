@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/lb/MathMenu.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,10 +22,37 @@
  */
 
 MathJax.Localization.addTranslation("lb","MathMenu",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
-
+          MathMLcode: "MathML Code",
+          OriginalMathML: "Original MathML",
+          Original: "Original Formulaire",
+          ErrorMessage: "Feelermessage",
+          Annotation: "Notiz",
+          TeX: "TeX",
+          StarMath: "StarMath",
+          Maple: "Maple",
+          OpenMath: "OpenMath",
+          Settings: "Math Astellungen",
+          Hover: "Driwwerfueren",
+          Click: "Klicken",
+          DoubleClick: "Duebel-Klick",
+          NoZoom: "Kee Zoom",
+          Option: "Optioun",
+          Alt: "Alt",
+          Control: "Ctrl",
+          Auto: "Automatesch",
+          TeXImage: "TeX (Bild)",
+          STIXLocal: "STIX (lokal)",
+          ContextMenu: "kontextuelle Men\u00FC",
+          Browser: "Browser",
+          Locale: "Sprooch",
+          LoadLocale: "Luede vun der URL ...",
+          About: "Iwwer MathJax",
+          Help: "MathJax H\u00EBllef",
+          LoadURL: "Iwwersetzungsdonn\u00E9e\u00EB vun d\u00EBser URL lueden:",
+          Close: "Zoumaachen"
         }
 });
 

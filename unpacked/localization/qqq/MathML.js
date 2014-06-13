@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/qqq/MathML.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("qqq","MathML",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           BadMglyph: "This error is displayed when processing a MathML mglyph element with a bad URL. Parameters:\n* %1 - the value of the src attribute",
@@ -34,7 +34,7 @@ MathJax.Localization.addTranslation("qqq","MathML",{
           ErrorParsingMathML: "This error is displayed when a MathML element fails to be parsed.\n\nIt can only be produced by old versions of Internet Explorer.",
           ParsingError: "This error is displayed when an XML parsing error happens.\n\nThe argument is the error returned by the XML parser.",
           MathMLSingleElement: "This error is displayed when a MathML input Jax contains more than one \u003Ccode\u003E\u003Cnowiki\u003E\u003Cmath\u003E\u003C/nowiki\u003E\u003C/code\u003E root.\n\nIt can only be produced by very old browsers.",
-          MathMLRootElement: "This error is displayed when a MathML input Jax contains a root other than \u003Ccode\u003E\u003Cnowiki\u003E\u003Cmath\u003E\u003C/nowiki\u003E\u003C/code\u003E.\n\nParameters:\n* %1 - the root name"
+          MathMLRootElement: "{{doc-important|Do not translate the \u003Ccode\u003E\u003Cnowiki\u003E\u003Cmath\u003E\u003C/nowiki\u003E\u003C/code\u003E tag! It is a MathML tag.}}         \n\nThis error is displayed when a MathML input Jax contains a root other than \u003Ccode\u003E\u003Cnowiki\u003E\u003Cmath\u003E\u003C/nowiki\u003E\u003C/code\u003E.\n\nParameters:\n* %1 - the root name"
         }
 });
 

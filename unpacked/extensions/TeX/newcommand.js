@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/newcommand"] = {
-  version: "2.3"
+  version: "2.4.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -85,7 +85,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
                      "Illegal number of parameters specified in %1",name]);
         }
       }
-      this.setEnv(env,['BeginEnv','EndEnv',bdef,edef,n]);
+      this.setEnv(env,['BeginEnv',[null,'EndEnv'],bdef,edef,n]);
     },
     
     /*
@@ -208,15 +208,15 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         var args = [];
         for (var i = 0; i < n; i++) {args.push(this.GetArgument("\\begin{"+name+"}"))}
         bdef = this.SubstituteArgs(args,bdef);
-        edef = this.SubstituteArgs(args,edef);
+        edef = this.SubstituteArgs([],edef); // no args, but get errors for #n in edef
       }
-      begin.edef = edef;
       this.string = this.AddArgs(bdef,this.string.slice(this.i)); this.i = 0;
       return begin;
     },
-    EndEnv: function (begin,row) {
-      this.string = this.AddArgs(begin.edef,this.string.slice(this.i)); this.i = 0
-      return row;
+    EndEnv: function (begin,bdef,edef,n) {
+      var end = "\\end{\\end\\"+begin.name+"}"; // special version of \end for after edef
+      this.string = this.AddArgs(edef,end+this.string.slice(this.i)); this.i = 0;
+      return null;
     },
     
     /*

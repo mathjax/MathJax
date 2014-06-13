@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/cs/TeX.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("cs","TeX",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "P\u0159eb\u00FDvaj\u00EDc\u00ED otv\u00EDrac\u00ED nebo chyb\u011Bj\u00EDc\u00ED zav\u00EDrac\u00ED slo\u017Een\u00E1 z\u00E1vorka",
@@ -48,6 +48,7 @@ MathJax.Localization.addTranslation("cs","TeX",{
           MisplacedMoveRoot: "%1 se m\u016F\u017Ee vyskytnout pouze v ko\u0159eni",
           MultipleCommand: "V\u00EDcen\u00E1sobn\u00FD %1",
           IntegerArg: "Argumentem %1 mus\u00ED b\u00FDt cel\u00E9 \u010D\u00EDslo",
+          NotMathMLToken: "%1 nen\u00ED primitivn\u00ED element",
           InvalidMathMLAttr: "Neplatn\u00FD atribut MathML: %1",
           UnknownAttrForElement: "%1 nen\u00ED zn\u00E1m\u00FD atribut %2",
           MaxMacroSub1: "P\u0159ekro\u010Den maxim\u00E1ln\u00ED po\u010Det substituc\u00ED makra MathJaxu; nen\u00ED tam rekurzivn\u00ED vol\u00E1n\u00ED makra?",
@@ -93,6 +94,7 @@ MathJax.Localization.addTranslation("cs","TeX",{
           SequentialParam: "Parametry %1 mus\u00ED b\u00FDt \u010D\u00EDslov\u00E1ny postupn\u011B",
           MissingReplacementString: "V definici %1 chyb\u00ED nahrazuj\u00EDc\u00ED \u0159et\u011Bzec",
           MismatchUseDef: "Pou\u017Eit\u00ED %1 neodpov\u00EDd\u00E1 jeho definici",
+          RunawayArgument: "Zbloudil\u00FD argument u %1?",
           NoClosingDelim: "Nenalezen ukon\u010Dovac\u00ED znak u %1"
         }
 });

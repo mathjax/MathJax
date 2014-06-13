@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/nl/nl.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,24 +23,24 @@
 
 MathJax.Localization.addTranslation("nl",null,{
   menuTitle: "Nederlands",
-  version: "2.3",
+  version: "2.4.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
-          LoadFile: "Bezig met laden van %1",
-          Loading: "Bezig met laden",
-          Processing: "Bezig met verwerken",
-          MathJaxNotSupported: "Uw browser ondersteunt MathJax niet",
           CookieConfig: "MathJax heeft een gebruikersconfiguratie cookie aangetroffen dat code bevat die uitgevoerd moet worden. Wilt u deze uitvoeren?\n\\n\n(U zou op annuleren moeten drukken tenzij u het cookie zelf ingesteld heeft.)",
           MathProcessingError: "Wiskunde verwerkingsfout",
           MathError: "Wiskunde fout",
+          LoadFile: "Bezig met laden van %1",
+          Loading: "Bezig met laden",
           LoadFailed: "Bestand kan niet geladen worden: %1",
           ProcessMath: "Berekening verwerken: %1",
+          Processing: "Bezig met verwerken",
           TypesetMath: "Berekening opmaken: %1",
-          Typesetting: "Opmaken"
+          Typesetting: "Opmaken",
+          MathJaxNotSupported: "Uw browser ondersteunt MathJax niet"
         }
     },
     "FontWarnings": {},

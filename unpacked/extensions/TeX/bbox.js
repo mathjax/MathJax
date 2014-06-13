@@ -30,7 +30,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2013 The MathJax Consortium
+ *  Copyright (c) 2011-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@
  */
 
 MathJax.Extension["TeX/bbox"] = {
-  version: "2.3"
+  version: "2.4.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -61,7 +61,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var bbox = this.GetBrackets(name,""),
           math = this.ParseArg(name);
       var parts = bbox.split(/,/), def, background, style;
-      for (var i in parts) {
+      for (var i = 0, m = parts.length; i < m; i++) {
         var part = parts[i].replace(/^\s+/,'').replace(/\s+$/,'');
         var match = part.match(/^(\.\d+|\d+(\.\d*)?)(pt|em|ex|mu|px|in|cm|mm)$/);
         if (match) {

@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2013 The MathJax Consortium
+ *  Copyright (c) 2010-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.3";
+  var VERSION = "2.4.0";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -48,7 +48,7 @@
   
   var CONFIG = HUB.CombineConfig("MathMenu",{
     delay: 150,                                    // the delay for submenus
-    closeImg: AJAX.fileURL(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
+    closeImg: AJAX.urlRev(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
     showMathPlayer: true,                          //  show the "MathPlayer" menu?
@@ -125,14 +125,19 @@
         "font-family": (isMSIE ? "'Arial unicode MS'" : null)
       },
       ".MathJax_MenuActive .MathJax_MenuArrow": {color:"white"},
+      ".MathJax_MenuArrow.RTL": {left:".5em", right:"auto"},
 
       ".MathJax_MenuCheck": {
         position:"absolute", left:".7em",
         "font-family": (isMSIE ? "'Arial unicode MS'" : null)
       },
+      ".MathJax_MenuCheck.RTL": {right:".7em", left:"auto"},
 
       ".MathJax_MenuRadioCheck": {
         position:"absolute", left: (isPC ? "1em" : ".7em")
+      },
+      ".MathJax_MenuRadioCheck.RTL": {
+        right: (isPC ? "1em" : ".7em"), left:"auto"
       },
 
       ".MathJax_MenuLabel": {
@@ -185,7 +190,7 @@
     /*
      *  Display the menu
      */
-    Post: function (event,parent) {
+    Post: function (event,parent,forceLTR) {
       if (!event) {event = window.event};
       var div = document.getElementById("MathJax_MenuFrame");
       if (!div) {
@@ -193,13 +198,14 @@
         delete ITEM.lastItem; delete ITEM.lastMenu;
         delete MENU.skipUp;
         SIGNAL.Post(["post",MENU.jax]);
+        MENU.isRTL = (MathJax.Localization.fontDirection() === "rtl");
       }
-      var menu = HTML.addElement(div,"div",{
+      var menu = HTML.Element("div",{
         onmouseup: MENU.Mouseup, ondblclick: FALSE,
         ondragstart: FALSE, onselectstart: FALSE, oncontextmenu: FALSE,
         menuItem: this, className: "MathJax_Menu"
       });
-      MathJax.Localization.setCSS(menu);
+      if (!forceLTR) {MathJax.Localization.setCSS(menu)}
 
       for (var i = 0, m = this.items.length; i < m; i++) {this.items[i].Create(menu)}
       if (MENU.isMobile) {
@@ -208,6 +214,8 @@
           ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close, onmouseup: FALSE
         },[["img",{src: CONFIG.closeImg, style:{width:"100%",height:"100%"}}]]);
       }
+      
+      div.appendChild(menu);
       this.posted = true;
       
       menu.style.width = (menu.offsetWidth+2) + "px";
@@ -228,8 +236,11 @@
           x += parent.offsetLeft; y += parent.offsetTop;
           parent = parent.parentNode;
         }
-        if (x + menu.offsetWidth > document.body.offsetWidth - this.margin && !MENU.isMobile)
-          {side = "right"; x = Math.max(this.margin,x - mw - menu.offsetWidth + 6)}
+        if (!MENU.isMobile) {
+          if ((MENU.isRTL && x - mw - menu.offsetWidth > this.margin) ||
+              (!MENU.isRTL && x + menu.offsetWidth > document.body.offsetWidth - this.margin))
+            {side = "right"; x = Math.max(this.margin,x - mw - menu.offsetWidth + 6)}
+        }
         if (!isPC) {
           // in case these ever get implemented
           menu.style["borderRadiusTop"+side] = 0;       // Opera 10.5
@@ -438,7 +449,10 @@
     Activate: function (menu) {this.Deactivate(menu); menu.className += " MathJax_MenuActive"},
     Deactivate: function (menu) {menu.className = menu.className.replace(/ MathJax_MenuActive/,"")},
 
-    With: function (def) {if (def) {HUB.Insert(this,def)}; return this}
+    With: function (def) {if (def) {HUB.Insert(this,def)}; return this},
+    
+    isRTL: function () {return MENU.isRTL},
+    rtlClass: function () {return (this.isRTL() ? " RTL" : "")}
   });
 
   /*************************************************************/
@@ -472,6 +486,7 @@
   MENU.ITEM.SUBMENU = MENU.ITEM.Subclass({
     menu: null,        // the submenu
     marker: (isPC && !HUB.Browser.isSafari ? "\u25B6" : "\u25B8"),  // the menu arrow
+    markerRTL: (isPC && !HUB.Browser.isSafari ? "\u25B0" : "\u25C2"),
 
     Init: function (name,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
@@ -481,7 +496,9 @@
     },
     Label: function (def,menu) {
       this.menu.posted = false;
-      return [this.Name()+" ",["span",{className:"MathJax_MenuArrow"},[this.marker]]];
+      return [this.Name()+" ",["span",{
+        className:"MathJax_MenuArrow" + this.rtlClass()
+      },[this.isRTL() ? this.markerRTL : this.marker]]];
     },
     Timer: function (event,menu) {
       if (this.timer) {clearTimeout(this.timer)}
@@ -498,7 +515,7 @@
       if (!this.disabled) {
         if (!this.menu.posted) {
           if (this.timer) {clearTimeout(this.timer); delete this.timer}
-          this.menu.Post(event,menu);
+          this.menu.Post(event,menu,this.ltr);
         } else {
          var menus = document.getElementById("MathJax_MenuFrame").childNodes,
               m = menus.length-1;
@@ -529,7 +546,7 @@
       if (this.value == null) {this.value = this.name[0]}
     },
     Label: function (def,menu) {
-      var span = {className:"MathJax_MenuRadioCheck"};
+      var span = {className:"MathJax_MenuRadioCheck" + this.rtlClass()};
       if (CONFIG.settings[this.variable] !== this.value) {span = {style:{display:"none"}}}
       return [["span",span,[this.marker]]," "+this.Name()];
     },
@@ -565,7 +582,7 @@
       this.name = name; this.variable = variable; this.With(def);
     },
     Label: function (def,menu) {
-      var span = {className:"MathJax_MenuCheck"};
+      var span = {className:"MathJax_MenuCheck" + this.rtlClass()};
       if (!CONFIG.settings[this.variable]) {span = {style:{display:"none"}}}
       return [["span",span,[this.marker]]," "+this.Name()];
     },
@@ -700,7 +717,7 @@
       var MML = MathJax.ElementJax.mml;
       if (MML && typeof(MML.mbase.prototype.toMathML) !== "undefined") {
         // toMathML() can call MathJax.Hub.RestartAfter, so trap errors and check
-        try {MENU.ShowSource.Text(MENU.jax.root.toMathML(),event)} catch (err) {
+        try {MENU.ShowSource.Text(MENU.jax.root.toMathML("",MENU.jax),event)} catch (err) {
           if (!err.restart) {throw err}
           CALLBACK.After([this,MENU.ShowSource,EVENT],err.restart);
         }
@@ -761,8 +778,10 @@
         var H = (w.outerHeight-w.innerHeight)||30, W = (w.outerWidth-w.innerWidth)||30, x, y;
         W = Math.max(100,Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25));
         H = Math.max(40,Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25));
+        if (MENU.prototype.msieHeightBug) {H += 35}; // for title bar in XP
         w.resizeTo(W,H);
-        if (event && event.screenX != null) {
+        var X; try {X = event.screenX} catch (e) {}; // IE8 throws an error accessing screenX
+        if (event && X != null) {
           x = Math.max(0,Math.min(event.screenX-Math.floor(W/2), screen.width-W-20));
           y = Math.max(0,Math.min(event.screenY-Math.floor(H/2), screen.height-H-20));
           w.moveTo(x,y);
@@ -955,9 +974,11 @@
       var isIE8 = browser.versionAtLeast("8.0") && document.documentMode > 7;
       MENU.Augment({
         margin: 20,
-        msieBackgroundBug: (document.documentMode < 9),
+        msieBackgroundBug: ((document.documentMode||0) < 9),
         msieFixedPositionBug: (quirks || !isIE8),
-        msieAboutBug: quirks
+        msieAboutBug: quirks,
+        msieHeightBug: ((document.documentMode||0) < 9)
+           // height of window doesn't include title bar in XP
       });
       if (isIE9) {
         delete CONFIG.styles["#MathJax_About"].filter;
@@ -1039,7 +1060,8 @@
         ITEM.COMMAND(["Original","Original Form"],  MENU.ShowSource, {nativeTouch: true}),
         ITEM.SUBMENU(["Annotation","Annotation"], {disabled:true}),
         ITEM.RULE(),
-        ITEM.CHECKBOX(["texHints","Show TeX hints in MathML"], "texHints")
+        ITEM.CHECKBOX(["texHints","Show TeX hints in MathML"], "texHints"),
+        ITEM.CHECKBOX(["semantics","Add original form as annotation"], "semantics")
       ),
       ITEM.RULE(),
       ITEM.SUBMENU(["Settings","Math Settings"],
@@ -1103,7 +1125,7 @@
         ITEM.RULE().With({hidden:!CONFIG.showDiscoverable, name:["","discover_rule"]}),
         ITEM.CHECKBOX(["Discoverable","Highlight on Hover"], "discoverable", {hidden:!CONFIG.showDiscoverable})
       ),
-      ITEM.SUBMENU(["Locale","Language"],                  {hidden:!CONFIG.showLocale},
+      ITEM.SUBMENU(["Locale","Language"],                  {hidden:!CONFIG.showLocale, ltr:true},
         ITEM.RADIO("en", "locale",  {action: MENU.Locale}),
         ITEM.RULE().With({hidden:!CONFIG.showLocaleURL, name:["","localURL_rule"]}),
         ITEM.COMMAND(["LoadLocale","Load from URL ..."], MENU.LoadLocale, {hidden:!CONFIG.showLocaleURL})

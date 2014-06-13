@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2013 The MathJax Consortium
+ *  Copyright (c) 2011-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.3";
+  var VERSION = "2.4.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX,
@@ -37,9 +37,10 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     type: "image", removeable: false,
     Init: function (img,w,h,align,mu,def) {
       if (def == null) {def = {}}
-      var W = img.width*1000/SVG.em, H = img.height*1000/SVG.em, y = 0;
-      if (w !== "") {W = SVG.length2em(w,mu,W)}
-      if (h !== "") {H = SVG.length2em(h,mu,H)}
+      var W = img.width*1000/SVG.em, H = img.height*1000/SVG.em;
+      var WW = W, HH = H, y = 0;
+      if (w !== "") {W = SVG.length2em(w,mu,WW); H = (WW ? W/WW * HH : 0)}
+      if (h !== "") {H = SVG.length2em(h,mu,HH); if (w === "") {W = (HH ? H/HH * WW : 0)}}
       if (align !== "" && align.match(/\d/)) {y = SVG.length2em(align,mu); def.y = -y}
       def.height = Math.floor(H); def.width = Math.floor(W);
       def.transform = "translate(0,"+H+") matrix(1 0 0 -1 0 0)";

@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2013 The MathJax Consortium
+ *  Copyright (c) 2011-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.3";
+  var VERSION = "2.4.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -86,14 +86,17 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Start with a fresh SVG element
       //  and make it full width if we are breaking to a specific width
+      //    in the top-level math element
       //
       svg = this.SVG();
-      if (SVG.linebreakWidth < SVG.BIGDIMEN) {svg.w = SVG.linebreakWidth}
-        else {svg.w = SVG.cwidth/SVG.em * 1000}
+      if (isTop && parent.type !== "mtd") {
+        if (SVG.linebreakWidth < SVG.BIGDIMEN) {svg.w = SVG.linebreakWidth}
+          else {svg.w = SVG.cwidth/SVG.em * 1000}
+      }
 
       var state = {
             n: 0, Y: 0,
-            scale: this.SVGgetScale(),
+            scale: this.scale || 1,
             isTop: isTop,
             values: {},
             VALUES: VALUES
@@ -112,7 +115,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Break the expression at its best line breaks
       //
       while (this.SVGbetterBreak(end,state) && 
-             (end.scanW >= SVG.linebreakWidth || end.penalty == PENALTY.newline)) {
+             (end.scanW >= SVG.linebreakWidth || end.penalty === PENALTY.newline)) {
         this.SVGaddLine(svg,start,end.index,state,end.values,broken);
         start = end.index.slice(0); broken = true;
         align = this.SVGgetAlign(state,end.values);
@@ -219,7 +222,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       if (state.n > 0) {
         var LHD = SVG.FONTDATA.baselineskip * state.scale;
-        var leading = (state.values.lineleading == null ? state.VALUES : state.values).lineleading;
+        var leading = (state.values.lineleading == null ? state.VALUES : state.values).lineleading * state.scale;
         state.Y -= Math.max(LHD,state.d + line.h + leading);
       }
       //
@@ -325,14 +328,16 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
            (state.last && values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER)) {
         //
         //  Recreate output
-        //  Remove padding (if first, remove at right, if last remove at left)
+        //  Remove padding (if first, remove at leftt, if last remove at right)
         //  Add to line
         //
         var svg = this.toSVG(this.SVGdata.HW,this.SVGdata.D);
-        if (state.last) {svg.x = 0}
-        if (state.first || state.nextIsFirst) {delete state.nextIsFirst; if (svg.X) {svg.X = 0}}
+        if (state.first || state.nextIsFirst) {svg.x = 0}
+        if (state.last && svg.X) {svg.X = 0}
         line.Add(svg,line.w,0,true);
-      } else if (state.first) {state.nextIsFirst = true} else {delete state.nextIsFirst}
+      }
+      if (state.first && svg && svg.w === 0) {state.nextIsFirst = true}
+        else {delete state.nextIsFirst}
     }
   });
       
@@ -466,13 +471,84 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       }
       //
       //  If this is the end, check for super and subscripts, and move those
-      //  by moving the stack tht contains them, and shifting by the amount of the
+      //  by moving the stack that contains them, and shifting by the amount of the
       //  base that has been removed.  Remove the empty base box from the stack.
       //
       if (end.length === 0) {
         var sup = this.data[this.sup], sub = this.data[this.sub], w = svg.w, data;
         if (sup) {data = sup.SVGdata; svg.Add(sup.toSVG(),w+(data.dx||0),data.dy)}
         if (sub) {data = sub.SVGdata; svg.Add(sub.toSVG(),w+(data.dx||0),data.dy)}
+      }
+    }
+
+  });
+  
+  /**************************************************************************/
+
+  MML.mmultiscripts.Augment({
+    SVGbetterBreak: function (info,state) {
+      if (!this.data[this.base]) {return false}
+      //
+      //  Get the current breakpoint position and other data
+      //
+      var index = info.index.slice(0), i = info.index.shift(),
+          W, w, scanW, broken = (info.index.length > 0), better = false;
+      if (!broken) {info.W += info.w; info.w = 0}
+      info.scanW = info.W;
+      //
+      //  The width of the postscripts
+      //
+      var dw = this.SVGdata.w - this.data[this.base].SVGdata.w - this.SVGdata.dx;
+      //
+      //  Add in the prescripts
+      //  
+      info.scanW += this.SVGdata.dx; scanW = info.scanW;
+      //
+      //  Check if the base can be broken (but don't break between prescripts and base)
+      //
+      if (this.data[this.base].SVGbetterBreak(info,state)) {
+        better = true; index = [this.base].concat(info.index); W = info.W; w = info.w;
+        if (info.penalty === PENALTY.newline) {better = broken = true}
+      }
+      //
+      //  Add in the base if it is unbroken, and add the postscripts
+      //
+      if (!broken) {this.SVGaddWidth(this.base,info,scanW)}
+      info.scanW += dw; info.W = info.scanW;
+      info.index = []; if (better) {info.W = W; info.w = w; info.index = index}
+      return better;
+    },
+    
+    SVGmoveLine: function (start,end,svg,state,values) {
+      var dx, data = this.SVGdata;
+      //
+      //  If this is the start, move the prescripts, if any.
+      //
+      if (start.length < 1) {
+        this.scriptBox = this.SVGgetScripts(this.SVGdata.s);
+        var presub = this.scriptBox[2], presup = this.scriptBox[3]; dx = svg.w + data.dx;
+        if (presup) {svg.Add(presup,dx+data.delta-presup.w,data.u)}
+        if (presub) {svg.Add(presub,dx-presub.w,-data.v)}
+      }
+      //
+      //  Move the proper part of the base
+      //
+      if (this.data[this.base]) {
+        if (start.length > 1) {
+          this.data[this.base].SVGmoveSlice(start.slice(1),end.slice(1),svg,state,values,"paddingLeft");
+        } else {
+          if (end.length <= 1) {this.data[this.base].SVGmove(svg,state,values)}
+            else {this.data[this.base].SVGmoveSlice([],end.slice(1),svg,state,values,"paddingRight")}
+        }
+      }
+      //
+      //  If this is the end, move the postscripts, if any.
+      //
+      if (end.length === 0) {
+        var sub = this.scriptBox[0], sup = this.scriptBox[1]; dx = svg.w + data.s;
+        if (sup) {svg.Add(sup,dx,data.u)}
+        if (sub) {svg.Add(sub,dx-data.delta,-data.v)}
+        delete this.scriptBox;
       }
     }
 
@@ -504,10 +580,12 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Get the default penalty for this location
       //
-      var W = info.scanW, mo = (info.embellished||this); delete info.embellished;
+      var W = info.scanW, mo = info.embellished; delete info.embellished;
+      if (!mo || !mo.SVGdata) {mo = this}
       var svg = mo.SVGdata, w = svg.w + svg.x;
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
-      if (W - info.shift === 0) {return false} // don't break at zero width (FIXME?)
+      if (W - info.shift === 0 && values.linebreak !== MML.LINEBREAK.NEWLINE)
+        {return false} // don't break at zero width (FIXME?)
       var offset = SVG.linebreakWidth - W;
       // adjust offest for explicit first-line indent and align
       if (state.n === 0 && (values.indentshiftfirst !== state.VALUES.indentshiftfirst ||
@@ -575,8 +653,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //    use it to modify the default penalty
       //
       var linebreak = PENALTY[linebreakValue];
-      if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit*1000)
-        {linebreak = [(w+PENALTY.spaceoffset)*PENALTY.spacefactor]}
+      if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit*1000 &&
+          !this.mathbackground && !this.backrgound)
+        {linebreak = [(w/1000+PENALTY.spaceoffset)*PENALTY.spacefactor]}
       if (!(linebreak instanceof Array)) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}

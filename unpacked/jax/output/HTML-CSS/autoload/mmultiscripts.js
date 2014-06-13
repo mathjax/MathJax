@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2013 The MathJax Consortium
+ *  Copyright (c) 2010-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.3";
+  var VERSION = "2.4.0";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -46,10 +46,12 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var BOX = this.HTMLgetScripts(stack,s);
       var sub = BOX[0], sup = BOX[1], presub = BOX[2], presup = BOX[3];
 
+      //
       // <mmultiscripts> children other than the base can be <none/>,
       // <mprescripts/>, <mrow></mrow> etc so try to get HTMLgetScale from the
       // first element with a spanID. See issue 362.
-      var sscale = this.HTMLgetScale();
+      //
+      var sscale = scale;
       for (var i = 1; i < this.data.length; i++) {
         if (this.data[i] && this.data[i].spanID) {
           sscale = this.data[i].HTMLgetScale();
@@ -108,6 +110,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       }
       this.HTMLhandleSpace(span);
       this.HTMLhandleColor(span);
+      var bbox = span.bbox;
+      bbox.dx = dx; bbox.s = s; bbox.u = u; bbox.v = v; bbox.delta = delta;
+      bbox.px = dx+base.bbox.w;
       return span;
     },
     HTMLgetScripts: function (stack,s) {
@@ -143,6 +148,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (BOX[j]) {
           BOX[j].bbox.w += s;
           BOX[j].bbox.rw = Math.max(BOX[j].bbox.w,BOX[j].bbox.rw);
+          BOX[j].bbox.name = (["sub","sup","presub","presup"])[j];
           this.HTMLcleanBBox(BOX[j].bbox);
         }
       }

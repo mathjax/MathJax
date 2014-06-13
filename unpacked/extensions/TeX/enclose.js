@@ -16,7 +16,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2013 The MathJax Consortium
+ *  Copyright (c) 2011-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@
  */
 
 MathJax.Extension["TeX/enclose"] = {
-  version: "2.3",
+  version: "2.4.0",
   
   //
   //  The attributes allowed in \enclose{notation}[attributes]{math}
@@ -74,7 +74,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
             keyvalue[1] = keyvalue[1].replace(/^"(.*)"$/,"$1");
             if (keyvalue[1] === "true") {keyvalue[1] = true}
             if (keyvalue[1] === "false") {keyvalue[1] = false}
-            def[keyvalue[0]] = keyvalue[1];
+            if (keyvalue[0] === "arrow" && keyvalue[1])
+              {def.notation = def.notation + " updiagonalarrow"} else
+              {def[keyvalue[0]] = keyvalue[1]}
           }
         }
       }

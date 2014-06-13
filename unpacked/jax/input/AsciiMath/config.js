@@ -13,7 +13,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2012-2013 The MathJax Consortium
+ *  Copyright (c) 2012-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,11 +30,13 @@
 
 MathJax.InputJax.AsciiMath = MathJax.InputJax({
   id: "AsciiMath",
-  version: "2.3",
+  version: "2.4.0",
   directory: MathJax.InputJax.directory + "/AsciiMath",
   extensionDir: MathJax.InputJax.extensionDir + "/AsciiMath",
   
   config: {
+    fixphi: true,                     // switch phi and varphi unicode values
+    useMathMLspacing: true,           // use MathML spacing rather than TeX spacing?
     displaystyle: true,               // put limits above and below operators
     decimalsign: "."                  // can change to "," but watch out for "(1,2)"
   }

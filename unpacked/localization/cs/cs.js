@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/cs/cs.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,14 +22,15 @@
  */
 
 MathJax.Localization.addTranslation("cs",null,{
-  menuTitle: "\u010Desky",
-  version: "2.3",
+  menuTitle: "\u010De\u0161tina",
+  version: "2.4.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
+          CookieConfig: "MathJax nalezl cookie u\u017Eivatelsk\u00E9 konfigurace obsahuj\u00EDc\u00ED spustiteln\u00FD k\u00F3d. Chcete ho spustit?\n\n(Pokud jste cookie nenastavili sami, m\u011Bli byste stisknout Storno.)",
           MathProcessingError: "Chyba zpracov\u00E1n\u00ED matematiky",
           MathError: "Chyba matematiky",
           LoadFile: "Na\u010D\u00EDt\u00E1 se %1",
@@ -39,8 +40,7 @@ MathJax.Localization.addTranslation("cs",null,{
           Processing: "Zpracov\u00E1v\u00E1 se",
           TypesetMath: "S\u00E1z\u00ED se matematika: %1 %%",
           Typesetting: "S\u00E1z\u00ED se",
-          MathJaxNotSupported: "V\u00E1\u0161 prohl\u00ED\u017Ee\u010D nepodporuje MathJax",
-          CookieConfig: "MathJax nalezl cookie u\u017Eivatelsk\u00E9 konfigurace obsahuj\u00EDc\u00ED spustiteln\u00FD k\u00F3d. Chcete ho spustit?\n\n(Pokud jste cookie nenastavili sami, m\u011Bli byste stisknout Storno.)"
+          MathJaxNotSupported: "V\u00E1\u0161 prohl\u00ED\u017Ee\u010D nepodporuje MathJax"
         }
     },
     "FontWarnings": {},
@@ -51,12 +51,12 @@ MathJax.Localization.addTranslation("cs",null,{
     "TeX": {}
   },
   plural: function (n) {
-      if (n === 1) return 1; // one
-      if (2 <= n && n <= 4) return 2; // few
+      if (n === 1) {return 1} // one
+      if (n === 2 || n === 3 || n === 4) {return 2} // two--four
       return 3; // other
     },
   number: function (n) {
-      return n;
+      return String(n).replace(".", ","); // replace dot by comma
     }
 });
 

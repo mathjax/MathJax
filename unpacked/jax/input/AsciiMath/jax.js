@@ -21,7 +21,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2012-2013 The MathJax Consortium
+ *  Copyright (c) 2012-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@
     MML.mbase.Augment({
       firstChild: null,
       lastChild: null,
-      nodeValue: "",
+      nodeValue: null,
       nextSibling: null,
       Init: function () {
         var obj = MBASEINIT.apply(this,arguments) || this;
@@ -117,7 +117,6 @@
           if (!this.firstChild) {this.firstChild = node}
           this.Append(node);
           this.lastChild = node;
-          this.nodeValue += node.nodeValue;
         }
         return node;
       },
@@ -132,9 +131,6 @@
             else {this.lastChild = this.childNodes[this.childNodes.length-1]}
         }
         if (i) {this.childNodes[i-1].nextSibling = node.nextSibling}
-        this.nodeValue = "";
-        for (i = 0, m = this.childNodes.length; i < m; i++)
-          {this.nodeValue += this.childNodes[i].nodeValue}
         node.nextSibling = node.parent = null;
         return node;
       },
@@ -145,9 +141,6 @@
         if (i) {this.childNodes[i-1].nextSibling = node} else {this.firstChild = node}
         if (i >= m-1) {this.lastChild = node}
         this.SetData(i,node); node.nextSibling = old.nextSibling;
-        this.nodeValue = "";
-        for (i = 0, m = this.childNodes.length; i < m; i++)
-          {this.nodeValue += this.childNodes[i].nodeValue}
         old.nextSibling = old.parent = null;
         return old;
       },
@@ -167,7 +160,11 @@
   //
   var document = {
     getElementById: true,
-    createElementNS: function (ns,type) {return MML[type]()},
+    createElementNS: function (ns,type) {
+      var node = MML[type]();
+      if (type === "mo" && ASCIIMATH.config.useMathMLspacing) {node.useMMLspacing = 0x80}
+      return node;
+    },
     createTextNode: function (text) {return MML.chars(text).With({nodeValue:text})},
     createDocumentFragment: function () {return DOCFRAG()}
   };
@@ -1199,6 +1196,13 @@ ASCIIMATH.Augment({
       // Old versions use the "decimal" option, so take it into account if it
       // is defined by the user. See issue 384.
       decimalsign  = (ASCIIMATH.config.decimal || ASCIIMATH.config.decimalsign);
+      // fix phi and varphi, if requested
+      if (ASCIIMATH.config.fixphi) {
+        for (var i = 0, m = AMsymbols.length; i < m; i++) {
+          if (AMsymbols[i].input === "phi")    {AMsymbols[i].output = "\u03D5"}
+          if (AMsymbols[i].input === "varphi") {AMsymbols[i].output = "\u03C6"; i = m}
+        }
+      }
       INITASCIIMATH();
       AMinitSymbols();
     },
@@ -1272,6 +1276,7 @@ junk = null;
   
   ASCIIMATH.Augment({
     sourceMenuTitle: /*_(MathMenu)*/ ["AsciiMathInput","AsciiMath Input"],
+    annotationEncoding: "text/x-asciimath",
 
     prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run before processing AsciiMath
     postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run after processing AsciiMath

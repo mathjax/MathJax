@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 
 MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   id: "HTML-CSS",
-  version: "2.3",
+  version: "2.4.0",
   directory: MathJax.OutputJax.directory + "/HTML-CSS",
   extensionDir: MathJax.OutputJax.extensionDir + "/HTML-CSS",
   autoloadDir: MathJax.OutputJax.directory + "/HTML-CSS/autoload",
@@ -73,6 +73,20 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
         padding: "1px 3px",
         "font-style": "normal",
         "font-size":  "90%"
+      },
+      
+      //
+      //  For mtextFontInherit version of \texttt{}
+      //
+      ".MathJax .MJX-monospace": {
+        "font-family": "monospace"
+      },
+      
+      //
+      //  For mtextFontInherit version of \textsf{}
+      //
+      ".MathJax .MJX-sans-serif": {
+        "font-family": "sans-serif"
       },
       
       "#MathJax_Tooltip": {

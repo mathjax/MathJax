@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,HTML) {
-  var VERSION = "2.3";
+  var VERSION = "2.4.0";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -87,9 +87,9 @@
                            0x1D4A4: 0x2110, 0x1D4A7: 0x2112, 0x1D4A8: 0x2133, 0x1D4AD: 0x211B,
                            0x1D4BA: 0x212F, 0x1D4BC: 0x210A, 0x1D4C4: 0x2134}},
         "bold-script": {fonts: [BITALIC], offsetA: 0x1D4D0, bold:true, italic:true},
-        "sans-serif": {offsetA: 0x1D5A0, offsetN: 0x1D7E2, offsetG: 0xE17D},
+        "sans-serif": {offsetA: 0x1D5A0, offsetN: 0x1D7E2, offsetG: 0xE17D, offsetE: 0xE17D},
         "bold-sans-serif": {offsetA: 0x1D5D4, offsetG: 0x1D756, offsetN: 0x1D7EC, bold:true},
-        "sans-serif-italic": {fonts: [ITALIC,NONUNII], offsetA: 0x1D608, offsetN: 0xE1B4, offsetG: 0xE1BF, italic:true},
+        "sans-serif-italic": {fonts: [ITALIC,NONUNII], offsetA: 0x1D608, offsetN: 0xE1B4, offsetG: 0xE1BF, offsetE: 0xE1BF, italic:true},
         "sans-serif-bold-italic": {fonts: [BITALIC,"STIXNonUnicode-bold-italic"], offsetA: 0x1D63C, offsetN: 0xE1F6, offsetG: 0x1D790, bold:true, italic:true},
         "monospace": {offsetA: 0x1D670, offsetN: 0x1D7F6,
                    remap: {0x20: [0x20,"-STIX-variant"]}}, // use a special space for monospace (see below)
@@ -122,6 +122,7 @@
         {name: "alpha", low: 0x61, high: 0x7A, offset: "A", add: 26},
         {name: "Alpha", low: 0x41, high: 0x5A, offset: "A"},
         {name: "number", low: 0x30, high: 0x39, offset: "N"},
+        {name: "greek-non-unicode", low: 0x03B1, high: 0x03C9, offset: "E", add: 25},
         {name: "greek", low: 0x03B1, high: 0x03C9, offset: "G", add: 26},
         {name: "Greek", low: 0x0391, high: 0x03F6, offset: "G",
            remap: {0x03F5: 53, 0x03D1: 54, 0x03F0: 55, 0x03D5: 56, 0x03F1: 57, 0x03D6: 58, 0x03F4: 17}}
@@ -137,7 +138,13 @@
       },
       
       REMAPACCENT: {
-        "\u2192": "\u20D7"
+        "\u007E": "\u0303",
+        "\u2192": "\u20D7",
+        "\u0060": "\u0300",
+        "\u005E": "\u0302",
+        "\u00B4": "\u0301",
+        "\u2032": "\u0301",
+        "\u2035": "\u0300"
       },
       REMAPACCENTUNDER: {
       },
@@ -245,7 +252,7 @@
         },
         0x21D1: // \Uparrow
         {
-          dir: V, HW: [[.818,GENERAL]], stretch: {top:[0x21D1,GENERAL], ext:[0x2225,GENERAL,.1]}
+          dir: V, HW: [[.818,GENERAL]], stretch: {top:[0x21D1,GENERAL], ext:[0x2225,GENERAL,.082]}
         },
         0x21D2: // right double arrow
         {
@@ -253,7 +260,7 @@
         },
         0x21D3: // \Downarrow
         {
-          dir: V, HW: [[.818,GENERAL]], stretch: {ext:[0x2225,GENERAL,.1], bot:[0x21D3,GENERAL]}
+          dir: V, HW: [[.818,GENERAL]], stretch: {ext:[0x2225,GENERAL,.082], bot:[0x21D3,GENERAL]}
         },
         0x21D4: // left-right double arrow
         {
@@ -263,7 +270,7 @@
         0x21D5: // \Updownarrow
         {
           dir: V, HW: [[.818,GENERAL]],
-          stretch: {top:[0x21D1,GENERAL], ext:[0x2225,GENERAL,.1], bot:[0x21D3,GENERAL]}
+          stretch: {top:[0x21D1,GENERAL], ext:[0x2225,GENERAL,.082], bot:[0x21D3,GENERAL]}
         },
         0x221A: // \surd
         {

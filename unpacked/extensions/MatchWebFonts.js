@@ -12,7 +12,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013 The MathJax Consortium
+ *  Copyright (c) 2013-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
  */
 
 (function (HUB,AJAX) {
-  var VERSION = "2.3";
+  var VERSION = "2.4.0";
   
   var CONFIG = MathJax.Hub.CombineConfig("MatchWebFonts",{
     matchFor: {
@@ -40,7 +40,7 @@
     fontCheckTimeout: 15 * 1000,  // how long to keep looking for fonts (15 seconds)
   });
   
-  var MATCH = MathJax.Extension.MatchWebFonts = {
+  MathJax.Extension.MatchWebFonts = {
     version: VERSION,
     config: CONFIG
   };
@@ -81,7 +81,6 @@
         for (i = 0, m = scripts.length; i < m; i++) {
           script = scripts[i]; if (!script.parentNode) continue; retry = true;
           var jax = script.MathJax.elementJax; if (!jax) continue;
-          var span = document.getElementById(jax.inputID+"-Frame");
           //
           //  Check if ex or mex has changed
           //
@@ -98,9 +97,10 @@
         //
         //  Remove markers
         //
+        scripts = scripts.concat(size);  // some scripts have been moved to the size array
         for (i = 0, m = scripts.length; i < m; i++) {
           script = scripts[i];
-          if (script.parentNode && script.MathJax.elementJax) {
+          if (script && script.parentNode && script.MathJax.elementJax) {
             script.parentNode.removeChild(script.previousSibling);
           }
         }
@@ -152,18 +152,18 @@
         for (i = 0, m = scripts.length; i < m; i++) {
           script = scripts[i]; if (!script.parentNode) continue; retry = true;
           var jax = script.MathJax.elementJax; if (!jax) continue;
-          var span = document.getElementById(jax.inputID+"-Frame");
           //
           //  Check if ex or mex has changed
           //
           var test = script.previousSibling;
           var ex = test.firstChild.offsetHeight/60;
-          if (ex === 0 || ex === "NaN") {ex = this.defaultEx; em = this.defaultEm}
+          if (ex === 0 || ex === "NaN") {ex = this.defaultEx}
           if (ex !== jax.SVG.ex) {size.push(script); scripts[i] = {}}
         }
         //
         //  Remove markers
         //
+        scripts = scripts.concat(size);  // some scripts have been moved to the size array
         for (i = 0, m = scripts.length; i < m; i++) {
           script = scripts[i];
           if (script.parentNode && script.MathJax.elementJax) {
@@ -257,7 +257,7 @@
           //  Check widths of mtd elements
           //
           if (math.MathJaxMtds) {
-            for (j = 0, n = math.MathJaxMtds.length; j < n; j++) {
+            for (var j = 0, n = math.MathJaxMtds.length; j < n; j++) {
               if (!math.MathJaxMtds[j].parentNode) continue;
               if (newEx || math.MathJaxMtds[j].firstChild.scrollWidth !== jax.mtds[j]) {
                 jax.mtds[j] = math.MathJaxMtds[j].firstChild.scrollWidth;
@@ -303,7 +303,7 @@
     });
   });
   
-  HUB.Startup.signal.Post("MathWebFont Extension Ready");
+  HUB.Startup.signal.Post("MatchWebFonts Extension Ready");
   AJAX.loadComplete("[MathJax]/extensions/MatchWebFonts.js");
 
 })(MathJax.Hub,MathJax.Ajax);

@@ -4,7 +4,7 @@
  *  
  *  Initializes the SVG OutputJax to use the STIX-Web fonts
 
- *  Copyright (c) 2013 The MathJax Consortium
+ *  Copyright (c) 2013-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-    var VERSION = "2.3";
+    var VERSION = "2.4.0";
 
   var ALPHABETSBOLDITALIC = "STIXMathJax_Alphabets-bold-italic",
       ALPHABETSBOLD = "STIXMathJax_Alphabets-bold",
@@ -152,7 +152,7 @@
           "bold": {fonts: [MAINBOLD,NORMALBOLD,FRAKTURBOLD,DOUBLESTRUCKBOLD,SANSSERIFBOLD,LATINBOLD,ALPHABETSBOLD,MARKSBOLD,ARROWSBOLD,OPERATORSBOLD,SYMBOLSBOLD,SHAPESBOLD,MISCBOLD,VARIANTSBOLD,SIZE1], bold:true
 },
           "italic": {fonts: [MAINITALIC,NORMALITALIC,SCRIPTITALIC,DOUBLESTRUCKITALIC,SANSSERIFITALIC,LATINITALIC,ALPHABETSITALIC,MARKSITALIC,MISCITALIC,VARIANTSITALIC,SIZE1], italic:true},
-          "bolditalic": {fonts: [MAINBOLDITALIC,NORMALBOLDITALIC,SCRIPTBOLDITALIC,DOUBLESTRUCKBOLDITALIC,SANSSERIFBOLDITALIC,LATINBOLDITALIC,ALPHABETSBOLDITALIC,MARKSBOLDITALIC,SHAPESBOLDITALIC,MISCBOLDITALIC,VARIANTSBOLDITALIC,SIZE1], bold: true, italic:true},
+          "bold-italic": {fonts: [MAINBOLDITALIC,NORMALBOLDITALIC,SCRIPTBOLDITALIC,DOUBLESTRUCKBOLDITALIC,SANSSERIFBOLDITALIC,LATINBOLDITALIC,ALPHABETSBOLDITALIC,MARKSBOLDITALIC,SHAPESBOLDITALIC,MISCBOLDITALIC,VARIANTSBOLDITALIC,SIZE1], bold: true, italic:true},
           "double-struck": {
             fonts: [DOUBLESTRUCK],
             offsetA: 0x1D538,
@@ -181,7 +181,8 @@
             fonts: [SANSSERIF],
             offsetA: 0x1D5A0,
             offsetN: 0x1D7E2,
-            offsetG: 0xE17D
+            offsetG: 0xE17D,
+            offsetE: 0xE17D
           },
           "bold-sans-serif": {
             fonts: [SANSSERIFBOLD], bold:true,
@@ -193,7 +194,8 @@
              fonts: [SANSSERIFITALIC], italic: true,
              offsetA: 0x1D608,
              offsetN: 0xE1B4,
-             offsetG: 0xE1BF
+             offsetG: 0xE1BF,
+             offsetE: 0xE1BF
           },
           "sans-serif-bold-italic": {
              fonts: [SANSSERIFBOLDITALIC], bold:true, italic: true,
@@ -220,6 +222,7 @@
         {name: "alpha", low: 0x61, high: 0x7A, offset: "A", add: 26},
         {name: "Alpha", low: 0x41, high: 0x5A, offset: "A"},
         {name: "number", low: 0x30, high: 0x39, offset: "N"},
+        {name: "greek-non-unicode", low: 0x03B1, high: 0x03C9, offset: "E", add: 25},
         {name: "greek", low: 0x03B1, high: 0x03C9, offset: "G", add: 26},
         {name: "Greek", low: 0x0391, high: 0x03F6, offset: "G",
            remap: {0x03F5: 52, 0x03D1: 53, 0x03F0: 54, 0x03D5: 55, 0x03F1: 56, 0x03D6: 57, 0x03F4: 17}}
@@ -238,7 +241,13 @@
       },
 
       REMAPACCENT: {
-        "\u2192": "\u20D7"
+        "\u007E": "\u0303",
+        "\u2192": "\u20D7",
+        "\u0060": "\u0300",
+        "\u005E": "\u0302",
+        "\u00B4": "\u0301",
+        "\u2032": "\u0301",
+        "\u2035": "\u0300"
       },
 
       REMAPACCENTUNDER: {

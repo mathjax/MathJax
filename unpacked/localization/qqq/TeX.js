@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/qqq/TeX.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("qqq","TeX",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "This appears in TeX expressions when open and close braces do not match e.g. \u003Ccode\u003E\\( { \\)\u003C/code\u003E\n\nSee also:\n* {{msg-mathjax|Tex-ExtraCloseMissingOpen}}",
@@ -58,7 +58,7 @@ MathJax.Localization.addTranslation("qqq","TeX",{
           BracketMustBeDimension: "This happens when a bracket argument of an item is not a dimension e.g. \u003Ccode\u003E\\begin{array} x \\\\[INVALID] y \\end{array}\u003C/code\u003E.\n\nParameters:\n* %1 - e.g. \u003Ccode\u003E\\\u003C/code\u003E",
           InvalidEnv: "This happens with invalid environment name e.g. \u003Ccode\u003E\\begin{_INVALID_} \\end{_INVALID_}\u003C/code\u003E where underscores are forbidden.\n\nParameters:\n* %1 - the environment name e.g. \u003Ccode\u003E_INVALID_\u003C/code\u003E",
           UnknownEnv: "This happens when an unknown environment is used e.g. \u003Ccode\u003E\\begin{UNKNOWN} \\end{UNKNOWN}\u003C/code\u003E.\n\nParameters:\n* %1 - the environment name e.g. \u003Ccode\u003EUNKNOWN\u003C/code\u003E",
-          ExtraCloseLooking: "This happens in some situations when an extra close brace while looking for another character, for example \u003Ccode\u003E\\( \\sqrt[}]x \\)\u003C/code\u003E.\n\nParameters:\n* %1 - the character searched e.g. \u003Ccode\u003E]\u003C/code\u003E",
+          ExtraCloseLooking: "This happens in some situations when an extra close brace is found while looking for another character, for example \u003Ccode\u003E\\( \\sqrt['''{{red|\u003Cnowiki\u003E}\u003C/nowiki\u003E}}''']x \\)\u003C/code\u003E.\n\nParameters:\n* %1 - the character searched e.g. \u003Ccode\u003E]\u003C/code\u003E",
           MissingCloseBracket: "This error happens when a closing '\u003Ccode\u003E]\u003C/code\u003E' is missing e.g. \u003Ccode\u003E\\( \\sqrt[ \\)\u003C/code\u003E. Parameters:\n* %1 - the command name e.g. \u003Ccode\u003E\\sqrt\u003C/code\u003E",
           MissingOrUnrecognizedDelim: "This error happens when a delimiter is missing or unrecognized in a TeX expression e.g. \u003Ccode\u003E\\( \\left \\)\u003C/code\u003E.\n\nParameters:\n* %1 - the command name e.g. \u003Ccode\u003E\\left\u003C/code\u003E",
           MissingDimOrUnits: "This error happens with some TeX commands that are expecting a unit e.g. \u003Ccode\u003E\\above\u003C/code\u003E. Parameters:\n* %1 - the command name",
@@ -90,7 +90,7 @@ MathJax.Localization.addTranslation("qqq","TeX",{
           IllegalControlSequenceName: "This appears when the \u003Ccode\u003E\\newcommand\u003C/code\u003E TeX command is given an illegal control sequence name.\n\nParameters:\n* %1 - \u003Ccode\u003E\\newcommand\u003C/code\u003E",
           IllegalParamNumber: "This appears when the \u003Ccode\u003E\\newcommand\u003C/code\u003E TeX command is given an illegal number of parameters.\n\nParameters:\n* %1 - \u003Ccode\u003E\\newcommand\u003C/code\u003E",
           MissingCS: "This appears when a TeX definitions is not followed by a control sequence e.g. \u003Ccode\u003E\\let INVALID\u003C/code\u003E.\n\nParameters:\n* %1 - may be commands like  \u003Ccode\u003E\\let\u003C/code\u003E, \u003Ccode\u003E\\def\u003C/code\u003E, \u003Ccode\u003E\\newcommand\u003C/code\u003E, \u003Ccode\u003E\\global\u003C/code\u003E, etc.",
-          CantUseHash2: "This appears in TeX definitions when the character '#' is used in incorrectly used e.g. \u003Ccode\u003E\\def\\mycommand#A\u003C/code\u003E.\n\nParameters:\n* %1 - the command used e.g. \u003Ccode\u003Emycommand\u003C/code\u003E",
+          CantUseHash2: "This appears when the character '#' is incorrectly used in TeX definitions, e.g. \u003Ccode\u003E\\def\\mycommand{{red|#}}A\u003C/code\u003E.\n\nParameters:\n* %1 - the command used e.g. \u003Ccode\u003Emycommand\u003C/code\u003E",
           SequentialParam: "This appears in TeX definitions when parameters are not numbered sequentially e.g. \u003Ccode\u003E\\def\\mycommand#2#1\u003C/code\u003E.\n\nParameters:\n* %1 - the command name e.g. \u003Ccode\u003E\\def\u003C/code\u003E",
           MissingReplacementString: "This appears in TeX definitions when you don't specify a replacement string e.g. \u003Ccode\u003E\\def\\mycommand\u003C/code\u003E.\n\nParameters:\n* %1 - the command name e.g. \u003Ccode\u003E\\def\u003C/code\u003E",
           MismatchUseDef: "This appears in TeX definitions when a TeX command does not match its definition e.g. \u003Ccode\u003E\\( \\def\\mycommand[#1]#2[#3]{#1+#2+#3} \\mycommand{a}{b}[c] \\)\u003C/code\u003E.\n\nParameters:\n* %1 - the command name e.g. \u003Ccode\u003E\\mycommand\u003C/code\u003E",

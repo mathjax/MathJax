@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/es/es.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,24 +23,24 @@
 
 MathJax.Localization.addTranslation("es",null,{
   menuTitle: "espa\u00F1ol",
-  version: "2.3",
+  version: "2.4.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
+          CookieConfig: "MathJax ha encontrado una cookie de configuraci\u00F3n de usuario que incluye c\u00F3digo para ser ejecutado.\u00BFQuieres ejecutarlo?\n\\n\n(Pulse Cancelar al menos que configure la cookie).",
           MathProcessingError: "Error de procesamiento de matem\u00E1ticas",
           MathError: "Error de matem\u00E1ticas",
           LoadFile: "Cargando %1",
           Loading: "Cargando",
           LoadFailed: "Fall\u00F3 la carga del archivo: %1",
-          ProcessMath: "Procesando matem\u00E1ticas: %1 %%",
+          ProcessMath: "Procesando notaci\u00F3n matem\u00E1tica: %1\u00A0%%",
           Processing: "Procesando",
           TypesetMath: "Composici\u00F3n tipogr\u00E1fica en curso: %1 %%",
           Typesetting: "Composici\u00F3n tipogr\u00E1fica",
-          MathJaxNotSupported: "El navegador no admite MathJax",
-          CookieConfig: "MathJax ha encontrado una cookie de configuraci\u00F3n de usuario que incluye c\u00F3digo para ser ejecutado.\u00BFQuieres ejecutarlo?\n\\n\n(Pulse Cancelar al menos que configure la cookie)."
+          MathJaxNotSupported: "El navegador no admite MathJax"
         }
     },
     "FontWarnings": {},

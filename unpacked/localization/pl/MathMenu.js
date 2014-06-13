@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/pl/MathMenu.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("pl","MathMenu",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           Show: "Poka\u017C wzory jako",
@@ -32,6 +32,12 @@ MathJax.Localization.addTranslation("pl","MathMenu",{
           AsciiMathInput: "Wej\u015Bcie AsciiMathML",
           Original: "Oryginalny formularz",
           ErrorMessage: "Komunikat o b\u0142\u0119dzie",
+          Annotation: "Adnotacja",
+          TeX: "TeX",
+          StarMath: "StarMath",
+          Maple: "Klon",
+          ContentMathML: "Zawarto\u015B\u0107 MathML",
+          OpenMath: "OpenMath",
           texHints: "Poka\u017C wskaz\u00F3wki TeX w MathML",
           Settings: "Ustawienia matematyki",
           ZoomTrigger: "Zwi\u0119kszanie zoomu",
@@ -92,13 +98,7 @@ MathJax.Localization.addTranslation("pl","MathMenu",{
           IE9warning: "Menu kontekstowe MathJax zostanie wy\u0142\u0105czone, ale mo\u017Cesz klikn\u0105\u0107 z Altem na wz\u00F3r, aby otworzy\u0107 menu.",
           NoOriginalForm: "Brak wzor\u00F3w w oryginalnej postaci",
           Close: "Zamknij",
-          EqSource: "\u0179r\u00F3d\u0142o wzoru MathJax",
-          Annotation: "Adnotacja",
-          TeX: "TeX",
-          StarMath: "StarMath",
-          Maple: "Klon",
-          ContentMathML: "Zawarto\u015B\u0107 MathML",
-          OpenMath: "OpenMath"
+          EqSource: "\u0179r\u00F3d\u0142o wzoru MathJax"
         }
 });
 

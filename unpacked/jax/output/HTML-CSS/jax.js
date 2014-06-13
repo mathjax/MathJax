@@ -11,7 +11,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,43 +38,56 @@
    
   var FONTTEST = MathJax.Object.Subclass({
     timeout:  (isMobile? 15:8)*1000,   // timeout for loading web fonts
-
-    FontInfo: {
-      STIX: {family: "STIXSizeOneSym", testString: "() {} []"},
-      TeX:  {family: "MathJax_Size1",  testString: "() {} []"},
-      "STIX-Web":  {family: "STIXWeb_Size1",  testString: "() {} []"},
-      "Asana-Math":  {family: "AsanaMath_Size1",  testString: "() {} []"},
-      "Gyre-Pagella":  {family: "GyrePagella_Size1",  testString: "() {} []"},
-      "Gyre-Termes":  {family: "GyreTermes_Size1",  testString: "() {} []"},
-      "Latin-Modern":  {family: "LatinModern_Size1",  testString: "() {} []"},
-      "Neo-Euler":  {family: "NeoEuler_Size1",  testString: "() {} []"}
-    },
     comparisonFont: ["sans-serif","monospace","script","Times","Courier","Arial","Helvetica"],
     testSize: ["40px","50px","60px","30px","20px"],
+    //
+    //  Fedora aliases STIXSizeOneSym to STIX Word, so MathJax thinks STIX is
+    //  available, but the fonts aren't actually correct.  This is to test if
+    //  STIXSizeOneSym has letters in it (so is actually STIX Word).
+    //  
+    FedoraSTIXcheck: {family:"STIXSizeOneSym", testString:"abcABC", noStyleChar:true},
 
     Init: function () {
-      this.div = MathJax.HTML.addElement(document.body,"div",{
-        id: "MathJax_Font_Test",
-        style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
-                padding:0, border:0, margin:0, whiteSpace:"nowrap",
-                textAlign:"left", textIndent:0, textTransform:"none",
-                lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
-                fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal",
-                fontSizeAdjust:"none"}
-      },[""]);
+      //
+      //  Wrap the Font_Test DIV in a 0x0 DIV so that it takes no room
+      //
+      this.div = MathJax.HTML.addElement(document.body,"div",{style: {
+          position:"absolute", width:0, height:0, overflow:"hidden",
+          padding:0, border:0, margin:0
+        }},[["div",{
+          id: "MathJax_Font_Test",
+          style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
+                  padding:0, border:0, margin:0, whiteSpace:"nowrap",
+                  textAlign:"left", textIndent:0, textTransform:"none",
+                  lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
+                  fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal",
+                  fontSizeAdjust:"none"}
+          },[""]]]
+      ).firstChild;
       this.text = this.div.firstChild;
     },
 
     findFont: function (fonts,pref) {
-      if (pref && this.testCollection(pref)) {return pref}
-      for (var i = 0, m = fonts.length; i < m; i++) {
-        if (fonts[i] === pref) continue;
-        if (this.testCollection(fonts[i])) {return fonts[i]}
+      var found = null;
+      if (pref && this.testCollection(pref)) {
+        found = pref;
+      } else {
+        for (var i = 0, m = fonts.length; i < m; i++) {
+          if (fonts[i] === pref) continue;
+          if (this.testCollection(fonts[i])) {found = fonts[i]; break}
+        }
       }
-      return null;
+      if (found === "STIX" && this.testFont(this.FedoraSTIXcheck)) {found = null}
+      return found;
     },
 
-    testCollection: function (name) {return this.testFont(this.FontInfo[name])},
+    testCollection: function (name) {
+      var font = {testString: "() {} []"};
+      font.family = {TeX:"MathJax_Size1", STIX:"STIXSizeOneSym"}[name] ||
+                     name.replace(/-(Math)?/,"")+"MathJax_Size1";
+      if (name === "STIX") {font.noStyleChar = true}
+      return this.testFont(font);
+    },
 
     testFont: function (font) {
       if (font.isWebFont && HTMLCSS.FontFaceBug) {
@@ -83,20 +96,39 @@
         this.div.style.fontWeight = (font.weight||"normal");
         this.div.style.fontStyle  = (font.style||"normal");
       }
+      //
+      //  Hack:  Fix up web font names for local access.
+      //  (The names for Windows and Mac are different, unlike in the STIX and
+      //  TeX fonts, so we have to work out a list of names here.)
+      //
+      //  This should be removed when the web fonts are fixed.  FIXME
+      //
+      var family = font.familyFixed || font.family;
+      if (!family.match(/^(STIX|MathJax)|'/)) {
+        family = family.replace(/_/g," ").replace(/([a-z])([A-Z])/g,"$1 $2").replace(/ Jax/,"Jax")
+               + "','" + family + "','" + family + "-";
+        if (font.weight) {family += "Bold"}; if (font.style) {family += "Italic"}
+        if (!font.weight && !font.style) {family += "Regular"}
+        font.familyFixed = family = "'"+family+"'"
+      }
+
       var W = this.getComparisonWidths(font.testString,font.noStyleChar);
+      var found = null;
       if (W) {
-        this.div.style.fontFamily = "'"+font.family+"',"+this.comparisonFont[0];
+        this.div.style.fontFamily = family+","+this.comparisonFont[0];
         if (this.div.offsetWidth == W[0]) {
-          this.div.style.fontFamily = "'"+font.family+"',"+this.comparisonFont[W[2]];
-          if (this.div.offsetWidth == W[1]) {return false}
+          this.div.style.fontFamily = family+","+this.comparisonFont[W[2]];
+          if (this.div.offsetWidth == W[1]) {found = false}
         }
-        if (this.div.offsetWidth != W[3] || this.div.offsetHeight != W[4]) {
-          if (font.noStyleChar || !HTMLCSS.FONTDATA || !HTMLCSS.FONTDATA.hasStyleChar) {return true}
-          for (var i = 0, m = this.testSize.length; i < m; i++)
-            {if (this.testStyleChar(font,this.testSize[i])) {return true}}
+        if (found === null && (this.div.offsetWidth != W[3] || this.div.offsetHeight != W[4])) {
+          if (!font.noStyleChar && HTMLCSS.FONTDATA && HTMLCSS.FONTDATA.hasStyleChar) {
+            for (var i = 0, m = this.testSize.length; i < m; i++)
+              {if (this.testStyleChar(font,this.testSize[i])) {found = true; m = 0}}
+          } else {found = true}
         }
       }
-      return false;
+      if (HTMLCSS.safariTextNodeBug) {this.div.innerHTML = ""} else {this.text.nodeValue = ""}
+      return found;
     },
 
     styleChar:   "\uEFFD", // width encodes style
@@ -182,18 +214,22 @@
       var type = HTMLCSS.allowWebFonts;
       var FONT = HTMLCSS.FONTDATA.FONTS[name];
       if (HTMLCSS.msieFontCSSBug && !FONT.family.match(/-Web$/)) {FONT.family += "-Web"}
-      var dir = AJAX.fileURL(HTMLCSS.webfontDir+"/"+type);
+      var webfonts = HTMLCSS.webfontDir+"/"+type;
+      var dir = AJAX.fileURL(webfonts);
       var fullname = name.replace(/-b/,"-B").replace(/-i/,"-I").replace(/-Bold-/,"-Bold");
       if (!fullname.match(/-/)) {fullname += "-Regular"}
       if (type === "svg") {fullname += ".svg#"+fullname} else {fullname += "."+type}
+      var rev = AJAX.fileRev(webfonts+"/"+fullname.replace(/#.*/,""));
       var def = {
         "font-family": FONT.family,
-        src: "url('"+dir+"/"+fullname+"')"
+        src: "url('"+dir+"/"+fullname+rev+"')"
       };
       if (type === "otf") {
+        fullname = fullname.replace(/otf$/,"woff");
+        rev = AJAX.fileRev(webfonts+"/"+fullname);
         def.src += " format('opentype')";
         dir = AJAX.fileURL(HTMLCSS.webfontDir+"/woff");  // add woff fonts as well
-        def.src = "url('"+dir+"/"+fullname.replace(/otf$/,"woff")+"') format('woff'), "+def.src;
+        def.src = "url('"+dir+"/"+fullname+rev+"') format('woff'), "+def.src;
       } else if (type !== "eot") {def.src += " format('"+type+"')"}
       if (!(HTMLCSS.FontFaceBug && FONT.isWebFont)) {
         if (name.match(/-bold/)) {def["font-weight"] = "bold"}
@@ -224,23 +260,30 @@
           "white-space":     "nowrap",
           "float":           "none",
           "direction":       "ltr",
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           border: 0, padding: 0, margin: 0
         },
 
         ".MathJax_Display": {
           position: "relative",
-          display: "block",
+          display: "block!important",
+          "text-indent": 0,
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           width: "100%"
         },
 
         ".MathJax img, .MathJax nobr, .MathJax a": {
-          border: 0, padding: 0, margin: 0, "max-width": "none", "max-height": "none",
+          border: 0, padding: 0, margin: 0,
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
           "vertical-align": 0, "line-height": "normal",
           "text-decoration": "none"
         },
         "img.MathJax_strut": {
-          border:"0 !important", padding:"0 !important", margin: "0 !important",
-          "vertical-align": "0 !important"
+          border:"0!important", padding:"0!important", margin:"0!important",
+          "vertical-align": "0!important"
         },
         
 	".MathJax span": {
@@ -251,12 +294,12 @@
 	},
 
         ".MathJax nobr": {
-          "white-space": "nowrap ! important"
+          "white-space": "nowrap!important"
         },
         
         ".MathJax img": {
-          display: "inline ! important",
-          "float": "none ! important"
+          display: "inline!important",
+          "float": "none!important"
         },
         
         ".MathJax *": {
@@ -274,12 +317,14 @@
         ".MathJax_Processed": {display:"none!important"},
         
         ".MathJax_ExBox": {
-          display:"block", overflow:"hidden",
-          width:"1px", height:"60ex"
+          display:"block!important", overflow:"hidden",
+          width:"1px", height:"60ex",
+          "min-height": 0, "max-height":"none"
         },
         ".MathJax .MathJax_EmBox": {
-          display:"block", overflow:"hidden",
-          width:"1px", height:"60em"
+          display:"block!important", overflow:"hidden",
+          width:"1px", height:"60em",
+          "min-height": 0, "max-height":"none"
         },
         
         ".MathJax .MathJax_HitBox": {
@@ -322,27 +367,51 @@
     maxStretchyParts: 1000,            // limit the number of parts allowed for
                                        // stretchy operators. See issue 366.
 
+    fontName: {
+      TeXLocal:       "TeX",
+      TeXWeb:         ["","TeX"],
+      TeXImage:       ["",""],
+      STIXLocal:      ["STIX","STIX-Web"],
+      STIXWeb:        "STIX-Web",
+      AsanaMathWeb:   "Asana-Math",
+      GyrePagellaWeb: "Gyre-Pagella",
+      GyreTermesWeb:  "Gyre-Termes",
+      LatinModernWeb: "Latin-Modern",
+      NeoEulerWeb:    "Neo-Euler"
+    },
+    
+    fontInUse: "generic",
+    FONTDATA: {
+      TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
+      FONTS: {},
+      VARIANT: {"normal": {fonts:[]}, "-generic-variant": {}, "-largeOp": {}, "-smallOp": {}},
+      RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
+    },
+
     Config: function () {
       if (!this.require) {this.require = []}
-      this.Font = FONTTEST();
-      this.SUPER(arguments).Config.call(this); var settings = this.settings;
-      if (this.adjustAvailableFonts) {this.adjustAvailableFonts(this.config.availableFonts)}
-      if (settings.scale) {this.config.scale = settings.scale}
-      if (settings.font && settings.font !== "Auto") {
-        if (settings.font === "TeXLocal") {this.config.availableFonts = ["TeX"]; this.config.preferredFont = "TeX"; this.config.webFont = "TeX"}
-        else if (settings.font === "TeXWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "TeX"}
-        else if (settings.font === "TeXimage") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = ""}
-        else if (settings.font === "STIXlocal") {this.config.availableFonts = ["STIX"]; this.config.preferredFont = "STIX"; this.config.webFont = "STIX-Web"}
-        else if (settings.font === "STIXWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "STIX-Web"}
-        else if (settings.font === "AsanaMathWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Asana-Math"}
-        else if (settings.font === "GyrePagellaWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Gyre-Pagella"}
-        else if (settings.font === "GyreTermesWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Gyre-Termes"}
-        else if (settings.font === "LatinModernWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Latin-Modern"}
-        else if (settings.font === "NeoEulerWeb") {this.config.availableFonts = []; this.config.preferredFont = ""; this.config.webFont = "Neo-Euler"}
+      this.Font = FONTTEST(); this.SUPER(arguments).Config.call(this);
+      var settings = this.settings, config = this.config, font = settings.font;
+      if (this.adjustAvailableFonts) {this.adjustAvailableFonts(config.availableFonts)}
+      if (settings.scale) {config.scale = settings.scale}
+      if (font && font !== "Auto" && this.fontName[font]) {
+        config.availableFonts = []; delete config.fonts;
+        if (this.fontName[font] instanceof Array) {
+          config.preferredFont = this.fontName[font][0];
+          config.webFont = this.fontName[font][1];
+        } else {
+          config.preferredFont = config.webFont = this.fontName[font];
+        }
+        if (config.preferredFont) {config.availableFonts[0] = config.preferredFont}
       }
-      var font = this.Font.findFont(this.config.availableFonts,this.config.preferredFont);
-      if (!font && this.allowWebFonts) {font = this.config.webFont; if (font) {this.webFonts = true}}
-      if (!font && this.config.imageFont) {font = this.config.imageFont; this.imgFonts = true}
+      if (config.fonts) {
+        config.availableFonts = config.fonts;
+        config.preferredFont = config.webFont = config.fonts[0];
+        if (config.webFont === "STIX") {config.webFont += "-Web"}
+      }
+      font = this.Font.findFont(config.availableFonts,config.preferredFont);
+      if (!font && this.allowWebFonts) {font = config.webFont; if (font) {this.webFonts = true}}
+      if (!font && this.config.imageFont) {font = config.imageFont; this.imgFonts = true}
       if (font) {
         this.fontInUse = font; this.fontDir += "/" + font; this.webfontDir += "/" + font;
         this.require.push(this.fontDir+"/fontdata.js");
@@ -353,15 +422,6 @@
       } else {
         MESSAGE(["CantFindFontUsing","Can't find a valid font using %1",
                 "["+this.config.availableFonts.join(", ")+"]"],null,3000);
-        this.fontInUse = "generic";
-        this.FONTDATA = {
-          TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
-          FONTS: {},
-          VARIANT: {
-            "normal": {fonts:[]}, "-generic-variant": {fonts:[]},
-            "-largeOp": {fonts:[]}, "-smallOp": {fonts:[]}
-          }, RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
-        };
         HUB.Startup.signal.Post("HTML-CSS Jax - no valid font");
       }
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
@@ -432,6 +492,8 @@
       //  Safari/Windows doesn't display Plane1,
       //  so disable STIX for these browsers.
       //
+      //  ### FIXME ### Do we need to disable the other web fonts for these?
+      //
       for (var i = 0, m = fonts.length; i < m; i++)
         {if (fonts[i] === "STIX") {fonts.splice(i,1); m--; i--;}}
       if (this.config.preferredFont === "STIX") {this.config.preferredFont = fonts[0]}
@@ -450,6 +512,23 @@
     //
     InitializeHTML: function () {
       this.PreloadWebFonts();
+      this.getDefaultExEm();
+      //
+      //  If the defaultEm size is zero, it might be that a web font hasn't
+      //  arrived yet, so try to wait for it, but don't wait too long.
+      //
+      if (this.defaultEm) return;
+      var ready = MathJax.Callback();
+      AJAX.timer.start(AJAX,function (check) {
+        if (check.time(ready)) {HUB.signal.Post("HTML-CSS Jax - no default em size"); return}
+        HTMLCSS.getDefaultExEm();
+        if (HTMLCSS.defaultEm) {ready()} else {setTimeout(check,check.delay)}
+      },this.defaultEmDelay,this.defaultEmTimeout);
+      return ready;
+    },
+    defaultEmDelay: 100,      // initial delay when checking for defaultEm
+    defaultEmTimeout: 1000,   // when to stop looking for defaultEm
+    getDefaultExEm: function () {
       //
       //  Get the default sizes (need styles in place to do this)
       //
@@ -579,7 +658,8 @@
       //
       var jax = script.MathJax.elementJax, math = jax.root,
           span = document.getElementById(jax.inputID+"-Frame"),
-          div = (jax.HTMLCSS.display ? span.parentNode : span);
+          div = (jax.HTMLCSS.display ? (span||{}).parentNode : span);
+      if (!div) return;
       //
       //  Set the font metrics
       //
@@ -691,7 +771,10 @@
       this.outerEm = em / jax.HTMLCSS.scale;
       emex.parentNode.removeChild(emex);
 
+      this.zoomScale = parseInt(HUB.config.menuSettings.zscale) / 100;
       this.idPostfix = "-zoom"; jax.root.toHTML(span,span); this.idPostfix = "";
+      this.zoomScale = 1;
+      
       var width = jax.root.HTMLspanElement().bbox.width;
       if (width) {
         //  Handle full-width displayed equations
@@ -700,7 +783,10 @@
         var id = (jax.root.id||"MathJax-Span-"+jax.root.spanID)+"-zoom";
         var child = document.getElementById(id).firstChild;
         while (child && child.style.width !== width) {child = child.nextSibling}
-        if (child) {child.style.width = "100%"}
+        if (child) {
+          var cwidth = child.offsetWidth; child.style.width = "100%";
+          if (cwidth > Mw) {span.style.width = (cwidth+100)+"px"}
+        }
       }
       //
       //  Get height and width of zoomed math and original math
@@ -719,8 +805,14 @@
     initHTML: function (math,span) {},
     initFont: function (name) {
       var FONTS = HTMLCSS.FONTDATA.FONTS, AVAIL = HTMLCSS.config.availableFonts;
-      if (AVAIL && AVAIL.length && HTMLCSS.Font.testFont(FONTS[name]))
-        {FONTS[name].available = true; return null}
+      if (AVAIL && AVAIL.length && HTMLCSS.Font.testFont(FONTS[name])) {
+        FONTS[name].available = true;
+        if (FONTS[name].familyFixed) {
+          FONTS[name].family = FONTS[name].familyFixed;
+          delete FONTS[name].familyFixed;
+        }
+        return null;
+      }
       if (!this.allowWebFonts) {return null}
       FONTS[name].isWebFont = true;
       if (HTMLCSS.FontFaceBug) {
@@ -755,20 +847,19 @@
     getW: function (span) {
       var W, H, w = (span.bbox||{}).w, start = span;
       if (span.bbox && span.bbox.exactW) {return w}
-      if ((span.bbox && w >= 0 && !this.initialSkipBug) || this.negativeBBoxes || !span.firstChild) {
+      if ((span.bbox && w >= 0 && !this.initialSkipBug && !this.msieItalicWidthBug) ||
+           this.negativeBBoxes || !span.firstChild) {
         W = span.offsetWidth; H = span.parentNode.offsetHeight;
       } else if (span.bbox && w < 0 && this.msieNegativeBBoxBug) {
         W = -span.offsetWidth, H = span.parentNode.offsetHeight;
       } else {
         // IE can't deal with a space at the beginning, so put something else first
-        if (this.initialSkipBug) {
-          var position = span.style.position; span.style.position = "absolute";
-          start = this.startMarker; span.insertBefore(start,span.firstChild)
-        }
+        var position = span.style.position; span.style.position = "absolute";
+        start = this.startMarker; span.insertBefore(start,span.firstChild)
         span.appendChild(this.endMarker);
         W = this.endMarker.offsetLeft - start.offsetLeft;
         span.removeChild(this.endMarker);
-        if (this.initialSkipBug) {span.removeChild(start); span.style.position = position}
+        span.removeChild(start); span.style.position = position
       }
       if (H != null) {span.parentNode.HH = H/this.em}
       return W/this.em;
@@ -867,7 +958,7 @@
       if (length === MML.SIZE.BIG)    {return 2}
       if (length === MML.SIZE.SMALL)  {return .71}
       if (length === "infinity")      {return HTMLCSS.BIGDIMEN}
-      var factor = this.FONTDATA.TeX_factor;
+      var factor = this.FONTDATA.TeX_factor, emFactor = (HTMLCSS.zoomScale||1) / HTMLCSS.em;
       if (length.match(/mathspace$/)) {return HTMLCSS.MATHSPACE[length]*factor}
       var match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
       var m = parseFloat(match[1]||"1"), unit = match[2];
@@ -875,14 +966,14 @@
       if (unit === "em") {return m * factor}
       if (unit === "ex") {return m * HTMLCSS.TeX.x_height * factor}
       if (unit === "%")  {return m / 100 * size}
-      if (unit === "px") {return m / HTMLCSS.em}
-      if (unit === "pt") {return m / 10 * factor}                        // 10 pt to an em
-      if (unit === "pc") {return m * 1.2 * factor}                       // 12 pt to a pc
-      if (unit === "in") {return m * this.pxPerInch / HTMLCSS.em}
-      if (unit === "cm") {return m * this.pxPerInch / HTMLCSS.em / 2.54} // 2.54 cm to an inch
-      if (unit === "mm") {return m * this.pxPerInch / HTMLCSS.em / 25.4} // 10 mm to a cm
+      if (unit === "px") {return m * emFactor}
+      if (unit === "pt") {return m / 10 * factor}                      // 10 pt to an em
+      if (unit === "pc") {return m * 1.2 * factor}                     // 12 pt to a pc
+      if (unit === "in") {return m * this.pxPerInch * emFactor}
+      if (unit === "cm") {return m * this.pxPerInch * emFactor / 2.54} // 2.54 cm to an inch
+      if (unit === "mm") {return m * this.pxPerInch * emFactor / 25.4} // 10 mm to a cm
       if (unit === "mu") {return m / 18 * factor * mu} // 18mu to an em for the scriptlevel
-      return m*factor*size;  // relative to given size (or 1em as default)
+      return m*size;  // relative to given size (or 1em as default)
     },
     thickness2em: function (length,mu) {
       var thick = HTMLCSS.TeX.rule_thickness;
@@ -1111,6 +1202,14 @@
     },
     alignBox: function (span,align,y) {
       this.placeBox(span,0,y); // set y position (and left aligned)
+      if (this.msiePlaceBoxBug) {
+        //
+        //  placeBox() adds an extra &nbsp;, so remove it here.
+        //
+        var node = span.lastChild;
+        while (node && node.nodeName !== "#text") {node = node.previousSibling}
+        if (node) {span.removeChild(node)}
+      }
       var bbox = span.bbox; if (bbox.isMultiline) return;
       var isRelative = bbox.width != null && !bbox.isFixed;
       var r = 0, c = -bbox.w/2, l = "50%";
@@ -1293,7 +1392,10 @@
           span.style.top = this.Em(-h);
         } else {
           span.style.verticalAlign = this.Em(h);
-          if (HTMLCSS.ffVerticalAlignBug) {HTMLCSS.createRule(span.parentNode,span.bbox.h,0,0)}
+	  if (HTMLCSS.ffVerticalAlignBug) {
+	    HTMLCSS.createRule(span.parentNode,span.bbox.h,0,0);
+	    delete span.parentNode.bbox;
+	  }
         }
       }
     },
@@ -1337,24 +1439,16 @@
           }
         }
         if (variant.remap && variant.remap[n]) {
-          if (variant.remap[n] instanceof Array) {
-            var remap = variant.remap[n];
-            n = remap[0]; variant = this.FONTDATA.VARIANT[remap[1]];
-          } else if (typeof(variant.remap[n]) === "string") {
-            text = variant.remap[n]+text.substr(i+1);
-            i = 0; m = text.length; n = text.charCodeAt(0);
-          } else {
-            n = variant.remap[n];
-            if (variant.remap.variant) {variant = this.FONTDATA.VARIANT[variant.remap.variant]}
-          }
-        }
-        if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
+          n = variant.remap[n];
+          if (variant.remap.variant) {variant = this.FONTDATA.VARIANT[variant.remap.variant]}
+        } else if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
           n = this.FONTDATA.REMAP[n];
-          if (n instanceof Array) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]}
-          if (typeof(n) === "string") {
-            text = n+text.substr(i+1);
-            i = 0; m = text.length; n = n.charCodeAt(0);
-          }
+        }
+        if (n instanceof Array) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]} 
+        if (typeof(n) === "string") {
+          text = n+text.substr(i+1);
+          m = text.length; i = -1;
+          continue;
         }
         font = this.lookupChar(variant,n); c = font[n];
         if (force || (!this.checkFont(font,SPAN.style) && !c[5].img)) {
@@ -1602,9 +1696,13 @@
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span)}}
 	var stretchy = this.HTMLcomputeBBox(span);
-	var h = span.bbox.h, d = span.bbox.d;
-	for (i = 0, m = stretchy.length; i < m; i++) {stretchy[i].HTMLstretchV(span,h,d)}
-	if (stretchy.length) {this.HTMLcomputeBBox(span,true)}
+	var h = span.bbox.h, d = span.bbox.d, stretched = false;
+	for (i = 0, m = stretchy.length; i < m; i++) {
+          var bbox = stretchy[i].HTMLspanElement().bbox;
+          if (stretchy[i].forceStretch || bbox.h !== h || bbox.d !== d)
+            {stretchy[i].HTMLstretchV(span,h,d); stretched = true}
+        }
+	if (stretched) {this.HTMLcomputeBBox(span,true)}
         if (this.HTMLlineBreaks(span)) {span = this.HTMLmultiline(span)}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
@@ -1818,7 +1916,8 @@
 	} else {
 	  var space = this.texSpacing();
 	  if (space !== "") {
-	    space = HTMLCSS.length2em(space,this.HTMLgetScale())/(span.scale||1);
+            this.HTMLgetScale();
+	    space = HTMLCSS.length2em(space,this.scale)/(span.scale||1)*this.mscale;
 	    if (span.style.paddingLeft) {space += HTMLCSS.unEm(span.style.paddingLeft)}
 	    span.style.paddingLeft = HTMLCSS.Em(space);
 	  }
@@ -1826,7 +1925,9 @@
       },
 
       HTMLgetScale: function () {
-	var scale = 1, values = this.getValues("mathsize","scriptlevel","fontsize");
+        if (this.scale) {return this.scale * this.mscale}
+	var scale = 1, values = this.getValues("scriptlevel","fontsize");
+        values.mathsize = (this.isToken ? this : this.Parent()).Get("mathsize");
 	if (this.style) {
 	  var span = this.HTMLspanElement();
 	  if (span.style.fontSize != "") {values.fontsize = span.style.fontSize}
@@ -1838,8 +1939,8 @@
 	  values.scriptminsize = HTMLCSS.length2em(this.Get("scriptminsize"));
 	  if (scale < values.scriptminsize) {scale = values.scriptminsize}
 	}
-	if (this.isToken) {scale *= HTMLCSS.length2em(values.mathsize)}
-	return scale;
+        this.scale = scale; this.mscale = HTMLCSS.length2em(values.mathsize);
+	return scale * this.mscale;
       },
       HTMLgetMu: function (span) {
 	var mu = 1, values = this.getValues("scriptlevel","scriptsizemultiplier");
@@ -1974,7 +2075,7 @@
 	if (bbox.skew && text.length !== 1) {delete bbox.skew}
         if (bbox.rw > bbox.w && text.length === 1 && !variant.noIC) {
           bbox.ic = bbox.rw - bbox.w;
-          HTMLCSS.createBlank(span,bbox.ic);
+          HTMLCSS.createBlank(span,bbox.ic/this.mscale);
           bbox.w = bbox.rw;
         }
 	this.HTMLhandleSpace(span);
@@ -2046,7 +2147,8 @@
         //  Handle large operator centering
         //
 	if (values.largeop) {
-	  var p = (span.bbox.h - span.bbox.d)/2 - HTMLCSS.TeX.axis_height*span.scale;
+          var a = HTMLCSS.TeX.axis_height * this.scale * this.mscale
+	  var p = (span.bbox.h - span.bbox.d)/2 - a;
 	  if (HTMLCSS.safariVerticalAlignBug && span.lastChild.nodeName === "IMG") {
 	    span.lastChild.style.verticalAlign =
 	      HTMLCSS.Em(HTMLCSS.unEm(span.lastChild.style.verticalAlign||0)/HTMLCSS.em-p/span.scale);
@@ -2060,7 +2162,7 @@
 	  span.bbox.h -= p; span.bbox.d += p;
 	  if (span.bbox.rw > span.bbox.w) {
 	    span.bbox.ic = span.bbox.rw-span.bbox.w;
-	    HTMLCSS.createBlank(span,span.bbox.ic);
+	    HTMLCSS.createBlank(span,span.bbox.ic/this.mscale);
 	    span.bbox.w = span.bbox.rw;
 	  }
 	}
@@ -2115,13 +2217,15 @@
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {c = HTMLCSS.FONTDATA.REMAPACCENTUNDER[c]||c}
         }
 	c = HTMLCSS.FONTDATA.DELIMITERS[c.charCodeAt(0)];
-	return (c && c.dir == direction.substr(0,1));
+        var stretch = (c && c.dir === direction.substr(0,1));
+        this.forceStretch = (stretch && (this.Get("minsize",true) || this.Get("maxsize",true)));
+	return stretch;
       },
       HTMLstretchV: function (box,h,d) {
 	this.HTMLremoveColor();
 	var values = this.getValues("symmetric","maxsize","minsize");
 	var span = this.HTMLspanElement(), mu = this.HTMLgetMu(span), H;
-	var axis = HTMLCSS.TeX.axis_height, scale = span.scale;
+	var scale = this.HTMLgetScale(), axis = HTMLCSS.TeX.axis_height * scale;
 	if (values.symmetric) {H = 2*Math.max(h-axis,d+axis)} else {H = h + d}
 	values.maxsize = HTMLCSS.length2em(values.maxsize,mu,span.bbox.h+span.bbox.d);
 	values.minsize = HTMLCSS.length2em(values.minsize,mu,span.bbox.h+span.bbox.d);
@@ -2158,8 +2262,12 @@
         span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); 
         var variant = this.HTMLgetVariant();
         //  Avoid setting the font style for error text or if mtextFontInherit is set
-        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror")
-          {variant = {bold:variant.bold, italic:variant.italic, fontInherit: true}}
+        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror") {
+          var vname = this.Get("mathvariant");
+          if (vname === "monospace") {span.className += " MJX-monospace"}
+            else if (vname.match(/sans-serif/)) {span.className += " MJX-sans-serif"}
+          variant = {bold:variant.bold, italic:variant.italic, fontInherit: true};
+        }
         for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
         if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
@@ -2193,12 +2301,12 @@
       toHTML: function (span) {
 	span = this.HTMLcreateSpan(span);
 	var values = this.getValues("height","depth","width");
-        var mu = this.HTMLgetMu(span);
+        var mu = this.HTMLgetMu(span); this.HTMLgetScale();
 	values.mathbackground = this.mathbackground;
 	if (this.background && !this.mathbackground) {values.mathbackground = this.background}
-	var h = HTMLCSS.length2em(values.height,mu),
-            d = HTMLCSS.length2em(values.depth,mu),
-	    w = HTMLCSS.length2em(values.width,mu);
+	var h = HTMLCSS.length2em(values.height,mu) * this.mscale,
+            d = HTMLCSS.length2em(values.depth,mu) * this.mscale,
+	    w = HTMLCSS.length2em(values.width,mu) * this.mscale;
        HTMLCSS.createSpace(span,h,d,w,values.mathbackground,true);
        return span;
       }
@@ -2236,9 +2344,10 @@
           else {HTMLCSS.Measured(child,box)}
 	  var values = this.getValues("height","depth","width","lspace","voffset"),
               x = 0, y = 0, mu = this.HTMLgetMu(span);
+          this.HTMLgetScale();
 	  if (values.lspace)  {x = this.HTMLlength2em(box,values.lspace,mu)}
 	  if (values.voffset) {y = this.HTMLlength2em(box,values.voffset,mu)}
-	  HTMLCSS.placeBox(box,x,y);
+	  HTMLCSS.placeBox(box,x,y); x /= this.mscale; y /= this.mscale;
 	  span.bbox = {
 	    h: box.bbox.h, d: box.bbox.d, w: box.bbox.w, exactW: true,
 	    lw: Math.min(0,box.bbox.lw+x), rw: Math.max(box.bbox.w,box.bbox.rw+x),
@@ -2263,7 +2372,7 @@
 	if (m == null) {m = -HTMLCSS.BIGDIMEN}
 	var match = String(length).match(/width|height|depth/);
 	var size = (match ? span.bbox[match[0].charAt(0)] : (d ? span.bbox[d] : 0));
-	var v = HTMLCSS.length2em(length,mu,size);
+	var v = HTMLCSS.length2em(length,mu,size/this.mscale) * this.mscale;
 	if (d && String(length).match(/^\s*[-+]/))
 	  {return Math.max(m,span.bbox[d]+v)} else {return v}
       },
@@ -2331,7 +2440,7 @@
 	  HTMLCSS.placeBox(den,num.bbox.w+bevel.bbox.w-delta,(den.bbox.d-den.bbox.h)/2+a-delta);
 	} else {
 	  var W = Math.max(num.bbox.w,den.bbox.w);
-	  var t = HTMLCSS.thickness2em(values.linethickness,scale), p,q, u,v;
+	  var t = HTMLCSS.thickness2em(values.linethickness,this.scale)*this.mscale, p,q, u,v;
 	  var mt = HTMLCSS.TeX.min_rule_thickness/this.em;
 	  if (isDisplay) {u = HTMLCSS.TeX.num1; v = HTMLCSS.TeX.denom1}
 	    else {u = (t === 0 ? HTMLCSS.TeX.num3 : HTMLCSS.TeX.num2); v = HTMLCSS.TeX.denom2}
@@ -2357,11 +2466,17 @@
       },
       HTMLcanStretch: function (direction) {return false},
       HTMLhandleSpace: function (span) {
-	if (!this.texWithDelims) {
-	  var space = (this.useMMLspacing ? 0 : HTMLCSS.length2em(this.texSpacing()||0)) + .12;
-	  span.style.paddingLeft  = HTMLCSS.Em(space);
-	  span.style.paddingRight = HTMLCSS.Em(.12);
+	if (!this.texWithDelims && !this.useMMLspacing) {
+          //
+          //  Add nulldelimiterspace around the fraction
+          //  (TeXBook pg 150 and Appendix G rule 15e)
+          //
+          var space = HTMLCSS.TeX.nulldelimiterspace * this.mscale;
+          var style = span.childNodes[HTMLCSS.msiePaddingWidthBug ? 1 : 0].style;
+          style.marginLeft = style.marginRight = HTMLCSS.Em(space);
+          span.bbox.w += 2*space; span.bbox.r += 2*space;
 	}
+        this.SUPER(arguments).HTMLhandleSpace.call(this,span);
       }
     });
 
@@ -2505,6 +2620,7 @@
 			   this.data[i].HTMLcanStretch("Horizontal"));
 	    } else {
 	      stretch[i] = this.data[i].HTMLcanStretch("Horizontal");
+              children[i].style.paddingLeft = children[i].style.paddingRight = "";
 	    }
           }
         }
@@ -2519,10 +2635,14 @@
 	if (D == null && HW != null) {W = HW} else if (W == -HTMLCSS.BIGDIMEN) {W = WW}
         for (i = WW = 0, m = this.data.length; i < m; i++) {if (this.data[i]) {
           box = boxes[i];
-          if (stretch[i]) {box.bbox = this.data[i].HTMLstretchH(box,W).bbox}
+          if (stretch[i]) {
+            box.bbox = this.data[i].HTMLstretchH(box,W).bbox;
+            if (i !== this.base)
+              {children[i].style.paddingLeft = children[i].style.paddingRight = ""}
+          }
           if (box.bbox.w > WW) {WW = box.bbox.w}
         }}
-	var t = HTMLCSS.TeX.rule_thickness, factor = HTMLCSS.FONTDATA.TeX_factor;
+	var t = HTMLCSS.TeX.rule_thickness * this.mscale, factor = HTMLCSS.FONTDATA.TeX_factor;
 	var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()};
 	var x, y, z1, z2, z3, dw, k, delta = 0;
         if (base.bbox.ic) {delta = 1.3*base.bbox.ic + .05} // adjust faked IC to be more in line with expeted results
@@ -2596,13 +2716,11 @@
 	if (sup) {sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw)}
 	if (sub) {sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw)}
 	HTMLCSS.placeBox(base,0,0);
-        var sscale;
+        var sscale = scale;
         if (sup) {
           sscale = this.data[this.sup].HTMLgetScale();
         } else if (sub) {
           sscale = this.data[this.sub].HTMLgetScale();
-        } else {
-          sscale = this.HTMLgetScale();
         }
 	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
 	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
@@ -2724,23 +2842,31 @@
     });
 
     MML.TeXAtom.Augment({
-      toHTML: function (span) {
+      toHTML: function (span,HW,D) {
 	span = this.HTMLcreateSpan(span);
 	if (this.data[0] != null) {
 	  if (this.texClass === MML.TEXCLASS.VCENTER) {
 	    var stack = HTMLCSS.createStack(span);
 	    var box = HTMLCSS.createBox(stack);
-	    HTMLCSS.Measured(this.data[0].toHTML(box),box);
-	    // FIXME: should the axis height be scaled?
-	    HTMLCSS.placeBox(box,0,HTMLCSS.TeX.axis_height-(box.bbox.h+box.bbox.d)/2+box.bbox.d);
+            var child = this.data[0].toHTML(box);
+            if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(box,HW,D),box)}
+            else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(box,HW),box)}
+            else {HTMLCSS.Measured(child,box)}
+            var a = HTMLCSS.TeX.axis_height * this.HTMLgetScale();
+	    HTMLCSS.placeBox(box,0,a-(box.bbox.h+box.bbox.d)/2+box.bbox.d);
 	  } else {
-	    span.bbox = this.data[0].toHTML(span).bbox;
+	    var html = this.data[0].toHTML(span,HW,D);
+            if (D != null) {html = this.data[0].HTMLstretchV(box,HW,D)}
+            else if (HW != null) {html = this.data[0].HTMLstretchH(box,HW)}
+            span.bbox = html.bbox;
 	  }
 	}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
 	return span;
-      }
+      },
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
     });
     
     //
@@ -2792,6 +2918,7 @@
           msieClipRectBug: !isIE8,
           msieNegativeSpaceBug: quirks,
           cloneNodeBug: (isIE8 && browser.version === "8.0"),
+          msieItalicWidthBug: true,          // can't measure boxes ending in italics correctly
           initialSkipBug: (mode < 8),        // confused by initial left-margin values
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
           msieIE6: !isIE7,
@@ -2810,7 +2937,7 @@
               (HUB.config.root+"/").substr(0,root.length) === root) {webFonts = "otf"}
         }
         HTMLCSS.Augment({
-          ffVerticalAlignBug: true,
+          ffVerticalAlignBug: !browser.versionAtLeast("20.0"),  // not sure when this bug was fixed
           AccentBug: true,
           allowWebFonts: webFonts
         });
@@ -2869,9 +2996,10 @@
         HTMLCSS.Augment({
           Em: HTMLCSS.EmRounded,   // vertical alignment needs help (since around v20)
           cloneNodeBug: true,      // Chrome gets heights wrong with the cloned ones
-          rfuzz: .011,
+          rfuzz: -.02,
           AccentBug: true,
           AdjustSurd: true,
+          FontFaceBug: browser.versionAtLeast("32.0"), // Chrome 32 fails on bold-italic (#735)
           negativeBBoxes: true,
           safariNegativeSpaceBug: true,
           safariWebFontSerif: [""],

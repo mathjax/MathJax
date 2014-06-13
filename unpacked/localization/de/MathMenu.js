@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/de/MathMenu.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("de","MathMenu",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           Show: "Zeige Mathe als",
@@ -64,6 +64,12 @@ MathJax.Localization.addTranslation("de","MathMenu",{
           TeXWeb: "TeX (Web)",
           TeXImage: "TeX (Bild)",
           STIXLocal: "STIX (Lokal)",
+          STIXWeb: "STIX (Web)",
+          AsanaMathWeb: "Asana Math (Web)",
+          GyrePagellaWeb: "Gyre Pagella (Web)",
+          GyreTermesWeb: "Gyre Termes (Web)",
+          LatinModernWeb: "Latin Modern (Web)",
+          NeoEulerWeb: "Neo Euler (Web)",
           ContextMenu: "Kontextmen\u00FC",
           Browser: "Browser",
           Scale: "Alle Inhalte skalieren \u2026",

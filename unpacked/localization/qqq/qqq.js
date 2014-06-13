@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/qqq/qqq.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("qqq",null,{
   menuTitle: "Message Documentation",
-  version: "2.3",
+  version: "2.4.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           CookieConfig: "This alert message is displayed when the MathJax cookie contains some data with URL or Config properties. These properties may be used to ask MathJax to perform actions during the Configuration phase: either loading a javascript file (URL property) or executing a configuration function (Config property). Note that the character '\\n' is used to specify new lines inside the alert box.",
@@ -37,7 +37,7 @@ MathJax.Localization.addTranslation("qqq",null,{
           Loading: "This appears in the MathJax message box when a file is loading and the messageStyle configuration option is set to 'simple'.\n\nIt will be followed by growing sequence of dots to show the progress.\n{{Identical|Loading}}",
           LoadFailed: "This appears in the MathJax message box when a file fails to load. Parameters:\n* %1 - the file name",
           ProcessMath: "This appears in the MathJax message box during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format.\n\nParameters:\n* %1 - a percentage",
-          Processing: "This appears in the MathJax message box during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format when the messageStyle configuration option is set to 'simple'.\n\nIt will be followed by growing sequence of dots to show the progress.",
+          Processing: "This appears in the MathJax message box during the conversion process from an input format (e.g., LaTeX, asciimath) to MathJax's internal format when the messageStyle configuration option is set to 'simple'.\n\nIt will be followed by growing sequence of dots to show the progress.\n{{Identical|Processing}}",
           TypesetMath: "This appears in the MathJax message box during the layout process of converting the internal format to the output format.\n\nParameters:\n* %1 - a percentage",
           Typesetting: "This appears in the MathJax message box during the layout process of converting the internal format to the output format when the messageStyle configuration option is set to 'simple'.\n\nIt will be followed by growing sequence of dots to show the progress.",
           MathJaxNotSupported: "This appears in the MathJax message box when MathJax determines the browser does not have adequate features."

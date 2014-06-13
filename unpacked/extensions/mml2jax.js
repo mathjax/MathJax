@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2013 The MathJax Consortium
+ *  Copyright (c) 2010-2014 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "2.3",
+  version: "2.4.0",
   config: {
     preview: "mathml"       // Use the <math> element as the
                             //   preview.  Set to "none" for no preview,
@@ -167,7 +167,7 @@ MathJax.Extension.mml2jax = {
       html = "<"+node.nodeName.toLowerCase();
       for (i = 0, m = node.attributes.length; i < m; i++) {
         var attribute = node.attributes[i];
-        if (attribute.specified) {
+        if (attribute.specified && attribute.nodeName.substr(0,10) !== "_moz-math-") {
           // Opera 11.5 beta turns xmlns into xmlns:xmlns, so put it back (*** check after 11.5 is out ***)
           html += " "+attribute.nodeName.toLowerCase().replace(/xmlns:xmlns/,"xmlns")+"=";
           var value = attribute.nodeValue; // IE < 8 doesn't properly set style by setAttributes
@@ -250,10 +250,12 @@ MathJax.Extension.mml2jax = {
 
 };
 
+//
 // We register the preprocessors with the following priorities:
 // - mml2jax.js: 5
 // - jsMath2jax.js: 8
 // - asciimath2jax.js, tex2jax.js: 10 (default)
 // See issues 18 and 484 and the other *2jax.js files.
+// 
 MathJax.Hub.Register.PreProcessor(["PreProcess",MathJax.Extension.mml2jax],5);
 MathJax.Ajax.loadComplete("[MathJax]/extensions/mml2jax.js");

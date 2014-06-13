@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/uk/MathMenu.js
  *
- *  Copyright (c) 2009-2013 The MathJax Consortium
+ *  Copyright (c) 2009-2014 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("uk","MathMenu",{
-        version: "2.3",
+        version: "2.4.0",
         isLoaded: true,
         strings: {
           Show: "\u041F\u043E\u043A\u0430\u0437\u0443\u0432\u0430\u0442\u0438 \u043C\u0430\u0442\u0435\u043C\u0430\u0442\u0438\u043A\u0443 \u044F\u043A",
@@ -64,6 +64,12 @@ MathJax.Localization.addTranslation("uk","MathMenu",{
           TeXWeb: "TeX (\u0432\u0435\u0431)",
           TeXImage: "TeX (\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u043D\u044F)",
           STIXLocal: "STIX (\u043B\u043E\u043A\u0430\u043B\u044C\u043D\u0438\u0439)",
+          STIXWeb: "STIX (\u0432\u0435\u0431)",
+          AsanaMathWeb: "Asana Math (\u0432\u0435\u0431)",
+          GyrePagellaWeb: "Gyre Pagella (\u0432\u0435\u0431)",
+          GyreTermesWeb: "Gyre Termes (\u0432\u0435\u0431)",
+          LatinModernWeb: "Latin Modern (\u0432\u0435\u0431)",
+          NeoEulerWeb: "Neo Euler (\u0432\u0435\u0431)",
           ContextMenu: "\u041A\u043E\u043D\u0442\u0435\u043A\u0441\u0442\u043D\u0435 \u043C\u0435\u043D\u044E",
           Browser: "\u041E\u0433\u043B\u044F\u0434",
           Scale: "\u041C\u0430\u0441\u0448\u0442\u0430\u0431\u0443\u0432\u0430\u0442\u0438 \u0443\u0441\u044E \u043C\u0430\u0442\u0435\u043C\u0430\u0442\u0438\u043A\u0443\u2026",
