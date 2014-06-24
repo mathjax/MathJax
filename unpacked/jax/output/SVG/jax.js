@@ -2059,9 +2059,9 @@
           if (svg.H > svg.h || svg.D > svg.d) {
             var frame = HTML.Element(
               "span",{style: {display:"inline-block", "white-space":"nowrap", padding:"1px 0px"}, isMathJax:true},[[
-              "span",{style: {display:"inline-block", position:"relative", isMathJax:true,
+              "span",{style: {display:"inline-block", position:"relative",
                               width:SVG.Ex(svg.w), height:SVG.Ex(svg.h+svg.d),
-                              "vertical-align":SVG.Ex(-svg.d)}}]]);
+                              "vertical-align":SVG.Ex(-svg.d)}, isMathJax:true}]]);
             frame.firstChild.appendChild(svg.element); svg.element = frame;
             style.verticalAlign = style.margin = ""; style.position = "absolute";
             style.bottom = SVG.Ex(svg.d-svg.D); style.left = 0;
