@@ -1733,7 +1733,7 @@
         if (++this.macroCount > TEX.config.MAXMACROS) {
           TEX.Error(["MaxMacroSub2",
                      "MathJax maximum substitution count exceeded; " +
-                     "is there a recursive latex environment?"]);
+                     "is there a recursive LaTeX environment?"]);
         }
         if (cmd[0] && this[cmd[0]]) {mml = this[cmd[0]].apply(this,[mml].concat(cmd.slice(2)))}
       }

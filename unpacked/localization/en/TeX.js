@@ -52,7 +52,7 @@ MathJax.Localization.addTranslation("en","TeX",{
           InvalidMathMLAttr: "Invalid MathML attribute: %1",
           UnknownAttrForElement: "%1 is not a recognized attribute for %2",
           MaxMacroSub1: "MathJax maximum macro substitution count exceeded; is there a recursive macro call?",
-          MaxMacroSub2: "MathJax maximum substitution count exceeded; is there a recursive latex environment?",
+          MaxMacroSub2: "MathJax maximum substitution count exceeded; is there a recursive LaTeX environment?",
           MissingArgFor: "Missing argument for %1",
           ExtraAlignTab: "Extra alignment tab in \\cases text",
           BracketMustBeDimension: "Bracket argument to %1 must be a dimension",
