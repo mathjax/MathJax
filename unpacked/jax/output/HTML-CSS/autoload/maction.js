@@ -91,13 +91,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     HTMLaction: {
       toggle: function (span,frame,selection) {
         this.selection = selection;
-        frame.onclick = span.childNodes[1].onclick = MathJax.Callback(["HTMLclick",this]);
+        frame.onclick = span.childNodes[1].onclick = MathJax.CallBack(["HTMLclick",this]);
         frame.style.cursor = span.childNodes[1].style.cursor="pointer";
       },
       
       statusline: function (span,frame,selection) {
-        frame.onmouseover = span.childNodes[1].onmouseover = MathJax.Callback(["HTMLsetStatus",this]);
-        frame.onmouseout  = span.childNodes[1].onmouseout  = MathJax.Callback(["HTMLclearStatus",this]);
+        frame.onmouseover = span.childNodes[1].onmouseover = MathJax.CallBack(["HTMLsetStatus",this]);
+        frame.onmouseout  = span.childNodes[1].onmouseout  = MathJax.CallBack(["HTMLclearStatus",this]);
         frame.onmouseover.autoReset = frame.onmouseout.autoReset = true;
       },
       
@@ -106,8 +106,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           frame.title = frame.alt = span.childNodes[1].title =
             span.childNodes[1].alt = this.data[1].data.join("");
         } else {
-          frame.onmouseover = span.childNodes[1].onmouseover = MathJax.Callback(["HTMLtooltipOver",this]);
-          frame.onmouseout  = span.childNodes[1].onmouseout  = MathJax.Callback(["HTMLtooltipOut",this]);
+          frame.onmouseover = span.childNodes[1].onmouseover = MathJax.CallBack(["HTMLtooltipOver",this]);
+          frame.onmouseout  = span.childNodes[1].onmouseout  = MathJax.CallBack(["HTMLtooltipOut",this]);
           frame.onmouseover.autoReset = frame.onmouseout.autoReset = true;
         }
       }
@@ -156,13 +156,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
         y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
       }
-      var callback = MathJax.Callback(["HTMLtooltipPost",this,x+CONFIG.offsetX,y+CONFIG.offsetY])
+      var callback = MathJax.CallBack(["HTMLtooltipPost",this,x+CONFIG.offsetX,y+CONFIG.offsetY])
       hover = setTimeout(callback,CONFIG.delayPost);
     },
     HTMLtooltipOut: function (event) {
       if (hover) {clearTimeout(hover); hover = null}
       if (clear) {clearTimeout(clear)}
-      var callback = MathJax.Callback(["HTMLtooltipClear",this,80]);
+      var callback = MathJax.CallBack(["HTMLtooltipClear",this,80]);
       clear = setTimeout(callback,CONFIG.delayClear);
     },
     HTMLtooltipPost: function (x,y) {
@@ -189,7 +189,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       try {HTMLCSS.Measured(this.data[1].toHTML(box),box)} catch(err) {
         if (!err.restart) {throw err}
         tip.style.display = "none";
-        MathJax.Callback.After(["HTMLtooltipPost",this,x,y],err.restart);
+        MathJax.CallBack.After(["HTMLtooltipPost",this,x,y],err.restart);
         return;
       }
       HTMLCSS.placeBox(box,0,0);
@@ -205,7 +205,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       } else {
         tip.style.opacity = n/100;
         tip.style.filter = "alpha(opacity="+n+")";
-        clear = setTimeout(MathJax.Callback(["HTMLtooltipClear",this,n-20]),50);
+        clear = setTimeout(MathJax.CallBack(["HTMLtooltipClear",this,n-20]),50);
       }
     }
   });

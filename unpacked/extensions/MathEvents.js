@@ -567,5 +567,5 @@
     ["loadComplete",AJAX,"[MathJax]/extensions/MathEvents.js"]
   );
   
-})(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.Callback,
+})(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.CallBack,
    MathJax.Localization,MathJax.OutputJax,MathJax.InputJax);

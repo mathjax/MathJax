@@ -91,7 +91,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Caligraphic-bold'] = {
   0xA0: [0,0,250,0,0]                // NO-BREAK SPACE
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Caligraphic-bold"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Caligraphic/Bold/Main.js"]
 );

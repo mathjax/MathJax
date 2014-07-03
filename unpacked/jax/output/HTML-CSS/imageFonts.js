@@ -188,7 +188,7 @@
     
     var IMGDIR = HTMLCSS.imgDir + HTMLCSS.imgPacked;
     
-    MathJax.Callback.Queue(
+    MathJax.CallBack.Queue(
       ["Require",AJAX,IMGDIR+"/imagedata.js"],
       GETWIDTHS,
       ["loadComplete",AJAX,HTMLCSS.directory+"/imageFonts.js"]

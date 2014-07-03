@@ -144,7 +144,7 @@
     if (HELP.div) {document.body.removeChild(HELP.div); delete HELP.div}
   };
 
-  MathJax.Callback.Queue(
+  MathJax.CallBack.Queue(
     HUB.Register.StartupHook("End Config",{}), // wait until config is complete
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"HelpDialig Ready"],

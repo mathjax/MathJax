@@ -1588,7 +1588,7 @@
   //  Load any patch files and then call loadComplete()
   //
   QUEUE.push(["loadComplete",MathJax.Ajax,HTMLCSS.fontDir + "/fontdata.js"]);
-  MathJax.Callback.Queue.apply(MathJax.Callback,QUEUE);
+  MathJax.CallBack.Queue.apply(MathJax.CallBack,QUEUE);
 
 })(MathJax.OutputJax["HTML-CSS"],MathJax.ElementJax.mml,MathJax.HTML);
 

@@ -238,8 +238,8 @@
   MATHML.Augment({
     sourceMenuTitle: /*_(MathMenu)*/ ["OriginalMathML","Original MathML"],
     
-    prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run before processing MathML
-    postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run after processing MathML
+    prefilterHooks:    MathJax.CallBack.Hooks(true),   // hooks to run before processing MathML
+    postfilterHooks:   MathJax.CallBack.Hooks(true),   // hooks to run after processing MathML
 
     Translate: function (script) {
       if (!this.ParseXML) {this.ParseXML = this.createParser()}

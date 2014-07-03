@@ -1278,8 +1278,8 @@ junk = null;
     sourceMenuTitle: /*_(MathMenu)*/ ["AsciiMathInput","AsciiMath Input"],
     annotationEncoding: "text/x-asciimath",
 
-    prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run before processing AsciiMath
-    postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run after processing AsciiMath
+    prefilterHooks:    MathJax.CallBack.Hooks(true),   // hooks to run before processing AsciiMath
+    postfilterHooks:   MathJax.CallBack.Hooks(true),   // hooks to run after processing AsciiMath
 
     Translate: function (script) {
       var mml, math = MathJax.HTML.getScript(script);

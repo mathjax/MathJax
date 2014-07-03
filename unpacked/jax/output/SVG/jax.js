@@ -290,7 +290,7 @@
       //  
       if (state.SVGdelay) {
         state.SVGdelay = false;
-        HUB.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay));
+        HUB.RestartAfter(MathJax.CallBack.Delay(this.config.EqnChunkDelay));
       }
 
       //
@@ -2092,7 +2092,7 @@
     //  will call Config and Startup, which need to modify the body.
     //
     HUB.Register.StartupHook("onLoad",function () {
-      setTimeout(MathJax.Callback(["loadComplete",SVG,"jax.js"]),0);
+      setTimeout(MathJax.CallBack(["loadComplete",SVG,"jax.js"]),0);
     });
   });
 

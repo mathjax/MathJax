@@ -29,7 +29,7 @@
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
   var VERSION = "2.4.0";
 
-  var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
+  var SIGNAL = MathJax.CallBack.Signal("menu")  // signal for menu events
   
   MathJax.Extension.MathMenu = {
     version: VERSION,

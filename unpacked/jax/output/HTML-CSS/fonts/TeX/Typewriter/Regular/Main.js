@@ -30,7 +30,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Typewriter'] = {
 
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Typewriter"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Typewriter/Regular/Main.js"]
 );

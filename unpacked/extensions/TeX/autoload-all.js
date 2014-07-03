@@ -77,7 +77,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
 });
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["Require",MathJax.Ajax,"[MathJax]/extensions/TeX/AMSsymbols.js"],
   ["loadComplete",MathJax.Ajax,"[MathJax]/extensions/TeX/autoload-all.js"]
 );

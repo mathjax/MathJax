@@ -38,7 +38,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_WinChrome'] = {
   0xE2F1: [587,85,894,96,797]        // stix-lowercase u bold italic slashed
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_WinChrome"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/WinChrome/Regular/Main.js"]
 );
