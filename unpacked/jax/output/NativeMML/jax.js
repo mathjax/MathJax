@@ -1309,7 +1309,7 @@
     //  (it would call NativeMML's Require routine, asking for the mml jax again)
     //  so wait until after the mml jax has finished processing.
     //
-    setTimeout(MathJax.Callback(["loadComplete",nMML,"jax.js"]),0);
+    setTimeout(MathJax.CallBack(["loadComplete",nMML,"jax.js"]),0);
   });
   
 

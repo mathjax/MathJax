@@ -83,7 +83,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['STIXMathJax_DoubleStruck-bold'] = 
   0x1D56B: [461,0,513,40,473]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"STIXMathJax_DoubleStruck-bold"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/DoubleStruck/Bold/Main.js"]
 );

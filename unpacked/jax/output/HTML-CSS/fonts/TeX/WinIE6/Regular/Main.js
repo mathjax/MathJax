@@ -106,7 +106,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_WinIE6'] = {
   0xE2B2: [40,2960,1000,111,1020]    // stix-capital P italic slashed
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_WinIE6"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/WinIE6/Regular/Main.js"]
 );

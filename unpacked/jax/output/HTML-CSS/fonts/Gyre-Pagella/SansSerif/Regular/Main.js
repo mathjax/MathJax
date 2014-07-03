@@ -369,7 +369,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['GyrePagellaMathJax_SansSerif'] = {
   0x1D7F5: [682,13,637,52,574]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"GyrePagellaMathJax_SansSerif"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/SansSerif/Regular/Main.js"]
 );

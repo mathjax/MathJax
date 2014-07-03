@@ -38,7 +38,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['LatinModernMathJax_Alphabets'] = {
   0xFEFF: [0,0,0,0,0]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"LatinModernMathJax_Alphabets"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Alphabets/Regular/Main.js"]
 );

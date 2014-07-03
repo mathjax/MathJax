@@ -72,7 +72,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['GyreTermesMathJax_Size4'] = {
   0x27EF: [1086,586,382,90,247]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"GyreTermesMathJax_Size4"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Size4/Regular/Main.js"]
 );

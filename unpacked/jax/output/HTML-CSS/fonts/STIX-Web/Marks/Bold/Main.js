@@ -194,7 +194,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['STIXMathJax_Marks-bold'] = {
   0xE28D: [734,-484,0,92,498]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"STIXMathJax_Marks-bold"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Marks/Bold/Main.js"]
 );

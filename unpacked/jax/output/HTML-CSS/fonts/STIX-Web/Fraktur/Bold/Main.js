@@ -81,7 +81,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['STIXMathJax_Fraktur-bold'] = {
   0x1D59F: [475,219,484,36,437]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"STIXMathJax_Fraktur-bold"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Fraktur/Bold/Main.js"]
 );

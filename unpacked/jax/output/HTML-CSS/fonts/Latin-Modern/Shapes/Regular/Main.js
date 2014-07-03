@@ -64,7 +64,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['LatinModernMathJax_Shapes'] = {
   0x2B33: [510,10,1463,56,1407]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"LatinModernMathJax_Shapes"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Shapes/Regular/Main.js"]
 );

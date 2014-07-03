@@ -2064,8 +2064,8 @@
     sourceMenuTitle: /*_(MathMenu)*/ ["TeXCommands","TeX Commands"],
     annotationEncoding: "application/x-tex",
 
-    prefilterHooks: MathJax.Callback.Hooks(true),    // hooks to run before processing TeX
-    postfilterHooks: MathJax.Callback.Hooks(true),   // hooks to run after processing TeX
+    prefilterHooks: MathJax.CallBack.Hooks(true),    // hooks to run before processing TeX
+    postfilterHooks: MathJax.CallBack.Hooks(true),   // hooks to run after processing TeX
     
     //
     //  Check if AMSmath extension must be loaded and push

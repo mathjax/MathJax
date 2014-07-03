@@ -530,7 +530,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['GyrePagellaMathJax_Main'] = {
   0x2AB0: [668,158,785,80,705]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"GyrePagellaMathJax_Main"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Regular/Main.js"]
 );

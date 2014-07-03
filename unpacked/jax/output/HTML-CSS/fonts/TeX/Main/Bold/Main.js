@@ -156,7 +156,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Main-bold'] = {
   0x3A9: [696,0,831,51,779]          // GREEK CAPITAL LETTER OMEGA
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Main-bold"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Main/Bold/Main.js"]
 );

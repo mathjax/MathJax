@@ -243,7 +243,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['STIXMathJax_Arrows'] = {
   0xE137: [405,-101,1033,229,805]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"STIXMathJax_Arrows"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Arrows/Regular/Main.js"]
 );

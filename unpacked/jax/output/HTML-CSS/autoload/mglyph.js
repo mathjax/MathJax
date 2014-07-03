@@ -56,8 +56,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (!this.img) {
           this.img = MML.mglyph.GLYPH[values.src] = {img: new Image(), status: "pending"};
           var img = this.img.img;
-          img.onload = MathJax.Callback(["HTMLimgLoaded",this]);
-          img.onerror = MathJax.Callback(["HTMLimgError",this]);
+          img.onload = MathJax.CallBack(["HTMLimgLoaded",this]);
+          img.onerror = MathJax.CallBack(["HTMLimgError",this]);
           img.src = values.src;
           MathJax.Hub.RestartAfter(img.onload);
         }

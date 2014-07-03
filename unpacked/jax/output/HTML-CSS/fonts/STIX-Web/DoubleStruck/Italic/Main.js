@@ -40,7 +40,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['STIXMathJax_DoubleStruck-italic'] 
   0x2149: [653,217,341,-104,394]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"STIXMathJax_DoubleStruck-italic"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/DoubleStruck/Italic/Main.js"]
 );

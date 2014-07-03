@@ -103,7 +103,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['AsanaMathJax_Latin'] = {
   0xFF: [637,283,555,12,544]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"AsanaMathJax_Latin"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Latin/Regular/Main.js"]
 );

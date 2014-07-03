@@ -45,7 +45,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['NeoEulerMathJax_Marks'] = {
   0x20EF: [50,221,287,0,418]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"NeoEulerMathJax_Marks"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Marks/Regular/Main.js"]
 );

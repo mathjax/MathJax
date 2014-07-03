@@ -61,7 +61,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Size2'] = {
   0x2A06: [950,450,1111,55,1055]     // N-ARY SQUARE UNION OPERATOR
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Size2"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Size2/Regular/Main.js"]
 );

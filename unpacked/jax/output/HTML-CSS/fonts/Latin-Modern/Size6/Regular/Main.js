@@ -71,7 +71,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['LatinModernMathJax_Size6'] = {
   0x27EF: [1472,972,541,56,306]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"LatinModernMathJax_Size6"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Size6/Regular/Main.js"]
 );

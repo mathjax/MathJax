@@ -71,18 +71,18 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       toggle: function (svg,frame,selection) {
         this.selection = selection;
         SVG.Element(frame,{cursor:"pointer"});
-        frame.onclick = MathJax.Callback(["SVGclick",this]);
+        frame.onclick = MathJax.CallBack(["SVGclick",this]);
       },
       
       statusline: function (svg,frame,selection) {
-        frame.onmouseover = MathJax.Callback(["SVGsetStatus",this]),
-        frame.onmouseout  = MathJax.Callback(["SVGclearStatus",this]);
+        frame.onmouseover = MathJax.CallBack(["SVGsetStatus",this]),
+        frame.onmouseout  = MathJax.CallBack(["SVGclearStatus",this]);
         frame.onmouseover.autoReset = frame.onmouseout.autoReset = true;
       },
       
       tooltip: function(svg,frame,selection) {
-        frame.onmouseover = MathJax.Callback(["SVGtooltipOver",this]),
-        frame.onmouseout  = MathJax.Callback(["SVGtooltipOut",this]);
+        frame.onmouseover = MathJax.CallBack(["SVGtooltipOver",this]),
+        frame.onmouseout  = MathJax.CallBack(["SVGtooltipOut",this]);
         frame.onmouseover.autoReset = frame.onmouseout.autoReset = true;
       }
     },
@@ -132,13 +132,13 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
         y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
       }
-      var callback = MathJax.Callback(["SVGtooltipPost",this,x+CONFIG.offsetX,y+CONFIG.offsetY])
+      var callback = MathJax.CallBack(["SVGtooltipPost",this,x+CONFIG.offsetX,y+CONFIG.offsetY])
       hover = setTimeout(callback,CONFIG.delayPost);
     },
     SVGtooltipOut: function (event) {
       if (hover) {clearTimeout(hover); hover = null}
       if (clear) {clearTimeout(clear)}
-      var callback = MathJax.Callback(["SVGtooltipClear",this,80]);
+      var callback = MathJax.CallBack(["SVGtooltipClear",this,80]);
       clear = setTimeout(callback,CONFIG.delayClear);
     },
     SVGtooltipPost: function (x,y) {
@@ -171,7 +171,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       try {math.toSVG(span,tip)} catch(err) {
         this.SetData(1,mml); tip.style.display = "none";
         if (!err.restart) {throw err}
-        MathJax.Callback.After(["SVGtooltipPost",this,x,y],err.restart);
+        MathJax.CallBack.After(["SVGtooltipPost",this,x,y],err.restart);
         return;
       }
       this.SetData(1,mml);
@@ -186,7 +186,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         clear = null;
       } else {
         tip.style.opacity = n/100;
-        clear = setTimeout(MathJax.Callback(["SVGtooltipClear",this,n-20]),50);
+        clear = setTimeout(MathJax.CallBack(["SVGtooltipClear",this,n-20]),50);
       }
     }
   });

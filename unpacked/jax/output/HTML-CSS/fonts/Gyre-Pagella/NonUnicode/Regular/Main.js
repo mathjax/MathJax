@@ -1468,7 +1468,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['GyrePagellaMathJax_NonUnicode'] = 
   0xE5A2: [1701,1201,823,80,783]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"GyrePagellaMathJax_NonUnicode"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/NonUnicode/Regular/Main.js"]
 );

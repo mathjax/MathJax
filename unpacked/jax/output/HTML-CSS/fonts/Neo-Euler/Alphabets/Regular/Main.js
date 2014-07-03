@@ -26,7 +26,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['NeoEulerMathJax_Alphabets'] = {
   0x2126: [689,2,875,25,844]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"NeoEulerMathJax_Alphabets"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Alphabets/Regular/Main.js"]
 );

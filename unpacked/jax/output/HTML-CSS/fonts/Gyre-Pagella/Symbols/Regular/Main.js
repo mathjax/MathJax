@@ -77,7 +77,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['GyrePagellaMathJax_Symbols'] = {
   0x27EB: [658,158,611,80,531]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"GyrePagellaMathJax_Symbols"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Symbols/Regular/Main.js"]
 );

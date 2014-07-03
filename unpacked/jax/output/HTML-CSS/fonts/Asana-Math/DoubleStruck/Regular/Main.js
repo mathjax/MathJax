@@ -96,7 +96,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['AsanaMathJax_DoubleStruck'] = {
   0x1D7E1: [679,17,600,38,562]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"AsanaMathJax_DoubleStruck"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/DoubleStruck/Regular/Main.js"]
 );

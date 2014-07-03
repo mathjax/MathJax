@@ -380,7 +380,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['LatinModernMathJax_Size7'] = {
   0xE134: [620,0,1056,702,1076]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"LatinModernMathJax_Size7"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Size7/Regular/Main.js"]
 );

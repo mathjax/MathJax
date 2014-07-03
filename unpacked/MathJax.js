@@ -586,13 +586,13 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
   //
   //  The main entry-points
   //
-  BASE.Callback = BASE.CallBack = USING;
-  BASE.Callback.Delay = DELAY;
-  BASE.Callback.After = AFTER;
-  BASE.Callback.Queue = QUEUE;
-  BASE.Callback.Signal = SIGNAL.find;
-  BASE.Callback.Hooks = HOOKS;
-  BASE.Callback.ExecuteHooks = EXECUTEHOOKS;
+  BASE.CallBack = USING;
+  BASE.CallBack.Delay = DELAY;
+  BASE.CallBack.After = AFTER;
+  BASE.CallBack.Queue = QUEUE;
+  BASE.CallBack.Signal = SIGNAL.find;
+  BASE.CallBack.Hooks = HOOKS;
+  BASE.CallBack.ExecuteHooks = EXECUTEHOOKS;
 })("MathJax");
 
 
@@ -686,7 +686,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     //  Make sure the file URL is "safe"?
     //
     Require: function (file,callback) {
-      callback = BASE.Callback(callback); var type;
+      callback = BASE.CallBack(callback); var type;
       if (file instanceof Object) {
         for (var i in file)
           {if (file.hasOwnProperty(i)) {type = i.toUpperCase(); file = file[i]}}
@@ -707,7 +707,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     //  already been loaded.
     //
     Load: function (file,callback) {
-      callback = BASE.Callback(callback); var type;
+      callback = BASE.CallBack(callback); var type;
       if (file instanceof Object) {
         for (var i in file)
           {if (file.hasOwnProperty(i)) {type = i.toUpperCase(); file = file[i]}}
@@ -728,7 +728,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     //  loadComplete() is called for that file)
     //
     LoadHook: function (file,callback,priority) {
-      callback = BASE.Callback(callback);
+      callback = BASE.CallBack(callback);
       if (file instanceof Object)
         {for (var i in file) {if (file.hasOwnProperty(i)) {file = file[i]}}}
       file = this.fileURL(file);
@@ -737,7 +737,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
       return callback;
     },
     addHook: function (file,callback,priority) {
-      if (!this.loadHooks[file]) {this.loadHooks[file] = MathJax.Callback.Hooks()}
+      if (!this.loadHooks[file]) {this.loadHooks[file] = MathJax.CallBack.Hooks()}
       this.loadHooks[file].Add(callback,priority);
     },
     
@@ -762,7 +762,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
       JS: function (file,callback) {
         var name = this.fileName(file);
         var script = document.createElement("script");
-        var timeout = BASE.Callback(["loadTimeout",this,file]);
+        var timeout = BASE.CallBack(["loadTimeout",this,file]);
         this.loading[file] = {
           callback: callback,
           timeout: setTimeout(timeout,this.timeout),
@@ -807,7 +807,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
       //  to be processed.
       //
       create: function (callback,node) {
-        callback = BASE.Callback(callback);
+        callback = BASE.CallBack(callback);
         if (node.nodeName === "STYLE" && node.styleSheet &&
             typeof(node.styleSheet.cssText) !== 'undefined') {
           callback(this.STATUS.OK); // MSIE processes style immediately, but doesn't set its styleSheet!
@@ -825,7 +825,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
       //  Start the timer for the given callback checker
       //
       start: function (AJAX,check,delay,timeout) {
-        check = BASE.Callback(check);
+        check = BASE.CallBack(check);
         check.execute = this.execute; check.time = this.time;
         check.STATUS = AJAX.STATUS; check.timeout = timeout || AJAX.timeout;
         check.delay = check.total = delay || 0;
@@ -881,7 +881,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
         }
         if (isStyle) {
           // Opera 9.6 requires this setTimeout
-          setTimeout(BASE.Callback([callback,check.STATUS.OK]),0);
+          setTimeout(BASE.CallBack([callback,check.STATUS.OK]),0);
         } else {
           setTimeout(check,check.delay);
         }
@@ -941,7 +941,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     Styles: function (styles,callback) {
       var styleString = this.StyleString(styles);
       if (styleString === "") {
-        callback = BASE.Callback(callback);
+        callback = BASE.CallBack(callback);
         callback();
       } else {
         var style = document.createElement("style"); style.type = "text/css";
@@ -1397,7 +1397,7 @@ MathJax.Localization = {
   //  directory and file.
   //
   loadFile: function (file,data,callback) {
-    callback = MathJax.Callback(callback);
+    callback = MathJax.CallBack(callback);
     file = (data.file || file);  // the data's file name or the default name
     if (!file.match(/\.js$/)) {file += ".js"} // add .js if needed
     //
@@ -1434,7 +1434,7 @@ MathJax.Localization = {
       if (!localeData.isLoaded) {
         load = this.loadFile(this.locale,localeData);
         if (load) {
-          return MathJax.Callback.Queue(
+          return MathJax.CallBack.Queue(
             load,["loadDomain",this,domain] // call again to load domain
           ).Push(callback||{});
         }
@@ -1443,12 +1443,12 @@ MathJax.Localization = {
         var domainData = localeData.domains[domain];
         if (!domainData.isLoaded) {
           load = this.loadFile(domain,domainData);
-          if (load) {return MathJax.Callback.Queue(load).Push(callback)}
+          if (load) {return MathJax.CallBack.Queue(load).Push(callback)}
         }
       }
     } 
     // localization data are loaded, so just do the callback
-    return MathJax.Callback(callback)();
+    return MathJax.CallBack(callback)();
   },
 
   //
@@ -1461,10 +1461,10 @@ MathJax.Localization = {
   //  can be used to synchronize it with other actions.)
   //
   Try: function (fn) {
-    fn = MathJax.Callback(fn); fn.autoReset = true;
+    fn = MathJax.CallBack(fn); fn.autoReset = true;
     try {fn()} catch (err) {
       if (!err.restart) {throw err}
-      MathJax.Callback.After(["Try",this,fn],err.restart);
+      MathJax.CallBack.After(["Try",this,fn],err.restart);
     }
   },
 
@@ -1691,7 +1691,7 @@ MathJax.Message = {
           //
           if (this.log[n].restarted == null) {this.log[n].restarted = 0}
           this.log[n].restarted++; delete this.log[n].cleared;
-          MathJax.Callback.After(["Set",this,text,n,clearDelay],err.restart);
+          MathJax.CallBack.After(["Set",this,text,n,clearDelay],err.restart);
           return n;
         }
       }
@@ -1737,7 +1737,7 @@ MathJax.Message = {
     //
     //  Check if we need to clear the message automatically.
     //
-    if (clearDelay) {setTimeout(MathJax.Callback(["Clear",this,n]),clearDelay)}
+    if (clearDelay) {setTimeout(MathJax.CallBack(["Clear",this,n]),clearDelay)}
       else if (clearDelay == 0) {this.Clear(n,0)}
     //
     //  Return the message number.
@@ -1765,7 +1765,7 @@ MathJax.Message = {
           if (this.timer) {clearTimeout(this.timer); delete this.timer}
           if (delay == null) {delay = 600}
           if (delay === 0) {this.Remove()}
-	    else {this.timer = setTimeout(MathJax.Callback(["Remove",this]),delay)}
+	    else {this.timer = setTimeout(MathJax.CallBack(["Remove",this]),delay)}
         } else if (MathJax.Hub.config.messageStyle !== "none") {
           //
           //  If there is an old message, put it in place
@@ -1863,14 +1863,14 @@ MathJax.Hub = {
     }
   },
   
-  preProcessors: MathJax.Callback.Hooks(true), // list of callbacks for preprocessing (initialized by extensions)
+  preProcessors: MathJax.CallBack.Hooks(true), // list of callbacks for preprocessing (initialized by extensions)
   inputJax: {},          // mime-type mapped to input jax (by registration)
   outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
 
   processUpdateTime: 250, // time between screen updates when processing math (milliseconds)
   processUpdateDelay: 10, // pause between screen updates to allow other processing (milliseconds)
 
-  signal: MathJax.Callback.Signal("Hub"), // Signal used for Hub events
+  signal: MathJax.CallBack.Signal("Hub"), // Signal used for Hub events
 
   Config: function (def) {
     this.Insert(this.config,def);
@@ -1970,7 +1970,7 @@ MathJax.Hub = {
   Typeset: function (element,callback) {
     if (!MathJax.isReady) return null;
     var ec = this.elementCallback(element,callback);
-    var queue = MathJax.Callback.Queue();
+    var queue = MathJax.CallBack.Queue();
     for (var i = 0, m = ec.elements.length; i < m; i++) {
       if (ec.elements[i]) {
         queue.Push(
@@ -1984,7 +1984,7 @@ MathJax.Hub = {
   
   PreProcess: function (element,callback) {
     var ec = this.elementCallback(element,callback);
-    var queue = MathJax.Callback.Queue();
+    var queue = MathJax.CallBack.Queue();
     for (var i = 0, m = ec.elements.length; i < m; i++) {
       if (ec.elements[i]) {
         queue.Push(
@@ -2004,7 +2004,7 @@ MathJax.Hub = {
   
   takeAction: function (action,element,callback) {
     var ec = this.elementCallback(element,callback);
-    var queue = MathJax.Callback.Queue(["Clear",this.signal]);
+    var queue = MathJax.CallBack.Queue(["Clear",this.signal]);
     for (var i = 0, m = ec.elements.length; i < m; i++) {
       if (ec.elements[i]) {
         var state = {
@@ -2136,7 +2136,7 @@ MathJax.Hub = {
         //
         state.i++; var now = new Date().getTime();
         if (now - state.start > this.processUpdateTime && state.i < state.scripts.length)
-          {state.start = now; this.RestartAfter(MathJax.Callback.Delay(1))}
+          {state.start = now; this.RestartAfter(MathJax.CallBack.Delay(1))}
       }
     } catch (err) {return this.processError(err,state,"Input")}
     //
@@ -2199,7 +2199,7 @@ MathJax.Hub = {
             MathJax.Hub.lastPrepError = err;
             state.j++;
           }
-          return MathJax.Callback.After(["prepareOutput",this,state,method],err.restart);
+          return MathJax.CallBack.After(["prepareOutput",this,state,method],err.restart);
         }
       }
       state.j++;
@@ -2236,7 +2236,7 @@ MathJax.Hub = {
         //
         var now = new Date().getTime();
         if (now - state.start > this.processUpdateTime && state.i < state.scripts.length)
-          {state.start = now; this.RestartAfter(MathJax.Callback.Delay(this.processUpdateDelay))}
+          {state.start = now; this.RestartAfter(MathJax.CallBack.Delay(this.processUpdateDelay))}
       }
     } catch (err) {return this.processError(err,state,"Output")}
     //
@@ -2263,7 +2263,7 @@ MathJax.Hub = {
       this.formatError(state.scripts[state.i],err); state.i++;
     }
     this.processMessage(state,type);
-    return MathJax.Callback.After(["process"+type,this,state],err.restart);
+    return MathJax.CallBack.After(["process"+type,this,state],err.restart);
   },
   
   formatError: function (script,err) {
@@ -2309,12 +2309,12 @@ MathJax.Hub = {
   },
   
   RestartAfter: function (callback) {
-    throw this.Insert(Error("restart"),{restart: MathJax.Callback(callback)});
+    throw this.Insert(Error("restart"),{restart: MathJax.CallBack(callback)});
   },
   
   elementCallback: function (element,callback) {
     if (callback == null && (element instanceof Array || typeof element === 'function'))
-      {try {MathJax.Callback(element); callback = element; element = null} catch(e) {}}
+      {try {MathJax.CallBack(element); callback = element; element = null} catch(e) {}}
     if (element == null) {element = this.config.elements || []}
     if (!(element instanceof Array)) {element = [element]}
     element = [].concat(element); // make a copy so the original isn't changed
@@ -2370,11 +2370,11 @@ MathJax.Extension = {};
 //
 //  Hub Startup code
 //
-MathJax.Hub.Configured = MathJax.Callback({}); // called when configuration is complete
+MathJax.Hub.Configured = MathJax.CallBack({}); // called when configuration is complete
 MathJax.Hub.Startup = {
   script: "", // the startup script from the SCRIPT call that loads MathJax.js
-  queue:   MathJax.Callback.Queue(),           // Queue used for startup actions
-  signal:  MathJax.Callback.Signal("Startup"), // Signal used for startup events
+  queue:   MathJax.CallBack.Queue(),           // Queue used for startup actions
+  signal:  MathJax.CallBack.Signal("Startup"), // Signal used for startup events
   params:  {},
 
   //
@@ -2432,7 +2432,7 @@ MathJax.Hub.Startup = {
   //
   ConfigBlocks: function () {
     var scripts = document.getElementsByTagName("script");
-    var last = null, queue = MathJax.Callback.Queue();
+    var last = null, queue = MathJax.CallBack.Queue();
     for (var i = 0, m = scripts.length; i < m; i++) {
       var type = String(scripts[i].type).replace(/ /g,"");
       if (type.match(/^text\/x-mathjax-config(;.*)?$/) && !type.match(/;executed=true/)) {
@@ -2492,7 +2492,7 @@ MathJax.Hub.Startup = {
       if (config.jax[i].substr(0,7) === "output/" && jax.order[name] == null)
         {jax.order[name] = k; k++}
     }
-    var queue = MathJax.Callback.Queue();
+    var queue = MathJax.CallBack.Queue();
     return queue.Push(
       ["Post",this.signal,"Begin Jax"],
       ["loadArray",this,config.jax,"jax","config.js"],
@@ -2503,7 +2503,7 @@ MathJax.Hub.Startup = {
   //  Load the extensions
   //
   Extensions: function () {
-    var queue = MathJax.Callback.Queue();
+    var queue = MathJax.CallBack.Queue();
     return queue.Push(
       ["Post",this.signal,"Begin Extensions"],
       ["loadArray",this,MathJax.Hub.config.extensions,"extensions"],
@@ -2575,7 +2575,7 @@ MathJax.Hub.Startup = {
       if (!MathJax.Extension.MathMenu) {
         setTimeout(
           function () {
-            MathJax.Callback.Queue(
+            MathJax.CallBack.Queue(
               ["Require",MathJax.Ajax,"[MathJax]/extensions/MathMenu.js",{}],
               ["loadDomain",MathJax.Localization,"MathMenu"]
             )
@@ -2583,13 +2583,13 @@ MathJax.Hub.Startup = {
         );
       } else {
         setTimeout(
-          MathJax.Callback(["loadDomain",MathJax.Localization,"MathMenu"]),
+          MathJax.CallBack(["loadDomain",MathJax.Localization,"MathMenu"]),
           1000
         );
       }
       if (!MathJax.Extension.MathZoom) {
         setTimeout(
-          MathJax.Callback(["Require",MathJax.Ajax,"[MathJax]/extensions/MathZoom.js",{}]),
+          MathJax.CallBack(["Require",MathJax.Ajax,"[MathJax]/extensions/MathZoom.js",{}]),
           2000
         );
       }
@@ -2601,7 +2601,7 @@ MathJax.Hub.Startup = {
   //
   onLoad: function () {
     var onload = this.onload =
-      MathJax.Callback(function () {MathJax.Hub.Startup.signal.Post("onLoad")});
+      MathJax.CallBack(function () {MathJax.Hub.Startup.signal.Post("onLoad")});
     if (document.body && document.readyState)
       if (MathJax.Hub.Browser.isMSIE) {
         // IE can change from loading to interactive before
@@ -2647,7 +2647,7 @@ MathJax.Hub.Startup = {
     if (files) {
       if (!(files instanceof Array)) {files = [files]}
       if (files.length) {
-        var queue = MathJax.Callback.Queue(), callback = {}, file;
+        var queue = MathJax.CallBack.Queue(), callback = {}, file;
         for (var i = 0, m = files.length; i < m; i++) {
           file = this.URL(dir,files[i]);
           if (name) {file += "/" + name}
@@ -2667,7 +2667,7 @@ MathJax.Hub.Startup = {
 
 (function (BASENAME) {
   var BASE = window[BASENAME], ROOT = "["+BASENAME+"]";
-  var HUB = BASE.Hub, AJAX = BASE.Ajax, CALLBACK = BASE.Callback;
+  var HUB = BASE.Hub, AJAX = BASE.Ajax, CALLBACK = BASE.CallBack;
 
   var JAX = MathJax.Object.Subclass({
     JAXFILE: "jax.js",
@@ -3097,7 +3097,7 @@ MathJax.Hub.Startup = {
   HUB.Browser.Select(MathJax.Message.browsers);
 
   if (BASE.AuthorConfig && typeof BASE.AuthorConfig.AuthorInit === "function") {BASE.AuthorConfig.AuthorInit()}
-  HUB.queue = BASE.Callback.Queue();
+  HUB.queue = BASE.CallBack.Queue();
   HUB.queue.Push(
     ["Post",STARTUP.signal,"Begin"],
     ["Config",STARTUP],
@@ -3106,7 +3106,7 @@ MathJax.Hub.Startup = {
     ["Message",STARTUP],
     function () {
       // Do Jax and Extensions in parallel, but wait for them all to complete
-      var queue = BASE.Callback.Queue(
+      var queue = BASE.CallBack.Queue(
         STARTUP.Jax(),
         STARTUP.Extensions()
       );

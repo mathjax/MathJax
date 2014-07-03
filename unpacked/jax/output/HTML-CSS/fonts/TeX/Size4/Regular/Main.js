@@ -72,7 +72,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Size4'] = {
   0xE154: [120,0,400,-10,410]        // stix-oblique open face capital letter A
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Size4"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Size4/Regular/Main.js"]
 );

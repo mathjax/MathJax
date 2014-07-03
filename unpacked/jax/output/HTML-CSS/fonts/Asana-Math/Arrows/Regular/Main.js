@@ -214,7 +214,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['AsanaMathJax_Arrows'] = {
   0x297F: [608,66,743,66,678]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"AsanaMathJax_Arrows"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Arrows/Regular/Main.js"]
 );

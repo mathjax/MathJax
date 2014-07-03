@@ -295,7 +295,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['GyreTermesMathJax_Latin'] = {
   0xFB04: [683,0,827,31,792]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"GyreTermesMathJax_Latin"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Latin/Regular/Main.js"]
 );

@@ -42,7 +42,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['NeoEulerMathJax_Variants'] = {
   0xE209: [470,182,501,27,468]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"NeoEulerMathJax_Variants"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Variants/Regular/Main.js"]
 );

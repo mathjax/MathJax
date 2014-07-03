@@ -226,7 +226,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['AsanaMathJax_Symbols'] = {
   0x29FF: [367,-197,678,60,619]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"AsanaMathJax_Symbols"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Symbols/Regular/Main.js"]
 );

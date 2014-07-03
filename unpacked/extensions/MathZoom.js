@@ -352,7 +352,7 @@
 
   /*************************************************************/
 
-  MathJax.Callback.Queue(
+  MathJax.CallBack.Queue(
     ["StartupHook",MathJax.Hub.Register,"Begin Styles",{}],
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathZoom Ready"],

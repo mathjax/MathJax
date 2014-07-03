@@ -77,7 +77,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['NeoEulerMathJax_Script'] = {
   0x1D4E9: [705,14,742,57,714]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"NeoEulerMathJax_Script"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Script/Regular/Main.js"]
 );

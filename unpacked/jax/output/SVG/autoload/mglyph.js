@@ -69,8 +69,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         if (!this.img) {
           this.img = MML.mglyph.GLYPH[values.src] = {img: new Image(), status: "pending"};
           img = this.img.img;
-          img.onload  = MathJax.Callback(["SVGimgLoaded",this]);
-          img.onerror = MathJax.Callback(["SVGimgError",this]);
+          img.onload  = MathJax.CallBack(["SVGimgLoaded",this]);
+          img.onerror = MathJax.CallBack(["SVGimgError",this]);
           img.src = values.src;
           MathJax.Hub.RestartAfter(img.onload);
         }

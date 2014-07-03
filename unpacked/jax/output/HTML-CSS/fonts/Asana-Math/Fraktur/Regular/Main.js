@@ -126,7 +126,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['AsanaMathJax_Fraktur'] = {
   0x1D59F: [541,168,374,36,345]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"AsanaMathJax_Fraktur"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Fraktur/Regular/Main.js"]
 );

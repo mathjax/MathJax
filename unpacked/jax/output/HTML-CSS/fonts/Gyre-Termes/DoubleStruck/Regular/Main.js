@@ -97,7 +97,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['GyreTermesMathJax_DoubleStruck'] =
   0x1D7E1: [716,21,672,80,592]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"GyreTermesMathJax_DoubleStruck"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/DoubleStruck/Regular/Main.js"]
 );

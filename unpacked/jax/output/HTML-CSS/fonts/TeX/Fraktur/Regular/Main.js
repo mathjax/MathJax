@@ -30,7 +30,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Fraktur'] = {
 
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Fraktur"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Fraktur/Regular/Main.js"]
 );

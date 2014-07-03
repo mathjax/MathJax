@@ -177,8 +177,8 @@
     loadWebFont: function (font) {
       HUB.Startup.signal.Post("HTML-CSS Jax - Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
       var n = MESSAGE(["LoadWebFont","Loading web-font %1",HTMLCSS.fontInUse+"/"+font.directory]);
-      var done = MathJax.Callback({}); // called when font is loaded
-      var callback = MathJax.Callback(["loadComplete",this,font,n,done]);
+      var done = MathJax.CallBack({}); // called when font is loaded
+      var callback = MathJax.CallBack(["loadComplete",this,font,n,done]);
       AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],0,this.timeout);
       return done;
     },
@@ -518,7 +518,7 @@
       //  arrived yet, so try to wait for it, but don't wait too long.
       //
       if (this.defaultEm) return;
-      var ready = MathJax.Callback();
+      var ready = MathJax.CallBack();
       AJAX.timer.start(AJAX,function (check) {
         if (check.time(ready)) {HUB.signal.Post("HTML-CSS Jax - no default em size"); return}
         HTMLCSS.getDefaultExEm();
@@ -650,7 +650,7 @@
       //  
       if (state.HTMLCSSdelay) {
         state.HTMLCSSdelay = false;
-        HUB.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay));
+        HUB.RestartAfter(MathJax.CallBack.Delay(this.config.EqnChunkDelay));
       }
 
       //
@@ -1585,7 +1585,7 @@
     },
 
     loadFont: function (file) {
-      var queue = MathJax.Callback.Queue();
+      var queue = MathJax.CallBack.Queue();
       queue.Push(["Require",AJAX,this.fontDir+"/"+file]);
       if (this.imgFonts) {
         if (!MathJax.isPacked) {file = file.replace(/\/([^\/]*)$/,HTMLCSS.imgPacked+"/$1")}
@@ -2879,7 +2879,7 @@
     //  will call Config and Startup, which need to modify the body.
     //
     MathJax.Hub.Register.StartupHook("onLoad",function () {
-      setTimeout(MathJax.Callback(["loadComplete",HTMLCSS,"jax.js"]),0);
+      setTimeout(MathJax.CallBack(["loadComplete",HTMLCSS,"jax.js"]),0);
     });
   });
 

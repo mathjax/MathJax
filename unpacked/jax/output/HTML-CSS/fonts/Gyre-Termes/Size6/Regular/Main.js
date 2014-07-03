@@ -389,7 +389,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['GyreTermesMathJax_Size6'] = {
   0xE13C: [1161,0,1750,80,1416]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"GyreTermesMathJax_Size6"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Size6/Regular/Main.js"]
 );

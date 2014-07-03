@@ -367,7 +367,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['GyreTermesMathJax_Normal'] = {
   0x1D7D7: [688,13,500,26,473]
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"GyreTermesMathJax_Normal"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Normal/Regular/Main.js"]
 );

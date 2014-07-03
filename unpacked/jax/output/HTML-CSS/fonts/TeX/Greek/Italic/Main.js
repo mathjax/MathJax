@@ -104,7 +104,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Greek-italic'] = {
   0x3F5: [431,11,406,40,382]         // GREEK LUNATE EPSILON SYMBOL
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Greek-italic"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Greek/Italic/Main.js"]
 );

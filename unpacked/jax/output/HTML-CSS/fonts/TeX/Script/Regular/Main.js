@@ -57,7 +57,7 @@ MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['MathJax_Script'] = {
 
 };
 
-MathJax.Callback.Queue(
+MathJax.CallBack.Queue(
   ["initFont",MathJax.OutputJax["HTML-CSS"],"MathJax_Script"],
   ["loadComplete",MathJax.Ajax,MathJax.OutputJax["HTML-CSS"].fontDir+"/Script/Regular/Main.js"]
 );
