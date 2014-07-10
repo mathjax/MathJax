@@ -206,7 +206,7 @@ MathJax.Extension.mml2jax = {
     if (preview === "mathml") {
       isNodePreview = true;
       // mathml preview does not work with IE < 9, so fallback to alttext.
-      if (this.MathTagBug) {preview = "alttext"} else {preview = math.cloneNode(false)}
+      if (this.MathTagBug) {preview = "alttext"} else {preview = math.cloneNode(true)}
     }
     if (preview === "alttext" || preview === "altimg") {
       isNodePreview = true;
