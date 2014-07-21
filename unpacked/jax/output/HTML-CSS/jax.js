@@ -520,7 +520,7 @@
       if (this.defaultEm) return;
       var ready = MathJax.Callback();
       AJAX.timer.start(AJAX,function (check) {
-        if (check.time(ready)) {HUB.signal.Post("HTML-CSS Jax - no default em size"); return}
+        if (check.time(ready)) {HUB.signal.Post(["HTML-CSS Jax - no default em size"]); return}
         HTMLCSS.getDefaultExEm();
         if (HTMLCSS.defaultEm) {ready()} else {setTimeout(check,check.delay)}
       },this.defaultEmDelay,this.defaultEmTimeout);
