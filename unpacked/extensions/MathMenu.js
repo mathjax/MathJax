@@ -1090,6 +1090,7 @@
         ITEM.RULE(),
         ITEM.SUBMENU(["Renderer","Math Renderer"],    {hidden:!CONFIG.showRenderer},
           ITEM.RADIO("HTML-CSS",  "renderer", {action: MENU.Renderer}),
+          ITEM.RADIO("Fast HTML", "renderer", {action: MENU.Renderer, value:"CommonHTML"}),
           ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"}),
           ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer})
         ),
