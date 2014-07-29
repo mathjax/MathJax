@@ -383,7 +383,7 @@
       "bold-fraktur": "MJXc-frak MJXc-bold",
       "monospace": "MJXc-mono",
       "sans-serif": "MJXc-sf",
-      "-tex-caligraphic": "MJXc-cal",
+      "-tex-caligraphic": "MJXc-cal"
     },
     MATHSPACE: {
       veryverythinmathspace:  1/18,
@@ -498,7 +498,7 @@
       return (m.toFixed(3).replace(/\.?0+$/,""))+"em";
     },
 
-    arrayEntry: function (a,i) {return a[Math.max(0,Math.min(i,a.length-1))]},
+    arrayEntry: function (a,i) {return a[Math.max(0,Math.min(i,a.length-1))]}
 
   });
 
@@ -537,6 +537,11 @@
       CHTMLcreateSpan: function (span) {
         this.bbox = {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
         if (this.inferred) return span;
+        //  ### FIXME:  This is a hack to handle the different spacing of the
+        //  ### integral sign in Times compared to CM fonts
+        if (this.type === "mo" && this.data.join("") === "\u222B") {CHTML.lastIsInt = true}
+        else if (this.type !== "mspace" || this.width !== "negativethinmathspace") {CHTML.lastIsInt = false}
+        //  ###
         if (!this.CHTMLspanID) {this.CHTMLspanID = CHTML.GetID()};
         var id = (this.id || "MJXc-Span-"+this.CHTMLspanID);
         return HTML.addElement(span,"span",{className:"MJXc-"+this.type, id:id});
@@ -730,6 +735,11 @@
             d = CHTML.length2em(values.depth);
         var bbox = this.bbox;
         bbox.w = w; bbox.h = h; bbox.d = d;
+        if (w < 0) {
+          //  ### FIXME:  lastIsInt hack
+          if (!CHTML.lastIsInt) span.style.marginLeft = CHTML.Em(w);
+          w = 0;
+        }
         span.style.width = CHTML.Em(w);
         span.style.height = CHTML.Em(h+d);
         if (d) span.style.verticalAlign = CHTML.Em(-d);
@@ -804,7 +814,8 @@
             acc = acc - obox.d + .1; if (bbox.t != null) {acc += bbox.t - bbox.h}
             over.firstChild.firstChild.style.marginBottom = CHTML.Em(acc);
           }
-          span.insertBefore(over,span.firstChild);
+          if (span.firstChild) {span.insertBefore(over,span.firstChild)}
+            else {span.appendChild(over)}
         }
         if (this.data[this.under]) {
           span.lastChild.firstChild.style.marginLeft = ubox.l =
@@ -821,7 +832,10 @@
     MML.msubsup.Augment({
       toCommonHTML: function (span) {
         span = this.CHTMLdefaultSpan(span,{noBBox:true});
-        if (!this.data[this.base]) {span.insertBefore(HTML.Element("span"),span.firstChild)}
+        if (!this.data[this.base]) {
+          if (span.firstChild) {span.insertBefore(HTML.Element("span"),span.firstChild)}
+            else {span.appendChild(HTML.Element("span"))}
+        }
         var base = this.data[this.base], sub = this.data[this.sub], sup = this.data[this.sup];
         if (!base) base = {bbox: {h:.8, d:.2}};
         span.firstChild.style.marginRight = ".05em";
