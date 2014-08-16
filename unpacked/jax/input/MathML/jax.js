@@ -247,20 +247,21 @@
       if (script.firstChild &&
           script.firstChild.nodeName.toLowerCase().replace(/^[a-z]+:/,"") === "math") {
         data.math = script.firstChild;
-        this.prefilterHooks.Execute(data); math = data.math;
       } else {
         math = MathJax.HTML.getScript(script);
         if (BROWSER.isMSIE) {math = math.replace(/(&nbsp;)+$/,"")}
-        data.math = math; this.prefilterHooks.Execute(data); math = data.math;
+        data.math = math;
       }
+      var callback = this.prefilterHooks.Execute(data); if (callback) return callback;
+      math = data.math;
       try {
         mml = MATHML.Parse(math).mml;
       } catch(err) {
         if (!err.mathmlError) {throw err}
         mml = this.formatError(err,math,script);
       }
-      data.math = MML(mml); this.postfilterHooks.Execute(data);
-      return data.math;
+      data.math = MML(mml);
+      return this.postfilterHooks.Execute(data) || data.math;
     },
     prefilterMath: function (math,script) {return math},
     prefilterMathML: function (math,script) {return math},

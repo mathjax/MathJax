@@ -1284,15 +1284,16 @@ junk = null;
     Translate: function (script) {
       var mml, math = MathJax.HTML.getScript(script);
       var data = {math:math, script:script};
-      this.prefilterHooks.Execute(data); math = data.math;
+      var callback = this.prefilterHooks.Execute(data); if (callback) return callback;
+      math = data.math;
       try {
         mml = this.AM.parseMath(math);
       } catch(err) {
         if (!err.asciimathError) {throw err}
         mml = this.formatError(err,math);
       }
-      data.math = MML(mml); this.postfilterHooks.Execute(data);
-      return data.math;
+      data.math = MML(mml);
+      return this.postfilterHooks.Execute(data) || data.math;
     },
     formatError: function (err,math,script) {
       var message = err.message.replace(/\n.*/,"");
