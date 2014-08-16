@@ -334,7 +334,7 @@
     },
     getHoverSpan: function (jax,math) {return jax.root.CHTMLspanElement()},
     getHoverBBox: function (jax,span,math) {
-//      var bbox = span.bbox, em = jax.CHTML.outerEm;
+//      var bbox = span.CHTML, em = jax.CHTML.outerEm;
 //      var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
 //      if (bbox.width) {BBOX.width = bbox.width}
       return BBOX;
@@ -523,11 +523,11 @@
               SPAN = HTML.addElement(span,"span",{className:options.className});
             child.toCommonHTML(SPAN);
             if (!options.noBBox) {
-              this.bbox.w += child.bbox.w + child.bbox.l + child.bbox.r;
-              if (child.bbox.h > this.bbox.h) this.bbox.h = child.bbox.h;
-              if (child.bbox.d > this.bbox.d) this.bbox.d = child.bbox.d;
-              if (child.bbox.t > this.bbox.t) this.bbox.t = child.bbox.t;
-              if (child.bbox.b > this.bbox.b) this.bbox.b = child.bbox.b;
+              this.CHTML.w += child.CHTML.w + child.CHTML.l + child.CHTML.r;
+              if (child.CHTML.h > this.CHTML.h) this.CHTML.h = child.CHTML.h;
+              if (child.CHTML.d > this.CHTML.d) this.CHTML.d = child.CHTML.d;
+              if (child.CHTML.t > this.CHTML.t) this.CHTML.t = child.CHTML.t;
+              if (child.CHTML.b > this.CHTML.b) this.CHTML.b = child.CHTML.b;
             }
           } else if (options.forceChild) {HTML.addElement(span,"span")}
         }
@@ -535,7 +535,8 @@
       },
 
       CHTMLcreateSpan: function (span) {
-        this.bbox = {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
+        if (!this.CHTML) this.CHTML = {};
+        this.CHTML = {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
         if (this.inferred) return span;
         //  ### FIXME:  This is a hack to handle the different spacing of the
         //  ### integral sign in Times compared to CM fonts
@@ -595,17 +596,18 @@
           // ### arrows (all sets), widths of braces
           if (h > H) H = h; if (d > D) D = d; W += w;
         }
-        this.bbox = {h:.9, d:.3, w:W, l:0, r:0, t:H, b:D};
+        if (!this.CHML) this.CHTML = {};
+        this.CHTML = {h:.9, d:.3, w:W, l:0, r:0, t:H, b:D};
         HTML.addText(span,text);
 //  ### FIXME:  use this to get proper bounding boxes in the future
-//      this.bbox = {h:H, d:D, w:W, l:0, r:0};
+//      this.CHTML = {h:H, d:D, w:W, l:0, r:0};
 //      HTML.addElement(span,"span",{className:"MJXc-char",style:{
 //        "margin-top":CHTML.Em(H-.9), "margin-bottom":CHTML.Em(D-.25)
 //      }},[text]);
       },
 
-      CHTMLbbox: function (n) {
-        if (this.data[n] && this.data[n].bbox) return this.data[n].bbox;
+      CHTMLbboxFor: function (n) {
+        if (this.data[n] && this.data[n].CHTML) return this.data[n].CHTML;
         return {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
       },
 
@@ -663,18 +665,18 @@
         this.CHTMLadjustAccent(span);
         var values = this.getValues("lspace","rspace","scriptlevel","displaystyle","largeop");
         if (values.scriptlevel === 0) {
-          this.bbox.l = CHTML.length2em(values.lspace);
-          this.bbox.r = CHTML.length2em(values.rspace);
-          span.style.marginLeft = CHTML.Em(this.bbox.l);
-          span.style.marginRight = CHTML.Em(this.bbox.r);
+          this.CHTML.l = CHTML.length2em(values.lspace);
+          this.CHTML.r = CHTML.length2em(values.rspace);
+          span.style.marginLeft = CHTML.Em(this.CHTML.l);
+          span.style.marginRight = CHTML.Em(this.CHTML.r);
         } else {
-          this.bbox.l = .15;
-          this.bbox.r = .1;
+          this.CHTML.l = .15;
+          this.CHTML.r = .1;
         }
         if (values.displaystyle && values.largeop) {
           var box = HTML.Element("span",{className:"MJXc-largeop"});
           box.appendChild(span.firstChild); span.appendChild(box);
-          this.bbox.h *= 1.2; this.bbox.d *= 1.2;
+          this.CHTML.h *= 1.2; this.CHTML.d *= 1.2;
           if (this.data.join("") === "\u222B") box.className += " MJXc-int";
         }
         // ### FIXME:  Handle embellished op spacing
@@ -690,8 +692,8 @@
           if (over && this === over.CoreMO() && parent.Get("accent")) {C = CHTML.REMAPACCENT[c]}
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {C = CHTML.REMAPACCENTUNDER[c]}
           if (C) c = span.innerHTML = C;
-          if (c.match(/[\u02C6-\u02DC\u00A8]/)) {this.bbox.acc = -.52}
-          else if (c === "\u2192") {this.bbox.acc = -.15; this.bbox.vec = true}
+          if (c.match(/[\u02C6-\u02DC\u00A8]/)) {this.CHTML.acc = -.52}
+          else if (c === "\u2192") {this.CHTML.acc = -.15; this.CHTML.vec = true}
         }
       },
       CHTMLcanStretch: function (direction,H,D) {
@@ -701,13 +703,13 @@
         c = CHTML.DELIMITERS[c];
         var stretch = (c && c.dir === direction.substr(0,1));
         if (stretch) {
-          stretch = (this.bbox.h !== H || this.bbox.d !== D ||
+          stretch = (this.CHTML.h !== H || this.CHTML.d !== D ||
             (this.Get("minsize",true) || this.Get("maxsize",true)));
         }
         return stretch;
       },
       CHTMLstretchV: function (h,d) {
-        var span = this.CHTMLspanElement(), bbox = this.bbox; //bbox.w = .4; // ## adjust width
+        var span = this.CHTMLspanElement(), bbox = this.CHTML; //bbox.w = .4; // ## adjust width
         var values = this.getValues("symmetric","maxsize","minsize");
         if (values.symmetric) {H = 2*Math.max(h-.25,d+.25)} else {H = h + d}
         values.maxsize = CHTML.length2em(values.maxsize,bbox.h+bbox.d);
@@ -733,7 +735,7 @@
         var w = CHTML.length2em(values.width),
             h = CHTML.length2em(values.height),
             d = CHTML.length2em(values.depth);
-        var bbox = this.bbox;
+        var bbox = this.CHTML;
         bbox.w = w; bbox.h = h; bbox.d = d;
         if (w < 0) {
           //  ### FIXME:  lastIsInt hack
@@ -762,12 +764,12 @@
         }
         if (values.height !== "") {
           dimen = this.CHTMLdimen(values.height,"h",0);
-          if (!dimen.pm) T += -this.CHTMLbbox(0).h;
+          if (!dimen.pm) T += -this.CHTMLbboxFor(0).h;
           T += dimen.len;
         }
         if (values.depth !== "")  {
           dimen = this.CHTMLdimen(values.depth,"d",0);
-          if (!dimen.pm) {B += -this.CHTMLbbox(0).d; V += -dimen.len}
+          if (!dimen.pm) {B += -this.CHTMLbboxFor(0).d; V += -dimen.len}
           B += dimen.len;
         }
         if (values.voffset !== "") {
@@ -786,7 +788,7 @@
         if (m == null) {m = -BIGDIMEN}
         length = String(length);
         var match = length.match(/width|height|depth/);
-        var size = (match ? this.bbox[match[0].charAt(0)] : (d ? this.bbox[d] : 0));
+        var size = (match ? this.CHTML[match[0].charAt(0)] : (d ? this.CHTML[d] : 0));
         return {len: CHTML.length2em(length,size)||0, pm: !!length.match(/^[-+]/)};
       }
     });
@@ -794,10 +796,10 @@
     MML.munderover.Augment({
       toCommonHTML: function (span) {
         span = this.CHTMLdefaultSpan(span,{childSpans:true, className:"", noBBox:true});
-        var obox = this.CHTMLbbox(this.over),
-            ubox = this.CHTMLbbox(this.under),
-            bbox = this.CHTMLbbox(this.base),
-            BBOX = this.bbox, acc = obox.acc;
+        var obox = this.CHTMLbboxFor(this.over),
+            ubox = this.CHTMLbboxFor(this.under),
+            bbox = this.CHTMLbboxFor(this.base),
+            BBOX = this.CHTML, acc = obox.acc;
         if (this.data[this.over]) {
           span.lastChild.firstChild.style.marginLeft = obox.l =
             span.lastChild.firstChild.style.marginRight = obox.r = 0;
@@ -839,19 +841,19 @@
         var base = this.data[this.base], sub = this.data[this.sub], sup = this.data[this.sup];
         if (!base) base = {bbox: {h:.8, d:.2}};
         span.firstChild.style.marginRight = ".05em";
-        var h = Math.max(.4,base.bbox.h-.4);
-            d = Math.max(.2,base.bbox.d+.1);
-        var bbox = this.bbox;
+        var h = Math.max(.4,base.CHTML.h-.4);
+            d = Math.max(.2,base.CHTML.d+.1);
+        var bbox = this.CHTML;
         if (sup && sub) {
           var box = HTML.Element("span",{className:"MJXc-script-box", style:{
-            height: CHTML.Em(h+sup.bbox.h*.8 + d+sub.bbox.d*.8),
-            "vertical-align": CHTML.Em(-d-sub.bbox.d*.8)
+            height: CHTML.Em(h+sup.CHTML.h*.8 + d+sub.CHTML.d*.8),
+            "vertical-align": CHTML.Em(-d-sub.CHTML.d*.8)
           }},[
             ["span",{},[["span",{},[["span",{
-              style:{"margin-bottom":CHTML.Em(-(sup.bbox.d-.05))}
+              style:{"margin-bottom":CHTML.Em(-(sup.CHTML.d-.05))}
             }]]]]],
             ["span",{},[["span",{},[["span",{
-              style:{"margin-top":CHTML.Em(-(sup.bbox.h-.05))}
+              style:{"margin-top":CHTML.Em(-(sup.CHTML.h-.05))}
             }]]]]]
           ]);
           sub.CHTMLhandleScriptlevel(box.firstChild);
@@ -859,21 +861,21 @@
           box.firstChild.firstChild.firstChild.appendChild(span.lastChild);
           box.lastChild.firstChild.firstChild.appendChild(span.lastChild);
           span.appendChild(box);
-          bbox.h = Math.max(base.bbox.h,sup.bbox.h*.8+h);
-          bbox.d = Math.max(base.bbox.d,sub.bbox.d*.8+d);
-          bbox.w = base.bbox.w + Math.max(sup.bbox.w,sub.bbox.w) + .07;
+          bbox.h = Math.max(base.CHTML.h,sup.CHTML.h*.8+h);
+          bbox.d = Math.max(base.CHTML.d,sub.CHTML.d*.8+d);
+          bbox.w = base.CHTML.w + Math.max(sup.CHTML.w,sub.CHTML.w) + .07;
         } else if (sup) {
           span.lastChild.style.verticalAlign = CHTML.Em(h);
           sup.CHTMLhandleScriptlevel(span.lastChild);
-          bbox.h = Math.max(base.bbox.h,sup.bbox.h*.8+h);
-          bbox.d = Math.max(base.bbox.d,sup.bbox.d*.8-h);
-          bbox.w = base.bbox.w + sup.bbox.w + .07;
+          bbox.h = Math.max(base.CHTML.h,sup.CHTML.h*.8+h);
+          bbox.d = Math.max(base.CHTML.d,sup.CHTML.d*.8-h);
+          bbox.w = base.CHTML.w + sup.CHTML.w + .07;
         } else if (sub) {
           span.lastChild.style.verticalAlign = CHTML.Em(-d);
           sub.CHTMLhandleScriptlevel(span.lastChild);
-          bbox.h = Math.max(base.bbox.h,sub.bbox.h*.8-d);
-          bbox.d = Math.max(base.bbox.d,sub.bbox.d*.8+d);
-          bbox.w = base.bbox.w + sub.bbox.w + .07;
+          bbox.h = Math.max(base.CHTML.h,sub.CHTML.h*.8-d);
+          bbox.d = Math.max(base.CHTML.d,sub.CHTML.d*.8+d);
+          bbox.w = base.CHTML.w + sub.CHTML.w + .07;
         }
         return span;
       }
@@ -896,7 +898,7 @@
         ]);
         denom.firstChild.lastChild.appendChild(span.lastChild);
         span.appendChild(denom);
-        var nbox = this.CHTMLbbox(0), dbox = this.CHTMLbbox(1), bbox = this.bbox;
+        var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1), bbox = this.CHTML;
         bbox.w = Math.max(nbox.w,dbox.w) * .8;
         bbox.h = nbox.h+nbox.d + .1 + .25;
         bbox.d = dbox.h+dbox.d - .25;
@@ -925,7 +927,7 @@
         return span;
       },
       CHTMLlayoutRoot: function (span,base) {
-        var bbox = this.CHTMLbbox(0);
+        var bbox = this.CHTMLbboxFor(0);
         var scale = Math.ceil((bbox.h+bbox.d+.14)*100), t = CHTML.Em(14/scale);
         var surd = HTML.Element("span",{className:"MJXc-surd"},[
           ["span",{style:{"font-size":scale+"%","margin-top":t}},["\u221A"]]
@@ -944,8 +946,8 @@
         root.appendChild(base);
         span.appendChild(surd);
         span.appendChild(root);
-        this.bbox.h = bbox.h + .18; this.bbox.d = bbox.d;
-        this.bbox.w = bbox.w + W; 
+        this.CHTML.h = bbox.h + .18; this.CHTML.d = bbox.d;
+        this.CHTML.w = bbox.w + W; 
         return span;
       }
     });
@@ -955,7 +957,7 @@
         span = this.CHTMLdefaultSpan(span,{
           childSpans:true, className:"MJXc-box", forceChild:true, noBBox:true
         });
-        var rbox = this.CHTMLbbox(1), root = span.removeChild(span.lastChild);
+        var rbox = this.CHTMLbboxFor(1), root = span.removeChild(span.lastChild);
         var sqrt = this.CHTMLlayoutRoot(HTML.Element("span"),span.firstChild);
         root.className = "MJXc-script";  // ### FIXME: should be scriptscript
         var scale = parseInt(sqrt.firstChild.firstChild.style.fontSize);
@@ -964,8 +966,8 @@
         root.style.marginRight = CHTML.Em(r); root.style.verticalAlign = CHTML.Em(v);
         if (-r > rbox.w*.8) root.style.marginLeft = CHTML.Em(-r-rbox.w*.8); // ### depends on rbox.w
         span.appendChild(root); span.appendChild(sqrt);
-        this.bbox.w += Math.max(0,rbox.w*.8+r);
-        this.bbox.h = Math.max(this.bbox.h,rbox.h*.8+v);
+        this.CHTML.w += Math.max(0,rbox.w*.8+r);
+        this.CHTML.h = Math.max(this.CHTML.h,rbox.h*.8+v);
         return span;
       },
       CHTMLlayoutRoot: MML.msqrt.prototype.CHTMLlayoutRoot
@@ -974,12 +976,12 @@
     MML.mrow.Augment({
       toCommonHTML: function (span) {
         span = this.CHTMLdefaultSpan(span);
-        var bbox = this.bbox;
+        var bbox = this.CHTML;
         var H = bbox.h, D = bbox.d;
         for (var i = 0, m = this.data.length; i < m; i++) {
           var data = this.data[i];
           if (data && data.CHTMLcanStretch("Vertical",H,D)) {
-            var dbox = data.bbox; var w = dbox.w;
+            var dbox = data.CHTML; var w = dbox.w;
             data.CHTMLstretchV(H,D);
             bbox.w += dbox.w - w;
             if (dbox.h > bbox.h) bbox.h = dbox.h;
@@ -1034,13 +1036,13 @@
           var row = this.data[i];
           if (row) {
             var rspace = CHTML.arrayEntry(RSPACE,i-1), ralign = CHTML.arrayEntry(RALIGN,i);
-            var rbox = row.bbox, rspan = row.CHTMLspanElement();
+            var rbox = row.CHTML, rspan = row.CHTMLspanElement();
             rspan.style.verticalAlign = ralign;
             for (j = 0, n = row.data.length; j < n; j++) {
               var cell = row.data[j];
               if (cell) {
                 var cspace = CHTML.arrayEntry(CSPACE,j-1), calign = CHTML.arrayEntry(CALIGN,j);
-                var cbox = cell.bbox, cspan = cell.CHTMLspanElement();
+                var cbox = cell.CHTML, cspan = cell.CHTMLspanElement();
                 if (j) {rbox.w += cspace; cspan.style.paddingLeft = CHTML.Em(cspace)}
                 if (i) cspan.style.paddingTop = CHTML.Em(rspace);
                 cspan.style.textAlign = calign;
@@ -1050,7 +1052,7 @@
             if (rbox.w > W) W = rbox.w;
           }
         }
-        var bbox = this.bbox;
+        var bbox = this.CHTML;
         bbox.w = W; bbox.h = H/2 + .25; bbox.d = H/2 - .25;
         bbox.l = bbox.r = .125;
         return span;
@@ -1062,7 +1064,7 @@
         span = this.CHTMLcreateSpan(span);
         if (this.data[i]) {
           this.data[i].toCommonHTML(span);
-          this.bbox = this.data[i].bbox;
+          this.CHTML = this.data[i].CHTML;
         }
         return span;
       }
