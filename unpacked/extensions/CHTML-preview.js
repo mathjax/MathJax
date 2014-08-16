@@ -36,25 +36,16 @@
     //  after the previews have been created
     //
     config: HUB.CombineConfig("CHTML-preview",{
-      EqnChunk: 5, EqnChunkFactor: 1, EqnChunkDelay: 100
+      EqnChunk: 5, EqnChunkFactor: 1, EqnChunkDelay: 150
     }),
 
     //
     //  Ajust the chunking of the output jax
     //
     Config: function () {
-      var config = this.config;
       HUB.Config({
-        "HTML-CSS": {
-          EqnChunk: config.EqnChunk,
-          EqnChunkFactor: config.EqnChunkFactor,
-          EqnChunkDelay: config.EqnChunkDelay
-        },
-        "SVG": {
-          EqnChunk: config.EqnChunk,
-          EqnChunkFactor: config.EqnChunkFactor,
-          EqnChunkDelay: config.EqnChunkDelay
-        }
+        "HTML-CSS": this.config,
+        "SVG": this.config
       });
     },
 
@@ -69,8 +60,16 @@
         data.script.parentNode.insertBefore(preview,data.script);
       }
       preview.innerHTML = "";
-      data.math.root.toCommonHTML(preview);
+      return this.postFilter(preview,data);
       return data;
+    },
+    postFilter: function (preview,data) {
+      try {
+        data.math.root.toCommonHTML(preview);
+      } catch (err) {
+        if (!err.restart) {throw err} // an actual error
+        return MathJax.Callback.After(["postFilter",this,preview,data],err.restart);
+      }
     },
 
     //
@@ -87,7 +86,7 @@
           "[MathJax]/jax/output/CommonHTML/config.js",
           "[MathJax]/jax/output/CommonHTML/jax.js"
         );
-        jax.postfilterHooks.Add(["Preview",MathJax.Extension["CHTML-preview"]]);
+        jax.postfilterHooks.Add(["Preview",MathJax.Extension["CHTML-preview"]],50);
       });
     }
   }
