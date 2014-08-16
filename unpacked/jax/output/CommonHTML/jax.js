@@ -42,8 +42,6 @@
 
   var FONTS = "'Times New Roman',Times,STIXGeneral,serif";
   var STYLES = {
-    ".MathJax_Preview": {color: "inherit"},
-
     ".MJXc-script": {"font-size":".8em"},
 
     ".MJXc-right": {
