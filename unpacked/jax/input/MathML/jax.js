@@ -158,8 +158,12 @@
         if (child.nodeName === "#comment") continue;
         if (child.nodeName === "#text") {
           if ((mml.isToken || mml.isChars) && !mml.mmlSelfClosing) {
-            var text = child.nodeValue.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
-            mml.Append(MML.chars(this.trimSpace(text)));
+            var text = child.nodeValue;
+            if (mml.isToken) {
+              text = text.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
+              text = this.trimSpace(text);
+            }
+            mml.Append(MML.chars(text));
           } else if (child.nodeValue.match(/\S/)) {
             MATHML.Error(["UnexpectedTextNode",
               "Unexpected text node: %1","'"+child.nodeValue+"'"]);
