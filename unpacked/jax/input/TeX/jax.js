@@ -1675,6 +1675,7 @@
       }
     },
     emPerInch: 7.2,
+    pxPerInch: 72,
     matchDimen: function (dim) {
       return dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
     },
@@ -1684,8 +1685,8 @@
       if (unit === "em") {return m}
       if (unit === "ex") {return m * .43}
       if (unit === "pt") {return m / 10}                    // 10 pt to an em
-      if (unit === "px") {return m / 12}                    // assume 12px per em (hack)
       if (unit === "pc") {return m * 1.2}                   // 12 pt to a pc
+      if (unit === "px") {return m * this.emPerInch / this.pxPerInch}
       if (unit === "in") {return m * this.emPerInch}
       if (unit === "cm") {return m * this.emPerInch / 2.54} // 2.54 cm to an inch
       if (unit === "mm") {return m * this.emPerInch / 25.4} // 10 mm to a cm
