@@ -1654,8 +1654,7 @@
       var n;
       if (this.string.charAt(this.i) === "[") {
         n = this.GetBrackets(name,"").replace(/ /g,"");
-        if (n &&
-            !n.match(/^((-?(\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/)) {
+        if (n && !this.matchDimen(n)) {
           TEX.Error(["BracketMustBeDimension",
                      "Bracket argument to %1 must be a dimension",name]);
         }
@@ -1676,12 +1675,16 @@
       }
     },
     emPerInch: 7.2,
+    matchDimen: function (dim) {
+      return dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
+    },
     dimen2em: function (dim) {
-      var match = dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(pt|em|ex|mu|pc|in|mm|cm)/);
+      var match = this.matchDimen(dim);
       var m = parseFloat(match[1]||"1"), unit = match[2];
       if (unit === "em") {return m}
       if (unit === "ex") {return m * .43}
       if (unit === "pt") {return m / 10}                    // 10 pt to an em
+      if (unit === "px") {return m / 12}                    // assume 12px per em (hack)
       if (unit === "pc") {return m * 1.2}                   // 12 pt to a pc
       if (unit === "in") {return m * this.emPerInch}
       if (unit === "cm") {return m * this.emPerInch / 2.54} // 2.54 cm to an inch
