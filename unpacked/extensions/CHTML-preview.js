@@ -36,7 +36,8 @@
     //  after the previews have been created
     //
     config: HUB.CombineConfig("CHTML-preview",{
-      EqnChunk: 5, EqnChunkFactor: 1, EqnChunkDelay: 150
+      Chunks: {EqnChunk: 5, EqnChunkFactor: 1, EqnChunkDelay: 150},
+      color:"inherit"
     }),
 
     //
@@ -44,9 +45,10 @@
     //
     Config: function () {
       HUB.Config({
-        "HTML-CSS": this.config,
-        "SVG": this.config
+        "HTML-CSS": this.config.Chunks,
+        SVG: this.config.Chunks,
       });
+      MathJax.Ajax.Styles({".MathJax_Preview":{color:this.config.color}});
     },
 
     //
