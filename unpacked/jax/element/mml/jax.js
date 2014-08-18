@@ -757,7 +757,7 @@ MathJax.ElementJax.mml.Augment({
         // <mrow> came from \left...\right
         // so treat as subexpression (tex class INNER)
         //
-        this.getPrevClass(prev);
+        this.getPrevClass(prev); prev = null;
         for (i = 0; i < m; i++)
           {if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}}
         this.texClass = MML.TEXCLASS.INNER;
