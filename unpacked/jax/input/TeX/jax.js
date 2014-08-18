@@ -1653,7 +1653,7 @@
     CrLaTeX: function (name) {
       var n;
       if (this.string.charAt(this.i) === "[") {
-        n = this.GetBrackets(name,"").replace(/ /g,"");
+        n = this.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
         if (n &&
             !n.match(/^((-?(\.\d+|\d+(\.\d*)?))(pt|em|ex|mu|mm|cm|in|pc))$/)) {
           TEX.Error(["BracketMustBeDimension",
@@ -1916,14 +1916,14 @@
       if (this.nextIsSpace()) {this.i++}
       if (this.string.charAt(this.i) == '{') {
         dimen = this.GetArgument(name);
-        if (dimen.match(/^\s*([-+]?(\.\d+|\d+(\.\d*)?))\s*(pt|em|ex|mu|px|mm|cm|in|pc)\s*$/))
-          {return dimen.replace(/ /g,"")}
+        if (dimen.match(/^\s*([-+]?([.,]\d+|\d+([.,]\d*)?))\s*(pt|em|ex|mu|px|mm|cm|in|pc)\s*$/))
+          {return dimen.replace(/ /g,"").replace(/,/,".")}
       } else {
         dimen = this.string.slice(this.i);
-        var match = dimen.match(/^\s*(([-+]?(\.\d+|\d+(\.\d*)?))\s*(pt|em|ex|mu|px|mm|cm|in|pc)) ?/);
+        var match = dimen.match(/^\s*(([-+]?([.,]\d+|\d+([.,]\d*)?))\s*(pt|em|ex|mu|px|mm|cm|in|pc)) ?/);
         if (match) {
           this.i += match[0].length;
-          return match[1].replace(/ /g,"");
+          return match[1].replace(/ /g,"").replace(/,/,".");
         }
       }
       TEX.Error(["MissingDimOrUnits",
