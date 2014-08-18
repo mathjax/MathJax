@@ -2011,14 +2011,11 @@ MathJax.Hub = {
   Typeset: function (element,callback) {
     if (!MathJax.isReady) return null;
     var ec = this.elementCallback(element,callback);
-    var queue = MathJax.Callback.Queue();
-    for (var i = 0, m = ec.elements.length; i < m; i++) {
-      if (ec.elements[i]) {
-        queue.Push(
-          ["PreProcess",this,ec.elements[i]],
-          ["Process",this,ec.elements[i]]
-        );
-      }
+    if (ec.count) {
+      var queue = MathJax.Callback.Queue(
+        ["PreProcess",this,ec.elements],
+        ["Process",this,ec.elements]
+      );
     }
     return queue.Push(ec.callback);
   },
@@ -2026,14 +2023,13 @@ MathJax.Hub = {
   PreProcess: function (element,callback) {
     var ec = this.elementCallback(element,callback);
     var queue = MathJax.Callback.Queue();
-    for (var i = 0, m = ec.elements.length; i < m; i++) {
-      if (ec.elements[i]) {
-        queue.Push(
-          ["Post",this.signal,["Begin PreProcess",ec.elements[i]]],
-          (arguments.callee.disabled? {} : ["Execute",this.preProcessors,ec.elements[i]]),
-          ["Post",this.signal,["End PreProcess",ec.elements[i]]]
-        );
+    if (ec.count) {
+      var elements = (ec.count === 1 ? [ec.elements] : ec.elements);
+      queue.Push(["Post",this.signal,["Begin PreProcess",ec.elements]]);
+      for (var i = 0, m = elements.length; i < m; i++) {
+        if (elements[i]) {queue.Push(["Execute",this.preProcessors,elements[i]])}
       }
+      queue.Push(["Post",this.signal,["End PreProcess",ec.elements]]);
     }
     return queue.Push(ec.callback);
   },
@@ -2045,32 +2041,31 @@ MathJax.Hub = {
   
   takeAction: function (action,element,callback) {
     var ec = this.elementCallback(element,callback);
+    var elements = ec.elements;
     var queue = MathJax.Callback.Queue(["Clear",this.signal]);
-    for (var i = 0, m = ec.elements.length; i < m; i++) {
-      if (ec.elements[i]) {
-        var state = {
-          scripts: [],                  // filled in by prepareScripts
-          start: new Date().getTime(),  // timer for processing messages
-          i: 0, j: 0,                   // current script, current jax
-          jax: {},                      // scripts grouped by output jax
-          jaxIDs: []                    // id's of jax used
-        };
-        queue.Push(
-          ["Post",this.signal,["Begin "+action,ec.elements[i]]],
-          ["Post",this.signal,["Begin Math",ec.elements[i],action]],
-          ["prepareScripts",this,action,ec.elements[i],state],
-          ["Post",this.signal,["Begin Math Input",ec.elements[i],action]],
-          ["processInput",this,state],
-          ["Post",this.signal,["End Math Input",ec.elements[i],action]],
-          ["prepareOutput",this,state,"preProcess"],
-          ["Post",this.signal,["Begin Math Output",ec.elements[i],action]],
-          ["processOutput",this,state],
-          ["Post",this.signal,["End Math Output",ec.elements[i],action]],
-          ["prepareOutput",this,state,"postProcess"],
-          ["Post",this.signal,["End Math",ec.elements[i],action]],
-          ["Post",this.signal,["End "+action,ec.elements[i]]]
-        );
-      }
+    var state = {
+      scripts: [],                  // filled in by prepareScripts
+      start: new Date().getTime(),  // timer for processing messages
+      i: 0, j: 0,                   // current script, current jax
+      jax: {},                      // scripts grouped by output jax
+      jaxIDs: []                    // id's of jax used
+    };
+    if (ec.count) {
+      queue.Push(
+        ["Post",this.signal,["Begin "+action,elements]],
+        ["Post",this.signal,["Begin Math",elements,action]],
+        ["prepareScripts",this,action,elements,state],
+        ["Post",this.signal,["Begin Math Input",elements,action]],
+        ["processInput",this,state],
+        ["Post",this.signal,["End Math Input",elements,action]],
+        ["prepareOutput",this,state,"preProcess"],
+        ["Post",this.signal,["Begin Math Output",elements,action]],
+        ["processOutput",this,state],
+        ["Post",this.signal,["End Math Output",elements,action]],
+        ["prepareOutput",this,state,"postProcess"],
+        ["Post",this.signal,["End Math",elements,action]],
+        ["Post",this.signal,["End "+action,elements]]
+      );
     }
     return queue.Push(ec.callback);
   },
@@ -2357,6 +2352,7 @@ MathJax.Hub = {
     if (callback == null && (element instanceof Array || typeof element === 'function'))
       {try {MathJax.Callback(element); callback = element; element = null} catch(e) {}}
     if (element == null) {element = this.config.elements || []}
+    if (element instanceof HTMLCollection) {element = [].slice.apply(element)}
     if (!(element instanceof Array)) {element = [element]}
     element = [].concat(element); // make a copy so the original isn't changed
     for (var i = 0, m = element.length; i < m; i++)
@@ -2364,11 +2360,15 @@ MathJax.Hub = {
     if (!document.body) {document.body = document.getElementsByTagName("body")[0]}
     if (element.length == 0) {element.push(document.body)}
     if (!callback) {callback = {}}
-    return {elements: element, callback: callback};
+    return {
+      count: element.length, 
+      elements: (element.length === 1 ? element[0] : element),
+      callback: callback
+    };
   },
   
   elementScripts: function (element) {
-    if (element instanceof Array) {
+    if (element instanceof Array || element instanceof HTMLCollection) {
       var scripts = [];
       for (var i = 0, m = element.length; i < m; i++)
         {scripts.push.apply(scripts,this.elementScripts(element[i]))}
