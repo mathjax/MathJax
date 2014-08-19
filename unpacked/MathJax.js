@@ -1902,6 +1902,7 @@ MathJax.Hub = {
   inputJax: {},          // mime-type mapped to input jax (by registration)
   outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
 
+  processSectionDelay: 50, // pause between input and output phases of processing
   processUpdateTime: 250, // time between screen updates when processing math (milliseconds)
   processUpdateDelay: 10, // pause between screen updates to allow other processing (milliseconds)
 
@@ -2058,11 +2059,15 @@ MathJax.Hub = {
         ["Post",this.signal,["Begin Math Input",elements,action]],
         ["processInput",this,state],
         ["Post",this.signal,["End Math Input",elements,action]],
+        ["Delay",MathJax.Callback,this.processSectionDelay],
         ["prepareOutput",this,state,"preProcess"],
+        ["Delay",MathJax.Callback,this.processSectionDelay],
         ["Post",this.signal,["Begin Math Output",elements,action]],
         ["processOutput",this,state],
         ["Post",this.signal,["End Math Output",elements,action]],
+        ["Delay",MathJax.Callback,this.processSectionDelay],
         ["prepareOutput",this,state,"postProcess"],
+        ["Delay",MathJax.Callback,this.processSectionDelay],
         ["Post",this.signal,["End Math",elements,action]],
         ["Post",this.signal,["End "+action,elements]]
       );
