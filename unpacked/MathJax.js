@@ -2052,6 +2052,8 @@ MathJax.Hub = {
       jaxIDs: []                    // id's of jax used
     };
     if (ec.count) {
+      var delay = ["Delay",MathJax.Callback,this.processSectionDelay];
+      if (!delay[2]) {delay = {}}
       queue.Push(
         ["Post",this.signal,["Begin "+action,elements]],
         ["Post",this.signal,["Begin Math",elements,action]],
@@ -2059,15 +2061,15 @@ MathJax.Hub = {
         ["Post",this.signal,["Begin Math Input",elements,action]],
         ["processInput",this,state],
         ["Post",this.signal,["End Math Input",elements,action]],
-        ["Delay",MathJax.Callback,this.processSectionDelay],
+        delay,
         ["prepareOutput",this,state,"preProcess"],
-        ["Delay",MathJax.Callback,this.processSectionDelay],
+        delay,
         ["Post",this.signal,["Begin Math Output",elements,action]],
         ["processOutput",this,state],
         ["Post",this.signal,["End Math Output",elements,action]],
-        ["Delay",MathJax.Callback,this.processSectionDelay],
+        delay,
         ["prepareOutput",this,state,"postProcess"],
-        ["Delay",MathJax.Callback,this.processSectionDelay],
+        delay,
         ["Post",this.signal,["End Math",elements,action]],
         ["Post",this.signal,["End "+action,elements]]
       );
