@@ -618,7 +618,7 @@
             c = String.fromCharCode((N>>10)+0xD800)
               + String.fromCharCode((N&0x3FF)+0xDC00);
           }
-          var box = BBOX.TEXT(scale,c,{
+          var box = BBOX.TEXT(scale*100/SVG.config.scale,c,{
             "font-family":variant.defaultFamily||SVG.config.undefinedFamily,
             "font-style":(variant.italic?"italic":""),
             "font-weight":(variant.bold?"bold":"")
@@ -1012,7 +1012,7 @@
       var bbox = this.element.getBBox();
       SVG.textSVG.removeChild(this.element);
       scale *= 1000/SVG.em;
-      this.element.setAttribute("transform","scale("+scale+") matrix(1 0 0 -1 0 0)");
+      this.element.setAttribute("transform","scale("+SVG.Fixed(scale)+") matrix(1 0 0 -1 0 0)");
       this.w = this.r = bbox.width*scale; this.l = 0;
       this.h = this.H = -bbox.y*scale;
       this.d = this.D = (bbox.height + bbox.y)*scale;
@@ -1543,7 +1543,7 @@
         this.SVGgetStyles();
         var svg = this.SVG(), scale = SVG.length2em(this.styles.fontSize||1)/1000;
         this.SVGhandleSpace(svg);
-        var def = (scale !== 1 ? {transform:"scale("+scale+")"} : {});
+        var def = (scale !== 1 ? {transform:"scale("+SVG.Fixed(scale)+")"} : {});
         var bbox = BBOX(def);
         bbox.Add(this.SVGchildSVG(0)); bbox.Clean();
         if (scale !== 1) {
