@@ -32,12 +32,14 @@
     version: "1.0",
 
     //
-    //  Configuration for the chinking of the main output
-    //  after the previews have been created
+    //  Configuration for the chunking of the main output
+    //  after the previews have been created, and other configuration.
     //
     config: HUB.CombineConfig("CHTML-preview",{
-      Chunks: {EqnChunk: 5, EqnChunkFactor: 1, EqnChunkDelay: 150},
-      color:"inherit"
+      Chunks: {EqnChunk: 10000, EqnChunkFactor: 1, EqnChunkDelay: 0},
+      color: "inherit",
+      updateTime: 10, updateDelay: 50,
+      messageStyle: "none"
     }),
 
     //
@@ -49,6 +51,26 @@
         SVG: this.config.Chunks,
       });
       MathJax.Ajax.Styles({".MathJax_Preview":{color:this.config.color}});
+      var update, delay, style, done;
+      var config = this.config;
+      HUB.Register.MessageHook("Begin Math Output",function () {
+        if (!done) {
+          update = HUB.processUpdateTime; delay = HUB.processUpdateDelay;
+          style = HUB.config.messageStyle;
+          HUB.processUpdateTime = config.updateTime;
+          HUB.processUpdateDelay = config.updateDelay;
+          HUB.Config({messageStyle: config.messageStyle});
+          MathJax.Message.Clear(0,0);
+        }
+      });
+      HUB.Register.MessageHook("End Math Output",function () {
+        if (!done) {
+          HUB.processUpdateTime = update;
+          HUB.processUpdateDelay = delay;
+          HUB.Config({messageStyle: style});
+          done = true;
+        }
+      });
     },
 
     //
