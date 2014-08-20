@@ -2749,6 +2749,7 @@
     MML.mtable.Augment({toHTML: MML.mbase.HTMLautoload});
     
     MML["annotation-xml"].Augment({toHTML: MML.mbase.HTMLautoload});
+    MML.annotation.Augment({toHTML: function (span) {return this.HTMLcreateSpan(span)}});
     
     MML.math.Augment({
       toHTML: function (span,node) {
