@@ -1706,6 +1706,11 @@
         if (this.HTMLlineBreaks(span)) {span = this.HTMLmultiline(span)}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
+        if (this.data.length === 1 && this.data[0]) {
+          // copy skew data from accented character
+          var bbox = this.data[0].HTMLspanElement().bbox;
+          if (bbox.skew) span.bbox.skew = bbox.skew;
+        }
 	return span;
       },
       HTMLlineBreaks: function () {return false},
@@ -2117,7 +2122,7 @@
         //
         var parent = this.CoreParent(),
             isScript = (parent && parent.isa(MML.msubsup) && this !== parent.data[parent.base]),
-            mapchars = (isScript?this.HTMLremapChars:null);
+            mapchars = (isScript?this.remapChars:null);
         if (text.length === 1 && parent && parent.isa(MML.munderover) &&
             this.CoreText(parent.data[parent.base]).length === 1) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
@@ -2133,7 +2138,7 @@
         //  Typeset contents
         //
 	for (var i = 0, m = this.data.length; i < m; i++)
-          {if (this.data[i]) {this.data[i].toHTML(span,variant,this.HTMLremap,mapchars)}}
+          {if (this.data[i]) {this.data[i].toHTML(span,variant,this.remap,mapchars)}}
 	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (text.length !== 1) {delete span.bbox.skew}
         //
@@ -2173,37 +2178,6 @@
 	this.HTMLhandleColor(span);
         this.HTMLhandleDir(span);
 	return span;
-      },
-      CoreParent: function () {
-        var parent = this;
-        while (parent && parent.isEmbellished() &&
-               parent.CoreMO() === this && !parent.isa(MML.math)) {parent = parent.Parent()}
-        return parent;
-      },
-      CoreText: function (parent) {
-        if (!parent) {return ""}
-        if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
-        while ((parent.isa(MML.mrow) || parent.isa(MML.TeXAtom) ||
-                parent.isa(MML.mstyle) || parent.isa(MML.mphantom)) &&
-                parent.data.length === 1 && parent.data[0]) {parent = parent.data[0]}
-        if (!parent.isToken) {return ""} else {return parent.data.join("")}
-      },
-      HTMLremapChars: {
-        '*':"\u2217",
-        '"':"\u2033",
-        "\u00B0":"\u2218",
-        "\u00B2":"2",
-        "\u00B3":"3",
-        "\u00B4":"\u2032",
-        "\u00B9":"1"
-      },
-      HTMLremap: function (text,map) {
-        text = text.replace(/-/g,"\u2212");
-        if (map) {
-          text = text.replace(/'/g,"\u2032").replace(/`/g,"\u2035");
-          if (text.length === 1) {text = map[text]||text}
-        }
-        return text;
       },
       HTMLcanStretch: function (direction) {
 	if (!this.Get("stretchy")) {return false}
@@ -2662,7 +2636,10 @@
 	    if (i == this.over) {
 	      if (accent) {
 		k = Math.max(t * scale * factor,2.5/this.em); z3 = 0;
-		if (base.bbox.skew) {x += base.bbox.skew}
+		if (base.bbox.skew) {
+                  x += base.bbox.skew; span.bbox.skew = base.bbox.skew;
+                  if (x+box.bbox.w > WW) {span.bbox.skew += (WW-box.bbox.w-x)/2}
+                }
 	      } else {
 		z1 = HTMLCSS.TeX.big_op_spacing1 * scale * factor;
 		z2 = HTMLCSS.TeX.big_op_spacing3 * scale * factor;

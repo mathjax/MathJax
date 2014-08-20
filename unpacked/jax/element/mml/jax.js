@@ -600,6 +600,38 @@ MathJax.ElementJax.mml.Augment({
     },
     isEmbellished: function () {return true},
     hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)},
+    CoreParent: function () {
+      var parent = this;
+      while (parent && parent.isEmbellished() &&
+             parent.CoreMO() === this && !parent.isa(MML.math)) {parent = parent.Parent()}
+      return parent;
+    },
+    CoreText: function (parent) {
+      if (!parent) {return ""}
+      if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
+      while ((((parent.isa(MML.mrow) || parent.isa(MML.TeXAtom) ||
+                parent.isa(MML.mstyle) || parent.isa(MML.mphantom)) &&
+                parent.data.length === 1) || parent.isa(MML.munderover)) &&
+                parent.data[0]) {parent = parent.data[0]}
+      if (!parent.isToken) {return ""} else {return parent.data.join("")}
+    },
+    remapChars: {
+      '*':"\u2217",
+      '"':"\u2033",
+      "\u00B0":"\u2218",
+      "\u00B2":"2",
+      "\u00B3":"3",
+      "\u00B4":"\u2032",
+      "\u00B9":"1"
+    },
+    remap: function (text,map) {
+      text = text.replace(/-/g,"\u2212");
+      if (map) {
+        text = text.replace(/'/g,"\u2032").replace(/`/g,"\u2035");
+        if (text.length === 1) {text = map[text]||text}
+      }
+      return text;
+    },
     setTeXclass: function (prev) {
       var values = this.getValues("form","lspace","rspace","fence"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}

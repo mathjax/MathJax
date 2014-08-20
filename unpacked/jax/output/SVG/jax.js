@@ -1102,6 +1102,8 @@
         this.SVGdata.h = svg.h, this.SVGdata.d = svg.d;
         if (svg.y) {this.SVGdata.h += svg.y; this.SVGdata.d -= svg.y}
         if (svg.X != null) {this.SVGdata.X = svg.X}
+        if (svg.skew) {this.SVGdata.skew = svg.skew}
+        if (svg.ic) {this.SVGdata.ic = svg.ic}
         if (this["class"]) {svg.removeable = false; SVG.Element(svg.element,{"class":this["class"]})}
         // FIXME:  if an element is split by linebreaking, the ID will be the same on both parts
         // FIXME:  if an element has an id, its zoomed copy will have the same ID
@@ -1420,7 +1422,7 @@
         //
         var parent = this.CoreParent(),
             isScript = (parent && parent.isa(MML.msubsup) && this !== parent.data[0]),
-            mapchars = (isScript?this.SVGremapChars:null);
+            mapchars = (isScript?this.remapChars:null);
         if (this.data.join("").length === 1 && parent && parent.isa(MML.munderover) &&
             this.CoreText(parent.data[parent.base]).length === 1) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
@@ -1437,7 +1439,7 @@
         //
 	for (var i = 0, m = this.data.length; i < m; i++) {
           if (this.data[i]) {
-            var text = this.data[i].toSVG(variant,scale,this.SVGremap,mapchars), x = svg.w;
+            var text = this.data[i].toSVG(variant,scale,this.remap,mapchars), x = svg.w;
             if (x === 0 && -text.l > 10*text.w) {x += -text.l} // initial combining character doesn't combine
             svg.Add(text,x,0,true);
             if (text.skew) {svg.skew = text.skew}
@@ -1458,37 +1460,6 @@
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
 	return svg;
-      },
-      CoreParent: function () {
-        var parent = this;
-        while (parent && parent.isEmbellished() &&
-               parent.CoreMO() === this && !parent.isa(MML.math)) {parent = parent.Parent()}
-        return parent;
-      },
-      CoreText: function (parent) {
-        if (!parent) {return ""}
-        if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
-        while ((parent.isa(MML.mrow) || parent.isa(MML.TeXAtom) ||
-                parent.isa(MML.mstyle) || parent.isa(MML.mphantom)) &&
-                parent.data.length === 1 && parent.data[0]) {parent = parent.data[0]}
-        if (!parent.isToken) {return ""} else {return parent.data.join("")}
-      },
-      SVGremapChars: {
-        '*':"\u2217",
-        '"':"\u2033",
-        "\u00B0":"\u2218",
-        "\u00B2":"2",
-        "\u00B3":"3",
-        "\u00B4":"\u2032",
-        "\u00B9":"1"
-      },
-      SVGremap: function (text,map) {
-        text = text.replace(/-/g,"\u2212");
-        if (map) {
-          text = text.replace(/'/g,"\u2032").replace(/`/g,"\u2035");
-          if (text.length === 1) {text = map[text]||text}
-        }
-        return text;
       },
       SVGcanStretch: function (direction) {
 	if (!this.Get("stretchy")) {return false}
@@ -1675,6 +1646,10 @@
 	for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {svg.Check(this.data[i])}}
         svg.Stretch(); svg.Clean();
+        if (this.data.length === 1 && this.data[0]) {
+          var data = this.data[0].SVGdata;
+          if (data.skew) {svg.skew = data.skew}
+        }
         if (this.SVGlineBreaks(svg)) {svg = this.SVGmultiline(svg)}
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
@@ -1914,7 +1889,10 @@
 	    if (i == this.over) {
 	      if (accent) {
 		k = t * scale; z3 = 0;
-		if (base.skew) {x += base.skew}
+		if (base.skew) {
+                  x += base.skew; svg.skew = base.skew;
+                  if (x+box.w > WW) {svg.skew += (WW-box.w-x)/2}
+                }
 	      } else {
 		z1 = SVG.TeX.big_op_spacing1 * scale;
 		z2 = SVG.TeX.big_op_spacing3 * scale;
@@ -2112,7 +2090,7 @@
           if (this.texClass === MML.TEXCLASS.VCENTER)
             {y = SVG.TeX.axis_height - (box.h+box.d)/2 + box.d}
           svg.Add(box,0,y);
-          svg.ic = box.ic;
+          svg.ic = box.ic; svg.skew = box.skew;
 	}
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
