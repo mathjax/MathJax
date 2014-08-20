@@ -2949,6 +2949,7 @@
           safariVerticalAlignBug: !v3p1,
           safariTextNodeBug: !v3p0,
           forceReflow: true,
+          FontFaceBug: true,
           allowWebFonts: (v3p1 && !forceImages ? "otf" : false)
         });
         if (trueSafari) {
