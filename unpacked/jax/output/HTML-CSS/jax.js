@@ -1485,7 +1485,8 @@
 
     handleFont: function (span,font,force) {
       span.style.fontFamily = font.family;
-      if (!font.directory) {span.style.fontSize = Math.floor(100/HTMLCSS.scale+.5) + "%"}
+      if (!font.directory)
+        {span.style.fontSize = Math.floor(HTMLCSS.config.scale/HTMLCSS.scale+.5) + "%"}
       if (!(HTMLCSS.FontFaceBug && font.isWebFont)) {
         var style  = font.style  || "normal", weight = font.weight || "normal";
         if (style !== "normal"  || force) {span.style.fontStyle  = style}
