@@ -2788,8 +2788,8 @@
 	span.bbox.lw *= f; span.bbox.rw *= f;
 	if (math && math.bbox.width != null) {
           span.style.minWidth = (math.bbox.minWidth || span.style.width);
-	  span.style.width = stack.style.width = math.bbox.width;
-	  box.style.width = "100%";
+	  span.style.width = math.bbox.width;
+	  box.style.width = stack.style.width = "100%";
 	}
 	//
 	//  Add color (if any)
