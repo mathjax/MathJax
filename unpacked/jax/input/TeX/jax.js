@@ -1973,7 +1973,7 @@
     InternalMath: function (text,level) {
       var def = {displaystyle: false}; if (level != null) {def.scriptlevel = level}
       if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      if (!text.match(/\\?\$|\\\(|\\(eq)?ref\s*\{/)) {return [this.InternalText(text,def)]}
+      if (!text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {return [this.InternalText(text,def)]}
       var i = 0, k = 0, c, match = '';
       var mml = [];
       while (i < text.length) {
@@ -2001,8 +2001,8 @@
             } else if (c === ')' && match === ')') {
               mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml().With(def)));
               match = ''; k = i;
-            } else if (c === '$' && match === '')  {
-              i--; text = text.substr(0,i-1) + text.substr(i); // remove \ from \$
+            } else if (c.match(/[${}\\]/) && match === '')  {
+              i--; text = text.substr(0,i-1) + text.substr(i); // remove \ from \$, \{, \}, or \\
             }
           }
         }
