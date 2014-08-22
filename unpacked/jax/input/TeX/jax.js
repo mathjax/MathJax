@@ -186,7 +186,7 @@
         if (this.open || this.close) {
           mml.texClass = MML.TEXCLASS.INNER;
           mml.texWithDelims = true;
-          mml = TEX.fenced(this.open,mml,this.close);
+          mml = TEX.fixedFence(this.open,mml,this.close);
         }
         return [STACKITEM.mml(mml), item];
       }
@@ -2145,6 +2145,20 @@
       if (mml.type === "mrow") {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
       if (close) {mrow.Append(MML.mo(close).With({fence:true, stretchy:true, texClass:MML.TEXCLASS.CLOSE}))}
       return mrow;
+    },
+    /*
+     *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
+     */
+    fixedFence: function (open,mml,close) {
+      var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
+      if (open) {mrow.Append(this.mathPalette(open,"l"))}
+      if (mml.type === "mrow") {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
+      if (close) {mrow.Append(this.mathPalette(close,"r"))}
+      return mrow;
+    },
+    mathPalette: function (fence,side) {
+      var D = '{\\bigg'+side+' '+fence+'}', T = '{\\big'+side+' '+fence+'}';
+      return TEX.Parse('\\mathchoice'+D+T+T+T).mml();
     },
     
     //
