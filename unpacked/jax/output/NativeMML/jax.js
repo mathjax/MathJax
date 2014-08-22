@@ -156,7 +156,7 @@
       this.Mouseout    = HOVER.Mouseout;
       this.Mousemove   = HOVER.Mousemove;
 
-      if (!isMSIE) {
+      if (!HUB.Browser.hasMathPlayer) {
         // Used in preTranslate to get scaling factors
         this.EmExSpan = HTML.Element("span",
           {style:{position:"absolute","font-size-adjust":"none"}},
@@ -173,10 +173,11 @@
     },
     //
     //  Set up MathPlayer for IE on the first time through.
+    //  Get the ex and em sizes.
     //
     InitializeMML: function () {
       this.initialized = true;
-      if (isMSIE) {
+      if (HUB.Browser.hasMathPlayer) {
         try {
           //
           //  Insert data needed to use MathPlayer for MathML output
