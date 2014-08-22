@@ -2359,7 +2359,7 @@ MathJax.Hub = {
     if (callback == null && (element instanceof Array || typeof element === 'function'))
       {try {MathJax.Callback(element); callback = element; element = null} catch(e) {}}
     if (element == null) {element = this.config.elements || []}
-    if (element instanceof HTMLCollection) {element = [].slice.apply(element)}
+    if (this.isHTMLCollection(element)) {element = this.HTMLCollection2Array(element)}
     if (!(element instanceof Array)) {element = [element]}
     element = [].concat(element); // make a copy so the original isn't changed
     for (var i = 0, m = element.length; i < m; i++)
@@ -2375,8 +2375,8 @@ MathJax.Hub = {
   },
   
   elementScripts: function (element) {
-    if (element instanceof Array || element instanceof HTMLCollection) {
-      var scripts = [];
+    var scripts = [];
+    if (element instanceof Array || this.isHTMLCollection(element)) {
       for (var i = 0, m = element.length; i < m; i++)
         {scripts.push.apply(scripts,this.elementScripts(element[i]))}
       return scripts;
@@ -2385,7 +2385,25 @@ MathJax.Hub = {
     if (!document.body) {document.body = document.getElementsByTagName("body")[0]}
     if (element == null) {element = document.body}
     if (element.tagName != null && element.tagName.toLowerCase() === "script") {return [element]}
-    return element.getElementsByTagName("script");
+    scripts = element.getElementsByTagName("script");
+    if (this.msieHTMLCollectionBug) {scripts = this.HTMLCollection2Array(scripts)}
+    return scripts;
+  },
+
+  //
+  //  IE8 fails to check "obj instanceof HTMLCollection" for some values of obj.
+  //
+  isHTMLCollection: function (obj) {
+    return (typeof(obj) === "object" && obj instanceof HTMLCollection);
+  },
+  //
+  //  IE8 doesn't deal with HTMLCollection as an array, so convert to array
+  //
+  HTMLCollection2Array: function (nodes) {
+    if (!this.msieHTMLCollectionBug) {return [].slice.call(nodes)}
+    var NODES = [];
+    for (var i = 0, m = nodes.length; i < m; i++) {NODES[i] = nodes[i]}
+    return NODES;
   },
   
   Insert: function (dst,src) {
@@ -3118,6 +3136,7 @@ MathJax.Hub.Startup = {
     MSIE: function (browser) {
       browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
+      MathJax.Hub.msieHTMLCollectionBug = (document.documentMode < 9);
       //
       //  MathPlayer doesn't function properly in IE10, and not at all in IE11,
       //  so don't even try to load it.
