@@ -1546,7 +1546,7 @@
     BuildRel: function (name) {
       var top = this.ParseUpTo(name,"\\over");
       var bot = this.ParseArg(name);
-      this.Push(MML.TeXAtom(MML.munderover(bot,null,top)).With({mclass: MML.TEXCLASS.REL}));
+      this.Push(MML.TeXAtom(MML.munderover(bot,null,top)).With({texClass: MML.TEXCLASS.REL}));
     },
     
     HBox: function (name,style) {
