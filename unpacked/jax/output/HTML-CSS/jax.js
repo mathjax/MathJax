@@ -26,7 +26,6 @@
  *  limitations under the License.
  */
 
-
 (function (AJAX,HUB,HTMLCSS) {
   var MML, isMobile = HUB.Browser.isMobile;
 
@@ -177,6 +176,7 @@
     loadWebFont: function (font) {
       HUB.Startup.signal.Post("HTML-CSS Jax - Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
       var n = MESSAGE(["LoadWebFont","Loading web-font %1",HTMLCSS.fontInUse+"/"+font.directory]);
+      if (HTMLCSS.noReflows) return;
       var done = MathJax.Callback({}); // called when font is loaded
       var callback = MathJax.Callback(["loadComplete",this,font,n,done]);
       AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],0,this.timeout);
@@ -832,6 +832,7 @@
     },
     
     getHD: function (span) {
+      if (span.bbox && this.config.noReflows) {return {h:span.bbox.h, d:span.bbox.d}}
       var position = span.style.position;
       span.style.position = "absolute";
       this.HDimg.style.height = "0px";
@@ -845,6 +846,7 @@
       return HD;
     },
     getW: function (span) {
+      if (span.bbox && this.config.noReflows) {return span.bbox.w}
       var W, H, w = (span.bbox||{}).w, start = span;
       if (span.bbox && span.bbox.exactW) {return w}
       if ((span.bbox && w >= 0 && !this.initialSkipBug && !this.msieItalicWidthBug) ||
@@ -886,7 +888,7 @@
       for (i = 0, m = SPANS.length; i < m; i++) {
         span = SPANS[i]; if (!span) continue;
         bbox = span.bbox; parent = this.parentNode(span);
-        if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline) {
+        if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline || this.config.noReflows) {
           if (!parent.bbox) {parent.bbox = bbox}
           continue;
         }
@@ -1077,7 +1079,8 @@
                 width:0, height:H, verticalAlign:D},
         bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW:true}, noAdjust:true, HH:h+d, isMathJax:true
       });
-      if (w > 0 && rule.offsetWidth == 0) {rule.style.width = this.Em(w)}
+      // ### FIXME:  figure out which IE has this bug and make a flag for it
+      if (w > 0 && !this.noReflows && rule.offsetWidth == 0) {rule.style.width = this.Em(w)}
       if (span.isBox || span.className == "mspace") {span.bbox = rule.bbox, span.HH = h+d}
       return rule;
     },
