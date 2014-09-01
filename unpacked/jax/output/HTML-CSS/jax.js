@@ -2042,7 +2042,7 @@
         var text = this.data.join("").replace(/[\u2061-\u2064]/g,""); // remove invisibles
         if (remap) {text = remap(text,chars)}
         if (variant.fontInherit) {
-          var scale = Math.floor(100/HTMLCSS.scale+.5) + "%";
+          var scale = Math.floor(HTMLCSS.config.scale/HTMLCSS.scale+.5) + "%";
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
           if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
           if (variant.italic) {span.lastChild.style.fontStyle = "italic"}
@@ -2058,7 +2058,7 @@
         var text = this.toString().replace(/[\u2061-\u2064]/g,""); // remove invisibles
         if (remap) {text = remap(text,chars)}
         if (variant.fontInherit) {
-          var scale = Math.floor(100/HTMLCSS.scale+.5) + "%";
+          var scale = Math.floor(HTMLCSS.config.scale/HTMLCSS.scale+.5) + "%";
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
           if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
           if (variant.italic) {span.lastChild.style.fontStyle = "italic"}

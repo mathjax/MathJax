@@ -1528,7 +1528,7 @@
           variant = this.Get("mathvariant");
           if (variant === "monospace") {def["class"] = "MJX-monospace"}
             else if (variant.match(/sans-serif/)) {def["class"] = "MJX-sans-serif"}
-          svg.Add(BBOX.TEXT(scale,this.data.join(""),def)); svg.Clean();
+          svg.Add(BBOX.TEXT(scale*100/SVG.config.scale,this.data.join(""),def)); svg.Clean();
           this.SVGhandleColor(svg);
           this.SVGsaveData(svg);
           return svg;
