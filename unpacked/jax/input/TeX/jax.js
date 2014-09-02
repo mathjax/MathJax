@@ -167,6 +167,7 @@
             else {item.data[0] = MML.mrow(this.primes.With({variantForm:true}),item.data[0])}
         }
         this.data[0].SetData(this.position,item.data[0]);
+        if (this.movesupsub != null) {this.data[0].movesupsub = this.movesupsub}
         return STACKITEM.mml(this.data[0]);
       }
       if (this.SUPER(arguments).checkItem.call(this,item))
@@ -1169,48 +1170,56 @@
     Superscript: function (c) {
       if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
         {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
-      var position, primes, base, top = this.stack.Top();
+      var primes, base, top = this.stack.Top();
       if (top.type === "prime") {base = top.data[0]; primes = top.data[1]; this.stack.Pop()}
         else {base = this.stack.Prev(); if (!base) {base = MML.mi("")}}
       if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
-      if (base.type === "msubsup") {
-        if (base.data[base.sup])
-          {TEX.Error(["DoubleExponent","Double exponent: use braces to clarify"])}
-        position = base.sup;
-      } else if (base.movesupsub) {
-        if (base.type !== "munderover" || base.data[base.over]) {
-          if (base.movablelimits && base.isa(MML.mi)) {base = this.mi2mo(base)}
-          base = MML.munderover(base,null,null).With({movesupsub:true})
+      var movesupsub = base.movesupsub, position = base.sup;
+      if ((base.type === "msubsup" && base.data[base.sup]) ||
+          (base.type === "munderover" && base.data[base.over]))
+           {TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"])}
+      if (base.type !== "msubsup") {
+        if (movesupsub) {
+          if (base.type !== "munderover" || base.data[base.over]) {
+            if (base.movablelimits && base.isa(MML.mi)) {base = this.mi2mo(base)}
+            base = MML.munderover(base,null,null).With({movesupsub:true})
+          }
+          position = base.over;
+        } else {
+          base = MML.msubsup(base,null,null);
+          position = base.sup;
         }
-        position = base.over;
-      } else {
-        base = MML.msubsup(base,null,null);
-        position = base.sup;
       }
-      this.Push(STACKITEM.subsup(base).With({position: position, primes: primes}));
+      this.Push(STACKITEM.subsup(base).With({
+        position: position, primes: primes, movesupsub: movesupsub
+      }));
     },
     Subscript: function (c) {
       if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
         {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
-      var position, primes, base, top = this.stack.Top();
+      var primes, base, top = this.stack.Top();
       if (top.type === "prime") {base = top.data[0]; primes = top.data[1]; this.stack.Pop()}
         else {base = this.stack.Prev(); if (!base) {base = MML.mi("")}}
       if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
-      if (base.type === "msubsup") {
-        if (base.data[base.sub])
-          {TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"])}
-        position = base.sub;
-      } else if (base.movesupsub) {
-        if (base.type !== "munderover" || base.data[base.under]) {
-          if (base.movablelimits && base.isa(MML.mi)) {base = this.mi2mo(base)}
-          base = MML.munderover(base,null,null).With({movesupsub:true})
+      var movesupsub = base.movesupsub, position = base.sub;
+      if ((base.type === "msubsup" && base.data[base.sub]) ||
+          (base.type === "munderover" && base.data[base.under]))
+           {TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"])}
+      if (base.type !== "msubsup") {
+        if (movesupsub) {
+          if (base.type !== "munderover" || base.data[base.under]) {
+            if (base.movablelimits && base.isa(MML.mi)) {base = this.mi2mo(base)}
+            base = MML.munderover(base,null,null).With({movesupsub:true})
+          }
+          position = base.under;
+        } else {
+          base = MML.msubsup(base,null,null);
+          position = base.sub;
         }
-        position = base.under;
-      } else {
-        base = MML.msubsup(base,null,null);
-        position = base.sub;
       }
-      this.Push(STACKITEM.subsup(base).With({position: position, primes: primes}));
+      this.Push(STACKITEM.subsup(base).With({
+        position: position, primes: primes, movesupsub: movesupsub
+      }));
     },
     PRIME: "\u2032", SMARTQUOTE: "\u2019",
     Prime: function (c) {
@@ -1324,8 +1333,14 @@
     },
     Limits: function (name,limits) {
       var op = this.stack.Prev("nopop");
-      if (!op || op.texClass !== MML.TEXCLASS.OP)
+      if (!op || (op.Get("texClass") !== MML.TEXCLASS.OP && op.movesupsub == null))
         {TEX.Error(["MisplacedLimits","%1 is allowed only on operators",name])}
+      var top = this.stack.Top();
+      if (op.type === "munderover" && !limits) {
+        op = top.data[top.data.length-1] = MML.msubsup.apply(MML.subsup,op.data);
+      } else if (op.type === "msubsup" && limits) {
+        op = top.data[top.data.length-1] = MML.munderover.apply(MML.underover,op.data);
+      }
       op.movesupsub = (limits ? true : false);
       op.movablelimits = false;
     },
@@ -1399,9 +1414,9 @@
       var base = this.ParseArg(name);
       if (base.Get("movablelimits")) {base.movablelimits = false}
       var mml = MML.munderover(base,null,null);
-      if (stack) {mml.movesupsub = true}
       mml.data[mml[pos]] = 
         this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:(pos == "under")}));
+      if (stack) {mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true})}
       this.Push(mml);
     },
     
