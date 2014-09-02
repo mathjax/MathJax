@@ -287,7 +287,14 @@
       return this.SUPER(arguments).checkItem.call(this,item);
     },
     EndEntry: function () {this.row.push(MML.mtd.apply(MML,this.data)); this.data = []},
-    EndRow:   function () {this.table.push(MML.mtr.apply(MML,this.row)); this.row = []},
+    EndRow:   function () {
+      var mtr = MML.mtr;
+      if (this.isNumbered && this.row.length === 3) {
+        this.row.unshift(this.row.pop());  // move equation number to first position
+        mtr = MML.mlabeledtr;
+      }
+      this.table.push(mtr.apply(MML,this.row)); this.row = [];
+    },
     EndTable: function () {
       if (this.data.length || this.row.length) {this.EndEntry(); this.EndRow()}
       this.checkLines();
@@ -913,8 +920,8 @@
         hline:             ['HLine','solid'],
         hdashline:         ['HLine','dashed'],
 //      noalign:            'HandleNoAlign',
-        eqalignno:         ['Matrix',null,null,"right left right",MML.LENGTH.THICKMATHSPACE+" 3em",".5em",'D'],
-        leqalignno:        ['Matrix',null,null,"right left right",MML.LENGTH.THICKMATHSPACE+" 3em",".5em",'D'],
+        eqalignno:         ['Matrix',null,null,"right left",MML.LENGTH.THICKMATHSPACE,".5em",'D',null,"right"],
+        leqalignno:        ['Matrix',null,null,"right left",MML.LENGTH.THICKMATHSPACE,".5em",'D',null,"left"],
 
         //  TeX substitution macros
         bmod:              ['Macro','\\mmlToken{mo}[lspace="thickmathspace" rspace="thickmathspace"]{mod}'],
@@ -1604,7 +1611,7 @@
       }
     },
     
-    Matrix: function (name,open,close,align,spacing,vspacing,style,cases) {
+    Matrix: function (name,open,close,align,spacing,vspacing,style,cases,numbered) {
       var c = this.GetNext();
       if (c === "")
         {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
@@ -1617,6 +1624,7 @@
         }
       });
       if (cases)         {array.isCases = true}
+      if (numbered)      {array.isNumbered = true; array.arraydef.side = numbered}
       if (open || close) {array.open = open; array.close = close}
       if (style === "D") {array.arraydef.displaystyle = true}
       if (align != null) {array.arraydef.columnalign = align}
