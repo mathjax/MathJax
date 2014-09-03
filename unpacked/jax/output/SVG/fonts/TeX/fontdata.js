@@ -1565,16 +1565,16 @@
   //  Add some spacing characters (more will come later)
   //
   MathJax.Hub.Insert(SVG.FONTDATA.FONTS['MathJax_Main'],{
-    0x2000: [0,0,500,0,0],             // en quad
-    0x2001: [0,0,1000,0,0],            // em quad
-    0x2002: [0,0,500,0,0],             // en space
-    0x2003: [0,0,1000,0,0],            // em space
-    0x2004: [0,0,333,0,0],             // 3-per-em space
-    0x2005: [0,0,250,0,0],             // 4-per-em space
-    0x2006: [0,0,167,0,0],             // 6-per-em space
-    0x2009: [0,0,167,0,0],             // thin space
-    0x200A: [0,0,83,0,0],              // hair space
-    0x200B: [0,0,0,0,0],               // zero-width space
+    0x2000: [0,0,500,0,0,{space:1}],     // en quad
+    0x2001: [0,0,1000,0,0,{space:1}],    // em quad
+    0x2002: [0,0,500,0,0,{space:1}],     // en space
+    0x2003: [0,0,1000,0,0,{space:1}],    // em space
+    0x2004: [0,0,333,0,0,{space:1}],     // 3-per-em space
+    0x2005: [0,0,250,0,0,{space:1}],     // 4-per-em space
+    0x2006: [0,0,167,0,0,{space:1}],     // 6-per-em space
+    0x2009: [0,0,167,0,0,{space:1}],     // thin space
+    0x200A: [0,0,83,0,0,{space:1}],      // hair space
+    0x200B: [0,0,0,0,0,{space:1}],       // zero-width space
     0xEEE0: [0,0,-575,0,0,{space:1}],
     0xEEE1: [0,0,-300,0,0,{space:1}],
     0xEEE8: [0,0,25,0,0,{space:1}]
