@@ -2038,7 +2038,7 @@
           var style = svg.element.style;
           svg.element.setAttribute("width",SVG.Ex(l+svg.w+r));
           svg.element.setAttribute("height",SVG.Ex(svg.H+svg.D+2*SVG.em));
-          style.verticalAlign = SVG.Ex(-svg.D-3*SVG.em); // remove 2 extra pixels added below plus padding
+          style.verticalAlign = SVG.Ex(-svg.D-2*SVG.em); // remove extra pixel added below plus padding from above
           style.marginLeft = SVG.Ex(-l); style.marginRight = SVG.Ex(-r);
           svg.element.setAttribute("viewBox",SVG.Fixed(-l,1)+" "+SVG.Fixed(-svg.H-SVG.em,1)+" "+
                                              SVG.Fixed(l+svg.w+r,1)+" "+SVG.Fixed(svg.H+svg.D+2*SVG.em,1));
@@ -2046,15 +2046,10 @@
           //
           //  If there is extra height or depth, hide that
           //
-          if (svg.H > svg.h || svg.D > svg.d) {
-            var frame = HTML.Element(
-              "span",{style: {display:"inline-block", "white-space":"nowrap", padding:"1px 0px"}, isMathJax:true},[[
-              "span",{style: {display:"inline-block", position:"relative",
-                              width:SVG.Ex(svg.w), height:SVG.Ex(svg.h+svg.d),
-                              "vertical-align":SVG.Ex(-svg.d)}, isMathJax:true}]]);
-            frame.firstChild.appendChild(svg.element); svg.element = frame;
-            style.verticalAlign = style.margin = ""; style.position = "absolute";
-            style.bottom = SVG.Ex(svg.d-svg.D); style.left = 0;
+          if (svg.H > svg.h) {style.marginTop = SVG.Ex(svg.h-svg.H)}
+          if (svg.D > svg.d) {
+            style.marginBottom = SVG.Ex(svg.d-svg.D);
+            style.verticalAlign = SVG.Ex(-svg.d);
           }
           //
           //  Add it to the MathJax span
