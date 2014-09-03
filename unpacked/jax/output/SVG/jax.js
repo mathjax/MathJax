@@ -605,7 +605,7 @@
         }
         font = this.lookupChar(variant,n); c = font[n];
         if (c) {
-          if (c[5] && c[5].space) {svg.w += c[2]} else {
+          if ((c[5] && c[5].space) || (c[5] === "" && c[0]+c[1] === 0)) {svg.w += c[2]} else {
             c = [scale,font.id+"-"+n.toString(16).toUpperCase()].concat(c);
             svg.Add(BBOX.GLYPH.apply(BBOX,c),svg.w,0);
           }
@@ -1038,7 +1038,7 @@
       if (!cache || !GLYPH.glyphs[id]) {
         def = {"stroke-width":t};
         if (cache) {def.id = id} else if (transform) {def.transform = transform}
-        if (p !== "") {def.d = "M"+p+"Z"}
+        def.d = (p ? "M"+p+"Z" : "");
         this.SUPER(arguments).Init.call(this,def);
         if (cache) {GLYPH.defs.appendChild(this.element); GLYPH.glyphs[id] = true;}
       }
