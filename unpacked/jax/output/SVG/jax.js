@@ -1006,6 +1006,8 @@
     type: "text", removeable: false,
     Init: function (scale,text,def) {
       if (!def) {def = {}}; def.stroke = "none";
+      if (def["font-style"] === "") delete def["font-style"];
+      if (def["font-weight"] === "") delete def["font-weight"];
       this.SUPER(arguments).Init.call(this,def);
       SVG.addText(this.element,text);
       SVG.textSVG.appendChild(this.element);
