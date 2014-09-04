@@ -259,7 +259,7 @@
   STACKITEM.array = STACKITEM.Subclass({
     type: "array", isOpen: true, arraydef: {},
     Init: function () {
-      this.table = []; this.row = []; this.env = {}; this.frame = []
+      this.table = []; this.row = []; this.env = {}; this.frame = []; this.hfill = [];
       this.SUPER(arguments).Init.apply(this,arguments);
     },
     checkItem: function (item) {
@@ -287,7 +287,15 @@
       }
       return this.SUPER(arguments).checkItem.call(this,item);
     },
-    EndEntry: function () {this.row.push(MML.mtd.apply(MML,this.data)); this.data = []},
+    EndEntry: function () {
+      var mtd = MML.mtd.apply(MML,this.data);
+      if (this.hfill.length) {
+        if (this.hfill[0] === 0) mtd.columnalign = "right";
+        if (this.hfill[this.hfill.length-1] === this.data.length)
+          mtd.columnalign = (mtd.columnalign ? "center" : "left");
+      }
+      this.row.push(mtd); this.data = []; this.hfill = [];
+    },
     EndRow:   function () {this.table.push(MML.mtr.apply(MML,this.row)); this.row = []},
     EndTable: function () {
       if (this.data.length || this.row.length) {this.EndEntry(); this.EndRow()}
@@ -916,6 +924,9 @@
 //      noalign:            'HandleNoAlign',
         eqalignno:         ['Matrix',null,null,"right left right",MML.LENGTH.THICKMATHSPACE+" 3em",".5em",'D'],
         leqalignno:        ['Matrix',null,null,"right left right",MML.LENGTH.THICKMATHSPACE+" 3em",".5em",'D'],
+        hfill:              'HFill',
+        hfil:               'HFill',   // \hfil treated as \hfill for now
+        hfilll:             'HFill',   // \hfilll treated as \hfill for now
 
         //  TeX substitution macros
         bmod:              ['Macro','\\mmlToken{mo}[lspace="thickmathspace" rspace="thickmathspace"]{mod}'],
@@ -1727,6 +1738,14 @@
         top.arraydef.rowlines = lines.join(' ');
       }
     },
+    
+    HFill: function (name) {
+      var top = this.stack.Top();
+      if (top.isa(STACKITEM.array)) top.hfill.push(top.data.length);
+        else TEX.Error(["UnsupportedHFill","Unsupported use of %1",name]);
+    },
+    
+
     
    /************************************************************************/
    /*
