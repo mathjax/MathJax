@@ -2049,6 +2049,7 @@
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
           if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
           if (variant.italic) {span.lastChild.style.fontStyle = "italic"}
+          delete span.bbox;
           var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
           span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
         } else {
@@ -2065,6 +2066,7 @@
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
           if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
           if (variant.italic) {span.lastChild.style.fontStyle = "italic"}
+          delete span.bbox;
           var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
           span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
         } else {
