@@ -814,7 +814,7 @@
       scriptspace:         100,
       nulldelimiterspace:  120,
       delimiterfactor:     901,
-      delimitershortfall:  100,    // originally 300,
+      delimitershortfall:  300,
 
       min_rule_thickness:  1.25,   // in pixels
       min_root_space:      1.5     // in pixels
@@ -1488,6 +1488,8 @@
 	values.maxsize = SVG.length2em(values.maxsize,mu,svg.h+svg.d);
 	values.minsize = SVG.length2em(values.minsize,mu,svg.h+svg.d);
 	H = Math.max(values.minsize,Math.min(values.maxsize,H));
+        if (H != values.minsize)
+          {H = [Math.max(H*SVG.TeX.delimiterfactor/1000,H-SVG.TeX.delimitershortfall),H]}
 	svg = SVG.createDelimiter(this.data.join("").charCodeAt(0),H,svg.scale);
 	if (values.symmetric) {H = (svg.h + svg.d)/2 + axis}
 	  else {H = (svg.h + svg.d) * h/(h + d)}
