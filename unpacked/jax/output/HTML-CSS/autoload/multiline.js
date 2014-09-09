@@ -209,13 +209,6 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var align = this.HTMLgetAlign(state,values),
           shift = this.HTMLgetShift(state,values,align);
       //
-      //  Add in space for the shift
-      //
-      if (shift) {
-        HTMLCSS.createBlank(line,shift,(align !== MML.INDENTALIGN.RIGHT));
-        line.bbox.w += shift; line.bbox.rw += shift;
-      }
-      //
       //  Set the Y offset based on previous depth, leading, and current height
       //
       if (state.n > 0) {
@@ -226,7 +219,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       //  Place the new line
       //
-      HTMLCSS.alignBox(line,align,state.Y);
+      HTMLCSS.alignBox(line,align,state.Y,shift);
       //
       //  Save the values needed for the future
       //
@@ -247,14 +240,18 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       return align;
     },
     HTMLgetShift: function (state,values,align) {
-      if (align === MML.INDENTALIGN.CENTER) {return 0}
       var cur = values, prev = state.values, def = state.VALUES, shift;
       if (state.n === 0)     {shift = cur.indentshiftfirst || prev.indentshiftfirst || def.indentshiftfirst}
       else if (state.isLast) {shift = prev.indentshiftlast || def.indentshiftlast}
       else                   {shift = prev.indentshift || def.indentshift}
       if (shift === MML.INDENTSHIFT.INDENTSHIFT) {shift = prev.indentshift || def.indentshift}
-      if (shift === "auto" || shift === "") {shift = (state.isTSop ? this.displayIndent : "0")}
-      return HTMLCSS.length2em(shift,0);
+      if (shift === "auto" || shift === "") {shift = "0"}
+      shift = HTMLCSS.length2em(shift,1,HTMLCSS.cwidth);
+      if (state.isTop && this.displayIndent !== "0") {
+        var indent = HTMLCSS.length2em(this.displayIndent,1,HTMLCSS.cwidth);
+        shift += (align === MML.INDENTALIGN.RIGHT ? -indent : indent);
+      }
+      return shift;
     },
     
     /****************************************************************/
@@ -692,7 +689,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       if (penalty >= info.penalty) {return false}
       info.penalty = penalty; info.values = values; info.W = W; info.w = w;
-      values.lineleading = HTMLCSS.length2em(values.lineleading,state.VALUES.lineleading);
+      values.lineleading = HTMLCSS.length2em(values.lineleading,1,state.VALUES.lineleading);
       values.id = this.spanID;
       return true;
     }

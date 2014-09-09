@@ -257,11 +257,12 @@
           this.hiddenDiv.appendChild(div);
           jax.SVG.isHidden = true;
           ex = this.defaultEx; cwidth = this.defaultWidth;
-          if (relwidth) {maxwidth = this.defaultWidth}
+          if (relwidth) {maxwidth = cwidth}
         }
-        jax.SVG.ex = ex; jax.SVG.cwidth = cwidth;
+        jax.SVG.ex = ex;
         jax.SVG.em = em = ex / SVG.TeX.x_height * 1000; // scale ex to x_height
-        jax.SVG.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/em) : 1000000);
+        jax.SVG.cwidth = cwidth/em * 1000;
+        jax.SVG.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/em*1000) : SVG.BIGDIMEN);
       }
       //
       //  Remove the test spans used for determining scales and linebreak widths
@@ -305,7 +306,7 @@
       //  Set the font metrics
       //
       this.em = MML.mbase.prototype.em = jax.SVG.em; this.ex = jax.SVG.ex;
-      this.linebreakWidth = jax.SVG.lineWidth * 1000; this.cwidth = jax.SVG.cwidth;
+      this.linebreakWidth = jax.SVG.lineWidth; this.cwidth = jax.SVG.cwidth;
       //
       //  Typeset the math
       //
@@ -431,7 +432,7 @@
       var emex = span.appendChild(this.ExSpan.cloneNode(true));
       var ex = emex.firstChild.offsetHeight/60;
       this.em = MML.mbase.prototype.em = ex / SVG.TeX.x_height * 1000;
-      this.cwidth = .85*SVG.defaultWidth;
+      this.cwidth = .85*SVG.defaultWidth/this.em * 1000;
       emex.parentNode.removeChild(emex);
 
       span.appendChild(this.textSVG);
@@ -2044,7 +2045,7 @@
           style.marginLeft = SVG.Ex(-l); style.marginRight = SVG.Ex(-r);
           svg.element.setAttribute("viewBox",SVG.Fixed(-l,1)+" "+SVG.Fixed(-svg.H-SVG.em,1)+" "+
                                              SVG.Fixed(l+svg.w+r,1)+" "+SVG.Fixed(svg.H+svg.D+2*SVG.em,1));
-          svg.element.style.margin="1px 0px"; // 1px above and below to prevent lines from touching
+          style.marginTop = style.marginBottom = "1px"; // 1px above and below to prevent lines from touching
           //
           //  If there is extra height or depth, hide that
           //
@@ -2060,17 +2061,25 @@
           //
           //  Handle indentalign and indentshift for single-line displays
           //
-          if (!this.isMultiline && this.Get("display") === "block") {
+          if (!this.isMultiline && this.Get("display") === "block" && !svg.hasIndent) {
             var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
             if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) {values.indentalign = values.indentalignfirst}
             if (values.indentalign === MML.INDENTALIGN.AUTO) {values.indentalign = this.displayAlign}
-            div.style.textAlign = values.indentalign;
             if (values.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {values.indentshift = values.indentshiftfirst}
-            if (values.indentshift === "auto") {values.indentshift = this.displayIndent}
-            if (values.indentshift && values.indentalign !== MML.INDENTALIGN.CENTER && !svg.hasIndent) {
-              span.style[{left:"marginLeft",right:"marginRight"}[values.indentalign]] =
-                SVG.Ex(SVG.length2em(values.indentshift));
-	    }
+            if (values.indentshift === "auto") {values.indentshift = "0"}
+            var shift = SVG.length2em(values.indentshift,1,SVG.cwidth);
+            if (this.displayIndent !== "0") {
+              var indent = SVG.length2em(this.displayIndent,1,SVG.cwidth);
+              shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
+            }
+            div.style.textAlign = values.indentalign;
+            if (shift) {
+              HUB.Insert(style,({
+                left: {marginLeft: SVG.Ex(shift)},
+                right: {marginRight: SVG.Ex(-shift)},
+                center: {marginLeft: SVG.Ex(shift), marginRight: SVG.Ex(-shift)}
+              })[values.indentalign]);
+            }
           }
         }
 	return span;
