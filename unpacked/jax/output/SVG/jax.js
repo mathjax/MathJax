@@ -889,20 +889,9 @@
       this.childScale = svg.scale; this.childX = svg.x; this.childY = svg.y; this.n++;
       return svg;
     },
-    Align: function (svg,align,dx,dy) {
+    Align: function (svg,align,dx,dy,shift) {
       dx = ({left: dx, center: (this.w - svg.w)/2, right: this.w - svg.w - dx})[align] || 0;
-      //
-      //  If we extend to the left of the current contents,
-      //    move the contents to the right and adjust the bounding box
-      //
-      if (dx < 0) {
-        if (this.element.childNodes.length) {
-          this.element.setAttribute("transform","translate("+Math.floor(-dx)+",0)");
-          var g = SVG.Element("g"); g.appendChild(this.element); this.element = g;
-        }
-        this.l -= dx; this.w -= dx; this.r -= dx; dx = 0;
-      }
-      this.Add(svg,dx,dy);
+      var w = this.w; this.Add(svg,dx+(shift||0),dy); this.w = w;
     },
     Clean: function () {
       if (this.h === -SVG.BIGDIMEN) {this.h = this.d = this.l = 0}

@@ -92,7 +92,6 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (isTop && parent.type !== "mtd") {
         if (SVG.linebreakWidth < SVG.BIGDIMEN) {svg.w = SVG.linebreakWidth}
           else {svg.w = SVG.cwidth}
-        svg.lw = svg.w;
       }
 
       var state = {
@@ -212,10 +211,6 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var align = this.SVGgetAlign(state,values),
           shift = this.SVGgetShift(state,values,align);
       //
-      //  Add in space for the shift
-      //
-      line.x = shift;
-      //
       //  Set the Y offset based on previous depth, leading, and current height
       //
       if (state.n > 0) {
@@ -226,8 +221,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Place the new line
       //
-      svg.Align(line,align,0,state.Y);
-      svg.w = svg.lw;  // in case a line extends past the right
+      svg.Align(line,align,0,state.Y,shift);
       //
       //  Save the values needed for the future
       //
