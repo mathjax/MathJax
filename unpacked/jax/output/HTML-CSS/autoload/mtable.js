@@ -443,8 +443,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         C[LABEL].style.marginRight = C[LABEL].style.marginLeft = HTMLCSS.Em(labelshift);
         if (indent.indentalign === MML.INDENTALIGN.CENTER) {mw += 4*labelshift + 2*C[LABEL].bbox.w}
           else if (indent.indentalign !== CALIGN[LABEL]) {mw += 2*labelshift + C[LABEL].bbox.w}
-        span.style.minWidth = span.bbox.minWidth = 
-          eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(Math.max(0,mw+shift));
+        span.style.minWidth = span.bbox.minWidth = HTMLCSS.Em(Math.max(0,mw+shift));
+        eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(Math.max(0,(mw+shift)/HTMLCSS.scale));
       }
       //
       //  Finish the table
