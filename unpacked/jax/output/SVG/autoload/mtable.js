@@ -336,10 +336,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -indent: indent);
         }
         var eqn = svg; svg = this.SVG();
-        eqn.x = shift; svg.w = svg.r = SVG.cwidth; svg.hasIndent = true;
+        svg.w = svg.r = SVG.cwidth; svg.hasIndent = true;
         svg.Align(C[LABEL],CALIGN[LABEL],labelshift,0);
-        svg.Align(eqn,indent.indentalign,0,0);
-        svg.w = SVG.cwidth; // in case the equation extends past the right
+        svg.Align(eqn,indent.indentalign,0,0,shift);
       }
       
       this.SVGsaveData(svg);
