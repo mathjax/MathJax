@@ -1665,14 +1665,10 @@
       },
       SVGmultiline: function (span) {MML.mbase.SVGautoloadFile("multiline")},
       SVGstretchH: function (w) {
-	var svg = this.SVG(), child;
+	var svg = this.SVG();
         this.SVGhandleSpace(svg);
-	for (var i = 0, m = this.data.length; i < m; i++) {
-          if (!this.data[i]) continue;
-          if (i === this.core) {child = this.data[i].SVGstretchH(w)}
-            else {child = this.data[i].toSVG()}
-          svg.Add(child,svg.w,0);
-        }
+	for (var i = 0, m = this.data.length; i < m; i++)
+          {svg.Add(this.SVGdataStretched(i,w),svg.w,0)}
         svg.Clean();
         this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
