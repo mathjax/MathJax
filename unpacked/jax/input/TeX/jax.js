@@ -1431,6 +1431,8 @@
       var pos = {o: "over", u: "under"}[name.charAt(1)];
       var base = this.ParseArg(name);
       if (base.Get("movablelimits")) {base.movablelimits = false}
+      if (base.isa(MML.munderover) && base.isEmbellished())
+        {base = MML.mrow(MML.mo().With({rspace:0}),base)}  // add an empty <mi> so it's not embellished any more
       var mml = MML.munderover(base,null,null);
       mml.data[mml[pos]] = 
         this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:(pos == "under")}));
