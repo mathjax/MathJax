@@ -1476,7 +1476,7 @@
         match = attr.match(/^([a-z]+)\s*=\s*(\'[^']*'|"[^"]*"|[^ ]*)\s*/i);
         if (!match)
           {TEX.Error(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr])}
-        if (!MML[type].prototype.defaults[match[1]] && !this.MmlTokenAllow[match[1]]) {
+        if (MML[type].prototype.defaults[match[1]] == null && !this.MmlTokenAllow[match[1]]) {
           TEX.Error(["UnknownAttrForElement",
                      "%1 is not a recognized attribute for %2",
                      match[1],type]);
