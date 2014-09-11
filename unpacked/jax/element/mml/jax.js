@@ -1135,6 +1135,10 @@ MathJax.ElementJax.mml.Augment({
       texClass: MML.TEXCLASS.ORD,
       useHeight: 1
     },
+    adjustChild_displaystyle: function () {
+      return (this.displaystyle != null ? this.displaystyle : this.defaults.displaystyle);
+    },
+    adjustChild_scriptlevel: function () {return 0},
     inheritFromMe: true,
     noInherit: {
       mover: {align: true},
@@ -1144,7 +1148,7 @@ MathJax.ElementJax.mml.Augment({
         align: true, rowalign: true, columnalign: true, groupalign: true,
         alignmentscope: true, columnwidth: true, width: true, rowspacing: true,
         columnspacing: true, rowlines: true, columnlines: true, frame: true,
-        framespacing: true, equalrows: true, equalcolumns: true,
+        framespacing: true, equalrows: true, equalcolumns: true, displaystyle: true,
         side: true, minlabelspacing: true, texClass: true, useHeight: 1
       }
     },
