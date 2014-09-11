@@ -221,6 +221,7 @@ MathJax.ElementJax.mml.Augment({
   },
   skipAttributes: {texClass: true, useHeight: true, texprimestyle: true},
   copyAttributeNames: [
+    "displaystyle", "scriptlevel", "open", "close", "form",  // force these to be copied
     "fontfamily", "fontsize", "fontweight", "fontstyle",
     "color", "background",
     "id", "class", "href", "style"

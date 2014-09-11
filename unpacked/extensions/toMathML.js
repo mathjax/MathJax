@@ -59,11 +59,9 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       if (!this.attrNames) {
         if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
         for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
-          var force = (id === "open" || id === "close" || id === "form");
-          if (this[id] != null && (force || this[id] !== defaults[id])) {
+          if (this[id] != null && this[id] !== defaults[id]) {
             var value = this[id]; delete this[id];
-            if (force || this.Get(id) !== value)
-              {attr.push(id+'="'+this.toMathMLattribute(value)+'"')}
+            if (this.Get(id) !== value) {attr.push(id+'="'+this.toMathMLattribute(value)+'"')}
             this[id] = value;
           }
         }}
