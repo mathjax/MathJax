@@ -431,12 +431,13 @@
       //
       var emex = span.appendChild(this.ExSpan.cloneNode(true));
       var ex = emex.firstChild.offsetHeight/60;
-      this.em = MML.mbase.prototype.em = ex / SVG.TeX.x_height * 1000;
-      this.cwidth = .85*SVG.defaultWidth/this.em * 1000;
+      this.em = MML.mbase.prototype.em = ex / SVG.TeX.x_height * 1000; this.ex = ex;
+      this.linebreakWidth = jax.SVG.lineWidth; this.cwidth = jax.SVG.cwidth;
       emex.parentNode.removeChild(emex);
 
       span.appendChild(this.textSVG);
       this.mathDIV = span; this.zoomScale = parseInt(HUB.config.menuSettings.zscale) / 100;
+      var tw = jax.root.data[0].SVGdata.tw; if (tw && tw < this.cwidth) this.cwidth = tw;
       this.idPostfix = "-zoom"; jax.root.toSVG(span,span); this.idPostfix = "";
       this.zoomScale = 1;
       span.removeChild(this.textSVG);
@@ -879,6 +880,7 @@
         delete svg.element;
       }
       if (svg.hasIndent) {this.hasIndent = svg.hasIndent}
+      if (svg.tw != null) {this.tw = svg.tw}
       if (svg.d - svg.y > this.d) {this.d = svg.d - svg.y; if (this.d > this.D) {this.D = this.d}}
       if (svg.y + svg.h > this.h) {this.h = svg.y + svg.h; if (this.h > this.H) {this.H = this.h}}
       if (svg.D - svg.y > this.D) {this.D = svg.D - svg.y}
@@ -1094,6 +1096,7 @@
         this.SVGdata.h = svg.h, this.SVGdata.d = svg.d;
         if (svg.y) {this.SVGdata.h += svg.y; this.SVGdata.d -= svg.y}
         if (svg.X != null) {this.SVGdata.X = svg.X}
+        if (svg.tw != null) {this.SVGdata.tw = svg.tw}
         if (svg.skew) {this.SVGdata.skew = svg.skew}
         if (svg.ic) {this.SVGdata.ic = svg.ic}
         if (this["class"]) {svg.removeable = false; SVG.Element(svg.element,{"class":this["class"]})}

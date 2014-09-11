@@ -771,15 +771,19 @@
       this.em = MML.mbase.prototype.em = em;
       this.outerEm = em / jax.HTMLCSS.scale;
       emex.parentNode.removeChild(emex);
+      this.scale = jax.HTMLCSS.scale;
+      this.linebreakWidth = jax.HTMLCSS.lineWidth;
+      this.cwidth = jax.HTMLCSS.cwidth;
 
       this.zoomScale = parseInt(HUB.config.menuSettings.zscale) / 100;
       this.idPostfix = "-zoom"; jax.root.toHTML(span,span); this.idPostfix = "";
       this.zoomScale = 1;
       
-      var width = jax.root.HTMLspanElement().bbox.width;
+      var bbox = jax.root.HTMLspanElement().bbox, width = bbox.width;
       if (width) {
         //  Handle full-width displayed equations
-        //  FIXME: this is a hack for now
+        if (bbox.tw) {Mw = bbox.tw*em}
+        if (bbox.w*em < Mw) {Mw = bbox.w*em}
         span.style.width = Math.floor(Mw-1.5*HTMLCSS.em)+"px"; span.style.display="inline-block";
         var id = (jax.root.id||"MathJax-Span-"+jax.root.spanID)+"-zoom";
         var child = document.getElementById(id).firstChild;
@@ -1203,6 +1207,7 @@
           }
           span.style.width = bbox.width;
         }
+        if (bbox.tw) {BBOX.tw = bbox.tw}
       }
     },
     alignBox: function (span,align,y,dx) {
@@ -1752,6 +1757,7 @@
 	BBOX.w += bbox.w;
 	if (child.style.paddingRight) {BBOX.w += HTMLCSS.unEm(child.style.paddingRight)*(child.scale||1)}
 	if (bbox.width) {BBOX.width = bbox.width; BBOX.minWidth = bbox.minWidth}
+        if (bbox.tw) {BBOX.tw = bbox.tw}
         if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
         if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
       },
