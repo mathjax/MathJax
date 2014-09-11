@@ -169,7 +169,9 @@ MathJax.Hub.Config({
   //  These two parameters control the alignment and shifting of displayed equations.
   //  The first can be "left", "center", or "right", and determines the alignment of
   //  displayed equations.  When the alignment is not "center", the second determines
-  //  an indentation from the left or right side for the displayed equations.
+  //  an indentation from the left or right side for the displayed equations.  When
+  //  the alignment is "center", the indent allows you to shift the center to the right
+  //  or left (negative is left).
   //  
   displayAlign: "center",
   displayIndent: "0em",

@@ -91,7 +91,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       svg = this.SVG();
       if (isTop && parent.type !== "mtd") {
         if (SVG.linebreakWidth < SVG.BIGDIMEN) {svg.w = SVG.linebreakWidth}
-          else {svg.w = SVG.cwidth/SVG.em * 1000}
+          else {svg.w = SVG.cwidth}
       }
 
       var state = {
@@ -211,13 +211,6 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var align = this.SVGgetAlign(state,values),
           shift = this.SVGgetShift(state,values,align);
       //
-      //  Add in space for the shift
-      //
-      if (shift) {
-        if (align === MML.INDENTALIGN.LEFT)  {line.x = shift} else
-        if (align === MML.INDENTALIGN.RIGHT) {line.w += shift; line.r = line.w}
-      }
-      //
       //  Set the Y offset based on previous depth, leading, and current height
       //
       if (state.n > 0) {
@@ -228,7 +221,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Place the new line
       //
-      svg.Align(line,align,0,state.Y);
+      svg.Align(line,align,0,state.Y,shift);
       //
       //  Save the values needed for the future
       //
@@ -249,14 +242,18 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       return align;
     },
     SVGgetShift: function (state,values,align) {
-      if (align === MML.INDENTALIGN.CENTER) {return 0}
       var cur = values, prev = state.values, def = state.VALUES, shift;
       if (state.n === 0)     {shift = cur.indentshiftfirst || prev.indentshiftfirst || def.indentshiftfirst}
       else if (state.isLast) {shift = prev.indentshiftlast || def.indentshiftlast}
       else                   {shift = prev.indentshift || def.indentshift}
       if (shift === MML.INDENTSHIFT.INDENTSHIFT) {shift = prev.indentshift || def.indentshift}
-      if (shift === "auto" || shift === "") {shift = (state.isTSop ? this.displayIndent : "0")}
-      return SVG.length2em(shift,0);
+      if (shift === "auto" || shift === "") {shift = "0"}
+      shift = SVG.length2em(shift,1,SVG.cwidth);
+      if (state.isTop && this.displayIndent !== "0") {
+        var indent = SVG.length2em(this.displayIndent,1,SVG.cwidth);
+        shift += (align === MML.INDENTALIGN.RIGHT ? -indent: indent);
+      }
+      return shift;
     },
     
     /****************************************************************/
@@ -617,7 +614,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       if (penalty >= info.penalty) {return false}
       info.penalty = penalty; info.values = values; info.W = W; info.w = w;
-      values.lineleading = SVG.length2em(values.lineleading,state.VALUES.lineleading);
+      values.lineleading = SVG.length2em(values.lineleading,1,state.VALUES.lineleading);
       values.last = this;
       return true;
     }

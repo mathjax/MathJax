@@ -543,7 +543,7 @@
     
     preTranslate: function (state) {
       var scripts = state.jax[this.id], i, m = scripts.length,
-          script, prev, span, div, test, jax, ex, em, scale, maxwidth, relwidth = false,
+          script, prev, span, div, test, jax, ex, em, scale, maxwidth, relwidth = false, cwidth,
           linebreak = this.config.linebreaks.automatic, width = this.config.linebreaks.width;
       if (linebreak) {
         relwidth = (width.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/) != null);
@@ -593,7 +593,7 @@
         //  Add the test span for determining scales and linebreak widths
         //
         script.parentNode.insertBefore(this.EmExSpan.cloneNode(true),script);
-        if (relwidth) {div.parentNode.insertBefore(this.linebreakSpan.cloneNode(true),div)}
+        div.parentNode.insertBefore(this.linebreakSpan.cloneNode(true),div)
       }
       //
       //  Determine the scaling factors for each script
@@ -605,19 +605,21 @@
         jax = script.MathJax.elementJax; if (!jax) continue;
         ex = test.firstChild.offsetHeight/60;
         em = test.lastChild.firstChild.offsetHeight/60;
-        if (relwidth) {maxwidth = div.previousSibling.firstChild.offsetWidth}
+        cwidth = div.previousSibling.firstChild.offsetWidth;
+        if (relwidth) {maxwidth = cwidth}
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
           // (this will cause a reflow for each math element that is hidden)
           this.hiddenDiv.appendChild(div);
           jax.HTMLCSS.isHidden = true;
-          ex = this.defaultEx; em = this.defaultEm;
-          if (relwidth) {maxwidth = this.defaultWidth}
+          ex = this.defaultEx; em = this.defaultEm; cwidth = this.defaultWidth;
+          if (relwidth) {maxwidth = cwidth}
         }
         scale = (this.config.matchFontHeight ? ex/this.TeX.x_height/em : 1);
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
         jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
         jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em; this.em = em * scale/100; jax.HTMLCSS.ex = ex;
+        jax.HTMLCSS.cwidth = cwidth/this.em;
         jax.HTMLCSS.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/this.em) : 1000000);
       }
       //
@@ -627,11 +629,9 @@
         script = scripts[i]; if (!script.parentNode) continue;
         test = scripts[i].previousSibling;
         jax = scripts[i].MathJax.elementJax; if (!jax) continue;
-        if (relwidth) {
-          span = test.previousSibling;
-          if (!jax.HTMLCSS.isHidden) {span = span.previousSibling}
-          span.parentNode.removeChild(span);
-        }
+        span = test.previousSibling;
+        if (!jax.HTMLCSS.isHidden) {span = span.previousSibling}
+        span.parentNode.removeChild(span);
         test.parentNode.removeChild(test);
       }
       //
@@ -665,6 +665,7 @@
       //
       this.em = MML.mbase.prototype.em = jax.HTMLCSS.em * jax.HTMLCSS.scale; 
       this.outerEm = jax.HTMLCSS.em; this.scale = jax.HTMLCSS.scale;
+      this.cwidth = jax.HTMLCSS.cwidth;
       this.linebreakWidth = jax.HTMLCSS.lineWidth;
       if (this.scale !== 1) {span.style.fontSize = jax.HTMLCSS.fontSize}
       //
@@ -1029,6 +1030,7 @@
         isMathJax: true,
         style: {display:"inline-block", overflow:"hidden", height:"1px", width:this.Em(w)}
       });
+      if (w < 0) {blank.style.marginRight = blank.style.width; blank.style.width = 0}
       if (before) {span.insertBefore(blank,span.firstChild)} else {span.appendChild(blank)}
       return blank;
     },
@@ -1203,8 +1205,9 @@
         }
       }
     },
-    alignBox: function (span,align,y) {
-      this.placeBox(span,0,y); // set y position (and left aligned)
+    alignBox: function (span,align,y,dx) {
+      if (dx == null) {dx = 0}
+      this.placeBox(span,dx,y); // set y position (and left aligned)
       if (this.msiePlaceBoxBug) {
         //
         //  placeBox() adds an extra &nbsp;, so remove it here.
@@ -1215,12 +1218,15 @@
       }
       var bbox = span.bbox; if (bbox.isMultiline) return;
       var isRelative = bbox.width != null && !bbox.isFixed;
-      var r = 0, c = -bbox.w/2, l = "50%";
+      var r = 0, c = dx-bbox.w/2, l = "50%";
       if (this.initialSkipBug) {r = bbox.w-bbox.rw-.1; c += bbox.lw}
       if (this.msieMarginScaleBug) {c = (c*this.em) + "px"} else {c = this.Em(c)}
-      if (isRelative) {c = ""; l = (50 - parseFloat(bbox.width)/2) + "%"}
+      if (isRelative) {
+        c = (dx === 0 ? "" : this.Em(dx));
+        l = (50 - parseFloat(bbox.width)/2) + "%";
+      }
       HUB.Insert(span.style,({
-        right:  {left:"", right: this.Em(r)},
+        right:  {left:"", right: this.Em(r-dx)},
         center: {left:l, marginLeft: c}
       })[align]);
     },
@@ -2814,13 +2820,23 @@
 	  var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
 	  if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) {values.indentalign = values.indentalignfirst}
 	  if (values.indentalign === MML.INDENTALIGN.AUTO) {values.indentalign = this.displayAlign}
-	  node.style.textAlign = values.indentalign;
 	  if (values.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {values.indentshift = values.indentshiftfirst}
-	  if (values.indentshift === "auto") {values.indentshift = this.displayIndent}
-	  if (values.indentshift && values.indentalign !== MML.INDENTALIGN.CENTER) {
-	    span.style[{left:"marginLeft",right:"marginRight"}[values.indentalign]] =
-	      HTMLCSS.Em(HTMLCSS.length2em(values.indentshift));
-	  }
+	  if (values.indentshift === "auto") {values.indentshift = "0"}
+          var shift = HTMLCSS.length2em(values.indentshift,1,HTMLCSS.cwidth);
+          if (this.displayIndent !== "0") {
+            var indent = HTMLCSS.length2em(this.displayIndent,1,HTMLCSS.cwidth);
+            shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
+          }
+	  node.style.textAlign = values.indentalign;
+          // ### FIXME: make percentage widths respond to changes in container
+          if (shift) {
+            shift *= HTMLCSS.scale * HTMLCSS.em/HTMLCSS.outerEm;
+            HUB.Insert(span.style,({
+              left: {marginLeft: HTMLCSS.Em(shift)},
+              right: {marginLeft: HTMLCSS.Em(Math.max(0,span.bbox.w+shift)), marginRight: HTMLCSS.Em(-shift)},
+              center: {marginLeft: HTMLCSS.Em(shift), marginRight: HTMLCSS.Em(-shift)}
+            })[values.indentalign]);
+          }
 	}
 	return span;
       },
@@ -2864,7 +2880,7 @@
     //  We also need to wait for the onload handler to run, since the loadComplete
     //  will call Config and Startup, which need to modify the body.
     //
-    MathJax.Hub.Register.StartupHook("onLoad",function () {
+    HUB.Register.StartupHook("onLoad",function () {
       setTimeout(MathJax.Callback(["loadComplete",HTMLCSS,"jax.js"]),0);
     });
   });
