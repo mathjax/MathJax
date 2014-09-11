@@ -1680,7 +1680,7 @@
       scriptspace:         .1,
       nulldelimiterspace:  .12,
       delimiterfactor:     901,
-      delimitershortfall:   .1,    // originally .3,
+      delimitershortfall:   .3,
 
       min_rule_thickness:  1.25     // in pixels
     },
@@ -2210,6 +2210,8 @@
 	values.maxsize = HTMLCSS.length2em(values.maxsize,mu,span.bbox.h+span.bbox.d);
 	values.minsize = HTMLCSS.length2em(values.minsize,mu,span.bbox.h+span.bbox.d);
 	H = Math.max(values.minsize,Math.min(values.maxsize,H));
+        if (H != values.minsize)
+          {H = [Math.max(H*HTMLCSS.TeX.delimiterfactor/1000,H-HTMLCSS.TeX.delimitershortfall),H]}
 	span = this.HTMLcreateSpan(box); // clear contents and attributes
 	HTMLCSS.createDelimiter(span,this.data.join("").charCodeAt(0),H,scale);
 	if (values.symmetric) {H = (span.bbox.h + span.bbox.d)/2 + axis}
