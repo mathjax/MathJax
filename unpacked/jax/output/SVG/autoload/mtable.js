@@ -324,6 +324,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Place the labels, if any
       //
       if (C[LABEL]) {
+        svg.tw = Math.max(svg.w,svg.r) - Math.min(0,svg.l);
         var indent = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
         if (indent.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) {indent.indentalign = indent.indentalignfirst}
         if (indent.indentalign === MML.INDENTALIGN.AUTO) {indent.indentalign = this.displayAlign}
@@ -339,6 +340,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         svg.w = svg.r = SVG.cwidth; svg.hasIndent = true;
         svg.Align(C[LABEL],CALIGN[LABEL],labelshift,0);
         svg.Align(eqn,indent.indentalign,0,0,shift);
+        svg.tw += C[LABEL].w + shift +
+          (indent.indentalign === MML.INDENTALIGN.CENTER ? 8 : 4)*labelshift;
       }
       
       this.SVGsaveData(svg);
