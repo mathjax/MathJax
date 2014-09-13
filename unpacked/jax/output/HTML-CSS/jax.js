@@ -794,13 +794,22 @@
         }
       }
       //
+      //  Adjust margins to prevent overlaps at the edges
+      //
+      var child = span.firstChild.firstChild.style;
+      if (bbox.H != null && bbox.H > bbox.h)
+        {child.marginTop = HTMLCSS.Em(bbox.H-Math.max(bbox.h,HTMLCSS.FONTDATA.lineH))}
+      if (bbox.D != null && bbox.D > bbox.d)
+        {child.marginBottom = HTMLCSS.Em(bbox.D-Math.max(bbox.d,HTMLCSS.FONTDATA.lineD))}
+      if (bbox.lw < 0) {child.paddingLeft = HTMLCSS.Em(-bbox.lw)}
+      if (bbox.rw > bbox.w) {child.marginRight = HTMLCSS.Em(bbox.rw-bbox.w)}
+      //
       //  Get height and width of zoomed math and original math
       //
       span.style.position = "absolute";
       if (!width) {math.style.position = "absolute"}
       var zW = span.offsetWidth, zH = span.offsetHeight,
           mH = math.offsetHeight, mW = math.offsetWidth;
-      if (mW === 0) {mW = math.parentNode.offsetWidth}; // IE7 gets mW == 0?
       span.style.position = math.style.position = "";
       //
       return {Y:-EVENT.getBBox(span).h, mW:mW, mH:mH, zW:zW, zH:zH};
@@ -2806,6 +2815,8 @@
         var p = 1/HTMLCSS.em, f = HTMLCSS.em / HTMLCSS.outerEm; HTMLCSS.em /= f;
 	span.bbox.h *= f; span.bbox.d *= f; span.bbox.w *= f;
 	span.bbox.lw *= f; span.bbox.rw *= f;
+        if (span.bbox.H) {span.bbox.H *= f}
+        if (span.bbox.D) {span.bbox.D *= f}
 	if (math && math.bbox.width != null) {
           span.style.minWidth = (math.bbox.minWidth || span.style.width);
 	  span.style.width = math.bbox.width;

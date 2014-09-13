@@ -442,6 +442,14 @@
       this.zoomScale = 1;
       span.removeChild(this.textSVG);
       
+      //
+      //  Don't allow overlaps on any edge
+      //
+      var svg = span.getElementsByTagName("svg")[0].style;
+      svg.marginTop = svg.marginRight = svg.marginLeft = 0;
+      if (svg.marginBottom.charAt(0) === "-")
+        span.style.marginBottom = svg.marginBottom.substr(1);
+      
       if (this.operaZoomRefresh)
         {setTimeout(function () {span.firstChild.style.border="1px solid transparent"},1)}
       //
