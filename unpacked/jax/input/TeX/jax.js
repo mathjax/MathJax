@@ -1473,7 +1473,7 @@
       if (!MML[type] || !MML[type].prototype.isToken)
         {TEX.Error(["NotMathMLToken","%1 is not a token element",type])}
       while (attr !== "") {
-        match = attr.match(/^([a-z]+)\s*=\s*(\'[^']*'|"[^"]*"|[^ ]*)\s*/i);
+        match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
         if (!match)
           {TEX.Error(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr])}
         if (!MML[type].prototype.defaults[match[1]] && !this.MmlTokenAllow[match[1]]) {
