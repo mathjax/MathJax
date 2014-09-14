@@ -1186,9 +1186,7 @@
         if (!this.msieClipRectBug && !bbox.noclip && !noclip) {
           var dd = 3/this.em;
           var H = (bbox.H == null ? bbox.h : bbox.H), D = (bbox.D == null ? bbox.d : bbox.D);
-          var t = HH - H - dd, b = HH + D + dd, l = bbox.lw - 3*dd, r = 1000;
-          if (this.initialSkipBug && bbox.lw < 0) {l = -3*dd}
-          if (bbox.isFixed) {r = bbox.width-l}
+          var t = HH - H - dd, b = HH + D + dd, l = -1000, r = 1000;
           span.style.clip = "rect("+this.Em(t)+" "+this.Em(r)+" "+this.Em(b)+" "+this.Em(l)+")";
         }
       }
