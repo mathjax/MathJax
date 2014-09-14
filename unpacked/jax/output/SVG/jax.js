@@ -1636,10 +1636,11 @@
 
     MML.mrow.Augment({
       SVG: BBOX.ROW,
-      toSVG: function () {
+      toSVG: function (h,d) {
         this.SVGgetStyles();
 	var svg = this.SVG();
         this.SVGhandleSpace(svg);
+        if (d != null) {this.sh = h; this.sd = d}
 	for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {svg.Check(this.data[i])}}
         svg.Stretch(); svg.Clean();
@@ -1659,16 +1660,14 @@
       },
       SVGmultiline: function (span) {MML.mbase.SVGautoloadFile("multiline")},
       SVGstretchH: function (w) {
-	var svg = this.data[this.core].SVGstretchH(w);
-	this.SVGhandleColor(svg);
+	var svg = this.SVG();
+        this.SVGhandleSpace(svg);
+	for (var i = 0, m = this.data.length; i < m; i++)
+          {svg.Add(this.SVGdataStretched(i,w),svg.w,0)}
+        svg.Clean();
+        this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
-	return svg;
-      },
-      SVGstretchV: function (h,d) {
-	var svg = this.data[this.core].SVGstretchV(h,d);
-	this.SVGhandleColor(svg);
-        this.SVGsaveData(svg);
-	return svg;
+        return svg;
       }
     });
 
