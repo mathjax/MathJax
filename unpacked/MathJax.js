@@ -1895,7 +1895,13 @@ MathJax.Hub = {
        // localized HTML snippet structure for message to use
       message: ["[",["MathProcessingError","Math Processing Error"],"]"],
       style: {color: "#CC0000", "font-style":"italic"}  // style for message
-    }
+    },
+    
+    ignoreMMLattributes: {}  // attributes not to copy to HTML-CSS or SVG output
+                             //   from MathML input (in addition to the ones in MML.nocopyAttributes).
+                             //   An id set to true will be ignored, one set to false will
+                             //   be allowed (even if other criteria normally would prevent
+                             //   it from being copied); use false carefully!
   },
   
   preProcessors: MathJax.Callback.Hooks(true), // list of callbacks for preprocessing (initialized by extensions)

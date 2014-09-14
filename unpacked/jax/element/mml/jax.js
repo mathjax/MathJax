@@ -226,6 +226,12 @@ MathJax.ElementJax.mml.Augment({
     "color", "background",
     "id", "class", "href", "style"
   ],
+  nocopyAttributes: {
+    fontfamily: true, fontsize: true, fontweight: true, fontstyle: true,
+    color: true, background: true,
+    id: true, class: true, href: true, style: true,
+    xmlns: true
+  },
   Error: function (message,def) {
     var mml = this.merror(message),
         dir = MathJax.Localization.fontDirection(),
