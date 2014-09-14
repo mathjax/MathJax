@@ -2736,7 +2736,7 @@
         }
 	if (this.data[this.base] &&
 	   (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
-	  if (this.data[this.base].data.join("").length === 1 && base.bbox.scale === 1 &&
+	  if (this.data[this.base].data.join("").length === 1 && children[0].scale === 1 &&
 	      !this.data[this.base].Get("largeop")) {u = v = 0}
 	}
 	var min = this.getValues("subscriptshift","superscriptshift");
