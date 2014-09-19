@@ -77,6 +77,7 @@
     },
     ".MJXc-math span": {"display": "inline-block"},
     ".MJXc-box":  {"display":"block!important", "text-align": "center"},
+    ".MJXc-box:after": {"content": '" "'},  // needed for when there is no DOCTYPE
     ".MJXc-rule": {"display":"block!important", "margin-top":".1em"},
     ".MJXc-char": {"display":"block!important"},
 
