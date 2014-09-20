@@ -27,7 +27,7 @@
  */
 
 
-(function (HUB,AJAX,HTML,CHTML) {
+(function (AJAX,HUB,HTML,CHTML) {
   var MML;
 
 /*
@@ -152,7 +152,9 @@
     },
 
     Startup: function () {
+      //
       //  Set up event handling
+      //
       EVENT = MathJax.Extension.MathEvents.Event;
       TOUCH = MathJax.Extension.MathEvents.Touch;
       HOVER = MathJax.Extension.MathEvents.Hover;
@@ -162,14 +164,18 @@
       this.Mouseout    = HOVER.Mouseout;
       this.Mousemove   = HOVER.Mousemove;
 
-      // Determine pixels per inch
+      //
+      //  Determine pixels per inch
+      //
       var div = HTML.addElement(document.body,"div",{style:{width:"5in"}});
       this.pxPerInch = div.offsetWidth/5; div.parentNode.removeChild(div);
 
-      // Set up styles and preload web fonts
-      return AJAX.Styles(this.config.styles,["InitializeHTML",this]);
+      //
+      //  Set up styles and preload web fonts
+      //
+      return AJAX.Styles(this.config.styles,["InitializeCHTML",this]);
     },
-    InitializeHTML: function () {
+    InitializeCHTML: function () {
     },
     
     preTranslate: function (state) {
@@ -515,22 +521,33 @@
         this.CHTMLhandleStyle(span);
         this.CHTMLhandleColor(span);
         if (this.isToken) this.CHTMLhandleToken(span);
-        for (var i = 0, m = this.data.length, SPAN = span; i < m; i++) {
-          var child = this.data[i];
-          if (child) {
-            if (options.childSpans)
-              SPAN = HTML.addElement(span,"span",{className:options.className});
-            child.toCommonHTML(SPAN);
-            if (!options.noBBox) {
-              this.CHTML.w += child.CHTML.w + child.CHTML.l + child.CHTML.r;
-              if (child.CHTML.h > this.CHTML.h) this.CHTML.h = child.CHTML.h;
-              if (child.CHTML.d > this.CHTML.d) this.CHTML.d = child.CHTML.d;
-              if (child.CHTML.t > this.CHTML.t) this.CHTML.t = child.CHTML.t;
-              if (child.CHTML.b > this.CHTML.b) this.CHTML.b = child.CHTML.b;
-            }
-          } else if (options.forceChild) {HTML.addElement(span,"span")}
-        }
+        for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLaddChild(span,i,options);
         return span;
+      },
+      CHTMLaddChild: function (span,i,options) {
+        var child = this.data[i];
+        if (child) {
+          if (options.childSpans)
+            span = HTML.addElement(span,"span",{className:options.className});
+          child.toCommonHTML(span);
+          if (!options.noBBox) {
+            this.CHTML.w += child.CHTML.w + child.CHTML.l + child.CHTML.r;
+            if (child.CHTML.h > this.CHTML.h) this.CHTML.h = child.CHTML.h;
+            if (child.CHTML.d > this.CHTML.d) this.CHTML.d = child.CHTML.d;
+            if (child.CHTML.t > this.CHTML.t) this.CHTML.t = child.CHTML.t;
+            if (child.CHTML.b > this.CHTML.b) this.CHTML.b = child.CHTML.b;
+          }
+        } else if (options.forceChild) {HTML.addElement(span,"span")}
+      },
+      CHTMLstretchChild: function (i,H,D) {
+        var data = this.data[i];
+        if (data && data.CHTMLcanStretch("Vertical",H,D)) {
+          var bbox = this.CHTML, dbox = data.CHTML, w = dbox.w;
+          data.CHTMLstretchV(H,D);
+          bbox.w += dbox.w - w;
+          if (dbox.h > bbox.h) bbox.h = dbox.h;
+          if (dbox.d > bbox.d) bbox.d = dbox.d;
+        }
       },
 
       CHTMLcreateSpan: function (span) {
@@ -569,7 +586,7 @@
 
       CHTMLhandleScriptlevel: function (span) {
         // ### FIXME:  Need to prevent getting too small
-        // ### and should keep track of scaling so it can be comensated for
+        // ### and should keep track of scaling so it can be compensated for
         var level = this.Get("scriptlevel");
         if (level) span.className += " MJXc-script";
       },
@@ -888,7 +905,7 @@
         var values = this.getValues("linethickness","displaystyle");
         if (!values.displaystyle) {
           if (this.data[0]) this.data[0].CHTMLhandleScriptlevel(span.firstChild);
-          if (this.data[1]) this.data[0].CHTMLhandleScriptlevel(span.lastChild);
+          if (this.data[1]) this.data[1].CHTMLhandleScriptlevel(span.lastChild);
         }
         var denom = HTML.Element("span",{className:"MJXc-box",style:{"margin-top":"-.8em"}},[
           ["span",{className:"MJXc-denom"},[                        // inline-table
@@ -971,22 +988,41 @@
       },
       CHTMLlayoutRoot: MML.msqrt.prototype.CHTMLlayoutRoot
     });
+    
+    MML.mfenced.Augment({
+      toCommonHTML: function (span) {
+        span = this.CHTMLcreateSpan(span);
+        this.CHTMLhandleStyle(span);
+        this.CHTMLhandleColor(span);
+        //
+        //  Make row of open, data, sep, ... data, close
+        //
+        this.addFakeNodes();
+        this.CHTMLaddChild(span,"open",{});
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          this.CHTMLaddChild(span,"sep"+i,{});
+          this.CHTMLaddChild(span,i,{});
+        }
+        this.CHTMLaddChild(span,"close",{});
+        //
+        //  Check for streching the elements
+        //
+        var H = this.CHTML.h, D = this.CHTML.d;
+        this.CHTMLstretchChild("open",H,D);
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          this.CHTMLstretchChild("sep"+i,H,D);
+          this.CHTMLstretchChild(i,H,D);
+        }
+        this.CHTMLstretchChild("close",H,D);
+        return span;
+      }
+    });
 
     MML.mrow.Augment({
       toCommonHTML: function (span) {
         span = this.CHTMLdefaultSpan(span);
-        var bbox = this.CHTML;
-        var H = bbox.h, D = bbox.d;
-        for (var i = 0, m = this.data.length; i < m; i++) {
-          var data = this.data[i];
-          if (data && data.CHTMLcanStretch("Vertical",H,D)) {
-            var dbox = data.CHTML; var w = dbox.w;
-            data.CHTMLstretchV(H,D);
-            bbox.w += dbox.w - w;
-            if (dbox.h > bbox.h) bbox.h = dbox.h;
-            if (dbox.d > bbox.d) bbox.d = dbox.d;
-          }
-        }
+        var H = this.CHTML.h, D = this.CHTML.d;
+        for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLstretchChild(i,H,D);
         return span;
       }
     });
@@ -1090,4 +1126,4 @@
       {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
   });
     
-})(MathJax.Hub,MathJax.Ajax,MathJax.HTML,MathJax.OutputJax.CommonHTML);
+})(MathJax.Ajax,MathJax.Hub,MathJax.HTML,MathJax.OutputJax.CommonHTML);
