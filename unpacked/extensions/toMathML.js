@@ -52,13 +52,14 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
 
     toMathMLattributes: function () {
       var attr = [], defaults = this.defaults;
-      var copy = (this.attrNames||MML.copyAttributeNames), skip = MML.skipAttributes;
+      var names = (this.attrNames||MML.copyAttributeNames),
+          skip = MML.skipAttributes, copy = MML.copyAttributes;
 
       if (this.type === "math" && (!this.attr || !this.attr.xmlns))
         {attr.push('xmlns="http://www.w3.org/1998/Math/MathML"')}
       if (!this.attrNames) {
         if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
-        for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
+        for (var id in defaults) {if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {
           if (this[id] != null && this[id] !== defaults[id]) {
             var value = this[id]; delete this[id];
             if (this.Get(id) !== value) {attr.push(id+'="'+this.toMathMLattribute(value)+'"')}
@@ -66,10 +67,10 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
           }
         }}
       }
-      for (var i = 0, m = copy.length; i < m; i++) {
-        if (copy[i] === "class") continue;  // this is handled separately below
-        value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
-        if (value != null) {attr.push(copy[i]+'="'+this.toMathMLquote(value)+'"')}
+      for (var i = 0, m = names.length; i < m; i++) {
+        if (copy[names[i]] === 1 && !defaults.hasOwnProperty(names[i])) continue;
+        value = (this.attr||{})[names[i]]; if (value == null) {value = this[names[i]]}
+        if (value != null) {attr.push(names[i]+'="'+this.toMathMLquote(value)+'"')}
       }
       this.toMathMLclass(attr);
       if (attr.length) {return " "+attr.join(" ")} else {return ""}
