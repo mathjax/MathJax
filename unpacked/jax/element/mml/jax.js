@@ -1138,7 +1138,6 @@ MathJax.ElementJax.mml.Augment({
     adjustChild_displaystyle: function () {
       return (this.displaystyle != null ? this.displaystyle : this.defaults.displaystyle);
     },
-    adjustChild_scriptlevel: function () {return 0},
     inheritFromMe: true,
     noInherit: {
       mover: {align: true},
