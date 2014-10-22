@@ -19,5 +19,5 @@
     },
     "dependencies": {
     },
-    "main": "./MathJax.js"
+    "main": "./unpacked/MathJax.js"
 }
