@@ -159,7 +159,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var math = this; while (math.type !== "math") {math = math.inherit}
       var jax = MathJax.Hub.getJaxFor(math.inputID);
       this.em = MML.mbase.prototype.em = jax.SVG.em; this.ex = jax.SVG.ex;
-      this.linebreakWidth = jax.SVG.lineWidth * 1000; this.cwidth = jax.SVG.cwidth;
+      this.linebreakWidth = jax.SVG.lineWidth; this.cwidth = jax.SVG.cwidth;
 
       //
       //  Make a new math element and temporarily move the tooltip to it
