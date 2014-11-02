@@ -27,6 +27,8 @@
  */
 
 (function (HUB,HTML) {
+  
+  var SETTINGS = HUB.config.menuSettings;
 
   var CHTMLpreview = MathJax.Extension["CHTML-preview"] = {
     version: "1.0",
@@ -38,8 +40,9 @@
     config: HUB.CombineConfig("CHTML-preview",{
       Chunks: {EqnChunk: 10000, EqnChunkFactor: 1, EqnChunkDelay: 0},
       color: "inherit",
-      updateTime: 10, updateDelay: 50,
-      messageStyle: "none"
+      updateTime: 10, updateDelay: 10,
+      messageStyle: "none",
+      disabled: false
     }),
 
     //
@@ -51,20 +54,22 @@
         SVG: this.config.Chunks,
       });
       MathJax.Ajax.Styles({".MathJax_Preview":{color:this.config.color}});
-      var update, delay, style, done;
+      var update, delay, style, done, saved;
       var config = this.config;
       HUB.Register.MessageHook("Begin Math Output",function () {
-        if (!done) {
+        if (!done && !config.disabled && SETTINGS.CHTMLpreview &&
+            SETTINGS.renderer !== "CommonHTML") {
           update = HUB.processUpdateTime; delay = HUB.processUpdateDelay;
           style = HUB.config.messageStyle;
           HUB.processUpdateTime = config.updateTime;
           HUB.processUpdateDelay = config.updateDelay;
           HUB.Config({messageStyle: config.messageStyle});
           MathJax.Message.Clear(0,0);
+          saved = true;
         }
       });
       HUB.Register.MessageHook("End Math Output",function () {
-        if (!done) {
+        if (!done && saved) {
           HUB.processUpdateTime = update;
           HUB.processUpdateDelay = delay;
           HUB.Config({messageStyle: style});
@@ -78,6 +83,8 @@
     //  and call the CommonHTML output jax to create the preview
     //
     Preview: function (data) {
+      if (this.config.disabled || !SETTINGS.CHTMLpreview ||
+          SETTINGS.renderer === "CommonHTML") return;
       var preview = data.script.previousSibling;
       if (!preview || preview.className !== MathJax.Hub.config.preRemoveClass) {
         preview = HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
@@ -85,7 +92,6 @@
       }
       preview.innerHTML = "";
       return this.postFilter(preview,data);
-      return data;
     },
     postFilter: function (preview,data) {
       try {
