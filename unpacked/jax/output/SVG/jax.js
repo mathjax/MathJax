@@ -227,11 +227,6 @@
           div = HTML.Element("div",{className:"MathJax_SVG_Display"});
           div.appendChild(span);
         }
-        //
-        //  Mark math for screen readers
-        //    (screen readers don't know about role="math" yet, so use "textbox" instead)
-        //
-        div.setAttribute("role","textbox"); div.setAttribute("aria-readonly","true");
         div.className += " MathJax_SVG_Processing";
         script.parentNode.insertBefore(div,script);
         //
@@ -1136,12 +1131,35 @@
           svg.element.style.cssText = style;
           if (svg.element.style.fontSize) {svg.element.style.fontSize = ""} // handled by scale
           svg.element.style.border = svg.element.style.padding = "";
-          if (svg.removeable) {svg.removeable = svg.element.style.cssText === ""}
+          if (svg.removeable) {svg.removeable = (svg.element.style.cssText === "")}
         }
+        this.SVGaddAttributes(svg);
       },
       SVGaddClass: function (node,name) {
         var classes = node.getAttribute("class");
         node.setAttribute("class",(classes ? classes+" " : "")+name);
+      },
+      SVGaddAttributes: function (svg) {
+        //
+        //  Copy RDFa, aria, and other tags from the MathML to the HTML-CSS
+        //  output spans Don't copy those in the MML.nocopyAttributes list,
+        //  the ignoreMMLattributes configuration list, or anything tha
+        //  already exists as a property of the span (e.g., no "onlick", etc.)
+        //  If a name in the ignoreMMLattributes object is set to false, then
+        //  the attribute WILL be copied.
+        //
+        if (this.attrNames) {
+          var copy = this.attrNames, skip = MML.nocopyAttributes, ignore = HUB.config.ignoreMMLattributes;
+          var defaults = (this.type === "mstyle" ? MML.math.prototype.defaults : this.defaults);
+          for (var i = 0, m = copy.length; i < m; i++) {
+            var id = copy[i];
+            if (ignore[id] == false || (!skip[id] && !ignore[id] &&
+                defaults[id] == null && typeof(svg.element[id]) === "undefined")) {
+              svg.element.setAttribute(id,this.attr[id]);
+              svg.removeable = false;
+            }
+          }
+        }
       },
       //
       //  WebKit currently scrolls to the BOTTOM of an svg element if it contains the
@@ -2058,6 +2076,10 @@
           //
           //  Add it to the MathJax span
           //
+          var alttext = this.Get("alttext");
+          if (alttext && !svg.element.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
+          if (!svg.element.getAttribute("role")) span.setAttribute("role","math");
+          span.setAttribute("tabindex",0);
           span.appendChild(svg.element); svg.element = null;
           //
           //  Handle indentalign and indentshift for single-line displays
