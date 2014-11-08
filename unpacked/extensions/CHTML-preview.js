@@ -39,7 +39,7 @@
     //
     config: HUB.CombineConfig("CHTML-preview",{
       Chunks: {EqnChunk: 10000, EqnChunkFactor: 1, EqnChunkDelay: 0},
-      color: "inherit",
+      color: "inherit!important",
       updateTime: 10, updateDelay: 10,
       messageStyle: "none",
       disabled: false
@@ -56,6 +56,7 @@
       MathJax.Ajax.Styles({".MathJax_Preview":{color:this.config.color}});
       var update, delay, style, done, saved;
       var config = this.config;
+
       HUB.Register.MessageHook("Begin Math Output",function () {
         if (!done && !config.disabled && SETTINGS.CHTMLpreview &&
             SETTINGS.renderer !== "CommonHTML") {
@@ -97,25 +98,28 @@
       try {
         data.math.root.toCommonHTML(preview);
       } catch (err) {
+        //
+        //  Load the CommonHTML jax if it is not already loaded
+        //
+        if (!data.math.root.toCommonHTML) {
+          var queue = MathJax.Callback.Queue();
+          HUB.RestartAfter(queue.Push(
+            ["Require",MathJax.Ajax,"[MathJax]/jax/output/CommonHTML/config.js"],
+            ["Require",MathJax.Ajax,"[MathJax]/jax/output/CommonHTML/jax.js"]
+          ));
+        }
         if (!err.restart) {throw err} // an actual error
         return MathJax.Callback.After(["postFilter",this,preview,data],err.restart);
       }
     },
 
     //
-    //  Hook into the inut jax postFilter to create the previews as
+    //  Hook into the input jax postFilter to create the previews as
     //  the input jax are processed.
     //
     Register: function (name) {
       HUB.Register.StartupHook(name+" Jax Require",function () {
         var jax = MathJax.InputJax[name];
-        var delay = HUB.config.delayJaxRegistration;
-        HUB.config.delayJaxRegistration = true;
-        HUB.Register.StartupHook(name+" Jax Ready",function () {HUB.config.delayJaxRegistration = delay});
-        jax.require.push(
-          "[MathJax]/jax/output/CommonHTML/config.js",
-          "[MathJax]/jax/output/CommonHTML/jax.js"
-        );
         jax.postfilterHooks.Add(["Preview",MathJax.Extension["CHTML-preview"]],50);
       });
     }
