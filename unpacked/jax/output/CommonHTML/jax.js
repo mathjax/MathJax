@@ -857,7 +857,7 @@
         var base = this.data[this.base], sub = this.data[this.sub], sup = this.data[this.sup];
         if (!base) base = {bbox: {h:.8, d:.2}};
         span.firstChild.style.marginRight = ".05em";
-        var h = Math.max(.4,base.CHTML.h-.4);
+        var h = Math.max(.4,base.CHTML.h-.4),
             d = Math.max(.2,base.CHTML.d+.1);
         var bbox = this.CHTML;
         if (sup && sub) {
@@ -1009,7 +1009,7 @@
         //
         var H = this.CHTML.h, D = this.CHTML.d;
         this.CHTMLstretchChild("open",H,D);
-        for (var i = 0, m = this.data.length; i < m; i++) {
+        for (i = 0, m = this.data.length; i < m; i++) {
           this.CHTMLstretchChild("sep"+i,H,D);
           this.CHTMLstretchChild(i,H,D);
         }
@@ -1055,11 +1055,11 @@
         var CSPACE = SPLIT(values.columnspacing),
             RSPACE = SPLIT(values.rowspacing),
             CALIGN = SPLIT(values.columnalign),
-            RALIGN = SPLIT(values.rowalign),
-            CLINES = SPLIT(values.columnlines),
-            RLINES = SPLIT(values.rowlines),
-            CWIDTH = SPLIT(values.columnwidth),
-            RCALIGN = [];
+            RALIGN = SPLIT(values.rowalign);//,
+//            CLINES = SPLIT(values.columnlines),
+//            RLINES = SPLIT(values.rowlines),
+//            CWIDTH = SPLIT(values.columnwidth),
+//            RCALIGN = [];
         for (i = 0, m = CSPACE.length; i < m; i++) {CSPACE[i] = CHTML.length2em(CSPACE[i])}
         for (i = 0, m = RSPACE.length; i < m; i++) {RSPACE[i] = CHTML.length2em(RSPACE[i])}
 
@@ -1077,7 +1077,7 @@
               var cell = row.data[j];
               if (cell) {
                 var cspace = CHTML.arrayEntry(CSPACE,j-1), calign = CHTML.arrayEntry(CALIGN,j);
-                var cbox = cell.CHTML, cspan = cell.CHTMLspanElement();
+                var /*cbox = cell.CHTML,*/ cspan = cell.CHTMLspanElement();
                 if (j) {rbox.w += cspace; cspan.style.paddingLeft = CHTML.Em(cspace)}
                 if (i) cspan.style.paddingTop = CHTML.Em(rspace);
                 cspan.style.textAlign = calign;
@@ -1097,9 +1097,9 @@
     MML.semantics.Augment({
       toCommonHTML: function (span) {
         span = this.CHTMLcreateSpan(span);
-        if (this.data[i]) {
-          this.data[i].toCommonHTML(span);
-          this.CHTML = this.data[i].CHTML;
+        if (this.data[0]) {
+          this.data[0].toCommonHTML(span);
+          this.CHTML = this.data[0].CHTML;
         }
         return span;
       }
@@ -1110,7 +1110,7 @@
     //
     //  Loading isn't complete until the element jax is modified,
     //  but can't call loadComplete within the callback for "mml Jax Ready"
-    //  (it would call HTMLCSS's Require routine, asking for the mml jax again)
+    //  (it would call CommonHTML's Require routine, asking for the mml jax again)
     //  so wait until after the mml jax has finished processing.
     //  
     //  We also need to wait for the onload handler to run, since the loadComplete
