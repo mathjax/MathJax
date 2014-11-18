@@ -2400,7 +2400,7 @@ MathJax.Hub = {
   //  IE8 fails to check "obj instanceof HTMLCollection" for some values of obj.
   //
   isHTMLCollection: function (obj) {
-    return (typeof(obj) === "object" && obj instanceof HTMLCollection);
+    return ("HTMLCollection" in window && typeof(obj) === "object" && obj instanceof HTMLCollection);
   },
   //
   //  IE8 doesn't deal with HTMLCollection as an array, so convert to array

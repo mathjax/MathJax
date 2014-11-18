@@ -232,7 +232,7 @@ MathJax.ElementJax.mml.Augment({
   nocopyAttributes: {
     fontfamily: true, fontsize: true, fontweight: true, fontstyle: true,
     color: true, background: true,
-    id: true, class: true, href: true, style: true,
+    id: true, 'class': true, href: true, style: true,
     xmlns: true
   },
   Error: function (message,def) {
