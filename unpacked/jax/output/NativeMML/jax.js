@@ -156,7 +156,7 @@
       this.Mouseout    = HOVER.Mouseout;
       this.Mousemove   = HOVER.Mousemove;
 
-      if (!isMSIE) {
+      if (!HUB.Browser.hasMathPlayer) {
         // Used in preTranslate to get scaling factors
         this.EmExSpan = HTML.Element("span",
           {style:{position:"absolute","font-size-adjust":"none"}},
@@ -173,10 +173,11 @@
     },
     //
     //  Set up MathPlayer for IE on the first time through.
+    //  Get the ex and em sizes.
     //
     InitializeMML: function () {
       this.initialized = true;
-      if (isMSIE) {
+      if (HUB.Browser.hasMathPlayer) {
         try {
           //
           //  Insert data needed to use MathPlayer for MathML output
@@ -437,12 +438,12 @@
       var mW = math.offsetWidth  || math.scrollWidth,
           mH = math.offsetHeight || math.scrollHeight;
       var zW = span.offsetWidth, zH = span.offsetHeight;
-      if (nMML.widthBug) {
+      if (nMML.widthBug || span.style.width.match(/%/)) {
         //
         //  FF doesn't get width of <math> right, so get it from <mrow>
         //
         var W = span.firstChild.firstChild.scrollWidth;
-        if (W > zW) {zW = W; span.style.width = zW + "px"}
+        if (W > zW) {zW = W; span.parentNode.style.width = span.style.minWidth = zW + "px";}
       }
       if (this.msieIE8HeightBug) {span.style.position = ""}
       return {Y:-EVENT.getBBox(span.parentNode).h, mW:mW, mH:mH, zW:zW, zH:zH}
@@ -518,7 +519,7 @@
 	value = String(value);
 	if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaces
 	else if (value.match(/^\s*(([-+])?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/))
-          {value = RegExp.$2+((1/18)*RegExp.$3).toFixed(3).replace(/\.?0+$/,"")+"em"} // FIXME:  should take scriptlevel into account
+          {value = (RegExp.$2||"")+((1/18)*RegExp.$3).toFixed(3).replace(/\.?0+$/,"")+"em"} // FIXME:  should take scriptlevel into account
 	else if (this.NativeMMLvariants[value]) {value = this.NativeMMLvariants[value]}
 	return value;
       },
