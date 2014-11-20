@@ -160,7 +160,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       if (annotation) {
         if (nested) {data.unshift(space+"    <mrow>"); data.push(space+"    </mrow>")}
         data.unshift(space+"  <semantics>");
-        var xmlEscapedTex = jax.originalText.replace(/([&<>])/g, function(item) {
+        var xmlEscapedTex = jax.originalText.replace(/[&<>]/g, function(item) {
             return { '>': '&gt;', '<': '&lt;','&': '&amp;' }[item]
         });
       data.push(space+'    <annotation encoding="'+annotation+'">'+xmlEscapedTex+"</annotation>");
