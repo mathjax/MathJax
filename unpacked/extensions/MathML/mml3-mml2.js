@@ -41,7 +41,7 @@
  */
 
 
-MathJax.Extension["MathML/content-mathml"] = {
+MathJax.Extension["MathML/mml3-mml2"] = {
   version: "2.4.0"
 };
 
@@ -122,7 +122,7 @@ MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
     MATHML.ctopXSLT = null;
   }
 
-  MathJax.Hub.Startup.signal.Post("MathML content-mathml Ready");
+  MathJax.Hub.Startup.signal.Post("MathML mml3-mml2 Ready");
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/MathML/mml3-mml2.js");
