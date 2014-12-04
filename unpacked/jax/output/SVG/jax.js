@@ -2030,12 +2030,13 @@
           //  Put content in a <g> with defaults and matrix that flips y axis.
           //  Put that in an <svg> with xlink defined.
           //
-          var box = BBOX.G({
+          var box = BBOX.G(); box.Add(this.data[0].toSVG(),0,0,true); box.Clean();
+          this.SVGhandleColor(box);
+          SVG.Element(box.element,{
             stroke:"black", fill:"black", "stroke-width":0,
             transform: "matrix(1 0 0 -1 0 0)"
-          }).With({removeable: false});
-          box.Add(this.data[0].toSVG(),0,0,true); box.Clean();
-          this.SVGhandleColor(box);
+          });
+          box.removeable = false;
           var svg = this.SVG();
           svg.element.setAttribute("xmlns:xlink",XLINKNS);
           if (CONFIG.useFontCache && !CONFIG.useGlobalCache)
