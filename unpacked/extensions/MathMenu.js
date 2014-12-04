@@ -806,7 +806,7 @@
             if (nMML)    {nMML.config.scale = scale}
             if (SVG)     {SVG.config.scale = scale}
             MENU.cookie.scale = scale;
-            MENU.saveCookie(); HUB.Reprocess();
+            MENU.saveCookie(); HUB.Rerender();
           }
         } else {alert(_("NonZeroScale","The scale should not be zero"))}
       } else {alert(_("PercentScale",
