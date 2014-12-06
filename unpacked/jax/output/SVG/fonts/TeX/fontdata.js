@@ -38,6 +38,8 @@
       SIZE4  = "MathJax_Size4";
   var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
   var STDHW = [[1000,MAIN],[1200,SIZE1],[1800,SIZE2],[2400,SIZE3],[3000,SIZE4]];
+  var ARROWREP = [0x2212,MAIN,0,0,0,0,.1];   // add depth for arrow extender
+  var DARROWREP = [0x3D,MAIN,0,0,0,0,.1];    // add depth for arrow extender
 
   SVG.Augment({
     FONTDATA: {
@@ -371,7 +373,7 @@
         },
         0x2190: // left arrow
         {
-          dir: H, HW: [[1000,MAIN]], stretch: {left:[0x2190,MAIN],rep:[0x2212,MAIN], fuzz:300}
+          dir: H, HW: [[1000,MAIN]], stretch: {left:[0x2190,MAIN], rep:ARROWREP, fuzz:300}
         },
         0x2191: // \uparrow
         {
@@ -379,7 +381,7 @@
         },
         0x2192: // right arrow
         {
-          dir: H, HW: [[1000,MAIN]], stretch: {rep:[0x2212,MAIN], right:[0x2192,MAIN], fuzz:300}
+          dir: H, HW: [[1000,MAIN]], stretch: {rep:ARROWREP, right:[0x2192,MAIN], fuzz:300}
         },
         0x2193: // \downarrow
         {
@@ -388,7 +390,7 @@
         0x2194: // left-right arrow
         {
           dir: H, HW: [[1000,MAIN]],
-          stretch: {left:[0x2190,MAIN],rep:[0x2212,MAIN], right:[0x2192,MAIN], fuzz:300}
+          stretch: {left:[0x2190,MAIN], rep:ARROWREP, right:[0x2192,MAIN], fuzz:300}
         },
         0x2195: // \updownarrow
         {
@@ -397,7 +399,7 @@
         },
         0x21D0: // left double arrow
         {
-          dir: H, HW: [[1000,MAIN]], stretch: {left:[0x21D0,MAIN],rep:[0x3D,MAIN], fuzz:300}
+          dir: H, HW: [[1000,MAIN]], stretch: {left:[0x21D0,MAIN], rep:DARROWREP, fuzz:300}
         },
         0x21D1: // \Uparrow
         {
@@ -405,7 +407,7 @@
         },
         0x21D2: // right double arrow
         {
-          dir: H, HW: [[1000,MAIN]], stretch: {rep:[0x3D,MAIN], right:[0x21D2,MAIN], fuzz:300}
+          dir: H, HW: [[1000,MAIN]], stretch: {rep:DARROWREP, right:[0x21D2,MAIN], fuzz:300}
         },
         0x21D3: // \Downarrow
         {
@@ -414,7 +416,7 @@
         0x21D4: // left-right double arrow
         {
           dir: H, HW: [[1000,MAIN]],
-          stretch: {left:[0x21D0,MAIN],rep:[0x3D,MAIN], right:[0x21D2,MAIN], fuzz:300}
+          stretch: {left:[0x21D0,MAIN], rep:DARROWREP, right:[0x21D2,MAIN], fuzz:300}
         },
         0x21D5: // \Updownarrow
         {
@@ -423,7 +425,7 @@
         },
         0x2212: // horizontal line
         {
-          dir: H, HW: [[611,MAIN]], stretch: {rep:[0x2212,MAIN], fuzz:300}
+          dir: H, HW: [[778,MAIN]], stretch: {rep:[0x2212,MAIN], fuzz:300}
         },
         0x221A: // \surd
         {
@@ -1558,8 +1560,6 @@
 
   SVG.FONTDATA.FONTS['MathJax_Main'][0x22EE][0]  += 400;  // adjust height for \vdots
   SVG.FONTDATA.FONTS['MathJax_Main'][0x22F1][0]  += 700;  // adjust height for \ddots
-  SVG.FONTDATA.FONTS['MathJax_Main'][0x2212][1]  += 100;  // adjust depth of minus (used as arrow extender)
-  SVG.FONTDATA.FONTS['MathJax_Main'][0x003D][1]  += 100;  // adjust depth of = (used as arrow extender)
 
   //
   //  Add some spacing characters (more will come later)
