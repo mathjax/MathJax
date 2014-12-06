@@ -3105,13 +3105,17 @@ MathJax.Hub.Startup = {
     Safari: function (browser) {
       var v = parseInt((String(browser.version).split("."))[0]);
       if (v > 85) {browser.webkit = browser.version}
-      if      (v >= 534) {browser.version = "5.1"}
+      if      (v >= 538) {browser.version = "8.0"}
+      else if (v >= 537) {browser.version = "7.0"}
+      else if (v >= 536) {browser.version = "6.0"}
+      else if (v >= 534) {browser.version = "5.1"}
       else if (v >= 533) {browser.version = "5.0"}
       else if (v >= 526) {browser.version = "4.0"}
       else if (v >= 525) {browser.version = "3.1"}
       else if (v >  500) {browser.version = "3.0"}
       else if (v >  400) {browser.version = "2.0"}
       else if (v >   85) {browser.version = "1.0"}
+      browser.webkit = (navigator.appVersion.match(/WebKit\/(\d+)\./))[1];
       browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
       browser.noContextMenu = browser.isMobile;
     },

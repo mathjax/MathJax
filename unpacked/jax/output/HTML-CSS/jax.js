@@ -2999,6 +2999,7 @@
               }
             }
           },
+          Em: ((browser.webkit||0) >= 538 ? HTMLCSS.EmRounded : HTMLCSS.Em), // issue #931
           rfuzz: .011,
           AccentBug: true,
           AdjustSurd: true,
