@@ -185,7 +185,6 @@
         var mml = MML.mfrac(this.num,this.mmlData(false));
         if (this.thickness != null) {mml.linethickness = this.thickness}
         if (this.open || this.close) {
-          mml.texClass = MML.TEXCLASS.INNER;
           mml.texWithDelims = true;
           mml = TEX.fixedFence(this.open,mml,this.close);
         }
@@ -2194,7 +2193,7 @@
      *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
      */
     fixedFence: function (open,mml,close) {
-      var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
+      var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
       if (open) {mrow.Append(this.mathPalette(open,"l"))}
       if (mml.type === "mrow") {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
       if (close) {mrow.Append(this.mathPalette(close,"r"))}
