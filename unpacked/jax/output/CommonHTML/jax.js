@@ -814,6 +814,17 @@
 
     MML.munderover.Augment({
       toCommonHTML: function (span) {
+	var values = this.getValues("displaystyle","accent","accentunder","align");
+	if (!values.displaystyle && this.data[this.base] != null &&
+	    this.data[this.base].CoreMO().Get("movablelimits")) {
+          span = MML.msubsup.prototype.toCommonHTML.call(this,span);
+          //
+          //  Change class to msubsup for CSS rules.
+          //  ### FIXME: should this be handled via adding another class instead?
+          //
+          span.className = span.className.replace(/munderover/,"msubsup");
+          return span;
+        }
         span = this.CHTMLdefaultSpan(span,{childSpans:true, className:"", noBBox:true});
         var obox = this.CHTMLbboxFor(this.over),
             ubox = this.CHTMLbboxFor(this.under),
