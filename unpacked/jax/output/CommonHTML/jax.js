@@ -108,6 +108,9 @@
     ".MJXc-mtd": {"display":"table-cell!important","text-align":"center","padding":".5em 0 0 .5em"},
     ".MJXc-mtr > .MJXc-mtd:first-child": {"padding-left":0},
     ".MJXc-mtr:first-child > .MJXc-mtd": {"padding-top":0},
+    ".MJXc-mlabeledtr": {"display":"table-row!important"},
+    ".MJXc-mlabeledtr > .MJXc-mtd:first-child": {"padding-left":0},
+    ".MJXc-mlabeledtr:first-child > .MJXc-mtd": {"padding-top":0},
     
     ".MJXc-merror": {
       "background-color": "#FFFF88",
@@ -1073,8 +1076,9 @@
             var rspace = CHTML.arrayEntry(RSPACE,i-1), ralign = CHTML.arrayEntry(RALIGN,i);
             var rbox = row.CHTML, rspan = row.CHTMLspanElement();
             rspan.style.verticalAlign = ralign;
-            for (j = 0, n = row.data.length; j < n; j++) {
-              var cell = row.data[j];
+            var k = (row.type === "mlabeledtr" ? 1 : 0);
+            for (j = 0, n = row.data.length; j < n-k; j++) {
+              var cell = row.data[j+k];
               if (cell) {
                 var cspace = CHTML.arrayEntry(CSPACE,j-1), calign = CHTML.arrayEntry(CALIGN,j);
                 var /*cbox = cell.CHTML,*/ cspan = cell.CHTMLspanElement();
@@ -1090,6 +1094,18 @@
         var bbox = this.CHTML;
         bbox.w = W; bbox.h = H/2 + .25; bbox.d = H/2 - .25;
         bbox.l = bbox.r = .125;
+        return span;
+      }
+    });
+    MML.mlabeledtr.Augment({
+      CHTMLdefaultSpan: function (span,options) {
+        if (!options) options = {};
+        span = this.CHTMLcreateSpan(span);
+        this.CHTMLhandleStyle(span);
+        this.CHTMLhandleColor(span);
+        if (this.isToken) this.CHTMLhandleToken(span);
+        // skip label for now
+        for (var i = 1, m = this.data.length; i < m; i++) this.CHTMLaddChild(span,i,options);
         return span;
       }
     });
