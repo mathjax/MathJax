@@ -561,8 +561,8 @@ MathJax.ElementJax.mml.Augment({
         if (!def) {def = this.CheckRange(mo)}
         if (!def && nodefault) {def = {}} else {
           if (!def) {def = MathJax.Hub.Insert({},this.defaultDef)}
+          if (this.parent) {this.def = def} else {def = MathJax.Hub.Insert({},def)}
           def.form = forms[0];
-          this.def = def;
         }
       }
       this.useMMLspacing &= ~(this.SPACE_ATTR[name] || 0);
@@ -802,7 +802,7 @@ MathJax.ElementJax.mml.Augment({
         this.getPrevClass(prev); prev = null;
         for (i = 0; i < m; i++)
           {if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}}
-        this.texClass = MML.TEXCLASS.INNER;
+        if (!this.hasOwnProperty("texClass")) this.texClass = MML.TEXCLASS.INNER;
         return this;
       } else {
         //
@@ -824,7 +824,6 @@ MathJax.ElementJax.mml.Augment({
   MML.mfrac = MML.mbase.Subclass({
     type: "mfrac", num: 0, den: 1,
     linebreakContainer: true,
-    texClass: MML.TEXCLASS.INNER,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
