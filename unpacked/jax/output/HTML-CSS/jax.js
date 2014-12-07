@@ -2959,7 +2959,7 @@
           msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
           msieIE6: !isIE7,
           msieItalicWidthBug: true,
-          FontFaceBug: true,
+          FontFaceBug: (mode < 9),
           msieFontCSSBug: browser.isIE9,
           allowWebFonts: (mode >= 9 ? "woff" : "eot")
         });
