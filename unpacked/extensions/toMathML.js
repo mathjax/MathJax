@@ -61,9 +61,8 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
         for (var id in defaults) {if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {
           if (this[id] != null && this[id] !== defaults[id]) {
-            var value = this[id]; delete this[id];
-            if (this.Get(id) !== value) {attr.push(id+'="'+this.toMathMLattribute(value)+'"')}
-            this[id] = value;
+            if (this.Get(id,null,1) !== this[id])
+              attr.push(id+'="'+this.toMathMLattribute(this[id])+'"');
           }
         }}
       }

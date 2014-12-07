@@ -296,9 +296,11 @@ MathJax.ElementJax.mml.Augment({
       while (parent && parent.notParent) {parent = parent.parent}
       return parent;
     },
-    Get: function (name,nodefault) {
-      if (this[name] != null) {return this[name]}
-      if (this.attr && this.attr[name] != null) {return this.attr[name]}
+    Get: function (name,nodefault,noself) {
+      if (!noself) {
+        if (this[name] != null) {return this[name]}
+        if (this.attr && this.attr[name] != null) {return this.attr[name]}
+      }
       // FIXME: should cache these values and get from cache
       // (clear cache when appended to a new object?)
       var parent = this.Parent();
