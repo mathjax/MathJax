@@ -169,7 +169,9 @@ MathJax.Hub.Config({
   //  These two parameters control the alignment and shifting of displayed equations.
   //  The first can be "left", "center", or "right", and determines the alignment of
   //  displayed equations.  When the alignment is not "center", the second determines
-  //  an indentation from the left or right side for the displayed equations.
+  //  an indentation from the left or right side for the displayed equations.  When
+  //  the alignment is "center", the indent allows you to shift the center to the right
+  //  or left (negative is left).
   //  
   displayAlign: "center",
   displayIndent: "0em",
@@ -734,10 +736,25 @@ MathJax.Hub.Config({
     EqnChunkFactor: 1.5,
     EqnChunkDelay: 100,
 
+    //
     //  This option indicates whether MathJax should try to correct the
     //  x-height of equations to match the size of the surrounding text.
+    //
     matchFontHeight: true,
 
+    //
+    //  When true, MathJax will not measure the widths or heights of the
+    //  subexpressions as it creates its output, but instead will rely on
+    //  its internal calculautions based on teh bounding boxes of the
+    //  characters it uses, and will only take measurements when it
+    //  absolutely has to.  Since measurements cause display reflows, they
+    //  slows down MathJax considerably, so without them MathJax runs
+    //  faster, but can produce slightly less accurate character placements,
+    //  especially in width fractions or roots.
+    //
+    noReflows: true,
+
+    
     //
     //  These settings control automatic line breaking.  It is off by
     //  default, so only explicit line breaks are performed (via

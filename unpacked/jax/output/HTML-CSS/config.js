@@ -35,6 +35,7 @@ MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   webfontDir: MathJax.OutputJax.fontDir + "/HTML-CSS",      // font name added later
   
   config: {
+    noReflows: true,                // true uses internal measurements to avoid browser reflows
     matchFontHeight: true,          // try to match math font height to surrounding font?
     scale: 100, minScaleAdjust: 50, // global math scaling factor, and minimum adjusted scale factor
     availableFonts: ["STIX","TeX"], // list of local fonts to check for

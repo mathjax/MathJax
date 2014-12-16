@@ -41,6 +41,8 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
     undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",  // fonts to use for missing characters
 
     addMMLclasses: false,           // keep MathML structure and use CSS classes to mark elements
+    useFontCache: true,             // use <use> elements to re-use font paths rather than repeat paths every time
+    useGlobalCache: true,           // store fonts in a global <defs> for use in all equations, or one in each equation
 
     EqnChunk: (MathJax.Hub.Browser.isMobile ? 10: 50),
                                     // number of equations to process before showing them
@@ -82,6 +84,10 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
       ".MathJax_SVG .MJX-sans-serif": {
         "font-family": "sans-serif"
       },
+      
+      //
+      //  For tooltips
+      //
       "#MathJax_SVG_Tooltip": {
         "background-color": "InfoBackground", color: "InfoText",
         border: "1px solid black",
