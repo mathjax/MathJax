@@ -130,8 +130,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       'alignat*':    ['AlignAt',null,false,true],
       alignedat:     ['AlignAt',null,false,false],
 
-      aligned:       ['AlignedArray',null,null,null,'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0]),".5em",'D'],
-      gathered:      ['AlignedArray',null,null,null,'c',null,".5em",'D'],
+      aligned:       ['AlignedAMSArray',null,null,null,'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0]),".5em",'D'],
+      gathered:      ['AlignedAMSArray',null,null,null,'c',null,".5em",'D'],
 
       subarray:      ['Array',null,null,null,null,COLS([0,0,0,0]),"0.1em",'S',1],
       smallmatrix:   ['Array',null,null,null,'c',COLS([1/3]),".2em",'S',1],
@@ -314,6 +314,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       });
     },
     
+    AlignedAMSArray: function (begin) {
+      var align = this.GetBrackets("\\begin{"+begin.name+"}");
+      return this.setArrayAlign(this.AMSarray.apply(this,arguments),align);
+    },
+
     /*
      *  Handle alignat environments
      */
@@ -457,7 +462,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
 
     /*
-     *  Set the initial <mo> to have form="infix" and lspace="0",
+     *  Set the initial <mo> to have form="infix",
      *  skipping any initial space or empty braces (TeXAtom with child
      *  being an empty inferred row).
      */
@@ -467,7 +472,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
            (data[i].type !== "texatom" || (data[i].data[0] && data[i].data[0].data.length)))) {
           if (data[i].isEmbellished()) {
             var core = data[i].CoreMO();
-            core.form = MML.FORM.INFIX; core.lspace = MML.LENGTH.MEDIUMMATHSPACE;
+            core.form = MML.FORM.INFIX;
+            core.useMMLspacing |= core.SPACE_ATTR.form; // use MathML space for this
           }
           break;
         }
