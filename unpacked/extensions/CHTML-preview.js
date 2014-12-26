@@ -86,10 +86,11 @@
     Preview: function (data) {
       if (this.config.disabled || !SETTINGS.CHTMLpreview ||
           SETTINGS.renderer === "CommonHTML") return;
-      var preview = data.script.previousSibling;
+      var preview = data.script.MathJax.preview || data.script.previousSibling;
       if (!preview || preview.className !== MathJax.Hub.config.preRemoveClass) {
         preview = HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
         data.script.parentNode.insertBefore(preview,data.script);
+        data.script.MathJax.preview = preview;
       }
       preview.innerHTML = "";
       return this.postFilter(preview,data);
