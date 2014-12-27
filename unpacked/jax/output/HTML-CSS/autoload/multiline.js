@@ -514,7 +514,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       if (end.length === 0) {
         var s = this.data[this.sup] || this.data[this.sub];
-        if (s) {
+        if (s && this.HTMLnotEmpty(s)) {
           var box = s.HTMLspanElement().parentNode, stack = box.parentNode;
           if (this.data[this.base]) {stack.removeChild(stack.firstChild)}
 	  for (box = stack.firstChild; box; box = box.nextSibling)
