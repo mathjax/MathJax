@@ -1976,17 +1976,18 @@
 	var min = this.getValues("subscriptshift","superscriptshift");
 	min.subscriptshift   = (min.subscriptshift === ""   ? 0 : SVG.length2em(min.subscriptshift,mu));
 	min.superscriptshift = (min.superscriptshift === "" ? 0 : SVG.length2em(min.superscriptshift,mu));
+        var x = base.w + base.x;
 	if (!sup) {
 	  if (sub) {
 	    v = Math.max(v,SVG.TeX.sub1*scale,sub.h-(4/5)*x_height,min.subscriptshift);
-            svg.Add(sub,base.w,-v); this.data[this.sub].SVGdata.dy = -v;
+            svg.Add(sub,x,-v); this.data[this.sub].SVGdata.dy = -v;
 	  }
 	} else {
 	  if (!sub) {
 	    values = this.getValues("displaystyle","texprimestyle");
 	    p = SVG.TeX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
 	    u = Math.max(u,p*scale,sup.d+(1/4)*x_height,min.superscriptshift);
-            svg.Add(sup,base.w+delta,u);
+            svg.Add(sup,x+delta,u);
             this.data[this.sup].SVGdata.dx = delta; 
             this.data[this.sup].SVGdata.dy = u;
 	  } else {
@@ -1997,8 +1998,8 @@
 	      q = (4/5)*x_height - (u - sup.d);
 	      if (q > 0) {u += q; v -= q}
 	    }
-            svg.Add(sup,base.w+delta,Math.max(u,min.superscriptshift));
-	    svg.Add(sub,base.w,-Math.max(v,min.subscriptshift));
+            svg.Add(sup,x+delta,Math.max(u,min.superscriptshift));
+	    svg.Add(sub,x,-Math.max(v,min.subscriptshift));
             this.data[this.sup].SVGdata.dx = delta; 
             this.data[this.sup].SVGdata.dy = Math.max(u,min.superscriptshift);
             this.data[this.sub].SVGdata.dy = -Math.max(v,min.subscriptshift);
