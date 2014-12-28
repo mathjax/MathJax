@@ -1194,7 +1194,7 @@
       var movesupsub = base.movesupsub, position = base.sup;
       if ((base.type === "msubsup" && base.data[base.sup]) ||
           (base.type === "munderover" && base.data[base.over]))
-           {TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"])}
+           {TEX.Error(["DoubleExponent","Double exponent: use braces to clarify"])}
       if (base.type !== "msubsup") {
         if (movesupsub) {
           if (base.type !== "munderover" || base.data[base.over]) {
