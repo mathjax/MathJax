@@ -499,8 +499,10 @@
           }}
         }
 	for (var i = 0, m = copy.length; i < m; i++) {
-          var value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
-	  if (value != null) {tag.setAttribute(copy[i],this.NativeMMLattribute(value))}
+          if (defaults.hasOwnProperty(copy[i])) {
+             var value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
+	     if (value != null) {tag.setAttribute(copy[i],this.NativeMMLattribute(value))}
+           }
 	}
         this.NativeMMLclass(tag);
       },
