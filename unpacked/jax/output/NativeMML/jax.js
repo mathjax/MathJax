@@ -495,7 +495,7 @@
         if (!this.attrNames) {
           if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
           for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
-	    if (this[id] != null) {tag.setAttribute(id,this.NativeMMLattribute(this[id]))}
+	    if (this[id] != null && this[id] !== defaults[id]) {tag.setAttribute(id,this.NativeMMLattribute(this[id]))}
           }}
         }
 	for (var i = 0, m = copy.length; i < m; i++) {

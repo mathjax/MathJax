@@ -510,7 +510,7 @@ MathJax.Hub.Config({
     //
     //  This is the amound of indentation (from right or left) for the tags.
     //
-    TagIndent: ".8em",
+    TagIndent: "0.8em",
     
     //
     //  This is the width to use for the multline environment
