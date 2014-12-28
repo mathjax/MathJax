@@ -668,11 +668,16 @@
       //
       this.initImg(span);
       this.initHTML(math,span);
-      math.setTeXclass();
-      try {math.toHTML(span,div)} catch (err) {
+      this.savePreview(script);
+      try {
+        math.setTeXclass();
+        math.toHTML(span,div);
+      } catch (err) {
         if (err.restart) {while (span.firstChild) {span.removeChild(span.firstChild)}}
+        this.restorePreview(script);
         throw err;
       }
+      this.restorePreview(script);
       //
       //  Put it in place, and remove the processing marker
       //
@@ -699,6 +704,25 @@
           state.HTMLCSSchunk = Math.floor(state.HTMLCSSchunk*this.config.EqnChunkFactor);
           state.HTMLCSSdelay = true;  // delay if there are more scripts
         }
+      }
+    },
+    //
+    //  MathML previews can contain the same ID's as the HTML output,
+    //  which confuses HTMLspanElement(), so remove the preview temporarily
+    //  and restore it after typesetting the math.
+    //
+    savePreview: function (script) {
+      var preview = script.MathJax.preview;
+      if (preview) {
+        script.MathJax.tmpPreview = document.createElement("span");
+        preview.parentNode.replaceChild(script.MathJax.tmpPreview,preview);
+      }
+    },
+    restorePreview: function (script) {
+      var tmpPreview = script.MathJax.tmpPreview;
+      if (tmpPreview) {
+        tmpPreview.parentNode.replaceChild(script.MathJax.preview,tmpPreview);
+        delete script.MathJax.tmpPreview;
       }
     },
 
