@@ -490,10 +490,9 @@
       //    and set those in the tag's attribute list
       //
       NativeMMLattributes: function (tag) {
-	var defaults = this.defaults;
+	var defaults = (this.type === "mstyle" ? MML.math.prototype.defaults : this.defaults);
 	var copy = (this.attrNames||MML.copyAttributeNames), skip = MML.skipAttributes;
         if (!this.attrNames) {
-          if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
           for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
 	    if (this[id] != null && this[id] !== defaults[id]) {tag.setAttribute(id,this.NativeMMLattribute(this[id]))}
           }}

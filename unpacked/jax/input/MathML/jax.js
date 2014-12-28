@@ -140,10 +140,11 @@
         if (name.match(/^_moz-math-((column|row)(align|line)|font-style)$/)) continue;
         var value = node.attributes[i].value;
         value = this.filterAttribute(name,value);
+        var defaults = (mml.type === "mstyle" ? MML.math.prototype.defaults : mml.defaults);
         if (value != null) {
           if (value.toLowerCase() === "true") {value = true}
             else if (value.toLowerCase() === "false") {value = false}
-          if (mml.defaults[name] != null || MML.copyAttributes[name])
+          if (defaults[name] != null || MML.copyAttributes[name])
             {mml[name] = value} else {mml.attr[name] = value}
           mml.attrNames.push(name);
         }
