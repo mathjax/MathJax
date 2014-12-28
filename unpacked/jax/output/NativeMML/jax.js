@@ -1344,8 +1344,8 @@
       // correctly and thus the element is displayed incorrectly in <mtable>.
       nMML.spaceWidthBug = !browser.versionAtLeast("20.0");
 
-      nMML.tableSpacingBug = true; // mtable@rowspacing/mtable@columnspacing not
-                                   // supported.
+      // mtable@rowspacing/mtable@columnspacing not supported.
+      nMML.tableSpacingBug = !browser.versionAtLeast("33.0");
       nMML.tableLabelBug = true;   // mlabeledtr is not implemented.
       nMML.mfencedBug = true;      // mfenced not displayed correctly
     },
