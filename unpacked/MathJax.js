@@ -2383,8 +2383,12 @@ MathJax.Hub = {
   elementScripts: function (element) {
     var scripts = [];
     if (element instanceof Array || this.isHTMLCollection(element)) {
-      for (var i = 0, m = element.length; i < m; i++)
-        {scripts.push.apply(scripts,this.elementScripts(element[i]))}
+      for (var i = 0, m = element.length; i < m; i++) {
+        var alreadyDone = 0;
+        for (var j = 0; j < i && !alreadyDone; j++)
+          {alreadyDone = element[j].contains(element[i])}
+        if (!alreadyDone) scripts.push.apply(scripts,this.elementScripts(element[i]));
+      }
       return scripts;
     }
     if (typeof(element) === 'string') {element = document.getElementById(element)}
