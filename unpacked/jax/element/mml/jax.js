@@ -219,12 +219,14 @@ MathJax.ElementJax.mml.Augment({
   },
   copyAttributes: {
     displaystyle:1, scriptlevel:1, open:1, close:1, form:1,
+    actiontype: 1,
     fontfamily:true, fontsize:true, fontweight:true, fontstyle:true,
     color:true, background:true,
     id:true, "class":1, href:true, style:true
   },
   copyAttributeNames: [
     "displaystyle", "scriptlevel", "open", "close", "form",  // force these to be copied
+    "actiontype",
     "fontfamily", "fontsize", "fontweight", "fontstyle",
     "color", "background",
     "id", "class", "href", "style"
