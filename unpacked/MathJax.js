@@ -1149,6 +1149,7 @@ MathJax.Localization = {
     // the languages that use a remap but are not translated at all.
     //
     "ast": {menuTitle: "asturianu"},
+    "bcc": {menuTitle: "\u0628\u0644\u0648\u0686\u06CC"},
     "br": {menuTitle: "brezhoneg"},
     "ca": {menuTitle: "catal\u00E0"},
     "cdo": {menuTitle: "M\u00ECng-d\u0115\u0324ng-ng\u1E73\u0304"},
@@ -1176,6 +1177,7 @@ MathJax.Localization = {
     "pt": {menuTitle: "portugus\u00EA"},
     "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
     "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
+    "sco": {menuTitle: "Scots"},
     "sl": {menuTitle: "sloven\u0161\u010Dina"},
     "sv": {menuTitle: "svenska"},
     "tr": {menuTitle: "T\u00FCrk\u00E7e"},
