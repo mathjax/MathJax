@@ -879,7 +879,7 @@
       return HD;
     },
     getW: function (span) {
-      if (span.bbox && this.config.noReflows) {return span.bbox.w}
+      if (span.bbox && this.config.noReflows && span.bbox.exactW !== false) {return span.bbox.w}
       var W, H, w = (span.bbox||{}).w, start = span;
       if (span.bbox && span.bbox.exactW) {return w}
       if ((span.bbox && w >= 0 && !this.initialSkipBug && !this.msieItalicWidthBug) ||
