@@ -40,7 +40,7 @@
     config: HUB.CombineConfig("CHTML-preview",{
       Chunks: {EqnChunk: 10000, EqnChunkFactor: 1, EqnChunkDelay: 0},
       color: "inherit!important",
-      updateTime: 10, updateDelay: 10,
+      updateTime: 30, updateDelay: 6,
       messageStyle: "none",
       disabled: false
     }),
