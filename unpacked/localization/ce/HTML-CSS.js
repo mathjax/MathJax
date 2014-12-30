@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("ce","HTML-CSS",{
-        version: "2.3",
+        version: "2.5.0-beta",
         isLoaded: true,
         strings: {
 

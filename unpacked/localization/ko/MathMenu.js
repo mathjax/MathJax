@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("ko","MathMenu",{
-        version: "2.3",
+        version: "2.5.0-beta",
         isLoaded: true,
         strings: {
           Show: "\uC218\uC2DD \uBCF4\uAE30",

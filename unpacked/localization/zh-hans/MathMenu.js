@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("zh-hans","MathMenu",{
-        version: "2.3",
+        version: "2.5.0-beta",
         isLoaded: true,
         strings: {
           Show: "\u6570\u5F0F\u663E\u793A\u5F62\u5F0F",

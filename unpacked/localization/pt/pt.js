@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("pt",null,{
   menuTitle: "portugus\u00EA",
-  version: "2.3",
+  version: "2.5.0-beta",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.3",
+        version: "2.5.0-beta",
         isLoaded: true,
         strings: {
           MathProcessingError: "Erro no processamento das f\u00F3rmulas",

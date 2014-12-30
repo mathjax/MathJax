@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("da","MathML",{
-        version: "2.3",
+        version: "2.5.0-beta",
         isLoaded: true,
         strings: {
           BadMglyph: "D\u00E5rlig mglyph: %1",

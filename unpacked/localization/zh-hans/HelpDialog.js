@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("zh-hans","HelpDialog",{
-        version: "2.3",
+        version: "2.5.0-beta",
         isLoaded: true,
         strings: {
           Help: "MathJax\u5E2E\u52A9",
