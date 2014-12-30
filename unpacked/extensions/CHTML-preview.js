@@ -53,13 +53,14 @@
         "HTML-CSS": this.config.Chunks,
         SVG: this.config.Chunks,
       });
-      MathJax.Ajax.Styles({".MathJax_Preview":{color:this.config.color}});
+      MathJax.Ajax.Styles({".MathJax_Preview .MJXc-math":{color:this.config.color}});
       var update, delay, style, done, saved;
       var config = this.config;
 
+      if (!config.disabled && SETTINGS.CHTMLpreview == null)
+        HUB.Config({menuSettings:{CHTMLpreview:true}});
       HUB.Register.MessageHook("Begin Math Output",function () {
-        if (!done && !config.disabled && SETTINGS.CHTMLpreview &&
-            SETTINGS.renderer !== "CommonHTML") {
+        if (!done && SETTINGS.CHTMLpreview && SETTINGS.renderer !== "CommonHTML") {
           update = HUB.processUpdateTime; delay = HUB.processUpdateDelay;
           style = HUB.config.messageStyle;
           HUB.processUpdateTime = config.updateTime;
@@ -84,15 +85,14 @@
     //  and call the CommonHTML output jax to create the preview
     //
     Preview: function (data) {
-      if (this.config.disabled || !SETTINGS.CHTMLpreview ||
-          SETTINGS.renderer === "CommonHTML") return;
+      if (!SETTINGS.CHTMLpreview || SETTINGS.renderer === "CommonHTML") return;
       var preview = data.script.MathJax.preview || data.script.previousSibling;
       if (!preview || preview.className !== MathJax.Hub.config.preRemoveClass) {
         preview = HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
         data.script.parentNode.insertBefore(preview,data.script);
         data.script.MathJax.preview = preview;
       }
-      preview.innerHTML = "";
+      preview.innerHTML = ""; preview.style.color = "inherit";
       return this.postFilter(preview,data);
     },
     postFilter: function (preview,data) {
@@ -104,10 +104,11 @@
         //
         if (!data.math.root.toCommonHTML) {
           var queue = MathJax.Callback.Queue();
-          HUB.RestartAfter(queue.Push(
+          queue.Push(
             ["Require",MathJax.Ajax,"[MathJax]/jax/output/CommonHTML/config.js"],
             ["Require",MathJax.Ajax,"[MathJax]/jax/output/CommonHTML/jax.js"]
-          ));
+          );
+          HUB.RestartAfter(queue.Push({}));
         }
         if (!err.restart) {throw err} // an actual error
         return MathJax.Callback.After(["postFilter",this,preview,data],err.restart);
