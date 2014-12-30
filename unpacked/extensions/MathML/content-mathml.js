@@ -45,7 +45,7 @@
 
 
 MathJax.Extension["MathML/content-mathml"] = {
-  version: "2.4.0"
+  version: "2.3"
 };
 
 MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
