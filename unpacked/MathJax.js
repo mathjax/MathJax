@@ -2544,6 +2544,8 @@ MathJax.Hub.Startup = {
           }
           jax.unshift(name);
         }
+        if (config.menuSettings.CHTMLpreview && !MathJax.Extension["CHTML-preview"])
+          {MathJax.Hub.config.extensions.push("CHTML-preview.js")}
       },MathJax.Hub.config],
       ["Post",this.signal,"End Cookie"]
     );

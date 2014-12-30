@@ -965,49 +965,58 @@ MathJax.ElementJax.mml.Augment({
       close: ')',
       separators: ','
     },
-    texClass: MML.TEXCLASS.OPEN,
-    setTeXclass: function (prev) {
-      this.getPrevClass(prev);
+    addFakeNodes: function () {
       var values = this.getValues("open","close","separators");
       values.open = values.open.replace(/[ \t\n\r]/g,"");
       values.close = values.close.replace(/[ \t\n\r]/g,"");
       values.separators = values.separators.replace(/[ \t\n\r]/g,"");
-      // create a fake node for the open item
+      //
+      //  Create a fake node for the open item
+      //
       if (values.open !== "") {
         this.SetData("open",MML.mo(values.open).With({
           fence:true, form:MML.FORM.PREFIX, texClass:MML.TEXCLASS.OPEN
         }));
+        //
         //  Clear flag for using MML spacing even though form is specified
+        //
         this.data.open.useMMLspacing &= ~this.data.open.SPACE_ATTR.form;
-        prev = this.data.open.setTeXclass(prev);
       }
-      // get the separators
+      //
+      //  Create fake nodes for the separators
+      //
       if (values.separators !== "") {
         while (values.separators.length < this.data.length)
           {values.separators += values.separators.charAt(values.separators.length-1)}
-      }
-      // handle the first item, if any
-      if (this.data[0]) {prev = this.data[0].setTeXclass(prev)}
-      // add fake nodes for separators and handle the following item
-      for (var i = 1, m = this.data.length; i < m; i++) {
-        if (this.data[i]) {
-          if (values.separators !== "") {
-            this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}));
-            prev = this.data["sep"+i].setTeXclass(prev);
-          }
-          prev = this.data[i].setTeXclass(prev);
+        for (var i = 1, m = this.data.length; i < m; i++) {
+          if (this.data[i])
+            {this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}))}
         }
       }
-      // create fake node for the close item
+      //
+      //  Create fake node for the close item
+      //
       if (values.close !== "") {
         this.SetData("close",MML.mo(values.close).With({
           fence:true, form:MML.FORM.POSTFIX, texClass:MML.TEXCLASS.CLOSE
         }));
+        //
         //  Clear flag for using MML spacing even though form is specified
+        //
         this.data.close.useMMLspacing &= ~this.data.close.SPACE_ATTR.form;
-        prev = this.data.close.setTeXclass(prev);
       }
-      // get the data from the open item
+    },
+    texClass: MML.TEXCLASS.OPEN,
+    setTeXclass: function (prev) {
+      this.addFakeNodes();
+      this.getPrevClass(prev);
+      if (this.data.open) {prev = this.data.open.setTeXclass(prev)}
+      if (this.data[0]) {prev = this.data[0].setTeXclass(prev)}
+      for (var i = 1, m = this.data.length; i < m; i++) {
+        if (this.data["sep"+i]) {prev = this.data["sep"+i].setTeXclass(prev)}
+        if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}
+      }
+      if (this.data.close) {prev = this.data.close.setTeXclass(prev)}
       this.updateTeXclass(this.data.open);
       this.texClass = MML.TEXCLASS.INNER;
       return prev;

@@ -964,7 +964,7 @@
       "The MathJax contextual menu will be disabled, but you can " +
       "Alt-Click on an expression to obtain the MathJax menu instead."]
   };
-
+  
   /*************************************************************/
   /*************************************************************/
 
@@ -1090,15 +1090,18 @@
         ITEM.RULE(),
         ITEM.SUBMENU(["Renderer","Math Renderer"],    {hidden:!CONFIG.showRenderer},
           ITEM.RADIO("HTML-CSS",  "renderer", {action: MENU.Renderer}),
+          ITEM.RADIO("Fast HTML", "renderer", {action: MENU.Renderer, value:"CommonHTML"}),
           ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"}),
-          ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer})
+          ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer}),
+          ITEM.RULE(),
+          ITEM.CHECKBOX("Fast Preview", "CHTMLpreview")
         ),
         ITEM.SUBMENU("MathPlayer",  {hidden:!HUB.Browser.isMSIE || !CONFIG.showMathPlayer,
                                                     disabled:!HUB.Browser.hasMathPlayer},
           ITEM.LABEL(["MPHandles","Let MathPlayer Handle:"]),
           ITEM.CHECKBOX(["MenuEvents","Menu Events"],             "mpContext", {action: MENU.MPEvents, hidden:!isIE9}),
           ITEM.CHECKBOX(["MouseEvents","Mouse Events"],           "mpMouse",   {action: MENU.MPEvents, hidden:!isIE9}),
-          ITEM.CHECKBOX(["MenuAndMouse","Mouse and Menu Events"], "mpMouse", {action: MENU.MPEvents, hidden:isIE9})
+          ITEM.CHECKBOX(["MenuAndMouse","Mouse and Menu Events"], "mpMouse",   {action: MENU.MPEvents, hidden:isIE9})
         ),
         ITEM.SUBMENU(["FontPrefs","Font Preference"],       {hidden:!CONFIG.showFontMenu},
           ITEM.LABEL(["ForHTMLCSS","For HTML-CSS:"]),
