@@ -617,7 +617,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     MathJax.Hub.Insert(AMS.IDs,AMS.eqIDs);       // save IDs from this equation
     MathJax.Hub.Insert(AMS.labels,AMS.eqlabels); // save labels from this equation
     if (AMS.badref && !data.math.texError) {AMS.refs.push(data.script)}  // reprocess later
-  });
+  },100);
   
   MathJax.Hub.Register.MessageHook("Begin Math Input",function () {
     AMS.refs = [];                 // array of jax with bad references
