@@ -577,7 +577,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           var def = {
             side: TEX.config.TagSide,
             minlabelspacing: TEX.config.TagIndent,
-            columnalign: mml.displayAlign
+            columnalign: mml.displayAlign,
+            displaystyle: "inherit"   // replaced by TeX input jax Translate() function with actual value
           };
           if (mml.displayAlign === MML.INDENTALIGN.LEFT) {
             def.width = "100%";
