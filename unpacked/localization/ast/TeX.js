@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("ast","TeX",{
-        version: "2.5.0-beta",
+        version: "2.5",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Hai una llave d'apertura de m\u00E1s o falta una llave de zarramientu",
