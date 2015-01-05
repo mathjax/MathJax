@@ -51,14 +51,14 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
     },
 
     toMathMLattributes: function () {
-      var attr = [], defaults = this.defaults;
+      var defaults = (this.type === "mstyle" ? MML.math.prototype.defaults : this.defaults);
       var names = (this.attrNames||MML.copyAttributeNames),
           skip = MML.skipAttributes, copy = MML.copyAttributes;
+      var attr = [];
 
       if (this.type === "math" && (!this.attr || !this.attr.xmlns))
         {attr.push('xmlns="http://www.w3.org/1998/Math/MathML"')}
       if (!this.attrNames) {
-        if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
         for (var id in defaults) {if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {
           if (this[id] != null && this[id] !== defaults[id]) {
             if (this.Get(id,null,1) !== this[id])

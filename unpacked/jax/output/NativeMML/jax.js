@@ -491,17 +491,18 @@
       //
       NativeMMLattributes: function (tag) {
 	var defaults = (this.type === "mstyle" ? MML.math.prototype.defaults : this.defaults);
-	var copy = (this.attrNames||MML.copyAttributeNames), skip = MML.skipAttributes;
+        var names = (this.attrNames||MML.copyAttributeNames),
+            skip = MML.skipAttributes, copy = MML.copyAttributes;
         if (!this.attrNames) {
-          for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
-	    if (this[id] != null && this[id] !== defaults[id]) {tag.setAttribute(id,this.NativeMMLattribute(this[id]))}
+          for (var id in defaults) {if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {
+	    if (this[id] != null && this[id] !== defaults[id]) 
+              tag.setAttribute(id,this.NativeMMLattribute(this[id]));
           }}
         }
-	for (var i = 0, m = copy.length; i < m; i++) {
-          if (defaults.hasOwnProperty(copy[i])) {
-             var value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
-	     if (value != null) {tag.setAttribute(copy[i],this.NativeMMLattribute(value))}
-           }
+	for (var i = 0, m = names.length; i < m; i++) {
+          if (copy[names[i]] === 1 && !defaults.hasOwnProperty(names[i])) continue;
+          var value = (this.attr||{})[names[i]]; if (value == null) {value = this[names[i]]}
+          if (value != null) {tag.setAttribute(names[i],this.NativeMMLattribute(value))}
 	}
         this.NativeMMLclass(tag);
       },
