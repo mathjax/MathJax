@@ -1193,7 +1193,7 @@
       if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
       var movesupsub = base.movesupsub, position = base.sup;
       if ((base.type === "msubsup" && base.data[base.sup]) ||
-          (base.type === "munderover" && base.data[base.over]))
+          (base.type === "munderover" && base.data[base.over] && !base.subsupOK))
            {TEX.Error(["DoubleExponent","Double exponent: use braces to clarify"])}
       if (base.type !== "msubsup") {
         if (movesupsub) {
@@ -1220,7 +1220,7 @@
       if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
       var movesupsub = base.movesupsub, position = base.sub;
       if ((base.type === "msubsup" && base.data[base.sub]) ||
-          (base.type === "munderover" && base.data[base.under]))
+          (base.type === "munderover" && base.data[base.under] && !base.subsupOK))
            {TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"])}
       if (base.type !== "msubsup") {
         if (movesupsub) {
@@ -1433,10 +1433,12 @@
       if (base.isa(MML.munderover) && base.isEmbellished())
         {base = MML.mrow(MML.mo().With({rspace:0}),base)}  // add an empty <mi> so it's not embellished any more
       var mml = MML.munderover(base,null,null);
-      mml.data[mml[pos]] = 
-        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:(pos == "under")}));
+      mml.SetData(
+        mml[pos], 
+        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:(pos==="under")}))
+      );
       if (stack) {mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true})}
-      this.Push(mml);
+      this.Push(mml.With({subsupOK:true}));
     },
     
     Overset: function (name) {

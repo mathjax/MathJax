@@ -391,7 +391,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         bot = TEX.Parse(bot,this.stack.env).mml()
         mml.SetData(mml.under,MML.mpadded(bot).With(def).With({voffset:"-.24em"}));
       }
-      this.Push(mml);
+      this.Push(mml.With({subsupOK:true}));
     },
     
     /*
