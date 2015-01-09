@@ -156,7 +156,7 @@
       this.Mouseout    = HOVER.Mouseout;
       this.Mousemove   = HOVER.Mousemove;
 
-      if (!isMSIE) {
+      if (!HUB.Browser.hasMathPlayer) {
         // Used in preTranslate to get scaling factors
         this.EmExSpan = HTML.Element("span",
           {style:{position:"absolute","font-size-adjust":"none"}},
@@ -173,10 +173,11 @@
     },
     //
     //  Set up MathPlayer for IE on the first time through.
+    //  Get the ex and em sizes.
     //
     InitializeMML: function () {
       this.initialized = true;
-      if (isMSIE) {
+      if (HUB.Browser.hasMathPlayer) {
         try {
           //
           //  Insert data needed to use MathPlayer for MathML output
@@ -437,12 +438,12 @@
       var mW = math.offsetWidth  || math.scrollWidth,
           mH = math.offsetHeight || math.scrollHeight;
       var zW = span.offsetWidth, zH = span.offsetHeight;
-      if (nMML.widthBug) {
+      if (nMML.widthBug || span.style.width.match(/%/)) {
         //
         //  FF doesn't get width of <math> right, so get it from <mrow>
         //
         var W = span.firstChild.firstChild.scrollWidth;
-        if (W > zW) {zW = W; span.style.width = zW + "px"}
+        if (W > zW) {zW = W; span.parentNode.style.width = span.style.minWidth = zW + "px";}
       }
       if (this.msieIE8HeightBug) {span.style.position = ""}
       return {Y:-EVENT.getBBox(span.parentNode).h, mW:mW, mH:mH, zW:zW, zH:zH}
@@ -489,17 +490,19 @@
       //    and set those in the tag's attribute list
       //
       NativeMMLattributes: function (tag) {
-	var defaults = this.defaults;
-	var copy = (this.attrNames||MML.copyAttributeNames), skip = MML.skipAttributes;
+	var defaults = (this.type === "mstyle" ? MML.math.prototype.defaults : this.defaults);
+        var names = (this.attrNames||MML.copyAttributeNames),
+            skip = MML.skipAttributes, copy = MML.copyAttributes;
         if (!this.attrNames) {
-          if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
-          for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
-	    if (this[id] != null) {tag.setAttribute(id,this.NativeMMLattribute(this[id]))}
+          for (var id in defaults) {if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {
+	    if (this[id] != null && this[id] !== defaults[id]) 
+              tag.setAttribute(id,this.NativeMMLattribute(this[id]));
           }}
         }
-	for (var i = 0, m = copy.length; i < m; i++) {
-          var value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
-	  if (value != null) {tag.setAttribute(copy[i],this.NativeMMLattribute(value))}
+	for (var i = 0, m = names.length; i < m; i++) {
+          if (copy[names[i]] === 1 && !defaults.hasOwnProperty(names[i])) continue;
+          var value = (this.attr||{})[names[i]]; if (value == null) {value = this[names[i]]}
+          if (value != null) {tag.setAttribute(names[i],this.NativeMMLattribute(value))}
 	}
         this.NativeMMLclass(tag);
       },
@@ -518,7 +521,7 @@
 	value = String(value);
 	if (nMML.NAMEDSPACE[value]) {value = nMML.NAMEDSPACE[value]} // MP doesn't do negative spaces
 	else if (value.match(/^\s*(([-+])?(\d+(\.\d*)?|\.\d+))\s*mu\s*$/))
-          {value = RegExp.$2+((1/18)*RegExp.$3).toFixed(3).replace(/\.?0+$/,"")+"em"} // FIXME:  should take scriptlevel into account
+          {value = (RegExp.$2||"")+((1/18)*RegExp.$3).toFixed(3).replace(/\.?0+$/,"")+"em"} // FIXME:  should take scriptlevel into account
 	else if (this.NativeMMLvariants[value]) {value = this.NativeMMLvariants[value]}
 	return value;
       },
@@ -1341,8 +1344,8 @@
       // correctly and thus the element is displayed incorrectly in <mtable>.
       nMML.spaceWidthBug = !browser.versionAtLeast("20.0");
 
-      nMML.tableSpacingBug = true; // mtable@rowspacing/mtable@columnspacing not
-                                   // supported.
+      // mtable@rowspacing/mtable@columnspacing not supported.
+      nMML.tableSpacingBug = !browser.versionAtLeast("33.0");
       nMML.tableLabelBug = true;   // mlabeledtr is not implemented.
       nMML.mfencedBug = true;      // mfenced not displayed correctly
     },

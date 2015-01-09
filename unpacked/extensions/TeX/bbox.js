@@ -46,7 +46,7 @@
  */
 
 MathJax.Extension["TeX/bbox"] = {
-  version: "2.4.0"
+  version: "2.5.0-beta"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
