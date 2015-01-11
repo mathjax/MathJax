@@ -2027,6 +2027,8 @@
           this.SVGgetStyles();
 	  MML.mbase.prototype.displayAlign = HUB.config.displayAlign;
 	  MML.mbase.prototype.displayIndent = HUB.config.displayIndent;
+          if (String(HUB.config.displayIndent).match(/^0($|[a-z%])/i))
+            MML.mbase.prototype.displayIndent = "0";
           //
           //  Put content in a <g> with defaults and matrix that flips y axis.
           //  Put that in an <svg> with xlink defined.
