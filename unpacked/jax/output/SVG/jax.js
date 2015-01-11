@@ -2081,7 +2081,7 @@
           var alttext = this.Get("alttext");
           if (alttext && !svg.element.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
           if (!svg.element.getAttribute("role")) span.setAttribute("role","math");
-          span.setAttribute("tabindex",0);
+//        span.setAttribute("tabindex",0);  // causes focus outline, so disable for now
           span.appendChild(svg.element); svg.element = null;
           //
           //  Handle indentalign and indentshift for single-line displays
