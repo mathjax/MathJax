@@ -2034,7 +2034,7 @@
           var box = BBOX.G(); box.Add(this.data[0].toSVG(),0,0,true); box.Clean();
           this.SVGhandleColor(box);
           SVG.Element(box.element,{
-            stroke:"black", fill:"black", "stroke-width":0,
+            stroke:"currentColor", fill:"currentColor", "stroke-width":0,
             transform: "matrix(1 0 0 -1 0 0)"
           });
           box.removeable = false;
