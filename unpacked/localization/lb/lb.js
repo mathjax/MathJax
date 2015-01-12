@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("lb",null,{
   menuTitle: "L\u00EBtzebuergesch",
-  version: "2.5.0-beta",
+  version: "2.5",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.5.0-beta",
+        version: "2.5",
         isLoaded: true,
         strings: {
           MathError: "Math Feeler",

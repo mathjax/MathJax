@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("oc",null,{
   menuTitle: "occitan",
-  version: "2.5.0-beta",
+  version: "2.5",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.5.0-beta",
+        version: "2.5",
         isLoaded: true,
         strings: {
           MathProcessingError: "Error de tractament de la formula matematica",
