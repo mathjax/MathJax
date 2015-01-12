@@ -2826,7 +2826,7 @@
 	var alttext = this.Get("alttext");
         if (alttext && !span.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
         if (!span.getAttribute("role")) span.setAttribute("role","math");
-        span.setAttribute("tabindex",0);
+//      span.setAttribute("tabindex",0);  // causes focus outline, so disable for now
 	var stack = HTMLCSS.createStack(span), box = HTMLCSS.createBox(stack), math;
 	// Move font-size from outer span to stack to avoid line separation 
 	// problem in strict HTML mode
