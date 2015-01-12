@@ -430,8 +430,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         var shift = HTMLCSS.length2em(indent.indentshift,mu,HTMLCSS.cwidth);
         var labelshift = HTMLCSS.length2em(values.minlabelspacing,mu,HTMLCSS.cwidth);
         if (this.displayIndent !== "0") {
-          var indent = HTMLCSS.length2em(this.displayIndent,mu,HTMLCSS.cwidth);
-          shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -indent: indent);
+          var dIndent = HTMLCSS.length2em(this.displayIndent,mu,HTMLCSS.cwidth);
+          shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -dIndent: dIndent);
         }
         var eqn = HTMLCSS.createStack(span,false,"100%");
         HTMLCSS.addBox(eqn,stack); HTMLCSS.alignBox(stack,indent.indentalign,0,shift);

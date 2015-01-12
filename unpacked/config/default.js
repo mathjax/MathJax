@@ -174,7 +174,7 @@ MathJax.Hub.Config({
   //  or left (negative is left).
   //  
   displayAlign: "center",
-  displayIndent: "0em",
+  displayIndent: "0",
   
   //
   //  Normally MathJax will perform its starup commands (loading of

@@ -333,8 +333,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         var shift = SVG.length2em(indent.indentshift,mu,SVG.cwidth);
         var labelshift = SVG.length2em(values.minlabelspacing,mu,SVG.cwidth);
         if (this.displayIndent !== "0") {
-          var indent = SVG.length2em(this.displayIndent,mu,SVG.cwidth);
-          shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -indent: indent);
+          var dIndent = SVG.length2em(this.displayIndent,mu,SVG.cwidth);
+          shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -dIndent: dIndent);
         }
         var eqn = svg; svg = this.SVG();
         svg.w = svg.r = SVG.cwidth; svg.hasIndent = true;

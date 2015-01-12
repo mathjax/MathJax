@@ -2838,6 +2838,8 @@
 	  }
 	  MML.mbase.prototype.displayAlign = HUB.config.displayAlign;
 	  MML.mbase.prototype.displayIndent = HUB.config.displayIndent;
+          if (String(HUB.config.displayIndent).match(/^0($|[a-z%])/i))
+            MML.mbase.prototype.displayIndent = "0";
           var html = this.data[0].toHTML(box); html.bbox.exactW = false; // force remeasure just to be sure
 	  math = HTMLCSS.Measured(html,box);
 	}
@@ -2881,10 +2883,10 @@
 	  if (values.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {values.indentshift = values.indentshiftfirst}
 	  if (values.indentshift === "auto") {values.indentshift = "0"}
           var shift = HTMLCSS.length2em(values.indentshift,1,HTMLCSS.cwidth);
-          if (this.displayIndent !== "0") {
-            var indent = HTMLCSS.length2em(this.displayIndent,1,HTMLCSS.cwidth);
-            shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
-          }
+	  if (this.displayIndent !== "0") {
+	    var indent = HTMLCSS.length2em(this.displayIndent,1,HTMLCSS.cwidth);
+	    shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
+	  }
 	  node.style.textAlign = values.indentalign;
           // ### FIXME: make percentage widths respond to changes in container
           if (shift) {
