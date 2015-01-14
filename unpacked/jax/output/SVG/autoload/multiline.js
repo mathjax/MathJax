@@ -473,8 +473,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       if (end.length === 0) {
         var sup = this.data[this.sup], sub = this.data[this.sub], w = svg.w, data;
-        if (sup) {data = sup.SVGdata; svg.Add(sup.toSVG(),w+(data.dx||0),data.dy)}
-        if (sub) {data = sub.SVGdata; svg.Add(sub.toSVG(),w+(data.dx||0),data.dy)}
+        if (sup) {data = sup.SVGdata||{}; svg.Add(sup.toSVG(),w+(data.dx||0),data.dy)}
+        if (sub) {data = sub.SVGdata||{}; svg.Add(sub.toSVG(),w+(data.dx||0),data.dy)}
       }
     }
 
