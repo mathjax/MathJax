@@ -961,8 +961,9 @@
         var mtable = ((this.data[0]||[]).data[0]||{});
         if (mtable.nMMLhasLabels) {
           if (mtable.nMMLforceWidth || !mtable.nMMLlaMatch) {
-            tag.setAttribute("style","width:100%")
+            tag.setAttribute("style","width:100%")  // mrow node
             parent.style.width = parent.parentNode.style.width="100%";
+            if (annotate) tag.parentNode.setAttribute("style","width:100%"); // semantics node
           };
           if (mtable.nMMLlaMatch) {
             if (parent.parentNode.parentNode.nodeName.toLowerCase() === "div") {
