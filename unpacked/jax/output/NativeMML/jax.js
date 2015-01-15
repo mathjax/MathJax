@@ -453,6 +453,8 @@
       jax.root.toNativeMML(span);
       if (this.msieIE8HeightBug) {span.style.position = "absolute"}
       if (nMML.widthBug) {span.style.width = span.parentNode.style.width = ""}
+      if (span.parentNode.style.width.match(/%$/)) 
+        {span.parentNode.style.minWidth = Math.ceil(3*Mh/4)+"px"} // for full-width tables
       var mW = math.offsetWidth  || math.scrollWidth,
           mH = math.offsetHeight || math.scrollHeight;
       var zW = span.offsetWidth, zH = span.offsetHeight;
