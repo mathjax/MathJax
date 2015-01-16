@@ -109,7 +109,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         if (n <= 0xD7FF || 0xE000 <= n) {
           // Code points U+0000 to U+D7FF and U+E000 to U+FFFF.
           // They are directly represented by n.
-          if (n > 0x7E || (n < 0x20 && n !== 0x0A && n !== 0x0D && n !== 0x08)) {
+          if (n > 0x7E || (n < 0x20 && n !== 0x0A && n !== 0x0D && n !== 0x09)) {
             string[i] = "&#x"+n.toString(16).toUpperCase()+";";
           } else {
             var c =
