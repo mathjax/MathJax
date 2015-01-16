@@ -1126,7 +1126,7 @@
         span = this.CHTMLcreateSpan(span);
         if (this.data[0]) {
           this.data[0].toCommonHTML(span);
-          this.CHTML = this.data[0].CHTML;
+          MathJax.Hub.Insert(this.data[0].CHTML||{},this.CHTML);
         }
         return span;
       }
