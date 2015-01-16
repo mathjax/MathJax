@@ -1359,7 +1359,7 @@
         op = top.data[top.data.length-1] = MML.munderover.apply(MML.underover,op.data);
       }
       op.movesupsub = (limits ? true : false);
-      op.movablelimits = false;
+      op.Core().movablelimits = false;
     },
     
     Over: function (name,open,close) {
