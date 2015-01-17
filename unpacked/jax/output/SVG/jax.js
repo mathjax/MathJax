@@ -1666,7 +1666,7 @@
         this.SVGgetStyles();
 	var svg = this.SVG();
         this.SVGhandleSpace(svg);
-        if (d != null) {this.sh = h; this.sd = d}
+        if (d != null) {svg.sh = h; svg.sd = d}
 	for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {svg.Check(this.data[i])}}
         svg.Stretch(); svg.Clean();
