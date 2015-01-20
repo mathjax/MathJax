@@ -95,7 +95,7 @@
         ["div",{style:{"margin-left":"1em"}},[
           ["p",{},[["ShowMath",
             "*Show Math As* allows you to view the formula's source markup " +
-            "for copy & paste (as MathML or in its origianl format)."]]
+            "for copy & paste (as MathML or in its original format)."]]
           ],
           ["p",{},[["Settings",
             "*Settings* gives you control over features of MathJax, such as the " +
