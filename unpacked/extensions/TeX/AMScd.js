@@ -70,7 +70,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (!c.match(/[><VA.|=]/)) {return this.Other(name)} else {this.i++}
 
       var top = this.stack.Top();
-      if (!top.isa(STACKITEM.array) || top.data.length) {this.CD_cell(name)}
+      if (!top.isa(STACKITEM.array) || top.data.length) {
+        this.CD_cell(name);
+        top = this.stack.Top();
+      }
       //
       //  Add enough cells to place the arrow correctly
       //
