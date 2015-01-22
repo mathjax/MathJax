@@ -3038,7 +3038,7 @@ MathJax.Hub.Startup = {
   if (!BASE) {BASE = window[BASENAME] = {}}
 
   var HUB = BASE.Hub; var STARTUP = HUB.Startup; var CONFIG = HUB.config;
-  var HEAD = document.getElementsByTagName("head")[0];
+  var HEAD = document.head || (document.getElementsByTagName("head")[0]);
   if (!HEAD) {HEAD = document.childNodes[0]};
   var scripts = (document.documentElement || document).getElementsByTagName("script");
   if (scripts.length === 0 && HEAD.namespaceURI)
@@ -3170,7 +3170,7 @@ MathJax.Hub.Startup = {
           if (browser.hasMathPlayer) {
             var mathplayer = document.createElement("object");
             mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
-            document.getElementsByTagName("head")[0].appendChild(mathplayer);
+            HEAD.appendChild(mathplayer);
             document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
             browser.mpNamespace = true;
             if (document.readyState && (document.readyState === "loading" ||
