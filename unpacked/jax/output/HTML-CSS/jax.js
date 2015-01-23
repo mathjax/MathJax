@@ -2868,7 +2868,7 @@
 	//
 	//  Add color (if any)
 	//
-	this.HTMLhandleColor(span);
+        var color = this.HTMLhandleColor(span);
 	//
 	//  Make math span be the correct height and depth
 	//
@@ -2896,6 +2896,15 @@
               right: {marginLeft: HTMLCSS.Em(Math.max(0,span.bbox.w+shift)), marginRight: HTMLCSS.Em(-shift)},
               center: {marginLeft: HTMLCSS.Em(shift), marginRight: HTMLCSS.Em(-shift)}
             })[values.indentalign]);
+            //
+            //  Move the background color, of any
+            //
+            if (color) {
+              color.style.marginLeft = HTMLCSS.Em(parseFloat(color.style.marginLeft)+shift);
+              color.style.marginRight =
+                HTMLCSS.Em(parseFloat(color.style.marginRight)-shift
+                            + (values.indentalign === "right" ? Math.min(0,span.bbox.w+shift) - span.bbox.w : 0));
+            }
           }
 	}
 	return span;
