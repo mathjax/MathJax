@@ -96,23 +96,18 @@
       return this.postFilter(preview,data);
     },
     postFilter: function (preview,data) {
-      try {
-        data.math.root.toCommonHTML(preview);
-      } catch (err) {
-        //
-        //  Load the CommonHTML jax if it is not already loaded
-        //
-        if (!data.math.root.toCommonHTML) {
-          var queue = MathJax.Callback.Queue();
-          queue.Push(
-            ["Require",MathJax.Ajax,"[MathJax]/jax/output/CommonHTML/config.js"],
-            ["Require",MathJax.Ajax,"[MathJax]/jax/output/CommonHTML/jax.js"]
-          );
-          HUB.RestartAfter(queue.Push({}));
-        }
-        if (!err.restart) {throw err} // an actual error
-        return MathJax.Callback.After(["postFilter",this,preview,data],err.restart);
+      //
+      //  Load the CommonHTML jax if it is not already loaded
+      //
+      if (!data.math.root.toCommonHTML) {
+        var queue = MathJax.Callback.Queue();
+        queue.Push(
+          ["Require",MathJax.Ajax,"[MathJax]/jax/output/CommonHTML/config.js"],
+          ["Require",MathJax.Ajax,"[MathJax]/jax/output/CommonHTML/jax.js"]
+        );
+        HUB.RestartAfter(queue.Push({}));
       }
+      data.math.root.toCommonHTML(preview);
     },
 
     //
@@ -135,6 +130,8 @@
   CHTMLpreview.Register("AsciiMath");
   
   HUB.Register.StartupHook("End Config",["Config",CHTMLpreview]);
+  
+  HUB.Startup.signal.Post("CHTML-preview Ready");
 
 })(MathJax.Hub,MathJax.HTML);
 
