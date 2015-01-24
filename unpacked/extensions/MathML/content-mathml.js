@@ -56,7 +56,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
   var isMSIE = HUB.Browser.isMSIE;
 
   if (isMSIE) {
-    document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
+    try {document.namespaces.add("m","http://www.w3.org/1998/Math/MathML")} catch (err) {}
   }
 
   var CONFIG = HUB.CombineConfig("MathML.content-mathml",{
