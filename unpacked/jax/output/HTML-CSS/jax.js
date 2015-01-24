@@ -2882,9 +2882,9 @@
 	  if (values.indentalign === MML.INDENTALIGN.AUTO) {values.indentalign = this.displayAlign}
 	  if (values.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {values.indentshift = values.indentshiftfirst}
 	  if (values.indentshift === "auto") {values.indentshift = "0"}
-          var shift = HTMLCSS.length2em(values.indentshift,1,HTMLCSS.cwidth);
+          var shift = HTMLCSS.length2em(values.indentshift,1,HTMLCSS.scale*HTMLCSS.cwidth);
 	  if (this.displayIndent !== "0") {
-	    var indent = HTMLCSS.length2em(this.displayIndent,1,HTMLCSS.cwidth);
+	    var indent = HTMLCSS.length2em(this.displayIndent,1,HTMLCSS.scale*HTMLCSS.cwidth);
 	    shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
 	  }
 	  node.style.textAlign = values.indentalign;
