@@ -641,7 +641,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     if (document.styleSheets && document.styleSheets.length > sheets)
       {sheets = document.styleSheets.length}
     if (!head) {
-      head = (document.getElementsByTagName("head"))[0];
+      head = document.head || ((document.getElementsByTagName("head"))[0]);
       if (!head) {head = document.body}
     }
     return head;
@@ -3038,9 +3038,11 @@ MathJax.Hub.Startup = {
   if (!BASE) {BASE = window[BASENAME] = {}}
 
   var HUB = BASE.Hub; var STARTUP = HUB.Startup; var CONFIG = HUB.config;
-  var HEAD = document.getElementsByTagName("head")[0];
+  var HEAD = document.head || (document.getElementsByTagName("head")[0]);
   if (!HEAD) {HEAD = document.childNodes[0]};
   var scripts = (document.documentElement || document).getElementsByTagName("script");
+  if (scripts.length === 0 && HEAD.namespaceURI)
+    scripts = document.getElementsByTagNameNS(HEAD.namespaceURI,"script");
   var namePattern = new RegExp("(^|/)"+BASENAME+"\\.js(\\?.*)?$");
   for (var i = scripts.length-1; i >= 0; i--) {
     if ((scripts[i].src||"").match(namePattern)) {
@@ -3168,7 +3170,7 @@ MathJax.Hub.Startup = {
           if (browser.hasMathPlayer) {
             var mathplayer = document.createElement("object");
             mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
-            document.getElementsByTagName("head")[0].appendChild(mathplayer);
+            HEAD.appendChild(mathplayer);
             document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
             browser.mpNamespace = true;
             if (document.readyState && (document.readyState === "loading" ||
