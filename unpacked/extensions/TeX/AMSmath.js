@@ -104,9 +104,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       frac:       ['Genfrac',"","","",""],
       tfrac:      ['Genfrac',"","","",1],
       dfrac:      ['Genfrac',"","","",0],
-      binom:      ['Genfrac',"(",")","0em",""],
-      tbinom:     ['Genfrac',"(",")","0em",1],
-      dbinom:     ['Genfrac',"(",")","0em",0],
+      binom:      ['Genfrac',"(",")","0",""],
+      tbinom:     ['Genfrac',"(",")","0",1],
+      dbinom:     ['Genfrac',"(",")","0",0],
       
       cfrac:       'CFrac',
       
