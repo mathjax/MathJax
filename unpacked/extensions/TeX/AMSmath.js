@@ -462,19 +462,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
 
     /*
-     *  Set the initial <mo> to have form="infix",
-     *  skipping any initial space or empty braces (TeXAtom with child
-     *  being an empty inferred row).
+     *  If the initial child, skipping any initial space or
+     *  empty braces (TeXAtom with child being an empty inferred row),
+     *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
+     *  be infix.
      */
     fixInitialMO: function (data) {
       for (var i = 0, m = data.length; i < m; i++) {
         if (data[i] && (data[i].type !== "mspace" &&
            (data[i].type !== "texatom" || (data[i].data[0] && data[i].data[0].data.length)))) {
-          if (data[i].isEmbellished()) {
-            var core = data[i].CoreMO();
-            core.form = MML.FORM.INFIX;
-            core.useMMLspacing |= core.SPACE_ATTR.form; // use MathML space for this
-          }
+          if (data[i].isEmbellished()) data.unshift(MML.mi());
           break;
         }
       }
