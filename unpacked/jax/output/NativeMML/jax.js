@@ -556,8 +556,9 @@
       //  Create a MathML element
       //
       NativeMMLelement: function (type) {
-        var math = (isMSIE ? document.createElement("m:"+type) :
-	                     document.createElementNS(nMML.MMLnamespace,type));
+        var math = (document.createElementNS ? document.createElementNS(nMML.MMLnamespace,type) :
+                    (HUB.Browser.mpNamespace ? document.createElement("m:"+type) :
+                                               document.createElement(type)));
         math.isMathJax = true;
         return math;
       }
@@ -568,7 +569,7 @@
       //  Make inferred rows not include an mrow tag
       //
       toNativeMML: function (parent) {
-        var i, m; 
+        var i, m;
 	if (this.inferred  && this.parent.inferRow) {
 	  for (i = 0, m = this.data.length; i < m; i++) {
 	    if (this.data[i]) {this.data[i].toNativeMML(parent)}
