@@ -251,6 +251,7 @@
     },
     SetWH: function () {
       var overlay = document.getElementById("MathJax_ZoomOverlay");
+      if (!overlay) return;
       overlay.style.display = "none"; // so scrollWidth/Height will be right below
       var doc = overlay.scroll_parent || document.documentElement || document.body;
       overlay.style.width = doc.scrollWidth + "px";
