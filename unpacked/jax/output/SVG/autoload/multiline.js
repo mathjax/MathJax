@@ -221,6 +221,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Place the new line
       //
+      if (line.w + shift > svg.w) svg.w = line.w + shift;
       svg.Align(line,align,0,state.Y,shift);
       //
       //  Save the values needed for the future
