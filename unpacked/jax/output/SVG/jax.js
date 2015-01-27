@@ -850,6 +850,8 @@
             svg.h -= y; svg.d += y; svg.H -= y; svg.D +=y;
             svg.w -= x; svg.r -= x; svg.l += x;
             svg.removeable = false;
+            child.setAttribute("x",Math.floor(svg.x/svg.scale));
+            child.setAttribute("y",Math.floor(svg.y/svg.scale));
           }
         }
         if (Math.abs(svg.x) < 1 && Math.abs(svg.y) < 1) {
