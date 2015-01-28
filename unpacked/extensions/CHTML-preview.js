@@ -51,7 +51,7 @@
     Config: function () {
       HUB.Config({
         "HTML-CSS": this.config.Chunks,
-        SVG: this.config.Chunks,
+        SVG: this.config.Chunks
       });
       MathJax.Ajax.Styles({".MathJax_Preview .MJXc-math":{color:this.config.color}});
       var update, delay, style, done, saved;

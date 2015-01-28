@@ -2109,7 +2109,7 @@
           HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
           if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
           if (variant.italic) {span.lastChild.style.fontStyle = "italic"}
-          delete span.bbox;
+          span.bbox = null;
           var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
           span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
         } else {
@@ -2850,7 +2850,7 @@
         //    Add the width to the span (outside the MathJax class, so uses outer em size,
         //    which makes it work even when minimum font size is in effect).
         //
-        span.style.width = HTMLCSS.Em((Math.round(math.bbox.w*this.em)+.25)/HTMLCSS.outerEm);
+        span.style.width = HTMLCSS.Em(Math.max(0,Math.round(math.bbox.w*this.em)+.25)/HTMLCSS.outerEm);
         span.style.display = "inline-block";
 	//
 	//  Adjust bbox to match outer em-size
