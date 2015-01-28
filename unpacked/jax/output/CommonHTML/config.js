@@ -27,7 +27,7 @@
 
 MathJax.OutputJax.CommonHTML = MathJax.OutputJax({
   id: "CommonHTML",
-  version: "2.5.0-beta",
+  version: "2.5.0",
   directory: MathJax.OutputJax.directory + "/CommonHTML",
   extensionDir: MathJax.OutputJax.extensionDir + "/CommonHTML",
   

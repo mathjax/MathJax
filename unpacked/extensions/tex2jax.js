@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "2.5.0-beta",
+  version: "2.5.0",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but

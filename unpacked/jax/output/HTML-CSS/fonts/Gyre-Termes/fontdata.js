@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-    var VERSION = "2.5.0-beta";
+    var VERSION = "2.5.0";
 
   var ALPHABETS = "GyreTermesMathJax_Alphabets",
       ARROWS = "GyreTermesMathJax_Arrows",

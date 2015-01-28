@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-    var VERSION = "2.5.0-beta";
+    var VERSION = "2.5.0";
 
   var ALPHABETS = "GyreTermesMathJax_Alphabets",
       ARROWS = "GyreTermesMathJax_Arrows",
