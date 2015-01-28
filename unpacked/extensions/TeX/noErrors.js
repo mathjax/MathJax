@@ -299,6 +299,51 @@
     
   });
 
+  /*******************************************************************
+   *
+   *   Fix CommonHTML output
+   */
+
+  HUB.Register.StartupHook("CommonHTML Jax Config",function () {
+    HUB.Config({
+      CommonHTML: {
+        styles: {
+          ".MathJax_CHTML .noError": HUB.Insert({
+            "vertical-align": (HUB.Browser.isMSIE && CONFIG.multiLine ? "-2px" : "")
+          },CONFIG.style)
+        }
+      }
+    });
+  });
+    
+  HUB.Register.StartupHook("CommonHTML Jax Ready",function () {
+    var MML = MathJax.ElementJax.mml;
+    var CHTML = MathJax.OutputJax.CommonHTML;
+    var HTML = MathJax.HTML;
+    
+    var MATH   = MML.math.prototype.toCommonHTML,
+        MERROR = MML.merror.prototype.toCommonHTML;
+        
+    //
+    //  Override merror toHTML routine so that it puts out the
+    //    TeX code in an inline-block with line breaks as in the original
+    //
+    MML.merror.Augment({
+      toCommonHTML: function (span) {
+        if (!this.isError) {return MERROR.call(this,span)}
+        span = this.CHTMLcreateSpan(span); span.className = "noError"
+        if (this.multiLine) {span.style.display = "inline-block"}
+        var text = this.data[0].data[0].data.join("").split(/\n/);
+        for (var i = 0, m = text.length; i < m; i++) {
+          HTML.addText(span,text[i]);
+          if (i !== m-1) {HTML.addElement(span,"br",{isMathJax:true})}
+        }
+        return span;
+      }
+    });
+
+  });
+  
   /*******************************************************************/
   
   HUB.Startup.signal.Post("TeX noErrors Ready");
