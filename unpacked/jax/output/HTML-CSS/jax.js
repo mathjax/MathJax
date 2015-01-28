@@ -2773,7 +2773,7 @@
           base.bbox.w -= base.bbox.ic;    // remove IC (added by mo and mi)
           delta = 1.3*base.bbox.ic + .05; // adjust faked IC to be more in line with expected results
         }
-	if (this.data[this.base] &&
+	if (this.data[this.base] && HW == null && D == null &&
 	   (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
 	  if (this.data[this.base].data.join("").length === 1 && children[0].scale === 1 &&
 	      !this.data[this.base].Get("largeop")) {u = v = 0}
