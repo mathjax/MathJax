@@ -536,8 +536,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       //  Get the current breakpoint position and other data
       //
-      var index = info.index.slice(0), i = info.index.shift(),
-          W, w, scanW, broken = (info.index.length > 0), better = false;
+      var index = info.index.slice(0); info.index.shift();
+      var W, w, scanW, broken = (info.index.length > 0), better = false;
       if (!broken) {info.W += info.w; info.w = 0}
       info.scanW = info.W;
       //
