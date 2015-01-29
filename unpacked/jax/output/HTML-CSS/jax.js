@@ -815,7 +815,7 @@
       //
       //  Adjust margins to prevent overlaps at the edges
       //
-      var child = span.firstChild.firstChild.style;
+      child = span.firstChild.firstChild.style;
       if (bbox.H != null && bbox.H > bbox.h)
         {child.marginTop = HTMLCSS.Em(bbox.H-Math.max(bbox.h,HTMLCSS.FONTDATA.lineH))}
       if (bbox.D != null && bbox.D > bbox.d)
@@ -1737,9 +1737,9 @@
 	for (var i = 0, m = this.data.length; i < m; i++)
 	  {if (this.data[i]) {this.data[i].toHTML(span)}}
 	var stretchy = this.HTMLcomputeBBox(span);
-	var h = span.bbox.h, d = span.bbox.d, stretched = false;
+	var h = span.bbox.h, d = span.bbox.d, stretched = false, bbox;
 	for (i = 0, m = stretchy.length; i < m; i++) {
-          var bbox = stretchy[i].HTMLspanElement().bbox;
+          bbox = stretchy[i].HTMLspanElement().bbox;
           if (stretchy[i].forceStretch || bbox.h !== h || bbox.d !== d)
             {stretchy[i].HTMLstretchV(span,h,d); stretched = true}
         }
@@ -1749,7 +1749,7 @@
 	this.HTMLhandleColor(span);
         if (this.data.length === 1 && this.data[0]) {
           // copy skew data from accented character
-          var bbox = this.data[0].HTMLspanElement().bbox;
+          bbox = this.data[0].HTMLspanElement().bbox;
           if (bbox.skew) span.bbox.skew = bbox.skew;
         }
 	return span;
