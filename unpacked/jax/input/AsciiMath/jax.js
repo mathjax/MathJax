@@ -232,7 +232,7 @@ THE SOFTWARE.
 
 //(function(){
 var mathcolor = "blue";        // change it to "" (to inherit) or another color
-var mathfontsize = "1em";      // change to e.g. 1.2em for larger math
+//var mathfontsize = "1em";      // change to e.g. 1.2em for larger math
 var mathfontfamily = "serif";  // change to "" to inherit (works in IE) 
                                // or another family (e.g. "arial")
 //var automathrecognize = false; // writing "amath" on page makes this true
@@ -251,9 +251,9 @@ var fixphi = true;  		//false to return to legacy phi/varphi mapping
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 var isIE = (navigator.appName.slice(0,9)=="Microsoft");
+/*
 var noMathML = false, translated = false;
 
-/*
 if (isIE) { // add MathPlayer info to IE webpages
   document.write("<object id=\"mathplayer\"\
   classid=\"clsid:32F66A20-7614-11D4-BD11-00104BD3F987\"></object>");
@@ -402,8 +402,8 @@ var AMbbb = [0xEF8C,0xEF8D,0x2102,0xEF8E,0xEF8F,0xEF90,0xEF91,0x210D,0xEF92,0xEF
 
 var CONST = 0, UNARY = 1, BINARY = 2, INFIX = 3, LEFTBRACKET = 4,
     RIGHTBRACKET = 5, SPACE = 6, UNDEROVER = 7, DEFINITION = 8,
-    LEFTRIGHT = 9, TEXT = 10, BIG = 11, LONG = 12, STRETCHY = 13,
-    MATRIX = 14, UNARYUNDEROVER = 15; // token types
+    LEFTRIGHT = 9, TEXT = 10, /*BIG = 11, LONG = 12, STRETCHY = 13,
+    MATRIX = 14,*/ UNARYUNDEROVER = 15; // token types
 
 var AMquote = {input:"\"",   tag:"mtext", output:"mbox", tex:null, ttype:TEXT};
 
