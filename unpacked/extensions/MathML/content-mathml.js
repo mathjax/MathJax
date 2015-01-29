@@ -351,7 +351,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           var munderover = CToP.createElement('munderover');
           munderover.appendChild(mo);
           var mrow1 = CToP.createElement('mrow');
-          var i, num_qualifiers, v, num_bvars, children, bvar, num_children, num_args;
+          var i, j, num_qualifiers, num_bvars, children, bvar, num_children, num_args;
           for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
             if (qualifiers[i].nodeName === 'lowlimit'||
                 qualifiers[i].nodeName === 'condition'||
@@ -789,7 +789,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       var firstArg = CToP.createElement('lambda');
       var children = CToP.classifyChildren(contentMMLNode);
       var args = children.args, bvars = children.bvars, qualifiers = children.qualifiers;
-      var i, l, num_quantifiers;
+      var i, l, num_qualifiers;
       
       if (bvars.length) {
         CToP.applyTokens.lambda(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
@@ -1373,7 +1373,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       var msubsup = CToP.createElement('msubsup');
       msubsup.appendChild(mo);
       var mrow1 = CToP.createElement('mrow');
-      var children, i, j, l, num_quantifiers, num_children;
+      var children, i, j, l, num_qualifiers, num_children;
       for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
         if (qualifiers[i].nodeName === 'lowlimit'||
             qualifiers[i].nodeName === 'condition'||
