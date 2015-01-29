@@ -116,14 +116,14 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
     },
 
     cloneNode: function(element,deep) {
-      var clone;
+      var clone, i, l;
       if (element.nodeType === 1) {
-        var clone = CToP.createElement(element.nodeName);
-        for (var i = 0, l = element.attributes.length; i<l; i++ ) {
+        clone = CToP.createElement(element.nodeName);
+        for (i = 0, l = element.attributes.length; i<l; i++ ) {
           clone.setAttribute(element.attributes[i].nodeName,element.attributes[i].nodeValue);
         }
         if (deep) {
-          for (var i = 0, l = element.childNodes.length; i<l; i++ ) {
+          for (i = 0, l = element.childNodes.length; i<l; i++ ) {
             var clonedChild = CToP.cloneNode(element.childNodes[i],true);
             clone.appendChild(clonedChild);
           }
@@ -351,15 +351,16 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           var munderover = CToP.createElement('munderover');
           munderover.appendChild(mo);
           var mrow1 = CToP.createElement('mrow');
-          for (var i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+          var i, num_qualifiers, v, num_bvars, children, bvar, num_children, num_args;
+          for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
             if (qualifiers[i].nodeName === 'lowlimit'||
                 qualifiers[i].nodeName === 'condition'||
                 qualifiers[i].nodeName === 'domainofapplication')
             {
               if (qualifiers[i].nodeName === 'lowlimit') {
-                for (var j = 0, num_bars = bvars.length; j<num_bvars; j++ ) {
-                  var bvar = bvars[j];
-                  var children = CToP.getChildren(bvar);
+                for (j = 0, num_bvars = bvars.length; j<num_bvars; j++ ) {
+                  bvar = bvars[j];
+                  children = CToP.getChildren(bvar);
                   if (children.length) {
                     CToP.applyTransform(mrow1,children[0],0);
                   }
@@ -368,16 +369,16 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
                   CToP.appendToken(mrow1,"mo",limitSymbol);
                 }
               }
-              var children = CToP.getChildren(qualifiers[i]);
+              children = CToP.getChildren(qualifiers[i]);
               for (j = 0;j<children.length;j++) {
                 CToP.applyTransform(mrow1,children[j],0);
               }
             } else {
-              var children = CToP.getChildren(qualifiers[i]);
+              children = CToP.getChildren(qualifiers[i]);
               if (qualifiers[i].nodeName === 'interval' && children.length === 2) {
-                for (var j = 0, num_bvars = bvars.length; j<num_bvars; j++ ) {
-                  var bvar = b[j];
-                  var children = CToP.getChildren(bvar);
+                for (j = 0, num_bvars = bvars.length; j<num_bvars; j++ ) {
+                  bvar = bvars[j];
+                  children = CToP.getChildren(bvar);
                   if (children.length) {
                     CToP.applyTransform(mrow1,children[0],0);
                   }
@@ -391,11 +392,11 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           }
           munderover.appendChild(mrow1);
           var mjrow = CToP.createElement('mrow');
-          for (var i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+          for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
             if (qualifiers[i].nodeName === 'uplimit' ||qualifiers[i].nodeName === 'interval' )
             {
-              var children = CToP.getChildren(qualifiers[i]);
-              for (var j = 0, num_children = children.length; j<num_children; j++ ) {
+              children = CToP.getChildren(qualifiers[i]);
+              for (j = 0, num_children = children.length; j<num_children; j++ ) {
                 CToP.applyTransform(mjrow,children[j],0);
               }
             }
@@ -403,7 +404,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           munderover.appendChild(mjrow);
           mrow.appendChild(munderover);
 
-          for (var i = 0, num_args = args.length; i<num_args; i++ ) {
+          for (i = 0, num_args = args.length; i<num_args; i++ ) {
             CToP.applyTransform(mrow,args[i],precedence);
           }
 
@@ -418,27 +419,28 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       bind: function(name,argSeparator,conditionSeparator) {
         return function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
           var mrow = CToP.createElement('mrow');
+          var children, i, j, l, num_qualifiers, num_children;
           if (name) {
             CToP.appendToken(mrow,'mo',name);
           }
-          for (var j = 0, l = bvars.length; j<l; j++ ) {
+          for (j = 0, l = bvars.length; j<l; j++ ) {
             var bvar = bvars[j];
             if (j>0) {
               CToP.appendToken(mrow,'mo',',');
             }
-            var children = CToP.getChildren(bvar);
+            children = CToP.getChildren(bvar);
             if (children.length) {
               CToP.applyTransform(mrow,children[0],0);
             }
           }
 
           var conditions_mrow = CToP.createElement('mrow');
-          var conditions = false, children;
-          for (var i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+          var conditions = false;
+          for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
             if (qualifiers[i].nodeName === 'condition')	{
               conditions = true;
               children = CToP.getChildren(qualifiers[i]);
-              for (var j = 0, num_children = children.length; j<num_children; j++ ) {
+              for (j = 0, num_children = children.length; j<num_children; j++ ) {
                 CToP.applyTransform(conditions_mrow,children[j],0);
               }
             }
@@ -447,11 +449,11 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
             CToP.appendToken(mrow,'mo',conditionSeparator);
           }
           mrow.appendChild(conditions_mrow);
-          for (var i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+          for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
             if (qualifiers[i].nodeName != 'condition')	{
               CToP.appendToken(mrow,'mo','\u2208');
               children = CToP.getChildren(qualifiers[i]);
-              for (var j = 0, num_children = children.length; j<num_children; j++ ) {
+              for (j = 0, num_children = children.length; j<num_children; j++ ) {
                 CToP.applyTransform(mrow,children[j],0);
               }
             }
@@ -459,7 +461,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           if (args.length && (bvars.length||children.length)) {
             CToP.appendToken(mrow,'mo',argSeparator);
           }
-          for (var i = 0, l = args.length; i<l; i++ ) {
+          for (i = 0, l = args.length; i<l; i++ ) {
             CToP.applyTransform(mrow,args[i],0);
           }
           parentNode.appendChild(mrow);
@@ -504,13 +506,13 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           }
           if (qualifiers.length) {
             CToP.appendToken(mrow2,'mo','|');
-            for (var i = 0, l = qualifiers.length; i<l; i++ ) {
+            for (i = 0, l = qualifiers.length; i<l; i++ ) {
               CToP.applyTransform(mrow2,qualifiers[i],0);
             }
           }
           CToP.appendToken(mrow2,'mo','}');
-        mrow.appendChild(mrow2);
-        parentNode.appendChild(mrow);
+          mrow.appendChild(mrow2);
+          parentNode.appendChild(mrow);
         }
       }
     }
@@ -687,12 +689,12 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
     piece: function(parentNode,contentMMLNode,precedence) {
       var mtr = CToP.createElement('mtr');
       var children = CToP.getChildren(contentMMLNode);
-      for (i = 0, l = children.length; i<l; i++ ) {
+      for (var i = 0, l = children.length; i<l; i++ ) {
         var mtd = CToP.createElement('mtd');
         mtr.appendChild(mtd);
         CToP.applyTransform(mtd,children[i],0);
         if (i === 0) {
-          var mtd = CToP.createElement('mtd');
+          mtd = CToP.createElement('mtd');
           CToP.appendToken(mtd,"mtext","\u00A0if\u00A0");
           mtr.appendChild(mtd);
         }
@@ -707,7 +709,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
         var mtd = CToP.createElement('mtd');
         mtr.appendChild(mtd);
         CToP.applyTransform(mtd,children[0],0);
-        var mtd = CToP.createElement('mtd');
+        mtd = CToP.createElement('mtd');
         mtd.setAttribute('columnspan','2');
         CToP.appendToken(mtd,"mtext","\u00A0otherwise");
         mtr.appendChild(mtd);
@@ -737,14 +739,14 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
         CToP.appendToken(mrow,'mo','|');
         mrow.appendChild(msub2);
         CToP.appendToken(mrow,'mo','=');
-        for (var i = 0, l = args.length; i<l; i++ ) {
+        for (i = 0, l = args.length; i<l; i++ ) {
           if (i != 0) {
             CToP.appendToken(mrow,'mo',',');
           }	
           CToP.applyTransform(mrow,args[i],0);
         }
         CToP.appendToken(mrow,'mo',';');
-        for (var i = 0, l = qualifiers.length; i<l; i++) {
+        for (i = 0, l = qualifiers.length; i<l; i++) {
           if (i != 0) {
             CToP.appendToken(mrow,'mo',',');
           }	
@@ -755,7 +757,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       } else {
         var mfenced = CToP.createElement('mfenced');
         var mtable = CToP.createElement('mtable');
-        for (var i = 0, l = args.length; i<l; i++ ) {
+        for (i = 0, l = args.length; i<l; i++ ) {
           CToP.applyTransform(mtable,args[i],0);
         }
         mfenced.appendChild(mtable);
@@ -787,20 +789,21 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       var firstArg = CToP.createElement('lambda');
       var children = CToP.classifyChildren(contentMMLNode);
       var args = children.args, bvars = children.bvars, qualifiers = children.qualifiers;
-
+      var i, l, num_quantifiers;
+      
       if (bvars.length) {
         CToP.applyTokens.lambda(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
       } else {
         var mrow = CToP.createElement('mrow');
-        for (var i = 0, l = args.length; i<l; i++ ) {
+        for (i = 0, l = args.length; i<l; i++ ) {
           CToP.applyTransform(mrow,args[i],0);
         }
         if (qualifiers.length) {
           var msub = CToP.createElement('msub');
           CToP.appendToken(msub,'mo','|');
           var mrow2 = CToP.createElement('mrow');
-          for (var i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
-            var children = CToP.getChildren(qualifiers[i]);
+          for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+            children = CToP.getChildren(qualifiers[i]);
             for (var j = 0, num_children = children.length; j<num_children; j++ ) {
               CToP.applyTransform(mrow2,children[j],0);
             }
@@ -1046,9 +1049,9 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
     },
 
     moment: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
-      var degree,momentabout;
+      var degree, momentabout, children, i, j, l;
 
-      for (var i = 0, l = qualifiers.length; i<l; i++ ) {
+      for (i = 0, l = qualifiers.length; i<l; i++ ) {
         if (qualifiers[i].nodeName === 'degree') {
           degree = qualifiers[i];
         } else if (qualifiers[i].nodeName === 'momentabout') {
@@ -1067,8 +1070,8 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       if (degree) {
         var msup = CToP.createElement('msup');
         msup.appendChild(argrow);
-        var children = CToP.getChildren(degree);
-        for (var j = 0, l = children.length; j<l; j++ ) {
+        children = CToP.getChildren(degree);
+        for (j = 0, l = children.length; j<l; j++ ) {
           CToP.applyTransform(msup,children[j],0);
         }
         mrow.appendChild(msup);
@@ -1080,8 +1083,8 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       if (momentabout) {
         var msub = CToP.createElement('msub');
         msub.appendChild(mrow);
-        var children = CToP.getChildren(momentabout);
-        for (var j = 0, l = children.length; j<l; j++ ) {
+        children = CToP.getChildren(momentabout);
+        for (j = 0, l = children.length; j<l; j++ ) {
           CToP.applyTransform(msub,children[j],0);
         }
         parentNode.appendChild(msub);
@@ -1370,17 +1373,18 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       var msubsup = CToP.createElement('msubsup');
       msubsup.appendChild(mo);
       var mrow1 = CToP.createElement('mrow');
-      for (var i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+      var children, i, j, l, num_quantifiers, num_children;
+      for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
         if (qualifiers[i].nodeName === 'lowlimit'||
             qualifiers[i].nodeName === 'condition'||
             qualifiers[i].nodeName === 'domainofapplication')
         {
-          var children = CToP.getChildren(qualifiers[i]);
-          for (var j = 0, num_children = children.length; j<num_children; j++ ) {
+          children = CToP.getChildren(qualifiers[i]);
+          for (j = 0, num_children = children.length; j<num_children; j++ ) {
             CToP.applyTransform(mrow1,children[j],0);
           }
         } else {
-          var children = CToP.getChildren(qualifiers[i]);
+          children = CToP.getChildren(qualifiers[i]);
           if (qualifiers[i].nodeName === 'interval' && children.length === 2) {
             CToP.applyTransform(mrow1,children[0],0);
           }
@@ -1388,27 +1392,27 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       }
       msubsup.appendChild(mrow1);
       var mrow2 = CToP.createElement('mrow');
-      for (var i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+      for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
         if (qualifiers[i].nodeName === 'uplimit') {
-          var children = CToP.getChildren(qualifiers[i]);
+          children = CToP.getChildren(qualifiers[i]);
           for (j = 0, num_children = children.length; j<num_children; j++ ) {
             CToP.applyTransform(mrow2,children[j],0);
           }
           break;
         } else if (qualifiers[i].nodeName === 'interval' ) {
-          var children = CToP.getChildren(qualifiers[i]);
+          children = CToP.getChildren(qualifiers[i]);
           CToP.applyTransform(mrow2,children[children.length-1],0);
           break;
         }
       }
       msubsup.appendChild(mrow2);
       mrow.appendChild(msubsup);
-      for (var i = 0, l = args.length; i<l; i++ ) {
+      for (i = 0, l = args.length; i<l; i++ ) {
         CToP.applyTransform(mrow,args[i],0);
       }
-      for (var i = 0, l = bvars.length; i<l; i++ ) {
+      for (i = 0, l = bvars.length; i<l; i++ ) {
         var bvar = bvars[i];
-        var children = CToP.getChildren(bvar);
+        children = CToP.getChildren(bvar);
         if (children.length) {
           var mrow3 = CToP.createElement("mrow");
           CToP.appendToken(mrow3,'mi','d');
@@ -1475,8 +1479,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
         mfrac.appendChild(toprow);
         mfrac.appendChild(bottomrow);
 
-        var bvar;
-        var degreeNode;
+        var bvar, degreeNode, msup, mrow;
 
         var d = CToP.createElement('mi');
         CToP.setTextContent(d,'d');
@@ -1487,7 +1490,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
             var childNode = CToP.getChildren(children[j])[0];
             if (CToP.getTextContent(childNode) != '1') {
               degreeNode = childNode;
-              var msup = CToP.createElement('msup');
+              msup = CToP.createElement('msup');
               msup.appendChild(d);
               d = msup;
               CToP.applyTransform(d,degreeNode,0);
@@ -1503,7 +1506,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
             case 'apply':
             case 'bind':
             case 'reln':
-              var mrow = CToP.createElement('mrow');
+              mrow = CToP.createElement('mrow');
               mrow.appendChild(mfrac);
               CToP.applyTransform(mrow,args[0],3);
               outNode = mrow;
@@ -1528,17 +1531,17 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
 
         parentNode.appendChild(outNode);
       } else {	// f' form
-        var msup = CToP.createElement('msup');
-        var mrow = CToP.createElement('mrow');
+        msup = CToP.createElement('msup');
+        mrow = CToP.createElement('mrow');
         msup.appendChild(mrow);
         CToP.applyTransform(mrow,args[0],0); 
-        CToP.appendToken(m,'mo','\u2032'); // tick
+        CToP.appendToken(msup,'mo','\u2032'); // tick
         parentNode.appendChild(msup);
       }
     },
 
     partialdiff: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence)  {
-      var m, mi, msup, mrow, mo, z;
+      var msup, msub, mrow;
 
       var mfrac = CToP.createElement('mfrac');
       var toprow = CToP.createElement('mrow');
@@ -1546,11 +1549,11 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       mfrac.appendChild(toprow);
       mfrac.appendChild(bottomrow);
 
-      var degreeNode, differendNode;
+      var differendNode, degree, children;
 
       if (bvars.length === 0 && args.length === 2 && args[0].nodeName === 'list') {
         if (args[1].nodeName === 'lambda') {	// `d^(n+m)/(dx^n dy^m) f` form, through a lambda
-          var degree = CToP.getChildren(args[0]).length;
+          degree = CToP.getChildren(args[0]).length;
           if (degree != 1) {
             msup = CToP.createElement('msup');
             CToP.appendToken(msup,'mo','\u2202');	// curly d
@@ -1560,7 +1563,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
             CToP.appendToken(toprow,'mo','\u2202');
           }
 
-          var children = CToP.getChildren(args[1]);
+          children = CToP.getChildren(args[1]);
 
           differendNode = children[children.length - 1];	// thing being differentiated
 
@@ -1573,7 +1576,8 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
             }
           }
 
-          var lastN = null, degree = 0;
+          var lastN = null;
+          degree = 0;
           function addDiff(n,degree) {
             CToP.appendToken(bottomrow,'mo','\u2202');
             var bvar = bvarNames[n];
@@ -1586,7 +1590,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
               CToP.applyTransform(bottomrow,bvar,0);
             }
           }
-          for (var i = 0, l = lambdaSequence.length; i<l; i++ ) {
+          for (i = 0, l = lambdaSequence.length; i<l; i++ ) {
             var n = Number(CToP.getTextContent(lambdaSequence[i]))-1;
             if (lastN !== null && n != lastN) {
               addDiff(lastN,degree);
@@ -1599,8 +1603,8 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
             addDiff(lastN,degree);
           }
         } else {	// `D_i_j f` form
-          var mrow = CToP.createElement('mrow');
-          var msub = CToP.createElement('msub');
+          mrow = CToP.createElement('mrow');
+          msub = CToP.createElement('msub');
           CToP.appendToken(msub,'mi','D');
           var bvar = CToP.getChildren(args[0]);
           msub.appendChild(CToP.createmfenced(bvar,'',''));
@@ -1610,7 +1614,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           return;
         }
       } else {	// `d^(n+m)/(dx^n dy^m) f` form, with bvars
-        var msup = CToP.createElement('msup');
+        msup = CToP.createElement('msup');
         toprow.appendChild(msup);
         CToP.appendToken(msup,'mo','\u2202');
 
@@ -1623,12 +1627,12 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           qualifier = CToP.getChildren(qualifiers[0])[0];
           CToP.applyTransform(degreeRow,qualifier,0);
         } else {
-          var degree = 0;
+          degree = 0;
           var hadFirst = false;
-          for (var i = 0, l = bvars.length; i<l; i++ ) {
-            var children = CToP.getChildren(bvars[i]);
+          for (i = 0, l = bvars.length; i<l; i++ ) {
+            children = CToP.getChildren(bvars[i]);
             if (children.length === 2) {
-              for (j = 0;j<2;j++) {
+              for (var j = 0;j<2;j++) {
                 if (children[j].nodeName === 'degree') {
                   if (/^\s*\d+\s*$/.test(CToP.getTextContent(children[j]))) {
                     degree += Number(CToP.getTextContent(children[j]));
@@ -1657,9 +1661,9 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           differendNode = args[0];
         }
 
-        for (var i = 0, l = bvars.length; i<l; i++ ) {
+        for (i = 0, l = bvars.length; i<l; i++ ) {
           CToP.appendToken(bottomrow,'mo','\u2202');
-          var children = CToP.getChildren(bvars[i]);
+          children = CToP.getChildren(bvars[i]);
 
           if (children.length === 2) {
             for (j = 0;j<2;j++) {
@@ -1681,7 +1685,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           case 'apply':
           case 'bind':
           case 'reln':
-            var mrow = CToP.createElement('mrow');
+            mrow = CToP.createElement('mrow');
             mrow.appendChild(mfrac);
             CToP.applyTransform(mrow,differendNode,3);
             outNode = mrow;
