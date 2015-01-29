@@ -318,11 +318,9 @@
     
   HUB.Register.StartupHook("CommonHTML Jax Ready",function () {
     var MML = MathJax.ElementJax.mml;
-    var CHTML = MathJax.OutputJax.CommonHTML;
     var HTML = MathJax.HTML;
     
-    var MATH   = MML.math.prototype.toCommonHTML,
-        MERROR = MML.merror.prototype.toCommonHTML;
+    var MERROR = MML.merror.prototype.toCommonHTML;
         
     //
     //  Override merror toHTML routine so that it puts out the
