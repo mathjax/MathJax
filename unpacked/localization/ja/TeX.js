@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/ja/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("ja","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u958B\u304D\u4E2D\u62EC\u5F27\u304C\u4F59\u5206\u3001\u307E\u305F\u306F\u9589\u3058\u4E2D\u62EC\u5F27\u304C\u4E0D\u8DB3\u3057\u3066\u3044\u307E\u3059",

@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/kn/kn.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("kn",null,{
   menuTitle: "\u0C95\u0CA8\u0CCD\u0CA8\u0CA1",
-  version: "2.4.0",
+  version: "2.5.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           CookieConfig: "\u0CAE\u0CA5\u0CCD\u0C9C\u0C95\u0CCD\u0CB7\u0CCD \u0C87\u0C97\u0CC6  \u0C92\u0C82\u0CA6\u0CC1 \u0CB8\u0CA6\u0CB8\u0CCD\u0CAF \u0C9A\u0CCA\u0CA8\u0CCD\u0CAB\u0CBC\u0CBF\u0C97\u0CC1\u0CB0\u0CA4\u0CBF\u0C92\u0CA8\u0CCD \u0C95\u0CC1\u0C95\u0CC0 \u0CB8\u0CBF\u0C95\u0CCD\u0C95\u0CBF\u0CA6\u0CC6. \u0C85\u0CA6\u0CCD\u0CA6\u0CA8\u0CCD\u0CA8 \u0CB0\u0CA8\u0CCD \u0CAE\u0CBE\u0CA1\u0CAC\u0CC7\u0C95?   \n\n(\u0CA8\u0CC0\u0CB5\u0CC7 \u0C85\u0CA6\u0CA8\u0CCD\u0CA8 \u0CB8\u0CC6\u0C9F\u0CCD \u0C85\u0CAA\u0CCD \u0CAE\u0CBE\u0CA1\u0CBF\u0CA6\u0CC1 \u0C85\u0CB2\u0CCD\u0CB2 \u0C86\u0CA6\u0CB0\u0CC6 \"Cancel\" \u0C85\u0CA5\u0CB5\u0CBE \"\u0CB0\u0CA6\u0CCD\u0CA6\u0CC1\" \u0CB5\u0CA4\u0CCD\u0CA4\u0CBF.)",

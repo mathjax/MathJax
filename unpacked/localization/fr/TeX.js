@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/fr/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fr","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Accolade ouvrante non attendue ou accolade fermante manquante",
@@ -52,7 +52,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
           InvalidMathMLAttr: "Attribut MathML non valide: %1",
           UnknownAttrForElement: "Attribut %1 inconnu pour l'\u00E9l\u00E9ment %2",
           MaxMacroSub1: "Le nombre maximal de substitutions de macro autoris\u00E9 par MathJax a \u00E9t\u00E9 d\u00E9pass\u00E9. Y a-t-il un appel de macro r\u00E9cursif?",
-          MaxMacroSub2: "Le nombre maximal de substitutions de macros autoris\u00E9 par MathJax a \u00E9t\u00E9 d\u00E9pass\u00E9. Y a-t-il un environnement LaTeX r\u00E9cursif ?",
+          MaxMacroSub2: "Le nombre maximal de substitutions de macros autoris\u00E9 par MathJax a \u00E9t\u00E9 d\u00E9pass\u00E9. Y a-t-il un environnement LaTeX r\u00E9cursif\u202F?",
           MissingArgFor: "Argument manquant pour la commande %1",
           ExtraAlignTab: "Caract\u00E8re d'alignement '\u0026' inattendu pour le texte de la commande \\cases",
           BracketMustBeDimension: "L'argument entre crochets de la commande %1 doit \u00EAtre une dimension",

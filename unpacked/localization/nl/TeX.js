@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/nl/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("nl","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Overtollige openende accolade of ontbrekende afsluitende accolade",
@@ -52,7 +52,7 @@ MathJax.Localization.addTranslation("nl","TeX",{
           InvalidMathMLAttr: "Ongeldig MathML attribuut: %1",
           UnknownAttrForElement: "%1 is niet een bekend attribuut voor %2",
           MaxMacroSub1: "MathJax maximaal aantal macro vervangingen overschreden; is er een recursieve macro aanroep?",
-          MaxMacroSub2: "MathJax maximaal aantal vervangingen overschreden; is er een recursieve latex omgeving?",
+          MaxMacroSub2: "Maximaal aantal vervangingen van MathJax overschreden; is er een recursieve LaTeX-omgeving?",
           MissingArgFor: "Ontbrekend argument voor %1",
           ExtraAlignTab: "Overtollige uitlijning tab in \\cases tekst",
           BracketMustBeDimension: "Rechte haak argument voor %1 moet een dimensie zijn",

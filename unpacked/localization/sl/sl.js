@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/sl/sl.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("sl",null,{
   menuTitle: "sloven\u0161\u010Dina",
-  version: "2.4.0",
+  version: "2.5.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax je na\u0161el pi\u0161kotek za uporabni\u0161ko konfiguracijo, ki vklju\u010Duje kodo za zagon. Ali jo \u017Eelite zagnati?\n\n(Pritisnite Prekli\u010Di, razen \u010De ste pi\u0161kotek sami nastavili.)",

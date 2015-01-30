@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/fa/HTML-CSS.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fa","HTML-CSS",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           LoadWebFont: "\u0628\u0627\u0631\u06AF\u06CC\u0631\u06CC \u0642\u0644\u0645 \u0648\u0628\u06CC %1",

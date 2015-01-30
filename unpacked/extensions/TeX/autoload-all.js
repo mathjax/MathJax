@@ -10,7 +10,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2014 The MathJax Consortium
+ *  Copyright (c) 2013-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/autoload-all"] = {
-  version: "2.4.0"
+  version: "2.5.0"
 };
   
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -41,7 +41,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
                    "shoveleft","shoveright","xrightarrow","xleftarrow"],
     begingroup: ["begingroup","endgroup","gdef","global"],
     cancel:     ["cancel","bcancel","xcancel","cancelto"],
-    color:      ["color","textcolor","colorbox","fcolorbox","DefineColor"],
+    color:      ["color","textcolor","colorbox","fcolorbox","definecolor"],
     enclose:    ["enclose"],
     extpfeil:   ["Newextarrow","xlongequal","xmapsto","xtofrom",
                    "xtwoheadleftarrow","xtwoheadrightarrow"],

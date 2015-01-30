@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.4.0",
+  version: "2.5.0",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -214,17 +214,29 @@ MathJax.ElementJax.mml.Augment({
     NONE:   -1
   },
   TEXCLASSNAMES: ["ORD", "OP", "BIN", "REL", "OPEN", "CLOSE", "PUNCT", "INNER", "VCENTER"],
+  skipAttributes: {
+    texClass:true, useHeight:true, texprimestyle:true
+  },
   copyAttributes: {
+    displaystyle:1, scriptlevel:1, open:1, close:1, form:1,
+    actiontype: 1,
     fontfamily:true, fontsize:true, fontweight:true, fontstyle:true,
     color:true, background:true,
-    id:true, "class":true, href:true, style:true
+    id:true, "class":1, href:true, style:true
   },
-  skipAttributes: {texClass: true, useHeight: true, texprimestyle: true},
   copyAttributeNames: [
+    "displaystyle", "scriptlevel", "open", "close", "form",  // force these to be copied
+    "actiontype",
     "fontfamily", "fontsize", "fontweight", "fontstyle",
     "color", "background",
     "id", "class", "href", "style"
   ],
+  nocopyAttributes: {
+    fontfamily: true, fontsize: true, fontweight: true, fontstyle: true,
+    color: true, background: true,
+    id: true, 'class': true, href: true, style: true,
+    xmlns: true
+  },
   Error: function (message,def) {
     var mml = this.merror(message),
         dir = MathJax.Localization.fontDirection(),
@@ -286,9 +298,11 @@ MathJax.ElementJax.mml.Augment({
       while (parent && parent.notParent) {parent = parent.parent}
       return parent;
     },
-    Get: function (name,nodefault) {
-      if (this[name] != null) {return this[name]}
-      if (this.attr && this.attr[name] != null) {return this.attr[name]}
+    Get: function (name,nodefault,noself) {
+      if (!noself) {
+        if (this[name] != null) {return this[name]}
+        if (this.attr && this.attr[name] != null) {return this.attr[name]}
+      }
       // FIXME: should cache these values and get from cache
       // (clear cache when appended to a new object?)
       var parent = this.Parent();
@@ -551,8 +565,8 @@ MathJax.ElementJax.mml.Augment({
         if (!def) {def = this.CheckRange(mo)}
         if (!def && nodefault) {def = {}} else {
           if (!def) {def = MathJax.Hub.Insert({},this.defaultDef)}
+          if (this.parent) {this.def = def} else {def = MathJax.Hub.Insert({},def)}
           def.form = forms[0];
-          this.def = def;
         }
       }
       this.useMMLspacing &= ~(this.SPACE_ATTR[name] || 0);
@@ -600,6 +614,38 @@ MathJax.ElementJax.mml.Augment({
     },
     isEmbellished: function () {return true},
     hasNewline: function () {return (this.Get("linebreak") === MML.LINEBREAK.NEWLINE)},
+    CoreParent: function () {
+      var parent = this;
+      while (parent && parent.isEmbellished() &&
+             parent.CoreMO() === this && !parent.isa(MML.math)) {parent = parent.Parent()}
+      return parent;
+    },
+    CoreText: function (parent) {
+      if (!parent) {return ""}
+      if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
+      while ((((parent.isa(MML.mrow) || parent.isa(MML.TeXAtom) ||
+                parent.isa(MML.mstyle) || parent.isa(MML.mphantom)) &&
+                parent.data.length === 1) || parent.isa(MML.munderover)) &&
+                parent.data[0]) {parent = parent.data[0]}
+      if (!parent.isToken) {return ""} else {return parent.data.join("")}
+    },
+    remapChars: {
+      '*':"\u2217",
+      '"':"\u2033",
+      "\u00B0":"\u2218",
+      "\u00B2":"2",
+      "\u00B3":"3",
+      "\u00B4":"\u2032",
+      "\u00B9":"1"
+    },
+    remap: function (text,map) {
+      text = text.replace(/-/g,"\u2212");
+      if (map) {
+        text = text.replace(/'/g,"\u2032").replace(/`/g,"\u2035");
+        if (text.length === 1) {text = map[text]||text}
+      }
+      return text;
+    },
     setTeXclass: function (prev) {
       var values = this.getValues("form","lspace","rspace","fence"); // sets useMMLspacing
       if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
@@ -757,10 +803,10 @@ MathJax.ElementJax.mml.Augment({
         // <mrow> came from \left...\right
         // so treat as subexpression (tex class INNER)
         //
-        this.getPrevClass(prev);
+        this.getPrevClass(prev); prev = null;
         for (i = 0; i < m; i++)
           {if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}}
-        this.texClass = MML.TEXCLASS.INNER;
+        if (!this.hasOwnProperty("texClass")) this.texClass = MML.TEXCLASS.INNER;
         return this;
       } else {
         //
@@ -782,7 +828,6 @@ MathJax.ElementJax.mml.Augment({
   MML.mfrac = MML.mbase.Subclass({
     type: "mfrac", num: 0, den: 1,
     linebreakContainer: true,
-    texClass: MML.TEXCLASS.INNER,
     isEmbellished: MML.mbase.childEmbellished,
     Core: MML.mbase.childCore,
     CoreMO: MML.mbase.childCoreMO,
@@ -920,49 +965,58 @@ MathJax.ElementJax.mml.Augment({
       close: ')',
       separators: ','
     },
-    texClass: MML.TEXCLASS.OPEN,
-    setTeXclass: function (prev) {
-      this.getPrevClass(prev);
+    addFakeNodes: function () {
       var values = this.getValues("open","close","separators");
       values.open = values.open.replace(/[ \t\n\r]/g,"");
       values.close = values.close.replace(/[ \t\n\r]/g,"");
       values.separators = values.separators.replace(/[ \t\n\r]/g,"");
-      // create a fake node for the open item
+      //
+      //  Create a fake node for the open item
+      //
       if (values.open !== "") {
         this.SetData("open",MML.mo(values.open).With({
           fence:true, form:MML.FORM.PREFIX, texClass:MML.TEXCLASS.OPEN
         }));
+        //
         //  Clear flag for using MML spacing even though form is specified
+        //
         this.data.open.useMMLspacing &= ~this.data.open.SPACE_ATTR.form;
-        prev = this.data.open.setTeXclass(prev);
       }
-      // get the separators
+      //
+      //  Create fake nodes for the separators
+      //
       if (values.separators !== "") {
         while (values.separators.length < this.data.length)
           {values.separators += values.separators.charAt(values.separators.length-1)}
-      }
-      // handle the first item, if any
-      if (this.data[0]) {prev = this.data[0].setTeXclass(prev)}
-      // add fake nodes for separators and handle the following item
-      for (var i = 1, m = this.data.length; i < m; i++) {
-        if (this.data[i]) {
-          if (values.separators !== "") {
-            this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}));
-            prev = this.data["sep"+i].setTeXclass(prev);
-          }
-          prev = this.data[i].setTeXclass(prev);
+        for (var i = 1, m = this.data.length; i < m; i++) {
+          if (this.data[i])
+            {this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}))}
         }
       }
-      // create fake node for the close item
+      //
+      //  Create fake node for the close item
+      //
       if (values.close !== "") {
         this.SetData("close",MML.mo(values.close).With({
           fence:true, form:MML.FORM.POSTFIX, texClass:MML.TEXCLASS.CLOSE
         }));
+        //
         //  Clear flag for using MML spacing even though form is specified
+        //
         this.data.close.useMMLspacing &= ~this.data.close.SPACE_ATTR.form;
-        prev = this.data.close.setTeXclass(prev);
       }
-      // get the data from the open item
+    },
+    texClass: MML.TEXCLASS.OPEN,
+    setTeXclass: function (prev) {
+      this.addFakeNodes();
+      this.getPrevClass(prev);
+      if (this.data.open) {prev = this.data.open.setTeXclass(prev)}
+      if (this.data[0]) {prev = this.data[0].setTeXclass(prev)}
+      for (var i = 1, m = this.data.length; i < m; i++) {
+        if (this.data["sep"+i]) {prev = this.data["sep"+i].setTeXclass(prev)}
+        if (this.data[i]) {prev = this.data[i].setTeXclass(prev)}
+      }
+      if (this.data.close) {prev = this.data.close.setTeXclass(prev)}
       this.updateTeXclass(this.data.open);
       this.texClass = MML.TEXCLASS.INNER;
       return prev;
@@ -1103,6 +1157,9 @@ MathJax.ElementJax.mml.Augment({
       texClass: MML.TEXCLASS.ORD,
       useHeight: 1
     },
+    adjustChild_displaystyle: function () {
+      return (this.displaystyle != null ? this.displaystyle : this.defaults.displaystyle);
+    },
     inheritFromMe: true,
     noInherit: {
       mover: {align: true},
@@ -1112,7 +1169,7 @@ MathJax.ElementJax.mml.Augment({
         align: true, rowalign: true, columnalign: true, groupalign: true,
         alignmentscope: true, columnwidth: true, width: true, rowspacing: true,
         columnspacing: true, rowlines: true, columnlines: true, frame: true,
-        framespacing: true, equalrows: true, equalcolumns: true,
+        framespacing: true, equalrows: true, equalcolumns: true, displaystyle: true,
         side: true, minlabelspacing: true, texClass: true, useHeight: 1
       }
     },

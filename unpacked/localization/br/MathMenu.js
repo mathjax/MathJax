@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/br/MathMenu.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("br","MathMenu",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           Show: "Diskouez ar formulenn evel",
@@ -66,7 +66,33 @@ MathJax.Localization.addTranslation("br","MathMenu",{
           svgfonts: "Fonto\u00F9 svg",
           LoadURL: "Karga\u00F1 roadenno\u00F9 trei\u00F1 eus an URL-ma\u00F1 :",
           Close: "Serri\u00F1",
-          EqSource: "Tarzh kevatalenn MathJax"
+          EqSource: "Tarzh kevatalenn MathJax",
+          AsciiMathInput: "Moned AsciiMathML",
+          Maple: "Maple",
+          ContentMathML: "Endalc'h MathML",
+          texHints: "Diskwel ar skoazello\u00F9 Tex e MathML",
+          ZoomTrigger: "Distegner Zoum",
+          TriggerRequires: "An distegner en deus ezhomm :",
+          Alt: "Erl",
+          Shift: "Pennlizherenn",
+          MPHandles: "Lezel MathPlayer da vera\u00F1 :",
+          MenuEvents: "Darvoudo\u00F9 la\u00F1ser",
+          MouseEvents: "Darvoudo\u00F9 logodenn",
+          MenuAndMouse: "Darvoudo\u00F9 logodenn ha la\u00F1serio\u00F9",
+          FontPrefs: "Penndibabo\u00F9 font",
+          Scale: "Lakaat an holl jedado\u00F9 hervez ar skeuliad...",
+          localTeXfonts: "Implijout ar fonto\u00F9 TeX lec'hel",
+          webTeXfonts: "Implijout fonto\u00F9 TeX ar web",
+          imagefonts: "Implijout ar fonto\u00F9 Skeudenn",
+          localSTIXfonts: "Implijout ar fonto\u00F9 STIX lec'hel",
+          webSVGfonts: "Implijout fonto\u00F9 SVG ar web",
+          genericfonts: "Implijout ar fonto\u00F9 Unicode generek",
+          BadData: "C'hwitet eo pellgardadur ar roadenno\u00F9 trei\u00F1 adalek %1",
+          NonZeroScale: "Ne zlefe ket ar skeuliad beza\u00F1 par da zero",
+          PercentScale: "Ar skeuliad a zlefe beza\u00F1 un dregantad (da skouer, 120 %%)",
+          IE8warning: "Se a ziweredekay al la\u00F1ser hag ar arc'hwelio\u00F9 zouma\u00F1. En o flas avat e c'halli klika\u00F1 war ur bomm en ur boueza\u00F1 war ar bouton Alt\n evit kaout al la\u00F1ser MathjAX.",
+          IE9warning: "Diweredekaet e vo al la\u00F1ser kemperzhel MathJax, met en e flas e c'hallot klika\u00F1 war ur bomm o terc'hel da boueza\u00F1 war ar bouton Alt evit kaout al la\u00F1ser MathJax.",
+          NoOriginalForm: "N'haller kaout furmad orin ebet"
         }
 });
 

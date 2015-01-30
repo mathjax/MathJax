@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/he/HelpDialog.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("he","HelpDialog",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           Help: "\u05E2\u05D6\u05E8\u05D4 \u05E9\u05DC MathJax",

@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/es/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("es","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Llave de apertura adicional o falta la llave de cierre",
@@ -38,7 +38,7 @@ MathJax.Localization.addTranslation("es","TeX",{
           EnvMissingEnd: "Falta \\end{%1}",
           MissingBoxFor: "Falta la caja para %1",
           MissingCloseBrace: "Falta la llave de cierre",
-          UndefinedControlSequence: "Secuencia de control indefinido %1",
+          UndefinedControlSequence: "Secuencia de control indefinida %1",
           DoubleExponent: "Doble exponente: utiliza llaves para aclarar",
           DoubleSubscripts: "Doble sub\u00EDndices: utiliza llaves para aclarar",
           DoubleExponentPrime: "El s\u00EDmbolo \u00ABprima\u00BB causa un exponente doble, utiliza llaves para aclarar",
@@ -52,7 +52,7 @@ MathJax.Localization.addTranslation("es","TeX",{
           InvalidMathMLAttr: "El atributo MathML no es v\u00E1lido: %1",
           UnknownAttrForElement: "%1 no es un atributo reconocido para %2",
           MaxMacroSub1: "Conteo m\u00E1ximo de sustituci\u00F3n de macro MathJax superado, \u00BFhay una llamada recursiva de macro?",
-          MaxMacroSub2: "Conteo m\u00E1ximo de sustituci\u00F3n MathJax superado, \u00BFhay un ambiente recursivo de l\u00E1tex?",
+          MaxMacroSub2: "Se excedi\u00F3 el conteo m\u00E1ximo de sustituci\u00F3n MathJax, \u00BFhay un ambiente recursivo de LaTeX?",
           MissingArgFor: "Falta el argumento para %1",
           ExtraAlignTab: "Ficha de alineaci\u00F3n adicional en texto \\cases",
           BracketMustBeDimension: "El argumento de par\u00E9ntesis %1 debe ser una dimensi\u00F3n",
@@ -60,12 +60,12 @@ MathJax.Localization.addTranslation("es","TeX",{
           UnknownEnv: "Entorno desconocido \u00AB%1\u00BB",
           ExtraCloseLooking: "Llave de cierre adicional al buscar %1",
           MissingCloseBracket: "No se pudo encontrar \"]\" de cierre para el argumento %1",
-          MissingOrUnrecognizedDelim: "Delimitador no reconocido o falta para %1",
+          MissingOrUnrecognizedDelim: "Delimitador no reconocido o faltante para %1",
           MissingDimOrUnits: "Falta la dimensi\u00F3n o sus unidades para %1",
           TokenNotFoundForCommand: "No se pudo encontrar %1 para %2",
           MathNotTerminated: "La notaci\u00F3n matem\u00E1tica no termina en el cuadro de texto",
           IllegalMacroParam: "Referencia de par\u00E1metro de macro ilegal",
-          MaxBufferSize: "Tama\u00F1o del b\u00FAfer interno de MathJax excedido; \u00BFHay una llamada macro recursiva?",
+          MaxBufferSize: "Tama\u00F1o del b\u00FAfer interno de MathJax excedido. \u00BFHay una llamada macro recursiva?",
           CommandNotAllowedInEnv: "%1 no permitido en el entorno %2",
           MultipleLabel: "Se defini\u00F3 la etiqueta \u00AB%1\u00BB varias veces",
           CommandAtTheBeginingOfLine: "%1 debe aparecer al principio de la l\u00EDnea",
@@ -86,7 +86,7 @@ MathJax.Localization.addTranslation("es","TeX",{
           NewextarrowArg1: "El primer argumento de %1 debe ser un nombre de secuencia de control",
           NewextarrowArg2: "El segundo argumento de %1 debe ser dos n\u00FAmeros enteros separados por una coma",
           NewextarrowArg3: "El tercer argumento de %1 debe ser un n\u00FAmero de caracteres Unicode",
-          NoClosingChar: "No se puede encontrar el cierre %1",
+          NoClosingChar: "No se puede encontrar el %1 de cierre",
           IllegalControlSequenceName: "El nombre de la secuencia de control para %1 es incorrecto",
           IllegalParamNumber: "Se especific\u00F3 una cantidad incorrecta de par\u00E1metros en %1",
           MissingCS: "A %1 ha de a\u00F1ad\u00EDrsele una secuencia de control",

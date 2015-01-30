@@ -5,9 +5,9 @@
  *
  *  MathJax/extensions/MathML/content-mathml.js
  *
- *  This file implements an XSLT transform to convert Content-MathML to
+ *  This file provides methods to convert Content-MathML to
  *  Presentation MathML for processing by MathJax.  The transform is
- *  performed in a pre-filter for the MathML input jax, so that the
+ *  performed in a DOM filter for the MathML input jax, so that the
  *  Show Math As menu will still show the Original MathML as Content MathML,
  *  but the Presentation MathML can be obtained from the main MathML menu.
  *  
@@ -19,7 +19,7 @@
  *  
  *  in your configuration.
  *
- *  A portion of this file is taken from ctop.xsl which is
+ *  A portion of this file is taken from ctop.js which is
  *  Copyright (c) David Carlisle 2001, 2002, 2008, 2009, 2013,
  *  and is used by permission of David Carlisle, who has agreed to allow us
  *  to release it under the Apache2 license (see below).  That portion is
@@ -28,7 +28,7 @@
  *  The remainder falls under the copyright that follows.
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2014 The MathJax Consortium
+ *  Copyright (c) 2013-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -44,88 +44,1679 @@
  */
 
 
-MathJax.Extension["MathML/content-mathml"] = {
-  version: "2.4.0"
-};
+MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
+  /* 
+   * Content MathML to Presentation MathML conversion
+   *
+   * based on David Carlisle's ctop.js - https://web-xslt.googlecode.com/svn/trunk/ctop/ctop.js
+   *
+   */
+
+
+  var isMSIE = HUB.Browser.isMSIE;
+
+  if (isMSIE) {
+    try {document.namespaces.add("m","http://www.w3.org/1998/Math/MathML")} catch (err) {}
+  }
+
+  var CONFIG = HUB.CombineConfig("MathML.content-mathml",{
+    // render `a+(-b)` as `a-b`?
+    collapsePlusMinus: true,
+
+      /* mathvariant to use with corresponding <ci> type attribute */
+      cistyles: {
+        vector: 'bold-italic',
+      matrix: 'bold-upright'
+      },
+
+      /* Symbol names to translate to characters
+      */
+      symbols: {
+        gamma: '\u03B3'
+      }
+
+  });
+
+  var CToP = {
+    version: '2.4',
+    settings: CONFIG,
+
+    /* Transform the given <math> elements from Content MathML to Presentation MathML and replace the original elements
+    */
+    transformElements: function(elements) {
+      for (var i = 0, l = elements.length; i<l; i++ ) {
+        var mathNode = CToP.transformElement(elements[i]);
+        elements[i].parentNode.replaceChild(mathNode,elements[i]); 
+      }
+    },
+
+    /* Transform a Content MathML element into Presentation MathML, and return the new element
+    */
+    transformElement: function(element) {
+      var mathNode = CToP.cloneNode(element);
+      for (var j = 0, l = element.childNodes.length; j<l; j++ ) {
+        CToP.applyTransform(mathNode,element.childNodes[j],0);
+      }
+      return mathNode;
+    },
+
+    getTextContent: function(element) {
+      return element.text !== undefined ? element.text : element.innerText !== undefined ? element.innerText : element.textContent;
+    },
+
+    setTextContent: function(element,textContent) {
+      for (var i = 0, l = element.childNodes.length; i<l; i++) {
+        if (element.childNodes[i].nodeType === 3) {
+          element.removeChild(element.childNodes[i]);
+          i--;
+          l--;
+        }
+      }
+      element.appendChild(document.createTextNode(textContent));
+    },
+
+    cloneNode: function(element,deep) {
+      var clone, i, l;
+      if (element.nodeType === 1) {
+        clone = CToP.createElement(element.nodeName);
+        for (i = 0, l = element.attributes.length; i<l; i++ ) {
+          clone.setAttribute(element.attributes[i].nodeName,element.attributes[i].nodeValue);
+        }
+        if (deep) {
+          for (i = 0, l = element.childNodes.length; i<l; i++ ) {
+            var clonedChild = CToP.cloneNode(element.childNodes[i],true);
+            clone.appendChild(clonedChild);
+          }
+        }
+      } else if (element.nodeType === 3) {
+        clone = document.createTextNode(element.nodeValue);
+      }
+      return clone;
+    },
+
+    /* Create an element with given name, belonging to the MathML namespace
+    */
+    createElement: function(name) {
+      var math = (isMSIE ? document.createElement("m:"+name) :
+          document.createElementNS("http://www.w3.org/1998/Math/MathML",name));
+      math.isMathJax = true;
+      return math;
+    },
+
+    /* Get node's children
+    */
+    getChildren: function(node) {
+      var children = [];
+      for (var j = 0, l = node.childNodes.length; j<l; j++ ) {
+        if (node.childNodes[j].nodeType === 1) {
+          children.push(node.childNodes[j]);
+        }
+      }
+      return children;
+    },
+
+    /* Classify node's children as argumentss, variable bindings, or qualifiers
+    */
+    classifyChildren: function(contentMMLNode) {
+      var args = [], bvars = [], qualifiers = [];
+      for (var j = 0, l = contentMMLNode.childNodes.length; j<l; j++ ) {
+        if (contentMMLNode.childNodes[j].nodeType === 1) {
+          var childNode = contentMMLNode.childNodes[j], name = childNode.nodeName;
+          if (name === 'bvar') {
+            bvars.push(childNode);
+          } else if (name === 'condition'||
+              name === 'degree'||
+              name === 'momentabout'||
+              name === 'logbase'||
+              name === 'lowlimit'||
+              name === 'uplimit'||
+              (name === 'interval' && args.length<2)||
+              name === 'domainofapplication') {
+                qualifiers.push(childNode);
+              } else {
+                args.push(childNode);
+              }
+        }
+      }
+      return {
+        args:args, 
+          bvars:bvars, 
+          qualifiers:qualifiers
+      };
+    },
+
+    /* Add an element with given name and text content
+    */
+    appendToken: function(parentNode,name,textContent) {
+      var element = CToP.createElement(name);
+      element.appendChild(document.createTextNode(textContent));
+      parentNode.appendChild(element);
+      return element;
+    },
+
+    /* Transform a Content MathML node to Presentation MathML node(s), and attach it to the parent
+    */
+    applyTransform: function(parentNode,contentMMLNode,precedence) {
+      if (!contentMMLNode) {
+        var merror = CToP.createElement('merror');
+        CToP.appendToken(merror,'mtext','Missing child node');
+        parentNode.appendChild(merror);
+        return;
+      }
+      if (contentMMLNode.nodeType === 1) {
+        if (CToP.tokens[contentMMLNode.nodeName]) {
+          CToP.tokens[contentMMLNode.nodeName](parentNode,contentMMLNode,precedence);
+        } else if (contentMMLNode.childNodes.length === 0) {
+          CToP.appendToken(parentNode,'mi',contentMMLNode.nodeName);
+        } else {
+          var clonedChild = CToP.cloneNode(contentMMLNode);
+          parentNode.appendChild(clonedChild);
+          for (var j = 0, l = contentMMLNode.childNodes.length; j<l; j++ ) {
+            CToP.applyTransform(clonedChild,contentMMLNode.childNodes[j],precedence);
+          }
+        }
+      } else if (contentMMLNode.nodeType === 3) {
+        parentNode.appendChild(CToP.cloneNode(contentMMLNode));
+      }
+    },
+
+    /* Make an mfenced environment
+    */
+    createmfenced: function(children,open,close) {
+      var mf = CToP.createElement('mfenced');
+      mf.setAttribute('open',open);
+      mf.setAttribute('close',close);
+      for (var j = 0, l = children.length; j<l; j++ ) {
+        CToP.applyTransform(mf,children[j],0);
+      }
+      return mf;
+    },
+
+    transforms: {
+
+      /* Transform an identifier symbol
+      */
+      identifier: function(textContent) {
+        return function(parentNode,contentMMLNode,precedence) {
+          CToP.appendToken(parentNode,'mi',textContent);
+        }
+      },
+
+      /* Transform a set or set-like notation
+      */
+      set: function(open,close) {
+        var bindSet = CToP.transforms.bind('',',','|');
+        return function(parentNode,contentMMLNode) {
+          var children = CToP.classifyChildren(contentMMLNode);
+
+          var args = children.args, bvars = children.bvars, qualifiers = children.qualifiers;
+          if (bvars.length) {
+            var firstArg = children.args[0];
+            args = args.slice(1);
+            var mfenced = CToP.createElement('mfenced');
+            mfenced.setAttribute('open',open);
+            mfenced.setAttribute('close',close);
+            bindSet(mfenced,contentMMLNode,firstArg,args,bvars,qualifiers,0);
+            parentNode.appendChild(mfenced);
+          } else {
+            parentNode.appendChild(CToP.createmfenced(args,open,close));
+          }
+        }
+      },
+
+      /* Transform a content token to a presentation token
+       *
+       * (function factory)
+       * @param {string} name - name of the corresponding presentation MML tag
+       */
+      token: function(name) {
+        return function(parentNode,contentMMLNode) {
+          if (contentMMLNode.childNodes.length === 1 && contentMMLNode.childNodes[0].nodeType === 3) {
+            CToP.appendToken(parentNode,name,CToP.getTextContent(contentMMLNode));
+          } else {
+            var mrow = CToP.createElement('mrow');
+            for (var j = 0, l = contentMMLNode.childNodes.length; j<l; j++ ) {
+              if (contentMMLNode.childNodes[j].nodeType === 3) {
+                CToP.appendToken(parentNode,name,CToP.getTextContent(contentMMLNode.childNodes[j]));
+              }else{
+                CToP.applyTransform(mrow,contentMMLNode.childNodes[j],0);
+              }
+            }
+            if (mrow.childNodes.length) {
+              parentNode.appendChild(mrow);
+            }
+          }
+        }
+      },
+
+      /* Transform a binary operation
+       *
+       * (function factory)
+       */
+      binary: function(name,tokenPrecedence) {
+        return function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+          var mrow = CToP.createElement('mrow');
+          var needsBrackets = tokenPrecedence<precedence || (tokenPrecedence == precedence && name === "-");
+          if (needsBrackets) {
+            CToP.appendToken(mrow,'mo','(');
+          }
+          if (args.length>1) {
+            CToP.applyTransform(mrow,args[0],tokenPrecedence);
+          }
+          CToP.appendToken(mrow,'mo',name);
+          if (args.length>0) {
+            var z = args[(args.length === 1)?0:1];
+            CToP.applyTransform(mrow,z,tokenPrecedence);
+          }	
+          if (needsBrackets) {
+            CToP.appendToken(mrow,'mo',')');
+          }
+          parentNode.appendChild(mrow);
+        }
+      },
+
+      /* Transform an infix operator
+       *
+       * (function factory)
+       */
+      infix: function(name,tokenPrecedence) {
+        return function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+          var mrow = CToP.createElement('mrow');
+          var needsBrackets = precedence>tokenPrecedence;
+          if (needsBrackets) {
+            CToP.appendToken(mrow,'mo','(');
+          }
+          for (var j = 0, l = args.length; j<l; j++ ) {
+            if (j>0) {
+              CToP.appendToken(mrow,'mo',name);
+            }
+            CToP.applyTransform(mrow,args[j],tokenPrecedence);
+          }
+          if (needsBrackets) {
+            CToP.appendToken(mrow,'mo',')');
+          }
+          parentNode.appendChild(mrow);
+        }
+      },
+
+      /* Transform an iterated operation, e.g. summation
+       *
+       * (function factory
+       */
+      iteration: function(name,limitSymbol) {
+        return function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+          var mrow = CToP.createElement('mrow');
+          var mo = CToP.createElement('mo');
+          CToP.setTextContent(mo,name);
+          var munderover = CToP.createElement('munderover');
+          munderover.appendChild(mo);
+          var mrow1 = CToP.createElement('mrow');
+          var i, j, num_qualifiers, num_bvars, children, bvar, num_children, num_args;
+          for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+            if (qualifiers[i].nodeName === 'lowlimit'||
+                qualifiers[i].nodeName === 'condition'||
+                qualifiers[i].nodeName === 'domainofapplication')
+            {
+              if (qualifiers[i].nodeName === 'lowlimit') {
+                for (j = 0, num_bvars = bvars.length; j<num_bvars; j++ ) {
+                  bvar = bvars[j];
+                  children = CToP.getChildren(bvar);
+                  if (children.length) {
+                    CToP.applyTransform(mrow1,children[0],0);
+                  }
+                }
+                if (bvars.length) {
+                  CToP.appendToken(mrow1,"mo",limitSymbol);
+                }
+              }
+              children = CToP.getChildren(qualifiers[i]);
+              for (j = 0;j<children.length;j++) {
+                CToP.applyTransform(mrow1,children[j],0);
+              }
+            } else {
+              children = CToP.getChildren(qualifiers[i]);
+              if (qualifiers[i].nodeName === 'interval' && children.length === 2) {
+                for (j = 0, num_bvars = bvars.length; j<num_bvars; j++ ) {
+                  bvar = bvars[j];
+                  children = CToP.getChildren(bvar);
+                  if (children.length) {
+                    CToP.applyTransform(mrow1,children[0],0);
+                  }
+                }
+                if (bvars.length) {
+                  CToP.appendToken(mrow1,"mo","=");
+                }
+                CToP.applyTransform(mrow1,CToP.getChildren(qualifiers[i])[0],0);
+              }
+            }
+          }
+          munderover.appendChild(mrow1);
+          var mjrow = CToP.createElement('mrow');
+          for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+            if (qualifiers[i].nodeName === 'uplimit' ||qualifiers[i].nodeName === 'interval' )
+            {
+              children = CToP.getChildren(qualifiers[i]);
+              for (j = 0, num_children = children.length; j<num_children; j++ ) {
+                CToP.applyTransform(mjrow,children[j],0);
+              }
+            }
+          }
+          munderover.appendChild(mjrow);
+          mrow.appendChild(munderover);
+
+          for (i = 0, num_args = args.length; i<num_args; i++ ) {
+            CToP.applyTransform(mrow,args[i],precedence);
+          }
+
+          parentNode.appendChild(mrow);
+        }
+      },
+
+      /* Transform something which binds a variable, e.g. forall or lambda
+       *
+       * (function factory)
+       */
+      bind: function(name,argSeparator,conditionSeparator) {
+        return function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+          var mrow = CToP.createElement('mrow');
+          var children, i, j, l, num_qualifiers, num_children;
+          if (name) {
+            CToP.appendToken(mrow,'mo',name);
+          }
+          for (j = 0, l = bvars.length; j<l; j++ ) {
+            var bvar = bvars[j];
+            if (j>0) {
+              CToP.appendToken(mrow,'mo',',');
+            }
+            children = CToP.getChildren(bvar);
+            if (children.length) {
+              CToP.applyTransform(mrow,children[0],0);
+            }
+          }
+
+          var conditions_mrow = CToP.createElement('mrow');
+          var conditions = false;
+          for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+            if (qualifiers[i].nodeName === 'condition')	{
+              conditions = true;
+              children = CToP.getChildren(qualifiers[i]);
+              for (j = 0, num_children = children.length; j<num_children; j++ ) {
+                CToP.applyTransform(conditions_mrow,children[j],0);
+              }
+            }
+          }
+          if (conditions) {
+            CToP.appendToken(mrow,'mo',conditionSeparator);
+          }
+          mrow.appendChild(conditions_mrow);
+          for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+            if (qualifiers[i].nodeName != 'condition')	{
+              CToP.appendToken(mrow,'mo','\u2208');
+              children = CToP.getChildren(qualifiers[i]);
+              for (j = 0, num_children = children.length; j<num_children; j++ ) {
+                CToP.applyTransform(mrow,children[j],0);
+              }
+            }
+          }
+          if (args.length && (bvars.length||children.length)) {
+            CToP.appendToken(mrow,'mo',argSeparator);
+          }
+          for (i = 0, l = args.length; i<l; i++ ) {
+            CToP.applyTransform(mrow,args[i],0);
+          }
+          parentNode.appendChild(mrow);
+        }
+      },
+
+      /** Transform a function application
+       *
+       * i.e. something which ends up looking like `f(x,y,z)`, where `f` is a string
+       *
+       * (function factory)
+       */
+      fn: function(name) {
+        return function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+          var mrow = CToP.createElement('mrow');
+          if (firstArg.childNodes.length) {
+            CToP.applyTransform(mrow,firstArg,1);
+          } else {
+            CToP.appendToken(mrow,'mi',name);
+          }
+          CToP.appendToken(mrow,'mo','\u2061');
+          mrow.appendChild(CToP.createmfenced(args,'(',')'));
+          parentNode.appendChild(mrow);
+        }
+      },
+
+      /** Transform a min/max operation
+       *
+       * (function factory)
+       */
+      minmax: function(name) {
+        return function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+          var mrow = CToP.createElement('mrow');
+          CToP.appendToken(mrow,'mi',name);
+          var mrow2 = CToP.createElement('mrow');
+          CToP.appendToken(mrow2,'mo','{');
+          for (var i = 0, l = args.length; i<l; i++ ) {
+            if (i>0) {
+              CToP.appendToken(mrow2,'mo',',');
+            }
+            CToP.applyTransform(mrow2,args[i],0);
+          }
+          if (qualifiers.length) {
+            CToP.appendToken(mrow2,'mo','|');
+            for (i = 0, l = qualifiers.length; i<l; i++ ) {
+              CToP.applyTransform(mrow2,qualifiers[i],0);
+            }
+          }
+          CToP.appendToken(mrow2,'mo','}');
+          mrow.appendChild(mrow2);
+          parentNode.appendChild(mrow);
+        }
+      }
+    }
+  }
+
+  /* Functions to transform variable/atom tokens
+  */
+  CToP.tokens = {
+    ci: function(parentNode,contentMMLNode,precedence) {
+      if (contentMMLNode.childNodes.length === 1 && contentMMLNode.childNodes[0].nodeType === 3) {
+        var mi = CToP.appendToken(parentNode,'mi',CToP.getTextContent(contentMMLNode));
+        var type = contentMMLNode.getAttribute('type');
+        if (type in CToP.settings.cistyles) {
+          mi.setAttribute('mathvariant',CToP.settings.cistyles[type]);
+        }
+      } else {
+        CToP.transforms.token('mi')(parentNode,contentMMLNode,precedence);
+      }
+    },
+    cs: CToP.transforms.token('ms'),
+
+    csymbol: function(parentNode,contentMMLNode,precedence) {
+      var cd = contentMMLNode.getAttribute('cd');
+      if (cd && CToP.contentDictionaries[cd]) {
+        CToP.contentDictionaries[cd](parentNode,contentMMLNode,precedence);
+      } else if (CToP.settings.symbols[name]) {
+        CToP.appendToken(parentNode,'mi',CToP.settings.symbols[name]);
+      } else {
+        CToP.tokens.ci(parentNode,contentMMLNode);
+      }
+    },
+    fn: function(parentNode,contentMMLNode,precedence) {
+      CToP.applyTransform(parentNode,CToP.getChildren(contentMMLNode)[0],precedence);
+    },
+
+    naturalnumbers: CToP.transforms.identifier('\u2115'),
+    integers: CToP.transforms.identifier('\u2124'),
+    reals: CToP.transforms.identifier('\u211D'),
+    rationals: CToP.transforms.identifier('\u211A'),
+    complexes: CToP.transforms.identifier('\u2102'),
+    primes: CToP.transforms.identifier('\u2119'),
+    exponentiale: CToP.transforms.identifier('e'),
+    imaginaryi: CToP.transforms.identifier('i'),
+    notanumber: CToP.transforms.identifier('NaN'),
+    eulergamma: CToP.transforms.identifier('\u03B3'),
+    gamma: CToP.transforms.identifier('\u0263'),
+    pi: CToP.transforms.identifier('\u03C0'),
+    infinity: CToP.transforms.identifier('\u221E'),
+    emptyset: CToP.transforms.identifier('\u2205'),
+    "true": CToP.transforms.identifier('true'),
+    "false": CToP.transforms.identifier('false'),
+    set: CToP.transforms.set('{','}'),
+    list: CToP.transforms.set('(',')'),
+
+    interval: function(parentNode,contentMMLNode,precedence) {
+      var closure = contentMMLNode.getAttribute('closure');
+
+      var open, close;
+      switch(closure) {
+        case 'open':
+          open = '(';
+          close = ')';
+          break;
+        case 'open-closed':
+          open = '(';
+          close = ']';
+          break;
+        case 'closed-open':
+          open = '[';
+          close = ')';
+          break;
+        case 'closed':
+        default:
+          open = '[';
+          close = ']';
+      }
+
+      parentNode.appendChild(CToP.createmfenced(CToP.getChildren(contentMMLNode),open,close));
+    },
+
+    apply: function(parentNode,contentMMLNode,precedence) {
+      var children = CToP.classifyChildren(contentMMLNode);
+
+      var firstArg = children.args[0];
+      var args = children.args.slice(1), bvars = children.bvars, qualifiers = children.qualifiers;
+
+      if (firstArg) {
+        var name = firstArg.nodeName;
+        name = (name === "csymbol") ? CToP.getTextContent(firstArg).toLowerCase() : name;
+        if (CToP.applyTokens[name]) {
+          CToP.applyTokens[name](parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
+        } else {
+          CToP.transforms.fn(name)(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
+        }
+      } else {
+        parentNode.appendChild(CToP.createElement('mrow'));
+      }
+    },
+
+    cn: function(parentNode,contentMMLNode,precedence) {
+      var type = contentMMLNode.getAttribute("type");
+      var base = contentMMLNode.getAttribute("base");
+      if (type || base) {
+        if (base) {
+          type = 'based-integer';
+        }
+        switch(type) {
+          case 'integer':
+          case 'real':
+          case 'double':
+          case 'constant':
+            CToP.transforms.token('mn')(parentNode,contentMMLNode);
+            break;
+          case 'hexdouble':
+            CToP.appendToken(parentNode,'mn','0x'+CToP.getTextContent(contentMMLNode));
+            break;
+          default:
+            var apply = CToP.createElement('apply');
+            var mrow = CToP.createElement('mrow');
+            var c = CToP.createElement(type);
+            apply.appendChild(c);
+            if (base) {
+              CToP.appendToken(apply,'mn',base);
+            }
+            for (var j = 0, l = contentMMLNode.childNodes.length; j<l; j++ ) {
+              if (contentMMLNode.childNodes[j].nodeType === 3) {
+                CToP.appendToken(mrow,'cn',CToP.getTextContent(contentMMLNode.childNodes[j]));
+              }else if (contentMMLNode.childNodes[j].nodeName === 'sep') {
+                apply.appendChild(mrow);
+                mrow = CToP.createElement('mrow');
+              } else {
+                mrow.appendChild(CToP.cloneNode(contentMMLNode.childNodes[j],true));
+              }
+            }
+            apply.appendChild(mrow);
+            CToP.applyTransform(parentNode,apply,0);
+        }
+      } else {  
+        CToP.transforms.token('mn')(parentNode,contentMMLNode);
+      }
+    },
+
+    vector: function(parentNode,contentMMLNode,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','(');
+
+      var mtable = CToP.createElement('mtable');
+      var children = CToP.getChildren(contentMMLNode);
+      for (var i = 0, l = children.length; i<l; i++ ) {
+        var mtr = CToP.createElement('mtr');
+        var mtd = CToP.createElement('mtd');
+        CToP.applyTransform(mtd,children[i],0);
+        mtr.appendChild(mtd);
+        mtable.appendChild(mtr);
+      }
+
+      mrow.appendChild(mtable);
+      CToP.appendToken(mrow,'mo',')');
+      parentNode.appendChild(mrow);
+    },
+
+    piecewise: function(parentNode,contentMMLNode,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','{');
+      var mtable = CToP.createElement('mtable');
+      mrow.appendChild(mtable);
+      var children = CToP.getChildren(contentMMLNode);
+      for (var i = 0, l = children.length; i<l; i++ ) {
+        CToP.applyTransform(mtable,children[i],0);
+      }
+      parentNode.appendChild(mrow);
+    },
+
+    piece: function(parentNode,contentMMLNode,precedence) {
+      var mtr = CToP.createElement('mtr');
+      var children = CToP.getChildren(contentMMLNode);
+      for (var i = 0, l = children.length; i<l; i++ ) {
+        var mtd = CToP.createElement('mtd');
+        mtr.appendChild(mtd);
+        CToP.applyTransform(mtd,children[i],0);
+        if (i === 0) {
+          mtd = CToP.createElement('mtd');
+          CToP.appendToken(mtd,"mtext","\u00A0if\u00A0");
+          mtr.appendChild(mtd);
+        }
+      }
+      parentNode.appendChild(mtr);
+    },
+
+    otherwise: function(parentNode,contentMMLNode,precedence) {
+      var mtr = CToP.createElement('mtr');
+      var children = CToP.getChildren(contentMMLNode);
+      if (children.length) {
+        var mtd = CToP.createElement('mtd');
+        mtr.appendChild(mtd);
+        CToP.applyTransform(mtd,children[0],0);
+        mtd = CToP.createElement('mtd');
+        mtd.setAttribute('columnspan','2');
+        CToP.appendToken(mtd,"mtext","\u00A0otherwise");
+        mtr.appendChild(mtd);
+      }
+      parentNode.appendChild(mtr);
+    },
+
+    matrix: function(parentNode,contentMMLNode,precedence) {
+      var children = CToP.classifyChildren(contentMMLNode);
+      var args = children.args, bvars = children.bvars, qualifiers = children.qualifiers;
+
+      if (bvars.length || qualifiers.length) {
+        var mrow = CToP.createElement('mrow');
+        CToP.appendToken(mrow,"mo","[");
+        var msub = CToP.createElement('msub');
+        CToP.appendToken(msub,'mi','m');
+        var mrow2 = CToP.createElement('mrow');
+        for (var i = 0, l = bvars.length; i<l; i++ ) {
+          if (i != 0) {
+            CToP.appendToken(mrow2,'mo',',');
+          }	
+          CToP.applyTransform(mrow2,bvars[i].childNodes[0],0);
+        }
+        msub.appendChild(mrow2);
+        mrow.appendChild(msub);
+        var msub2 = CToP.cloneNode(msub,true);
+        CToP.appendToken(mrow,'mo','|');
+        mrow.appendChild(msub2);
+        CToP.appendToken(mrow,'mo','=');
+        for (i = 0, l = args.length; i<l; i++ ) {
+          if (i != 0) {
+            CToP.appendToken(mrow,'mo',',');
+          }	
+          CToP.applyTransform(mrow,args[i],0);
+        }
+        CToP.appendToken(mrow,'mo',';');
+        for (i = 0, l = qualifiers.length; i<l; i++) {
+          if (i != 0) {
+            CToP.appendToken(mrow,'mo',',');
+          }	
+          CToP.applyTransform(mrow,qualifiers[i],0);
+        }
+        CToP.appendToken(mrow,'mo',']');
+        parentNode.appendChild(mrow);
+      } else {
+        var mfenced = CToP.createElement('mfenced');
+        var mtable = CToP.createElement('mtable');
+        for (i = 0, l = args.length; i<l; i++ ) {
+          CToP.applyTransform(mtable,args[i],0);
+        }
+        mfenced.appendChild(mtable);
+        parentNode.appendChild(mfenced);
+      }
+    },
+
+    matrixrow: function(parentNode,contentMMLNode,precedence) {
+      var mtr = CToP.createElement('mtr');
+      var children = CToP.getChildren(contentMMLNode);
+      for (var i = 0, l = children.length; i<l; i++ ) {
+        var mtd = CToP.createElement('mtd');
+        CToP.applyTransform(mtd,children[i],0);
+        mtr.appendChild(mtd);
+      }
+      parentNode.appendChild(mtr);
+    },
+
+    condition: function(parentNode,contentMMLNode,precedence) {
+      var mrow = CToP.createElement('mrow');
+      var children = CToP.getChildren(contentMMLNode);
+      for (var i = 0, l = children.length; i<l; i++ ) {
+        CToP.applyTransform(mrow,children[i],0);
+      }
+      parentNode.appendChild(mrow);
+    },
+
+    lambda: function(parentNode,contentMMLNode,precedence) {
+      var firstArg = CToP.createElement('lambda');
+      var children = CToP.classifyChildren(contentMMLNode);
+      var args = children.args, bvars = children.bvars, qualifiers = children.qualifiers;
+      var i, l, num_qualifiers;
+      
+      if (bvars.length) {
+        CToP.applyTokens.lambda(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
+      } else {
+        var mrow = CToP.createElement('mrow');
+        for (i = 0, l = args.length; i<l; i++ ) {
+          CToP.applyTransform(mrow,args[i],0);
+        }
+        if (qualifiers.length) {
+          var msub = CToP.createElement('msub');
+          CToP.appendToken(msub,'mo','|');
+          var mrow2 = CToP.createElement('mrow');
+          for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+            children = CToP.getChildren(qualifiers[i]);
+            for (var j = 0, num_children = children.length; j<num_children; j++ ) {
+              CToP.applyTransform(mrow2,children[j],0);
+            }
+          }
+          msub.appendChild(mrow2);
+          mrow.appendChild(msub);
+        }
+        parentNode.appendChild(mrow);
+      }
+    },
+
+    ident: function(parentNode,contentMMLNode,precedence) {
+      CToP.appendToken(parentNode,"mi","id")
+    },
+
+    domainofapplication: function(parentNode,contentMMLNode,precedence) {
+      var merror = CToP.createElement('merror');
+      CToP.appendToken(merror,'mtext','unexpected domainofapplication');
+      parentNode.appendChild(merror);
+    },
+
+    share: function(parentNode,contentMMLNode,precedence) {
+      var mi = CToP.createElement('mi');
+      mi.setAttribute('href',contentMMLNode.getAttribute('href'));
+      CToP.setTextContent(mi,"Share " + contentMMLNode.getAttribute('href'));
+      parentNode.appendChild(mi);
+    },
+
+    cerror: function(parentNode,contentMMLNode,precedence) {
+      var merror = CToP.createElement('merror');
+      var children = CToP.getChildren(contentMMLNode);
+      for (var i = 0, l = children.length; i<l; i++ ) {
+        CToP.applyTransform(merror,children[i],0);
+      }
+      parentNode.appendChild(merror);
+    },
+
+    semantics: function(parentNode,contentMMLNode,precedence)  {
+      var mrow = CToP.createElement('mrow');
+      var children = CToP.getChildren(contentMMLNode);
+      if (children.length) {
+        var z = children[0];
+        for (var i = 0, l = children.length; i<l; i++ ) {
+          if (children[i].nodeName === 'annotation-xml' && children[i].getAttribute('encoding') === 'MathML-Presentation') {
+            z = children[i];
+            break;
+          }
+        }
+        CToP.applyTransform(mrow,z,0);
+      }
+      parentNode.appendChild(mrow);
+    },
+
+    "annotation-xml": function(parentNode,contentMMLNode,precedence)  {
+      var mrow = CToP.createElement('mrow');
+      var children = CToP.getChildren(contentMMLNode);
+      for (var i = 0, l = children.length; i<l; i++ ) {
+        CToP.applyTransform(mrow,children[i],0);
+      }
+      parentNode.appendChild(mrow);
+    }
+  };
+
+  CToP.tokens.reln = CToP.tokens.bind = CToP.tokens.apply;
+
+  CToP.contentDictionaries = {
+    "setname1": function(parentNode,contentMMLNode,precedence) {
+      var sets = {
+        C: '\u2102',
+        N: '\u2115',
+        P: '\u2119',
+        Q: '\u211A',
+        R: '\u211D',
+        Z: '\u2124'
+      }
+      var name = CToP.getTextContent(contentMMLNode);
+      CToP.appendToken(parentNode,'mi',sets[name]);
+    },
+    aritherror: function(parentNode,contentMMLNode,precedence) {
+      var name = CToP.getTextContent(contentMMLNode);
+      CToP.appendToken(parentNode,'mi',name+':');
+    }
+  }
+
+  /* Functions to transform function/operation application tokens
+  */
+  CToP.applyTokens = {
+    rem: CToP.transforms.binary('mod',3),
+    divide: CToP.transforms.binary('/',3),
+    remainder: CToP.transforms.binary('mod',3),
+    implies: CToP.transforms.binary('\u21D2',3),
+    factorof: CToP.transforms.binary('|',3),
+    "in": CToP.transforms.binary('\u2208',3),
+    notin: CToP.transforms.binary('\u2209',3),
+    notsubset: CToP.transforms.binary('\u2288',2),
+    notprsubset: CToP.transforms.binary('\u2284',2),
+    setdiff: CToP.transforms.binary('\u2216',2),
+    eq: CToP.transforms.infix('=',1),
+    compose: CToP.transforms.infix('\u2218',0),
+    "left_compose": CToP.transforms.infix('\u2218',1),
+    xor: CToP.transforms.infix('xor',3),
+    neq: CToP.transforms.infix('\u2260',1),
+    gt: CToP.transforms.infix('>',1),
+    lt: CToP.transforms.infix('<',1),
+    geq: CToP.transforms.infix('\u2265',1),
+    leq: CToP.transforms.infix('\u2264',1),
+    equivalent: CToP.transforms.infix('\u2261',1),
+    approx: CToP.transforms.infix('\u2248',1),
+    subset: CToP.transforms.infix('\u2286',2),
+    prsubset: CToP.transforms.infix('\u2282',2),
+    cartesianproduct: CToP.transforms.infix('\u00D7',2),
+    "cartesian_product": CToP.transforms.infix('\u00D7',2),
+    vectorproduct: CToP.transforms.infix('\u00D7',2),
+    scalarproduct: CToP.transforms.infix('.',2),
+    outerproduct: CToP.transforms.infix('\u2297',2),
+    sum: CToP.transforms.iteration('\u2211','='),
+    product: CToP.transforms.iteration('\u220F','='),
+    forall: CToP.transforms.bind('\u2200','.',','),
+    exists: CToP.transforms.bind('\u2203','.',','),
+    lambda: CToP.transforms.bind('\u03BB','.',','),
+    limit: CToP.transforms.iteration('lim','\u2192'),
+    sdev: CToP.transforms.fn('\u03c3'),
+    determinant: CToP.transforms.fn('det'),
+    max: CToP.transforms.minmax('max'),
+    min: CToP.transforms.minmax('min'),
+    real: CToP.transforms.fn('\u211b'),
+    imaginary: CToP.transforms.fn('\u2111'),
+    set: CToP.transforms.set('{','}'),
+    list: CToP.transforms.set('(',')'),
+
+    exp: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var msup = CToP.createElement('msup');
+      CToP.appendToken(msup,'mi','e');
+      CToP.applyTransform(msup,args[0],0);
+      parentNode.appendChild(msup);
+    },
+
+    union: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      if (bvars.length) {
+        CToP.transforms.iteration('\u22C3','=')(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
+      } else {
+        CToP.transforms.infix('\u222A',2)(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
+      }
+    },
+
+    intersect: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      if (bvars.length) {
+        CToP.transforms.iteration('\u22C2','=')(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
+      } else {
+        var mrow = CToP.createElement('mrow');
+        var needsBrackets = precedence>2;
+        if (needsBrackets) {
+          CToP.appendToken(mrow,'mo','(');
+        }
+        for (var j = 0, l = args.length; j<l; j++ ) {
+          var argBrackets = false;
+          if (j>0) {
+            CToP.appendToken(mrow,'mo','\u2229');
+            if (args[j].nodeName === 'apply') {
+              var child = CToP.getChildren(args[j])[0];
+              argBrackets = child.nodeName  ===  'union';
+            }
+          }
+          if (argBrackets) {
+            CToP.appendToken(mrow,'mo','(');
+          }
+          CToP.applyTransform(mrow,args[j],2);
+          if (argBrackets) {
+            CToP.appendToken(mrow,'mo',')');
+          }
+        }
+        if (needsBrackets) {
+          CToP.appendToken(mrow,'mo',')');
+        }
+        parentNode.appendChild(mrow);
+      }
+    },
+
+    floor: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','\u230a');
+      CToP.applyTransform(mrow,args[0],0);
+      CToP.appendToken(mrow,'mo','\u230b');
+      parentNode.appendChild(mrow);
+    },
+
+    conjugate: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mover = CToP.createElement('mover');
+      CToP.applyTransform(mover,args[0],0);
+      CToP.appendToken(mover,'mo','\u00af');
+      parentNode.appendChild(mover);
+    },
+
+    abs: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','|');
+      CToP.applyTransform(mrow,args[0],0);
+      CToP.appendToken(mrow,'mo','|');
+      parentNode.appendChild(mrow);
+    },
+
+    and: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      if (bvars.length || qualifiers.length) {
+        CToP.transforms.iteration('\u22c0','=')(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,4);
+      } else {
+        CToP.transforms.infix('\u2227',2)(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
+      }
+    },
+
+    or: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      if (bvars.length || qualifiers.length) {
+        CToP.transforms.iteration('\u22c1','=')(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,4);
+      } else {
+        CToP.transforms.infix('\u2228',2)(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
+      }
+    },
+
+    xor: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      if (bvars.length || qualifiers.length) {
+        CToP.transforms.iteration('xor','=')(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,4);
+      } else {
+        CToP.transforms.infix('xor',2)(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
+      }
+    },
+
+    card: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','|');
+      CToP.applyTransform(mrow,args[0],0);
+      CToP.appendToken(mrow,'mo','|');
+      parentNode.appendChild(mrow);
+    },
+
+    mean: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      if (args.length === 1) {
+        var mover = CToP.createElement('mover');
+        CToP.applyTransform(mover,args[0],0);
+        CToP.appendToken(mover,'mo','\u00af');
+        parentNode.appendChild(mover);
+      } else {
+        parentNode.appendChild(CToP.createmfenced(args,'\u27e8','\u27e9'));
+      }
+    },
+
+    moment: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var degree, momentabout, children, i, j, l;
+
+      for (i = 0, l = qualifiers.length; i<l; i++ ) {
+        if (qualifiers[i].nodeName === 'degree') {
+          degree = qualifiers[i];
+        } else if (qualifiers[i].nodeName === 'momentabout') {
+          momentabout = qualifiers[i];
+        }
+      }
+
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','\u27e8');
+      var argrow = CToP.createElement('mrow');
+      if (args.length>1) {
+        argrow.appendChild(CToP.createmfenced(args,'(',')'));
+      } else {
+        CToP.applyTransform(argrow,args[0],0);
+      }
+      if (degree) {
+        var msup = CToP.createElement('msup');
+        msup.appendChild(argrow);
+        children = CToP.getChildren(degree);
+        for (j = 0, l = children.length; j<l; j++ ) {
+          CToP.applyTransform(msup,children[j],0);
+        }
+        mrow.appendChild(msup);
+      } else {
+        mrow.appendChild(argrow);
+      }
+      CToP.appendToken(mrow,'mo','\u27e9');
+
+      if (momentabout) {
+        var msub = CToP.createElement('msub');
+        msub.appendChild(mrow);
+        children = CToP.getChildren(momentabout);
+        for (j = 0, l = children.length; j<l; j++ ) {
+          CToP.applyTransform(msub,children[j],0);
+        }
+        parentNode.appendChild(msub);
+      } else {
+        parentNode.appendChild(mrow);
+      }
+    },
+
+    variance: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      var msup = CToP.createElement('msup');
+      CToP.appendToken(msup,'mo','\u03c3');
+      CToP.appendToken(msup,'mn','2');
+      mrow.appendChild(msup);
+      CToP.appendToken(mrow,'mo','\u2061');
+      mrow.appendChild(CToP.createmfenced(args,'(',')'));
+      parentNode.appendChild(mrow);
+    },
+
+    grad: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','\u2207');
+      CToP.appendToken(mrow,'mo','\u2061');
+      mrow.appendChild(CToP.createmfenced(args,'(',')'));
+      parentNode.appendChild(mrow);
+    },
+
+    laplacian: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      var msup = CToP.createElement('msup');
+      CToP.appendToken(msup,'mo','\u2207');
+      CToP.appendToken(msup,'mn','2');
+      mrow.appendChild(msup);
+      CToP.appendToken(mrow,'mo','\u2061');
+      mrow.appendChild(CToP.createmfenced(args,'(',')'));
+      parentNode.appendChild(mrow);
+    },
+
+    curl: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','\u2207');
+      CToP.appendToken(mrow,'mo','\u00d7');
+      var needsBrackets = args[0].nodeName === 'apply';
+      if (needsBrackets) {
+        mrow.appendChild(CToP.createmfenced(args,'(', ')'));
+      }
+      else {
+        CToP.applyTransform(mrow,args[0],precedence);
+      }
+      parentNode.appendChild(mrow);
+    },
+
+    divergence: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','\u2207');
+      CToP.appendToken(mrow,'mo','\u22c5');
+      var needsBrackets = args[0].nodeName === 'apply';
+      if (needsBrackets) {
+        mrow.appendChild(CToP.createmfenced(args,'(', ')'));
+      }
+      else {
+        CToP.applyTransform(mrow,args[0],precedence);
+      }
+      parentNode.appendChild(mrow);
+    },
+
+    not: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','\u00ac');
+      var needsBrackets = args[0].nodeName === 'apply' || args[0].nodeName === 'bind';
+      if (needsBrackets) {
+        CToP.appendToken(mrow,'mo','(');
+      }
+      CToP.applyTransform(mrow,args[0],precedence);
+      if (needsBrackets) {
+        CToP.appendToken(mrow,'mo',')');
+      }
+      parentNode.appendChild(mrow)
+    },
+
+    divide: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mfrac = CToP.createElement('mfrac');
+      CToP.applyTransform(mfrac,args[0],0);
+      CToP.applyTransform(mfrac,args[1],0);
+      parentNode.appendChild(mfrac);
+    },
+
+    tendsto: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var type;
+      if (firstArg.nodeName === 'tendsto') {
+        type = firstArg.getAttribute('type');
+      } else {
+        type = CToP.getTextContent(args[0]);
+        args = args.slice(1);
+      }
+      var name = (type === 'above')? '\u2198' :
+        (type === 'below') ? '\u2197' : '\u2192' ;
+      CToP.transforms.binary(name,2)(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence);
+    },
+
+    minus: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var tokenPrecedence = args.length === 1 ? 5 : 2;
+
+      var mrow = CToP.createElement('mrow');
+      var needsBrackets = tokenPrecedence<precedence;
+      if (needsBrackets) {
+        CToP.appendToken(mrow,'mo','(');
+      }
+
+      if (args.length === 1) {
+        CToP.appendToken(mrow,'mo','-');
+        CToP.applyTransform(mrow,args[0],tokenPrecedence);
+      } else {
+        CToP.applyTransform(mrow,args[0],tokenPrecedence);
+        CToP.appendToken(mrow,'mo','-');
+        var bracketArg;
+        if (args[1].nodeName === 'apply') {
+          var argOp = CToP.getChildren(args[1])[0];
+          bracketArg = argOp.nodeName === 'plus' || argOp.nodeName === 'minus';
+        }
+        if (bracketArg) {
+          CToP.appendToken(mrow,'mo','(');
+        }
+        CToP.applyTransform(mrow,args[1],tokenPrecedence);
+        if (bracketArg) {
+          CToP.appendToken(mrow,'mo',')');
+        }
+      }
+
+      if (needsBrackets) {
+        CToP.appendToken(mrow,'mo',')');
+      }
+      parentNode.appendChild(mrow);
+    },
+
+    "complex-cartesian": function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.applyTransform(mrow,args[0],0);
+      CToP.appendToken(mrow,'mo','+');
+      CToP.applyTransform(mrow,args[1],0);
+      CToP.appendToken(mrow,'mo','\u2062');
+      CToP.appendToken(mrow,'mi','i');
+      parentNode.appendChild(mrow);
+    },
+
+    "complex-polar": function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      CToP.applyTransform(mrow,args[0],0);
+      CToP.appendToken(mrow,'mo','\u2062');
+      var msup = CToP.createElement('msup');
+      CToP.appendToken(msup,'mi','e');
+      var exponent = CToP.createElement('mrow');
+      CToP.applyTransform(exponent,args[1],0);
+      CToP.appendToken(exponent,'mo','\u2062');
+      CToP.appendToken(exponent,'mi','i');
+      msup.appendChild(exponent);
+      mrow.appendChild(msup);
+      parentNode.appendChild(mrow);
+    },
+
+    integer: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      CToP.applyTransform(parentNode,args[0],0);
+    },
+
+    "based-integer": function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var msub = CToP.createElement('msub');
+      CToP.applyTransform(msub,args[1],0);
+      CToP.applyTransform(msub,args[0],0);
+      parentNode.appendChild(msub);
+    },
+
+    rational: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mfrac = CToP.createElement('mfrac');
+      CToP.applyTransform(mfrac,args[0],0);
+      CToP.applyTransform(mfrac,args[1],0);
+      parentNode.appendChild(mfrac);
+    },
+
+    times: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      var needsBrackets = precedence>3;
+      if (needsBrackets) {
+        CToP.appendToken(mrow,'mo','(');
+      }
+      for (var j = 0, l = args.length; j<l; j++ ) {
+        if (j>0) {
+          CToP.appendToken(mrow,'mo',(args[j].nodeName === 'cn') ? "\u00D7" :"\u2062");
+        }
+        CToP.applyTransform(mrow,args[j],3);
+      }
+      if (needsBrackets) {
+        CToP.appendToken(mrow,'mo',')');
+      }
+      parentNode.appendChild(mrow);
+    },
+
+    plus: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var mrow = CToP.createElement('mrow');
+      var needsBrackets = precedence>2;
+      if (needsBrackets) {
+        CToP.appendToken(mrow,'mo','(');
+      }
+      for (var j = 0, l = args.length; j<l; j++ ) {
+        var arg = args[j];
+        var children = CToP.getChildren(arg);
+        if (j>0) {
+          var n;
+          if (CToP.settings.collapsePlusMinus) {
+            if (arg.nodeName === 'cn' && !(children.length) && (n = Number(CToP.getTextContent(arg))) <0) {
+              CToP.appendToken(mrow,'mo','\u2212');
+              CToP.appendToken(mrow,'mn', -n);
+            } else if (arg.nodeName === 'apply' && children.length === 2 && children[0].nodeName === 'minus') {
+              CToP.appendToken(mrow,'mo','\u2212');
+              CToP.applyTransform(mrow,children[1],2);
+            } else if (arg.nodeName === 'apply' && children.length>2 && children[0].nodeName === 'times' && children[1].nodeName === 'cn' && ( n = Number(CToP.getTextContent(children[1])) < 0)) {
+              CToP.appendToken(mrow,'mo','\u2212');
+              CToP.getTextContent(children[1]) = -n;// fix me: modifying document
+              CToP.applyTransform(mrow,arg,2);
+            } else{
+              CToP.appendToken(mrow,'mo','+');
+              CToP.applyTransform(mrow,arg,2);
+            }
+          } else {
+            CToP.appendToken(mrow,'mo','+');
+            CToP.applyTransform(mrow,arg,2);
+          }
+        } else {
+          CToP.applyTransform(mrow,arg,2);	
+        }
+      }
+      if (needsBrackets) {
+        CToP.appendToken(mrow,'mo',')');
+      }
+      parentNode.appendChild(mrow);
+    },
+
+    transpose: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var msup = CToP.createElement('msup');
+      CToP.applyTransform(msup,args[0],precedence);
+      CToP.appendToken(msup,'mi','T');
+      parentNode.appendChild(msup);
+    },
+
+    power: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var msup = CToP.createElement('msup');
+      CToP.applyTransform(msup,args[0],3);
+      CToP.applyTransform(msup,args[1],precedence);
+      parentNode.appendChild(msup);
+    },
+
+    selector: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence) {
+      var msub = CToP.createElement('msub');
+      var mrow = args ? args[0]: CToP.createElement('mrow');
+      CToP.applyTransform(msub,mrow,0);
+      var mrow2 = CToP.createElement('mrow');
+      for (var i = 1, l = args.length; i<l; i++ ) {
+        if (i != 1) {
+          CToP.appendToken(mrow2,'mo',',');
+        }	
+        CToP.applyTransform(mrow2,args[i],0);
+      }
+      msub.appendChild(mrow2);
+      parentNode.appendChild(msub);
+    },
+
+    log: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence)  {
+      var mrow = CToP.createElement('mrow');
+      var mi = CToP.createElement('mi');
+      CToP.setTextContent(mi,'log');
+      if (qualifiers.length && qualifiers[0].nodeName === 'logbase') {
+        var msub = CToP.createElement('msub');
+        msub.appendChild(mi);
+        CToP.applyTransform(msub,CToP.getChildren(qualifiers[0])[0],0);
+        mrow.appendChild(msub);
+      } else {
+        mrow.appendChild(mi);
+      }
+      CToP.applyTransform(mrow,args[0],7);
+      parentNode.appendChild(mrow);
+    },
+
+    "int": function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence)  {
+      var mrow = CToP.createElement('mrow');
+      var mo = CToP.createElement('mo');
+      CToP.setTextContent(mo,'\u222B');
+      var msubsup = CToP.createElement('msubsup');
+      msubsup.appendChild(mo);
+      var mrow1 = CToP.createElement('mrow');
+      var children, i, j, l, num_qualifiers, num_children;
+      for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+        if (qualifiers[i].nodeName === 'lowlimit'||
+            qualifiers[i].nodeName === 'condition'||
+            qualifiers[i].nodeName === 'domainofapplication')
+        {
+          children = CToP.getChildren(qualifiers[i]);
+          for (j = 0, num_children = children.length; j<num_children; j++ ) {
+            CToP.applyTransform(mrow1,children[j],0);
+          }
+        } else {
+          children = CToP.getChildren(qualifiers[i]);
+          if (qualifiers[i].nodeName === 'interval' && children.length === 2) {
+            CToP.applyTransform(mrow1,children[0],0);
+          }
+        }
+      }
+      msubsup.appendChild(mrow1);
+      var mrow2 = CToP.createElement('mrow');
+      for (i = 0, num_qualifiers = qualifiers.length; i<num_qualifiers; i++ ) {
+        if (qualifiers[i].nodeName === 'uplimit') {
+          children = CToP.getChildren(qualifiers[i]);
+          for (j = 0, num_children = children.length; j<num_children; j++ ) {
+            CToP.applyTransform(mrow2,children[j],0);
+          }
+          break;
+        } else if (qualifiers[i].nodeName === 'interval' ) {
+          children = CToP.getChildren(qualifiers[i]);
+          CToP.applyTransform(mrow2,children[children.length-1],0);
+          break;
+        }
+      }
+      msubsup.appendChild(mrow2);
+      mrow.appendChild(msubsup);
+      for (i = 0, l = args.length; i<l; i++ ) {
+        CToP.applyTransform(mrow,args[i],0);
+      }
+      for (i = 0, l = bvars.length; i<l; i++ ) {
+        var bvar = bvars[i];
+        children = CToP.getChildren(bvar);
+        if (children.length) {
+          var mrow3 = CToP.createElement("mrow");
+          CToP.appendToken(mrow3,'mi','d');
+          CToP.applyTransform(mrow3,children[0],0);
+          mrow.appendChild(mrow3);
+        }
+      }
+      parentNode.appendChild(mrow);
+    },
+
+    inverse: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence)  {
+      var msup = CToP.createElement('msup');
+      var arg = (args.length) ? args[0] : CToP.createElement('mrow');
+      CToP.applyTransform(msup,arg,precedence);
+      var mfenced = CToP.createElement('mfenced');
+      CToP.appendToken(mfenced,'mn','-1');
+      msup.appendChild(mfenced);
+      parentNode.appendChild(msup);
+    },
+
+    quotient: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence)  {
+      var mrow = CToP.createElement('mrow');
+      CToP.appendToken(mrow,'mo','\u230A');
+      if (args.length) {
+        CToP.applyTransform(mrow,args[0],0);
+        CToP.appendToken(mrow,'mo','/');
+        if (args.length>1) {
+          CToP.applyTransform(mrow,args[1],0);
+        }
+      }
+      CToP.appendToken(mrow,'mo','\u230B');
+      parentNode.appendChild(mrow);
+    },
+
+    factorial: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence)  {
+      var mrow = CToP.createElement('mrow');
+      CToP.applyTransform(mrow,args[0],4);
+      CToP.appendToken(mrow,'mo','!');
+      parentNode.appendChild(mrow);
+    },
+
+    root: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence)  {
+      var mr;
+      if (firstArg.nodeName === 'root' && (qualifiers.length === 0 || (qualifiers[0].nodeName === 'degree' && CToP.getTextContent(qualifiers[0]) === '2'))) {
+        mr = CToP.createElement('msqrt');
+        for (var i = 0, l = args.length; i<l; i++ ) {
+          CToP.applyTransform(mr,args[i],0);
+        }
+      } else {
+        mr = CToP.createElement('mroot');
+        CToP.applyTransform(mr,args[0],0);
+        var arg = (firstArg.nodeName === 'root') ? qualifiers[0].childNodes[0] : args[1];
+        CToP.applyTransform(mr,arg,0);
+      }
+      parentNode.appendChild(mr);
+    },
+
+    diff: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence)  {
+      if (bvars.length) {	// d/dx form
+        var outNode;
+        var mfrac = CToP.createElement('mfrac');
+        var toprow = CToP.createElement('mrow');
+        var bottomrow = CToP.createElement('mrow');
+        mfrac.appendChild(toprow);
+        mfrac.appendChild(bottomrow);
+
+        var bvar, degreeNode, msup, mrow;
+
+        var d = CToP.createElement('mi');
+        CToP.setTextContent(d,'d');
+
+        var children = CToP.getChildren(bvars[0]);
+        for (var j = 0, l = children.length; j<l; j++ ) {
+          if (children[j].nodeName === 'degree') {
+            var childNode = CToP.getChildren(children[j])[0];
+            if (CToP.getTextContent(childNode) != '1') {
+              degreeNode = childNode;
+              msup = CToP.createElement('msup');
+              msup.appendChild(d);
+              d = msup;
+              CToP.applyTransform(d,degreeNode,0);
+            }
+          } else {
+            bvar = children[j];
+          }
+        }
+        toprow.appendChild(d);
+
+        if (args.length) {
+          switch(args[0].nodeName) {
+            case 'apply':
+            case 'bind':
+            case 'reln':
+              mrow = CToP.createElement('mrow');
+              mrow.appendChild(mfrac);
+              CToP.applyTransform(mrow,args[0],3);
+              outNode = mrow;
+              break;
+            default:
+              CToP.applyTransform(toprow,args[0],0);
+              outNode = mfrac;
+          }
+        }
+
+        CToP.appendToken(bottomrow,'mi','d');
+
+        if (degreeNode) {
+          var msup2 = CToP.createElement('msup');
+          CToP.applyTransform(msup2,bvar,0);
+          CToP.applyTransform(msup2,degreeNode,0);
+          bottomrow.appendChild(msup2);
+        } else {
+          CToP.applyTransform(bottomrow,bvar,0);
+        }
+
+
+        parentNode.appendChild(outNode);
+      } else {	// f' form
+        msup = CToP.createElement('msup');
+        mrow = CToP.createElement('mrow');
+        msup.appendChild(mrow);
+        CToP.applyTransform(mrow,args[0],0); 
+        CToP.appendToken(msup,'mo','\u2032'); // tick
+        parentNode.appendChild(msup);
+      }
+    },
+
+    partialdiff: function(parentNode,contentMMLNode,firstArg,args,bvars,qualifiers,precedence)  {
+      var msup, msub, mrow;
+
+      var mfrac = CToP.createElement('mfrac');
+      var toprow = CToP.createElement('mrow');
+      var bottomrow = CToP.createElement('mrow');
+      mfrac.appendChild(toprow);
+      mfrac.appendChild(bottomrow);
+
+      var differendNode, degree, children;
+
+      if (bvars.length === 0 && args.length === 2 && args[0].nodeName === 'list') {
+        if (args[1].nodeName === 'lambda') {	// `d^(n+m)/(dx^n dy^m) f` form, through a lambda
+          degree = CToP.getChildren(args[0]).length;
+          if (degree != 1) {
+            msup = CToP.createElement('msup');
+            CToP.appendToken(msup,'mo','\u2202');	// curly d
+            CToP.appendToken(msup,'mn',degree);
+            toprow.appendChild(msup);
+          } else {
+            CToP.appendToken(toprow,'mo','\u2202');
+          }
+
+          children = CToP.getChildren(args[1]);
+
+          differendNode = children[children.length - 1];	// thing being differentiated
+
+          var bvarNames = [];
+          var lambdaChildren = CToP.getChildren(args[1]);	// names of bound variables
+          var lambdaSequence = CToP.getChildren(args[0]);	// indices of bound variable names, in order
+          for (var i = 0, l = lambdaChildren.length; i<l; i++ ) {
+            if (lambdaChildren[i].nodeName === 'bvar') {
+              bvarNames.push(CToP.getChildren(lambdaChildren[i])[0]);
+            }
+          }
+
+          var lastN = null;
+          degree = 0;
+          function addDiff(n,degree) {
+            CToP.appendToken(bottomrow,'mo','\u2202');
+            var bvar = bvarNames[n];
+            if (degree>1) {
+              var msup = CToP.createElement('msup');
+              CToP.applyTransform(msup,bvar,0);
+              CToP.appendToken(msup,'mn',degree);
+              bottomrow.appendChild(msup);
+            } else {
+              CToP.applyTransform(bottomrow,bvar,0);
+            }
+          }
+          for (i = 0, l = lambdaSequence.length; i<l; i++ ) {
+            var n = Number(CToP.getTextContent(lambdaSequence[i]))-1;
+            if (lastN !== null && n != lastN) {
+              addDiff(lastN,degree);
+              degree = 0;
+            }
+            lastN = n;
+            degree += 1;
+          }
+          if (lastN) {
+            addDiff(lastN,degree);
+          }
+        } else {	// `D_i_j f` form
+          mrow = CToP.createElement('mrow');
+          msub = CToP.createElement('msub');
+          CToP.appendToken(msub,'mi','D');
+          var bvar = CToP.getChildren(args[0]);
+          msub.appendChild(CToP.createmfenced(bvar,'',''));
+          mrow.appendChild(msub);
+          CToP.applyTransform(mrow,args[1],0);
+          parentNode.appendChild(mrow);
+          return;
+        }
+      } else {	// `d^(n+m)/(dx^n dy^m) f` form, with bvars
+        msup = CToP.createElement('msup');
+        toprow.appendChild(msup);
+        CToP.appendToken(msup,'mo','\u2202');
+
+        var degreeRow = CToP.createElement('mrow');
+        msup.appendChild(degreeRow);
+
+        var qualifier;
+
+        if (qualifiers.length && qualifiers[0].nodeName === 'degree' && CToP.getChildren(qualifiers[0]).length) {
+          qualifier = CToP.getChildren(qualifiers[0])[0];
+          CToP.applyTransform(degreeRow,qualifier,0);
+        } else {
+          degree = 0;
+          var hadFirst = false;
+          for (i = 0, l = bvars.length; i<l; i++ ) {
+            children = CToP.getChildren(bvars[i]);
+            if (children.length === 2) {
+              for (var j = 0;j<2;j++) {
+                if (children[j].nodeName === 'degree') {
+                  if (/^\s*\d+\s*$/.test(CToP.getTextContent(children[j]))) {
+                    degree += Number(CToP.getTextContent(children[j]));
+                  } else {
+                    if (hadFirst) {
+                      CToP.appendToken(degreeRow,'mo','+');
+                    }
+                    hadFirst = true;
+                    CToP.applyTransform(degreeRow,CToP.getChildren(children[j])[0],0);
+                  }
+                }
+              }
+            } else {
+              degree++;
+            }
+          }
+          if (degree>0) {
+            if (hadFirst) {
+              CToP.appendToken(degreeRow,'mo','+');
+            }   
+            CToP.appendToken(degreeRow,'mn',degree);
+          }
+        }
+
+        if (args.length) {
+          differendNode = args[0];
+        }
+
+        for (i = 0, l = bvars.length; i<l; i++ ) {
+          CToP.appendToken(bottomrow,'mo','\u2202');
+          children = CToP.getChildren(bvars[i]);
+
+          if (children.length === 2) {
+            for (j = 0;j<2;j++) {
+              if (children[j].nodeName === 'degree') {
+                var msup2 = CToP.createElement('msup');
+                CToP.applyTransform(msup2,children[1-j],0);
+                var bvarDegreeNode = CToP.getChildren(children[j])[0];
+                CToP.applyTransform(msup2,bvarDegreeNode,0);
+                bottomrow.appendChild(msup2);
+              }
+            }
+          } else if (children.length === 1) {
+            CToP.applyTransform(bottomrow,children[0],0);
+          }
+        }
+      }
+      if (differendNode) {
+        switch(differendNode.nodeName) {
+          case 'apply':
+          case 'bind':
+          case 'reln':
+            mrow = CToP.createElement('mrow');
+            mrow.appendChild(mfrac);
+            CToP.applyTransform(mrow,differendNode,3);
+            outNode = mrow;
+            break;
+          default:
+            CToP.applyTransform(toprow,differendNode,0);
+            outNode = mfrac;
+        }
+      } else {
+        outNode = mfrac;
+      }
+      parentNode.appendChild(outNode);
+    }
+  };
+  CToP.applyTokens.size = CToP.applyTokens.card;
+
+  return CToP;
+})(MathJax.Hub);
+
 
 MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
 
-  var MATHML = MathJax.InputJax.MathML,
-      PARSE = MATHML.Parse.prototype;
+  var MATHML = MathJax.InputJax.MathML;
 
-  MATHML.prefilterHooks.Add(function (data) {
-    if (!MATHML.ctopXSLT) return;
+  var CToP = MathJax.Extension["MathML/content-mathml"];
 
-    // Parse the <math> but use MATHML.Parse's preProcessMath to apply the normal preprocessing.
-    if (!MATHML.ParseXML) {MATHML.ParseXML = MATHML.createParser()}
-    var doc = MATHML.ParseXML(PARSE.preProcessMath(data.math));
-
-    // Now transform the <math> using the ctop stylesheet.
-    var newdoc = MATHML.ctopXSLT.transformToDocument(doc);
-
-    if ((typeof newdoc) === "string") {
-      // Internet Explorer returns a string, so just use it.
-      data.math = newdoc;
-    } else if (window.XMLSerializer) {
-      // Serialize the <math> again. We could directly provide the DOM content
-      // but other prefilterHooks may assume data.math is still a string.
-      var serializer = new XMLSerializer();
-      data.math = serializer.serializeToString(newdoc.documentElement, doc);
-    }
+  MATHML.DOMfilterHooks.Add(function (data) {
+    data.math = CToP.transformElement(data.math);
   });
 
-  /*
-   *  The following is taken from ctop.xsl and mml3mml2.xsl 
-   *  (https://web-xslt.googlecode.com/svn/trunk/ctop/)
-   *  which is Copyright (c) David Carlisle 2001, 2002, 2008, 2009, 2013. 
-   *  It is used by permission of David Carlisle, who has agreed to allow it to
-   *  be released under the Apache2 licesnse.
-   */
-  var ctopStylesheet = '<x:stylesheet version="1.0" xmlns:x="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1998/Math/MathML" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:c="http://exslt.org/common" exclude-result-prefixes="m c"><!-- Copyright David Carlisle 2001, 2002, 2008, 2009, 2013. Use and distribution of this code are permitted under the terms of the <a href="http://www.w3.org/Consortium/Legal/copyright-software-19980720" >W3C Software Notice and License</a>. Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences. --> <x:output method="xml" /><x:template match="/"><x:apply-templates/></x:template><x:template match="*"><x:copy><x:copy-of select="@*"/><x:apply-templates/></x:copy></x:template><x:template match="m:cn"><mn><x:apply-templates/></mn></x:template><x:template match="m:cn[@type=\'complex-cartesian\']"><mrow><mn><x:apply-templates select="text()[1]"/></mn><mo>+</mo><mn><x:apply-templates select="text()[2]"/></mn><mo>&#8290;<!--invisible times--></mo><mi>i<!-- imaginary i --></mi></mrow></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'complex_cartesian\']]"><mrow><mn><x:apply-templates select="*[2]"/></mn><mo>+</mo><mn><x:apply-templates select="*[3]"/></mn><mo>&#8290;<!--invisible times--></mo><mi>i<!-- imaginary i --></mi></mrow></x:template><x:template match="m:cn[@type=\'rational\']"><mrow><mn><x:apply-templates select="text()[1]"/></mn><mo>/</mo><mn><x:apply-templates select="text()[2]"/></mn></mrow></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'rational\']]"><mrow><mn><x:apply-templates select="*[2]"/></mn><mo>/</mo><mn><x:apply-templates select="*[3]"/></mn></mrow></x:template><x:template match="m:cn[not(@type) or @type=\'integer\']"><x:choose><x:when test="not(@base) or @base=10"><mn><x:apply-templates/></mn></x:when><x:otherwise><msub><mn><x:apply-templates/></mn><mn><x:value-of select="@base"/></mn></msub></x:otherwise></x:choose></x:template><x:template match="m:cn[@type=\'complex-polar\']"><mrow><mn><x:apply-templates select="text()[1]"/></mn><mo>&#8290;<!--invisible times--></mo><msup><mi>e<!-- exponential e--></mi><mrow><mi>i<!-- imaginary i--></mi><mo>&#8290;<!--invisible times--></mo><mn><x:apply-templates select="text()[2]"/></mn></mrow></msup></mrow></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'complex_polar\']]"><mrow><x:apply-templates select="*[2]"/><mo>&#8290;<!--invisible times--></mo><msup><mi>e<!-- exponential e--></mi><mrow><mi>i<!-- imaginary i--></mi><mo>&#8290;<!--invisible times--></mo><x:apply-templates select="*[3]"/></mrow></msup></mrow></x:template><x:template match="m:cn[@type=\'e-notation\']"><mn><x:apply-templates select="m:sep/preceding-sibling::node()"/><x:text>E</x:text><x:apply-templates select="m:sep/following-sibling::node()"/></mn></x:template><x:template match="m:cn[@type=\'hexdouble\']"><mn><x:text>0x</x:text><x:apply-templates/></mn></x:template><x:template match="m:ci/text()"><mi><x:value-of select="."/></mi></x:template><x:template match="m:ci"><mrow><x:apply-templates/></mrow></x:template><x:template match="m:csymbol/text()"><mi><x:value-of select="."/></mi></x:template><x:template match="m:csymbol"><mrow><x:apply-templates/></mrow></x:template><x:template match="m:apply|m:reln"><mrow><x:choose><x:when test="*[1]/*/*"><mfenced separators=""><x:apply-templates select="*[1]"><x:with-param name="p" select="10"/></x:apply-templates></mfenced></x:when><x:otherwise><x:apply-templates select="*[1]"><x:with-param name="p" select="10"/></x:apply-templates></x:otherwise></x:choose><mo>&#8289;<!--function application--></mo><mfenced open="(" close=")" separators=","><x:apply-templates select="*[position()>1]"/></mfenced></mrow></x:template><x:template match="m:bind"><mrow><x:choose><x:when test="*[1]/*/*"><mfenced separators=""><x:apply-templates select="*[1]"><x:with-param name="p" select="10"/></x:apply-templates></mfenced></x:when><x:otherwise><x:apply-templates select="*[1]"><x:with-param name="p" select="10"/></x:apply-templates></x:otherwise></x:choose><x:apply-templates select="bvar/*"/><mo>.</mo><x:apply-templates select="*[position()>1][not(self::m:bvar)]"/></mrow></x:template><x:template match="m:fn"><mrow><x:apply-templates/></mrow></x:template><x:template match="m:interval[*[2]]"><mfenced open="[" close="]"><x:apply-templates/></mfenced></x:template><x:template match="m:interval[*[2]][@closure=\'open\']" priority="2"><mfenced open="(" close=")"><x:apply-templates/></mfenced></x:template><x:template match="m:interval[*[2]][@closure=\'open-closed\']" priority="2"><mfenced open="(" close="]"><x:apply-templates/></mfenced></x:template><x:template match="m:interval[*[2]][@closure=\'closed-open\']" priority="2"><mfenced open="[" close=")"><x:apply-templates/></mfenced></x:template><x:template match="m:interval"><mfenced open="{{" close="}}"><x:apply-templates/></mfenced></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'integer_interval\']]"><mfenced open="[" close="]"><x:apply-templates select="*[position()!=1]"/></mfenced></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'interval\']]"><mfenced open="[" close="]"><x:apply-templates select="*[position()!=1]"/></mfenced></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'interval-cc\']]"><mfenced open="[" close="]"><x:apply-templates select="*[position()!=1]"/></mfenced></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'interval-oo\']]"><mfenced open="(" close=")"><x:apply-templates select="*[position()!=1]"/></mfenced></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'oriented_interval\']]"><mfenced open="(" close=")"><x:apply-templates select="*[position()!=1]"/></mfenced></x:template><x:template match="m:apply[*[1][self::m:inverse]] |m:apply[*[1][self::m:csymbol=\'inverse\']]"><msup><x:apply-templates select="*[2]"/><mrow><mo>(</mo><mn>-1</mn><mo>)</mo></mrow></msup></x:template><x:template match="m:condition"><mrow><x:apply-templates/></mrow></x:template><x:template match="m:declare"/><x:template match="m:lambda |m:apply[*[1][self::m:csymbol=\'lambda\']] |m:bind[*[1][self::m:csymbol=\'lambda\']]"><mrow><mi>&#955;<!--lambda--></mi><mrow><x:choose><x:when test="m:condition"><x:apply-templates select="m:condition/*"/></x:when><x:otherwise><x:apply-templates select="m:bvar/*"/></x:otherwise></x:choose><x:if test="m:domainofapplication"><mo>&#x2208;</mo><x:apply-templates select="m:domainofapplication/*"/></x:if></mrow><mo>.</mo><mfenced><x:apply-templates select="*[last()]"/></mfenced></mrow></x:template><x:template match="m:lambda[not(m:bvar)]" priority="2"><mrow><x:apply-templates select="*[last()]"/><msub><mo>|</mo><mrow><x:apply-templates select="m:condition|m:interval|m:domainofapplication/*"/></mrow></msub></mrow></x:template><x:template match="m:apply[*[1][self::m:compose]] |m:apply[*[1][self::m:csymbol=\'left_compose\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="1"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8728;<!-- o --></mo></x:with-param></x:call-template></x:template><x:template match="m:ident"><mi>id</mi></x:template><x:template match="m:domain"><mi>domain</mi></x:template><x:template match="m:codomain"><mi>codomain</mi></x:template><x:template match="m:image"><mi>image</mi></x:template><x:template match="m:domainofapplication"><merror><mtext>unexpected domainofapplication</mtext></merror></x:template><x:template match="m:apply[*[2][self::m:bvar]][m:domainofapplication]" priority="0.4"><mrow><munder><x:apply-templates select="*[1]"/><mrow><x:apply-templates select="m:bvar/*"/><mo>&#8712;<!-- in --></mo><x:apply-templates select="m:domainofapplication/*"/></mrow></munder><mfenced><x:apply-templates select="m:domainofapplication/following-sibling::*"/></mfenced></mrow></x:template><x:template match="m:apply[m:domainofapplication]" priority="0.3"><mrow><mrow><mi>restriction</mi><mfenced><x:apply-templates select="*[1]"/><x:apply-templates select="m:domainofapplication/*"/></mfenced></mrow><mfenced><x:apply-templates select="m:domainofapplication/following-sibling::*"/></mfenced></mrow></x:template><x:template match="m:piecewise"><mrow><mo>{</mo><mtable><x:for-each select="m:piece|m:otherwise"><mtr><mtd><x:apply-templates select="*[1]"/></mtd><x:choose><x:when test="self::m:piece"><mtd columnalign="left"><mtext>&#160; if &#160;</mtext></mtd><mtd><x:apply-templates select="*[2]"/></mtd></x:when><x:otherwise><mtd columnspan="2" columnalign="left"><mtext>&#160; otherwise</mtext></mtd></x:otherwise></x:choose></mtr></x:for-each></mtable></mrow></x:template><x:template match="m:apply[*[1][self::m:quotient]] |m:apply[*[1][self::m:csymbol=\'quotient\']]"><mrow><mo>&#8970;<!-- lfloor--></mo><x:apply-templates select="*[2]"/><mo>/</mo><x:apply-templates select="*[3]"/><mo>&#8971;<!-- rfloor--></mo></mrow></x:template><x:template match="m:apply[*[1][self::m:factorial]] |m:apply[*[1][self::m:csymbol=\'factorial\']]"><mrow><x:apply-templates select="*[2]"><x:with-param name="p" select="7"/></x:apply-templates><mo>!</mo></mrow></x:template><x:template match="m:apply[*[1][self::m:divide]] |m:apply[*[1][self::m:csymbol=\'divide\']]"><x:param name="p" select="0"/><x:call-template name="binary"><x:with-param name="mo"><mo>/</mo></x:with-param><x:with-param name="p" select="$p"/><x:with-param name="this-p" select="3"/></x:call-template></x:template><x:template match="m:apply[*[1][self::m:max]] |m:apply[*[1][self::m:csymbol=\'max\']]"><mrow><mi>max</mi><x:call-template name="set"/></mrow></x:template><x:template match="m:apply[*[1][self::m:min]]|m:reln[*[1][self::m:min]]"><mrow><mi>min</mi><x:call-template name="set"/></mrow></x:template><x:template match="m:apply[*[1][self::m:minus] and count(*)=2] |m:apply[*[1][self::m:csymbol=\'unary_minus\']]"><mrow><mo>&#8722;<!--minus--></mo><x:apply-templates select="*[2]"><x:with-param name="p" select="5"/></x:apply-templates></mrow></x:template><x:template match="m:apply[*[1][self::m:minus] and count(*)&gt;2] |m:apply[*[1][self::m:csymbol=\'minus\']]"><x:param name="p" select="0"/><x:call-template name="binary"><x:with-param name="mo"><mo>&#8722;<!--minus--></mo></x:with-param><x:with-param name="p" select="$p"/><x:with-param name="this-p" select="2"/></x:call-template></x:template><x:template match="m:apply[*[1][self::m:plus]] |m:apply[*[1][self::m:csymbol=\'plus\']]"><x:param name="p" select="0"/><mrow><x:if test="$p &gt; 2"><mo>(</mo></x:if><x:for-each select="*[position()&gt;1]"><x:choose><x:when test="self::m:apply[*[1][self::m:times] and *[2][self::m:apply/*[1][self::m:minus] or self::m:cn[not(m:sep) and (number(.) &lt; 0)]]] or self::m:apply[count(*)=2 and *[1][self::m:minus]] or self::m:cn[not(m:sep) and (number(.) &lt; 0)]"><mo>&#8722;<!--minus--></mo></x:when><x:when test="position()!=1"><mo>+</mo></x:when></x:choose><x:choose><x:when test="self::m:cn[not(m:sep) and (number(.) &lt; 0)]"><mn><x:value-of select="-(.)"/></mn></x:when><x:when test=" self::m:apply[count(*)=2 and *[1][self::m:minus]]"><x:apply-templates select="*[2]"><x:with-param name="first" select="2"/><x:with-param name="p" select="2"/></x:apply-templates></x:when><x:when test="self::m:apply[*[1][self::m:times] and *[2][self::m:cn[not(m:sep) and (number(.) &lt;0)]]]"><mrow><mn><x:value-of select="-(*[2])"/></mn><mo>&#8290;<!--invisible times--></mo><x:apply-templates select="."><x:with-param name="first" select="2"/><x:with-param name="p" select="2"/></x:apply-templates></mrow></x:when><x:when test="self::m:apply[*[1][self::m:times] and *[2][self::m:apply/*[1][self::m:minus]]]"><mrow><x:apply-templates select="./*[2]/*[2]"/><x:apply-templates select="."><x:with-param name="first" select="2"/><x:with-param name="p" select="2"/></x:apply-templates></mrow></x:when><x:otherwise><x:apply-templates select="."><x:with-param name="p" select="2"/></x:apply-templates></x:otherwise></x:choose></x:for-each><x:if test="$p &gt; 2"><mo>)</mo></x:if></mrow></x:template><x:template match="m:apply[*[1][self::m:power]] |m:apply[*[1][self::m:csymbol=\'power\']]"><x:param name="p" select="0"/><x:choose><x:when test="$p&gt;=5"><mrow><mo>(</mo><msup><x:apply-templates select="*[2]"><x:with-param name="p" select="5"/></x:apply-templates><x:apply-templates select="*[3]"><x:with-param name="p" select="5"/></x:apply-templates></msup><mo>)</mo></mrow></x:when><x:otherwise><msup><x:apply-templates select="*[2]"><x:with-param name="p" select="5"/></x:apply-templates><x:apply-templates select="*[3]"><x:with-param name="p" select="5"/></x:apply-templates></msup></x:otherwise></x:choose></x:template><x:template match="m:apply[*[1][self::m:rem]] |m:apply[*[1][self::m:csymbol=\'rem\']]"><x:param name="p" select="0"/><x:call-template name="binary"><x:with-param name="mo"><mo>mod</mo></x:with-param><x:with-param name="p" select="$p"/><x:with-param name="this-p" select="3"/></x:call-template></x:template><x:template match="m:apply[*[1][self::m:times]] |m:apply[*[1][self::m:csymbol=\'times\']]" name="times"><x:param name="p" select="0"/><x:param name="first" select="1"/><mrow><x:if test="$p &gt; 3"><mo>(</mo></x:if><x:for-each select="*[position()&gt;1]"><x:if test="position() &gt; 1"><mo><x:choose><x:when test="self::m:cn">&#215;<!-- times --></x:when><x:otherwise>&#8290;<!--invisible times--></x:otherwise></x:choose></mo></x:if><x:if test="position()&gt;= $first"><x:apply-templates select="."><x:with-param name="p" select="3"/></x:apply-templates></x:if></x:for-each><x:if test="$p &gt; 3"><mo>)</mo></x:if></mrow></x:template><x:template match="m:apply[*[1][self::m:root] and not(m:degree) or m:degree=2]" priority="4"><msqrt><x:apply-templates select="*[position()&gt;1]"/></msqrt></x:template><x:template match="m:apply[*[1][self::m:root]]"><mroot><x:apply-templates select="*[position()&gt;1 and not(self::m:degree)]"/><mrow><x:apply-templates select="m:degree/*"/></mrow></mroot></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'root\']]"><mroot><x:apply-templates select="*[position()!=1]"/></mroot></x:template><x:template match="m:gcd"><mi>gcd</mi></x:template><x:template match="m:apply[*[1][self::m:and]] |m:reln[*[1][self::m:and]] |m:apply[*[1][self::m:csymbol=\'and\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8743;<!-- and --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:or]] |m:apply[*[1][self::m:csymbol=\'or\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="3"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8744;<!-- or --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:xor]] |m:apply[*[1][self::m:csymbol=\'xor\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="3"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>xor</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:not]] |m:apply[*[1][self::m:csymbol=\'not\']]"><mrow><mo>&#172;<!-- not --></mo><x:apply-templates select="*[2]"><x:with-param name="p" select="7"/></x:apply-templates></mrow></x:template><x:template match="m:apply[*[1][self::m:implies]] |m:reln[*[1][self::m:implies]] |m:apply[*[1][self::m:csymbol=\'implies\']]"><x:param name="p" select="0"/><x:call-template name="binary"><x:with-param name="mo"><mo>&#8658;<!-- Rightarrow --></mo></x:with-param><x:with-param name="p" select="$p"/><x:with-param name="this-p" select="3"/></x:call-template></x:template><x:template match="m:apply[*[1][self::m:forall]] |m:apply[*[1][self::m:csymbol=\'forall\']] |m:bind[*[1][self::m:forall]] |m:bind[*[1][self::m:csymbol=\'forall\']]"><mrow><mo>&#8704;<!--forall--></mo><mrow><x:apply-templates select="m:bvar[not(current()/m:condition)]/*|m:condition/*"/></mrow><mo>.</mo><mfenced><x:apply-templates select="*[last()]"/></mfenced></mrow></x:template><x:template match="m:apply[*[1][self::m:exists]] |m:apply[*[1][self::m:csymbol=\'exists\']] |m:bind[*[1][self::m:exists]] |m:bind[*[1][self::m:csymbol=\'exists\']]"><mrow><mo>&#8707;<!--exists--></mo><mrow><x:apply-templates select="m:bvar[not(current()/m:condition)]/*|m:condition/*"/></mrow><mo>.</mo><mfenced separators=""><x:choose><x:when test="m:condition"><x:apply-templates select="m:condition/*"/><mo>&#8743;<!-- and --></mo></x:when><x:when test="m:domainofapplication"><mrow><mrow><x:for-each select="m:bvar"><x:apply-templates/><x:if test="position()!=last()"><mo>,</mo></x:if></x:for-each></mrow><mo>&#8712;<!-- in --></mo><x:apply-templates select="m:domainofapplication/*"/></mrow><mo>&#8743;<!-- and --></mo></x:when></x:choose><x:apply-templates select="*[last()]"/></mfenced></mrow></x:template><x:template match="m:apply[*[1][self::m:abs]] |m:apply[*[1][self::m:csymbol=\'abs\']]"><mrow><mo>|</mo><x:apply-templates select="*[2]"/><mo>|</mo></mrow></x:template><x:template match="m:apply[*[1][self::m:conjugate]] |m:apply[*[1][self::m:csymbol=\'conjugate\']]"><mover><x:apply-templates select="*[2]"/><mo>&#175;<!-- overline --></mo></mover></x:template><x:template match="m:arg"><mi>arg</mi></x:template><x:template match="m:real|m:csymbol[.=\'real\']"><mo>&#8475;<!-- real --></mo></x:template><x:template match="m:imaginary|m:csymbol[.=\'imaginary\']"><mo>&#8465;<!-- imaginary --></mo></x:template><x:template match="m:lcm"><mi>lcm</mi></x:template><x:template match="m:apply[*[1][self::m:floor]] |m:apply[*[1][self::m:csymbol=\'floor\']]"><mrow><mo>&#8970;<!-- lfloor--></mo><x:apply-templates select="*[2]"/><mo>&#8971;<!-- rfloor--></mo></mrow></x:template><x:template match="m:apply[*[1][self::m:ceiling]] |m:apply[*[1][self::m:csymbol=\'ceiling\']]"><mrow><mo>&#8968;<!-- lceil--></mo><x:apply-templates select="*[2]"/><mo>&#8969;<!-- rceil--></mo></mrow></x:template><x:template match="m:apply[*[1][self::m:eq]] |m:reln[*[1][self::m:eq]] |m:apply[*[1][self::m:csymbol=\'eq\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="1"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>=</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:neq]] |m:apply[*[1][self::m:csymbol=\'neq\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="1"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8800;<!-- neq --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:gt]] |m:reln[*[1][self::m:gt]] |m:apply[*[1][self::m:csymbol=\'gt\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="1"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&gt;</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:lt]] |m:reln[*[1][self::m:lt]] |m:apply[*[1][self::m:csymbol=\'lt\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="1"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&lt;</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:geq]] |m:apply[*[1][self::m:csymbol=\'geq\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="1"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8805;</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:leq]] |m:apply[*[1][self::m:csymbol=\'leq\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="1"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8804;</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:equivalent]] |m:apply[*[1][self::m:csymbol=\'equivalent\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="1"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8801;</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:approx]] |m:apply[*[1][self::m:csymbol=\'approx\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="1"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8771;</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:factorof]] |m:apply[*[1][self::m:csymbol=\'factorof\']]"><x:param name="p" select="0"/><x:call-template name="binary"><x:with-param name="mo"><mo>|</mo></x:with-param><x:with-param name="p" select="$p"/><x:with-param name="this-p" select="3"/></x:call-template></x:template><x:template match="m:apply[*[1][self::m:int]] |m:apply[*[1][self::m:csymbol=\'int\']] |m:bind[*[1][self::m:int]] |m:bind[*[1][self::m:csymbol=\'int\']]"><mrow><msubsup><mi>&#8747;<!--int--></mi><mrow><x:apply-templates select="m:lowlimit/*|m:interval/*[1]|m:condition/*|m:domainofapplication/*"/></mrow><mrow><x:apply-templates select="m:uplimit/*|m:interval/*[2]"/></mrow></msubsup><x:apply-templates select="*[last()]"/><x:if test="m:bvar"><mi>d</mi><x:apply-templates select="m:bvar"/></x:if></mrow></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'defint\']]"><mrow><munder><mi>&#8747;<!--int--></mi><x:apply-templates select="*[2]"/></munder><x:apply-templates select="*[last()]"/></mrow></x:template><x:template match="m:apply[*[1][self::m:diff] and not(m:bvar)]| m:apply[*[1][self::m:csymbol=\'diff\']]" priority="2"><msup><mrow><x:apply-templates select="*[2]"/></mrow><mo>&#8242;<!--prime--></mo></msup></x:template><x:template match="m:apply[*[1][self::m:diff]]" priority="1"><mfrac><x:choose><x:when test="m:bvar/m:degree"><mrow><msup><mi>d</mi><x:apply-templates select="m:bvar/m:degree/node()"/></msup><x:apply-templates select="*[last()]"/></mrow><mrow><mi>d</mi><msup><x:apply-templates select="m:bvar/node()"/><x:apply-templates select="m:bvar/m:degree/node()"/></msup></mrow></x:when><x:otherwise><mrow><mi>d</mi><x:apply-templates select="*[last()]"/></mrow><mrow><mi>d</mi><x:apply-templates select="m:bvar"/></mrow></x:otherwise></x:choose></mfrac></x:template><x:template match="m:apply[*[1][self::m:partialdiff] and m:list and not(m:bvar) and count(*)=3]" priority="2"><mrow><msub><mi>D</mi><mrow><x:for-each select="m:list[1]/*"><x:apply-templates select="."/><x:if test="position()&lt;last()"><mo>,</mo></x:if></x:for-each></mrow></msub><mrow><x:apply-templates select="*[3]"/></mrow></mrow></x:template><x:template match="m:apply[*[1][self::m:partialdiff] and m:list and m:lambda]" priority="3"><mfrac><mrow><x:choose><x:when test="count(m:list/*)=1"><mo>&#8706;<!-- partial --></mo></x:when><x:otherwise><msup><mo>&#8706;<!-- partial --></mo><mrow><x:choose><x:when test="m:degree"><x:apply-templates select="m:degree/node()"/></x:when><x:otherwise><mn><x:value-of select="count(m:list/*)"/></mn></x:otherwise></x:choose></mrow></msup></x:otherwise></x:choose><x:apply-templates select="m:lambda/*[last()]"/></mrow><mrow><x:call-template name="pddx"/></mrow></mfrac></x:template><x:template name="pddx"><x:param name="n" select="1"/><x:param name="b" select="m:lambda/m:bvar"/><x:param name="l" select="m:list/*"/><x:choose><x:when test="number($l[1])=number($l[2])"><x:call-template name="pddx"><x:with-param name="n" select="$n+1"/><x:with-param name="b" select="$b"/><x:with-param name="l" select="$l[position()!=1]"/></x:call-template></x:when><x:otherwise><mrow><mo>&#8706;<!-- partial --></mo><x:choose><x:when test="$n=1"><x:apply-templates select="$b[position()=$l[1]]/*"/></x:when><x:otherwise><msup><x:apply-templates select="$b[position()=$l[1]]/*"/><mn><x:value-of select="$n"/></mn></msup></x:otherwise></x:choose></mrow><x:if test="$l[2]"><x:call-template name="pddx"><x:with-param name="b" select="$b"/><x:with-param name="l" select="$l[position()!=1]"/></x:call-template></x:if></x:otherwise></x:choose></x:template><x:template match="m:apply[*[1][self::m:partialdiff]]" priority="1"><mfrac><mrow><x:choose><x:when test="not(m:bvar/m:degree) and not(m:bvar[2])"><mo>&#8706;<!-- partial --></mo></x:when><x:otherwise><msup><mo>&#8706;<!-- partial --></mo><mrow><x:choose><x:when test="m:degree"><x:apply-templates select="m:degree/node()"/></x:when><x:when test="m:bvar/m:degree[string(number(.))=\'NaN\']"><x:for-each select="m:bvar/m:degree"><x:apply-templates select="node()"/><x:if test="position()&lt;last()"><mo>+</mo></x:if></x:for-each><x:if test="count(m:bvar[not(m:degree)])&gt;0"><mo>+</mo><mn><x:value-of select="count(m:bvar[not(m:degree)])"/></mn></x:if></x:when><x:otherwise><mn><x:value-of select="number(sum(m:bvar/m:degree))+count(m:bvar[not(m:degree)])"/></mn></x:otherwise></x:choose></mrow></msup></x:otherwise></x:choose><x:apply-templates select="*[last()]"/></mrow><mrow><x:for-each select="m:bvar"><mrow><mo>&#8706;<!-- partial --></mo><msup><x:apply-templates select="node()"/><mrow><x:apply-templates select="m:degree/node()"/></mrow></msup></mrow></x:for-each></mrow></mfrac></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'partialdiffdegree\']]"><mrow><msub><mo>&#8706;<!-- partial --></mo><mrow><x:apply-templates select="*[2]"/></mrow></msub><mfenced><x:apply-templates select="*[4]"/></mfenced></mrow></x:template><x:template match="m:lowlimit"/><x:template match="m:uplimit"/><x:template match="m:bvar"><mi><x:apply-templates/></mi><x:if test="following-sibling::m:bvar"><mo>,</mo></x:if></x:template><x:template match="m:degree"/><x:template match="m:divergence"><mi>div</mi></x:template><x:template match="m:apply[*[1][self::m:divergence]and m:bvar and m:vector]"><x:variable name="v" select="m:bvar"/><mrow><mi>div</mi><mo>&#8289;<!--function application--></mo><mo>(</mo><mtable><x:for-each select="m:vector/*"><x:variable name="p" select="position()"/><mtr><mtd><x:apply-templates select="$v[$p]/*"/><mo>&#x21a6;<!-- map--></mo><x:apply-templates select="."/></mtd></mtr></x:for-each></mtable><mo>)</mo></mrow></x:template><x:template match="m:grad"><mi>grad</mi></x:template><x:template match="m:apply[*[1][self::m:grad]and m:bvar]"><mrow><mi>grad</mi><mo>&#8289;<!--function application--></mo><mrow><mo>(</mo><mfenced><x:apply-templates select="m:bvar/*"/></mfenced><mo>&#x21a6;<!-- map--></mo><x:apply-templates select="*[position()!=1][not(self::m:bvar)]"/><mo>)</mo></mrow></mrow></x:template><x:template match="m:curl"><mi>curl</mi></x:template><x:template match="m:laplacian"><msup><mo>&#8711;<!-- nabla --></mo><mn>2</mn></msup></x:template><x:template match="m:apply[*[1][self::m:laplacian]and m:bvar]"><mrow><x:apply-templates select="*[1]"/><mo>&#8289;<!--function application--></mo><mrow><mo>(</mo><mfenced><x:apply-templates select="m:bvar/*"/></mfenced><mo>&#x21a6;<!-- map--></mo><x:apply-templates select="*[position()!=1][not(self::m:bvar)]"/><mo>)</mo></mrow></mrow></x:template><x:template match="m:set"><x:call-template name="set"/></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'set\']]"><mfenced open="{{" close="}}" separators=","><x:apply-templates select="*[position()!=1]"/></mfenced></x:template><x:template match="m:list"><x:call-template name="set"><x:with-param name="o" select="\'(\'"/><x:with-param name="c" select="\')\'"/></x:call-template></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'list\']]"><mfenced open="(" close=")" separators=","><x:apply-templates select="*[position()!=1]"/></mfenced></x:template><x:template match="m:apply[*[1][self::m:union]] |m:apply[*[1][self::m:csymbol=\'union\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8746;<!-- union --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:union]][m:bvar] |m:apply[*[1][self::m:csymbol=\'union\']][m:bvar]" priority="2" ><x:call-template name="sum"><x:with-param name="mo"><mo>&#x22C3;</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:intersect]] |m:apply[*[1][self::m:csymbol=\'intersect\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="3"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8745;<!-- intersect --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:intersect]][m:bvar] |m:apply[*[1][self::m:csymbol=\'intersect\']][m:bvar]" priority="2" ><x:call-template name="sum"><x:with-param name="mo"><mo>&#x22C2;</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:in]] |m:apply[*[1][self::m:csymbol=\'in\']]"><x:param name="p" select="0"/><x:call-template name="binary"><x:with-param name="mo"><mo>&#8712;<!-- in --></mo></x:with-param><x:with-param name="p" select="$p"/><x:with-param name="this-p" select="3"/></x:call-template></x:template><x:template match="m:apply[*[1][self::m:notin]]|m:reln[*[1][self::m:notin]] |m:apply[*[1][self::m:csymbol=\'notin\']]"><x:param name="p" select="0"/><x:call-template name="binary"><x:with-param name="mo"><mo>&#8713;<!-- not in --></mo></x:with-param><x:with-param name="p" select="$p"/><x:with-param name="this-p" select="3"/></x:call-template></x:template><x:template match="m:apply[*[1][self::m:subset]] |m:apply[*[1][self::m:csymbol=\'subset\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8838;<!-- subseteq --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:prsubset]] |m:apply[*[1][self::m:csymbol=\'prsubset\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8834;<!-- prsubset --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:notsubset]] |m:apply[*[1][self::m:csymbol=\'notsubset\']]"><x:param name="p" select="0"/><x:call-template name="binary"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8840;<!-- notsubseteq --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:notprsubset]] |m:apply[*[1][self::m:csymbol=\'notprsubset\']]"><x:param name="p" select="0"/><x:call-template name="binary"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8836;<!-- prsubset --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:setdiff]] |m:apply[*[1][self::m:csymbol=\'setdiff\']]"><x:param name="p" select="0"/><x:call-template name="binary"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#8726;<!-- setminus --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:card]] |m:apply[*[1][self::m:csymbol=\'card\']]"><mrow><mo>|</mo><x:apply-templates select="*[2]"/><mo>|</mo></mrow></x:template><x:template match="m:apply[*[1][self::m:cartesianproduct or self::m:vectorproduct]] |m:apply[*[1][self::m:csymbol[.=\'cartesian_product\' or . = \'vectorproduct\']]]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#215;<!-- times --></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:cartesianproduct][count(following-sibling::m:reals)=count(following-sibling::*)]]" priority="2"><msup><x:apply-templates select="*[2]"><x:with-param name="p" select="5"/></x:apply-templates><mn><x:value-of select="count(*)-1"/></mn></msup></x:template><x:template name="sum" match="m:apply[*[1][self::m:sum]]"><x:param name="mo"><mo>&#8721;<!--sum--></mo></x:param><mrow><munderover><x:copy-of select="$mo"/><mrow><x:apply-templates select="m:lowlimit|m:interval/*[1]|m:condition/*|m:domainofapplication/*"/></mrow><mrow><x:apply-templates select="m:uplimit/*|m:interval/*[2]"/></mrow></munderover><x:apply-templates select="*[last()]"/></mrow></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'sum\']]"><mrow><munder><mo>&#8721;<!--sum--></mo><x:apply-templates select="*[2]"/></munder><x:apply-templates select="*[last()]"/></mrow></x:template><x:template match="m:apply/m:lowlimit" priority="3"><mrow><x:if test="../m:bvar"><x:apply-templates select="../m:bvar/node()"/><mo>=</mo></x:if><x:apply-templates/></mrow></x:template><x:template match="m:apply[*[1][self::m:product]]"><x:call-template name="sum"><x:with-param name="mo"><mo>&#8719;<!--product--></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'product\']]"><mrow><munder><mo>&#8719;<!--product--></mo><x:apply-templates select="*[2]"/></munder><x:apply-templates select="*[last()]"/></mrow></x:template><x:template match="m:apply[*[1][self::m:limit]]"><mrow><munder><mi>lim</mi><mrow><x:apply-templates select="m:lowlimit|m:condition/*"/></mrow></munder><x:apply-templates select="*[last()]"/></mrow></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'limit\']][m:bind]"><mrow><munder><mi>lim</mi><mrow><x:apply-templates select="m:bind/m:bvar/*"/><mo><x:choose><x:when test="*[3]=\'above\'">&#8600;<!--searrow--></x:when><x:when test="*[3]=\'below\'">&#8599;<!--nearrow--></x:when><x:otherwise>&#8594;<!--rightarrow--></x:otherwise></x:choose></mo><x:apply-templates select="*[2]"/></mrow></munder><x:apply-templates select="m:bind/*[last()]"/></mrow></x:template><x:template match="m:apply[m:limit]/m:lowlimit" priority="4"><mrow><x:apply-templates select="../m:bvar/node()"/><mo>&#8594;<!--rightarrow--></mo><x:apply-templates/></mrow></x:template><x:template match="m:apply[*[1][self::m:tendsto]]|m:reln[*[1][self::m:tendsto]]"><x:param name="p"/><x:call-template name="binary"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo><x:choose><x:when test="@type=\'above\'">&#8600;<!--searrow--></x:when><x:when test="@type=\'below\'">&#8599;<!--nearrow--></x:when><x:when test="@type=\'two-sided\'">&#8594;<!--rightarrow--></x:when><x:otherwise>&#8594;<!--rightarrow--></x:otherwise></x:choose></mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'tendsto\']]"><mrow><x:apply-templates select="*[3]"/><mo><x:choose><x:when test="*[1][self::above]">&#8600;<!--searrow--></x:when><x:when test="*[1][self::below]">&#8599;<!--nearrow--></x:when><x:when test="*[1][self::two-sided]">&#8594;<!--rightarrow--></x:when><x:otherwise>&#8594;<!--rightarrow--></x:otherwise></x:choose></mo><x:apply-templates select="*[4]"/></mrow></x:template><x:template match="m:apply[*[1][self::m:semantics/m:ci=\'tendsto\']]"><mrow><x:apply-templates select="*[2]"/><mo>&#8594;<!--rightarrow--></mo><x:apply-templates select="*[3]"/></mrow></x:template><x:template match="m:tendsto"><mi>tendsto</mi></x:template><x:template match="m:apply[*[1][ self::m:sin or self::m:cos or self::m:tan or self::m:sec or self::m:csc or self::m:cot or self::m:sinh or self::m:cosh or self::m:tanh or self::m:sech or self::m:csch or self::m:coth or self::m:arcsin or self::m:arccos or self::m:arctan or self::m:arccosh or self::m:arccot or self::m:arccoth or self::m:arccsc or self::m:arccsch or self::m:arcsec or self::m:arcsech or self::m:arcsinh or self::m:arctanh or self::m:ln]]"><mrow><mi><x:value-of select="local-name(*[1])"/></mi><mo>&#8289;<!--function application--></mo><x:if test="m:apply"><mo>(</mo></x:if><x:apply-templates select="*[2]"/><x:if test="m:apply"><mo>)</mo></x:if></mrow></x:template><x:template match=" m:sin | m:cos | m:tan | m:sec | m:csc | m:cot | m:sinh | m:cosh | m:tanh | m:sech | m:csch | m:coth | m:arcsin | m:arccos | m:arctan | m:arccosh | m:arccot | m:arccoth | m:arccsc | m:arccsch | m:arcsec | m:arcsech | m:arcsinh | m:arctanh | m:ln|m:mean| m:plus|m:minus"><mi><x:value-of select="local-name()"/></mi></x:template><x:template match="m:apply[*[1][self::m:exp]] |m:apply[*[1][self::m:csymbol=\'exp\']]"><msup><mi>e<!-- exponential e--></mi><mrow><x:apply-templates select="*[2]"/></mrow></msup></x:template><x:template match="m:apply[*[1][self::m:log]] |m:apply[*[1][self::m:csymbol=\'log\']]"><mrow><x:choose><x:when test="not(m:logbase) or m:logbase=10"><mi>log</mi></x:when><x:otherwise><msub><mi>log</mi><mrow><x:apply-templates select="m:logbase/node()"/></mrow></msub></x:otherwise></x:choose><mo>&#8289;<!--function application--></mo><x:apply-templates select="*[last()]"><x:with-param name="p" select="7"/></x:apply-templates></mrow></x:template><x:template match="m:apply[*[1][self::m:mean]] |m:apply[*[1][self::m:csymbol=\'mean\']]"><mrow><mo>&#9001;<!--langle--></mo><x:for-each select="*[position()&gt;1]"><x:apply-templates select="."/><x:if test="position() !=last()"><mo>,</mo></x:if></x:for-each><mo>&#9002;<!--rangle--></mo></mrow></x:template><x:template match="m:sdev|m:csymbol[.=\'sdev\']"><mo>&#963;<!--sigma--></mo></x:template><x:template match="m:apply[*[1][self::m:variance]] |m:apply[*[1][self::m:csymbol=\'variance\']]"><msup><mrow><mo>&#963;<!--sigma--></mo><mo>&#8289;<!--function application--></mo><mfenced><x:apply-templates select="*[position()!=1]"/></mfenced></mrow><mn>2</mn></msup></x:template><x:template match="m:median"><mi>median</mi></x:template><x:template match="m:mode"><mi>mode</mi></x:template><x:template match="m:apply[*[1][self::m:moment]]"><mrow><mo>&#9001;<!--langle--></mo><msup><x:variable name="data" select="*[not(position()=1)] [not(self::m:degree or self::m:momentabout)]"/><x:choose><x:when test="$data[2]"><mfenced><x:apply-templates select="$data"/></mfenced></x:when><x:otherwise><x:apply-templates select="$data"/></x:otherwise></x:choose><mrow><x:apply-templates select="m:degree/node()"/></mrow></msup><mo>&#9002;<!--rangle--></mo></mrow></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'moment\']]"><msub><mrow><mo>&#9001;<!--langle--></mo><msup><x:apply-templates select="*[4]"/><x:apply-templates select="*[2]"/></msup><mo>&#9002;<!--rangle--></mo></mrow><x:apply-templates select="*[3]"/></msub></x:template><x:template match="m:momentabout"/><x:template match="m:apply[*[1][self::m:moment]][m:momentabout]" priority="2"><msub><mrow><mo>&#9001;<!--langle--></mo><msup><x:variable name="data" select="*[not(position()=1)] [not(self::m:degree or self::m:momentabout)]"/><x:choose><x:when test="$data[2]"><mfenced><x:apply-templates select="$data"/></mfenced></x:when><x:otherwise><x:apply-templates select="$data"/></x:otherwise></x:choose><mrow><x:apply-templates select="m:degree/node()"/></mrow></msup><mo>&#9002;<!--rangle--></mo></mrow><mrow><x:apply-templates select="m:momentabout/*"/></mrow></msub></x:template><x:template match="m:vector"><mrow><mo>(</mo><mtable><x:for-each select="*"><mtr><mtd><x:apply-templates select="."/></mtd></mtr></x:for-each></mtable><mo>)</mo></mrow></x:template><x:template match="m:vector[m:condition]"><mrow><mo>[</mo><x:apply-templates select="*[last()]"/><mo>|</mo><x:apply-templates select="m:condition"/><mo>]</mo></mrow></x:template><x:template match="m:vector[m:domainofapplication]"><mrow><mo>[</mo><x:apply-templates select="*[last()]"/><mo>|</mo><x:apply-templates select="m:bvar/*"/><mo>&#x2208;</mo><x:apply-templates select="m:domainofapplication/*"/><mo>]</mo></mrow></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'vector\']]"><mrow><mo>(</mo><mtable><x:for-each select="*[position()!=1]"><mtr><mtd><x:apply-templates select="."/></mtd></mtr></x:for-each></mtable><mo>)</mo></mrow></x:template><x:template match="m:matrix"><mrow><mo>(</mo><mtable><x:apply-templates/></mtable><mo>)</mo></mrow></x:template><x:template match="m:matrix[m:condition]"><mrow><mo>[</mo><msub><mi>m</mi><mrow><x:for-each select="m:bvar"><x:apply-templates/><x:if test="position()!=last()"><mo>,</mo></x:if></x:for-each></mrow></msub><mo>|</mo><mrow><msub><mi>m</mi><mrow><x:for-each select="m:bvar"><x:apply-templates/><x:if test="position()!=last()"><mo>,</mo></x:if></x:for-each></mrow></msub><mo>=</mo><x:apply-templates select="*[last()]"/></mrow><mo>;</mo><x:apply-templates select="m:condition"/><mo>]</mo></mrow></x:template><x:template match="m:apply[*[1][self::m:csymbol=\'matrix\']]"><mrow><mo>(</mo><mtable><x:apply-templates select="*[position()!=1]"/></mtable><mo>)</mo></mrow></x:template><x:template match="m:matrix/m:matrixrow"><mtr><x:for-each select="*"><mtd><x:apply-templates select="."/></mtd></x:for-each></mtr></x:template><x:template match="m:matrixrow"><mtable><mtr><x:for-each select="*"><mtd><x:apply-templates select="."/></mtd></x:for-each></mtr></mtable></x:template><x:template match="m:apply[*[1][self::m:csymbol.=\'matrixrow\']]"><mtr><x:for-each select="*[position()!=1]"><mtd><x:apply-templates select="."/></mtd></x:for-each></mtr></x:template><x:template match="m:apply[*[1][self::m:determinant]] |m:apply[*[1][self::m:csymbol=\'determinant\']]"><mrow><mi>det</mi><mo>&#8289;<!--function application--></mo><x:apply-templates select="*[2]"><x:with-param name="p" select="7"/></x:apply-templates></mrow></x:template><x:template match="m:apply[*[1][self::m:determinant]][*[2][self::m:matrix]]" priority="2"><mrow><mo>|</mo><mtable><x:apply-templates select="m:matrix/*"/></mtable><mo>|</mo></mrow></x:template><x:template match="m:apply[*[1][self::m:transpose]] |m:apply[*[1][self::m:csymbol=\'transpose\']]"><msup><x:apply-templates select="*[2]"><x:with-param name="p" select="7"/></x:apply-templates><mi>T</mi></msup></x:template><x:template match="m:apply[*[1][self::m:selector]] |m:apply[*[1][self::m:csymbol=\'selector\']]"><msub><x:apply-templates select="*[2]"><x:with-param name="p" select="7"/></x:apply-templates><mrow><x:for-each select="*[position()&gt;2]"><x:apply-templates select="."/><x:if test="position() !=last()"><mo>,</mo></x:if></x:for-each></mrow></msub></x:template><x:template match="m:apply[*[1][self::m:scalarproduct]] |m:apply[*[1][self::m:csymbol=\'scalarproduct\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>.</mo></x:with-param></x:call-template></x:template><x:template match="m:apply[*[1][self::m:outerproduct]] |m:apply[*[1][self::m:csymbol=\'outerproduct\']]"><x:param name="p" select="0"/><x:call-template name="infix"><x:with-param name="this-p" select="2"/><x:with-param name="p" select="$p"/><x:with-param name="mo"><mo>&#x2297;</mo></x:with-param></x:call-template></x:template><x:template match="m:semantics"><x:apply-templates select="*[1]"/></x:template><x:template match="m:semantics[m:annotation-xml/@encoding=\'MathML-Presentation\']"><x:apply-templates select="m:annotation-xml[@encoding=\'MathML-Presentation\']/node()"/></x:template><x:template match="m:integers"><mi mathvariant="double-struck">Z</mi></x:template><x:template match="m:reals"><mi mathvariant="double-struck">R</mi></x:template><x:template match="m:rationals"><mi mathvariant="double-struck">Q</mi></x:template><x:template match="m:naturalnumbers"><mi mathvariant="double-struck">N</mi></x:template><x:template match="m:complexes"><mi mathvariant="double-struck">C</mi></x:template><x:template match="m:primes"><mi mathvariant="double-struck">P</mi></x:template><x:template match="m:exponentiale"><mi>e<!-- exponential e--></mi></x:template><x:template match="m:imaginaryi"><mi>i<!-- imaginary i--></mi></x:template><x:template match="m:notanumber"><mi>NaN</mi></x:template><x:template match="m:true"><mi>true</mi></x:template><x:template match="m:false"><mi>false</mi></x:template><x:template match="m:emptyset|m:csymbol[.=\'emptyset\']"><mi>&#8709;<!-- emptyset --></mi></x:template><x:template match="m:pi|m:csymbol[.=\'pi\']"><mi>&#960;<!-- pi --></mi></x:template><x:template match="m:eulergamma|m:csymbol[.=\'gamma\']"><mi>&#947;<!-- gamma --></mi></x:template><x:template match="m:infinity|m:csymbol[.=\'infinity\']"><mi>&#8734;<!-- infinity --></mi></x:template><x:template name="infix" ><x:param name="mo"/><x:param name="p" select="0"/><x:param name="this-p" select="0"/><x:variable name="dmo"><x:choose><x:when test="m:domainofapplication"><munder><x:copy-of select="$mo"/><mrow><x:apply-templates select="m:domainofapplication/*"/></mrow></munder></x:when><x:otherwise><x:copy-of select="$mo"/></x:otherwise></x:choose></x:variable><mrow><x:if test="$this-p &lt; $p"><mo>(</mo></x:if><x:for-each select="*[not(self::m:domainofapplication)][position()&gt;1]"><x:if test="position() &gt; 1"><x:copy-of select="$dmo"/></x:if><x:apply-templates select="."><x:with-param name="p" select="$this-p"/></x:apply-templates></x:for-each><x:if test="$this-p &lt; $p"><mo>)</mo></x:if></mrow></x:template><x:template name="binary" ><x:param name="mo"/><x:param name="p" select="0"/><x:param name="this-p" select="0"/><mrow><x:if test="($this-p &lt; $p) or ($this-p=$p and $mo=\'&#8722;\')"><mo>(</mo></x:if><x:apply-templates select="*[2]"><x:with-param name="p" select="$this-p"/></x:apply-templates><x:copy-of select="$mo"/><x:apply-templates select="*[3]"><x:with-param name="p" select="$this-p"/></x:apply-templates><x:if test="($this-p &lt; $p) or ($this-p=$p and $mo=\'&#8722;\')"><mo>)</mo></x:if></mrow></x:template><x:template name="set" ><x:param name="o" select="\'{\'"/><x:param name="c" select="\'}\'"/><mrow><mo><x:value-of select="$o"/></mo><x:choose><x:when test="m:condition"><mrow><x:apply-templates select="m:condition/following-sibling::*"/></mrow><mo>|</mo><mrow><x:apply-templates select="m:condition/node()"/></mrow></x:when><x:when test="m:domainofapplication"><mrow><x:apply-templates select="m:domainofapplication/following-sibling::*"/></mrow><mo>|</mo><mrow><x:apply-templates select="m:bvar/node()"/></mrow><mo>&#8712;<!-- in --></mo><mrow><x:apply-templates select="m:domainofapplication/node()"/></mrow></x:when><x:otherwise><x:for-each select="*[not(position()=1 and parent::m:apply)]"><x:apply-templates select="."/><x:if test="position() !=last()"><mo>,</mo></x:if></x:for-each></x:otherwise></x:choose><mo><x:value-of select="$c"/></mo></mrow></x:template><x:template match="m:cs"><ms><x:value-of select=" translate(., \'&#9;&#10;&#13;&#32;\', \'&#160;&#160;&#160;&#160;\')"/></ms></x:template><x:template match="m:cbytes"><mrow/></x:template><x:template match="m:cerror"><merror><x:apply-templates/></merror></x:template><x:template match="m:share" priority="4"><mi href="{@href}">share<x:value-of select="substring-after(@href,\'#\')"/></mi></x:template><x:output indent="yes" omit-xml-declaration="yes"/><x:template match="*"><x:copy><x:copy-of select="@*"/><x:apply-templates/></x:copy></x:template><x:template match="*[@dir=\'rtl\']" priority="10"><x:apply-templates mode="rtl" select="."/></x:template><x:template match="@*" mode="rtl"><x:copy-of select="."/></x:template><x:template match="*" mode="rtl"><x:copy><x:apply-templates select="@*" mode="rtl"/><x:for-each select="node()"><x:sort data-type="number" order="descending" select="position()"/><x:text></x:text><x:apply-templates mode="rtl" select="."/></x:for-each></x:copy></x:template><x:template match="@open" mode="rtl"><x:attribute name="close"><x:value-of select="."/></x:attribute></x:template><x:template match="@open[.=\'(\']" mode="rtl"><x:attribute name="close">)</x:attribute></x:template><x:template match="@open[.=\')\']" mode="rtl"><x:attribute name="close">(</x:attribute></x:template><x:template match="@open[.=\'[\']" mode="rtl"><x:attribute name="close">]</x:attribute></x:template><x:template match="@open[.=\']\']" mode="rtl"><x:attribute name="close">[</x:attribute></x:template><x:template match="@open[.=\'{\']" mode="rtl"><x:attribute name="close">}</x:attribute></x:template><x:template match="@open[.=\'}\']" mode="rtl"><x:attribute name="close">{</x:attribute></x:template><x:template match="@close" mode="rtl"><x:attribute name="open"><x:value-of select="."/></x:attribute></x:template><x:template match="@close[.=\'(\']" mode="rtl"><x:attribute name="open">)</x:attribute></x:template><x:template match="@close[.=\')\']" mode="rtl"><x:attribute name="open">(</x:attribute></x:template><x:template match="@close[.=\'[\']" mode="rtl"><x:attribute name="open">]</x:attribute></x:template><x:template match="@close[.=\']\']" mode="rtl"><x:attribute name="open">[</x:attribute></x:template><x:template match="@close[.=\'{\']" mode="rtl"><x:attribute name="open">}</x:attribute></x:template><x:template match="@close[.=\'}\']" mode="rtl"><x:attribute name="open">{</x:attribute></x:template><x:template match="m:mfrac[@bevelled=\'true\']" mode="rtl"><mrow><msub><mi></mi><x:apply-templates select="*[2]" mode="rtl"/></msub><mo>&#x5c;</mo><msup><mi></mi><x:apply-templates select="*[1]" mode="rtl"/></msup></mrow></x:template><x:template match="m:mfrac" mode="rtl"><x:copy><x:apply-templates mode="rtl" select="@*|*"/></x:copy></x:template><x:template match="m:mroot" mode="rtl"><msup><menclose notation="top right"><x:apply-templates mode="rtl" select="@*|*[1]"/></menclose><x:apply-templates mode="rtl" select="*[2]"/></msup></x:template><x:template match="m:msqrt" mode="rtl"><menclose notation="top right"><x:apply-templates mode="rtl" select="@*|*[1]"/></menclose></x:template><x:template match="m:mtable|m:munder|m:mover|m:munderover" mode="rtl" priority="2"><x:copy><x:apply-templates select="@*" mode="rtl"/><x:apply-templates mode="rtl"></x:apply-templates></x:copy></x:template><x:template match="m:msup" mode="rtl" priority="2"><mmultiscripts><x:apply-templates select="*[1]" mode="rtl"/><mprescripts/><none/><x:apply-templates select="*[2]" mode="rtl"/></mmultiscripts></x:template><x:template match="m:msub" mode="rtl" priority="2"><mmultiscripts><x:apply-templates select="*[1]" mode="rtl"/><mprescripts/><x:apply-templates select="*[2]" mode="rtl"/><none/></mmultiscripts></x:template><x:template match="m:msubsup" mode="rtl" priority="2"><mmultiscripts><x:apply-templates select="*[1]" mode="rtl"/><mprescripts/><x:apply-templates select="*[2]" mode="rtl"/><x:apply-templates select="*[3]" mode="rtl"/></mmultiscripts></x:template><x:template match="m:mmultiscripts" mode="rtl" priority="2"><mmultiscripts><x:apply-templates select="*[1]" mode="rtl"/><x:for-each select="m:mprescripts/following-sibling::*[position() mod 2 = 1]"><x:sort data-type="number" order="descending" select="position()"/><x:apply-templates select="." mode="rtl"/><x:apply-templates select="following-sibling::*[1]" mode="rtl"/></x:for-each><mprescripts/><x:for-each select="m:mprescripts/preceding-sibling::*[position()!=last()][position() mod 2 = 0]"><x:sort data-type="number" order="descending" select="position()"/><x:apply-templates select="." mode="rtl"/><x:apply-templates select="following-sibling::*[1]" mode="rtl"/></x:for-each></mmultiscripts></x:template><x:template match="m:mmultiscripts[not(m:mprescripts)]" mode="rtl" priority="3"><mmultiscripts><x:apply-templates select="*[1]" mode="rtl"/><mprescripts/><x:for-each select="*[position() mod 2 = 0]"><x:sort data-type="number" order="descending" select="position()"/><x:apply-templates select="." mode="rtl"/><x:apply-templates select="following-sibling::*[1]" mode="rtl"/></x:for-each></mmultiscripts></x:template><x:template match="text()[.=\'(\']" mode="rtl">)</x:template><x:template match="text()[.=\')\']" mode="rtl">(</x:template><x:template match="text()[.=\'{\']" mode="rtl">}</x:template><x:template match="text()[.=\'}\']" mode="rtl">{</x:template><x:template match="text()[.=\'&lt;\']" mode="rtl">&gt;</x:template><x:template match="text()[.=\'&gt;\']" mode="rtl">&lt;</x:template><x:template match="text()[.=\'&#x2208;\']" mode="rtl">&#x220b;</x:template><x:template match="text()[.=\'&#x220b;\']" mode="rtl">&#x2208;</x:template><x:template match="@notation[.=\'radical\']" mode="rtl"><x:attribute name="notation">top right</x:attribute></x:template><x:template name="mml2attrib"><!-- <x:copy-of select="@*[not(local-name()=\'href\')]"/> --><x:copy-of select="@*[not(local-name()=\'href\')]"/><x:attribute name="style"><x:if test="@style"><x:value-of select="@style"/>;</x:if><x:if test="@mathcolor">color:<x:value-of select="@mathcolor"/>;</x:if><x:if test="@mathbackground">background-color:<x:value-of select="@mathbackground"/>;</x:if></x:attribute></x:template><!-- <x:template match="*[@href]" priority="3"><a xmlns="http://www.w3.org/1999/xhtml" style="text-decoration: none" href="{@href}"><x:copy><x:call-template name="mml2attrib"/><x:attribute name="class"><x:text>mmlhref </x:text><x:value-of select="@class"/></x:attribute><x:apply-templates/></x:copy></a></x:template> --><x:template match="*[@mathcolor|@mathbackground]"><x:copy><x:call-template name="mml2attrib"/><x:apply-templates/></x:copy></x:template><x:param name="hascolspan" select="true()"/><x:template match="m:mstack"><mtable columnspacing="0em"><x:variable name="t"><x:apply-templates select="*" mode="mstack1"><x:with-param name="p" select="0"/></x:apply-templates></x:variable><x:variable name="maxl"><x:for-each select="c:node-set($t)/*/@l"><x:sort data-type="number" order="descending"/><x:if test="position()=1"><x:value-of select="."/></x:if></x:for-each></x:variable><x:for-each select="c:node-set($t)/*[not(@class=\'mscarries\') or following-sibling::*[1]/@class=\'mscarries\']"><x:variable name="c" select="preceding-sibling::*[1][@class=\'mscarries\']"/><x:text>&#10;</x:text><mtr><x:variable name="offset" select="$maxl - @l"/><x:choose><x:when test="$hascolspan and @class=\'msline\' and (string(*[1]/@columnspan)=\'\' or string(*[1]/@columnspan)=\'0\')"><mtd columnspan="{$maxl}"><x:copy-of select="*/@style"/></mtd></x:when><x:when test="@class=\'msline\' and @l=\'*\'"><x:variable name="msl" select="*[1]"/><x:for-each select="(//node())[position()&lt;=$maxl]"><x:copy-of select="$msl"/></x:for-each></x:when><x:when test="$c"><x:variable name="ldiff" select="$c/@l - @l"/><x:variable name="loffset" select="$maxl - $c/@l"/><x:for-each select="(//*)[position()&lt;= $offset]"><x:variable name="pn" select="position()"/><x:variable name="cy" select="$c/*[position()=$pn - $loffset]"/> <mtd> <x:if test="$cy/*"/> <mover><mphantom><mn>0</mn></mphantom><mpadded width="0em" lspace="-0.5width"><x:copy-of select="$cy/*/*"/></mpadded></mover> </mtd></x:for-each><x:for-each select="*"><x:variable name="pn" select="position()"/><x:variable name="cy" select="$c/*[position()=$pn + $ldiff]"/><x:copy> <x:copy-of select="@*"/> <x:variable name="b"> <x:choose> <x:when test="not(string($cy/@crossout) or $cy/@crossout=\'none\')"><x:copy-of select="*"/></x:when> <x:otherwise> <menclose notation="{$cy/@crossout}"><x:copy-of select="*"/></menclose> </x:otherwise> </x:choose> </x:variable> <x:choose> <x:when test="$cy/*/m:none or not($cy/*/*)"><x:copy-of select="$b"/></x:when> <x:when test="not(string($cy/@location)) or $cy/@location=\'n\'"> <mover><x:copy-of select="$b"/><mpadded width="0em" lspace="-0.5width"><x:copy-of select="$cy/*/*"/></mpadded></mover> </x:when> <x:when test="$cy/@location=\'nw\'"> <mmultiscripts><x:copy-of select="$b"/><mprescripts/><none/><mpadded lspace="-1width" width="0em"><x:copy-of select="$cy/*/*"/></mpadded></mmultiscripts> </x:when> <x:when test="$cy/@location=\'s\'"> <munder><x:copy-of select="$b"/><mpadded width="0em" lspace="-0.5width"><x:copy-of select="$cy/*/*"/></mpadded></munder> </x:when> <x:when test="$cy/@location=\'sw\'"> <mmultiscripts><x:copy-of select="$b"/><mprescripts/><mpadded lspace="-1width" width="0em"><x:copy-of select="$cy/*/*"/></mpadded><none/></mmultiscripts> </x:when> <x:when test="$cy/@location=\'ne\'"> <msup><x:copy-of select="$b"/><mpadded width="0em"><x:copy-of select="$cy/*/*"/></mpadded></msup> </x:when> <x:when test="$cy/@location=\'se\'"> <msub><x:copy-of select="$b"/><mpadded width="0em"><x:copy-of select="$cy/*/*"/></mpadded></msub> </x:when> <x:when test="$cy/@location=\'w\'"> <msup><mrow/><mpadded lspace="-1width" width="0em"><x:copy-of select="$cy/*/*"/></mpadded></msup> <x:copy-of select="$b"/> </x:when> <x:when test="$cy/@location=\'e\'"> <x:copy-of select="$b"/> <msup><mrow/><mpadded width="0em"><x:copy-of select="$cy/*/*"/></mpadded></msup> </x:when> <x:otherwise> <x:copy-of select="$b"/> </x:otherwise> </x:choose></x:copy></x:for-each></x:when><x:otherwise><x:for-each select="(//*)[position()&lt;= $offset]"><mtd/></x:for-each><x:copy-of select="*"/></x:otherwise></x:choose></mtr></x:for-each></mtable></x:template><x:template mode="mstack1" match="*"><x:param name="p"/><x:param name="maxl" select="0"/><mtr l="{1 + $p}"><x:if test="ancestor::mstack[1]/@stackalign=\'left\'"><x:attribute name="l"><x:value-of select="$p"/></x:attribute></x:if><mtd><x:apply-templates select="."/></mtd></mtr></x:template><x:template mode="mstack1" match="m:msrow"><x:param name="p"/><x:param name="maxl" select="0"/><x:variable name="align1" select="ancestor::m:mstack[1]/@stackalign"/><x:variable name="align"><x:choose><x:when test="string($align1)=\'\'">decimalpoint</x:when><x:otherwise><x:value-of select="$align1"/></x:otherwise></x:choose></x:variable><x:variable name="row"><x:apply-templates mode="mstack1" select="*"><x:with-param name="p" select="0"/></x:apply-templates></x:variable><x:text>&#10;</x:text><x:variable name="l1"><x:choose><x:when test="$align=\'decimalpoint\' and m:mn"><x:for-each select="c:node-set($row)/m:mtr[m:mtd/m:mn][1]"><x:value-of select="number(sum(@l))+count(preceding-sibling::*/@l)"/></x:for-each></x:when><x:when test="$align=\'right\' or $align=\'decimalpoint\'"><x:value-of select="count(c:node-set($row)/m:mtr/m:mtd)"/></x:when><x:otherwise><x:value-of select="0"/></x:otherwise></x:choose></x:variable><mtr class="msrow" l="{number($l1) + number(sum(@position)) +$p}"><x:copy-of select="c:node-set($row)/m:mtr/*"/></mtr></x:template><x:template mode="mstack1" match="m:mn"><x:param name="p"/><x:variable name="align1" select="ancestor::m:mstack[1]/@stackalign"/><x:variable name="dp1" select="ancestor::*[@decimalpoint][1]/@decimalpoint"/><x:variable name="align"><x:choose><x:when test="string($align1)=\'\'">decimalpoint</x:when><x:otherwise><x:value-of select="$align1"/></x:otherwise></x:choose></x:variable><x:variable name="dp"><x:choose><x:when test="string($dp1)=\'\'">.</x:when><x:otherwise><x:value-of select="$dp1"/></x:otherwise></x:choose></x:variable><mtr l="$p"><x:variable name="mn" select="normalize-space(.)"/><x:variable name="len" select="string-length($mn)"/><x:choose><x:when test="$align=\'right\' or ($align=\'decimalpoint\' and not(contains($mn,$dp)))"><x:attribute name="l"><x:value-of select="$p + $len"/></x:attribute></x:when><x:when test="$align=\'decimalpoint\'"><x:attribute name="l"><x:value-of select="$p + string-length(substring-before($mn,$dp))"/></x:attribute></x:when></x:choose><x:for-each select="(//node())[position() &lt;=$len]"><x:variable name="pos" select="position()"/><mtd><mn><x:value-of select="substring($mn,$pos,1)"/></mn></mtd></x:for-each></mtr></x:template><x:template match="m:msgroup" mode="mstack1"><x:param name="p"/><x:variable name="s" select="number(sum(@shift))"/><x:variable name="thisp" select="number(sum(@position))"/><x:for-each select="*"><x:apply-templates mode="mstack1" select="."><x:with-param name="p" select="number($p)+$thisp+(position()-1)*$s"/></x:apply-templates></x:for-each></x:template><x:template match="m:msline" mode="mstack1"><x:param name="p"/><x:variable name="align1" select="ancestor::m:mstack[1]/@stackalign"/><x:variable name="align"><x:choose><x:when test="string($align1)=\'\'">decimalpoint</x:when><x:otherwise><x:value-of select="$align1"/></x:otherwise></x:choose></x:variable><mtr class="msline"><x:attribute name="l"><x:choose><x:when test="not(string(@length)) or @length=0">*</x:when><x:when test="string($align)=\'right\' or string($align)=\'decimalpoint\' "><x:value-of select="$p+ @length"/></x:when><x:otherwise><x:value-of select="$p"/></x:otherwise></x:choose></x:attribute><x:variable name="w"><x:choose><x:when test="@mslinethickness=\'thin\'">0.1em</x:when><x:when test="@mslinethickness=\'medium\'">0.15em</x:when><x:when test="@mslinethickness=\'thick\'">0.2em</x:when><x:when test="@mslinethickness"><x:value-of select="@mslinethickness"/></x:when><x:otherwise>0.15em</x:otherwise></x:choose></x:variable><x:choose><x:when test="$hascolspan"><mtd class="msline" columnspan="{@length}"><x:copy-of select="@position"/><x:attribute name="style"><x:value-of select="concat(\'border-style: solid; border-width: 0 0 \',$w,\' 0\')"/></x:attribute></mtd></x:when><x:when test="not(string(@length)) or @length=0"><mtd class="mslinemax"><mpadded lspace="-0.5em" width="0em" height="0em"><mfrac linethickness="{$w}"><mspace width="1em"/><mrow/></mfrac></mpadded></mtd></x:when><x:otherwise><x:variable name="l" select="@length"/><x:for-each select="(//node())[position()&lt;=$l]"><mtd class="msline"><mpadded lspace="-0.5em" width="0em" height="0em"><mfrac linethickness="{$w}"> <mspace width="1em"/> <mrow/></mfrac></mpadded></mtd></x:for-each></x:otherwise></x:choose></mtr></x:template><x:template match="m:mscarries" mode="mstack1"><x:param name="p"/><x:variable name="align1" select="ancestor::m:mstack[1]/@stackalign"/><x:variable name="l1"><x:choose><x:when test="string($align1)=\'left\'">0</x:when><x:otherwise><x:value-of select="count(*)"/></x:otherwise></x:choose></x:variable><mtr class="mscarries" l="{$p + $l1 + sum(@position)}"><x:apply-templates select="*" mode="msc"/></mtr></x:template><x:template match="*" mode="msc"><mtd><x:copy-of select="../@location|../@crossout"/><mstyle mathsize="70%"><x:apply-templates select="."/></mstyle></mtd></x:template><x:template match="m:mscarry" mode="msc"><mtd><x:copy-of select="@location|@crossout"/><mstyle mathsize="70%"><x:apply-templates select="*"/></mstyle></mtd></x:template><x:template match="m:mlongdiv"><x:variable name="ms"><mstack><x:copy-of select="(ancestor-or-self::*/@decimalpoint)[last()]"/><x:choose><x:when test="@longdivstyle=\'left/\right\'"><msrow><mrow><x:copy-of select="*[1]"/></mrow><mo>/</mo><x:copy-of select="*[3]"/><mo>\</mo><x:copy-of select="*[2]"/></msrow></x:when><x:when test="@longdivstyle=\'left)(right\'"><msrow><mrow><x:copy-of select="*[1]"/></mrow><mo>)</mo><x:copy-of select="*[3]"/><mo>(</mo><x:copy-of select="*[2]"/></msrow></x:when><x:when test="@longdivstyle=\':right=right\'"><msrow><x:copy-of select="*[3]"/><mo>:</mo><x:copy-of select="*[1]"/><mo>=</mo><x:copy-of select="*[2]"/></msrow></x:when><x:otherwise><x:copy-of select="*[2]"/><msline length="{string-length(*[3])}"/><msrow><mrow><x:copy-of select="*[1]"/></mrow><mo>)</mo><x:copy-of select="*[3]"/></msrow></x:otherwise></x:choose><x:copy-of select="*[position()&gt;3]"/></mstack></x:variable><x:apply-templates select="c:node-set($ms)"/></x:template><x:template match="m:menclose[@notation=\'madruwb\']" mode="rtl"><menclose notation="bottom right"><x:apply-templates mode="rtl"/></menclose></x:template></x:stylesheet>';
-  /*
-   *  End of ctop.xsl amd mml3mml2.csl material.
-   */
-  
-  var ctop;
-  if (window.XSLTProcessor) {
-    // standard method: just use an XSLTProcessor and parse the stylesheet
-    if (!MATHML.ParseXML) {MATHML.ParseXML = MATHML.createParser()}
-    MATHML.ctopXSLT = new XSLTProcessor();
-    MATHML.ctopXSLT.importStylesheet(MATHML.ParseXML(ctopStylesheet));
-  } else if (MathJax.Hub.Browser.isMSIE) {
-    // nonstandard methods for Internet Explorer
-    if (MathJax.Hub.Browser.versionAtLeast("9.0") || (document.documentMode||0) >= 9) {
-      // For Internet Explorer >= 9, use createProcessor
-      ctop = new ActiveXObject("Msxml2.FreeThreadedDOMDocument");
-      ctop.loadXML(ctopStylesheet);
-      var xslt = new ActiveXObject("Msxml2.XSLTemplate");
-      xslt.stylesheet = ctop;
-      MATHML.ctopXSLT = {
-        ctop: xslt.createProcessor(),
-        transformToDocument: function(doc) {
-          this.ctop.input = doc;
-          this.ctop.transform();
-          return this.ctop.output;
-        }
-      }
-    } else {
-      // For Internet Explorer <= 8, use transformNode
-      ctop = MATHML.createMSParser();
-      ctop.async = false;
-      ctop.loadXML(ctopStylesheet);
-      MATHML.ctopXSLT = {
-        ctop: ctop,
-        transformToDocument: function(doc) {
-          return doc.documentElement.transformNode(this.ctop);
-        }
-      }
-    }
-  } else {
-    // No XSLT support. Do not change the <math> content.
-    MATHML.ctopXSLT = null;
-  }
-
-  MathJax.Hub.Startup.signal.Post("MathML content-mathml Ready");
+  MathJax.Hub.Startup.signal.Post("MathML/content-mathml Ready");
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/MathML/content-mathml.js");

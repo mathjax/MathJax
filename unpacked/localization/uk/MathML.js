@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/uk/MathML.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("uk","MathML",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           BadMglyph: "\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0438\u0439 mglyph: %1",

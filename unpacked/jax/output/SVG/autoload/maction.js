@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2014 The MathJax Consortium
+ *  Copyright (c) 2011-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.4.0";
+  var VERSION = "2.5.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax["SVG"];
   
@@ -159,7 +159,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var math = this; while (math.type !== "math") {math = math.inherit}
       var jax = MathJax.Hub.getJaxFor(math.inputID);
       this.em = MML.mbase.prototype.em = jax.SVG.em; this.ex = jax.SVG.ex;
-      this.linebreakWidth = jax.SVG.lineWidth * 1000; this.cwidth = jax.SVG.cwidth;
+      this.linebreakWidth = jax.SVG.lineWidth; this.cwidth = jax.SVG.cwidth;
 
       //
       //  Make a new math element and temporarily move the tooltip to it

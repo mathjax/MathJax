@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/qqq/MathMenu.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("qqq","MathMenu",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           Show: "'Show math as' menu item. MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.\n\nFollowed by the following menu subitems:\n* {{msg-mathjax|Mathmenu-MathMLcode}}\n* {{msg-mathjax|Mathmenu-Original}}\n* {{msg-mathjax|Mathmenu-Annotation}}\n* {{msg-mathjax|Mathmenu-texHints}} - checkbox label",
@@ -30,7 +30,7 @@ MathJax.Localization.addTranslation("qqq","MathMenu",{
           OriginalMathML: "This menu item from 'Show math as' shows the MathML code as if that was originally in the page source",
           TeXCommands: "This menu item from 'Show math as' shows the TeX code if that was originally in the page source",
           AsciiMathInput: "This menu item from 'Show math as' shows the asciimath code if that was originally in the page source",
-          Original: "This menu item from 'Show math as' shows the code that was originally in the page source but has no registered type.\n\nThis can happen when extensions add new input formats but fail to provide an adequate format name.\n\nThe parent menu item is {{msg-mathjax|Mathmenu-Show}}.",
+          Original: "This menu item from 'Show math as' shows the code that was originally in the page source but has no registered type.\n\nThis can happen when extensions add new input formats but fail to provide an adequate format name.\n\nThe parent menu item is {{msg-mathjax|Mathmenu-Show}}.\n{{Identical|Original form}}",
           ErrorMessage: "This menu item from 'Show math as' shows the error message if MathJax fails to process the source.\n{{Identical|Error message}}",
           Annotation: "This menu item from 'Show math as' allows to access possible annotations attached to a MathML formula.\n{{Identical|Annotation}}",
           TeX: "This is a menu item from the 'Annotation Menu' to show a TeX annotation.",
@@ -71,7 +71,7 @@ MathJax.Localization.addTranslation("qqq","MathMenu",{
           LatinModernWeb: "{{Related|Mathmenu-fonts}}",
           NeoEulerWeb: "{{Related|Mathmenu-fonts}}",
           ContextMenu: "Used as menu item.\n\nFollowed by the following sub menu items:\n* MathJax - radio box label\n* {{msg-mathjax|Mathmenu-Browser}} - radio box label",
-          Browser: "Used as menu item.\n\nThe parent menu item is {{msg-mathjax|Mathmenu-ContextMenu}}.",
+          Browser: "Used as menu item.\n\nThe parent menu item is {{msg-mathjax|Mathmenu-ContextMenu}}.\n{{Identical|Browser}}",
           Scale: "This menu item from 'Math Settings' allows users to set a scaling factor for the MathJax output (relative to the surrounding content).",
           Discoverable: "This menu option indicates whether the formulas should be highlighted when you pass the mouse over them.\n\nUsed as checkbox label in the menu.",
           Locale: "This menu item from 'Math Settings' allows to select a language. The language names are specified by the 'menuTitle' properties.\n\nThis menu item has the following sub menu items:\n* en\n* {{msg-mathjax|Mathmenu-LoadLocale}}\n{{Identical|Language}}",

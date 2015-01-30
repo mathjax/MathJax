@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/sv/sv.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("sv",null,{
   menuTitle: "svenska",
-  version: "2.4.0",
+  version: "2.5.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax har hittat en anv\u00E4ndarkonfigurations-cookie som inneh\u00E5ller kod som kan k\u00F6ras. Vill du k\u00F6ra den?\n\n(Du b\u00F6r trycka p\u00E5 Avbryt om du inte sj\u00E4lv har lagt upp denna cookie.)",
@@ -35,8 +35,8 @@ MathJax.Localization.addTranslation("sv",null,{
           MathError: "Matematikfel",
           LoadFile: "L\u00E4ser in %1",
           Loading: "L\u00E4ser in",
-          LoadFailed: "Misslyckades med att l\u00E4sa in: %1",
-          ProcessMath: "Bearbetar matematik: %1 %%",
+          LoadFailed: "Filen kunde inte l\u00E4sas in: %1",
+          ProcessMath: "Bearbetar matematik: %1%%",
           Processing: "Bearbetar",
           TypesetMath: "Typs\u00E4tter matematik: %1%%",
           Typesetting: "Typs\u00E4ttning",

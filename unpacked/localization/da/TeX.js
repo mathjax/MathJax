@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/da/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("da","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Ekstra venstreklammeparentes eller manglende h\u00F8jreklammeparentes",
@@ -52,7 +52,7 @@ MathJax.Localization.addTranslation("da","TeX",{
           InvalidMathMLAttr: "Ugyldig MathML attribut: %1",
           UnknownAttrForElement: "%1 er ikke en genkendt attribut for %2",
           MaxMacroSub1: "Det maksimale antal makro substitutioner i MathJax er overskredet; er der et rekursivt makrokald?",
-          MaxMacroSub2: "Det maksimale antal substitutioner i MathJax er overskredet; er der et rekursivt latex milj\u00F8?",
+          MaxMacroSub2: "Det maksimale antal substitutioner i MathJax er overskredet; er der et rekursivt LaTeX milj\u00F8?",
           MissingArgFor: "Manglende argument til %1",
           ExtraAlignTab: "For mange \u0026 i \\cases tekst",
           BracketMustBeDimension: "Klammeargument til %1 skal v\u00E6re en dimension",

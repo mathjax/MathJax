@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/qqq/qqq.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("qqq",null,{
   menuTitle: "Message Documentation",
-  version: "2.4.0",
+  version: "2.5.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           CookieConfig: "This alert message is displayed when the MathJax cookie contains some data with URL or Config properties. These properties may be used to ask MathJax to perform actions during the Configuration phase: either loading a javascript file (URL property) or executing a configuration function (Config property). Note that the character '\\n' is used to specify new lines inside the alert box.",

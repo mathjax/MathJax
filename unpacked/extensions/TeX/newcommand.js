@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/newcommand"] = {
-  version: "2.4.0"
+  version: "2.5.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -48,7 +48,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   TEX.Parse.Augment({
 
     /*
-     *  Implement \newcommand{\name}[n]{...}
+     *  Implement \newcommand{\name}[n][default]{...}
      */
     NewCommand: function (name) {
       var cs = this.trimSpaces(this.GetArgument(name)),
@@ -76,6 +76,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     NewEnvironment: function (name) {
       var env  = this.trimSpaces(this.GetArgument(name)),
           n    = this.GetBrackets(name),
+          opt  = this.GetBrackets(name),
           bdef = this.GetArgument(name),
           edef = this.GetArgument(name);
       if (n) {
@@ -85,7 +86,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
                      "Illegal number of parameters specified in %1",name]);
         }
       }
-      this.setEnv(env,['BeginEnv',[null,'EndEnv'],bdef,edef,n]);
+      this.setEnv(env,['BeginEnv',[null,'EndEnv'],bdef,edef,n,opt]);
     },
     
     /*
@@ -203,10 +204,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  Process a user-defined environment
      */
-    BeginEnv: function (begin,bdef,edef,n) {
+    BeginEnv: function (begin,bdef,edef,n,def) {
       if (n) {
         var args = [];
-        for (var i = 0; i < n; i++) {args.push(this.GetArgument("\\begin{"+name+"}"))}
+        if (def != null) {
+          var optional = this.GetBrackets("\\begin{"+name+"}");
+          args.push(optional == null ? def : optional);
+        }
+        for (var i = args.length; i < n; i++) {args.push(this.GetArgument("\\begin{"+name+"}"))}
         bdef = this.SubstituteArgs(args,bdef);
         edef = this.SubstituteArgs([],edef); // no args, but get errors for #n in edef
       }

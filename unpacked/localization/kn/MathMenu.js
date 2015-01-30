@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/kn/MathMenu.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("kn","MathMenu",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           Show: "\u0C97\u0CA3\u0CBF\u0CA4 \u0CB5\u0CA8\u0CCD\u0CA8\u0CC1 \u0CB9\u0CC7\u0C97\u0CC6 \u0CA4\u0CCB\u0CB0\u0CBF\u0CB8\u0CB2\u0CBF?",

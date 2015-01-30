@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/qqq/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("qqq","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "This appears in TeX expressions when open and close braces do not match e.g. \u003Ccode\u003E\\( { \\)\u003C/code\u003E\n\nSee also:\n* {{msg-mathjax|Tex-ExtraCloseMissingOpen}}",

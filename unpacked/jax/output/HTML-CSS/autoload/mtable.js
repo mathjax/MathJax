@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2014 The MathJax Consortium
+ *  Copyright (c) 2010-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.4.0";
+  var VERSION = "2.5.0";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -167,7 +167,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var Y, fY, n = "";
       if (typeof(values.align) !== "string") {values.align = String(values.align)}
       if (values.align.match(/(top|bottom|center|baseline|axis)( +(-?\d+))?/))
-        {n = RegExp.$3; values.align = RegExp.$1} else {values.align = this.defaults.align}
+        {n = RegExp.$3||""; values.align = RegExp.$1} else {values.align = this.defaults.align}
       if (n !== "") {
         //
         //  Find the height of the given row
@@ -421,28 +421,31 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Place the labels, if any
       //
       if (C[LABEL]) {
-        var mw = stack.bbox.w, dw;
+        var mw = stack.bbox.w;
         var indent = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
         if (indent.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) {indent.indentalign = indent.indentalignfirst}
         if (indent.indentalign === MML.INDENTALIGN.AUTO) {indent.indentalign = this.displayAlign}
         if (indent.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {indent.indentshift = indent.indentshiftfirst}
-        if (indent.indentshift === "auto") {indent.indentshift = this.displayIndent}
+        if (indent.indentshift === "auto") {indent.indentshift = "0"}
+        var shift = HTMLCSS.length2em(indent.indentshift,mu,HTMLCSS.cwidth);
+        var labelshift = HTMLCSS.length2em(values.minlabelspacing,mu,HTMLCSS.cwidth);
+        if (this.displayIndent !== "0") {
+          var dIndent = HTMLCSS.length2em(this.displayIndent,mu,HTMLCSS.cwidth);
+          shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -dIndent: dIndent);
+        }
         var eqn = HTMLCSS.createStack(span,false,"100%");
-        HTMLCSS.addBox(eqn,stack); HTMLCSS.alignBox(stack,indent.indentalign,0);
-	if (indent.indentshift && indent.indentalign !== MML.INDENTALIGN.CENTER) {
-          dw = HTMLCSS.length2em(indent.indentshift,mu); mw += dw;
-	  stack.style[indent.indentalign] = HTMLCSS.Em(dw);
-	}
+        HTMLCSS.addBox(eqn,stack); HTMLCSS.alignBox(stack,indent.indentalign,0,shift);
+
         C[LABEL].parentNode.parentNode.removeChild(C[LABEL].parentNode);
         HTMLCSS.addBox(eqn,C[LABEL]); HTMLCSS.alignBox(C[LABEL],CALIGN[LABEL],0);
         if (HTMLCSS.msieRelativeWidthBug) {stack.style.top = C[LABEL].style.top = ""}
         if (hasRelativeWidth) {stack.style.width = values.width; span.bbox.width = "100%"}
-        dw = HTMLCSS.length2em(values.minlabelspacing,mu);
-        C[LABEL].style.marginRight = C[LABEL].style.marginLeft = HTMLCSS.Em(dw);
-        if (indent.indentalign === MML.INDENTALIGN.CENTER) {mw += 4*dw + 2*C[LABEL].bbox.w}
-          else if (indent.indentalign !== CALIGN[LABEL]) {mw += 2*dw + C[LABEL].bbox.w}
-        span.style.minWidth = span.bbox.minWidth = 
-          eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(mw);
+        C[LABEL].style.marginRight = C[LABEL].style.marginLeft = HTMLCSS.Em(labelshift);
+        if (indent.indentalign === MML.INDENTALIGN.CENTER) {mw += 4*labelshift + 2*C[LABEL].bbox.w}
+          else if (indent.indentalign !== CALIGN[LABEL]) {mw += 2*labelshift + C[LABEL].bbox.w}
+        mw = Math.max(0,mw+shift); span.bbox.tw = mw + 2*labelshift;
+        span.style.minWidth = span.bbox.minWidth = HTMLCSS.Em(mw);
+        eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(mw/HTMLCSS.scale);
       }
       //
       //  Finish the table
