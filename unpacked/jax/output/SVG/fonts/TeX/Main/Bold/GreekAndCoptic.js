@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/SVG/fonts/TeX/svg/Main/Bold/GreekAndCoptic.js
  *
- *  Copyright (c) 2011-2014 The MathJax Consortium
+ *  Copyright (c) 2011-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.

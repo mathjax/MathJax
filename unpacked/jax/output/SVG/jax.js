@@ -11,7 +11,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2014 The MathJax Consortium
+ *  Copyright (c) 2011-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -227,11 +227,6 @@
           div = HTML.Element("div",{className:"MathJax_SVG_Display"});
           div.appendChild(span);
         }
-        //
-        //  Mark math for screen readers
-        //    (screen readers don't know about role="math" yet, so use "textbox" instead)
-        //
-        div.setAttribute("role","textbox"); div.setAttribute("aria-readonly","true");
         div.className += " MathJax_SVG_Processing";
         script.parentNode.insertBefore(div,script);
         //
@@ -855,6 +850,8 @@
             svg.h -= y; svg.d += y; svg.H -= y; svg.D +=y;
             svg.w -= x; svg.r -= x; svg.l += x;
             svg.removeable = false;
+            child.setAttribute("x",Math.floor(svg.x/svg.scale));
+            child.setAttribute("y",Math.floor(svg.y/svg.scale));
           }
         }
         if (Math.abs(svg.x) < 1 && Math.abs(svg.y) < 1) {
@@ -1136,12 +1133,35 @@
           svg.element.style.cssText = style;
           if (svg.element.style.fontSize) {svg.element.style.fontSize = ""} // handled by scale
           svg.element.style.border = svg.element.style.padding = "";
-          if (svg.removeable) {svg.removeable = svg.element.style.cssText === ""}
+          if (svg.removeable) {svg.removeable = (svg.element.style.cssText === "")}
         }
+        this.SVGaddAttributes(svg);
       },
       SVGaddClass: function (node,name) {
         var classes = node.getAttribute("class");
         node.setAttribute("class",(classes ? classes+" " : "")+name);
+      },
+      SVGaddAttributes: function (svg) {
+        //
+        //  Copy RDFa, aria, and other tags from the MathML to the HTML-CSS
+        //  output spans Don't copy those in the MML.nocopyAttributes list,
+        //  the ignoreMMLattributes configuration list, or anything tha
+        //  already exists as a property of the span (e.g., no "onlick", etc.)
+        //  If a name in the ignoreMMLattributes object is set to false, then
+        //  the attribute WILL be copied.
+        //
+        if (this.attrNames) {
+          var copy = this.attrNames, skip = MML.nocopyAttributes, ignore = HUB.config.ignoreMMLattributes;
+          var defaults = (this.type === "mstyle" ? MML.math.prototype.defaults : this.defaults);
+          for (var i = 0, m = copy.length; i < m; i++) {
+            var id = copy[i];
+            if (ignore[id] == false || (!skip[id] && !ignore[id] &&
+                defaults[id] == null && typeof(svg.element[id]) === "undefined")) {
+              svg.element.setAttribute(id,this.attr[id]);
+              svg.removeable = false;
+            }
+          }
+        }
       },
       //
       //  WebKit currently scrolls to the BOTTOM of an svg element if it contains the
@@ -1617,12 +1637,12 @@
 	if (this.data[0] != null) {
           this.SVGgetScale(svg); this.SVGhandleSpace(svg);
           var pad = this.SVGdataStretched(0,HW,D), mu = this.SVGgetMu(svg);
-	  var values = this.getValues("height","depth","width","lspace","voffset"), x = 0, y = 0;
-	  if (values.lspace)  {x = this.SVGlength2em(pad,values.lspace,mu)}
-	  if (values.voffset) {y = this.SVGlength2em(pad,values.voffset,mu)}
-          var h = pad.h, d = pad.d, w = pad.w; // these can change durring the Add() 
-          svg.Add(pad,x,y); svg.Clean();
-          svg.h = h+pad.y; svg.d = d-pad.y; svg.w = w; svg.removeable = false;
+	  var values = this.getValues("height","depth","width","lspace","voffset"), X = 0, Y = 0;
+	  if (values.lspace)  {X = this.SVGlength2em(pad,values.lspace,mu)}
+	  if (values.voffset) {Y = this.SVGlength2em(pad,values.voffset,mu)}
+          var h = pad.h, d = pad.d, w = pad.w, y = pad.y; // these can change durring the Add() 
+          svg.Add(pad,X,Y); svg.Clean();
+          svg.h = h+y; svg.d = d-y; svg.w = w; svg.removeable = false;
 	  if (values.height !== "") {svg.h = this.SVGlength2em(svg,values.height,mu,"h",0)}
 	  if (values.depth  !== "") {svg.d = this.SVGlength2em(svg,values.depth,mu,"d",0)}
 	  if (values.width  !== "") {svg.w = this.SVGlength2em(svg,values.width,mu,"w",0)}
@@ -1648,7 +1668,7 @@
         this.SVGgetStyles();
 	var svg = this.SVG();
         this.SVGhandleSpace(svg);
-        if (d != null) {this.sh = h; this.sd = d}
+        if (d != null) {svg.sh = h; svg.sd = d}
 	for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {svg.Check(this.data[i])}}
         svg.Stretch(); svg.Clean();
@@ -1958,17 +1978,18 @@
 	var min = this.getValues("subscriptshift","superscriptshift");
 	min.subscriptshift   = (min.subscriptshift === ""   ? 0 : SVG.length2em(min.subscriptshift,mu));
 	min.superscriptshift = (min.superscriptshift === "" ? 0 : SVG.length2em(min.superscriptshift,mu));
+        var x = base.w + base.x;
 	if (!sup) {
 	  if (sub) {
 	    v = Math.max(v,SVG.TeX.sub1*scale,sub.h-(4/5)*x_height,min.subscriptshift);
-            svg.Add(sub,base.w,-v); this.data[this.sub].SVGdata.dy = -v;
+            svg.Add(sub,x,-v); this.data[this.sub].SVGdata.dy = -v;
 	  }
 	} else {
 	  if (!sub) {
 	    values = this.getValues("displaystyle","texprimestyle");
 	    p = SVG.TeX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
 	    u = Math.max(u,p*scale,sup.d+(1/4)*x_height,min.superscriptshift);
-            svg.Add(sup,base.w+delta,u);
+            svg.Add(sup,x+delta,u);
             this.data[this.sup].SVGdata.dx = delta; 
             this.data[this.sup].SVGdata.dy = u;
 	  } else {
@@ -1979,8 +2000,8 @@
 	      q = (4/5)*x_height - (u - sup.d);
 	      if (q > 0) {u += q; v -= q}
 	    }
-            svg.Add(sup,base.w+delta,Math.max(u,min.superscriptshift));
-	    svg.Add(sub,base.w,-Math.max(v,min.subscriptshift));
+            svg.Add(sup,x+delta,Math.max(u,min.superscriptshift));
+	    svg.Add(sub,x,-Math.max(v,min.subscriptshift));
             this.data[this.sup].SVGdata.dx = delta; 
             this.data[this.sup].SVGdata.dy = Math.max(u,min.superscriptshift);
             this.data[this.sub].SVGdata.dy = -Math.max(v,min.subscriptshift);
@@ -2008,16 +2029,19 @@
           this.SVGgetStyles();
 	  MML.mbase.prototype.displayAlign = HUB.config.displayAlign;
 	  MML.mbase.prototype.displayIndent = HUB.config.displayIndent;
+          if (String(HUB.config.displayIndent).match(/^0($|[a-z%])/i))
+            MML.mbase.prototype.displayIndent = "0";
           //
           //  Put content in a <g> with defaults and matrix that flips y axis.
           //  Put that in an <svg> with xlink defined.
           //
-          var box = BBOX.G({
-            stroke:"black", fill:"black", "stroke-width":0,
-            transform: "matrix(1 0 0 -1 0 0)"
-          }).With({removeable: false});
-          box.Add(this.data[0].toSVG(),0,0,true); box.Clean();
+          var box = BBOX.G(); box.Add(this.data[0].toSVG(),0,0,true); box.Clean();
           this.SVGhandleColor(box);
+          SVG.Element(box.element,{
+            stroke:"currentColor", fill:"currentColor", "stroke-width":0,
+            transform: "matrix(1 0 0 -1 0 0)"
+          });
+          box.removeable = false;
           var svg = this.SVG();
           svg.element.setAttribute("xmlns:xlink",XLINKNS);
           if (CONFIG.useFontCache && !CONFIG.useGlobalCache)
@@ -2058,6 +2082,10 @@
           //
           //  Add it to the MathJax span
           //
+          var alttext = this.Get("alttext");
+          if (alttext && !svg.element.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
+          if (!svg.element.getAttribute("role")) span.setAttribute("role","math");
+//        span.setAttribute("tabindex",0);  // causes focus outline, so disable for now
           span.appendChild(svg.element); svg.element = null;
           //
           //  Handle indentalign and indentshift for single-line displays

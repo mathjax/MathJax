@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2014 The MathJax Consortium
+ *  Copyright (c) 2011-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.4.0";
+  var VERSION = "2.5.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -333,8 +333,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         var shift = SVG.length2em(indent.indentshift,mu,SVG.cwidth);
         var labelshift = SVG.length2em(values.minlabelspacing,mu,SVG.cwidth);
         if (this.displayIndent !== "0") {
-          var indent = SVG.length2em(this.displayIndent,mu,SVG.cwidth);
-          shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -indent: indent);
+          var dIndent = SVG.length2em(this.displayIndent,mu,SVG.cwidth);
+          shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -dIndent: dIndent);
         }
         var eqn = svg; svg = this.SVG();
         svg.w = svg.r = SVG.cwidth; svg.hasIndent = true;

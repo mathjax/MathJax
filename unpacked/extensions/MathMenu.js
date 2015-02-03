@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2014 The MathJax Consortium
+ *  Copyright (c) 2010-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.4.0";
+  var VERSION = "2.5.0";
 
   var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
   
@@ -806,7 +806,7 @@
             if (nMML)    {nMML.config.scale = scale}
             if (SVG)     {SVG.config.scale = scale}
             MENU.cookie.scale = scale;
-            MENU.saveCookie(); HUB.Reprocess();
+            MENU.saveCookie(); HUB.Rerender();
           }
         } else {alert(_("NonZeroScale","The scale should not be zero"))}
       } else {alert(_("PercentScale",
@@ -964,7 +964,7 @@
       "The MathJax contextual menu will be disabled, but you can " +
       "Alt-Click on an expression to obtain the MathJax menu instead."]
   };
-
+  
   /*************************************************************/
   /*************************************************************/
 
@@ -1090,15 +1090,18 @@
         ITEM.RULE(),
         ITEM.SUBMENU(["Renderer","Math Renderer"],    {hidden:!CONFIG.showRenderer},
           ITEM.RADIO("HTML-CSS",  "renderer", {action: MENU.Renderer}),
+          ITEM.RADIO("Fast HTML", "renderer", {action: MENU.Renderer, value:"CommonHTML"}),
           ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"}),
-          ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer})
+          ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer}),
+          ITEM.RULE(),
+          ITEM.CHECKBOX("Fast Preview", "CHTMLpreview")
         ),
         ITEM.SUBMENU("MathPlayer",  {hidden:!HUB.Browser.isMSIE || !CONFIG.showMathPlayer,
                                                     disabled:!HUB.Browser.hasMathPlayer},
           ITEM.LABEL(["MPHandles","Let MathPlayer Handle:"]),
           ITEM.CHECKBOX(["MenuEvents","Menu Events"],             "mpContext", {action: MENU.MPEvents, hidden:!isIE9}),
           ITEM.CHECKBOX(["MouseEvents","Mouse Events"],           "mpMouse",   {action: MENU.MPEvents, hidden:!isIE9}),
-          ITEM.CHECKBOX(["MenuAndMouse","Mouse and Menu Events"], "mpMouse", {action: MENU.MPEvents, hidden:isIE9})
+          ITEM.CHECKBOX(["MenuAndMouse","Mouse and Menu Events"], "mpMouse",   {action: MENU.MPEvents, hidden:isIE9})
         ),
         ITEM.SUBMENU(["FontPrefs","Font Preference"],       {hidden:!CONFIG.showFontMenu},
           ITEM.LABEL(["ForHTMLCSS","For HTML-CSS:"]),

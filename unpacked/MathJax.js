@@ -12,7 +12,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,10 +45,10 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
-MathJax.version = "2.4.0";
-MathJax.fileversion = "2.4.0";
-MathJax.cdnVersion = "2.4-beta-2";  // specifies a revision to break caching
-MathJax.cdnFileVersions = {};       // can be used to specify revisions for individual files
+MathJax.version = "2.5.0";
+MathJax.fileversion = "2.5.0";
+MathJax.cdnVersion = "2.5.0";  // specifies a revision to break caching
+MathJax.cdnFileVersions = {};  // can be used to specify revisions for individual files
 
 /**********************************************************/
 
@@ -641,7 +641,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     if (document.styleSheets && document.styleSheets.length > sheets)
       {sheets = document.styleSheets.length}
     if (!head) {
-      head = (document.getElementsByTagName("head"))[0];
+      head = document.head || ((document.getElementsByTagName("head"))[0]);
       if (!head) {head = document.body}
     }
     return head;
@@ -1149,6 +1149,7 @@ MathJax.Localization = {
     // the languages that use a remap but are not translated at all.
     //
     "ast": {menuTitle: "asturianu"},
+    "bcc": {menuTitle: "\u0628\u0644\u0648\u0686\u06CC"},
     "br": {menuTitle: "brezhoneg"},
     "ca": {menuTitle: "catal\u00E0"},
     "cdo": {menuTitle: "M\u00ECng-d\u0115\u0324ng-ng\u1E73\u0304"},
@@ -1176,6 +1177,7 @@ MathJax.Localization = {
     "pt": {menuTitle: "portugus\u00EA"},
     "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
     "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
+    "sco": {menuTitle: "Scots"},
     "sl": {menuTitle: "sloven\u0161\u010Dina"},
     "sv": {menuTitle: "svenska"},
     "tr": {menuTitle: "T\u00FCrk\u00E7e"},
@@ -1895,7 +1897,13 @@ MathJax.Hub = {
        // localized HTML snippet structure for message to use
       message: ["[",["MathProcessingError","Math Processing Error"],"]"],
       style: {color: "#CC0000", "font-style":"italic"}  // style for message
-    }
+    },
+    
+    ignoreMMLattributes: {}  // attributes not to copy to HTML-CSS or SVG output
+                             //   from MathML input (in addition to the ones in MML.nocopyAttributes).
+                             //   An id set to true will be ignored, one set to false will
+                             //   be allowed (even if other criteria normally would prevent
+                             //   it from being copied); use false carefully!
   },
   
   preProcessors: MathJax.Callback.Hooks(true), // list of callbacks for preprocessing (initialized by extensions)
@@ -2377,8 +2385,12 @@ MathJax.Hub = {
   elementScripts: function (element) {
     var scripts = [];
     if (element instanceof Array || this.isHTMLCollection(element)) {
-      for (var i = 0, m = element.length; i < m; i++)
-        {scripts.push.apply(scripts,this.elementScripts(element[i]))}
+      for (var i = 0, m = element.length; i < m; i++) {
+        var alreadyDone = 0;
+        for (var j = 0; j < i && !alreadyDone; j++)
+          {alreadyDone = element[j].contains(element[i])}
+        if (!alreadyDone) scripts.push.apply(scripts,this.elementScripts(element[i]));
+      }
       return scripts;
     }
     if (typeof(element) === 'string') {element = document.getElementById(element)}
@@ -2394,7 +2406,7 @@ MathJax.Hub = {
   //  IE8 fails to check "obj instanceof HTMLCollection" for some values of obj.
   //
   isHTMLCollection: function (obj) {
-    return (typeof(obj) === "object" && obj instanceof HTMLCollection);
+    return ("HTMLCollection" in window && typeof(obj) === "object" && obj instanceof HTMLCollection);
   },
   //
   //  IE8 doesn't deal with HTMLCollection as an array, so convert to array
@@ -2532,6 +2544,8 @@ MathJax.Hub.Startup = {
           }
           jax.unshift(name);
         }
+        if (config.menuSettings.CHTMLpreview && !MathJax.Extension["CHTML-preview"])
+          {MathJax.Hub.config.extensions.push("CHTML-preview.js")}
       },MathJax.Hub.config],
       ["Post",this.signal,"End Cookie"]
     );
@@ -2807,7 +2821,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "Jax",
-    version: "2.4.0",
+    version: "2.5.0",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -2853,7 +2867,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "InputJax",
-    version: "2.4.0",
+    version: "2.5.0",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -2886,7 +2900,7 @@ MathJax.Hub.Startup = {
     Remove: function (jax) {}
   },{
     id: "OutputJax",
-    version: "2.4.0",
+    version: "2.5.0",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
@@ -2970,7 +2984,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "2.4.0",
+    version: "2.5.0",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -2994,7 +3008,7 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.4.0", config: {},
+    id: "Error", version: "2.5.0", config: {},
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
@@ -3011,7 +3025,7 @@ MathJax.Hub.Startup = {
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.4.0", config: {},
+    id: "Error", version: "2.5.0", config: {},
     sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"]
   };
   
@@ -3024,9 +3038,11 @@ MathJax.Hub.Startup = {
   if (!BASE) {BASE = window[BASENAME] = {}}
 
   var HUB = BASE.Hub; var STARTUP = HUB.Startup; var CONFIG = HUB.config;
-  var HEAD = document.getElementsByTagName("head")[0];
+  var HEAD = document.head || (document.getElementsByTagName("head")[0]);
   if (!HEAD) {HEAD = document.childNodes[0]};
   var scripts = (document.documentElement || document).getElementsByTagName("script");
+  if (scripts.length === 0 && HEAD.namespaceURI)
+    scripts = document.getElementsByTagNameNS(HEAD.namespaceURI,"script");
   var namePattern = new RegExp("(^|/)"+BASENAME+"\\.js(\\?.*)?$");
   for (var i = scripts.length-1; i >= 0; i--) {
     if ((scripts[i].src||"").match(namePattern)) {
@@ -3099,13 +3115,17 @@ MathJax.Hub.Startup = {
     Safari: function (browser) {
       var v = parseInt((String(browser.version).split("."))[0]);
       if (v > 85) {browser.webkit = browser.version}
-      if      (v >= 534) {browser.version = "5.1"}
+      if      (v >= 538) {browser.version = "8.0"}
+      else if (v >= 537) {browser.version = "7.0"}
+      else if (v >= 536) {browser.version = "6.0"}
+      else if (v >= 534) {browser.version = "5.1"}
       else if (v >= 533) {browser.version = "5.0"}
       else if (v >= 526) {browser.version = "4.0"}
       else if (v >= 525) {browser.version = "3.1"}
       else if (v >  500) {browser.version = "3.0"}
       else if (v >  400) {browser.version = "2.0"}
       else if (v >   85) {browser.version = "1.0"}
+      browser.webkit = (navigator.appVersion.match(/WebKit\/(\d+)\./))[1];
       browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
       browser.noContextMenu = browser.isMobile;
     },
@@ -3150,7 +3170,7 @@ MathJax.Hub.Startup = {
           if (browser.hasMathPlayer) {
             var mathplayer = document.createElement("object");
             mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
-            document.getElementsByTagName("head")[0].appendChild(mathplayer);
+            HEAD.appendChild(mathplayer);
             document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
             browser.mpNamespace = true;
             if (document.readyState && (document.readyState === "loading" ||
