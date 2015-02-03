@@ -9,7 +9,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2014 The MathJax Consortium
+ *  Copyright (c) 2013-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMScd"] = {
-  version: "2.4.0",
+  version: "2.5.0",
   config: MathJax.Hub.CombineConfig("TeX.CD",{
     colspace: "5pt",
     rowspace: "5pt",
@@ -70,7 +70,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (!c.match(/[><VA.|=]/)) {return this.Other(name)} else {this.i++}
 
       var top = this.stack.Top();
-      if (!top.isa(STACKITEM.array) || top.data.length) {this.CD_cell(name)}
+      if (!top.isa(STACKITEM.array) || top.data.length) {
+        this.CD_cell(name);
+        top = this.stack.Top();
+      }
       //
       //  Add enough cells to place the arrow correctly
       //

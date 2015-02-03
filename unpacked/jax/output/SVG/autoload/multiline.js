@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2014 The MathJax Consortium
+ *  Copyright (c) 2011-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.4.0";
+  var VERSION = "2.5.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -221,6 +221,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Place the new line
       //
+      if (line.w + shift > svg.w) svg.w = line.w + shift;
       svg.Align(line,align,0,state.Y,shift);
       //
       //  Save the values needed for the future
@@ -473,8 +474,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       if (end.length === 0) {
         var sup = this.data[this.sup], sub = this.data[this.sub], w = svg.w, data;
-        if (sup) {data = sup.SVGdata; svg.Add(sup.toSVG(),w+(data.dx||0),data.dy)}
-        if (sub) {data = sub.SVGdata; svg.Add(sub.toSVG(),w+(data.dx||0),data.dy)}
+        if (sup) {data = sup.SVGdata||{}; svg.Add(sup.toSVG(),w+(data.dx||0),data.dy)}
+        if (sub) {data = sub.SVGdata||{}; svg.Add(sub.toSVG(),w+(data.dx||0),data.dy)}
       }
     }
 
@@ -488,8 +489,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Get the current breakpoint position and other data
       //
-      var index = info.index.slice(0), i = info.index.shift(),
-          W, w, scanW, broken = (info.index.length > 0), better = false;
+      var index = info.index.slice(0); info.index.shift();
+      var W, w, scanW, broken = (info.index.length > 0), better = false;
       if (!broken) {info.W += info.w; info.w = 0}
       info.scanW = info.W;
       //

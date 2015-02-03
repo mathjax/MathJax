@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2014 The MathJax Consortium
+ *  Copyright (c) 2010-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -140,10 +140,11 @@
         if (name.match(/^_moz-math-((column|row)(align|line)|font-style)$/)) continue;
         var value = node.attributes[i].value;
         value = this.filterAttribute(name,value);
+        var defaults = (mml.type === "mstyle" ? MML.math.prototype.defaults : mml.defaults);
         if (value != null) {
           if (value.toLowerCase() === "true") {value = true}
             else if (value.toLowerCase() === "false") {value = false}
-          if (mml.defaults[name] != null || MML.copyAttributes[name])
+          if (defaults[name] != null || MML.copyAttributes[name])
             {mml[name] = value} else {mml.attr[name] = value}
           mml.attrNames.push(name);
         }
@@ -254,20 +255,21 @@
       if (script.firstChild &&
           script.firstChild.nodeName.toLowerCase().replace(/^[a-z]+:/,"") === "math") {
         data.math = script.firstChild;
-        this.prefilterHooks.Execute(data); math = data.math;
       } else {
         math = MathJax.HTML.getScript(script);
         if (BROWSER.isMSIE) {math = math.replace(/(&nbsp;)+$/,"")}
-        data.math = math; this.prefilterHooks.Execute(data); math = data.math;
+        data.math = math;
       }
+      var callback = this.prefilterHooks.Execute(data); if (callback) return callback;
+      math = data.math;
       try {
         mml = MATHML.Parse(math,script).mml;
       } catch(err) {
         if (!err.mathmlError) {throw err}
         mml = this.formatError(err,math,script);
       }
-      data.math = MML(mml); this.postfilterHooks.Execute(data);
-      return data.math;
+      data.math = MML(mml);
+      return this.postfilterHooks.Execute(data) || data.math;
     },
     prefilterMath: function (math,script) {return math},
     prefilterMathML: function (math,script) {return math},

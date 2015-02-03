@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -185,7 +185,6 @@
         var mml = MML.mfrac(this.num,this.mmlData(false));
         if (this.thickness != null) {mml.linethickness = this.thickness}
         if (this.open || this.close) {
-          mml.texClass = MML.TEXCLASS.INNER;
           mml.texWithDelims = true;
           mml = TEX.fixedFence(this.open,mml,this.close);
         }
@@ -1194,8 +1193,8 @@
       if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
       var movesupsub = base.movesupsub, position = base.sup;
       if ((base.type === "msubsup" && base.data[base.sup]) ||
-          (base.type === "munderover" && base.data[base.over]))
-           {TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"])}
+          (base.type === "munderover" && base.data[base.over] && !base.subsupOK))
+           {TEX.Error(["DoubleExponent","Double exponent: use braces to clarify"])}
       if (base.type !== "msubsup") {
         if (movesupsub) {
           if (base.type !== "munderover" || base.data[base.over]) {
@@ -1221,7 +1220,7 @@
       if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
       var movesupsub = base.movesupsub, position = base.sub;
       if ((base.type === "msubsup" && base.data[base.sub]) ||
-          (base.type === "munderover" && base.data[base.under]))
+          (base.type === "munderover" && base.data[base.under] && !base.subsupOK))
            {TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"])}
       if (base.type !== "msubsup") {
         if (movesupsub) {
@@ -1360,7 +1359,7 @@
         op = top.data[top.data.length-1] = MML.munderover.apply(MML.underover,op.data);
       }
       op.movesupsub = (limits ? true : false);
-      op.movablelimits = false;
+      op.Core().movablelimits = false;
     },
     
     Over: function (name,open,close) {
@@ -1431,13 +1430,17 @@
       var pos = {o: "over", u: "under"}[name.charAt(1)];
       var base = this.ParseArg(name);
       if (base.Get("movablelimits")) {base.movablelimits = false}
-      if (base.isa(MML.munderover) && base.isEmbellished())
-        {base = MML.mrow(MML.mo().With({rspace:0}),base)}  // add an empty <mi> so it's not embellished any more
+      if (base.isa(MML.munderover) && base.isEmbellished()) {
+        base.Core().With({lspace:0,rspace:0}); // get spacing right for NativeMML
+        base = MML.mrow(MML.mo().With({rspace:0}),base);  // add an empty <mi> so it's not embellished any more
+      }
       var mml = MML.munderover(base,null,null);
-      mml.data[mml[pos]] = 
-        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:(pos == "under")}));
+      mml.SetData(
+        mml[pos], 
+        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:(pos==="under")}))
+      );
       if (stack) {mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true})}
-      this.Push(mml);
+      this.Push(mml.With({subsupOK:true}));
     },
     
     Overset: function (name) {
@@ -2134,7 +2137,8 @@
       var mml, isError = false, math = MathJax.HTML.getScript(script);
       var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
       var data = {math:math, display:display, script:script};
-      this.prefilterHooks.Execute(data); math = data.math;
+      var callback = this.prefilterHooks.Execute(data); if (callback) return callback;
+      math = data.math;
       try {
         mml = TEX.Parse(math).mml();
       } catch(err) {
@@ -2142,11 +2146,12 @@
         mml = this.formatError(err,math,display,script);
         isError = true;
       }
+      if (mml.isa(MML.mtable) && mml.displaystyle === "inherit") mml.displaystyle = display; // for tagged equations
       if (mml.inferred) {mml = MML.apply(MathJax.ElementJax,mml.data)} else {mml = MML(mml)}
       if (display) {mml.root.display = "block"}
       if (isError) {mml.texError = true}
-      data.math = mml; this.postfilterHooks.Execute(data);
-      return data.math;
+      data.math = mml; 
+      return this.postfilterHooks.Execute(data) || data.math;
     },
     prefilterMath: function (math,displaystyle,script) {
       return math;
@@ -2194,13 +2199,14 @@
      *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
      */
     fixedFence: function (open,mml,close) {
-      var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
+      var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
       if (open) {mrow.Append(this.mathPalette(open,"l"))}
       if (mml.type === "mrow") {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
       if (close) {mrow.Append(this.mathPalette(close,"r"))}
       return mrow;
     },
     mathPalette: function (fence,side) {
+      if (fence === '{' || fence === '}') {fence = "\\"+fence}
       var D = '{\\bigg'+side+' '+fence+'}', T = '{\\big'+side+' '+fence+'}';
       return TEX.Parse('\\mathchoice'+D+T+T+T).mml();
     },
