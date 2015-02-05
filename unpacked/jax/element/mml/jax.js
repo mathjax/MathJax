@@ -1177,7 +1177,7 @@ MathJax.ElementJax.mml.Augment({
     Append: function () {
       for (var i = 0, m = arguments.length; i < m; i++) {
         if (!((arguments[i] instanceof MML.mtr) ||
-              (arguments[i] instanceof MML.mlabeledtr))) {arguments[i] = MML.mtd(arguments[i])}
+              (arguments[i] instanceof MML.mlabeledtr))) {arguments[i] = MML.mtr(arguments[i])}
       }
       this.SUPER(arguments).Append.apply(this,arguments);
     },
