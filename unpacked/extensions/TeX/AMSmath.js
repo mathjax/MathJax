@@ -9,7 +9,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.4.0",
+  version: "2.5.0",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -104,9 +104,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       frac:       ['Genfrac',"","","",""],
       tfrac:      ['Genfrac',"","","",1],
       dfrac:      ['Genfrac',"","","",0],
-      binom:      ['Genfrac',"(",")","0em",""],
-      tbinom:     ['Genfrac',"(",")","0em",1],
-      dbinom:     ['Genfrac',"(",")","0em",0],
+      binom:      ['Genfrac',"(",")","0",""],
+      tbinom:     ['Genfrac',"(",")","0",1],
+      dbinom:     ['Genfrac',"(",")","0",0],
       
       cfrac:       'CFrac',
       
@@ -130,8 +130,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       'alignat*':    ['AlignAt',null,false,true],
       alignedat:     ['AlignAt',null,false,false],
 
-      aligned:       ['AlignedArray',null,null,null,'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0]),".5em",'D'],
-      gathered:      ['AlignedArray',null,null,null,'c',null,".5em",'D'],
+      aligned:       ['AlignedAMSArray',null,null,null,'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0]),".5em",'D'],
+      gathered:      ['AlignedAMSArray',null,null,null,'c',null,".5em",'D'],
 
       subarray:      ['Array',null,null,null,null,COLS([0,0,0,0]),"0.1em",'S',1],
       smallmatrix:   ['Array',null,null,null,'c',COLS([1/3]),".2em",'S',1],
@@ -266,7 +266,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var den = this.ParseArg(name);
       var frac = MML.mfrac(num,den);
       if (thick !== "") {frac.linethickness = thick}
-      if (left || right) {frac = TEX.fenced(left,frac,right)}
+      if (left || right) {frac = TEX.fixedFence(left,frac.With({texWithDelims:true}),right)}
       if (style !== "") {
         var STYLE = (["D","T","S","SS"])[style];
         if (STYLE == null)
@@ -314,6 +314,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       });
     },
     
+    AlignedAMSArray: function (begin) {
+      var align = this.GetBrackets("\\begin{"+begin.name+"}");
+      return this.setArrayAlign(this.AMSarray.apply(this,arguments),align);
+    },
+
     /*
      *  Handle alignat environments
      */
@@ -386,7 +391,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         bot = TEX.Parse(bot,this.stack.env).mml()
         mml.SetData(mml.under,MML.mpadded(bot).With(def).With({voffset:"-.24em"}));
       }
-      this.Push(mml);
+      this.Push(mml.With({subsupOK:true}));
     },
     
     /*
@@ -457,18 +462,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
 
     /*
-     *  Set the initial <mo> to have form="infix" and lspace="0",
-     *  skipping any initial space or empty braces (TeXAtom with child
-     *  being an empty inferred row).
+     *  If the initial child, skipping any initial space or
+     *  empty braces (TeXAtom with child being an empty inferred row),
+     *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
+     *  be infix.
      */
     fixInitialMO: function (data) {
       for (var i = 0, m = data.length; i < m; i++) {
         if (data[i] && (data[i].type !== "mspace" &&
            (data[i].type !== "texatom" || (data[i].data[0] && data[i].data[0].data.length)))) {
-          if (data[i].isEmbellished()) {
-            var core = data[i].CoreMO();
-            core.form = MML.FORM.INFIX; core.lspace = MML.LENGTH.MEDIUMMATHSPACE;
-          }
+          if (data[i].isEmbellished()) data.unshift(MML.mi());
           break;
         }
       }
@@ -571,17 +574,18 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           var def = {
             side: TEX.config.TagSide,
             minlabelspacing: TEX.config.TagIndent,
-            columnalign: mml.displayAlign
+            columnalign: mml.displayAlign,
+            displaystyle: "inherit"   // replaced by TeX input jax Translate() function with actual value
           };
           if (mml.displayAlign === MML.INDENTALIGN.LEFT) {
             def.width = "100%";
-            if (mml.displayIndent && !String(mml.displayIndent).match(/^0+(\.0*)?($|[a-z%])/)) {
+            if (mml.displayIndent !== "0") {
               def.columnwidth = mml.displayIndent + " fit"; def.columnspacing = "0"
               row = [row[0],MML.mtd(),row[1]];
             }
           } else if (mml.displayAlign === MML.INDENTALIGN.RIGHT) {
             def.width = "100%";
-            if (mml.displayIndent && !String(mml.displayIndent).match(/^0+(\.0*)?($|[a-z%])/)) {
+            if (mml.displayIndent !== "0") {
               def.columnwidth = "fit "+mml.displayIndent; def.columnspacing = "0"
               row[2] = MML.mtd();
             }
@@ -611,7 +615,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     MathJax.Hub.Insert(AMS.IDs,AMS.eqIDs);       // save IDs from this equation
     MathJax.Hub.Insert(AMS.labels,AMS.eqlabels); // save labels from this equation
     if (AMS.badref && !data.math.texError) {AMS.refs.push(data.script)}  // reprocess later
-  });
+  },100);
   
   MathJax.Hub.Register.MessageHook("Begin Math Input",function () {
     AMS.refs = [];                 // array of jax with bad references

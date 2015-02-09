@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/en/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("en","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Extra open brace or missing close brace",
@@ -41,8 +41,8 @@ MathJax.Localization.addTranslation("en","TeX",{
           UndefinedControlSequence: "Undefined control sequence %1",
           DoubleExponent: "Double exponent: use braces to clarify",
           DoubleSubscripts: "Double subscripts: use braces to clarify",
-          DoubleExponentPrime: "Prime causes double exponent: use braces to clarify",
-          CantUseHash1: "You can't use 'macro parameter character #' in math mode",
+          DoubleExponentPrime: "Prime causes double exponent: Use braces to clarify",
+          CantUseHash1: "You cannot use 'macro parameter character #' in math mode",
           MisplacedMiddle: "%1 must be within \\left and \\right",
           MisplacedLimits: "%1 is allowed only on operators",
           MisplacedMoveRoot: "%1 can appear only within a root",
@@ -52,17 +52,17 @@ MathJax.Localization.addTranslation("en","TeX",{
           InvalidMathMLAttr: "Invalid MathML attribute: %1",
           UnknownAttrForElement: "%1 is not a recognized attribute for %2",
           MaxMacroSub1: "MathJax maximum macro substitution count exceeded; is there a recursive macro call?",
-          MaxMacroSub2: "MathJax maximum substitution count exceeded; is there a recursive latex environment?",
+          MaxMacroSub2: "MathJax maximum substitution count exceeded; is there a recursive LaTeX environment?",
           MissingArgFor: "Missing argument for %1",
           ExtraAlignTab: "Extra alignment tab in \\cases text",
           BracketMustBeDimension: "Bracket argument to %1 must be a dimension",
           InvalidEnv: "Invalid environment name '%1'",
           UnknownEnv: "Unknown environment '%1'",
           ExtraCloseLooking: "Extra close brace while looking for %1",
-          MissingCloseBracket: "Couldn't find closing ']' for argument to %1",
+          MissingCloseBracket: "Could not find closing ']' for argument to %1",
           MissingOrUnrecognizedDelim: "Missing or unrecognized delimiter for %1",
           MissingDimOrUnits: "Missing dimension or its units for %1",
-          TokenNotFoundForCommand: "Couldn't find %1 for %2",
+          TokenNotFoundForCommand: "Could not find %1 for %2",
           MathNotTerminated: "Math not terminated in text box",
           IllegalMacroParam: "Illegal macro parameter reference",
           MaxBufferSize: "MathJax internal buffer size exceeded; is there a recursive macro call?",
@@ -75,7 +75,7 @@ MathJax.Localization.addTranslation("en","TeX",{
           ErroneousNestingEq: "Erroneous nesting of equation structures",
           MultlineRowsOneCol: "The rows within the %1 environment must have exactly one column",
           MultipleBBoxProperty: "%1 specified twice in %2",
-          InvalidBBoxProperty: "'%1' doesn't look like a color, a padding dimension, or a style",
+          InvalidBBoxProperty: "'%1' does not look like a color, a padding dimension, or a style",
           ExtraEndMissingBegin: "Extra %1 or missing \\begingroup",
           GlobalNotFollowedBy: "%1 not followed by \\let, \\def, or \\newcommand",
           UndefinedColorModel: "Color model '%1' not defined",
@@ -85,17 +85,17 @@ MathJax.Localization.addTranslation("en","TeX",{
           InvalidNumber: "Invalid number",
           NewextarrowArg1: "First argument to %1 must be a control sequence name",
           NewextarrowArg2: "Second argument to %1 must be two integers separated by a comma",
-          NewextarrowArg3: "Third argument to %1 must be a unicode character number",
-          NoClosingChar: "Can't find closing %1",
+          NewextarrowArg3: "Third argument to %1 must be a Unicode character number",
+          NoClosingChar: "Cannot find closing %1",
           IllegalControlSequenceName: "Illegal control sequence name for %1",
           IllegalParamNumber: "Illegal number of parameters specified in %1",
           MissingCS: "%1 must be followed by a control sequence",
           CantUseHash2: "Illegal use of # in template for %1",
           SequentialParam: "Parameters for %1 must be numbered sequentially",
           MissingReplacementString: "Missing replacement string for definition of %1",
-          MismatchUseDef: "Use of %1 doesn't match its definition",
+          MismatchUseDef: "Use of %1 does not match its definition",
           RunawayArgument: "Runaway argument for %1?",
-          NoClosingDelim: "Can't find closing delimiter for %1"
+          NoClosingDelim: "Cannot find closing delimiter for %1"
         }
 });
 

@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/pl/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("pl","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Nadmiarowy nawias otwieraj\u0105cy lub brakuj\u0105cy nawias zamykaj\u0105cy",
@@ -52,7 +52,7 @@ MathJax.Localization.addTranslation("pl","TeX",{
           InvalidMathMLAttr: "Nieprawid\u0142owy atrybut MathML: %1",
           UnknownAttrForElement: "%1 nie jest znanym atrybutem dla %2",
           MaxMacroSub1: "Przekroczono maksymaln\u0105 liczb\u0119 wywo\u0142a\u0144 makra; czy wyst\u0119puje rekursywne makro?",
-          MaxMacroSub2: "Przekroczono maksymaln\u0105 liczb\u0119 zast\u0105pie\u0144; czy wyst\u0119puje rekursywne \u015Brodowisko latex?",
+          MaxMacroSub2: "Przekroczono maksymaln\u0105 liczb\u0119 zast\u0105pie\u0144 MathJax; czy wyst\u0119puje rekursywne \u015Brodowisko LaTeX?",
           MissingArgFor: "Brakuje argumentu dla %1",
           ExtraAlignTab: "Nadmiarowy tabulator w \\cases",
           BracketMustBeDimension: "Argument w nawiasie dla %1 musi by\u0107 wymiarem",

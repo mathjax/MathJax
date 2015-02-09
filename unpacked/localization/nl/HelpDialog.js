@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/nl/HelpDialog.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,14 +22,14 @@
  */
 
 MathJax.Localization.addTranslation("nl","HelpDialog",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           Help: "MathJax Help",
           MathJax: "*MathJax* is een JavaScript bibliotheek die het mogelijk maakt dat auteurs wiskunde kunnen toevoegen aan hun web-pagina's. Als een lezer hoeft u niks te doen om dat mogelijk te maken.",
           Browsers: "*Browsers*: MathJax werkt met alle moderne browsers, inclusief IE6+, Firefox 3+, Chrome 0.2+, Safari 2+, Opera 9.6+ en de meeste mobiele browsers.",
           Menu: "*Math menu*:MathJax voegt een context menu toe aan vergelijkingen. Rechtsklik of Ctrl-klik op willekeurige wiskunde om het menu weer te geven.",
-          ShowMath: "*Toon wiskunde als* toont de formule in bron opmaak voor knippen \u0026 plakken (als MathML of in zijn originele formaat).",
+          ShowMath: "*Wiskunde weergeven als* geeft de formule in bron opmaak weer voor knippen en plakken (als MathML of in de originele opmaak).",
           Settings: "Via *Instellingen* kunt u de functionaliteit van MathJax beheersen, zoals de grootte van de wiskunde en het mechanisme dat gebruikt wordt om vergelijkingen weer te geven.",
           Language: "Via *Taal* kunt u de taal kiezen die MathJax gebruikt voor de menu's en waarschuwingsboodschappen.",
           Zoom: "*Wiskunde zoom*: Als u moeite heeft met het lezen van een vergelijking dan kan MathJax deze vergroten zodat u het beter kunt zien.",

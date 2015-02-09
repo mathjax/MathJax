@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/qqq/MathML.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@
  */
 
 MathJax.Localization.addTranslation("qqq","MathML",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           BadMglyph: "This error is displayed when processing a MathML mglyph element with a bad URL. Parameters:\n* %1 - the value of the src attribute",
           BadMglyphFont: "Parameters:\n* %1 - font family",
-          MathPlayer: "This alert is displayed when the Native MathML output Jax fails to set up MathPlayer.\n\nThe new line character is used to force new lines in the alert box.",
-          CantCreateXMLParser: "This alert is displayed when the MathML input Jax fails to create an XML parser.\n\nThe new line character is used to force new lines in the alert box.",
+          MathPlayer: "This alert is displayed when the Native MathML output Jax fails to set up MathPlayer. The instructions are IE specific.\n\nThe new line character is used to force new lines in the alert box.",
+          CantCreateXMLParser: "This alert is displayed when the MathML input Jax fails to create an XML parser. The instructions are IE specific.\n\nThe new line character is used to force new lines in the alert box.",
           UnknownNodeType: "Used as error message. Parameters:\n* %1 - node type",
           UnexpectedTextNode: "Used as error message. Parameters:\n* %1 - text, enclosed in \"'\"",
           ErrorParsingMathML: "This error is displayed when a MathML element fails to be parsed.\n\nIt can only be produced by old versions of Internet Explorer.",

@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/uk/uk.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("uk",null,{
   menuTitle: "\u0443\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430",
-  version: "2.4.0",
+  version: "2.5.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax \u0437\u043D\u0430\u0439\u0448\u043B\u0430 \u043A\u0443\u043A\u0438 \u043A\u043E\u043D\u0444\u0456\u0433\u0443\u0440\u0430\u0446\u0456\u0457 \u043A\u043E\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447\u0430, \u0449\u043E \u043C\u0456\u0441\u0442\u0438\u0442\u044C \u043A\u043E\u0434 \u0434\u043B\u044F \u0437\u0430\u043F\u0443\u0441\u043A\u0443. \u0412\u0438 \u0445\u043E\u0447\u0435\u0442\u0435 \u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u0438 \u0439\u043E\u0433\u043E?\n\n\n(\u0412\u0438 \u043F\u043E\u0432\u0438\u043D\u043D\u0456 \u043D\u0430\u0442\u0438\u0441\u043D\u0443\u0442\u0438 \"\u0421\u043A\u0430\u0441\u0443\u0432\u0430\u0442\u0438\", \u0430\u0431\u0438 \u0441\u043A\u0430\u0441\u0443\u0432\u0430\u0442\u0438 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u043A\u0443\u043A \u0443 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u044E\u0432\u0430\u043D\u043D\u044F cookie \u0441\u0435\u0431\u0435.)",

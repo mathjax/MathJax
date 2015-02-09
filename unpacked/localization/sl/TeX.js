@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/sl/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("sl","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Dodaten uklepaj ali manjkajo\u010D zaklepaj",
@@ -52,7 +52,7 @@ MathJax.Localization.addTranslation("sl","TeX",{
           InvalidMathMLAttr: "Neveljaven atribut MathML: %1",
           UnknownAttrForElement: "%1 ni prepoznani atribut za %2",
           MaxMacroSub1: "Prese\u017Eeno najve\u010Dje \u0161tevilo makrosubstitucij MathJax; ali obstaja rekurzivni makroklic?",
-          MaxMacroSub2: "Prese\u017Eeno najve\u010Dje \u0161tevilo substitucij MathJax; ali obstaja rekurzivno okolje latex?",
+          MaxMacroSub2: "Prese\u017Eeno najve\u010Dje \u0161tevilo substitucij MathJax; ali obstaja rekurzivno okolje LaTeX?",
           MissingArgFor: "Manjka argument za %1",
           ExtraAlignTab: "Dodatni zavihek za poravnavo v tekstu \\cases",
           BracketMustBeDimension: "Argument v oklepaju za %1 mora biti velikost",

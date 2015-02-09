@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/zh-hans/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("zh-hans","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u6709\u591A\u4F59\u7684\u5DE6\u62EC\u53F7\u6216\u7F3A\u5C11\u53F3\u62EC\u53F7",
@@ -84,7 +84,9 @@ MathJax.Localization.addTranslation("zh-hans","TeX",{
           SequentialParam: "%1\u7684\u53C2\u6570\u5FC5\u987B\u987A\u5E8F\u6807\u53F7",
           MissingReplacementString: "%1\u7684\u5B9A\u4E49\u7F3A\u5C11\u66FF\u6362\u5B57\u7B26\u4E32",
           MismatchUseDef: "%1\u7684\u4F7F\u7528\u4E0D\u7B26\u5408\u5176\u5B9A\u4E49",
-          NoClosingDelim: "\u65E0\u6CD5\u627E\u5230\u7528\u4E8E\u7ED3\u675F\u7684\u5206\u9694\u7B26%1"
+          NoClosingDelim: "\u65E0\u6CD5\u627E\u5230\u7528\u4E8E\u7ED3\u675F\u7684\u5206\u9694\u7B26%1",
+          MaxMacroSub2: "\u5DF2\u8D85\u51FAMathJax\u7684\u6700\u9AD8\u66FF\u4EE3\u6B21\u6570\uFF1B\u96BE\u9053\u5B58\u5728\u5FAA\u73AFLaTeX\u73AF\u5883\uFF1F",
+          MultipleLabel: "\u5DF2\u5B9A\u4E49\u6807\u7B7E\u201C%1\u201D\u4E58"
         }
 });
 

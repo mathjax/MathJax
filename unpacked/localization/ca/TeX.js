@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/ca/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("ca","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Sobra una clau d'apertura o falta una clau de tancament",
@@ -52,7 +52,7 @@ MathJax.Localization.addTranslation("ca","TeX",{
           InvalidMathMLAttr: "Atribut MathML inv\u00E0lid: %1",
           UnknownAttrForElement: "%1 no \u00E9s un atribut v\u00E0lid per %2",
           MaxMacroSub1: "S'ha sobrepassat el nombre m\u00E0xim de substitucions en una macro MathJax; hi ha una crida de macro recursiva?",
-          MaxMacroSub2: "S'ha sobrepassat el nombre m\u00E0xim de substitucions en una macro MathJax; hi ha un entorn de LaTeX recursiu?",
+          MaxMacroSub2: "El comptador m\u00E0xim de substitucions de MathJax s'ha sobrepassat; hi ha un entorn de LaTeX recursiu?",
           MissingArgFor: "Falta argument per %1",
           ExtraAlignTab: "Marca d'alineaci\u00F3 extra en text \\cases",
           BracketMustBeDimension: "Argument de claud\u00E0tor per %1 ha de ser una dimensi\u00F3",

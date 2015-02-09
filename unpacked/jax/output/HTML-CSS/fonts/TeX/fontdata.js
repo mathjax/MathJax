@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "2.4.0";
+  var VERSION = "2.5.0";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -37,6 +37,8 @@
       SIZE3  = "MathJax_Size3",
       SIZE4  = "MathJax_Size4";
   var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
+  var ARROWREP = [0x2212,MAIN,0,0,0,0,.1];   // add depth for arrow extender
+  var DARROWREP = [0x3D,MAIN,0,0,0,0,.1];    // add depth for arrow extender
 
   HTMLCSS.Augment({
     FONTDATA: {
@@ -372,7 +374,7 @@
         },
         0x2190: // left arrow
         {
-          dir: H, HW: [[1,MAIN]], stretch: {left:[0x2190,MAIN],rep:[0x2212,MAIN]}
+          dir: H, HW: [[1,MAIN]], stretch: {left:[0x2190,MAIN], rep:ARROWREP}
         },
         0x2191: // \uparrow
         {
@@ -380,7 +382,7 @@
         },
         0x2192: // right arrow
         {
-          dir: H, HW: [[1,MAIN]], stretch: {rep:[0x2212,MAIN], right:[0x2192,MAIN]}
+          dir: H, HW: [[1,MAIN]], stretch: {rep:ARROWREP, right:[0x2192,MAIN]}
         },
         0x2193: // \downarrow
         {
@@ -389,7 +391,7 @@
         0x2194: // left-right arrow
         {
           dir: H, HW: [[1,MAIN]],
-          stretch: {left:[0x2190,MAIN],rep:[0x2212,MAIN], right:[0x2192,MAIN]}
+          stretch: {left:[0x2190,MAIN], rep:ARROWREP, right:[0x2192,MAIN]}
         },
         0x2195: // \updownarrow
         {
@@ -398,7 +400,7 @@
         },
         0x21D0: // left double arrow
         {
-          dir: H, HW: [[1,MAIN]], stretch: {left:[0x21D0,MAIN],rep:[0x3D,MAIN]}
+          dir: H, HW: [[1,MAIN]], stretch: {left:[0x21D0,MAIN], rep:DARROWREP}
         },
         0x21D1: // \Uparrow
         {
@@ -406,7 +408,7 @@
         },
         0x21D2: // right double arrow
         {
-          dir: H, HW: [[1,MAIN]], stretch: {rep:[0x3D,MAIN], right:[0x21D2,MAIN]}
+          dir: H, HW: [[1,MAIN]], stretch: {rep:DARROWREP, right:[0x21D2,MAIN]}
         },
         0x21D3: // \Downarrow
         {
@@ -415,7 +417,7 @@
         0x21D4: // left-right double arrow
         {
           dir: H, HW: [[1,MAIN]],
-          stretch: {left:[0x21D0,MAIN],rep:[0x3D,MAIN], right:[0x21D2,MAIN]}
+          stretch: {left:[0x21D0,MAIN], rep:DARROWREP, right:[0x21D2,MAIN]}
         },
         0x21D5: // \Updownarrow
         {
@@ -424,7 +426,7 @@
         },
         0x2212: // horizontal line
         {
-          dir: H, HW: [[.611,MAIN]], stretch: {rep:[0x2212,MAIN]}
+          dir: H, HW: [[.778,MAIN]], stretch: {rep:[0x2212,MAIN]}
         },
         0x221A: // \surd
         {
@@ -1561,8 +1563,6 @@
   HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x22F1][0] += 700;  // adjust height for \ddots
   HTMLCSS.FONTDATA.FONTS['MathJax_Size4'][0xE154][0] += 200;  // adjust height for brace extender
   HTMLCSS.FONTDATA.FONTS['MathJax_Size4'][0xE154][1] += 200;  // adjust depth for brace extender
-  HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2212][1] += 100; // adjust depth of minus (used as arrow extender)
-  HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x003D][1] += 100; // adjust depth of = (used as arrow extender)
   HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2245][2] -= 222; // fix error in character's right bearing
   HTMLCSS.FONTDATA.FONTS['MathJax_Main'][0x2245][5] = {rfix:-222}; // fix error in character's right bearing
   MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Main/Bold/MathOperators.js",function () {

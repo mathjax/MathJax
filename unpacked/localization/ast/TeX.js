@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/ast/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("ast","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Hai una llave d'apertura de m\u00E1s o falta una llave de zarramientu",
@@ -52,7 +52,7 @@ MathJax.Localization.addTranslation("ast","TeX",{
           InvalidMathMLAttr: "Atributu de MathML inv\u00E1lidu: %1",
           UnknownAttrForElement: "%1 nun ye un atributu reconoc\u00EDu pa %2",
           MaxMacroSub1: "Se sobrepas\u00F3'l n\u00FAmberu m\u00E1ximu de sustituciones de macro de MathJax; \u00BFhai ha una llamada de macro recursiva?",
-          MaxMacroSub2: "Se sobrepas\u00F3'l n\u00FAmberu m\u00E1ximu de sustituciones de MathJax; \u00BFhai un entornu de LaTeX recursivu?",
+          MaxMacroSub2: "Pas\u00F3se'l n\u00FAmberu m\u00E1ximu de sustituciones de MathJax; \u00BFhai un entornu de LaTeX recursivu?",
           MissingArgFor: "Falta l'argumentu pa %1",
           ExtraAlignTab: "Tabulador d'alliniamientu estra en testu \\cases",
           BracketMustBeDimension: "L'argumentu de corchete pa %1 tien de ser una dimensi\u00F3n",

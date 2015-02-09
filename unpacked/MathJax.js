@@ -12,7 +12,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,10 +45,10 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
-MathJax.version = "2.4.0";
-MathJax.fileversion = "2.4.0";
-MathJax.cdnVersion = "2.4-beta-2";  // specifies a revision to break caching
-MathJax.cdnFileVersions = {};       // can be used to specify revisions for individual files
+MathJax.version = "2.5.0";
+MathJax.fileversion = "2.5.0";
+MathJax.cdnVersion = "2.5.0";  // specifies a revision to break caching
+MathJax.cdnFileVersions = {};  // can be used to specify revisions for individual files
 
 /**********************************************************/
 
@@ -380,7 +380,9 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     //
     Init: function (reset) {
       this.hooks = [];
+      this.remove = []; // used when hooks are removed during execution of list
       this.reset = reset;
+      this.running = false;
     },
     //
     //  Add a callback to the list, in priority order (default priority is 10)
@@ -396,25 +398,42 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     },
     Remove: function (hook) {
       for (var i = 0, m = this.hooks.length; i < m; i++) {
-        if (this.hooks[i] === hook) {this.hooks.splice(i,1); return}
+        if (this.hooks[i] === hook) {
+          if (this.running) {this.remove.push(i)}
+            else {this.hooks.splice(i,1)}
+          return;
+        }
       }
     },
     //
     //  Execute the list of callbacks, resetting them if requested.
     //  If any return callbacks, return a callback that will be 
     //  executed when they all have completed.
+    //  Remove any hooks that requested being removed during processing.
     //
     Execute: function () {
       var callbacks = [{}];
+      this.running = true;
       for (var i = 0, m = this.hooks.length; i < m; i++) {
         if (this.reset) {this.hooks[i].reset()}
         var result = this.hooks[i].apply(window,arguments);
         if (ISCALLBACK(result) && !result.called) {callbacks.push(result)}
       }
+      this.running = false;
+      if (this.remove.length) {this.RemovePending()}
       if (callbacks.length === 1) {return null}
       if (callbacks.length === 2) {return callbacks[1]}
       return AFTER.apply({},callbacks);
+    },
+    //
+    //  Remove hooks that asked to be removed during execution of list
+    //
+    RemovePending: function () {
+      this.remove = this.remove.sort();
+      for (var i = this.remove.length-1; i >= 0; i--) {this.hooks.splice(i,1)}
+      this.remove = [];
     }
+
   });
   
   //
@@ -439,7 +458,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     //  Create the queue and push any commands that are specified
     //
     Init: function () {
-      this.pending = 0; this.running = 0;
+      this.pending = this.running = 0;
       this.queue = [];
       this.Push.apply(this,arguments);
     },
@@ -494,6 +513,8 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
       this.name = name;
       this.posted = [];              // the messages posted so far
       this.listeners = HOOKS(true);  // those with interest in this signal
+      this.posting = false;
+      this.callback = null;
     },
     //
     // Post a message to the signal listeners, with callback for when complete
@@ -508,7 +529,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
         this.Suspend(); this.posting = true;
         var result = this.listeners.Execute(message);
         if (ISCALLBACK(result) && !result.called) {WAITFOR(result,this)}
-        this.Resume(); delete this.posting;
+        this.Resume(); this.posting = false;
         if (!this.pending) {this.call()}
       }
       return callback;
@@ -564,6 +585,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
       this.hooks[msg].Add(callback,priority);
       for (var i = 0, m = this.posted.length; i < m; i++)
         {if (this.posted[i] == msg) {callback.reset(); callback(this.posted[i])}}
+      callback.msg = msg; // keep track so we can remove it
       return callback;
     },
     //
@@ -573,6 +595,12 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
       var type = ((msg instanceof Array) ? msg[0] : msg);
       if (!this.hooks[type]) {return null}
       return this.hooks[type].Execute(msg);
+    },
+    //
+    //  Remove a hook safely
+    //
+    RemoveHook: function (hook) {
+      this.hooks[hook.msg].Remove(hook);
     }
     
   },{
@@ -613,7 +641,7 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     if (document.styleSheets && document.styleSheets.length > sheets)
       {sheets = document.styleSheets.length}
     if (!head) {
-      head = (document.getElementsByTagName("head"))[0];
+      head = document.head || ((document.getElementsByTagName("head"))[0]);
       if (!head) {head = document.body}
     }
     return head;
@@ -739,6 +767,13 @@ MathJax.cdnFileVersions = {};       // can be used to specify revisions for indi
     addHook: function (file,callback,priority) {
       if (!this.loadHooks[file]) {this.loadHooks[file] = MathJax.Callback.Hooks()}
       this.loadHooks[file].Add(callback,priority);
+      callback.file = file;
+    },
+    removeHook: function (hook) {
+      if (this.loadHooks[hook.file]) {
+        this.loadHooks[hook.file].Remove(hook);
+        if (!this.loadHooks[hook.file].hooks.length) {delete this.loadHooks[hook.file]}
+      }
     },
     
     //
@@ -1114,6 +1149,7 @@ MathJax.Localization = {
     // the languages that use a remap but are not translated at all.
     //
     "ast": {menuTitle: "asturianu"},
+    "bcc": {menuTitle: "\u0628\u0644\u0648\u0686\u06CC"},
     "br": {menuTitle: "brezhoneg"},
     "ca": {menuTitle: "catal\u00E0"},
     "cdo": {menuTitle: "M\u00ECng-d\u0115\u0324ng-ng\u1E73\u0304"},
@@ -1141,6 +1177,7 @@ MathJax.Localization = {
     "pt": {menuTitle: "portugus\u00EA"},
     "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
     "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
+    "sco": {menuTitle: "Scots"},
     "sl": {menuTitle: "sloven\u0161\u010Dina"},
     "sv": {menuTitle: "svenska"},
     "tr": {menuTitle: "T\u00FCrk\u00E7e"},
@@ -1860,13 +1897,20 @@ MathJax.Hub = {
        // localized HTML snippet structure for message to use
       message: ["[",["MathProcessingError","Math Processing Error"],"]"],
       style: {color: "#CC0000", "font-style":"italic"}  // style for message
-    }
+    },
+    
+    ignoreMMLattributes: {}  // attributes not to copy to HTML-CSS or SVG output
+                             //   from MathML input (in addition to the ones in MML.nocopyAttributes).
+                             //   An id set to true will be ignored, one set to false will
+                             //   be allowed (even if other criteria normally would prevent
+                             //   it from being copied); use false carefully!
   },
   
   preProcessors: MathJax.Callback.Hooks(true), // list of callbacks for preprocessing (initialized by extensions)
   inputJax: {},          // mime-type mapped to input jax (by registration)
   outputJax: {order:{}}, // mime-type mapped to output jax list (by registration)
 
+  processSectionDelay: 50, // pause between input and output phases of processing
   processUpdateTime: 250, // time between screen updates when processing math (milliseconds)
   processUpdateDelay: 10, // pause between screen updates to allow other processing (milliseconds)
 
@@ -1887,10 +1931,16 @@ MathJax.Hub = {
   },
   
   Register: {
-    PreProcessor: function () {MathJax.Hub.preProcessors.Add.apply(MathJax.Hub.preProcessors,arguments)},
+    PreProcessor: function () {return MathJax.Hub.preProcessors.Add.apply(MathJax.Hub.preProcessors,arguments)},
     MessageHook: function () {return MathJax.Hub.signal.MessageHook.apply(MathJax.Hub.signal,arguments)},
     StartupHook: function () {return MathJax.Hub.Startup.signal.MessageHook.apply(MathJax.Hub.Startup.signal,arguments)},
     LoadHook: function () {return MathJax.Ajax.LoadHook.apply(MathJax.Ajax,arguments)}
+  },
+  UnRegister: {
+    PreProcessor: function (hook) {MathJax.Hub.preProcessors.Remove(hook)},
+    MessageHook: function (hook) {MathJax.Hub.signal.RemoveHook(hook)},
+    StartupHook: function (hook) {MathJax.Hub.Startup.signal.RemoveHook(hook)},
+    LoadHook: function (hook) {MathJax.Ajax.removeHook(hook)}
   },
   
   getAllJax: function (element) {
@@ -1970,14 +2020,11 @@ MathJax.Hub = {
   Typeset: function (element,callback) {
     if (!MathJax.isReady) return null;
     var ec = this.elementCallback(element,callback);
-    var queue = MathJax.Callback.Queue();
-    for (var i = 0, m = ec.elements.length; i < m; i++) {
-      if (ec.elements[i]) {
-        queue.Push(
-          ["PreProcess",this,ec.elements[i]],
-          ["Process",this,ec.elements[i]]
-        );
-      }
+    if (ec.count) {
+      var queue = MathJax.Callback.Queue(
+        ["PreProcess",this,ec.elements],
+        ["Process",this,ec.elements]
+      );
     }
     return queue.Push(ec.callback);
   },
@@ -1985,14 +2032,13 @@ MathJax.Hub = {
   PreProcess: function (element,callback) {
     var ec = this.elementCallback(element,callback);
     var queue = MathJax.Callback.Queue();
-    for (var i = 0, m = ec.elements.length; i < m; i++) {
-      if (ec.elements[i]) {
-        queue.Push(
-          ["Post",this.signal,["Begin PreProcess",ec.elements[i]]],
-          (arguments.callee.disabled? {} : ["Execute",this.preProcessors,ec.elements[i]]),
-          ["Post",this.signal,["End PreProcess",ec.elements[i]]]
-        );
+    if (ec.count) {
+      var elements = (ec.count === 1 ? [ec.elements] : ec.elements);
+      queue.Push(["Post",this.signal,["Begin PreProcess",ec.elements]]);
+      for (var i = 0, m = elements.length; i < m; i++) {
+        if (elements[i]) {queue.Push(["Execute",this.preProcessors,elements[i]])}
       }
+      queue.Push(["Post",this.signal,["End PreProcess",ec.elements]]);
     }
     return queue.Push(ec.callback);
   },
@@ -2004,32 +2050,37 @@ MathJax.Hub = {
   
   takeAction: function (action,element,callback) {
     var ec = this.elementCallback(element,callback);
+    var elements = ec.elements;
     var queue = MathJax.Callback.Queue(["Clear",this.signal]);
-    for (var i = 0, m = ec.elements.length; i < m; i++) {
-      if (ec.elements[i]) {
-        var state = {
-          scripts: [],                  // filled in by prepareScripts
-          start: new Date().getTime(),  // timer for processing messages
-          i: 0, j: 0,                   // current script, current jax
-          jax: {},                      // scripts grouped by output jax
-          jaxIDs: []                    // id's of jax used
-        };
-        queue.Push(
-          ["Post",this.signal,["Begin "+action,ec.elements[i]]],
-          ["Post",this.signal,["Begin Math",ec.elements[i],action]],
-          ["prepareScripts",this,action,ec.elements[i],state],
-          ["Post",this.signal,["Begin Math Input",ec.elements[i],action]],
-          ["processInput",this,state],
-          ["Post",this.signal,["End Math Input",ec.elements[i],action]],
-          ["prepareOutput",this,state,"preProcess"],
-          ["Post",this.signal,["Begin Math Output",ec.elements[i],action]],
-          ["processOutput",this,state],
-          ["Post",this.signal,["End Math Output",ec.elements[i],action]],
-          ["prepareOutput",this,state,"postProcess"],
-          ["Post",this.signal,["End Math",ec.elements[i],action]],
-          ["Post",this.signal,["End "+action,ec.elements[i]]]
-        );
-      }
+    var state = {
+      scripts: [],                  // filled in by prepareScripts
+      start: new Date().getTime(),  // timer for processing messages
+      i: 0, j: 0,                   // current script, current jax
+      jax: {},                      // scripts grouped by output jax
+      jaxIDs: []                    // id's of jax used
+    };
+    if (ec.count) {
+      var delay = ["Delay",MathJax.Callback,this.processSectionDelay];
+      if (!delay[2]) {delay = {}}
+      queue.Push(
+        ["Post",this.signal,["Begin "+action,elements]],
+        ["Post",this.signal,["Begin Math",elements,action]],
+        ["prepareScripts",this,action,elements,state],
+        ["Post",this.signal,["Begin Math Input",elements,action]],
+        ["processInput",this,state],
+        ["Post",this.signal,["End Math Input",elements,action]],
+        delay,
+        ["prepareOutput",this,state,"preProcess"],
+        delay,
+        ["Post",this.signal,["Begin Math Output",elements,action]],
+        ["processOutput",this,state],
+        ["Post",this.signal,["End Math Output",elements,action]],
+        delay,
+        ["prepareOutput",this,state,"postProcess"],
+        delay,
+        ["Post",this.signal,["End Math",elements,action]],
+        ["Post",this.signal,["End "+action,elements]]
+      );
     }
     return queue.Push(ec.callback);
   },
@@ -2316,6 +2367,7 @@ MathJax.Hub = {
     if (callback == null && (element instanceof Array || typeof element === 'function'))
       {try {MathJax.Callback(element); callback = element; element = null} catch(e) {}}
     if (element == null) {element = this.config.elements || []}
+    if (this.isHTMLCollection(element)) {element = this.HTMLCollection2Array(element)}
     if (!(element instanceof Array)) {element = [element]}
     element = [].concat(element); // make a copy so the original isn't changed
     for (var i = 0, m = element.length; i < m; i++)
@@ -2323,21 +2375,47 @@ MathJax.Hub = {
     if (!document.body) {document.body = document.getElementsByTagName("body")[0]}
     if (element.length == 0) {element.push(document.body)}
     if (!callback) {callback = {}}
-    return {elements: element, callback: callback};
+    return {
+      count: element.length, 
+      elements: (element.length === 1 ? element[0] : element),
+      callback: callback
+    };
   },
   
   elementScripts: function (element) {
-    if (element instanceof Array) {
-      var scripts = [];
-      for (var i = 0, m = element.length; i < m; i++)
-        {scripts.push.apply(scripts,this.elementScripts(element[i]))}
+    var scripts = [];
+    if (element instanceof Array || this.isHTMLCollection(element)) {
+      for (var i = 0, m = element.length; i < m; i++) {
+        var alreadyDone = 0;
+        for (var j = 0; j < i && !alreadyDone; j++)
+          {alreadyDone = element[j].contains(element[i])}
+        if (!alreadyDone) scripts.push.apply(scripts,this.elementScripts(element[i]));
+      }
       return scripts;
     }
     if (typeof(element) === 'string') {element = document.getElementById(element)}
     if (!document.body) {document.body = document.getElementsByTagName("body")[0]}
     if (element == null) {element = document.body}
     if (element.tagName != null && element.tagName.toLowerCase() === "script") {return [element]}
-    return element.getElementsByTagName("script");
+    scripts = element.getElementsByTagName("script");
+    if (this.msieHTMLCollectionBug) {scripts = this.HTMLCollection2Array(scripts)}
+    return scripts;
+  },
+
+  //
+  //  IE8 fails to check "obj instanceof HTMLCollection" for some values of obj.
+  //
+  isHTMLCollection: function (obj) {
+    return ("HTMLCollection" in window && typeof(obj) === "object" && obj instanceof HTMLCollection);
+  },
+  //
+  //  IE8 doesn't deal with HTMLCollection as an array, so convert to array
+  //
+  HTMLCollection2Array: function (nodes) {
+    if (!this.msieHTMLCollectionBug) {return [].slice.call(nodes)}
+    var NODES = [];
+    for (var i = 0, m = nodes.length; i < m; i++) {NODES[i] = nodes[i]}
+    return NODES;
   },
   
   Insert: function (dst,src) {
@@ -2466,6 +2544,8 @@ MathJax.Hub.Startup = {
           }
           jax.unshift(name);
         }
+        if (config.menuSettings.CHTMLpreview && !MathJax.Extension["CHTML-preview"])
+          {MathJax.Hub.config.extensions.push("CHTML-preview.js")}
       },MathJax.Hub.config],
       ["Post",this.signal,"End Cookie"]
     );
@@ -2741,7 +2821,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "Jax",
-    version: "2.4.0",
+    version: "2.5.0",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -2787,7 +2867,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "InputJax",
-    version: "2.4.0",
+    version: "2.5.0",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -2820,7 +2900,7 @@ MathJax.Hub.Startup = {
     Remove: function (jax) {}
   },{
     id: "OutputJax",
-    version: "2.4.0",
+    version: "2.5.0",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
@@ -2904,7 +2984,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "2.4.0",
+    version: "2.5.0",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -2928,7 +3008,7 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.4.0", config: {},
+    id: "Error", version: "2.5.0", config: {},
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
@@ -2945,7 +3025,7 @@ MathJax.Hub.Startup = {
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.4.0", config: {},
+    id: "Error", version: "2.5.0", config: {},
     sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"]
   };
   
@@ -2958,9 +3038,11 @@ MathJax.Hub.Startup = {
   if (!BASE) {BASE = window[BASENAME] = {}}
 
   var HUB = BASE.Hub; var STARTUP = HUB.Startup; var CONFIG = HUB.config;
-  var HEAD = document.getElementsByTagName("head")[0];
+  var HEAD = document.head || (document.getElementsByTagName("head")[0]);
   if (!HEAD) {HEAD = document.childNodes[0]};
   var scripts = (document.documentElement || document).getElementsByTagName("script");
+  if (scripts.length === 0 && HEAD.namespaceURI)
+    scripts = document.getElementsByTagNameNS(HEAD.namespaceURI,"script");
   var namePattern = new RegExp("(^|/)"+BASENAME+"\\.js(\\?.*)?$");
   for (var i = scripts.length-1; i >= 0; i--) {
     if ((scripts[i].src||"").match(namePattern)) {
@@ -3033,13 +3115,17 @@ MathJax.Hub.Startup = {
     Safari: function (browser) {
       var v = parseInt((String(browser.version).split("."))[0]);
       if (v > 85) {browser.webkit = browser.version}
-      if      (v >= 534) {browser.version = "5.1"}
+      if      (v >= 538) {browser.version = "8.0"}
+      else if (v >= 537) {browser.version = "7.0"}
+      else if (v >= 536) {browser.version = "6.0"}
+      else if (v >= 534) {browser.version = "5.1"}
       else if (v >= 533) {browser.version = "5.0"}
       else if (v >= 526) {browser.version = "4.0"}
       else if (v >= 525) {browser.version = "3.1"}
       else if (v >  500) {browser.version = "3.0"}
       else if (v >  400) {browser.version = "2.0"}
       else if (v >   85) {browser.version = "1.0"}
+      browser.webkit = (navigator.appVersion.match(/WebKit\/(\d+)\./))[1];
       browser.isMobile = (navigator.appVersion.match(/Mobile/i) != null);
       browser.noContextMenu = browser.isMobile;
     },
@@ -3070,28 +3156,36 @@ MathJax.Hub.Startup = {
     MSIE: function (browser) {
       browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
-      var MathPlayer = false;
-      try {new ActiveXObject("MathPlayer.Factory.1"); browser.hasMathPlayer = MathPlayer = true}
-        catch (err) {}
-      try {
-        if (MathPlayer && !STARTUP.params.NoMathPlayer) {
-          var mathplayer = document.createElement("object");
-          mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
-          document.getElementsByTagName("head")[0].appendChild(mathplayer);
-          document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
-          browser.mpNamespace = true;
-          if (document.readyState && (document.readyState === "loading" ||
-                                      document.readyState === "interactive")) {
-            document.write('<?import namespace="m" implementation="#MathPlayer">');
-            browser.mpImported = true;
+      MathJax.Hub.msieHTMLCollectionBug = (document.documentMode < 9);
+      //
+      //  MathPlayer doesn't function properly in IE10, and not at all in IE11,
+      //  so don't even try to load it.
+      //
+      if (document.documentMode < 10 && !STARTUP.params.NoMathPlayer) {
+        try {
+          new ActiveXObject("MathPlayer.Factory.1");
+          browser.hasMathPlayer = true;
+        } catch (err) {}
+        try {
+          if (browser.hasMathPlayer) {
+            var mathplayer = document.createElement("object");
+            mathplayer.id = "mathplayer"; mathplayer.classid = "clsid:32F66A20-7614-11D4-BD11-00104BD3F987";
+            HEAD.appendChild(mathplayer);
+            document.namespaces.add("m","http://www.w3.org/1998/Math/MathML");
+            browser.mpNamespace = true;
+            if (document.readyState && (document.readyState === "loading" ||
+                                        document.readyState === "interactive")) {
+              document.write('<?import namespace="m" implementation="#MathPlayer">');
+              browser.mpImported = true;
+            }
+          } else {
+            //  Adding any namespace avoids a crash in IE9 in IE9-standards mode
+            //  (any reference to document.namespaces before document.readyState is 
+            //   "complete" causes an "unspecified error" to be thrown)
+            document.namespaces.add("mjx_IE_fix","http://www.w3.org/1999/xlink");
           }
-        } else {
-          //  Adding any namespace avoids a crash in IE9 in IE9-standards mode
-          //  (any reference to document.namespaces before document.readyState is 
-          //   "complete" causes an "unspecified error" to be thrown)
-          document.namespaces.add("mjx_IE_fix","http://www.w3.org/1999/xlink");
-        }
-      } catch (err) {}
+        } catch (err) {}
+      }
     }
   });
   HUB.Browser.Select(MathJax.Message.browsers);

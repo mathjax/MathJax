@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/uk/HTML-CSS.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("uk","HTML-CSS",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           LoadWebFont: "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F \u0432\u0435\u0431 \u0448\u0440\u0438\u0444\u0442\u0456\u0432 %1",

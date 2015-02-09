@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/de/de.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("de",null,{
   menuTitle: "Deutsch",
-  version: "2.4.0",
+  version: "2.5.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax hat eine Cookie mit ausf\u00FChrbaren Code gefunden. Soll dieser Code ausgef\u00FChrt werden?\n\n(Klicken Sie 'Abbrechen' falls Sie das Cookie nicht selber akzeptiert haben.)",

@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/ja/FontWarnings.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("ja","FontWarnings",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax \u306F\u3053\u306E\u30DA\u30FC\u30B8\u3067\u3001\u6570\u5F0F\u3092\u8868\u793A\u3059\u308B\u305F\u3081\u306B\u30A6\u30A7\u30D6 \u30D9\u30FC\u30B9\u306E\u30D5\u30A9\u30F3\u30C8\u3092\u4F7F\u7528\u3057\u3066\u3044\u307E\u3059\u3002\u30D5\u30A9\u30F3\u30C8\u306E\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u306B\u6642\u9593\u304C\u304B\u304B\u308B\u305F\u3081\u3001\u3042\u306A\u305F\u306E\u30B7\u30B9\u30C6\u30E0\u306E\u30D5\u30A9\u30F3\u30C8 \u30D5\u30A9\u30EB\u30C0\u30FC\u306B\u6570\u5F0F\u30D5\u30A9\u30F3\u30C8\u3092\u76F4\u63A5\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB\u3059\u308B\u3053\u3068\u3067\u30DA\u30FC\u30B8\u306E\u30EC\u30F3\u30C0\u30EA\u30F3\u30B0\u304C\u3088\u308A\u901F\u304F\u306A\u308A\u307E\u3059\u3002",

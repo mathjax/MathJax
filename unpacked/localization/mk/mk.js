@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/mk/mk.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("mk",null,{
   menuTitle: "\u043C\u0430\u043A\u0435\u0434\u043E\u043D\u0441\u043A\u0438",
-  version: "2.4.0",
+  version: "2.5.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax \u043F\u0440\u043E\u043D\u0430\u0458\u0434\u0435 \u043A\u043E\u043B\u0430\u0447\u0435 \u0441\u043E \u043A\u043E\u0440\u0438\u0441\u043D\u0438\u0447\u043A\u0438 \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0438 \u043A\u043E\u0435 \u0441\u043E\u0434\u0440\u0436\u0438 \u043A\u043E\u0434 \u0448\u0442\u043E \u0442\u0440\u0435\u0431\u0430 \u0434\u0430 \u0441\u0435 \u043F\u0443\u0448\u0442\u0438. \u0421\u0430\u043A\u0430\u0442\u0435 \u0434\u0430 \u0433\u043E \u043F\u0443\u0448\u0442\u0438\u0442\u0435?\n\n(\u0421\u0442\u0438\u0441\u043D\u0435\u0442\u0435 \u043D\u0430 \u201E\u041E\u0442\u043A\u0430\u0436\u0438\u201C \u0434\u043E\u043A\u043E\u043B\u043A\u0443 \u043D\u0435 \u0441\u0442\u0435 \u0433\u043E \u043F\u043E\u0441\u0442\u0430\u0432\u0438\u043B\u0435 \u043A\u043E\u043B\u0430\u0447\u0435\u0442\u043E \u0432\u0438\u0435 \u0441\u0430\u043C\u0438\u0442\u0435.)",

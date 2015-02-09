@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/vi/vi.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("vi",null,{
   menuTitle: "Ti\u1EBFng Vi\u1EC7t",
-  version: "2.4.0",
+  version: "2.5.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax \u0111\u00E3 t\u00ECm th\u1EA5y m\u1ED9t cookie thi\u1EBFt l\u1EADp c\u1EE7a ng\u01B0\u1EDDi d\u00F9ng c\u00F3 m\u00E3 ngu\u1ED3n \u0111\u1EC3 ch\u1EA1y. B\u1EA1n c\u00F3 mu\u1ED1n ch\u1EA1y n\u00F3?\n\n(Khuy\u00EAn b\u1EA1n b\u1EA5m H\u1EE7y b\u1ECF tr\u1EEB khi b\u1EA1n l\u00E0 ng\u01B0\u1EDDi thi\u1EBFt l\u1EADp cookie.)",

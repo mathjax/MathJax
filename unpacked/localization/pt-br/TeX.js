@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/pt-br/TeX.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("pt-br","TeX",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Sobrou uma chave de abertura ou faltou uma de fechamento",
@@ -52,7 +52,7 @@ MathJax.Localization.addTranslation("pt-br","TeX",{
           InvalidMathMLAttr: "Atributo MathML inv\u00E1lido: %1",
           UnknownAttrForElement: "%1 n\u00E3o \u00E9 um atributo reconhecido para %2",
           MaxMacroSub1: "Foi excedido o m\u00E1ximo de substitui\u00E7\u00F5es de macros do MathJax; h\u00E1 alguma chamada a uma macro recursiva?",
-          MaxMacroSub2: "Foi excedido o m\u00E1ximo de substitui\u00E7\u00F5es do MathJax; h\u00E1 algum ambiente latex recursivo?",
+          MaxMacroSub2: "Foi excedido o m\u00E1ximo de substitui\u00E7\u00F5es do MathJax; h\u00E1 algum ambiente de LaTeX recursivo?",
           MissingArgFor: "Faltou um argumento para %1",
           ExtraAlignTab: "Sobrou um tab de alinhamento no texto de \\cases",
           BracketMustBeDimension: "O argumento nos colchetes de %1 deve ser uma dimens\u00E3o",

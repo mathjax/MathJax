@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2014 The MathJax Consortium
+ *  Copyright (c) 2010-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,12 +36,12 @@
 
   MATHML.Parse = MathJax.Object.Subclass({
 
-    Init: function (string) {this.Parse(string)},
+    Init: function (string,script) {this.Parse(string,script)},
     
     //
     //  Parse the MathML and check for errors
     //
-    Parse: function (math) {
+    Parse: function (math,script) {
       var doc;
       if (typeof math !== "string") {doc = math.parentNode} else {
         doc = MATHML.ParseXML(this.preProcessMath.call(this,math));
@@ -63,7 +63,9 @@
             "MathML must be formed by a <math> element, not %1",
             "<"+doc.firstChild.nodeName+">"]);
       }
-      this.mml = this.MakeMML(doc.firstChild);
+      var data = {math:doc.firstChild, script:script};
+      MATHML.DOMfilterHooks.Execute(data);
+      this.mml = this.MakeMML(data.math);
     },
     
     //
@@ -138,10 +140,11 @@
         if (name.match(/^_moz-math-((column|row)(align|line)|font-style)$/)) continue;
         var value = node.attributes[i].value;
         value = this.filterAttribute(name,value);
+        var defaults = (mml.type === "mstyle" ? MML.math.prototype.defaults : mml.defaults);
         if (value != null) {
           if (value.toLowerCase() === "true") {value = true}
             else if (value.toLowerCase() === "false") {value = false}
-          if (mml.defaults[name] != null || MML.copyAttributes[name])
+          if (defaults[name] != null || MML.copyAttributes[name])
             {mml[name] = value} else {mml.attr[name] = value}
           mml.attrNames.push(name);
         }
@@ -158,8 +161,12 @@
         if (child.nodeName === "#comment") continue;
         if (child.nodeName === "#text") {
           if ((mml.isToken || mml.isChars) && !mml.mmlSelfClosing) {
-            var text = child.nodeValue.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
-            mml.Append(MML.chars(this.trimSpace(text)));
+            var text = child.nodeValue;
+            if (mml.isToken) {
+              text = text.replace(/&([a-z][a-z0-9]*);/ig,this.replaceEntity);
+              text = this.trimSpace(text);
+            }
+            mml.Append(MML.chars(text));
           } else if (child.nodeValue.match(/\S/)) {
             MATHML.Error(["UnexpectedTextNode",
               "Unexpected text node: %1","'"+child.nodeValue+"'"]);
@@ -238,8 +245,9 @@
   MATHML.Augment({
     sourceMenuTitle: /*_(MathMenu)*/ ["OriginalMathML","Original MathML"],
     
-    prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run before processing MathML
-    postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run after processing MathML
+    prefilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run on MathML string before processing MathML
+    DOMfilterHooks:    MathJax.Callback.Hooks(true),   // hooks to run on MathML DOM before processing
+    postfilterHooks:   MathJax.Callback.Hooks(true),   // hooks to run on internal jax format after processing MathML
 
     Translate: function (script) {
       if (!this.ParseXML) {this.ParseXML = this.createParser()}
@@ -247,20 +255,21 @@
       if (script.firstChild &&
           script.firstChild.nodeName.toLowerCase().replace(/^[a-z]+:/,"") === "math") {
         data.math = script.firstChild;
-        this.prefilterHooks.Execute(data); math = data.math;
       } else {
         math = MathJax.HTML.getScript(script);
         if (BROWSER.isMSIE) {math = math.replace(/(&nbsp;)+$/,"")}
-        data.math = math; this.prefilterHooks.Execute(data); math = data.math;
+        data.math = math;
       }
+      var callback = this.prefilterHooks.Execute(data); if (callback) return callback;
+      math = data.math;
       try {
-        mml = MATHML.Parse(math).mml;
+        mml = MATHML.Parse(math,script).mml;
       } catch(err) {
         if (!err.mathmlError) {throw err}
         mml = this.formatError(err,math,script);
       }
-      data.math = MML(mml); this.postfilterHooks.Execute(data);
-      return data.math;
+      data.math = MML(mml);
+      return this.postfilterHooks.Execute(data) || data.math;
     },
     prefilterMath: function (math,script) {return math},
     prefilterMathML: function (math,script) {return math},
@@ -282,8 +291,11 @@
     parseDOM: function (string) {return this.parser.parseFromString(string,"text/xml")},
     parseMS: function (string) {return (this.parser.loadXML(string) ? this.parser : null)},
     parseDIV: function (string) {
-      this.div.innerHTML = string.replace(/<([a-z]+)([^>]*)\/>/g,"<$1$2></$1>");
-      return this.div;
+      this.div.innerHTML = 
+        "<div>"+string.replace(/<([a-z]+)([^>]*)\/>/g,"<$1$2></$1>")+"</div>";
+      var doc = this.div.firstChild;
+      this.div.innerHTML = "";
+      return doc;
     },
     parseError: function (string) {return null},
     createMSParser: function() {

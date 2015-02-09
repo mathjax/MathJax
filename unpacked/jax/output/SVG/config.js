@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2014 The MathJax Consortium
+ *  Copyright (c) 2011-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 
 MathJax.OutputJax.SVG = MathJax.OutputJax({
   id: "SVG",
-  version: "2.4.0",
+  version: "2.5.0",
   directory: MathJax.OutputJax.directory + "/SVG",
   extensionDir: MathJax.OutputJax.extensionDir + "/SVG",
   autoloadDir: MathJax.OutputJax.directory + "/SVG/autoload",
@@ -41,6 +41,8 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
     undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",  // fonts to use for missing characters
 
     addMMLclasses: false,           // keep MathML structure and use CSS classes to mark elements
+    useFontCache: true,             // use <use> elements to re-use font paths rather than repeat paths every time
+    useGlobalCache: true,           // store fonts in a global <defs> for use in all equations, or one in each equation
 
     EqnChunk: (MathJax.Hub.Browser.isMobile ? 10: 50),
                                     // number of equations to process before showing them
@@ -82,6 +84,10 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
       ".MathJax_SVG .MJX-sans-serif": {
         "font-family": "sans-serif"
       },
+      
+      //
+      //  For tooltips
+      //
       "#MathJax_SVG_Tooltip": {
         "background-color": "InfoBackground", color: "InfoText",
         border: "1px solid black",

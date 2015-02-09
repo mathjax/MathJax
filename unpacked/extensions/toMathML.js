@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2014 The MathJax Consortium
+ *  Copyright (c) 2010-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
-  var VERSION = "2.4.0";
+  var VERSION = "2.5.0";
   
   var MML = MathJax.ElementJax.mml
       SETTINGS = MathJax.Hub.config.menuSettings;
@@ -43,7 +43,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         if (this.data[i]) {data.push(this.data[i].toMathML(SPACE))}
           else if (!this.isToken && !this.isChars) {data.push(SPACE+"<mrow />")}
       }
-      if (this.isToken) {return space + "<"+tag+attr+">"+data.join("")+"</"+tag+">"}
+      if (this.isToken || this.isChars) {return space + "<"+tag+attr+">"+data.join("")+"</"+tag+">"}
       if (inferred) {return data.join("\n")}
       if (data.length === 0 || (data.length === 1 && data[0] === ""))
         {return space + "<"+tag+attr+" />"}
@@ -51,27 +51,25 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
     },
 
     toMathMLattributes: function () {
-      var attr = [], defaults = this.defaults;
-      var copy = (this.attrNames||MML.copyAttributeNames), skip = MML.skipAttributes;
+      var defaults = (this.type === "mstyle" ? MML.math.prototype.defaults : this.defaults);
+      var names = (this.attrNames||MML.copyAttributeNames),
+          skip = MML.skipAttributes, copy = MML.copyAttributes;
+      var attr = [];
 
       if (this.type === "math" && (!this.attr || !this.attr.xmlns))
         {attr.push('xmlns="http://www.w3.org/1998/Math/MathML"')}
       if (!this.attrNames) {
-        if (this.type === "mstyle") {defaults = MML.math.prototype.defaults}
-        for (var id in defaults) {if (!skip[id] && defaults.hasOwnProperty(id)) {
-          var force = (id === "open" || id === "close" || id === "form");
-          if (this[id] != null && (force || this[id] !== defaults[id])) {
-            var value = this[id]; delete this[id];
-            if (force || this.Get(id) !== value)
-              {attr.push(id+'="'+this.toMathMLattribute(value)+'"')}
-            this[id] = value;
+        for (var id in defaults) {if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {
+          if (this[id] != null && this[id] !== defaults[id]) {
+            if (this.Get(id,null,1) !== this[id])
+              attr.push(id+'="'+this.toMathMLattribute(this[id])+'"');
           }
         }}
       }
-      for (var i = 0, m = copy.length; i < m; i++) {
-        if (copy[i] === "class") continue;  // this is handled separately below
-        value = (this.attr||{})[copy[i]]; if (value == null) {value = this[copy[i]]}
-        if (value != null) {attr.push(copy[i]+'="'+this.toMathMLquote(value)+'"')}
+      for (var i = 0, m = names.length; i < m; i++) {
+        if (copy[names[i]] === 1 && !defaults.hasOwnProperty(names[i])) continue;
+        value = (this.attr||{})[names[i]]; if (value == null) {value = this[names[i]]}
+        if (value != null) {attr.push(names[i]+'="'+this.toMathMLquote(value)+'"')}
       }
       this.toMathMLclass(attr);
       if (attr.length) {return " "+attr.join(" ")} else {return ""}
@@ -91,7 +89,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       if (typeof(value) === "string" &&
           value.replace(/ /g,"").match(/^(([-+])?(\d+(\.\d*)?|\.\d+))mu$/)) {
         // FIXME:  should take scriptlevel into account
-        return RegExp.$2+((1/18)*RegExp.$3).toFixed(3).replace(/\.?0+$/,"")+"em";
+        return (RegExp.$2||"")+((1/18)*RegExp.$3).toFixed(3).replace(/\.?0+$/,"")+"em";
       }
       else if (this.toMathMLvariants[value]) {return this.toMathMLvariants[value]}
       return this.toMathMLquote(value);
@@ -111,7 +109,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         if (n <= 0xD7FF || 0xE000 <= n) {
           // Code points U+0000 to U+D7FF and U+E000 to U+FFFF.
           // They are directly represented by n.
-          if (n < 0x20 || n > 0x7E) {
+          if (n > 0x7E || (n < 0x20 && n !== 0x0A && n !== 0x0D && n !== 0x09)) {
             string[i] = "&#x"+n.toString(16).toUpperCase()+";";
           } else {
             var c =
@@ -149,7 +147,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         {annotation = MathJax.InputJax[jax.inputJax].annotationEncoding}
       var nested = (this.data[0] && this.data[0].data.length > 1);
       var tag = this.type, attr = this.toMathMLattributes();
-      var data = [], SPACE = space + (annotation ? "    " : "") + (nested ? "  " : "");
+      var data = [], SPACE = space + (annotation ? "  " + (nested ? "  " : "") : "") + "  ";
       for (var i = 0, m = this.data.length; i < m; i++) {
         if (this.data[i]) {data.push(this.data[i].toMathML(SPACE))}
           else {data.push(SPACE+"<mrow />")}
@@ -161,7 +159,10 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       if (annotation) {
         if (nested) {data.unshift(space+"    <mrow>"); data.push(space+"    </mrow>")}
         data.unshift(space+"  <semantics>");
-        data.push(space+'    <annotation encoding="'+annotation+'">'+jax.originalText+"</annotation>");
+        var xmlEscapedTex = jax.originalText.replace(/[&<>]/g, function(item) {
+            return { '>': '&gt;', '<': '&lt;','&': '&amp;' }[item]
+        });
+        data.push(space+'    <annotation encoding="'+annotation+'">'+xmlEscapedTex+"</annotation>");
         data.push(space+"  </semantics>");
       }
       return space+"<"+tag+attr+">\n"+data.join("\n")+"\n"+space+"</"+tag+">";

@@ -12,7 +12,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2014 The MathJax Consortium
+ *  Copyright (c) 2013-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
  */
 
 (function (HUB,AJAX) {
-  var VERSION = "2.4.0";
+  var VERSION = "2.5.0";
   
   var CONFIG = MathJax.Hub.CombineConfig("MatchWebFonts",{
     matchFor: {

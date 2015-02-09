@@ -5,7 +5,7 @@
  *
  *  /MathJax/unpacked/config/AM_HTMLorMML.js
  *  
- *  Copyright (c) 2010-2014 The MathJax Consortium
+ *  Copyright (c) 2010-2015 The MathJax Consortium
  *
  *  Part of the MathJax library.
  *  See http://www.mathjax.org for details.
@@ -18,8 +18,8 @@
 
 MathJax.Hub.Config({
   config: ["MMLorHTML.js"],
-  extensions: ["asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js"],
-  jax: ["input/AsciiMath","output/HTML-CSS","output/NativeMML"]
+  extensions: ["asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","CHTML-preview.js"],
+  jax: ["input/AsciiMath","output/HTML-CSS","output/NativeMML","output/CommonHTML"]
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/config/AM_HTMLorMML.js");

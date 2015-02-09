@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2014 The MathJax Consortium
+ *  Copyright (c) 2010-2015 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "2.4.0",
+  version: "2.5.0",
   config: {
     preview: "mathml"       // Use the <math> element as the
                             //   preview.  Set to "none" for no preview,
@@ -206,7 +206,7 @@ MathJax.Extension.mml2jax = {
     if (preview === "mathml") {
       isNodePreview = true;
       // mathml preview does not work with IE < 9, so fallback to alttext.
-      if (this.MathTagBug) {preview = "alttext"} else {preview = math.cloneNode(false)}
+      if (this.MathTagBug) {preview = "alttext"} else {preview = math.cloneNode(true)}
     }
     if (preview === "alttext" || preview === "altimg") {
       isNodePreview = true;

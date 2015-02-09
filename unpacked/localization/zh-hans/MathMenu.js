@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/zh-hans/MathMenu.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("zh-hans","MathMenu",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           Show: "\u6570\u5F0F\u663E\u793A\u5F62\u5F0F",
@@ -99,7 +99,12 @@ MathJax.Localization.addTranslation("zh-hans","MathMenu",{
           IE9warning: "MathJax\u5FEB\u6377\u83DC\u5355\u5C06\u5173\u95ED\uFF0C\u4F46\u60A8\u53EF\u4EE5\u6309Alt\u5E76\u70B9\u51FB\u8868\u8FBE\u5F0F\u6765\u547C\u51FA\u83DC\u5355\u3002",
           NoOriginalForm: "\u6CA1\u6709\u53EF\u7528\u7684\u539F\u59CB\u5F62\u5F0F",
           Close: "\u5173\u95ED",
-          EqSource: "MathJax \u65B9\u7A0B\u6E90"
+          EqSource: "MathJax \u65B9\u7A0B\u6E90",
+          AsanaMathWeb: "Asana Math (web)",
+          GyrePagellaWeb: "Gyre Pagella (web)",
+          GyreTermesWeb: "Gyre Termes (web)",
+          NeoEulerWeb: "Neo Euler (web)",
+          MSIESVGWarning: "SVG\u5728 IE9 \u4E4B\u524D\u7684 Internet Explorer \u6216\u4F7F\u7528 IE8 \u53CA\u4EE5\u4E0B\u67B6\u6784\u7684\u6D4F\u89C8\u5668\u4E2D\u4E0D\u6267\u884C\u3002\u8F6C\u6362SVG\u8F93\u51FA\u5C06\u5BFC\u81F4\u6570\u5B66\u516C\u5F0F\u4E0D\u80FD\u6B63\u5E38\u663E\u793A\u3002"
         }
 });
 

@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/cs/FontWarnings.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("cs","FontWarnings",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax pou\u017E\u00EDv\u00E1 k zobrazen\u00ED matematiky na t\u00E9to str\u00E1nce webov\u00E1 p\u00EDsma. T\u011Bm trv\u00E1 sta\u017Een\u00ED n\u011Bjakou dobu, tak\u017Ee str\u00E1nka by se vykreslila rychleji, pokud byste si tato matematick\u00E1 p\u00EDsma nainstalovali p\u0159\u00EDmo do syst\u00E9mov\u00E9 slo\u017Eky p\u00EDsem.",

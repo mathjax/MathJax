@@ -5,7 +5,7 @@
  *
  *  MathJax/localization/zh-hans/FontWarnings.js
  *
- *  Copyright (c) 2009-2014 The MathJax Consortium
+ *  Copyright (c) 2009-2015 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("zh-hans","FontWarnings",{
-        version: "2.4.0",
+        version: "2.5.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax\u4F7F\u7528\u57FA\u4E8EWeb\u7684\u5B57\u4F53\u6765\u663E\u793A\u6B64\u9875\u4E0A\u663E\u793A\u6570\u5B66\u76F8\u5173\u5185\u5BB9\u3002\u8FD9\u5C06\u82B1\u8D39\u8F83\u957F\u65F6\u95F4\u4E0B\u8F7D\uFF0C\u6240\u4EE5\u6211\u4EEC\u5F3A\u70C8\u5EFA\u8BAE\u60A8\u76F4\u63A5\u5728\u60A8\u7684\u64CD\u4F5C\u7CFB\u7EDF\u7684\u5B57\u4F53\u6587\u4EF6\u5939\u4E2D\u5B89\u88C5\u6570\u5B66\u7B26\u53F7\u5B57\u4F53\u4EE5\u4FBF\u7ACB\u523B\u663E\u793A\u3002",
