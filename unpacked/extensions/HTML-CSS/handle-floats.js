@@ -66,7 +66,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       TRANSLATE = HTMLCSS.Translate;
   HTMLCSS.Augment({
     Translate: function (script,state) {
-      TRANSLATE.call(this,script,state);
+      TRANSLATE.apply(this,arguments);
       if (script.MathJax.elementJax.HTMLCSS.display) {
         var next = script.nextSibling;
         if (!next || next.className !== "MathJax_MSIE_Separator") {
