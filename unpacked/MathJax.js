@@ -2273,15 +2273,23 @@ MathJax.Hub = {
         var jax = script.MathJax.elementJax; if (!jax) {state.i++; continue}
         //
         //  Call the output Jax's Process method (which will be its Translate()
-        //  method once loaded).  Mark it as complete and remove the preview.
+        //  method once loaded).  Mark it as complete and remove the preview unless
+        //  the Process() call returns an explicit false value (in which case, it will
+        //  handle this later during the postProcess phase, as HTML-CSS does).
         //
         result = MathJax.OutputJax[jax.outputJax].Process(script,state);
-        script.MathJax.state = STATE.PROCESSED; state.i++;
-        if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+        if (result !== false) {
+          script.MathJax.state = STATE.PROCESSED;
+          if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+          //
+          //  Signal that new math is available
+          //
+          this.signal.Post(["New Math",jax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
+        }
         //
-        //  Signal that new math is available
+        //  Go on to next math expression
         //
-        this.signal.Post(["New Math",jax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
+        state.i++;
         //
         //  Update the processing message, if needed
         //
