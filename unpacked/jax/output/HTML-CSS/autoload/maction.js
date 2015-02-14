@@ -50,7 +50,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         span.bbox = this.HTMLzeroBBox();
         return span;
       }
-      span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
+      span = this.HTMLcreateSpan(span); span.bbox = null;
+      span.scale = this.HTMLgetScale();
       var box = selected.toHTML(span);
       if (D != null) {HTMLCSS.Remeasured(selected.HTMLstretchV(span,HW,D),span)}
       else if (HW != null) {
