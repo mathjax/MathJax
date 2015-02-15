@@ -142,7 +142,7 @@
     settings: HUB.config.menuSettings,
     config: {styles: STYLES},
 
-    hideProcessedMath: false,           // use display:none until all math is processed
+    hideProcessedMath: false,          // use display:none until all math is processed
 
     maxStretchyParts: 1000,            // limit the number of parts allowed for
                                        // stretchy operators. See issue 366.
@@ -638,22 +638,7 @@
         return false;
       },
       CHTMLstretchV: function (h,d) {},
-      CHTMLstretchH: function (w) {},
-
-      CoreParent: function () {
-        var parent = this;
-        while (parent && parent.isEmbellished() &&
-               parent.CoreMO() === this && !parent.isa(MML.math)) {parent = parent.Parent()}
-        return parent;
-      },
-      CoreText: function (parent) {
-        if (!parent) {return ""}
-        if (parent.isEmbellished()) {return parent.CoreMO().data.join("")}
-        while ((parent.isa(MML.mrow) || parent.isa(MML.TeXAtom) ||
-                parent.isa(MML.mstyle) || parent.isa(MML.mphantom)) &&
-                parent.data.length === 1 && parent.data[0]) {parent = parent.data[0]}
-        if (!parent.isToken) {return ""} else {return parent.data.join("")}
-      }
+      CHTMLstretchH: function (w) {}
 
     });
 
