@@ -892,8 +892,14 @@
       return HD;
     },
     getW: function (span) {
-      if (span.bbox && this.config.noReflows && span.bbox.exactW !== false) {return span.bbox.w}
       var W, H, w = (span.bbox||{}).w, start = span;
+      if (span.bbox && this.config.noReflows && span.bbox.exactW !== false) {
+        if (!span.bbox.exactW) {
+          if (span.style.paddingLeft) w += this.unEm(span.style.paddingLeft)*(span.scale||1);
+          if (span.style.paddingRight) w += this.unEm(span.style.paddingRight)*(span.scale||1);
+        }
+        return w;
+      }
       if (span.bbox && span.bbox.exactW) {return w}
       if ((span.bbox && w >= 0 && !this.initialSkipBug && !this.msieItalicWidthBug) ||
            this.negativeBBoxes || !span.firstChild) {
