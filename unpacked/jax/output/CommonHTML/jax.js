@@ -83,9 +83,14 @@
 
     ".MJXc-mo": {"margin": "0 .15em"},
 
-    ".MJXc-mfrac": {"margin": "0 .125em", "vertical-align":".25em"},
-    ".MJXc-denom": {"display": "inline-table!important", "width":"100%"},
-    ".MJXc-denom > *": {"display": "table-row!important"},
+    ".MJXc-mfrac": {"margin": "0 .125em", "vertical-align":".25em", 
+                    "display": "inline-table!important", "text-align":"center"},
+    ".MJXc-mfrac > *": {"display": "table-row!important"},
+    ".MJXc-num": {"line-height": 0},
+    ".MJXc-num > *": {"line-height":"1.2", "width":"100%"},
+    ".MJXc-num > * > *": {"display":"table!important", "width":"100%"},
+    ".MJXc-mfrac-row": {"display":"table-row!important"},
+    ".MJXc-mfrac-row > *": {"display":"table-cell!important","width":"100%"},
 
     ".MJXc-surd": {"vertical-align":"top"},
     ".MJXc-surd > *": {"display":"block!important"},
@@ -418,7 +423,7 @@
     TeX: {
       x_height:         .430554
     },
-    pxPerInch: 72,
+    pxPerInch: 96,
     em: 16,
 
     // ### FIXME:  add more here
@@ -899,20 +904,27 @@
     MML.mfrac.Augment({
       toCommonHTML: function (span) {
         span = this.CHTMLdefaultSpan(span,{
-          childSpans:true, className:"MJXc-box", forceChild:true, noBBox:true
+          childSpans:true, className:"MJXc-mfrac-cell", forceChild:true, noBBox:true
         });
         var values = this.getValues("linethickness","displaystyle");
         if (!values.displaystyle) {
           if (this.data[0]) this.data[0].CHTMLhandleScriptlevel(span.firstChild);
           if (this.data[1]) this.data[1].CHTMLhandleScriptlevel(span.lastChild);
         }
-        var denom = HTML.Element("span",{className:"MJXc-box",style:{"margin-top":"-.8em"}},[
-          ["span",{className:"MJXc-denom"},[                        // inline-table
-            ["span",{},[["span",{className:"MJXc-rule"}]]],["span"] // spans are table-row
-          ]]
+        var num = HTML.Element("span",{className:"MJXc-num"},[
+          ["span",{},      // inline-block
+            [["span",{},[   // table, 100%
+              ["span",{className:"MJXc-mfrac-row"}], // numerator row, 100%
+              ["span",{className:"MJXc-mfrac-row", style:"font-size:0"},
+                [["span",{},[["span",{className:"MJXc-rule"}]]]]]  // division line
+            ]]]
+          ]
         ]);
-        denom.firstChild.lastChild.appendChild(span.lastChild);
-        span.appendChild(denom);
+        num.firstChild.firstChild.firstChild.appendChild(span.firstChild);
+        var denom = HTML.Element("span",{className:"MJXc-mfrac-row"});
+        denom.appendChild(span.firstChild);
+        span.appendChild(num); span.appendChild(denom);
+        
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1), bbox = this.CHTML;
         bbox.w = Math.max(nbox.w,dbox.w) * .8;
         bbox.h = nbox.h+nbox.d + .1 + .25;
@@ -920,12 +932,11 @@
         bbox.l = bbox.r = .125;
         values.linethickness = Math.max(0,CHTML.length2em(values.linethickness||"0",0));
         if (values.linethickness) {
-          var rule = denom.firstChild.firstChild.firstChild;
+          var rule = num.firstChild.firstChild.lastChild.lastChild.lastChild;
           var t = CHTML.Em(values.linethickness);
           rule.style.borderTop = (values.linethickness < .15 ? "1px" : t)+" solid";
           rule.style.margin = t+" 0";
           t = values.linethickness;
-          denom.style.marginTop = CHTML.Em(3*t-.9);
           span.style.verticalAlign = CHTML.Em(1.5*t + .1);
           bbox.h += 1.5*t - .1; bbox.d += 1.5*t;
         }
