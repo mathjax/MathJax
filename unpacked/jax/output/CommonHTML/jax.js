@@ -77,7 +77,7 @@
     },
     ".MJXc-math span": {"display": "inline-block"},
     ".MJXc-box":  {"display":"block!important", "text-align": "center"},
-    ".MJXc-box:after": {"content": '" "'},  // needed for when there is no DOCTYPE
+//    ".MJXc-box:after": {"content": '" "'},  // needed for when there is no DOCTYPE
     ".MJXc-rule": {"display":"block!important", "margin-top":".1em"},
     ".MJXc-char": {"display":"block!important"},
 
@@ -358,12 +358,11 @@
       //  Re-render at larger size
       //
       span.className = "MathJax";
-      this.idPostfix = "-zoom"; jax.root.toCHTML(span,span); this.idPostfix = "";
+      this.idPostfix = "-zoom"; jax.root.toCommonHTML(span,span); this.idPostfix = "";
       //
       //  Get height and width of zoomed math and original math
       //
       span.style.position = "absolute";
-      if (!width) {math.style.position = "absolute"}
       var zW = span.offsetWidth, zH = span.offsetHeight,
           mH = math.offsetHeight, mW = math.offsetWidth;
       if (mW === 0) {mW = math.parentNode.offsetWidth}; // IE7 gets mW == 0?
