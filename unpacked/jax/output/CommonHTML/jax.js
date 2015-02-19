@@ -576,10 +576,6 @@
       },
 
       CHTMLhandleToken: function (span) {
-        var values = this.getValues("mathvariant");
-        if (values.mathvariant !== MML.VARIANT.NORMAL) {
-          span.className += " "+CHTML.VARIANT[values.mathvariant];
-        }
       },
 
       CHTMLhandleStyle: function (span) {
@@ -598,7 +594,7 @@
         if (level) span.className += " MJXc-script";
       },
 
-      CHTMLhandleText: function (span,text) {
+      CHTMLhandleText: function (span,text,variant) {
         var c, n;
         var H = 0, D = 0, W = 0;
         for (var i = 0, m = text.length; i < m; i++) {
@@ -622,6 +618,7 @@
         if (!this.CHML) this.CHTML = {};
         this.CHTML = {h:.9, d:.3, w:W, l:0, r:0, t:H, b:D};
         HTML.addText(span,text);
+        if (variant !== MML.VARIANT.NORMAL) span.className += " "+CHTML.VARIANT[variant];
 //  ### FIXME:  use this to get proper bounding boxes in the future
 //      this.CHTML = {h:H, d:D, w:W, l:0, r:0};
 //      HTML.addElement(span,"span",{className:"MJXc-char",style:{
@@ -649,13 +646,13 @@
     MML.chars.Augment({
       toCommonHTML: function (span) {
         var text = this.toString().replace(/[\u2061-\u2064]/g,"");
-        this.CHTMLhandleText(span,text);
+        this.CHTMLhandleText(span,text,this.parent.Get("mathvariant"));
       }
     });
     MML.entity.Augment({
       toCommonHTML: function (span) {
         var text = this.toString().replace(/[\u2061-\u2064]/g,"");
-        this.CHTMLhandleText(span,text);
+        this.CHTMLhandleText(span,text,this.parent.Get("mathvariant"));
       }
     });
 
@@ -1109,7 +1106,6 @@
         span = this.CHTMLcreateSpan(span);
         this.CHTMLhandleStyle(span);
         this.CHTMLhandleColor(span);
-        if (this.isToken) this.CHTMLhandleToken(span);
         // skip label for now
         for (var i = 1, m = this.data.length; i < m; i++) this.CHTMLaddChild(span,i,options);
         return span;
