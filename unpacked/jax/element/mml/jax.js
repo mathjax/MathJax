@@ -30,7 +30,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.5.0",
+  version: "2.5.1",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
