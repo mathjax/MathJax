@@ -1274,7 +1274,10 @@ MathJax.ElementJax.mml.Augment({
         // Make sure tooltip has proper spacing when typeset (see issue #412)
         this.data[1].setTeXclass();
       }
-      return this.selected().setTeXclass(prev);
+      var selected = this.selected();
+      prev = selected.setTeXclass(prev);
+      this.updateTeXclass(selected);
+      return prev;
     }
   });
   

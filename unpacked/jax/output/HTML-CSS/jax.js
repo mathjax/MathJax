@@ -1857,8 +1857,8 @@
       HTMLaddAttributes: function(span) {
         //
         //  Copy RDFa, aria, and other tags from the MathML to the HTML-CSS
-        //  output spans Don't copy those in the MML.nocopyAttributes list,
-        //  the ignoreMMLattributes configuration list, or anything tha
+        //  output spans.  Don't copy those in the MML.nocopyAttributes list,
+        //  the ignoreMMLattributes configuration list, or anything that
         //  already exists as a property of the span (e.g., no "onlick", etc.)
         //  If a name in the ignoreMMLattributes object is set to false, then
         //  the attribute WILL be copied.
