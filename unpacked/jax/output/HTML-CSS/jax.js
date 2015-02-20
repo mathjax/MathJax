@@ -739,7 +739,7 @@
       //  Reveal this chunk of math
       //
       for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
-        var script = scripts[i];
+        script = scripts[i];
         if (script && script.MathJax.elementJax) {
           //
           //  Finish the math with its measured size (toHTML phase III)
@@ -756,7 +756,6 @@
           //  Remove the processed marker
           //
           script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
-          var data = script.MathJax.elementJax.HTMLCSS;
           //
           //  Remove the preview, if any
           //
