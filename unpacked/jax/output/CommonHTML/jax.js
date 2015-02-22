@@ -87,8 +87,12 @@
                     "display": "inline-table!important", "text-align":"center"},
     ".MJXc-mfrac > *": {"display": "table-row!important"},
     ".MJXc-num": {"line-height": 0},
+    ".MJXc-num > span": {"display":"inline-block"},
     ".MJXc-num > *": {"line-height":"1.2", "width":"100%"},
     ".MJXc-num > * > *": {"display":"table!important", "width":"100%"},
+    ".MJXc-den": {"line-height":".96"},
+    ".MJXc-den > *": {"display":"table-cell!important"},
+    ".MJXc-den > * > *": {"line-height":"1.2"},
     ".MJXc-mfrac-row": {"display":"table-row!important"},
     ".MJXc-mfrac-row > *": {"display":"table-cell!important","width":"100%"},
 
@@ -932,24 +936,24 @@
           ]
         ]);
         num.firstChild.firstChild.firstChild.appendChild(span.firstChild);
-        var denom = HTML.Element("span",{className:"MJXc-mfrac-row"});
+        var denom = HTML.Element("span",{className:"MJXc-den"});
         denom.appendChild(span.firstChild);
         span.appendChild(num); span.appendChild(denom);
         
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1), bbox = this.CHTML;
-        bbox.w = Math.max(nbox.w,dbox.w) * .8;
-        bbox.h = nbox.h+nbox.d + .1 + .25;
-        bbox.d = dbox.h+dbox.d - .25;
+        if (nbox.h < .9) num.firstChild.firstChild.style.marginTop = CHTML.Em(.8*(nbox.h-.9));
+        bbox.w = .8*Math.max(nbox.w,dbox.w);
+        bbox.h = .8*(nbox.h+nbox.d) + .25;
+        bbox.d = .8*(dbox.h+dbox.d) - .25;
         bbox.l = bbox.r = .125;
         values.linethickness = Math.max(0,CHTML.length2em(values.linethickness||"0",0));
         if (values.linethickness) {
           var rule = num.firstChild.firstChild.lastChild.lastChild.lastChild;
-          var t = CHTML.Em(values.linethickness);
-          rule.style.borderTop = (values.linethickness < .15 ? "1px" : t)+" solid";
-          rule.style.margin = t+" 0";
+          var t = (values.linethickness < .15 ? "1px" : CHTML.Em(values.linethickness));
+          rule.style.borderTop = t+" solid"; rule.style.margin = t+" 0";
           t = values.linethickness;
-          span.style.verticalAlign = CHTML.Em(1.5*t + .1);
-          bbox.h += 1.5*t - .1; bbox.d += 1.5*t;
+          span.style.verticalAlign = CHTML.Em(.25-t);
+          bbox.h += 2*t; bbox.d += t;
         }
         return span;
       }
