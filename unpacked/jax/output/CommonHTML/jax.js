@@ -584,7 +584,9 @@
 
       CHTMLhandleColor: function (span) {
         if (this.mathcolor) {span.style.color = this.mathcolor}
+          else if (this.color) {span.style.color = this.color}
         if (this.mathbackground) {span.style.backgroundColor = this.mathbackground}
+          else if (this.background) {span.style.backgroundColor = this.background}
       },
 
       CHTMLhandleScriptlevel: function (span) {
