@@ -32,13 +32,11 @@
 
   var EVENT, TOUCH, HOVER; // filled in later
 
-  var FONTS = "'Times New Roman',Times,STIXGeneral,serif";
   var SCRIPTFACTOR = Math.sqrt(1/2),
       LINEHEIGHT = 1.2;
- 
+
   var STYLES = {
     ".MJXc-script": {"font-size":SCRIPTFACTOR+"em"},
-
     ".MJXc-right": {
       "-webkit-transform-origin":"right",
       "-moz-transform-origin":"right",
@@ -47,13 +45,6 @@
       "transform-origin":"right"
     },
 
-    ".MJXc-bold": {"font-weight":"bold"},
-    ".MJXc-italic": {"font-style":"italic"},
-    ".MJXc-scr": {"font-family":"MathJax_Script,"+FONTS},
-    ".MJXc-frak": {"font-family":"MathJax_Fraktur,"+FONTS},
-    ".MJXc-sf": {"font-family":"MathJax_SansSerif,"+FONTS},
-    ".MJXc-cal": {"font-family":"MathJax_Caligraphic,"+FONTS},
-    ".MJXc-mono": {"font-family":"MathJax_Typewriter,"+FONTS},
     ".MJXc-largeop": {"font-size":"150%"},
     ".MJXc-largeop.MJXc-int": {"vertical-align":"-.2em"},
 
@@ -61,7 +52,6 @@
       "display": "inline-block",
       "line-height": LINEHEIGHT,
       "text-indent": "0",
-      "font-family": FONTS,
       "white-space":"nowrap",
       "border-collapse":"collapse"
     },
@@ -149,6 +139,7 @@
       if (!this.require) {this.require = []}
       this.SUPER(arguments).Config.call(this); var settings = this.settings;
       if (settings.scale) {this.config.scale = settings.scale}
+      this.require.push(this.fontDir+"/TeX/fontdata.js");
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
     },
 
@@ -413,10 +404,118 @@
       infinity: BIGDIMEN
     },
     TeX: {
-      x_height:         .430554
+      x_height:         .442
     },
     pxPerInch: 96,
     em: 16,
+    
+    FONTDEF: {},
+    
+    getUnicode: function (string) {
+      var n = string.text.charCodeAt(string.i); string.i++;
+      if (n >= 0xD800 && n < 0xDBFF) {
+        n = (((n-0xD800)<<10)+(string.text.charCodeAt(string.i)-0xDC00))+0x10000;
+        string.i++;
+      }
+      return n;
+    },
+    getCharList: function (variant,n) {
+      var id, M, list = [], cache = variant.cache, N = n;
+      if (cache[n]) return cache[n];
+      var RANGES = this.FONTDATA.RANGES, VARIANT = this.FONTDATA.VARIANT;
+      if (n >= RANGES[0].low && n <= RANGES[RANGES.length-1].high) {
+        for (id = 0, M = RANGES.length; id < M; id++) {
+          if (RANGES[id].name === "alpha" && variant.noLowerCase) continue;
+          var N = variant["offset"+RANGES[id].offset];
+          if (N && n >= RANGES[id].low && n <= RANGES[id].high) {
+            if (RANGES[id].remap && RANGES[id].remap[n]) {
+              n = N + RANGES[id].remap[n];
+            } else {
+              n = n - RANGES[id].low + N;
+              if (RANGES[id].add) {n += RANGES[id].add}
+            }
+            if (variant["variant"+RANGES[id].offset])
+              variant = VARIANT[variant["variant"+RANGES[id].offset]];
+            break;
+          }
+        }
+      }
+      if (variant.remap && variant.remap[n]) {
+        n = variant.remap[n];
+        if (variant.remap.variant) {variant = VARIANT[variant.remap.variant]}
+      } else if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
+        n = this.FONTDATA.REMAP[n];
+      }
+      if (n instanceof Array) {variant = VARIANT[n[1]]; n = n[0]} 
+      if (typeof(n) === "string") {
+        var string = {text:n, i:0, length:n.length};
+        while (string.i < string.length) {
+          n = this.getUnicode(string);
+          var chars = this.getCharList(variant,n);
+          if (chars) list.push.apply(list,chars);
+        }
+      } else {
+        if (variant.cache[n]) {list = variant.cache[n]}
+          else {variant.cache[n] = list = [this.lookupChar(variant,n)]}
+      }
+      cache[N] = list;
+      return list;
+    },
+    lookupChar: function (variant,n) {
+      while (variant) {
+        for (var i = 0, m = variant.fonts.length; i < m; i++) {
+          var font = this.FONTDATA.FONTS[variant.fonts[i]];
+//          if (typeof(font) === "string") this.loadFont(font);
+          var C = font[n];
+          if (C) {
+// ### FIXME: implement aliases, spaces, etc.
+            if (C.length === 5) C[5] = {};
+            if (C.c == null) {
+              C[0] /= 1000; C[1] /= 1000; C[2] /= 1000; C[3] /= 1000; C[4] /= 1000;
+              if (n <= 0xFFFF) {
+                C.c = String.fromCharCode(n);
+              } else {
+                var N = n - 0x10000;
+                C.c = String.fromCharCode((N>>10)+0xD800)
+                    + String.fromCharCode((N&0x3FF)+0xDC00);
+              }
+            }
+            return {type:"char", font:font, n:n};
+          } // else load block files?
+        }
+        variant = this.FONTDATA.VARIANT[variant.chain];
+      }
+      return this.unknownChar(variant,n);
+    },
+    unknownChar: function (variant,n) {},
+
+    addCharList: function (span,list,bbox) {
+      var text = "", className;
+      for (var i = 0, m = list.length; i < m; i++) {
+        var item = list[i];
+        switch (item.type) {
+          case "char":
+            if (className && item.font.className !== className) {
+              HTML.addElement(span,"span",{className:className},[text]);
+              text = ""; className = null;
+            }
+            var C = item.font[item.n];
+            text += C.c; className = item.font.className;
+            if (bbox.h < C[0]) bbox.h = C[0];
+            if (bbox.d < C[1]) bbox.d = C[1];
+            if (bbox.l > bbox.w+C[3]) bbox.l = bbox.w+C[3];
+            if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
+            bbox.w += C[2];
+        }
+      }
+      if (span.childNodes.length) {
+        HTML.addElement(span,"span",{className:className},[text]);
+      } else {
+        HTML.addText(span,text);
+        span.className += " "+className;
+      }
+    },
+    
 
     // ### FIXME:  add more here
 
@@ -502,7 +601,7 @@
       if (Math.abs(m) < .001) return "0em";
       return (m.toFixed(3).replace(/\.?0+$/,""))+"em";
     },
-
+    
     scaleBBox: function (bbox,level,dlevel) {
       var scale = Math.pow(SCRIPTFACTOR,Math.min(2,level)-(dlevel||0));
       bbox.w *= scale; bbox.h *= scale; bbox.d *= scale;
@@ -544,8 +643,6 @@
             bbox.w += cbox.w + (cbox.L||0) + (cbox.R||0);
             if (cbox.h > bbox.h) bbox.h = cbox.h;
             if (cbox.d > bbox.d) bbox.d = cbox.d;
-            if (cbox.t > bbox.t) bbox.t = cbox.t;
-            if (cbox.b > bbox.b) bbox.b = cbox.b;
           }
         } else if (options.forceChild) {HTML.addElement(span,"span")}
       },
@@ -605,7 +702,7 @@
           span.style.fontSize = scale+"%";
         }
       },
-
+      
       CHTMLhandleMargins: function (span,box) {
         var bbox = this.CHTML;
         //  ### FIXME: should these be FONTDATA values?
@@ -621,35 +718,26 @@
       },
 
       CHTMLhandleText: function (span,text,variant) {
-        var c, n;
-        var H = 0, D = 0, W = 0;
-        for (var i = 0, m = text.length; i < m; i++) {
-          n = text.charCodeAt(i); c = text.charAt(i);
-          if (n >= 0xD800 && n < 0xDBFF) {
-            i++; n = (((n-0xD800)<<10)+(text.charCodeAt(i)-0xDC00))+0x10000;
-          }
-          var h = .7, d = .22, w = .5;
-          if (n < 127) {
-            if (c.match(/[A-Za-ehik-or-xz0-9]/)) d = 0;
-            if (c.match(/[A-HK-Z]/)) {w = .67} else if (c.match(/[IJ]/)) {w = .36}
-            if (c.match(/[acegm-su-z]/)) {h = .45} else if (c.match(/[ij]/)) {h = .75}
-            if (c.match(/[ijlt]/)) w = .28;
-          }
-          if (CHTML.DELIMITERS[c]) {w = CHTML.DELIMITERS[c].w || .4}
-          // ### FIXME:  handle Greek
-          // ### Combining diacriticals (all sets), spacing modifiers
-          // ### arrows (all sets), widths of braces
-          if (h > H) H = h; if (d > D) D = d; W += w;
+        if (span.childNodes.length === 0) {
+          HTML.addElement(span,"span",{className:"MJXc-char"});
+          this.CHTML = {h:-BIGDIMEN, d:-BIGDIMEN, w:0, l:BIGDIMEN, r:-BIGDIMEN};
         }
-        if (!this.CHML) this.CHTML = {};
-        this.CHTML = {h:.9, d:.3, w:W, l:0, r:0, t:H, b:D};
-        HTML.addText(span,text);
-        if (variant !== MML.VARIANT.NORMAL) span.className += " "+CHTML.VARIANT[variant];
-//  ### FIXME:  use this to get proper bounding boxes in the future
-//      this.CHTML = {h:H, d:D, w:W, l:0, r:0};
-//      HTML.addElement(span,"span",{className:"MJXc-char",style:{
-//        "margin-top":CHTML.Em(H-.9), "margin-bottom":CHTML.Em(D-.25)
-//      }},[text]);
+        var bbox = this.CHTML, string = {text:text, i:0, length:text.length};
+        if (typeof(variant) === "string") variant = CHTML.FONTDATA.VARIANT[variant];
+        if (!variant) {variant = CHTML.FONTDATA.VARIANT[MML.VARIANT.NORMAL]}
+        var list = [];
+        while (string.i < string.length) {
+          var n = CHTML.getUnicode(string);
+          list.push.apply(list,CHTML.getCharList(variant,n));
+        }
+        CHTML.addCharList(span.firstChild,list,bbox);
+        if (bbox.h === -BIGDIMEN) bbox.h = 0;
+        if (bbox.d === -BIGDIMEN) bbox.d = 0;
+        if (bbox.l ===  BIGDIMEN) bbox.l = 0;
+        if (bbox.r === -BIGDIMEN) bbox.r = 0;
+        //  ### FIXME: should these be FONTDATA values?
+        if (bbox.h < .9) span.firstChild.style.marginTop = CHTML.Em(bbox.h-.9);
+        if (bbox.d < .25) span.firstChild.style.marginBottom = CHTML.Em(bbox.d-.25);
       },
 
       CHTMLbboxFor: function (n) {
