@@ -30,6 +30,9 @@ MathJax.OutputJax.CommonHTML = MathJax.OutputJax({
   version: "2.5.0",
   directory: MathJax.OutputJax.directory + "/CommonHTML",
   extensionDir: MathJax.OutputJax.extensionDir + "/CommonHTML",
+  autoloadDir: MathJax.OutputJax.directory + "/CommonHTML/autoload",
+  fontDir: MathJax.OutputJax.directory + "/CommonHTML/fonts",
+  webfontDir: MathJax.OutputJax.fontDir + "/HTML-CSS",
   
   config: {
     scale: 100, minScaleAdjust: 50, // global math scaling factor, and minimum adjusted scale factor
