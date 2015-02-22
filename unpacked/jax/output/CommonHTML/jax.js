@@ -510,6 +510,12 @@
       return (m.toFixed(3).replace(/\.?0+$/,""))+"em";
     },
 
+    scaleBBox: function (bbox,level,dlevel) {
+      var scale = Math.pow(.8,Math.min(2,level)-(dlevel||0));
+      bbox.w *= scale; bbox.h *= scale; bbox.d *= scale;
+      bbox.l *= scale; bbox.r *= scale;
+    },
+
     arrayEntry: function (a,i) {return a[Math.max(0,Math.min(i,a.length-1))]}
 
   });
@@ -589,11 +595,18 @@
           else if (this.background) {span.style.backgroundColor = this.background}
       },
 
-      CHTMLhandleScriptlevel: function (span) {
-        // ### FIXME:  Need to prevent getting too small
-        // ### and should keep track of scaling so it can be compensated for
+      CHTMLhandleScriptlevel: function (span,dlevel) {
         var level = this.Get("scriptlevel");
-        if (level) span.className += " MJXc-script";
+        if (level === 0) return;
+        // ### FIXME: handle scriptminsize
+        if (level > 2) level = 2;
+        if (level > 0 && dlevel == null) {
+          span.className += " MJXc-script";
+        } else {
+          if (dlevel) level -= dlevel;
+          var scale = Math.floor(Math.pow(.8,level)*100);
+          span.style.fontSize = scale+"%";
+        }
       },
 
       CHTMLhandleText: function (span,text,variant) {
@@ -1038,7 +1051,13 @@
     MML.mstyle.Augment({
       toCommonHTML: function (span) {
         span = this.CHTMLdefaultSpan(span);
-        this.CHTMLhandleScriptlevel(span);
+        if (this.scriptlevel) {
+          var dlevel = this.Get("scriptlevel",null,true);
+          if (this.scriptlevel !== dlevel) {
+            this.CHTMLhandleScriptlevel(span,dlevel);
+            CHTML.scaleBBox(this.CHTML,this.scriptlevel,dlevel);
+          }
+        }
         return span;
       }
     });
