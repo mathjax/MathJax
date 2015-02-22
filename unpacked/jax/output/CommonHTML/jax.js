@@ -539,6 +539,7 @@
         this.CHTMLhandleColor(span);
         if (this.isToken) this.CHTMLhandleToken(span);
         for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLaddChild(span,i,options);
+        if (!options.noMargins && !options.noBBox) this.CHTMLhandleMargins(span);
         return span;
       },
       CHTMLaddChild: function (span,i,options) {
@@ -610,6 +611,20 @@
           if (dlevel) level -= dlevel;
           var scale = Math.floor(Math.pow(.8,level)*100);
           span.style.fontSize = scale+"%";
+        }
+      },
+
+      CHTMLhandleMargins: function (span,box) {
+        var bbox = this.CHTML;
+        //  ### FIXME: should these be FONTDATA values?
+        if (bbox.h < .9 || bbox.d < .25) {
+          if (box == null) {
+            box = HTML.Element("span",{className:"MJXc-box"});
+            while (span.firstChild) box.appendChild(span.firstChild);
+            span.appendChild(box);
+          }
+          if (bbox.h < .9) box.style.marginTop = CHTML.Em(bbox.h-.9);
+          if (bbox.d < .25) box.style.marginBottom = CHTML.Em(bbox.d-.25);
         }
       },
 
