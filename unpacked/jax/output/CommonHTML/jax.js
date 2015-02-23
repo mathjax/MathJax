@@ -603,9 +603,12 @@
           child.toCommonHTML(span,options.childOptions);
           if (!options.noBBox) {
             var bbox = this.CHTML, cbox = child.CHTML;
+            if (cbox.r + bbox.w > bbox.r) bbox.r = bbox.w + cbox.r;
+            if (cbox.l + bbox.w < bbox.l) bbox.l = bbox.w + cbox.l;
             bbox.w += cbox.w + (cbox.L||0) + (cbox.R||0);
             if (cbox.h > bbox.h) bbox.h = cbox.h;
             if (cbox.d > bbox.d) bbox.d = cbox.d;
+            if (cbox.ic) {bbox.ic = cbox.ic} else {delete bbox.ic}
           }
         } else if (options.forceChild) {HTML.addElement(span,"span")}
       },
@@ -750,6 +753,18 @@
         return span;
       }
     });
+    
+    MML.mi.Augment({
+      toCommonHTML: function (span) {
+        span = this.CHTMLdefaultSpan(span);
+        var bbox = this.CHTML, text = this.data.join("");
+        if (bbox.skew != null && text.length !== 1) delete bbox.skew;
+        if (bbox.r > bbox.w && text.length === 1 /*&& !variant.noIC*/) {  // ### FIXME: handle variants
+          bbox.ic = bbox.r - bbox.w; bbox.w = bbox.r;
+          span.style.paddingRight = CHTML.Em(bbox.ic);
+        }
+      }
+    });
 
     MML.mo.Augment({
       toCommonHTML: function (span) {
@@ -817,6 +832,14 @@
         }
       },
       CHTMLcenterOp: function (span) {
+        var bbox = this.CHTML;
+        var p = (bbox.h - bbox.d)/2 - AXISHEIGHT;
+        if (Math.abs(p) > .001) span.style.verticalAlign = CHTML.Em(-p);
+        bbox.h -= p; bbox.d += p;
+        if (bbox.r > bbox.w) {
+          bbox.ic = bbox.r - bbox.w; bbox.w = bbox.r;
+          span.style.paddingRight = CHTML.Em(bbox.ic);
+        }
       },
       CHTMLcanStretch: function (direction,H,D) {
         if (!this.Get("stretchy")) {return false}
