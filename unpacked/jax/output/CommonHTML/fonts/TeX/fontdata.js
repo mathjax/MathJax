@@ -107,7 +107,7 @@
                  remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                          0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                          0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
-      "double-struck": {fonts:[AMS], cache:{}, chain:"normal"},
+      "double-struck": {fonts:[AMS,MAIN,SIZE1], cache:{}},
       "fraktur": {fonts:["MathJax_Fraktur"], cache:{}, chain:"normal"},
       "bold-fraktur": {fonts:["MathJax_Fraktur-bold"], bold:true, cache:{}, chain:"bold"},
       "script": {fonts:["MathJax_Script"], cache:{}, chain:"normal"},
@@ -123,7 +123,7 @@
                  remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                          0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                          0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
-      "-TeX-variant": {fonts:[AMS,MAIN,SIZE1],   // HACK: to get larger prime for \prime
+      "-TeX-variant": {fonts:[AMS,MAIN,SIZE1], cache:{},  // HACK: to get larger prime for \prime
                  remap: {
                    0x2268: 0xE00C, 0x2269: 0xE00D, 0x2270: 0xE011, 0x2271: 0xE00E,
                    0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2224: 0xE006, 0x2226: 0xE007,
@@ -132,8 +132,8 @@
                    0x2216:[0x2216,MML.VARIANT.NORMAL], // \setminus
                    0x210F:[0x210F,MML.VARIANT.NORMAL]  // \hslash
                  }},
-      "-largeOp": {fonts:[SIZE2,SIZE1,MAIN]},
-      "-smallOp": {fonts:[SIZE1,MAIN]},
+      "-largeOp": {fonts:[SIZE2,SIZE1,MAIN,AMS],cache:{}},
+      "-smallOp": {fonts:[SIZE1,MAIN,AMS], cache:{}},
       "-tex-caligraphic-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold"], bold:true, cache:{}, chain:"normal",
                                 offsetA: 0x41, variantA: "bold-italic"},
       "-tex-oldstyle-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold"], bold:true, cache:{}, chain:"normal"}
@@ -1542,9 +1542,13 @@
   });
   
   //
-  //  Add some spacing characters (more will come later)
+  //  Add some spacing characters
   //
   MathJax.Hub.Insert(CHTML.FONTDATA.FONTS[MAIN],{
+    0x2061: [0,0,0,0,0,{space:1}],    // function application
+    0x2062: [0,0,0,0,0,{space:1}],    // invisible times
+    0x2063: [0,0,0,0,0,{space:1}],    // invisible separator
+    0x2064: [0,0,0,0,0,{space:1}],    // invisible plus
     0xEEE0: [0,0,-575,0,0,{space:1}],
     0xEEE1: [0,0,-300,0,0,{space:1}],
     0xEEE8: [0,0,25,0,0,{space:1}]
