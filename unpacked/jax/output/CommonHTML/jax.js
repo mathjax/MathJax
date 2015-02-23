@@ -45,11 +45,8 @@
       "transform-origin":"right"
     },
 
-    ".MJXc-largeop": {"font-size":"150%"},
-    ".MJXc-largeop.MJXc-int": {"vertical-align":"-.2em"},
-
     ".MJXc-math": {
-      "display" "inline-block",
+      "display":"inline-block",
       "line-height":LINEHEIGHT,
       "text-indent":"0",
       "white-space":"nowrap",
@@ -367,18 +364,6 @@
     ID: 0, idPostfix: "",
     GetID: function () {this.ID++; return this.ID},
 
-    VARIANT: {
-      "bold": "MJXc-bold",
-      "italic": "MJXc-italic",
-      "bold-italic": "MJXc-bold MJXc-italic",
-      "script": "MJXc-scr",
-      "bold-script": "MJXc-scr MJXc-bold",
-      "fraktur": "MJXc-frak",
-      "bold-fraktur": "MJXc-frak MJXc-bold",
-      "monospace": "MJXc-mono",
-      "sans-serif": "MJXc-sf",
-      "-tex-caligraphic": "MJXc-cal"
-    },
     MATHSPACE: {
       veryverythinmathspace:  1/18,
       verythinmathspace:      2/18,
@@ -546,31 +531,6 @@
       "\u23B0": {dir:V, w:.6},
       "\u23B1": {dir:V, w:.6}
     },
-
-    REMAPACCENT: {
-      "\u20D7":"\u2192",  // vector arrow
-      "'": "\u02CB",
-      "`": "\u02CA",
-      ".": "\u02D9",
-      "^": "\u02C6",
-      "-": "\u02C9",
-      "~": "\u02DC",
-      "\u00AF": "\u02C9",  // macron
-      "\u00B0": "\u02DA",  // degree sign
-      "\u00B4": "\u02CA",  // acute accent
-      "\u0300": "\u02CB",  // combining grave
-      "\u0301": "\u02CA",  // combining acute
-      "\u0302": "\u02C6",  // combining circumflex
-      "\u0303": "\u02DC",  // combinig tilde
-      "\u0304": "\u02C9",  // combining macron
-      "\u0305": "\u02C9",  // combining overline
-      "\u0306": "\u02D8",  // combining breve 
-      "\u0307": "\u02D9",  // combining dot
-      "\u0308": "\u00A8",  // combining double dot
-      "\u030C": "\u02C7"   // combining caron
-    },
-    REMAPACCENTUNDER: {
-    },
     
     //
     //  ### FIXME: Handle mu's
@@ -638,7 +598,7 @@
         if (child) {
           if (options.childSpans)
             span = HTML.addElement(span,"span",{className:options.className});
-          child.toCommonHTML(span);
+          child.toCommonHTML(span,options.childOptions);
           if (!options.noBBox) {
             var bbox = this.CHTML, cbox = child.CHTML;
             bbox.w += cbox.w + (cbox.L||0) + (cbox.R||0);
@@ -763,15 +723,21 @@
     });
 
     MML.chars.Augment({
-      toCommonHTML: function (span) {
-        var text = this.toString().replace(/[\u2061-\u2064]/g,"");
-        this.CHTMLhandleText(span,text,this.parent.Get("mathvariant"));
+      toCommonHTML: function (span,options) {
+        if (options == null) options = {};
+        var text = this.toString();
+        if (options.remap) text = options.remap(text,options.remapchars);
+        //  ### FIXME: handle mtextFontInherit
+        this.CHTMLhandleText(span,text,options.variant||this.parent.Get("mathvariant"));
       }
     });
     MML.entity.Augment({
-      toCommonHTML: function (span) {
-        var text = this.toString().replace(/[\u2061-\u2064]/g,"");
-        this.CHTMLhandleText(span,text,this.parent.Get("mathvariant"));
+      toCommonHTML: function (span,options) {
+        if (options == null) options = {};
+        var text = this.toString();
+        if (options.remapchars) text = options.remap(text,options.remapchars);
+        //  ### FIXME: handle mtextFontInherit
+        this.CHTMLhandleText(span,text,options.variant||this.parent.Get("mathvariant"));
       }
     });
 
@@ -785,28 +751,27 @@
 
     MML.mo.Augment({
       toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span);
-        this.CHTMLadjustAccent(span);
-        var values = this.getValues(/*"lspace","rspace","scriptlevel",*/"displaystyle","largeop");
-	/* 
-	 * if (values.scriptlevel === 0) {
-	 *   this.CHTML.L = CHTML.length2em(values.lspace);
-	 *   this.CHTML.R = CHTML.length2em(values.rspace);
-	 *   span.style.marginLeft = CHTML.Em(this.CHTML.L);
-	 *   span.style.marginRight = CHTML.Em(this.CHTML.R);
-	 * } else {
-	 *   this.CHTML.L = .15;
-	 *   this.CHTML.R = .1;
-	 * }
-	 */
-        if (values.displaystyle && values.largeop) {
-          var box = HTML.Element("span",{className:"MJXc-largeop"});
-          box.appendChild(span.firstChild); span.appendChild(box);
-          this.CHTML.h *= 1.2; this.CHTML.d *= 1.2;
-          if (this.data.join("") === "\u222B") box.className += " MJXc-int";
+        span = this.CHTMLcreateSpan(span);
+
+        var values = this.getValues("displaystyle","largeop","mathvariant");
+        values.text = this.data.join("");
+        this.CHTMLadjustAccent(values);
+        this.CHTMLadjustVariant(values);
+
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          this.CHTMLaddChild(span,i,{childOptions:{
+            variant: values.mathvariant,
+            remap: this.remap,
+            remapchars: values.mapchars
+          }});
         }
-        // ### FIXME:  Handle embellished op spacing
-        // ### FIXME:  Remap minus signs
+        if (values.text.length !== 1) delete this.CHTML.skew;
+        if (values.largeop) this.CHTMLcenterOp(span);
+
+        this.CHTMLhandleSpace(span);
+        this.CHTMLhandleStyle(span);
+        this.CHTMLhandleColor(span);
+
         return span;
       },
       CHTMLhandleSpace: function (span) {
@@ -827,19 +792,29 @@
           this.SUPER(arguments).CHTMLhandleSpace.apply(this,arguments);
         }
       },
-      CHTMLadjustAccent: function (span) {
-        var parent = this.CoreParent();
-        if (parent && parent.isa(MML.munderover) && 
+      CHTMLadjustAccent: function (data) {
+        var parent = this.CoreParent(); data.parent = parent;
+        if (data.text.length === 1 && parent && parent.isa(MML.munderover) && 
             this.CoreText(parent.data[parent.base]).length === 1) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
-          var c = this.data.join(""), C;
-          if (over && this === over.CoreMO() && parent.Get("accent")) {C = CHTML.REMAPACCENT[c]}
-          else if (under && this === under.CoreMO() && parent.Get("accentunder")) {C = CHTML.REMAPACCENTUNDER[c]}
-          if (C) c = span.innerHTML = C;
-          if (c.match(/[\u02C6-\u02DC\u00A8]/)) {this.CHTML.acc = -.52}
-          else if (c === "\u2192") {this.CHTML.acc = -.15; this.CHTML.vec = true}
+          if (over && this === over.CoreMO() && parent.Get("accent")) {
+            data.mapchars = CHTML.FONTDATA.REMAPACCENT
+          } else if (under && this === under.CoreMO() && parent.Get("accentunder")) {
+            data.mapchars = CHTML.FONTDATA.REMAPACCENTUNDER
+          }
         }
       },
+      CHTMLadjustVariant: function (data) {
+        var parent = data.parent,
+            isScript = (parent && parent.isa(MML.msubsup) && this !== parent.data[parent.base]);
+        if (data.largeop) data.mathvariant = (data.displaystyle ? "-largeOp" : "-smallOp");
+        if (isScript) {
+          data.mapchars = this.remapChars;
+          if (data.text.match(/['`"\u00B4\u2032-\u2037\u2057]/))
+            data.mathvariant = "-TeX-variant";  // ### FIXME: handle other fonts
+        }
+      },
+      CHTMLcenterOp: function (span) {},
       CHTMLcanStretch: function (direction,H,D) {
         if (!this.Get("stretchy")) {return false}
         var c = this.data.join("");
