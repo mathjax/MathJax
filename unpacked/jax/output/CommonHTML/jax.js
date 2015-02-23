@@ -65,7 +65,7 @@
     ".MJXc-rule": {"display":"block!important", "margin-top":"1px"},
     ".MJXc-char": {"display":"block!important"},
 
-    ".MJXc-mo": {"margin": "0 .15em"},
+//    ".MJXc-mo": {"margin": "0 .15em"},
 
     ".MJXc-mfrac": {"margin": "0 .125em", "vertical-align":".25em", 
                     "display": "inline-table!important", "text-align":"center"},
@@ -238,7 +238,7 @@
       //  Typeset the math
       //
       this.initCHTML(math,span);
-//      math.setTeXclass();
+      math.setTeXclass();
       try {math.toCommonHTML(span)} catch (err) {
         if (err.restart) {while (span.firstChild) {span.removeChild(span.firstChild)}}
         throw err;
@@ -574,6 +574,9 @@
     REMAPACCENTUNDER: {
     },
     
+    //
+    //  ### FIXME: Handle mu's
+    //
     length2em: function (length,size) {
       if (typeof(length) !== "string") {length = length.toString()}
       if (length === "") {return ""}
@@ -625,9 +628,9 @@
       CHTMLdefaultSpan: function (span,options) {
         if (!options) options = {};
         span = this.CHTMLcreateSpan(span);
+        this.CHTMLhandleSpace(span);
         this.CHTMLhandleStyle(span);
         this.CHTMLhandleColor(span);
-        if (this.isToken) this.CHTMLhandleToken(span);
         for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLaddChild(span,i,options);
         if (!options.noMargins && !options.noBBox) this.CHTMLhandleMargins(span);
         return span;
@@ -675,9 +678,6 @@
         return document.getElementById(this.id||"MJXc-Span-"+this.CHTMLspanID);
       },
 
-      CHTMLhandleToken: function (span) {
-      },
-
       CHTMLhandleStyle: function (span) {
         if (this.style) span.style.cssText = this.style;
       },
@@ -687,6 +687,13 @@
           else if (this.color) {span.style.color = this.color}
         if (this.mathbackground) {span.style.backgroundColor = this.mathbackground}
           else if (this.background) {span.style.backgroundColor = this.background}
+      },
+      
+      CHTMLhandleSpace: function (span) {
+        if (!this.useMMLspacing) {
+	  var space = this.texSpacing();
+	  if (space !== "") span.style.marginLeft = CHTML.Em(CHTML.length2em(space));
+        }
       },
 
       CHTMLhandleScriptlevel: function (span,dlevel) {
@@ -782,16 +789,18 @@
       toCommonHTML: function (span) {
         span = this.CHTMLdefaultSpan(span);
         this.CHTMLadjustAccent(span);
-        var values = this.getValues("lspace","rspace","scriptlevel","displaystyle","largeop");
-        if (values.scriptlevel === 0) {
-          this.CHTML.L = CHTML.length2em(values.lspace);
-          this.CHTML.R = CHTML.length2em(values.rspace);
-          span.style.marginLeft = CHTML.Em(this.CHTML.L);
-          span.style.marginRight = CHTML.Em(this.CHTML.R);
-        } else {
-          this.CHTML.L = .15;
-          this.CHTML.R = .1;
-        }
+        var values = this.getValues(/*"lspace","rspace","scriptlevel",*/"displaystyle","largeop");
+	/* 
+	 * if (values.scriptlevel === 0) {
+	 *   this.CHTML.L = CHTML.length2em(values.lspace);
+	 *   this.CHTML.R = CHTML.length2em(values.rspace);
+	 *   span.style.marginLeft = CHTML.Em(this.CHTML.L);
+	 *   span.style.marginRight = CHTML.Em(this.CHTML.R);
+	 * } else {
+	 *   this.CHTML.L = .15;
+	 *   this.CHTML.R = .1;
+	 * }
+	 */
         if (values.displaystyle && values.largeop) {
           var box = HTML.Element("span",{className:"MJXc-largeop"});
           box.appendChild(span.firstChild); span.appendChild(box);
@@ -801,6 +810,24 @@
         // ### FIXME:  Handle embellished op spacing
         // ### FIXME:  Remap minus signs
         return span;
+      },
+      CHTMLhandleSpace: function (span) {
+        if (this.useMMLspacing) {
+	  var values = this.getValues("scriptlevel","lspace","rspace");
+          values.lspace = Math.max(0,CHTML.length2em(values.lspace));
+          values.rspace = Math.max(0,CHTML.length2em(values.rspace));
+          if (values.scriptlevel > 0) {
+            if (!this.hasValue("lspace")) values.lspace = .15;
+            if (!this.hasValue("rspace")) values.rspace = .15;
+          }
+          var core = this, parent = this.Parent();
+          while (parent && parent.isEmbellished() && parent.Core() === core)
+	    {core = parent; parent = parent.Parent(); span = core.CHTMLspanElement()}
+          if (values.lspace) {span.style.paddingLeft =  CHTML.Em(values.lspace)}
+	  if (values.rspace) {span.style.paddingRight = CHTML.Em(values.rspace)}
+        } else {
+          this.SUPER(arguments).CHTMLhandleSpace.apply(this,arguments);
+        }
       },
       CHTMLadjustAccent: function (span) {
         var parent = this.CoreParent();
@@ -1116,6 +1143,7 @@
     MML.mfenced.Augment({
       toCommonHTML: function (span) {
         span = this.CHTMLcreateSpan(span);
+        this.CHTMLhandleSpace(span);
         this.CHTMLhandleStyle(span);
         this.CHTMLhandleColor(span);
         //
