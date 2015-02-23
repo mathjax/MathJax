@@ -33,7 +33,7 @@
   var EVENT, TOUCH, HOVER; // filled in later
 
   var SCRIPTFACTOR = Math.sqrt(1/2),
-      LINEHEIGHT = 1.2,
+      LINEHEIGHT = 1.2, LINEH = .9, LINED = .3,
       AXISHEIGHT = .25;
 
   var STYLES = {
@@ -671,14 +671,14 @@
       CHTMLhandleMargins: function (span,box) {
         var bbox = this.CHTML;
         //  ### FIXME: should these be FONTDATA values?
-        if (bbox.h < .9 || bbox.d < .25) {
+        if (bbox.h < LINEH || bbox.d < LINED) {
           if (box == null) {
             box = HTML.Element("span",{className:"MJXc-box"});
             while (span.firstChild) box.appendChild(span.firstChild);
             span.appendChild(box);
           }
-          if (bbox.h < .9) box.style.marginTop = CHTML.Em(bbox.h-.9);
-          if (bbox.d < .25) box.style.marginBottom = CHTML.Em(bbox.d-.25);
+          if (bbox.h < LINEH) box.style.marginTop = CHTML.Em(bbox.h-LINEH);
+          if (bbox.d < LINED) box.style.marginBottom = CHTML.Em(bbox.d-LINED);
         }
       },
 
@@ -701,8 +701,8 @@
         if (bbox.l ===  BIGDIMEN) bbox.l = 0;
         if (bbox.r === -BIGDIMEN) bbox.r = 0;
         //  ### FIXME: should these be FONTDATA values?
-        span.firstChild.style.marginTop = CHTML.Em(bbox.h-.9);
-        span.firstChild.style.marginBottom = CHTML.Em(bbox.d-.25);
+        span.firstChild.style.marginTop = CHTML.Em(bbox.h-LINEH);
+        span.firstChild.style.marginBottom = CHTML.Em(bbox.d-LINED);
       },
 
       CHTMLbboxFor: function (n) {
@@ -1059,7 +1059,8 @@
         span.appendChild(num); span.appendChild(denom);
         
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1), bbox = this.CHTML;
-        if (nbox.h < .9) num.firstChild.firstChild.style.marginTop = CHTML.Em(sscale*(nbox.h-.9));
+        if (nbox.h < LINEH)
+          num.firstChild.firstChild.style.marginTop = CHTML.Em(sscale*(nbox.h-LINEH));
         bbox.w = sscale*Math.max(nbox.w,dbox.w);
         bbox.h = sscale*(nbox.h+nbox.d) + AXISHEIGHT;
         bbox.d = sscale*(dbox.h+dbox.d) - AXISHEIGHT;
