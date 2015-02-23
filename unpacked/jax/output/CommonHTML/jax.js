@@ -701,8 +701,8 @@
         if (bbox.l ===  BIGDIMEN) bbox.l = 0;
         if (bbox.r === -BIGDIMEN) bbox.r = 0;
         //  ### FIXME: should these be FONTDATA values?
-        if (bbox.h < .9) span.firstChild.style.marginTop = CHTML.Em(bbox.h-.9);
-        if (bbox.d < .25) span.firstChild.style.marginBottom = CHTML.Em(bbox.d-.25);
+        span.firstChild.style.marginTop = CHTML.Em(bbox.h-.9);
+        span.firstChild.style.marginBottom = CHTML.Em(bbox.d-.25);
       },
 
       CHTMLbboxFor: function (n) {
