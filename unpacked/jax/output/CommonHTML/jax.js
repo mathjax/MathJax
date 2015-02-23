@@ -627,11 +627,6 @@
         if (!this.CHTML) this.CHTML = {};
         this.CHTML = {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
         if (this.inferred) return span;
-        //  ### FIXME:  This is a hack to handle the different spacing of the
-        //  ### integral sign in Times compared to CM fonts
-        if (this.type === "mo" && this.data.join("") === "\u222B") {CHTML.lastIsInt = true}
-        else if (this.type !== "mspace" || this.width !== "negativethinmathspace") {CHTML.lastIsInt = false}
-        //  ###
         if (!this.CHTMLspanID) {this.CHTMLspanID = CHTML.GetID()};
         var id = (this.id || "MJXc-Span-"+this.CHTMLspanID);
         return HTML.addElement(span,"span",{className:"MJXc-"+this.type, id:id});
@@ -875,18 +870,16 @@
 
     MML.mspace.Augment({
       toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span);
+        span = this.CHTMLcreateSpan(span);
+        this.CHTMLhandleStyle(span);
+        this.CHTMLhandleColor(span);
         var values = this.getValues("height","depth","width");
         var w = CHTML.length2em(values.width),
             h = CHTML.length2em(values.height),
             d = CHTML.length2em(values.depth);
         var bbox = this.CHTML;
         bbox.w = w; bbox.h = h; bbox.d = d;
-        if (w < 0) {
-          //  ### FIXME:  lastIsInt hack
-          if (!CHTML.lastIsInt) span.style.marginLeft = CHTML.Em(w);
-          w = 0;
-        }
+        if (w < 0) {span.style.marginRight = CHTML.Em(w); w = 0}
         span.style.width = CHTML.Em(w);
         span.style.height = CHTML.Em(h+d);
         if (d) span.style.verticalAlign = CHTML.Em(-d);
