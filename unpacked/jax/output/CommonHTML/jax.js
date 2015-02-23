@@ -33,7 +33,8 @@
   var EVENT, TOUCH, HOVER; // filled in later
 
   var SCRIPTFACTOR = Math.sqrt(1/2),
-      LINEHEIGHT = 1.2;
+      LINEHEIGHT = 1.2,
+      AXISHEIGHT = .25;
 
   var STYLES = {
     ".MJXc-script": {"font-size":SCRIPTFACTOR+"em"},
@@ -62,7 +63,7 @@
     ".MJXc-rule": {"display":"block!important", "margin-top":"1px"},
     ".MJXc-char": {"display":"block!important"},
 
-    ".MJXc-mfrac": {"margin":"0 .125em", "vertical-align":".25em", 
+    ".MJXc-mfrac": {"margin":"0 .125em", "vertical-align":AXISHEIGHT+"em", 
                     "display":"inline-table!important", "text-align":"center"},
     ".MJXc-mfrac > *": {"display":"table-row!important"},
     ".MJXc-num": {"line-height":0},
@@ -90,7 +91,7 @@
     ".MJXc-over > *": {"display":"block!important"},
     ".MJXc-munderover > *": {"display":"table-row!important"},
 
-    ".MJXc-mtable": {"vertical-align":".25em", "margin":"0 .125em"},
+    ".MJXc-mtable": {"vertical-align":AXISHEIGHT+"em", "margin":"0 .125em"},
     ".MJXc-mtable > *": {"display":"inline-table!important", "vertical-align":"middle"},
     ".MJXc-mtr": {"display":"table-row!important"},
     ".MJXc-mtd": {"display":"table-cell!important", "text-align":"center", "padding":".5em 0 0 .5em"},
@@ -387,7 +388,8 @@
       infinity: BIGDIMEN
     },
     TeX: {
-      x_height:         .442
+      x_height:         .442,
+      axis:             AXISHEIGHT
     },
     pxPerInch: 96,
     em: 16,
@@ -814,7 +816,8 @@
             data.mathvariant = "-TeX-variant";  // ### FIXME: handle other fonts
         }
       },
-      CHTMLcenterOp: function (span) {},
+      CHTMLcenterOp: function (span) {
+      },
       CHTMLcanStretch: function (direction,H,D) {
         if (!this.Get("stretchy")) {return false}
         var c = this.data.join("");
@@ -830,7 +833,7 @@
       CHTMLstretchV: function (h,d) {
         var span = this.CHTMLspanElement(), bbox = this.CHTML; //bbox.w = .4; // ## adjust width
         var values = this.getValues("symmetric","maxsize","minsize");
-        if (values.symmetric) {H = 2*Math.max(h-.25,d+.25)} else {H = h + d}
+        if (values.symmetric) {H = 2*Math.max(h-AXISHEIGHT,d+AXISHEIGHT)} else {H = h + d}
         values.maxsize = CHTML.length2em(values.maxsize,bbox.h+bbox.d);
         values.minsize = CHTML.length2em(values.minsize,bbox.h+bbox.d);
         H = Math.max(values.minsize,Math.min(values.maxsize,H));
@@ -843,7 +846,7 @@
           bbox.w *= scale*sX/10;
         }
         box.appendChild(span.firstChild); span.appendChild(box);
-        if (values.symmetric) span.style.verticalAlign = CHTML.Em(.25*(1-scale));
+        if (values.symmetric) span.style.verticalAlign = CHTML.Em(AXISHEIGHT*(1-scale));
       }
     });
 
@@ -1042,8 +1045,8 @@
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1), bbox = this.CHTML;
         if (nbox.h < .9) num.firstChild.firstChild.style.marginTop = CHTML.Em(sscale*(nbox.h-.9));
         bbox.w = sscale*Math.max(nbox.w,dbox.w);
-        bbox.h = sscale*(nbox.h+nbox.d) + .25;
-        bbox.d = sscale*(dbox.h+dbox.d) - .25;
+        bbox.h = sscale*(nbox.h+nbox.d) + AXISHEIGHT;
+        bbox.d = sscale*(dbox.h+dbox.d) - AXISHEIGHT;
         bbox.L = bbox.R = .125/scale;
         values.linethickness = Math.max(0,CHTML.length2em(values.linethickness||"0",0));
         if (values.linethickness) {
@@ -1051,7 +1054,7 @@
           var t = (values.linethickness < .15 ? "1px" : CHTML.Em(values.linethickness));
           rule.style.borderTop = t+" solid"; rule.style.margin = t+" 0";
           t = values.linethickness;
-          span.style.verticalAlign = CHTML.Em(.25-t);
+          span.style.verticalAlign = CHTML.Em(AXISHEIGHT-t);
           bbox.h += 2*t; bbox.d += t;
         }
         return span;
@@ -1220,7 +1223,7 @@
           }
         }
         var bbox = this.CHTML;
-        bbox.w = W; bbox.h = H/2 + .25; bbox.d = H/2 - .25;
+        bbox.w = W; bbox.h = H/2 + AXISHEIGHT; bbox.d = H/2 - AXISHEIGHT;
         bbox.L = bbox.R = .125;
         return span;
       }
