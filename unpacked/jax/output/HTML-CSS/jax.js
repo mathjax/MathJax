@@ -939,7 +939,8 @@
       for (i = 0, m = SPANS.length; i < m; i++) {
         span = SPANS[i]; if (!span) continue;
         bbox = span.bbox; parent = this.parentNode(span);
-        if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline || this.config.noReflows) {
+        if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline ||
+            (this.config.noReflows && bbox.exactW !== false)) {
           if (!parent.bbox) {parent.bbox = bbox}
           continue;
         }
@@ -1524,6 +1525,7 @@
         if (span.bbox.w + c[3]/1000 < span.bbox.lw) {span.bbox.lw = span.bbox.w + c[3]/1000}
         if (span.bbox.w + c[4]/1000 > span.bbox.rw) {span.bbox.rw = span.bbox.w + c[4]/1000}
         span.bbox.w += c[2]/1000;
+        if ((c[5]||{}).isUnknown) span.bbox.exactW = false;  // force measurement
       }
       if (newtext.length) {this.addText(SPAN,newtext)}
       if (span.scale && span.scale !== 1) {
