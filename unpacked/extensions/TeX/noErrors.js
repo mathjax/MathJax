@@ -71,7 +71,7 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "2.5.0";
+  var VERSION = "2.5.1";
   
   var CONFIG = HUB.CombineConfig("TeX.noErrors",{
     disabled: false,               // set to true to return to original error messages
@@ -154,7 +154,7 @@
           span = this.HTMLcreateSpan(span);
           span.bbox = data.data[0].toHTML(span).bbox;
         } else {
-          span = MATH.call(this,span,node);
+          span = MATH.apply(this,arguments);
         }
         return span;
       }
@@ -166,7 +166,7 @@
     //
     MML.merror.Augment({
       toHTML: function (span) {
-        if (!this.isError) {return MERROR.call(this,span)}
+        if (!this.isError) {return MERROR.apply(this,arguments)}
         span = this.HTMLcreateSpan(span); span.className = "noError"
         if (this.multiLine) {span.style.display = "inline-block"}
         var text = this.data[0].data[0].data.join("").split(/\n/);
@@ -218,7 +218,7 @@
       toSVG: function (span,node) {
         var data = this.data[0];
         if (data && data.data[0] && data.data[0].isError)
-          {span = data.data[0].toSVG(span)} else {span = MATH.call(this,span,node)}
+          {span = data.data[0].toSVG(span)} else {span = MATH.apply(this,arguments)}
         return span;
       }
     });
@@ -229,7 +229,7 @@
     //
     MML.merror.Augment({
       toSVG: function (span) {
-        if (!this.isError || this.Parent().type !== "math") {return MERROR.call(this,span)}
+        if (!this.isError || this.Parent().type !== "math") {return MERROR.apply(this,arguments)}
         span = HTML.addElement(span,"span",{className: "noError", isMathJax:true});
         if (this.multiLine) {span.style.display = "inline-block"}
         var text = this.data[0].data[0].data.join("").split(/\n/);
@@ -267,7 +267,7 @@
       toNativeMML: function (span) {
         var data = this.data[0];
         if (data && data.data[0] && data.data[0].isError)
-          {span = data.data[0].toNativeMML(span)} else {span = MATH.call(this,span)}
+          {span = data.data[0].toNativeMML(span)} else {span = MATH.apply(this,arguments)}
         return span;
       }
     });
@@ -278,7 +278,7 @@
     //
     MML.merror.Augment({
       toNativeMML: function (span) {
-        if (!this.isError) {return MERROR.call(this,span)}
+        if (!this.isError) {return MERROR.apply(this,arguments)}
         span = span.appendChild(document.createElement("span"));
         var text = this.data[0].data[0].data.join("").split(/\n/);
         for (var i = 0, m = text.length; i < m; i++) {
@@ -328,7 +328,7 @@
     //
     MML.merror.Augment({
       toCommonHTML: function (span) {
-        if (!this.isError) {return MERROR.call(this,span)}
+        if (!this.isError) {return MERROR.apply(this,arguments)}
         span = this.CHTMLcreateSpan(span); span.className = "noError"
         if (this.multiLine) {span.style.display = "inline-block"}
         var text = this.data[0].data[0].data.join("").split(/\n/);

@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.5.0",
+  version: "2.5.1",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -258,8 +258,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Implement AMS generalized fraction
      */
     Genfrac: function (name,left,right,thick,style) {
-      if (left  == null) {left  = this.GetDelimiterArg(name)} else {left  = this.convertDelimiter(left)}
-      if (right == null) {right = this.GetDelimiterArg(name)} else {right = this.convertDelimiter(right)}
+      if (left  == null) {left  = this.GetDelimiterArg(name)}
+      if (right == null) {right = this.GetDelimiterArg(name)}
       if (thick == null) {thick = this.GetArgument(name)}
       if (style == null) {style = this.trimSpaces(this.GetArgument(name))}
       var num = this.ParseArg(name);
@@ -399,12 +399,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     GetDelimiterArg: function (name) {
       var c = this.trimSpaces(this.GetArgument(name));
-      if (c == "") {return null}
-      if (TEXDEF.delimiter[c] == null) {
-        TEX.Error(["MissingOrUnrecognizedDelim",
-                   "Missing or unrecognized delimiter for %1",name]);
-      }
-      return this.convertDelimiter(c);
+      if (c == "") return null;
+      if (TEXDEF.delimiter[c]) return c;
+      TEX.Error(["MissingOrUnrecognizedDelim","Missing or unrecognized delimiter for %1",name]);
     },
     
     /*
