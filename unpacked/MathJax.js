@@ -45,7 +45,7 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
-MathJax.version = "2.5.0";
+MathJax.version = "2.5.1";
 MathJax.fileversion = "2.5.1";
 MathJax.cdnVersion = "2.5.1";  // specifies a revision to break caching
 MathJax.cdnFileVersions = {};  // can be used to specify revisions for individual files
