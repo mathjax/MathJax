@@ -45,14 +45,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
   MML.TeXmathchoice = MML.mbase.Subclass({
     type: "TeXmathchoice", notParent: true,
-    choice: function () {
-      if (this.selection == null) {
-        this.selection = 0;
-        var values = this.getValues("displaystyle","scriptlevel");
-        if (values.scriptlevel > 0) {this.selection = Math.min(3,values.scriptlevel+1)}
-          else {this.selection = (values.displaystyle ? 0 : 1)}
-      }
-      return this.selection;
+    choice: function (nocache) {
+      var selection = 0, values = this.getValues("displaystyle","scriptlevel");
+      if (values.scriptlevel > 0) {selection = Math.min(3,values.scriptlevel+1)}
+        else {selection = (values.displaystyle ? 0 : 1)}
+      return selection;
     },
     selected: function () {return this.data[this.choice()]},
     setTeXclass: function (prev) {return this.selected().setTeXclass(prev)},
