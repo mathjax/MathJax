@@ -585,6 +585,8 @@
 
   CHTML.FONTDATA.FONTS['MathJax_Caligraphic'] = {
     directory: 'Caligraphic/Regular',
+    ascent: .789,
+    descent: .216,
     skew: {
       0x41: 0.194,
       0x42: 0.139,
@@ -656,6 +658,8 @@
   CHTML.FONTDATA.FONTS['MathJax_Main-bold'] = {
     directory: 'Main/Bold',
     weight: 'bold',
+    ascent: .951,
+    descent: .267,
     skew: {
       0x131: 0.0319,
       0x237: 0.0958,
@@ -792,6 +796,8 @@
   CHTML.FONTDATA.FONTS['MathJax_Main-italic'] = {
     directory: 'Main/Italic',
     style: 'italic',
+    ascent: .750,
+    descent: .250,
     Ranges: [
       [0xA0,0xFF,"Latin1Supplement"],
       [0x300,0x36F,"CombDiacritMarks"],
@@ -903,6 +909,8 @@
 
   CHTML.FONTDATA.FONTS['MathJax_Main'] = {
     directory: 'Main/Regular',
+    ascent: .900,
+    descent: .272,
     skew: {
       0x131: 0.0278,
       0x237: 0.0833,
@@ -1183,6 +1191,8 @@
   CHTML.FONTDATA.FONTS['MathJax_Math-italic'] = {
     directory: 'Math/Italic',
     style: 'italic',
+    ascent: .717,
+    descent: .218,
     skew: {
       0x41: 0.139,
       0x42: 0.0833,
@@ -1361,6 +1371,8 @@
 
   CHTML.FONTDATA.FONTS['MathJax_Size1'] = {
     directory: 'Size1/Regular',
+    ascent: .850,
+    descent: .350,
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [850,349,458,152,422],       // LEFT PARENTHESIS
     0x29: [850,349,458,35,305],        // RIGHT PARENTHESIS
@@ -1410,6 +1422,8 @@
 
   CHTML.FONTDATA.FONTS['MathJax_Size2'] = {
     directory: 'Size2/Regular',
+    ascent: 1.360,
+    descent: .862,
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [1150,649,597,180,561],      // LEFT PARENTHESIS
     0x29: [1150,649,597,35,416],       // RIGHT PARENTHESIS
@@ -1451,6 +1465,8 @@
 
   CHTML.FONTDATA.FONTS['MathJax_Size3'] = {
     directory: 'Size3/Regular',
+    ascent: 1.450,
+    descent: .950,
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [1450,949,736,209,701],      // LEFT PARENTHESIS
     0x29: [1450,949,736,34,526],       // RIGHT PARENTHESIS
@@ -1476,6 +1492,8 @@
 
   CHTML.FONTDATA.FONTS['MathJax_Size4'] = {
     directory: 'Size4/Regular',
+    ascent: 1.750,
+    descent: 1.250,
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [1750,1249,792,237,758],     // LEFT PARENTHESIS
     0x29: [1750,1249,792,33,554],      // RIGHT PARENTHESIS
@@ -1569,7 +1587,7 @@
       var family = "MJX_TeX_"+suffix; FONTS[name].className = "MJXc-TeX-"+suffix;
       STYLES[".MJXc-TeX-"+suffix] = {"font-family":family};
       font = {"font-family":family}; name = name.replace(/-.*/,"");
-      if (names[1] === "Regular") {font.src = "local('"+name+"')"}
+      if (names[1] === "Regular") {font.src = "local('"+name+"'), local('"+name+"-Regular+')"}
         else {font.src = "local('"+name+" "+names[1]+"'), local('"+name+"-"+names[1]+"')"}
       faces.push(font);
     }}

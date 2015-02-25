@@ -33,7 +33,6 @@
   var EVENT, TOUCH, HOVER; // filled in later
 
   var SCRIPTFACTOR = Math.sqrt(1/2),
-      LINEHEIGHT = 1.2, LINEH = .9, LINED = .3,
       AXISHEIGHT = .25;
 
   var STYLES = {
@@ -48,7 +47,7 @@
 
     ".MJXc-math": {
       "display":"inline-block",
-      "line-height":LINEHEIGHT,
+      "line-height":"0",
       "text-indent":"0",
       "white-space":"nowrap",
       "border-collapse":"collapse"
@@ -61,38 +60,34 @@
     ".MJXc-math span": {"display":"inline-block"},
     ".MJXc-box":  {"display":"block!important", "text-align":"center"},
     ".MJXc-rule": {"display":"block!important", "margin-top":"1px"},
-    ".MJXc-char": {"display":"block!important"},
+    ".MJXc-char": {"display":"block!important","line-height":"normal"},
 
     ".MJXc-mfrac": {"margin":"0 .125em", "vertical-align":AXISHEIGHT+"em", 
                     "display":"inline-table!important", "text-align":"center"},
-    ".MJXc-mfrac > *": {"display":"table-row!important"},
-    ".MJXc-num": {"line-height":0},
-    ".MJXc-num > span": {"display":"inline-block"},
-    ".MJXc-num > *": {"line-height":LINEHEIGHT, "width":"100%"},
-    ".MJXc-num > * > *": {"display":"table!important", "width":"100%"},
-    ".MJXc-den": {"line-height":LINEHEIGHT*SCRIPTFACTOR},
-    ".MJXc-den > *": {"display":"table-cell!important"},
-    ".MJXc-den > * > *": {"line-height":LINEHEIGHT},
+    ".MJXc-mfrac > span": {"display":"table-row!important"},
+    ".MJXc-num > span": {"display":"inline-block", "width":"100%"},
+    ".MJXc-num > span > span": {"display":"table!important", "width":"100%"},
+    ".MJXc-den > span": {"display":"table-cell!important"},
     ".MJXc-mfrac-row": {"display":"table-row!important"},
-    ".MJXc-mfrac-row > *": {"display":"table-cell!important", "width":"100%"},
+    ".MJXc-mfrac-row > span": {"display":"table-cell!important", "width":"100%"},
 
     ".MJXc-surd": {"vertical-align":"top"},
-    ".MJXc-surd > *": {"display":"block!important"},
+    ".MJXc-surd > span": {"display":"block!important"},
 
-    ".MJXc-script-box > * ": {"display":"table!important", "height":"50%"},
-    ".MJXc-script-box > * > *": {"display":"table-cell!important", "vertical-align":"top"},
-    ".MJXc-script-box > *:last-child > *": {"vertical-align":"bottom"},
-    ".MJXc-script-box > * > * > *": {"display":"block!important"},
+    ".MJXc-script-box > span ": {"display":"table!important", "height":"50%"},
+    ".MJXc-script-box > span > span": {"display":"table-cell!important", "vertical-align":"top"},
+    ".MJXc-script-box > span:last-child > span": {"vertical-align":"bottom"},
+    ".MJXc-script-box > span > span > span": {"display":"block!important"},
 
     ".MJXc-mphantom": {"visibility":"hidden"},
 
     ".MJXc-munderover": {"display":"inline-table!important"},
     ".MJXc-over": {"display":"inline-block!important", "text-align":"center"},
-    ".MJXc-over > *": {"display":"block!important"},
-    ".MJXc-munderover > *": {"display":"table-row!important"},
+    ".MJXc-over > span": {"display":"block!important"},
+    ".MJXc-munderover > span": {"display":"table-row!important"},
 
     ".MJXc-mtable": {"vertical-align":AXISHEIGHT+"em", "margin":"0 .125em"},
-    ".MJXc-mtable > *": {"display":"inline-table!important", "vertical-align":"middle"},
+    ".MJXc-mtable > span": {"display":"inline-table!important", "vertical-align":"middle"},
     ".MJXc-mtr": {"display":"table-row!important"},
     ".MJXc-mtd": {"display":"table-cell!important", "text-align":"center", "padding":".5em 0 0 .5em"},
     ".MJXc-mtr > .MJXc-mtd:first-child": {"padding-left":0},
@@ -480,17 +475,20 @@
         var item = list[i];
         switch (item.type) {
           case "char":
-            if (className && item.font.className !== className) {
+            var font = item.font;
+            if (className && font.className !== className) {
               HTML.addElement(span,"span",{className:className},[text]);
               text = ""; className = null;
             }
-            var C = item.font[item.n];
-            text += C.c; className = item.font.className;
+            var C = font[item.n];
+            text += C.c; className = font.className;
             if (bbox.h < C[0]) bbox.h = C[0];
             if (bbox.d < C[1]) bbox.d = C[1];
             if (bbox.l > bbox.w+C[3]) bbox.l = bbox.w+C[3];
             if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
             bbox.w += C[2];
+            if (bbox.H < font.ascent)  bbox.H = font.ascent;
+            if (bbox.D < font.descent) bbox.D = font.descent;
         }
       }
       if (span.childNodes.length) {
@@ -592,7 +590,6 @@
         this.CHTMLhandleStyle(span);
         this.CHTMLhandleColor(span);
         for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLaddChild(span,i,options);
-        if (!options.noMargins && !options.noBBox) this.CHTMLhandleMargins(span);
         return span;
       },
       CHTMLaddChild: function (span,i,options) {
@@ -668,24 +665,11 @@
         }
       },
       
-      CHTMLhandleMargins: function (span,box) {
-        var bbox = this.CHTML;
-        //  ### FIXME: should these be FONTDATA values?
-        if (bbox.h < LINEH || bbox.d < LINED) {
-          if (box == null) {
-            box = HTML.Element("span",{className:"MJXc-box"});
-            while (span.firstChild) box.appendChild(span.firstChild);
-            span.appendChild(box);
-          }
-          if (bbox.h < LINEH) box.style.marginTop = CHTML.Em(bbox.h-LINEH);
-          if (bbox.d < LINED) box.style.marginBottom = CHTML.Em(bbox.d-LINED);
-        }
-      },
-
       CHTMLhandleText: function (span,text,variant) {
         if (span.childNodes.length === 0) {
           HTML.addElement(span,"span",{className:"MJXc-char"});
-          this.CHTML = {h:-BIGDIMEN, d:-BIGDIMEN, w:0, l:BIGDIMEN, r:-BIGDIMEN};
+          this.CHTML = {h:-BIGDIMEN, d:-BIGDIMEN, w:0, l:BIGDIMEN, r:-BIGDIMEN,
+                        D:-BIGDIMEN, H:-BIGDIMEN};
         }
         var bbox = this.CHTML, string = {text:text, i:0, length:text.length};
         if (typeof(variant) === "string") variant = CHTML.FONTDATA.VARIANT[variant];
@@ -700,14 +684,15 @@
         if (bbox.d === -BIGDIMEN) bbox.d = 0;
         if (bbox.l ===  BIGDIMEN) bbox.l = 0;
         if (bbox.r === -BIGDIMEN) bbox.r = 0;
-        //  ### FIXME: should these be FONTDATA values?
-        span.firstChild.style.marginTop = CHTML.Em(bbox.h-LINEH);
-        span.firstChild.style.marginBottom = CHTML.Em(bbox.d-LINED);
+        if (bbox.H === -BIGDIMEN) bbox.H = .8;
+        if (bbox.D === -BIGDIMEN) bbox.D = .2;
+        span.firstChild.style.marginTop = CHTML.Em(bbox.h-bbox.H);
+        span.firstChild.style.marginBottom = CHTML.Em(bbox.d-bbox.D);
       },
 
       CHTMLbboxFor: function (n) {
         if (this.data[n] && this.data[n].CHTML) return this.data[n].CHTML;
-        return {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
+        return {w:0, h:0, d:0, l:0, r:0};
       },
 
       CHTMLcanStretch: function (direction,H,D) {
@@ -1046,21 +1031,20 @@
           ["span",{},      // inline-block
             [["span",{},[   // table, 100%
               ["span",{className:"MJXc-mfrac-row"}], // numerator row, 100%
-              ["span",{className:"MJXc-mfrac-row", style:"font-size:0"},
+              ["span",{className:"MJXc-mfrac-row"},
                 [["span",{},[["span",{className:"MJXc-rule"}]]]]]  // division line
             ]]]
           ]
         ]);
         num.firstChild.firstChild.firstChild.appendChild(span.firstChild);
         var denom = HTML.Element("span",{className:"MJXc-den"});
-        if (sscale === 1) denom.style.lineHeight = LINEHEIGHT;
         if (scale !== 1) span.style.margin = "0 "+CHTML.Em(.125/scale);
         denom.appendChild(span.firstChild);
         span.appendChild(num); span.appendChild(denom);
         
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1), bbox = this.CHTML;
-        if (nbox.h < LINEH)
-          num.firstChild.firstChild.style.marginTop = CHTML.Em(sscale*(nbox.h-LINEH));
+        if (nbox.h < .9)
+          num.firstChild.firstChild.style.marginTop = CHTML.Em(sscale*(nbox.h-.9));
         bbox.w = sscale*Math.max(nbox.w,dbox.w);
         bbox.h = sscale*(nbox.h+nbox.d) + AXISHEIGHT;
         bbox.d = sscale*(dbox.h+dbox.d) - AXISHEIGHT;
