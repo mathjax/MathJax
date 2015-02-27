@@ -37,41 +37,48 @@
       HFUZZ = .05, DFUZZ = 0;  // adjustments to bounding box of character boxes
 
   var STYLES = {
-    ".MJXc-script": {"font-size":SCRIPTFACTOR+"em"},
-    ".MJXc-right": {
-      "-webkit-transform-origin":"right",
-      "-moz-transform-origin":"right",
-      "-ms-transform-origin":"right",
-      "-o-transform-origin":"right",
-      "transform-origin":"right"
+    ".MJXc-display": {
+      "display":    "block",
+      "text-align": "center",
+      "margin":     "1em 0"
     },
 
-    ".MJXc-math": {
-      "display":"inline-block",
-      "line-height":"0",
-      "text-indent":"0",
-      "white-space":"nowrap",
+    "mjx-math":   {
+      "display":        "inline-block",
+      "line-height":    0,
+      "text-indent":    0,
+      "white-space":    "nowrap",
       "border-collapse":"collapse"
     },
-    ".MJXc-display": {
-      "display": "block",
-      "text-align": "center",
-      "margin": "1em 0"
+    "mjx-math *": {display:"inline-block"},
+
+    "mjx-mfrac":  {"vertical-align":".25em"},
+    "mjx-fbox":   {width:"100%"},
+    
+    "mjx-mphantom": {"visibility":"hidden"},
+
+    "mjx-merror": {
+      "background-color":"#FFFF88",
+      color:             "#CC0000",
+      border:            "1px solid #CC0000",
+      padding:           "1px 3px",
+      "font-style":      "normal",
+      "font-size":       "90%"
     },
-    ".MJXc-math span": {"display":"inline-block"},
-    ".MJXc-box":  {"display":"block!important", "text-align":"center"},
-    ".MJXc-rule": {"display":"block!important", "margin-top":"1px"},
-    ".MJXc-char": {"display":"block!important"},
 
-    ".MJXc-mfrac": {"margin":"0 .125em", "vertical-align":AXISHEIGHT+"em", 
-                    "display":"inline-table!important", "text-align":"center"},
-    ".MJXc-mfrac > span": {"display":"table-row!important"},
-    ".MJXc-num > span": {"display":"inline-block", "width":"100%"},
-    ".MJXc-num > span > span": {"display":"table!important", "width":"100%"},
-    ".MJXc-den > span": {"display":"table-cell!important"},
-    ".MJXc-mfrac-row": {"display":"table-row!important"},
-    ".MJXc-mfrac-row > span": {"display":"table-cell!important", "width":"100%"},
+    "mjx-box":    {display:"inline-block"},
+    "mjx-block":  {display:"block"},
+    "mjx-char":   {display:"block", "xline-height":"normal"},
+    "mjx-itable": {display:"inline-table"},
+    "mjx-row":    {display:"table-row"},
+    "mjx-cell":   {display:"table-cell", "text-align":"center"},
+    "mjx-table":  {display:"table", width:"100%"},
+    "mjx-line":   {display:"block", width:"100%", "border-top":"0 solid"},
 
+    ".MJXc-script": {"font-size":SCRIPTFACTOR+"em"},
+
+/*********************************/
+    
     ".MJXc-surd": {"vertical-align":"top"},
     ".MJXc-surd > span": {"display":"block!important"},
 
@@ -79,8 +86,6 @@
     ".MJXc-script-box > span > span": {"display":"table-cell!important", "vertical-align":"top"},
     ".MJXc-script-box > span:last-child > span": {"vertical-align":"bottom"},
     ".MJXc-script-box > span > span > span": {"display":"block!important"},
-
-    ".MJXc-mphantom": {"visibility":"hidden"},
 
     ".MJXc-munderover": {"display":"inline-table!important"},
     ".MJXc-over": {"display":"inline-block!important", "text-align":"center"},
@@ -321,7 +326,7 @@
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
       return HUB.getJaxFor(math);
     },
-    getHoverSpan: function (jax,math) {return jax.root.CHTMLspanElement()},
+    getHoverSpan: function (jax,math) {return jax.root.CHTMLnodeElement()},
     getHoverBBox: function (jax,span,math) {
 //      var bbox = span.CHTML, em = jax.CHTML.outerEm;
 //      var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
@@ -470,7 +475,7 @@
     },
     unknownChar: function (variant,n) {},
 
-    addCharList: function (span,list,bbox) {
+    addCharList: function (node,list,bbox) {
       var text = "", className;
       for (var i = 0, m = list.length; i < m; i++) {
         var item = list[i];
@@ -478,7 +483,7 @@
           case "char":
             var font = item.font;
             if (className && font.className !== className) {
-              HTML.addElement(span,"span",{className:className},[text]);
+              HTML.addElement(node,"span",{className:className},[text]);
               text = ""; className = null;
             }
             var C = font[item.n];
@@ -492,11 +497,11 @@
             if (bbox.D < font.descent) bbox.D = font.descent;
         }
       }
-      if (span.childNodes.length) {
-        HTML.addElement(span,"span",{className:className},[text]);
+      if (node.childNodes.length) {
+        HTML.addElement(node,"span",{className:className},[text]);
       } else {
-        HTML.addText(span,text);
-        span.className += " "+className;
+        HTML.addText(node,text);
+        node.className += " "+className;
       }
     },
     
@@ -580,25 +585,25 @@
     MML = MathJax.ElementJax.mml;
 
     MML.mbase.Augment({
-      toCommonHTML: function (span,options) {
-        return this.CHTMLdefaultSpan(span,options);
+      toCommonHTML: function (node,options) {
+        return this.CHTMLdefaultNode(node,options);
       },
 
-      CHTMLdefaultSpan: function (span,options) {
+      CHTMLdefaultNode: function (node,options) {
         if (!options) options = {};
-        span = this.CHTMLcreateSpan(span);
-        this.CHTMLhandleSpace(span);
-        this.CHTMLhandleStyle(span);
-        this.CHTMLhandleColor(span);
-        for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLaddChild(span,i,options);
-        return span;
+        node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleSpace(node);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleColor(node);
+        for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLaddChild(node,i,options);
+        return node;
       },
-      CHTMLaddChild: function (span,i,options) {
+      CHTMLaddChild: function (node,i,options) {
         var child = this.data[i];
         if (child) {
-          if (options.childSpans)
-            span = HTML.addElement(span,"span",{className:options.className});
-          child.toCommonHTML(span,options.childOptions);
+          if (options.childNodes)
+            node = HTML.addElement(node,options.childNodes);
+          child.toCommonHTML(node,options.childOptions);
           if (!options.noBBox) {
             var bbox = this.CHTML, cbox = child.CHTML;
             if (cbox.r + bbox.w > bbox.r) bbox.r = bbox.w + cbox.r;
@@ -608,7 +613,7 @@
             if (cbox.d > bbox.d) bbox.d = cbox.d;
             if (cbox.ic) {bbox.ic = cbox.ic} else {delete bbox.ic}
           }
-        } else if (options.forceChild) {HTML.addElement(span,"span")}
+        } else if (options.forceChild) {HTML.addElement(node,"span")}
       },
       CHTMLstretchChild: function (i,H,D) {
         var data = this.data[i];
@@ -621,54 +626,54 @@
         }
       },
 
-      CHTMLcreateSpan: function (span) {
+      CHTMLcreateNode: function (node) {
         if (!this.CHTML) this.CHTML = {};
         this.CHTML = {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
-        if (this.inferred) return span;
-        if (!this.CHTMLspanID) {this.CHTMLspanID = CHTML.GetID()};
-        var id = (this.id || "MJXc-Span-"+this.CHTMLspanID);
-        return HTML.addElement(span,"span",{className:"MJXc-"+this.type, id:id});
+        if (this.inferred) return node;
+        if (!this.CHTMLnodeID) {this.CHTMLnodeID = CHTML.GetID()};
+        var id = (this.id || "MJXc-Node-"+this.CHTMLnodeID);
+        return HTML.addElement(node,"mjx-"+this.type,{className:"MJXc-"+this.type, id:id});
       },
-      CHTMLspanElement: function () {
-        if (!this.CHTMLspanID) {return null}
-        return document.getElementById(this.id||"MJXc-Span-"+this.CHTMLspanID);
-      },
-
-      CHTMLhandleStyle: function (span) {
-        if (this.style) span.style.cssText = this.style;
+      CHTMLnodeElement: function () {
+        if (!this.CHTMLnodeID) {return null}
+        return document.getElementById(this.id||"MJXc-Node-"+this.CHTMLnodeID);
       },
 
-      CHTMLhandleColor: function (span) {
-        if (this.mathcolor) {span.style.color = this.mathcolor}
-          else if (this.color) {span.style.color = this.color}
-        if (this.mathbackground) {span.style.backgroundColor = this.mathbackground}
-          else if (this.background) {span.style.backgroundColor = this.background}
+      CHTMLhandleStyle: function (node) {
+        if (this.style) node.style.cssText = this.style;
+      },
+
+      CHTMLhandleColor: function (node) {
+        if (this.mathcolor) {node.style.color = this.mathcolor}
+          else if (this.color) {node.style.color = this.color}
+        if (this.mathbackground) {node.style.backgroundColor = this.mathbackground}
+          else if (this.background) {node.style.backgroundColor = this.background}
       },
       
-      CHTMLhandleSpace: function (span) {
+      CHTMLhandleSpace: function (node) {
         if (!this.useMMLspacing) {
 	  var space = this.texSpacing();
-	  if (space !== "") span.style.marginLeft = CHTML.Em(CHTML.length2em(space));
+	  if (space !== "") node.style.marginLeft = CHTML.Em(CHTML.length2em(space));
         }
       },
 
-      CHTMLhandleScriptlevel: function (span,dlevel) {
+      CHTMLhandleScriptlevel: function (node,dlevel) {
         var level = this.Get("scriptlevel");
         if (level === 0) return;
         // ### FIXME: handle scriptminsize
         if (level > 2) level = 2;
         if (level > 0 && dlevel == null) {
-          span.className += " MJXc-script";
+          node.className += " MJXc-script";
         } else {
           if (dlevel) level -= dlevel;
           var scale = Math.floor(Math.pow(SCRIPTFACTOR,level)*100);
-          span.style.fontSize = scale+"%";
+          node.style.fontSize = scale+"%";
         }
       },
       
-      CHTMLhandleText: function (span,text,variant) {
-        if (span.childNodes.length === 0) {
-          HTML.addElement(span,"span",{className:"MJXc-char"});
+      CHTMLhandleText: function (node,text,variant) {
+        if (node.childNodes.length === 0) {
+          HTML.addElement(node,"mjx-char");
           this.CHTML = {h:-BIGDIMEN, d:-BIGDIMEN, w:0, l:BIGDIMEN, r:-BIGDIMEN,
                         D:-BIGDIMEN, H:-BIGDIMEN};
         }
@@ -680,7 +685,7 @@
           var n = CHTML.getUnicode(string);
           list.push.apply(list,CHTML.getCharList(variant,n));
         }
-        CHTML.addCharList(span.firstChild,list,bbox);
+        CHTML.addCharList(node.firstChild,list,bbox);
         if (bbox.h === -BIGDIMEN) bbox.h = 0;
         if (bbox.d === -BIGDIMEN) bbox.d = 0;
         if (bbox.l ===  BIGDIMEN) bbox.l = 0;
@@ -689,14 +694,25 @@
         if (bbox.D === -BIGDIMEN) bbox.D = .2;
         bbox.h += HFUZZ; bbox.d += DFUZZ;
         var a = (bbox.H-bbox.D)/2;  // center of font (line-height:0)
-        span.firstChild.style.marginTop = CHTML.Em(bbox.h-a);
-        span.firstChild.style.marginBottom = CHTML.Em(bbox.d+a);
+        node.firstChild.style.marginTop = CHTML.Em(bbox.h-a);
+        node.firstChild.style.marginBottom = CHTML.Em(bbox.d+a);
       },
 
       CHTMLbboxFor: function (n) {
         if (this.data[n] && this.data[n].CHTML) return this.data[n].CHTML;
         return {w:0, h:0, d:0, l:0, r:0};
       },
+      //
+      //  Debugging function to see if internal BBox matches actual bbox
+      //
+      CHTMLdrawBBox: function (node) {
+        var bbox = this.CHTML;
+        HTML.addElement(node.parentNode,"mjx-box",{style:{opacity:.5,"margin-left":CHTML.Em(-bbox.w)}},[
+          ["mjx-box",{style:{height:CHTML.Em(bbox.h),width:CHTML.Em(bbox.w),"background-color":"red"}}],
+          ["mjx-box",{style:{height:CHTML.Em(bbox.d),width:CHTML.Em(bbox.w),"margin-left":CHTML.Em(-bbox.w),"vertical-align":CHTML.Em(-bbox.d),"background-color":"green"}}]
+        ]);
+      },
+
 
       CHTMLcanStretch: function (direction,H,D) {
         if (this.isEmbellished()) {
@@ -711,47 +727,47 @@
     });
 
     MML.chars.Augment({
-      toCommonHTML: function (span,options) {
+      toCommonHTML: function (node,options) {
         if (options == null) options = {};
         var text = this.toString();
         if (options.remap) text = options.remap(text,options.remapchars);
         //  ### FIXME: handle mtextFontInherit
-        this.CHTMLhandleText(span,text,options.variant||this.parent.Get("mathvariant"));
+        this.CHTMLhandleText(node,text,options.variant||this.parent.Get("mathvariant"));
       }
     });
     MML.entity.Augment({
-      toCommonHTML: function (span,options) {
+      toCommonHTML: function (node,options) {
         if (options == null) options = {};
         var text = this.toString();
         if (options.remapchars) text = options.remap(text,options.remapchars);
         //  ### FIXME: handle mtextFontInherit
-        this.CHTMLhandleText(span,text,options.variant||this.parent.Get("mathvariant"));
+        this.CHTMLhandleText(node,text,options.variant||this.parent.Get("mathvariant"));
       }
     });
 
     MML.math.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span);
-        if (this.Get("display") === "block") {span.className += " MJXc-display"}
-        return span;
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node);
+        if (this.Get("display") === "block") {node.className += " MJXc-display"}
+        return node;
       }
     });
     
     MML.mi.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span);
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node);
         var bbox = this.CHTML, text = this.data.join("");
         if (bbox.skew != null && text.length !== 1) delete bbox.skew;
         if (bbox.r > bbox.w && text.length === 1 /*&& !variant.noIC*/) {  // ### FIXME: handle variants
           bbox.ic = bbox.r - bbox.w; bbox.w = bbox.r;
-          span.style.paddingRight = CHTML.Em(bbox.ic);
+          node.style.paddingRight = CHTML.Em(bbox.ic);
         }
       }
     });
 
     MML.mo.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLcreateSpan(span);
+      toCommonHTML: function (node) {
+        node = this.CHTMLcreateNode(node);
 
         var values = this.getValues("displaystyle","largeop","mathvariant");
         values.text = this.data.join("");
@@ -759,22 +775,22 @@
         this.CHTMLadjustVariant(values);
 
         for (var i = 0, m = this.data.length; i < m; i++) {
-          this.CHTMLaddChild(span,i,{childOptions:{
+          this.CHTMLaddChild(node,i,{childOptions:{
             variant: values.mathvariant,
             remap: this.remap,
             remapchars: values.mapchars
           }});
         }
         if (values.text.length !== 1) delete this.CHTML.skew;
-        if (values.largeop) this.CHTMLcenterOp(span);
+        if (values.largeop) this.CHTMLcenterOp(node);
 
-        this.CHTMLhandleSpace(span);
-        this.CHTMLhandleStyle(span);
-        this.CHTMLhandleColor(span);
+        this.CHTMLhandleSpace(node);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleColor(node);
 
-        return span;
+        return node;
       },
-      CHTMLhandleSpace: function (span) {
+      CHTMLhandleSpace: function (node) {
         if (this.useMMLspacing) {
 	  var values = this.getValues("scriptlevel","lspace","rspace");
           values.lspace = Math.max(0,CHTML.length2em(values.lspace));
@@ -785,9 +801,9 @@
           }
           var core = this, parent = this.Parent();
           while (parent && parent.isEmbellished() && parent.Core() === core)
-	    {core = parent; parent = parent.Parent(); span = core.CHTMLspanElement()}
-          if (values.lspace) {span.style.paddingLeft =  CHTML.Em(values.lspace)}
-	  if (values.rspace) {span.style.paddingRight = CHTML.Em(values.rspace)}
+	    {core = parent; parent = parent.Parent(); node = core.CHTMLnodeElement()}
+          if (values.lspace) {node.style.paddingLeft =  CHTML.Em(values.lspace)}
+	  if (values.rspace) {node.style.paddingRight = CHTML.Em(values.rspace)}
         } else {
           this.SUPER(arguments).CHTMLhandleSpace.apply(this,arguments);
         }
@@ -814,14 +830,14 @@
             data.mathvariant = "-TeX-variant";  // ### FIXME: handle other fonts
         }
       },
-      CHTMLcenterOp: function (span) {
+      CHTMLcenterOp: function (node) {
         var bbox = this.CHTML;
         var p = (bbox.h - bbox.d)/2 - AXISHEIGHT;
-        if (Math.abs(p) > .001) span.style.verticalAlign = CHTML.Em(-p);
+        if (Math.abs(p) > .001) node.style.verticalAlign = CHTML.Em(-p);
         bbox.h -= p; bbox.d += p;
         if (bbox.r > bbox.w) {
           bbox.ic = bbox.r - bbox.w; bbox.w = bbox.r;
-          span.style.paddingRight = CHTML.Em(bbox.ic);
+          node.style.paddingRight = CHTML.Em(bbox.ic);
         }
       },
       CHTMLcanStretch: function (direction,H,D) {
@@ -837,7 +853,7 @@
         return stretch;
       },
       CHTMLstretchV: function (h,d) {
-        var span = this.CHTMLspanElement(), bbox = this.CHTML; //bbox.w = .4; // ## adjust width
+        var node = this.CHTMLnodeElement(), bbox = this.CHTML; //bbox.w = .4; // ## adjust width
         var values = this.getValues("symmetric","maxsize","minsize");
         if (values.symmetric) {H = 2*Math.max(h-AXISHEIGHT,d+AXISHEIGHT)} else {H = h + d}
         values.maxsize = CHTML.length2em(values.maxsize,bbox.h+bbox.d);
@@ -851,42 +867,42 @@
           box.style.marginLeft = CHTML.Em(bbox.w*(sX/10-1)+.07);
           bbox.w *= scale*sX/10;
         }
-        box.appendChild(span.firstChild); span.appendChild(box);
-        if (values.symmetric) span.style.verticalAlign = CHTML.Em(AXISHEIGHT*(1-scale));
+        box.appendChild(node.firstChild); node.appendChild(box);
+        if (values.symmetric) node.style.verticalAlign = CHTML.Em(AXISHEIGHT*(1-scale));
       }
     });
 
     MML.mspace.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLcreateSpan(span);
-        this.CHTMLhandleStyle(span);
-        this.CHTMLhandleColor(span);
+      toCommonHTML: function (node) {
+        node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleColor(node);
         var values = this.getValues("height","depth","width");
         var w = CHTML.length2em(values.width),
             h = CHTML.length2em(values.height),
             d = CHTML.length2em(values.depth);
         var bbox = this.CHTML;
         bbox.w = w; bbox.h = h; bbox.d = d;
-        if (w < 0) {span.style.marginRight = CHTML.Em(w); w = 0}
-        span.style.width = CHTML.Em(w);
-        span.style.height = CHTML.Em(h+d);
-        if (d) span.style.verticalAlign = CHTML.Em(-d);
-        return span;
+        if (w < 0) {node.style.marginRight = CHTML.Em(w); w = 0}
+        node.style.width = CHTML.Em(w);
+        node.style.height = CHTML.Em(h+d);
+        if (d) node.style.verticalAlign = CHTML.Em(-d);
+        return node;
       }
     });
 
     MML.mpadded.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span,{
-          childSpans:true, className:"MJXc-box", forceChild:true
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node,{
+          childNodes:"mjx-box", forceChild:true
         });
-        var child = span.firstChild;
+        var child = node.firstChild;
         var values = this.getValues("width","height","depth","lspace","voffset");
         var dimen = this.CHTMLdimen(values.lspace);
         var T = 0, B = 0, L = dimen.len, R = -dimen.len, V = 0;
         if (values.width !== "") {
           dimen = this.CHTMLdimen(values.width,"w",0);
-          if (dimen.pm) {R += dimen.len} else {span.style.width = CHTML.Em(dimen.len)}
+          if (dimen.pm) {R += dimen.len} else {node.style.width = CHTML.Em(dimen.len)}
         }
         if (values.height !== "") {
           dimen = this.CHTMLdimen(values.height,"h",0);
@@ -907,8 +923,8 @@
         if (B) child.style.marginBottom = CHTML.Em(B);
         if (L) child.style.marginLeft = CHTML.Em(L);
         if (R) child.style.marginRight = CHTML.Em(R);
-        if (V) span.style.verticalAlign = CHTML.Em(V);
-        return span;
+        if (V) node.style.verticalAlign = CHTML.Em(V);
+        return node;
       },
       CHTMLdimen: function (length,d,m) {
         if (m == null) {m = -BIGDIMEN}
@@ -920,30 +936,30 @@
     });
 
     MML.munderover.Augment({
-      toCommonHTML: function (span) {
+      toCommonHTML: function (node) {
 	var values = this.getValues("displaystyle","accent","accentunder","align");
 	if (!values.displaystyle && this.data[this.base] != null &&
 	    this.data[this.base].CoreMO().Get("movablelimits")) {
-          span = MML.msubsup.prototype.toCommonHTML.call(this,span);
+          node = MML.msubsup.prototype.toCommonHTML.call(this,node);
           //
           //  Change class to msubsup for CSS rules.
           //  ### FIXME: should this be handled via adding another class instead?
           //
-          span.className = span.className.replace(/munderover/,"msubsup");
-          return span;
+          node.className = node.className.replace(/munderover/,"msubsup");
+          return node;
         }
-        span = this.CHTMLdefaultSpan(span,{childSpans:true, className:"", noBBox:true});
+        node = this.CHTMLdefaultNode(node,{childNodes:"span", noBBox:true});
         var obox = this.CHTMLbboxFor(this.over),
             ubox = this.CHTMLbboxFor(this.under),
             bbox = this.CHTMLbboxFor(this.base),
             BBOX = this.CHTML, acc = obox.acc;
         if (this.data[this.over]) {
-          span.lastChild.firstChild.style.marginLeft = obox.l =
-            span.lastChild.firstChild.style.marginRight = obox.r = 0;
+          node.lastChild.firstChild.style.marginLeft = obox.l =
+            node.lastChild.firstChild.style.marginRight = obox.r = 0;
           var over = HTML.Element("span",{},[["span",{className:"MJXc-over"}]]);
-          over.firstChild.appendChild(span.lastChild);
-          if (span.childNodes.length > (this.data[this.under] ? 1 : 0))
-            over.firstChild.appendChild(span.firstChild);
+          over.firstChild.appendChild(node.lastChild);
+          if (node.childNodes.length > (this.data[this.under] ? 1 : 0))
+            over.firstChild.appendChild(node.firstChild);
           this.data[this.over].CHTMLhandleScriptlevel(over.firstChild.firstChild);
           if (acc != null) {
             if (obox.vec) {
@@ -953,31 +969,31 @@
             acc = acc - obox.d + .1; if (bbox.t != null) {acc += bbox.t - bbox.h}
             over.firstChild.firstChild.style.marginBottom = CHTML.Em(acc);
           }
-          if (span.firstChild) {span.insertBefore(over,span.firstChild)}
-            else {span.appendChild(over)}
+          if (node.firstChild) {node.insertBefore(over,node.firstChild)}
+            else {node.appendChild(over)}
         }
         if (this.data[this.under]) {
-          span.lastChild.firstChild.style.marginLeft = ubox.l =
-            span.lastChild.firstChild.marginRight = ubox.r = 0;
-          this.data[this.under].CHTMLhandleScriptlevel(span.lastChild);
+          node.lastChild.firstChild.style.marginLeft = ubox.l =
+            node.lastChild.firstChild.marginRight = ubox.r = 0;
+          this.data[this.under].CHTMLhandleScriptlevel(node.lastChild);
         }
         BBOX.w = Math.max(SCRIPTFACTOR*obox.w,SCRIPTFACTOR*ubox.w,bbox.w);
         BBOX.h = SCRIPTFACTOR*(obox.h+obox.d+(acc||0)) + bbox.h;
         BBOX.d = bbox.d + SCRIPTFACTOR*(ubox.h+ubox.d);
-        return span;
+        return node;
       }
     });
 
     MML.msubsup.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span,{noBBox:true});
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node,{noBBox:true});
         if (!this.data[this.base]) {
-          if (span.firstChild) {span.insertBefore(HTML.Element("span"),span.firstChild)}
-            else {span.appendChild(HTML.Element("span"))}
+          if (node.firstChild) {node.insertBefore(HTML.Element("span"),node.firstChild)}
+            else {node.appendChild(HTML.Element("span"))}
         }
         var base = this.data[this.base], sub = this.data[this.sub], sup = this.data[this.sup];
         if (!base) base = {bbox: {h:.8, d:.2}};
-        span.firstChild.style.marginRight = ".05em";
+        node.firstChild.style.marginRight = ".05em";
         var h = Math.max(.4,base.CHTML.h-.4),
             d = Math.max(.2,base.CHTML.d+.1);
         var bbox = this.CHTML;
@@ -995,85 +1011,86 @@
           ]);
           sub.CHTMLhandleScriptlevel(box.firstChild);
           sup.CHTMLhandleScriptlevel(box.lastChild);
-          box.firstChild.firstChild.firstChild.appendChild(span.lastChild);
-          box.lastChild.firstChild.firstChild.appendChild(span.lastChild);
-          span.appendChild(box);
+          box.firstChild.firstChild.firstChild.appendChild(node.lastChild);
+          box.lastChild.firstChild.firstChild.appendChild(node.lastChild);
+          node.appendChild(box);
           bbox.h = Math.max(base.CHTML.h,sup.CHTML.h*SCRIPTFACTOR+h);
           bbox.d = Math.max(base.CHTML.d,sub.CHTML.d*SCRIPTFACTOR+d);
           bbox.w = base.CHTML.w + Math.max(sup.CHTML.w,sub.CHTML.w) + .07;
         } else if (sup) {
-          span.lastChild.style.verticalAlign = CHTML.Em(h);
-          sup.CHTMLhandleScriptlevel(span.lastChild);
+          node.lastChild.style.verticalAlign = CHTML.Em(h);
+          sup.CHTMLhandleScriptlevel(node.lastChild);
           bbox.h = Math.max(base.CHTML.h,sup.CHTML.h*SCRIPTFACTOR+h);
           bbox.d = Math.max(base.CHTML.d,sup.CHTML.d*SCRIPTFACTOR-h);
           bbox.w = base.CHTML.w + sup.CHTML.w + .07;
         } else if (sub) {
-          span.lastChild.style.verticalAlign = CHTML.Em(-d);
-          sub.CHTMLhandleScriptlevel(span.lastChild);
+          node.lastChild.style.verticalAlign = CHTML.Em(-d);
+          sub.CHTMLhandleScriptlevel(node.lastChild);
           bbox.h = Math.max(base.CHTML.h,sub.CHTML.h*SCRIPTFACTOR-d);
           bbox.d = Math.max(base.CHTML.d,sub.CHTML.d*SCRIPTFACTOR+d);
           bbox.w = base.CHTML.w + sub.CHTML.w + .07;
         }
-        return span;
+        return node;
       }
     });
 
     MML.mfrac.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span,{
-          childSpans:true, className:"MJXc-mfrac-cell", forceChild:true, noBBox:true
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node,{
+          childNodes:"mjx-cell", forceChild:true, noBBox:true
         });
         var values = this.getValues("linethickness","displaystyle","scriptlevel");
         var sscale = 1, scale = (values.scriptlevel > 0 ? SCRIPTFACTOR : 1);
         if (!values.displaystyle && values.scriptlevel < 2) {
           sscale = SCRIPTFACTOR;
-          if (this.data[0]) this.data[0].CHTMLhandleScriptlevel(span.firstChild);
-          if (this.data[1]) this.data[1].CHTMLhandleScriptlevel(span.lastChild);
+          if (this.data[0]) this.data[0].CHTMLhandleScriptlevel(node.firstChild);
+          if (this.data[1]) this.data[1].CHTMLhandleScriptlevel(node.lastChild);
         }
-        var num = HTML.Element("span",{className:"MJXc-num"},[
-          ["span",{},      // inline-block
-            [["span",{},[   // table, 100%
-              ["span",{className:"MJXc-mfrac-row"}], // numerator row, 100%
-              ["span",{className:"MJXc-mfrac-row"},
-                [["span",{},[["span",{className:"MJXc-rule"}]]]]]  // division line
-            ]]]
-          ]
+        var frac = HTML.addElement(node,"mjx-itable",{},[
+          ["mjx-row",{},[
+            ["mjx-fbox",{},[
+              ["mjx-ftable",{},[
+                ["mjx-row",{className:"mjx-numerator"}],
+                ["mjx-row",{className:"mjx-division"},[
+                  ["mjx-cell",{},[["mjx-line"]]]
+                ]]
+              ]]
+            ]]
+          ]],
+          ["mjx-row",{className:"mjx-denominator"}]
         ]);
-        num.firstChild.firstChild.firstChild.appendChild(span.firstChild);
-        var denom = HTML.Element("span",{className:"MJXc-den"});
-        if (scale !== 1) span.style.margin = "0 "+CHTML.Em(.125/scale);
-        denom.appendChild(span.firstChild);
-        span.appendChild(num); span.appendChild(denom);
+        var num = frac.firstChild.firstChild.firstChild.firstChild, denom = frac.lastChild;
+        num.appendChild(node.firstChild);
+        denom.appendChild(node.firstChild);
         
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1), bbox = this.CHTML;
-        if (nbox.h < .9)
-          num.firstChild.firstChild.style.marginTop = CHTML.Em(sscale*(nbox.h-.9));
+        var H = sscale*(nbox.h+nbox.d + dbox.h+dbox.d);
         bbox.w = sscale*Math.max(nbox.w,dbox.w);
-        bbox.h = sscale*(nbox.h+nbox.d) + AXISHEIGHT;
-        bbox.d = sscale*(dbox.h+dbox.d) - AXISHEIGHT;
+        bbox.h = H/2 + AXISHEIGHT;
+        bbox.d = H/2 - AXISHEIGHT;
         bbox.L = bbox.R = .125/scale;
         values.linethickness = Math.max(0,CHTML.length2em(values.linethickness||"0",0));
         if (values.linethickness) {
-          var rule = num.firstChild.firstChild.lastChild.lastChild.lastChild;
+          var rule = num.nextSibling.firstChild.firstChild;
           var t = (values.linethickness < .15 ? "1px" : CHTML.Em(values.linethickness));
           rule.style.borderTop = t+" solid"; rule.style.margin = t+" 0";
           t = values.linethickness;
-          span.style.verticalAlign = CHTML.Em(AXISHEIGHT-t);
+          node.style.verticalAlign = CHTML.Em(AXISHEIGHT-t);
           bbox.h += 2*t; bbox.d += t;
         }
-        return span;
+        return node;
       }
     });
 
     MML.msqrt.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span,{
-          childSpans:true, className:"MJXc-box", forceChild:true, noBBox:true
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node,{
+          childNodes:"mjx-box", forceChild:true, noBBox:true
         });
-        this.CHTMLlayoutRoot(span,span.firstChild);
-        return span;
+        this.CHTMLlayoutRoot(node,node.firstChild);
+        return node;
       },
-      CHTMLlayoutRoot: function (span,base) {
+      CHTMLlayoutRoot: function (node,base) {
         var bbox = this.CHTMLbboxFor(0);
         var scale = Math.ceil((bbox.h+bbox.d+.14)*100), t = CHTML.Em(14/scale);
         var surd = HTML.Element("span",{className:"MJXc-surd"},[
@@ -1091,51 +1108,51 @@
           root.firstChild.style.borderTopWidth = CHTML.Em(.08/Math.sqrt(sX/10));
         }
         root.appendChild(base);
-        span.appendChild(surd);
-        span.appendChild(root);
+        node.appendChild(surd);
+        node.appendChild(root);
         this.CHTML.h = bbox.h + .18; this.CHTML.d = bbox.d;
         this.CHTML.w = bbox.w + W; 
-        return span;
+        return node;
       }
     });
 
     MML.mroot.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span,{
-          childSpans:true, className:"MJXc-box", forceChild:true, noBBox:true
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node,{
+          childNodes:"mjx-box", forceChild:true, noBBox:true
         });
-        var rbox = this.CHTMLbboxFor(1), root = span.removeChild(span.lastChild);
-        var sqrt = this.CHTMLlayoutRoot(HTML.Element("span"),span.firstChild);
+        var rbox = this.CHTMLbboxFor(1), root = node.removeChild(node.lastChild);
+        var sqrt = this.CHTMLlayoutRoot(HTML.Element("span"),node.firstChild);
         root.className = "MJXc-script";  // ### FIXME: should be scriptscript
         var scale = parseInt(sqrt.firstChild.firstChild.style.fontSize);
         var v = .55*(scale/120) + rbox.d*SCRIPTFACTOR, r = -.6*(scale/120);
         if (scale > 150) {r *= .95*Math.ceil(150/scale*10)/10}
         root.style.marginRight = CHTML.Em(r); root.style.verticalAlign = CHTML.Em(v);
         if (-r > rbox.w*SCRIPTFACTOR) root.style.marginLeft = CHTML.Em(-r-rbox.w*SCRIPTFACTOR); // ### depends on rbox.w
-        span.appendChild(root); span.appendChild(sqrt);
+        node.appendChild(root); node.appendChild(sqrt);
         this.CHTML.w += Math.max(0,rbox.w*SCRIPTFACTOR+r);
         this.CHTML.h = Math.max(this.CHTML.h,rbox.h*SCRIPTFACTOR+v);
-        return span;
+        return node;
       },
       CHTMLlayoutRoot: MML.msqrt.prototype.CHTMLlayoutRoot
     });
     
     MML.mfenced.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLcreateSpan(span);
-        this.CHTMLhandleSpace(span);
-        this.CHTMLhandleStyle(span);
-        this.CHTMLhandleColor(span);
+      toCommonHTML: function (node) {
+        node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleSpace(node);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleColor(node);
         //
         //  Make row of open, data, sep, ... data, close
         //
         this.addFakeNodes();
-        this.CHTMLaddChild(span,"open",{});
+        this.CHTMLaddChild(node,"open",{});
         for (var i = 0, m = this.data.length; i < m; i++) {
-          this.CHTMLaddChild(span,"sep"+i,{});
-          this.CHTMLaddChild(span,i,{});
+          this.CHTMLaddChild(node,"sep"+i,{});
+          this.CHTMLaddChild(node,i,{});
         }
-        this.CHTMLaddChild(span,"close",{});
+        this.CHTMLaddChild(node,"close",{});
         //
         //  Check for streching the elements
         //
@@ -1146,45 +1163,45 @@
           this.CHTMLstretchChild(i,H,D);
         }
         this.CHTMLstretchChild("close",H,D);
-        return span;
+        return node;
       }
     });
 
     MML.mrow.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span);
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node);
         var H = this.CHTML.h, D = this.CHTML.d;
         for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLstretchChild(i,H,D);
-        return span;
+        return node;
       }
     });
 
     MML.mstyle.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span);
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node);
         if (this.scriptlevel) {
           var dlevel = this.Get("scriptlevel",null,true);
           if (this.scriptlevel !== dlevel) {
-            this.CHTMLhandleScriptlevel(span,dlevel);
+            this.CHTMLhandleScriptlevel(node,dlevel);
             CHTML.scaleBBox(this.CHTML,this.scriptlevel,dlevel);
           }
         }
-        return span;
+        return node;
       }
     });
 
     MML.TeXAtom.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span);
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node);
         // ### FIXME: handle TeX class?
-        span.className = "MJXc-mrow";
-        return span;
+        node.className = "MJXc-mrow";
+        return node;
       }
     });
 
     MML.mtable.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLdefaultSpan(span,{noBBox:true});
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node,{noBBox:true});
         var values = this.getValues("columnalign","rowalign","columnspacing","rowspacing",
                                     "columnwidth","equalcolumns","equalrows",
                                     "columnlines","rowlines","frame","framespacing",
@@ -1201,25 +1218,25 @@
         for (i = 0, m = CSPACE.length; i < m; i++) {CSPACE[i] = CHTML.length2em(CSPACE[i])}
         for (i = 0, m = RSPACE.length; i < m; i++) {RSPACE[i] = CHTML.length2em(RSPACE[i])}
 
-        var table = HTML.Element("span");
-        while (span.firstChild) table.appendChild(span.firstChild);
-        span.appendChild(table);
+        var table = HTML.Element("node");
+        while (node.firstChild) table.appendChild(node.firstChild);
+        node.appendChild(table);
         var H = 0, W = 0;
         for (i = 0, m = this.data.length; i < m; i++) {
           var row = this.data[i];
           if (row) {
             var rspace = CHTML.arrayEntry(RSPACE,i-1), ralign = CHTML.arrayEntry(RALIGN,i);
-            var rbox = row.CHTML, rspan = row.CHTMLspanElement();
-            rspan.style.verticalAlign = ralign;
+            var rbox = row.CHTML, rnode = row.CHTMLnodeElement();
+            rnode.style.verticalAlign = ralign;
             var k = (row.type === "mlabeledtr" ? 1 : 0);
             for (j = 0, n = row.data.length; j < n-k; j++) {
               var cell = row.data[j+k];
               if (cell) {
                 var cspace = CHTML.arrayEntry(CSPACE,j-1), calign = CHTML.arrayEntry(CALIGN,j);
-                var /*cbox = cell.CHTML,*/ cspan = cell.CHTMLspanElement();
-                if (j) {rbox.w += cspace; cspan.style.paddingLeft = CHTML.Em(cspace)}
-                if (i) cspan.style.paddingTop = CHTML.Em(rspace);
-                cspan.style.textAlign = calign;
+                var /*cbox = cell.CHTML,*/ cnode = cell.CHTMLnodeElement();
+                if (j) {rbox.w += cspace; cnode.style.paddingLeft = CHTML.Em(cspace)}
+                if (i) cnode.style.paddingTop = CHTML.Em(rspace);
+                cnode.style.textAlign = calign;
               }
             }
             H += rbox.h + rbox.d; if (i) {H += rspace}
@@ -1229,33 +1246,33 @@
         var bbox = this.CHTML;
         bbox.w = W; bbox.h = H/2 + AXISHEIGHT; bbox.d = H/2 - AXISHEIGHT;
         bbox.L = bbox.R = .125;
-        return span;
+        return node;
       }
     });
     MML.mlabeledtr.Augment({
-      CHTMLdefaultSpan: function (span,options) {
+      CHTMLdefaultNode: function (node,options) {
         if (!options) options = {};
-        span = this.CHTMLcreateSpan(span);
-        this.CHTMLhandleStyle(span);
-        this.CHTMLhandleColor(span);
+        node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleColor(node);
         // skip label for now
-        for (var i = 1, m = this.data.length; i < m; i++) this.CHTMLaddChild(span,i,options);
-        return span;
+        for (var i = 1, m = this.data.length; i < m; i++) this.CHTMLaddChild(node,i,options);
+        return node;
       }
     });
 
     MML.semantics.Augment({
-      toCommonHTML: function (span) {
-        span = this.CHTMLcreateSpan(span);
+      toCommonHTML: function (node) {
+        node = this.CHTMLcreateNode(node);
         if (this.data[0]) {
-          this.data[0].toCommonHTML(span);
+          this.data[0].toCommonHTML(node);
           MathJax.Hub.Insert(this.data[0].CHTML||{},this.CHTML);
         }
-        return span;
+        return node;
       }
     });
-    MML.annotation.Augment({toCommonHTML: function(span) {}});
-    MML["annotation-xml"].Augment({toCommonHTML: function(span) {}});
+    MML.annotation.Augment({toCommonHTML: function(node) {}});
+    MML["annotation-xml"].Augment({toCommonHTML: function(node) {}});
 
     //
     //  Loading isn't complete until the element jax is modified,
