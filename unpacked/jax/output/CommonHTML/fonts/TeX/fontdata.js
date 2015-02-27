@@ -1587,7 +1587,7 @@
       var family = "MJX_TeX_"+suffix; FONTS[name].className = "MJXc-TeX-"+suffix;
       STYLES[".MJXc-TeX-"+suffix] = {"font-family":family};
       font = {"font-family":family}; name = name.replace(/-.*/,"");
-      if (names[1] === "Regular") {font.src = "local('"+name+"'), local('"+name+"-Regular+')"}
+      if (names[1] === "Regular") {font.src = "local('"+name+"'), local('"+name+"-Regular')"}
         else {font.src = "local('"+name+" "+names[1]+"'), local('"+name+"-"+names[1]+"')"}
       faces.push(font);
     }}
