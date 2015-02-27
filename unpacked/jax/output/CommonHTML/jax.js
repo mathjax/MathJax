@@ -33,7 +33,8 @@
   var EVENT, TOUCH, HOVER; // filled in later
 
   var SCRIPTFACTOR = Math.sqrt(1/2),
-      AXISHEIGHT = .25;
+      AXISHEIGHT = .25,
+      HFUZZ = .05, DFUZZ = 0;  // adjustments to bounding box of character boxes
 
   var STYLES = {
     ".MJXc-script": {"font-size":SCRIPTFACTOR+"em"},
@@ -60,7 +61,7 @@
     ".MJXc-math span": {"display":"inline-block"},
     ".MJXc-box":  {"display":"block!important", "text-align":"center"},
     ".MJXc-rule": {"display":"block!important", "margin-top":"1px"},
-    ".MJXc-char": {"display":"block!important","line-height":"normal"},
+    ".MJXc-char": {"display":"block!important"},
 
     ".MJXc-mfrac": {"margin":"0 .125em", "vertical-align":AXISHEIGHT+"em", 
                     "display":"inline-table!important", "text-align":"center"},
@@ -686,8 +687,10 @@
         if (bbox.r === -BIGDIMEN) bbox.r = 0;
         if (bbox.H === -BIGDIMEN) bbox.H = .8;
         if (bbox.D === -BIGDIMEN) bbox.D = .2;
-        span.firstChild.style.marginTop = CHTML.Em(bbox.h-bbox.H);
-        span.firstChild.style.marginBottom = CHTML.Em(bbox.d-bbox.D);
+        bbox.h += HFUZZ; bbox.d += DFUZZ;
+        var a = (bbox.H-bbox.D)/2;  // center of font (line-height:0)
+        span.firstChild.style.marginTop = CHTML.Em(bbox.h-a);
+        span.firstChild.style.marginBottom = CHTML.Em(bbox.d+a);
       },
 
       CHTMLbboxFor: function (n) {
