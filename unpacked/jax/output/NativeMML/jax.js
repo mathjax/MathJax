@@ -1249,7 +1249,7 @@
         // Some browsers do not implement the mmultiscripts element.
         // Try to emulate the support using basic script elements.
         //
-        if (!nMML.mmultiscriptsBug || this.data.length === 0 ) {
+        if (!nMML.mmultiscriptsBug || this.data.length === 0) {
           this.SUPER(arguments).toNativeMML.call(this,parent);
           return;
         }
@@ -1267,7 +1267,7 @@
         //
         if (this.data[0]) {this.data[0].toNativeMML(tag)}
         else {tag.appendChild(this.NativeMMLelement("mrow"))}
-        base = tag.removeChild(tag.lastChild);
+        var base = tag.removeChild(tag.lastChild);
 
         //
         // Process the postscript pairs

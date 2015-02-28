@@ -62,7 +62,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/unicode"] = {
-  version: "2.5.0",
+  version: "2.5.1",
   unicode: {},
   config: MathJax.Hub.CombineConfig("TeX.unicode",{
     fonts: "STIXGeneral,'Arial Unicode MS'"
@@ -124,7 +124,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
   var GETVARIANT = MML.mbase.prototype.HTMLgetVariant;
   MML.mbase.Augment({
     HTMLgetVariant: function () {
-      var variant = GETVARIANT.call(this);
+      var variant = GETVARIANT.apply(this,arguments);
       if (variant.unicode) {delete variant.unicode; delete variant.FONTS} // clear font cache in case of restart
       if (!this.unicode) {return variant}
       variant.unicode = true;
