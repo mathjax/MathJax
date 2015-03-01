@@ -980,7 +980,7 @@ MathJax.ElementJax.mml.Augment({
         //
         //  Clear flag for using MML spacing even though form is specified
         //
-        this.data.open.useMMLspacing &= ~this.data.open.SPACE_ATTR.form;
+        this.data.open.useMMLspacing = 0;
       }
       //
       //  Create fake nodes for the separators
@@ -989,8 +989,10 @@ MathJax.ElementJax.mml.Augment({
         while (values.separators.length < this.data.length)
           {values.separators += values.separators.charAt(values.separators.length-1)}
         for (var i = 1, m = this.data.length; i < m; i++) {
-          if (this.data[i])
-            {this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}))}
+          if (this.data[i]) {
+            this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}))
+            this.data["sep"+i].useMMLspacing = 0;
+          }
         }
       }
       //
@@ -1003,7 +1005,7 @@ MathJax.ElementJax.mml.Augment({
         //
         //  Clear flag for using MML spacing even though form is specified
         //
-        this.data.close.useMMLspacing &= ~this.data.close.SPACE_ATTR.form;
+        this.data.close.useMMLspacing = 0;
       }
     },
     texClass: MML.TEXCLASS.OPEN,
