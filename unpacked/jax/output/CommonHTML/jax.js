@@ -37,7 +37,7 @@
       HFUZZ = .05, DFUZZ = 0;  // adjustments to bounding box of character boxes
 
   var STYLES = {
-    ".MJXc-display": {
+    ".MathJax_CHTML_Display": {
       "display":    "block",
       "text-align": "center",
       "margin":     "1em 0"
@@ -54,6 +54,7 @@
 
     "mjx-mfrac":  {"vertical-align":".25em"},
     "mjx-fbox":   {width:"100%"},
+    "mjx-ftable": {display:"table", width:"100%"},
     
     "mjx-mphantom": {"visibility":"hidden"},
 
@@ -68,7 +69,7 @@
 
     "mjx-box":    {display:"inline-block"},
     "mjx-block":  {display:"block"},
-    "mjx-char":   {display:"block", "xline-height":"normal"},
+    "mjx-char":   {display:"block"},
     "mjx-itable": {display:"inline-table"},
     "mjx-row":    {display:"table-row"},
     "mjx-cell":   {display:"table-cell", "text-align":"center"},
@@ -237,7 +238,7 @@
       this.initCHTML(math,span);
       math.setTeXclass();
       try {math.toCommonHTML(span)} catch (err) {
-        if (err.restart) {while (span.firstChild) {span.removeChild(span.firstChild)}}
+        while (span.firstChild) span.removeChild(span.firstChild);
         throw err;
       }
       //
@@ -568,6 +569,9 @@
       if (Math.abs(m) < .001) return "0em";
       return (m.toFixed(3).replace(/\.?0+$/,""))+"em";
     },
+    unEm: function (m) {
+      return parseFloat(m);
+    },
     
     scaleBBox: function (bbox,level,dlevel) {
       var scale = Math.pow(SCRIPTFACTOR,Math.min(2,level)-(dlevel||0));
@@ -628,7 +632,7 @@
 
       CHTMLcreateNode: function (node) {
         if (!this.CHTML) this.CHTML = {};
-        this.CHTML = {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
+        this.CHTML = {w:0, h:0, d:0, l:0, r:0};
         if (this.inferred) return node;
         if (!this.CHTMLnodeID) {this.CHTMLnodeID = CHTML.GetID()};
         var id = (this.id || "MJXc-Node-"+this.CHTMLnodeID);
@@ -707,9 +711,16 @@
       //
       CHTMLdrawBBox: function (node) {
         var bbox = this.CHTML;
-        HTML.addElement(node.parentNode,"mjx-box",{style:{opacity:.5,"margin-left":CHTML.Em(-bbox.w)}},[
-          ["mjx-box",{style:{height:CHTML.Em(bbox.h),width:CHTML.Em(bbox.w),"background-color":"red"}}],
-          ["mjx-box",{style:{height:CHTML.Em(bbox.d),width:CHTML.Em(bbox.w),"margin-left":CHTML.Em(-bbox.w),"vertical-align":CHTML.Em(-bbox.d),"background-color":"green"}}]
+        HTML.addElement(node.parentNode,"mjx-box",
+          {style:{opacity:.5,"margin-left":CHTML.Em(-bbox.w-(bbox.R||0))}},[
+          ["mjx-box",{style:{
+            height:CHTML.Em(bbox.h),width:CHTML.Em(bbox.w),"background-color":"red"}
+          }],
+          ["mjx-box",{style:{
+            height:CHTML.Em(bbox.d),width:CHTML.Em(bbox.w),
+            "margin-left":CHTML.Em(-bbox.w),"vertical-align":CHTML.Em(-bbox.d),
+            "background-color":"green"}
+          }]
         ]);
       },
 
