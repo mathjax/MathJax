@@ -942,7 +942,7 @@
     MML.mpadded.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{childNodes:"mjx-block", forceChild:true});
-        var child = node.firstChild, cbox = this.CHTMLbboxFor(0);
+        var child = node.firstChild, cbox = this.CHTMLbboxFor(0), bbox = this.CHTML;
         node = HTML.addElement(node,"mjx-block"); node.appendChild(child);
         var values = this.getValues("width","height","depth","lspace","voffset"), dimen;
         if (values.width !== "") {
@@ -950,16 +950,17 @@
           if (dimen.pm) dimen.len += cbox.w;
           if (dimen.len < 0) dimen.len = 0;
           if (dimen.len !== cbox.w) node.style.width = CHTML.Em(dimen.len);
+          bbox.w = dimen.len;
         }
         if (values.height !== "") {
           dimen = this.CHTMLdimen(values.height,"h",0);
-          if (!dimen.pm) dimen.len += -cbox.h;
+          if (dimen.pm) {bbox.h += dimen.len} else {bbox.h = dimen.len; dimen.len += -cbox.h}
           if (dimen.len+cbox.h < 0) dimen.len = -cbox.h;
           if (dimen.len) child.style.marginTop = CHTML.Em(dimen.len);
         }
         if (values.depth !== "")  {
           dimen = this.CHTMLdimen(values.depth,"d",0);
-          if (!dimen.pm) dimen.len += -cbox.d;
+          if (dimen.pm) {bbox.d += dimen.len} else {bbox.d = dimen.len; dimen.len += -cbox.d}
           if (dimen.len+cbox.d < 0) dimen.len = -cbox.d;
           if (dimen.len) child.style.marginBottom = CHTML.Em(dimen.len);
         }
