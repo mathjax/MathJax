@@ -65,7 +65,7 @@
       "background-color":"#FFFF88",
       color:             "#CC0000",
       border:            "1px solid #CC0000",
-      padding:           "1px 3px",
+      padding:           "2px 3px",
       "font-style":      "normal",
       "font-size":       "90%"
     },
@@ -104,16 +104,7 @@
     ".MJXc-mtr:first-child > .MJXc-mtd": {"padding-top":0},
     ".MJXc-mlabeledtr": {"display":"table-row!important"},
     ".MJXc-mlabeledtr > .MJXc-mtd:first-child": {"padding-left":0},
-    ".MJXc-mlabeledtr:first-child > .MJXc-mtd": {"padding-top":0},
-    
-    ".MJXc-merror": {
-      "background-color":"#FFFF88",
-      color:             "#CC0000",
-      border:            "1px solid #CC0000",
-      padding:           "1px 3px",
-      "font-style":      "normal",
-      "font-size":       "90%"
-    }
+    ".MJXc-mlabeledtr:first-child > .MJXc-mtd": {"padding-top":0}    
   };
   
   (function () {
