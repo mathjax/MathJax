@@ -55,6 +55,9 @@
     "mjx-mfrac":  {"vertical-align":".25em"},
     "mjx-fbox":   {width:"100%"},
     "mjx-ftable": {display:"table", width:"100%"},
+    "mjx-numerator":   {display:"table-cell"},
+    "mjx-denominator": {display:"table-cell"},
+    ".MJXc-fpad": {"padding-left":".1em", "padding-right":".1em"},
     
     "mjx-mphantom": {"visibility":"hidden"},
 
@@ -624,7 +627,7 @@
       CHTMLdefaultNode: function (node,options) {
         if (!options) options = {};
         node = this.CHTMLcreateNode(node);
-        this.CHTMLhandleSpace(node);
+        if (!options.noBBox) this.CHTMLhandleSpace(node);
         this.CHTMLhandleStyle(node);
         this.CHTMLhandleColor(node);
         for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLaddChild(node,i,options);
@@ -633,8 +636,11 @@
       CHTMLaddChild: function (node,i,options) {
         var child = this.data[i];
         if (child) {
-          if (options.childNodes)
-            node = HTML.addElement(node,options.childNodes);
+          var type = options.childNodes;
+          if (type) {
+            if (type instanceof Array) type = type[i];
+            node = HTML.addElement(node,type);
+          }
           child.toCommonHTML(node,options.childOptions);
           if (!options.noBBox) {
             var bbox = this.CHTML, cbox = child.CHTML;
@@ -685,7 +691,9 @@
       CHTMLhandleSpace: function (node) {
         if (!this.useMMLspacing) {
 	  var space = this.texSpacing();
-          if (space !== "") node.style.marginLeft = CHTML.Em(CHTML.length2em(space));
+          if (space !== "") this.CHTML.L = CHTML.length2em(space) + (this.CHTML.L||0);
+          if (this.CHTML.L) node.style.marginLeft = CHTML.Em(this.CHTML.L);
+          if (this.CHTML.R) node.style.marginRight = CHTML.Em(this.CHTML.R);
         }
       },
 
@@ -1077,47 +1085,80 @@
     MML.mfrac.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{
-          childNodes:"mjx-cell", forceChild:true, noBBox:true
+          childNodes:["mjx-numerator","mjx-denominator"],
+          forceChild:true, noBBox:true
         });
-        var values = this.getValues("linethickness","displaystyle","scriptlevel");
+        var values = this.getValues("linethickness","displaystyle","scriptlevel",
+                                    "numalign","denomalign","bevelled");
+        var isDisplay = values.displaystyle;
+        //
+        //  Get the scale of the fraction and its parts
+        //
         var sscale = 1, scale = (values.scriptlevel > 0 ? SCRIPTFACTOR : 1);
-        if (!values.displaystyle && values.scriptlevel < 2) {
+        if (!isDisplay && values.scriptlevel < 2) {
           sscale = SCRIPTFACTOR;
           if (this.data[0]) this.data[0].CHTMLhandleScriptlevel(node.firstChild);
           if (this.data[1]) this.data[1].CHTMLhandleScriptlevel(node.lastChild);
         }
+        //
+        //  Create the table for the fraction and set the alignment
+        //
         var frac = HTML.addElement(node,"mjx-itable",{},[
-          ["mjx-row",{},[
-            ["mjx-fbox",{},[
-              ["mjx-ftable",{},[
-                ["mjx-row",{className:"mjx-numerator"}],
-                ["mjx-row",{className:"mjx-division"},[
-                  ["mjx-cell",{},[["mjx-line"]]]
-                ]]
-              ]]
-            ]]
-          ]],
-          ["mjx-row",{className:"mjx-denominator"}]
+          ["mjx-row",{},[["mjx-fbox",{},[["mjx-ftable",{},[["mjx-row"]]]]]]],
+          ["mjx-row"]
         ]);
         var num = frac.firstChild.firstChild.firstChild.firstChild, denom = frac.lastChild;
         num.appendChild(node.firstChild);
         denom.appendChild(node.firstChild);
-        
+        if (values.numalign !== "center") num.firstChild.style.textAlign = values.numalign;
+        if (values.denomalign !== "center") denom.firstChild.style.textAlign = values.denomalign;
+        //
+        //  Get the bounding boxes for the parts, and determine the placement
+        //  of the numerator and denominator
+        //
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1), bbox = this.CHTML;
-        var H = sscale*(nbox.h+nbox.d + dbox.h+dbox.d);
-        bbox.w = sscale*Math.max(nbox.w,dbox.w);
-        bbox.h = H/2 + CHTML.TEX.axis_height;
-        bbox.d = H/2 - CHTML.TEX.axis_height;
-        bbox.L = bbox.R = .125/scale;
         values.linethickness = Math.max(0,CHTML.length2em(values.linethickness||"0",0));
-        if (values.linethickness) {
-          var rule = num.nextSibling.firstChild.firstChild;
-          var t = (values.linethickness < .15 ? "1px" : CHTML.Em(values.linethickness));
-          rule.style.borderTop = t+" solid"; rule.style.margin = t+" 0";
-          t = values.linethickness;
-          node.style.verticalAlign = CHTML.Em(CHTML.TEX.axis_height-t);
-          bbox.h += 2*t; bbox.d += t;
+        var mt = CHTML.TEX.min_rule_thickness/CHTML.em/scale, a = CHTML.TEX.axis_height;
+        var t = values.linethickness, p,q, u,v;
+        if (isDisplay) {u = CHTML.TEX.num1; v = CHTML.TEX.denom1}
+          else {u = (t === 0 ? CHTML.TEX.num3 : CHTML.TEX.num2); v = CHTML.TEX.denom2}
+        if (t === 0) { // \atop
+          p = Math.max((isDisplay ? 7 : 3) * CHTML.TEX.rule_thickness, 2*mt); // force to at least 2 px
+          q = (u - nbox.d*sscale) - (dbox.h*sscale - v);
+          if (q < p) {u += (p - q)/2; v += (p - q)/2}
+        } else { // \over
+          p = Math.max((isDisplay ? 3 : 0) * t, mt);  // force to be at least 1px
+          t = Math.max(t,mt);
+          q = (u - nbox.d*sscale) - (a + t/2); if (q < p) u += (p - q);
+          q = (a - t/2) - (dbox.h*sscale - v); if (q < p) v += (p - q);
+          node.style.verticalAlign = CHTML.Em(a-t/2);
+          //
+          //  Add the rule to the table
+          //
+          var rule = HTML.Element("mjx-row",{},[["mjx-cell",{},[["mjx-line"]]]]);
+          num.parentNode.appendChild(rule); rule = rule.firstChild.firstChild;
+          rule.style.borderTop = CHTML.Em(t)+" solid";
+          num.firstChild.className += " MJXc-fpad";
+          denom.firstChild.className += " MJXc-fpad";
         }
+        //
+        //  Determine the new bounding box and place the parts
+        //
+        bbox.w = sscale*Math.max(nbox.w,dbox.w);
+        bbox.h = sscale*nbox.h+u; bbox.d = sscale*dbox.d+v;
+        u -= sscale*nbox.d + a + t/2; v -= sscale*dbox.h - a + t/2;
+        if (u > 0) num.firstChild.style.paddingBottom = CHTML.Em(u);
+        if (v > 0) denom.firstChild.style.paddingTop = CHTML.Em(v);
+        //
+        //  Add nulldelimiterspace around the fraction
+        //  (TeXBook pg 150 and Appendix G rule 15e)
+        //
+	if (!this.texWithDelims && !this.useMMLspacing) 
+          bbox.L = bbox.R = CHTML.TEX.nulldelimiterspace;
+        this.CHTMLhandleSpace(node);
+        //
+        //  Return the completed fraction
+        //
         return node;
       }
     });
