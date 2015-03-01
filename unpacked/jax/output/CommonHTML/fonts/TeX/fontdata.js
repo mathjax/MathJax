@@ -40,6 +40,7 @@
   var ARROWREP = [0x2212,MAIN,0,0,0,0,.1];   // add depth for arrow extender
   var DARROWREP = [0x3D,MAIN,0,0,0,0,.1];    // add depth for arrow extender
 
+  CHTML.TEX = CHTML.TEXDEF;     // use default TeX paramaters
   CHTML.FONTDEF.TeX = {
     version: VERSION,
       

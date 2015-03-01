@@ -383,20 +383,48 @@
       negativeverythickmathspace:     -6/18,
       negativeveryverythickmathspace: -7/18,
 
-      thin: .08,
-      medium: .1,
-      thick: .15,
+      thin: .04,
+      medium: .06,
+      thick: .1,
 
       infinity: BIGDIMEN
-    },
-    TeX: {
-      x_height:         .442,
-      axis:             AXISHEIGHT
     },
     pxPerInch: 96,
     em: 16,
     
     FONTDEF: {},
+    TEXDEF: {
+      x_height:         .442,
+      quad:             1,
+      num1:             .676508,
+      num2:             .393732,
+      num3:             .44373,
+      denom1:           .685951,
+      denom2:           .344841,
+      sup1:             .412892,
+      sup2:             .362892,
+      sup3:             .288888,
+      sub1:             .15,
+      sub2:             .247217,
+      sup_drop:         .386108,
+      sub_drop:         .05,
+      delim1:          2.39,
+      delim2:          1.0,
+      axis_height:      .25,
+      rule_thickness:   .06,
+      big_op_spacing1:  .111111,
+      big_op_spacing2:  .166666,
+      big_op_spacing3:  .2,
+      big_op_spacing4:  .6,
+      big_op_spacing5:  .1,
+
+      scriptspace:         .1,
+      nulldelimiterspace:  .12,
+      delimiterfactor:     901,
+      delimitershortfall:   .3,
+
+      min_rule_thickness:  1.25     // in pixels
+    },
     
     getUnicode: function (string) {
       var n = string.text.charCodeAt(string.i); string.i++;
@@ -657,7 +685,7 @@
       CHTMLhandleSpace: function (node) {
         if (!this.useMMLspacing) {
 	  var space = this.texSpacing();
-	  if (space !== "") node.style.marginLeft = CHTML.Em(CHTML.length2em(space));
+          if (space !== "") node.style.marginLeft = CHTML.Em(CHTML.length2em(space));
         }
       },
 
@@ -843,7 +871,7 @@
       },
       CHTMLcenterOp: function (node) {
         var bbox = this.CHTML;
-        var p = (bbox.h - bbox.d)/2 - AXISHEIGHT;
+        var p = (bbox.h - bbox.d)/2 - CHTML.TEX.axis_height;
         if (Math.abs(p) > .001) node.style.verticalAlign = CHTML.Em(-p);
         bbox.h -= p; bbox.d += p;
         if (bbox.r > bbox.w) {
@@ -866,7 +894,8 @@
       CHTMLstretchV: function (h,d) {
         var node = this.CHTMLnodeElement(), bbox = this.CHTML; //bbox.w = .4; // ## adjust width
         var values = this.getValues("symmetric","maxsize","minsize");
-        if (values.symmetric) {H = 2*Math.max(h-AXISHEIGHT,d+AXISHEIGHT)} else {H = h + d}
+        var a = CHTML.TEX.axis_height;
+        if (values.symmetric) {H = 2*Math.max(h-a,d+a)} else {H = h + d}
         values.maxsize = CHTML.length2em(values.maxsize,bbox.h+bbox.d);
         values.minsize = CHTML.length2em(values.minsize,bbox.h+bbox.d);
         H = Math.max(values.minsize,Math.min(values.maxsize,H));
@@ -879,7 +908,7 @@
           bbox.w *= scale*sX/10;
         }
         box.appendChild(node.firstChild); node.appendChild(box);
-        if (values.symmetric) node.style.verticalAlign = CHTML.Em(AXISHEIGHT*(1-scale));
+        if (values.symmetric) node.style.verticalAlign = CHTML.Em(a*(1-scale));
       }
     });
 
@@ -1077,8 +1106,8 @@
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1), bbox = this.CHTML;
         var H = sscale*(nbox.h+nbox.d + dbox.h+dbox.d);
         bbox.w = sscale*Math.max(nbox.w,dbox.w);
-        bbox.h = H/2 + AXISHEIGHT;
-        bbox.d = H/2 - AXISHEIGHT;
+        bbox.h = H/2 + CHTML.TEX.axis_height;
+        bbox.d = H/2 - CHTML.TEX.axis_height;
         bbox.L = bbox.R = .125/scale;
         values.linethickness = Math.max(0,CHTML.length2em(values.linethickness||"0",0));
         if (values.linethickness) {
@@ -1086,7 +1115,7 @@
           var t = (values.linethickness < .15 ? "1px" : CHTML.Em(values.linethickness));
           rule.style.borderTop = t+" solid"; rule.style.margin = t+" 0";
           t = values.linethickness;
-          node.style.verticalAlign = CHTML.Em(AXISHEIGHT-t);
+          node.style.verticalAlign = CHTML.Em(CHTML.TEX.axis_height-t);
           bbox.h += 2*t; bbox.d += t;
         }
         return node;
