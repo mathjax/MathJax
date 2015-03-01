@@ -50,13 +50,13 @@
       "white-space":    "nowrap",
       "border-collapse":"collapse"
     },
-    "mjx-math *": {display:"inline-block"},
+    "mjx-math *": {display:"inline-block", "text-align":"left"},
 
     "mjx-mfrac":  {"vertical-align":".25em"},
     "mjx-fbox":   {width:"100%"},
     "mjx-ftable": {display:"table", width:"100%"},
-    "mjx-numerator":   {display:"table-cell"},
-    "mjx-denominator": {display:"table-cell"},
+    "mjx-numerator":   {display:"table-cell", "text-align":"center"},
+    "mjx-denominator": {display:"table-cell", "text-align":"center"},
     ".MJXc-fpad": {"padding-left":".1em", "padding-right":".1em"},
     
     "mjx-mphantom": {"visibility":"hidden"},
@@ -584,7 +584,7 @@
       var m = parseFloat(match[1]||"1"), unit = match[2];
       if (size == null) {size = 1}
       if (unit === "em") {return m}
-      if (unit === "ex") {return m * this.TeX.x_height}
+      if (unit === "ex") {return m * this.TEX.x_height}
       if (unit === "%")  {return m / 100 * size}
       if (unit === "px") {return m / this.em}
       if (unit === "pt") {return m / 10}                      // 10 pt to an em
@@ -941,38 +941,43 @@
 
     MML.mpadded.Augment({
       toCommonHTML: function (node) {
-        node = this.CHTMLdefaultNode(node,{
-          childNodes:"mjx-box", forceChild:true
-        });
-        var child = node.firstChild;
-        var values = this.getValues("width","height","depth","lspace","voffset");
-        var dimen = this.CHTMLdimen(values.lspace);
-        var T = 0, B = 0, L = dimen.len, R = -dimen.len, V = 0;
+        node = this.CHTMLdefaultNode(node,{childNodes:"mjx-block", forceChild:true});
+        var child = node.firstChild, cbox = this.CHTMLbboxFor(0);
+        node = HTML.addElement(node,"mjx-block"); node.appendChild(child);
+        var values = this.getValues("width","height","depth","lspace","voffset"), dimen;
         if (values.width !== "") {
           dimen = this.CHTMLdimen(values.width,"w",0);
-          if (dimen.pm) {R += dimen.len} else {node.style.width = CHTML.Em(dimen.len)}
+          if (dimen.pm) dimen.len += cbox.w;
+          if (dimen.len < 0) dimen.len = 0;
+          if (dimen.len !== cbox.w) node.style.width = CHTML.Em(dimen.len);
         }
         if (values.height !== "") {
           dimen = this.CHTMLdimen(values.height,"h",0);
-          if (!dimen.pm) T += -this.CHTMLbboxFor(0).h;
-          T += dimen.len;
+          if (!dimen.pm) dimen.len += -cbox.h;
+          if (dimen.len+cbox.h < 0) dimen.len = -cbox.h;
+          if (dimen.len) child.style.marginTop = CHTML.Em(dimen.len);
         }
         if (values.depth !== "")  {
           dimen = this.CHTMLdimen(values.depth,"d",0);
-          if (!dimen.pm) {B += -this.CHTMLbboxFor(0).d; V += -dimen.len}
-          B += dimen.len;
+          if (!dimen.pm) dimen.len += -cbox.d;
+          if (dimen.len+cbox.d < 0) dimen.len = -cbox.d;
+          if (dimen.len) child.style.marginBottom = CHTML.Em(dimen.len);
         }
         if (values.voffset !== "") {
           dimen = this.CHTMLdimen(values.voffset);
-          T -= dimen.len; B += dimen.len;
-          V += dimen.len;
+          if (dimen.len) {
+            node.style.position = "relative";
+            node.style.top = CHTML.Em(-dimen.len);
+          }
         }
-        if (T) child.style.marginTop = CHTML.Em(T);
-        if (B) child.style.marginBottom = CHTML.Em(B);
-        if (L) child.style.marginLeft = CHTML.Em(L);
-        if (R) child.style.marginRight = CHTML.Em(R);
-        if (V) node.style.verticalAlign = CHTML.Em(V);
-        return node;
+        if (values.lspace !== "") {
+          dimen = this.CHTMLdimen(values.lspace);
+          if (dimen.len) {
+            node.style.position = "relative";
+            node.style.left = CHTML.Em(dimen.len);
+          }
+        }
+        return node.parentNode;
       },
       CHTMLdimen: function (length,d,m) {
         if (m == null) {m = -BIGDIMEN}
