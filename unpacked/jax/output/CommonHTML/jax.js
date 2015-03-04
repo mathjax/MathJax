@@ -1115,19 +1115,15 @@
         //  Put the base and script into a stack
         //  
         var stack = HTML.Element("mjx-stack");
+        stack.appendChild(over); stack.appendChild(base);
         if (obox.d < 0) {
           //
-          // for negative depths, use a table to avoid unwanted baseline space
-          // FIXME:  needs work in Safari.
+          // For negative depths, set the height and align to top
+          // in order to avoid extra baseline space
           //
-          HTML.addElement(stack,"mjx-block",{},[["mjx-table"]]);
-          stack.firstChild.firstChild.appendChild(over);
-          stack.firstChild.firstChild.style.marginBottom = CHTML.Em(obox.d);
-          over = stack.firstChild;
-        } else {
-          stack.appendChild(over);
+          over.firstChild.style.verticalAlign = "top";
+          over.style.height = obox.h+obox.d;
         }
-        stack.appendChild(base);
         //
         //  Determine the spacing
         //
