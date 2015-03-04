@@ -63,7 +63,6 @@
     "mjx-base":   {display:"block"},
     "mjx-under":  {display:"table-cell"},
     "mjx-over":   {display:"block"},
-    "mjx-table > mjxover": {display:"table-cell"},
     
     "mjx-mphantom": {"visibility":"hidden"},
 
@@ -1018,9 +1017,10 @@
         //
         //  Get the nodes for base and limits
         //
+        var types = ["mjx-base","mjx-under","mjx-over"];
+        if (this.over === 1) types[1] = types[2];
         node = this.CHTMLdefaultNode(node,{
-          childNodes:["mjx-base","mjx-under","mjx-over"], noBBox:true, forceChild:true,
-          minChildren: 2
+          childNodes:types, noBBox:true, forceChild:true, minChildren: 2
         });
         var base, under, over;
         base = node.removeChild(node.firstChild);
@@ -1116,13 +1116,13 @@
         //  
         var stack = HTML.Element("mjx-stack");
         stack.appendChild(over); stack.appendChild(base);
-        if (obox.d < 0) {
+        if (obox.d < 0 || obox.h < .25) {
           //
           // For negative depths, set the height and align to top
           // in order to avoid extra baseline space
           //
           over.firstChild.style.verticalAlign = "top";
-          over.style.height = obox.h+obox.d;
+          over.style.height = CHTML.Em(obox.h+obox.d);
         }
         //
         //  Determine the spacing
@@ -1165,13 +1165,13 @@
         ]);
         node.firstChild.firstChild.firstChild.appendChild(stack);
         node.firstChild.lastChild.appendChild(under);
-        if (ubox.d < 0) {
+        if (ubox.d < 0 || ubox.h < .25) {
           //
           // For negative depths, set the height and align to top
           // in order to avoid extra baseline space
           //
           under.firstChild.style.verticalAlign = "top";
-          under.style.height = ubox.h+ubox.d;
+          under.style.height = CHTML.Em(ubox.h+ubox.d);
         }
         //
         //  determine the spacing
