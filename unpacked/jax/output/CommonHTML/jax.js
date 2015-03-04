@@ -518,6 +518,7 @@
             bbox.w += C[2];
             if (bbox.H < font.ascent)  bbox.H = font.ascent;
             if (bbox.D < font.descent) bbox.D = font.descent;
+            if (m == 1 && font.skew && font.skew[item.n]) bbox.skew = font.skew[item.n];
         }
       }
       if (node.childNodes.length) {
@@ -641,6 +642,7 @@
             if (cbox.h > bbox.h) bbox.h = cbox.h;
             if (cbox.d > bbox.d) bbox.d = cbox.d;
             if (cbox.ic) {bbox.ic = cbox.ic} else {delete bbox.ic}
+            if (cbox.skew) bbox.skew = cbox.skew;
           }
         } else if (options.forceChild) {HTML.addElement(node,"span")}
       },
