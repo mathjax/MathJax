@@ -1118,6 +1118,7 @@
         if (obox.d < 0) {
           //
           // for negative depths, use a table to avoid unwanted baseline space
+          // FIXME:  needs work in Safari.
           //
           HTML.addElement(stack,"mjx-block",{},[["mjx-table"]]);
           stack.firstChild.firstChild.appendChild(over);
