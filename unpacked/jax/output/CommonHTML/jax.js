@@ -59,6 +59,12 @@
     "mjx-denominator": {display:"table-cell", "text-align":"center"},
     ".MJXc-fpad": {"padding-left":".1em", "padding-right":".1em"},
     
+    "mjx-stack":  {display:"inline-block"},
+    "mjx-base":   {display:"block"},
+    "mjx-under":  {display:"table-cell"},
+    "mjx-over":   {display:"block"},
+    "mjx-table > mjxover": {display:"table-cell"},
+    
     "mjx-mphantom": {"visibility":"hidden"},
 
     "mjx-merror": {
@@ -75,7 +81,7 @@
     "mjx-char":   {display:"block"},
     "mjx-itable": {display:"inline-table"},
     "mjx-row":    {display:"table-row"},
-    "mjx-cell":   {display:"table-cell", "text-align":"center"},
+    "mjx-cell":   {display:"table-cell"},
     "mjx-table":  {display:"table", width:"100%"},
     "mjx-line":   {display:"block", width:"100%", "border-top":"0 solid"},
 
@@ -90,11 +96,6 @@
     ".MJXc-script-box > span > span": {"display":"table-cell!important", "vertical-align":"top"},
     ".MJXc-script-box > span:last-child > span": {"vertical-align":"bottom"},
     ".MJXc-script-box > span > span > span": {"display":"block!important"},
-
-    ".MJXc-munderover": {"display":"inline-table!important"},
-    ".MJXc-over": {"display":"inline-block!important", "text-align":"center"},
-    ".MJXc-over > span": {"display":"block!important"},
-    ".MJXc-munderover > span": {"display":"table-row!important"},
 
     ".MJXc-mtable": {"vertical-align":AXISHEIGHT+"em", "margin":"0 .125em"},
     ".MJXc-mtable > span": {"display":"inline-table!important", "vertical-align":"middle"},
@@ -637,7 +638,8 @@
         if (!options.noBBox) this.CHTMLhandleSpace(node);
         this.CHTMLhandleStyle(node);
         this.CHTMLhandleColor(node);
-        for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLaddChild(node,i,options);
+        var m = Math.max((options.minChildren||0),this.data.length);
+        for (var i = 0; i < m; i++) this.CHTMLaddChild(node,i,options);
         if (!options.noBBox) CHTML.cleanBBox(this.CHTML);
         return node;
       },
@@ -831,13 +833,13 @@
     MML.mo.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
-
+        this.CHTML = CHTML.emptyBBox();
+        
         var values = this.getValues("displaystyle","largeop","mathvariant");
         values.text = this.data.join("");
         this.CHTMLadjustAccent(values);
         this.CHTMLadjustVariant(values);
 
-        this.CHTML = CHTML.emptyBBox();
         for (var i = 0, m = this.data.length; i < m; i++) {
           this.CHTMLaddChild(node,i,{childOptions:{
             variant: values.mathvariant,
@@ -1009,50 +1011,202 @@
 
     MML.munderover.Augment({
       toCommonHTML: function (node) {
-	var values = this.getValues("displaystyle","accent","accentunder","align");
+	var values = this.getValues("displaystyle","scriptlevel","accent","accentunder","align");
 	if (!values.displaystyle && this.data[this.base] != null &&
-	    this.data[this.base].CoreMO().Get("movablelimits")) {
-          node = MML.msubsup.prototype.toCommonHTML.call(this,node);
-          //
-          //  Change class to msubsup for CSS rules.
-          //  ### FIXME: should this be handled via adding another class instead?
-          //
-          node.className = node.className.replace(/munderover/,"msubsup");
-          return node;
-        }
-        node = this.CHTMLdefaultNode(node,{childNodes:"span", noBBox:true});
-        var obox = this.CHTMLbboxFor(this.over),
-            ubox = this.CHTMLbboxFor(this.under),
-            bbox = this.CHTMLbboxFor(this.base),
-            BBOX = this.CHTML, acc = obox.acc;
+	    this.data[this.base].CoreMO().Get("movablelimits"))
+                return MML.msubsup.prototype.toCommonHTML.call(this,node);
+        //
+        //  Get the nodes for base and limits
+        //
+        node = this.CHTMLdefaultNode(node,{
+          childNodes:["mjx-base","mjx-under","mjx-over"], noBBox:true, forceChild:true,
+          minChildren: 2
+        });
+        var base, under, over;
+        base = node.removeChild(node.firstChild);
+        under = over = node.removeChild(node.firstChild);
+        if (node.firstChild) over = node.removeChild(node.firstChild);
+        //
+        //  Get the scale of the base and its limits
+        //
+        this.CHTMLgetScaleFactors(values,under,over);
+        var oscale = values.oscale, uscale = values.uscale;
+        //
+        //  Get the bounding boxes and the maximum width
+        //
+        var boxes = [], W = this.CHTMLgetBBoxes(boxes,values);
+	var bbox = boxes[this.base], BBOX = this.CHTML;
+        BBOX.w = W; BBOX.h = bbox.h; BBOX.d = bbox.d; // modified below
+        //
+        //  Add over- and under-scripts
+        //  
+        var stack = base, delta = 0;
+        if (bbox.ic) {delta = 1.3*bbox.ic + .05} // make faked IC be closer to expeted results
         if (this.data[this.over]) {
-          node.lastChild.firstChild.style.marginLeft = obox.l =
-            node.lastChild.firstChild.style.marginRight = obox.r = 0;
-          var over = HTML.Element("span",{},[["span",{className:"MJXc-over"}]]);
-          over.firstChild.appendChild(node.lastChild);
-          if (node.childNodes.length > (this.data[this.under] ? 1 : 0))
-            over.firstChild.appendChild(node.firstChild);
-          this.data[this.over].CHTMLhandleScriptlevel(over.firstChild.firstChild);
-          if (acc != null) {
-            if (obox.vec) {
-              over.firstChild.firstChild.firstChild.style.fontSize = "60%";
-              obox.h *= .6; obox.d *= .6; obox.w *= .6;
-            }
-            acc = acc - obox.d + .1; if (bbox.t != null) {acc += bbox.t - bbox.h}
-            over.firstChild.firstChild.style.marginBottom = CHTML.Em(acc);
-          }
-          if (node.firstChild) {node.insertBefore(over,node.firstChild)}
-            else {node.appendChild(over)}
+          stack = this.CHTMLaddOverscript(over,boxes,values,delta,base);
         }
         if (this.data[this.under]) {
-          node.lastChild.firstChild.style.marginLeft = ubox.l =
-            node.lastChild.firstChild.marginRight = ubox.r = 0;
-          this.data[this.under].CHTMLhandleScriptlevel(node.lastChild);
+          this.CHTMLaddUnderscript(under,boxes,values,delta,node,stack);
+        } else {
+          node.appendChild(stack);
         }
-        BBOX.w = Math.max(SCRIPTFACTOR*obox.w,SCRIPTFACTOR*ubox.w,bbox.w);
-        BBOX.h = SCRIPTFACTOR*(obox.h+obox.d+(acc||0)) + bbox.h;
-        BBOX.d = bbox.d + SCRIPTFACTOR*(ubox.h+ubox.d);
+        //
+        //  Handle horizontal positions
+        //
+        this.CHTMLplaceBoxes(base,under,over,values,boxes);
+        this.CHTMLhandleSpace(node);
         return node;
+      },
+      //
+      //  Compute scaling factors for the under- and over-scripts
+      //
+      CHTMLgetScaleFactors: function (values,under,over) {
+        values.oscale = values.uscale = 1;
+        if (values.scriptlevel < 2) {
+          if (!values.accent) {
+            values.oscale = SCRIPTFACTOR;
+            if (this.data[this.over])  this.data[this.over].CHTMLhandleScriptlevel(over);
+          }
+          if (!values.accentunder) {
+            values.uscale = SCRIPTFACTOR;
+            if (this.data[this.under]) this.data[this.under].CHTMLhandleScriptlevel(under);
+          }
+        }
+      },
+      //
+      //  Get the bounding boxes for the children, stretch
+      //  any stretchable elements, and compute the maximum width
+      //  
+      CHTMLgetBBoxes: function (bbox,values) {
+        var i, m = this.data.length, SCALE,
+            w = -BIGDIMEN,  // maximum width of non-stretchy items
+            W = w;          // maximum width of all items
+        //
+        //  Get the maximum width
+        //
+        for (i = 0; i < m; i++) {
+          bbox[i] = this.CHTMLbboxFor(i);
+          if (this.data[i]) bbox[i].stretch = this.data[i].CHTMLcanStretch("Horizontal");
+          SCALE = (i === this.base ? 1 : i === this.over ? values.oscale : values.uscale);
+          W = Math.max(W,SCALE*(bbox[i].w + (bbox[i].L||0) + (bbox[i].R||0)));
+          if (!bbox[i].stretch && W > w) w = W;
+        }
+        if (w === -BIGDIMEN) w = W;
+        //
+        //  Stretch those parts that need it
+        //
+        for (i = 0; i < m; i++) {
+          if (bbox[i].stretch) {
+            SCALE = (i === this.base ? 1 : i === this.over ? valuses.oscale : values.uscale);
+            this.CHTMLstretchChildH(i,w/SCALE);
+            W = Math.max(W,SCALE*(bbox[i].w + (bbox[i].L||0) + (bbox[i].R||0)));
+          }
+        }
+        return W;
+      },
+      //
+      //  Add an overscript
+      //
+      CHTMLaddOverscript: function (over,boxes,values,delta,base) {
+        var BBOX = this.CHTML;
+        var w, z1, z2, z3 = CHTML.TEX.big_op_spacing5, k;
+        var scale = values.oscale, obox = boxes[this.over], bbox = boxes[this.base];
+        //
+        //  Put the base and script into a stack
+        //  
+        var stack = HTML.Element("mjx-stack");
+        if (obox.d < 0) {
+          //
+          // for negative depths, use a table to avoid unwanted baseline space
+          //
+          HTML.addElement(stack,"mjx-block",{},[["mjx-table"]]);
+          stack.firstChild.firstChild.appendChild(over);
+          stack.firstChild.firstChild.style.marginBottom = CHTML.Em(obox.d);
+          over = stack.firstChild;
+        } else {
+          stack.appendChild(over);
+        }
+        stack.appendChild(base);
+        //
+        //  Determine the spacing
+        //
+        obox.x = 0;
+        if (values.accent) {
+          if (obox.w < .001) obox.x += (obox.r - obox.l)/2; // center combining accents
+          k = CHTML.TEX.rule_thickness; z3 = 0;
+          if (bbox.skew) {
+            obox.x += scale*bbox.skew; BBOX.skew = scale*bbox.skew;
+            if (obox.x+scale*obox.w > BBOX.w) BBOX.skew += (BBOX.w - (obox.x+scale*obox.w))/2;
+          }
+        } else {
+          z1 = CHTML.TEX.big_op_spacing1;
+          z2 = CHTML.TEX.big_op_spacing3;
+          k = Math.max(z1,z2-Math.max(0,scale*obox.d));
+        }
+        obox.x += delta/2;
+        //
+        //  Position the overscript
+        //
+        if (k) over.style.paddingBottom = CHTML.Em(k/scale);
+        if (z3) over.style.paddingTop = CHTML.Em(z3/scale);
+        BBOX.h += scale*(obox.h+obox.d) + k + z3;
+        return stack;
+      },
+      //
+      //  Add an underscript
+      //
+      CHTMLaddUnderscript: function (under,boxes,values,delta,node,stack) {
+        var BBOX = this.CHTML;
+        var w, x = 0, z1, z2, z3 = CHTML.TEX.big_op_spacing5, k;
+        var scale = values.uscale, ubox = boxes[this.under], bbox = boxes[this.base];
+        //
+        //  Create a table for the underscript
+        //
+        HTML.addElement(node,"mjx-itable",{},[
+          ["mjx-row",{},[["mjx-cell"]]],
+          ["mjx-row"],
+        ]);
+        node.firstChild.firstChild.firstChild.appendChild(stack);
+        node.firstChild.lastChild.appendChild(under);
+        //
+        //  determine the spacing
+        //
+        if (values.accentunder) {
+          k = 3*CHTML.TEX.rule_thickness; z3 = 0;
+        } else {
+          z1 = CHTML.TEX.big_op_spacing2;
+          z2 = CHTML.TEX.big_op_spacing4;
+          k = Math.max(z1,z2-scale*ubox.h);
+        }
+        ubox.x = -delta/2;
+        //
+        //  Position the overscript
+        //
+        if (k) under.style.paddingTop = CHTML.Em(k/scale);
+        if (z3) under.style.paddingBottom = CHTML.Em(z3/scale);
+        BBOX.d += scale*(ubox.h+ubox.d) + z3 + k;
+      },
+      //
+      //  Center boxes horizontally, taking offsets into account
+      //
+      CHTMLplaceBoxes: function (base,under,over,values,boxes) {
+        var BBOX = this.CHTML, W = BBOX.w, i, m = boxes.length;
+        boxes[this.base].x = 0; var dx = 0;
+        for (i = 0; i < m; i++) {
+          var SCALE = (i === this.base ? 1 : i === this.over ? values.oscale : values.uscale);
+          var w = SCALE*(boxes[i].w + (boxes[i].L||0) + (boxes[i].R||0));
+          boxes[i].x += (W-w)/2;
+          if (w + boxes[i].x > BBOX.w) BBOX.w = w + boxes[i].x;
+          if (boxes[i].x < dx) dx = boxes[i].x;
+        }
+        if (dx) BBOX.w += -dx;
+        for (i = 0; i < m; i++) {
+          if (boxes[i].x + dx) {
+            var node = (i === this.base ? base : i === this.over ? over : under);
+          var SCALE = (i === this.base ? 1 : i === this.over ? values.oscale : values.uscale);
+            node.style.paddingLeft = CHTML.Em((boxes[i].x+dx)/SCALE);
+          }
+        }
       }
     });
 
