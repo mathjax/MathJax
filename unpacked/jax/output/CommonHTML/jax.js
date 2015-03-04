@@ -1165,6 +1165,14 @@
         ]);
         node.firstChild.firstChild.firstChild.appendChild(stack);
         node.firstChild.lastChild.appendChild(under);
+        if (ubox.d < 0) {
+          //
+          // For negative depths, set the height and align to top
+          // in order to avoid extra baseline space
+          //
+          under.firstChild.style.verticalAlign = "top";
+          under.style.height = ubox.h+ubox.d;
+        }
         //
         //  determine the spacing
         //
