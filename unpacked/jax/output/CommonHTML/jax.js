@@ -596,6 +596,21 @@
       return parseFloat(m);
     },
     
+    zeroBBox: function () {
+      return {h:0, d:0, w:0, l:0, r:0, D:0, H:0};
+    },
+    emptyBBox: function () {
+      return {h:-BIGDIMEN, d:-BIGDIMEN, w:0, l:BIGDIMEN, r:-BIGDIMEN,
+              D:-BIGDIMEN, H:-BIGDIMEN};
+    },
+    cleanBBox: function (bbox) {
+      if (bbox.h === -BIGDIMEN) bbox.h = 0;
+      if (bbox.d === -BIGDIMEN) bbox.d = 0;
+      if (bbox.l ===  BIGDIMEN) bbox.l = 0;
+      if (bbox.r === -BIGDIMEN) bbox.r = 0;
+      if (bbox.H === -BIGDIMEN) bbox.H = .8;
+      if (bbox.D === -BIGDIMEN) bbox.D = .2;
+    },
     scaleBBox: function (bbox,level,dlevel) {
       var scale = Math.pow(SCRIPTFACTOR,Math.min(2,level)-(dlevel||0));
       bbox.w *= scale; bbox.h *= scale; bbox.d *= scale;
@@ -623,6 +638,7 @@
         this.CHTMLhandleStyle(node);
         this.CHTMLhandleColor(node);
         for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLaddChild(node,i,options);
+        if (!options.noBBox) CHTML.cleanBBox(this.CHTML);
         return node;
       },
       CHTMLaddChild: function (node,i,options) {
@@ -659,7 +675,7 @@
 
       CHTMLcreateNode: function (node) {
         if (!this.CHTML) this.CHTML = {};
-        this.CHTML = {w:0, h:0, d:0, l:0, r:0};
+        this.CHTML = CHTML.zeroBBox();
         if (this.inferred) return node;
         if (!this.CHTMLnodeID) {this.CHTMLnodeID = CHTML.GetID()};
         var id = (this.id || "MJXc-Node-"+this.CHTMLnodeID);
@@ -707,8 +723,7 @@
       CHTMLhandleText: function (node,text,variant) {
         if (node.childNodes.length === 0) {
           HTML.addElement(node,"mjx-char");
-          this.CHTML = {h:-BIGDIMEN, d:-BIGDIMEN, w:0, l:BIGDIMEN, r:-BIGDIMEN,
-                        D:-BIGDIMEN, H:-BIGDIMEN};
+          this.CHTML = CHTML.emptyBBox();
         }
         var bbox = this.CHTML, string = {text:text, i:0, length:text.length};
         if (typeof(variant) === "string") variant = CHTML.FONTDATA.VARIANT[variant];
@@ -719,12 +734,7 @@
           list.push.apply(list,CHTML.getCharList(variant,n));
         }
         CHTML.addCharList(node.firstChild,list,bbox);
-        if (bbox.h === -BIGDIMEN) bbox.h = 0;
-        if (bbox.d === -BIGDIMEN) bbox.d = 0;
-        if (bbox.l ===  BIGDIMEN) bbox.l = 0;
-        if (bbox.r === -BIGDIMEN) bbox.r = 0;
-        if (bbox.H === -BIGDIMEN) bbox.H = .8;
-        if (bbox.D === -BIGDIMEN) bbox.D = .2;
+        CHTML.cleanBBox(bbox);
         bbox.h += HFUZZ; bbox.d += DFUZZ;
         var a = (bbox.H-bbox.D)/2;  // center of font (line-height:0)
         node.firstChild.style.marginTop = CHTML.Em(bbox.h-a);
@@ -733,7 +743,7 @@
 
       CHTMLbboxFor: function (n) {
         if (this.data[n] && this.data[n].CHTML) return this.data[n].CHTML;
-        return {w:0, h:0, d:0, l:0, r:0};
+        return CHTML.zeroBBox();
       },
       //
       //  Debugging function to see if internal BBox matches actual bbox
@@ -814,6 +824,7 @@
         this.CHTMLadjustAccent(values);
         this.CHTMLadjustVariant(values);
 
+        this.CHTML = CHTML.emptyBBox();
         for (var i = 0, m = this.data.length; i < m; i++) {
           this.CHTMLaddChild(node,i,{childOptions:{
             variant: values.mathvariant,
@@ -823,6 +834,7 @@
         }
         if (values.text.length !== 1) delete this.CHTML.skew;
         if (values.largeop) this.CHTMLcenterOp(node);
+        CHTML.cleanBBox(this.CHTML);
 
         this.CHTMLhandleSpace(node);
         this.CHTMLhandleStyle(node);
