@@ -662,14 +662,27 @@
           }
         } else if (options.forceChild) {HTML.addElement(node,"span")}
       },
-      CHTMLstretchChild: function (i,H,D) {
+      CHTMLstretchChildV: function (i,H,D) {
         var data = this.data[i];
         if (data && data.CHTMLcanStretch("Vertical",H,D)) {
           var bbox = this.CHTML, dbox = data.CHTML, w = dbox.w;
-          data.CHTMLstretchV(H,D);
-          bbox.w += dbox.w - w;
-          if (dbox.h > bbox.h) bbox.h = dbox.h;
-          if (dbox.d > bbox.d) bbox.d = dbox.d;
+          if (dbox.h !== H || dbox.d !== D) {
+            data.CHTMLstretchV(H,D);
+            bbox.w += dbox.w - w;
+            if (dbox.h > bbox.h) bbox.h = dbox.h;
+            if (dbox.d > bbox.d) bbox.d = dbox.d;
+          }
+        }
+      },
+      CHTMLstretchChildH: function (i,W) {
+        var data = this.data[i];
+        if (data) {
+          var bbox = this.CHTML, dbox = data.CHTML;
+          if (dbox.w !== W) {
+            data.CHTMLstretchH(W);
+            if (dbox.h > bbox.h) bbox.h = dbox.h;
+            if (dbox.d > bbox.d) bbox.d = dbox.d;
+          }
         }
       },
 
@@ -1246,15 +1259,15 @@
         }
         this.CHTMLaddChild(node,"close",{});
         //
-        //  Check for streching the elements
+        //  Check for stretching the elements
         //
         var H = this.CHTML.h, D = this.CHTML.d;
-        this.CHTMLstretchChild("open",H,D);
+        this.CHTMLstretchChildV("open",H,D);
         for (i = 0, m = this.data.length; i < m; i++) {
-          this.CHTMLstretchChild("sep"+i,H,D);
-          this.CHTMLstretchChild(i,H,D);
+          this.CHTMLstretchChildV("sep"+i,H,D);
+          this.CHTMLstretchChildV(i,H,D);
         }
-        this.CHTMLstretchChild("close",H,D);
+        this.CHTMLstretchChildV("close",H,D);
         return node;
       }
     });
@@ -1263,7 +1276,7 @@
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
         var H = this.CHTML.h, D = this.CHTML.d;
-        for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLstretchChild(i,H,D);
+        for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLstretchChildV(i,H,D);
         return node;
       }
     });
