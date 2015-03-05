@@ -965,7 +965,8 @@
     MML.mpadded.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{childNodes:"mjx-block", forceChild:true});
-        var child = node.firstChild, cbox = this.CHTMLbboxFor(0), bbox = this.CHTML;
+        var child = node.firstChild, cbox = this.CHTMLbboxFor(0);
+        var bbox = MathJax.Hub.Insert({},this.CHTML); // copy to be updated without affecting CHTMLdimen()
         node = HTML.addElement(node,"mjx-block"); node.appendChild(child);
         var values = this.getValues("width","height","depth","lspace","voffset"), dimen;
         if (values.width !== "") {
@@ -1001,6 +1002,7 @@
             node.style.left = CHTML.Em(dimen.len);
           }
         }
+        this.CHTML = bbox;
         return node.parentNode;
       },
       CHTMLdimen: function (length,d,m) {
