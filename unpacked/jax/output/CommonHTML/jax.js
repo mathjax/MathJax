@@ -967,7 +967,8 @@
         node = this.CHTMLdefaultNode(node,{childNodes:"mjx-block", forceChild:true});
         var child = node.firstChild, cbox = this.CHTMLbboxFor(0);
         var bbox = MathJax.Hub.Insert({},this.CHTML); // copy to be updated without affecting CHTMLdimen()
-        node = HTML.addElement(node,"mjx-block"); node.appendChild(child);
+        node = HTML.addElement(node,"mjx-block");
+        node.appendChild(child); HTML.addElement(child,"mjx-box");  // force box be in text mode
         var values = this.getValues("width","height","depth","lspace","voffset"), dimen;
         if (values.width !== "") {
           dimen = this.CHTMLdimen(values.width,"w",0);
