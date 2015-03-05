@@ -60,9 +60,12 @@
     ".MJXc-fpad": {"padding-left":".1em", "padding-right":".1em"},
     
     "mjx-stack":  {display:"inline-block"},
-    "mjx-base":   {display:"block"},
+    "mjx-op":     {display:"block"},
     "mjx-under":  {display:"table-cell"},
     "mjx-over":   {display:"block"},
+    
+    "mjx-stack > mjx-sup": {display:"block"},
+    "mjx-stack > mjx-sub": {display:"block"},
     
     "mjx-mphantom": {"visibility":"hidden"},
 
@@ -90,11 +93,6 @@
     
     ".MJXc-surd": {"vertical-align":"top"},
     ".MJXc-surd > span": {"display":"block!important"},
-
-    ".MJXc-script-box > span ": {"display":"table!important", "height":"50%"},
-    ".MJXc-script-box > span > span": {"display":"table-cell!important", "vertical-align":"top"},
-    ".MJXc-script-box > span:last-child > span": {"vertical-align":"bottom"},
-    ".MJXc-script-box > span > span > span": {"display":"block!important"},
 
     ".MJXc-mtable": {"vertical-align":AXISHEIGHT+"em", "margin":"0 .125em"},
     ".MJXc-mtable > span": {"display":"inline-table!important", "vertical-align":"middle"},
@@ -412,7 +410,7 @@
       big_op_spacing4:  .6,
       big_op_spacing5:  .1,
 
-      scriptspace:         .1,
+      scriptspace:         .05,
       nulldelimiterspace:  .12,
       delimiterfactor:     901,
       delimitershortfall:   .3,
@@ -778,6 +776,12 @@
       },
 
 
+      CHTMLnotEmpty: function (mml) {
+	while (mml && mml.data.length < 2 && (mml.type === "mrow" || mml.type === "texatom"))
+          mml = mml.data[0];
+	return !!mml;
+      },
+
       CHTMLcanStretch: function (direction,H,D) {
         if (this.isEmbellished()) {
           var core = this.Core();
@@ -1017,7 +1021,7 @@
         //
         //  Get the nodes for base and limits
         //
-        var types = ["mjx-base","mjx-under","mjx-over"];
+        var types = ["mjx-op","mjx-under","mjx-over"];
         if (this.over === 1) types[1] = types[2];
         node = this.CHTMLdefaultNode(node,{
           childNodes:types, noBBox:true, forceChild:true, minChildren: 2
@@ -1030,7 +1034,6 @@
         //  Get the scale of the base and its limits
         //
         this.CHTMLgetScaleFactors(values,under,over);
-        var oscale = values.oscale, uscale = values.uscale;
         //
         //  Get the bounding boxes and the maximum width
         //
@@ -1193,6 +1196,7 @@
       },
       //
       //  Center boxes horizontally, taking offsets into account
+      //  ### FIXME: handle BBOX.l and BBOX.r
       //
       CHTMLplaceBoxes: function (base,under,over,values,boxes) {
         var BBOX = this.CHTML, W = BBOX.w, i, m = boxes.length;
@@ -1217,51 +1221,127 @@
 
     MML.msubsup.Augment({
       toCommonHTML: function (node) {
-        node = this.CHTMLdefaultNode(node,{noBBox:true});
-        if (!this.data[this.base]) {
-          if (node.firstChild) {node.insertBefore(HTML.Element("span"),node.firstChild)}
-            else {node.appendChild(HTML.Element("span"))}
+	var values = this.getValues("displaystyle","scriptlevel",
+                       "subscriptshift","superscriptshift","texprimestyle");
+        //
+        //  Get the nodes for base and limits
+        //
+        var types = ["mjx-base","mjx-sub","mjx-sup"];
+        if (this.sup === 1) types[1] = types[2];
+        node = this.CHTMLdefaultNode(node,{
+          childNodes:types, noBBox:true, forceChild:true, minChildren: 2
+        });
+        var base, sub, sup; base = node.firstChild; sub = sup = base.nextSibling;
+        if (sub.nextSibling) sup = sub.nextSibling;
+        if (!this.CHTMLnotEmpty(this.data[this.sub])) {node.removeChild(sub); sub = null}
+        if (!this.CHTMLnotEmpty(this.data[this.sup])) {node.removeChild(sup); sup = null}
+        if (node.childNodes.length === 3) {
+          var stack = HTML.addElement(node,"mjx-stack");
+          stack.appendChild(sup); stack.appendChild(sub);
         }
-        var base = this.data[this.base], sub = this.data[this.sub], sup = this.data[this.sup];
-        if (!base) base = {bbox: {h:.8, d:.2}};
-        node.firstChild.style.marginRight = ".05em";
-        var h = Math.max(.4,base.CHTML.h-.4),
-            d = Math.max(.2,base.CHTML.d+.1);
-        var bbox = this.CHTML;
-        if (sup && sub) {
-          var box = HTML.Element("span",{className:"MJXc-script-box", style:{
-            height: CHTML.Em(h+sup.CHTML.h*SCRIPTFACTOR + d+sub.CHTML.d*SCRIPTFACTOR),
-            "vertical-align": CHTML.Em(-d-sub.CHTML.d*SCRIPTFACTOR)
-          }},[
-            ["span",{},[["span",{},[["span",{
-              style:{"margin-bottom":CHTML.Em(-(sup.CHTML.d-.05))}
-            }]]]]],
-            ["span",{},[["span",{},[["span",{
-              style:{"margin-top":CHTML.Em(-(sup.CHTML.h-.05))}
-            }]]]]]
-          ]);
-          sub.CHTMLhandleScriptlevel(box.firstChild);
-          sup.CHTMLhandleScriptlevel(box.lastChild);
-          box.firstChild.firstChild.firstChild.appendChild(node.lastChild);
-          box.lastChild.firstChild.firstChild.appendChild(node.lastChild);
-          node.appendChild(box);
-          bbox.h = Math.max(base.CHTML.h,sup.CHTML.h*SCRIPTFACTOR+h);
-          bbox.d = Math.max(base.CHTML.d,sub.CHTML.d*SCRIPTFACTOR+d);
-          bbox.w = base.CHTML.w + Math.max(sup.CHTML.w,sub.CHTML.w) + .07;
-        } else if (sup) {
-          node.lastChild.style.verticalAlign = CHTML.Em(h);
-          sup.CHTMLhandleScriptlevel(node.lastChild);
-          bbox.h = Math.max(base.CHTML.h,sup.CHTML.h*SCRIPTFACTOR+h);
-          bbox.d = Math.max(base.CHTML.d,sup.CHTML.d*SCRIPTFACTOR-h);
-          bbox.w = base.CHTML.w + sup.CHTML.w + .07;
-        } else if (sub) {
-          node.lastChild.style.verticalAlign = CHTML.Em(-d);
-          sub.CHTMLhandleScriptlevel(node.lastChild);
-          bbox.h = Math.max(base.CHTML.h,sub.CHTML.h*SCRIPTFACTOR-d);
-          bbox.d = Math.max(base.CHTML.d,sub.CHTML.d*SCRIPTFACTOR+d);
-          bbox.w = base.CHTML.w + sub.CHTML.w + .07;
+        //
+        //  Get the scale of the base and its limits
+        //
+        this.CHTMLgetScaleFactors(values,sub,sup);
+        var sscale = values.sscale;
+        //
+        //  Get the bounding boxes and maximum width of scripts
+        //
+        var boxes = []; this.CHTMLgetBBoxes(boxes,values);
+	var BBOX = this.CHTML,
+            bbox = boxes[this.base], subbox = boxes[this.sub], supbox = boxes[this.sup];
+        BBOX.w = bbox.w; BBOX.h = bbox.h; BBOX.d = bbox.d; // modified below
+        //
+        //  Get initial values for parameters
+        //
+        var ex = CHTML.TEX.x_height, s = CHTML.TEX.scriptspace;
+	var q = CHTML.TEX.sup_drop * sscale, r = CHTML.TEX.sub_drop * sscale;
+	var u = bbox.h - q, v = bbox.d + r, delta = 0, p;
+	if (bbox.ic) {
+          BBOX.w -= bbox.ic;         // remove IC (added by mo and mi)
+          base.style.marginRight = CHTML.Em(-bbox.ic);
+          delta = 1.3*bbox.ic + .05; // make faked IC be closer to expeted results
         }
+        var bmml = this.data[this.base];
+	if (bmml && (bmml.type === "mi" || bmml.type === "mo")) {
+	  if (bmml.data.join("").length === 1 && bmml.Get("scriptlevel") === 0 &&
+	      !bmml.Get("largeop")) {u = v = 0}  // ### FIXME: get scale rather than use scriptlevel
+	}
+	values.subscriptshift   = (values.subscriptshift === ""   ? 0 : CHTML.length2em(values.subscriptshift));
+	values.superscriptshift = (values.superscriptshift === "" ? 0 : CHTML.length2em(values.superscriptshift));
+        //
+        //  Add the super- and subscripts
+        //
+	if (!sup) {
+	  if (sub) {
+	    v = Math.max(v,CHTML.TEX.sub1,sscale*subbox.h-(4/5)*ex,values.subscriptshift);
+            this.CHTMLplaceSub(sub,subbox,v,s,BBOX,bbox.w,sscale,sup);
+	  }
+	} else {
+	  if (!sub) {
+	    p = CHTML.TEX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
+	    u = Math.max(u,p,sscale*supbox.d+(1/4)*ex,values.superscriptshift);
+            this.CHTMLplaceSuper(sup,supbox,u,s,BBOX,bbox.w,delta,sscale,sub);
+	  } else {
+	    v = Math.max(v,CHTML.TEX.sub2);
+	    var t = CHTML.TEX.rule_thickness;
+	    if ((u - sscale*supbox.d) - (sscale*subbox.h - v) < 3*t) {
+	      v = 3*t - u + sscale*(supbox.d + subbox.h);
+	      q = (4/5)*ex - (u - sscale*supbox.d);
+	      if (q > 0) {u += q; v -= q}
+	    }
+            u = Math.max(u,values.superscriptshift);
+            v = Math.max(v,values.subscriptshift);
+            this.CHTMLplaceSuper(sup,supbox,u,s,BBOX,bbox.w,delta,sscale,sub,subbox,v,stack);
+            this.CHTMLplaceSub(sub,subbox,v,s,BBOX,bbox.w,sscale,sup);
+	  }
+	}
         return node;
+      },
+      //
+      //  Compute scaling factors for the under- and over-scripts
+      //
+      CHTMLgetScaleFactors: function (values,sub,sup) {
+        values.sscale = 1;
+        if (values.scriptlevel < 2) {
+          values.sscale = SCRIPTFACTOR;
+          if (sub) this.data[this.sub].CHTMLhandleScriptlevel(sub);
+          if (sup) this.data[this.sup].CHTMLhandleScriptlevel(sup);
+        }
+      },
+      //
+      //  Get the bounding boxes for the children
+      //  
+      CHTMLgetBBoxes: function (bbox,values) {
+        var i, m = this.data.length;
+        for (i = 0; i < m; i++) bbox[i] = this.CHTMLbboxFor(i);
+      },
+      //
+      //  Place subscript
+      //
+      CHTMLplaceSub: function (sub,subbox,v,s,BBOX,w,sscale,sup) {
+        if (!sup) sub.style.verticalAlign = CHTML.Em(-v/sscale);
+        sub.style.paddingRight = CHTML.Em(s/sscale);
+        BBOX.w = Math.max(BBOX.w,w+sscale*(subbox.w+(subbox.L||0)+(subbox.R||0))+s);
+        BBOX.h = Math.max(BBOX.h,sscale*subbox.h-v);
+        BBOX.d = Math.max(BBOX.d,sscale*subbox.d+v);
+        // ### FIXME: handle BBOX.l and BBOX.r
+      },
+      //
+      //  Place subscript
+      //
+      CHTMLplaceSuper: function (sup,supbox,u,s,BBOX,w,delta,sscale,sub,subbox,v,stack) {
+        if (sub) {
+          sup.style.paddingBottom = CHTML.Em((u+v)/sscale-supbox.d-subbox.h);
+          stack.style.verticalAlign = CHTML.Em(-v);
+        } else {
+          sup.style.verticalAlign = CHTML.Em(u/sscale);
+        }
+        sup.style.paddingLeft = CHTML.Em(delta/sscale);
+        sup.style.paddingRight = CHTML.Em(s/sscale);
+        BBOX.w = Math.max(BBOX.w,w+sscale*(supbox.w+(supbox.L||0)+(supbox.R||0))+s+delta);
+        BBOX.h = Math.max(BBOX.h,sscale*supbox.h+u);
+        BBOX.d = Math.max(BBOX.d,sscale*supbox.d-u);
       }
     });
 
