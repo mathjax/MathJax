@@ -509,8 +509,8 @@
             }
             var C = font[item.n];
             text += C.c; className = font.className;
-            if (bbox.h < C[0]) bbox.h = C[0];
-            if (bbox.d < C[1]) bbox.d = C[1];
+            if (bbox.h < C[0]) bbox.t = bbox.h = C[0];
+            if (bbox.d < C[1]) bbox.b = bbox.d = C[1];
             if (bbox.l > bbox.w+C[3]) bbox.l = bbox.w+C[3];
             if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
             bbox.w += C[2];
@@ -595,26 +595,38 @@
     },
     
     zeroBBox: function () {
-      return {h:0, d:0, w:0, l:0, r:0, D:0, H:0};
+      return {h:0, d:0, w:0, l:0, r:0, D:0, H:0, t:0, b:0};
     },
     emptyBBox: function () {
       return {h:-BIGDIMEN, d:-BIGDIMEN, w:0, l:BIGDIMEN, r:-BIGDIMEN,
-              D:-BIGDIMEN, H:-BIGDIMEN};
+              D:-BIGDIMEN, H:-BIGDIMEN, t:-BIGDIMEN, b:-BIGDIMEN};
     },
     cleanBBox: function (bbox) {
       if (bbox.h === -BIGDIMEN) bbox.h = 0;
       if (bbox.d === -BIGDIMEN) bbox.d = 0;
       if (bbox.l ===  BIGDIMEN) bbox.l = 0;
       if (bbox.r === -BIGDIMEN) bbox.r = 0;
+      if (bbox.t === -BIGDIMEN) bbox.t = 0;
+      if (bbox.b === -BIGDIMEN) bbox.b = 0;
       if (bbox.H === -BIGDIMEN) bbox.H = .8;
       if (bbox.D === -BIGDIMEN) bbox.D = .2;
     },
     scaleBBox: function (bbox,level,dlevel) {
       var scale = Math.pow(SCRIPTFACTOR,Math.min(2,level)-(dlevel||0));
       bbox.w *= scale; bbox.h *= scale; bbox.d *= scale;
-      bbox.l *= scale; bbox.r *= scale;
+      bbox.l *= scale; bbox.r *= scale; bbox.t *= scale; bbox.b *= scale;
       if (bbox.L) bbox.L *= scale;
       if (bbox.R) bbox.R *= scale;
+    },
+    combineBBoxes: function (bbox,cbox,x,y,scale) {
+      if (x + scale*cbox.r > bbox.r) bbox.r = x + scale*cbox.r;
+      if (x + scale*cbox.l < bbox.l) bbox.l = x + scale*cbox.l;
+      if (x + scale*(cbox.w+(cbox.L||0)+(cbox.R||0)) > bbox.w)
+        bbox.w  = x + scale*(cbox.w + (cbox.L||0) + (cbox.R||0));
+      if (y + scale*cbox.h > bbox.h) bbox.h = y + scale*cbox.h;
+      if (scale*cbox.d - y > bbox.d) bbox.d = scale*cbox.d - y;
+      if (y + scale*cbox.t > bbox.t) bbox.t = y + scale*cbox.t;
+      if (scale*cbox.b - y > bbox.b) bbox.b = scale*cbox.b - y;
     },
 
     arrayEntry: function (a,i) {return a[Math.max(0,Math.min(i,a.length-1))]}
@@ -651,11 +663,7 @@
           child.toCommonHTML(node,options.childOptions);
           if (!options.noBBox) {
             var bbox = this.CHTML, cbox = child.CHTML;
-            if (cbox.r + bbox.w > bbox.r) bbox.r = bbox.w + cbox.r;
-            if (cbox.l + bbox.w < bbox.l) bbox.l = bbox.w + cbox.l;
-            bbox.w += cbox.w + (cbox.L||0) + (cbox.R||0);
-            if (cbox.h > bbox.h) bbox.h = cbox.h;
-            if (cbox.d > bbox.d) bbox.d = cbox.d;
+            CHTML.combineBBoxes(bbox,cbox,bbox.w,0,1);
             if (cbox.ic) {bbox.ic = cbox.ic} else {delete bbox.ic}
             if (cbox.skew) bbox.skew = cbox.skew;
           }
@@ -670,6 +678,8 @@
             bbox.w += dbox.w - w;
             if (dbox.h > bbox.h) bbox.h = dbox.h;
             if (dbox.d > bbox.d) bbox.d = dbox.d;
+            if (dbox.t > bbox.t) bbox.t = dbox.t;
+            if (dbox.b > bbox.b) bbox.b = dbox.b;
           }
         }
       },
@@ -681,6 +691,8 @@
             data.CHTMLstretchH(W);
             if (dbox.h > bbox.h) bbox.h = dbox.h;
             if (dbox.d > bbox.d) bbox.d = dbox.d;
+            if (dbox.t > bbox.t) bbox.t = dbox.t;
+            if (dbox.b > bbox.b) bbox.b = dbox.b;
           }
         }
       },
@@ -748,6 +760,7 @@
         CHTML.addCharList(node.firstChild,list,bbox);
         CHTML.cleanBBox(bbox);
         bbox.h += HFUZZ; bbox.d += DFUZZ;
+        bbox.t += HFUZZ; bbox.b += DFUZZ;
         var a = (bbox.H-bbox.D)/2;  // center of font (line-height:0)
         node.firstChild.style.marginTop = CHTML.Em(bbox.h-a);
         node.firstChild.style.marginBottom = CHTML.Em(bbox.d+a);
@@ -966,43 +979,48 @@
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{childNodes:"mjx-block", forceChild:true});
         var child = node.firstChild, cbox = this.CHTMLbboxFor(0);
-        var bbox = MathJax.Hub.Insert({},this.CHTML); // copy to be updated without affecting CHTMLdimen()
         node = HTML.addElement(node,"mjx-block");
         node.appendChild(child); HTML.addElement(child,"mjx-box");  // force box be in text mode
-        var values = this.getValues("width","height","depth","lspace","voffset"), dimen;
+        var values = this.getValues("width","height","depth","lspace","voffset");
+        var dimen, x = 0, y = 0, w = cbox.w, h = cbox.h, d = cbox.d;
         if (values.width !== "") {
           dimen = this.CHTMLdimen(values.width,"w",0);
           if (dimen.pm) dimen.len += cbox.w;
           if (dimen.len < 0) dimen.len = 0;
           if (dimen.len !== cbox.w) node.style.width = CHTML.Em(dimen.len);
-          bbox.w = dimen.len;
+          w = dimen.len;
         }
         if (values.height !== "") {
           dimen = this.CHTMLdimen(values.height,"h",0);
-          if (dimen.pm) {bbox.h += dimen.len} else {bbox.h = dimen.len; dimen.len += -cbox.h}
-          if (dimen.len+cbox.h < 0) dimen.len = -cbox.h;
+          if (dimen.pm) {h += dimen.len} else {h = dimen.len; dimen.len += -cbox.h}
+          if (dimen.len+cbox.h < 0) {dimen.len = -cbox.h; h = 0}
           if (dimen.len) child.style.marginTop = CHTML.Em(dimen.len);
         }
         if (values.depth !== "")  {
           dimen = this.CHTMLdimen(values.depth,"d",0);
-          if (dimen.pm) {bbox.d += dimen.len} else {bbox.d = dimen.len; dimen.len += -cbox.d}
-          if (dimen.len+cbox.d < 0) dimen.len = -cbox.d;
+          if (dimen.pm) {d += dimen.len} else {d = dimen.len; dimen.len += -cbox.d}
+          if (dimen.len+cbox.d < 0) {dimen.len = -cbox.d; d = 0}
           if (dimen.len) child.style.marginBottom = CHTML.Em(dimen.len);
         }
         if (values.voffset !== "") {
           dimen = this.CHTMLdimen(values.voffset);
           if (dimen.len) {
+            y = dimen.len;
             node.style.position = "relative";
-            node.style.top = CHTML.Em(-dimen.len);
+            node.style.top = CHTML.Em(-y);
           }
         }
         if (values.lspace !== "") {
           dimen = this.CHTMLdimen(values.lspace);
           if (dimen.len) {
+            x = dimen.len;
             node.style.position = "relative";
-            node.style.left = CHTML.Em(dimen.len);
+            node.style.left = CHTML.Em(x);
           }
         }
+        var bbox = {w:w, h:h, d:d, l:0, r:w, t:h, b:d};
+        CHTML.combineBBoxes(bbox,cbox,x,y,1);
+        bbox.w = w; bbox.h = h; bbox.d = d;
         this.CHTML = bbox;
         return node.parentNode;
       },
