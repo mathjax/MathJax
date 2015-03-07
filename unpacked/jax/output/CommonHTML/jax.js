@@ -181,15 +181,15 @@
         jax = script.MathJax.elementJax; if (!jax) continue;
         jax.CHTML = {display: (jax.root.Get("display") === "block")}
         span = div = HTML.Element("span",{
-	  className:"MathJax_CHTML", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
+          className:"MathJax_CHTML", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
-	  onclick:EVENT.Click, ondblclick:EVENT.DblClick
+          onclick:EVENT.Click, ondblclick:EVENT.DblClick
         });
-	if (HUB.Browser.noContextMenu) {
-	  span.ontouchstart = TOUCH.start;
-	  span.ontouchend = TOUCH.end;
-	}
+        if (HUB.Browser.noContextMenu) {
+          span.ontouchstart = TOUCH.start;
+          span.ontouchend = TOUCH.end;
+        }
         if (jax.CHTML.display) {
           div = HTML.Element("div",{className:"MathJax_CHTML_Display"});
           div.appendChild(span);
@@ -249,17 +249,17 @@
           jax.CHTML.preview = script.MathJax.preview;
           delete script.MathJax.preview;
         }
-	/* 
-	 * //
-	 * //  Check if we should show this chunk of equations
-	 * //
-	 * state.CHTMLeqn += (state.i - state.CHTMLi); state.CHTMLi = state.i;
-	 * if (state.CHTMLeqn >= state.CHTMLlast + state.CHTMLchunk) {
-	 *   this.postTranslate(state);
-	 *   state.CHTMLchunk = Math.floor(state.CHTMLchunk*this.config.EqnChunkFactor);
-	 *   state.CHTMLdelay = true;  // delay if there are more scripts
-	 * }
-	 */
+        /* 
+         * //
+         * //  Check if we should show this chunk of equations
+         * //
+         * state.CHTMLeqn += (state.i - state.CHTMLi); state.CHTMLi = state.i;
+         * if (state.CHTMLeqn >= state.CHTMLlast + state.CHTMLchunk) {
+         *   this.postTranslate(state);
+         *   state.CHTMLchunk = Math.floor(state.CHTMLchunk*this.config.EqnChunkFactor);
+         *   state.CHTMLdelay = true;  // delay if there are more scripts
+         * }
+         */
       }
     },
 
@@ -723,7 +723,7 @@
       
       CHTMLhandleSpace: function (node) {
         if (!this.useMMLspacing) {
-	  var space = this.texSpacing();
+          var space = this.texSpacing();
           if (space !== "") this.CHTML.L = CHTML.length2em(space) + (this.CHTML.L||0);
           if (this.CHTML.L) node.style.marginLeft = CHTML.Em(this.CHTML.L);
           if (this.CHTML.R) node.style.marginRight = CHTML.Em(this.CHTML.R);
@@ -790,9 +790,9 @@
 
 
       CHTMLnotEmpty: function (mml) {
-	while (mml && mml.data.length < 2 && (mml.type === "mrow" || mml.type === "texatom"))
+        while (mml && mml.data.length < 2 && (mml.type === "mrow" || mml.type === "texatom"))
           mml = mml.data[0];
-	return !!mml;
+        return !!mml;
       },
 
       CHTMLcanStretch: function (direction,H,D) {
@@ -875,7 +875,7 @@
       },
       CHTMLhandleSpace: function (node) {
         if (this.useMMLspacing) {
-	  var values = this.getValues("scriptlevel","lspace","rspace");
+          var values = this.getValues("scriptlevel","lspace","rspace");
           values.lspace = Math.max(0,CHTML.length2em(values.lspace));
           values.rspace = Math.max(0,CHTML.length2em(values.rspace));
           if (values.scriptlevel > 0) {
@@ -884,9 +884,9 @@
           }
           var core = this, parent = this.Parent();
           while (parent && parent.isEmbellished() && parent.Core() === core)
-	    {core = parent; parent = parent.Parent(); node = core.CHTMLnodeElement()}
+            {core = parent; parent = parent.Parent(); node = core.CHTMLnodeElement()}
           if (values.lspace) {node.style.paddingLeft =  CHTML.Em(values.lspace)}
-	  if (values.rspace) {node.style.paddingRight = CHTML.Em(values.rspace)}
+          if (values.rspace) {node.style.paddingRight = CHTML.Em(values.rspace)}
         } else {
           this.SUPER(arguments).CHTMLhandleSpace.apply(this,arguments);
         }
@@ -1035,9 +1035,9 @@
 
     MML.munderover.Augment({
       toCommonHTML: function (node) {
-	var values = this.getValues("displaystyle","scriptlevel","accent","accentunder","align");
-	if (!values.displaystyle && this.data[this.base] != null &&
-	    this.data[this.base].CoreMO().Get("movablelimits"))
+        var values = this.getValues("displaystyle","scriptlevel","accent","accentunder","align");
+        if (!values.displaystyle && this.data[this.base] != null &&
+            this.data[this.base].CoreMO().Get("movablelimits"))
                 return MML.msubsup.prototype.toCommonHTML.call(this,node);
         //
         //  Get the nodes for base and limits
@@ -1059,7 +1059,7 @@
         //  Get the bounding boxes and the maximum width
         //
         var boxes = [], W = this.CHTMLgetBBoxes(boxes,values);
-	var bbox = boxes[this.base], BBOX = this.CHTML;
+        var bbox = boxes[this.base], BBOX = this.CHTML;
         BBOX.w = W; BBOX.h = bbox.h; BBOX.d = bbox.d; // modified below
         //
         //  Add over- and under-scripts
@@ -1240,7 +1240,7 @@
 
     MML.msubsup.Augment({
       toCommonHTML: function (node) {
-	var values = this.getValues("displaystyle","scriptlevel",
+        var values = this.getValues("displaystyle","scriptlevel",
                        "subscriptshift","superscriptshift","texprimestyle");
         //
         //  Get the nodes for base and limits
@@ -1272,53 +1272,53 @@
         //
         var boxes = [], BBOX = this.CHTML = CHTML.emptyBBox(); 
         for (var i = 0, m = this.data.length; i < m; i++) boxes[i] = this.CHTMLbboxFor(i);
-	var bbox = boxes[this.base], subbox = boxes[this.sub], supbox = boxes[this.sup];
+        var bbox = boxes[this.base], subbox = boxes[this.sub], supbox = boxes[this.sup];
         CHTML.combineBBoxes(BBOX,bbox,0,0,1);
         //
         //  Get initial values for parameters
         //
         var ex = CHTML.TEX.x_height, s = CHTML.TEX.scriptspace;
-	var q = CHTML.TEX.sup_drop * sscale, r = CHTML.TEX.sub_drop * sscale;
-	var u = bbox.h - q, v = bbox.d + r, delta = 0, p;
-	if (bbox.ic) {
+        var q = CHTML.TEX.sup_drop * sscale, r = CHTML.TEX.sub_drop * sscale;
+        var u = bbox.h - q, v = bbox.d + r, delta = 0, p;
+        if (bbox.ic) {
           BBOX.w -= bbox.ic;         // remove IC (added by mo and mi)
           base.style.marginRight = CHTML.Em(-bbox.ic);
           delta = 1.3*bbox.ic + .05; // make faked IC be closer to expeted results
         }
         var bmml = this.data[this.base];
-	if (bmml && (bmml.type === "mi" || bmml.type === "mo")) {
-	  if (bmml.data.join("").length === 1 && bmml.Get("scriptlevel") === 0 &&
-	      !bmml.Get("largeop")) {u = v = 0}  // ### FIXME: get scale rather than use scriptlevel
-	}
-	values.subscriptshift   = (values.subscriptshift === ""   ? 0 : CHTML.length2em(values.subscriptshift));
-	values.superscriptshift = (values.superscriptshift === "" ? 0 : CHTML.length2em(values.superscriptshift));
+        if (bmml && (bmml.type === "mi" || bmml.type === "mo")) {
+          if (bmml.data.join("").length === 1 && bmml.Get("scriptlevel") === 0 &&
+              !bmml.Get("largeop")) {u = v = 0}  // ### FIXME: get scale rather than use scriptlevel
+        }
+        values.subscriptshift   = (values.subscriptshift === ""   ? 0 : CHTML.length2em(values.subscriptshift));
+        values.superscriptshift = (values.superscriptshift === "" ? 0 : CHTML.length2em(values.superscriptshift));
         //
         //  Add the super- and subscripts
         //
         var x = BBOX.w; subbox.w += s; supbox.w += s;
-	if (!sup) {
-	  if (sub) {
-	    v = Math.max(v,CHTML.TEX.sub1,sscale*subbox.h-(4/5)*ex,values.subscriptshift);
+        if (!sup) {
+          if (sub) {
+            v = Math.max(v,CHTML.TEX.sub1,sscale*subbox.h-(4/5)*ex,values.subscriptshift);
             sub.style.verticalAlign = CHTML.Em(-v/sscale);
             sub.style.paddingRight = CHTML.Em(s/sscale);
             CHTML.combineBBoxes(BBOX,subbox,x,-v,sscale);
-	  }
-	} else {
-	  if (!sub) {
-	    p = CHTML.TEX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
-	    u = Math.max(u,p,sscale*supbox.d+(1/4)*ex,values.superscriptshift);
+          }
+        } else {
+          if (!sub) {
+            p = CHTML.TEX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
+            u = Math.max(u,p,sscale*supbox.d+(1/4)*ex,values.superscriptshift);
             sup.style.verticalAlign = CHTML.Em(u/sscale);
             sup.style.paddingLeft = CHTML.Em(delta/sscale);
             sup.style.paddingRight = CHTML.Em(s/sscale);
             CHTML.combineBBoxes(BBOX,supbox,x+delta,u,sscale);
-	  } else {
-	    v = Math.max(v,CHTML.TEX.sub2);
-	    var t = CHTML.TEX.rule_thickness;
-	    if ((u - sscale*supbox.d) - (sscale*subbox.h - v) < 3*t) {
-	      v = 3*t - u + sscale*(supbox.d + subbox.h);
-	      q = (4/5)*ex - (u - sscale*supbox.d);
-	      if (q > 0) {u += q; v -= q}
-	    }
+          } else {
+            v = Math.max(v,CHTML.TEX.sub2);
+            var t = CHTML.TEX.rule_thickness;
+            if ((u - sscale*supbox.d) - (sscale*subbox.h - v) < 3*t) {
+              v = 3*t - u + sscale*(supbox.d + subbox.h);
+              q = (4/5)*ex - (u - sscale*supbox.d);
+              if (q > 0) {u += q; v -= q}
+            }
             u = Math.max(u,values.superscriptshift);
             v = Math.max(v,values.subscriptshift);
             sub.style.paddingRight = CHTML.Em(s/sscale);
@@ -1328,8 +1328,8 @@
             stack.style.verticalAlign = CHTML.Em(-v);
             CHTML.combineBBoxes(BBOX,supbox,x+delta,u,sscale);
             CHTML.combineBBoxes(BBOX,subbox,x,-v,sscale);
-	  }
-	}
+          }
+        }
         CHTML.cleanBBox(BBOX);
         return node;
       }
@@ -1408,7 +1408,7 @@
         //  Add nulldelimiterspace around the fraction
         //  (TeXBook pg 150 and Appendix G rule 15e)
         //
-	if (!this.texWithDelims && !this.useMMLspacing) 
+        if (!this.texWithDelims && !this.useMMLspacing) 
           this.CHTML.L = this.CHTML.R = CHTML.TEX.nulldelimiterspace;
         this.CHTMLhandleSpace(node);
         //
