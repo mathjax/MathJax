@@ -966,7 +966,7 @@
             h = CHTML.length2em(values.height),
             d = CHTML.length2em(values.depth);
         var bbox = this.CHTML;
-        bbox.w = w; bbox.h = h; bbox.d = d;
+        bbox.w = bbox.r = w; bbox.h = bbox.t = h; bbox.d = bbox.b = d; bbox.l = 0;
         if (w < 0) {node.style.marginRight = CHTML.Em(w); w = 0}
         node.style.width = CHTML.Em(w);
         node.style.height = CHTML.Em(h+d);
@@ -980,7 +980,7 @@
         node = this.CHTMLdefaultNode(node,{childNodes:"mjx-block", forceChild:true});
         var child = node.firstChild, cbox = this.CHTMLbboxFor(0);
         node = HTML.addElement(node,"mjx-block");
-        node.appendChild(child); HTML.addElement(child,"mjx-box");  // force box be in text mode
+        node.appendChild(child); HTML.addElement(child,"mjx-box");  // force box to be in text mode
         var values = this.getValues("width","height","depth","lspace","voffset");
         var dimen, x = 0, y = 0, w = cbox.w, h = cbox.h, d = cbox.d;
         if (values.width !== "") {
@@ -1164,13 +1164,12 @@
           z2 = CHTML.TEX.big_op_spacing3;
           k = Math.max(z1,z2-Math.max(0,scale*obox.d));
         }
-        obox.x += delta/2;
+        obox.x += delta/2; obox.y = BBOX.h + k + z3;
         //
         //  Position the overscript
         //
         if (k) over.style.paddingBottom = CHTML.Em(k/scale);
         if (z3) over.style.paddingTop = CHTML.Em(z3/scale);
-        BBOX.h += scale*(obox.h+obox.d) + k + z3;
         return stack;
       },
       //
@@ -1207,35 +1206,34 @@
           z2 = CHTML.TEX.big_op_spacing4;
           k = Math.max(z1,z2-scale*ubox.h);
         }
-        ubox.x = -delta/2;
+        ubox.x = -delta/2; ubox.y = -(BBOX.d + k + z3 + scale*ubox.h);
         //
         //  Position the overscript
         //
         if (k) under.style.paddingTop = CHTML.Em(k/scale);
         if (z3) under.style.paddingBottom = CHTML.Em(z3/scale);
-        BBOX.d += scale*(ubox.h+ubox.d) + z3 + k;
       },
       //
       //  Center boxes horizontally, taking offsets into account
       //  ### FIXME: handle BBOX.l and BBOX.r
       //
       CHTMLplaceBoxes: function (base,under,over,values,boxes) {
-        var BBOX = this.CHTML, W = BBOX.w, i, m = boxes.length;
-        boxes[this.base].x = 0; var dx = 0;
+        var W = this.CHTML.w, i, m = boxes.length;
+        var BBOX = this.CHTML = CHTML.zeroBBox();
+        boxes[this.base].x = boxes[this.base].y = 0; var dx = BIGDIMEN;
         for (i = 0; i < m; i++) {
           var SCALE = (i === this.base ? 1 : i === this.over ? values.oscale : values.uscale);
           var w = SCALE*(boxes[i].w + (boxes[i].L||0) + (boxes[i].R||0));
           boxes[i].x += (W-w)/2;
-          if (w + boxes[i].x > BBOX.w) BBOX.w = w + boxes[i].x;
           if (boxes[i].x < dx) dx = boxes[i].x;
         }
-        if (dx) BBOX.w += -dx;
         for (i = 0; i < m; i++) {
-          if (boxes[i].x + dx) {
-            var node = (i === this.base ? base : i === this.over ? over : under);
           var SCALE = (i === this.base ? 1 : i === this.over ? values.oscale : values.uscale);
-            node.style.paddingLeft = CHTML.Em((boxes[i].x+dx)/SCALE);
+          if (boxes[i].x - dx) {
+            var node = (i === this.base ? base : i === this.over ? over : under);
+            node.style.paddingLeft = CHTML.Em((boxes[i].x-dx)/SCALE);
           }
+          CHTML.combineBBoxes(BBOX,boxes[i],boxes[i].x-dx,boxes[i].y,SCALE)
         }
       }
     });
@@ -1272,10 +1270,10 @@
         //
         //  Get the bounding boxes and maximum width of scripts
         //
-        var boxes = [], BBOX = this.CHTML; 
+        var boxes = [], BBOX = this.CHTML = CHTML.emptyBBox(); 
         for (var i = 0, m = this.data.length; i < m; i++) boxes[i] = this.CHTMLbboxFor(i);
 	var bbox = boxes[this.base], subbox = boxes[this.sub], supbox = boxes[this.sup];
-        BBOX.w = bbox.w; BBOX.h = bbox.h; BBOX.d = bbox.d; // modified below
+        CHTML.combineBBoxes(BBOX,bbox,0,0,1);
         //
         //  Get initial values for parameters
         //
@@ -1297,14 +1295,13 @@
         //
         //  Add the super- and subscripts
         //
+        var x = BBOX.w; subbox.w += s; supbox.w += s;
 	if (!sup) {
 	  if (sub) {
 	    v = Math.max(v,CHTML.TEX.sub1,sscale*subbox.h-(4/5)*ex,values.subscriptshift);
             sub.style.verticalAlign = CHTML.Em(-v/sscale);
             sub.style.paddingRight = CHTML.Em(s/sscale);
-            BBOX.w += sscale*(subbox.w + (subbox.L||0) + (subbox.R||0)) + s;
-            BBOX.h = Math.max(BBOX.h,sscale*subbox.h-v);
-            BBOX.d = Math.max(BBOX.d,sscale*subbox.d+v);
+            CHTML.combineBBoxes(BBOX,subbox,x,-v,sscale);
 	  }
 	} else {
 	  if (!sub) {
@@ -1313,9 +1310,7 @@
             sup.style.verticalAlign = CHTML.Em(u/sscale);
             sup.style.paddingLeft = CHTML.Em(delta/sscale);
             sup.style.paddingRight = CHTML.Em(s/sscale);
-            BBOX.w += sscale*(supbox.w + (supbox.L||0) + (supbox.R||0)) + s + delta;
-            BBOX.h = Math.max(BBOX.h,sscale*supbox.h+u);
-            BBOX.d = Math.max(BBOX.d,sscale*supbox.d-u);
+            CHTML.combineBBoxes(BBOX,supbox,x+delta,u,sscale);
 	  } else {
 	    v = Math.max(v,CHTML.TEX.sub2);
 	    var t = CHTML.TEX.rule_thickness;
@@ -1331,14 +1326,11 @@
             sup.style.paddingLeft = CHTML.Em(delta/sscale);
             sup.style.paddingRight = CHTML.Em(s/sscale);
             stack.style.verticalAlign = CHTML.Em(-v);
-            BBOX.w += Math.max(
-              sscale*(supbox.w + (supbox.L||0) + (supbox.R||0)) + s + delta,
-              sscale*(subbox.w + (subbox.L||0) + (subbox.R||0)) + s
-            );
-            BBOX.h = Math.max(BBOX.h,sscale*supbox.h+u,sscale*subbox.h-v);
-            BBOX.d = Math.max(BBOX.d,sscale*supbox.d-u,sscale*subbox.d+v);
+            CHTML.combineBBoxes(BBOX,supbox,x+delta,u,sscale);
+            CHTML.combineBBoxes(BBOX,subbox,x,-v,sscale);
 	  }
 	}
+        CHTML.cleanBBox(BBOX);
         return node;
       }
     });
@@ -1377,7 +1369,7 @@
         //  Get the bounding boxes for the parts, and determine the placement
         //  of the numerator and denominator
         //
-        var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1), bbox = this.CHTML;
+        var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1);
         values.linethickness = Math.max(0,CHTML.length2em(values.linethickness||"0",0));
         var mt = CHTML.TEX.min_rule_thickness/CHTML.em/scale, a = CHTML.TEX.axis_height;
         var t = values.linethickness, p,q, u,v;
@@ -1399,14 +1391,16 @@
           var rule = HTML.Element("mjx-row",{},[["mjx-cell",{},[["mjx-line"]]]]);
           num.parentNode.appendChild(rule); rule = rule.firstChild.firstChild;
           rule.style.borderTop = CHTML.Em(t)+" solid";
-          num.firstChild.className += " MJXc-fpad";
-          denom.firstChild.className += " MJXc-fpad";
+          num.firstChild.className += " MJXc-fpad";   nbox.L = nbox.R = .1;
+          denom.firstChild.className += " MJXc-fpad"; dbox.L = dbox.R = .1;
         }
         //
         //  Determine the new bounding box and place the parts
         //
-        bbox.w = sscale*Math.max(nbox.w,dbox.w);
-        bbox.h = sscale*nbox.h+u; bbox.d = sscale*dbox.d+v;
+        this.CHTML = CHTML.emptyBBox();
+        CHTML.combineBBoxes(this.CHTML,nbox,0,u,sscale);
+        CHTML.combineBBoxes(this.CHTML,dbox,0,-v,sscale);
+        CHTML.cleanBBox(this.CHTML);
         u -= sscale*nbox.d + a + t/2; v -= sscale*dbox.h - a + t/2;
         if (u > 0) num.firstChild.style.paddingBottom = CHTML.Em(u);
         if (v > 0) denom.firstChild.style.paddingTop = CHTML.Em(v);
@@ -1415,7 +1409,7 @@
         //  (TeXBook pg 150 and Appendix G rule 15e)
         //
 	if (!this.texWithDelims && !this.useMMLspacing) 
-          bbox.L = bbox.R = CHTML.TEX.nulldelimiterspace;
+          this.CHTML.L = this.CHTML.R = CHTML.TEX.nulldelimiterspace;
         this.CHTMLhandleSpace(node);
         //
         //  Return the completed fraction
