@@ -1339,7 +1339,7 @@
         //
         //  Add the super- and subscripts
         //
-        var x = BBOX.w; subbox.w += s; supbox.w += s;
+        var x = BBOX.w; if (sub) subbox.w += s; if (sup) supbox.w += s;
         if (!sup) {
           if (sub) {
             v = Math.max(v,CHTML.TEX.sub1,sscale*subbox.h-(4/5)*ex,values.subscriptshift);
