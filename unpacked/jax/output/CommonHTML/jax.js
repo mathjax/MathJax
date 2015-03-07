@@ -3,11 +3,12 @@
 
 /*************************************************************
  *
- *  MathJax/jax/output/HTML2/jax.js
+ *  MathJax/jax/output/CommonHTML/jax.js
  *
- *  Implements the HTML2 OutputJax that displays mathematics
- *  using HTML to position the characters from math fonts
- *  in their proper locations.
+ *  Implements the CommonHTML OutputJax that displays mathematics
+ *  using HTML and CSS to position the characters from math fonts
+ *  in their proper locations.  Unlike the HTML-CSS output jax,
+ *  this HTML is browswer and OS independent.
  *  
  *  ---------------------------------------------------------------------
  *  
