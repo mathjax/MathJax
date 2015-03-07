@@ -118,6 +118,8 @@
     }
   })();
   
+  /************************************************************/
+  
   var BIGDIMEN = 1000000;
   var V = "V", H = "H";
 
@@ -125,6 +127,8 @@
     settings: HUB.config.menuSettings,
     config: {styles: STYLES},
 
+    /********************************************/
+    
     Config: function () {
       if (!this.require) {this.require = []}
       this.SUPER(arguments).Config.call(this); var settings = this.settings;
@@ -159,6 +163,8 @@
     },
     InitializeCHTML: function () {
     },
+    
+    /********************************************/
     
     preTranslate: function (state) {
       var scripts = state.jax[this.id], i, m = scripts.length,
@@ -205,6 +211,8 @@
        */
     },
 
+    /********************************************/
+    
     Translate: function (script,state) {
       if (!script.parentNode) return;
 
@@ -263,6 +271,10 @@
       }
     },
 
+    initCHTML: function (math,span) {},
+
+    /********************************************/
+    
     postTranslate: function (state) {
       var scripts = state.jax[this.id];
       if (!this.hideProcessedMath) return;
@@ -314,6 +326,8 @@
        */
     },
 
+    /********************************************/
+    
     getJaxFromMath: function (math) {
       if (math.parentNode.className === "MathJax_CHTML_Display") {math = math.parentNode}
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
@@ -345,8 +359,6 @@
       return {Y:-EVENT.getBBox(span).h, mW:mW, mH:mH, zW:zW, zH:zH};
     },
 
-    initCHTML: function (math,span) {},
-
     Remove: function (jax) {
       var span = document.getElementById(jax.inputID+"-Frame");
       if (span) {
@@ -355,6 +367,8 @@
       }
       delete jax.CHTML;
     },
+    
+    /********************************************/
     
     ID: 0, idPostfix: "",
     GetID: function () {this.ID++; return this.ID},
@@ -417,6 +431,8 @@
 
       min_rule_thickness:  1.25     // in pixels
     },
+    
+    /********************************************************/
     
     getUnicode: function (string) {
       var n = string.text.charCodeAt(string.i); string.i++;
@@ -496,6 +512,8 @@
     },
     unknownChar: function (variant,n) {},
 
+    /********************************************************/
+    
     addCharList: function (node,list,bbox) {
       var text = "", className;
       for (var i = 0, m = list.length; i < m; i++) {
@@ -527,9 +545,8 @@
       }
     },
     
-
-    // ### FIXME:  add more here
-
+    /********************************************************/
+    
     DELIMITERS: {
       "(": {dir:V},
       "{": {dir:V, w:.58},
@@ -559,6 +576,8 @@
       "\u23B0": {dir:V, w:.6},
       "\u23B1": {dir:V, w:.6}
     },
+    
+    /********************************************************/
     
     //
     //  ### FIXME: Handle mu's
@@ -593,6 +612,8 @@
     unEm: function (m) {
       return parseFloat(m);
     },
+    
+    /********************************************************/
     
     zeroBBox: function () {
       return {h:0, d:0, w:0, l:0, r:0, D:0, H:0, t:0, b:0};
@@ -629,13 +650,19 @@
       if (scale*cbox.b - y > bbox.b) bbox.b = scale*cbox.b - y;
     },
 
+    /********************************************************/
+    
     arrayEntry: function (a,i) {return a[Math.max(0,Math.min(i,a.length-1))]}
 
   });
 
+  /**********************************************************/
+
   MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
     MML = MathJax.ElementJax.mml;
 
+    /********************************************************/
+    
     MML.mbase.Augment({
       toCommonHTML: function (node,options) {
         return this.CHTMLdefaultNode(node,options);
@@ -807,6 +834,8 @@
 
     });
 
+    /********************************************************/
+    
     MML.chars.Augment({
       toCommonHTML: function (node,options) {
         if (options == null) options = {};
@@ -826,6 +855,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.math.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
@@ -833,6 +864,8 @@
         return node;
       }
     });
+    
+    /********************************************************/
     
     MML.mi.Augment({
       toCommonHTML: function (node) {
@@ -846,6 +879,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.mo.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
@@ -956,6 +991,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.mspace.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
@@ -975,6 +1012,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.mpadded.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{childNodes:"mjx-block", forceChild:true});
@@ -1033,6 +1072,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.munderover.Augment({
       toCommonHTML: function (node) {
         var values = this.getValues("displaystyle","scriptlevel","accent","accentunder","align");
@@ -1238,6 +1279,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.msubsup.Augment({
       toCommonHTML: function (node) {
         var values = this.getValues("displaystyle","scriptlevel",
@@ -1335,6 +1378,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.mfrac.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{
@@ -1418,6 +1463,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.msqrt.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{
@@ -1452,6 +1499,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.mroot.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{
@@ -1472,6 +1521,8 @@
       },
       CHTMLlayoutRoot: MML.msqrt.prototype.CHTMLlayoutRoot
     });
+    
+    /********************************************************/
     
     MML.mfenced.Augment({
       toCommonHTML: function (node) {
@@ -1503,6 +1554,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.mrow.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
@@ -1512,6 +1565,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.mstyle.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
@@ -1526,6 +1581,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.TeXAtom.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
@@ -1535,6 +1592,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.mtable.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{noBBox:true});
@@ -1597,6 +1656,8 @@
       }
     });
 
+    /********************************************************/
+    
     MML.semantics.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
@@ -1610,6 +1671,8 @@
     MML.annotation.Augment({toCommonHTML: function(node) {}});
     MML["annotation-xml"].Augment({toCommonHTML: function(node) {}});
 
+    /********************************************************/
+    
     //
     //  Loading isn't complete until the element jax is modified,
     //  but can't call loadComplete within the callback for "mml Jax Ready"
