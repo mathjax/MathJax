@@ -1547,6 +1547,8 @@
 
   CHTML.FONTDATA.FONTS[MAIN][0x22EE][0] += 400;  // adjust height for \vdots
   CHTML.FONTDATA.FONTS[MAIN][0x22F1][0] += 700;  // adjust height for \ddots
+  CHTML.FONTDATA.FONTS[SIZE4][0x23AA][0] -= 20;
+  CHTML.FONTDATA.FONTS[SIZE4][0x23AA][1] += 5;
   CHTML.FONTDATA.FONTS[SIZE4][0xE154][0] += 200;  // adjust height for brace extender
   CHTML.FONTDATA.FONTS[SIZE4][0xE154][1] += 200;  // adjust depth for brace extender
   CHTML.FONTDATA.FONTS[MAIN][0x2245][2] -= 222; // fix error in character's right bearing
