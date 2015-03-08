@@ -1151,7 +1151,7 @@
         //  Get the maximum width
         //
         for (i = 0; i < m; i++) {
-          bbox[i] = this.CHTMLbboxFor(i);
+          bbox[i] = this.CHTMLbboxFor(i); bbox[i].x = bbox[i].y = 0;
           if (this.data[i]) bbox[i].stretch = this.data[i].CHTMLcanStretch("Horizontal");
           SCALE = (i === this.base ? 1 : i === this.over ? values.oscale : values.uscale);
           W = Math.max(W,SCALE*(bbox[i].w + (bbox[i].L||0) + (bbox[i].R||0)));
@@ -1206,7 +1206,7 @@
           z2 = CHTML.TEX.big_op_spacing3;
           k = Math.max(z1,z2-Math.max(0,scale*obox.d));
         }
-        obox.x += delta/2; obox.y = BBOX.h + k + z3;
+        obox.x += delta/2; obox.y = BBOX.h + k + z3 + scale*obox.d;
         //
         //  Position the overscript
         //
@@ -1270,12 +1270,14 @@
           if (boxes[i].x < dx) dx = boxes[i].x;
         }
         for (i = 0; i < m; i++) {
-          var SCALE = (i === this.base ? 1 : i === this.over ? values.oscale : values.uscale);
-          if (boxes[i].x - dx) {
-            var node = (i === this.base ? base : i === this.over ? over : under);
-            node.style.paddingLeft = CHTML.Em((boxes[i].x-dx)/SCALE);
+          if (this.data[i]) {
+            var SCALE = (i === this.base ? 1 : i === this.over ? values.oscale : values.uscale);
+            if (boxes[i].x - dx) {
+              var node = (i === this.base ? base : i === this.over ? over : under);
+              node.style.paddingLeft = CHTML.Em((boxes[i].x-dx)/SCALE);
+            }
+            CHTML.combineBBoxes(BBOX,boxes[i],boxes[i].x-dx,boxes[i].y,SCALE);
           }
-          CHTML.combineBBoxes(BBOX,boxes[i],boxes[i].x-dx,boxes[i].y,SCALE)
         }
       }
     });
