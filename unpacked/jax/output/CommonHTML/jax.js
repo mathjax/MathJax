@@ -1582,6 +1582,7 @@
           }
         }
         CHTML.cleanBBox(BBOX);
+        this.CHTMLhandleSpace(node);
         return node;
       }
     });
