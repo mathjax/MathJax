@@ -1681,7 +1681,7 @@
         var base = node.firstChild;
         var sqrt = HTML.addElement(node,"mjx-box"); sqrt.appendChild(base);
         var bbox = this.CHTMLbboxFor(0), BBOX = this.CHTML = CHTML.emptyBBox();
-	var t = CHTML.TEX.surd_height, p = t, q, H;
+	var t = CHTML.TEX.surd_height, p = CHTML.TEX.rule_thickness, q, H;
 	if (this.Get("displaystyle")) p = CHTML.TEX.x_height;
         q = t + p/4;
 	H = bbox.h + bbox.d + q + t;
