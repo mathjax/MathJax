@@ -68,7 +68,13 @@
     "mjx-stack > mjx-sup": {display:"block"},
     "mjx-stack > mjx-sub": {display:"block"},
     
-    "mjx-delim > mjx-char": {transform:"scale(1)"},  // for Firefox to get horizontal alignment better
+    "mjx-delim-v > mjx-char": {transform:"scale(1)"},  // for Firefox to get horizontal alignment better
+    "mjx-delim-h": {display:"block"},
+    "mjx-delim-h > mjx-char": {
+      transform:"scale(1)",
+      display:"inline-block",
+      "vertical-align":"top"
+    },
     
     "mjx-mphantom": {"visibility":"hidden"},
 
@@ -591,7 +597,7 @@
       return this["extendDelimiter"+delim.dir](node,hw,delim.stretch,scale,font);
     },
     extendDelimiterV: function (node,H,delim,scale,font) {
-      node = HTML.addElement(node,"mjx-delim"); var tmp = HTML.Element("span");
+      node = HTML.addElement(node,"mjx-delim-v"); var tmp = HTML.Element("span");
       var top, bot, mid, ext, tbox, bbox, mbox, ebox, k = 1;
       tbox = this.createChar(tmp,(delim.top||delim.ext),scale,font); top = tmp.removeChild(tmp.firstChild);
       bbox = this.createChar(tmp,(delim.bot||delim.ext),scale,font); bot = tmp.removeChild(tmp.firstChild);
@@ -608,17 +614,17 @@
         var s = 1.1*(H - h)/k + .2*k;  // space to cover by extender
         s /= (ebox.h+ebox.d);          // scale factor;
         var a = (ebox.H-ebox.D)/2;     // center of font
-        ext.style.WebkitTransform = 
-          ext.style.transform = "translate(0,"+CHTML.Em(-(a+ebox.d)+.05)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")";
-        ext.style.WebkitTransformOrigin = 
-          ext.style.transformOrigin = "left "+CHTML.Em(a+ebox.d);
+        this.Transform(ext,
+          "translateY("+CHTML.Em(-(a+ebox.d)+.05)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
+          "left "+CHTML.Em(a+ebox.d)
+        );
         ext.style.paddingTop=ext.style.paddingBottom = 0;
         top.style.marginBottom = CHTML.Em((H-h)/k);
         node.appendChild(ext);
         if (delim.mid) {
           node.appendChild(mid);
-          mid.style.marginBottom = CHTML.Em((H-h)/2);
-          node.appendChild(ext.cloneNode(true)); HTML.addElement(node,"mjx-block");
+          mid.style.marginBottom = top.style.marginBottom;
+          node.appendChild(ext.cloneNode(true));
         }
       } else {
         H = h - .25; top.style.marginBottom = "-.25em";
@@ -635,53 +641,65 @@
         h: H-bbox.d, d: bbox.d, t: H-bbox.d, b: bbox.d
       };
     },
-    /* 
-     * extendDelimiterH: function (span,W,delim,scale,font) {
-     *   var stack = this.createStack(span,true);
-     *   var left = this.createBox(stack), right = this.createBox(stack);
-     *   this.createChar(left,(delim.left||delim.rep),scale,font);
-     *   this.createChar(right,(delim.right||delim.rep),scale,font);
-     *   var rep = this.Element("span"); this.createChar(rep,delim.rep,scale,font);
-     *   var mid = {bbox: {h:-this.BIGDIMEN, d:-this.BIGDIMEN}}, REP;
-     *   this.placeBox(left,-left.bbox.lw,0,true);
-     *   var w = (left.bbox.rw - left.bbox.lw) + (right.bbox.rw - right.bbox.lw) - .05,
-     *       x = left.bbox.rw - left.bbox.lw - .025, dx;
-     *   if (delim.mid) {
-     *     mid = this.createBox(stack); this.createChar(mid,delim.mid,scale,font);
-     *     w += mid.bbox.w;
-     *   }
-     *   if (delim.min && W < w*delim.min) {W = w*delim.min}
-     *   if (W > w) {
-     *     var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
-     *     N = n = Math.min(Math.ceil((W-w)/(k*rw)), this.maxStretchyParts);
-     *     if (!delim.fillExtenders) {rw = (W-w)/(k*n)}
-     *     dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
-     *     while (k-- > 0) {
-     *       while (n-- > 0) {
-     *         if (!this.cloneNodeBug) {REP = rep.cloneNode(true)}
-     *           else {REP = this.Element("span"); this.createChar(REP,delim.rep,scale,font)}
-     *         REP.bbox = rep.bbox;
-     *         this.placeBox(this.addBox(stack,REP),x,0,true); x += rw;
-     *       }
-     *       if (delim.mid && k) {this.placeBox(mid,x,0,true); x += mid.bbox.w - dx; n = N}
-     *     }
-     *   } else {
-     *     x -= (w - W)/2;
-     *     if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w};
-     *     x -= (w - W)/2;
-     *   }
-     *   this.placeBox(right,x,0,true);
-     *   span.bbox = {
-     *     w: x+right.bbox.rw, lw: 0, rw: x+right.bbox.rw,
-     *     H: Math.max(left.bbox.h,rep.bbox.h,right.bbox.h,mid.bbox.h),
-     *     D: Math.max(left.bbox.d,rep.bbox.d,right.bbox.d,mid.bbox.d),
-     *     h: rep.bbox.h, d: rep.bbox.d, exactW: true
-     *   }
-     *   span.scale = scale;
-     *   span.isMultiChar = true;
-     *   this.setStackWidth(stack,span.bbox.w);
-     * },
-     */
+    extendDelimiterH: function (node,W,delim,scale,font) {
+      node = HTML.addElement(node,"mjx-delim-h"); var tmp = HTML.Element("span");
+      var left, right, mid, ext, ext2, lbox, rbox, mbox, ebox, k = 1;
+      lbox = this.createChar(tmp,(delim.left||delim.rep),scale,font); left = tmp.removeChild(tmp.firstChild);
+      rbox = this.createChar(tmp,(delim.right||delim.rep),scale,font); right = tmp.removeChild(tmp.firstChild);
+      mbox = ebox = this.emptyBBox();
+      node.appendChild(left); left.style.marginLeft = CHTML.Em(-lbox.l);
+      var w = (lbox.r - lbox.l) + (rbox.r - rbox.l) - .05;
+      if (delim.mid) {
+        mbox = this.createChar(tmp,delim.mid,scale,font);
+        mid = tmp.removeChild(tmp.firstChild);
+        w += mbox.w; k = 2;
+      }
+      if (delim.min && W < w*delim.min) W = w*delim.min;
+      if (W > w) {
+        ebox = this.createChar(tmp,delim.rep,scale,font); ext = tmp.removeChild(tmp.firstChild);
+        var s = (W - w)/k + .2;  // space to cover by extender
+        s /= (ebox.r - ebox.l);        // scale factor
+        this.Transform(ext,
+          "translateX("+CHTML.Em(-ebox.l-.1)+") scaleX("+s.toFixed(3).replace(/0+$/,"")+")",
+          CHTML.Em(ebox.l)+" center"
+        );
+        ext.style.width = 0;
+        right.style.marginLeft = CHTML.Em((W-w-(lbox.w-lbox.r)-rbox.l)/k);
+        node.appendChild(ext);
+        if (delim.mid) {
+          node.appendChild(mid);
+          mid.style.marginLeft = right.style.marginLeft;
+          ext2 = node.appendChild(ext.cloneNode(true));
+        }
+      } else {
+        W = w - .1; right.style.marginLeft = "-.1em";
+        if (delim.mid) {
+          node.appendChild(mid);
+          mid.style.marginLeft = "-.1em"; W -= .1;
+        }
+      }
+      this.adjustTops([left,ext,mid,ext2,right]);
+      var t = Math.max(lbox.t,rbox.t,ebox.t,mbox.t),
+          b = Math.max(lbox.b,rbox.b,ebox.b,mbox.b);
+      node.appendChild(right);
+      if (t !== ebox.h) node.style.marginTop = CHTML.Em(ebox.h - t);
+      if (b !== ebox.d) node.style.marginBottom = CHTML.Em(ebox.d - b);
+      return {w: W, l: 0, r: W, t: t, b: b, h: ebox.h, d: ebox.d};
+    },
+    adjustTops: function (nodes) {
+      //
+      //  to get alignment right in horizontal delimiters, we force all
+      //  the elements to the same height and align to top
+      //
+      var i, m = nodes.length, T = 0;
+      for (i = 0; i < m; i++) {
+        if (nodes[i] && nodes[i].style.paddingTop) {
+          var t = this.unEm(nodes[i].style.paddingTop);
+          if (t > T) T = t;
+        }
+      }
+      for (i = 0; i < m; i++) if (nodes[i]) nodes[i].style.paddingTop = CHTML.Em(T);
+    },
     createChar: function (node,data,scale,font) {
       // ### FIXME: handle cache better (by data[1] and font)
       var text = "", variant = {fonts: [data[1]], noRemap:true, cache:{}};
@@ -750,6 +768,13 @@
     
     Percent: function (m) {
       return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
+    },
+    
+    Transform: function (node,trans,origin) {
+      var style = node.style;
+      style.transform = style.WebkitTransform = style.MozTransform = trans;
+      if (origin)
+        style.transformOrigin = style.WebkitTransformOrigin = style.MozTransformOrigin = origin;
     },
 
     /********************************************************/
@@ -851,16 +876,13 @@
           }
         }
       },
-      CHTMLstretchChildH: function (i,W) {
+      CHTMLstretchChildH: function (i,W,nodes) {
         var data = this.data[i];
         if (data) {
-          var bbox = this.CHTML, dbox = data.CHTML;
-          if (dbox.w !== W) {
-            data.CHTMLstretchH(W);
-            if (dbox.h > bbox.h) bbox.h = dbox.h;
-            if (dbox.d > bbox.d) bbox.d = dbox.d;
-            if (dbox.t > bbox.t) bbox.t = dbox.t;
-            if (dbox.b > bbox.b) bbox.b = dbox.b;
+          var bbox = this.CHTML;
+          if (bbox.stretch || (bbox.stretch == null && data.CHTMLcanStretch("Horizontal",W))) {
+            data.CHTMLstretchH(nodes[i].firstChild,W);
+            MathJax.Hub.Insert(this.CHTML,data.CHTML);
           }
         }
       },
@@ -875,7 +897,7 @@
         return stretch;
       },
       CHTMLstretchV: function (h,d) {},
-      CHTMLstretchH: function (w) {},
+      CHTMLstretchH: function (node,w) {},
 
       CHTMLcreateNode: function (node) {
         if (!this.CHTML) this.CHTML = {};
@@ -1136,7 +1158,23 @@
 	    bbox.h += H; bbox.d -= H; bbox.t += H; bbox.b -= H;
 	  }
         }
+      },
+      CHTMLstretchH: function (node,W) {
+        var bbox = this.CHTML;
+	var values = this.getValues("maxsize","minsize","mathvariant","fontweight");
+        // FIXME:  should take style="font-weight:bold" into account as well
+	if ((values.fontweight === "bold" || parseInt(values.fontweight) >= 600) &&
+            !this.Get("mathvariant",true)) values.mathvariant = MML.VARIANT.BOLD;
+	values.maxsize = CHTML.length2em(values.maxsize,bbox.w);
+	values.minsize = CHTML.length2em(values.minsize,bbox.w);
+	W = Math.max(values.minsize,Math.min(values.maxsize,W));
+        if (W !== bbox.sW) {
+          while (node.firstChild) node.removeChild(node.firstChild);
+          this.CHTML = bbox = CHTML.createDelimiter(node,this.data.join("").charCodeAt(0),W,1,values.mathvariant);
+          bbox.sW = W;
+        }
       }
+
     });
 
     /********************************************************/
@@ -1236,10 +1274,10 @@
         node = this.CHTMLdefaultNode(node,{
           childNodes:types, noBBox:true, forceChild:true, minChildren: 2
         });
-        var base, under, over;
-        base = node.removeChild(node.firstChild);
-        under = over = node.removeChild(node.firstChild);
-        if (node.firstChild) over = node.removeChild(node.firstChild);
+        var base, under, over, nodes = [];
+        nodes[0] = base = node.removeChild(node.firstChild);
+        nodes[1] = under = over = node.removeChild(node.firstChild);
+        if (node.firstChild) nodes[2] = over = node.removeChild(node.firstChild);
         //
         //  Get the scale of the base and its limits
         //
@@ -1247,7 +1285,7 @@
         //
         //  Get the bounding boxes and the maximum width
         //
-        var boxes = [], W = this.CHTMLgetBBoxes(boxes,values);
+        var boxes = [], W = this.CHTMLgetBBoxes(boxes,nodes,values);
         var bbox = boxes[this.base], BBOX = this.CHTML;
         BBOX.w = W; BBOX.h = bbox.h; BBOX.d = bbox.d; // modified below
         //
@@ -1290,7 +1328,7 @@
       //  Get the bounding boxes for the children, stretch
       //  any stretchable elements, and compute the maximum width
       //  
-      CHTMLgetBBoxes: function (bbox,values) {
+      CHTMLgetBBoxes: function (bbox,nodes,values) {
         var i, m = this.data.length, SCALE,
             w = -BIGDIMEN,  // maximum width of non-stretchy items
             W = w;          // maximum width of all items
@@ -1310,8 +1348,9 @@
         //
         for (i = 0; i < m; i++) {
           if (bbox[i].stretch) {
-            SCALE = (i === this.base ? 1 : i === this.over ? valuses.oscale : values.uscale);
-            this.CHTMLstretchChildH(i,w/SCALE);
+            SCALE = (i === this.base ? 1 : i === this.over ? values.oscale : values.uscale);
+            this.CHTMLstretchChildH(i,w/SCALE,nodes);
+            bbox[i] = this.CHTMLbboxFor(i); bbox[i].x = bbox[i].y = 0;
             W = Math.max(W,SCALE*(bbox[i].w + (bbox[i].L||0) + (bbox[i].R||0)));
           }
         }
