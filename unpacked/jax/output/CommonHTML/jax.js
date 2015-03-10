@@ -34,7 +34,8 @@
   var EVENT, TOUCH, HOVER; // filled in later
 
   var SCRIPTFACTOR = Math.sqrt(1/2),
-      AXISHEIGHT = .25;
+      AXISHEIGHT = .25,
+      HFUZZ = .05, DFUZZ = 0;  // adjustments to bounding box of character boxes
 
   var STYLES = {
     ".MathJax_CHTML_Display": {
@@ -52,11 +53,8 @@
     },
     "mjx-math *": {display:"inline-block", "text-align":"left"},
 
-    "mjx-mfrac":  {"vertical-align":".25em"},
-    "mjx-fbox":   {width:"100%"},
-    "mjx-ftable": {display:"table", width:"100%"},
-    "mjx-numerator":   {display:"table-cell", "text-align":"center"},
-    "mjx-denominator": {display:"table-cell", "text-align":"center"},
+    "mjx-numerator":   {display:"block", "text-align":"center"},
+    "mjx-denominator": {display:"block", "text-align":"center"},
     ".MJXc-fpad": {"padding-left":".1em", "padding-right":".1em"},
     
     "mjx-stack":  {display:"inline-block"},
@@ -555,8 +553,9 @@
       }
       this.addCharList(node.firstChild,list,bbox);
       this.cleanBBox(bbox);
-      node.firstChild.style.paddingTop = this.Em(bbox.h);
-      node.firstChild.style.paddingBottom = this.Em(bbox.d);
+      bbox.h += HFUZZ; bbox.d += DFUZZ; bbox.t += HFUZZ; bbox.b += DFUZZ;
+      node.firstChild.style[bbox.h < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h);
+      node.firstChild.style[bbox.d < 0 ? "marginBottom": "paddingBottom"] = this.Em(bbox.d);
       return bbox;
     },
 
@@ -911,7 +910,7 @@
         if (this.inferred) return node;
         if (!this.CHTMLnodeID) {this.CHTMLnodeID = CHTML.GetID()};
         var id = (this.id || "MJXc-Node-"+this.CHTMLnodeID);
-        return HTML.addElement(node,"mjx-"+this.type,{className:"MJXc-"+this.type, id:id});
+        return HTML.addElement(node,"mjx-"+this.type,{id:id});
       },
       CHTMLnodeElement: function () {
         if (!this.CHTMLnodeID) {return null}
@@ -1580,7 +1579,7 @@
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{
           childNodes:["mjx-numerator","mjx-denominator"],
-          forceChild:true, noBBox:true
+          forceChild:true, noBBox:true, childCount:2
         });
         var values = this.getValues("linethickness","displaystyle","scriptlevel",
                                     "numalign","denomalign","bevelled");
@@ -1597,15 +1596,11 @@
         //
         //  Create the table for the fraction and set the alignment
         //
-        var frac = HTML.addElement(node,"mjx-itable",{},[
-          ["mjx-row",{},[["mjx-fbox",{},[["mjx-ftable",{},[["mjx-row"]]]]]]],
-          ["mjx-row"]
-        ]);
-        var num = frac.firstChild.firstChild.firstChild.firstChild, denom = frac.lastChild;
-        num.appendChild(node.firstChild);
-        denom.appendChild(node.firstChild);
-        if (values.numalign !== "center") num.firstChild.style.textAlign = values.numalign;
-        if (values.denomalign !== "center") denom.firstChild.style.textAlign = values.denomalign;
+        var num = node.firstChild, denom = node.lastChild;
+        var frac = HTML.addElement(node,"mjx-box");
+        frac.appendChild(num); frac.appendChild(denom); node.appendChild(frac);
+        if (values.numalign !== "center") num.style.textAlign = values.numalign;
+        if (values.denomalign !== "center") denom.style.textAlign = values.denomalign;
         //
         //  Get the bounding boxes for the parts, and determine the placement
         //  of the numerator and denominator
@@ -1625,15 +1620,10 @@
           t = Math.max(t,mt);
           q = (u - nbox.d*sscale) - (a + t/2); if (q < p) u += (p - q);
           q = (a - t/2) - (dbox.h*sscale - v); if (q < p) v += (p - q);
-          node.style.verticalAlign = CHTML.Em(a-t/2);
-          //
-          //  Add the rule to the table
-          //
-          var rule = HTML.Element("mjx-row",{},[["mjx-cell",{},[["mjx-line"]]]]);
-          num.parentNode.appendChild(rule); rule = rule.firstChild.firstChild;
-          rule.style.borderTop = CHTML.Em(t)+" solid";
-          num.firstChild.className += " MJXc-fpad";   nbox.L = nbox.R = .1;
-          denom.firstChild.className += " MJXc-fpad"; dbox.L = dbox.R = .1;
+          frac.style.verticalAlign = CHTML.Em(t/2-v);
+          num.style.borderBottom = CHTML.Em(t)+" solid";
+          num.className += " MJXc-fpad";   nbox.L = nbox.R = .1;
+          denom.className += " MJXc-fpad"; dbox.L = dbox.R = .1;
         }
         //
         //  Determine the new bounding box and place the parts
@@ -1643,8 +1633,8 @@
         CHTML.combineBBoxes(this.CHTML,dbox,0,-v,sscale);
         CHTML.cleanBBox(this.CHTML);
         u -= sscale*nbox.d + a + t/2; v -= sscale*dbox.h - a + t/2;
-        if (u > 0) num.firstChild.style.paddingBottom = CHTML.Em(u);
-        if (v > 0) denom.firstChild.style.paddingTop = CHTML.Em(v);
+        if (u > 0) num.style.paddingBottom = CHTML.Em(u);
+        if (v > 0) denom.style.paddingTop = CHTML.Em(v);
         //
         //  Add nulldelimiterspace around the fraction
         //  (TeXBook pg 150 and Appendix G rule 15e)
