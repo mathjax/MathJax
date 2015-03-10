@@ -34,8 +34,7 @@
   var EVENT, TOUCH, HOVER; // filled in later
 
   var SCRIPTFACTOR = Math.sqrt(1/2),
-      AXISHEIGHT = .25,
-      HFUZZ = .05, DFUZZ = 0;  // adjustments to bounding box of character boxes
+      AXISHEIGHT = .25;
 
   var STYLES = {
     ".MathJax_CHTML_Display": {
@@ -558,14 +557,8 @@
       }
       this.addCharList(node.firstChild,list,bbox);
       this.cleanBBox(bbox);
-      bbox.h += HFUZZ; bbox.d += DFUZZ;
-      bbox.t += HFUZZ; bbox.b += DFUZZ;
-      var a = (bbox.H-bbox.D)/2;  // center of font (line-height:0)
-      if (a < bbox.h) {node.firstChild.style.paddingTop = this.Em(bbox.h-a)}
-        else {node.firstChild.style.marginTop = this.Em(bbox.h-a)}
-      // ### FIXME: Safari doesn't center, so clip bbox.d at 0 and adjust later?
-      if (bbox.d+1 > 0) {node.firstChild.style.paddingBottom = this.Em(bbox.d+a)}
-        else {node.firstChild.style.marginBottom = this.Em(bbox.d+a)}
+      node.firstChild.style.paddingTop = this.Em(bbox.h);
+      node.firstChild.style.paddingBottom = this.Em(bbox.d);
       return bbox;
     },
 
