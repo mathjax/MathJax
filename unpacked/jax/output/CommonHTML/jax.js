@@ -73,7 +73,7 @@
       "vertical-align":"top"
     },
     
-    "mjx-surd": {"vertical-align":"top!important"},
+    "mjx-surd": {"vertical-align":"top"},
     
     "mjx-mphantom": {visibility:"hidden"},
 
@@ -1659,19 +1659,18 @@
         var base = node.firstChild;
         var sqrt = HTML.addElement(node,"mjx-box"); sqrt.appendChild(base);
         var bbox = this.CHTMLbboxFor(0), BBOX = this.CHTML = CHTML.emptyBBox();
-	var t = CHTML.TEX.surd_height, p = CHTML.TEX.rule_thickness, q, H;
+	var t = CHTML.TEX.rule_thickness, T = CHTML.TEX.surd_height, p = t, q, H;
 	if (this.Get("displaystyle")) p = CHTML.TEX.x_height;
         q = t + p/4;
 	H = bbox.h + bbox.d + q + t;
         var surd = HTML.Element("mjx-surd"); sqrt.insertBefore(surd,base);
-        var sbox = CHTML.createDelimiter(surd,0x221A,H,1);
+        var sbox = CHTML.createDelimiter(surd,0x221A,[H-.04,H],1);
 	if (sbox.h + sbox.d > H) q = ((sbox.h+sbox.d) - (H-t))/2;
 	H = bbox.h + q + t;
         var x = this.CHTMLaddRoot(node,sbox,sbox.h+sbox.d-H);
-        surd.style.verticalAlign = CHTML.Em(H-sbox.h);
         base.style.paddingTop = CHTML.Em(q); 
-        base.style.borderTop = CHTML.Em(t)+" solid";
-        sqrt.style.paddingTop = CHTML.Em(t);
+        base.style.borderTop = CHTML.Em(T)+" solid";
+        sqrt.style.paddingTop = CHTML.Em(2*t-T);  // use wider line, but don't affect height
         bbox.h += q + 2*t;
         CHTML.combineBBoxes(BBOX,sbox,x,H-sbox.h,1);
         CHTML.combineBBoxes(BBOX,bbox,x+sbox.w,0,1);
