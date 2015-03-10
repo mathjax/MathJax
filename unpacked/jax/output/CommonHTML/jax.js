@@ -1615,6 +1615,7 @@
           p = Math.max((isDisplay ? 7 : 3) * CHTML.TEX.rule_thickness, 2*mt); // force to at least 2 px
           q = (u - nbox.d*sscale) - (dbox.h*sscale - v);
           if (q < p) {u += (p - q)/2; v += (p - q)/2}
+          frac.style.verticalAlign = CHTML.Em(-v);
         } else { // \over
           p = Math.max((isDisplay ? 3 : 0) * t, mt);  // force to be at least 1px
           t = Math.max(t,mt);
