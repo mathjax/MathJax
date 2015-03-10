@@ -1579,7 +1579,7 @@
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{
           childNodes:["mjx-numerator","mjx-denominator"],
-          forceChild:true, noBBox:true, childCount:2
+          forceChild:true, noBBox:true, minChildren:2
         });
         var values = this.getValues("linethickness","displaystyle","scriptlevel",
                                     "numalign","denomalign","bevelled");
