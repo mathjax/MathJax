@@ -529,8 +529,6 @@
             if (bbox.l > bbox.w+C[3]) bbox.l = bbox.w+C[3];
             if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
             bbox.w += C[2];
-            if (bbox.H < font.ascent)  bbox.H = font.ascent;
-            if (bbox.D < font.descent) bbox.D = font.descent;
             if (m == 1 && font.skew && font.skew[item.n]) bbox.skew = font.skew[item.n];
         }
       }
@@ -613,10 +611,9 @@
         }
         var s = 1.1*(H - h)/k + .2*k;  // space to cover by extender
         s /= (ebox.h+ebox.d);          // scale factor;
-        var a = (ebox.H-ebox.D)/2;     // center of font
         this.Transform(ext,
-          "translateY("+CHTML.Em(-(a+ebox.d)+.05)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
-          "left "+CHTML.Em(a+ebox.d)
+          "translateY("+CHTML.Em(-ebox.d+.05)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
+          "left "+CHTML.Em(ebox.d)
         );
         ext.style.paddingTop=ext.style.paddingBottom = 0;
         top.style.marginBottom = CHTML.Em((H-h)/k);
@@ -663,12 +660,11 @@
       }
       if (delim.min && W < w*delim.min) W = w*delim.min;
       right.style.marginLeft = CHTML.Em((W-w-rbox.l)/k);
-      BBOX.w = BBOX.r = W; BBOX.H = lbox.H; BBOX.D = lbox.D;
+      BBOX.w = BBOX.r = W;
       if (W > w) {
         ebox = this.createChar(tmp,delim.rep,scale,font); ext = tmp.removeChild(tmp.firstChild);
         if (ebox.h > BBOX.h) BBOX.h = ebox.h;
         if (ebox.d < BBOX.d) BBOX.d = ebox.d;
-         BBOX.H = ebox.H; BBOX.D = ebox.D;
         var s = (W - w)/k + .2;  // space to cover by extender
         s /= (ebox.r - ebox.l);        // scale factor
         this.Transform(ext,
@@ -792,11 +788,11 @@
     /********************************************************/
     
     zeroBBox: function () {
-      return {h:0, d:0, w:0, l:0, r:0, D:0, H:0, t:0, b:0};
+      return {h:0, d:0, w:0, l:0, r:0, t:0, b:0};
     },
     emptyBBox: function () {
       return {h:-BIGDIMEN, d:-BIGDIMEN, w:0, l:BIGDIMEN, r:-BIGDIMEN,
-              D:-BIGDIMEN, H:-BIGDIMEN, t:-BIGDIMEN, b:-BIGDIMEN};
+              t:-BIGDIMEN, b:-BIGDIMEN};
     },
     cleanBBox: function (bbox) {
       if (bbox.h === -BIGDIMEN) bbox.h = 0;
@@ -805,8 +801,6 @@
       if (bbox.r === -BIGDIMEN) bbox.r = 0;
       if (bbox.t === -BIGDIMEN) bbox.t = 0;
       if (bbox.b === -BIGDIMEN) bbox.b = 0;
-      if (bbox.H === -BIGDIMEN) bbox.H = .8;
-      if (bbox.D === -BIGDIMEN) bbox.D = .2;
     },
     scaleBBox: function (bbox,level,dlevel) {
       var scale = Math.pow(SCRIPTFACTOR,Math.min(2,level)-(dlevel||0));
