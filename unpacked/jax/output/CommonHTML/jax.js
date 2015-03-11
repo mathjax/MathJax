@@ -96,18 +96,21 @@
     "mjx-line":   {display:"block", width:"100%", "border-top":"0 solid"},
 
     ".MJXc-script": {"font-size":SCRIPTFACTOR+"em"},
+    ".MJXc-space1": {"margin-left":".167em"},
+    ".MJXc-space2": {"margin-left":".222em"},
+    ".MJXc-space3": {"margin-left":".278em"},
 
 /*********************************/
     
-    ".MJXc-mtable": {"vertical-align":AXISHEIGHT+"em", "margin":"0 .125em"},
-    ".MJXc-mtable > span": {"display":"inline-table!important", "vertical-align":"middle"},
-    ".MJXc-mtr": {"display":"table-row!important"},
-    ".MJXc-mtd": {"display":"table-cell!important", "text-align":"center", "padding":".5em 0 0 .5em"},
-    ".MJXc-mtr > .MJXc-mtd:first-child": {"padding-left":0},
-    ".MJXc-mtr:first-child > .MJXc-mtd": {"padding-top":0},
-    ".MJXc-mlabeledtr": {"display":"table-row!important"},
-    ".MJXc-mlabeledtr > .MJXc-mtd:first-child": {"padding-left":0},
-    ".MJXc-mlabeledtr:first-child > .MJXc-mtd": {"padding-top":0}    
+    "mjx-mtable": {"vertical-align":AXISHEIGHT+"em", "margin":"0 .125em"},
+    "mjx-mtable > span": {"display":"inline-table!important", "vertical-align":"middle"},
+    "mjx-mtr": {"display":"table-row!important"},
+    "mjx-mtd": {"display":"table-cell!important", "text-align":"center", "padding":".5em 0 0 .5em"},
+    "mjx-mtr > mjx-mtd:first-child": {"padding-left":0},
+    "mjx-mtr:first-child > mjx-mtd": {"padding-top":0},
+    "mjx-mlabeledtr": {"display":"table-row!important"},
+    "mjx-mlabeledtr > mjx-mtd:first-child": {"padding-left":0},
+    "mjx-mlabeledtr:first-child > mjx-mtd": {"padding-top":0}    
   };
   
   
@@ -387,6 +390,11 @@
       thick: .1,
 
       infinity: BIGDIMEN
+    },
+    SPACECLASS: {
+      thinmathspace:   "MJXc-space1",
+      mediummathspace: "MJXc-space2",
+      thickmathspace:  "MJXc-space3"
     },
     pxPerInch: 96,
     em: 16,
@@ -931,9 +939,10 @@
       CHTMLhandleSpace: function (node) {
         if (!this.useMMLspacing) {
           var space = this.texSpacing();
-          if (space !== "") this.CHTML.L = CHTML.length2em(space) + (this.CHTML.L||0);
-          if (this.CHTML.L) node.style.marginLeft = CHTML.Em(this.CHTML.L);
-          if (this.CHTML.R) node.style.marginRight = CHTML.Em(this.CHTML.R);
+          if (space !== "") {
+            this.CHTML.L = CHTML.length2em(space);
+            node.className += " "+CHTML.SPACECLASS[space];
+          }
         }
       },
 
@@ -1076,8 +1085,9 @@
           var core = this, parent = this.Parent();
           while (parent && parent.isEmbellished() && parent.Core() === core)
             {core = parent; parent = parent.Parent(); node = core.CHTMLnodeElement()}
-          if (values.lspace) {node.style.paddingLeft =  CHTML.Em(values.lspace)}
-          if (values.rspace) {node.style.paddingRight = CHTML.Em(values.rspace)}
+          if (values.lspace) node.style.paddingLeft =  CHTML.Em(values.lspace);
+          if (values.rspace) node.style.paddingRight = CHTML.Em(values.rspace);
+          this.CHTML.L = values.lspace; this.CHTML.R = values.rspace;
         } else {
           this.SUPER(arguments).CHTMLhandleSpace.apply(this,arguments);
         }
@@ -1634,8 +1644,11 @@
         //  Add nulldelimiterspace around the fraction
         //  (TeXBook pg 150 and Appendix G rule 15e)
         //
-        if (!this.texWithDelims && !this.useMMLspacing) 
-          this.CHTML.L = this.CHTML.R = CHTML.TEX.nulldelimiterspace;
+        if (!this.texWithDelims && !this.useMMLspacing) {
+          var space = CHTML.TEX.nulldelimiterspace, BBOX = this.CHTML;
+          frac.style.padding = "0 "+CHTML.Em(space);
+          BBOX.l += space; BBOX.r += space; BBOX.w += 2*space;
+        }
         this.CHTMLhandleSpace(node);
         //
         //  Return the completed fraction
@@ -1669,6 +1682,7 @@
         bbox.h += q + 2*t;
         CHTML.combineBBoxes(BBOX,sbox,x,H-sbox.h,1);
         CHTML.combineBBoxes(BBOX,bbox,x+sbox.w,0,1);
+        this.CHTMLhandleSpace(node);
         return node;
       },
       CHTMLaddRoot: function () {return 0}
@@ -1793,7 +1807,7 @@
         for (i = 0, m = CSPACE.length; i < m; i++) {CSPACE[i] = CHTML.length2em(CSPACE[i])}
         for (i = 0, m = RSPACE.length; i < m; i++) {RSPACE[i] = CHTML.length2em(RSPACE[i])}
 
-        var table = HTML.Element("node");
+        var table = HTML.Element("span");
         while (node.firstChild) table.appendChild(node.firstChild);
         node.appendChild(table);
         var H = 0, W = 0;
