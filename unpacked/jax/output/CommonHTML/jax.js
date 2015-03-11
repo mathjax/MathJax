@@ -1150,29 +1150,29 @@
           if (H != values.minsize)
             {H = [Math.max(H*CHTML.TEX.delimiterfactor/1000,H-CHTML.TEX.delimitershortfall),H]}
           while (node.firstChild) node.removeChild(node.firstChild);
-	  this.CHTML = bbox = CHTML.createDelimiter(node,this.data.join("").charCodeAt(0),H,1);
+          this.CHTML = bbox = CHTML.createDelimiter(node,this.data.join("").charCodeAt(0),H,1);
           bbox.sH = (H instanceof Array ? H[1] : H);
           //
           //  Reposition as needed
           //
-	  if (values.symmetric) {H = (bbox.h + bbox.d)/2 + a}
-	    else {H = (bbox.h + bbox.d) * h/(h + d)}
-	  H -= bbox.h;
-	  if (Math.abs(H) > .05) {
-	    node.style.verticalAlign = CHTML.Em(H);
-	    bbox.h += H; bbox.d -= H; bbox.t += H; bbox.b -= H;
-	  }
+          if (values.symmetric) {H = (bbox.h + bbox.d)/2 + a}
+            else {H = (bbox.h + bbox.d) * h/(h + d)}
+          H -= bbox.h;
+          if (Math.abs(H) > .05) {
+            node.style.verticalAlign = CHTML.Em(H);
+            bbox.h += H; bbox.d -= H; bbox.t += H; bbox.b -= H;
+          }
         }
       },
       CHTMLstretchH: function (node,W) {
         var bbox = this.CHTML;
-	var values = this.getValues("maxsize","minsize","mathvariant","fontweight");
+        var values = this.getValues("maxsize","minsize","mathvariant","fontweight");
         // FIXME:  should take style="font-weight:bold" into account as well
-	if ((values.fontweight === "bold" || parseInt(values.fontweight) >= 600) &&
+        if ((values.fontweight === "bold" || parseInt(values.fontweight) >= 600) &&
             !this.Get("mathvariant",true)) values.mathvariant = MML.VARIANT.BOLD;
-	values.maxsize = CHTML.length2em(values.maxsize,bbox.w);
-	values.minsize = CHTML.length2em(values.minsize,bbox.w);
-	W = Math.max(values.minsize,Math.min(values.maxsize,W));
+        values.maxsize = CHTML.length2em(values.maxsize,bbox.w);
+        values.minsize = CHTML.length2em(values.minsize,bbox.w);
+        W = Math.max(values.minsize,Math.min(values.maxsize,W));
         if (W !== bbox.sW) {
           while (node.firstChild) node.removeChild(node.firstChild);
           this.CHTML = bbox = CHTML.createDelimiter(node,this.data.join("").charCodeAt(0),W,1,values.mathvariant);
@@ -1298,14 +1298,9 @@
         //  
         var stack = base, delta = 0;
         if (bbox.ic) {delta = 1.3*bbox.ic + .05} // make faked IC be closer to expeted results
-        if (this.data[this.over]) {
-          stack = this.CHTMLaddOverscript(over,boxes,values,delta,base);
-        }
-        if (this.data[this.under]) {
-          this.CHTMLaddUnderscript(under,boxes,values,delta,node,stack);
-        } else {
-          node.appendChild(stack);
-        }
+        if (this.data[this.over]) stack = this.CHTMLaddOverscript(over,boxes,values,delta,base);
+        if (this.data[this.under]) this.CHTMLaddUnderscript(under,boxes,values,delta,node,stack);
+          else node.appendChild(stack);
         //
         //  Handle horizontal positions
         //
@@ -1373,7 +1368,7 @@
         //  
         var stack = HTML.Element("mjx-stack");
         stack.appendChild(over); stack.appendChild(base);
-        if (obox.d < 0 || obox.h < .25) {
+        if (obox.d < 0) {
           //
           // For negative depths, set the height and align to top
           // in order to avoid extra baseline space
@@ -1421,7 +1416,7 @@
         ]);
         node.firstChild.firstChild.firstChild.appendChild(stack);
         node.firstChild.lastChild.appendChild(under);
-        if (ubox.d < 0 || ubox.h < .25) {
+        if (ubox.d < 0) {
           //
           // For negative depths, set the height and align to top
           // in order to avoid extra baseline space
@@ -1448,7 +1443,6 @@
       },
       //
       //  Center boxes horizontally, taking offsets into account
-      //  ### FIXME: handle BBOX.l and BBOX.r
       //
       CHTMLplaceBoxes: function (base,under,over,values,boxes) {
         var W = this.CHTML.w, i, m = boxes.length;
@@ -1660,14 +1654,14 @@
         var base = node.firstChild;
         var sqrt = HTML.addElement(node,"mjx-box"); sqrt.appendChild(base);
         var bbox = this.CHTMLbboxFor(0), BBOX = this.CHTML = CHTML.emptyBBox();
-	var t = CHTML.TEX.rule_thickness, T = CHTML.TEX.surd_height, p = t, q, H;
-	if (this.Get("displaystyle")) p = CHTML.TEX.x_height;
+        var t = CHTML.TEX.rule_thickness, T = CHTML.TEX.surd_height, p = t, q, H;
+        if (this.Get("displaystyle")) p = CHTML.TEX.x_height;
         q = t + p/4;
-	H = bbox.h + bbox.d + q + t;
+        H = bbox.h + bbox.d + q + t;
         var surd = HTML.Element("mjx-surd"); sqrt.insertBefore(surd,base);
         var sbox = CHTML.createDelimiter(surd,0x221A,[H-.04,H],1);
-	if (sbox.h + sbox.d > H) q = ((sbox.h+sbox.d) - (H-t))/2;
-	H = bbox.h + q + t;
+        if (sbox.h + sbox.d > H) q = ((sbox.h+sbox.d) - (H-t))/2;
+        H = bbox.h + q + t;
         var x = this.CHTMLaddRoot(node,sbox,sbox.h+sbox.d-H);
         base.style.paddingTop = CHTML.Em(q); 
         base.style.borderTop = CHTML.Em(T)+" solid";
@@ -1675,7 +1669,7 @@
         bbox.h += q + 2*t;
         CHTML.combineBBoxes(BBOX,sbox,x,H-sbox.h,1);
         CHTML.combineBBoxes(BBOX,bbox,x+sbox.w,0,1);
-	return node;
+        return node;
       },
       CHTMLaddRoot: function () {return 0}
     });
@@ -1686,24 +1680,24 @@
       toCommonHTML: MML.msqrt.prototype.toCommonHTML,
       CHTMLaddRoot: function (sqrt,sbox,d) {
         if (!this.data[1]) return;
-	var BBOX = this.CHTML, bbox = this.data[1].CHTML,
+        var BBOX = this.CHTML, bbox = this.data[1].CHTML,
             root = sqrt.firstChild;
         var dlevel = Math.min(2,this.Get("scriptlevel")),
              level = Math.min(2,this.data[1].Get("scriptlevel"));
         scale = Math.pow(SCRIPTFACTOR,level-dlevel);
         if (scale !== 1) this.data[1].CHTMLhandleScriptlevel(root,dlevel);
-	var h = this.CHTMLrootHeight(bbox,sbox,scale)-d;
-	var w = Math.min(bbox.w,bbox.r); // remove extra right-hand padding, if any
-	var dx = Math.max(w,sbox.offset/scale); 
+        var h = this.CHTMLrootHeight(bbox,sbox,scale)-d;
+        var w = Math.min(bbox.w,bbox.r); // remove extra right-hand padding, if any
+        var dx = Math.max(w,sbox.offset/scale); 
         if (h) root.style.verticalAlign = CHTML.Em(h/scale);
         if (dx > w) root.firstChild.style.paddingLeft = CHTML.Em(dx-w);
         dx -= sbox.offset/scale;
         root.style.width = CHTML.Em(dx);
         CHTML.combineBBoxes(BBOX,bbox,0,h,scale);
-	return dx*scale;
+        return dx*scale;
       },
       CHTMLrootHeight: function (bbox,sbox,scale) {
-	return .45*(sbox.h+sbox.d-.9)+sbox.offset + Math.max(0,bbox.d-.075);
+        return .45*(sbox.h+sbox.d-.9)+sbox.offset + Math.max(0,bbox.d-.075);
       }
     });
     
