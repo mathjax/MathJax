@@ -35,7 +35,7 @@
 
   var SCRIPTFACTOR = Math.sqrt(1/2),
       AXISHEIGHT = .25,
-      HFUZZ = .05, DFUZZ = 0;  // adjustments to bounding box of character boxes
+      HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
 
   var STYLES = {
     ".MathJax_CHTML_Display": {
@@ -494,7 +494,7 @@
 //          if (typeof(font) === "string") this.loadFont(font);
           var C = font[n];
           if (C) {
-// ### FIXME: implement aliases, spaces, etc.
+// ### FIXME: implement aliases
             if (C.length === 5) C[5] = {};
             if (C.c == null) {
               C[0] /= 1000; C[1] /= 1000; C[2] /= 1000; C[3] /= 1000; C[4] /= 1000;
@@ -506,6 +506,7 @@
                     + String.fromCharCode((N&0x3FF)+0xDC00);
               }
             }
+            if (C[5].space) return {type:"space", w:C[2]};
             return {type:"char", font:font, n:n};
           } // else load block files?
         }
@@ -536,6 +537,14 @@
             if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
             bbox.w += C[2];
             if (m == 1 && font.skew && font.skew[item.n]) bbox.skew = font.skew[item.n];
+            break;
+            
+           case "space":
+            if (item.w) {
+              HTML.addElement(node,"mjx-space",{style:{"margin-left":CHTML.Em(item.w)}});
+              bbox.w += item.w;
+            }
+            break;
         }
       }
       if (node.childNodes.length) {

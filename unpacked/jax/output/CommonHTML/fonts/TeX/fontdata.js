@@ -1548,6 +1548,17 @@
   //  Add some spacing characters
   //
   MathJax.Hub.Insert(CHTML.FONTDATA.FONTS[MAIN],{
+    0x2000: [0,0,500,0,0,{space:1}],  // en space
+    0x2001: [0,0,1000,0,0,{space:1}], // em quad
+    0x2002: [0,0,500,0,0,{space:1}],  // en quad
+    0x2003: [0,0,1000,0,0,{space:1}], // em space
+    0x2004: [0,0,333,0,0,{space:1}],  // 3-per-em space
+    0x2005: [0,0,250,0,0,{space:1}],  // 4-per-em space
+    0x2006: [0,0,167,0,0,{space:1}],  // 6-per-em space
+    0x2009: [0,0,167,0,0,{space:1}],  // thin space
+    0x200A: [0,0,100,0,0,{space:1}],  // hair space
+    0x200B: [0,0,0,0,0,{space:1}],    // zero-width space
+    0x200C: [0,0,0,0,0,{space:1}],    // zero-width non-joiner space
     0x2061: [0,0,0,0,0,{space:1}],    // function application
     0x2062: [0,0,0,0,0,{space:1}],    // invisible times
     0x2063: [0,0,0,0,0,{space:1}],    // invisible separator
