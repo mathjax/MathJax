@@ -506,7 +506,7 @@
                     + String.fromCharCode((N&0x3FF)+0xDC00);
               }
             }
-            if (C[5].space) return {type:"space", w:C[2]};
+            if (C[5].space) return {type:"space", w:C[2], font:font};
             return {type:"char", font:font, n:n};
           } // else load block files?
         }
@@ -537,21 +537,33 @@
             if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
             bbox.w += C[2];
             if (m == 1 && font.skew && font.skew[item.n]) bbox.skew = font.skew[item.n];
+	    if (C[5].rfix) {
+	      HTML.addElement(node,"span",{
+                className:className, style:{"margin-right":CHTML.Em(C[5].rfix/1000)}
+              },[text]);
+	      text = ""; className = null;
+	    }
             break;
             
            case "space":
             if (item.w) {
-              HTML.addElement(node,"mjx-space",{style:{"margin-left":CHTML.Em(item.w)}});
+              if (text === "") className = item.font.className;
+              HTML.addElement(node,"span",{
+                className:className, style:{"margin-right":CHTML.Em(item.w)}
+              },[text]);
+              text = ""; className = null;
               bbox.w += item.w;
             }
             break;
         }
       }
-      if (node.childNodes.length) {
-        HTML.addElement(node,"span",{className:className},[text]);
-      } else {
-        HTML.addText(node,text);
-        node.className = className;
+      if (text !== "") {
+        if (node.childNodes.length) {
+          HTML.addElement(node,"span",{className:className},[text]);
+        } else {
+          HTML.addText(node,text);
+          node.className = className;
+        }
       }
     },
 
