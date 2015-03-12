@@ -35,6 +35,7 @@
 
   var SCRIPTFACTOR = Math.sqrt(1/2),
       AXISHEIGHT = .25,
+      STRUTHEIGHT = 1,
       HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
 
   var STYLES = {
@@ -94,6 +95,7 @@
     "mjx-cell":   {display:"table-cell"},
     "mjx-table":  {display:"table", width:"100%"},
     "mjx-line":   {display:"block", width:"100%", "border-top":"0 solid"},
+    "mjx-strut":  {width:0, "padding-top":STRUTHEIGHT+"em"},
 
     ".MJXc-script": {"font-size":SCRIPTFACTOR+"em"},
     ".MJXc-space1": {"margin-left":".167em"},
@@ -1238,47 +1240,50 @@
     
     MML.mpadded.Augment({
       toCommonHTML: function (node) {
-        node = this.CHTMLdefaultNode(node,{childNodes:"mjx-block", forceChild:true});
+        node = this.CHTMLdefaultNode(node,{childNodes:"mjx-box", forceChild:true});
         var child = node.firstChild, cbox = this.CHTMLbboxFor(0);
-        node = HTML.addElement(node,"mjx-block");
-        node.appendChild(child); HTML.addElement(child,"mjx-box");  // force box to be in text mode
+        node = HTML.addElement(node,"mjx-block"); node.appendChild(child);
+        HTML.addElement(node,"mjx-strut"); // force proper alignment of short heights
         var values = this.getValues("width","height","depth","lspace","voffset");
         var dimen, x = 0, y = 0, w = cbox.w, h = cbox.h, d = cbox.d;
+        child.style.width = 0; child.style.margin = CHTML.Em(-h)+" 0 "+CHTML.Em(-d);
         if (values.width !== "") {
           dimen = this.CHTMLdimen(values.width,"w",0);
-          if (dimen.pm) dimen.len += cbox.w;
+          if (dimen.pm) dimen.len += w;
           if (dimen.len < 0) dimen.len = 0;
-          if (dimen.len !== cbox.w) node.style.width = CHTML.Em(dimen.len);
           w = dimen.len;
         }
         if (values.height !== "") {
           dimen = this.CHTMLdimen(values.height,"h",0);
-          if (dimen.pm) {h += dimen.len} else {h = dimen.len; dimen.len += -cbox.h}
-          if (dimen.len+cbox.h < 0) {dimen.len = -cbox.h; h = 0}
-          if (dimen.len) child.style.marginTop = CHTML.Em(dimen.len);
+          if (dimen.pm) dimen.len += h;
+          if (dimen.len < 0) dimen.len = 0
+          h = dimen.len;
         }
         if (values.depth !== "")  {
           dimen = this.CHTMLdimen(values.depth,"d",0);
-          if (dimen.pm) {d += dimen.len} else {d = dimen.len; dimen.len += -cbox.d}
-          if (dimen.len+cbox.d < 0) {dimen.len = -cbox.d; d = 0}
-          if (dimen.len) child.style.marginBottom = CHTML.Em(dimen.len);
+          if (dimen.pm) dimen.len += d;
+          if (dimen.len < 0) dimen.len = 0
+          d = dimen.len;
         }
         if (values.voffset !== "") {
           dimen = this.CHTMLdimen(values.voffset);
           if (dimen.len) {
             y = dimen.len;
-            node.style.position = "relative";
-            node.style.top = CHTML.Em(-y);
+            child.style.position = "relative";
+            child.style.top = CHTML.Em(-y);
           }
         }
         if (values.lspace !== "") {
           dimen = this.CHTMLdimen(values.lspace);
           if (dimen.len) {
             x = dimen.len;
-            node.style.position = "relative";
-            node.style.left = CHTML.Em(x);
+            child.style.position = "relative";
+            child.style.left = CHTML.Em(x);
           }
         }
+        node.style.width = 0;
+        node.style.marginTop = CHTML.Em(h-STRUTHEIGHT);
+        node.style.padding = "0 "+CHTML.Em(w)+" "+CHTML.Em(d)+" 0";
         var bbox = {w:w, h:h, d:d, l:0, r:w, t:h, b:d};
         CHTML.combineBBoxes(bbox,cbox,x,y,1);
         bbox.w = w; bbox.h = h; bbox.d = d;
