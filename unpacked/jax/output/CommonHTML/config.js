@@ -46,7 +46,9 @@ MathJax.OutputJax.CommonHTML = MathJax.OutputJax({
                          // use "container" to compute size from containing element,
                          // use "nn% container" for a portion of the container,
                          // use "nn%" for a portion of the window size
-    }
+    },
+    
+    undefinedFamily: "STIXGeneral,'Cambria Math','Arial Unicode MS',serif"
     
   }
 });

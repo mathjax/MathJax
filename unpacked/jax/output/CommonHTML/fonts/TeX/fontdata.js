@@ -40,11 +40,19 @@
   var ARROWREP = [0x2212,MAIN,0,0,0,0,.1];   // add depth for arrow extender
   var DARROWREP = [0x3D,MAIN,0,0,0,0,.1];    // add depth for arrow extender
 
+  var UNDEFINEDFAMILY = CHTML.config.undefinedFamily;
+
+  MathJax.Hub.Insert(CHTML.config.styles,{
+    ".MJXc-TeX-unknown-R":  {"font-family":UNDEFINEDFAMILY, "font-style":"normal", "font-weight":"normal"},
+    ".MJXc-TeX-unknown-I":  {"font-family":UNDEFINEDFAMILY, "font-style":"italic", "font-weight":"normal"},
+    ".MJXc-TeX-unknown-B":  {"font-family":UNDEFINEDFAMILY, "font-style":"normal", "font-weight":"bold"},
+    ".MJXc-TeX-unknown-BI": {"font-family":UNDEFINEDFAMILY, "font-style":"italic", "font-weight":"bold"},
+  });
+
   CHTML.TEX = CHTML.TEXDEF;     // use default TeX paramaters
   CHTML.FONTDEF.TeX = {
     version: VERSION,
       
-    TeX_factor: 1,    // TeX em's to font em's
     baselineskip: 1.2,
     lineH: .8, lineD: .2,
       

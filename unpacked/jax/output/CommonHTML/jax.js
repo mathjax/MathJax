@@ -38,8 +38,6 @@
       STRUTHEIGHT = 1,
       AFUZZ = .08, HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
 
-  var UNKNOWNFAMILY = "STIXGeneral,'Cambria Math','Arial Unicode MS',serif";
-
   var STYLES = {
     ".MathJax_CHTML_Display": {
       "display":    "block",
@@ -104,11 +102,6 @@
     ".MJXc-space2": {"margin-left":".222em"},
     ".MJXc-space3": {"margin-left":".278em"},
     
-    ".MJXc-TeX-unknown-R":  {"font-family":UNKNOWNFAMILY, "font-style":"normal", "font-weight":"normal"},
-    ".MJXc-TeX-unknown-I":  {"font-family":UNKNOWNFAMILY, "font-style":"italic", "font-weight":"normal"},
-    ".MJXc-TeX-unknown-B":  {"font-family":UNKNOWNFAMILY, "font-style":"normal", "font-weight":"bold"},
-    ".MJXc-TeX-unknown-BI": {"font-family":UNKNOWNFAMILY, "font-style":"italic","font-weight":"bold"},
-
     "mjx-chartest": {
       display:"block",
       position:"absolute", top:0,
