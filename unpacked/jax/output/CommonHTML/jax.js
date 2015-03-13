@@ -1249,7 +1249,7 @@
         child.style.width = 0; child.style.margin = CHTML.Em(-h)+" 0 "+CHTML.Em(-d);
         if (values.width !== "")  w = this.CHTMLdimen(values.width,"w",w,0);
         if (values.height !== "") h = this.CHTMLdimen(values.height,"h",h,0);
-        if (values.depth !== "")  d = this.CHTMLdimen(values.depth,"d",w,0);
+        if (values.depth !== "")  d = this.CHTMLdimen(values.depth,"d",d,0);
         if (values.voffset !== "") {
           y = this.CHTMLdimen(values.voffset);
           if (y) {
