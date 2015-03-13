@@ -36,7 +36,9 @@
   var SCRIPTFACTOR = Math.sqrt(1/2),
       AXISHEIGHT = .25,
       STRUTHEIGHT = 1,
-      HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
+      AFUZZ = .08, HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
+
+  var UNKNOWNFAMILY = "STIXGeneral,'Cambria Math','Arial Unicode MS',serif";
 
   var STYLES = {
     ".MathJax_CHTML_Display": {
@@ -101,6 +103,17 @@
     ".MJXc-space1": {"margin-left":".167em"},
     ".MJXc-space2": {"margin-left":".222em"},
     ".MJXc-space3": {"margin-left":".278em"},
+    
+    ".MJXc-TeX-unknown": {"font-family":UNKNOWNFAMILY},
+    "mjx-chartest": {
+      display:"block",
+      position:"absolute", top:0,
+      "line-height":"normal",
+      "font-size":"500%",
+      "font-family":UNKNOWNFAMILY
+    },
+    "mjx-chartest mjx-char": {display:"inline"},
+    "mjx-chartest mjx-box": {"padding-top": "500px"},
 
 /*********************************/
     
@@ -439,6 +452,17 @@
     
     /********************************************************/
     
+    //
+    //  Get a unicode character by number (even when it takes two character)
+    //
+    unicodeChar: function (n) {
+      if (n < 0xFFFF) return String.fromCharCode(n);
+      n -= 0x10000;
+      return String.fromCharCode((n>>10)+0xD800) + String.fromCharCode((N&0x3FF)+0xDC00);
+    },
+    //
+    //  Get the unicode number of a (possibly multi-character) string
+    //
     getUnicode: function (string) {
       var n = string.text.charCodeAt(string.i); string.i++;
       if (n >= 0xD800 && n < 0xDBFF) {
@@ -447,6 +471,12 @@
       }
       return n;
     },
+    //
+    //  Get the list of actions for a given character in a given variant
+    //  (processing remaps, multi-character results, and so on).  Results are
+    //  cached so that future lookups for the same variant/n pair will not
+    //  require looking through the data again.
+    //
     getCharList: function (variant,n) {
       var id, M, list = [], cache = variant.cache, N = n;
       if (cache[n]) return cache[n];
@@ -489,6 +519,12 @@
       cache[N] = list;
       return list;
     },
+    //
+    //  After all remapping has been done, look up a character
+    //  in the fonts for a given variant, chaining to other
+    //  variants as needed.  Return an undefined character if
+    //  it isnt' found in the given variant.
+    //
     lookupChar: function (variant,n) {
       while (variant) {
         for (var i = 0, m = variant.fonts.length; i < m; i++) {
@@ -500,13 +536,7 @@
             if (C.length === 5) C[5] = {};
             if (C.c == null) {
               C[0] /= 1000; C[1] /= 1000; C[2] /= 1000; C[3] /= 1000; C[4] /= 1000;
-              if (n <= 0xFFFF) {
-                C.c = String.fromCharCode(n);
-              } else {
-                var N = n - 0x10000;
-                C.c = String.fromCharCode((N>>10)+0xD800)
-                    + String.fromCharCode((N&0x3FF)+0xDC00);
-              }
+              C.c = this.unicodeChar(n);
             }
             if (C[5].space) return {type:"space", w:C[2], font:font};
             return {type:"char", font:font, n:n};
@@ -516,59 +546,115 @@
       }
       return this.unknownChar(variant,n);
     },
-    unknownChar: function (variant,n) {},
+    //
+    //  Create a fake font entry for an unknown character.
+    //
+    unknownChar: function (variant,n) {
+      HUB.signal.Post(["CommonHTML Jax - unknown char",n,variant]);
+      var c = this.unicodeChar(n);
+      var HDW = this.getHDW(c); var a = (HDW.h-HDW.d)/2+AFUZZ; // ### FIXME:  is this really the axis of the surrounding text?
+      var unknown = {type:"unknown", n:n, font:{className:"MJXc-TeX-unknown"}};
+      unknown.font[n] = [.8,.2,HDW.w,0,HDW.w,{a:a, A:HDW.h-a, d:HDW.d}];
+      unknown.font[n].c = c
+      return unknown;
+    },
+    //
+    //  Get the height, depth and width of a character
+    //  (height and depth are of the font, not the character).
+    //  WARNING:  causes reflow of the page!
+    //
+    getHDW: function (c) {
+      var test1 = HTML.addElement(document.body,"mjx-chartest",{},[["mjx-char",{},[c]]]);
+      var test2 = HTML.addElement(document.body,"mjx-chartest",{},[["mjx-char",{},[c,["mjx-box"]]]]);
+      var em = window.parseFloat(window.getComputedStyle(test1).fontSize);
+      var d = (test2.offsetHeight-500)/em;
+      var w = test1.offsetWidth/em, h = test1.offsetHeight/em - d;
+      document.body.removeChild(test1);
+      document.body.removeChild(test2);
+      return {h:h, d:d, w:w}
+    },
 
     /********************************************************/
     
+    //
+    //  Process a character list into a given node and return
+    //  the updated bounding box.
+    //
     addCharList: function (node,list,bbox) {
-      var text = "", className;
+      var state = {text:"", className:null};
       for (var i = 0, m = list.length; i < m; i++) {
         var item = list[i];
-        switch (item.type) {
-          case "char":
-            var font = item.font;
-            if (className && font.className !== className) {
-              HTML.addElement(node,"span",{className:className},[text]);
-              text = ""; className = null;
-            }
-            var C = font[item.n];
-            text += C.c; className = font.className;
-            if (bbox.h < C[0]) bbox.t = bbox.h = C[0];
-            if (bbox.d < C[1]) bbox.b = bbox.d = C[1];
-            if (bbox.l > bbox.w+C[3]) bbox.l = bbox.w+C[3];
-            if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
-            bbox.w += C[2];
-            if (m == 1 && font.skew && font.skew[item.n]) bbox.skew = font.skew[item.n];
-	    if (C[5].rfix) {
-	      HTML.addElement(node,"span",{
-                className:className, style:{"margin-right":CHTML.Em(C[5].rfix/1000)}
-              },[text]);
-	      text = ""; className = null;
-	    }
-            break;
-            
-           case "space":
-            if (item.w) {
-              if (text === "") className = item.font.className;
-              HTML.addElement(node,"span",{
-                className:className, style:{"margin-right":CHTML.Em(item.w)}
-              },[text]);
-              text = ""; className = null;
-              bbox.w += item.w;
-            }
-            break;
-        }
+        if (this.charList[item.type]) (this.charList[item.type])(item,node,bbox,state,m);
       }
-      if (text !== "") {
+      if (state.text !== "") {
         if (node.childNodes.length) {
-          HTML.addElement(node,"span",{className:className},[text]);
+          HTML.addElement(node,"span",{className:state.className},[state.text]);
         } else {
-          HTML.addText(node,text);
-          node.className = className;
+          HTML.addText(node,state.text);
+          node.className = state.className;
         }
       }
     },
+    //
+    //  The various item types are processed by these
+    //  functions.
+    //
+    charList: {
+      //
+      //  Character from the known fonts
+      //
+      char: function (item,node,bbox,state,m) {
+        var font = item.font;
+        if (state.className && font.className !== state.className) this.flushText(node,state);
+        var C = font[item.n];
+        state.text += C.c; state.className = font.className;
+        if (bbox.h < C[0]) bbox.t = bbox.h = C[0];
+        if (bbox.d < C[1]) bbox.b = bbox.d = C[1];
+        if (bbox.l > bbox.w+C[3]) bbox.l = bbox.w+C[3];
+        if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
+        bbox.w += C[2];
+        if (m == 1 && font.skew && font.skew[item.n]) bbox.skew = font.skew[item.n];
+        if (C[5].rfix) this.flushText(node,state).style.marginRight = CHTML.Em(C[5].rfix/1000);
+      },
+      //
+      //  Space characters (not actually in the fonts)
+      //
+      space: function (item,node,bbox,state) {
+        if (item.w) {
+          if (state.text === "") state.className = item.font.className;
+          this.flushText(node,state).style.marginRight = CHTML.Em(item.w);
+          bbox.w += item.w;
+        }
+      },
+      //
+      //  An unknown character (one not in the font data)
+      //
+      unknown: function (item,node,bbox,state) {
+        this.char(item,node,bbox,state,0);
+        node = this.flushText(node,state);
+        node.style.lineHeight = "normal";
+        var C = item.font[item.n];
+        node.style.marginTop = CHTML.Em(-C[5].A-HFUZZ);
+        node.style.marginBottom = CHTML.Em(-C[5].d-DFUZZ);
+        node.style.width = CHTML.Em(C[2]);
+        if (!bbox.a || C[5].a > bbox.a) bbox.a = C[5].a;
+      },
+      //
+      //  Put the pending text into a box of the class, and
+      //  reset the data about the text.
+      //
+      flushText: function (node,state) {
+        node = HTML.addElement(node,"mjx-charbox",{className:state.className},[state.text]);
+        state.text = ""; state.className = null;
+        return node;
+      }
+    },
 
+    //
+    //  Add the given text (in the given variant) into the given node, and
+    //  update the bounding box of the result.  Make sure the node's DOM
+    //  bounding box matches the contents.
+    //
     handleText: function (node,text,variant,bbox) {
       if (node.childNodes.length === 0) {
         HTML.addElement(node,"mjx-char");
@@ -585,7 +671,7 @@
       this.addCharList(node.firstChild,list,bbox);
       this.cleanBBox(bbox);
       bbox.h += HFUZZ; bbox.d += DFUZZ; bbox.t += HFUZZ; bbox.b += DFUZZ;
-      node.firstChild.style[bbox.h < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h);
+      node.firstChild.style[bbox.h < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h-(bbox.a||0));
       node.firstChild.style[bbox.d < 0 ? "marginBottom": "paddingBottom"] = this.Em(bbox.d);
       return bbox;
     },
@@ -1060,6 +1146,7 @@
           bbox.ic = bbox.r - bbox.w; bbox.w = bbox.r;
           node.style.paddingRight = CHTML.Em(bbox.ic);
         }
+        return node;
       }
     });
 
