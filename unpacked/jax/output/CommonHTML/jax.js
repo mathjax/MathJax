@@ -140,7 +140,8 @@
       if (!this.require) {this.require = []}
       this.SUPER(arguments).Config.call(this); var settings = this.settings;
       if (settings.scale) {this.config.scale = settings.scale}
-      this.require.push(this.fontDir+"/TeX/fontdata.js");
+      this.fontDir += "/TeX"; this.webfontDir += "/TeX/otf";
+      this.require.push(this.fontDir+"/fontdata.js");
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
     },
 

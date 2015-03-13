@@ -1589,23 +1589,55 @@
   //
   (function () {
     var STYLES = CHTML.config.styles, FONTS = CHTML.FONTDATA.FONTS;
+    var DIR = AJAX.fileURL(CHTML.webfontDir);
     var faces = [];
     for (var name in FONTS) {if (FONTS.hasOwnProperty(name)) {
       var font = FONTS[name]; if (typeof(font) !== "string") font = font.directory;
       var names = font.split(/\//);
       var suffix = names[0].toLowerCase().replace(/(?:igraphic|serif|writer|tur)$/,"") 
                  + "-" + names[1].replace(/[^A-Z]/g,"");
-      var family = "MJX_TeX_"+suffix; FONTS[name].className = "MJXc-TeX-"+suffix;
-      STYLES[".MJXc-TeX-"+suffix] = {"font-family":family};
-      font = {"font-family":family}; name = name.replace(/-.*/,"");
-      if (names[1] === "Regular") {font.src = "local('"+name+"'), local('"+name+"-Regular')"}
-        else {font.src = "local('"+name+" "+names[1]+"'), local('"+name+"-"+names[1]+"')"}
+      var family = "MJXc_TeX_"+suffix, FAMILY = family;
+      FONTS[name].className = "MJXc-TeX-"+suffix;
+      //
+      //  The local font, if found
+      //
+      font = {"font-family":family};
+      name = name.replace(/-.*/,"");
+      if (names[1] === "Regular") {
+        font.src = "local('"+name+"'), local('"+name+"-Regular')";
+      } else {
+        font.src = "local('"+name+" "+names[1]+"'), local('"+name+"-"+names[1]+"')";
+      }
       faces.push(font);
+      //
+      //  For Chrome, need to have separate font-weight and font-style versions
+      //
+      if (names[1] !== "Regular") {
+        font = {"font-family":family+"x", src:"local('"+name+"')"};
+        if (names[1].match(/Bold/))   font["font-weight"] = "bold";
+        if (names[1].match(/Italic/)) font["font-style"] = "italic";
+        FAMILY += ","+family+"x";
+        faces.push(font);
+      }
+      //
+      //  The web font, if no local font found
+      //   ### FIXME: add more formats to src
+      //
+      font = {
+        "font-family":family+"w",
+        src:"url('"+DIR+"/MathJax_"+names[0]+"-"+names[1]+".otf')"
+      };
+      faces.push(font);
+      //
+      //  A class that looks for the local and web fonts
+      //
+      FAMILY += ","+family+"w";
+      STYLES[".MJXc-TeX-"+suffix] = {"font-family":FAMILY};
     }}
     if (faces.length) STYLES["@font-face"] = faces;
   })();
 
-  AJAX.loadComplete(CHTML.fontDir + "/TeX/fontdata.js");
+  AJAX.loadComplete(CHTML.fontDir + "/fontdata.js");
   
 })(MathJax.OutputJax.CommonHTML,MathJax.ElementJax.mml,MathJax.Ajax);
 
