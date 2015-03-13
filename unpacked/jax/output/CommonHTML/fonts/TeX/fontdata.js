@@ -69,6 +69,13 @@
       "MathJax_Typewriter":       "Typewriter/Regular/Main.js",
       "MathJax_Caligraphic-bold": "Caligraphic/Bold/Main.js"
     },
+    
+    UNKNOWN: {
+      R:  {className:"MJXc-TeX-unknown-R"},
+      I:  {className:"MJXc-TeX-unknown-I"},
+      B:  {className:"MJXc-TeX-unknown-B"},
+      BI: {className:"MJXc-TeX-unknown-BI"}
+    },
       
     VARIANT: {
       "normal": {fonts:[MAIN,SIZE1,AMS], cache: {},

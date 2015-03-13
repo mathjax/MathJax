@@ -104,13 +104,16 @@
     ".MJXc-space2": {"margin-left":".222em"},
     ".MJXc-space3": {"margin-left":".278em"},
     
-    ".MJXc-TeX-unknown": {"font-family":UNKNOWNFAMILY},
+    ".MJXc-TeX-unknown-R":  {"font-family":UNKNOWNFAMILY, "font-style":"normal", "font-weight":"normal"},
+    ".MJXc-TeX-unknown-I":  {"font-family":UNKNOWNFAMILY, "font-style":"italic", "font-weight":"normal"},
+    ".MJXc-TeX-unknown-B":  {"font-family":UNKNOWNFAMILY, "font-style":"normal", "font-weight":"bold"},
+    ".MJXc-TeX-unknown-BI": {"font-family":UNKNOWNFAMILY, "font-style":"italic","font-weight":"bold"},
+
     "mjx-chartest": {
       display:"block",
       position:"absolute", top:0,
       "line-height":"normal",
-      "font-size":"500%",
-      "font-family":UNKNOWNFAMILY
+      "font-size":"500%"
     },
     "mjx-chartest mjx-char": {display:"inline"},
     "mjx-chartest mjx-box": {"padding-top": "500px"},
@@ -526,6 +529,7 @@
     //  it isnt' found in the given variant.
     //
     lookupChar: function (variant,n) {
+      var VARIANT = variant;
       while (variant) {
         for (var i = 0, m = variant.fonts.length; i < m; i++) {
           var font = this.FONTDATA.FONTS[variant.fonts[i]];
@@ -544,28 +548,34 @@
         }
         variant = this.FONTDATA.VARIANT[variant.chain];
       }
-      return this.unknownChar(variant,n);
+      return this.unknownChar(VARIANT,n);
     },
     //
     //  Create a fake font entry for an unknown character.
     //
     unknownChar: function (variant,n) {
       HUB.signal.Post(["CommonHTML Jax - unknown char",n,variant]);
+      var id = ""; if (variant.bold) id += "B"; if (variant.italic) id += "I";
+      var unknown = this.FONTDATA.UNKNOWN[id||"R"]; // cache of previously measured characters
+      if (!unknown[n]) this.getUnknownChar(unknown,n);
+      return {type:"unknown", n:n, font:unknown};
+    },
+    getUnknownChar: function (unknown,n) {
       var c = this.unicodeChar(n);
-      var HDW = this.getHDW(c); var a = (HDW.h-HDW.d)/2+AFUZZ; // ### FIXME:  is this really the axis of the surrounding text?
-      var unknown = {type:"unknown", n:n, font:{className:"MJXc-TeX-unknown"}};
-      unknown.font[n] = [.8,.2,HDW.w,0,HDW.w,{a:a, A:HDW.h-a, d:HDW.d}];
-      unknown.font[n].c = c
-      return unknown;
+      var HDW = this.getHDW(c,unknown.className);
+      var a = (HDW.h-HDW.d)/2+AFUZZ; // ### FIXME:  is this really the axis of the surrounding text?
+      // ### FIXME:  provide a means of setting the height and depth for individual characters
+      unknown[n] = [.8,.2,HDW.w,0,HDW.w,{a:a, A:HDW.h-a, d:HDW.d}];
+      unknown[n].c = c;
     },
     //
     //  Get the height, depth and width of a character
     //  (height and depth are of the font, not the character).
     //  WARNING:  causes reflow of the page!
     //
-    getHDW: function (c) {
-      var test1 = HTML.addElement(document.body,"mjx-chartest",{},[["mjx-char",{},[c]]]);
-      var test2 = HTML.addElement(document.body,"mjx-chartest",{},[["mjx-char",{},[c,["mjx-box"]]]]);
+    getHDW: function (c,name) {
+      var test1 = HTML.addElement(document.body,"mjx-chartest",{className:name},[["mjx-char",{},[c]]]);
+      var test2 = HTML.addElement(document.body,"mjx-chartest",{className:name},[["mjx-char",{},[c,["mjx-box"]]]]);
       var em = window.parseFloat(window.getComputedStyle(test1).fontSize);
       var d = (test2.offsetHeight-500)/em;
       var w = test1.offsetWidth/em, h = test1.offsetHeight/em - d;
