@@ -1247,36 +1247,19 @@
         var values = this.getValues("width","height","depth","lspace","voffset");
         var dimen, x = 0, y = 0, w = cbox.w, h = cbox.h, d = cbox.d;
         child.style.width = 0; child.style.margin = CHTML.Em(-h)+" 0 "+CHTML.Em(-d);
-        if (values.width !== "") {
-          dimen = this.CHTMLdimen(values.width,"w",0);
-          if (dimen.pm) dimen.len += w;
-          if (dimen.len < 0) dimen.len = 0;
-          w = dimen.len;
-        }
-        if (values.height !== "") {
-          dimen = this.CHTMLdimen(values.height,"h",0);
-          if (dimen.pm) dimen.len += h;
-          if (dimen.len < 0) dimen.len = 0
-          h = dimen.len;
-        }
-        if (values.depth !== "")  {
-          dimen = this.CHTMLdimen(values.depth,"d",0);
-          if (dimen.pm) dimen.len += d;
-          if (dimen.len < 0) dimen.len = 0
-          d = dimen.len;
-        }
+        if (values.width !== "")  w = this.CHTMLdimen(values.width,"w",w,0);
+        if (values.height !== "") h = this.CHTMLdimen(values.height,"h",h,0);
+        if (values.depth !== "")  d = this.CHTMLdimen(values.depth,"d",w,0);
         if (values.voffset !== "") {
-          dimen = this.CHTMLdimen(values.voffset);
-          if (dimen.len) {
-            y = dimen.len;
+          y = this.CHTMLdimen(values.voffset);
+          if (y) {
             child.style.position = "relative";
             child.style.top = CHTML.Em(-y);
           }
         }
         if (values.lspace !== "") {
-          dimen = this.CHTMLdimen(values.lspace);
-          if (dimen.len) {
-            x = dimen.len;
+          x = this.CHTMLdimen(values.lspace);
+          if (x) {
             child.style.position = "relative";
             child.style.left = CHTML.Em(x);
           }
@@ -1290,12 +1273,15 @@
         this.CHTML = bbox;
         return node.parentNode;
       },
-      CHTMLdimen: function (length,d,m) {
+      CHTMLdimen: function (length,d,D,m) {
         if (m == null) {m = -BIGDIMEN}
         length = String(length);
         var match = length.match(/width|height|depth/);
         var size = (match ? this.CHTML[match[0].charAt(0)] : (d ? this.CHTML[d] : 0));
-        return {len: CHTML.length2em(length,size)||0, pm: !!length.match(/^[-+]/)};
+        var dimen = (CHTML.length2em(length,size)||0);
+        if (length.match(/^[-+]/)) dimen += D;
+        if (m != null) dimen = Math.max(m,dimen);
+        return dimen;
       }
     });
 
