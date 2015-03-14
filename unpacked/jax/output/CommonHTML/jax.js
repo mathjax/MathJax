@@ -735,7 +735,7 @@
         code = delim.alias; delim = this.FONTDATA.DELIMITERS[code];
         if (!delim) {delim = {HW: [0,this.FONTDATA.VARIANT[MML.VARIANT.NORMAL]]}}
       }
-//      if (delim.load) {HUB.RestartAfter(AJAX.Require(this.fontDir+"/fontdata-"+delim.load+".js"))}
+      if (delim.load) HUB.RestartAfter(AJAX.Require(this.fontDir+"/TeX/fontdata-"+delim.load+".js"));
       for (var i = 0, m = delim.HW.length; i < m; i++) {
         if (delim.HW[i][0]*scale >= HW-.01 || (i == m-1 && !delim.stretch)) {
           if (delim.HW[i][2]) scale *= delim.HW[i][2];
