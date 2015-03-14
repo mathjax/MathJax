@@ -1867,7 +1867,6 @@
         //
         //  Make row of open, data, sep, ... data, close
         //
-        this.addFakeNodes();
         this.CHTMLaddChild(node,"open",{});
         for (var i = 0, m = this.data.length; i < m; i++) {
           this.CHTMLaddChild(node,"sep"+i,{});
