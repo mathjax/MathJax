@@ -57,6 +57,7 @@
     "mjx-numerator":   {display:"block", "text-align":"center"},
     "mjx-denominator": {display:"block", "text-align":"center"},
     ".MJXc-fpad": {"padding-left":".1em", "padding-right":".1em"},
+    ".MJXc-bevelled > *": {display:"inline-block"},
     
     "mjx-stack":  {display:"inline-block"},
     "mjx-op":     {display:"block"},
@@ -1753,34 +1754,52 @@
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1);
         values.linethickness = Math.max(0,CHTML.length2em(values.linethickness||"0",0));
         var mt = CHTML.TEX.min_rule_thickness/CHTML.em/scale, a = CHTML.TEX.axis_height;
-        var t = values.linethickness, p,q, u,v;
-        if (isDisplay) {u = CHTML.TEX.num1; v = CHTML.TEX.denom1}
-          else {u = (t === 0 ? CHTML.TEX.num3 : CHTML.TEX.num2); v = CHTML.TEX.denom2}
-        if (t === 0) { // \atop
-          p = Math.max((isDisplay ? 7 : 3) * CHTML.TEX.rule_thickness, 2*mt); // force to at least 2 px
-          q = (u - nbox.d*sscale) - (dbox.h*sscale - v);
-          if (q < p) {u += (p - q)/2; v += (p - q)/2}
-          frac.style.verticalAlign = CHTML.Em(-v);
-        } else { // \over
-          p = Math.max((isDisplay ? 3 : 0) * t, mt);  // force to be at least 1px
-          t = Math.max(t,mt);
-          q = (u - nbox.d*sscale) - (a + t/2); if (q < p) u += (p - q);
-          q = (a - t/2) - (dbox.h*sscale - v); if (q < p) v += (p - q);
-          frac.style.verticalAlign = CHTML.Em(t/2-v);
-          num.style.borderBottom = CHTML.Em(t)+" solid";
-          num.className += " MJXc-fpad";   nbox.L = nbox.R = .1;
-          denom.className += " MJXc-fpad"; dbox.L = dbox.R = .1;
+          var t = values.linethickness, p,q, u,v;
+        if (values.bevelled) {
+          frac.className = "MJXc-bevelled";
+	  var delta = (isDisplay ? .4 : .15);
+	  var H = sscale*Math.max(nbox.h+nbox.d,dbox.h+dbox.d) + 2*delta;
+	  var bevel = HTML.Element("mjx-bevel"); frac.insertBefore(bevel,denom);
+          var bbox = CHTML.createDelimiter(bevel,0x2F,H);
+          u = sscale*(nbox.d-nbox.h)/2+a+delta;
+          v = sscale*(dbox.d-dbox.h)/2+a-delta;
+          if (u) num.style.verticalAlign = CHTML.Em(u);
+          if (v) denom.style.verticalAlign = CHTML.Em(v);
+          bevel.style.marginLeft = bevel.style.marginRight = CHTML.Em(-delta/2);
+          this.CHTML = CHTML.emptyBBox();
+          CHTML.combineBBoxes(this.CHTML,nbox,0,u,sscale);
+          CHTML.combineBBoxes(this.CHTML,bbox,sscale*nbox.w-delta/2,0,sscale);
+          CHTML.combineBBoxes(this.CHTML,dbox,sscale*nbox.w+bbox.w-delta,v,sscale);
+          CHTML.cleanBBox(this.CHTML);
+        } else {
+          if (isDisplay) {u = CHTML.TEX.num1; v = CHTML.TEX.denom1}
+            else {u = (t === 0 ? CHTML.TEX.num3 : CHTML.TEX.num2); v = CHTML.TEX.denom2}
+          if (t === 0) { // \atop
+            p = Math.max((isDisplay ? 7 : 3) * CHTML.TEX.rule_thickness, 2*mt); // force to at least 2 px
+            q = (u - nbox.d*sscale) - (dbox.h*sscale - v);
+            if (q < p) {u += (p - q)/2; v += (p - q)/2}
+            frac.style.verticalAlign = CHTML.Em(-v);
+          } else { // \over
+            p = Math.max((isDisplay ? 3 : 0) * t, mt);  // force to be at least 1px
+            t = Math.max(t,mt);
+            q = (u - nbox.d*sscale) - (a + t/2); if (q < p) u += (p - q);
+            q = (a - t/2) - (dbox.h*sscale - v); if (q < p) v += (p - q);
+            frac.style.verticalAlign = CHTML.Em(t/2-v);
+            num.style.borderBottom = CHTML.Em(t)+" solid";
+            num.className += " MJXc-fpad";   nbox.L = nbox.R = .1;
+            denom.className += " MJXc-fpad"; dbox.L = dbox.R = .1;
+          }
+          //
+          //  Determine the new bounding box and place the parts
+          //
+          this.CHTML = CHTML.emptyBBox();
+          CHTML.combineBBoxes(this.CHTML,nbox,0,u,sscale);
+          CHTML.combineBBoxes(this.CHTML,dbox,0,-v,sscale);
+          CHTML.cleanBBox(this.CHTML);
+          u -= sscale*nbox.d + a + t/2; v -= sscale*dbox.h - a + t/2;
+          if (u > 0) num.style.paddingBottom = CHTML.Em(u);
+          if (v > 0) denom.style.paddingTop = CHTML.Em(v);
         }
-        //
-        //  Determine the new bounding box and place the parts
-        //
-        this.CHTML = CHTML.emptyBBox();
-        CHTML.combineBBoxes(this.CHTML,nbox,0,u,sscale);
-        CHTML.combineBBoxes(this.CHTML,dbox,0,-v,sscale);
-        CHTML.cleanBBox(this.CHTML);
-        u -= sscale*nbox.d + a + t/2; v -= sscale*dbox.h - a + t/2;
-        if (u > 0) num.style.paddingBottom = CHTML.Em(u);
-        if (v > 0) denom.style.paddingTop = CHTML.Em(v);
         //
         //  Add nulldelimiterspace around the fraction
         //  (TeXBook pg 150 and Appendix G rule 15e)
