@@ -767,10 +767,10 @@
           var n = Math.ceil((H-h)/(k*(ebox.h+ebox.d)*.9));
           H = .9*n*k*(ebox.h+ebox.d) + h;
         }
-        var s = 1.1*(H - h)/k + .2*k;  // space to cover by extender
+        var s = 1.1*(H - h)/k + .3;  // space to cover by extender
         s /= (ebox.h+ebox.d);          // scale factor;
         this.Transform(ext,
-          "translateY("+CHTML.Em(-ebox.d+.05)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
+          "translateY("+CHTML.Em(-ebox.d+.25)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
           "left "+CHTML.Em(ebox.d)
         );
         ext.style.paddingTop=ext.style.paddingBottom = 0;
