@@ -1104,6 +1104,8 @@
 
       CHTMLhandleStyle: function (node) {
         if (this.style) node.style.cssText = this.style;
+        // ### FIXME:  remove font size and other font settings from non-token elements?
+        // ### FIXME:  modify bounding box to handle border, padding, and margin.
       },
 
       CHTMLhandleColor: function (node) {
