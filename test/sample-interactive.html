@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MathJax Test Page interactive equations</title>
+<!-- Copyright (c) 2009-2014 The MathJax Consortium -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+	messageStyle: "none",
+    jax: ["input/TeX","output/HTML-CSS"],
+    "HTML-CSS": {
+      availableFonts:[],
+      styles: {".MathJax_Preview": {visibility: "hidden"}}
+    }
+  });
+</script>
+<script type="text/javascript" src="../MathJax.js"></script>
+
+<style>
+h1 {text-align:center}
+h2 {
+  font-weight: bold;
+  background-color: #DDDDDD;
+  padding: .2em .5em;
+  margin-top: 1.5em;
+  border-top: 3px solid #666666;
+  border-bottom: 2px solid #999999;
+}
+.sample_txt {
+	border: solid 1px #32322E;
+	width: 300px;
+	border-radius:6px;
+	margin-top:30px;
+	margin-left:20px;
+	margin-right:10px;
+	font-size: 16px;
+	text-align:center;
+}	
+</style>
+</head>
+<body>
+
+<noscript>
+<div style="color:#CC0000; text-align:center">
+<b>Warning: <a href="http://www.mathjax.org/">MathJax</a>
+requires JavaScript to process the mathematics on this page.<br />
+If your browser supports JavaScript, be sure it is enabled.</b>
+</div>
+<hr>
+</noscript>
+
+<h1>Interactive sample MathJax Equations</h1>
+
+    <div style = "margin-left: 100px;">	
+	
+		<div style="position: relative;">
+	
+			<div id="info" style="margin-left: -80px; margin-top: 0px; position: absolute; z-index: 2;" >
+				<p class="sample_txt"><span>
+					Canonical equations of a line
+				</span></p>
+
+			</div>	
+	
+			<div id = "myDiv" style="margin-top: 50px; font-size: 160%; position: absolute; z-index: 100;" >
+		
+				Here is the formula
+		
+			</div>	
+	
+			<canvas id="layer1" width="600" height="600" style="position: absolute; left: 0; top: 0; z-index: 0;">
+			</canvas>
+			<canvas id="layer2" width="600" height="600" style="position: absolute; left: 0; top: 0; z-index: 1;">
+			</canvas>
+	</div>
+	
+	</div>	
+
+</body>
+</html>
+
+ <script>
+
+function random(min_random, max_random) {
+
+	var range = max_random - min_random + 1;
+	return Math.floor(Math.random()*range) + min_random;
+
+}
+
+function parseIntPlus( st ) {
+// "-4" -> -4, "+5" -> 5	
+	var str = st;
+	if ( str.charAt( 0 ) == "+" ) { str = str.substr(1); }
+	if ( str.charAt( 0 ) == "−" ) { str = "-" + str.substr(1); }	
+	var value = parseInt( str );
+	return( value );
+	
+}
+ 
+function StringPlus( x, Flag ) {
+// -4 -> "-4", 5 -> "+5"
+	var flag = ( Flag !== undefined ) ? Flag : false;
+	var value = String( x );
+	if ( x >= 0 && !flag ) { value = "+" + value; }
+	return value;
+} 
+ 
+var x0 = random(-9,9),
+	y0 = random(-9,9),
+	ax = random(-9,9),
+	ay = random(-9,9);
+
+function formulaCodeGeneric( x0, y0, ax, ay ) {
+	
+	var formulaCode = "\\[  \\frac{x \\cssId{x0}{\\class{dynamic}{" + StringPlus( x0 ) 
+	 + "}} }{ \\cssId{ax}{\\class{dynamic}{" + StringPlus( ax, true ) 
+	 + "}}} =    \\frac{y  \\cssId{y0}{\\class{dynamic}{" + StringPlus( y0 ) 
+	 + "}} }{ \\cssId{ay}{\\class{dynamic}{" + StringPlus( ay, true ) 
+	 + "}}}  \\]";  
+	return formulaCode;
+  
+} 
+ 
+document.getElementById("myDiv").innerHTML = formulaCodeGeneric( x0, y0, ax, ay );
+
+MathJax.Hub.Queue( function () { addEvents(); drawGraphic(); } );
+
+
+function addEvents() {
+
+var elems = document.getElementsByClassName("dynamic"), newInput;
+
+for (var i=0; i<elems.length; i++) {
+	var el = elems[i];
+	el.addEventListener('mouseover', function() { 
+			this.style.cursor = 'pointer';
+			this.style.backgroundColor = "#F6CEF5";
+		}, false);
+	el.addEventListener('mouseout', function() { 
+			this.style.cursor = 'auto';
+			this.style.backgroundColor = "#FFFFFF";
+		}, false);		
+}
+
+
+for (var i=0; i<elems.length; i++) {
+    var el = elems[i]; var cssString = el.style.cssText;
+    el.addEventListener("click", function() {
+      var  inputs = this.getElementsByTagName("input");
+        if (inputs.length > 0) return;
+        if (!newInput) {
+            newInput = document.createElement("input");
+            newInput.type = "text";
+          //  newInput.maxLength = 2;
+            newInput.setAttribute("size", 1);
+			newInput.style.fontSize = "18px";
+			newInput.style.color = "blue";
+			newInput.style.width = "30px";
+            newInput.addEventListener("blur", function() {
+
+				newInput.value = newInput.value.replace("-","−");
+				newInput.parentNode.innerHTML = newInput.value;
+				
+				x0 = parseIntPlus( document.getElementById("x0").innerText );
+				y0 = parseIntPlus( document.getElementById("y0").innerText );
+				ax = parseIntPlus( document.getElementById("ax").innerText );
+				ay = parseIntPlus( document.getElementById("ay").innerText );
+
+				document.getElementById("myDiv").innerHTML = formulaCodeGeneric( x0, y0, ax, ay );
+				
+				MathJax.Hub.Queue(["Typeset",MathJax.Hub,document.getElementById("myDiv")], function () { addEvents(); drawGraphic(); });
+
+				
+            }, false)
+        }
+        newInput.value = this.innerText;
+        this.innerHTML = "";
+        this.appendChild(newInput);
+        newInput.focus();
+        newInput.select()
+		}.bind(el), false);
+	};
+ 
+}	
+
+
+function fun(x) {
+    var z;
+    z = y0 + ay/ax * (x - x0);
+    return z;
+}
+
+
+var a = -9;
+var b = 9;
+var h = 0.1;
+var delta = 300;
+var size = 30;
+
+function drawAxis() {
+
+	var myCanvas = document.getElementById('layer1');
+	var ctx = myCanvas.getContext('2d');	
+
+	// axis
+	ctx.beginPath();
+	ctx.strokeStyle = '#000000';
+	ctx.lineWidth = 1;
+	ctx.moveTo(0, delta); 
+	ctx.lineTo( 2 * delta, delta );
+	ctx.moveTo(delta, 0 ); 
+	ctx.lineTo( delta, 2 * delta );
+	ctx.stroke();
+
+	//
+	ctx.beginPath();
+	ctx.strokeStyle = '#000000';
+	ctx.lineWidth = 1;
+	var bias = 5;
+	ctx.font = "italic 10pt Arial";
+	for ( var i = -9; i<= 9; i++ ) {
+		ctx.moveTo( i * size + delta, delta-bias );	ctx.lineTo( i * size + delta, delta+bias );	
+		ctx.moveTo( delta-bias, i * size + delta );	ctx.lineTo( delta+bias, i * size + delta );	
+		if ( i!=0 ) { ctx.fillText( i, i * size + delta - bias, delta + 4 * bias ); }
+		if ( i!=0 ) { ctx.fillText( i, delta + 2 * bias, -i * size + delta + bias ); }		
+	}
+	ctx.fillText( 0, delta + bias, delta + 4 * bias );
+	ctx.fillText( "X", 2 * delta - 2 * bias, delta - bias );
+	ctx.fillText( "Y", delta + bias, 2 * bias );	
+	ctx.stroke();
+}
+
+function drawGraphic() {
+
+	var myCanvas = document.getElementById('layer2');
+	var ctx = myCanvas.getContext('2d');
+	ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+
+	ctx.beginPath();
+	var x = a, y = fun( x ); 
+	var XX = x * size + delta, YY = -y * size + delta;
+	ctx.moveTo(XX,YY);
+
+	while ( x <= b ) {
+		y = fun( x );
+		XX = x * size + delta; YY = -y * size + delta;
+		ctx.lineTo( XX, YY );
+		x = x + h;
+	}
+
+	ctx.strokeStyle = '#FF0000';
+	ctx.lineWidth = 2;
+	ctx.stroke();
+
+}
+
+drawAxis();
+
+ </script>
