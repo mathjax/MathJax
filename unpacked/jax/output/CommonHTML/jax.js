@@ -104,6 +104,7 @@
     
     "mjx-chartest": {
       display:"block",
+      visibility: "hidden",
       position:"absolute", top:0,
       "line-height":"normal",
       "font-size":"500%"
@@ -140,8 +141,7 @@
       if (!this.require) {this.require = []}
       this.SUPER(arguments).Config.call(this); var settings = this.settings;
       if (settings.scale) {this.config.scale = settings.scale}
-      this.fontDir += "/TeX"; this.webfontDir += "/TeX/otf";
-      this.require.push(this.fontDir+"/fontdata.js");
+      this.require.push(this.fontDir+"/TeX/fontdata.js");
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
     },
 
@@ -171,7 +171,26 @@
     },
     InitializeCHTML: function () {
     },
+
+    //
+    //  Load data for a font
+    //
+    loadFont: function (font) {
+      HUB.RestartAfter(AJAX.Require(this.fontDir+"/"+font));
+    },
+    //
+    //  Signal that the font data are loaded
+    //
+    fontLoaded: function (font) {
+      if (!font.match(/-|fontdata/)) font += "-Regular";
+      if (!font.match(/\.js$/)) font += ".js"
+      MathJax.Callback.Queue(
+        ["Post",HUB.Startup.signal,["CommonHTML - font data loaded",font]],
+        ["loadComplete",AJAX,this.fontDir+"/"+font]
+      );
+    },
     
+
     /********************************************/
     
     preTranslate: function (state) {
@@ -380,6 +399,8 @@
     
     ID: 0, idPostfix: "",
     GetID: function () {this.ID++; return this.ID},
+    
+    /********************************************/
 
     MATHSPACE: {
       veryverythinmathspace:  1/18,
@@ -527,10 +548,9 @@
       while (variant) {
         for (var i = 0, m = variant.fonts.length; i < m; i++) {
           var font = this.FONTDATA.FONTS[variant.fonts[i]];
-//          if (typeof(font) === "string") this.loadFont(font);
+          if (typeof(font) === "string") this.loadFont(font);
           var C = font[n];
           if (C) {
-// ### FIXME: implement aliases
             if (C.length === 5) C[5] = {};
             if (C.c == null) {
               C[0] /= 1000; C[1] /= 1000; C[2] /= 1000; C[3] /= 1000; C[4] /= 1000;
@@ -538,11 +558,29 @@
             }
             if (C[5].space) return {type:"space", w:C[2], font:font};
             return {type:"char", font:font, n:n};
-          } // else load block files?
+          } else if (font.Extra) {
+            this.findBlock(font,n);
+          }
         }
         variant = this.FONTDATA.VARIANT[variant.chain];
       }
       return this.unknownChar(VARIANT,n);
+    },
+    findBlock: function (font,n) {
+      var extra = font.Extra, name = font.file, file;
+      for (var i = 0, m = extra.length; i < m; i++) {
+        if (typeof(extra[i]) === "number") {
+          if (n === extra[i]) {file = name; break}
+        } else {
+          if (n <  extra[i][0]) return;
+          if (n <= extra[i][1]) {file = name; break}
+        }
+      }
+      //
+      //  Currently this only loads one extra file, but that
+      //  might need to be expanded in the future.
+      //
+      if (file) {delete font.Extra; this.loadFont(name)}
     },
     //
     //  Create a fake font entry for an unknown character.

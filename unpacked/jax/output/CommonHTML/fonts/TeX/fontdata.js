@@ -29,8 +29,8 @@
   var VERSION = "2.5.0";
   
   var MAIN   = "MathJax_Main",
-      BOLD   = "MathJax_Main-bold",
-      ITALIC = "MathJax_Math-italic",
+      BOLD   = "MathJax_Main-Bold",
+      ITALIC = "MathJax_Math-Italic",
       AMS    = "MathJax_AMS",
       SIZE1  = "MathJax_Size1",
       SIZE2  = "MathJax_Size2",
@@ -57,25 +57,29 @@
     lineH: .8, lineD: .2,
       
     FONTS: {
-      "MathJax_Main":             "Main/Regular/Main.js",
-      "MathJax_Main-bold":        "Main/Bold/Main.js",
-      "MathJax_Main-italic":      "Main/Italic/Main.js",
-      "MathJax_Math-italic":      "Math/Italic/Main.js",
-      "MathJax_Math-bold-italic": "Math/BoldItalic/Main.js",
-      "MathJax_Caligraphic":      "Caligraphic/Regular/Main.js",
-      "MathJax_Size1":            "Size1/Regular/Main.js",
-      "MathJax_Size2":            "Size2/Regular/Main.js",
-      "MathJax_Size3":            "Size3/Regular/Main.js",
-      "MathJax_Size4":            "Size4/Regular/Main.js",
-      "MathJax_AMS":              "AMS/Regular/Main.js",
-      "MathJax_Fraktur":          "Fraktur/Regular/Main.js",
-      "MathJax_Fraktur-bold":     "Fraktur/Bold/Main.js",
-      "MathJax_SansSerif":        "SansSerif/Regular/Main.js",
-      "MathJax_SansSerif-bold":   "SansSerif/Bold/Main.js",
-      "MathJax_SansSerif-italic": "SansSerif/Italic/Main.js",
-      "MathJax_Script":           "Script/Regular/Main.js",
-      "MathJax_Typewriter":       "Typewriter/Regular/Main.js",
-      "MathJax_Caligraphic-bold": "Caligraphic/Bold/Main.js"
+//
+//    These ones are defined below
+//
+//    "MathJax_Main":
+//    "MathJax_Main-Bold":
+//    "MathJax_Main-Italic":
+//    "MathJax_Math-Italic":
+//    "MathJax_Caligraphic":
+//    "MathJax_Size1":
+//    "MathJax_Size2":
+//    "MathJax_Size3":
+//    "MathJax_Size4":
+
+      "MathJax_AMS":              "TeX/AMS-Regular.js",
+      "MathJax_Caligraphic-Bold": "TeX/Caligraphic-Bold.js",
+      "MathJax_Fraktur":          "TeX/Fraktur-Regular.js",
+      "MathJax_Fraktur-Bold":     "TeX/Fraktur-Bold.js",
+      "MathJax_Math-BoldItalic":  "TeX/Math-BoldItalic.js",
+      "MathJax_SansSerif":        "TeX/SansSerif-Regular.js",
+      "MathJax_SansSerif-Bold":   "TeX/SansSerif-Bold.js",
+      "MathJax_SansSerif-Italic": "TeX/SansSerif-Italic.js",
+      "MathJax_Script":           "TeX/Script-Regular.js",
+      "MathJax_Typewriter":       "TeX/Typewriter-Regular.js"
     },
     
     UNKNOWN: {
@@ -114,28 +118,28 @@
 //                       0x22EA:"\u22B2\u0338", 0x22EB:"\u22B3\u0338",
 //                       0x22EC:"\u22B4\u0338", 0x22ED:"\u22B5\u0338"
                 }},
-      "italic": {fonts:[ITALIC,"MathJax_Main-italic"], italic:true, cache: {}, chain:"normal",
+      "italic": {fonts:[ITALIC,"MathJax_Main-Italic"], italic:true, cache: {}, chain:"normal",
                  remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                          0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                          0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
-      "bold-italic": {fonts:["MathJax_Math-bold-italic"], bold:true, italic:true,
+      "bold-italic": {fonts:["MathJax_Math-BoldItalic"], bold:true, italic:true,
                  cache: {}, chain:"bold",
                  remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                          0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                          0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
       "double-struck": {fonts:[AMS,MAIN,SIZE1], cache:{}},
       "fraktur": {fonts:["MathJax_Fraktur"], cache:{}, chain:"normal"},
-      "bold-fraktur": {fonts:["MathJax_Fraktur-bold"], bold:true, cache:{}, chain:"bold"},
+      "bold-fraktur": {fonts:["MathJax_Fraktur-Bold"], bold:true, cache:{}, chain:"bold"},
       "script": {fonts:["MathJax_Script"], cache:{}, chain:"normal"},
       "bold-script": {fonts:["MathJax_Script"], bold:true, cache:{}, chain:"bold"},
       "sans-serif": {fonts:["MathJax_SansSerif"], cache:{}, chain:"normal"},
-      "bold-sans-serif": {fonts:["MathJax_SansSerif-bold"], bold:true, cache:{}, chain:"bold"},
-      "sans-serif-italic": {fonts:["MathJax_SansSerif-italic"], italic:true, cache:{}, chain:"italic"},
-      "sans-serif-bold-italic": {fonts:["MathJax_SansSerif-italic"], bold:true, italic:true, cache:{}, chain:"italic"},
+      "bold-sans-serif": {fonts:["MathJax_SansSerif-Bold"], bold:true, cache:{}, chain:"bold"},
+      "sans-serif-italic": {fonts:["MathJax_SansSerif-Italic"], italic:true, cache:{}, chain:"italic"},
+      "sans-serif-bold-italic": {fonts:["MathJax_SansSerif-Italic"], bold:true, italic:true, cache:{}, chain:"italic"},
       "monospace": {fonts:["MathJax_Typewriter"], cache:{}, chain:"normal"},
       "-tex-caligraphic": {fonts:["MathJax_Caligraphic"], offsetA: 0x41, variantA: "italic", cache:{}, chain:"normal"},
       "-tex-oldstyle": {fonts:["MathJax_Caligraphic"], cache:{}, chain:"normal"},
-      "-tex-mathit": {fonts:["MathJax_Main-italic"], italic:true, noIC: true, cache:{}, chain:"normal",
+      "-tex-mathit": {fonts:["MathJax_Main-Italic"], italic:true, noIC: true, cache:{}, chain:"normal",
                  remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                          0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                          0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58}},
@@ -150,9 +154,9 @@
                  }},
       "-largeOp": {fonts:[SIZE2,SIZE1,MAIN,AMS],cache:{}},
       "-smallOp": {fonts:[SIZE1,MAIN,AMS], cache:{}},
-      "-tex-caligraphic-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold"], bold:true, cache:{}, chain:"normal",
+      "-tex-caligraphic-bold": {fonts:["MathJax_Caligraphic-Bold","MathJax_Main-Bold"], bold:true, cache:{}, chain:"normal",
                                 offsetA: 0x41, variantA: "bold-italic"},
-      "-tex-oldstyle-bold": {fonts:["MathJax_Caligraphic-bold","MathJax_Main-bold"], bold:true, cache:{}, chain:"normal"}
+      "-tex-oldstyle-bold": {fonts:["MathJax_Caligraphic-Bold","MathJax_Main-Bold"], bold:true, cache:{}, chain:"normal"}
     },
       
     RANGES: [
@@ -600,7 +604,6 @@
   CHTML.FONTDATA = CHTML.FONTDEF["TeX"];
 
   CHTML.FONTDATA.FONTS['MathJax_Caligraphic'] = {
-    directory: 'Caligraphic/Regular',
     skew: {
       0x41: 0.194,
       0x42: 0.139,
@@ -669,9 +672,32 @@
     0xA0: [0,0,250,0,0]                // NO-BREAK SPACE
   };
 
-  CHTML.FONTDATA.FONTS['MathJax_Main-bold'] = {
-    directory: 'Main/Bold',
+  CHTML.FONTDATA.FONTS['MathJax_Main-Bold'] = {
     weight: 'bold',
+    file: "TeX/Main-Bold.js",
+    Extra: [
+      0xA0, 0xA8, 0xAC, [0xAF,0xB1], 0xB4, 0xD7, 0xF7,
+      0x131, 0x237,
+      [0x2C6,0x2CB],[0x2D8,0x2DC],
+      [0x300,0x30C], 0x338,
+      [0x2002,0x2006], 0x2009, 0x200A, 0x2013, 0x2014, 0x2018, 0x2019,
+        0x201C, 0x201D, 0x2020, 0x2021, 0x2026, 0x2032,
+      0x20D7,
+      [0x210F,0x2113], 0x2118, 0x211C, 0x2135,
+      [0x2190,0x2199], 0x21A6, 0x21A9, 0x21AA, 0x21BC, 0x21BD, 0x21C0,
+        0x21C1, 0x21CC, [0x21D0,0x21D5],
+      [0x2200,0x220B], [0x2212,0x221A], [0x221D,0x2220],
+        [0x2223,0x223C], 0x2240, 0x2243, 0x2245, 0x2248, 0x224D, 0x2250,
+        0x2260, 0x2261, 0x2264, 0x2265, 0x226A, 0x226B, 0x227A, 0x227B,
+        0x2282, 0x2283, 0x2286, 0x2287, 0x228E, [0x2291,0x2299],
+        [0x22A2,0x22A5], 0x22A8, [0x22C4,0x22C8], [0x22EE,0x22F1],
+      [0x2308,0x230B], 0x2322, 0x2323,
+      0x25B3, 0x25B9, 0x25BD, 0x25C3, 0x25EF,
+      [0x2660,0x2663], [0x266D,0x266F],
+      0x27E8, 0x27E9,
+      [0x27F5,0x27FC],
+      0x2A3F, 0x2AAF, 0x2AB0
+    ],
     skew: {
       0x131: 0.0319,
       0x237: 0.0958,
@@ -679,24 +705,6 @@
       0x2113: 0.128,
       0x2202: 0.0958
     },
-    Ranges: [
-      [0xA0,0xFF,"Latin1Supplement"],
-      [0x100,0x17F,"LatinExtendedA"],
-      [0x180,0x24F,"LatinExtendedB"],
-      [0x2B0,0x2FF,"SpacingModLetters"],
-      [0x300,0x36F,"CombDiacritMarks"],
-      [0x2000,0x206F,"GeneralPunctuation"],
-      [0x20D0,0x20FF,"CombDiactForSymbols"],
-      [0x2100,0x214F,"LetterlikeSymbols"],
-      [0x2190,0x21FF,"Arrows"],
-      [0x2200,0x22FF,"MathOperators"],
-      [0x2300,0x23FF,"MiscTechnical"],
-      [0x25A0,0x25FF,"GeometricShapes"],
-      [0x2600,0x26FF,"MiscSymbols"],
-      [0x27C0,0x27EF,"MiscMathSymbolsA"],
-      [0x27F0,0x27FF,"SupplementalArrowsA"],
-      [0x2A00,0x2AFF,"SuppMathOperators"]
-    ],
     0x20: [0,0,250,0,0],               // SPACE
     0x21: [705,-1,350,89,260],         // EXCLAMATION MARK
     0x22: [694,-329,603,38,492],       // QUOTATION MARK
@@ -805,15 +813,8 @@
     0x3A9: [696,0,831,51,779]          // GREEK CAPITAL LETTER OMEGA
   };
 
-  CHTML.FONTDATA.FONTS['MathJax_Main-italic'] = {
-    directory: 'Main/Italic',
+  CHTML.FONTDATA.FONTS['MathJax_Main-Italic'] = {
     style: 'italic',
-    Ranges: [
-      [0xA0,0xFF,"Latin1Supplement"],
-      [0x300,0x36F,"CombDiacritMarks"],
-      [0x2000,0x206F,"GeneralPunctuation"],
-      [0x2100,0x214F,"LetterlikeSymbols"]
-    ],
     0x20: [0,0,250,0,0],               // SPACE
     0x21: [716,0,307,107,380],         // EXCLAMATION MARK
     0x22: [694,-379,514,176,538],      // QUOTATION MARK
@@ -901,9 +902,21 @@
     0x79: [441,205,486,75,522],        // LATIN SMALL LETTER Y
     0x7A: [442,11,409,54,466],         // LATIN SMALL LETTER Z
     0x7E: [318,-208,511,246,571],      // TILDE
+    0xA0: [0,0,250,0,0],               // NO-BREAK SPACE
     0xA3: [714,11,769,88,699],         // POUND SIGN
     0x131: [441,10,307,75,340],        // LATIN SMALL LETTER DOTLESS I
     0x237: [442,204,332,-32,327],      // LATIN SMALL LETTER DOTLESS J
+    0x300: [697,-500,0,-222,-74],      // COMBINING GRAVE ACCENT
+    0x301: [697,-500,0,-173,39],       // COMBINING ACUTE ACCENT
+    0x302: [694,-527,0,-251,17],       // COMBINING CIRCUMFLEX ACCENT
+    0x303: [668,-558,0,-265,60],       // COMBINING TILDE
+    0x304: [589,-544,0,-282,54],       // COMBINING MACRON
+    0x306: [694,-515,0,-237,62],       // COMBINING BREVE
+    0x307: [669,-548,0,-165,-41],      // COMBINING DOT ABOVE
+    0x308: [669,-554,0,-251,45],       // COMBINING DIAERESIS
+    0x30A: [716,-542,0,-199,3],        // COMBINING RING ABOVE
+    0x30B: [697,-503,0,-248,65],       // COMBINING DOUBLE ACUTE ACCENT
+    0x30C: [638,-502,0,-236,29],       // COMBINING CARON
     0x393: [680,0,627,54,705],         // GREEK CAPITAL LETTER GAMMA
     0x394: [716,0,818,70,751],         // GREEK CAPITAL LETTER DELTA
     0x398: [704,22,767,149,788],       // GREEK CAPITAL LETTER THETA
@@ -914,11 +927,17 @@
     0x3A5: [705,0,767,213,832],        // GREEK CAPITAL LETTER UPSILON
     0x3A6: [683,0,716,159,728],        // GREEK CAPITAL LETTER PHI
     0x3A8: [683,0,767,207,824],        // GREEK CAPITAL LETTER PSI
-    0x3A9: [705,0,716,100,759]         // GREEK CAPITAL LETTER OMEGA
+    0x3A9: [705,0,716,100,759],        // GREEK CAPITAL LETTER OMEGA
+    0x2013: [285,-248,511,91,554],     // EN DASH
+    0x2014: [285,-248,1022,117,1038],  // EM DASH
+    0x2018: [694,-379,307,197,362],    // LEFT SINGLE QUOTATION MARK
+    0x2019: [694,-379,307,213,377],    // RIGHT SINGLE QUOTATION MARK
+    0x201C: [694,-379,514,243,606],    // LEFT DOUBLE QUOTATION MARK
+    0x201D: [694,-379,514,176,538],    // RIGHT DOUBLE QUOTATION MARK
+    0x210F: [695,13,540,42,562]        // stix-/hbar - Planck's over 2pi
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Main'] = {
-    directory: 'Main/Regular',
     skew: {
       0x131: 0.0278,
       0x237: 0.0833,
@@ -926,12 +945,6 @@
       0x2118: 0.111,
       0x2202: 0.0833
     },
-    Ranges: [
-      [0x2B0,0x2FF,"SpacingModLetters"],
-      [0x300,0x36F,"CombDiacritMarks"],
-      [0x25A0,0x25FF,"GeometricShapes"],
-      [0x2600,0x26FF,"MiscSymbols"]
-    ],
     0x20: [0,0,250,0,0],               // SPACE
     0x21: [716,-1,278,78,199],         // EXCLAMATION MARK
     0x22: [694,-379,500,34,372],       // QUOTATION MARK
@@ -1046,6 +1059,19 @@
     0x2D8: [694,-515,500,92,407],      // BREVE
     0x2D9: [669,-549,500,190,309],     // DOT ABOVE
     0x2DC: [668,-565,500,83,416],      // SMALL TILDE
+    0x2DA: [715,-542,500,147,352],     // RING ABOVE
+    0x300: [699,-505,0,-394,-205],     // COMBINING GRAVE ACCENT
+    0x301: [699,-505,0,-297,-107],     // COMBINING ACUTE ACCENT
+    0x302: [694,-531,0,-388,-113],     // COMBINING CIRCUMFLEX ACCENT
+    0x303: [668,-565,0,-417,-84],      // COMBINING TILDE
+    0x304: [590,-544,0,-431,-70],      // COMBINING MACRON
+    0x306: [694,-515,0,-408,-93],      // COMBINING BREVE
+    0x307: [669,-549,0,-310,-191],     // COMBINING DOT ABOVE
+    0x308: [669,-554,0,-405,-96],      // COMBINING DIAERESIS
+    0x30A: [715,-542,0,-353,-148],     // COMBINING RING ABOVE
+    0x30B: [701,-510,0,-378,-80],      // COMBINING DOUBLE ACUTE ACCENT
+    0x30C: [644,-513,0,-386,-115],     // COMBINING CARON
+    0x338: [716,215,0,-639,-140],      // COMBINING LONG SOLIDUS OVERLAY
     0x393: [680,0,625,25,582],         // GREEK CAPITAL LETTER GAMMA
     0x394: [716,0,833,46,786],         // GREEK CAPITAL LETTER DELTA
     0x398: [705,22,778,56,722],        // GREEK CAPITAL LETTER THETA
@@ -1180,6 +1206,18 @@
     0x2323: [378,-134,1000,55,944],    // stix-small up curve
     0x23B0: [744,244,412,55,357],      // UPPER LEFT OR LOWER RIGHT CURLY BRACKET SECTION
     0x23B1: [744,244,412,56,357],      // UPPER RIGHT OR LOWER LEFT CURLY BRACKET SECTION
+    0x25B3: [716,0,889,59,828],        // WHITE UP-POINTING TRIANGLE
+    0x25B9: [505,5,500,26,474],        // WHITE RIGHT-POINTING SMALL TRIANGLE
+    0x25BD: [500,215,889,59,828],      // WHITE DOWN-POINTING TRIANGLE
+    0x25C3: [505,5,500,26,473],        // WHITE LEFT-POINTING SMALL TRIANGLE
+    0x25EF: [715,215,1000,56,944],     // LARGE CIRCLE
+    0x2660: [727,130,778,55,723],      // BLACK SPADE SUIT
+    0x2661: [716,33,778,55,723],       // WHITE HEART SUIT
+    0x2662: [727,162,778,55,723],      // WHITE DIAMOND SUIT
+    0x2663: [726,130,778,28,750],      // BLACK CLUB SUIT
+    0x266D: [750,22,389,55,332],       // MUSIC FLAT SIGN
+    0x266E: [734,223,389,65,324],      // MUSIC NATURAL SIGN
+    0x266F: [723,223,389,55,333],      // MUSIC SHARP SIGN
     0x27E8: [750,250,389,110,333],     // MATHEMATICAL LEFT ANGLE BRACKET
     0x27E9: [750,250,389,55,278],      // MATHEMATICAL RIGHT ANGLE BRACKET
     0x27EE: [744,244,412,173,357],     // MATHEMATICAL LEFT FLATTENED PARENTHESIS
@@ -1196,8 +1234,7 @@
     0x2AB0: [636,138,778,83,694]       // SUCCEEDS ABOVE SINGLE-LINE EQUALS SIGN
   };
 
-  CHTML.FONTDATA.FONTS['MathJax_Math-italic'] = {
-    directory: 'Math/Italic',
+  CHTML.FONTDATA.FONTS['MathJax_Math-Italic'] = {
     style: 'italic',
     skew: {
       0x41: 0.139,
@@ -1376,7 +1413,6 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Size1'] = {
-    directory: 'Size1/Regular',
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [850,349,458,152,422],       // LEFT PARENTHESIS
     0x29: [850,349,458,35,305],        // RIGHT PARENTHESIS
@@ -1425,7 +1461,6 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Size2'] = {
-    directory: 'Size2/Regular',
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [1150,649,597,180,561],      // LEFT PARENTHESIS
     0x29: [1150,649,597,35,416],       // RIGHT PARENTHESIS
@@ -1466,7 +1501,6 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Size3'] = {
-    directory: 'Size3/Regular',
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [1450,949,736,209,701],      // LEFT PARENTHESIS
     0x29: [1450,949,736,34,526],       // RIGHT PARENTHESIS
@@ -1491,7 +1525,6 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Size4'] = {
-    directory: 'Size4/Regular',
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [1750,1249,792,237,758],     // LEFT PARENTHESIS
     0x29: [1750,1249,792,33,554],      // RIGHT PARENTHESIS
@@ -1550,11 +1583,11 @@
   CHTML.FONTDATA.FONTS[SIZE4][0xE154][1] += 200;  // adjust depth for brace extender
   CHTML.FONTDATA.FONTS[MAIN][0x2245][2] -= 222; // fix error in character's right bearing
   CHTML.FONTDATA.FONTS[MAIN][0x2245][5] = {rfix:-222}; // fix error in character's right bearing
-  MathJax.Hub.Register.LoadHook(CHTML.fontDir+"/Main/Bold/MathOperators.js",function () {
+  MathJax.Hub.Register.LoadHook(CHTML.fontDir+"/TeX/Main-Bold.js",function () {
     CHTML.FONTDATA.FONTS[BOLD][0x2245][2] -= 106; // fix error in character's right bearing
     CHTML.FONTDATA.FONTS[BOLD][0x2245][5] = {rfix:-106}; // fix error in character's right bearing
   });
-  MathJax.Hub.Register.LoadHook(CHTML.fontDir+"/Typewriter/Regular/BasicLatin.js",function () {
+  MathJax.Hub.Register.LoadHook(CHTML.fontDir+"/TeX/Typewriter-Regular.js",function () {
     CHTML.FONTDATA.FONTS['MathJax_Typewriter'][0x20][2] += 275;       // fix error in character width
     CHTML.FONTDATA.FONTS['MathJax_Typewriter'][0x20][5] = {rfix:275}; // fix error in character width
   });
@@ -1587,35 +1620,39 @@
   //
   //  Create @font-face stylesheet for the declared fonts
   //
+  CHTML.FONTDATA.familyName = function (font) {
+    font = font.replace(/^MathJax_/,"");
+    var names = (font+"-Regular").split(/-/);
+    var suffix = names[0].toLowerCase().replace(/(?:igraphic|serif|writer|tur)$/,"") 
+               + "-" + names[1].replace(/[^A-Z]/g,"");
+    return "MJXc-TeX-"+suffix;
+  };
   (function () {
     var STYLES = CHTML.config.styles, FONTS = CHTML.FONTDATA.FONTS;
-    var DIR = AJAX.fileURL(CHTML.webfontDir);
+    var DIR = AJAX.fileURL(CHTML.webfontDir+"/TeX/otf");
     var faces = [];
     for (var name in FONTS) {if (FONTS.hasOwnProperty(name)) {
-      var font = FONTS[name]; if (typeof(font) !== "string") font = font.directory;
-      var names = font.split(/\//);
-      var suffix = names[0].toLowerCase().replace(/(?:igraphic|serif|writer|tur)$/,"") 
-                 + "-" + names[1].replace(/[^A-Z]/g,"");
-      var family = "MJXc_TeX_"+suffix, FAMILY = family;
-      FONTS[name].className = "MJXc-TeX-"+suffix;
+      var family = CHTML.FONTDATA.familyName(name), FAMILY = family;
+      var variant = ((name+"-Regular").split(/-/))[1];
+      FONTS[name].className = family;
       //
       //  The local font, if found
       //
-      font = {"font-family":family};
+      var font = {"font-family":family};
       name = name.replace(/-.*/,"");
-      if (names[1] === "Regular") {
+      if (variant === "Regular") {
         font.src = "local('"+name+"'), local('"+name+"-Regular')";
       } else {
-        font.src = "local('"+name+" "+names[1]+"'), local('"+name+"-"+names[1]+"')";
+        font.src = "local('"+name+" "+variant+"'), local('"+name+"-"+variant+"')";
       }
       faces.push(font);
       //
       //  For Chrome, need to have separate font-weight and font-style versions
       //
-      if (names[1] !== "Regular") {
+      if (variant !== "Regular") {
         font = {"font-family":family+"x", src:"local('"+name+"')"};
-        if (names[1].match(/Bold/))   font["font-weight"] = "bold";
-        if (names[1].match(/Italic/)) font["font-style"] = "italic";
+        if (variant.match(/Bold/))   font["font-weight"] = "bold";
+        if (variant.match(/Italic/)) font["font-style"] = "italic";
         FAMILY += ","+family+"x";
         faces.push(font);
       }
@@ -1623,21 +1660,18 @@
       //  The web font, if no local font found
       //   ### FIXME: add more formats to src
       //
-      font = {
-        "font-family":family+"w",
-        src:"url('"+DIR+"/MathJax_"+names[0]+"-"+names[1]+".otf')"
-      };
+      font = {"font-family":family+"w", src:"url('"+DIR+"/"+name+".otf')"};
       faces.push(font);
       //
       //  A class that looks for the local and web fonts
       //
       FAMILY += ","+family+"w";
-      STYLES[".MJXc-TeX-"+suffix] = {"font-family":FAMILY};
+      STYLES["."+family] = {"font-family":FAMILY};
     }}
     if (faces.length) STYLES["@font-face"] = faces;
   })();
 
-  AJAX.loadComplete(CHTML.fontDir + "/fontdata.js");
+  CHTML.fontLoaded("TeX/fontdata");
   
 })(MathJax.OutputJax.CommonHTML,MathJax.ElementJax.mml,MathJax.Ajax);
 
