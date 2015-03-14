@@ -1068,13 +1068,38 @@
         if (!this.CHTML) this.CHTML = {};
         this.CHTML = CHTML.zeroBBox();
         if (this.inferred) return node;
+        if (this.href) node = HTML.addElement(node,"a",{href:this.href, isMathJax:true});
         if (!this.CHTMLnodeID) {this.CHTMLnodeID = CHTML.GetID()};
         var id = (this.id || "MJXc-Node-"+this.CHTMLnodeID);
-        return HTML.addElement(node,"mjx-"+this.type,{id:id});
+        return this.CHTMLhandleAttributes(HTML.addElement(node,"mjx-"+this.type,{id:id}));
       },
       CHTMLnodeElement: function () {
         if (!this.CHTMLnodeID) {return null}
         return document.getElementById(this.id||"MJXc-Node-"+this.CHTMLnodeID);
+      },
+      
+      CHTMLhandleAttributes: function (node) {
+        if (this["class"]) node.className = this["class"];
+        //
+        //  Copy RDFa, aria, and other tags from the MathML to the CHTML
+        //  output nodes.  Don't copy those in the MML.nocopyAttributes list,
+        //  the ignoreMMLattributes configuration list, or anything that
+        //  already exists as a property of the node (e.g., no "onlick", etc.)
+        //  If a name in the ignoreMMLattributes object is set to false, then
+        //  the attribute WILL be copied.
+        //
+        if (this.attrNames) {
+          var copy = this.attrNames, skip = MML.nocopyAttributes, ignore = HUB.config.ignoreMMLattributes;
+          var defaults = (this.type === "mstyle" ? MML.math.prototype.defaults : this.defaults);
+          for (var i = 0, m = copy.length; i < m; i++) {
+            var id = copy[i];
+            if (ignore[id] == false || (!skip[id] && !ignore[id] &&
+                defaults[id] == null && typeof(node[id]) === "undefined")) {
+              node.setAttribute(id,this.attr[id])
+            }
+          }
+        }
+        return node;
       },
 
       CHTMLhandleStyle: function (node) {
