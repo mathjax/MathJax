@@ -946,7 +946,12 @@
 
     /********************************************************/
     
-    arrayEntry: function (a,i) {return a[Math.max(0,Math.min(i,a.length-1))]}
+    arrayEntry: function (a,i) {return a[Math.max(0,Math.min(i,a.length-1))]},
+
+    //
+    //  Styles to be removed from style="..." attributes
+    //
+    removeStyles: ["fontSize","fontFamily","fontWeight","fontStyle","fontVariant","font"]
     
   });
 
@@ -1132,13 +1137,22 @@
       },
 
       CHTMLhandleStyle: function (node) {
-        var BBOX = this.CHTML, style = node.style, w;
-        if (this.style) style.cssText = this.style;
-        for (var i = 0, m = CHTML.BBOX.styleAdjust.length; i < m; i++) {
+        if (!this.style) return;
+        var BBOX = this.CHTML, style = node.style, i, m;
+        style.cssText = this.style;
+        // ### FIXME:  adjust for width, height, vertical-align?
+        for (i = 0, m = CHTML.BBOX.styleAdjust.length; i < m; i++) {
           var data = CHTML.BBOX.styleAdjust[i];
           if (style[data[0]]) BBOX.adjust(style[data[0]],data[1],data[2],data[3]);
         }
-        // ### FIXME:  remove font size and other font settings from non-token elements?
+        this.removedStyles = {};
+        for (i = 0, m = CHTML.removeStyles.length; i < m; i++) {
+          var id = CHTML.removeStyles[i];
+          if (style[id]) {
+            this.removedStyles[id] = style[id];
+            style[id] = "";
+          }
+        }
       },
 
       CHTMLhandleColor: function (node) {
