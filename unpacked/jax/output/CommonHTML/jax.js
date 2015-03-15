@@ -982,13 +982,34 @@
       if (scale*cbox.d - y > this.d) this.d = scale*cbox.d - y;
       if (y + scale*cbox.t > this.t) this.t = y + scale*cbox.t;
       if (scale*cbox.b - y > this.b) this.b = scale*cbox.b - y;
+    },
+    adjust: function (m,x,X,M) {
+      this[x] += CHTML.length2em(m);
+      if (M == null) {
+        if (this[x] > this[X]) this[X] = this[x];
+      } else {
+        if (this[X] < M) this[X] = M;
+      }
     }
   },{
     zero: function () {return CHTML.BBOX({h:0, d:0, w:0, l:0, r:0, t:0, b:0})},
     empty: function () {
       return CHTML.BBOX({h:-BIGDIMEN, d:-BIGDIMEN, w:0, l:BIGDIMEN, r:-BIGDIMEN,
                          t:-BIGDIMEN, b:-BIGDIMEN});
-    }
+    },
+    //
+    //  CSS styles that affect BBOXes
+    //
+    styleAdjust: [
+      ["borderTopWidth","h","t"],
+      ["borderRightWidth","w","r"],
+      ["borderBottomWidth","d","b"],
+      ["borderLeftWidth","w","l",0],
+      ["paddingTop","h","t"],
+      ["paddingRight","w","r"],
+      ["paddingBottom","d","b"],
+      ["paddingLeft","w","l",0],
+    ]
   });
   
   /**********************************************************/
@@ -1006,12 +1027,14 @@
       CHTMLdefaultNode: function (node,options) {
         if (!options) options = {};
         node = this.CHTMLcreateNode(node);
-        if (!options.noBBox) this.CHTMLhandleSpace(node);
-        this.CHTMLhandleStyle(node);
-        this.CHTMLhandleColor(node);
         var m = Math.max((options.minChildren||0),this.data.length);
         for (var i = 0; i < m; i++) this.CHTMLaddChild(node,i,options);
-        if (!options.noBBox) this.CHTML.clean();
+        if (!options.noBBox) {
+          this.CHTML.clean();
+          this.CHTMLhandleSpace(node);
+        }
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleColor(node);
         return node;
       },
       CHTMLaddChild: function (node,i,options) {
@@ -1109,9 +1132,13 @@
       },
 
       CHTMLhandleStyle: function (node) {
-        if (this.style) node.style.cssText = this.style;
+        var BBOX = this.CHTML, style = node.style, w;
+        if (this.style) style.cssText = this.style;
+        for (var i = 0, m = CHTML.BBOX.styleAdjust.length; i < m; i++) {
+          var data = CHTML.BBOX.styleAdjust[i];
+          if (style[data[0]]) BBOX.adjust(style[data[0]],data[1],data[2],data[3]);
+        }
         // ### FIXME:  remove font size and other font settings from non-token elements?
-        // ### FIXME:  modify bounding box to handle border, padding, and margin.
       },
 
       CHTMLhandleColor: function (node) {
@@ -1220,7 +1247,7 @@
         if (bbox.skew != null && text.length !== 1) delete bbox.skew;
         if (bbox.r > bbox.w && text.length === 1 /*&& !variant.noIC*/) {  // ### FIXME: handle variants
           bbox.ic = bbox.r - bbox.w; bbox.w = bbox.r;
-          node.style.paddingRight = CHTML.Em(bbox.ic);
+          node.lastChild.style.paddingRight = CHTML.Em(bbox.ic);
         }
         return node;
       }
@@ -1383,8 +1410,6 @@
     MML.mspace.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
-        this.CHTMLhandleStyle(node);
-        this.CHTMLhandleColor(node);
         var values = this.getValues("height","depth","width");
         var w = CHTML.length2em(values.width),
             h = CHTML.length2em(values.height),
@@ -1395,6 +1420,8 @@
         node.style.width = CHTML.Em(w);
         node.style.height = CHTML.Em(h+d);
         if (d) node.style.verticalAlign = CHTML.Em(-d);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleColor(node);
         return node;
       }
     });
@@ -1914,9 +1941,6 @@
     MML.mfenced.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
-        this.CHTMLhandleSpace(node);
-        this.CHTMLhandleStyle(node);
-        this.CHTMLhandleColor(node);
         //
         //  Make row of open, data, sep, ... data, close
         //
@@ -1936,6 +1960,9 @@
           this.CHTMLstretchChildV(i,H,D);
         }
         this.CHTMLstretchChildV("close",H,D);
+        this.CHTMLhandleSpace(node);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleColor(node);
         return node;
       }
     });
@@ -2035,10 +2062,10 @@
       CHTMLdefaultNode: function (node,options) {
         if (!options) options = {};
         node = this.CHTMLcreateNode(node);
-        this.CHTMLhandleStyle(node);
-        this.CHTMLhandleColor(node);
         // skip label for now
         for (var i = 1, m = this.data.length; i < m; i++) this.CHTMLaddChild(node,i,options);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleColor(node);
         return node;
       }
     });
