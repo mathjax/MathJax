@@ -1664,10 +1664,10 @@
         var types = ["mjx-base","mjx-sub","mjx-sup"];
         if (this.sup === 1) types[1] = types[2];
         node = this.CHTMLdefaultNode(node,{
-          childNodes:types, noBBox:true, forceChild:true, minChildren: 2
+          childNodes:types, noBBox:true, forceChild:true, minChildren: 3
         });
-        var base, sub, sup; base = node.firstChild; sub = sup = base.nextSibling;
-        if (sub.nextSibling) sup = sub.nextSibling;
+        var base, sub, sup; base = node.childNodes[this.base];
+        sub = node.childNodes[this.sub]; sup = node.childNodes[this.sup];
         if (!this.CHTMLnotEmpty(this.data[this.sub])) {node.removeChild(sub); sub = null}
         if (!this.CHTMLnotEmpty(this.data[this.sup])) {node.removeChild(sup); sup = null}
         if (node.childNodes.length === 3) {
@@ -1675,7 +1675,7 @@
           stack.appendChild(sup); stack.appendChild(sub);
         }
         //
-        //  Get the scale of the base and its limits
+        //  Get the scale of the base and its scripts
         //
         var sscale = 1;
         if (values.scriptlevel < 2) {
