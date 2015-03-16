@@ -2122,8 +2122,11 @@
     MML.TeXAtom.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
-        var H = this.CHTML.h, D = this.CHTML.d;
-        for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLstretchChildV(i,H,D);
+        if (this.texClass === MML.TEXCLASS.VCENTER) {
+          var a = CHTML.TEX.axis_height, BBOX = this.CHTML;
+          var v = a-(BBOX.h+BBOX.d)/2+BBOX.d;
+          node.style.verticalAlign = CHTML.Em(v);
+        }
         return node;
       }
     });
