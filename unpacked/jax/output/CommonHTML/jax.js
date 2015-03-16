@@ -1059,10 +1059,8 @@
         if (this.isToken) this.CHTMLgetVariant();
         var m = Math.max((options.minChildren||0),this.data.length);
         for (var i = 0; i < m; i++) this.CHTMLaddChild(node,i,options);
-        if (!options.noBBox) {
-          this.CHTML.clean();
-          this.CHTMLhandleSpace(node);
-        }
+        if (!options.noBBox) this.CHTML.clean();
+        this.CHTMLhandleSpace(node);
         this.CHTMLhandleBBox(node);
         this.CHTMLhandleColor(node);
         return node;
@@ -1639,7 +1637,6 @@
         //  Handle horizontal positions
         //
         this.CHTMLplaceBoxes(base,under,over,values,boxes);
-        this.CHTMLhandleSpace(node);
         return node;
       },
       //
@@ -1896,7 +1893,6 @@
           }
         }
         BBOX.clean();
-        this.CHTMLhandleSpace(node);
         return node;
       }
     });
@@ -1991,7 +1987,6 @@
           frac.style.padding = "0 "+CHTML.Em(space);
           BBOX.l += space; BBOX.r += space; BBOX.w += 2*space;
         }
-        this.CHTMLhandleSpace(node);
         //
         //  Return the completed fraction
         //
@@ -2025,7 +2020,6 @@
         BBOX.combine(sbox,x,H-sbox.h,1);
         BBOX.combine(bbox,x+sbox.w,0,1);
         BBOX.clean();
-        this.CHTMLhandleSpace(node);
         return node;
       },
       CHTMLaddRoot: function () {return 0}
