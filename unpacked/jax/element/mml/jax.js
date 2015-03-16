@@ -264,6 +264,7 @@ MathJax.ElementJax.mml.Augment({
     noInheritAttribute: {
       texClass: true
     },
+    getRemoved: {},
     linebreakContainer: false,
     
     Init: function () {
@@ -312,6 +313,7 @@ MathJax.ElementJax.mml.Augment({
       var obj = this.inherit; var root = obj;
       while (obj) {
         var value = obj[name]; if (value == null && obj.attr) {value = obj.attr[name]}
+        if (obj.removedStyles && obj.getRemoved[name] && value == null) value = obj.removedStyles[obj.getRemoved[name]];
         if (value != null && obj.noInheritAttribute && !obj.noInheritAttribute[name]) {
           var noInherit = obj.noInherit[this.type];
           if (!(noInherit && noInherit[name])) {return value}
@@ -916,6 +918,7 @@ MathJax.ElementJax.mml.Augment({
       mpadded: {width: true, height: true, depth: true, lspace: true, voffset: true},
       mtable:  {width: true, height: true, depth: true, align: true}
     },
+    getRemoved: {fontfamily:"fontFamily", fontweight:"fontWeight", fontstyle:"fontStyle"},
     setTeXclass: MML.mbase.setChildTeXclass
   });
 
