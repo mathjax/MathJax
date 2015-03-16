@@ -1055,6 +1055,7 @@
       CHTMLdefaultNode: function (node,options) {
         if (!options) options = {};
         node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleStyle(node);
         if (this.isToken) this.CHTMLgetVariant();
         var m = Math.max((options.minChildren||0),this.data.length);
         for (var i = 0; i < m; i++) this.CHTMLaddChild(node,i,options);
@@ -1062,7 +1063,7 @@
           this.CHTML.clean();
           this.CHTMLhandleSpace(node);
         }
-        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleBBox(node);
         this.CHTMLhandleColor(node);
         return node;
       },
@@ -1162,20 +1163,24 @@
 
       CHTMLhandleStyle: function (node) {
         if (!this.style) return;
-        var BBOX = this.CHTML, style = node.style, i, m;
-        style.cssText = this.style;
-        // ### FIXME:  adjust for width, height, vertical-align?
-        for (i = 0, m = CHTML.BBOX.styleAdjust.length; i < m; i++) {
-          var data = CHTML.BBOX.styleAdjust[i];
-          if (style[data[0]]) BBOX.adjust(style[data[0]],data[1],data[2],data[3]);
-        }
-        this.removedStyles = {};
-        for (i = 0, m = CHTML.removeStyles.length; i < m; i++) {
+        var BBOX = this.CHTML, style = node.style;
+        style.cssText = this.style; this.removedStyles = {};
+        for (var i = 0, m = CHTML.removeStyles.length; i < m; i++) {
           var id = CHTML.removeStyles[i];
           if (style[id]) {
             this.removedStyles[id] = style[id];
             style[id] = "";
           }
+        }
+      },
+
+      CHTMLhandleBBox: function (node) {
+        if (!this.style) return;
+        var BBOX = this.CHTML, style = node.style;
+        // ### FIXME:  adjust for width, height, vertical-align?
+        for (var i = 0, m = CHTML.BBOX.styleAdjust.length; i < m; i++) {
+          var data = CHTML.BBOX.styleAdjust[i];
+          if (style[data[0]]) BBOX.adjust(style[data[0]],data[1],data[2],data[3]);
         }
       },
 
@@ -1352,9 +1357,12 @@
     MML.mo.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLgetVariant();
         this.CHTML = CHTML.BBOX.empty();
         
-        var values = this.getValues("displaystyle","largeop","mathvariant");
+        var values = this.getValues("displaystyle","largeop");
+        values.variant = this.CHTMLvariant;
         values.text = this.data.join("");
         if (values.text == "") {
           if (this.fence) node.style.width = CHTML.Em(CHTML.TEX.nulldelimiterspace);
@@ -1375,7 +1383,7 @@
 
         this.CHTML.clean();
         this.CHTMLhandleSpace(node);
-        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleBBox(node);
         this.CHTMLhandleColor(node);
 
         return node;
@@ -1504,6 +1512,7 @@
     MML.mspace.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleStyle(node);
         var values = this.getValues("height","depth","width");
         var w = CHTML.length2em(values.width),
             h = CHTML.length2em(values.height),
@@ -1514,11 +1523,10 @@
         node.style.width = CHTML.Em(w);
         node.style.height = CHTML.Em(h+d);
         if (d) node.style.verticalAlign = CHTML.Em(-d);
-        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleBBox(node);
         this.CHTMLhandleColor(node);
         return node;
-      },
-      CHTMLgetVariant: function () {}
+      }
     });
 
     /********************************************************/
@@ -2036,6 +2044,7 @@
     MML.mfenced.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleStyle(node);
         //
         //  Make row of open, data, sep, ... data, close
         //
@@ -2056,7 +2065,7 @@
         }
         this.CHTMLstretchChildV("close",H,D);
         this.CHTMLhandleSpace(node);
-        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleBBox(node);
         this.CHTMLhandleColor(node);
         return node;
       }
@@ -2157,9 +2166,10 @@
       CHTMLdefaultNode: function (node,options) {
         if (!options) options = {};
         node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleStyle(node);
         // skip label for now
         for (var i = 1, m = this.data.length; i < m; i++) this.CHTMLaddChild(node,i,options);
-        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleBBox(node);
         this.CHTMLhandleColor(node);
         return node;
       }
