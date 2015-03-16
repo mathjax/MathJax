@@ -906,9 +906,7 @@ MathJax.ElementJax.mml.Augment({
       if (level == null) {
         level = this.Get("scriptlevel");
       } else if (String(level).match(/^ *[-+]/)) {
-        delete this.scriptlevel;
-        var LEVEL = this.Get("scriptlevel");
-        this.scriptlevel = level;
+        var LEVEL = this.Get("scriptlevel",null,true);
         level = LEVEL + parseInt(level);
       }
       return level;
@@ -918,7 +916,7 @@ MathJax.ElementJax.mml.Augment({
       mpadded: {width: true, height: true, depth: true, lspace: true, voffset: true},
       mtable:  {width: true, height: true, depth: true, align: true}
     },
-    getRemoved: {fontfamily:"fontFamily", fontweight:"fontWeight", fontstyle:"fontStyle"},
+    getRemoved: {fontfamily:"fontFamily", fontweight:"fontWeight", fontstyle:"fontStyle", fontsize:"fontSize"},
     setTeXclass: MML.mbase.setChildTeXclass
   });
 
