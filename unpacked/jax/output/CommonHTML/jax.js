@@ -601,14 +601,32 @@
       unknown[n] = [.8,.2,HDW.w,0,HDW.w,{a:a, A:HDW.h-a, d:HDW.d}];
       unknown[n].c = c;
     },
+    styledText: function (variant,text) {
+      HUB.signal.Post(["CommonHTML Jax - styled text",text,variant]);
+      var style = variant.style;
+      var id = "_"+style.family;
+      if (style.weight) id += "_"+style.weight;
+      if (style.style)  id += "_"+style.style;
+      if (!this.STYLEDTEXT) this.STYLEDTEXT = {};
+      if (!this.STYLEDTEXT[id]) this.STYLEDTEXT[id] = {cache:{}, className:""};
+      var unknown = this.STYLEDTEXT[id];
+      if (!unknown["_"+text]) {
+        var HDW = this.getHDW(text,"",style);
+        var a = (HDW.h-HDW.d)/2+AFUZZ; // ### FIXME:  is this really the axis of the surrounding text?
+        unknown["_"+text] = [.8,.2,HDW.w,0,HDW.w,{a:a, A:HDW.h-a, d:HDW.d}];
+        unknown["_"+text].c = text;
+      }
+      return {type:"unknown", n:"_"+text, font:unknown, style:style};
+    },
+
     //
     //  Get the height, depth and width of a character
     //  (height and depth are of the font, not the character).
     //  WARNING:  causes reflow of the page!
     //
-    getHDW: function (c,name) {
-      var test1 = HTML.addElement(document.body,"mjx-chartest",{className:name},[["mjx-char",{},[c]]]);
-      var test2 = HTML.addElement(document.body,"mjx-chartest",{className:name},[["mjx-char",{},[c,["mjx-box"]]]]);
+    getHDW: function (c,name,styles) {
+      var test1 = HTML.addElement(document.body,"mjx-chartest",{className:name,style:styles},[["mjx-char",{},[c]]]);
+      var test2 = HTML.addElement(document.body,"mjx-chartest",{className:name,style:styles},[["mjx-char",{},[c,["mjx-box"]]]]);
       var em = window.parseFloat(window.getComputedStyle(test1).fontSize);
       var d = (test2.offsetHeight-500)/em;
       var w = test1.offsetWidth/em, h = test1.offsetHeight/em - d;
@@ -616,6 +634,7 @@
       document.body.removeChild(test2);
       return {h:h, d:d, w:w}
     },
+    
 
     /********************************************************/
     
@@ -674,7 +693,7 @@
       //
       unknown: function (item,node,bbox,state) {
         this.char(item,node,bbox,state,0);
-        node = this.flushText(node,state);
+        node = this.flushText(node,state,item.style);
         node.style.lineHeight = "normal";
         var C = item.font[item.n];
         node.style.marginTop = CHTML.Em(-C[5].A-HFUZZ);
@@ -686,8 +705,9 @@
       //  Put the pending text into a box of the class, and
       //  reset the data about the text.
       //
-      flushText: function (node,state) {
-        node = HTML.addElement(node,"mjx-charbox",{className:state.className},[state.text]);
+      flushText: function (node,state,style) {
+        node = HTML.addElement(node,"mjx-charbox",
+          {className:state.className,style:style},[state.text]);
         state.text = ""; state.className = null;
         return node;
       }
@@ -703,15 +723,18 @@
         HTML.addElement(node,"mjx-char");
         bbox = CHTML.BBOX.empty();
       }
-      var string = {text:text, i:0, length:text.length};
       if (typeof(variant) === "string") variant = this.FONTDATA.VARIANT[variant];
       if (!variant) variant = this.FONTDATA.VARIANT[MML.VARIANT.NORMAL];
-      var list = [];
-      while (string.i < string.length) {
-        var n = this.getUnicode(string);
-        list.push.apply(list,this.getCharList(variant,n));
+      var string = {text:text, i:0, length:text.length}, list = [];
+      if (variant.style && string.length) {
+        list.push(this.styledText(variant,text));
+      } else {
+        while (string.i < string.length) {
+          var n = this.getUnicode(string);
+          list.push.apply(list,this.getCharList(variant,n));
+        }
       }
-      this.addCharList(node.firstChild,list,bbox);
+      if (list.length) this.addCharList(node.firstChild,list,bbox);
       bbox.clean();
       bbox.h += HFUZZ; bbox.d += DFUZZ; bbox.t += HFUZZ; bbox.b += DFUZZ;
       node.firstChild.style[bbox.h < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h-(bbox.a||0));
@@ -1032,6 +1055,7 @@
       CHTMLdefaultNode: function (node,options) {
         if (!options) options = {};
         node = this.CHTMLcreateNode(node);
+        if (this.isToken) this.CHTMLgetVariant();
         var m = Math.max((options.minChildren||0),this.data.length);
         for (var i = 0; i < m; i++) this.CHTMLaddChild(node,i,options);
         if (!options.noBBox) {
@@ -1189,6 +1213,63 @@
       CHTMLhandleText: function (node,text,variant) {
         this.CHTML = CHTML.handleText(node,text,variant,this.CHTML);
       },
+      
+      CHTMLgetVariant: function () {
+	var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
+        values.hasVariant = this.Get("mathvariant",true);  // null if not explicitly specified
+        if (this.style) {
+          var span = HTML.Element("span"); span.style.cssText = this.style;
+          if (span.style.fontFamily) values.family = span.style.fontFamily;
+          if (span.style.fontWeight) values.weight = span.style.fontWeight;
+          if (span.style.fontStyle)  values.style  = span.style.fontStyle;
+        }
+        if (!values.hasVariant) {
+          if (values.fontfamily) values.family = values.fontfamily;
+          if (values.fontweight) values.weight = values.fontweight;
+          if (values.fontstyle)  values.style  = values.fontstyle;
+        }
+        if (values.weight && values.weight.match(/^\d+$/))
+            values.weight = (parseInt(values.weight) > 600 ? "bold" : "normal");
+	var variant = values.mathvariant; if (this.variantForm) variant = "-TeX-variant";
+	if (values.family && !values.hasVariant) {
+	  if (!values.weight && values.mathvariant.match(/bold/)) values.weight = "bold";
+	  if (!values.style && values.mathvariant.match(/italic/)) values.style = "italic";
+	  this.CHTMLvariant = {fonts:[], noRemap:true, cache:{}, style: {
+            "font-family":values.family, "font-weight":values.weight, "font-style":values.style
+          }};
+          return;
+	}
+        if (values.weight === "bold") {
+          variant = {
+            normal:MML.VARIANT.BOLD, italic:MML.VARIANT.BOLDITALIC,
+            fraktur:MML.VARIANT.BOLDFRAKTUR, script:MML.VARIANT.BOLDSCRIPT,
+            "sans-serif":MML.VARIANT.BOLDSANSSERIF,
+            "sans-serif-italic":MML.VARIANT.SANSSERIFBOLDITALIC
+          }[variant]||variant;
+        } else if (values.weight === "normal") {
+          variant = {
+            bold:MML.VARIANT.normal, "bold-italic":MML.VARIANT.ITALIC,
+            "bold-fraktur":MML.VARIANT.FRAKTUR, "bold-script":MML.VARIANT.SCRIPT,
+            "bold-sans-serif":MML.VARIANT.SANSSERIF,
+            "sans-serif-bold-italic":MML.VARIANT.SANSSERIFITALIC
+          }[variant]||variant;
+        }
+        if (values.style === "italic") {
+          variant = {
+            normal:MML.VARIANT.ITALIC, bold:MML.VARIANT.BOLDITALIC,
+            "sans-serif":MML.VARIANT.SANSSERIFITALIC,
+            "bold-sans-serif":MML.VARIANT.SANSSERIFBOLDITALIC
+          }[variant]||variant;
+        } else if (values.style === "normal") {
+          variant = {
+            italic:MML.VARIANT.NORMAL, "bold-italic":MML.VARIANT.BOLD,
+            "sans-serif-italic":MML.VARIANT.SANSSERIF,
+            "sans-serif-bold-italic":MML.VARIANT.BOLDSANSSERIF
+          }[variant]||variant;
+        }
+        this.CHTMLvariant = CHTML.FONTDATA.VARIANT[variant] ||
+                            CHTML.FONTDATA.VARIANT[MML.VARIANT.NORMAL];
+      },
 
       CHTMLbboxFor: function (n) {
         if (this.data[n] && this.data[n].CHTML) return this.data[n].CHTML;
@@ -1212,7 +1293,6 @@
         ]);
       },
 
-
       CHTMLnotEmpty: function (mml) {
         while (mml && mml.data.length < 2 && (mml.type === "mrow" || mml.type === "texatom"))
           mml = mml.data[0];
@@ -1229,7 +1309,7 @@
         var text = this.toString();
         if (options.remap) text = options.remap(text,options.remapchars);
         //  ### FIXME: handle mtextFontInherit
-        this.CHTMLhandleText(node,text,options.variant||this.parent.Get("mathvariant"));
+        this.CHTMLhandleText(node,text,options.variant||this.parent.CHTMLvariant);
       }
     });
     MML.entity.Augment({
@@ -1238,7 +1318,7 @@
         var text = this.toString();
         if (options.remapchars) text = options.remap(text,options.remapchars);
         //  ### FIXME: handle mtextFontInherit
-        this.CHTMLhandleText(node,text,options.variant||this.parent.Get("mathvariant"));
+        this.CHTMLhandleText(node,text,options.variant||this.parent.CHTMLvariant);
       }
     });
 
@@ -1437,7 +1517,8 @@
         this.CHTMLhandleStyle(node);
         this.CHTMLhandleColor(node);
         return node;
-      }
+      },
+      CHTMLgetVariant: function () {}
     });
 
     /********************************************************/
