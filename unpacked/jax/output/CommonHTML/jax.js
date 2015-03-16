@@ -813,12 +813,12 @@
         }
       }
       node.appendChild(bot);
-      var BBOX = {
+      var BBOX = CHTML.BBOX({
         w:  Math.max(tbox.w,ebox.w,bbox.w,mbox.w),
         l: Math.min(tbox.l,ebox.l,bbox.l,mbox.l),
         r: Math.max(tbox.r,ebox.r,bbox.r,mbox.r),
         h: H-bbox.d, d: bbox.d, t: H-bbox.d, b: bbox.d
-      };
+      });
       BBOX.offset = .5 * BBOX.w;
       return BBOX;
     },
@@ -1579,7 +1579,7 @@
         node.style.width = 0;
         node.style.marginTop = CHTML.Em(h-STRUTHEIGHT);
         node.style.padding = "0 "+CHTML.Em(w)+" "+CHTML.Em(d)+" 0";
-        var bbox = {w:w, h:h, d:d, l:0, r:w, t:h, b:d};
+        var bbox = CHTML.BBOX({w:w, h:h, d:d, l:0, r:w, t:h, b:d});
         bbox.combine(cbox,x,y,1);
         bbox.w = w; bbox.h = h; bbox.d = d;
         this.CHTML = bbox;
@@ -2121,7 +2121,6 @@
     
     MML.TeXAtom.Augment({
       toCommonHTML: function (node) {
-        // ### FIXME: handle TeX class?
         node = this.CHTMLdefaultNode(node);
         var H = this.CHTML.h, D = this.CHTML.d;
         for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLstretchChildV(i,H,D);
