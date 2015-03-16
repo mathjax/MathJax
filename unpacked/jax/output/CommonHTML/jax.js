@@ -604,11 +604,11 @@
     styledText: function (variant,text) {
       HUB.signal.Post(["CommonHTML Jax - styled text",text,variant]);
       var style = variant.style;
-      var id = "_"+style.family;
-      if (style.weight) id += "_"+style.weight;
-      if (style.style)  id += "_"+style.style;
+      var id = "_"+(style["font-family"]||variant.className||"");
+      if (style["font-weight"]) id += "_"+style["font-weight"];
+      if (style["font-style"])  id += "_"+style["font-style"];
       if (!this.STYLEDTEXT) this.STYLEDTEXT = {};
-      if (!this.STYLEDTEXT[id]) this.STYLEDTEXT[id] = {cache:{}, className:""};
+      if (!this.STYLEDTEXT[id]) this.STYLEDTEXT[id] = {className:variant.className||""};
       var unknown = this.STYLEDTEXT[id];
       if (!unknown["_"+text]) {
         var HDW = this.getHDW(text,"",style);
@@ -1313,7 +1313,6 @@
         if (options == null) options = {};
         var text = this.toString();
         if (options.remap) text = options.remap(text,options.remapchars);
-        //  ### FIXME: handle mtextFontInherit
         this.CHTMLhandleText(node,text,options.variant||this.parent.CHTMLvariant);
       }
     });
@@ -1322,7 +1321,6 @@
         if (options == null) options = {};
         var text = this.toString();
         if (options.remapchars) text = options.remap(text,options.remapchars);
-        //  ### FIXME: handle mtextFontInherit
         this.CHTMLhandleText(node,text,options.variant||this.parent.CHTMLvariant);
       }
     });
@@ -1505,6 +1503,27 @@
         }
       }
 
+    });
+
+    /********************************************************/
+
+    MML.mtext.Augment({
+      CHTMLgetVariant: function () {
+        if (CHTML.config.mtextFontInherit) {
+          var variant = {cache:{}, fonts:[], className:"MJXc-font-inherit", style:{}};
+          var name = this.Get("mathvariant");
+          if (name.match(/bold/)) variant.style["font-weight"] = "bold";
+          if (name.match(/italic/)) variant.style["font-style"] = "italic";
+          if (name === "monospace") variant.className += " MJXc-monospace-font";
+          if (name === "double-struck") variant.className += " MJXc-double-struck-font";
+          if (name.match(/fraktur/)) variant.className += " MJXc-fraktur-font";
+          if (name.match(/sans-serif/)) variant.className += " MJXc-sans-serif-font";
+          if (name.match(/script/)) variant.className += " MJXc-script-font";
+          this.CHTMLvariant = variant;
+        } else {
+          this.SUPER(arguments).CHTMLgetVariant.call(this);
+        }
+      }
     });
 
     /********************************************************/
