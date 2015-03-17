@@ -48,7 +48,7 @@
   
   var CONFIG = HUB.CombineConfig("MathMenu",{
     delay: 150,                                    // the delay for submenus
-    closeImg: AJAX.urlRev(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
+//    closeImg: AJAX.urlRev(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
     showMathPlayer: true,                          //  show the "MathPlayer" menu?
@@ -212,7 +212,10 @@
         HTML.addElement(menu,"span",{
           className: "MathJax_Menu_Close", menu: parent,
           ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close, onmouseup: FALSE
-        },[["img",{src: CONFIG.closeImg, style:{width:"100%",height:"100%"}}]]);
+        },[
+//          ["img",{src: CONFIG.closeImg, style:{width:"100%",height:"100%"}}]
+            ["span",{style:{width:"21px", height:"21px", "font-weight": "bold", "font-size": "1.33em", position:"absolute", top:".2em", right:".2em"}, onclick: MENU.About.Remove},"\u00D7"]
+        ]);
       }
       
       div.appendChild(menu);
@@ -376,9 +379,9 @@
     //
     //  Preload images so they show up with the menu
     //
-    getImages: function () {
-      if (MENU.isMobile) {var close = new Image(); close.src = CONFIG.closeImg}
-    }
+//    getImages: function () {
+//      if (MENU.isMobile) {var close = new Image(); close.src = CONFIG.closeImg}
+//    }
 
   });
 
@@ -665,11 +668,12 @@
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
       }},jax],["br"],["br"],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
-      ["img", {
-        src: CONFIG.closeImg,
-        style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
-        onclick: MENU.About.Remove
-      }]
+//      ["img", {
+//        src: CONFIG.closeImg,
+//        style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
+//        onclick: MENU.About.Remove
+//      }]
+      ["span",{style:{width:"21px", height:"21px", "font-weight": "bold", "font-size": "1.33em", position:"absolute", top:".2em", right:".2em"}, onclick: MENU.About.Remove},"\u00D7"]
     ]);
     MathJax.Localization.setCSS(about);
     var doc = (document.documentElement||{});
@@ -1191,7 +1195,7 @@
 
   CALLBACK.Queue(
     HUB.Register.StartupHook("End Config",{}), // wait until config is complete
-    ["getImages",MENU],
+//    ["getImages",MENU],
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathMenu Ready"],
     ["loadComplete",AJAX,"[MathJax]/extensions/MathMenu.js"]

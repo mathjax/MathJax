@@ -34,7 +34,7 @@
   var MENU = MathJax.Menu;
 
   var CONFIG = HUB.CombineConfig("HelpDialog",{
-    closeImg: AJAX.urlRev(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
+//    closeImg: AJAX.urlRev(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     styles: {
       "#MathJax_Help": {
@@ -122,11 +122,12 @@
         ]
       ]],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
-      ["img", {
-        src: CONFIG.closeImg,
-        style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
-        onclick: HELP.Remove
-      }]
+//      ["img", {
+//        src: CONFIG.closeImg,
+//        style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
+//        onclick: HELP.Remove
+//      }]
+      ["span",{style:{width:"21px", height:"21px", "font-weight": "bold", "font-size": "1.33em", position:"absolute", top:".2em", right:".2em"}, onclick: HELP.Remove},["\u00D7"]]
     ]));
     LOCALE.setCSS(help);
     var doc = (document.documentElement||{});
