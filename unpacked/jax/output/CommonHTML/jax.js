@@ -1011,6 +1011,10 @@
       if (y + scale*cbox.t > this.t) this.t = y + scale*cbox.t;
       if (scale*cbox.b - y > this.b) this.b = scale*cbox.b - y;
     },
+    updateFrom: function (cbox) {
+      this.h = cbox.h; this.d = cbox.d; this.w = cbox.w; this.r = cbox.r; this.l = cbox.l;
+      this.t = cbox.t; this.b = cbox.b;
+    },
     adjust: function (m,x,X,M) {
       this[x] += CHTML.length2em(m);
       if (M == null) {
@@ -1025,9 +1029,9 @@
     },
     empty: function (bbox) {
       if (!bbox) bbox = CHTML.BBOX.zero();
-      return MathJax.Hub.Insert(bbox,{
-        h:-BIGDIMEN, d:-BIGDIMEN, w:0, l:BIGDIMEN, r:-BIGDIMEN, t:-BIGDIMEN, b:-BIGDIMEN
-      });
+      bbox.h = bbox.d = bbox.r = bbox.t = bbox.b = -BIGDIMEN;
+      bbox.w = 0;  bbox.l = BIGDIMEN;
+      return bbox;
     },
     //
     //  CSS styles that affect BBOXes
@@ -1058,7 +1062,7 @@
 
       CHTMLdefaultNode: function (node,options) {
         if (!options) options = {};
-        node = this.CHTMLcreateNode(node);
+        node = this.CHTMLcreateNode(node); this.CHTML = CHTML.BBOX.empty();
         this.CHTMLhandleStyle(node);
         this.CHTMLhandleScale(node);
         if (this.isToken) this.CHTMLgetVariant();
@@ -1095,12 +1099,12 @@
       CHTMLstretchChildV: function (i,H,D) {
         var data = this.data[i];
         if (data) {
-          var bbox = this.CHTML;
-          if (bbox.stretch || (bbox.stretch == null && data.CHTMLcanStretch("Vertical",H,D))) {
-            var w = data.CHTML.w;
-            data.CHTMLstretchV(H,D);
-            var dbox = data.CHTML;
+          var bbox = this.CHTML, dbox = data.CHTML;
+          if (dbox.stretch || (dbox.stretch == null && data.CHTMLcanStretch("Vertical",H,D))) {
+            var w = dbox.w;
+            dbox = data.CHTMLstretchV(H,D);
             bbox.w += dbox.w - w;
+            if (bbox.w > bbox.r) bbox.r = bbox.w;
             if (dbox.h > bbox.h) bbox.h = dbox.h;
             if (dbox.d > bbox.d) bbox.d = dbox.d;
             if (dbox.t > bbox.t) bbox.t = dbox.t;
@@ -1108,13 +1112,19 @@
           }
         }
       },
-      CHTMLstretchChildH: function (i,W,nodes) {
+      CHTMLstretchChildH: function (i,W,node) {
         var data = this.data[i];
         if (data) {
-          var bbox = this.CHTML;
-          if (bbox.stretch || (bbox.stretch == null && data.CHTMLcanStretch("Horizontal",W))) {
-            data.CHTMLstretchH(nodes[i].firstChild,W);
-            MathJax.Hub.Insert(this.CHTML,data.CHTML);
+          var bbox = this.CHTML, dbox = data.CHTML;
+          if (dbox.stretch || (dbox.stretch == null && data.CHTMLcanStretch("Horizontal",W))) {
+            var w = dbox.w;
+            dbox = data.CHTMLstretchH(node,W);
+            bbox.w += dbox.w - w;
+            if (bbox.w > bbox.r) bbox.r = bbox.w;
+            if (dbox.h > bbox.h) bbox.h = dbox.h;
+            if (dbox.d > bbox.d) bbox.d = dbox.d;
+            if (dbox.t > bbox.t) bbox.t = dbox.t;
+            if (dbox.b > bbox.b) bbox.b = dbox.b;
           }
         }
       },
@@ -1128,8 +1138,14 @@
         this.CHTML.stretch = stretch;
         return stretch;
       },
-      CHTMLstretchV: function (h,d) {},
-      CHTMLstretchH: function (node,w) {},
+      CHTMLstretchV: function (h,d) {
+        this.CHTML.updateFrom(this.Core().CHTMLstretchV(h,d));
+        return this.CHTML;
+      },
+      CHTMLstretchH: function (node,w) {
+        this.CHTML.updateFrom(this.Core().CHTMLstretchH(node,w));
+        return this.CHTML;
+      },
 
       CHTMLcreateNode: function (node) {
         if (!this.CHTML) this.CHTML = {};
@@ -1298,7 +1314,7 @@
       //
       CHTMLdrawBBox: function (node) {
         var bbox = this.CHTML, scale = bbox.rscale;
-        HTML.addElement(node.parentNode,"mjx-box",
+        var box = HTML.Element("mjx-box",
           {style:{opacity:.25,"margin-left":CHTML.Em(-scale*(bbox.w+(bbox.R||0)))}},[
           ["mjx-box",{style:{
             height:CHTML.Em(scale*bbox.h),width:CHTML.Em(scale*bbox.w),
@@ -1310,6 +1326,8 @@
             "background-color":"green"
           }}]
         ]);
+        if (node.nextSibling) {node.parentNode.insertBefore(box,node.nextSibling)}
+          else {node.parentNode.appendChild(box)}
       },
 
       CHTMLnotEmpty: function (mml) {
@@ -1318,6 +1336,20 @@
         return !!mml;
       }
 
+    },{
+      //
+      //  For use with embellished operators
+      //
+      CHTMLstretchV: function (h,d) {
+        this.Core().CHTMLstretchV(h,d);
+        this.toCommonHTML(this.CHTMLnodeElement(),true);
+        return this.CHTML;
+      },
+      CHTMLstretchH: function (node,w) {
+        this.Core().CHTMLstretchH(w);
+        this.toCommonHTML(node,true);
+        return this.CHTML;
+      }      
     });
 
     /********************************************************/
@@ -1516,6 +1548,7 @@
             bbox.h += H; bbox.d -= H; bbox.t += H; bbox.b -= H;
           }
         }
+        return this.CHTML;
       },
       CHTMLstretchH: function (node,W) {
         var bbox = this.CHTML;
@@ -1531,6 +1564,7 @@
           this.CHTML = bbox = CHTML.createDelimiter(node,this.data.join("").charCodeAt(0),W,bbox,values.mathvariant);
           bbox.sW = W;
         }
+        return this.CHTML;
       }
 
     });
@@ -1581,11 +1615,16 @@
     /********************************************************/
     
     MML.mpadded.Augment({
-      toCommonHTML: function (node) {
-        node = this.CHTMLdefaultNode(node,{childNodes:"mjx-box", forceChild:true});
-        var child = node.firstChild, cbox = this.CHTMLbboxFor(0);
-        node = HTML.addElement(node,"mjx-block"); node.appendChild(child);
-        HTML.addElement(node,"mjx-strut"); // force proper alignment of short heights
+      toCommonHTML: function (node,stretch) {
+        var child;
+        if (stretch) {
+          node = node.firstChild; child = node.firstChild;
+        } else {
+          node = this.CHTMLdefaultNode(node,{childNodes:"mjx-box", forceChild:true});
+          child = node.firstChild; node = HTML.addElement(node,"mjx-block");
+          node.appendChild(child); HTML.addElement(node,"mjx-strut"); // force proper alignment of short heights
+        }
+        var cbox = this.CHTMLbboxFor(0);
         var values = this.getValues("width","height","depth","lspace","voffset");
         var dimen, x = 0, y = 0, w = cbox.w, h = cbox.h, d = cbox.d;
         child.style.width = 0; child.style.margin = CHTML.Em(-h)+" 0 "+CHTML.Em(-d);
@@ -1615,6 +1654,8 @@
         this.CHTML = bbox;
         return node.parentNode;
       },
+      CHTMLstretchV: MML.mbase.CHTMLstretchV,
+      CHTMLstretchH: MML.mbase.CHTMLstretchH,
       CHTMLdimen: function (length,d,D,m) {
         if (m == null) {m = -BIGDIMEN}
         length = String(length);
@@ -1630,23 +1671,30 @@
     /********************************************************/
     
     MML.munderover.Augment({
-      toCommonHTML: function (node) {
+      toCommonHTML: function (node,stretch) {
         var values = this.getValues("displaystyle","scriptlevel","accent","accentunder","align");
         if (!values.displaystyle && this.data[this.base] != null &&
             this.data[this.base].CoreMO().Get("movablelimits"))
-                return MML.msubsup.prototype.toCommonHTML.call(this,node);
+                return MML.msubsup.prototype.toCommonHTML.call(this,node,stretch);
         //
         //  Get the nodes for base and limits
         //
-        var types = ["mjx-op","mjx-under","mjx-over"];
-        if (this.over === 1) types[1] = types[2];
-        node = this.CHTMLdefaultNode(node,{
-          childNodes:types, noBBox:true, forceChild:true, minChildren: 2
-        });
         var base, under, over, nodes = [];
-        nodes[0] = base = node.removeChild(node.firstChild);
-        nodes[1] = under = over = node.removeChild(node.firstChild);
-        if (node.firstChild) nodes[2] = over = node.removeChild(node.firstChild);
+        if (stretch) {
+          base = node.getElementsByTagName("mjx-op")[0];
+          under = node.getElementsByTagName("mjx-under")[0];
+          over = node.getElementsByTagName("mjx-over")[0];
+          nodes[0] = base; nodes[1] = under||over; nodes[2] = over;
+        } else {
+          var types = ["mjx-op","mjx-under","mjx-over"];
+          if (this.over === 1) types[1] = types[2];
+          node = this.CHTMLdefaultNode(node,{
+            childNodes:types, noBBox:true, forceChild:true, minChildren: 2
+          });
+          nodes[0] = base = node.removeChild(node.firstChild);
+          nodes[1] = under = over = node.removeChild(node.firstChild);
+          if (node.firstChild) nodes[2] = over = node.removeChild(node.firstChild);
+        }
         //
         //  Get the bounding boxes and the maximum width
         //
@@ -1658,9 +1706,9 @@
         //  
         var stack = base, delta = 0;
         if (bbox.ic) {delta = 1.3*bbox.ic + .05} // make faked IC be closer to expeted results
-        if (this.data[this.over]) stack = this.CHTMLaddOverscript(over,boxes,values,delta,base);
-        if (this.data[this.under]) this.CHTMLaddUnderscript(under,boxes,values,delta,node,stack);
-          else node.appendChild(stack);
+        if (this.data[this.over]) stack = this.CHTMLaddOverscript(over,boxes,values,delta,base,stretch);
+        if (this.data[this.under]) this.CHTMLaddUnderscript(under,boxes,values,delta,node,stack,stretch);
+          else if (!stretch) node.appendChild(stack);
         //
         //  Handle horizontal positions
         //
@@ -1692,8 +1740,8 @@
         for (i = 0; i < m; i++) {
           if (bbox[i].stretch) {
             scale = (i === this.base ? 1 : bbox[i].rscale);
-            this.CHTMLstretchChildH(i,w/scale,nodes);
-            bbox[i] = this.CHTMLbboxFor(i); bbox[i].x = bbox[i].y = 0;
+            bbox[i] = this.data[i].CHTMLstretchH(nodes[i].firstChild,w/scale);
+            bbox[i].x = bbox[i].y = 0;
             W = Math.max(W,scale*(bbox[i].w + (bbox[i].L||0) + (bbox[i].R||0)));
           }
         }
@@ -1702,15 +1750,17 @@
       //
       //  Add an overscript
       //
-      CHTMLaddOverscript: function (over,boxes,values,delta,base) {
+      CHTMLaddOverscript: function (over,boxes,values,delta,base,stretch) {
         var BBOX = this.CHTML;
         var w, z1, z2, z3 = CHTML.TEX.big_op_spacing5, k;
         var obox = boxes[this.over], bbox = boxes[this.base], scale = obox.rscale;
         //
         //  Put the base and script into a stack
-        //  
-        var stack = HTML.Element("mjx-stack");
-        stack.appendChild(over); stack.appendChild(base);
+        //
+        if (!stretch) {
+          var stack = HTML.Element("mjx-stack");
+          stack.appendChild(over); stack.appendChild(base);
+        }
         if (obox.d < 0) {
           //
           // For negative depths, set the height and align to top
@@ -1746,19 +1796,21 @@
       //
       //  Add an underscript
       //
-      CHTMLaddUnderscript: function (under,boxes,values,delta,node,stack) {
+      CHTMLaddUnderscript: function (under,boxes,values,delta,node,stack,stretch) {
         var BBOX = this.CHTML;
         var w, x = 0, z1, z2, z3 = CHTML.TEX.big_op_spacing5, k;
         var ubox = boxes[this.under], bbox = boxes[this.base], scale = ubox.rscale;
         //
         //  Create a table for the underscript
         //
-        HTML.addElement(node,"mjx-itable",{},[
-          ["mjx-row",{},[["mjx-cell"]]],
-          ["mjx-row"],
-        ]);
-        node.firstChild.firstChild.firstChild.appendChild(stack);
-        node.firstChild.lastChild.appendChild(under);
+        if (!stretch) {
+          HTML.addElement(node,"mjx-itable",{},[
+            ["mjx-row",{},[["mjx-cell"]]],
+            ["mjx-row"],
+          ]);
+          node.firstChild.firstChild.firstChild.appendChild(stack);
+          node.firstChild.lastChild.appendChild(under);
+        }
         if (ubox.d < 0) {
           //
           // For negative depths, set the height and align to top
@@ -1809,30 +1861,39 @@
           }
         }
         this.CHTML = BBOX;
-      }
+      },
+      CHTMLstretchV: MML.mbase.CHTMLstretchV,
+      CHTMLstretchH: MML.mbase.CHTMLstretchH
     });
 
     /********************************************************/
     
     MML.msubsup.Augment({
-      toCommonHTML: function (node) {
+      toCommonHTML: function (node,stretch) {
         var values = this.getValues("displaystyle","scriptlevel",
                        "subscriptshift","superscriptshift","texprimestyle");
         //
         //  Get the nodes for base and limits
         //
-        var types = ["mjx-base","mjx-sub","mjx-sup"];
-        if (this.sup === 1) types[1] = types[2];
-        node = this.CHTMLdefaultNode(node,{
-          childNodes:types, noBBox:true, forceChild:true, minChildren: 3
-        });
-        var base, sub, sup; base = node.childNodes[this.base];
-        sub = node.childNodes[this.sub]; sup = node.childNodes[this.sup];
-        if (!this.CHTMLnotEmpty(this.data[this.sub])) {node.removeChild(sub); sub = null}
-        if (!this.CHTMLnotEmpty(this.data[this.sup])) {node.removeChild(sup); sup = null}
-        if (node.childNodes.length === 3) {
-          var stack = HTML.addElement(node,"mjx-stack");
-          stack.appendChild(sup); stack.appendChild(sub);
+        var base, sub, sup;
+        if (stretch) {
+          base = node.getElementsByTagName("mjx-base")[0];
+          sub = node.getElementsByTagName("mjx-sub")[0];
+          sup = node.getElementsByTagName("mjx-sup")[0];
+        } else {
+          var types = ["mjx-base","mjx-sub","mjx-sup"];
+          if (this.sup === 1) types[1] = types[2];
+          node = this.CHTMLdefaultNode(node,{
+            childNodes:types, noBBox:true, forceChild:true, minChildren: 3
+          });
+          base = node.childNodes[this.base];
+          sub = node.childNodes[this.sub]; sup = node.childNodes[this.sup];
+          if (!this.CHTMLnotEmpty(this.data[this.sub])) {node.removeChild(sub); sub = null}
+          if (!this.CHTMLnotEmpty(this.data[this.sup])) {node.removeChild(sup); sup = null}
+          if (node.childNodes.length === 3) {
+            var stack = HTML.addElement(node,"mjx-stack");
+            stack.appendChild(sup); stack.appendChild(sub);
+          }
         }
         //
         //  Get the bounding boxes and maximum width of scripts
@@ -1855,8 +1916,8 @@
         }
         var bmml = this.data[this.base];
         if (bmml && (bmml.type === "mi" || bmml.type === "mo")) {
-          if (bmml.data.join("").length === 1 && bmml.Get("scriptlevel") === 0 &&
-              !bmml.Get("largeop")) {u = v = 0}  // ### FIXME: get scale rather than use scriptlevel
+          if (bmml.data.join("").length === 1 && bbox.rscale === 1 && !bbox.sH &&
+              !bmml.Get("largeop")) {u = v = 0}
         }
         values.subscriptshift   = (values.subscriptshift === ""   ? 0 : CHTML.length2em(values.subscriptshift));
         values.superscriptshift = (values.superscriptshift === "" ? 0 : CHTML.length2em(values.superscriptshift));
@@ -1900,7 +1961,9 @@
         }
         BBOX.clean();
         return node;
-      }
+      },
+      CHTMLstretchV: MML.mbase.CHTMLstretchV,
+      CHTMLstretchH: MML.mbase.CHTMLstretchH
     });
 
     /********************************************************/
@@ -1987,7 +2050,8 @@
         //  Return the completed fraction
         //
         return node;
-      }
+      },
+      CHTMLcanStretch: function (direction) {return false},
     });
 
     /********************************************************/
@@ -2084,6 +2148,17 @@
         var bbox = this.CHTML, H = bbox.h, D = bbox.d;
         for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLstretchChildV(i,H,D);
         return node;
+      },
+      CHTMLstretchV: function (h,d) {
+        this.CHTMLstretchChildV(this.CoreIndex(),h,d);
+        return this.CHTML;
+      },
+      CHTMLstretchH: function (node,w) {
+        var i = this.CoreIndex()
+        node = node.childNodes[i];
+        if (node.nodeName.toLowerCase() === "a") node = node.firstChild;
+        this.CHTMLstretchChildH(i,w,node);
+        return this.CHTML;
       }
     });
 
@@ -2100,14 +2175,24 @@
     /********************************************************/
     
     MML.TeXAtom.Augment({
-      toCommonHTML: function (node) {
-        node = this.CHTMLdefaultNode(node);
+      toCommonHTML: function (node,stretch) {
+        if (!stretch) node = this.CHTMLdefaultNode(node);
         if (this.texClass === MML.TEXCLASS.VCENTER) {
           var a = CHTML.TEX.axis_height, BBOX = this.CHTML;
           var v = a-(BBOX.h+BBOX.d)/2+BBOX.d;
-          node.style.verticalAlign = CHTML.Em(v);
+          if (Math.abs(v) > .001) node.style.verticalAlign = CHTML.Em(v);
         }
         return node;
+      },
+      CHTMLstretchV: function (h,d) {
+        this.CHTML.updateFrom(this.Core().CHTMLstretchV(h,d));
+        this.toCommonHTML(this.CHTMLnodeElement(),true);
+        return this.CHTML;
+      },
+      CHTMLstretchH: function (node,w) {
+        this.CHTML.updateFrom(this.Core().CHTMLstretchH(node.firstChild,w));
+        this.toCommonHTML(node,true);
+        return this.CHTML;
       }
     });
 

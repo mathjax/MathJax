@@ -401,6 +401,11 @@ MathJax.ElementJax.mml.Augment({
     isEmbellished: function () {return false},
     Core: function () {return this},
     CoreMO: function () {return this},
+    childIndex: function(child) {
+      if (child == null) return;
+      for (var i = 0, m = this.data.length; i < m; i++) if (child === this.data[i]) return i;
+    },
+    CoreIndex: function () {return this.childIndex(this.Core())},
     hasNewline: function () {
       if (this.isEmbellished()) {return this.CoreMO().hasNewline()}
       if (this.isToken || this.linebreakContainer) {return false}
