@@ -1356,7 +1356,22 @@
         node = this.CHTMLdefaultNode(node);
         var bbox = this.CHTML, text = this.data.join("");
         if (bbox.skew != null && text.length !== 1) delete bbox.skew;
-        if (bbox.r > bbox.w && text.length === 1 /*&& !variant.noIC*/) {  // ### FIXME: handle variants
+        if (bbox.r > bbox.w && text.length === 1 && !this.CHTMLvariant.noIC) {
+          bbox.ic = bbox.r - bbox.w; bbox.w = bbox.r;
+          node.lastChild.style.paddingRight = CHTML.Em(bbox.ic);
+        }
+        return node;
+      }
+    });
+
+    /********************************************************/
+    
+    MML.mn.Augment({
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node);
+        var bbox = this.CHTML, text = this.data.join("");
+        if (bbox.skew != null && text.length !== 1) delete bbox.skew;
+        if (bbox.r > bbox.w && text.length === 1 && !this.CHTMLvariant.noIC) {
           bbox.ic = bbox.r - bbox.w; bbox.w = bbox.r;
           node.lastChild.style.paddingRight = CHTML.Em(bbox.ic);
         }
