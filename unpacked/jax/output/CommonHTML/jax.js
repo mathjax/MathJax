@@ -650,7 +650,7 @@
       }
       if (state.text !== "") {
         if (node.childNodes.length) {
-          HTML.addElement(node,"span",{className:state.className},[state.text]);
+          this.charList.flushText(node,state);
         } else {
           HTML.addText(node,state.text);
           node.className = state.className;
