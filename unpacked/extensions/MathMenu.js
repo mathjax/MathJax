@@ -121,8 +121,8 @@
       },
 
       ".MathJax_MenuArrow": {
-        position:"absolute", right:".5em", color:"#666666",
-        "font-family": (isMSIE ? "'Arial unicode MS'" : null)
+        position:"absolute", right:".5em", "padding-top":".25em", color:"#666666",
+        "font-family": (isMSIE ? "'Arial unicode MS'" : null), "font-size": ".75em"
       },
       ".MathJax_MenuActive .MathJax_MenuArrow": {color:"white"},
       ".MathJax_MenuArrow.RTL": {left:".5em", right:"auto"},
@@ -374,7 +374,7 @@
     },
     
     saveCookie: function () {HTML.Cookie.Set("menu",this.cookie)},
-    getCookie: function () {this.cookie = HTML.Cookie.Get("menu")},
+    getCookie: function () {this.cookie = HTML.Cookie.Get("menu")}
     
     //
     //  Preload images so they show up with the menu
@@ -488,8 +488,8 @@
    */
   MENU.ITEM.SUBMENU = MENU.ITEM.Subclass({
     menu: null,        // the submenu
-    marker: (isPC && !HUB.Browser.isSafari ? "\u25B6" : "\u25B8"),  // the menu arrow
-    markerRTL: (isPC && !HUB.Browser.isSafari ? "\u25B0" : "\u25C2"),
+    marker: "\u25BA",  // the submenu arrow
+    markerRTL: "\u25C4", // the submenu arrow for RTL
 
     Init: function (name,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
