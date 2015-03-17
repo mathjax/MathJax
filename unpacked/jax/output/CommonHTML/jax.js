@@ -1169,27 +1169,22 @@
       },
 
       CHTMLhandleScale: function (node) {
-	var scale = 1, parent = this.parent, pscale = (parent ? parent.CHTML.scale : 1);
+        var scale = 1, parent = this.parent, pscale = (parent ? parent.CHTML.scale : 1);
         var values = this.getValues("scriptlevel","fontsize","mathsize");
-        if (this.type === "mstyle" || this.type === "math")
-          values.scriptlevel = this.Get("scriptlevel",null,true);
+        if (values.scriptlevel !== 0) {
+          if (values.scriptlevel > 2) values.scriptlevel = 2;
+          scale = Math.pow(this.Get("scriptsizemultiplier"),values.scriptlevel);
+          values.scriptminsize = CHTML.length2em(this.Get("scriptminsize"));
+          if (scale < values.scriptminsize) scale = values.scriptminsize;
+        }
         if (this.removedStyles && this.removedStyles.fontSize && !values.fontsize)
           values.fontsize = this.removedStyles.fontSize;
-	if (values.fontsize && !this.mathsize) values.mathsize = values.fontsize;
-	if (values.scriptlevel !== 0) {
-	  if (values.scriptlevel > 2) values.scriptlevel = 2;
-	  scale = Math.pow(this.Get("scriptsizemultiplier"),values.scriptlevel);
-	  values.scriptminsize = CHTML.length2em(this.Get("scriptminsize"));
-	  if (scale < values.scriptminsize) scale = values.scriptminsize;
-	}
-        if (this.isToken) {
-          this.CHTML.mscale = CHTML.length2em(values.mathsize,pscale);
-          scale *= this.CHTML.mscale;
-        }
+        if (values.fontsize && !this.mathsize) values.mathsize = values.fontsize;
+        scale *= CHTML.length2em(values.mathsize);
         this.CHTML.scale = scale; pscale = this.CHTML.rscale = scale/pscale;
         if (Math.abs(pscale-1) < .001) pscale = 1;
         if (node && pscale !== 1) node.style.fontSize = CHTML.Percent(pscale);
-	return scale;
+        return scale;
       },
 
       CHTMLhandleStyle: function (node) {
@@ -1238,7 +1233,7 @@
       },
       
       CHTMLgetVariant: function () {
-	var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
+        var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
         values.hasVariant = this.Get("mathvariant",true);  // null if not explicitly specified
         if (this.style) {
           var span = HTML.Element("span"); span.style.cssText = this.style;
@@ -1253,15 +1248,15 @@
         }
         if (values.weight && values.weight.match(/^\d+$/))
             values.weight = (parseInt(values.weight) > 600 ? "bold" : "normal");
-	var variant = values.mathvariant; if (this.variantForm) variant = "-TeX-variant";
-	if (values.family && !values.hasVariant) {
-	  if (!values.weight && values.mathvariant.match(/bold/)) values.weight = "bold";
-	  if (!values.style && values.mathvariant.match(/italic/)) values.style = "italic";
-	  this.CHTMLvariant = {fonts:[], noRemap:true, cache:{}, style: {
+        var variant = values.mathvariant; if (this.variantForm) variant = "-TeX-variant";
+        if (values.family && !values.hasVariant) {
+          if (!values.weight && values.mathvariant.match(/bold/)) values.weight = "bold";
+          if (!values.style && values.mathvariant.match(/italic/)) values.style = "italic";
+          this.CHTMLvariant = {fonts:[], noRemap:true, cache:{}, style: {
             "font-family":values.family, "font-weight":values.weight, "font-style":values.style
           }};
           return;
-	}
+        }
         if (values.weight === "bold") {
           variant = {
             normal:MML.VARIANT.BOLD, italic:MML.VARIANT.BOLDITALIC,
@@ -1923,9 +1918,9 @@
         var t = values.linethickness, p,q, u,v;
         if (values.bevelled) {
           frac.className = "MJXc-bevelled";
-	  var delta = (isDisplay ? .4 : .15);
-	  var H = Math.max(nscale*(nbox.h+nbox.d),dscale*(dbox.h+dbox.d)) + 2*delta;
-	  var bevel = HTML.Element("mjx-bevel"); frac.insertBefore(bevel,denom);
+          var delta = (isDisplay ? .4 : .15);
+          var H = Math.max(nscale*(nbox.h+nbox.d),dscale*(dbox.h+dbox.d)) + 2*delta;
+          var bevel = HTML.Element("mjx-bevel"); frac.insertBefore(bevel,denom);
           var bbox = CHTML.createDelimiter(bevel,0x2F,H);
           u = nscale*(nbox.d-nbox.h)/2+a+delta;
           v = dscale*(dbox.d-dbox.h)/2+a-delta;
@@ -2082,7 +2077,7 @@
     MML.mstyle.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
-	if (this.scriptlevel) this.CHTML.rescale(this.data[0].CHTML.rscale);
+        if (this.scriptlevel) this.CHTML.rescale(this.data[0].CHTML.rscale);
         return node;
       }
     });
