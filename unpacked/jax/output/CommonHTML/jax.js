@@ -1249,13 +1249,13 @@
       },
       
       CHTMLgetVariant: function () {
-        var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
+        var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle"), style;
         values.hasVariant = this.Get("mathvariant",true);  // null if not explicitly specified
-        if (this.style) {
-          var span = HTML.Element("span"); span.style.cssText = this.style;
-          if (span.style.fontFamily) values.family = span.style.fontFamily;
-          if (span.style.fontWeight) values.weight = span.style.fontWeight;
-          if (span.style.fontStyle)  values.style  = span.style.fontStyle;
+        if (this.removedStyles) {
+          style = this.removedStyles;
+          if (style.fontFamily) values.family = style.fontFamily;
+          if (style.fontWeight) values.weight = style.fontWeight;
+          if (style.fontStyle)  values.style  = style.fontStyle;
         }
         if (!values.hasVariant) {
           if (values.fontfamily) values.family = values.fontfamily;
