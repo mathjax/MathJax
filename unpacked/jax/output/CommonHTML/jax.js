@@ -2182,7 +2182,7 @@
     MML.mstyle.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
-        if (this.scriptlevel) this.CHTML.rescale(this.data[0].CHTML.rscale);
+        if (this.scriptlevel && this.data[0]) this.CHTML.rescale(this.data[0].CHTML.rscale);
         return node;
       }
     });
@@ -2281,10 +2281,10 @@
     MML.semantics.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
-        if (this.data[0]) {
-          this.data[0].toCommonHTML(node);
-          MathJax.Hub.Insert(this.data[0].CHTML||{},this.CHTML);
-        }
+	if (this.data[0]) {
+	  this.data[0].toCommonHTML(node);
+	  this.CHTML.updateFrom(this.data[0].CHTML);
+	}
         return node;
       }
     });
