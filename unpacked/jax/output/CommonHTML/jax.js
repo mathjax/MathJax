@@ -1196,7 +1196,10 @@
         if (this.removedStyles && this.removedStyles.fontSize && !values.fontsize)
           values.fontsize = this.removedStyles.fontSize;
         if (values.fontsize && !this.mathsize) values.mathsize = values.fontsize;
-        scale *= CHTML.length2em(values.mathsize);
+        if (values.mathsize !== 1) {
+          this.CHTML.mscale = CHTML.length2em(values.mathsize);
+          scale *= this.CHTML.mscale;
+        }
         this.CHTML.scale = scale; pscale = this.CHTML.rscale = scale/pscale;
         if (Math.abs(pscale-1) < .001) pscale = 1;
         if (node && pscale !== 1) node.style.fontSize = CHTML.Percent(pscale);
