@@ -2297,7 +2297,7 @@
     /********************************************************/
 
     MML.ms.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
-//    MML.mglyph.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+    MML.mglyph.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
 //    MML.menclose.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
 //    MML.maction.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
 //    MML.mmultiscripts.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
