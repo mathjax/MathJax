@@ -87,6 +87,8 @@
       "font-style":      "normal",
       "font-size":       "90%"
     },
+    
+    "mjx-annotation-xml": {"line-height":"normal"},
 
     "mjx-box":    {display:"inline-block"},
     "mjx-block":  {display:"block"},
@@ -2290,8 +2292,7 @@
       }
     });
     MML.annotation.Augment({toCommonHTML: function(node) {return this.CHTMLcreateNode(node)}});
-    MML["annotation-xml"].Augment({toCommonHTML: function(node) {}});
-//    MML["annotation-xml"].Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+    MML["annotation-xml"].Augment({toCommonHTML: MML.mbase.CHTMLautoload});
 
     /********************************************************/
 
