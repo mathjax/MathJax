@@ -1004,7 +1004,8 @@
       if (this.L) this.L *= scale;
       if (this.R) this.R *= scale;
     },
-    combine: function (cbox,x,y,scale) {
+   combine: function (cbox,x,y) {
+      scale = cbox.rscale;
       if (x + scale*cbox.r > this.r) this.r = x + scale*cbox.r;
       if (x + scale*cbox.l < this.l) this.l = x + scale*cbox.l;
       if (x + scale*(cbox.w+(cbox.L||0)+(cbox.R||0)) > this.w)
@@ -1093,7 +1094,7 @@
           }
           if (!options.noBBox) {
             var bbox = this.CHTML, cbox = child.CHTML;
-            bbox.combine(cbox,bbox.w,0,1);
+            bbox.combine(cbox,bbox.w,0);
             if (cbox.ic) {bbox.ic = cbox.ic} else {delete bbox.ic}
             if (cbox.skew) bbox.skew = cbox.skew;
           }
@@ -1154,13 +1155,13 @@
         if (!this.CHTML) this.CHTML = {};
         this.CHTML = CHTML.BBOX.zero();
         if (this.href) node = HTML.addElement(node,"a",{href:this.href, isMathJax:true});
-        if (!this.CHTMLnodeID) {this.CHTMLnodeID = CHTML.GetID()};
-        var id = (this.id || "MJXc-Node-"+this.CHTMLnodeID);
+        if (!this.CHTMLnodeID) this.CHTMLnodeID = CHTML.GetID();
+        var id = (this.id || "MJXc-Node-"+this.CHTMLnodeID)+CHTML.idPostfix;
         return this.CHTMLhandleAttributes(HTML.addElement(node,"mjx-"+this.type,{id:id}));
       },
       CHTMLnodeElement: function () {
         if (!this.CHTMLnodeID) {return null}
-        return document.getElementById(this.id||"MJXc-Node-"+this.CHTMLnodeID);
+        return document.getElementById((this.id||"MJXc-Node-"+this.CHTMLnodeID)+CHTML.idPostfix);
       },
       
       CHTMLhandleAttributes: function (node) {
@@ -1199,10 +1200,7 @@
         if (this.removedStyles && this.removedStyles.fontSize && !values.fontsize)
           values.fontsize = this.removedStyles.fontSize;
         if (values.fontsize && !this.mathsize) values.mathsize = values.fontsize;
-        if (values.mathsize !== 1) {
-          this.CHTML.mscale = CHTML.length2em(values.mathsize);
-          scale *= this.CHTML.mscale;
-        }
+        if (values.mathsize !== 1) scale *= CHTML.length2em(values.mathsize);
         this.CHTML.scale = scale; pscale = this.CHTML.rscale = scale/pscale;
         if (Math.abs(pscale-1) < .001) pscale = 1;
         if (node && pscale !== 1) node.style.fontSize = CHTML.Percent(pscale);
@@ -1224,7 +1222,6 @@
 
       CHTMLhandleBBox: function (node) {
         var BBOX = this.CHTML, style = node.style;
-        if (BBOX.mscale != null && BBOX.mscale !== 1) BBOX.rescale(BBOX.mscale);
         if (!this.style) return;
         // ### FIXME:  adjust for width, height, vertical-align?
         for (var i = 0, m = CHTML.BBOX.styleAdjust.length; i < m; i++) {
@@ -1687,7 +1684,7 @@
         node.style.marginTop = CHTML.Em(h-STRUTHEIGHT);
         node.style.padding = "0 "+CHTML.Em(w)+" "+CHTML.Em(d)+" 0";
         var bbox = CHTML.BBOX({w:w, h:h, d:d, l:0, r:w, t:h, b:d});
-        bbox.combine(cbox,x,y,1);
+        bbox.combine(cbox,x,y);
         bbox.w = w; bbox.h = h; bbox.d = d;
         this.CHTML = bbox;
         return node.parentNode;
@@ -1895,7 +1892,7 @@
               var node = (i === this.base ? base : i === this.over ? over : under);
               node.style.paddingLeft = CHTML.Em((boxes[i].x-dx)/scale);
             }
-            BBOX.combine(boxes[i],boxes[i].x-dx,boxes[i].y,scale);
+            BBOX.combine(boxes[i],boxes[i].x-dx,boxes[i].y);
           }
         }
         this.CHTML = BBOX;
@@ -1940,7 +1937,7 @@
         for (var i = 0, m = this.data.length; i < m; i++) boxes[i] = this.CHTMLbboxFor(i);
         var bbox = boxes[this.base], sbox = boxes[this.sub], Sbox = boxes[this.sup];
         var sscale = (sub ? sbox.rscale : 1), Sscale = (sup ? Sbox.rscale : 1);
-        BBOX.combine(bbox,0,0,1);
+        BBOX.combine(bbox,0,0);
         //
         //  Get initial values for parameters
         //
@@ -1968,7 +1965,7 @@
             v = Math.max(v,CHTML.TEX.sub1,sscale*sbox.h-(4/5)*ex,values.subscriptshift);
             sub.style.verticalAlign = CHTML.Em(-v/sscale);
             sub.style.paddingRight = CHTML.Em(s/sscale);
-            BBOX.combine(sbox,x,-v,sscale);
+            BBOX.combine(sbox,x,-v);
           }
         } else {
           if (!sub) {
@@ -1977,7 +1974,7 @@
             sup.style.verticalAlign = CHTML.Em(u/Sscale);
             sup.style.paddingLeft = CHTML.Em(delta/Sscale);
             sup.style.paddingRight = CHTML.Em(s/Sscale);
-            BBOX.combine(Sbox,x+delta,u,Sscale);
+            BBOX.combine(Sbox,x+delta,u);
           } else {
             v = Math.max(v,CHTML.TEX.sub2);
             var t = CHTML.TEX.rule_thickness;
@@ -1993,8 +1990,8 @@
             sup.style.paddingLeft = CHTML.Em(delta/Sscale);
             sup.style.paddingRight = CHTML.Em(s/Sscale);
             stack.style.verticalAlign = CHTML.Em(-v);
-            BBOX.combine(Sbox,x+delta,u,Sscale);
-            BBOX.combine(sbox,x,-v,sscale);
+            BBOX.combine(Sbox,x+delta,u);
+            BBOX.combine(sbox,x,-v);
           }
         }
         BBOX.clean();
@@ -2043,9 +2040,9 @@
           if (u) num.style.verticalAlign = CHTML.Em(u/nscale);
           if (v) denom.style.verticalAlign = CHTML.Em(v/dscale);
           bevel.style.marginLeft = bevel.style.marginRight = CHTML.Em(-delta/2);
-          BBOX.combine(nbox,0,u,nscale);
-          BBOX.combine(bbox,nscale*nbox.w-delta/2,0,nscale);
-          BBOX.combine(dbox,nscale*nbox.w+bbox.w-delta,v,dscale);
+          BBOX.combine(nbox,0,u);
+          BBOX.combine(bbox,nscale*nbox.w-delta/2,0);
+          BBOX.combine(dbox,nscale*nbox.w+bbox.w-delta,v);
           BBOX.clean();
         } else {
           if (isDisplay) {u = CHTML.TEX.num1; v = CHTML.TEX.denom1}
@@ -2068,8 +2065,8 @@
           //
           //  Determine the new bounding box and place the parts
           //
-          BBOX.combine(nbox,0,u,nscale);
-          BBOX.combine(dbox,0,-v,dscale);
+          BBOX.combine(nbox,0,u);
+          BBOX.combine(dbox,0,-v);
           BBOX.clean();
           u -= nscale*nbox.d + a + t/2; v -= dscale*dbox.h - a + t/2;
           if (u > 0) num.style.paddingBottom = CHTML.Em(u/nscale);
@@ -2115,8 +2112,8 @@
         base.style.borderTop = CHTML.Em(T)+" solid";
         sqrt.style.paddingTop = CHTML.Em(2*t-T);  // use wider line, but don't affect height
         bbox.h += q + 2*t;
-        BBOX.combine(sbox,x,H-sbox.h,1);
-        BBOX.combine(bbox,x+sbox.w,0,1);
+        BBOX.combine(sbox,x,H-sbox.h);
+        BBOX.combine(bbox,x+sbox.w,0);
         BBOX.clean();
         return node;
       },
@@ -2138,7 +2135,7 @@
         if (dx > w) root.firstChild.style.paddingLeft = CHTML.Em(dx-w);
         dx -= sbox.offset/scale;
         root.style.width = CHTML.Em(dx);
-        BBOX.combine(bbox,0,h,scale);
+        BBOX.combine(bbox,0,h);
         return dx*scale;
       },
       CHTMLrootHeight: function (bbox,sbox,scale) {
