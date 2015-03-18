@@ -1610,6 +1610,26 @@
 
     /********************************************************/
     
+    MML.merror.Augment({
+      toCommonHTML: function (node) {
+        node = this.CHTMLdefaultNode(node);
+        var bbox = this.CHTML;
+        //
+        //  Adjust for font-size: 90%
+        //
+        bbox.rescale(.9);
+        //
+        //  Adjust for padding and border
+        //
+        bbox.h += 3/CHTML.em; if (bbox.h > bbox.t) bbox.t = bbox.h;
+        bbox.d += 3/CHTML.em; if (bbox.d > bbox.b) bbox.b = bbox.d;
+        bbox.w += 8/CHTML.em; bbox.r = bbox.w; bbox.l = 0;
+        return node;
+      }
+    });
+    
+    /********************************************************/
+    
     MML.mspace.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
