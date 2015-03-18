@@ -365,9 +365,9 @@
     },
     getHoverSpan: function (jax,math) {return jax.root.CHTMLnodeElement()},
     getHoverBBox: function (jax,span,math) {
-//      var bbox = span.CHTML, em = jax.CHTML.outerEm;
-//      var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
-//      if (bbox.width) {BBOX.width = bbox.width}
+      var bbox = jax.root.CHTML, em = CHTML.em; //jax.CHTML.outerEm;
+      var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
+      if (bbox.width) {BBOX.width = bbox.width}
       return BBOX;
     },
     
