@@ -894,7 +894,8 @@
     createChar: function (node,data,scale,font) {
       // ### FIXME: handle cache better (by data[1] and font)
       var text = "", variant = {fonts: [data[1]], noRemap:true, cache:{}};
-      if (font && font === MML.VARIANT.BOLD) variant.fonts = [data[1]+"-bold",data[1]];
+      if (font && font === MML.VARIANT.BOLD && this.FONTDATA.FONTS[data[1]+"-Bold"])
+        variant.fonts = [data[1]+"-Bold",data[1]];
       if (typeof(data[1]) !== "string") variant = data[1];
       if (data[0] instanceof Array) {
         for (var i = 0, m = data[0].length; i < m; i++) text += String.fromCharCode(data[0][i]);
@@ -1556,9 +1557,9 @@
       CHTMLstretchH: function (node,W) {
         var bbox = this.CHTML;
         var values = this.getValues("maxsize","minsize","mathvariant","fontweight");
-        // FIXME:  should take style="font-weight:bold" into account as well
-        if ((values.fontweight === "bold" || parseInt(values.fontweight) >= 600) &&
-            !this.Get("mathvariant",true)) values.mathvariant = MML.VARIANT.BOLD;
+        if ((values.fontweight === "bold" || (this.removedStyles||{}).fontWeight === "bold" ||
+            parseInt(values.fontweight) >= 600) && !this.Get("mathvariant",true))
+                values.mathvariant = MML.VARIANT.BOLD;
         values.maxsize = CHTML.length2em(values.maxsize,bbox.w);
         values.minsize = CHTML.length2em(values.minsize,bbox.w);
         W = Math.max(values.minsize,Math.min(values.maxsize,W));
