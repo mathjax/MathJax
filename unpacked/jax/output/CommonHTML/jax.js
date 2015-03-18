@@ -1342,6 +1342,17 @@
 
     },{
       //
+      //  Autoload files based on node type or file name
+      //
+      HTMLautoload: function () {
+	var file = CHTML.autoloadDir+"/"+this.type+".js";
+	HUB.RestartAfter(AJAX.Require(file));
+      },
+      HTMLautoloadFile: function (name) {
+	var file = CHTML.autoloadDir+"/"+name+".js";
+	HUB.RestartAfter(AJAX.Require(file));
+      },
+      //
       //  For use with embellished operators
       //
       CHTMLstretchV: function (h,d) {
@@ -2277,9 +2288,18 @@
         return node;
       }
     });
-    MML.annotation.Augment({toCommonHTML: function(node) {}});
+    MML.annotation.Augment({toCommonHTML: function(node) {return this.CHTMLcreateNode(node)}});
     MML["annotation-xml"].Augment({toCommonHTML: function(node) {}});
+//    MML["annotation-xml"].Augment({toCommonHTML: MML.mbase.CHTMLautoload});
 
+    /********************************************************/
+
+//    MML.ms.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+//    MML.mglyph.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+//    MML.menclose.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+//    MML.maction.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+//    MML.mmultiscripts.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+    
     /********************************************************/
     
     //
