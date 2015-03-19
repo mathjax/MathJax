@@ -45,7 +45,7 @@
     button: {
       x: -4, y: -3,          // menu button offsets
       wx: -2,                // button offset for full-width equations
-      src: AJAX.urlRev(OUTPUT.imageDir+"/MenuArrow-15.png")  // button image
+      src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAAA5CAMAAABJeiYSAAAAUVBMVEX////l5OTY19e2tbW3tbWVk5Owrq6cmpr5+Pj////X19fKycne3d3r6+vy8vKpp6fEwsLR0NCioaG5t7fl5OTT0tK9vLzY19eenJzt7e329vb9tHZmAAAABXRSTlMAQF+vr1FpKV4AAAEuSURBVHhe7dhrjsMgDARg0nRsyLvv7t7/oLtK1FCh3Thg/+wc4JNBExRwzlVH6HOs3G8OsMnBuQpWqVxtZtVuAS5dKE93WZDFegRdHtFqgzbtanm15V8WzWNSaeYNoneLUBoytT7WSJvJsaQvauDd1hikTLuts2jd7dbYQbD2D+Y5w0IrrDDHYr9B9ZldvW9YlGmh/5dqkGuRtPGyJfeixU5L7sWADEvoBRVZz7+oLxRZOAljCZZU2CsyLKGw52IL14Q6odwa05oqLDTJaaqx+DvZeIUFipR/KqykZBOUVizZALWFKTZeZ8VTsYOFRbHxagtNHEtt8RA8GVkAcQJ8/gunYmt6tzjow4sFNGqqwcviXkn1vFrgm1dI/jZTWO+1VB4sqS3v25bvAJbvEz/hAGybD4dbVwAAAABJRU5ErkJggg=="  // button image
     },
     fadeinInc: .2,           // increment for fade-in
     fadeoutInc: .05,         // increment for fade-out
