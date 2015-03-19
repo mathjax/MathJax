@@ -162,6 +162,7 @@
           position:"absolute",
           width:"21px", height:"21px", 
           top:".2em", right:".2em",
+          cursor:"pointer",
           "font-weight": "bold", 
           "font-size": "1.33em"
       },
