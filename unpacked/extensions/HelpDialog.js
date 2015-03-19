@@ -1,6 +1,3 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/extensions/HelpDialog.js
@@ -34,7 +31,6 @@
   var MENU = MathJax.Menu;
 
   var CONFIG = HUB.CombineConfig("HelpDialog",{
-//    closeImg: AJAX.urlRev(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     styles: {
       "#MathJax_Help": {
@@ -61,6 +57,14 @@
         overflow:"auto", "text-align":"left", "font-size":"80%",
         padding:".4em .6em", border:"1px inset", margin:"1em 0px",
         "max-height":"20em", "max-width":"30em", "background-color":"#EEEEEE"
+      },
+      
+      ".MathJax_Menu_Close": {
+          position:"absolute",
+          width:"21px", height:"21px", 
+          top:".2em", right:".2em",
+          "font-weight": "bold", 
+          "font-size": "1.33em"
       }
     }
   });
@@ -122,12 +126,11 @@
         ]
       ]],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
-//      ["img", {
-//        src: CONFIG.closeImg,
-//        style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
-//        onclick: HELP.Remove
-//      }]
-      ["span",{style:{width:"21px", height:"21px", "font-weight": "bold", "font-size": "1.33em", position:"absolute", top:".2em", right:".2em"}, onclick: HELP.Remove},["\u00D7"]]
+      ["span",{
+        className: "MathJax_Menu_Close",
+        onclick: HELP.Remove},
+        ["\u00D7"]
+      ]
     ]));
     LOCALE.setCSS(help);
     var doc = (document.documentElement||{});
