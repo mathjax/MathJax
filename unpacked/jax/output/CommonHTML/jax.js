@@ -66,6 +66,8 @@
     
     "mjx-stack > mjx-sup": {display:"block"},
     "mjx-stack > mjx-sub": {display:"block"},
+    "mjx-prestack > mjx-presup": {display:"block"},
+    "mjx-prestack > mjx-presub": {display:"block"},
     
     "mjx-delim-v > mjx-char": {transform:"scale(1)"},  // for Firefox to get horizontal alignment better
     "mjx-delim-h": {display:"block"},
@@ -1707,7 +1709,7 @@
     
     MML.munderover.Augment({
       toCommonHTML: function (node,stretch) {
-        var values = this.getValues("displaystyle","scriptlevel","accent","accentunder","align");
+        var values = this.getValues("displaystyle","accent","accentunder","align");
         if (!values.displaystyle && this.data[this.base] != null &&
             this.data[this.base].CoreMO().Get("movablelimits"))
                 return MML.msubsup.prototype.toCommonHTML.call(this,node,stretch);
@@ -1905,8 +1907,9 @@
     
     MML.msubsup.Augment({
       toCommonHTML: function (node,stretch) {
-        var values = this.getValues("displaystyle","scriptlevel",
-                       "subscriptshift","superscriptshift","texprimestyle");
+        var values = this.getValues(
+           "displaystyle","subscriptshift","superscriptshift","texprimestyle"
+        );
         //
         //  Get the nodes for base and limits
         //
@@ -2009,7 +2012,7 @@
           childNodes:["mjx-numerator","mjx-denominator"],
           forceChild:true, noBBox:true, minChildren:2
         });
-        var values = this.getValues("linethickness","displaystyle","scriptlevel",
+        var values = this.getValues("linethickness","displaystyle",
                                     "numalign","denomalign","bevelled");
         var isDisplay = values.displaystyle;
         //
@@ -2317,7 +2320,7 @@
     MML.mglyph.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
 //    MML.menclose.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
 //    MML.maction.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
-//    MML.mmultiscripts.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+    MML.mmultiscripts.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     
     /********************************************************/
     
