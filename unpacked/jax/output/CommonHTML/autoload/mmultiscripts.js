@@ -121,7 +121,6 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       this.CHTMLhandleSpace(node);
       this.CHTMLhandleBBox(node);
       this.CHTMLhandleColor(node);
-this.CHTMLdrawBBox(node);
       return node;
     },
     //
