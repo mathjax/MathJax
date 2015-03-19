@@ -1,0 +1,23 @@
+{
+    "name": "MathJax",
+    "version": "2.5.1-mjnode",
+    "description": "Beautiful math in all browsers.",
+    "keywords": ["math","svg","MathML","TeX","AsciiMath"],
+    "maintainers": [
+        "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
+    ],
+    "bugs": {
+        "url": "http://github.com/mathjax/MathJax/issues"
+    },
+    "license": {
+        "type": "Apache",
+        "url": "http://github.com/mathjax/MathJax/blob/master/LICENSE"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/mathjax/MathJax.git"
+    },
+    "dependencies": {
+    },
+    "main": "./unpacked/MathJax.js"
+}
