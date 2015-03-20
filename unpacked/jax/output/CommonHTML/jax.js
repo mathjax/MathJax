@@ -39,17 +39,32 @@
       AFUZZ = .08, HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
 
   var STYLES = {
-    ".MathJax_CHTML_Display": {
-      "display":    "block",
+    "mjx-chtml": {
+      display:           "inline-block",
+      "line-height":     0,
+      "text-indent":     0,
+      "white-space":     "nowrap",
+      "font-style":      "normal",
+      "font-weight":     "normal",
+      "font-size":       "100%",
+      "font-size-adjust":"none",
+      "text-indent":     0,
+      "text-transform":  "none",
+      "letter-spacing":  "normal",
+      "word-spacing":    "normal",
+      "float":           "none",
+      "direction":       "ltr",
+      "word-wrap":       "normal",
+      padding:           "1px 0",
+    },
+    ".MJXc-display": {
+      display:      "block",
       "text-align": "center",
       "margin":     "1em 0"
     },
 
     "mjx-math":   {
       "display":        "inline-block",
-      "line-height":    0,
-      "text-indent":    0,
-      "white-space":    "nowrap",
       "border-collapse":"collapse"
     },
     "mjx-math *": {display:"inline-block", "text-align":"left"},
@@ -117,6 +132,30 @@
     "mjx-chartest mjx-char": {display:"inline"},
     "mjx-chartest mjx-box": {"padding-top": "500px"},
 
+    ".MJXc-processing": {
+      visibility: "hidden", position:"fixed",
+      width: 0, height: 0, overflow:"hidden"
+    },
+    ".MJXc-processed": {display:"none"},
+    
+    "mjx-test": {
+      display:           "block",
+      "font-style":      "normal",
+      "font-weight":     "normal",
+      "font-size":       "100%",
+      "font-size-adjust":"none",
+      "text-indent":     0,
+      "text-transform":  "none",
+      "letter-spacing":  "normal",
+      "word-spacing":    "normal",
+      overflow:          "hidden",
+      height:            "1px"
+    },
+    "mjx-ex-box-test": {
+      position:  "absolute",
+      width:"1px", height:"60ex"
+    },
+
 /*********************************/
     
     "mjx-mtable": {"vertical-align":AXISHEIGHT+"em", "margin":"0 .125em"},
@@ -166,15 +205,47 @@
       //
       //  Determine pixels per inch
       //
-      var div = HTML.addElement(document.body,"div",{style:{width:"5in"}});
+      var div = HTML.addElement(document.body,"mjx-block",{style:{display:"block",width:"5in"}});
       this.pxPerInch = div.offsetWidth/5; div.parentNode.removeChild(div);
+
+      //
+      // Used in preTranslate to get scaling factors and line width
+      //
+      this.TestSpan = HTML.Element("mjx-test",{},[["mjx-ex-box-test"]]);
 
       //
       //  Set up styles and preload web fonts
       //
       return AJAX.Styles(this.config.styles,["InitializeCHTML",this]);
     },
+    
     InitializeCHTML: function () {
+      this.getDefaultExEm();
+      //
+      //  If the defaultEm size is zero, it might be that a web font hasn't
+      //  arrived yet, so try to wait for it, but don't wait too long.
+      //
+      if (this.defaultEm) return;
+      var ready = MathJax.Callback();
+      AJAX.timer.start(AJAX,function (check) {
+        if (check.time(ready)) {HUB.signal.Post(["CommonHTML Jax - no default em size"]); return}
+        CHTML.getDefaultExEm();
+        if (CHTML.defaultEm) {ready()} else {setTimeout(check,check.delay)}
+      },this.defaultEmDelay,this.defaultEmTimeout);
+      return ready;
+    },
+    defaultEmDelay: 100,      // initial delay when checking for defaultEm
+    defaultEmTimeout: 1000,   // when to stop looking for defaultEm
+    getDefaultExEm: function () {
+      //
+      //  Get the default sizes (need styles in place to do this)
+      //
+      document.body.appendChild(this.TestSpan);
+      var style = window.getComputedStyle(this.TestSpan);
+      this.defaultEm    = parseFloat(style.fontSize);
+      this.defaultEx    = this.TestSpan.firstChild.offsetHeight/60;
+      this.defaultWidth = this.TestSpan.offsetWidth;
+      document.body.removeChild(this.TestSpan);
     },
 
     //
@@ -200,7 +271,19 @@
     
     preTranslate: function (state) {
       var scripts = state.jax[this.id], i, m = scripts.length,
-          script, prev, span, div, jax;
+          script, prev, node, jax, ex, em;
+      //
+      //  Get linebreaking information
+      //
+      var maxwidth = 100000, relwidth = false, cwidth,
+          linebreak = this.config.linebreaks.automatic,
+          width = this.config.linebreaks.width;
+      if (linebreak) {
+        relwidth = !!width.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/);
+        if (relwidth) {width = width.replace(/\s*container\s*/,"")}
+          else {maxwidth = this.defaultWidth}
+        if (width === "") {width = "100%"}
+      }
       //
       //  Loop through the scripts
       //
@@ -210,37 +293,73 @@
         //  Remove any existing output
         //
         prev = script.previousSibling;
-        if (prev && String(prev.className).match(/^MathJax_CHTML(_Display)?( MathJax_Processing)?$/))
-          {prev.parentNode.removeChild(prev)}
+	if (prev && prev.nodeName.toLowerCase() === "mjx-chtml")
+	  prev.parentNode.removeChild(prev);
         //
-        //  Add the span, and a div if in display mode,
-        //  then set the role and mark it as being processed
+        //  Add the node for the math and mark it as being processed
         //
         jax = script.MathJax.elementJax; if (!jax) continue;
         jax.CHTML = {display: (jax.root.Get("display") === "block")}
-        span = div = HTML.Element("span",{
-          className:"MathJax_CHTML", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
+        node = HTML.Element("mjx-chtml",{
+          id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
           onclick:EVENT.Click, ondblclick:EVENT.DblClick
         });
-        if (HUB.Browser.noContextMenu) {
-          span.ontouchstart = TOUCH.start;
-          span.ontouchend = TOUCH.end;
-        }
         if (jax.CHTML.display) {
-          div = HTML.Element("div",{className:"MathJax_CHTML_Display"});
-          div.appendChild(span);
+          //
+          // Zoom box requires an outer container to get the positioning right.
+          //
+          var NODE = HTML.Element("mjx-chtml",{className:"MJXc-display"});
+          NODE.appendChild(node); node = NODE;
+        }
+        if (HUB.Browser.noContextMenu) {
+          node.ontouchstart = TOUCH.start;
+          node.ontouchend = TOUCH.end;
         }
         //
-        div.className += " MathJax_Processing";
-        script.parentNode.insertBefore(div,script);
+        node.className += " MJXc-processing";
+        script.parentNode.insertBefore(node,script);
+        //
+        //  Add test nodes for determineing scales and linebreak widths
+        //
+        script.parentNode.insertBefore(this.TestSpan.cloneNode(true),script);
       }
-      /* 
-       * state.CHTMLeqn = state.CHTMLlast = 0; state.CHTMLi = -1;
-       * state.CHTMLchunk = this.config.EqnChunk;
-       * state.CHTMLdelay = false;
-       */
+      //
+      //  Determine the scaling factors for each script
+      //  (this only requires one reflow rather than a reflow for each equation)
+      //
+      for (i = 0; i < m; i++) {
+        script = scripts[i]; if (!script.parentNode) continue;
+        test = script.previousSibling;
+        jax = script.MathJax.elementJax; if (!jax) continue;
+        var style = window.getComputedStyle(test);
+        em = parseFloat(style.fontSize);
+        ex = test.firstChild.offsetHeight/60;
+        if (ex === 0 || ex === "NaN") ex = this.defaultEx
+        node = test;
+        while (node && node.offsetWidth === 0) node = node.parentNode;
+        cwidth = (node ? node.offsetWidth : this.defaultWidth);
+        
+        scale = (this.config.matchFontHeight ? ex/this.TEX.x_height/em : 1);
+        scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
+        jax.CHTML.scale = scale/100; jax.CHTML.fontSize = scale+"%";
+        jax.CHTML.outerEm = em; jax.CHTML.em = this.em = em * scale/100;
+        jax.CHTML.ex = ex; jax.CHTML.cwidth = cwidth/this.em;
+        jax.CHTML.lineWidth = (linebreak ? this.length2em(width,maxwidth/this.em) : maxwidth);
+      }
+      //
+      //  Remove the test spans used for determining scales and linebreak widths
+      //
+      for (i = 0; i < m; i++) {
+        script = scripts[i]; if (!script.parentNode) continue;
+        test = scripts[i].previousSibling;
+        jax = scripts[i].MathJax.elementJax; if (!jax) continue;
+        test.parentNode.removeChild(test);
+      }
+      state.CHTMLeqn = state.CHTMLlast = 0; state.CHTMLi = -1;
+      state.CHTMLchunk = this.config.EqnChunk;
+      state.CHTMLdelay = false;
     },
 
     /********************************************/
@@ -248,68 +367,96 @@
     Translate: function (script,state) {
       if (!script.parentNode) return;
 
-      /* 
-       * //
-       * //  If we are supposed to do a chunk delay, do it
-       * //  
-       * if (state.CHTMLdelay) {
-       *   state.CHTMLdelay = false;
-       *   HUB.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay));
-       * }
-       */
+      //
+      //  If we are supposed to do a chunk delay, do it
+      //
+      if (state.CHTMLdelay) {
+        state.CHTMLdelay = false;
+        HUB.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay));
+      }
 
       //
       //  Get the data about the math
       //
       var jax = script.MathJax.elementJax, math = jax.root,
-          span = document.getElementById(jax.inputID+"-Frame"),
-          div = (jax.CHTML.display ? span.parentNode : span);
+          node = document.getElementById(jax.inputID+"-Frame");
+      this.getMetrics(jax);
+      if (this.scale !== 1) node.style.fontSize = jax.CHTML.fontSize;
       //
       //  Typeset the math
       //
-      this.initCHTML(math,span);
-      math.setTeXclass();
-      try {math.toCommonHTML(span)} catch (err) {
-        while (span.firstChild) span.removeChild(span.firstChild);
+      this.initCHTML(math,node);
+      this.savePreview(script);
+      try {
+        math.setTeXclass();
+        math.toCommonHTML(node);
+      } catch (err) {
+        while (node.firstChild) node.removeChild(node.firstChild);
+        this.restorePreview(script);
         throw err;
       }
+      this.restorePreview(script);
       //
       //  Put it in place, and remove the processing marker
       //
-      div.className = div.className.split(/ /)[0];
+      if (jax.CHTML.display) node = node.parentNode;
+      node.className = node.className.split(/ /)[0];
       //
-      //  Check if we are hiding the math until more is processed
+      //  Hide the math and don't let its preview be removed
       //
-      if (this.hideProcessedMath) {
-        //
-        //  Hide the math and don't let its preview be removed
-        //
-        div.className += " MathJax_Processed";
-        if (script.MathJax.preview) {
-          jax.CHTML.preview = script.MathJax.preview;
-          delete script.MathJax.preview;
-        }
-        /* 
-         * //
-         * //  Check if we should show this chunk of equations
-         * //
-         * state.CHTMLeqn += (state.i - state.CHTMLi); state.CHTMLi = state.i;
-         * if (state.CHTMLeqn >= state.CHTMLlast + state.CHTMLchunk) {
-         *   this.postTranslate(state);
-         *   state.CHTMLchunk = Math.floor(state.CHTMLchunk*this.config.EqnChunkFactor);
-         *   state.CHTMLdelay = true;  // delay if there are more scripts
-         * }
-         */
+      node.className += " MJXc-processed";
+      if (script.MathJax.preview) {
+        jax.CHTML.preview = script.MathJax.preview;
+        delete script.MathJax.preview;
+      }
+      //
+      //  Check if we should show this chunk of equations
+      //
+      state.CHTMLeqn += (state.i - state.CHTMLi); state.CHTMLi = state.i;
+      if (state.CHTMLeqn >= state.CHTMLlast + state.CHTMLchunk) {
+        this.postTranslate(state);
+        state.CHTMLchunk = Math.floor(state.CHTMLchunk*this.config.EqnChunkFactor);
+        state.CHTMLdelay = true;  // delay if there are more scripts
       }
     },
 
-    initCHTML: function (math,span) {},
+    initCHTML: function (math,node) {},
+
+    //
+    //  MathML previews can contain the same ID's as the HTML output,
+    //  which confuses HTMLspanElement(), so remove the preview temporarily
+    //  and restore it after typesetting the math.
+    //
+    savePreview: function (script) {
+      var preview = script.MathJax.preview;
+      if (preview && preview.parentNode) {
+        script.MathJax.tmpPreview = document.createElement("span");
+        preview.parentNode.replaceChild(script.MathJax.tmpPreview,preview);
+      }
+    },
+    restorePreview: function (script) {
+      var tmpPreview = script.MathJax.tmpPreview;
+      if (tmpPreview) {
+        tmpPreview.parentNode.replaceChild(script.MathJax.preview,tmpPreview);
+        delete script.MathJax.tmpPreview;
+      }
+    },
+    //
+    //  Get the jax metric information
+    //
+    getMetrics: function(jax) {
+      var data = jax.CHTML;
+      this.em = data.em; 
+      this.outerEm = data.outerEm;
+      this.scale = data.scale;
+      this.cwidth = data.cwidth;
+      this.linebreakWidth = data.lineWidth;
+    },
 
     /********************************************/
     
     postTranslate: function (state) {
       var scripts = state.jax[this.id];
-      if (!this.hideProcessedMath) return;
       for (var i = 0, m = scripts.length; i < m; i++) {
         var script = scripts[i];
         if (script && script.MathJax.elementJax) {
@@ -329,45 +476,43 @@
         }
       }
 
-      /* 
-       * //
-       * //  Reveal this chunk of math
-       * //
-       * for (var i = state.CHTMLlast, m = state.CHTMLeqn; i < m; i++) {
-       *   var script = scripts[i];
-       *   if (script && script.MathJax.elementJax) {
-       *     //
-       *     //  Remove the processed marker
-       *     //
-       *     script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
-       *     var data = script.MathJax.elementJax.CHTML;
-       *     //
-       *     //  Remove the preview, if any
-       *     //
-       *     if (data.preview) {
-       *       data.preview.innerHTML = "";
-       *       script.MathJax.preview = data.preview;
-       *       delete data.preview;
-       *     }
-       *   }
-       * }
-       * //
-       * //  Save our place so we know what is revealed
-       * //
-       * state.CHTMLlast = state.CHTMLeqn;
-       */
+      //
+      //  Reveal this chunk of math
+      //
+      for (var i = state.CHTMLlast, m = state.CHTMLeqn; i < m; i++) {
+        var script = scripts[i];
+        if (script && script.MathJax.elementJax) {
+          //
+          //  Remove the processed marker
+          //
+          script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
+          var data = script.MathJax.elementJax.CHTML;
+          //
+          //  Remove the preview, if any
+          //
+          if (data.preview) {
+            data.preview.innerHTML = "";
+            script.MathJax.preview = data.preview;
+            delete data.preview;
+          }
+        }
+      }
+      //
+      //  Save our place so we know what is revealed
+      //
+      state.CHTMLlast = state.CHTMLeqn;
     },
 
     /********************************************/
     
     getJaxFromMath: function (math) {
-      if (math.parentNode.className === "MathJax_CHTML_Display") {math = math.parentNode}
+      if (math.parentNode.className === "MJXc-display") math = math.parentNode;
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
       return HUB.getJaxFor(math);
     },
     getHoverSpan: function (jax,math) {return jax.root.CHTMLnodeElement()},
     getHoverBBox: function (jax,span,math) {
-      var bbox = jax.root.CHTML, em = CHTML.em; //jax.CHTML.outerEm;
+      var bbox = jax.root.CHTML, em = jax.CHTML.outerEm;
       var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
       if (bbox.width) {BBOX.width = bbox.width}
       return BBOX;
@@ -377,26 +522,23 @@
       //
       //  Re-render at larger size
       //
-      span.className = "MathJax";
-      this.idPostfix = "-zoom"; jax.root.toCommonHTML(span,span); this.idPostfix = "";
+      this.getMetrics(jax);
+      var node = HTML.addElement(span,"mjx-chtml");
+      this.idPostfix = "-zoom"; jax.root.toCommonHTML(node); this.idPostfix = "";
       //
       //  Get height and width of zoomed math and original math
       //
-      span.style.position = "absolute";
-      var zW = span.offsetWidth, zH = span.offsetHeight,
-          mH = math.offsetHeight, mW = math.offsetWidth;
-      if (mW === 0) {mW = math.parentNode.offsetWidth}; // IE7 gets mW == 0?
-      span.style.position = math.style.position = "";
+      node.style.position = "absolute";
+      var zW = node.offsetWidth, zH = node.offsetHeight,
+          mH = math.firstChild.offsetHeight, mW = math.firstChild.offsetWidth;
+      node.style.position = "";
       //
       return {Y:-EVENT.getBBox(span).h, mW:mW, mH:mH, zW:zW, zH:zH};
     },
 
     Remove: function (jax) {
-      var span = document.getElementById(jax.inputID+"-Frame");
-      if (span) {
-        if (jax.CHTML.display) {span = span.parentNode}
-        span.parentNode.removeChild(span);
-      }
+      var node = document.getElementById(jax.inputID+"-Frame");
+      if (node) node.parentNode.removeChild(node);
       delete jax.CHTML;
     },
     
@@ -1393,7 +1535,6 @@
     MML.math.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
-        if (this.Get("display") === "block") {node.className += " MJXc-display"}
         return node;
       }
     });
@@ -1699,7 +1840,7 @@
         var match = length.match(/width|height|depth/);
         var size = (match ? this.CHTML[match[0].charAt(0)] : (d ? this.CHTML[d] : 0));
         var dimen = (CHTML.length2em(length,size)||0);
-        if (length.match(/^[-+]/)) dimen += D;
+        if (length.match(/^[-+]/) && D != null) dimen += D;
         if (m != null) dimen = Math.max(m,dimen);
         return dimen;
       }
