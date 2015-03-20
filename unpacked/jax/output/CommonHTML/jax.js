@@ -275,7 +275,7 @@
       //
       //  Get linebreaking information
       //
-      var maxwidth = 100000, relwidth = false, cwidth,
+      var maxwidth = 100000, relwidth = false, cwidth = 0,
           linebreak = this.config.linebreaks.automatic,
           width = this.config.linebreaks.width;
       if (linebreak) {
@@ -338,8 +338,12 @@
         ex = test.firstChild.offsetHeight/60;
         if (ex === 0 || ex === "NaN") ex = this.defaultEx
         node = test;
-        while (node && node.offsetWidth === 0) node = node.parentNode;
-        cwidth = (node ? node.offsetWidth : this.defaultWidth);
+        while (node) {
+          cwidth = node.offsetWidth; if (cwidth) break;
+          var style = window.getComputedStyle(node);
+          if (style.maxWidth !== "none") {cwidth = parseFloat(style.maxWidth); break}
+          node = node.parentNode;
+        }
         
         scale = (this.config.matchFontHeight ? ex/this.TEX.x_height/em : 1);
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
