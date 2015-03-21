@@ -391,14 +391,17 @@
       //
       this.initCHTML(math,node);
       this.savePreview(script);
+      this.CHTMLnode = node;
       try {
         math.setTeXclass();
         math.toCommonHTML(node);
       } catch (err) {
         while (node.firstChild) node.removeChild(node.firstChild);
+        delete this.CHTMLnode;
         this.restorePreview(script);
         throw err;
       }
+      delete this.CHTMLnode;
       this.restorePreview(script);
       //
       //  Put it in place, and remove the processing marker
@@ -761,12 +764,12 @@
       if (!this.STYLEDTEXT[id]) this.STYLEDTEXT[id] = {className:variant.className||""};
       var unknown = this.STYLEDTEXT[id];
       if (!unknown["_"+text]) {
-        var HDW = this.getHDW(text,"",style);
+        var HDW = this.getHDW(text,variant.className||"",style);
         var a = (HDW.h-HDW.d)/2+AFUZZ; // ### FIXME:  is this really the axis of the surrounding text?
         unknown["_"+text] = [.8,.2,HDW.w,0,HDW.w,{a:a, A:HDW.h-a, d:HDW.d}];
         unknown["_"+text].c = text;
       }
-      return {type:"unknown", n:"_"+text, font:unknown, style:style};
+      return {type:"unknown", n:"_"+text, font:unknown, style:style, rscale:variant.rscale};
     },
 
     //
@@ -775,13 +778,13 @@
     //  WARNING:  causes reflow of the page!
     //
     getHDW: function (c,name,styles) {
-      var test1 = HTML.addElement(document.body,"mjx-chartest",{className:name,style:styles},[["mjx-char",{},[c]]]);
-      var test2 = HTML.addElement(document.body,"mjx-chartest",{className:name,style:styles},[["mjx-char",{},[c,["mjx-box"]]]]);
-      var em = window.parseFloat(window.getComputedStyle(test1).fontSize);
+      var test1 = HTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name,style:styles},[["mjx-char",{},[c]]]);
+      var test2 = HTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name,style:styles},[["mjx-char",{},[c,["mjx-box"]]]]);
+      var em = CHTML.outerEm;
       var d = (test2.offsetHeight-500)/em;
       var w = test1.offsetWidth/em, h = test1.offsetHeight/em - d;
-      document.body.removeChild(test1);
-      document.body.removeChild(test2);
+      CHTML.CHTMLnode.removeChild(test1);
+      CHTML.CHTMLnode.removeChild(test2);
       return {h:h, d:d, w:w}
     },
     
@@ -824,7 +827,7 @@
         if (bbox.d < C[1]) bbox.b = bbox.d = C[1];
         if (bbox.l > bbox.w+C[3]) bbox.l = bbox.w+C[3];
         if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
-        bbox.w += C[2];
+        bbox.w += C[2] * (item.rscale||1);
         if (m == 1 && font.skew && font.skew[item.n]) bbox.skew = font.skew[item.n];
         if (C[5].rfix) this.flushText(node,state).style.marginRight = CHTML.Em(C[5].rfix/1000);
       },
@@ -1735,8 +1738,10 @@
 
     MML.mtext.Augment({
       CHTMLgetVariant: function () {
-        if (CHTML.config.mtextFontInherit) {
-          var variant = {cache:{}, fonts:[], className:"MJXc-font-inherit", style:{}};
+        if (CHTML.config.mtextFontInherit || this.Parent().type === "merror") {
+          var scale = 1/CHTML.scale;
+          var variant = {cache:{}, fonts:[], className:"MJXc-font-inherit", rscale:scale,
+                         style:{"font-size":CHTML.Percent(scale)}};
           var name = this.Get("mathvariant");
           if (name.match(/bold/)) variant.style["font-weight"] = "bold";
           if (name.match(/italic/)) variant.style["font-style"] = "italic";
