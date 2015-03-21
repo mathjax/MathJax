@@ -32,20 +32,28 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
 
   MML.mmultiscripts.Augment({
     toCommonHTML: function (node,stretch) {
-      node = this.CHTMLcreateNode(node);
-      this.CHTMLhandleStyle(node);
-      this.CHTMLhandleScale(node);
-      this.CHTMLgetVariant();
+      if (!stretch) {
+        node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleScale(node);
+        this.CHTMLgetVariant();
+      }
       CHTML.BBOX.empty(this.CHTML);
 
       //
       //  Get base node
       //
-      this.CHTMLaddChild(node,0,{type:"mjx-base", noBBox:true, forceChild:true});
-      var base = node.firstChild, bbox = this.CHTMLbboxFor(0);
+      var base, bbox;
+      if (stretch) {
+        base = node.getElementsByTagName("mjx-base")[0];
+      } else {
+        this.CHTMLaddChild(node,0,{type:"mjx-base", noBBox:true, forceChild:true});
+        base = node.firstChild;
+      }
+      bbox = this.CHTMLbboxFor(0);
       if (bbox.ic) {
           bbox.R -= bbox.ic;         // remove IC (added by mo and mi)
-          base.style.marginRight = CHTML.Em(-bbox.ic);
+          if (!stretch) base.style.marginRight = CHTML.Em(-bbox.ic);
           delta = 1.3*bbox.ic + .05; // make faked IC be closer to expeted results
       }
       
@@ -53,10 +61,10 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Collect scripts into horizontal boxes and add them into the node
       //
       var BOX = {}, BBOX = {};
-      this.CHTMLgetScripts(BOX,BBOX,stretch);
+      this.CHTMLgetScripts(BOX,BBOX,stretch,node);
       var sub = BOX.sub, sup = BOX.sup, presub = BOX.presub, presup = BOX.presup;
       var sbox = BBOX.sub, Sbox = BBOX.sup, pbox = BBOX.presub, Pbox = BBOX.presup;
-      this.CHTMLaddBoxes(node,base,BOX);
+      if (!stretch) this.CHTMLaddBoxes(node,base,BOX);
       
       //
       //  Get the initial values for the variables
@@ -127,7 +135,19 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //  Get the subscript, superscript, presubscript, and presuperscript
     //  boxes, with proper spacing, and computer their bounding boxes.
     //
-    CHTMLgetScripts: function (BOX,BBOX,stretch) {
+    CHTMLgetScripts: function (BOX,BBOX,stretch,node) {
+      if (stretch) {
+        BOX.sub = node.getElementsByTagName("mjx-sub")[0];
+        BOX.sup = node.getElementsByTagName("mjx-sup")[0];
+        BOX.presub = node.getElementsByTagName("mjx-presub")[0];
+        BOX.presup = node.getElementsByTagName("mjx-presup")[0];
+        BBOX.sub = this.CHTMLbbox.sub;
+        BBOX.sup = this.CHTMLbbox.sup;
+        BBOX.presub = this.CHTMLbbox.presub;
+        BBOX.presup = this.CHTMLbbox.presup;
+        return;
+      }
+      this.CHTMLbbox = BBOX;  // save for when stretched
       var state = {i:1, w:0, BOX:BOX, BBOX:BBOX}, m = this.data.length;
       var sub = "sub", sup = "sup";
       while (state.i < m) {
