@@ -1830,7 +1830,8 @@
         node.style.width = 0;
         node.style.marginTop = CHTML.Em(h-STRUTHEIGHT);
         node.style.padding = "0 "+CHTML.Em(w)+" "+CHTML.Em(d)+" 0";
-        var bbox = CHTML.BBOX({w:w, h:h, d:d, l:0, r:w, t:h, b:d});
+        var bbox = CHTML.BBOX({w:w, h:h, d:d, l:0, r:w, t:h, b:d,
+                               scale:this.CHTML.scale, rscale:this.CHTML.rscale});
         bbox.combine(cbox,x,y);
         bbox.w = w; bbox.h = h; bbox.d = d;
         this.CHTML = bbox;
