@@ -33,8 +33,7 @@
 
   var EVENT, TOUCH, HOVER; // filled in later
 
-  var SCRIPTFACTOR = Math.sqrt(1/2),
-      AXISHEIGHT = .25,
+  var AXISHEIGHT = .25,
       STRUTHEIGHT = 1,
       AFUZZ = .08, HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
 
@@ -117,7 +116,6 @@
     "mjx-line":   {display:"block", width:"100%", "border-top":"0 solid"},
     "mjx-strut":  {width:0, "padding-top":STRUTHEIGHT+"em"},
 
-    ".MJXc-script": {"font-size":SCRIPTFACTOR+"em"},
     ".MJXc-space1": {"margin-left":".167em"},
     ".MJXc-space2": {"margin-left":".222em"},
     ".MJXc-space3": {"margin-left":".278em"},
