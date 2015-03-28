@@ -391,6 +391,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           }
         }
       }
+      W[LABEL] = state.W[LABEL];
       state.W = W;
       state.R = TW;
     },
