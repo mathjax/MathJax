@@ -47,7 +47,6 @@
       "font-weight":     "normal",
       "font-size":       "100%",
       "font-size-adjust":"none",
-      "text-indent":     0,
       "text-transform":  "none",
       "letter-spacing":  "normal",
       "word-spacing":    "normal",
@@ -106,6 +105,11 @@
     
     "mjx-annotation-xml": {"line-height":"normal"},
 
+    "mjx-mtr":    {display:"table-row"},
+    "mjx-mlabeledtr": {display:"table-row"},
+    "mjx-mtd":    {display:"table-cell", "text-align":"center"},
+    "mjx-label":  {display:"block"},
+
     "mjx-box":    {display:"inline-block"},
     "mjx-block":  {display:"block"},
     "mjx-char":   {display:"block"},
@@ -152,19 +156,8 @@
     "mjx-ex-box-test": {
       position:  "absolute",
       width:"1px", height:"60ex"
-    },
+    }
 
-/*********************************/
-    
-    "mjx-mtable": {"vertical-align":AXISHEIGHT+"em", "margin":"0 .125em"},
-    "mjx-mtable > span": {"display":"inline-table!important", "vertical-align":"middle"},
-    "mjx-mtr": {"display":"table-row!important"},
-    "mjx-mtd": {"display":"table-cell!important", "text-align":"center", "padding":".5em 0 0 .5em"},
-    "mjx-mtr > mjx-mtd:first-child": {"padding-left":0},
-    "mjx-mtr:first-child > mjx-mtd": {"padding-top":0},
-    "mjx-mlabeledtr": {"display":"table-row!important"},
-    "mjx-mlabeledtr > mjx-mtd:first-child": {"padding-left":0},
-    "mjx-mlabeledtr:first-child > mjx-mtd": {"padding-top":0}    
   };
   
   
@@ -1102,7 +1095,7 @@
     },
 
     Em: function (m) {
-      if (Math.abs(m) < .001) return "0em";
+      if (Math.abs(m) < .001) return "0";
       return (m.toFixed(3).replace(/\.?0+$/,""))+"em";
     },
     unEm: function (m) {
@@ -1228,14 +1221,14 @@
         return node;
       },
       CHTMLaddChild: function (node,i,options) {
-        var child = this.data[i];
+        var child = this.data[i], cnode;
         if (child) {
           var type = options.childNodes;
           if (type) {
             if (type instanceof Array) type = type[i];
             node = HTML.addElement(node,type);
           }
-          child.toCommonHTML(node,options.childOptions);
+          cnode = child.toCommonHTML(node,options.childOptions);
           if (type && child.CHTML.rscale !== 1) {
             // move scale factor to outer container (which seems to be more accurate)
             node.style.fontSize = node.firstChild.style.fontSize;
@@ -1247,7 +1240,8 @@
             if (cbox.ic) {bbox.ic = cbox.ic} else {delete bbox.ic}
             if (cbox.skew) bbox.skew = cbox.skew;
           }
-        } else if (options.forceChild) {HTML.addElement(node,"span")}
+        } else if (options.forceChild) {cnode = HTML.addElement(node,"span")}
+        return cnode;
       },
       CHTMLstretchChildV: function (i,H,D) {
         var data = this.data[i];
@@ -1371,6 +1365,11 @@
 
       CHTMLhandleBBox: function (node) {
         var BBOX = this.CHTML, style = node.style;
+        if (this.data.length === 1 && this.data[0].CHTML.pwidth) {
+          BBOX.pwidth = this.data[0].CHTML.pwidth;
+          BBOX.mwidth = this.data[0].CHTML.mwidth;
+          style.width = "100%";
+        }
         if (!this.style) return;
         // ### FIXME:  adjust for width, height, vertical-align?
         for (var i = 0, m = CHTML.BBOX.styleAdjust.length; i < m; i++) {
@@ -1540,6 +1539,10 @@
     MML.math.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
+        if (this.CHTML.pwidth) {
+          node.parentNode.style.width = this.CHTML.pwidth;
+          node.parentNode.style.minWidth = this.CHTML.mwidth;
+        }
         return node;
       }
     });
@@ -2385,71 +2388,6 @@
 
     /********************************************************/
     
-    MML.mtable.Augment({
-      toCommonHTML: function (node) {
-        node = this.CHTMLdefaultNode(node,{noBBox:true});
-        var values = this.getValues("columnalign","rowalign","columnspacing","rowspacing",
-                                    "columnwidth","equalcolumns","equalrows",
-                                    "columnlines","rowlines","frame","framespacing",
-                                    "align","width"/*,"useHeight","side","minlabelspacing"*/);
-        var SPLIT = MathJax.Hub.SplitList, i, m, j, n;
-        var CSPACE = SPLIT(values.columnspacing),
-            RSPACE = SPLIT(values.rowspacing),
-            CALIGN = SPLIT(values.columnalign),
-            RALIGN = SPLIT(values.rowalign);//,
-//            CLINES = SPLIT(values.columnlines),
-//            RLINES = SPLIT(values.rowlines),
-//            CWIDTH = SPLIT(values.columnwidth),
-//            RCALIGN = [];
-        for (i = 0, m = CSPACE.length; i < m; i++) {CSPACE[i] = CHTML.length2em(CSPACE[i])}
-        for (i = 0, m = RSPACE.length; i < m; i++) {RSPACE[i] = CHTML.length2em(RSPACE[i])}
-
-        var table = HTML.Element("span");
-        while (node.firstChild) table.appendChild(node.firstChild);
-        node.appendChild(table);
-        var H = 0, W = 0;
-        for (i = 0, m = this.data.length; i < m; i++) {
-          var row = this.data[i];
-          if (row) {
-            var rspace = CHTML.arrayEntry(RSPACE,i-1), ralign = CHTML.arrayEntry(RALIGN,i);
-            var rbox = row.CHTML, rnode = row.CHTMLnodeElement();
-            rnode.style.verticalAlign = ralign;
-            var k = (row.type === "mlabeledtr" ? 1 : 0);
-            for (j = 0, n = row.data.length; j < n-k; j++) {
-              var cell = row.data[j+k];
-              if (cell) {
-                var cspace = CHTML.arrayEntry(CSPACE,j-1), calign = CHTML.arrayEntry(CALIGN,j);
-                var /*cbox = cell.CHTML,*/ cnode = cell.CHTMLnodeElement();
-                if (j) {rbox.w += cspace; cnode.style.paddingLeft = CHTML.Em(cspace)}
-                if (i) cnode.style.paddingTop = CHTML.Em(rspace);
-                cnode.style.textAlign = calign;
-              }
-            }
-            H += rbox.h + rbox.d; if (i) {H += rspace}
-            if (rbox.w > W) W = rbox.w;
-          }
-        }
-        var bbox = this.CHTML;
-        bbox.w = W; bbox.h = H/2 + AXISHEIGHT; bbox.d = H/2 - AXISHEIGHT;
-        bbox.L = bbox.R = .125;
-        return node;
-      }
-    });
-    MML.mlabeledtr.Augment({
-      CHTMLdefaultNode: function (node,options) {
-        if (!options) options = {};
-        node = this.CHTMLcreateNode(node);
-        this.CHTMLhandleStyle(node);
-        // skip label for now
-        for (var i = 1, m = this.data.length; i < m; i++) this.CHTMLaddChild(node,i,options);
-        this.CHTMLhandleBBox(node);
-        this.CHTMLhandleColor(node);
-        return node;
-      }
-    });
-
-    /********************************************************/
-    
     MML.semantics.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
@@ -2470,6 +2408,7 @@
 //    MML.menclose.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
 //    MML.maction.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     MML.mmultiscripts.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+    MML.mtable.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     
     /********************************************************/
     
