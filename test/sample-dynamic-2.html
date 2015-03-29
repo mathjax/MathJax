@@ -24,6 +24,7 @@ var Preview = {
   timeout: null,     // store setTimout id
   mjRunning: false,  // true when MathJax is processing
   oldText: null,     // used to check if an update is needed
+  recheck: false,    // flag that text has changed while typesetting
 
   //
   //  Get the preview and buffer DIV's
@@ -67,13 +68,18 @@ var Preview = {
   //  
   CreatePreview: function () {
     Preview.timeout = null;
-    if (this.mjRunning) return;
+    if (this.mjRunning) {
+      this.recheck = true;
+      return;
+    }
     var text = document.getElementById("MathInput").value;
     if (text === this.oldtext) return;
     this.buffer.innerHTML = this.oldtext = text;
     this.mjRunning = true;
+    this.recheck = false;
     MathJax.Hub.Queue(
       ["Typeset",MathJax.Hub,this.buffer],
+      ["ReCheck",this],
       ["PreviewDone",this]
     );
   },
@@ -85,8 +91,18 @@ var Preview = {
   PreviewDone: function () {
     this.mjRunning = false;
     this.SwapBuffers();
-  }
+  },
 
+  //
+  //  Re-CreatePreview if Necessary
+  //
+  ReCheck: function () {
+    if (this.recheck) {
+      MathJax.Hub.Queue(
+	["CreatePreview",this]
+      );
+    }
+  }
 };
 
 //
