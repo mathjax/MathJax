@@ -150,14 +150,20 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (FSPACE.length != 2) FSPACE = SPLIT(this.defaults.framespacing);
       FSPACE[0] = Math.max(0,CHTML.length2em(FSPACE[0]));
       FSPACE[1] = Math.max(0,CHTML.length2em(FSPACE[1]));
+      if (values.columnlines.replace(/none/g,"").replace(/ /g,"") !== "" ||
+          values.rowlines.replace(/none/g,"").replace(/ /g,"") !== "") values.fspace = true;
       //
       //  Pad arrays so that final column can be treated as all the others
       //
-      if (values.frame === MML.LINES.NONE) {
-        delete values.frame;
-        CSPACE[J] = RSPACE[M] = 0;
-      } else {
+      if (values.frame === MML.LINES.NONE) delete values.frame; else values.fspace = true;
+      if (values.frame) {
+        FSPACE[0] = Math.max(0,FSPACE[0]-1/CHTML.em);
+        FSPACE[1] = Math.max(0,FSPACE[1]-1/CHTML.em);
+      }
+      if (values.fspace) {
         CSPACE[J] = FSPACE[0]; RSPACE[M] = FSPACE[1];
+      } else {
+        CSPACE[J] = RSPACE[M] = 0;
       }
       CLINES[J] = RLINES[M] = MML.LINES.NONE;
       //
@@ -182,7 +188,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       var LH = CHTML.FONTDATA.lineH * values.useHeight,
           LD = CHTML.FONTDATA.lineD * values.useHeight;
       var T = "0", B, R, L, border, HD, cbox, align;
-      if (values.frame) T = CHTML.Em(state.FSPACE[1]);
+      if (values.fspace) T = CHTML.Em(state.FSPACE[1]);
       for (var i = 0, m = ROWS.length; i < m; i++) {
         var row = ROWS[i], rdata = this.data[i];
         //
@@ -197,7 +203,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //
         //  Frame space for initial cell
         //
-        if (values.frame) L = CHTML.Em(state.FSPACE[0]);
+        if (values.fspace) L = CHTML.Em(state.FSPACE[0]);
         //
         //  The cells in the row
         //
@@ -268,7 +274,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Get table height and baseline offset
       //
       var T = 0, B = 0, a = CHTML.TEX.axis_height;
-      if (values.frame) {T = state.FSPACE[1] + 2/CHTML.em; B = 1/CHTML.em}
+      if (values.fspace) T += state.FSPACE[1];
+      if (values.frame) {T += 2/CHTML.em; B += 1/CHTML.em}
       var h = state.HH, d = state.DD;
       for (var i = 0; i < M; i++) {
         if (!state.HD) {h = H[i]; d = D[i]}
@@ -317,7 +324,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           //
           w = Math.max.apply(Math,state.W);
           if (values.width !== "auto") {
-            var S = (values.frame ? state.FSPACE[0] + 2/CHTML.em : 0);
+            var S = (values.fspace ? state.FSPACE[0] + (values.frame ? 2/CHTML.em : 0) : 0);
             for (j = 0; j <= J; j++) S += CSPACE[j];
             w = Math.max((WW-S)/(J+1),w);
           }
@@ -329,7 +336,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       //  Compute natural table width
       //
-      var TW = 0; if (values.frame) TW = state.FSPACE[0];
+      var TW = 0; if (values.fspace) TW = state.FSPACE[0];
       var auto = [], fit = [], percent = [], W = [];
       var row = state.rows[0];
       for (j = 0; j <= J; j++) {
@@ -457,7 +464,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Vertically align the labels with their rows
       //
       var LABELS = state.labels, T = 0, H = state.H, D = state.D, RSPACE = state.RSPACE;
-      if (values.frame) T = state.FSPACE[0] + 1/CHTML.em;
+      if (values.fspace) T = state.FSPACE[0] + (values.frame ? 1/CHTML.em : 0);
       var h = state.HH, d = state.DD;
       for (var i = 0, m = LABELS.length; i < m; i++) {
         if (!state.HD) {h = H[i]; d = D[i]}
