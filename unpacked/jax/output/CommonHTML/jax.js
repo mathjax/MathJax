@@ -86,8 +86,7 @@
     "mjx-delim-h": {display:"block"},
     "mjx-delim-h > mjx-char": {
       transform:"scale(1)",
-      display:"inline-block",
-      "vertical-align":"top"
+      display:"inline-block"
     },
     
     "mjx-surd": {"vertical-align":"top"},
@@ -600,7 +599,7 @@
       big_op_spacing1:  .111111,
       big_op_spacing2:  .166666,
       big_op_spacing3:  .2,
-      big_op_spacing4:  .6,
+      big_op_spacing4:  .45, //.6,  // better spacing for under arrows and braces
       big_op_spacing5:  .1,
 
       surd_height:      .075,
@@ -814,8 +813,8 @@
         if (state.className && font.className !== state.className) this.flushText(node,state);
         var C = font[item.n];
         state.text += C.c; state.className = font.className;
-        if (bbox.h < C[0]) bbox.t = bbox.h = C[0];
-        if (bbox.d < C[1]) bbox.b = bbox.d = C[1];
+        if (bbox.h < C[0]+HFUZZ) bbox.t = bbox.h = C[0]+HFUZZ;
+        if (bbox.d < C[1]+DFUZZ) bbox.b = bbox.d = C[1]+DFUZZ;
         if (bbox.l > bbox.w+C[3]) bbox.l = bbox.w+C[3];
         if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
         bbox.w += C[2] * (item.rscale||1);
@@ -880,7 +879,6 @@
       }
       if (list.length) this.addCharList(node.firstChild,list,bbox);
       bbox.clean();
-      bbox.h += HFUZZ; bbox.d += DFUZZ; bbox.t += HFUZZ; bbox.b += DFUZZ;
       node.firstChild.style[bbox.h < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h-(bbox.a||0));
       node.firstChild.style[bbox.d < 0 ? "marginBottom": "paddingBottom"] = this.Em(bbox.d);
       return bbox;
@@ -971,6 +969,7 @@
       var left, right, mid, ext, ext2, lbox, rbox, mbox, ebox, k = 1;
       lbox = this.createChar(tmp,(delim.left||delim.rep),1,font); left = tmp.removeChild(tmp.firstChild);
       rbox = this.createChar(tmp,(delim.right||delim.rep),1,font); right = tmp.removeChild(tmp.firstChild);
+      ebox = this.createChar(tmp,delim.rep,1,font); ext = tmp.removeChild(tmp.firstChild);
       node.appendChild(left); 
       var hbox = CHTML.BBOX.zero(); 
       hbox.h = Math.max(lbox.h,rbox.h); hbox.d = Math.max(lbox.d,rbox.d);
@@ -982,15 +981,14 @@
         mid = tmp.removeChild(tmp.firstChild);
         w += mbox.w; k = 2;
         if (mbox.h > hbox.h) hbox.h = mbox.h;
-        if (mbox.d < hbox.d) hbox.d = mbox.d;
+        if (mbox.d > hbox.d) hbox.d = mbox.d;
       }
       if (delim.min && W < w*delim.min) W = w*delim.min;
       right.style.marginLeft = CHTML.Em((W-w-rbox.l)/k);
       hbox.w = hbox.r = W;
       if (W > w) {
-        ebox = this.createChar(tmp,delim.rep,1,font); ext = tmp.removeChild(tmp.firstChild);
         if (ebox.h > hbox.h) hbox.h = ebox.h;
-        if (ebox.d < hbox.d) hbox.d = ebox.d;
+        if (ebox.d > hbox.d) hbox.d = ebox.d;
         var s = (W - w)/k + .2;  // space to cover by extender
         s /= (ebox.r - ebox.l);  // scale factor
         this.Transform(ext,
@@ -1011,29 +1009,24 @@
         }
       }
       node.appendChild(right);
-      this.adjustTops([left,ext,mid,ext2,right]);
+      this.adjustHeights([left,ext,mid,ext2,right],hbox);
       hbox.t = hbox.h; hbox.b = hbox.d;
-      if (ext) {
-        if (hbox.h !== ebox.h) node.style.marginTop = CHTML.Em(ebox.h - hbox.h);
-        if (hbox.d !== ebox.d) node.style.marginBottom = CHTML.Em(ebox.d - hbox.d);
-        hbox.h = ebox.h; hbox.d = ebox.d;
-      }
+      if (hbox.h !== ebox.h) node.style.marginTop = CHTML.Em(ebox.h - hbox.h);
+      if (hbox.d !== ebox.d) node.style.marginBottom = CHTML.Em(ebox.d - hbox.d);
+      hbox.h = ebox.h; hbox.d = ebox.d;
       if (BBOX) {hbox.scale = BBOX.scale; hbox.rscale = BBOX.rscale}
       return hbox;
     },
-    adjustTops: function (nodes) {
+    adjustHeights: function (nodes,bbox) {
       //
-      //  to get alignment right in horizontal delimiters, we force all
-      //  the elements to the same height and align to top
+      //  To get alignment right in horizontal delimiters, we force all
+      //  the elements to the same height and depth
       //
-      var i, m = nodes.length, T = 0;
-      for (i = 0; i < m; i++) {
-        if (nodes[i] && nodes[i].style.paddingTop) {
-          var t = this.unEm(nodes[i].style.paddingTop);
-          if (t > T) T = t;
-        }
+      var T = CHTML.Em(bbox.h), D = CHTML.Em(bbox.d);
+      for (var i = 0, m = nodes.length; i < m; i++) if (nodes[i]) {
+        nodes[i].style.paddingTop = T;
+        nodes[i].style.paddingBottom = D;
       }
-      for (i = 0; i < m; i++) if (nodes[i]) nodes[i].style.paddingTop = CHTML.Em(T);
     },
     createChar: function (node,data,scale,font) {
       // ### FIXME: handle cache better (by data[1] and font)
@@ -1465,16 +1458,16 @@
       //  Debugging function to see if internal BBox matches actual bbox
       //
       CHTMLdrawBBox: function (node) {
-        var bbox = this.CHTML, scale = bbox.rscale;
+        var bbox = this.CHTML;
         var box = HTML.Element("mjx-box",
-          {style:{opacity:.25,"margin-left":CHTML.Em(-scale*(bbox.w+(bbox.R||0)))}},[
+          {style:{"font-size":node.style.fontSize, opacity:.25,"margin-left":CHTML.Em(-(bbox.w+(bbox.R||0)))}},[
           ["mjx-box",{style:{
-            height:CHTML.Em(scale*bbox.h),width:CHTML.Em(scale*bbox.w),
+            height:CHTML.Em(bbox.h),width:CHTML.Em(bbox.w),
             "background-color":"red"
           }}],
           ["mjx-box",{style:{
-            height:CHTML.Em(scale*bbox.d),width:CHTML.Em(scale*bbox.w),
-            "margin-left":CHTML.Em(-scale*bbox.w),"vertical-align":CHTML.Em(-scale*bbox.d),
+            height:CHTML.Em(bbox.d),width:CHTML.Em(bbox.w),
+            "margin-left":CHTML.Em(-bbox.w),"vertical-align":CHTML.Em(-bbox.d),
             "background-color":"green"
           }}]
         ]);
@@ -2012,7 +2005,7 @@
         //  determine the spacing
         //
         if (values.accentunder) {
-          k = 3*CHTML.TEX.rule_thickness; z3 = 0;
+          k = 2*CHTML.TEX.rule_thickness; z3 = 0;
         } else {
           z1 = CHTML.TEX.big_op_spacing2;
           z2 = CHTML.TEX.big_op_spacing4;
@@ -2020,7 +2013,7 @@
         }
         ubox.x = -delta/2; ubox.y = -(BBOX.d + k + z3 + scale*ubox.h);
         //
-        //  Position the overscript
+        //  Position the underscript
         //
         if (k) under.style.paddingTop = CHTML.Em(k/scale);
         if (z3) under.style.paddingBottom = CHTML.Em(z3/scale);
