@@ -155,6 +155,24 @@
     "mjx-ex-box-test": {
       position:  "absolute",
       width:"1px", height:"60ex"
+    },
+    
+    "#MathJax_CHTML_Tooltip": {
+      "background-color": "InfoBackground", color: "InfoText",
+      border: "1px solid black",
+      "box-shadow": "2px 2px 5px #AAAAAA",         // Opera 10.5
+      "-webkit-box-shadow": "2px 2px 5px #AAAAAA", // Safari 3 and Chrome
+      "-moz-box-shadow": "2px 2px 5px #AAAAAA",    // Forefox 3.5
+      "-khtml-box-shadow": "2px 2px 5px #AAAAAA",  // Konqueror
+//      filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')", // IE
+      padding: "3px 4px",
+      "z-index": 401,
+      position: "absolute", left: 0, top: 0,
+      width: "auto", height: "auto",
+      display: "none"
+//    },
+//    "#MathJax_Tooltip *": {
+//      filter: "none", opacity:1, background:"transparent" // for IE
     }
 
   };
@@ -443,6 +461,7 @@
     //
     getMetrics: function(jax) {
       var data = jax.CHTML;
+      this.jax = jax;
       this.em = data.em; 
       this.outerEm = data.outerEm;
       this.scale = data.scale;
@@ -2399,7 +2418,7 @@
     MML.ms.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     MML.mglyph.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
 //    MML.menclose.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
-//    MML.maction.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+    MML.maction.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     MML.mmultiscripts.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     MML.mtable.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     
