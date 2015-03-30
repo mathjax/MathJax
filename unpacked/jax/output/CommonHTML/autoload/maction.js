@@ -44,7 +44,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
   MML.maction.Augment({
     CHTMLtooltip: HTML.addElement(document.body,"div",{id:"MathJax_CHTML_Tooltip"}),
     
-    toCommonHTML: function (node,stretch) {
+    toCommonHTML: function (node) {
       var selected = this.Get("selection");
       node = this.CHTMLcreateNode(node);
       this.CHTML = CHTML.BBOX.empty();
@@ -62,8 +62,6 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
 
       return node;
     },
-    CHTMLstretchH: MML.mbase.CHTMLstretchH,
-    CHTMLstretchV: MML.mbase.CHTMLstretchV,
     
     //
     //  Implementations for the various actions
