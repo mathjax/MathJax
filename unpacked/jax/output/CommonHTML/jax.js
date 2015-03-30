@@ -103,6 +103,8 @@
     },
     
     "mjx-annotation-xml": {"line-height":"normal"},
+    
+    "mjx-menclose > svg": {fill:"none", stroke:"currentColor"},
 
     "mjx-mtr":    {display:"table-row"},
     "mjx-mlabeledtr": {display:"table-row"},
@@ -1113,6 +1115,11 @@
     unEm: function (m) {
       return parseFloat(m);
     },
+    Px: function (m) {
+      m *= this.em;
+      if (Math.abs(m) < .1) return "0";
+      return m.toFixed(1).replace(/\.0$/,"")+"px";
+    },
     
     Percent: function (m) {
       return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
@@ -1252,7 +1259,7 @@
             if (cbox.ic) {bbox.ic = cbox.ic} else {delete bbox.ic}
             if (cbox.skew) bbox.skew = cbox.skew;
           }
-        } else if (options.forceChild) {cnode = HTML.addElement(node,"span")}
+        } else if (options.forceChild) {cnode = HTML.addElement(node,"mjx-box")}
         return cnode;
       },
       CHTMLstretchChildV: function (i,H,D) {
@@ -2417,7 +2424,7 @@
 
     MML.ms.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     MML.mglyph.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
-//    MML.menclose.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
+    MML.menclose.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     MML.maction.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     MML.mmultiscripts.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
     MML.mtable.Augment({toCommonHTML: MML.mbase.CHTMLautoload});
