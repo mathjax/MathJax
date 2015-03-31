@@ -42,7 +42,7 @@
       color: "inherit!important",
       updateTime: 30, updateDelay: 6,
       messageStyle: "none",
-      disabled: ((BROWSER.isMSIE && BROWSER.version < 8) ? true :  false)
+      disabled: ((BROWSER.isMSIE && !BROWSER.versionAtLeast("8.0")) ? true :  false)
     }),
 
     //
