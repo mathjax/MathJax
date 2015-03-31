@@ -17,7 +17,7 @@
 <script>
 var Preview = {
   delay: 150,        // delay after keystroke before updating
-
+  
   preview: null,     // filled in by Init below
   buffer: null,      // filled in by Init below
 
@@ -58,7 +58,7 @@ var Preview = {
     if (this.timeout) {clearTimeout(this.timeout)}
     this.timeout = setTimeout(this.callback,this.delay);
   },
-
+  
   //
   //  Creates the preview and runs MathJax on it.
   //  If MathJax is already trying to render the code, return
@@ -83,7 +83,7 @@ var Preview = {
       );
     }
   },
-
+  
   //
   //  Indicate that MathJax is no longer running,
   //  and swap the buffers to show the results.
@@ -92,7 +92,9 @@ var Preview = {
     this.mjRunning = this.mjPending = false;
     this.SwapBuffers();
   }
+  
 };
+
 //
 //  Cache a callback to the CreatePreview action
 //
