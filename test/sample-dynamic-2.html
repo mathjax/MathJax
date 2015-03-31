@@ -23,6 +23,7 @@ var Preview = {
 
   timeout: null,     // store setTimout id
   mjRunning: false,  // true when MathJax is processing
+  mjPending: false,  // true when a typeset has been queued
   oldText: null,     // used to check if an update is needed
 
   //
@@ -67,15 +68,20 @@ var Preview = {
   //  
   CreatePreview: function () {
     Preview.timeout = null;
-    if (this.mjRunning) return;
+    if (this.mjPending) return;
     var text = document.getElementById("MathInput").value;
     if (text === this.oldtext) return;
-    this.buffer.innerHTML = this.oldtext = text;
-    this.mjRunning = true;
-    MathJax.Hub.Queue(
-      ["Typeset",MathJax.Hub,this.buffer],
-      ["PreviewDone",this]
-    );
+    if (this.mjRunning) {
+      this.mjPending = true;
+      MathJax.Hub.Queue(["CreatePreview",this]);
+    } else {
+      this.buffer.innerHTML = this.oldtext = text;
+      this.mjRunning = true;
+      MathJax.Hub.Queue(
+	["Typeset",MathJax.Hub,this.buffer],
+	["PreviewDone",this]
+      );
+    }
   },
 
   //
@@ -83,7 +89,7 @@ var Preview = {
   //  and swap the buffers to show the results.
   //
   PreviewDone: function () {
-    this.mjRunning = false;
+    this.mjRunning = this.mjPending = false;
     this.SwapBuffers();
   }
 
