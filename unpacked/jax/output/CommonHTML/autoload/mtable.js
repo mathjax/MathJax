@@ -356,11 +356,6 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (setWidths) {
         if (relWidth) {
           //
-          //  Set variable width on DOM nodes
-          //
-          this.CHTML.pwidth = values.width; this.CHTML.mwidth = CHTML.Em(TW);
-          node.style.width = node.firstChild.style.width = "100%";
-          //
           //  Attach appropriate widths to the columns
           //  
           for (j = 0; j <= J; j++) {
@@ -401,6 +396,13 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       W[LABEL] = state.W[LABEL];
       state.W = W;
       state.R = TW;
+      //
+      //  Set variable width on DOM nodes
+      //
+      if (relWidth) {
+        this.CHTML.pwidth = values.width; this.CHTML.mwidth = CHTML.Em(TW);
+        node.style.width = node.firstChild.style.width = "100%";
+      }
     },
     //
     //  Stretch any cells that can be stretched
