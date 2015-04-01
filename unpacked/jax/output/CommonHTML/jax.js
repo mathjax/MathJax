@@ -184,6 +184,7 @@
   
   var BIGDIMEN = 1000000;
   var V = "V", H = "H";
+  var LINEBREAKS = {};
 
   CHTML.Augment({
     settings: HUB.config.menuSettings,
@@ -197,6 +198,7 @@
       if (settings.scale) {this.config.scale = settings.scale}
       this.require.push(this.fontDir+"/TeX/fontdata.js");
       this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
+      LINEBREAKS = this.config.linebreaks;
     },
 
     Startup: function () {
@@ -286,8 +288,7 @@
       //  Get linebreaking information
       //
       var maxwidth = 100000, relwidth = false, cwidth = 0,
-          linebreak = this.config.linebreaks.automatic,
-          width = this.config.linebreaks.width;
+          linebreak = LINEBREAKS.automatic, width = LINEBREAKS.width;
       if (linebreak) {
         relwidth = !!width.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/);
         if (relwidth) {width = width.replace(/\s*container\s*/,"")}
@@ -354,7 +355,7 @@
           if (style.maxWidth !== "none") {cwidth = parseFloat(style.maxWidth); break}
           node = node.parentNode;
         }
-        
+        if (relwidth) maxwidth = cwidth;
         scale = (this.config.matchFontHeight ? ex/this.TEX.x_height/em : 1);
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
         jax.CHTML.scale = scale/100; jax.CHTML.fontSize = scale+"%";
@@ -1224,6 +1225,7 @@
       toCommonHTML: function (node,options) {
         return this.CHTMLdefaultNode(node,options);
       },
+      CHTMLmultiline: function () {MML.mbase.CHTMLautoloadFile("multiline")},
 
       CHTMLdefaultNode: function (node,options) {
         if (!options) options = {};
@@ -1384,7 +1386,7 @@
 
       CHTMLhandleBBox: function (node) {
         var BBOX = this.CHTML, style = node.style;
-        if (this.data.length === 1 && this.data[0].CHTML.pwidth) {
+        if (this.data.length === 1 && (this.data[0].CHTML||{}).pwidth) {
           BBOX.pwidth = this.data[0].CHTML.pwidth;
           BBOX.mwidth = this.data[0].CHTML.mwidth;
           style.width = "100%";
@@ -1483,8 +1485,8 @@
       //
       //  Debugging function to see if internal BBox matches actual bbox
       //
-      CHTMLdrawBBox: function (node) {
-        var bbox = this.CHTML;
+      CHTMLdrawBBox: function (node,bbox) {
+        if (!bbox) bbox = this.CHTML;
         var box = HTML.Element("mjx-box",
           {style:{"font-size":node.style.fontSize, opacity:.25,"margin-left":CHTML.Em(-(bbox.w+(bbox.R||0)))}},[
           ["mjx-box",{style:{
@@ -2356,7 +2358,12 @@
         node = this.CHTMLdefaultNode(node);
         var bbox = this.CHTML, H = bbox.h, D = bbox.d;
         for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLstretchChildV(i,H,D);
+        if (this.CHTMLlineBreaks()) this.CHTMLmultiline(node);
         return node;
+      },
+      CHTMLlineBreaks: function () {
+        if (!LINEBREAKS.automatic || !this.parent.linebreakContainer) return false;
+        return (this.CHTML.w > CHTML.linebreakWidth) || this.hasNewline();
       },
       CHTMLstretchV: function (h,d) {
         this.CHTMLstretchChildV(this.CoreIndex(),h,d);
