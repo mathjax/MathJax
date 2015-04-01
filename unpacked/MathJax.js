@@ -1975,7 +1975,7 @@ MathJax.Hub = {
   getJaxFor: function (element) {
     if (typeof(element) === 'string') {element = document.getElementById(element)}
     if (element && element.MathJax) {return element.MathJax.elementJax}
-    if (element && element.isMathJax) {
+    if (this.isMathJaxNode(element)) {
       while (element && !element.jaxID) {element = element.parentNode}
       if (element) {return MathJax.OutputJax[element.jaxID].getJaxFromMath(element)}
     }
@@ -1984,13 +1984,16 @@ MathJax.Hub = {
   
   isJax: function (element) {
     if (typeof(element) === 'string') {element = document.getElementById(element)}
-    if (element && element.isMathJax) {return 1}
-    if (element && element.tagName != null && element.tagName.toLowerCase() === 'script') {
+    if (this.isMathJaxNode(element.tagName)) {return 1}
+    if (element && (element.tagName||"").toLowerCase() === 'script') {
       if (element.MathJax) 
         {return (element.MathJax.state === MathJax.ElementJax.STATE.PROCESSED ? 1 : -1)}
       if (element.type && this.inputJax[element.type.replace(/ *;(.|\s)*/,"")]) {return -1}
     }
     return 0;
+  },
+  isMathJaxNode: function (element) {
+    return !!element && (element.isMathJax || (element.tagName||"").substr(0,4) === "MJX-");
   },
   
   setRenderer: function (renderer,type) {
@@ -2644,7 +2647,7 @@ MathJax.Hub.Startup = {
     }
   },
   HashCheck: function (target) {
-    if (target.isMathJax) {
+    if (this.isMathJaxNode(target)) {
       var jax = MathJax.Hub.getJaxFor(target);
       if (jax && MathJax.OutputJax[jax.outputJax].hashCheck)
         {target = MathJax.OutputJax[jax.outputJax].hashCheck(target)}
