@@ -216,7 +216,6 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (align !== MML.INDENTALIGN.LEFT) block.style.textAlign = align;
       if (dY) block.style.paddingTop = CHTML.Em(dY);
       state.BBOX.combine(bbox,shift,state.Y);
-//this.CHTMLdrawBBox(line,bbox);
       //
       //  Save the values needed for the future
       //
@@ -541,13 +540,12 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       //  Get the bounding boxes and the width of the scripts
       //
-      var bbox = this.CHTML,
-          base = this.data[this.base].CHTML;
-      var dw = bbox.w - base.w;
+      var bbox = this.CHTML, base = this.data[this.base].CHTML;
+      var dw = bbox.w - base.w - bbox.X;
       //
-      //  Add in the prescripts
+      //  Add in the width of the prescripts
       //  
-      info.scanW += bbox.dx; scanW = info.scanW;
+      info.scanW += bbox.X; scanW = info.scanW;
       //
       //  Check if the base can be broken
       //
@@ -565,59 +563,50 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     },
     
     CHTMLmoveLine: function (start,end,node,state,values) {
-      var NODE = this.CHTMLnodeElement(), data = this.CHTML,
-          stack = NODE.firstChild, BOX = {};
-      var box = stack.firstChild;
-      
-      //
-      //  Get the boxes for the scripts (if any)
-      //
-//      while (box) {
-//        if (box.bbox && box.bbox.name) {BOX[box.bbox.name] = box}
-//        box = box.nextSibling;
-//      }
+      var NODE = this.CHTMLnodeElement(), data = this.CHTML, BOX = this.CHTMLbbox, NODE;
       //
       //  If this is the start, move the prescripts, if any.
       //
       if (start.length < 1) {
-        if (BOX.presub || BOX.presup) {
-          var STACK = HTMLCSS.createStack(node);
-          if (BOX.presup) {
-            HTMLCSS.addBox(STACK,BOX.presup);
-            HTMLCSS.placeBox(BOX.presup,data.dx-BOX.presup.bbox.w,data.u);
-          }
-          if (BOX.presub) {
-            HTMLCSS.addBox(STACK,BOX.presub);
-            HTMLCSS.placeBox(BOX.presub,data.dx+data.delta-BOX.presub.bbox.w,-data.v);
-          }
-          this.HTMLcombineBBoxes(STACK,node.bbox);
-          node.appendChild(STACK);
-          STACK.style.width = HTMLCSS.Em(data.dx);
-        }
+        NODE = this.CHTMLnodeElement();
+        var prestack = NODE.getElementsByTagName("mjx-prestack")[0],
+            presup = NODE.getElementsByTagName("mjx-presup")[0],
+            presub = NODE.getElementsByTagName("mjx-presub")[0];
+        if (prestack)      node.appendChild(prestack);
+          else if (presup) node.appendChild(presup);
+          else if (presub) node.appendChild(presub);
+        var w = state.bbox.w, bbox;
+        if (presup) state.bbox.combine(BOX.presup,w+BOX.presup.X,BOX.presup.Y);
+        if (presub) state.bbox.combine(BOX.presub,w+BOX.presub.X,BOX.presub.Y);
       }
       //
       //  Move the proper part of the base
       //
       if (this.data[this.base]) {
+        var base = HTML.addElement(node,"mjx-base");
         if (start.length > 1) {
-          this.data[this.base].CHTMLmoveSlice(start.slice(1),end.slice(1),node,state,values,"marginLeft");
+          this.data[this.base].CHTMLmoveSlice(start.slice(1),end.slice(1),base,state,values,"marginLeft");
         } else {
-          if (end.length <= 1) this.data[this.base].CHTMLmoveNode(node,state,values);
-            else this.data[this.base].CHTMLmoveSlice([],end.slice(1),node,state,values,"marginRight");
+          if (end.length <= 1) this.data[this.base].CHTMLmoveNode(base,state,values);
+            else this.data[this.base].CHTMLmoveSlice([],end.slice(1),base,state,values,"marginRight");
         }
       }
       //
       //  If this is the end, check for super and subscripts, and move those
-      //  by moving the stack that contains them, and shifting by the amount of the
-      //  base that has been removed.  Remove the empty base box from the stack.
+      //  by moving the elements that contains them.  Adjust the bounding box
+      //  to include the super and subscripts.
       //
       if (end.length === 0) {
-        if (this.data[this.base]) stack.removeChild(stack.firstChild);
-        for (box = stack.firstChild; box; box = box.nextSibling)
-	  box.style.left = CHTML.Em(CHTML.unEm(box.style.left)-data.px);
-//        stack.bbox.w -= data.px; stack.style.width = HTMLCSS.Em(stack.bbox.w);
-//        this.HTMLcombineBBoxes(stack,node.bbox);
-        node.appendChild(stack);
+        NODE = this.CHTMLnodeElement();
+        var stack = NODE.getElementsByTagName("mjx-stack")[0],
+            sup = NODE.getElementsByTagName("mjx-sup")[0],
+            sub = NODE.getElementsByTagName("mjx-sub")[0];
+        if (stack)      node.appendChild(stack);
+          else if (sup) node.appendChild(sup);
+          else if (sub) node.appendChild(sub);
+        var w = state.bbox.w, bbox;
+        if (sup) state.bbox.combine(BOX.sup,w,BOX.sup.Y);
+        if (sub) state.bbox.combine(BOX.sub,w,BOX.sub.Y);
       }
     }
 
