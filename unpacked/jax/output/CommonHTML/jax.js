@@ -1166,7 +1166,8 @@
       if (this.L) this.L *= scale;
       if (this.R) this.R *= scale;
     },
-   combine: function (cbox,x,y) {
+    combine: function (cbox,x,y) {
+      cbox.X = x; cbox.Y = y;  // save for use with line breaking
       scale = cbox.rscale;
       if (x + scale*cbox.r > this.r) this.r = x + scale*cbox.r;
       if (x + scale*cbox.l < this.l) this.l = x + scale*cbox.l;

@@ -273,8 +273,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         var last = state.last; state.last = false;
         while (i < j) {
           if (this.data[i]) {
-            if (start.length <= 1) {this.data[i].CHTMLmoveNode(node,state,values)}
-              else {this.data[i].CHTMLmoveSlice(start.slice(1),[],node,state,values,"marginLeft")}
+            if (start.length <= 1) this.data[i].CHTMLmoveNode(node,state,values);
+              else this.data[i].CHTMLmoveSlice(start.slice(1),[],node,state,values,"marginLeft");
           }
           i++; state.first = false; start = [];
         }
@@ -284,8 +284,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //
         state.last = last;
         if (this.data[i]) {
-          if (end.length <= 1) {this.data[i].CHTMLmoveNode(node,state,values)}
-            else {this.data[i].CHTMLmoveSlice([],end.slice(1),node,state,values,"marginRight")}
+          if (end.length <= 1) this.data[i].CHTMLmoveNode(node,state,values);
+            else this.data[i].CHTMLmoveSlice([],end.slice(1),node,state,values,"marginRight");
         }
       }
     },
@@ -357,8 +357,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           node.style.marginLeft = ""; this.CHTML.L = 0;
           node.className = node.className.replace(/ MJXc-space\d/,"");
         }
-        if (state.first && this.CHTML.w === 0) {state.nextIsFirst = true}
-          else {delete state.nextIsFirst}
+        if (state.first && this.CHTML.w === 0) state.nextIsFirst = true;
+          else delete state.nextIsFirst;
         //
         //  Update bounding box
         //
@@ -433,8 +433,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         var last = state.last; state.last = false; var k = this.dataI[i];
         while (i < j) {
           if (this.data[k]) {
-            if (start.length <= 1) {this.data[k].CHTMLmoveNode(node,state,values)}
-              else {this.data[k].CHTMLmoveSlice(start.slice(1),[],node,state,values,"marginLeft")}
+            if (start.length <= 1) this.data[k].CHTMLmoveNode(node,state,values);
+              else this.data[k].CHTMLmoveSlice(start.slice(1),[],node,state,values,"marginLeft");
           }
           i++; k = this.dataI[i]; state.first = false; start = [];
         }
@@ -443,8 +443,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //
         state.last = last;
         if (this.data[k]) {
-          if (end.length <= 1) {this.data[k].CHTMLmoveNode(node,state,values)}
-            else {this.data[k].CHTMLmoveSlice([],end.slice(1),node,state,values,"marginRight")}
+          if (end.length <= 1) this.data[k].CHTMLmoveNode(node,state,values);
+            else this.data[k].CHTMLmoveSlice([],end.slice(1),node,state,values,"marginRight");
         }
       }
     }
@@ -491,28 +491,35 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Move the proper part of the base
       //
       if (this.data[this.base]) {
+        var base = HTML.addElement(node,"mjx-base");
         if (start.length > 1) {
-          this.data[this.base].CHTMLmoveSlice(start.slice(1),end.slice(1),node,state,values,"marginLeft");
+          this.data[this.base].CHTMLmoveSlice(start.slice(1),end.slice(1),base,state,values,"marginLeft");
         } else {
-          if (end.length <= 1) {this.data[this.base].CHTMLmoveNode(node,state,values)}
-            else {this.data[this.base].CHTMLmoveSlice([],end.slice(1),node,state,values,"marginRight")}
+          if (end.length <= 1) this.data[this.base].CHTMLmoveNode(base,state,values);
+            else this.data[this.base].CHTMLmoveSlice([],end.slice(1),base,state,values,"marginRight");
         }
       }
       //
       //  If this is the end, check for super and subscripts, and move those
-      //  by moving the stack that contains them, and shifting by the amount of the
-      //  base that has been removed.  Remove the empty base box from the stack.
+      //  by moving the elements that contains them.  Adjust the bounding box
+      //  to include the super and subscripts.
       //
       if (end.length === 0) {
-        var s = this.data[this.sup] || this.data[this.sub];
-        if (s && this.CHTMLnotEmpty(s)) {
-          var box = s.CHTMLnodeElement().parentNode, stack = box.parentNode;
-          if (this.data[this.base]) stack.removeChild(stack.firstChild);
-	  for (box = stack.firstChild; box; box = box.nextSibling)
-	    {box.style.left = CHTML.Em(CHTML.unEm(box.style.left)-this.CHTML.baseW)}
-//          stack.bbox.w -= this.CHTML.baseW; stack.style.width = CHTML.Em(stack.bbox.w);
-//          this.HTMLcombineBBoxes(stack,span.bbox);
-          node.appendChild(stack);
+        var NODE = this.CHTMLnodeElement(),
+            stack = NODE.getElementsByTagName("mjx-stack")[0],
+            sup = NODE.getElementsByTagName("mjx-sup")[0],
+            sub = NODE.getElementsByTagName("mjx-sub")[0];
+        if (stack)      node.appendChild(stack);
+          else if (sup) node.appendChild(sup);
+          else if (sub) node.appendChild(sub);
+        var w = state.bbox.w, bbox;
+        if (sup) {
+          bbox = this.data[this.sup].CHTML;
+          state.bbox.combine(bbox,w,bbox.Y);
+        }
+        if (sub) {
+          bbox = this.data[this.sub].CHTML;
+          state.bbox.combine(bbox,w,bbox.Y);
         }
       }
     }
@@ -595,8 +602,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         if (start.length > 1) {
           this.data[this.base].CHTMLmoveSlice(start.slice(1),end.slice(1),node,state,values,"marginLeft");
         } else {
-          if (end.length <= 1) {this.data[this.base].CHTMLmoveNode(node,state,values)}
-            else {this.data[this.base].CHTMLmoveSlice([],end.slice(1),node,state,values,"marginRight")}
+          if (end.length <= 1) this.data[this.base].CHTMLmoveNode(node,state,values);
+            else this.data[this.base].CHTMLmoveSlice([],end.slice(1),node,state,values,"marginRight");
         }
       }
       //
