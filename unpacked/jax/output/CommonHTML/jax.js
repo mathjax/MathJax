@@ -184,7 +184,7 @@
   
   var BIGDIMEN = 1000000;
   var V = "V", H = "H";
-  var LINEBREAKS = {};
+  var LINEBREAKS = {}, CONFIG = MathJax.Hub.config;
 
   CHTML.Augment({
     settings: HUB.config.menuSettings,
@@ -1564,6 +1564,28 @@
         if (this.CHTML.pwidth) {
           node.parentNode.style.width = this.CHTML.pwidth;
           node.parentNode.style.minWidth = this.CHTML.mwidth;
+        } else if (!this.isMultiline && this.Get("display") === "block") {
+          var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
+          if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) values.indentalign = values.indentalignfirst;
+          if (values.indentalign === MML.INDENTALIGN.AUTO) values.indentalign = CONFIG.displayAlign;
+          if (values.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) values.indentshift = values.indentshiftfirst;
+          if (values.indentshift === "auto") values.indentshift = "0";
+          var shift = CHTML.length2em(values.indentshift,CHTML.cwidth);
+          if (CONFIG.displayIndent !== "0") {
+            var indent = CHTML.length2em(CONFIG.displayIndent,CHTML.cwidth);
+            shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
+          }
+          var styles = node.parentNode.parentNode.style;
+          styles.textAlign = values.indentalign;
+          // ### FIXME: make percentage widths respond to changes in container
+          if (shift) {
+            shift *= CHTML.em/CHTML.outerEm;
+            HUB.Insert(styles,({
+              left: {marginLeft: CHTML.Em(shift)},
+              right: {marginLeft: CHTML.Em(Math.max(0,this.CHTML.w+shift)), marginRight: CHTML.Em(-shift)},
+              center: {marginLeft: CHTML.Em(shift), marginRight: CHTML.Em(-shift)}
+            })[values.indentalign]);
+          }
         }
         return node;
       }
