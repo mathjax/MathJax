@@ -1660,7 +1660,7 @@
       //  The web font, if no local font found
       //   ### FIXME: add more formats to src
       //
-      font = {"font-family":family+"w", src:"url('"+DIR+"/"+name+".otf')"};
+      font = {"font-family":family+"w", src:"url('"+DIR+"/"+name+"-"+variant+".otf')"};
       faces.push(font);
       //
       //  A class that looks for the local and web fonts
