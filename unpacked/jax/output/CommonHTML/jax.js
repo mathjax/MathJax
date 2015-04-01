@@ -901,8 +901,9 @@
       }
       if (list.length) this.addCharList(node.firstChild,list,bbox);
       bbox.clean();
-      node.firstChild.style[bbox.h < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h-(bbox.a||0));
-      node.firstChild.style[bbox.d < 0 ? "marginBottom": "paddingBottom"] = this.Em(bbox.d);
+      if (bbox.d < 0) {bbox.D = bbox.d; bbox.d = 0}
+      if (bbox.h || bbox.a) node.firstChild.style[bbox.h < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h-(bbox.a||0));
+      if (bbox.d) node.firstChild.style[bbox.d < 0 ? "marginBottom": "paddingBottom"] = this.Em(bbox.d);
       return bbox;
     },
 
@@ -1032,6 +1033,7 @@
       }
       node.appendChild(right);
       this.adjustHeights([left,ext,mid,ext2,right],hbox);
+      if (ebox.D) ebox.d = ebox.D;
       hbox.t = hbox.h; hbox.b = hbox.d;
       if (hbox.h !== ebox.h) node.style.marginTop = CHTML.Em(ebox.h - hbox.h);
       if (hbox.d !== ebox.d) node.style.marginBottom = CHTML.Em(ebox.d - hbox.d);
@@ -1165,6 +1167,7 @@
       this.l *= scale; this.r *= scale; this.t *= scale; this.b *= scale;
       if (this.L) this.L *= scale;
       if (this.R) this.R *= scale;
+      if (this.D) this.D *= scale;
     },
     combine: function (cbox,x,y) {
       cbox.X = x; cbox.Y = y;  // save for use with line breaking
@@ -1175,12 +1178,14 @@
         this.w  = x + scale*(cbox.w + (cbox.L||0) + (cbox.R||0));
       if (y + scale*cbox.h > this.h) this.h = y + scale*cbox.h;
       if (scale*cbox.d - y > this.d) this.d = scale*cbox.d - y;
+      if (cbox.D && (this.D == null || scale*cbox.D - y > this.D)) this.D = scale*cbox.D - y;
       if (y + scale*cbox.t > this.t) this.t = y + scale*cbox.t;
       if (scale*cbox.b - y > this.b) this.b = scale*cbox.b - y;
     },
     updateFrom: function (cbox) {
       this.h = cbox.h; this.d = cbox.d; this.w = cbox.w; this.r = cbox.r; this.l = cbox.l;
       this.t = cbox.t; this.b = cbox.b;
+      if (cbox.D) this.D = cbox.D;
     },
     adjust: function (m,x,X,M) {
       this[x] += CHTML.length2em(m);
@@ -1994,6 +1999,7 @@
           var stack = HTML.Element("mjx-stack");
           stack.appendChild(over); stack.appendChild(base);
         }
+        if (obox.D) obox.d = obox.D;
         if (obox.d < 0) {
           //
           // For negative depths, set the height and align to top
@@ -2044,13 +2050,14 @@
           node.firstChild.firstChild.firstChild.appendChild(stack);
           node.firstChild.lastChild.appendChild(under);
         }
+        if (ubox.D) ubox.d = ubox.D;
         if (ubox.d < 0) {
           //
           // For negative depths, set the height and align to top
           // in order to avoid extra baseline space
           //
           under.firstChild.style.verticalAlign = "top";
-          under.style.height = CHTML.Em(ubox.h+ubox.d);
+          node.firstChild.style.marginBottom = CHTML.Em(ubox.d);
         }
         //
         //  determine the spacing
