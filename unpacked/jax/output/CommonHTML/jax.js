@@ -1211,6 +1211,17 @@
       if (y + scale*cbox.t > this.t) this.t = y + scale*cbox.t;
       if (scale*cbox.b - y > this.b) this.b = scale*cbox.b - y;
     },
+    append: function (cbox) {
+      scale = cbox.rscale; var x = this.w;
+      if (x + scale*cbox.r > this.r) this.r = x + scale*cbox.r;
+      if (x + scale*cbox.l < this.l) this.l = x + scale*cbox.l;
+      this.w += scale*(cbox.w+(cbox.L||0)+(cbox.R||0)) ;
+      if (scale*cbox.h > this.h) this.h = scale*cbox.h;
+      if (scale*cbox.d > this.d) this.d = scale*cbox.d;
+      if (cbox.D && (this.D == null || scale*cbox.D > this.D)) this.D = scale*cbox.D;
+      if (scale*cbox.t > this.t) this.t = scale*cbox.t;
+      if (scale*cbox.b > this.b) this.b = scale*cbox.b;
+    },
     updateFrom: function (cbox) {
       this.h = cbox.h; this.d = cbox.d; this.w = cbox.w; this.r = cbox.r; this.l = cbox.l;
       this.t = cbox.t; this.b = cbox.b;
@@ -1292,7 +1303,7 @@
           }
           if (!options.noBBox) {
             var bbox = this.CHTML, cbox = child.CHTML;
-            bbox.combine(cbox,bbox.w,0);
+            bbox.append(cbox);
             if (cbox.ic) {bbox.ic = cbox.ic} else {delete bbox.ic}
             if (cbox.skew) bbox.skew = cbox.skew;
           }
