@@ -166,15 +166,11 @@
       "-webkit-box-shadow": "2px 2px 5px #AAAAAA", // Safari 3 and Chrome
       "-moz-box-shadow": "2px 2px 5px #AAAAAA",    // Forefox 3.5
       "-khtml-box-shadow": "2px 2px 5px #AAAAAA",  // Konqueror
-//      filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')", // IE
       padding: "3px 4px",
       "z-index": 401,
       position: "absolute", left: 0, top: 0,
       width: "auto", height: "auto",
       display: "none"
-//    },
-//    "#MathJax_Tooltip *": {
-//      filter: "none", opacity:1, background:"transparent" // for IE
     }
 
   };
@@ -1686,6 +1682,7 @@
             }});
           }
           if (values.text.length !== 1) delete this.CHTML.skew;
+            else if (this.CHTML.w === 0 && this.CHTML.l < 0) this.CHTMLfixCombiningChar(node);
           if (values.largeop) this.CHTMLcenterOp(node);
         }
 
@@ -1736,6 +1733,18 @@
           if (data.text.match(/['`"\u00B4\u2032-\u2037\u2057]/))
             data.mathvariant = "-TeX-variant";  // ### FIXME: handle other fonts
         }
+      },
+      CHTMLfixCombiningChar: function (node) {
+        //
+        //  IE doesn't display combining chararacters unless they combine with
+        //  something, so put them over a space and remove the space's width
+        //
+        var char = node.firstChild.textContent;
+        node.firstChild.innerHTML = "\u00A0" + char;
+        var font = this.CHTMLvariant.cache[char.charCodeAt(0)][0].font;
+        var space = font[0xA0] || font[0x20];
+        var w = space[2] / (space.c ? 1 : 1000);
+        node.firstChild.style.marginLeft = CHTML.Em(-w);
       },
       CHTMLcenterOp: function (node) {
         var bbox = this.CHTML;
