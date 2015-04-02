@@ -53,7 +53,7 @@
       "float":           "none",
       "direction":       "ltr",
       "word-wrap":       "normal",
-      padding:           "1px 0",
+      padding:           "1px 0"
     },
     ".MJXc-display": {
       display:      "block",
@@ -223,7 +223,7 @@
       //
       // Used in preTranslate to get scaling factors and line width
       //
-      this.TestSpan = HTML.Element("mjx-test",{},[["mjx-ex-box-test"]]);
+      this.TestSpan = HTML.Element("mjx-test",{style:{left:"1em"}},[["mjx-ex-box-test"]]);
 
       //
       //  Set up styles and preload web fonts
@@ -253,12 +253,47 @@
       //  Get the default sizes (need styles in place to do this)
       //
       document.body.appendChild(this.TestSpan);
-      var style = window.getComputedStyle(this.TestSpan);
-      this.defaultEm    = parseFloat(style.fontSize);
+      this.defaultEm    = this.getFontSize(this.TestSpan);
       this.defaultEx    = this.TestSpan.firstChild.offsetHeight/60;
       this.defaultWidth = this.TestSpan.offsetWidth;
       document.body.removeChild(this.TestSpan);
     },
+    getFontSize: (window.getComputedStyle ? 
+      function (node) {
+        var style = window.getComputedStyle(node);
+        return parseFloat(style.fontSize);
+      } :
+      //
+      //  IE 8 doesn't do getComputedStyle, so use
+      //  an alternative approach
+      //
+      function (node) {
+        return node.style.pixelLeft;
+      }
+    ),
+    getMaxWidth: (window.getComputedStyle ?
+      function (node) {
+        var style = window.getComputedStyle(node);
+        if (style.maxWidth !== "none") return parseFloat(style.maxWidth);
+        return 0;
+      } :
+      //
+      //  IE 8 doesn't do getComputedStyle, so use
+      //  currentStyle, and a hack to get the pixels for
+      //  a non-px max-width
+      //
+      function (node) {
+        var max = node.currentStyle.maxWidth;
+        if (max !== "none") {
+          if (max.match(/\d*px/)) return parseFloat(max);
+          var left = node.style.left;
+          node.style.left = max; max = node.style.pixelLeft;
+          node.style.left = left;
+          return max;
+        }
+        return 0;
+      }
+    ),
 
     //
     //  Load data for a font
@@ -344,15 +379,13 @@
         script = scripts[i]; if (!script.parentNode) continue;
         test = script.previousSibling;
         jax = script.MathJax.elementJax; if (!jax) continue;
-        var style = window.getComputedStyle(test);
-        em = parseFloat(style.fontSize);
+        em = CHTML.getFontSize(test);
         ex = test.firstChild.offsetHeight/60;
         if (ex === 0 || ex === "NaN") ex = this.defaultEx
         node = test;
         while (node) {
           cwidth = node.offsetWidth; if (cwidth) break;
-          var style = window.getComputedStyle(node);
-          if (style.maxWidth !== "none") {cwidth = parseFloat(style.maxWidth); break}
+          cwidth = CHTML.getMaxWidth(node); if (cwidth) break;
           node = node.parentNode;
         }
         if (relwidth) maxwidth = cwidth;
@@ -2045,7 +2078,7 @@
         if (!stretch) {
           HTML.addElement(node,"mjx-itable",{},[
             ["mjx-row",{},[["mjx-cell"]]],
-            ["mjx-row"],
+            ["mjx-row"]
           ]);
           node.firstChild.firstChild.firstChild.appendChild(stack);
           node.firstChild.lastChild.appendChild(under);
@@ -2292,7 +2325,7 @@
         //
         return node;
       },
-      CHTMLcanStretch: function (direction) {return false},
+      CHTMLcanStretch: function (direction) {return false}
     });
 
     /********************************************************/

@@ -46,7 +46,7 @@
     ".MJXc-TeX-unknown-R":  {"font-family":UNDEFINEDFAMILY, "font-style":"normal", "font-weight":"normal"},
     ".MJXc-TeX-unknown-I":  {"font-family":UNDEFINEDFAMILY, "font-style":"italic", "font-weight":"normal"},
     ".MJXc-TeX-unknown-B":  {"font-family":UNDEFINEDFAMILY, "font-style":"normal", "font-weight":"bold"},
-    ".MJXc-TeX-unknown-BI": {"font-family":UNDEFINEDFAMILY, "font-style":"italic", "font-weight":"bold"},
+    ".MJXc-TeX-unknown-BI": {"font-family":UNDEFINEDFAMILY, "font-style":"italic", "font-weight":"bold"}
   });
 
   CHTML.TEX = CHTML.TEXDEF;     // use default TeX paramaters
