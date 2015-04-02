@@ -346,7 +346,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         else if (CWIDTH[j].match(/%$/)) percent.push(j)
         else W[j] = CHTML.length2em(CWIDTH[j],W[j]);
         TW += W[j] + CSPACE[j];
-        row[j].style.width = CHTML.Em(W[j]);
+        if (row[j]) row[j].style.width = CHTML.Em(W[j]);
       }
       if (values.frame) TW += 2/CHTML.em;
       var hasFit = (fit.length > 0);
@@ -416,6 +416,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         if (!state.HD) {h = H[i]; d = D[i]}
         for (var j = 0; j <= J; j++) {
           var cell = row[j], cdata = rdata.data[j];
+          if (!cdata) continue;
           if (cdata.CHTML.stretch === "V") cdata.CHTMLstretchV(h,d);
           else if (cdata.CHTML.stretch === "H") cdata.CHTMLstretchH(cell,W[j]);
         }
