@@ -2479,7 +2479,10 @@
         if (this.texClass === MML.TEXCLASS.VCENTER) {
           var a = CHTML.TEX.axis_height, BBOX = this.CHTML;
           var v = a-(BBOX.h+BBOX.d)/2+BBOX.d;
-          if (Math.abs(v) > .001) node.style.verticalAlign = CHTML.Em(v);
+          if (Math.abs(v) > .001) {
+            node.style.verticalAlign = CHTML.Em(v);
+            BBOX.h += v; BBOX.t += v; BBOX.d -= v; BBOX.b -= v;
+          }
         }
         return node;
       },
