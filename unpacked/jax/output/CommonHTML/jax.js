@@ -2445,8 +2445,8 @@
         return node;
       },
       CHTMLlineBreaks: function () {
-        if (!LINEBREAKS.automatic || !this.parent.linebreakContainer) return false;
-        return (this.CHTML.w > CHTML.linebreakWidth) || this.hasNewline();
+        if (!this.parent.linebreakContainer) return false;
+        return (LINEBREAKS.automatic && this.CHTML.w > CHTML.linebreakWidth) || this.hasNewline();
       },
       CHTMLstretchV: function (h,d) {
         this.CHTMLstretchChildV(this.CoreIndex(),h,d);
