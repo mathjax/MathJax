@@ -450,7 +450,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       }); box.appendChild(table);
       var labels = HTML.Element("mjx-stack");
       table.style.display = "inline-table"; if (!table.style.width) table.style.width = "auto";
-      labels.style.verticalAlign = table.style.verticalAlign = "top";
+      labels.style.verticalAlign = "top";
       node.style.verticalAlign = "";
       if (shift) table.style[margin] = CHTML.Em(shift);
       //

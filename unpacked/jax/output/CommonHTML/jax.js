@@ -574,9 +574,17 @@
       var node = HTML.addElement(span,"mjx-chtml");
       this.idPostfix = "-zoom"; jax.root.toCommonHTML(node); this.idPostfix = "";
       //
+      //  Adjust margins to prevent overlaps at the edges
+      //
+      var style = node.style, bbox = jax.root.CHTML;
+      if (bbox.t > bbox.h) style.marginTop = CHTML.Em(bbox.t-Math.max(bbox.h,CHTML.FONTDATA.lineH));
+      if (bbox.b > bbox.d) style.marginBottom = CHTML.Em(bbox.b-Math.max(bbox.d,CHTML.FONTDATA.lineD));
+      if (bbox.l < 0) style.paddingLeft = CHTML.Em(-bbox.l);
+      if (bbox.r > bbox.w) style.marginRight = CHTML.Em(bbox.r-bbox.w);
+      //
       //  Get height and width of zoomed math and original math
       //
-      node.style.position = "absolute";
+      style.position = "absolute";
       var zW = node.offsetWidth, zH = node.offsetHeight,
           mH = math.firstChild.offsetHeight, mW = math.firstChild.offsetWidth;
       node.style.position = "";
