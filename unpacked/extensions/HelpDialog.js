@@ -59,13 +59,34 @@
         "max-height":"20em", "max-width":"30em", "background-color":"#EEEEEE"
       },
       
-      ".MathJax_Menu_Close": {
-          position:"absolute",
-          width:"21px", height:"21px", 
-          top:".2em", right:".2em",
-          cursor:"pointer",
-          "font-weight": "bold", 
-          "font-size": "1.33em"
+      "#MathJax_HelpClose": {
+        position:"absolute", top:".2em", right:".2em",
+        cursor:"pointer",
+        display:"inline-block",
+        border:"2px solid #AAA",
+        "border-radius":"18px",
+        "-webkit-border-radius": "18px",             // Safari and Chrome
+        "-moz-border-radius": "18px",                // Firefox
+        "-khtml-border-radius": "18px",              // Konqueror
+        "font-family":"'Courier New',Courier",
+        "font-size":"24px",
+        color:"#F0F0F0"
+      },
+      "#MathJax_HelpClose span": {
+        display:"block", "background-color":"#AAA", border:"1.5px solid",
+        "border-radius":"18px",
+        "-webkit-border-radius": "18px",             // Safari and Chrome
+        "-moz-border-radius": "18px",                // Firefox
+        "-khtml-border-radius": "18px",              // Konqueror
+        "line-height":0, 
+        padding:"8px 0 6px"     // may need to be browser-specific
+      },
+      "#MathJax_HelpClose:hover": {
+        color:"white!important",
+        border:"2px solid #CCC!important"
+      },
+      "#MathJax_HelpClose:hover span": {
+        "background-color":"#CCC!important"
       }
     }
   });
@@ -127,10 +148,8 @@
         ]
       ]],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
-      ["span",{
-        className: "MathJax_Menu_Close",
-        onclick: HELP.Remove},
-        ["\u00D7"]
+      ["span",{id: "MathJax_HelpClose", onclick: HELP.Remove},
+        [["span",{},["\u00D7"]]]
       ]
     ]));
     LOCALE.setCSS(help);

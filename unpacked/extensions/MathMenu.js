@@ -158,21 +158,43 @@
         color: (isPC ? "HighlightText" : "white")
       },
       
-      ".MathJax_Menu_Close": {
-          position:"absolute",
-          width:"21px", height:"21px", 
-          top:".2em", right:".2em",
-          cursor:"pointer",
-          "font-weight": "bold", 
-          "font-size": "1.33em"
+      "#MathJax_AboutClose": {
+        top:".2em", right:".2em"
       },
-      ".MathJax_Menu_Mobile_Close": {
-          position:"absolute",
-          width:"1em", height:"1em", 
-          top:"0", left:"0",
-          "font-weight": "bold", 
-          "font-size": "1.33em"
+      ".MathJax_Menu .MathJax_MenuClose": {
+        top:"-10px", left:"-10px"
+      },
+      
+      ".MathJax_MenuClose": {
+        position:"absolute",
+        cursor:"pointer",
+        display:"inline-block",
+        border:"2px solid #AAA",
+        "border-radius":"18px",
+        "-webkit-border-radius": "18px",             // Safari and Chrome
+        "-moz-border-radius": "18px",                // Firefox
+        "-khtml-border-radius": "18px",              // Konqueror
+        "font-family":"'Courier New',Courier",
+        "font-size":"24px",
+        color:"#F0F0F0"
+      },
+      ".MathJax_MenuClose span": {
+        display:"block", "background-color":"#AAA", border:"1.5px solid",
+        "border-radius":"18px",
+        "-webkit-border-radius": "18px",             // Safari and Chrome
+        "-moz-border-radius": "18px",                // Firefox
+        "-khtml-border-radius": "18px",              // Konqueror
+        "line-height":0, 
+        padding:"8px 0 6px"     // may need to be browser-specific
+      },
+      ".MathJax_MenuClose:hover": {
+        color:"white!important",
+        border:"2px solid #CCC!important"
+      },
+      ".MathJax_MenuClose:hover span": {
+        "background-color":"#CCC!important"
       }
+
     }
   });
   
@@ -219,10 +241,9 @@
       for (var i = 0, m = this.items.length; i < m; i++) {this.items[i].Create(menu)}
       if (MENU.isMobile) {
         HTML.addElement(menu,"span",{
-          className: "MathJax_Menu_Mobile_Close", menu: parent,
+          className: "MathJax_MenuClose", menu: parent,
           ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close, onmouseup: FALSE
-        },"\u00D7"
-        );
+        },[["span",{},"\u00D7"]]);
       }
       
       div.appendChild(menu);
@@ -668,11 +689,8 @@
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
       }},jax],["br"],["br"],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
-      ["span",{
-        className: "MathJax_Menu_Close",
-        onclick: MENU.About.Remove},
-        "\u00D7"
-      ]
+      ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",onclick:MENU.About.Remove},
+        [["span",{},"\u00D7"]]]
     ]);
     MathJax.Localization.setCSS(about);
     var doc = (document.documentElement||{});
