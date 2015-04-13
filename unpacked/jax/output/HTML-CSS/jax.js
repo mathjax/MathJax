@@ -726,7 +726,18 @@
     postTranslate: function (state,partial) {
       var scripts = state.jax[this.id], script, jax, i, m;
       //
-      //  Merasure the math in this chunk (toHTML phase II)
+      //  Remove the processed markers so that measuring can occur,
+      //  and remove the preview, if any, since the math will now be visible.
+      //
+      for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
+        script = scripts[i];
+        if (script && script.MathJax.elementJax) {
+          script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
+          if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+        }
+      }
+      //
+      //  Measure the math in this chunk (toHTML phase II)
       //
       for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
         script = scripts[i];
@@ -752,14 +763,6 @@
           //
           script.MathJax.state = jax.STATE.PROCESSED;
           HUB.signal.Post(["New Math",script.MathJax.elementJax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
-          //
-          //  Remove the processed marker
-          //
-          script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
-          //
-          //  Remove the preview, if any
-          //
-          if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
         }
       }
       if (this.forceReflow) {
@@ -2865,7 +2868,7 @@
             MML.mbase.prototype.displayIndent = HUB.config.displayIndent;
             if (String(HUB.config.displayIndent).match(/^0($|[a-z%])/i))
               MML.mbase.prototype.displayIndent = "0";
-            html = this.data[0].toHTML(box); html.bbox.exactW = true; // force remeasure just to be sure
+            html = this.data[0].toHTML(box); html.bbox.exactW = false; // force remeasure just to be sure
 	  }
         } else {
           span = span.firstChild.firstChild;
