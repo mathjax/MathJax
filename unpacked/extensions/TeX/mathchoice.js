@@ -45,10 +45,17 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
   MML.TeXmathchoice = MML.mbase.Subclass({
     type: "TeXmathchoice", notParent: true,
-    choice: function (nocache) {
+    choice: function () {
+      if (this.selection != null) return this.selection;
+      if (this.choosing) return 2; // prevent infinite loops:  see issue #1151
+      this.choosing = true;
       var selection = 0, values = this.getValues("displaystyle","scriptlevel");
       if (values.scriptlevel > 0) {selection = Math.min(3,values.scriptlevel+1)}
         else {selection = (values.displaystyle ? 0 : 1)}
+      // only cache the result if we are actually in place in a <math> tag.
+      var node = this.inherit; while (node && node.type !== "math") node = node.inherit;
+      if (node) this.selection = selection;
+      this.choosing = false;
       return selection;
     },
     selected: function () {return this.data[this.choice()]},
