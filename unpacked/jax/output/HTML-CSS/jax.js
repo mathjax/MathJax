@@ -1804,7 +1804,7 @@
 	if (bbox.width) {BBOX.width = bbox.width; BBOX.minWidth = bbox.minWidth}
         if (bbox.tw) {BBOX.tw = bbox.tw}
         if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
-        if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
+        if (BBOX.exactW && !bbox.exactW) {BBOX.exactW = bbox.exactW}
       },
       HTMLemptyBBox: function (BBOX) {
 	BBOX.h = BBOX.d = BBOX.H = BBOX.D = BBOX.rw = -HTMLCSS.BIGDIMEN;
