@@ -31,10 +31,17 @@ See <http://www.mathjax.org/> for additional details.
 
 ## Installation and Usage
 
-The MathJax installation and usage documentation is available in the
-`docs/html` directory of the MathJax distribution (see
-`docs/html/index.html` for the starting point).  The documents are also
-available on the MathJax web site on line at <http://www.mathjax.org/resources/docs/>.
+The MathJax installation and usage documentation is available in a
+separate GitHub repository at
+
+      https://github.com/mathjax/mathjax-docs
+
+The HTML versions are now available at
+
+      http://docs.mathjax.org/
+
+where it is possible for you to submit corrections and modifications
+directly to the documentation on line.
 
 
 ## Community
