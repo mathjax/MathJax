@@ -1228,7 +1228,7 @@ MathJax.ElementJax.mml.Augment({
   });
 
   MML.maligngroup = MML.mbase.Subclass({
-    type: "malign",
+    type: "maligngroup",
     isSpacelike: function () {return true},
     defaults: {
       mathbackground: MML.INHERIT,
