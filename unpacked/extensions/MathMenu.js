@@ -48,7 +48,6 @@
   
   var CONFIG = HUB.CombineConfig("MathMenu",{
     delay: 150,                                    // the delay for submenus
-    closeImg: AJAX.urlRev(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
     showMathPlayer: true,                          //  show the "MathPlayer" menu?
@@ -121,8 +120,8 @@
       },
 
       ".MathJax_MenuArrow": {
-        position:"absolute", right:".5em", color:"#666666",
-        "font-family": (isMSIE ? "'Arial unicode MS'" : null)
+        position:"absolute", right:".5em", "padding-top":".25em", color:"#666666",
+        "font-family": (isMSIE ? "'Arial unicode MS'" : null), "font-size": ".75em"
       },
       ".MathJax_MenuActive .MathJax_MenuArrow": {color:"white"},
       ".MathJax_MenuArrow.RTL": {left:".5em", right:"auto"},
@@ -159,11 +158,43 @@
         color: (isPC ? "HighlightText" : "white")
       },
       
-      ".MathJax_Menu_Close": {
-          position:"absolute",
-          width: "31px", height: "31px",
-          top:"-15px", left:"-15px"
+      "#MathJax_AboutClose": {
+        top:".2em", right:".2em"
+      },
+      ".MathJax_Menu .MathJax_MenuClose": {
+        top:"-10px", left:"-10px"
+      },
+      
+      ".MathJax_MenuClose": {
+        position:"absolute",
+        cursor:"pointer",
+        display:"inline-block",
+        border:"2px solid #AAA",
+        "border-radius":"18px",
+        "-webkit-border-radius": "18px",             // Safari and Chrome
+        "-moz-border-radius": "18px",                // Firefox
+        "-khtml-border-radius": "18px",              // Konqueror
+        "font-family":"'Courier New',Courier",
+        "font-size":"24px",
+        color:"#F0F0F0"
+      },
+      ".MathJax_MenuClose span": {
+        display:"block", "background-color":"#AAA", border:"1.5px solid",
+        "border-radius":"18px",
+        "-webkit-border-radius": "18px",             // Safari and Chrome
+        "-moz-border-radius": "18px",                // Firefox
+        "-khtml-border-radius": "18px",              // Konqueror
+        "line-height":0, 
+        padding:"8px 0 6px"     // may need to be browser-specific
+      },
+      ".MathJax_MenuClose:hover": {
+        color:"white!important",
+        border:"2px solid #CCC!important"
+      },
+      ".MathJax_MenuClose:hover span": {
+        "background-color":"#CCC!important"
       }
+
     }
   });
   
@@ -210,9 +241,9 @@
       for (var i = 0, m = this.items.length; i < m; i++) {this.items[i].Create(menu)}
       if (MENU.isMobile) {
         HTML.addElement(menu,"span",{
-          className: "MathJax_Menu_Close", menu: parent,
+          className: "MathJax_MenuClose", menu: parent,
           ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close, onmouseup: FALSE
-        },[["img",{src: CONFIG.closeImg, style:{width:"100%",height:"100%"}}]]);
+        },[["span",{},"\u00D7"]]);
       }
       
       div.appendChild(menu);
@@ -371,14 +402,7 @@
     },
     
     saveCookie: function () {HTML.Cookie.Set("menu",this.cookie)},
-    getCookie: function () {this.cookie = HTML.Cookie.Get("menu")},
-    
-    //
-    //  Preload images so they show up with the menu
-    //
-    getImages: function () {
-      if (MENU.isMobile) {var close = new Image(); close.src = CONFIG.closeImg}
-    }
+    getCookie: function () {this.cookie = HTML.Cookie.Get("menu")}
 
   });
 
@@ -485,8 +509,8 @@
    */
   MENU.ITEM.SUBMENU = MENU.ITEM.Subclass({
     menu: null,        // the submenu
-    marker: (isPC && !HUB.Browser.isSafari ? "\u25B6" : "\u25B8"),  // the menu arrow
-    markerRTL: (isPC && !HUB.Browser.isSafari ? "\u25B0" : "\u25C2"),
+    marker: "\u25BA",  // the submenu arrow
+    markerRTL: "\u25C4", // the submenu arrow for RTL
 
     Init: function (name,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
@@ -665,11 +689,8 @@
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
       }},jax],["br"],["br"],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
-      ["img", {
-        src: CONFIG.closeImg,
-        style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
-        onclick: MENU.About.Remove
-      }]
+      ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",onclick:MENU.About.Remove},
+        [["span",{},"\u00D7"]]]
     ]);
     MathJax.Localization.setCSS(about);
     var doc = (document.documentElement||{});
@@ -1191,7 +1212,6 @@
 
   CALLBACK.Queue(
     HUB.Register.StartupHook("End Config",{}), // wait until config is complete
-    ["getImages",MENU],
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathMenu Ready"],
     ["loadComplete",AJAX,"[MathJax]/extensions/MathMenu.js"]

@@ -43,9 +43,8 @@
       hcolor: "#83A"         // haze color
     },       
     button: {
-      x: -4, y: -3,          // menu button offsets
-      wx: -2,                // button offset for full-width equations
-      src: AJAX.urlRev(OUTPUT.imageDir+"/MenuArrow-15.png")  // button image
+      x: -6, y: -3,          // menu button offsets
+      wx: -2                 // button offset for full-width equations
     },
     fadeinInc: .2,           // increment for fade-in
     fadeoutInc: .05,         // increment for fade-out
@@ -69,10 +68,33 @@
         display: "inline-block", position:"absolute"
       },
 
-      ".MathJax_Hover_Arrow": {
+      ".MathJax_Menu_Button .MathJax_Hover_Arrow": {
         position:"absolute",
-        width:"15px", height:"11px",
-        cursor:"pointer"
+        cursor:"pointer",
+        display:"inline-block",
+        border:"2px solid #AAA",
+        "border-radius":"4px",
+        "-webkit-border-radius": "4px",           // Safari and Chrome
+        "-moz-border-radius": "4px",              // Firefox
+        "-khtml-border-radius": "4px",            // Konqueror
+        "font-family":"'Courier New',Courier",
+        "font-size":"9px",
+        color:"#F0F0F0"
+      },
+      ".MathJax_Menu_Button .MathJax_Hover_Arrow span": {
+        display:"block",
+        "background-color":"#AAA",
+        border:"1px solid",
+        "border-radius":"3px",
+        "line-height":0,
+        padding:"4px"
+      },
+      ".MathJax_Hover_Arrow:hover": {
+        color:"white!important",
+        border:"2px solid #CCC!important"
+      },
+      ".MathJax_Hover_Arrow:hover span": {
+        "background-color":"#CCC!important"
       }
     }
   };
@@ -334,17 +356,17 @@
         ]]
       );
       var button = HTML.Element("span",{
-         isMathJax: true, id:jax.hover.id+"Menu",
+         isMathJax: true, id:jax.hover.id+"Menu", className:"MathJax_Menu_Button",
          style:{display:"inline-block", "z-index": 1, width:0, height:0, position:"relative"}
-        },[["img",{
+        },[["span",{
             className: "MathJax_Hover_Arrow", isMathJax: true, math: math,
-            src: CONFIG.button.src, onclick: this.HoverMenu, jax:JAX.id,
+            onclick: this.HoverMenu, jax:JAX.id,
             style: {
               left:this.Px(bbox.w+dx+dd+(bbox.x||0)+CONFIG.button.x),
               top:this.Px(-bbox.h-dy-dd-(bbox.y||0)-CONFIG.button.y),
               opacity:0, filter:"alpha(opacity=0)"
             }
-          }]]
+          },[["span",{isMathJax:true},"\u25BC"]]]]
       );
       if (bbox.width) {
         frame.style.width = button.style.width = bbox.width;
@@ -502,14 +524,16 @@
     
   };
   
-  //
-  //  Mobile screens are small, so use larger version of arrow
-  //
-  if (HUB.Browser.isMobile) {
-    var arrow = CONFIG.styles[".MathJax_Hover_Arrow"];
-    arrow.width = "25px"; arrow.height = "18px";
-    CONFIG.button.x = -6;
-  }
+  /* 
+   * //
+   * //  Mobile screens are small, so use larger version of arrow
+   * //
+   * if (HUB.Browser.isMobile) {
+   *   var arrow = CONFIG.styles[".MathJax_Hover_Arrow"];
+   *   arrow.width = "25px"; arrow.height = "18px";
+   *   CONFIG.button.x = -6;
+   * }
+   */
   
   //
   //  Set up browser-specific values
