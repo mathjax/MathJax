@@ -802,6 +802,8 @@
         underline:           ['UnderOver','005F'],
         overbrace:           ['UnderOver','23DE',1],
         underbrace:          ['UnderOver','23DF',1],
+        overparen:           ['UnderOver','23DC'],
+        underparen:          ['UnderOver','23DD'],
         overrightarrow:      ['UnderOver','2192'],
         underrightarrow:     ['UnderOver','2192'],
         overleftarrow:       ['UnderOver','2190'],
