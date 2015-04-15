@@ -26,7 +26,7 @@
  *  limitations under the License.
  */
 
-(function (HUB,HTML) {
+(function (HUB,HTML,BROWSER) {
   
   var SETTINGS = HUB.config.menuSettings;
 
@@ -42,7 +42,7 @@
       color: "inherit!important",
       updateTime: 30, updateDelay: 6,
       messageStyle: "none",
-      disabled: false
+      disabled: BROWSER.isMSIE && !BROWSER.versionAtLeast("8.0")
     }),
 
     //
@@ -133,7 +133,7 @@
   
   HUB.Startup.signal.Post("CHTML-preview Ready");
 
-})(MathJax.Hub,MathJax.HTML);
+})(MathJax.Hub,MathJax.HTML,MathJax.Hub.Browser);
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/CHTML-preview.js");
 
