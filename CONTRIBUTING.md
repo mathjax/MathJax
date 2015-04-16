@@ -8,11 +8,12 @@ There are lots and lots of ways to get involved, this document covers:
     * [bug reports](#bug-reports)
     * [feature requests](#feature-requests)
     * [change requests](#change-requests)
-* [working on MathJax core](#working-on-MathJax-core)
+* [working on MathJax core](#working-on-mathjax-core)
+    * [key branches and tags](#key-branches--tags)
     * [submitting pull requests](#submitting-pull-requests)
-* [testing and quality assurance](#testing-and-quality-assurance)
-* [writing documentation](#writing-documentation)
-* [translation](#translation)
+    * [testing and quality assurance](#testing-and-quality-assurance)
+    * [writing documentation](#writing-documentation)
+    * [translation](#translation)
 * [Conduct](#conduct)
 
 
@@ -137,10 +138,12 @@ You want to contribute code? Fantastic! Let's get you started.
 To get it out of the way:
 
 - **[develop](https://github.com/MathJax/MathJax/tree/develop)** is
-  the development branch. All work on the next release is here. Do
-  **NOT** use this branch for a production site.
+  the development branch. All work on the next release happens here so
+  you should generally branch of `develop`. Do **NOT** use this branch
+  for a production site. 
 - **[master](https://github.com/MathJax/MathJax)** contains the latest
-  release of MathJax. This branch may be used in production.
+  release of MathJax. This branch may be used in production. Do 
+  **NOT** use this branch to work on MathJax's source.
 
 ### Submitting Pull Requests
 
@@ -187,16 +190,14 @@ requests in the same way as branches:
 <https://gist.github.com/piscisaureus/3342247>.
 
 
-### Documentation
+### Writing documentation
 
 MathJax's main documentation can be found at [docs.mathjax.org](http://docs.mathjax.org).
+The source of the docs is hosted in the
+[mathjax/mathjax-docs](http://github.com/mathjax/mathjax-docs) repo here on GitHub.
 
-The documentation is generated using
-[Sphinx-doc](http://sphinx-doc.org/) and hosted on [Read the
-docs](http://readthedocs.org). The source of the docs is hosted in the
-[MathJax-Docs GitHub
-repository](http://github.com/mathjax/mathjax-docs).
-
+The documentation is generated using [Sphinx-doc](http://sphinx-doc.org/) and hosted on 
+[Read the docs](http://readthedocs.org).
 You can clone the repo and submit pull requests following the
 [pull-request](#submitting-pull-requests) guidelines.
 
@@ -213,7 +214,7 @@ TranslateWiki.net, head over to the
 [mathjax/mathjax-i18n](https://github.com/mathjax/MathJax-i18n)
 repository.
 
-# Conduct
+## Conduct
 
 We are committed to providing a friendly, safe and welcoming environment for
 all, regardless of gender, sexual orientation, disability, ethnicity, religion,
@@ -249,7 +250,7 @@ behaviour is not welcome.
 We also suggest to read [discourse's
 rules](http://blog.discourse.org/2013/03/the-universal-rules-of-civilized-discourse/)
 
-### References
+## References
 
 * We heavily borrowed from Mozilla and Ghost -- thank you!
   * https://github.com/TryGhost/Ghost/blob/master/CONTRIBUTING.md
