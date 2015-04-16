@@ -139,7 +139,7 @@ To get it out of the way:
 
 - **[develop](https://github.com/MathJax/MathJax/tree/develop)** is
   the development branch. All work on the next release happens here so
-  you should generally branch of `develop`. Do **NOT** use this branch
+  you should generally branch off `develop`. Do **NOT** use this branch
   for a production site. 
 - **[master](https://github.com/MathJax/MathJax)** contains the latest
   release of MathJax. This branch may be used in production. Do 
