@@ -113,6 +113,7 @@
 
     "mjx-box":    {display:"inline-block"},
     "mjx-block":  {display:"block"},
+    "mjx-span":   {display:"span"},
     "mjx-char":   {display:"block"},
     "mjx-itable": {display:"inline-table"},
     "mjx-row":    {display:"table-row"},
@@ -1758,12 +1759,10 @@
         //  IE doesn't display combining chararacters unless they combine with
         //  something, so put them over a space and remove the space's width
         //
-        var char = node.firstChild.textContent;
-        node.firstChild.innerHTML = "\u00A0" + char;
-        var font = this.CHTMLvariant.cache[char.charCodeAt(0)][0].font;
-        var space = font[0xA0] || font[0x20];
-        var w = space[2] / (space.c ? 1 : 1000);
-        node.firstChild.style.marginLeft = CHTML.Em(-w);
+        node = node.firstChild;
+        var char = node.textContent;
+        var space = HTML.Element("mjx-span",{style:{width:".25em","margin-left":"-.25em"}});
+        node.insertBefore(space,node.firstChild);
       },
       CHTMLcenterOp: function (node) {
         var bbox = this.CHTML;
