@@ -32,7 +32,7 @@ MathJax.OutputJax.CommonHTML = MathJax.OutputJax({
   extensionDir: MathJax.OutputJax.extensionDir + "/CommonHTML",
   autoloadDir: MathJax.OutputJax.directory + "/CommonHTML/autoload",
   fontDir: MathJax.OutputJax.directory + "/CommonHTML/fonts",  // fontname added later
-  webfontDir: MathJax.OutputJax.fontDir + "/CommonHTML",       // fontname added later
+  webfontDir: MathJax.OutputJax.fontDir + "/HTML-CSS",         // fontname added later
   
   config: {
     matchFontHeight: true,          // try to match math font height to surrounding font?

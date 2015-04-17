@@ -1632,7 +1632,9 @@
   };
   (function () {
     var STYLES = CHTML.config.styles, FONTS = CHTML.FONTDATA.FONTS;
-    var DIR = AJAX.fileURL(CHTML.webfontDir+"/TeX/otf");
+    var OTFDIR = AJAX.fileURL(CHTML.webfontDir+"/TeX/otf"),
+        EOTDIR = AJAX.fileURL(CHTML.webfontDir+"/TeX/eot"),
+        WOFFDIR = AJAX.fileURL(CHTML.webfontDir+"/TeX/woff");
     var faces = [];
     for (var name in FONTS) {if (FONTS.hasOwnProperty(name)) {
       var family = CHTML.FONTDATA.familyName(name), FAMILY = family;
@@ -1661,9 +1663,15 @@
       }
       //
       //  The web font, if no local font found
-      //   ### FIXME: add more formats to src
       //
-      font = {"font-family":family+"w", src:"url('"+DIR+"/"+name+"-"+variant+".otf')"};
+      font = {"font-family":family+"w",
+        src: [
+//          "url('"+EOTDIR+"/"+name+"-"+variant+".eot?#iefix') format('embedded-opentype')",
+          "url('"+EOTDIR+"/"+name+"-"+variant+".eot') format('embedded-opentype')",
+          "url('"+WOFFDIR+"/"+name+"-"+variant+".woff') format('woff')",
+          "url('"+OTFDIR+"/"+name+"-"+variant+".otf') format('opentype')"
+        ].join(", ")
+      };
       faces.push(font);
       //
       //  A class that looks for the local and web fonts
