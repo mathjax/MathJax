@@ -1168,9 +1168,10 @@
     
     Transform: function (node,trans,origin) {
       var style = node.style;
-      style.transform = style.WebkitTransform = style.MozTransform = trans;
+      style.transform = style.WebkitTransform = style.MozTransform = style["-ms-transform"] = trans;
       if (origin)
-        style.transformOrigin = style.WebkitTransformOrigin = style.MozTransformOrigin = origin;
+        style.transformOrigin = style.WebkitTransformOrigin =
+          style.MozTransformOrigin = style["-ms-transform-origin"] = origin;
     },
 
     /********************************************************/
