@@ -1664,10 +1664,10 @@
       //
       //  The web font, if no local font found
       //
-      font = {"font-family":family+"w",
-        src: [
-//          "url('"+EOTDIR+"/"+name+"-"+variant+".eot?#iefix') format('embedded-opentype')",
-          "url('"+EOTDIR+"/"+name+"-"+variant+".eot') format('embedded-opentype')",
+      font = {
+        "font-family": family+"w",
+        "src /*1*/": "url('"+EOTDIR+"/"+name+"-"+variant+".eot')", // for IE8
+        "src /*2*/": [
           "url('"+WOFFDIR+"/"+name+"-"+variant+".woff') format('woff')",
           "url('"+OTFDIR+"/"+name+"-"+variant+".otf') format('opentype')"
         ].join(", ")
