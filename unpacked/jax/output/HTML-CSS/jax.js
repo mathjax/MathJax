@@ -879,8 +879,8 @@
       delete jax.HTMLCSS;
     },
     
-    getHD: function (span) {
-      if (span.bbox && this.config.noReflows) {return {h:span.bbox.h, d:span.bbox.d}}
+    getHD: function (span,force) {
+      if (span.bbox && this.config.noReflows && !force) {return {h:span.bbox.h, d:span.bbox.d}}
       var position = span.style.position;
       span.style.position = "absolute";
       this.HDimg.style.height = "0px";
@@ -1096,7 +1096,7 @@
     createSpace: function (span,h,d,w,color,isSpace) {
       if (h < -d) {d = -h} // make sure h is above d
       var H = this.Em(h+d), D = this.Em(-d);
-      if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode).d-d)}
+      if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode,true).d-d)}
       if (span.isBox || isSpace) {
 	var scale = (span.scale == null ? 1 : span.scale);
 	span.bbox = {exactW: true, h: h*scale, d: d*scale, w: w*scale, rw: w*scale, lw: 0};
@@ -2860,10 +2860,6 @@
           // problem in strict HTML mode
           stack.style.fontSize = nobr.parentNode.style.fontSize; nobr.parentNode.style.fontSize = "";
           if (this.data[0] != null) {
-            if (HTMLCSS.msieColorBug) {
-              if (this.background) {this.data[0].background = this.background; delete this.background}
-              if (this.mathbackground) {this.data[0].mathbackground = this.mathbackground; delete this.mathbackground}
-            }
             MML.mbase.prototype.displayAlign = HUB.config.displayAlign;
             MML.mbase.prototype.displayIndent = HUB.config.displayIndent;
             if (String(HUB.config.displayIndent).match(/^0($|[a-z%])/i))
@@ -2942,12 +2938,23 @@
               //
               //  Move the background color, of any
               //
-              if (color) {
-                color.style.marginLeft = HTMLCSS.Em(parseFloat(color.style.marginLeft)+shift);
-                color.style.marginRight =
-                  HTMLCSS.Em(parseFloat(color.style.marginRight)-shift
-                     + (values.indentalign === "right" ? Math.min(0,span.bbox.w+shift) - span.bbox.w : 0));
-              }
+	      if (color) {
+                var L = parseFloat(color.style.marginLeft||"0")+shift,
+                    R = parseFloat(color.style.marginRight||"0")-shift;
+	        color.style.marginLeft = HTMLCSS.Em(L);
+	        color.style.marginRight =
+	          HTMLCSS.Em(R + (values.indentalign === "right" ?
+                      Math.min(0,span.bbox.w+shift) - span.bbox.w : 0));
+		if (HTMLCSS.msieColorBug && values.indentalign === "right") {
+                  if (parseFloat(color.style.marginLeft) > 0) {
+                    var padding = MathJax.HTML.addElement(color.parentNode,"span");
+                    padding.style.marginLeft = HTMLCSS.Em(R+Math.min(0,span.bbox.w+shift));
+                    color.nextSibling.style.marginRight = "0em";
+                  }
+		  color.nextSibling.style.marginLeft = "0em";
+		  color.style.marginRight = color.style.marginLeft = "0em";
+		}
+	      }
             }
           }
         }
@@ -3020,7 +3027,7 @@
         HTMLCSS.Augment({
           PaddingWidthBug: true,
           msieAccentBug: true,
-          msieColorBug: true,
+          msieColorBug: (mode < 8),      // negative margin-right doesn't work to position color
           msieColorPositionBug: true,    // needs position:relative to put color behind text
           msieRelativeWidthBug: quirks,
           msieDisappearingBug: (mode >= 8), // inline math disappears
