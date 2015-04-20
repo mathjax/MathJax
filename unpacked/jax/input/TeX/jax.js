@@ -1679,7 +1679,7 @@
         }
         var text = string.substr(this.i,i-this.i);
         if (!text.match(/^\s*\\text[^a-zA-Z]/)) {
-          this.Push.apply(this,this.InternalMath(text));
+          this.Push.apply(this,this.InternalMath(text,0));
           this.i = i;
         }
       }
@@ -2054,8 +2054,11 @@
         if (match !== '') TEX.Error(["MathNotTerminated","Math not terminated in text box"]);
       }
       if (k < text.length) mml.push(this.InternalText(text.slice(k),def));
-      var mml = [MML.mstyle.apply(MML,mml).With({displaystyle:false})];
-      if (level != null) mml[0].scriptlevel = level;
+      if (level != null) {
+        mml = [MML.mstyle.apply(MML,mml).With({displaystyle:false,scriptlevel:level})];
+      } else if (mml.length > 1) {
+        mml = [MML.mrow.apply(MML,mml)];
+      }
       return mml;
     },
     InternalText: function (text,def) {
