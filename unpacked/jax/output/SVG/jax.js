@@ -34,6 +34,9 @@
   var XLINKNS = "http://www.w3.org/1999/xlink";
 
   SVG.Augment({
+    HFUZZ: 2,     // adjustments for height and depth of final svg element
+    DFUZZ: 2,     //   to get baselines right (fragile).
+    
     config: {
       styles: {
         ".MathJax_SVG": {
@@ -477,19 +480,19 @@
     },
     
     Em: function (m) {
-      if (Math.abs(m) < .0006) {return "0em"}
+      if (Math.abs(m) < .0006) return "0";
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
     Ex: function (m) {
-      m = Math.round(m / this.TeX.x_height * this.ex) / this.ex;  // try to use closest pixel size
-      if (Math.abs(m) < .0006) {return "0ex"}
+      m = m / this.TeX.x_height;
+      if (Math.abs(m) < .0006) return "0";
       return m.toFixed(3).replace(/\.?0+$/,"") + "ex";
     },
     Percent: function (m) {
       return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
     },
     Fixed: function (m,n) {
-      if (Math.abs(m) < .0006) {return "0"}
+      if (Math.abs(m) < .0006) return "0";
       return m.toFixed(n||3).replace(/\.?0+$/,"");
     },
     length2em: function (length,mu,size) {
@@ -2063,22 +2066,24 @@
           //  Style the <svg> to get the right size and placement
           //
           var l = Math.max(-svg.l,0), r = Math.max(svg.r-svg.w,0);
-          var style = svg.element.style;
+          var style = svg.element.style, px = SVG.TeX.x_height/SVG.ex;
+          var H = (Math.ceil(svg.H/px)+1)*px+SVG.HFUZZ,  // round to pixels and add padding
+              D = (Math.ceil(svg.D/px)+1)*px+SVG.DFUZZ;
           svg.element.setAttribute("width",SVG.Ex(l+svg.w+r));
-          svg.element.setAttribute("height",SVG.Ex(svg.H+svg.D+2*SVG.em));
-          style.verticalAlign = SVG.Ex(-svg.D-2*SVG.em); // remove extra pixel added below plus padding from above
-          style.marginLeft = SVG.Ex(-l); style.marginRight = SVG.Ex(-r);
-          svg.element.setAttribute("viewBox",SVG.Fixed(-l,1)+" "+SVG.Fixed(-svg.H-SVG.em,1)+" "+
-                                             SVG.Fixed(l+svg.w+r,1)+" "+SVG.Fixed(svg.H+svg.D+2*SVG.em,1));
-          style.marginTop = style.marginBottom = "1px"; // 1px above and below to prevent lines from touching
+          svg.element.setAttribute("height",SVG.Ex(H+D));
+          style.verticalAlign = SVG.Ex(-D);
+          if (l) style.marginLeft = SVG.Ex(-l);
+          if (r) style.marginRight = SVG.Ex(-r);
+          svg.element.setAttribute("viewBox",SVG.Fixed(-l,1)+" "+SVG.Fixed(-H,1)+" "+
+                                             SVG.Fixed(l+svg.w+r,1)+" "+SVG.Fixed(H+D,1));
           //
           //  If there is extra height or depth, hide that
           //
-          if (svg.H > svg.h) {style.marginTop = SVG.Ex(svg.h-svg.H)}
-          if (svg.D > svg.d) {
-            style.marginBottom = SVG.Ex(svg.d-svg.D);
-            style.verticalAlign = SVG.Ex(-svg.d);
-          }
+	  if (svg.H > svg.h) style.marginTop = SVG.Ex(svg.h-H);
+	  if (svg.D > svg.d) {
+	    style.marginBottom = SVG.Ex(svg.d-D);
+	    style.verticalAlign = SVG.Ex(-svg.d);
+	  }
           //
           //  Add it to the MathJax span
           //
@@ -2086,7 +2091,8 @@
           if (alttext && !svg.element.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
           if (!svg.element.getAttribute("role")) span.setAttribute("role","math");
 //        span.setAttribute("tabindex",0);  // causes focus outline, so disable for now
-          span.appendChild(svg.element); svg.element = null;
+          span.appendChild(svg.element);
+          svg.element = null;
           //
           //  Handle indentalign and indentshift for single-line displays
           //
