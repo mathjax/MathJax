@@ -3063,8 +3063,8 @@ MathJax.Hub.Startup = {
         }
       }
       CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'')
-        // convert rackspace to cdn.mathjax.org now that it supports https protocol
-        .replace(/^(https?:)\/\/[0-9a-f]+(-[0-9a-f]+)?.ssl.cf1.rackcdn.com\//,"$1//cdn.mathjax.org/");
+        // convert mathjax/latest to mathjax/x.y-latest so that all files are the same version
+        .replace(/^(https?:\/\/cdn.mathjax.org\/mathjax\/)(latest)/,"$1"+BASE.version.split(/\./).slice(0,2).join(".")+"-$2");
       BASE.Ajax.config.root = CONFIG.root;
       break;
     }
