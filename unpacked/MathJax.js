@@ -2172,13 +2172,15 @@ MathJax.Hub = {
         if (!script.MathJax.elementJax || script.MathJax.state === STATE.UPDATE) {
           this.checkScriptSiblings(script);                 // remove preJax/postJax etc.
           var type = script.type.replace(/ *;(.|\s)*/,"");  // the input jax type
-          jax = this.inputJax[type].Process(script,state);  // run the input jax
+          var input = this.inputJax[type];                  // the input jax itself
+          jax = input.Process(script,state);                // run the input jax
           if (typeof jax === 'function') {                  // if a callback was returned
             if (jax.called) continue;                       //   go back and call Process() again
             this.RestartAfter(jax);                         //   wait for the callback
           }
-          jax.Attach(script,this.inputJax[type].id);        // register the jax on the script
+          jax.Attach(script,input.id);                      // register the jax on the script
           this.saveScript(jax,state,script,STATE);          // add script to state
+          this.postInputHooks.Execute(jax,input.id,script); // run global jax filters
         } else if (script.MathJax.state === STATE.OUTPUT) {
           this.saveScript(script.MathJax.elementJax,state,script,STATE); // add script to state
         }
@@ -2198,6 +2200,7 @@ MathJax.Hub = {
     state.start = new Date().getTime(); state.i = state.j = 0;
     return null;
   },
+  postInputHooks: MathJax.Callback.Hooks(true),  // hooks to run after element jax is created
   saveScript: function (jax,state,script,STATE) {
     //
     //  Check that output jax exists
