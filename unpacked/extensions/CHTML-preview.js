@@ -31,7 +31,7 @@
   var SETTINGS = HUB.config.menuSettings;
 
   var CHTMLpreview = MathJax.Extension["CHTML-preview"] = {
-    version: "2.5.0",
+    version: "2.5.2",
 
     //
     //  Configuration for the chunking of the main output
