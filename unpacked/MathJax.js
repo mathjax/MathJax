@@ -2178,7 +2178,7 @@ MathJax.Hub = {
             if (jax.called) continue;                       //   go back and call Process() again
             this.RestartAfter(jax);                         //   wait for the callback
           }
-          jax.Attach(script,input.id);                      // register the jax on the script
+          jax = jax.Attach(script,input.id);                // register the jax on the script
           this.saveScript(jax,state,script,STATE);          // add script to state
           this.postInputHooks.Execute(jax,input.id,script); // run global jax filters
         } else if (script.MathJax.state === STATE.OUTPUT) {
