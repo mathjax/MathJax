@@ -1679,7 +1679,7 @@
         }
         var text = string.substr(this.i,i-this.i);
         if (!text.match(/^\s*\\text[^a-zA-Z]/)) {
-          this.Push.apply(this,this.InternalMath(text));
+          this.Push.apply(this,this.InternalMath(text,0));
           this.i = i;
         }
       }
@@ -2014,49 +2014,51 @@
     
     /*
      *  Break up a string into text and math blocks
-     *  @@@ FIXME:  skip over braced groups?  @@@
      *  @@@ FIXME:  pass environment to TEX.Parse? @@@
      */
     InternalMath: function (text,level) {
-      var def = {displaystyle: false}; if (level != null) {def.scriptlevel = level}
-      if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      if (!text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {return [this.InternalText(text,def)]}
-      var i = 0, k = 0, c, match = '';
-      var mml = [];
-      while (i < text.length) {
-        c = text.charAt(i++);
-        if (c === '$') {
-          if (match === '$') {
-            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1),{}).mml().With(def)));
-            match = ''; k = i;
-          } else if (match === '') {
-            if (k < i-1) {mml.push(this.InternalText(text.slice(k,i-1),def))}
-            match = '$'; k = i;
-          }
-        } else if (c === '}' && match === '}') {
-          mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i),{}).mml().With(def)));
-          match = ''; k = i;
-        } else if (c === '\\') {
-          if (match === '' && text.substr(i).match(/^(eq)?ref\s*\{/)) {
-            if (k < i-1) {mml.push(this.InternalText(text.slice(k,i-1),def))}
-            match = '}'; k = i-1;
-          } else {
-            c = text.charAt(i++);
-            if (c === '(' && match === '') {
-              if (k < i-2) {mml.push(this.InternalText(text.slice(k,i-2),def))}
-              match = ')'; k = i;
-            } else if (c === ')' && match === ')') {
-              mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml().With(def)));
+      var def = (this.stack.env.font ? {mathvariant: this.stack.env.font} : {});
+      var mml = [], i = 0, k = 0, c, match = '';
+      if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
+        while (i < text.length) {
+          c = text.charAt(i++);
+          if (c === '$') {
+            if (match === '$') {
+              mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1),{}).mml().With(def)));
               match = ''; k = i;
-            } else if (c.match(/[${}\\]/) && match === '')  {
-              i--; text = text.substr(0,i-1) + text.substr(i); // remove \ from \$, \{, \}, or \\
+            } else if (match === '') {
+              if (k < i-1) mml.push(this.InternalText(text.slice(k,i-1),def));
+              match = '$'; k = i;
+            }
+          } else if (c === '}' && match === '}') {
+            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i),{}).mml().With(def)));
+            match = ''; k = i;
+          } else if (c === '\\') {
+            if (match === '' && text.substr(i).match(/^(eq)?ref\s*\{/)) {
+              if (k < i-1) mml.push(this.InternalText(text.slice(k,i-1),def));
+              match = '}'; k = i-1;
+            } else {
+              c = text.charAt(i++);
+              if (c === '(' && match === '') {
+                if (k < i-2) mml.push(this.InternalText(text.slice(k,i-2),def));
+                match = ')'; k = i;
+              } else if (c === ')' && match === ')') {
+                mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml().With(def)));
+                match = ''; k = i;
+              } else if (c.match(/[${}\\]/) && match === '')  {
+                i--; text = text.substr(0,i-1) + text.substr(i); // remove \ from \$, \{, \}, or \\
+              }
             }
           }
         }
+        if (match !== '') TEX.Error(["MathNotTerminated","Math not terminated in text box"]);
       }
-      if (match !== '')
-        {TEX.Error(["MathNotTerminated","Math not terminated in text box"])}
-      if (k < text.length) {mml.push(this.InternalText(text.slice(k),def))}
+      if (k < text.length) mml.push(this.InternalText(text.slice(k),def));
+      if (level != null) {
+        mml = [MML.mstyle.apply(MML,mml).With({displaystyle:false,scriptlevel:level})];
+      } else if (mml.length > 1) {
+        mml = [MML.mrow.apply(MML,mml)];
+      }
       return mml;
     },
     InternalText: function (text,def) {
