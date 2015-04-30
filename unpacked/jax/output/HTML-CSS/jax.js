@@ -539,7 +539,7 @@
     },
     
     preTranslate: function (state) {
-      var scripts = state.jax[this.id], i, m = scripts.length,
+      var scripts = state.jax[this.id], i, m = scripts.length, n,
           script, prev, span, div, test, jax, ex, em, scale, maxwidth, relwidth = false, cwidth,
           linebreak = this.config.linebreaks.automatic, width = this.config.linebreaks.width;
       if (linebreak) {
@@ -590,7 +590,10 @@
       //
       //  Determine the scaling factors for each script
       //  (this only requires one reflow rather than a reflow for each equation)
+      //  Record any that need to be hidden (don't move them now, since that
+      //  would cause reflows).
       //
+      var hidden = [];
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         test = script.previousSibling; div = test.previousSibling;
@@ -601,8 +604,7 @@
         if (relwidth) {maxwidth = cwidth}
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
-          // (this will cause a reflow for each math element that is hidden)
-          this.hiddenDiv.appendChild(div);
+          hidden.push(div);
           jax.HTMLCSS.isHidden = true;
           ex = this.defaultEx; em = this.defaultEm; cwidth = this.defaultWidth;
           if (relwidth) {maxwidth = cwidth}
@@ -613,6 +615,10 @@
         jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em; this.em = em * scale/100; jax.HTMLCSS.ex = ex;
         jax.HTMLCSS.cwidth = cwidth/this.em;
         jax.HTMLCSS.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/this.em) : 1000000);
+      }
+      for (i = 0, n = hidden.length; i < n; i++) {
+        this.hiddenDiv.appendChild(hidden[i]);
+        this.addElement(this.hiddenDiv,"br");
       }
       //
       //  Remove the test spans used for determining scales and linebreak widths
@@ -676,9 +682,8 @@
       }
       this.restorePreview(script);
       //
-      //  Put it in place, remove the processing marker, and signal the new math
+      //  Remove the processing marker, and signal the new math pending
       //
-      if (jax.HTMLCSS.isHidden) {script.parentNode.insertBefore(div,script)}
       div.className = div.className.split(/ /)[0] + " MathJax_Processed";
       HUB.signal.Post(["New Math Pending",jax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
       //
@@ -732,7 +737,8 @@
       for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
         script = scripts[i];
         if (script && script.MathJax.elementJax) {
-          script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
+          var div = script.MathJax.elementJax.HTMLCSS.div;
+          div.className = div.className.split(/ /)[0];
           if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
         }
       }
@@ -757,6 +763,7 @@
           //
           jax = script.MathJax.elementJax; this.getMetrics(jax);
           jax.root.toHTML(jax.HTMLCSS.span,jax.HTMLCSS.div,this.PHASE.III);
+          if (jax.HTMLCSS.isHidden) script.parentNode.insertBefore(jax.HTMLCSS.div,script);
           delete jax.HTMLCSS.span; delete jax.HTMLCSS.div;
           //
           //  The math is now fully processed
