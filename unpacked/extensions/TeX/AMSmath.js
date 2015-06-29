@@ -400,7 +400,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     GetDelimiterArg: function (name) {
       var c = this.trimSpaces(this.GetArgument(name));
       if (c == "") return null;
-      if (TEXDEF.delimiter[c]) return c;
+      if (c in TEXDEF.delimiter) return c;
       TEX.Error(["MissingOrUnrecognizedDelim","Missing or unrecognized delimiter for %1",name]);
     },
     
