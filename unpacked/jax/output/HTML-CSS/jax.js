@@ -539,7 +539,7 @@
     },
     
     preTranslate: function (state) {
-      var scripts = state.jax[this.id], i, m = scripts.length,
+      var scripts = state.jax[this.id], i, m = scripts.length, n,
           script, prev, span, div, test, jax, ex, em, scale, maxwidth, relwidth = false, cwidth,
           linebreak = this.config.linebreaks.automatic, width = this.config.linebreaks.width;
       if (linebreak) {
@@ -590,7 +590,10 @@
       //
       //  Determine the scaling factors for each script
       //  (this only requires one reflow rather than a reflow for each equation)
+      //  Record any that need to be hidden (don't move them now, since that
+      //  would cause reflows).
       //
+      var hidden = [];
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         test = script.previousSibling; div = test.previousSibling;
@@ -601,8 +604,7 @@
         if (relwidth) {maxwidth = cwidth}
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
-          // (this will cause a reflow for each math element that is hidden)
-          this.hiddenDiv.appendChild(div);
+          hidden.push(div);
           jax.HTMLCSS.isHidden = true;
           ex = this.defaultEx; em = this.defaultEm; cwidth = this.defaultWidth;
           if (relwidth) {maxwidth = cwidth}
@@ -613,6 +615,10 @@
         jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em; this.em = em * scale/100; jax.HTMLCSS.ex = ex;
         jax.HTMLCSS.cwidth = cwidth/this.em;
         jax.HTMLCSS.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/this.em) : 1000000);
+      }
+      for (i = 0, n = hidden.length; i < n; i++) {
+        this.hiddenDiv.appendChild(hidden[i]);
+        this.addElement(this.hiddenDiv,"br");
       }
       //
       //  Remove the test spans used for determining scales and linebreak widths
@@ -676,9 +682,8 @@
       }
       this.restorePreview(script);
       //
-      //  Put it in place, remove the processing marker, and signal the new math
+      //  Remove the processing marker, and signal the new math pending
       //
-      if (jax.HTMLCSS.isHidden) {script.parentNode.insertBefore(div,script)}
       div.className = div.className.split(/ /)[0] + " MathJax_Processed";
       HUB.signal.Post(["New Math Pending",jax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
       //
@@ -726,7 +731,19 @@
     postTranslate: function (state,partial) {
       var scripts = state.jax[this.id], script, jax, i, m;
       //
-      //  Merasure the math in this chunk (toHTML phase II)
+      //  Remove the processed markers so that measuring can occur,
+      //  and remove the preview, if any, since the math will now be visible.
+      //
+      for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
+        script = scripts[i];
+        if (script && script.MathJax.elementJax) {
+          var div = script.MathJax.elementJax.HTMLCSS.div;
+          div.className = div.className.split(/ /)[0];
+          if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+        }
+      }
+      //
+      //  Measure the math in this chunk (toHTML phase II)
       //
       for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
         script = scripts[i];
@@ -746,20 +763,13 @@
           //
           jax = script.MathJax.elementJax; this.getMetrics(jax);
           jax.root.toHTML(jax.HTMLCSS.span,jax.HTMLCSS.div,this.PHASE.III);
+          if (jax.HTMLCSS.isHidden) script.parentNode.insertBefore(jax.HTMLCSS.div,script);
           delete jax.HTMLCSS.span; delete jax.HTMLCSS.div;
           //
           //  The math is now fully processed
           //
           script.MathJax.state = jax.STATE.PROCESSED;
           HUB.signal.Post(["New Math",script.MathJax.elementJax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
-          //
-          //  Remove the processed marker
-          //
-          script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
-          //
-          //  Remove the preview, if any
-          //
-          if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
         }
       }
       if (this.forceReflow) {
@@ -876,8 +886,8 @@
       delete jax.HTMLCSS;
     },
     
-    getHD: function (span) {
-      if (span.bbox && this.config.noReflows) {return {h:span.bbox.h, d:span.bbox.d}}
+    getHD: function (span,force) {
+      if (span.bbox && this.config.noReflows && !force) {return {h:span.bbox.h, d:span.bbox.d}}
       var position = span.style.position;
       span.style.position = "absolute";
       this.HDimg.style.height = "0px";
@@ -1093,7 +1103,7 @@
     createSpace: function (span,h,d,w,color,isSpace) {
       if (h < -d) {d = -h} // make sure h is above d
       var H = this.Em(h+d), D = this.Em(-d);
-      if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode).d-d)}
+      if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode,true).d-d)}
       if (span.isBox || isSpace) {
 	var scale = (span.scale == null ? 1 : span.scale);
 	span.bbox = {exactW: true, h: h*scale, d: d*scale, w: w*scale, rw: w*scale, lw: 0};
@@ -1804,7 +1814,7 @@
 	if (bbox.width) {BBOX.width = bbox.width; BBOX.minWidth = bbox.minWidth}
         if (bbox.tw) {BBOX.tw = bbox.tw}
         if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
-        if (BBOX.exactW && !bbox.exactW) {delete BBOX.exactW}
+        if (BBOX.exactW && !bbox.exactW) {BBOX.exactW = bbox.exactW}
       },
       HTMLemptyBBox: function (BBOX) {
 	BBOX.h = BBOX.d = BBOX.H = BBOX.D = BBOX.rw = -HTMLCSS.BIGDIMEN;
@@ -2857,15 +2867,11 @@
           // problem in strict HTML mode
           stack.style.fontSize = nobr.parentNode.style.fontSize; nobr.parentNode.style.fontSize = "";
           if (this.data[0] != null) {
-            if (HTMLCSS.msieColorBug) {
-              if (this.background) {this.data[0].background = this.background; delete this.background}
-              if (this.mathbackground) {this.data[0].mathbackground = this.mathbackground; delete this.mathbackground}
-            }
             MML.mbase.prototype.displayAlign = HUB.config.displayAlign;
             MML.mbase.prototype.displayIndent = HUB.config.displayIndent;
             if (String(HUB.config.displayIndent).match(/^0($|[a-z%])/i))
               MML.mbase.prototype.displayIndent = "0";
-            html = this.data[0].toHTML(box); html.bbox.exactW = true; // force remeasure just to be sure
+            html = this.data[0].toHTML(box); html.bbox.exactW = false; // force remeasure just to be sure
 	  }
         } else {
           span = span.firstChild.firstChild;
@@ -2939,12 +2945,23 @@
               //
               //  Move the background color, of any
               //
-              if (color) {
-                color.style.marginLeft = HTMLCSS.Em(parseFloat(color.style.marginLeft)+shift);
-                color.style.marginRight =
-                  HTMLCSS.Em(parseFloat(color.style.marginRight)-shift
-                     + (values.indentalign === "right" ? Math.min(0,span.bbox.w+shift) - span.bbox.w : 0));
-              }
+	      if (color) {
+                var L = parseFloat(color.style.marginLeft||"0")+shift,
+                    R = parseFloat(color.style.marginRight||"0")-shift;
+	        color.style.marginLeft = HTMLCSS.Em(L);
+	        color.style.marginRight =
+	          HTMLCSS.Em(R + (values.indentalign === "right" ?
+                      Math.min(0,span.bbox.w+shift) - span.bbox.w : 0));
+		if (HTMLCSS.msieColorBug && values.indentalign === "right") {
+                  if (parseFloat(color.style.marginLeft) > 0) {
+                    var padding = MathJax.HTML.addElement(color.parentNode,"span");
+                    padding.style.marginLeft = HTMLCSS.Em(R+Math.min(0,span.bbox.w+shift));
+                    color.nextSibling.style.marginRight = "0em";
+                  }
+		  color.nextSibling.style.marginLeft = "0em";
+		  color.style.marginRight = color.style.marginLeft = "0em";
+		}
+	      }
             }
           }
         }
@@ -3017,7 +3034,7 @@
         HTMLCSS.Augment({
           PaddingWidthBug: true,
           msieAccentBug: true,
-          msieColorBug: true,
+          msieColorBug: (mode < 8),      // negative margin-right doesn't work to position color
           msieColorPositionBug: true,    // needs position:relative to put color behind text
           msieRelativeWidthBug: quirks,
           msieDisappearingBug: (mode >= 8), // inline math disappears
