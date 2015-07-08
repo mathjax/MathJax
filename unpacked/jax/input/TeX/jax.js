@@ -2212,7 +2212,7 @@
     mathPalette: function (fence,side) {
       if (fence === '{' || fence === '}') {fence = "\\"+fence}
       var D = '{\\bigg'+side+' '+fence+'}', T = '{\\big'+side+' '+fence+'}';
-      return TEX.Parse('\\mathchoice'+D+T+T+T).mml();
+      return TEX.Parse('\\mathchoice'+D+T+T+T,{}).mml();
     },
     
     //
