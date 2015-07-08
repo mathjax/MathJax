@@ -1202,7 +1202,7 @@ MathJax.Localization = {
     function (string,regex) {
       var result = [], match, last = 0;
       regex.lastIndex = 0;
-      while (match = regex.exec(string)) {
+      while ((match = regex.exec(string))) {
         result.push(string.substr(last,match.index-last));
         result.push.apply(result,match.slice(1));
         last = match.index + match[0].length;
