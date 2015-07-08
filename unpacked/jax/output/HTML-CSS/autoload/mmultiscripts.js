@@ -137,14 +137,14 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             var w = box[k+1].bbox.w - box[k].bbox.w;
             if (w > 0) {
               if (isPre) {
-                box[k].style.paddingLeft = HTMLCSS.Em(w/box[k].scale);
+                box[k].style.paddingLeft = HTMLCSS.Em(w/(box[k].scale||1));
                 BOX[k].w += w;
               } else {
                 HTMLCSS.createBlank(sub,w);
               }
             } else if (w < 0) {
               if (isPre) {
-                box[k+1].style.paddingLeft = HTMLCSS.Em(-w/box[k+1].scale);
+                box[k+1].style.paddingLeft = HTMLCSS.Em(-w/(box[k+1].scale||1));
                 BOX[k+1].w += -w;
               } else {
                 HTMLCSS.createBlank(sup,-w);
