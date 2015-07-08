@@ -866,7 +866,10 @@
               else {svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")")}
           } else if (nodeName === "line" || nodeName === "polygon" ||
                      nodeName === "path" || nodeName === "a") {
-            svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")");
+            var transform = svg.element.getAttribute("transform");
+            if (transform) transform = " "+transform;
+            transform = "translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+") "+transform;
+            svg.element.setAttribute("transform",transform);
           } else {
             svg.element.setAttribute("x",Math.floor(svg.x/svg.scale));
             svg.element.setAttribute("y",Math.floor(svg.y/svg.scale));
