@@ -31,7 +31,7 @@
   var SETTINGS = HUB.config.menuSettings;
 
   var CHTMLpreview = MathJax.Extension["CHTML-preview"] = {
-    version: "2.5.2",
+    version: "2.5.3",
 
     //
     //  Configuration for the chunking of the main output
@@ -49,16 +49,13 @@
     //  Ajust the chunking of the output jax
     //
     Config: function () {
-      HUB.Config({
-        "HTML-CSS": this.config.Chunks,
-        SVG: this.config.Chunks
-      });
       MathJax.Ajax.Styles({".MathJax_Preview .MJXc-math":{color:this.config.color}});
       var update, delay, style, done, saved;
       var config = this.config;
 
       if (!config.disabled && SETTINGS.CHTMLpreview == null)
         HUB.Config({menuSettings:{CHTMLpreview:true}});
+      if (SETTINGS.CHTMLpreview) HUB.Config({"HTML-CSS":config.Chunks, SVG:config.Chunks});
       HUB.Register.MessageHook("Begin Math Output",function () {
         if (!done && SETTINGS.CHTMLpreview && SETTINGS.renderer !== "CommonHTML") {
           update = HUB.processUpdateTime; delay = HUB.processUpdateDelay;
