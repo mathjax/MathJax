@@ -333,7 +333,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       while (n > 0) {align += "rl"; spacing.push("0em 0em"); n--}
       spacing = spacing.join(" ");
       if (taggable) {return this.AMSarray(begin,numbered,taggable,align,spacing)}
-      var array = this.Array.call(this,begin,null,null,align,spacing,".5em",'D');
+      var array = this.AMSarray(begin,numbered,taggable,align,spacing);
       return this.setArrayAlign(array,valign);
     },
     
