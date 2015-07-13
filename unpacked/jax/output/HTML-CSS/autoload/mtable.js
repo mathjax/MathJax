@@ -428,24 +428,31 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (indent.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {indent.indentshift = indent.indentshiftfirst}
         if (indent.indentshift === "auto") {indent.indentshift = "0"}
         var shift = HTMLCSS.length2em(indent.indentshift,mu,HTMLCSS.cwidth);
-        var labelshift = HTMLCSS.length2em(values.minlabelspacing,mu,HTMLCSS.cwidth);
-        if (this.displayIndent !== "0") {
-          var dIndent = HTMLCSS.length2em(this.displayIndent,mu,HTMLCSS.cwidth);
-          shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -dIndent: dIndent);
+        var labelspace = HTMLCSS.length2em(values.minlabelspacing,mu,HTMLCSS.cwidth);
+        var labelW = labelspace + C[LABEL].bbox.w, labelshift = 0, tw = mw;
+        var dIndent = HTMLCSS.length2em(this.displayIndent,mu,HTMLCSS.cwidth);
+        var s = (CALIGN[LABEL] === MML.INDENTALIGN.RIGHT ? -1 : 1);
+        if (indent.indentalign === MML.INDENTALIGN.CENTER) {
+          tw += 2 * (labelW - s*(shift + dIndent));
+          shift += dIndent;
+        } else if (CALIGN[LABEL] === indent.indentalign) {
+          if (dIndent < 0) {labelshift = s*dIndent; dIndent = 0}
+          shift += s*dIndent; if (labelW > s*shift) shift = s*labelW; shift += labelshift;
+          tw += s*shift;
+        } else {
+          tw += labelW - s*shift + dIndent;
+          shift -= s*dIndent;
         }
         var eqn = HTMLCSS.createStack(span,false,"100%");
         HTMLCSS.addBox(eqn,stack); HTMLCSS.alignBox(stack,indent.indentalign,0,shift);
-
         C[LABEL].parentNode.parentNode.removeChild(C[LABEL].parentNode);
         HTMLCSS.addBox(eqn,C[LABEL]); HTMLCSS.alignBox(C[LABEL],CALIGN[LABEL],0);
         if (HTMLCSS.msieRelativeWidthBug) {stack.style.top = C[LABEL].style.top = ""}
         if (hasRelativeWidth) {stack.style.width = values.width; span.bbox.width = "100%"}
-        C[LABEL].style.marginRight = C[LABEL].style.marginLeft = HTMLCSS.Em(labelshift);
-        if (indent.indentalign === MML.INDENTALIGN.CENTER) {mw += 4*labelshift + 2*C[LABEL].bbox.w}
-          else if (indent.indentalign !== CALIGN[LABEL]) {mw += 2*labelshift + C[LABEL].bbox.w}
-        mw = Math.max(0,mw+shift); span.bbox.tw = mw + 2*labelshift;
-        span.style.minWidth = span.bbox.minWidth = HTMLCSS.Em(mw);
-        eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(mw/HTMLCSS.scale);
+        C[LABEL].style[s === 1 ? "marginLeft" : "marginRight"] = HTMLCSS.Em(s*labelshift);
+        span.bbox.tw = tw;
+        span.style.minWidth = span.bbox.minWidth = HTMLCSS.Em(tw);
+        eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(tw/scale);
       }
       //
       //  Finish the table
