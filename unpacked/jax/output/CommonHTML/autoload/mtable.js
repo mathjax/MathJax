@@ -435,13 +435,21 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (indent.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) indent.indentshift = indent.indentshiftfirst;
       if (indent.indentshift === "auto") indent.indentshift = "0";
       var shift = CHTML.length2em(indent.indentshift,CHTML.cwidth);
-      var labelshift = CHTML.length2em(values.minlabelspacing,CHTML.cwidth);
-      if (this.displayIndent !== "0") {
-        var dIndent = CHTML.length2em(CONFIG.displayIndent,CHTML.cwidth);
-        shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -dIndent: dIndent);
+      var labelspace = CHTML.length2em(values.minlabelspacing,this.defaults.minlabelspacing);
+      var labelW = labelspace + state.W[LABEL], labelshift = 0, tw = state.R;
+      var dIndent = CHTML.length2em(CONFIG.displayIndent,CHTML.cwidth);
+      var s = (state.CALIGN[LABEL] === MML.INDENTALIGN.RIGHT ? -1 : 1);
+      if (indent.indentalign === MML.INDENTALIGN.CENTER) {
+        tw += 2 * (labelW - s*(shift + dIndent));
+        shift += dIndent;
+      } else if (state.CALIGN[LABEL] === indent.indentalign) {
+        if (dIndent < 0) {labelshift = s*dIndent; dIndent = 0}
+        shift += s*dIndent; if (labelW > s*shift) shift = s*labelW; shift += labelshift;
+        shift *= s; tw += shift;
+      } else {
+        tw += labelW - s*shift + dIndent;
+        shift -= s*dIndent; shift *= -s;
       }
-      if (indent.indentalign === MML.INDENTALIGN.CENTER) shift *= 2;
-      var margin = "margin"+(indent.indentalign === MML.INDENTALIGN.RIGHT ? "Right" : "Left");
       //
       //  Create boxes for table and labels
       //
@@ -452,16 +460,25 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       table.style.display = "inline-table"; if (!table.style.width) table.style.width = "auto";
       labels.style.verticalAlign = "top";
       node.style.verticalAlign = "";
-      if (shift) table.style[margin] = CHTML.Em(shift);
+      if (shift) {
+        if (indent.indentalign === MML.INDENTALIGN.CENTER) {
+          table.style.marginLeft = CHTML.Em(shift);
+          table.style.marginRight = CHTML.Em(-shift);
+        } else {
+          var margin = "margin" + (indent.indentalign === MML.INDENTALIGN.RIGHT ? "Right" : "Left");
+          table.style[margin] = CHTML.Em(shift);
+        }
+      }
       //
       //  Add labels on correct side
       //
       if (state.CALIGN[LABEL] === "left") {
         node.insertBefore(labels,box);
-        labels.style.marginRight = CHTML.Em(-state.W[LABEL]);
+        labels.style.marginRight = CHTML.Em(-state.W[LABEL]-labelshift);
+        if (labelshift) labels.style.marginLeft = CHTML.Em(labelshift);
       } else {
         node.appendChild(labels);
-        labels.style.marginLeft = CHTML.Em(-state.W[LABEL]);
+        labels.style.marginLeft = CHTML.Em(-state.W[LABEL]+labelshift);
       }
       //
       //  Vertically align the labels with their rows
@@ -483,14 +500,10 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         T += RSPACE[i];
       }
       //
-      //  Propagage full-width equations, and reserve
-      //  room for equation plus label and minlabelspacing
+      //  Propagate full-width equations, and reserve room for equation plus label
       //
       node.style.width = this.CHTML.pwidth = "100%";
-      var min = CHTML.length2em(values.minlabelspacing,this.defaults.minlabelspacing);
-      var w = state.R + state.W[LABEL] + min;
-      if (indent.indentalign === MML.INDENTALIGN.CENTER) w += state.W[LABEL] + min;
-      this.CHTML.mwidth = CHTML.Em(w);
+      this.CHTML.mwidth = CHTML.Em(tw);
     }
   });
   

@@ -1637,7 +1637,7 @@
             shift *= CHTML.em/CHTML.outerEm;
             HUB.Insert(styles,({
               left: {marginLeft: CHTML.Em(shift)},
-              right: {marginLeft: CHTML.Em(Math.max(0,this.CHTML.w+shift)), marginRight: CHTML.Em(-shift)},
+              right: {marginRight: CHTML.Em(-shift)},
               center: {marginLeft: CHTML.Em(shift), marginRight: CHTML.Em(-shift)}
             })[values.indentalign]);
           }
