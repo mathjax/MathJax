@@ -36,6 +36,9 @@
       "#MathJax_Zoom": {
         position:"absolute", "background-color":"#F0F0F0", overflow:"auto",
         display:"block", "z-index":301, padding:".5em", border:"1px solid black", margin:0,
+        "-webkit-box-sizing":"content-box", // Android ≤ 2.3, iOS ≤ 4
+        "-moz-box-sizing":"content-box", // Firefox ≤ 28
+        "box-sizing":"content-box", // Chrome, Firefox 29+, IE 8+, Opera, Safari 5.1
         "font-weight":"normal", "font-style":"normal",
         "text-align":"left", "text-indent":0, "text-transform":"none",
         "line-height":"normal", "letter-spacing":"normal", "word-spacing":"normal",
