@@ -571,22 +571,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           var def = {
             side: TEX.config.TagSide,
             minlabelspacing: TEX.config.TagIndent,
-            columnalign: mml.displayAlign,
             displaystyle: "inherit"   // replaced by TeX input jax Translate() function with actual value
           };
-          if (mml.displayAlign === MML.INDENTALIGN.LEFT) {
-            def.width = "100%";
-            if (mml.displayIndent !== "0") {
-              def.columnwidth = mml.displayIndent + " fit"; def.columnspacing = "0"
-              row = [row[0],MML.mtd(),row[1]];
-            }
-          } else if (mml.displayAlign === MML.INDENTALIGN.RIGHT) {
-            def.width = "100%";
-            if (mml.displayIndent !== "0") {
-              def.columnwidth = "fit "+mml.displayIndent; def.columnspacing = "0"
-              row[2] = MML.mtd();
-            }
-          }
           mml = MML.mtable(MML.mlabeledtr.apply(MML,row)).With(def);
         }
         return STACKITEM.mml(mml);
