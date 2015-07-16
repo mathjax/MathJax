@@ -2936,10 +2936,10 @@
             node.style.textAlign = values.indentalign;
             // ### FIXME: make percentage widths respond to changes in container
             if (shift) {
-              shift *= HTMLCSS.em/HTMLCSS.outerEm;
+              shift *= HTMLCSS.scale;
               HUB.Insert(span.style,({
                 left: {marginLeft: HTMLCSS.Em(shift)},
-                right: {marginLeft: HTMLCSS.Em(Math.max(0,span.bbox.w+shift)), marginRight: HTMLCSS.Em(-shift)},
+                right: {marginRight: HTMLCSS.Em(-shift)},
                 center: {marginLeft: HTMLCSS.Em(shift), marginRight: HTMLCSS.Em(-shift)}
               })[values.indentalign]);
               //
