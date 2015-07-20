@@ -119,7 +119,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       var sup, sub, BOX = [];
       var i = 1, m = this.data.length, W = 0;
       for (var k = 0; k < 4; k += 2) {
-        while (i < m && this.data[i].type !== "mprescripts") {
+        while (i < m && (this.data[i]||{}).type !== "mprescripts") {
           var box = [null,null,null,null];
           for (var j = k; j < k+2; j++) {
             if (this.data[i] && this.data[i].type !== "none" && this.data[i].type !== "mprescripts") {

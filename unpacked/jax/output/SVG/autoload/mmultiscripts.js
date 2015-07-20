@@ -100,16 +100,14 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var sup, sub, BOX = [];
       var i = 1, m = this.data.length, W = 0;
       for (var k = 0; k < 4; k += 2) {
-        while (i < m && this.data[i].type !== "mprescripts") {
+        while (i < m && (this.data[i]||{}).type !== "mprescripts") {
           var box = [null,null,null,null];
           for (var j = k; j < k+2; j++) {
             if (this.data[i] && this.data[i].type !== "none" && this.data[i].type !== "mprescripts") {
               if (!BOX[j]) {BOX[j] = SVG.BBOX.G()}
               box[j] = this.data[i].toSVG();
-            } else {
-              box[j] = {w:0};
             }
-            if (this.data[i].type !== "mprescripts") i++;
+            if ((this.data[i]||{}).type !== "mprescripts") i++;
           }
           var isPre = (k === 2);
           if (isPre) W += Math.max((box[k]||{w:0}).w,(box[k+1]||{w:0}).w);
