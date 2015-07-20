@@ -175,7 +175,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //
     CHTMLaddScript: function (type,state) {
       var BOX, BBOX, data = this.data[state.i];
-      if (data && data.type !== "none") {
+      if (data && data.type !== "none" && data.type !== "mprescripts") {
         BOX = state.BOX[type];
         if (!BOX) {
           BOX = state.BOX[type] = HTML.Element("mjx-"+type);
@@ -188,7 +188,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         data.toCommonHTML(BOX);
         BBOX = data.CHTML;
       }
-      state.i++;
+      if (data && data.type !== "mprescripts") state.i++;
       return BBOX;
     },
     //
