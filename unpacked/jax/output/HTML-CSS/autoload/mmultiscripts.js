@@ -122,14 +122,16 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         while (i < m && this.data[i].type !== "mprescripts") {
           var box = [null,null,null,null];
           for (var j = k; j < k+2; j++) {
-            if (this.data[i] && this.data[i].type !== "none") {
+            if (this.data[i] && this.data[i].type !== "none" && this.data[i].type !== "mprescripts") {
               if (!BOX[j]) {
                 BOX[j] = HTMLCSS.createBox(stack); BOX[j].bbox = this.HTMLemptyBBox({});
                 if (W) {HTMLCSS.createBlank(BOX[j],W); BOX[j].bbox.w = BOX[j].bbox.rw = W}
               }
               box[j] = this.data[i].toHTML(BOX[j]);
+            } else {
+              box[j] = MathJax.HTML.Element("span",{bbox:this.HTMLemptyBBox({})});
             }
-            i++;
+            if ((this.data[i]||{}).type !== "mprescripts") i++;
           }
           var isPre = (k === 2);
           sub = BOX[k]; sup = BOX[k+1];
