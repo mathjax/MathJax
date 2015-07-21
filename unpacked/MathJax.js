@@ -2327,12 +2327,13 @@ MathJax.Hub = {
   
   formatError: function (script,err) {
     //
-    //  Get the error message, URL, and line, and save it for
+    //  Get the error message, URL, line, and stack trace, and save it for
     //    reporting in the Show Math As Error menu
     //
     var message = "Error: "+err.message+"\n";
     if (err.sourceURL) {message += "\nfile: "+err.sourceURL}
     if (err.line) {message += "\nline: "+err.line}
+    if (err.stack) {message += "\nstack:\n"+err.stack}
     script.MathJax.error = MathJax.OutputJax.Error.Jax(message,script);
 
     //
