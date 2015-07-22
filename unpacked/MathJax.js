@@ -2333,6 +2333,7 @@ MathJax.Hub = {
     var message = "Error: "+err.message+"\n";
     if (err.sourceURL) {message += "\nfile: "+err.sourceURL}
     if (err.line) {message += "\nline: "+err.line}
+    message += "\n[debugging tips: use unpacked/MathJax.js, inspect `MathJax.Hub.lastError` in the console]";
     script.MathJax.error = MathJax.OutputJax.Error.Jax(message,script);
 
     //
