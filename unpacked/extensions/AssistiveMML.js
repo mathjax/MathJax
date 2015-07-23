@@ -26,9 +26,54 @@
  */
 
 (function (AJAX,CALLBACK,HUB,HTML) {
-
+  var SETTINGS = HUB.config.menuSettings;
+  
   var AssistiveMML = MathJax.Extension["AssistiveMML"] = {
     version: "2.6",
+    
+    config: {
+      disabled: false,
+      styles: {
+        ".MJX_Assistive_MathML": {
+          position:"absolute!important",
+          clip: (HUB.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                 "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+          padding: "1px 0 0 0!important",
+          border: "0!important",
+          height: "1px!important",
+          width: "1px!important",
+          overflow: "hidden!important",
+          display:"block!important"
+        }
+      }
+    },
+    
+    Config: function () {
+      if (!this.config.disabled && SETTINGS.assistiveMML == null)
+        HUB.Config({menuSettings:{assistiveMML:true}});
+      AJAX.Styles(this.config.styles);
+      HUB.Register.MessageHook("End Math",function (msg) {AssistiveMML.EndMathHook(msg[1])});
+    },
+    
+    //
+    //  The hook for the End Math signal.
+    //  This sets up a state object that lists the jax and index into the jax,
+    //    and a dummy callback that is used to synchronizing with MathJax.
+    //    It will be called when the jax are all processed, and that will
+    //    let the MathJax queue continue (it will block until then).
+    //
+    EndMathHook: function (node) {
+      if (!SETTINGS.assistiveMML) return;
+      var state = {
+        jax: HUB.getAllJax(node), i: 0,
+        callback: MathJax.Callback(function () {
+          console.log("MathML time: "+((new Date().getTime())-state.start));
+        }),
+        start: new Date().getTime()
+      };
+      this.HandleMML(state);
+      return state.callback;
+    },
 
     //
     //  For each jax in the state, look up the frame.
@@ -52,53 +97,17 @@
             return MathJax.Callback.After(["HandleMML",this,state],err.restart);
           }
           frame.setAttribute("data-mathml",mml);
-	  span = HTML.Element("span",{
-	    isMathJax: true,
-	    style:{
-              position:"absolute",
-              clip: (HUB.Browser.isMSIE && (document.documentMode||0) < 8 ?
-                     "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
-              padding: "1 0 0 0",
-              border: "0",
-              height: "1px",
-              width: "1px",
-              overflow: "hidden",
-              display:"block"
-            }
-	  });
+	  span = HTML.addElement(frame,"span",{
+            isMathJax: true, className: "MJX_Assistive_MathML"
+          });
 	  span.innerHTML = mml;
-	  frame.appendChild(span);
         }
         state.i++;
       }
       state.callback();
-    },
-    
-    //
-    //  The hook for the End Math signal.
-    //  This sets up a state object that lists the jax and index into the jax,
-    //    and a dummy callback that is used to synchronizing with MathJax.
-    //    It will be called when the jax are all processed, and that will
-    //    let the MathJax queue continue (it will block until then).
-    //
-    EndMathHook: function (node) {
-      var state = {
-        jax: HUB.getAllJax(node), i: 0,
-        callback: MathJax.Callback(function () {
-          console.log("MathML time: "+((new Date().getTime())-state.start));
-        }),
-        start: new Date().getTime()
-      };
-      this.HandleMML(state);
-      return state.callback;
     }
     
   };
-
-  //
-  //  Call the hook when math has been processed.
-  //
-  HUB.Register.MessageHook("End Math",function (msg) {AssistiveMML.EndMathHook(msg[1])});
 
   HUB.Startup.signal.Post("AssistiveMML Ready");
 
@@ -106,10 +115,14 @@
 
 //
 //  Make sure the toMathML extension is loaded before we signal
-//  the load complete for this extension.
+//  the load complete for this extension.  Then wait for the end
+//  of the user configuration before configuring this extension. 
 //
 MathJax.Callback.Queue(
   ["Require",MathJax.Ajax,"[MathJax]/extensions/toMathML.js"],
-  ["loadComplete",MathJax.Ajax,"[MathJax]/extensions/AssistiveMML.js"]
+  ["loadComplete",MathJax.Ajax,"[MathJax]/extensions/AssistiveMML.js"],
+  function () {
+    MathJax.Hub.Register.StartupHook("End Config",["Config",MathJax.Extension.AssistiveMML]);
+  }
 );
 
