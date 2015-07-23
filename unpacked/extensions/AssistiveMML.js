@@ -55,9 +55,15 @@
 	  span = HTML.Element("span",{
 	    isMathJax: true,
 	    style:{
-              position:"absolute!important",
-              left:"-100000px", top:"auto", height:"1px", width:"1px",
-              "padding-top":"1px", display:"block"
+              position:"absolute",
+              clip: (HUB.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                     "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+              padding: "1 0 0 0",
+              border: "0",
+              height: "1px",
+              width: "1px",
+              overflow: "hidden",
+              display:"block"
             }
 	  });
 	  span.innerHTML = mml;
