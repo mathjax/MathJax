@@ -1,0 +1,109 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
+/*************************************************************
+ *
+ *  MathJax/extensions/AssistiveMML.js
+ *  
+ *  Implements an extension that inserts hidden MathML into the
+ *  page for screen readers or other asistive technology.
+ *  
+ *  ---------------------------------------------------------------------
+ *  
+ *  Copyright (c) 2015 The MathJax Consortium
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+(function (AJAX,CALLBACK,HUB,HTML) {
+
+  var AssistiveMML = MathJax.Extension["AssistiveMML"] = {
+    version: "2.6",
+
+    //
+    //  For each jax in the state, look up the frame.
+    //  If the jax doesn't use NativeMML and hasn't already been handled:
+    //    Get the MathML for the jax, taking resets into account.
+    //    Add a data-mathml attribute to the frame, and
+    //    Create a span that is not visible on screen and put the MathML in it,
+    //      and add it to the frame.
+    //  When all the jax are processed, call the callback.
+    //
+    HandleMML: function (state) {
+      var m = state.jax.length, jax, mml, frame, span;
+      while (state.i < m) {
+        jax = state.jax[state.i];
+        frame = document.getElementById(jax.inputID+"-Frame");
+        if (jax.outputJax !== "NativeMML" && frame && !frame.getAttribute("data-mathml")) {
+          try {
+            mml = jax.root.toMathML("").replace(/\n */g,"").replace(/<!--.*?-->/g,"");
+          } catch (err) {
+            if (!err.restart) throw err; // an actual error
+            return MathJax.Callback.After(["HandleMML",this,state],err.restart);
+          }
+          frame.setAttribute("data-mathml",mml);
+	  span = HTML.Element("span",{
+	    isMathJax: true,
+	    style:{
+              position:"absolute!important",
+              left:"-100000px", top:"auto", height:"1px", width:"1px",
+              "padding-top":"1px", display:"block"
+            }
+	  });
+	  span.innerHTML = mml;
+	  frame.appendChild(span);
+        }
+        state.i++;
+      }
+      state.callback();
+    },
+    
+    //
+    //  The hook for the End Math signal.
+    //  This sets up a state object that lists the jax and index into the jax,
+    //    and a dummy callback that is used to synchronizing with MathJax.
+    //    It will be called when the jax are all processed, and that will
+    //    let the MathJax queue continue (it will block until then).
+    //
+    EndMathHook: function (node) {
+      var state = {
+        jax: HUB.getAllJax(node), i: 0,
+        callback: MathJax.Callback(function () {
+          console.log("MathML time: "+((new Date().getTime())-state.start));
+        }),
+        start: new Date().getTime()
+      };
+      this.HandleMML(state);
+      return state.callback;
+    }
+    
+  };
+
+  //
+  //  Call the hook when math has been processed.
+  //
+  HUB.Register.MessageHook("End Math",function (msg) {AssistiveMML.EndMathHook(msg[1])});
+
+  HUB.Startup.signal.Post("AssistiveMML Ready");
+
+})(MathJax.Ajax,MathJax.Callback,MathJax.Hub,MathJax.HTML);
+
+//
+//  Make sure the toMathML extension is loaded before we signal
+//  the load complete for this extension.
+//
+MathJax.Callback.Queue(
+  ["Require",MathJax.Ajax,"[MathJax]/extensions/toMathML.js"],
+  ["loadComplete",MathJax.Ajax,"[MathJax]/extensions/AssistiveMML.js"]
+);
+
