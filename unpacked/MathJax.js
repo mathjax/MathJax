@@ -2554,6 +2554,8 @@ MathJax.Hub.Startup = {
         }
         if (config.menuSettings.CHTMLpreview && !MathJax.Extension["CHTML-preview"])
           {MathJax.Hub.config.extensions.push("CHTML-preview.js")}
+        if (config.menuSettings.assistiveMML && !MathJax.Extension.AssistiveMML)
+          {MathJax.Hub.config.extensions.push("AssistiveMML.js")}
       },MathJax.Hub.config],
       ["Post",this.signal,"End Cookie"]
     );
