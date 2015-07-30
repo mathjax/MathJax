@@ -99,6 +99,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       
       DeclareMathOperator: 'HandleDeclareOp',
       operatorname:        'HandleOperatorName',
+      SkipLimits:          'SkipLimits',
       
       genfrac:     'Genfrac',
       frac:       ['Genfrac',"","","",""],
@@ -210,7 +211,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle \DeclareMathOperator
      */
     HandleDeclareOp: function (name) {
-      var limits = (this.GetStar() ? "" : "\\nolimits");
+      var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
       var cs = this.trimSpaces(this.GetArgument(name));
       if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
       var op = this.GetArgument(name);
@@ -219,13 +220,18 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     HandleOperatorName: function (name) {
-      var limits = (this.GetStar() ? "" : "\\nolimits");
+      var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
       var op = this.trimSpaces(this.GetArgument(name));
       op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
       this.string = '\\mathop{\\rm '+op+'}'+limits+" "+this.string.slice(this.i);
       this.i = 0;
     },
     
+    SkipLimits: function (name) {
+      var c = this.GetNext(), i = this.i;
+      if (c === "\\" && ++this.i && this.GetCS() !== "limits") this.i = i;
+    },
+
     /*
      *  Record presence of \shoveleft and \shoveright
      */
