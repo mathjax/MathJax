@@ -1075,7 +1075,7 @@
       hbox.t = hbox.h; hbox.b = hbox.d;
       if (hbox.h !== ebox.h) node.style.marginTop = CHTML.Em(ebox.h - hbox.h);
       if (hbox.d !== ebox.d) node.style.marginBottom = CHTML.Em(ebox.d - hbox.d);
-      hbox.h = ebox.h; hbox.d = ebox.d;
+//      hbox.h = ebox.h; hbox.d = ebox.d;
       if (BBOX) {hbox.scale = BBOX.scale; hbox.rscale = BBOX.rscale}
       return hbox;
     },
@@ -1100,22 +1100,22 @@
         for (var i = 0, m = data[0].length; i < m; i++) text += String.fromCharCode(data[0][i]);
       } else text = String.fromCharCode(data[0]);
       if (data[4]) scale *= data[4];
-      if (scale !== 1) node.style.fontSize = this.Percent(scale);
-      var bbox = this.handleText(node,text,variant);
+      var bbox = this.handleText(node,text,variant), style = node.firstChild.style;
+      if (scale !== 1) style.fontSize = this.Percent(scale);
       if (data[2]) {  // x offset
-        node.style.paddingLeft = this.Em(data[2]);
+        style.paddingLeft = this.Em(data[2]);
         bbox.w += data[2]; bbox.r += data[2];
       }
       if (data[3]) {  // y offset
-        node.style.verticalAlign = this.Em(data[3]);
+        style.verticalAlign = this.Em(data[3]);
         bbox.h += data[3]; if (bbox.h < 0) bbox.h = 0;
       }
       if (data[5]) {  // extra height
-        node.style.marginTop = this.Em(data[5]);
+        style.marginTop = this.Em(data[5]);
         bbox.h += data[5]; bbox.t += data[5];
       }
       if (data[6]) {  // extra depth
-        node.style.marginBottom = this.Em(data[6]);
+        style.marginBottom = this.Em(data[6]);
         bbox.d += data[6]; bbox.b += data[6];
       }
       return bbox;
