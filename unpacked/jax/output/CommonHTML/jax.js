@@ -940,7 +940,7 @@
       if (list.length) this.addCharList(node.firstChild,list,bbox);
       bbox.clean();
       if (bbox.a == null) bbox.a = CENTERLINE;
-      if (bbox.d + bbox.a < 0) {bbox.D = bbox.d; bbox.d = -bbox.a}
+      if (bbox.d < 0) {bbox.D = bbox.d; bbox.d = 0}
       if (bbox.h - bbox.a) node.firstChild.style[bbox.h - bbox.a < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h-bbox.a);
       if (bbox.d + bbox.a) node.firstChild.style[bbox.d + bbox.a < 0 ? "marginBottom": "paddingBottom"] = this.Em(bbox.d+bbox.a);
       return bbox;
@@ -2063,7 +2063,7 @@
           stack.appendChild(over); stack.appendChild(base);
         }
         if (obox.D) obox.d = obox.D;
-        if (obox.d + CENTERLINE < 0) {
+        if (obox.d < 0) {
           //
           // For negative depths, set the height and align to top
           // in order to avoid extra baseline space
@@ -2114,7 +2114,7 @@
           node.firstChild.lastChild.appendChild(under);
         }
         if (ubox.D) ubox.d = ubox.D;
-        if (ubox.d + CENTERLINE < 0) {
+        if (ubox.d < 0) {
           //
           // For negative depths, set the height and align to top
           // in order to avoid extra baseline space
