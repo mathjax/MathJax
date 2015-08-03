@@ -409,7 +409,7 @@ MathJax.ElementJax.mml.Augment({
     },
     array: function () {if (this.inferred) {return this.data} else {return [this]}},
     toString: function () {return this.type+"("+this.data.join(",")+")"},
-    getAnnotation: function () { return null; }
+    getAnnotation: function () {return null}
   },{
     childrenSpacelike: function () {
       for (var i = 0, m = this.data.length; i < m; i++)
@@ -419,7 +419,7 @@ MathJax.ElementJax.mml.Augment({
     childEmbellished: function () {
       return (this.data[0] && this.data[0].isEmbellished());
     },
-    childCore: function () {return this.data[0]},
+    childCore: function () {return (this.inferRow && this.data[0] ? this.data[0].Core() : this.data[0])},
     childCoreMO: function () {return (this.data[0] ? this.data[0].CoreMO() : null)},
     setChildTeXclass: function (prev) {
       if (this.data[0]) {
