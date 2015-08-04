@@ -2326,21 +2326,22 @@ MathJax.Hub = {
   },
   
   formatError: function (script,err) {
+    var LOCALIZE = function (id,text,arg1,arg2) {return MathJax.Localization._(id,text,arg1,arg2)};
     //
     //  Get the error message, URL, and line, and save it for
     //    reporting in the Show Math As Error menu
     //
-    var message = "Error: "+err.message+"\n";
-    if (err.sourceURL) {message += "\nfile: "+err.sourceURL}
-    if (err.line) {message += "\nline: "+err.line}
-    message += "\n[debugging tips: use unpacked/MathJax.js, inspect `MathJax.Hub.lastError` in the console]";
+    var message = LOCALIZE("ErrorMessage","Error: %1",err.message)+"\n";
+    if (err.sourceURL||err.fileName) message += "\n"+LOCALIZE("ErrorFile","file: %1",err.sourceURL||err.fileName);
+    if (err.line||err.lineNumber) message += "\n"+LOCALIZE("ErrorLine","line: %1",err.line||err.lineNumber);
+    message += "\n\n"+LOCALIZE("ErrorTips","Debugging tips: use %1, inspect %2 in the browser console","'unpacked/MathJax.js'","'MathJax.Hub.lastError'");
     script.MathJax.error = MathJax.OutputJax.Error.Jax(message,script);
 
     //
     //  Create the [Math Processing Error] span
     //
     var errorSettings = this.config.errorSettings;
-    var errorText = MathJax.Localization._(errorSettings.messageId,errorSettings.message);
+    var errorText = LOCALIZE(errorSettings.messageId,errorSettings.message);
     var error = MathJax.HTML.Element("span",
                  {className:"MathJax_Error", jaxID:"Error", isMathJax:true},errorText);
     //
