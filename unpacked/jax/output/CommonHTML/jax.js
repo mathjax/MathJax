@@ -33,7 +33,7 @@
 
   var EVENT, TOUCH, HOVER; // filled in later
 
-  var AXISHEIGHT = .25,
+  var CENTERLINE = .25,
       STRUTHEIGHT = 1,
       AFUZZ = .08, HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
 
@@ -824,7 +824,7 @@
     },
 
     //
-    //  Get the height, depth and width of a character
+    //  Get the height, depth, and width of a character
     //  (height and depth are of the font, not the character).
     //  WARNING:  causes reflow of the page!
     //
@@ -940,9 +940,10 @@
       }
       if (list.length) this.addCharList(node.firstChild,list,bbox);
       bbox.clean();
+      if (bbox.a == null) bbox.a = CENTERLINE;
       if (bbox.d < 0) {bbox.D = bbox.d; bbox.d = 0}
-      if (bbox.h || bbox.a) node.firstChild.style[bbox.h < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h-(bbox.a||0));
-      if (bbox.d) node.firstChild.style[bbox.d < 0 ? "marginBottom": "paddingBottom"] = this.Em(bbox.d);
+      if (bbox.h - bbox.a) node.firstChild.style[bbox.h - bbox.a < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h-bbox.a);
+      if (bbox.d + bbox.a) node.firstChild.style[bbox.d + bbox.a < 0 ? "marginBottom": "paddingBottom"] = this.Em(bbox.d+bbox.a);
       return bbox;
     },
 
@@ -997,7 +998,7 @@
         var s = 1.1*(H - h)/k + .3;  // space to cover by extender
         s /= (ebox.h+ebox.d);        // scale factor;
         this.Transform(ext,
-          "translateY("+CHTML.Em(-ebox.d+.25)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
+          "translateY("+CHTML.Em(-ebox.d+.25-s*CENTERLINE)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
           "left "+CHTML.Em(ebox.d)
         );
         ext.style.paddingTop=ext.style.paddingBottom = 0;
@@ -1074,9 +1075,10 @@
       this.adjustHeights([left,ext,mid,ext2,right],hbox);
       if (ebox.D) ebox.d = ebox.D;
       hbox.t = hbox.h; hbox.b = hbox.d;
-      if (hbox.h !== ebox.h) node.style.marginTop = CHTML.Em(ebox.h - hbox.h);
-      if (hbox.d !== ebox.d) node.style.marginBottom = CHTML.Em(ebox.d - hbox.d);
-//      hbox.h = ebox.h; hbox.d = ebox.d;
+      var mt = ebox.h - hbox.h - CENTERLINE, mb = ebox.d - hbox.d + CENTERLINE;
+      if (mt) node.style.marginTop = CHTML.Em(mt);
+      if (mb) node.style.marginBottom = CHTML.Em(mb);
+      hbox.h = ebox.h; hbox.d = ebox.d;
       if (BBOX) {hbox.scale = BBOX.scale; hbox.rscale = BBOX.rscale}
       return hbox;
     },
