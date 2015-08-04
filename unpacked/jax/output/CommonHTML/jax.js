@@ -62,8 +62,9 @@
     },
 
     "mjx-math":   {
-      "display":        "inline-block",
-      "border-collapse":"collapse"
+      "display":         "inline-block",
+      "border-collapse": "separate",
+      "border-spacing":  0,
     },
     "mjx-math *": {display:"inline-block", "text-align":"left"},
 
