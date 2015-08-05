@@ -18,7 +18,7 @@
 
 MathJax.Hub.Config({
   config: ["MMLorHTML.js"],
-  extensions: ["asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","CHTML-preview.js"],
+  extensions: ["asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","FHTML-preview.js"],
   jax: ["input/AsciiMath","output/HTML-CSS","output/NativeMML","output/FastHTML"]
 });
 
