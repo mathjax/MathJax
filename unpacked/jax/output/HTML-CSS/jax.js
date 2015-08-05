@@ -1136,14 +1136,20 @@
       if (w > 0 && w*this.em < min) {w = min/this.em}
       if (h+d > 0 && (h+d)*this.em < min) {f = 1/(h+d)*(min/this.em); h *= f; d *= f}
       if (!color) {color = "solid"} else {color = "solid "+color}
-      color = this.Em(w)+" "+color;
-      var H = (f === 1 ? this.Em(h+d) : min+"px"), D = this.Em(-d);
+      var style = {display: "inline-block", overflow:"hidden", verticalAlign:this.Em(-d)};
+      if (w > h+d) {
+        style.borderTop = this.Px(h+d)+" "+color;
+        style.width = this.Em(w);
+        style.height = (this.msieRuleBug && h+d > 0 ? this.Em(h+d) : 0);
+      } else {
+        style.borderLeft = this.Px(w)+" "+color;
+        style.width = (this.msieRuleBug && w > 0 ? this.Em(w) : 0);
+        style.height = this.Em(h+d);
+      }
       var rule = this.addElement(span,"span",{
-        style: {borderLeft: color, display: "inline-block", overflow:"hidden",
-                width:0, height:H, verticalAlign:D},
-        bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW:true}, noAdjust:true, HH:h+d, isMathJax:true
+        style: style, noAdjust:true, HH:h+d, isMathJax:true,
+        bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW:true}
       });
-      if (this.msieRuleBug && w > 0) {rule.style.width = this.Em(w)}
       if (span.isBox || span.className == "mspace") {span.bbox = rule.bbox, span.HH = h+d}
       return rule;
     },
@@ -1153,7 +1159,7 @@
       if (this.msieFrameSizeBug) {if (w < T) {w = T}; if (h+d < T) {h = T-d}}
       if (this.msieBorderWidthBug) {T = 0}
       var H = this.Em(h+d-T), D = this.Em(-d-t), W = this.Em(w-T);
-      var B = this.Em(t)+" "+style;
+      var B = this.Px(t)+" "+style;
       var frame = this.addElement(span,"span",{
         style: {border: B, display:"inline-block", overflow:"hidden", width:W, height:H},
         bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW:true}, noAdjust: true, HH:h+d, isMathJax:true
