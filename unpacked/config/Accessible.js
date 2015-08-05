@@ -19,7 +19,7 @@
 MathJax.Hub.Config({
   config: ["MMLorHTML.js"],
   extensions: ["tex2jax.js","mml2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","TeX/noErrors.js","TeX/noUndefined.js","TeX/AMSmath.js","TeX/AMSsymbols.js","CHTML-preview.js"],
-  jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML","output/CommonHTML"],
+  jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML","output/FastHTML"],
   menuSettings: {
     zoom: "Double-Click",
     mpContext: true,

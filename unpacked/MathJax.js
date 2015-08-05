@@ -2542,8 +2542,8 @@ MathJax.Hub.Startup = {
       ["Post",this.signal,"Begin Cookie"],
       ["Get",MathJax.HTML.Cookie,"menu",MathJax.Hub.config.menuSettings],
       [function (config) {
-        if (config.menuSettings.locale)
-          {MathJax.Localization.resetLocale(config.menuSettings.locale)}
+        var SETTINGS = config.menuSettings;
+        if (SETTINGS.locale) MathJax.Localization.resetLocale(SETTINGS.locale);
         var renderer = config.menuSettings.renderer, jax = config.jax;
         if (renderer) {
           var name = "output/"+renderer; jax.sort();
@@ -2555,8 +2555,12 @@ MathJax.Hub.Startup = {
           }
           jax.unshift(name);
         }
-        if (config.menuSettings.CHTMLpreview && !MathJax.Extension["CHTML-preview"])
-          {MathJax.Hub.config.extensions.push("CHTML-preview.js")}
+        if (SETTINGS.CHTMLpreview != null) {
+          if (SETTINGS.FHTMLpreview == null) SETTINGS.FHTMLpreview = SETTINGS.CHTMLpreview;
+          delete SETTINGS.CHTMLpreview;
+        }
+        if (SETTINGS.FHTMLpreview && !MathJax.Extension["FHTML-preview"])
+          MathJax.Hub.config.extensions.push("FHTML-preview.js");
       },MathJax.Hub.config],
       ["Post",this.signal,"End Cookie"]
     );
