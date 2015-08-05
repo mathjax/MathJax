@@ -684,6 +684,17 @@ MathJax.ElementJax.mml.Augment({
                     this.texClass === MML.TEXCLASS.CLOSE ||
                     this.texClass === MML.TEXCLASS.PUNCT)) {
         prev.texClass = this.prevClass = MML.TEXCLASS.ORD;
+      } else if (this.texClass === MML.TEXCLASS.BIN) {
+        //
+        // Check if node is the last one in its container since the rule
+        // above only takes effect if there is a node that follows.
+        //
+        var child = this, parent = this.parent;
+        while (parent && parent.parent && parent.isEmbellished() &&
+              (parent.data.length === 1 ||
+              (parent.type !== "mrow" && parent.Core() === child))) // handles msubsup and munderover
+                 {child = parent; parent = parent.parent}
+        if (parent.data[parent.data.length-1] === child) this.texClass = MML.TEXCLASS.ORD;
       }
       return this;
     }
