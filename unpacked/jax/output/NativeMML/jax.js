@@ -556,8 +556,8 @@
       //  Create a MathML element
       //
       NativeMMLelement: function (type) {
-        var math = (document.createElementNS ? document.createElementNS(nMML.MMLnamespace,type) :
-                    (HUB.Browser.mpNamespace ? document.createElement("m:"+type) :
+        var math = ( HUB.Browser.mpNamespace ? document.createElement("m:"+type) :
+                   (document.createElementNS ? document.createElementNS(nMML.MMLnamespace,type) :
                                                document.createElement(type)));
         math.isMathJax = true;
         return math;
