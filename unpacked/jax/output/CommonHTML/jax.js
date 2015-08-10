@@ -596,6 +596,7 @@
 
     Remove: function (jax) {
       var node = document.getElementById(jax.inputID+"-Frame");
+      if (node && jax.CHTML.display) node = node.parentNode;
       if (node) node.parentNode.removeChild(node);
       delete jax.CHTML;
     },
