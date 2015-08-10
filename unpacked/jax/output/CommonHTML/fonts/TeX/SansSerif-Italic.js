@@ -24,6 +24,7 @@ var font = 'MathJax_SansSerif-Italic';
 
 CHTML.FONTDATA.FONTS[font] = {
   className: CHTML.FONTDATA.familyName(font),
+  centerline: 250, ascent: 750, descent: 250,
   style: 'italic',
     0x20: [0,0,250,0,0],               // SPACE
     0x21: [694,0,319,110,355],         // EXCLAMATION MARK

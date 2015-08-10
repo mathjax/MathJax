@@ -24,6 +24,8 @@ var font = 'MathJax_Typewriter';
 
 CHTML.FONTDATA.FONTS[font] = {
   className: CHTML.FONTDATA.familyName(font),
+  centerline: 233, ascent: 694, descent: 229,
+  
   0x20: [0,0,250,0,0],               // SPACE
   0x21: [622,0,525,206,320],         // EXCLAMATION MARK
   0x22: [623,-333,525,122,402],      // QUOTATION MARK

@@ -24,6 +24,7 @@ var font = 'MathJax_Math-BoldItalic';
 
 CHTML.FONTDATA.FONTS[font] = {
   className: CHTML.FONTDATA.familyName(font),
+  centerline: 255, ascent: 725, descent: 216,
   weight: 'bold',
   style: 'italic',
   skew: {

@@ -24,6 +24,7 @@ var font = 'MathJax_Fraktur-Bold';
 
 CHTML.FONTDATA.FONTS[font] = {
   className: CHTML.FONTDATA.familyName(font),
+  centerline: 259, ascent: 740, descent: 223,
   weight: 'bold',
   0x20: [0,0,250,0,0],               // SPACE
   0x21: [689,12,349,107,241],        // EXCLAMATION MARK

@@ -24,6 +24,7 @@ var font = 'MathJax_AMS';
 
 CHTML.FONTDATA.FONTS[font] = {
   className: CHTML.FONTDATA.familyName(font),
+  centerline: 270, ascent: 1003, descent: 463,
   0x20: [0,0,250,0,0],               // SPACE
   0x41: [701,1,722,17,703],          // LATIN CAPITAL LETTER A
   0x42: [683,1,667,11,620],          // LATIN CAPITAL LETTER B

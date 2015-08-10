@@ -33,8 +33,7 @@
 
   var EVENT, TOUCH, HOVER; // filled in later
 
-  var CENTERLINE = .25,
-      STRUTHEIGHT = 1,
+  var STRUTHEIGHT = 1,
       HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
 
   var STYLES = {
@@ -871,7 +870,7 @@
       char: function (item,node,bbox,state,m) {
         var font = item.font;
         if (state.className && font.className !== state.className) this.flushText(node,state);
-        if (!state.a) state.a = (font.centerline || CENTERLINE);
+        if (!state.a) state.a = font.centerline/1000;
         if (state.a > (bbox.a||0)) bbox.a = state.a;
         var C = font[item.n];
         state.text += C.c; state.className = font.className;
@@ -996,7 +995,7 @@
         var s = 1.1*(H - h)/k + .3;  // space to cover by extender
         s /= (ebox.h+ebox.d);        // scale factor;
         this.Transform(ext,
-          "translateY("+CHTML.Em(-ebox.d+.25-s*CENTERLINE)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
+          "translateY("+CHTML.Em(-ebox.d+.25-s*ebox.a)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
           "left "+CHTML.Em(ebox.d)
         );
         ext.style.paddingTop=ext.style.paddingBottom = 0;
@@ -1073,7 +1072,7 @@
       this.adjustHeights([left,ext,mid,ext2,right],hbox);
       if (ebox.D) ebox.d = ebox.D;
       hbox.t = hbox.h; hbox.b = hbox.d;
-      var mt = ebox.h - hbox.h - CENTERLINE, mb = ebox.d - hbox.d + CENTERLINE;
+      var mt = ebox.h - hbox.h - ebox.a, mb = ebox.d - hbox.d + ebox.a;
       if (mt) node.style.marginTop = CHTML.Em(mt);
       if (mb) node.style.marginBottom = CHTML.Em(mb);
       hbox.h = ebox.h; hbox.d = ebox.d;
