@@ -24,6 +24,7 @@ var font = 'MathJax_Fraktur';
 
 CHTML.FONTDATA.FONTS[font] = {
   className: CHTML.FONTDATA.familyName(font),
+  centerline: 258, ascent: 740, descent: 224,
   0x20: [0,0,250,0,0],               // SPACE
   0x21: [689,12,296,91,204],         // EXCLAMATION MARK
   0x22: [695,-432,215,8,196],        // QUOTATION MARK

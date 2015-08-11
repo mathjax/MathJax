@@ -24,6 +24,7 @@ var font = 'MathJax_Script';
 
 CHTML.FONTDATA.FONTS[font] = {
   className: CHTML.FONTDATA.familyName(font),
+  centerline: 211, ascent: 735, descent: 314,
   skew: {
     0x41: 0.389,
     0x42: 0.194,

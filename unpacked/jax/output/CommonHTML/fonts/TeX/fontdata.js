@@ -607,6 +607,7 @@
   CHTML.FONTDATA = CHTML.FONTDEF["TeX"];
 
   CHTML.FONTDATA.FONTS['MathJax_Caligraphic'] = {
+    centerline: 287, ascent: 789, descent: 216,
     skew: {
       0x41: 0.194,
       0x42: 0.139,
@@ -676,6 +677,7 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Main-Bold'] = {
+    centerline: 342, ascent: 951, descent: 267,
     weight: 'bold',
     file: "TeX/Main-Bold.js",
     Extra: [
@@ -817,6 +819,7 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Main-Italic'] = {
+    centerline: 250, ascent: 750, descent: 250,
     style: 'italic',
     0x20: [0,0,250,0,0],               // SPACE
     0x21: [716,0,307,107,380],         // EXCLAMATION MARK
@@ -941,6 +944,7 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Main'] = {
+    centerline: 314, ascent: 900, descent: 272,
     skew: {
       0x131: 0.0278,
       0x237: 0.0833,
@@ -1238,6 +1242,7 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Math-Italic'] = {
+    centerline: 250, ascent: 717, descent: 218,
     style: 'italic',
     skew: {
       0x41: 0.139,
@@ -1416,6 +1421,7 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Size1'] = {
+    centerline: 250, ascent: 850, descent: 350,
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [850,349,458,152,422],       // LEFT PARENTHESIS
     0x29: [850,349,458,35,305],        // RIGHT PARENTHESIS
@@ -1464,6 +1470,7 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Size2'] = {
+    centerline: 249, ascent: 1360, descent: 862,
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [1150,649,597,180,561],      // LEFT PARENTHESIS
     0x29: [1150,649,597,35,416],       // RIGHT PARENTHESIS
@@ -1504,6 +1511,7 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Size3'] = {
+    centerline: 250, ascent: 1450, descent: 950,
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [1450,949,736,209,701],      // LEFT PARENTHESIS
     0x29: [1450,949,736,34,526],       // RIGHT PARENTHESIS
@@ -1528,6 +1536,7 @@
   };
 
   CHTML.FONTDATA.FONTS['MathJax_Size4'] = {
+    centerline: 250, ascent: 1750, descent: 1250,
     0x20: [0,0,250,0,0],               // SPACE
     0x28: [1750,1249,792,237,758],     // LEFT PARENTHESIS
     0x29: [1750,1249,792,33,554],      // RIGHT PARENTHESIS

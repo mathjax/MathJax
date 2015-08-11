@@ -33,9 +33,8 @@
 
   var EVENT, TOUCH, HOVER; // filled in later
 
-  var CENTERLINE = .25,
-      STRUTHEIGHT = 1,
-      AFUZZ = .08, HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
+  var STRUTHEIGHT = 1,
+      HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
 
   var STYLES = {
     "mjx-chtml": {
@@ -135,7 +134,7 @@
       "font-size":"500%"
     },
     "mjx-chartest mjx-char": {display:"inline"},
-    "mjx-chartest mjx-box": {"padding-top": "500px"},
+    "mjx-chartest mjx-box": {"padding-top": "1000px"},
 
     ".MJXc-processing": {
       visibility: "hidden", position:"fixed",
@@ -801,9 +800,8 @@
     getUnknownChar: function (unknown,n) {
       var c = this.unicodeChar(n);
       var HDW = this.getHDW(c,unknown.className);
-      var a = (HDW.h-HDW.d)/2+AFUZZ; // ### FIXME:  is this really the axis of the surrounding text?
       // ### FIXME:  provide a means of setting the height and depth for individual characters
-      unknown[n] = [.8,.2,HDW.w,0,HDW.w,{a:a, A:HDW.h-a, d:HDW.d}];
+      unknown[n] = [.8,.2,HDW.w,0,HDW.w,{a:(HDW.h-HDW.d)/2, h:HDW.h, d:HDW.d}];
       unknown[n].c = c;
     },
     styledText: function (variant,text) {
@@ -817,8 +815,7 @@
       var unknown = this.STYLEDTEXT[id];
       if (!unknown["_"+text]) {
         var HDW = this.getHDW(text,variant.className||"",style);
-        var a = (HDW.h-HDW.d)/2+AFUZZ; // ### FIXME:  is this really the axis of the surrounding text?
-        unknown["_"+text] = [.8,.2,HDW.w,0,HDW.w,{a:a, A:HDW.h-a, d:HDW.d}];
+        unknown["_"+text] = [.8,.2,HDW.w,0,HDW.w,{a:(HDW.h-HDW.d)/2, h:HDW.h, d:HDW.d}];
         unknown["_"+text].c = text;
       }
       return {type:"unknown", n:"_"+text, font:unknown, style:style, rscale:variant.rscale};
@@ -832,8 +829,8 @@
     getHDW: function (c,name,styles) {
       var test1 = HTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name,style:styles},[["mjx-char",{},[c]]]);
       var test2 = HTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name,style:styles},[["mjx-char",{},[c,["mjx-box"]]]]);
-      var em = CHTML.outerEm;
-      var d = (test2.offsetHeight-500)/em;
+      var em = 5*CHTML.em;
+      var d = (test2.offsetHeight-1000)/em;
       var w = test1.offsetWidth/em, h = test1.offsetHeight/em - d;
       CHTML.CHTMLnode.removeChild(test1);
       CHTML.CHTMLnode.removeChild(test2);
@@ -848,7 +845,7 @@
     //  the updated bounding box.
     //
     addCharList: function (node,list,bbox) {
-      var state = {text:"", className:null};
+      var state = {text:"", className:null, a:0};
       for (var i = 0, m = list.length; i < m; i++) {
         var item = list[i];
         if (this.charList[item.type]) (this.charList[item.type])(item,node,bbox,state,m);
@@ -861,6 +858,7 @@
           node.className = state.className;
         }
       }
+      bbox.b = (state.flushed ? 0 : bbox.a);
     },
     //
     //  The various item types are processed by these
@@ -873,6 +871,8 @@
       char: function (item,node,bbox,state,m) {
         var font = item.font;
         if (state.className && font.className !== state.className) this.flushText(node,state);
+        if (!state.a) state.a = font.centerline/1000;
+        if (state.a > (bbox.a||0)) bbox.a = state.a;
         var C = font[item.n];
         state.text += C.c; state.className = font.className;
         if (bbox.h < C[0]+HFUZZ) bbox.t = bbox.h = C[0]+HFUZZ;
@@ -898,13 +898,10 @@
       //
       unknown: function (item,node,bbox,state) {
         this.char(item,node,bbox,state,0);
-        node = this.flushText(node,state,item.style);
-        node.style.lineHeight = "normal";
         var C = item.font[item.n];
-        node.style.marginTop = CHTML.Em(-C[5].A-HFUZZ);
-        node.style.marginBottom = CHTML.Em(-C[5].d-DFUZZ);
+        if (C[5].a) {state.a = C[5].a; if (state.a > bbox.a) bbox.a = state.a}
+        node = this.flushText(node,state,item.style);
         node.style.width = CHTML.Em(C[2]);
-        if (!bbox.a || C[5].a > bbox.a) bbox.a = C[5].a;
       },
       //
       //  Put the pending text into a box of the class, and
@@ -913,7 +910,8 @@
       flushText: function (node,state,style) {
         node = HTML.addElement(node,"mjx-charbox",
           {className:state.className,style:style},[state.text]);
-        state.text = ""; state.className = null;
+        if (state.a) node.style.paddingBottom = CHTML.Em(state.a);
+        state.text = ""; state.className = null; state.a = 0; state.flushed = true;
         return node;
       }
     },
@@ -941,10 +939,9 @@
       }
       if (list.length) this.addCharList(node.firstChild,list,bbox);
       bbox.clean();
-      if (bbox.a == null) bbox.a = CENTERLINE;
       if (bbox.d < 0) {bbox.D = bbox.d; bbox.d = 0}
       if (bbox.h - bbox.a) node.firstChild.style[bbox.h - bbox.a < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h-bbox.a);
-      if (bbox.d + bbox.a) node.firstChild.style[bbox.d + bbox.a < 0 ? "marginBottom": "paddingBottom"] = this.Em(bbox.d+bbox.a);
+      if (bbox.d > -bbox.b) node.firstChild.style.paddingBottom = this.Em(bbox.d+bbox.b);
       return bbox;
     },
 
@@ -999,7 +996,7 @@
         var s = 1.1*(H - h)/k + .3;  // space to cover by extender
         s /= (ebox.h+ebox.d);        // scale factor;
         this.Transform(ext,
-          "translateY("+CHTML.Em(-ebox.d+.25-s*CENTERLINE)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
+          "translateY("+CHTML.Em(-ebox.d+.25-s*ebox.a)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
           "left "+CHTML.Em(ebox.d)
         );
         ext.style.paddingTop=ext.style.paddingBottom = 0;
@@ -1076,7 +1073,7 @@
       this.adjustHeights([left,ext,mid,ext2,right],hbox);
       if (ebox.D) ebox.d = ebox.D;
       hbox.t = hbox.h; hbox.b = hbox.d;
-      var mt = ebox.h - hbox.h - CENTERLINE, mb = ebox.d - hbox.d + CENTERLINE;
+      var mt = ebox.h - hbox.h - ebox.a, mb = ebox.d - hbox.d + ebox.a;
       if (mt) node.style.marginTop = CHTML.Em(mt);
       if (mb) node.style.marginBottom = CHTML.Em(mb);
       hbox.h = ebox.h; hbox.d = ebox.d;

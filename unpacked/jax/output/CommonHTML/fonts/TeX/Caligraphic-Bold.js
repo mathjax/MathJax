@@ -24,6 +24,7 @@ var font = 'MathJax_Caligraphic-Bold';
 
 CHTML.FONTDATA.FONTS[font] = {
   className: CHTML.FONTDATA.familyName(font),
+  centerline: 315, ascent: 840, descent: 211,
   weight: 'bold',
   skew: {
     0x41: 0.224,
