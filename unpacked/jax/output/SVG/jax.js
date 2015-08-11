@@ -1074,14 +1074,14 @@
 	var variant = this.SVGgetVariant();
         var svg = this.SVG(); this.SVGgetScale(svg);
         this.SVGhandleSpace(svg);
-	for (var i = 0, m = this.data.length; i < m; i++) {
+        for (var i = 0, m = this.data.length; i < m; i++) {
           if (this.data[i]) {
             var child = svg.Add(this.data[i].toSVG(variant,svg.scale),svg.w,0,true);
             if (child.skew) {svg.skew = child.skew}
           }
         }
         svg.Clean(); var text = this.data.join("");
-	if (svg.skew && text.length !== 1) {delete svg.skew}
+        if (svg.skew && text.length !== 1) {delete svg.skew}
         if (svg.r > svg.w && text.length === 1 && !variant.noIC)
           {svg.ic = svg.r - svg.w; svg.w = svg.r}
 	this.SVGhandleColor(svg);
@@ -1402,6 +1402,12 @@
       SVGlineBreaks: function () {return false}
       
     },{
+      SVGemptySVG: function () {
+        var svg = this.SVG();
+        svg.Clean();
+        this.SVGsaveData(svg);
+	return svg;
+      },
       SVGautoload: function () {
 	var file = SVG.autoloadDir+"/"+this.type+".js";
 	HUB.RestartAfter(AJAX.Require(file));
@@ -2141,6 +2147,14 @@
 	return svg;
       }
     });
+
+    //
+    //  Make sure these don't generate output
+    //
+    MML.maligngroup.Augment({toSVG: MML.mbase.SVGemptySVG});
+    MML.malignmark.Augment({toSVG: MML.mbase.SVGemptySVG});
+    MML.mprescripts.Augment({toSVG: MML.mbase.SVGemptySVG});
+    MML.none.Augment({toSVG: MML.mbase.SVGemptySVG});
 
     //
     //  Loading isn't complete until the element jax is modified,
