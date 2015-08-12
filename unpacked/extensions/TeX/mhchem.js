@@ -124,7 +124,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         else if (c.match(/[0-9]/)) {this.ParseNumber()}
         else {this["Parse"+(this.ParseTable[c]||"Other")](c)}
       }
-      this.FinishAtom();
+      this.FinishAtom(true);
       return this.TEX;
     },
     
@@ -301,21 +301,24 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     //  Handle the super and subscripts for an atom
     //  
-    FinishAtom: function () {
+    FinishAtom: function (force) {
       if (this.sup || this.sub || this.presup || this.presub) {
-        if (!this.atom && this.tex === "") {
+        if (!this.atom && this.tex === "" && !force) {
           this.presup = this.sup, this.presub = this.sub;  // save for later
           this.sub = this.sup = "";
           return;
         }
         if (this.sub && !this.sup) {this.sup = "\\Space{0pt}{0pt}{.2em}"} // forces subscripts to align properly
-        if (this.presup || this.presub) {
+        if ((this.presup || this.presub) && this.tex !== "{") {
           if (!this.presup && !this.sup) {this.presup = "\\Space{0pt}{0pt}{.2em}"}
           this.tex = "\\CEprescripts{"+(this.presub||"\\CEnone")+"}{"+(this.presup||"\\CEnone")+"}"
-                   + "{"+this.tex+"}{"+(this.sub||"\\CEnone")+"}{"+(this.sup||"\\CEnone")+"}";
+                   + "{"+(this.tex !== "}" ? this.tex : "")+"}"
+                   +" {"+(this.sub||"\\CEnone")+"}{"+(this.sup||"\\CEnone")+"}"
+                   + (this.tex === "}" ? "}" : "");
           this.presub = this.presup = "";
         } else {
-          this.tex += "^{"+this.sup+"}_{"+this.sub+"}";
+          if (this.sup) this.tex += "^{"+this.sup+"}";
+          if (this.sub) this.tex += "_{"+this.sub+"}";
         }
         this.sup = this.sub = "";
       }
