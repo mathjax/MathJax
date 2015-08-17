@@ -303,12 +303,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //  
     FinishAtom: function (force) {
       if (this.sup || this.sub || this.presup || this.presub) {
-        if (!force && !this.atom && (this.tex === "" || this.tex === "{" ||
-             (this.tex === "}" && this.TEX.substr(-1) === "{"))) {
-          this.presup = this.sup, this.presub = this.sub;  // save for later
-          this.sub = this.sup = "";
-          this.TEX += this.tex; this.tex = "";
-          return;
+        if (!force && !this.atom) {
+          if (this.tex === "" && !this.sup && !this.sub) return;
+          if (!this.presup && !this.presub &&
+                (this.tex === "" || this.tex === "{" ||
+                (this.tex === "}" && this.TEX.substr(-1) === "{"))) {
+            this.presup = this.sup, this.presub = this.sub;  // save for later
+            this.sub = this.sup = "";
+            this.TEX += this.tex; this.tex = "";
+            return;
+          }
         }
         if (this.sub && !this.sup) {this.sup = "\\Space{0pt}{0pt}{.2em}"} // forces subscripts to align properly
         if ((this.presup || this.presub) && this.tex !== "{") {
