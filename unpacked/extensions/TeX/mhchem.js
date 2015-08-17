@@ -303,9 +303,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //  
     FinishAtom: function (force) {
       if (this.sup || this.sub || this.presup || this.presub) {
-        if (!this.atom && this.tex === "" && !force) {
+        if (!force && !this.atom && (this.tex === "" || this.tex === "{" ||
+             (this.tex === "}" && this.TEX.substr(-1) === "{"))) {
           this.presup = this.sup, this.presub = this.sub;  // save for later
           this.sub = this.sup = "";
+          this.TEX += this.tex; this.tex = "";
           return;
         }
         if (this.sub && !this.sup) {this.sup = "\\Space{0pt}{0pt}{.2em}"} // forces subscripts to align properly
@@ -313,7 +315,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           if (!this.presup && !this.sup) {this.presup = "\\Space{0pt}{0pt}{.2em}"}
           this.tex = "\\CEprescripts{"+(this.presub||"\\CEnone")+"}{"+(this.presup||"\\CEnone")+"}"
                    + "{"+(this.tex !== "}" ? this.tex : "")+"}"
-                   +" {"+(this.sub||"\\CEnone")+"}{"+(this.sup||"\\CEnone")+"}"
+                   + "{"+(this.sub||"\\CEnone")+"}{"+(this.sup||"\\CEnone")+"}"
                    + (this.tex === "}" ? "}" : "");
           this.presub = this.presup = "";
         } else {
