@@ -26,13 +26,13 @@
  *  limitations under the License.
  */
 
-(function (HUB,HTML) {
+(function (HUB,HTML,BROWSER) {
   
   var SETTINGS = HUB.config.menuSettings;
-  var msieColorBug = MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8;
+  var msieColorBug = BROWSER.isMSIE && (document.documentMode||0) < 8;
 
   var FHTMLpreview = MathJax.Extension["FHTML-preview"] = {
-    version: "2.5.0",
+    version: "2.5.3",
 
     //
     //  Configuration for the chunking of the main output
@@ -43,7 +43,7 @@
       color: "inherit!important",
       updateTime: 30, updateDelay: 6,
       messageStyle: "none",
-      disabled: false
+      disabled: BROWSER.isMSIE && !BROWSER.versionAtLeast("8.0")
     }),
 
     //
@@ -52,17 +52,15 @@
     Config: function () {
       if (HUB.config["CHTML-preview"])
         MathJax.Hub.Config({"FHTML-preview": HUB.config["CHTML-preview"]});
-      HUB.Config({
-        "HTML-CSS": this.config.Chunks,
-        CommonHTML: this.config.Chunks,
-        SVG: this.config.Chunks
-      });
-      MathJax.Ajax.Styles({".MathJax_Preview .MJXf-math":{color:this.config.color}});
       var update, delay, style, done, saved;
       var config = this.config;
 
       if (!config.disabled && SETTINGS.FHTMLpreview == null)
         HUB.Config({menuSettings:{FHTMLpreview:true}});
+      if (SETTINGS.FHTMLpreview) {
+        MathJax.Ajax.Styles({".MathJax_Preview .MJXf-math":{color:config.color}});
+        HUB.Config({"HTML-CSS": config.Chunks, CommonHTML: config.Chunks, SVG: config.Chunks});
+      }
       HUB.Register.MessageHook("Begin Math Output",function () {
         if (!done && SETTINGS.FHTMLpreview && SETTINGS.renderer !== "FastHTML") {
           update = HUB.processUpdateTime; delay = HUB.processUpdateDelay;
@@ -138,7 +136,7 @@
   
   HUB.Startup.signal.Post("FHTML-preview Ready");
 
-})(MathJax.Hub,MathJax.HTML);
+})(MathJax.Hub,MathJax.HTML,MathJax.Hub.Browser);
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/FHTML-preview.js");
 
