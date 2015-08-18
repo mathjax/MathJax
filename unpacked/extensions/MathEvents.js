@@ -142,7 +142,20 @@
       }
       return false;
     },
-
+    
+    //
+    // Keydown event handler. Should only fire on Space key.
+    //
+    // TODO: (sorge) Fit this into the Handler function.
+    // 
+    Keydown: function (event, math) {
+      var jax = OUTPUT[this.jaxID];
+      if (event.keyCode === 32) {
+        // TODO: Put the focus on the first element.
+        EVENT.ContextMenu(event, this);
+      };
+    },
+    
     //
     //  Load the contextual menu code, if needed, and post the menu
     //
@@ -178,7 +191,7 @@
         load = LOCALE.loadDomain("MathMenu");
         if (!load) {
           MENU.jax = jax;
-          var source = MENU.menu.Find("Show Math As").menu;
+          var source = MENU.menu.Find("Show Math As").submenu;
 	  source.items[0].name = jax.sourceMenuTitle;
 	  source.items[0].format = (jax.sourceMenuFormat||"MathML");
           source.items[1].name = INPUT[jax.inputJax].sourceMenuTitle;
@@ -189,7 +202,7 @@
           // items accordingly.
           //
           var annotations = source.items[2]; annotations.disabled = true;
-          var annotationItems = annotations.menu.items;
+          var annotationItems = annotations.submenu.items;
           annotationList = MathJax.Hub.Config.semanticsAnnotations;
           for (var i = 0, m = annotationItems.length; i < m; i++) {
             var name = annotationItems[i].name[1]

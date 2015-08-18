@@ -29,7 +29,7 @@
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
   var VERSION = "2.5.0";
 
-  var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
+  var SIGNAL = MathJax.Callback.Signal("menu");  // signal for menu events
   
   MathJax.Extension.MathMenu = {
     version: VERSION,
@@ -234,7 +234,7 @@
       var menu = HTML.Element("div",{
         onmouseup: MENU.Mouseup, ondblclick: FALSE,
         ondragstart: FALSE, onselectstart: FALSE, oncontextmenu: FALSE,
-        menuItem: this, className: "MathJax_Menu"
+        menuItem: this, className: "MathJax_Menu", onkeydown: MENU.Keydown
       });
       if (!forceLTR) {MathJax.Localization.setCSS(menu)}
 
@@ -248,7 +248,6 @@
       
       div.appendChild(menu);
       this.posted = true;
-      
       menu.style.width = (menu.offsetWidth+2) + "px";
       var x = event.pageX, y = event.pageY;
       if (!x && !y) {
@@ -284,6 +283,7 @@
       menu.style.left = x+"px"; menu.style.top = y+"px";
       
       if (document.selection && document.selection.empty) {document.selection.empty()}
+      MENU.Focus(event, menu);
       return FALSE(event);
     },
 
@@ -301,6 +301,7 @@
         delete MENU.jax.hover.nofade;
         HOVER.UnHover(MENU.jax);
       }
+      MENU.Unfocus();
       return FALSE(event);
     },
 
@@ -314,8 +315,8 @@
       for (var i = 0, m = this.items.length; i < m; i++) {
         if (this.items[i].name[n] === name) {
           if (names.length) {
-            if (!this.items[i].menu) {return null}
-            return this.items[i].menu.FindN(n,names[0],names.slice(1));
+            if (!this.items[i].submenu) {return null}
+            return this.items[i].submenu.FindN(n,names[0],names.slice(1));
           }
           return this.items[i];
         }
@@ -332,23 +333,74 @@
       for (var i = 0, m = this.items.length; i < m; i++)
         {if (this.items[i].name[n] === name) {return i}}
       return null;
-    }
+    },
     
+    /*
+     * Moving in the list of items.
+     */
+    Up: function(item) {
+      var index = this.items.indexOf(item);
+      if (index === -1) {
+        return;
+      }
+      do {
+        index--;
+        if (index < 0) {
+          index = this.items.length - 1;
+        }
+      } while (!this.items[index].GetNode().role);
+      MENU.UnfocusItem(item);
+      MENU.FocusItem(this.items[index]);
+    },
+    Down: function(item) {
+      var index = this.items.indexOf(item);
+      if (index === -1) {
+        return;
+      }
+      do {
+        index++;
+        if (index >= this.items.length) {
+          index = 0;
+        }
+      } while (!this.items[index].GetNode().role);
+      MENU.UnfocusItem(item);
+      MENU.FocusItem(this.items[index]);
+    }
+
   },{
     
     config: CONFIG,
 
     div: null,     // the DOM elements for the menu and submenus
 
-    Close:      function (event)
-      {return MENU.Event(event,this.menu||this.parentNode,(this.menu?"Touchend":"Remove"))},
+    /*************************************************************/
+    /*
+     *  Enum element for key codes.
+     */
+    KEY: {
+      RETURN: 13,
+      ESCAPE: 27,
+      SPACE: 32,
+      LEFT: 37,
+      UP: 38,
+      RIGHT: 39,
+      DOWN: 40
+    },
+
     Remove:     function (event) {return MENU.Event(event,this,"Remove")},
     Mouseover:  function (event) {return MENU.Event(event,this,"Mouseover")},
     Mouseout:   function (event) {return MENU.Event(event,this,"Mouseout")},
     Mousedown:  function (event) {return MENU.Event(event,this,"Mousedown")},
     Mouseup:    function (event) {return MENU.Event(event,this,"Mouseup")},
+    Keydown:    function (event) {return MENU.Event(event,this,"Keydown")},
+    /*
+     *  Events for mobile devices.
+     */
     Touchstart: function (event) {return MENU.Event(event,this,"Touchstart")},
     Touchend:   function (event) {return MENU.Event(event,this,"Touchend")},
+    Close:      function (event) {
+      return MENU.Event(event,this.menu||this.parentNode,(this.menu?"Touchend":"Remove"));
+    },
     Event: function (event,menu,type,force) {
       if (MENU.skipMouseover && type === "Mouseover" && !force) {return FALSE(event)}
       if (MENU.skipUp) {
@@ -361,7 +413,6 @@
       if (item && item[type]) {return item[type](event,menu)}
       return null;
     },
-
     /*
      *  Style for the background DIV
      */
@@ -400,7 +451,57 @@
         bg.style.height = document.body.scrollHeight + "px";
       }
     },
+
+
+    /*************************************************************/
+    /*
+     *  Keyboard navigation of menu.
+     */
+    jaxs: [],
+    hasJaxs: false,
+    oldJax: null,
+
+    GetJaxs: function() {
+      // input.id + adding frame to get the elements.
+      var nodes = document.getElementsByClassName('MathJax');
+      for (var i = 0, node; node = nodes[i]; i++) {
+        MENU.jaxs.push(node);
+      }
+    },
+    Focus: function(event, menu) {
+      console.log('focusing...');
+      if (!MENU.hasJaxs) {
+        MENU.GetJaxs();
+      }
+      MENU.oldJax = event.srcElement;
+      for (var j = 0, jax; jax = MENU.jaxs[j]; j++) {
+        jax.tabIndex = -1;
+      }
+      MENU.FocusItem(MENU.menu.items[0]);
+      console.log('end focusing...');
+    },
+    FocusItem: function(item) {
+      console.log('Focusing on item');
+      console.log(item);
+      var node = item.GetNode();
+      node.tabIndex = 0;
+      item.Activate(node);
+      node.focus();
+    },
+    Unfocus: function() {
+      for (var j = 0, jax; jax = MENU.jaxs[j]; j++) {
+        jax.tabIndex = 0;
+      }
+      MENU.oldJax.focus();
+      MENU.oldJax = null;
+    },
+    UnfocusItem: function(item) {
+      var node = item.GetNode();
+      node.tabIndex = -1;
+      item.Deactivate(node);
+    },
     
+
     saveCookie: function () {HTML.Cookie.Set("menu",this.cookie)},
     getCookie: function () {this.cookie = HTML.Cookie.Get("menu")}
 
@@ -411,9 +512,11 @@
    *  Abstract class of menu items.
    */
   var ITEM = MENU.ITEM = MathJax.Object.Subclass({
-    name: "", // the menu item's label as [id,label] pair
-    node: null,
 
+    name: "", // The menu item's label as [id,label] pair.
+    node: null,  // The HTML node of the item.
+    menu: null,  // The parent menu containing that item.
+    
     /*
      *  Accessor method for node.
      */
@@ -426,7 +529,6 @@
     SetNode: function(node) {
       this.node = node;
     },
-
     Attributes: function() {
       return {onmouseup: MENU.Mouseup,
               ondragstart: FALSE, onselectstart: FALSE, onselectend: FALSE,
@@ -439,21 +541,27 @@
         var label = this.Label(def,menu);
         var node = HTML.addElement(menu, "div", def, label);
         this.SetNode(node);
+        this.menu = menu;
       }
     },
     Name: function () {return _(this.name[0],this.name[1])},
 
     Mouseover: function (event,menu) {
       if (!this.disabled) {this.Activate(menu)}
-      if (!this.menu || !this.menu.posted) {
+      if (!this.submenu || !this.submenu.posted) {
+        console.log('This is not a submenu method!');
         var menus = document.getElementById("MathJax_MenuFrame").childNodes,
-            items = menu.parentNode.childNodes;
+            items = this.menu.childNodes;
         for (var i = 0, m = items.length; i < m; i++) {
           var item = items[i].menuItem;
-          if (item && item.menu && item.menu.posted) {item.Deactivate(items[i])}
+          // Deactivates submenu items.
+          if (item && item.submenu && item.submenu.posted) {
+            item.Deactivate(items[i]);
+          }
         }
+        // Removes all submenus.
         m = menus.length-1;
-        while (m >= 0 && menu.parentNode.menuItem !== menus[m].menuItem) {
+        while (m >= 0 && this.menu.menuItem !== menus[m].menuItem) {
           menus[m].menuItem.posted = false;
           menus[m].parentNode.removeChild(menus[m]);
           m--;
@@ -462,7 +570,7 @@
       }
     },
     Mouseout: function (event,menu) {
-      if (!this.menu || !this.menu.posted) {this.Deactivate(menu)}
+      if (!this.submenu || !this.submenu.posted) {this.Deactivate(menu)}
       if (this.timer) {clearTimeout(this.timer); delete this.timer}
     },
     Mouseup: function (event,menu) {return this.Remove(event,menu)},
@@ -485,7 +593,10 @@
       return menu.Remove(event,menu);
     },
 
-    Activate: function (menu) {this.Deactivate(menu); menu.className += " MathJax_MenuActive"},
+    Activate: function (menu) {
+      this.Deactivate(menu);
+      menu.className += " MathJax_MenuActive";
+    },
     Deactivate: function (menu) {menu.className = menu.className.replace(/ MathJax_MenuActive/,"")},
 
     With: function (def) {if (def) {HUB.Insert(this,def)}; return this},
@@ -509,8 +620,30 @@
       }
       var augdef = {onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
                     onmousedown: MENU.Mousedown, role: this.role,
+                    onkeydown: MENU.Keydown, tabIndex: -1,
                     'aria-disabled': !!this.disabled};
       return MathJax.Hub.Insert(def, augdef);
+    },
+    Keydown: function(event, menu) {
+      console.log('MENUEntry');
+      switch (event.keyCode) {
+      case MENU.KEY.ESCAPE:
+        this.Remove(event, menu);
+        break;
+      case MENU.KEY.UP:
+        menu.parentNode.menuItem.Up(menu.menuItem);
+        break;
+      case MENU.KEY.DOWN:
+        menu.parentNode.menuItem.Down(menu.menuItem);
+        break;
+      default:
+        break;
+      }
+      return FALSE(event);
+    },
+    Remove: function(event, menu) {
+      MENU.UnfocusItem(this);
+      this.SUPER(arguments).Remove.apply(this, arguments);
     }
   });
   
@@ -536,6 +669,13 @@
       }
       return FALSE(event);
     }
+    // Keydown: function(event, menu) {
+    //   console.log('here');
+    //   if (event.keyCode === MENU.KEY.ESCAPE) {
+    //     this.Remove(event, menu);
+    //   }
+    //   return FALSE(event);
+    // }
   });
 
   /*************************************************************/
@@ -543,7 +683,7 @@
    *  A menu item that posts a submenu
    */
   MENU.ITEM.SUBMENU = MENU.ENTRY.Subclass({
-    menu: null,        // the submenu
+    submenu: null,        // the submenu
     marker: "\u25BA",  // the submenu arrow
     markerRTL: "\u25C4", // the submenu arrow for RTL
 
@@ -551,10 +691,10 @@
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; var i = 1;
       if (!(def instanceof MENU.ITEM)) {this.With(def), i++}
-      this.menu = MENU.apply(MENU,[].slice.call(arguments,i));
+      this.submenu = MENU.apply(MENU,[].slice.call(arguments,i));
     },
     Label: function (def,menu) {
-      this.menu.posted = false;
+      this.submenu.posted = false;
       return [this.Name()+" ",["span",{
         className:"MathJax_MenuArrow" + this.rtlClass()
       },[this.isRTL() ? this.markerRTL : this.marker]]];
@@ -565,16 +705,16 @@
       this.timer = setTimeout(CALLBACK(["Mouseup",this,event,menu]),CONFIG.delay);
     },
     Touchend: function (event,menu) {
-      var forceout = this.menu.posted;
+      var forceout = this.submenu.posted;
       var result = this.SUPER(arguments).Touchend.apply(this,arguments);
       if (forceout) {this.Deactivate(menu); delete ITEM.lastItem; delete ITEM.lastMenu}
       return result;
     },
     Mouseup: function (event,menu) {
       if (!this.disabled) {
-        if (!this.menu.posted) {
+        if (!this.submenu.posted) {
           if (this.timer) {clearTimeout(this.timer); delete this.timer}
-          this.menu.Post(event,menu,this.ltr);
+          this.submenu.Post(event,menu,this.ltr);
         } else {
          var menus = document.getElementById("MathJax_MenuFrame").childNodes,
               m = menus.length-1;
@@ -582,13 +722,31 @@
             var child = menus[m];
             child.menuItem.posted = false;
             child.parentNode.removeChild(child);
-            if (child.menuItem === this.menu) {break};
+            if (child.menuItem === this.submenu) {break};
             m--;
           }
         }
       }
       return FALSE(event);
+    },
+    Keydown: function(event, menu) {
+      console.log('MENUSubmenu');
+      switch (event.keyCode) {
+      case MENU.KEY.RIGHT:
+      case MENU.KEY.SPACE:
+        if (!this.submenu.posted) {
+          this.submenu.Post(event,menu,this.ltr);
+        }
+        break;
+      case MENU.KEY.LEFT:
+        menu.parentNode.menuItem.Down(menu.menuItem);
+        break;
+      default:
+        break;
+      }
+      return this.SUPER(arguments).Keydown.apply(this, arguments);
     }
+
   });
 
   /*************************************************************/
@@ -1056,7 +1214,7 @@
   //
   MENU.CreateLocaleMenu = function () {
     if (!MENU.menu) return;
-    var menu = MENU.menu.Find("Language").menu, items = menu.items;
+    var menu = MENU.menu.Find("Language").submenu, items = menu.items;
     //
     //  Get the names of the languages and sort them
     //
@@ -1082,7 +1240,7 @@
   //
   MENU.CreateAnnotationMenu = function () {
     if (!MENU.menu) return;
-    var menu = MENU.menu.Find("Show Math As","Annotation").menu;
+    var menu = MENU.menu.Find("Show Math As","Annotation").submenu;
     var annotations = CONFIG.semanticsAnnotations;
     for (var a in annotations) {
       if (annotations.hasOwnProperty(a)) {
@@ -1197,7 +1355,7 @@
     if (MENU.isMobile) {
       (function () {
         var settings = CONFIG.settings;
-        var trigger = MENU.menu.Find("Math Settings","Zoom Trigger").menu;
+        var trigger = MENU.menu.Find("Math Settings","Zoom Trigger").submenu;
         trigger.items[0].disabled = trigger.items[1].disabled = true;
         if (settings.zoom === "Hover" || settings.zoom == "Click") {settings.zoom = "None"}
         trigger.items = trigger.items.slice(0,4);
