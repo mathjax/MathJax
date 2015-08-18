@@ -414,6 +414,19 @@
     name: "", // the menu item's label as [id,label] pair
     node: null,
 
+    /*
+     *  Accessor method for node.
+     */
+    GetNode: function() {
+      return this.node;
+    },
+    /*
+     *  Registers the HTML node of the menu item.
+     */
+    SetNode: function(node) {
+      this.node = node;
+    },
+
     Attributes: function() {
       return {onmouseup: MENU.Mouseup,
               ondragstart: FALSE, onselectstart: FALSE, onselectend: FALSE,
@@ -424,7 +437,8 @@
       if (!this.hidden) {
         var def = this.Attributes();
         var label = this.Label(def,menu);
-        this.node = HTML.addElement(menu, "div", def, label);
+        var node = HTML.addElement(menu, "div", def, label);
+        this.SetNode(node);
       }
     },
     Name: function () {return _(this.name[0],this.name[1])},
@@ -486,18 +500,18 @@
    */
   MENU.ENTRY = MENU.ITEM.Subclass({
 
+    role: "menuitem",  // Aria role.
+    
     Attributes: function() {
       var def = this.SUPER(arguments).Attributes.apply(this,arguments);
-      def.onmouseover =  MENU.Mouseover;
-      def.onmouseout = MENU.Mouseout;
-      def.onmousedown = MENU.Mousedown;
-      def.role = "menuitem";
       if (this.disabled) {
         def.className += " MathJax_MenuDisabled";
-        def["aria-disabled"] = true;
       }
-      return def;
-    },
+      var augdef = {onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
+                    onmousedown: MENU.Mousedown, role: this.role,
+                    'aria-disabled': !!this.disabled};
+      return MathJax.Hub.Insert(def, augdef);
+    }
   });
   
   /*************************************************************/
@@ -584,12 +598,8 @@
   MENU.ITEM.RADIO = MENU.ENTRY.Subclass({
     variable: null,     // the variable name
     marker: (isPC ? "\u25CF" : "\u2713"),   // the checkmark
-
-    Attributes: function() {
-      var def = this.SUPER(arguments).Attributes.apply(this,arguments);
-      def.role = "menuitemradio";
-      return def;
-    },
+    role: "menuitemradio",
+    
     Init: function (name,variable,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
@@ -626,12 +636,8 @@
   MENU.ITEM.CHECKBOX = MENU.ENTRY.Subclass({
     variable: null,     // the variable name
     marker: "\u2713",   // the checkmark
+    role: "menuitemcheckbox",
 
-    Attributes: function() {
-      var def = this.SUPER(arguments).Attributes.apply(this,arguments);
-      def.role = "menuitemcheckbox";
-      return def;
-    },
     Init: function (name,variable,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
