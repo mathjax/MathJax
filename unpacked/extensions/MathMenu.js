@@ -427,12 +427,14 @@
       this.node = node;
     },
 
-    Attributes: function() {
-      return {onmouseup: MENU.Mouseup,
-              ondragstart: FALSE, onselectstart: FALSE, onselectend: FALSE,
-              ontouchstart: MENU.Touchstart, ontouchend: MENU.Touchend,
-              className: "MathJax_MenuItem", menuItem: this};
-    },    
+    Attributes: function(def) {
+      return HUB.Insert(
+        {onmouseup: MENU.Mouseup,
+         ondragstart: FALSE, onselectstart: FALSE, onselectend: FALSE,
+         ontouchstart: MENU.Touchstart, ontouchend: MENU.Touchend,
+         className: "MathJax_MenuItem", menuItem: this},
+        def);
+    },
     Create: function (menu) {
       if (!this.hidden) {
         var def = this.Attributes();
@@ -503,14 +505,15 @@
     role: "menuitem",  // Aria role.
     
     Attributes: function() {
-      var def = this.SUPER(arguments).Attributes.apply(this,arguments);
+      var def = this.SUPER(arguments).Attributes.call(
+        this,
+        {onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
+         onmousedown: MENU.Mousedown, role: this.role,
+         'aria-disabled': !!this.disabled});
       if (this.disabled) {
         def.className += " MathJax_MenuDisabled";
       }
-      var augdef = {onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
-                    onmousedown: MENU.Mousedown, role: this.role,
-                    'aria-disabled': !!this.disabled};
-      return MathJax.Hub.Insert(def, augdef);
+      return def;
     }
   });
   
