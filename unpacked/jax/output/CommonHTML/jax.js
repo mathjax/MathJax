@@ -76,6 +76,8 @@
     "mjx-op":     {display:"block"},
     "mjx-under":  {display:"table-cell"},
     "mjx-over":   {display:"block"},
+    "mjx-over > *": {"padding-left":"0px!important", "padding-right":"0px!important"},
+    "mjx-under > *": {"padding-left":"0px!important", "padding-right":"0px!important"},
     
     "mjx-stack > mjx-sup": {display:"block"},
     "mjx-stack > mjx-sub": {display:"block"},
@@ -1201,6 +1203,7 @@
       if (this.r === -BIGDIMEN) this.r = 0;
       if (this.t === -BIGDIMEN) this.t = 0;
       if (this.b === -BIGDIMEN) this.b = 0;
+      if (this.D && this.d > 0) delete this.D;
     },
     rescale: function (scale) {
       this.w *= scale; this.h *= scale; this.d *= scale;
@@ -1217,8 +1220,9 @@
       if (x + scale*(cbox.w+(cbox.L||0)+(cbox.R||0)) > this.w)
         this.w  = x + scale*(cbox.w + (cbox.L||0) + (cbox.R||0));
       if (y + scale*cbox.h > this.h) this.h = y + scale*cbox.h;
+      if (cbox.D && (this.D == null || scale*cbox.D - y > this.D) && scale*cbox.D > this.d) this.D = scale*cbox.D - y;
+        else if (cbox.D == null && this.D) delete this.D;
       if (scale*cbox.d - y > this.d) this.d = scale*cbox.d - y;
-      if (cbox.D && (this.D == null || scale*cbox.D - y > this.D)) this.D = scale*cbox.D - y;
       if (y + scale*cbox.t > this.t) this.t = y + scale*cbox.t;
       if (scale*cbox.b - y > this.b) this.b = scale*cbox.b - y;
     },
@@ -1228,15 +1232,16 @@
       if (x + scale*cbox.l < this.l) this.l = x + scale*cbox.l;
       this.w += scale*(cbox.w+(cbox.L||0)+(cbox.R||0)) ;
       if (scale*cbox.h > this.h) this.h = scale*cbox.h;
+      if (cbox.D && (this.D == null || scale*cbox.D > this.D) && scale*cbox.D > this.d) this.D = scale*cbox.D;
+        else if (cbox.D == null && this.D) delete this.D;
       if (scale*cbox.d > this.d) this.d = scale*cbox.d;
-      if (cbox.D && (this.D == null || scale*cbox.D > this.D)) this.D = scale*cbox.D;
       if (scale*cbox.t > this.t) this.t = scale*cbox.t;
       if (scale*cbox.b > this.b) this.b = scale*cbox.b;
     },
     updateFrom: function (cbox) {
       this.h = cbox.h; this.d = cbox.d; this.w = cbox.w; this.r = cbox.r; this.l = cbox.l;
       this.t = cbox.t; this.b = cbox.b;
-      if (cbox.D) this.D = cbox.D;
+      if (cbox.D) this.D = cbox.D; else delete this.D;
     },
     adjust: function (m,x,X,M) {
       this[x] += CHTML.length2em(m);
