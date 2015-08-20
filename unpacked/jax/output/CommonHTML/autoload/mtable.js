@@ -488,7 +488,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       var h = state.HH, d = state.DD;
       for (var i = 0, m = LABELS.length; i < m; i++) {
         if (!state.HD) {h = H[i]; d = D[i]}
-        if (LABELS[i]) {
+        if (LABELS[i] && this.data[i].data[0]) {
           labels.appendChild(LABELS[i]);
           var lbox = this.data[i].data[0].CHTML;
           T += h - lbox.h;

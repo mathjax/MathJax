@@ -2050,6 +2050,7 @@
             W = Math.max(W,scale*(bbox[i].w + (bbox[i].L||0) + (bbox[i].R||0)));
           }
         }
+        if (!bbox[this.base]) bbox[this.base] = CHTML.BBOX.empty();
         return W;
       },
       //
@@ -2208,7 +2209,8 @@
         //
         var boxes = [], BBOX = CHTML.BBOX.empty(this.CHTML);
         for (var i = 0, m = this.data.length; i < m; i++) boxes[i] = this.CHTMLbboxFor(i);
-        var bbox = boxes[this.base], sbox = boxes[this.sub], Sbox = boxes[this.sup];
+        var bbox = boxes[this.base] || CHTML.BBOX.empty(),
+            sbox = boxes[this.sub], Sbox = boxes[this.sup];
         var sscale = (sub ? sbox.rscale : 1), Sscale = (sup ? Sbox.rscale : 1);
         BBOX.combine(bbox,0,0);
         //
@@ -2369,7 +2371,7 @@
         node = this.CHTMLdefaultNode(node,{
           childNodes:["mjx-box","mjx-root"], forceChild:true, noBBox:true
         });
-        var base = node.firstChild;
+        var base = node.firstChild || HTML.Element("mjx-box");
         var sqrt = HTML.addElement(node,"mjx-box"); sqrt.appendChild(base);
         var bbox = this.CHTMLbboxFor(0), BBOX = CHTML.BBOX.empty(this.CHTML);
         var t = CHTML.TEX.rule_thickness, T = CHTML.TEX.surd_height, p = t, q, H;
