@@ -1151,6 +1151,13 @@
       if (unit === "mu") {return m / 18}                     // 18mu to an em for the scriptlevel
       return m*size;  // relative to given size (or 1em as default)
     },
+    thickness2em: function (length) {
+      var thick = CHTML.TEX.rule_thickness;
+      if (length === MML.LINETHICKNESS.MEDIUM) return thick;
+      if (length === MML.LINETHICKNESS.THIN)   return .67*thick;
+      if (length === MML.LINETHICKNESS.THICK)  return 1.67*thick;
+      return this.length2em(length,thick);
+    },
 
     Em: function (m) {
       if (Math.abs(m) < .001) return "0";
@@ -2301,7 +2308,7 @@
         //
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1),
             BBOX = CHTML.BBOX.empty(this.CHTML), nscale = nbox.rscale, dscale = dbox.rscale;
-        values.linethickness = Math.max(0,CHTML.length2em(values.linethickness||"0",0));
+        values.linethickness = Math.max(0,CHTML.thickness2em(values.linethickness||"0"));
         var mt = CHTML.TEX.min_rule_thickness/CHTML.em/BBOX.scale, a = CHTML.TEX.axis_height;
         var t = values.linethickness, p,q, u,v;
         if (values.bevelled) {
