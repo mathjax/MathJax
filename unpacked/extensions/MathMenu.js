@@ -666,10 +666,8 @@
       MENU.Focus(menu);
     },
     Deactivate: function (menu) {
-      console.log(menu);
-      console.log(menu.className);
-
-      menu.className = menu.className.replace(/ MathJax_MenuActive/,"")},
+      menu.className = menu.className.replace(/ MathJax_MenuActive/,"");
+    },
 
     With: function (def) {if (def) {HUB.Insert(this,def)}; return this},
 
@@ -851,6 +849,9 @@
       MENU.Focus(menu);
     },
     Right: function(event, menu) {
+      if (this.disabled) {
+        return;
+      }
       if (this.submenu.items.length > 0) {
         var item = this.submenu.items[0];
         item.Activate(event, item.GetNode());
