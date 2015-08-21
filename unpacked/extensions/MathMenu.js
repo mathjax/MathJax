@@ -423,7 +423,6 @@
       return MENU.Event(event,this.menu||this.parentNode,(this.menu?"Touchend":"Remove"));
     },
     Event: function (event,menu,type,force) {
-      console.log(type);
       if (MENU.skipMouseover && type === "Mouseover" && !force) {return FALSE(event)}
       if (MENU.skipUp) {
         if (type.match(/Mouseup|Touchend/)) {delete MENU.skipUp; return FALSE(event)}
@@ -686,13 +685,14 @@
 
     role: "menuitem",  // Aria role.
 
-    Attributes: function() {
-      var def = this.SUPER(arguments).Attributes.call(
-        this,
+    Attributes: function(def) {
+      def = HUB.Insert(
         {onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
          onmousedown: MENU.Mousedown, role: this.role,
          onkeydown: MENU.Keydown,
-         'aria-disabled': !!this.disabled});
+         'aria-disabled': !!this.disabled},
+        def);
+      def = this.SUPER(arguments).Attributes.call(this, def);
       if (this.disabled) {
         def.className += " MathJax_MenuDisabled";
       }
