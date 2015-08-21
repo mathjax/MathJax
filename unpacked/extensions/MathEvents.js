@@ -109,6 +109,20 @@
     RIGHTBUTTON: 2,          // the event.button value for right button
     MENUKEY: "altKey",       // the event value for alternate context menu
 
+    /*************************************************************/
+    /*
+     *  Enum element for key codes.
+     */
+    KEY: {
+      RETURN: 13,
+      ESCAPE: 27,
+      SPACE: 32,
+      LEFT: 37,
+      UP: 38,
+      RIGHT: 39,
+      DOWN: 40
+    },
+
     Mousedown: function (event) {return EVENT.Handler(event,"Mousedown",this)},
     Mouseup:   function (event) {return EVENT.Handler(event,"Mouseup",this)},
     Mousemove: function (event) {return EVENT.Handler(event,"Mousemove",this)},
@@ -150,7 +164,7 @@
     // 
     Keydown: function (event, math) {
       var jax = OUTPUT[this.jaxID];
-      if (event.keyCode === 32) {
+      if (event.keyCode === EVENT.KEY.SPACE) {
         // TODO: Put the focus on the first element.
         EVENT.ContextMenu(event, this);
       };

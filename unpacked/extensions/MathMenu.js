@@ -198,10 +198,11 @@
     }
   });
   
-  var FALSE, HOVER;
+  var FALSE, HOVER, KEY;
   HUB.Register.StartupHook("MathEvents Ready",function () {
     FALSE = MathJax.Extension.MathEvents.Event.False;
     HOVER = MathJax.Extension.MathEvents.Hover;
+    KEY = MathJax.Extension.MathEvents.Event.KEY;
   });
   
   /*************************************************************/
@@ -250,6 +251,12 @@
       this.posted = true;
       menu.style.width = (menu.offsetWidth+2) + "px";
       var x = event.pageX, y = event.pageY;
+      var node = MENU.node || event.target;
+      if (!x && !y && node) {
+        var rect = node.getBoundingClientRect();
+        x = rect.right;
+        y = rect.bottom;
+      }
       if (!x && !y) {
         x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
         y = event.clientY + document.body.scrollTop  + document.documentElement.scrollTop;
@@ -283,7 +290,7 @@
       menu.style.left = x+"px"; menu.style.top = y+"px";
       
       if (document.selection && document.selection.empty) {document.selection.empty()}
-      MENU.Focus(event, menu);
+      MENU.Focus(menu);
       return FALSE(event);
     },
 
@@ -301,7 +308,7 @@
         delete MENU.jax.hover.nofade;
         HOVER.UnHover(MENU.jax);
       }
-      MENU.Unfocus();
+      MENU.Unfocus(menu);
       return FALSE(event);
     },
 
@@ -338,54 +345,55 @@
     /*
      * Moving in the list of items.
      */
-    Up: function(item) {
-      var index = this.items.indexOf(item);
-      if (index === -1) {
-        return;
+    Keydown: function(event, menu) {
+      if (!this.posted) {
+        return FALSE(event);
       }
-      do {
-        index--;
-        if (index < 0) {
-          index = this.items.length - 1;
-        }
-      } while (!this.items[index].GetNode().role);
-      MENU.UnfocusItem(item);
-      MENU.FocusItem(this.items[index]);
+      switch (event.keyCode) {
+      case KEY.ESCAPE:
+        this.Remove(event, menu);
+        break;
+      case KEY.RIGHT:
+        this.Right(event, menu);
+        break;
+      case KEY.LEFT:
+        this.Left(event, menu);
+        break;
+      case KEY.UP:
+        this.Up(event, menu);
+        break;
+      case KEY.DOWN:
+        this.Down(event, menu);
+        break;
+      case KEY.RETURN:
+      case KEY.SPACE:
+        this.Space(event, menu);
+        break;
+      default:
+        break;
+      }
+      return FALSE(event);
     },
-    Down: function(item) {
-      var index = this.items.indexOf(item);
-      if (index === -1) {
-        return;
-      }
-      do {
-        index++;
-        if (index >= this.items.length) {
-          index = 0;
-        }
-      } while (!this.items[index].GetNode().role);
-      MENU.UnfocusItem(item);
-      MENU.FocusItem(this.items[index]);
-    }
-
+    Right: function(event, menu) {
+      MENU.Right(event, menu);
+    },
+    Left: function(event, menu) {
+      MENU.Left(event, menu);
+    },
+    Up: function(event, menu) {
+      var item = this.items[this.items.length - 1];
+      item.Activate(item.GetNode());
+    },
+    Down: function(event, menu) {
+      var item = this.items[0];
+      item.Activate(item.GetNode());
+    },
+    Space: function(event, menu) { }
   },{
     
     config: CONFIG,
 
     div: null,     // the DOM elements for the menu and submenus
-
-    /*************************************************************/
-    /*
-     *  Enum element for key codes.
-     */
-    KEY: {
-      RETURN: 13,
-      ESCAPE: 27,
-      SPACE: 32,
-      LEFT: 37,
-      UP: 38,
-      RIGHT: 39,
-      DOWN: 40
-    },
 
     Remove:     function (event) {return MENU.Event(event,this,"Remove")},
     Mouseover:  function (event) {return MENU.Event(event,this,"Mouseover")},
@@ -457,51 +465,84 @@
     /*
      *  Keyboard navigation of menu.
      */
-    jaxs: [],
-    hasJaxs: false,
-    oldJax: null,
-
+    jaxs: [],    // List of all MathJax nodes.
+    hasJaxs: false,  // Flag to indicate if the MathJax node list has already
+                     // been computed.
+    node: null,   // The node the menu was activated on.
+    active: null,   // The currently focused item. There can only be one!
+    posted: false,  // Is a menu open?
+    
     GetJaxs: function() {
-      // input.id + adding frame to get the elements.
       var nodes = document.getElementsByClassName('MathJax');
       for (var i = 0, node; node = nodes[i]; i++) {
         MENU.jaxs.push(node);
       }
     },
-    Focus: function(event, menu) {
-      console.log('focusing...');
+    //
+    // Focus is a global affair, since we only ever want a single focused item.
+    //
+    Focus: function(menu) {
+      if (!MENU.posted) {
+        MENU.Activate(menu);
+      }
+      if (MENU.active) {
+        MENU.active.tabIndex = -1;
+      }
+      MENU.active = menu;
+      MENU.active.tabIndex = 0;
+      MENU.active.focus();
+    },
+    Activate: function(menu) {
       if (!MENU.hasJaxs) {
         MENU.GetJaxs();
       }
-      MENU.oldJax = event.srcElement;
+      if (!MENU.node) {
+        MENU.node = document.getElementById(MENU.jax.inputID + '-Frame');
+      }
       for (var j = 0, jax; jax = MENU.jaxs[j]; j++) {
         jax.tabIndex = -1;
       }
-      MENU.FocusItem(MENU.menu.items[0]);
-      console.log('end focusing...');
-    },
-    FocusItem: function(item) {
-      console.log('Focusing on item');
-      console.log(item);
-      var node = item.GetNode();
-      node.tabIndex = 0;
-      item.Activate(node);
-      node.focus();
+      MENU.posted = true;
     },
     Unfocus: function() {
+      MENU.active.tabIndex = -1;
+      MENU.active = null;
       for (var j = 0, jax; jax = MENU.jaxs[j]; j++) {
         jax.tabIndex = 0;
       }
-      MENU.oldJax.focus();
-      MENU.oldJax = null;
+      MENU.node.focus();
+      MENU.node = null;
+      MENU.posted = false;
     },
-    UnfocusItem: function(item) {
-      var node = item.GetNode();
-      node.tabIndex = -1;
-      item.Deactivate(node);
+    //TODO: A toggle focus method on the top level would avoid having to
+    //tabIndex all the Jaxs.
+    Move: function(event, menu, move) {
+      var len = MENU.jaxs.length;
+      if (len === 0) {
+        return;
+      }
+      var next = MENU.jaxs[MENU.Mod(move(MENU.jaxs.indexOf(MENU.node)), len)];
+      if (next === MENU.node) {
+        return;
+      }
+      MENU.menu.Remove(event, menu);
+      MENU.jax = MathJax.Hub.getJaxFor(next);
+      MENU.node = next;
+      MENU.menu.Post(null);
+    },
+    Right: function(event, menu) {
+      MENU.Move(event, menu, function(x) {return x + 1;});
+    },
+    Left: function(event, menu) {
+      MENU.Move(event, menu, function(x) {return x - 1;});
+    },
+
+    //TODO: Helper. To move
+    // Computes a mod n.
+    Mod: function(a, n) {
+      return ((a % n) + n) % n;
     },
     
-
     saveCookie: function () {HTML.Cookie.Set("menu",this.cookie)},
     getCookie: function () {this.cookie = HTML.Cookie.Get("menu")}
 
@@ -515,7 +556,7 @@
 
     name: "", // The menu item's label as [id,label] pair.
     node: null,  // The HTML node of the item.
-    menu: null,  // The parent menu containing that item.
+    menu: null,  // The parent menu containing that item. HTML node.
     
     /*
      *  Accessor method for node.
@@ -551,33 +592,36 @@
     Name: function () {return _(this.name[0],this.name[1])},
 
     Mouseover: function (event,menu) {
-      if (!this.disabled) {this.Activate(menu)}
-      if (!this.submenu || !this.submenu.posted) {
-        console.log('This is not a submenu method!');
-        var menus = document.getElementById("MathJax_MenuFrame").childNodes,
-            items = this.menu.childNodes;
-        for (var i = 0, m = items.length; i < m; i++) {
-          var item = items[i].menuItem;
-          // Deactivates submenu items.
-          if (item && item.submenu && item.submenu.posted) {
-            item.Deactivate(items[i]);
-          }
-        }
-        // Removes all submenus.
-        m = menus.length-1;
-        while (m >= 0 && this.menu.menuItem !== menus[m].menuItem) {
-          menus[m].menuItem.posted = false;
-          menus[m].parentNode.removeChild(menus[m]);
-          m--;
-        }
-        if (this.Timer && !MENU.isMobile) {this.Timer(event,menu)}
-      }
+      this.Activate(menu);
     },
     Mouseout: function (event,menu) {
       if (!this.submenu || !this.submenu.posted) {this.Deactivate(menu)}
       if (this.timer) {clearTimeout(this.timer); delete this.timer}
     },
     Mouseup: function (event,menu) {return this.Remove(event,menu)},
+
+
+    DeactivateSubmenus: function(menu) {
+      var menus = document.getElementById("MathJax_MenuFrame").childNodes,
+          items = this.menu.childNodes;
+      for (var i = 0, m = items.length; i < m; i++) {
+        var item = items[i].menuItem;
+        // Deactivates submenu items.
+        if (item && item.submenu && item.submenu.posted) {
+          item.Deactivate(items[i]);
+        }
+      }
+      this.RemoveSubmenus(menu, menus);
+    },
+    RemoveSubmenus: function(menu, menus) {
+      menus = menus || document.getElementById("MathJax_MenuFrame").childNodes;
+      var m = menus.length-1;
+      while (m >= 0 && this.menu.menuItem !== menus[m].menuItem) {
+        menus[m].menuItem.posted = false;
+        menus[m].parentNode.removeChild(menus[m]);
+        m--;
+      }
+    },
     
     Touchstart: function (event,menu) {return this.TouchEvent(event,menu,"Mousedown")},
     Touchend: function (event,menu)   {return this.TouchEvent(event,menu,"Mouseup")},
@@ -599,7 +643,11 @@
 
     Activate: function (menu) {
       this.Deactivate(menu);
-      menu.className += " MathJax_MenuActive";
+      if (!this.disabled) {
+        menu.className += " MathJax_MenuActive";
+      }
+      this.DeactivateSubmenus(menu);
+      MENU.Focus(menu);
     },
     Deactivate: function (menu) {menu.className = menu.className.replace(/ MathJax_MenuActive/,"")},
 
@@ -622,32 +670,79 @@
         this,
         {onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
          onmousedown: MENU.Mousedown, role: this.role,
+         onkeydown: MENU.Keydown,
          'aria-disabled': !!this.disabled});
       if (this.disabled) {
         def.className += " MathJax_MenuDisabled";
       }
       return def;
-    }
-    Keydown: function(event, menu) {
-      console.log('MENUEntry');
+    },
+    Keydown: function(event, item) {
       switch (event.keyCode) {
-      case MENU.KEY.ESCAPE:
-        this.Remove(event, menu);
+      case KEY.ESCAPE:
+        this.Remove(event, item);
         break;
-      case MENU.KEY.UP:
-        menu.parentNode.menuItem.Up(menu.menuItem);
+      case KEY.UP:
+        this.Up(event, item);
         break;
-      case MENU.KEY.DOWN:
-        menu.parentNode.menuItem.Down(menu.menuItem);
+      case KEY.DOWN:
+        this.Down(event, item);
+        break;
+      case KEY.RIGHT:
+        this.Right(event, item);
+        break;
+      case KEY.LEFT:
+        this.Left(event, item);
+        break;
+      case KEY.SPACE:
+      case KEY.RETURN:
+        this.Space(event, item);
         break;
       default:
         break;
       }
       return FALSE(event);
     },
-    Remove: function(event, menu) {
-      MENU.UnfocusItem(this);
-      this.SUPER(arguments).Remove.apply(this, arguments);
+    Move: function(event, item, move) {
+      var items = this.menu.menuItem.items;
+      var len = items.length;
+      var index = items.indexOf(this);
+      if (index === -1) {
+        return;
+      }
+      do {
+        index = MENU.Mod(move(index), len);
+      } while (items[index].hidden || !items[index].GetNode().role);
+      this.Deactivate(item);
+      item = items[index];
+      item.Activate(item.GetNode());
+    },
+    Up: function(event, item) {
+      this.Move(event, item, function(x) { return x - 1; });
+    },
+    Down: function(event, item) {
+      this.Move(event, item, function(x) { return x + 1; });
+    },
+    Right: function(event, item) {
+      if (this.menu.menuItem === MENU.menu) {
+        MENU.Right(event, item);
+      }
+    },
+    Left: function(event, item) {
+      if (this.menu.menuItem === MENU.menu) {
+        MENU.Left(event, item);
+      } else {
+        this.Deactivate(item);
+        var sibling = item.parentNode.previousSibling;
+        var actives = sibling.getElementsByClassName('MathJax_MenuActive');
+        if (actives.length > 0) {
+          MENU.Focus(actives[0]);
+        }
+        this.RemoveSubmenus(item);
+      }
+    },
+    Space: function (event, menu) {
+      this.Mouseup(event, menu);
     }
   });
   
@@ -665,6 +760,7 @@
     },
     
     Label: function (def,menu) {return [this.Name()]},
+    //TODO: Focus the popup.
     Mouseup: function (event,menu) {
       if (!this.disabled) {
         this.Remove(event,menu);
@@ -673,13 +769,6 @@
       }
       return FALSE(event);
     }
-    // Keydown: function(event, menu) {
-    //   console.log('here');
-    //   if (event.keyCode === MENU.KEY.ESCAPE) {
-    //     this.Remove(event, menu);
-    //   }
-    //   return FALSE(event);
-    // }
   });
 
   /*************************************************************/
@@ -714,43 +803,40 @@
       if (forceout) {this.Deactivate(menu); delete ITEM.lastItem; delete ITEM.lastMenu}
       return result;
     },
+    Mouseover: function(event, menu) {
+      this.Activate(menu);
+    },
     Mouseup: function (event,menu) {
       if (!this.disabled) {
         if (!this.submenu.posted) {
           if (this.timer) {clearTimeout(this.timer); delete this.timer}
           this.submenu.Post(event,menu,this.ltr);
+          MENU.Focus(menu);
         } else {
-         var menus = document.getElementById("MathJax_MenuFrame").childNodes,
-              m = menus.length-1;
-          while (m >= 0) {
-            var child = menus[m];
-            child.menuItem.posted = false;
-            child.parentNode.removeChild(child);
-            if (child.menuItem === this.submenu) {break};
-            m--;
-          }
+          this.RemoveSubmenus(menu);
         }
       }
       return FALSE(event);
     },
-    Keydown: function(event, menu) {
-      console.log('MENUSubmenu');
-      switch (event.keyCode) {
-      case MENU.KEY.RIGHT:
-      case MENU.KEY.SPACE:
-        if (!this.submenu.posted) {
-          this.submenu.Post(event,menu,this.ltr);
-        }
-        break;
-      case MENU.KEY.LEFT:
-        menu.parentNode.menuItem.Down(menu.menuItem);
-        break;
-      default:
-        break;
+    Activate: function (menu) {
+      if (!this.disabled) {
+        this.Deactivate(menu);
+        menu.className += " MathJax_MenuActive";
       }
-      return this.SUPER(arguments).Keydown.apply(this, arguments);
+      if (!this.submenu.posted) {
+        this.DeactivateSubmenus(menu);
+      }
+      MENU.Focus(menu);
+      if (!MENU.isMobile) {
+        this.Timer(event,menu);
+      }
+    },
+    Right: function(event, menu) {
+      if (this.submenu.items.length > 0) {
+        var item = this.submenu.items[0];
+        item.Activate(item.GetNode());
+      }
     }
-
   });
 
   /*************************************************************/
@@ -825,8 +911,11 @@
   /*************************************************************/
   /*
    *  A menu item that is a label
-   */
-  MENU.ITEM.LABEL = MENU.ITEM.Subclass({
+   * //TODO: Turn this into a focusable! No mouse interaction!
+   */ 
+  MENU.ITEM.LABEL = MENU.ENTRY.Subclass({
+    role: "menuitem",  // Aria role.
+
     Init: function (name,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.With(def);
@@ -834,6 +923,10 @@
     Label: function (def,menu) {
       def.className += " MathJax_MenuLabel";
       return [this.Name()];
+    },
+    Activate: function(menu) {
+      this.Deactivate(menu);
+      MENU.Focus(menu);
     }
   });
 
