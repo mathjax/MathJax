@@ -294,7 +294,9 @@
       div.appendChild(menu);
       this.posted = true;
       menu.style.width = (menu.offsetWidth+2) + "px";
-      var x = event.pageX, y = event.pageY;
+      if (event) {
+        var x = event.pageX, y = event.pageY;
+      }
       var node = MENU.node || event.target;
       if (!x && !y && node) {
         var rect = node.getBoundingClientRect();
@@ -309,7 +311,7 @@
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
            {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
         if (MENU.isMobile) {x = Math.max(5,x-Math.floor(menu.offsetWidth/2)); y -= 20}
-        MENU.skipUp = event.isContextMenu;
+        if (event) {MENU.skipUp = event.isContextMenu;}
       } else {
         var side = "left", mw = parent.offsetWidth;
         x = (MENU.isMobile ? 30 : mw - 2); y = 0;
@@ -394,12 +396,11 @@
     },
     Up: function(event, menu) {
       var item = this.items[this.items.length - 1];
-      item.Activate(item.GetNode());
+      item.Activate(event, item.GetNode());
     },
     Down: function(event, menu) {
-      console.log('In menu');
       var item = this.items[0];
-      item.Activate(item.GetNode());
+      item.Activate(event, item.GetNode());
     }
   },{
     
@@ -422,7 +423,6 @@
       return MENU.Event(event,this.menu||this.parentNode,(this.menu?"Touchend":"Remove"));
     },
     Event: function (event,menu,type,force) {
-      console.log(type);
       if (MENU.skipMouseover && type === "Mouseover" && !force) {return FALSE(event)}
       if (MENU.skipUp) {
         if (type.match(/Mouseup|Touchend/)) {delete MENU.skipUp; return FALSE(event)}
@@ -431,8 +431,6 @@
       }
       if (!event) {event = window.event}
       var item = menu.menuItem;
-      console.log(item);
-      console.log(item[type]);
       if (item && item[type]) {return item[type](event,menu)}
       return null;
     },
@@ -506,7 +504,7 @@
       MENU.active.tabIndex = 0;
       MENU.active.focus();
     },
-    Activate: function(menu) {
+    Activate: function(event, menu) {
       if (!MENU.hasJaxs) {
         MENU.GetJaxs();
       }
@@ -608,7 +606,7 @@
     Name: function () {return _(this.name[0],this.name[1])},
 
     Mouseover: function (event,menu) {
-      this.Activate(menu);
+      this.Activate(event, menu);
     },
     Mouseout: function (event,menu) {
       this.Deactivate(menu);
@@ -656,7 +654,7 @@
       return menu.Remove(event,menu);
     },
 
-    Activate: function (menu) {
+    Activate: function (event, menu) {
       this.Deactivate(menu);
       if (!this.disabled) {
         menu.className += " MathJax_MenuActive";
@@ -664,7 +662,11 @@
       this.DeactivateSubmenus(menu);
       MENU.Focus(menu);
     },
-    Deactivate: function (menu) {menu.className = menu.className.replace(/ MathJax_MenuActive/,"")},
+    Deactivate: function (menu) {
+      console.log(menu);
+      console.log(menu.className);
+
+      menu.className = menu.className.replace(/ MathJax_MenuActive/,"")},
 
     With: function (def) {if (def) {HUB.Insert(this,def)}; return this},
     
@@ -704,13 +706,12 @@
       } while (items[index].hidden || !items[index].GetNode().role);
       this.Deactivate(item);
       item = items[index];
-      item.Activate(item.GetNode());
+      item.Activate(event, item.GetNode());
     },
     Up: function(event, item) {
       this.Move(event, item, function(x) { return x - 1; });
     },
     Down: function(event, item) {
-      console.log('?????');
       this.Move(event, item, function(x) { return x + 1; });
     },
     Right: function(event, item) {
@@ -733,7 +734,19 @@
     },
     Space: function (event, menu) {
       this.Mouseup(event, menu);
-    }
+    },
+    
+    Activate: function (event, menu) {
+      this.Deactivate(menu);
+      if (!this.disabled) {
+        menu.className += " MathJax_MenuActive";
+      }
+      this.DeactivateSubmenus(menu);
+      MENU.Focus(menu);
+    },
+    Deactivate: function (menu) {
+      menu.className = menu.className.replace(/ MathJax_MenuActive/,"")}
+
   });
   
   /*************************************************************/
@@ -805,21 +818,21 @@
       this.ClearTimer();
     },
     Mouseover: function(event, menu) {
-      this.Activate(menu);
+      this.Activate(event, menu);
     },
     Mouseup: function (event,menu) {
       if (!this.disabled) {
         if (!this.submenu.posted) {
           this.ClearTimer();
-          this.submenu.Post(event,menu,this.ltr);
+          this.submenu.Post(event, menu, this.ltr);
           MENU.Focus(menu);
         } else {
-          this.RemoveSubmenus(menu);
+          this.DeactivateSubmenus(menu);
         }
       }
       return FALSE(event);
     },
-    Activate: function (menu) {
+    Activate: function (event, menu) {
       if (!this.disabled) {
         this.Deactivate(menu);
         menu.className += " MathJax_MenuActive";
@@ -835,7 +848,7 @@
     Right: function(event, menu) {
       if (this.submenu.items.length > 0) {
         var item = this.submenu.items[0];
-        item.Activate(item.GetNode());
+        item.Activate(event, item.GetNode());
       }
     }
   });
@@ -924,7 +937,7 @@
       def.className += " MathJax_MenuLabel";
       return [this.Name()];
     },
-    Activate: function(menu) {
+    Activate: function(event, menu) {
       this.Deactivate(menu);
       MENU.Focus(menu);
     },
