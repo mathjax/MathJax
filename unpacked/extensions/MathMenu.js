@@ -204,12 +204,56 @@
     HOVER = MathJax.Extension.MathEvents.Hover;
     KEY = MathJax.Extension.MathEvents.Event.KEY;
   });
+
+
+  /*************************************************************/
+  /*
+   *  Abstract class of all keyboard navigatable objects.
+   */
+  var NAV = MathJax.Object.Subclass({
+    /*
+     * Moving in the list of items.
+     */
+    Keydown: function(event, menu) {
+      switch (event.keyCode) {
+      case KEY.ESCAPE:
+        this.Remove(event, menu);
+        break;
+      case KEY.RIGHT:
+        this.Right(event, menu);
+        break;
+      case KEY.LEFT:
+        this.Left(event, menu);
+        break;
+      case KEY.UP:
+        this.Up(event, menu);
+        break;
+      case KEY.DOWN:
+        this.Down(event, menu);
+        break;
+      case KEY.RETURN:
+      case KEY.SPACE:
+        this.Space(event, menu);
+        break;
+      default:
+        break;
+      }
+      return FALSE(event);
+    },
+    Escape: function(event, menu) { },
+    Right: function(event, menu) { },
+    Left: function(event, menu) { },
+    Up: function(event, menu) { },
+    Down: function(event, menu) { },
+    Space: function(event, menu) { }
+  }, {});
   
+
   /*************************************************************/
   /*
    *  The main menu class
    */
-  var MENU = MathJax.Menu = MathJax.Object.Subclass({
+  var MENU = MathJax.Menu = NAV.Subclass({
     version: VERSION,
     items: [],
     posted: false,
@@ -342,38 +386,6 @@
       return null;
     },
     
-    /*
-     * Moving in the list of items.
-     */
-    Keydown: function(event, menu) {
-      if (!this.posted) {
-        return FALSE(event);
-      }
-      switch (event.keyCode) {
-      case KEY.ESCAPE:
-        this.Remove(event, menu);
-        break;
-      case KEY.RIGHT:
-        this.Right(event, menu);
-        break;
-      case KEY.LEFT:
-        this.Left(event, menu);
-        break;
-      case KEY.UP:
-        this.Up(event, menu);
-        break;
-      case KEY.DOWN:
-        this.Down(event, menu);
-        break;
-      case KEY.RETURN:
-      case KEY.SPACE:
-        this.Space(event, menu);
-        break;
-      default:
-        break;
-      }
-      return FALSE(event);
-    },
     Right: function(event, menu) {
       MENU.Right(event, menu);
     },
@@ -385,10 +397,10 @@
       item.Activate(item.GetNode());
     },
     Down: function(event, menu) {
+      console.log('In menu');
       var item = this.items[0];
       item.Activate(item.GetNode());
-    },
-    Space: function(event, menu) { }
+    }
   },{
     
     config: CONFIG,
@@ -410,6 +422,7 @@
       return MENU.Event(event,this.menu||this.parentNode,(this.menu?"Touchend":"Remove"));
     },
     Event: function (event,menu,type,force) {
+      console.log(type);
       if (MENU.skipMouseover && type === "Mouseover" && !force) {return FALSE(event)}
       if (MENU.skipUp) {
         if (type.match(/Mouseup|Touchend/)) {delete MENU.skipUp; return FALSE(event)}
@@ -418,6 +431,8 @@
       }
       if (!event) {event = window.event}
       var item = menu.menuItem;
+      console.log(item);
+      console.log(item[type]);
       if (item && item[type]) {return item[type](event,menu)}
       return null;
     },
@@ -459,7 +474,6 @@
         bg.style.height = document.body.scrollHeight + "px";
       }
     },
-
 
     /*************************************************************/
     /*
@@ -537,7 +551,7 @@
       MENU.Move(event, menu, function(x) {return x - 1;});
     },
 
-    //TODO: Helper. To move
+    //TODO: Move to utility class.
     // Computes a mod n.
     Mod: function(a, n) {
       return ((a % n) + n) % n;
@@ -548,11 +562,13 @@
 
   });
 
+  MathJax.Menu.NAV = NAV;
+  
   /*************************************************************/
   /*
    *  Abstract class of menu items.
    */
-  var ITEM = MENU.ITEM = MathJax.Object.Subclass({
+  var ITEM = MENU.ITEM = NAV.Subclass({
 
     name: "", // The menu item's label as [id,label] pair.
     node: null,  // The HTML node of the item.
@@ -676,32 +692,6 @@
       }
       return def;
     },
-    Keydown: function(event, item) {
-      switch (event.keyCode) {
-      case KEY.ESCAPE:
-        this.Remove(event, item);
-        break;
-      case KEY.UP:
-        this.Up(event, item);
-        break;
-      case KEY.DOWN:
-        this.Down(event, item);
-        break;
-      case KEY.RIGHT:
-        this.Right(event, item);
-        break;
-      case KEY.LEFT:
-        this.Left(event, item);
-        break;
-      case KEY.SPACE:
-      case KEY.RETURN:
-        this.Space(event, item);
-        break;
-      default:
-        break;
-      }
-      return FALSE(event);
-    },
     Move: function(event, item, move) {
       var items = this.menu.menuItem.items;
       var len = items.length;
@@ -720,6 +710,7 @@
       this.Move(event, item, function(x) { return x - 1; });
     },
     Down: function(event, item) {
+      console.log('?????');
       this.Move(event, item, function(x) { return x + 1; });
     },
     Right: function(event, item) {
