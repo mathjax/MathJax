@@ -1599,7 +1599,7 @@
         return this.CHTML;
       },
       CHTMLstretchH: function (node,w) {
-        this.Core().CHTMLstretchH(w);
+        this.Core().CHTMLstretchH(node,w);
         this.toCommonHTML(node,true);
         return this.CHTML;
       }      
