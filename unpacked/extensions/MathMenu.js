@@ -595,8 +595,7 @@
       this.Activate(menu);
     },
     Mouseout: function (event,menu) {
-      if (!this.submenu || !this.submenu.posted) {this.Deactivate(menu)}
-      if (this.timer) {clearTimeout(this.timer); delete this.timer}
+      this.Deactivate(menu);
     },
     Mouseup: function (event,menu) {return this.Remove(event,menu)},
 
@@ -793,9 +792,14 @@
       },[this.isRTL() ? this.markerRTL : this.marker]]];
     },
     Timer: function (event,menu) {
-      if (this.timer) {clearTimeout(this.timer)}
+      this.ClearTimer();
       event = {clientX: event.clientX, clientY: event.clientY}; // MSIE can't pass the event below
       this.timer = setTimeout(CALLBACK(["Mouseup",this,event,menu]),CONFIG.delay);
+    },
+    ClearTimer: function() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
     },
     Touchend: function (event,menu) {
       var forceout = this.submenu.posted;
@@ -803,13 +807,19 @@
       if (forceout) {this.Deactivate(menu); delete ITEM.lastItem; delete ITEM.lastMenu}
       return result;
     },
+    Mouseout: function(event, menu) {
+      if (!this.submenu.posted) {
+        this.Deactivate(menu);
+      }
+      this.ClearTimer();
+    },
     Mouseover: function(event, menu) {
       this.Activate(menu);
     },
     Mouseup: function (event,menu) {
       if (!this.disabled) {
         if (!this.submenu.posted) {
-          if (this.timer) {clearTimeout(this.timer); delete this.timer}
+          this.ClearTimer();
           this.submenu.Post(event,menu,this.ltr);
           MENU.Focus(menu);
         } else {
@@ -825,11 +835,11 @@
       }
       if (!this.submenu.posted) {
         this.DeactivateSubmenus(menu);
+        if (!MENU.isMobile) {
+          this.Timer(event,menu);
+        }
       }
       MENU.Focus(menu);
-      if (!MENU.isMobile) {
-        this.Timer(event,menu);
-      }
     },
     Right: function(event, menu) {
       if (this.submenu.items.length > 0) {
@@ -911,7 +921,6 @@
   /*************************************************************/
   /*
    *  A menu item that is a label
-   * //TODO: Turn this into a focusable! No mouse interaction!
    */ 
   MENU.ITEM.LABEL = MENU.ENTRY.Subclass({
     role: "menuitem",  // Aria role.
@@ -927,7 +936,8 @@
     Activate: function(menu) {
       this.Deactivate(menu);
       MENU.Focus(menu);
-    }
+    },
+    Mouseup: function (event,menu) { }
   });
 
   /*************************************************************/
