@@ -423,6 +423,7 @@
       return MENU.Event(event,this.menu||this.parentNode,(this.menu?"Touchend":"Remove"));
     },
     Event: function (event,menu,type,force) {
+      console.log(type);
       if (MENU.skipMouseover && type === "Mouseover" && !force) {return FALSE(event)}
       if (MENU.skipUp) {
         if (type.match(/Mouseup|Touchend/)) {delete MENU.skipUp; return FALSE(event)}
@@ -606,6 +607,9 @@
     Name: function () {return _(this.name[0],this.name[1])},
 
     Mouseover: function (event,menu) {
+      if (menu.parentNode === MENU.active.parentNode) {
+       this.Deactivate(MENU.active); 
+      }
       this.Activate(event, menu);
     },
     Mouseout: function (event,menu) {
@@ -745,7 +749,8 @@
       MENU.Focus(menu);
     },
     Deactivate: function (menu) {
-      menu.className = menu.className.replace(/ MathJax_MenuActive/,"")}
+      menu.className = menu.className.replace(/ MathJax_MenuActive/,"");
+    }
 
   });
   
