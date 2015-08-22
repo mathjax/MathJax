@@ -68,7 +68,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           //
           bbox.w = bbox.r = img.offsetWidth/CHTML.em; bbox.h = bbox.t = img.offsetHeight/CHTML.em;
           if (values.valign) {
-            bbox.d = bbox.b = -CHTML.length2em(values.valign,bbox.h);
+            bbox.d = bbox.b = -CHTML.length2em(values.valign,h);
             img.style.verticalAlign = CHTML.Em(-bbox.d);
             bbox.h -= bbox.d; bbox.t = bbox.h;
           }
