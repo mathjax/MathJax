@@ -43,9 +43,11 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       //  Get the quotes to use
       //
-      var values = this.getValues("lquote","rquote");
+      var values = this.getValues("lquote","rquote","mathvariant");
       if (!this.hasValue("lquote") || values.lquote === '"') values.lquote = "\u201C";
       if (!this.hasValue("rquote") || values.rquote === '"') values.rquote = "\u201D";
+      if (values.lquote === "\u201C" && values.mathvariant === "monospace") values.lquote = '"';
+      if (values.rquote === "\u201D" && values.mathvariant === "monospace") values.rquote = '"';
       //
       //  Add the left quote, the child nodes, and the right quote
       //  FIXME:  should the quotation marks be in MML.VARIANT.NORMAL?
