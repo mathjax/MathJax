@@ -157,8 +157,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       if (values.frame === MML.LINES.NONE) delete values.frame; else values.fspace = true;
       if (values.frame) {
-        FSPACE[0] = Math.max(0,FSPACE[0]-1/CHTML.em);
-        FSPACE[1] = Math.max(0,FSPACE[1]-1/CHTML.em);
+        FSPACE[0] = Math.max(0,FSPACE[0]);
+        FSPACE[1] = Math.max(0,FSPACE[1]);
       }
       if (values.fspace) {
         CSPACE[J] = FSPACE[0]; RSPACE[M] = FSPACE[1];
@@ -235,7 +235,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           //  (setting style.height seems to work very strangely)
           //
           if (state.HD && j === 0) {
-            HTML.addElement(row[j].parentNode,"mjx-mtd",{},
+            HTML.addElement(row[j].parentNode,"mjx-mtd",{style:{padding:T+" 0 "+B}},
               [["mjx-box",{style:{
                 height:CHTML.Em(state.HH+state.DD),
                 "vertical-align":CHTML.Em(-state.DD)
