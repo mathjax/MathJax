@@ -93,7 +93,7 @@
     
     "mjx-surd": {"vertical-align":"top"},
     
-    "mjx-mphantom": {visibility:"hidden"},
+    "mjx-mphantom *": {visibility:"hidden"},
 
     "mjx-merror": {
       "background-color":"#FFFF88",
@@ -116,7 +116,7 @@
     "mjx-box":    {display:"inline-block"},
     "mjx-block":  {display:"block"},
     "mjx-span":   {display:"span"},
-    "mjx-char":   {display:"block"},
+    "mjx-char":   {display:"block", "white-space":"pre"},
     "mjx-itable": {display:"inline-table"},
     "mjx-row":    {display:"table-row"},
     "mjx-cell":   {display:"table-cell"},
@@ -2232,6 +2232,7 @@
           delta = 1.3*bbox.ic + .05; // make faked IC be closer to expeted results
         }
         var bmml = this.data[this.base];
+        if ((bmml.type === "mrow" || bmml.type === "mstyle") && bmml.data.length === 1) bmml = bmml.data[0];
         if (bmml && (bmml.type === "mi" || bmml.type === "mo")) {
           if (bmml.data.join("").length === 1 && bbox.rscale === 1 && !bbox.sH &&
               !bmml.Get("largeop")) {u = v = 0}
