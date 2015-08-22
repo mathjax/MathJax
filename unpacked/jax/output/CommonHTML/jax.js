@@ -2162,7 +2162,7 @@
         for (i = 0; i < m; i++) {
           scale = (i === this.base ? 1 : boxes[i].rscale);
           var w = scale*(boxes[i].w + (boxes[i].L||0) + (boxes[i].R||0));
-          boxes[i].x += (W-w)/2;
+          boxes[i].x += {left:0, center:(W-w)/2, right:W-w}[values.align];
           if (boxes[i].x < dx) dx = boxes[i].x;
         }
         for (i = 0; i < m; i++) {
