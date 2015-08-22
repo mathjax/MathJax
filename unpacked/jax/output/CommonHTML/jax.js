@@ -497,7 +497,7 @@
     getMetrics: function(jax) {
       var data = jax.CHTML;
       this.jax = jax;
-      this.em = data.em; 
+      this.em = data.em;
       this.outerEm = data.outerEm;
       this.scale = data.scale;
       this.cwidth = data.cwidth;
@@ -574,14 +574,14 @@
       //  Re-render at larger size
       //
       this.getMetrics(jax);
-      var node = HTML.addElement(span,"mjx-chtml");
+      var node = HTML.addElement(span,"mjx-chtml",{style:{"font-size":Math.floor(CHTML.scale*100)+"%"}});
       this.idPostfix = "-zoom"; jax.root.toCommonHTML(node); this.idPostfix = "";
       //
       //  Adjust margins to prevent overlaps at the edges
       //
       var style = node.style, bbox = jax.root.CHTML;
-      if (bbox.t > bbox.h) style.marginTop = CHTML.Em(bbox.t-Math.max(bbox.h,CHTML.FONTDATA.lineH));
-      if (bbox.b > bbox.d) style.marginBottom = CHTML.Em(bbox.b-Math.max(bbox.d,CHTML.FONTDATA.lineD));
+      if (bbox.t > bbox.h) style.marginTop = CHTML.Em(bbox.t-bbox.h);
+      if (bbox.b > bbox.d) style.marginBottom = CHTML.Em(bbox.b-bbox.d);
       if (bbox.l < 0) style.paddingLeft = CHTML.Em(-bbox.l);
       if (bbox.r > bbox.w) style.marginRight = CHTML.Em(bbox.r-bbox.w);
       //
