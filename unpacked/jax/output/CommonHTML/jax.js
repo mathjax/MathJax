@@ -683,7 +683,7 @@
     unicodeChar: function (n) {
       if (n < 0xFFFF) return String.fromCharCode(n);
       n -= 0x10000;
-      return String.fromCharCode((n>>10)+0xD800) + String.fromCharCode((N&0x3FF)+0xDC00);
+      return String.fromCharCode((n>>10)+0xD800) + String.fromCharCode((n&0x3FF)+0xDC00);
     },
     //
     //  Get the unicode number of a (possibly multi-character) string
