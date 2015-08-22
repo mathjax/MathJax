@@ -1712,7 +1712,7 @@
             this.CHTMLaddChild(node,i,{childOptions:{
               variant: values.mathvariant,
               remap: this.remap,
-              remapchars: values.mapchars
+              remapchars: values.remapchars
             }});
           }
           if (values.text.length !== 1) delete this.CHTML.skew;
@@ -1752,9 +1752,9 @@
             this.CoreText(parent.data[parent.base]).length === 1) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
           if (over && this === over.CoreMO() && parent.Get("accent")) {
-            data.mapchars = CHTML.FONTDATA.REMAPACCENT
+            data.remapchars = CHTML.FONTDATA.REMAPACCENT;
           } else if (under && this === under.CoreMO() && parent.Get("accentunder")) {
-            data.mapchars = CHTML.FONTDATA.REMAPACCENTUNDER
+            data.remapchars = CHTML.FONTDATA.REMAPACCENTUNDER;
           }
         }
       },
@@ -1763,7 +1763,7 @@
             isScript = (parent && parent.isa(MML.msubsup) && this !== parent.data[parent.base]);
         if (data.largeop) data.mathvariant = (data.displaystyle ? "-largeOp" : "-smallOp");
         if (isScript) {
-          data.mapchars = this.remapChars;
+          data.remapchars = this.remapChars;
           if (data.text.match(/['`"\u00B4\u2032-\u2037\u2057]/))
             data.mathvariant = "-TeX-variant";  // ### FIXME: handle other fonts
         }
