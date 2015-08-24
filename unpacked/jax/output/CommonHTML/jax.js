@@ -1333,6 +1333,16 @@
         } else if (options.forceChild) {cnode = HTML.addElement(node,"mjx-box")}
         return cnode;
       },
+      
+      CHTMLchildNode: function (node,i) {
+        node = node.childNodes[i];
+        if (node.nodeName.toLowerCase() === "a") node = node.firstChild;
+        return node;
+      },
+      CHTMLcoreNode: function (node) {
+        return this.CHTMLchildNode(node,this.CoreIndex());
+      },
+      
       CHTMLstretchChildV: function (i,H,D) {
         var data = this.data[i];
         if (data) {
@@ -1355,7 +1365,7 @@
           var bbox = this.CHTML, dbox = data.CHTML;
           if (dbox.stretch || (dbox.stretch == null && data.CHTMLcanStretch("Horizontal",W))) {
             var w = dbox.w;
-            dbox = data.CHTMLstretchH(node,W);
+            dbox = data.CHTMLstretchH(this.CHTMLchildNode(node,i),W);
             bbox.w += dbox.w - w;
             if (bbox.w > bbox.r) bbox.r = bbox.w;
             if (dbox.h > bbox.h) bbox.h = dbox.h;
@@ -1380,8 +1390,11 @@
         return this.CHTML;
       },
       CHTMLstretchH: function (node,w) {
-        this.CHTML.updateFrom(this.Core().CHTMLstretchH(node,w));
+        this.CHTML.updateFrom(this.CHTMLstretchCoreH(node,w));
         return this.CHTML;
+      },
+      CHTMLstretchCoreH: function (node,w) {
+        return this.Core().CHTMLstretchH(this.CHTMLcoreNode(node),w);
       },
 
       CHTMLcreateNode: function (node) {
@@ -1599,7 +1612,7 @@
         return this.CHTML;
       },
       CHTMLstretchH: function (node,w) {
-        this.Core().CHTMLstretchH(node,w);
+        this.CHTMLstretchCoreH(node,w);
         this.toCommonHTML(node,true);
         return this.CHTML;
       }      
@@ -2477,10 +2490,7 @@
         return this.CHTML;
       },
       CHTMLstretchH: function (node,w) {
-        var i = this.CoreIndex()
-        node = node.childNodes[i];
-        if (node.nodeName.toLowerCase() === "a") node = node.firstChild;
-        this.CHTMLstretchChildH(i,w,node);
+        this.CHTMLstretchChildH(this.CoreIndex(),w,node);
         return this.CHTML;
       }
     });
@@ -2516,7 +2526,7 @@
         return this.CHTML;
       },
       CHTMLstretchH: function (node,w) {
-        this.CHTML.updateFrom(this.Core().CHTMLstretchH(node.firstChild,w));
+        this.CHTML.updateFrom(this.CHTMLstretchCoreH(node,w));
         this.toCommonHTML(node,true);
         return this.CHTML;
       }

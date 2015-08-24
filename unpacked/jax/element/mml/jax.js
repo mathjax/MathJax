@@ -405,7 +405,9 @@ MathJax.ElementJax.mml.Augment({
       if (child == null) return;
       for (var i = 0, m = this.data.length; i < m; i++) if (child === this.data[i]) return i;
     },
-    CoreIndex: function () {return this.childIndex(this.Core())},
+    CoreIndex: function () {
+      return (this.inferRow ? this.data[0]||this : this).childIndex(this.Core());
+    },
     hasNewline: function () {
       if (this.isEmbellished()) {return this.CoreMO().hasNewline()}
       if (this.isToken || this.linebreakContainer) {return false}
