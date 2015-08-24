@@ -1333,6 +1333,7 @@
             bbox.append(cbox);
             if (cbox.ic) {bbox.ic = cbox.ic} else {delete bbox.ic}
             if (cbox.skew) bbox.skew = cbox.skew;
+            if (cbox.pwidth) bbox.pwidth = cbox.pwidth;
           }
         } else if (options.forceChild) {cnode = HTML.addElement(node,"mjx-box")}
         return cnode;
@@ -1475,6 +1476,9 @@
         if (this.data.length === 1 && (this.data[0].CHTML||{}).pwidth) {
           BBOX.pwidth = this.data[0].CHTML.pwidth;
           BBOX.mwidth = this.data[0].CHTML.mwidth;
+          style.width = "100%";
+        } else if (BBOX.pwidth) {
+          BBOX.mwidth = BBOX.w;
           style.width = "100%";
         }
         if (!this.style) return;
