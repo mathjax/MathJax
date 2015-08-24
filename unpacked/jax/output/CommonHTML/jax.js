@@ -1928,6 +1928,7 @@
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
         this.CHTMLhandleStyle(node);
+        this.CHTMLhandleScale(node);
         var values = this.getValues("height","depth","width");
         var w = CHTML.length2em(values.width),
             h = CHTML.length2em(values.height),
@@ -2453,6 +2454,7 @@
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
         this.CHTMLhandleStyle(node);
+        this.CHTMLhandleScale(node);
         //
         //  Make row of open, data, sep, ... data, close
         //
