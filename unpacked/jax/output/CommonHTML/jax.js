@@ -2260,10 +2260,12 @@
           delta = 1.3*bbox.ic + .05; // make faked IC be closer to expeted results
         }
         var bmml = this.data[this.base];
-        if ((bmml.type === "mrow" || bmml.type === "mstyle") && bmml.data.length === 1) bmml = bmml.data[0];
-        if (bmml && (bmml.type === "mi" || bmml.type === "mo")) {
-          if (bmml.data.join("").length === 1 && bbox.rscale === 1 && !bbox.sH &&
-              !bmml.Get("largeop")) {u = v = 0}
+        if (bmml) {
+          if ((bmml.type === "mrow" || bmml.type === "mstyle") && bmml.data.length === 1) bmml = bmml.data[0];
+          if (bmml.type === "mi" || bmml.type === "mo") {
+            if (bmml.data.join("").length === 1 && bbox.rscale === 1 && !bbox.sH &&
+                !bmml.Get("largeop")) {u = v = 0}
+          }
         }
         values.subscriptshift   = (values.subscriptshift === ""   ? 0 : this.CHTMLlength2em(values.subscriptshift));
         values.superscriptshift = (values.superscriptshift === "" ? 0 : this.CHTMLlength2em(values.superscriptshift));
