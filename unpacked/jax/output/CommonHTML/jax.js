@@ -1738,8 +1738,8 @@
         }
 
         this.CHTML.clean();
-        this.CHTMLhandleSpace(node);
         this.CHTMLhandleBBox(node);
+        this.CHTMLhandleSpace(node);
         this.CHTMLhandleColor(node);
 
         return node;
