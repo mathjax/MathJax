@@ -829,8 +829,9 @@
     //  WARNING:  causes reflow of the page!
     //
     getHDW: function (c,name,styles) {
-      var test1 = HTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name,style:styles},[["mjx-char",{},[c]]]);
-      var test2 = HTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name,style:styles},[["mjx-char",{},[c,["mjx-box"]]]]);
+      var test1 = HTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name},[["mjx-char",{style:styles},[c]]]);
+      var test2 = HTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name},[["mjx-char",{style:styles},[c,["mjx-box"]]]]);
+      test1.firstChild.style.fontSize = test2.firstChild.style.fontSize = "";
       var em = 5*CHTML.em;
       var d = (test2.offsetHeight-1000)/em;
       var w = test1.offsetWidth/em, h = test1.offsetHeight/em - d;
@@ -901,7 +902,10 @@
       unknown: function (item,node,bbox,state) {
         this.char(item,node,bbox,state,0);
         var C = item.font[item.n];
-        if (C[5].a) {state.a = C[5].a; if (state.a > bbox.a) bbox.a = state.a}
+        if (C[5].a) {
+          state.a = C[5].a;
+          if (bbox.a == null || state.a > bbox.a) bbox.a = state.a;
+        }
         node = this.flushText(node,state,item.style);
         node.style.width = CHTML.Em(C[2]);
       },
@@ -1881,7 +1885,7 @@
                          style:{"font-size":CHTML.Percent(scale)}};
           var name = this.Get("mathvariant");
           if (name.match(/bold/)) variant.style["font-weight"] = "bold";
-          if (name.match(/italic/)) variant.style["font-style"] = "italic";
+          if (name.match(/italic|-tex-mathit/)) variant.style["font-style"] = "italic";
           if (name === "monospace") variant.className += " MJXc-monospace-font";
           if (name === "double-struck") variant.className += " MJXc-double-struck-font";
           if (name.match(/fraktur/)) variant.className += " MJXc-fraktur-font";
