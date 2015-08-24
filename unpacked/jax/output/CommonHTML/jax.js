@@ -2364,7 +2364,7 @@
             if (q < p) {u += (p - q)/2; v += (p - q)/2}
             frac.style.verticalAlign = CHTML.Em(-v);
           } else { // \over
-            p = Math.max((isDisplay ? 3 : 0) * t, mt);  // force to be at least 1px
+            p = Math.max((isDisplay ? 3 : 0) * t, 2*mt);  // force to be at least 2px
             t = Math.max(t,mt);
             q = (u - nbox.d*nscale) - (a + t/2); if (q < p) u += (p - q);
             q = (a - t/2) - (dbox.h*dscale - v); if (q < p) v += (p - q);
@@ -2380,8 +2380,8 @@
           BBOX.combine(dbox,0,-v);
           BBOX.clean();
           u -= nscale*nbox.d + a + t/2; v -= dscale*dbox.h - a + t/2;
-          if (u > 0) num.style.paddingBottom = CHTML.Em(u/nscale);
-          if (v > 0) denom.style.paddingTop = CHTML.Em(v/dscale);
+          if (u) num.style[u > 0 ? "paddingBottom" : "marginBottom"] = CHTML.Em(u/nscale);
+          if (v) denom.style[v > 0 ? "paddingTop" : "marginTop"] = CHTML.Em(v/dscale);
         }
         //
         //  Add nulldelimiterspace around the fraction
