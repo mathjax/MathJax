@@ -80,8 +80,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           !bmml.Get("largeop")) {u = v = 0}
       }
       values = this.getValues("displaystyle","subscriptshift","superscriptshift","texprimestyle");
-      values.subscriptshift   = (values.subscriptshift === ""   ? 0 : CHTML.length2em(values.subscriptshift));
-      values.superscriptshift = (values.superscriptshift === "" ? 0 : CHTML.length2em(values.superscriptshift));
+      values.subscriptshift   = (values.subscriptshift === ""   ? 0 : this.CHTMLlength2em(values.subscriptshift));
+      values.superscriptshift = (values.superscriptshift === "" ? 0 : this.CHTMLlength2em(values.superscriptshift));
 
       var dx = (presub ? s+pbox.w : presup ? s+Pbox.w-delta : 0);
       this.CHTML.combine(bbox,dx,0); var x = this.CHTML.w;

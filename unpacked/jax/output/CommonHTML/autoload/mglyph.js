@@ -61,14 +61,14 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
             isMathJax:true, src:values.src, alt:values.alt, title:values.alt
           });
           var w = bbox.img.img.width/CHTML.em, h = bbox.img.img.height/CHTML.em;
-          if (values.width !== "")  img.style.width  = CHTML.Em(CHTML.length2em(values.width,w));
-          if (values.height !== "") img.style.height = CHTML.Em(CHTML.length2em(values.height,h));
+          if (values.width !== "")  img.style.width  = CHTML.Em(this.CHTMLlength2em(values.width,w));
+          if (values.height !== "") img.style.height = CHTML.Em(this.CHTMLlength2em(values.height,h));
           //
           //  Warning:  causes page reflows
           //
           bbox.w = bbox.r = img.offsetWidth/CHTML.em; bbox.h = bbox.t = img.offsetHeight/CHTML.em;
           if (values.valign) {
-            bbox.d = bbox.b = -CHTML.length2em(values.valign,h);
+            bbox.d = bbox.b = -this.CHTMLlength2em(values.valign,h);
             img.style.verticalAlign = CHTML.Em(-bbox.d);
             bbox.h -= bbox.d; bbox.t = bbox.h;
           }

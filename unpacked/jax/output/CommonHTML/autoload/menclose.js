@@ -46,8 +46,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       //  Get the padding and rule thickness
       //
-      var p = CHTML.length2em(values.padding,1/CHTML.em);   // padding for enclosure
-      var t = CHTML.length2em(values.thickness,1/CHTML.em); // thickness of lines
+      var p = this.CHTMLlength2em(values.padding,1/CHTML.em);   // padding for enclosure
+      var t = this.CHTMLlength2em(values.thickness,1/CHTML.em); // thickness of lines
       t = Math.max(1,Math.round(t*CHTML.em))/CHTML.em;
       var SOLID = CHTML.Px(t)+" solid";
       var bb = {L:p, R:p, T:p, B:p, H:cbox.h+p, D:cbox.d+p, W:cbox.w+2*p};

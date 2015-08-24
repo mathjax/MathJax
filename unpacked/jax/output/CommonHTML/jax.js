@@ -393,7 +393,7 @@
         jax.CHTML.scale = scale/100; jax.CHTML.fontSize = scale+"%";
         jax.CHTML.outerEm = em; jax.CHTML.em = this.em = em * scale/100;
         jax.CHTML.ex = ex; jax.CHTML.cwidth = cwidth/this.em;
-        jax.CHTML.lineWidth = (linebreak ? this.length2em(width,maxwidth/this.em) : maxwidth);
+        jax.CHTML.lineWidth = (linebreak ? this.length2em(width,maxwidth/this.em,1) : maxwidth);
       }
       //
       //  Remove the test spans used for determining scales and linebreak widths
@@ -1133,34 +1133,36 @@
     //
     //  ### FIXME: Handle mu's
     //
-    length2em: function (length,size) {
-      if (typeof(length) !== "string") {length = length.toString()}
-      if (length === "") {return ""}
-      if (length === MML.SIZE.NORMAL) {return 1}
-      if (length === MML.SIZE.BIG)    {return 2}
-      if (length === MML.SIZE.SMALL)  {return .71}
-      if (this.MATHSPACE[length])     {return this.MATHSPACE[length]}
+    length2em: function (length,size,scale) {
+      if (typeof(length) !== "string") length = length.toString();
+      if (length === "") return "";
+      if (length === MML.SIZE.NORMAL) return 1;
+      if (length === MML.SIZE.BIG)    return 2;
+      if (length === MML.SIZE.SMALL)  return .71;
+      if (this.MATHSPACE[length])     return this.MATHSPACE[length];
       var match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
       var m = parseFloat(match[1]||"1"), unit = match[2];
-      if (size == null) {size = 1}
-      if (unit === "em") {return m}
-      if (unit === "ex") {return m * this.TEX.x_height}
-      if (unit === "%")  {return m / 100 * size}
-      if (unit === "px") {return m / this.em}
-      if (unit === "pt") {return m / 10}                      // 10 pt to an em
-      if (unit === "pc") {return m * 1.2}                     // 12 pt to a pc
-      if (unit === "in") {return m * this.pxPerInch / this.em}
-      if (unit === "cm") {return m * this.pxPerInch / this.em / 2.54}  // 2.54 cm to an inch
-      if (unit === "mm") {return m * this.pxPerInch / this.em / 25.4}  // 10 mm to a cm
-      if (unit === "mu") {return m / 18}                     // 18mu to an em for the scriptlevel
+      if (size == null) size = 1;  if (!scale) scale = 1;
+      scale = 1 /this.em / scale;
+      if (unit === "em") return m;
+      if (unit === "ex") return m * this.TEX.x_height;
+      if (unit === "%")  return m / 100 * size;
+      if (unit === "px") return m * scale;
+      if (unit === "pt") return m / 10;                 // 10 pt to an em
+      if (unit === "pc") return m * 1.2;                // 12 pt to a pc
+      scale *= this.pxPerInch;
+      if (unit === "in") return m * scale;
+      if (unit === "cm") return m * scale / 2.54;       // 2.54 cm to an inch
+      if (unit === "mm") return m * scale / 25.4;       // 10 mm to a cm
+      if (unit === "mu") return m / 18;                 // 18mu to an em for the scriptlevel
       return m*size;  // relative to given size (or 1em as default)
     },
-    thickness2em: function (length) {
-      var thick = CHTML.TEX.rule_thickness;
+    thickness2em: function (length,scale) {
+      var thick = CHTML.TEX.rule_thickness/(scale||1);
       if (length === MML.LINETHICKNESS.MEDIUM) return thick;
       if (length === MML.LINETHICKNESS.THIN)   return .67*thick;
       if (length === MML.LINETHICKNESS.THICK)  return 1.67*thick;
-      return this.length2em(length,thick);
+      return this.length2em(length,thick,scale);
     },
 
     Em: function (m) {
@@ -1255,7 +1257,7 @@
       if (cbox.D) this.D = cbox.D; else delete this.D;
     },
     adjust: function (m,x,X,M) {
-      this[x] += CHTML.length2em(m);
+      this[x] += CHTML.length2em(m,1,this.scale);
       if (M == null) {
         if (this[x] > this[X]) this[X] = this[x];
       } else {
@@ -1415,6 +1417,10 @@
         return document.getElementById((this.id||"MJXc-Node-"+this.CHTMLnodeID)+CHTML.idPostfix);
       },
       
+      CHTMLlength2em: function (length,size) {
+        return CHTML.length2em(length,size,this.CHTML.scale);
+      },
+      
       CHTMLhandleAttributes: function (node) {
         if (this["class"]) node.className = this["class"];
         //
@@ -1445,13 +1451,13 @@
         if (values.scriptlevel !== 0) {
           if (values.scriptlevel > 2) values.scriptlevel = 2;
           scale = Math.pow(this.Get("scriptsizemultiplier"),values.scriptlevel);
-          values.scriptminsize = CHTML.length2em(this.Get("scriptminsize"));
+          values.scriptminsize = CHTML.length2em(this.Get("scriptminsize"),.8,1);
           if (scale < values.scriptminsize) scale = values.scriptminsize;
         }
         if (this.removedStyles && this.removedStyles.fontSize && !values.fontsize)
           values.fontsize = this.removedStyles.fontSize;
         if (values.fontsize && !this.mathsize) values.mathsize = values.fontsize;
-        if (values.mathsize !== 1) scale *= CHTML.length2em(values.mathsize);
+        if (values.mathsize !== 1) scale *= CHTML.length2em(values.mathsize,1,1);
         this.CHTML.scale = scale; pscale = this.CHTML.rscale = scale/pscale;
         if (Math.abs(pscale-1) < .001) pscale = 1;
         if (node && pscale !== 1) node.style.fontSize = CHTML.Percent(pscale);
@@ -1500,7 +1506,7 @@
         if (!this.useMMLspacing) {
           var space = this.texSpacing();
           if (space !== "") {
-            this.CHTML.L = CHTML.length2em(space);
+            this.CHTML.L = this.CHTMLlength2em(space);
             node.className += " "+CHTML.SPACECLASS[space];
           }
         }
@@ -1659,9 +1665,9 @@
           if (values.indentalign === MML.INDENTALIGN.AUTO) values.indentalign = CONFIG.displayAlign;
           if (values.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) values.indentshift = values.indentshiftfirst;
           if (values.indentshift === "auto") values.indentshift = "0";
-          var shift = CHTML.length2em(values.indentshift,CHTML.cwidth);
+          var shift = this.CHTMLlength2em(values.indentshift,CHTML.cwidth);
           if (CONFIG.displayIndent !== "0") {
-            var indent = CHTML.length2em(CONFIG.displayIndent,CHTML.cwidth);
+            var indent = this.CHTMLlength2em(CONFIG.displayIndent,CHTML.cwidth);
             shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
           }
           var styles = node.parentNode.parentNode.style;
@@ -1751,8 +1757,8 @@
       CHTMLhandleSpace: function (node) {
         if (this.useMMLspacing) {
           var values = this.getValues("scriptlevel","lspace","rspace");
-          values.lspace = Math.max(0,CHTML.length2em(values.lspace));
-          values.rspace = Math.max(0,CHTML.length2em(values.rspace));
+          values.lspace = Math.max(0,this.CHTMLlength2em(values.lspace));
+          values.rspace = Math.max(0,this.CHTMLlength2em(values.rspace));
           if (values.scriptlevel > 0) {
             if (!this.hasValue("lspace")) values.lspace = .15;
             if (!this.hasValue("rspace")) values.rspace = .15;
@@ -1832,8 +1838,8 @@
         //
         var H, a = CHTML.TEX.axis_height;
         if (values.symmetric) {H = 2*Math.max(h-a,d+a)} else {H = h + d}
-        values.maxsize = CHTML.length2em(values.maxsize,bbox.h+bbox.d);
-        values.minsize = CHTML.length2em(values.minsize,bbox.h+bbox.d);
+        values.maxsize = this.CHTMLlength2em(values.maxsize,bbox.h+bbox.d);
+        values.minsize = this.CHTMLlength2em(values.minsize,bbox.h+bbox.d);
         H = Math.max(values.minsize,Math.min(values.maxsize,H));
         //
         //  If we are not already stretched to this height
@@ -1866,8 +1872,8 @@
         if ((values.fontweight === "bold" || (this.removedStyles||{}).fontWeight === "bold" ||
             parseInt(values.fontweight) >= 600) && !this.Get("mathvariant",true))
                 values.mathvariant = MML.VARIANT.BOLD;
-        values.maxsize = CHTML.length2em(values.maxsize,bbox.w);
-        values.minsize = CHTML.length2em(values.minsize,bbox.w);
+        values.maxsize = this.CHTMLlength2em(values.maxsize,bbox.w);
+        values.minsize = this.CHTMLlength2em(values.minsize,bbox.w);
         W = Math.max(values.minsize,Math.min(values.maxsize,W));
         if (W !== bbox.sW) {
           while (node.firstChild) node.removeChild(node.firstChild);
@@ -1930,9 +1936,9 @@
         this.CHTMLhandleStyle(node);
         this.CHTMLhandleScale(node);
         var values = this.getValues("height","depth","width");
-        var w = CHTML.length2em(values.width),
-            h = CHTML.length2em(values.height),
-            d = CHTML.length2em(values.depth);
+        var w = this.CHTMLlength2em(values.width),
+            h = this.CHTMLlength2em(values.height),
+            d = this.CHTMLlength2em(values.depth);
         var bbox = this.CHTML;
         bbox.w = bbox.r = w; bbox.h = bbox.t = h; bbox.d = bbox.b = d; bbox.l = 0;
         if (w < 0) {node.style.marginRight = CHTML.Em(w); w = 0}
@@ -1995,7 +2001,7 @@
         length = String(length);
         var match = length.match(/width|height|depth/);
         var size = (match ? this.CHTML[match[0].charAt(0)] : (d ? this.CHTML[d] : 0));
-        var dimen = (CHTML.length2em(length,size)||0);
+        var dimen = (this.CHTMLlength2em(length,size)||0);
         if (length.match(/^[-+]/) && D != null) dimen += D;
         if (m != null) dimen = Math.max(m,dimen);
         return dimen;
@@ -2259,8 +2265,8 @@
           if (bmml.data.join("").length === 1 && bbox.rscale === 1 && !bbox.sH &&
               !bmml.Get("largeop")) {u = v = 0}
         }
-        values.subscriptshift   = (values.subscriptshift === ""   ? 0 : CHTML.length2em(values.subscriptshift));
-        values.superscriptshift = (values.superscriptshift === "" ? 0 : CHTML.length2em(values.superscriptshift));
+        values.subscriptshift   = (values.subscriptshift === ""   ? 0 : this.CHTMLlength2em(values.subscriptshift));
+        values.superscriptshift = (values.superscriptshift === "" ? 0 : this.CHTMLlength2em(values.superscriptshift));
         //
         //  Add the super- and subscripts
         //
@@ -2331,7 +2337,7 @@
         //
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1),
             BBOX = CHTML.BBOX.empty(this.CHTML), nscale = nbox.rscale, dscale = dbox.rscale;
-        values.linethickness = Math.max(0,CHTML.thickness2em(values.linethickness||"0"));
+        values.linethickness = Math.max(0,CHTML.thickness2em(values.linethickness||"0",BBOX.scale));
         var mt = CHTML.TEX.min_rule_thickness/CHTML.em/BBOX.scale, a = CHTML.TEX.axis_height;
         var t = values.linethickness, p,q, u,v;
         if (values.bevelled) {

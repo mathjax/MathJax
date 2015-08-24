@@ -84,7 +84,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       );
       if (VALUES.linebreakstyle === MML.LINEBREAKSTYLE.INFIXLINEBREAKSTYLE) 
         VALUES.linebreakstyle = this.Get("infixlinebreakstyle");
-      VALUES.lineleading = CHTML.length2em(VALUES.lineleading,0.5);
+      VALUES.lineleading = this.CHTMLlength2em(VALUES.lineleading,0.5);
 
       //
       //  Break the math at its best line breaks
@@ -242,9 +242,9 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       else                   shift = prev.indentshift || def.indentshift;
       if (shift === MML.INDENTSHIFT.INDENTSHIFT) shift = prev.indentshift || def.indentshift;
       if (shift === "auto" || shift === "") shift = "0";
-      shift = CHTML.length2em(shift,CHTML.cwidth);
+      shift = this.CHTMLlength2em(shift,CHTML.cwidth);
       if (state.isTop && CONFIG.displayIndent !== "0") {
-        var indent = CHTML.length2em(CONFIG.displayIndent,CHTML.cwidth);
+        var indent = this.CHTMLlength2em(CONFIG.displayIndent,CHTML.cwidth);
         shift += (align === MML.INDENTALIGN.RIGHT ? -indent : indent);
       }
       return (align === MML.INDENTALIGN.RIGHT && !noadjust ? -shift : shift);
@@ -674,7 +674,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       if (penalty >= info.penalty) return false;
       info.penalty = penalty; info.values = values; info.W = W; info.w = w;
-      values.lineleading = CHTML.length2em(values.lineleading,state.VALUES.lineleading);
+      values.lineleading = this.CHTMLlength2em(values.lineleading,state.VALUES.lineleading);
       values.id = this.CHTMLnodeID;
       return true;
     }

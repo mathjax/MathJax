@@ -122,8 +122,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           RLINES = SPLIT(values.rowlines),
           CWIDTH = SPLIT(values.columnwidth),
           RCALIGN = [], i, m, J = state.J, M = state.rows.length-1;
-      for (i = 0, m = CSPACE.length; i < m; i++) CSPACE[i] = CHTML.length2em(CSPACE[i]);
-      for (i = 0, m = RSPACE.length; i < m; i++) RSPACE[i] = CHTML.length2em(RSPACE[i]);
+      for (i = 0, m = CSPACE.length; i < m; i++) CSPACE[i] = this.CHTMLlength2em(CSPACE[i]);
+      for (i = 0, m = RSPACE.length; i < m; i++) RSPACE[i] = this.CHTMLlength2em(RSPACE[i]);
       while (CSPACE.length <  J) CSPACE.push(CSPACE[CSPACE.length-1]);
       while (CALIGN.length <= J) CALIGN.push(CALIGN[CALIGN.length-1]);
       while (CLINES.length <  J) CLINES.push(CLINES[CLINES.length-1]);
@@ -148,8 +148,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       var FSPACE = SPLIT(values.framespacing);
       if (FSPACE.length != 2) FSPACE = SPLIT(this.defaults.framespacing);
-      FSPACE[0] = Math.max(0,CHTML.length2em(FSPACE[0]));
-      FSPACE[1] = Math.max(0,CHTML.length2em(FSPACE[1]));
+      FSPACE[0] = Math.max(0,this.CHTMLlength2em(FSPACE[0]));
+      FSPACE[1] = Math.max(0,this.CHTMLlength2em(FSPACE[1]));
       if (values.columnlines.replace(/none/g,"").replace(/ /g,"") !== "" ||
           values.rowlines.replace(/none/g,"").replace(/ /g,"") !== "") values.fspace = true;
       //
@@ -306,7 +306,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Handle equal columns by adjusting the CWIDTH array
       //
       if (values.width !== "auto" && !relWidth) {
-        WW = Math.max(0,CHTML.length2em(values.width,state.R));
+        WW = Math.max(0,this.CHTMLlength2em(values.width,state.R));
         setWidths = true;
       }
       if (values.equalcolumns) {
@@ -344,7 +344,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         if (CWIDTH[j] === "auto") auto.push(j)
         else if (CWIDTH[j] === "fit") fit.push(j)
         else if (CWIDTH[j].match(/%$/)) percent.push(j)
-        else W[j] = CHTML.length2em(CWIDTH[j],W[j]);
+        else W[j] = this.CHTMLlength2em(CWIDTH[j],W[j]);
         TW += W[j] + CSPACE[j];
         if (row[j]) row[j].style.width = CHTML.Em(W[j]);
       }
@@ -373,7 +373,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
             var extra = 0;
             for (i = 0, m = percent.length; i < m; i++) {
               j = percent[i];
-              w = Math.max(W[j],CHTML.length2em(CWIDTH[j],WW));
+              w = Math.max(W[j],this.CHTMLlength2em(CWIDTH[j],WW));
               extra += w-W[j]; W[j] = w;
               row[j].style.width = CHTML.Em(w);
             }
@@ -434,10 +434,10 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (indent.indentalign === MML.INDENTALIGN.AUTO) indent.indentalign = CONFIG.displayAlign;
       if (indent.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) indent.indentshift = indent.indentshiftfirst;
       if (indent.indentshift === "auto") indent.indentshift = "0";
-      var shift = CHTML.length2em(indent.indentshift,CHTML.cwidth);
-      var labelspace = CHTML.length2em(values.minlabelspacing,this.defaults.minlabelspacing);
+      var shift = this.CHTMLlength2em(indent.indentshift,CHTML.cwidth);
+      var labelspace = this.CHTMLlength2em(values.minlabelspacing,this.defaults.minlabelspacing);
       var labelW = labelspace + state.W[LABEL], labelshift = 0, tw = state.R;
-      var dIndent = CHTML.length2em(CONFIG.displayIndent,CHTML.cwidth);
+      var dIndent = this.CHTMLlength2em(CONFIG.displayIndent,CHTML.cwidth);
       var s = (state.CALIGN[LABEL] === MML.INDENTALIGN.RIGHT ? -1 : 1);
       if (indent.indentalign === MML.INDENTALIGN.CENTER) {
         tw += 2 * (labelW - s*(shift + dIndent));
@@ -574,11 +574,11 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
             if (BBOX.stretch === "V") {
               var HD = BBOX.h + BBOX.d;
               if (HD) {
-                var r = CHTML.length2em(min,HD)/HD;
+                var r = this.CHTMLlength2em(min,HD)/HD;
                 if (r > 1) {BBOX.h *= r; BBOX.d *= r}
               }
             } else {
-              BBOX.w = Math.max(BBOX.w,CHTML.length2em(min,BBOX.w));
+              BBOX.w = Math.max(BBOX.w,this.CHTMLlength2em(min,BBOX.w));
             }
           }
         }
