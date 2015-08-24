@@ -623,7 +623,8 @@
       for (var i = 0, m = items.length; i < m; i++) {
         var item = items[i].menuItem;
         // Deactivates submenu items.
-        if (item && item.submenu && item.submenu.posted) {
+        if (item && item.submenu && item.submenu.posted &&
+            item !== menu.menuItem) {
           item.Deactivate(items[i]);
         }
       }
