@@ -459,6 +459,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       var labels = HTML.Element("mjx-stack");
       table.style.display = "inline-table"; if (!table.style.width) table.style.width = "auto";
       labels.style.verticalAlign = "top";
+      table.style.verticalAlign = CHTML.Em(state.T-state.B-state.H[0]);
       node.style.verticalAlign = "";
       if (shift) {
         if (indent.indentalign === MML.INDENTALIGN.CENTER) {
