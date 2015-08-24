@@ -1880,7 +1880,7 @@
     MML.mtext.Augment({
       CHTMLgetVariant: function () {
         if (CHTML.config.mtextFontInherit || this.Parent().type === "merror") {
-          var scale = 1/CHTML.scale;
+          var scale = (CHTML.config.scale/100)/CHTML.scale;
           var variant = {cache:{}, fonts:[], className:"MJXc-font-inherit", rscale:scale,
                          style:{"font-size":CHTML.Percent(scale)}};
           var name = this.Get("mathvariant");
