@@ -2367,7 +2367,7 @@
             if (q < p) {u += (p - q)/2; v += (p - q)/2}
             frac.style.verticalAlign = CHTML.Em(-v);
           } else { // \over
-            p = Math.max((isDisplay ? 3 : 0) * t, 2*mt);  // force to be at least 2px
+            p = Math.max((isDisplay ? 2 : 0) * mt + t, t/2 + 1.5*mt);
             t = Math.max(t,mt);
             q = (u - nbox.d*nscale) - (a + t/2); if (q < p) u += (p - q);
             q = (a - t/2) - (dbox.h*dscale - v); if (q < p) v += (p - q);
