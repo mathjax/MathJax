@@ -408,22 +408,39 @@
 
   /*************************************************************/
   /*
-   *  The menu item root subclass
+   *  Abstract class of menu items.
    */
   var ITEM = MENU.ITEM = MathJax.Object.Subclass({
     name: "", // the menu item's label as [id,label] pair
+    node: null,
 
+    /*
+     *  Accessor method for node.
+     */
+    GetNode: function() {
+      return this.node;
+    },
+    /*
+     *  Registers the HTML node of the menu item.
+     */
+    SetNode: function(node) {
+      this.node = node;
+    },
+
+    Attributes: function(def) {
+      return HUB.Insert(
+        {onmouseup: MENU.Mouseup,
+         ondragstart: FALSE, onselectstart: FALSE, onselectend: FALSE,
+         ontouchstart: MENU.Touchstart, ontouchend: MENU.Touchend,
+         className: "MathJax_MenuItem", menuItem: this},
+        def);
+    },
     Create: function (menu) {
       if (!this.hidden) {
-        var def = {
-          onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
-          onmouseup: MENU.Mouseup, onmousedown: MENU.Mousedown,
-          ondragstart: FALSE, onselectstart: FALSE, onselectend: FALSE,
-          ontouchstart: MENU.Touchstart, ontouchend: MENU.Touchend,
-          className: "MathJax_MenuItem", menuItem: this
-        };
-        if (this.disabled) {def.className += " MathJax_MenuDisabled"}
-        HTML.addElement(menu,"div",def,this.Label(def,menu));
+        var def = this.Attributes();
+        var label = this.Label(def,menu);
+        var node = HTML.addElement(menu, "div", def, label);
+        this.SetNode(node);
       }
     },
     Name: function () {return _(this.name[0],this.name[1])},
@@ -481,9 +498,30 @@
 
   /*************************************************************/
   /*
+   *  Abstract class of menu items that are focusable and perform some action
+   */
+  MENU.ENTRY = MENU.ITEM.Subclass({
+
+    role: "menuitem",  // Aria role.
+    
+    Attributes: function() {
+      var def = this.SUPER(arguments).Attributes.call(
+        this,
+        {onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
+         onmousedown: MENU.Mousedown, role: this.role,
+         'aria-disabled': !!this.disabled});
+      if (this.disabled) {
+        def.className += " MathJax_MenuDisabled";
+      }
+      return def;
+    }
+  });
+  
+  /*************************************************************/
+  /*
    *  A menu item that performs a command when selected
    */
-  MENU.ITEM.COMMAND = MENU.ITEM.Subclass({
+  MENU.ITEM.COMMAND = MENU.ENTRY.Subclass({
     action: function () {},
 
     Init: function (name,action,def) {
@@ -507,7 +545,7 @@
   /*
    *  A menu item that posts a submenu
    */
-  MENU.ITEM.SUBMENU = MENU.ITEM.Subclass({
+  MENU.ITEM.SUBMENU = MENU.ENTRY.Subclass({
     menu: null,        // the submenu
     marker: "\u25BA",  // the submenu arrow
     markerRTL: "\u25C4", // the submenu arrow for RTL
@@ -560,10 +598,11 @@
   /*
    *  A menu item that is one of several radio buttons
    */
-  MENU.ITEM.RADIO = MENU.ITEM.Subclass({
+  MENU.ITEM.RADIO = MENU.ENTRY.Subclass({
     variable: null,     // the variable name
     marker: (isPC ? "\u25CF" : "\u2713"),   // the checkmark
-
+    role: "menuitemradio",
+    
     Init: function (name,variable,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
@@ -597,9 +636,10 @@
   /*
    *  A menu item that is checkable
    */
-  MENU.ITEM.CHECKBOX = MENU.ITEM.Subclass({
+  MENU.ITEM.CHECKBOX = MENU.ENTRY.Subclass({
     variable: null,     // the variable name
     marker: "\u2713",   // the checkmark
+    role: "menuitemcheckbox",
 
     Init: function (name,variable,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
@@ -633,7 +673,6 @@
       this.name = name; this.With(def);
     },
     Label: function (def,menu) {
-      delete def.onmouseover, delete def.onmouseout; delete def.onmousedown;
       def.className += " MathJax_MenuLabel";
       return [this.Name()];
     }
@@ -645,7 +684,6 @@
    */
   MENU.ITEM.RULE = MENU.ITEM.Subclass({
     Label: function (def,menu) {
-      delete def.onmouseover, delete def.onmouseout; delete def.onmousedown;
       def.className += " MathJax_MenuRule";
       return null;
     }
