@@ -297,7 +297,7 @@
       if (event) {
         var x = event.pageX, y = event.pageY;
       }
-      var node = MENU.node || event.target;
+      var node = MENU.GetNode() || event.target;
       if (!x && !y && node) {
         var rect = node.getBoundingClientRect();
         x = rect.right;
@@ -480,8 +480,8 @@
     jaxs: [],    // List of all MathJax nodes.
     hasJaxs: false,  // Flag to indicate if the MathJax node list has already
                      // been computed.
-    node: null,   // The node the menu was activated on.
-    active: null,   // The currently focused item. There can only be one!
+    node: null,   // The node the menu was activated on. HTML!
+    active: null,   // The currently focused item. There can only be one! HTML!
     posted: false,  // Is a menu open?
 
     GetJaxs: function() {
@@ -490,6 +490,18 @@
         MENU.jaxs.push(node);
       }
     },
+    GetNode: function() {
+      return MENU.node;
+    },
+    SetNode: function(node) {
+      MENU.node = node;
+    },
+    GetActive: function() {
+      return MENU.active;
+    },
+    SetActive: function(node) {
+      MENU.active = node;
+    },
     //
     // Focus is a global affair, since we only ever want a single focused item.
     //
@@ -497,19 +509,19 @@
       if (!MENU.posted) {
         MENU.Activate(menu);
       }
-      if (MENU.active) {
-        MENU.active.tabIndex = -1;
+      if (MENU.GetActive()) {
+        MENU.GetActive().tabIndex = -1;
       }
-      MENU.active = menu;
-      MENU.active.tabIndex = 0;
-      MENU.active.focus();
+      MENU.SetActive(menu);
+      MENU.GetActive().tabIndex = 0;
+      MENU.GetActive().focus();
     },
     Activate: function(event, menu) {
       if (!MENU.hasJaxs) {
         MENU.GetJaxs();
       }
-      if (!MENU.node) {
-        MENU.node = document.getElementById(MENU.jax.inputID + '-Frame');
+      if (!MENU.GetNode()) {
+        MENU.SetNode(document.getElementById(MENU.jax.inputID + '-Frame'));
       }
       for (var j = 0, jax; jax = MENU.jaxs[j]; j++) {
         jax.tabIndex = -1;
@@ -517,13 +529,13 @@
       MENU.posted = true;
     },
     Unfocus: function() {
-      MENU.active.tabIndex = -1;
-      MENU.active = null;
+      MENU.GetActive().tabIndex = -1;
+      MENU.SetActive(null);
       for (var j = 0, jax; jax = MENU.jaxs[j]; j++) {
         jax.tabIndex = 0;
       }
-      MENU.node.focus();
-      MENU.node = null;
+      MENU.GetNode().focus();
+      MENU.SetNode(null);
       MENU.posted = false;
     },
     //TODO: A toggle focus method on the top level would avoid having to
@@ -533,13 +545,13 @@
       if (len === 0) {
         return;
       }
-      var next = MENU.jaxs[MENU.Mod(move(MENU.jaxs.indexOf(MENU.node)), len)];
-      if (next === MENU.node) {
+      var next = MENU.jaxs[MENU.Mod(move(MENU.jaxs.indexOf(MENU.GetNode())), len)];
+      if (next === MENU.GetNode()) {
         return;
       }
       MENU.menu.Remove(event, menu);
       MENU.jax = MathJax.Hub.getJaxFor(next);
-      MENU.node = next;
+      MENU.SetNode(next);
       MENU.menu.Post(null);
     },
     Right: function(event, menu) {
@@ -584,6 +596,12 @@
     SetNode: function(node) {
       this.node = node;
     },
+    GetMenuNode: function() {
+      return this.menu;
+    },
+    SetMenuNode: function(menu) {
+      this.menu = menu;
+    },
 
     Attributes: function(def) {
       return HUB.Insert(
@@ -600,14 +618,14 @@
         var label = this.Label(def,menu);
         var node = HTML.addElement(menu, "div", def, label);
         this.SetNode(node);
-        this.menu = menu;
+        this.SetMenuNode(menu);
       }
     },
     Name: function () {return _(this.name[0],this.name[1])},
 
     Mouseover: function (event,menu) {
-      if (menu.parentNode === MENU.active.parentNode) {
-       this.Deactivate(MENU.active);
+      if (menu.parentNode === MENU.GetActive().parentNode) {
+       this.Deactivate(MENU.GetActive());
       }
       this.Activate(event, menu);
     },
@@ -619,7 +637,7 @@
 
     DeactivateSubmenus: function(menu) {
       var menus = document.getElementById("MathJax_MenuFrame").childNodes,
-          items = this.menu.childNodes;
+          items = this.GetMenuNode().childNodes;
       for (var i = 0, m = items.length; i < m; i++) {
         var item = items[i].menuItem;
         // Deactivates submenu items.
@@ -633,7 +651,7 @@
     RemoveSubmenus: function(menu, menus) {
       menus = menus || document.getElementById("MathJax_MenuFrame").childNodes;
       var m = menus.length-1;
-      while (m >= 0 && this.menu.menuItem !== menus[m].menuItem) {
+      while (m >= 0 && this.GetMenuNode().menuItem !== menus[m].menuItem) {
         menus[m].menuItem.posted = false;
         menus[m].parentNode.removeChild(menus[m]);
         m--;
@@ -698,7 +716,7 @@
       return def;
     },
     Move: function(event, item, move) {
-      var items = this.menu.menuItem.items;
+      var items = this.GetMenuNode().menuItem.items;
       var len = items.length;
       var index = items.indexOf(this);
       if (index === -1) {
@@ -718,12 +736,12 @@
       this.Move(event, item, function(x) { return x + 1; });
     },
     Right: function(event, item) {
-      if (this.menu.menuItem === MENU.menu) {
+      if (this.GetMenuNode().menuItem === MENU.menu) {
         MENU.Right(event, item);
       }
     },
     Left: function(event, item) {
-      if (this.menu.menuItem === MENU.menu) {
+      if (this.GetMenuNode().menuItem === MENU.menu) {
         MENU.Left(event, item);
       } else {
         this.Deactivate(item);
