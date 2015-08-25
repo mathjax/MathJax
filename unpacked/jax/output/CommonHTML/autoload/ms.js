@@ -50,11 +50,9 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (values.rquote === "\u201D" && values.mathvariant === "monospace") values.rquote = '"';
       //
       //  Add the left quote, the child nodes, and the right quote
-      //  FIXME:  should the quotation marks be in MML.VARIANT.NORMAL?
       //
-      this.CHTMLhandleText(node,values.lquote,this.CHTMLvariant);
-      for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLaddChild(node,i,{});
-      this.CHTMLhandleText(node,values.rquote,this.CHTMLvariant);
+      var text = values.lquote+this.data.join("")+values.rquote;  // FIXME:  handle mglyph?
+      this.CHTMLhandleText(node,text,this.CHTMLvariant);
       //
       //  Finish the bbox, add any needed space and color
       //
