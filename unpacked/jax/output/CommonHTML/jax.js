@@ -1448,6 +1448,7 @@
       CHTMLhandleScale: function (node) {
         var scale = 1, parent = this.parent, pscale = (parent ? parent.CHTML.scale : 1);
         var values = this.getValues("scriptlevel","fontsize","mathsize");
+        if (!this.isToken) values.mathsize = 1;
         if (values.scriptlevel !== 0) {
           if (values.scriptlevel > 2) values.scriptlevel = 2;
           scale = Math.pow(this.Get("scriptsizemultiplier"),values.scriptlevel);
