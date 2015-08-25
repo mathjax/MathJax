@@ -405,11 +405,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           line = HTMLCSS.createRule(stack,1.25/HTMLCSS.em,0,fW); HTMLCSS.addBox(stack,line);
           line.bbox = {h:1.25/HTMLCSS.em, d:0, w:fW, rw:fW, lw:0};
           HTMLCSS.placeBox(line,0,y - D[i] - (dy-D[i]-H[i+1])/2,true);
-          if (RLINES[i] === "dashed" || hasRelativeWidth) {
-            line.style.borderTop = line.style.height+" "+RLINES[i]; line.style.height = 0;
-            line.style.width = line.style.borderLeftWidth; line.style.borderLeft = "";
-            if (hasRelativeWidth) {line.style.width = "100%"}
-          }
+          if (RLINES[i] === "dashed") line.style.borderTopStyle = "dashed";
+          if (hasRelativeWidth) line.style.width = "100%"
         }
         y -= dy;
       }
