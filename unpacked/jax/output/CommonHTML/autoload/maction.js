@@ -62,6 +62,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
 
       return node;
     },
+    CHTMLcoreNode: function (node) {return this.CHTMLchildNode(node,0)},
     
     //
     //  Implementations for the various actions
