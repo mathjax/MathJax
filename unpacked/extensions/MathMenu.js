@@ -485,10 +485,15 @@
     posted: false,  // Is a menu open?
 
     GetJaxs: function() {
+      if (MENU.hasJaxs) {
+        return MENU.jaxs;
+      }
       var nodes = document.getElementsByClassName('MathJax');
       for (var i = 0, node; node = nodes[i]; i++) {
         MENU.jaxs.push(node);
       }
+      MENU.hasJaxs = true;
+      return MENU.jaxs;
     },
     GetNode: function() {
       return MENU.node;
@@ -517,13 +522,10 @@
       MENU.GetActive().focus();
     },
     Activate: function(event, menu) {
-      if (!MENU.hasJaxs) {
-        MENU.GetJaxs();
-      }
       if (!MENU.GetNode()) {
         MENU.SetNode(document.getElementById(MENU.jax.inputID + '-Frame'));
       }
-      for (var j = 0, jax; jax = MENU.jaxs[j]; j++) {
+      for (var j = 0, jax; jax = MENU.GetJaxs()[j]; j++) {
         jax.tabIndex = -1;
       }
       MENU.posted = true;
@@ -531,7 +533,8 @@
     Unfocus: function() {
       MENU.GetActive().tabIndex = -1;
       MENU.SetActive(null);
-      for (var j = 0, jax; jax = MENU.jaxs[j]; j++) {
+      var jaxs = MENU.GetJaxs();
+      for (var j = 0, jax; jax = jaxs[j]; j++) {
         jax.tabIndex = 0;
       }
       MENU.GetNode().focus();
@@ -541,11 +544,12 @@
     //TODO: A toggle focus method on the top level would avoid having to
     //tabIndex all the Jaxs.
     Move: function(event, menu, move) {
-      var len = MENU.jaxs.length;
+      var jaxs = MENU.GetJaxs();
+      var len = jaxs.length;
       if (len === 0) {
         return;
       }
-      var next = MENU.jaxs[MENU.Mod(move(MENU.jaxs.indexOf(MENU.GetNode())), len)];
+      var next = jaxs[MENU.Mod(move(jaxs.indexOf(MENU.GetNode())), len)];
       if (next === MENU.GetNode()) {
         return;
       }
