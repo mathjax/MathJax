@@ -297,7 +297,7 @@
       if (event) {
         var x = event.pageX, y = event.pageY;
       }
-      var node = MENU.GetNode() || event.target;
+      var node = MENU.CurrentNode() || event.target;
       if (!x && !y && node) {
         var rect = node.getBoundingClientRect();
         x = rect.right;
@@ -477,25 +477,23 @@
     /*
      *  Keyboard navigation of menu.
      */
-    node: null,   // The node the menu was activated on. HTML!
     active: null,   // The currently focused item. There can only be one! HTML!
     posted: false,  // Is a menu open?
 
-    GetJaxs: function() {
+    GetNode: function(jax) {
+      var node = document.getElementById(jax.inputID + '-Frame');
+      return node.isMathJax ? node : node.firstChild;
+    },
+    CurrentNode: function() {
+      return MENU.GetNode(MENU.jax);
+    },
+    AllNodes: function() {
       var jaxs = MathJax.Hub.getAllJax();
       var nodes = [];
       for (var i = 0, jax; jax = jaxs[i]; i++) {
-        var node = document.getElementById(jax.inputID + "-Frame");
-        nodes.push(node.isMathJax ? node : node.firstChild);
+        nodes.push(MENU.GetNode(jax));
       }
       return nodes;
-    },
-    GetNode: function() {
-      return document.getElementById(MENU.jax.inputID + '-Frame');
-      // return MENU.node;
-    },
-    SetNode: function(node) {
-      MENU.node = node;
     },
     GetActive: function() {
       return MENU.active;
@@ -518,10 +516,7 @@
       MENU.GetActive().focus();
     },
     Activate: function(event, menu) {
-      if (!MENU.GetNode()) {
-        MENU.SetNode(document.getElementById(MENU.jax.inputID + '-Frame'));
-      }
-      var jaxs = MENU.GetJaxs();
+      var jaxs = MENU.AllNodes();
       for (var j = 0, jax; jax = jaxs[j]; j++) {
         jax.tabIndex = -1;
       }
@@ -530,29 +525,27 @@
     Unfocus: function() {
       MENU.GetActive().tabIndex = -1;
       MENU.SetActive(null);
-      var jaxs = MENU.GetJaxs();
+      var jaxs = MENU.AllNodes();
       for (var j = 0, jax; jax = jaxs[j]; j++) {
         jax.tabIndex = 0;
       }
-      MENU.GetNode().focus();
-      MENU.SetNode(null);
+      MENU.CurrentNode().focus();
       MENU.posted = false;
     },
     //TODO: A toggle focus method on the top level would avoid having to
     //tabIndex all the Jaxs.
     Move: function(event, menu, move) {
-      var jaxs = MENU.GetJaxs();
+      var jaxs = MENU.AllNodes();
       var len = jaxs.length;
       if (len === 0) {
         return;
       }
-      var next = jaxs[MENU.Mod(move(jaxs.indexOf(MENU.GetNode())), len)];
-      if (next === MENU.GetNode()) {
+      var next = jaxs[MENU.Mod(move(jaxs.indexOf(MENU.CurrentNode())), len)];
+      if (next === MENU.CurrentNode()) {
         return;
       }
       MENU.menu.Remove(event, menu);
       MENU.jax = MathJax.Hub.getJaxFor(next);
-      MENU.SetNode(next);
       MENU.menu.Post(null);
     },
     Right: function(event, menu) {
