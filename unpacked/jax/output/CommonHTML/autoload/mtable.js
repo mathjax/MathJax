@@ -504,7 +504,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Propagate full-width equations, and reserve room for equation plus label
       //
       node.style.width = this.CHTML.pwidth = "100%";
-      this.CHTML.mwidth = CHTML.Em(tw);
+      node.style.minWidth = this.CHTML.mwidth = CHTML.Em(tw);
     }
   });
   
