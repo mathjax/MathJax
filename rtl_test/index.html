@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+    <title>MathJax Dynamic Math Test Page</title>
+    <link href='https://fonts.googleapis.com/css?family=Amiri&subset=arabic,latin' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/earlyaccess/droidarabicnaskh.css' rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript"
+            src="/unpacked/MathJax.js?config=TeX-AMS-MML_HTMLorMML&delayStartupUntilConfig">
+    </script>
+    <script type="text/javascript" src="/rtl_test/rtl_config.js"></script>
+    <style>
+        .MathJax_Display, .MathJax_Display * {
+            font-family: Amiri !important;
+            direction: rtl;
+        }
+
+        #wrapper {
+            transform: scale(2, 2);
+            transform-origin: top center;
+            width: 30%;
+            margin: 50px auto 0;
+        }
+    </style>
+</head>
+<body dir="rtl">
+
+<div id="wrapper">
+    $$ س = {-ب \pm \sqrt{ب^٢-٤أج} \over ٢أ} $$
+
+    $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+
+    $${x^{22}} = {y+2015}$$
+
+
+    <div id="eq-2">
+        $${س^{٨}} = {ص+٢٠١٥}$$
+    </div>
+
+
+</div>
+</body>
+</html>
