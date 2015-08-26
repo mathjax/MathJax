@@ -477,26 +477,22 @@
     /*
      *  Keyboard navigation of menu.
      */
-    jaxs: [],    // List of all MathJax nodes.
-    hasJaxs: false,  // Flag to indicate if the MathJax node list has already
-                     // been computed.
     node: null,   // The node the menu was activated on. HTML!
     active: null,   // The currently focused item. There can only be one! HTML!
     posted: false,  // Is a menu open?
 
     GetJaxs: function() {
-      if (MENU.hasJaxs) {
-        return MENU.jaxs;
+      var jaxs = MathJax.Hub.getAllJax();
+      var nodes = [];
+      for (var i = 0, jax; jax = jaxs[i]; i++) {
+        var node = document.getElementById(jax.inputID + "-Frame");
+        nodes.push(node.isMathJax ? node : node.firstChild);
       }
-      var nodes = document.getElementsByClassName('MathJax');
-      for (var i = 0, node; node = nodes[i]; i++) {
-        MENU.jaxs.push(node);
-      }
-      MENU.hasJaxs = true;
-      return MENU.jaxs;
+      return nodes;
     },
     GetNode: function() {
-      return MENU.node;
+      return document.getElementById(MENU.jax.inputID + '-Frame');
+      // return MENU.node;
     },
     SetNode: function(node) {
       MENU.node = node;
@@ -525,7 +521,8 @@
       if (!MENU.GetNode()) {
         MENU.SetNode(document.getElementById(MENU.jax.inputID + '-Frame'));
       }
-      for (var j = 0, jax; jax = MENU.GetJaxs()[j]; j++) {
+      var jaxs = MENU.GetJaxs();
+      for (var j = 0, jax; jax = jaxs[j]; j++) {
         jax.tabIndex = -1;
       }
       MENU.posted = true;
