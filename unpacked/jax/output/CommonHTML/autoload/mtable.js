@@ -435,7 +435,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (indent.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) indent.indentshift = indent.indentshiftfirst;
       if (indent.indentshift === "auto") indent.indentshift = "0";
       var shift = this.CHTMLlength2em(indent.indentshift,CHTML.cwidth);
-      var labelspace = this.CHTMLlength2em(values.minlabelspacing,this.defaults.minlabelspacing);
+      var labelspace = this.CHTMLlength2em(values.minlabelspacing,.8);
       var labelW = labelspace + state.W[LABEL], labelshift = 0, tw = state.R;
       var dIndent = this.CHTMLlength2em(CONFIG.displayIndent,CHTML.cwidth);
       var s = (state.CALIGN[LABEL] === MML.INDENTALIGN.RIGHT ? -1 : 1);
