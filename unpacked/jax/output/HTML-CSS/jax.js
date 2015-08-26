@@ -2957,7 +2957,7 @@
 	        color.style.marginLeft = HTMLCSS.Em(L);
 	        color.style.marginRight =
 	          HTMLCSS.Em(R + (values.indentalign === "right" ?
-                      Math.min(0,span.bbox.w+shift) - span.bbox.w : 0));
+                      span.bbox.w+shift - span.bbox.w : 0));
 		if (HTMLCSS.msieColorBug && values.indentalign === "right") {
                   if (parseFloat(color.style.marginLeft) > 0) {
                     var padding = MathJax.HTML.addElement(color.parentNode,"span");

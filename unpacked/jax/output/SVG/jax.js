@@ -2120,7 +2120,7 @@
             if (shift) {
               HUB.Insert(style,({
                 left: {marginLeft: SVG.Ex(shift)},
-                right: {marginRight: SVG.Ex(-shift)},
+                right: {marginRight: SVG.Ex(-shift), marginLeft: SVG.Ex(Math.max(0,shift-(l+svg.w+r)))},
                 center: {marginLeft: SVG.Ex(shift), marginRight: SVG.Ex(-shift)}
               })[values.indentalign]);
             }
