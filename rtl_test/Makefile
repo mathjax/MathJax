@@ -9,7 +9,7 @@ browsersync:
 		start \
 		--server \
 		--startPath "/rtl_test/" \
-		--files="unpacked/*.js, rtl_test/*.html"
+		--files="unpacked/*.js, rtl_test/*"
 
 basicserver:
 	xdg-open http://localhost:8080 &

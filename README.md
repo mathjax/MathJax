@@ -1,4 +1,21 @@
-# MathJax
+# MathJax - Right to Left Equations
+
+This is a MathJax configuration to support right to left languages such as Arabic.
+
+Run the demo:
+
+    $ cd rtl_test
+    $ make
+
+Figure out the dependencies, but generally you need Node.js and BrowserSync installed.
+
+The example will look like this:
+![Demo RTL MathJax](https://cloud.githubusercontent.com/assets/645156/9517397/70fc8fb2-4cb8-11e5-96fd-147751ca6e14.png)
+
+
+**Note:** This is currently just a hack, suggestions pull requests are welcome :).
+
+-------------
 
 ## Beautiful math in all browsers
 
