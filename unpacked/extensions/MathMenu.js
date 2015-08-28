@@ -639,18 +639,6 @@
       return menu.Remove(event,menu);
     },
 
-    Activate: function (event, menu) {
-      this.Deactivate(menu);
-      if (!this.disabled) {
-        menu.className += " MathJax_MenuActive";
-      }
-      this.DeactivateSubmenus(menu);
-      MENU.Focus(menu);
-    },
-    Deactivate: function (menu) {
-      menu.className = menu.className.replace(/ MathJax_MenuActive/,"");
-    },
-
     With: function (def) {if (def) {HUB.Insert(this,def)}; return this},
 
     isRTL: function () {return MENU.isRTL},
