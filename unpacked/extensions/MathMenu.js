@@ -42,7 +42,7 @@
       [["MathMenu",id]].concat([].slice.call(arguments,1))
     );
   };
-
+  
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE, isIE9 = ((document.documentMode||0) > 8);
   var ROUND = (isPC ? null : "5px");
 
@@ -829,7 +829,6 @@
       MENU.Focus(menu);
     },
     MoveHorizontal: function(event, menu, move, rtl) {
-      console.log(move);
       if (this.disabled) {
         return;
       }
@@ -1509,7 +1508,19 @@
     HUB.Register.StartupHook("End Config",{}), // wait until config is complete
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathMenu Ready"],
-    ["loadComplete",AJAX,"[MathJax]/extensions/MathMenu.js"]
+    ["loadComplete",AJAX,"[MathJax]/extensions/MathMenu.js"],
+    function() {
+      if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function(item, start) {
+          for (var i = (start || 0), j = this.length; i < j; i++) {
+            if (item === this[i]) {
+              return i;
+            }
+          }
+          return -1;
+        };
+      }
+    }
   );
 
 })(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.CallBack,MathJax.OutputJax);
