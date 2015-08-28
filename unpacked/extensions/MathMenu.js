@@ -522,9 +522,7 @@
       MENU.CurrentNode().focus();
       MENU.posted = false;
     },
-    //TODO: A toggle focus method on the top level would avoid having to
-    //tabIndex all the Jaxs.
-    Move: function(event, menu, move) {
+    MoveHorizontal: function(event, menu, move) {
       var jaxs = MENU.AllNodes();
       var len = jaxs.length;
       if (len === 0) {
@@ -539,10 +537,10 @@
       MENU.menu.Post(null);
     },
     Right: function(event, menu) {
-      MENU.Move(event, menu, function(x) {return x + 1;});
+      MENU.MoveHorizontal(event, menu, function(x) {return x + 1;});
     },
     Left: function(event, menu) {
-      MENU.Move(event, menu, function(x) {return x - 1;});
+      MENU.MoveHorizontal(event, menu, function(x) {return x - 1;});
     },
 
     //TODO: Move to utility class.
@@ -670,7 +668,7 @@
       }
       return def;
     },
-    Move: function(event, item, move) {
+    MoveVertical: function(event, item, move) {
       var menuNode = ITEM.GetMenuNode(item);
       var items = [];
       for (var i = 0, allItems = menuNode.menuItem.items, it;
@@ -692,28 +690,29 @@
       items[index].Activate(event, children[index]);
     },
     Up: function(event, item) {
-      this.Move(event, item, function(x) { return x - 1; });
+      this.MoveVertical(event, item, function(x) { return x - 1; });
     },
     Down: function(event, item) {
-      this.Move(event, item, function(x) { return x + 1; });
+      this.MoveVertical(event, item, function(x) { return x + 1; });
     },
     Right: function(event, item) {
-      if (ITEM.GetMenuNode(item).menuItem === MENU.menu) {
-        MENU.Right(event, item);
-      }
+      this.MoveHorizontal(event, item, MENU.Right, !this.isRTL());
     },
     Left: function(event, item) {
+      this.MoveHorizontal(event, item, MENU.Left, this.isRTL());
+    },
+    MoveHorizontal: function(event, item, move, rtl) {
       if (ITEM.GetMenuNode(item).menuItem === MENU.menu) {
-        MENU.Left(event, item);
-      } else {
-        this.Deactivate(item);
-        var sibling = item.parentNode.previousSibling;
-        var actives = sibling.getElementsByClassName('MathJax_MenuActive');
-        if (actives.length > 0) {
-          MENU.Focus(actives[0]);
-        }
-        this.RemoveSubmenus(item);
+        move(event, item);
       }
+      if (rtl) { return; }
+      this.Deactivate(item);
+      var sibling = item.parentNode.previousSibling;
+      var actives = sibling.getElementsByClassName('MathJax_MenuActive');
+      if (actives.length > 0) {
+        MENU.Focus(actives[0]);
+      }
+      this.RemoveSubmenus(item);
     },
     Space: function (event, menu) {
       this.Mouseup(event, menu);
@@ -829,8 +828,13 @@
       }
       MENU.Focus(menu);
     },
-    Right: function(event, menu) {
+    MoveHorizontal: function(event, menu, move, rtl) {
+      console.log(move);
       if (this.disabled) {
+        return;
+      }
+      if (!rtl) {
+        this.SUPER(arguments).MoveHorizontal.apply(this, arguments);
         return;
       }
       var submenuNodes = ITEM.GetMenuNode(menu).nextSibling.childNodes;
