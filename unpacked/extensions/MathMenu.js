@@ -395,12 +395,12 @@
       MENU.Left(event, menu);
     },
     Up: function(event, menu) {
-      var item = this.items[this.items.length - 1];
-      item.Activate(event, item.GetNode());
+      var node = menu.lastChild;
+      node.menuItem.Activate(event, node);
     },
     Down: function(event, menu) {
-      var item = this.items[0];
-      item.Activate(event, item.GetNode());
+      var node = menu.firstChild;
+      node.menuItem.Activate(event, node);
     }
   },{
 
@@ -568,22 +568,6 @@
     node: null,  // The HTML node of the item.
     menu: null,  // The parent menu containing that item. HTML node.
 
-    /*
-     *  Accessor method for node.
-     */
-    GetNode: function() {
-      return this.node;
-    },
-    /*
-     *  Registers the HTML node of the menu item.
-     */
-    SetNode: function(node) {
-      this.node = node;
-    },
-    GetMenuNode: function() {
-      return this.GetNode().parentNode;
-    },
-
     Attributes: function(def) {
       return HUB.Insert(
         {onmouseup: MENU.Mouseup,
@@ -598,7 +582,6 @@
         var def = this.Attributes();
         var label = this.Label(def,menu);
         var node = HTML.addElement(menu, "div", def, label);
-        this.SetNode(node);
       }
     },
     Name: function () {return _(this.name[0],this.name[1])},
@@ -617,7 +600,7 @@
 
     DeactivateSubmenus: function(menu) {
       var menus = document.getElementById("MathJax_MenuFrame").childNodes,
-          items = this.GetMenuNode().childNodes;
+          items = ITEM.GetMenuNode(menu).childNodes;
       for (var i = 0, m = items.length; i < m; i++) {
         var item = items[i].menuItem;
         // Deactivates submenu items.
@@ -631,7 +614,7 @@
     RemoveSubmenus: function(menu, menus) {
       menus = menus || document.getElementById("MathJax_MenuFrame").childNodes;
       var m = menus.length-1;
-      while (m >= 0 && this.GetMenuNode().menuItem !== menus[m].menuItem) {
+      while (m >= 0 && ITEM.GetMenuNode(menu).menuItem !== menus[m].menuItem) {
         menus[m].menuItem.posted = false;
         menus[m].parentNode.removeChild(menus[m]);
         m--;
@@ -672,6 +655,10 @@
 
     isRTL: function () {return MENU.isRTL},
     rtlClass: function () {return (this.isRTL() ? " RTL" : "")}
+  }, {
+    GetMenuNode: function(item) {
+      return item.parentNode;
+    }
   });
 
   /*************************************************************/
@@ -696,18 +683,25 @@
       return def;
     },
     Move: function(event, item, move) {
-      var items = this.GetMenuNode().menuItem.items;
-      var len = items.length;
+      var menuNode = ITEM.GetMenuNode(item);
+      var items = [];
+      for (var i = 0, allItems = menuNode.menuItem.items, it;
+           it = allItems[i]; i++) {
+        if (!it.hidden) {
+          items.push(it);
+        }
+      }
       var index = items.indexOf(this);
       if (index === -1) {
         return;
       }
+      var len = items.length;
+      var children = menuNode.childNodes;
       do {
         index = MENU.Mod(move(index), len);
-      } while (items[index].hidden || !items[index].GetNode().role);
+      } while (items[index].hidden || !children[index].role);
       this.Deactivate(item);
-      item = items[index];
-      item.Activate(event, item.GetNode());
+      items[index].Activate(event, children[index]);
     },
     Up: function(event, item) {
       this.Move(event, item, function(x) { return x - 1; });
@@ -716,12 +710,12 @@
       this.Move(event, item, function(x) { return x + 1; });
     },
     Right: function(event, item) {
-      if (this.GetMenuNode().menuItem === MENU.menu) {
+      if (ITEM.GetMenuNode(item).menuItem === MENU.menu) {
         MENU.Right(event, item);
       }
     },
     Left: function(event, item) {
-      if (this.GetMenuNode().menuItem === MENU.menu) {
+      if (ITEM.GetMenuNode(item).menuItem === MENU.menu) {
         MENU.Left(event, item);
       } else {
         this.Deactivate(item);
@@ -851,9 +845,9 @@
       if (this.disabled) {
         return;
       }
-      if (this.submenu.items.length > 0) {
-        var item = this.submenu.items[0];
-        item.Activate(event, item.GetNode());
+      var submenuNodes = ITEM.GetMenuNode(menu).nextSibling.childNodes;
+      if (submenuNodes.length > 0) {
+        menu.menuItem.Activate(event, submenuNodes[0]);
       }
     }
   });
