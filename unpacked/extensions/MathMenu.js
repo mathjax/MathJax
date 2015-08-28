@@ -301,13 +301,13 @@
         x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
         y = event.clientY + document.body.scrollTop  + document.documentElement.scrollTop;
       }
-      var node = MENU.CurrentNode() || event.target;
-      if (!x && !y && node) {
-        var rect = node.getBoundingClientRect();
-        x = rect.right;
-        y = rect.bottom;
-      }
       if (!parent) {
+        var node = MENU.CurrentNode() || event.target;
+        if (!x && !y && node) {
+          var rect = node.getBoundingClientRect();
+          x = rect.right;
+          y = rect.bottom;
+        }
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
            {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
         if (MENU.isMobile) {x = Math.max(5,x-Math.floor(menu.offsetWidth/2)); y -= 20}
