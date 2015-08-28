@@ -495,25 +495,16 @@
       }
       return nodes;
     },
-    GetActive: function() {
-      return MENU.active;
-    },
-    SetActive: function(node) {
-      MENU.active = node;
+    ActiveNode: function() {
+      return document.activeElement;
     },
     //
     // Focus is a global affair, since we only ever want a single focused item.
     //
     Focus: function(menu) {
-      if (!MENU.posted) {
-        MENU.Activate(menu);
-      }
-      if (MENU.GetActive()) {
-        MENU.GetActive().tabIndex = -1;
-      }
-      MENU.SetActive(menu);
-      MENU.GetActive().tabIndex = 0;
-      MENU.GetActive().focus();
+      !MENU.posted ? MENU.Activate(menu) : MENU.ActiveNode().tabIndex = -1;
+      menu.tabIndex = 0;
+      menu.focus();
     },
     Activate: function(event, menu) {
       var jaxs = MENU.AllNodes();
@@ -523,8 +514,7 @@
       MENU.posted = true;
     },
     Unfocus: function() {
-      MENU.GetActive().tabIndex = -1;
-      MENU.SetActive(null);
+      MENU.ActiveNode().tabIndex = -1;
       var jaxs = MENU.AllNodes();
       for (var j = 0, jax; jax = jaxs[j]; j++) {
         jax.tabIndex = 0;
@@ -591,10 +581,7 @@
       this.node = node;
     },
     GetMenuNode: function() {
-      return this.menu;
-    },
-    SetMenuNode: function(menu) {
-      this.menu = menu;
+      return this.GetNode().parentNode;
     },
 
     Attributes: function(def) {
@@ -612,14 +599,13 @@
         var label = this.Label(def,menu);
         var node = HTML.addElement(menu, "div", def, label);
         this.SetNode(node);
-        this.SetMenuNode(menu);
       }
     },
     Name: function () {return _(this.name[0],this.name[1])},
 
     Mouseover: function (event,menu) {
-      if (menu.parentNode === MENU.GetActive().parentNode) {
-       this.Deactivate(MENU.GetActive());
+      if (menu.parentNode === MENU.ActiveNode().parentNode) {
+       this.Deactivate(MENU.ActiveNode());
       }
       this.Activate(event, menu);
     },
