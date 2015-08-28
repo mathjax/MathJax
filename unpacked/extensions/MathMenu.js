@@ -297,15 +297,15 @@
       if (event) {
         var x = event.pageX, y = event.pageY;
       }
+      if (!x && !y && event && event.clientX && event.clientY) {
+        x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = event.clientY + document.body.scrollTop  + document.documentElement.scrollTop;
+      }
       var node = MENU.CurrentNode() || event.target;
       if (!x && !y && node) {
         var rect = node.getBoundingClientRect();
         x = rect.right;
         y = rect.bottom;
-      }
-      if (!x && !y) {
-        x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        y = event.clientY + document.body.scrollTop  + document.documentElement.scrollTop;
       }
       if (!parent) {
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
@@ -835,7 +835,7 @@
       }
       var submenuNodes = ITEM.GetMenuNode(menu).nextSibling.childNodes;
       if (submenuNodes.length > 0) {
-        menu.menuItem.Activate(event, submenuNodes[0]);
+        this.submenu.items[0].Activate(event, submenuNodes[0]);
       }
     }
   });
