@@ -101,7 +101,7 @@
   HELP.Post = function () {
     this.div = MENU.Background(this);
     var help = HTML.addElement(this.div,"div",{
-      id: "MathJax_Help"
+      id: "MathJax_Help", tabIndex: "0"
     },LOCALE._("HelpDialog",[
       ["b",{style:{fontSize:"120%"}},[["Help","MathJax Help"]]],
       ["div",{id: "MathJax_HelpContent"},[
@@ -148,10 +148,13 @@
         ]
       ]],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
-      ["span",{id: "MathJax_HelpClose", onclick: HELP.Remove},
+      ["span",{id: "MathJax_HelpClose", onclick: HELP.Remove,
+               onkeydown: HELP.Remove, tabIndex: '0',
+               'aria-label': 'Close', 'aria-describedby': 'Close window'},
         [["span",{},["\u00D7"]]]
       ]
     ]));
+    help.focus();
     LOCALE.setCSS(help);
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;

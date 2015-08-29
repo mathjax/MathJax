@@ -477,7 +477,6 @@
     /*
      *  Keyboard navigation of menu.
      */
-    active: null,   // The currently focused item. There can only be one! HTML!
     posted: false,  // Is a menu open?
 
     GetNode: function(jax) {
@@ -746,7 +745,6 @@
     },
 
     Label: function (def,menu) {return [this.Name()]},
-    //TODO: Focus the popup.
     Mouseup: function (event,menu) {
       if (!this.disabled) {
         this.Remove(event,menu);
@@ -973,7 +971,7 @@
     ]]);
     MENU.About.div = MENU.Background(MENU.About);
     var about = HTML.addElement(MENU.About.div,"div",{
-      id: "MathJax_About"
+      id: "MathJax_About", tabIndex:0
     },[
       ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
       _(font.replace(/ /g,""),"using "+font),["br"],["br"],
@@ -983,9 +981,13 @@
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
       }},jax],["br"],["br"],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
-      ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",onclick:MENU.About.Remove},
+      ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",
+               onclick:MENU.About.Remove,
+               onkeydown:MENU.About.Remove, tabIndex:0,
+               'aria-label': "Close", 'aria-describedby': "Close window"},
         [["span",{},"\u00D7"]]]
     ]);
+    about.focus();
     MathJax.Localization.setCSS(about);
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;
