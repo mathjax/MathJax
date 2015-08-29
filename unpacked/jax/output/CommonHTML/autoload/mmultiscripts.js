@@ -178,7 +178,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (data && data.type !== "none" && data.type !== "mprescripts") {
         BOX = state.BOX[type];
         if (!BOX) {
-          BOX = state.BOX[type] = HTML.Element("mjx-"+type);
+          BOX = state.BOX[type] = CHTML.Element("mjx-"+type);
           BBOX = state.BBOX[type] = CHTML.BBOX.empty();
           if (state.w) {
             BOX.style.paddingLeft = CHTML.Em(state.w);
@@ -203,7 +203,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (BBOX) {
         if (bbox.rscale*bbox.w < w) {
           var BOX = state.BOX[type]; dw = w-bbox.rscale*bbox.w;
-          var space = HTML.Element("mjx-spacer",{style:{width:CHTML.Em(dw)}});
+          var space = CHTML.Element("mjx-spacer",{style:{width:CHTML.Em(dw)}});
           if (type.substr(0,3) === "pre" && !bbox.fake) {
             BOX.insertBefore(space,BOX.lastChild);
             dx = dw; dw = 0;
@@ -221,14 +221,14 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     CHTMLaddBoxes: function (node,base,BOX) {
       var sub = BOX.sub, sup = BOX.sup, presub = BOX.presub, presup = BOX.presup;
       if (presub && presup) {
-        var prestack = HTML.Element("mjx-prestack"); node.insertBefore(prestack,base);
+        var prestack = CHTML.Element("mjx-prestack"); node.insertBefore(prestack,base);
         prestack.appendChild(presup); prestack.appendChild(presub);
       } else {
         if (presub) node.insertBefore(presub,base);
         if (presup) node.insertBefore(presup,base);
       }
       if (sub && sup) {
-        var stack = HTML.addElement(node,"mjx-stack");
+        var stack = CHTML.addElement(node,"mjx-stack");
         stack.appendChild(sup); stack.appendChild(sub);
       } else {
         if (sub) node.appendChild(sub);

@@ -37,65 +37,73 @@
       HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
 
   var STYLES = {
-    "mjx-chtml": {
+    ".mjx-chtml": {
       display:           "inline-block",
       "line-height":     0,
       "text-indent":     0,
-      "white-space":     "nowrap",
+      "text-align":      "left",
+      "text-transform":  "none",
       "font-style":      "normal",
       "font-weight":     "normal",
       "font-size":       "100%",
       "font-size-adjust":"none",
-      "text-transform":  "none",
       "letter-spacing":  "normal",
+      "word-wrap":       "normal",
       "word-spacing":    "normal",
+      "white-space":     "nowrap",
       "float":           "none",
       "direction":       "ltr",
-      "word-wrap":       "normal",
+      "max-width":       "none",
+      "max-height":      "none",
+      "min-width":       0,
+      "min-height":      0,
+      border:            0,
+      margin:            0,
       padding:           "1px 0"
     },
     ".MJXc-display": {
       display:      "block",
       "text-align": "center",
-      "margin":     "1em 0"
+      "margin":     "1em 0",
+      padding:      0
     },
 
-    "mjx-math":   {
+    ".mjx-math":   {
       "display":         "inline-block",
       "border-collapse": "separate",
       "border-spacing":  0,
     },
-    "mjx-math *": {display:"inline-block", "text-align":"left"},
+    ".mjx-math *": {display:"inline-block", "text-align":"left"},
 
-    "mjx-numerator":   {display:"block", "text-align":"center"},
-    "mjx-denominator": {display:"block", "text-align":"center"},
+    ".mjx-numerator":   {display:"block", "text-align":"center"},
+    ".mjx-denominator": {display:"block", "text-align":"center"},
     ".MJXc-fpad": {"padding-left":".1em", "padding-right":".1em"},
     ".MJXc-bevelled > *": {display:"inline-block"},
     
-    "mjx-stack":  {display:"inline-block"},
-    "mjx-op":     {display:"block"},
-    "mjx-under":  {display:"table-cell"},
-    "mjx-over":   {display:"block"},
-    "mjx-over > *": {"padding-left":"0px!important", "padding-right":"0px!important"},
-    "mjx-under > *": {"padding-left":"0px!important", "padding-right":"0px!important"},
+    ".mjx-stack":  {display:"inline-block"},
+    ".mjx-op":     {display:"block"},
+    ".mjx-under":  {display:"table-cell"},
+    ".mjx-over":   {display:"block"},
+    ".mjx-over > *": {"padding-left":"0px!important", "padding-right":"0px!important"},
+    ".mjx-under > *": {"padding-left":"0px!important", "padding-right":"0px!important"},
     
-    "mjx-stack > mjx-sup": {display:"block"},
-    "mjx-stack > mjx-sub": {display:"block"},
-    "mjx-prestack > mjx-presup": {display:"block"},
-    "mjx-prestack > mjx-presub": {display:"block"},
+    ".mjx-stack > .mjx-sup": {display:"block"},
+    ".mjx-stack > .mjx-sub": {display:"block"},
+    ".mjx-prestack > .mjx-presup": {display:"block"},
+    ".mjx-prestack > .mjx-presub": {display:"block"},
     
-    "mjx-delim-v > mjx-char": {transform:"scale(1)"},  // for Firefox to get horizontal alignment better
-    "mjx-delim-h": {display:"block"},
-    "mjx-delim-h > mjx-char": {
+    ".mjx-delim-v > .mjx-char": {transform:"scale(1)"},  // for Firefox to get horizontal alignment better
+    ".mjx-delim-h": {display:"block"},
+    ".mjx-delim-h > .mjx-char": {
       transform:"scale(1)",
       display:"inline-block"
     },
     
-    "mjx-surd": {"vertical-align":"top"},
+    ".mjx-surd": {"vertical-align":"top"},
     
-    "mjx-mphantom *": {visibility:"hidden"},
+    ".mjx-mphantom *": {visibility:"hidden"},
 
-    "mjx-merror": {
+    ".mjx-merror": {
       "background-color":"#FFFF88",
       color:             "#CC0000",
       border:            "1px solid #CC0000",
@@ -104,39 +112,39 @@
       "font-size":       "90%"
     },
     
-    "mjx-annotation-xml": {"line-height":"normal"},
+    ".mjx-annotation-xml": {"line-height":"normal"},
     
-    "mjx-menclose > svg": {fill:"none", stroke:"currentColor"},
+    ".mjx-menclose > svg": {fill:"none", stroke:"currentColor"},
 
-    "mjx-mtr":    {display:"table-row"},
-    "mjx-mlabeledtr": {display:"table-row"},
-    "mjx-mtd":    {display:"table-cell", "text-align":"center"},
-    "mjx-label":  {display:"block"},
+    ".mjx-mtr":    {display:"table-row"},
+    ".mjx-mlabeledtr": {display:"table-row"},
+    ".mjx-mtd":    {display:"table-cell", "text-align":"center"},
+    ".mjx-label":  {display:"block"},
 
-    "mjx-box":    {display:"inline-block"},
-    "mjx-block":  {display:"block"},
-    "mjx-span":   {display:"span"},
-    "mjx-char":   {display:"block", "white-space":"pre"},
-    "mjx-itable": {display:"inline-table"},
-    "mjx-row":    {display:"table-row"},
-    "mjx-cell":   {display:"table-cell"},
-    "mjx-table":  {display:"table", width:"100%"},
-    "mjx-line":   {display:"block", width:"100%", "border-top":"0 solid"},
-    "mjx-strut":  {width:0, "padding-top":STRUTHEIGHT+"em"},
+    ".mjx-box":    {display:"inline-block"},
+    ".mjx-block":  {display:"block"},
+    ".mjx-span":   {display:"span"},
+    ".mjx-char":   {display:"block", "white-space":"pre"},
+    ".mjx-itable": {display:"inline-table"},
+    ".mjx-row":    {display:"table-row"},
+    ".mjx-cell":   {display:"table-cell"},
+    ".mjx-table":  {display:"table", width:"100%"},
+    ".mjx-line":   {display:"block", width:"100%", "border-top":"0 solid"},
+    ".mjx-strut":  {width:0, "padding-top":STRUTHEIGHT+"em"},
 
     ".MJXc-space1": {"margin-left":".167em"},
     ".MJXc-space2": {"margin-left":".222em"},
     ".MJXc-space3": {"margin-left":".278em"},
     
-    "mjx-chartest": {
+    ".mjx-chartest": {
       display:"block",
       visibility: "hidden",
       position:"absolute", top:0,
       "line-height":"normal",
       "font-size":"500%"
     },
-    "mjx-chartest mjx-char": {display:"inline"},
-    "mjx-chartest mjx-box": {"padding-top": "1000px"},
+    ".mjx-chartest .mjx-char": {display:"inline"},
+    ".mjx-chartest .mjx-box": {"padding-top": "1000px"},
 
     ".MJXc-processing": {
       visibility: "hidden", position:"fixed",
@@ -144,7 +152,7 @@
     },
     ".MJXc-processed": {display:"none"},
     
-    "mjx-test": {
+    ".mjx-test": {
       display:           "block",
       "font-style":      "normal",
       "font-weight":     "normal",
@@ -157,7 +165,7 @@
       overflow:          "hidden",
       height:            "1px"
     },
-    "mjx-ex-box-test": {
+    ".mjx-ex-box-test": {
       position:  "absolute",
       width:"1px", height:"60ex"
     },
@@ -216,13 +224,13 @@
       //
       //  Determine pixels per inch
       //
-      var div = HTML.addElement(document.body,"mjx-block",{style:{display:"block",width:"5in"}});
+      var div = CHTML.addElement(document.body,"mjx-block",{style:{display:"block",width:"5in"}});
       this.pxPerInch = div.offsetWidth/5; div.parentNode.removeChild(div);
 
       //
       // Used in preTranslate to get scaling factors and line width
       //
-      this.TestSpan = HTML.Element("mjx-test",{style:{left:"1em"}},[["mjx-ex-box-test"]]);
+      this.TestSpan = CHTML.Element("mjx-test",{style:{left:"1em"}},[["mjx-ex-box-test"]]);
 
       //
       //  Set up styles and preload web fonts
@@ -312,6 +320,20 @@
       );
     },
     
+    Element: function (type,def,content) {
+      if (type.substr(0,4) === "mjx-") {
+        if (!def) def = {};
+        if (def.className) def.className = type+" "+def.className; else def.className = type;
+      }
+      return this.HTMLElement("span",def,content);
+    },
+    addElement: function (node,type,def,content) {
+      return node.appendChild(this.Element(type,def,content));
+    },
+    HTMLElement: HTML.Element,
+    ucMatch: HTML.ucMatch,
+    setScript: HTML.setScript,
+    
 
     /********************************************/
     
@@ -345,7 +367,7 @@
         //
         jax = script.MathJax.elementJax; if (!jax) continue;
         jax.CHTML = {display: (jax.root.Get("display") === "block")}
-        node = HTML.Element("mjx-chtml",{
+        node = CHTML.Element("mjx-chtml",{
           id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
@@ -355,7 +377,7 @@
           //
           // Zoom box requires an outer container to get the positioning right.
           //
-          var NODE = HTML.Element("mjx-chtml",{className:"MJXc-display"});
+          var NODE = CHTML.Element("mjx-chtml",{className:"MJXc-display"});
           NODE.appendChild(node); node = NODE;
         }
         if (HUB.Browser.noContextMenu) {
@@ -450,7 +472,7 @@
       //  Put it in place, and remove the processing marker
       //
       if (jax.CHTML.display) node = node.parentNode;
-      node.className = node.className.split(/ /)[0];
+      node.className = node.className.replace(/ [^ ]+$/,"");
       //
       //  Hide the math and don't let its preview be removed
       //
@@ -474,7 +496,7 @@
 
     //
     //  MathML previews can contain the same ID's as the HTML output,
-    //  which confuses HTMLspanElement(), so remove the preview temporarily
+    //  which confuses CHTMLnodeElement(), so remove the preview temporarily
     //  and restore it after typesetting the math.
     //
     savePreview: function (script) {
@@ -508,25 +530,6 @@
     
     postTranslate: function (state) {
       var scripts = state.jax[this.id];
-      for (var i = 0, m = scripts.length; i < m; i++) {
-        var script = scripts[i];
-        if (script && script.MathJax.elementJax) {
-          //
-          //  Remove the processed marker
-          //
-          script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
-          var data = script.MathJax.elementJax.CHTML;
-          //
-          //  Remove the preview, if any
-          //
-          if (data.preview) {
-            data.preview.innerHTML = "";
-            script.MathJax.preview = data.preview;
-            delete data.preview;
-          }
-        }
-      }
-
       //
       //  Reveal this chunk of math
       //
@@ -536,7 +539,7 @@
           //
           //  Remove the processed marker
           //
-          script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
+          script.previousSibling.className = script.previousSibling.className.replace(/ [^ ]+$/,"");
           var data = script.MathJax.elementJax.CHTML;
           //
           //  Remove the preview, if any
@@ -557,7 +560,7 @@
     /********************************************/
     
     getJaxFromMath: function (math) {
-      if (math.parentNode.className === "MJXc-display") math = math.parentNode;
+      if (math.parentNode.className.match(/MJXc-display/)) math = math.parentNode;
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
       return HUB.getJaxFor(math);
     },
@@ -574,7 +577,7 @@
       //  Re-render at larger size
       //
       this.getMetrics(jax);
-      var node = HTML.addElement(span,"mjx-chtml",{style:{"font-size":Math.floor(CHTML.scale*100)+"%"}});
+      var node = CHTML.addElement(span,"mjx-chtml",{style:{"font-size":Math.floor(CHTML.scale*100)+"%"}});
       this.idPostfix = "-zoom"; jax.root.toCommonHTML(node); this.idPostfix = "";
       //
       //  Adjust margins to prevent overlaps at the edges
@@ -829,8 +832,8 @@
     //  WARNING:  causes reflow of the page!
     //
     getHDW: function (c,name,styles) {
-      var test1 = HTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name},[["mjx-char",{style:styles},[c]]]);
-      var test2 = HTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name},[["mjx-char",{style:styles},[c,["mjx-box"]]]]);
+      var test1 = CHTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name},[["mjx-char",{style:styles},[c]]]);
+      var test2 = CHTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name},[["mjx-char",{style:styles},[c,["mjx-box"]]]]);
       test1.firstChild.style.fontSize = test2.firstChild.style.fontSize = "";
       var em = 5*CHTML.em;
       var d = (test2.offsetHeight-1000)/em;
@@ -858,7 +861,8 @@
           this.charList.flushText(node,state);
         } else {
           HTML.addText(node,state.text);
-          node.className = state.className;
+          if (node.className) node.className += " "+state.className;
+            else node.className = state.className;
         }
       }
       bbox.b = (state.flushed ? 0 : bbox.a);
@@ -914,7 +918,7 @@
       //  reset the data about the text.
       //
       flushText: function (node,state,style) {
-        node = HTML.addElement(node,"mjx-charbox",
+        node = CHTML.addElement(node,"mjx-charbox",
           {className:state.className,style:style},[state.text]);
         if (state.a) node.style.paddingBottom = CHTML.Em(state.a);
         state.text = ""; state.className = null; state.a = 0; state.flushed = true;
@@ -929,7 +933,7 @@
     //
     handleText: function (node,text,variant,bbox) {
       if (node.childNodes.length === 0) {
-        HTML.addElement(node,"mjx-char");
+        CHTML.addElement(node,"mjx-char");
         bbox = CHTML.BBOX.empty(bbox);
       }
       if (typeof(variant) === "string") variant = this.FONTDATA.VARIANT[variant];
@@ -957,7 +961,7 @@
       if (!code) {
         var bbox = this.BBOX.zero();
         bbox.w = bbox.r = this.TEX.nulldelimiterspace;
-        HTML.addElement(node,"mjx-box",{style:{width:bbox.w}});
+        CHTML.addElement(node,"mjx-box",{style:{width:bbox.w}});
         return bbox;
       }
       if (!(HW instanceof Array)) HW = [HW,HW];
@@ -981,7 +985,7 @@
       return this["extendDelimiter"+delim.dir](node,hw,delim.stretch,BBOX,font);
     },
     extendDelimiterV: function (node,H,delim,BBOX,font) {
-      node = HTML.addElement(node,"mjx-delim-v"); var tmp = HTML.Element("span");
+      node = CHTML.addElement(node,"mjx-delim-v"); var tmp = CHTML.Element("span");
       var top, bot, mid, ext, tbox, bbox, mbox, ebox, k = 1;
       tbox = this.createChar(tmp,(delim.top||delim.ext),1,font); top = tmp.removeChild(tmp.firstChild);
       bbox = this.createChar(tmp,(delim.bot||delim.ext),1,font); bot = tmp.removeChild(tmp.firstChild);
@@ -1032,7 +1036,7 @@
       return vbox;
     },
     extendDelimiterH: function (node,W,delim,BBOX,font) {
-      node = HTML.addElement(node,"mjx-delim-h"); var tmp = HTML.Element("span");
+      node = CHTML.addElement(node,"mjx-delim-h"); var tmp = CHTML.Element("span");
       var left, right, mid, ext, ext2, lbox, rbox, mbox, ebox, k = 1;
       lbox = this.createChar(tmp,(delim.left||delim.rep),1,font); left = tmp.removeChild(tmp.firstChild);
       rbox = this.createChar(tmp,(delim.right||delim.rep),1,font); right = tmp.removeChild(tmp.firstChild);
@@ -1322,7 +1326,7 @@
           var type = options.childNodes;
           if (type) {
             if (type instanceof Array) type = type[i];
-            node = HTML.addElement(node,type);
+            node = CHTML.addElement(node,type);
           }
           cnode = child.toCommonHTML(node,options.childOptions);
           if (type && child.CHTML.rscale !== 1) {
@@ -1337,7 +1341,7 @@
             if (cbox.skew) bbox.skew = cbox.skew;
             if (cbox.pwidth) bbox.pwidth = cbox.pwidth;
           }
-        } else if (options.forceChild) {cnode = HTML.addElement(node,"mjx-box")}
+        } else if (options.forceChild) {cnode = CHTML.addElement(node,"mjx-box")}
         return cnode;
       },
       
@@ -1407,10 +1411,10 @@
       CHTMLcreateNode: function (node) {
         if (!this.CHTML) this.CHTML = {};
         this.CHTML = CHTML.BBOX.zero();
-        if (this.href) node = HTML.addElement(node,"a",{href:this.href, isMathJax:true});
+        if (this.href) node = CHTML.addElement(node,"a",{href:this.href, isMathJax:true});
         if (!this.CHTMLnodeID) this.CHTMLnodeID = CHTML.GetID();
         var id = (this.id || "MJXc-Node-"+this.CHTMLnodeID)+CHTML.idPostfix;
-        return this.CHTMLhandleAttributes(HTML.addElement(node,"mjx-"+this.type,{id:id}));
+        return this.CHTMLhandleAttributes(CHTML.addElement(node,"mjx-"+this.type,{id:id}));
       },
       CHTMLnodeElement: function () {
         if (!this.CHTMLnodeID) {return null}
@@ -1422,7 +1426,10 @@
       },
       
       CHTMLhandleAttributes: function (node) {
-        if (this["class"]) node.className = this["class"];
+        if (this["class"]) {
+          if (node.className) node.className += " "+this["class"];
+            else node.className = this["class"];
+        }
         //
         //  Copy RDFa, aria, and other tags from the MathML to the CHTML
         //  output nodes.  Don't copy those in the MML.nocopyAttributes list,
@@ -1584,7 +1591,7 @@
       //
       CHTMLdrawBBox: function (node,bbox) {
         if (!bbox) bbox = this.CHTML;
-        var box = HTML.Element("mjx-box",
+        var box = CHTML.Element("mjx-box",
           {style:{"font-size":node.style.fontSize, opacity:.25,"margin-left":CHTML.Em(-(bbox.w+(bbox.R||0)))}},[
           ["mjx-box",{style:{
             height:CHTML.Em(bbox.h),width:CHTML.Em(bbox.w),
@@ -1803,7 +1810,7 @@
         //
         node = node.firstChild;
         var char = node.textContent;
-        var space = HTML.Element("mjx-span",{style:{width:".25em","margin-left":"-.25em"}});
+        var space = CHTML.Element("mjx-span",{style:{width:".25em","margin-left":"-.25em"}});
         node.insertBefore(space,node.firstChild);
       },
       CHTMLcenterOp: function (node) {
@@ -1961,8 +1968,8 @@
           node = node.firstChild; child = node.firstChild;
         } else {
           node = this.CHTMLdefaultNode(node,{childNodes:"mjx-box", forceChild:true});
-          child = node.firstChild; node = HTML.addElement(node,"mjx-block");
-          node.appendChild(child); HTML.addElement(node,"mjx-strut"); // force proper alignment of short heights
+          child = node.firstChild; node = CHTML.addElement(node,"mjx-block");
+          node.appendChild(child); CHTML.addElement(node,"mjx-strut"); // force proper alignment of short heights
         }
         var cbox = this.CHTMLbboxFor(0);
         var values = this.getValues("width","height","depth","lspace","voffset");
@@ -2100,7 +2107,7 @@
         //  Put the base and script into a stack
         //
         if (!stretch) {
-          var stack = HTML.Element("mjx-stack");
+          var stack = CHTML.Element("mjx-stack");
           stack.appendChild(over); stack.appendChild(base);
         }
         if (obox.D) obox.d = obox.D;
@@ -2147,7 +2154,7 @@
         //  Create a table for the underscript
         //
         if (!stretch) {
-          HTML.addElement(node,"mjx-itable",{},[
+          CHTML.addElement(node,"mjx-itable",{},[
             ["mjx-row",{},[["mjx-cell"]]],
             ["mjx-row"]
           ]);
@@ -2236,7 +2243,7 @@
           if (!this.CHTMLnotEmpty(this.data[this.sub])) {node.removeChild(sub); sub = null}
           if (!this.CHTMLnotEmpty(this.data[this.sup])) {node.removeChild(sup); sup = null}
           if (node.childNodes.length === 3) {
-            var stack = HTML.addElement(node,"mjx-stack");
+            var stack = CHTML.addElement(node,"mjx-stack");
             stack.appendChild(sup); stack.appendChild(sub);
           }
         }
@@ -2330,7 +2337,7 @@
         //  Create the table for the fraction and set the alignment
         //
         var num = node.firstChild, denom = node.lastChild;
-        var frac = HTML.addElement(node,"mjx-box");
+        var frac = CHTML.addElement(node,"mjx-box");
         frac.appendChild(num); frac.appendChild(denom); node.appendChild(frac);
         if (values.numalign !== "center") num.style.textAlign = values.numalign;
         if (values.denomalign !== "center") denom.style.textAlign = values.denomalign;
@@ -2344,10 +2351,10 @@
         var mt = CHTML.TEX.min_rule_thickness/CHTML.em/BBOX.scale, a = CHTML.TEX.axis_height;
         var t = values.linethickness, p,q, u,v;
         if (values.bevelled) {
-          frac.className = "MJXc-bevelled";
+          frac.className += " MJXc-bevelled";
           var delta = (isDisplay ? .4 : .15);
           var H = Math.max(nscale*(nbox.h+nbox.d),dscale*(dbox.h+dbox.d)) + 2*delta;
-          var bevel = HTML.Element("mjx-bevel"); frac.insertBefore(bevel,denom);
+          var bevel = CHTML.Element("mjx-bevel"); frac.insertBefore(bevel,denom);
           var bbox = CHTML.createDelimiter(bevel,0x2F,H);
           u = nscale*(nbox.d-nbox.h)/2+a+delta;
           v = dscale*(dbox.d-dbox.h)/2+a-delta;
@@ -2410,14 +2417,14 @@
         node = this.CHTMLdefaultNode(node,{
           childNodes:["mjx-box","mjx-root"], forceChild:true, noBBox:true
         });
-        var base = node.firstChild || HTML.Element("mjx-box");
-        var sqrt = HTML.addElement(node,"mjx-box"); sqrt.appendChild(base);
+        var base = node.firstChild || CHTML.Element("mjx-box");
+        var sqrt = CHTML.addElement(node,"mjx-box"); sqrt.appendChild(base);
         var bbox = this.CHTMLbboxFor(0), BBOX = CHTML.BBOX.empty(this.CHTML);
         var t = CHTML.TEX.rule_thickness, T = CHTML.TEX.surd_height, p = t, q, H;
         if (this.Get("displaystyle")) p = CHTML.TEX.x_height;
         q = t + p/4;
         H = bbox.h + bbox.d + q + t;
-        var surd = HTML.Element("mjx-surd"); sqrt.insertBefore(surd,base);
+        var surd = CHTML.Element("mjx-surd"); sqrt.insertBefore(surd,base);
         var sbox = CHTML.createDelimiter(surd,0x221A,[H-.04,H]);
         if (sbox.h + sbox.d > H) q = ((sbox.h+sbox.d) - (H-t))/2;
         H = bbox.h + q + t;

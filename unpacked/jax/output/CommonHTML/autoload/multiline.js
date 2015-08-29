@@ -90,7 +90,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Break the math at its best line breaks
       //
       CHTML.BBOX.empty(this.CHTML);
-      var stack = HTML.addElement(node,"mjx-stack");
+      var stack = CHTML.addElement(node,"mjx-stack");
       var state = {
             BBOX: this.CHTML,
             n: 0, Y: 0,
@@ -188,7 +188,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //    fill it with the proper elements,
       //    and clean up the bbox
       //
-      var block = HTML.addElement(stack,"mjx-block",{},[["mjx-box"]]), line = block.firstChild;
+      var block = CHTML.addElement(stack,"mjx-block",{},[["mjx-box"]]), line = block.firstChild;
       var bbox = state.bbox = CHTML.BBOX.empty();
       state.first = broken; state.last = true;
       this.CHTMLmoveLine(start,end,line,state,values);
@@ -490,7 +490,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Move the proper part of the base
       //
       if (this.data[this.base]) {
-        var base = HTML.addElement(node,"mjx-base");
+        var base = CHTML.addElement(node,"mjx-base");
         if (start.length > 1) {
           this.data[this.base].CHTMLmoveSlice(start.slice(1),end.slice(1),base,state,values,"marginLeft");
         } else {
@@ -583,7 +583,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Move the proper part of the base
       //
       if (this.data[this.base]) {
-        var base = HTML.addElement(node,"mjx-base");
+        var base = CHTML.addElement(node,"mjx-base");
         if (start.length > 1) {
           this.data[this.base].CHTMLmoveSlice(start.slice(1),end.slice(1),base,state,values,"marginLeft");
         } else {
