@@ -571,7 +571,9 @@
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout,
           onmousemove:EVENT.Mousemove, onclick:EVENT.Click,
-          ondblclick:EVENT.DblClick, onkeydown: EVENT.Keydown, tabIndex: "0"
+          ondblclick:EVENT.DblClick,
+          // Added for keyboard accessible menu.
+          onkeydown: EVENT.Keydown, tabIndex: "0"
         });
 	if (HUB.Browser.noContextMenu) {
 	  span.ontouchstart = TOUCH.start;
@@ -2869,7 +2871,6 @@
           var alttext = this.Get("alttext");
           if (alttext && !span.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
           if (!span.getAttribute("role")) span.setAttribute("role","math");
-//        span.setAttribute("tabindex",0);  // causes focus outline, so disable for now
 	  stack = HTMLCSS.createStack(span); box = HTMLCSS.createBox(stack);
           // Move font-size from outer span to stack to avoid line separation 
           // problem in strict HTML mode
