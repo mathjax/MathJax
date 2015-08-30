@@ -136,13 +136,10 @@
     //  Call the output jax's event handler or the zoom handler
     //
     Handler: function (event,type,math) {
-      console.log(type);
       if (AJAX.loadingMathMenu) {return EVENT.False(event)}
       var jax = OUTPUT[math.jaxID];
-      console.log(jax);
       if (!event) {event = window.event}
       event.isContextMenu = (type === "ContextMenu");
-      console.log(jax[type]);
       if (jax[type]) {return jax[type](event,math)}
       if (EXTENSION.MathZoom) {return EXTENSION.MathZoom.HandleEvent(event,type,math)}
     },

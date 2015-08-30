@@ -527,7 +527,7 @@
       if (len === 0) {
         return;
       }
-      var next = jaxs[MENU.Mod(move(jaxs.indexOf(MENU.CurrentNode())), len)];
+      var next = jaxs[MENU.Mod(move(MENU.IndexOf(jaxs, MENU.CurrentNode())), len)];
       if (next === MENU.CurrentNode()) {
         return;
       }
@@ -547,7 +547,15 @@
     Mod: function(a, n) {
       return ((a % n) + n) % n;
     },
-
+    IndexOf: (Array.prototype.indexOf ?
+              function (A, item, start) {return A.indexOf(item, start);} :
+              function (A, item, start) {
+                for (var i = (start || 0), j = A.length; i < j; i++) {
+                  if (item === A[i]) return i;
+                }
+                return -1;
+              }),
+    
     saveCookie: function () {HTML.Cookie.Set("menu",this.cookie)},
     getCookie: function () {this.cookie = HTML.Cookie.Get("menu")}
 
@@ -676,7 +684,7 @@
           items.push(it);
         }
       }
-      var index = items.indexOf(this);
+      var index = MENU.IndexOf(items, this);
       if (index === -1) {
         return;
       }
@@ -1510,19 +1518,7 @@
     HUB.Register.StartupHook("End Config",{}), // wait until config is complete
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathMenu Ready"],
-    ["loadComplete",AJAX,"[MathJax]/extensions/MathMenu.js"],
-    function() {
-      if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function(item, start) {
-          for (var i = (start || 0), j = this.length; i < j; i++) {
-            if (item === this[i]) {
-              return i;
-            }
-          }
-          return -1;
-        };
-      }
-    }
+    ["loadComplete",AJAX,"[MathJax]/extensions/MathMenu.js"]
   );
 
 })(MathJax.Hub,MathJax.HTML,MathJax.Ajax,MathJax.CallBack,MathJax.OutputJax);
