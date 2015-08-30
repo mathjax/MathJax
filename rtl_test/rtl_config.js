@@ -28,17 +28,18 @@ MathJax.Hub.Config({
             'rtlequation': ['\\class{mrtl}{#1}', 1],
             'م': ['\\class{mrtl}{#1}', 1], // Alias to rtlequation
             'rtl': ['\\class{mrtltext}{\\text{#1}}', 1],
-            'ع': ['\\class{mrtltext}{\\text{#1}}', 1] // Alias to rtl
+            'ع': ['\\class{mrtltext}{\\text{#1}}', 1], // Alias to rtl
+            'markrtl': ''
         }
     }
 });
 
-MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready', function () {
-    var REMAP = MathJax.OutputJax['HTML-CSS'].FONTDATA.REMAP;
-    var ZERO = 0x660;     // use 0x660 for Arabic, 0x6F0 for Persian
-    for (var i = 0; i < 10; i++) {
-        REMAP[0x30 + i] = ZERO + i;
-    }
-});
+//MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready', function () {
+//    var REMAP = MathJax.OutputJax['HTML-CSS'].FONTDATA.REMAP;
+//    var ZERO = 0x660;     // use 0x660 for Arabic, 0x6F0 for Persian
+//    for (var i = 0; i < 10; i++) {
+//        REMAP[0x30 + i] = ZERO + i;
+//    }
+//});
 
 MathJax.Hub.Configured();

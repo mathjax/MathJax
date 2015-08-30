@@ -1186,6 +1186,7 @@
      */
     Superscript: function (c) {
       if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
+        // Omar: What is this?
         {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
       var primes, base, top = this.stack.Top();
       if (top.type === "prime") {base = top.data[0]; primes = top.data[1]; this.stack.Pop()}
