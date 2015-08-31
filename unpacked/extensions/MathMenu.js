@@ -341,9 +341,17 @@
       }
 
       menu.style.left = x+"px"; menu.style.top = y+"px";
-
       if (document.selection && document.selection.empty) {document.selection.empty()}
+
+      // Focusing while keeping the scroll position.
+      var oldX = window.pageXOffset || document.documentElement.scrollLeft;
+      var oldY = window.pageYOffset || document.documentElement.scrollTop;
       MENU.Focus(menu);
+      if (event.type === 'keydown') {
+        MENU.skipMouseoverFromKey = true;
+        setTimeout(function() {delete MENU.skipMouseoverFromKey;}, CONFIG.delay);
+      }
+      window.scrollTo(oldX, oldY);
       return FALSE(event);
     },
 
@@ -429,6 +437,10 @@
     },
     Event: function (event,menu,type,force) {
       if (MENU.skipMouseover && type === "Mouseover" && !force) {return FALSE(event)}
+      if (MENU.skipMouseoverFromKey && type === "Mouseover") {
+        delete MENU.skipMouseoverFromKey;
+        return FALSE(event);
+      }
       if (MENU.skipUp) {
         if (type.match(/Mouseup|Touchend/)) {delete MENU.skipUp; return FALSE(event)}
         if (type === "Touchstart" ||
@@ -797,7 +809,8 @@
     },
     Timer: function (event,menu) {
       this.ClearTimer();
-      event = {clientX: event.clientX, clientY: event.clientY}; // MSIE can't pass the event below
+      event = {type: event.type,
+               clientX: event.clientX, clientY: event.clientY}; // MSIE can't pass the event below
       this.timer = setTimeout(CALLBACK(["Mouseup",this,event,menu]),CONFIG.delay);
     },
     ClearTimer: function() {
@@ -1115,7 +1128,6 @@
         W = Math.max(100,Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25));
         H = Math.max(40,Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25));
         if (MENU.prototype.msieHeightBug) {H += 35}; // for title bar in XP
-        console.log(W + ' ' + H);
         w.resizeTo(W,H);
         var X; try {X = event.screenX} catch (e) {}; // IE8 throws an error accessing screenX
         if (event && X != null) {
