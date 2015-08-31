@@ -478,6 +478,7 @@
      *  Keyboard navigation of menu.
      */
     posted: false,  // Is a menu open?
+    active: null,   // The focused in HTML node in the menu.
 
     GetNode: function(jax) {
       var node = document.getElementById(jax.inputID + '-Frame');
@@ -495,7 +496,11 @@
       return nodes;
     },
     ActiveNode: function() {
-      return document.activeElement;
+      return MENU.active;
+    },
+    FocusNode: function(node) {
+      MENU.active = node;
+      node.focus();
     },
     //
     // Focus is a global affair, since we only ever want a single focused item.
@@ -503,7 +508,7 @@
     Focus: function(menu) {
       !MENU.posted ? MENU.Activate(menu) : MENU.ActiveNode().tabIndex = -1;
       menu.tabIndex = 0;
-      menu.focus();
+      MENU.FocusNode(menu);
     },
     Activate: function(event, menu) {
       var jaxs = MENU.AllNodes();
@@ -518,7 +523,7 @@
       for (var j = 0, jax; jax = jaxs[j]; j++) {
         jax.tabIndex = 0;
       }
-      MENU.CurrentNode().focus();
+      MENU.FocusNode(MENU.CurrentNode());
       MENU.posted = false;
     },
     MoveHorizontal: function(event, menu, move) {
