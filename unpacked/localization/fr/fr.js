@@ -36,8 +36,8 @@ MathJax.Localization.addTranslation("fr",null,{
           LoadFile: "Chargement de %1",
           Loading: "Chargement",
           LoadFailed: "\u00C9chec du chargement de %1",
-          ProcessMath: "Traitement des formules: %1%%",
-          Processing: "En traitement",
+          ProcessMath: "Traitement des formules : %1 %%",
+          Processing: "Traitement en cours",
           TypesetMath: "Composition des formules: %1%%",
           Typesetting: "Composition",
           MathJaxNotSupported: "Votre navigateur ne supporte pas MathJax"
