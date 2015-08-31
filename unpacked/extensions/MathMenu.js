@@ -285,7 +285,8 @@
       var menu = HTML.Element("div",{
         onmouseup: MENU.Mouseup, ondblclick: FALSE,
         ondragstart: FALSE, onselectstart: FALSE, oncontextmenu: FALSE,
-        menuItem: this, className: "MathJax_Menu", onkeydown: MENU.Keydown
+        menuItem: this, className: "MathJax_Menu", onkeydown: MENU.Keydown,
+        role: "navigation"
       });
       if (!forceLTR) {MathJax.Localization.setCSS(menu)}
 
@@ -412,8 +413,6 @@
 
     config: CONFIG,
 
-    div: null,     // the DOM elements for the menu and submenus
-
     Remove:     function (event) {return MENU.Event(event,this,"Remove")},
     Mouseover:  function (event) {return MENU.Event(event,this,"Mouseover")},
     Mouseout:   function (event) {return MENU.Event(event,this,"Mouseout")},
@@ -449,7 +448,8 @@
     },
 
     Background: function (menu) {
-      var div = HTML.addElement(document.body,"div",{style:this.BGSTYLE, id:"MathJax_MenuFrame"},
+      var div = HTML.addElement(document.body,"div",
+                    {style:this.BGSTYLE, id:"MathJax_MenuFrame"},
                     [["div",{style: this.BGSTYLE, menuItem: menu, onmousedown: this.Remove}]]);
       var bg = div.firstChild;
       if (MENU.msieBackgroundBug) {
@@ -1115,6 +1115,7 @@
         W = Math.max(100,Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25));
         H = Math.max(40,Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25));
         if (MENU.prototype.msieHeightBug) {H += 35}; // for title bar in XP
+        console.log(W + ' ' + H);
         w.resizeTo(W,H);
         var X; try {X = event.screenX} catch (e) {}; // IE8 throws an error accessing screenX
         if (event && X != null) {
