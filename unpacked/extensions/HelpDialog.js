@@ -29,7 +29,13 @@
 
   var STIXURL = "http://www.stixfonts.org/";
   var MENU = MathJax.Menu;
+  var FALSE, KEY;
+  HUB.Register.StartupHook("MathEvents Ready",function () {
+    FALSE = MathJax.Extension.MathEvents.Event.False;
+    KEY = MathJax.Extension.MathEvents.Event.KEY;
+  });
 
+  
   var CONFIG = HUB.CombineConfig("HelpDialog",{
 
     styles: {
@@ -104,7 +110,7 @@
       id: "MathJax_Help", tabIndex: 0, onkeydown: HELP.Keydown
     },LOCALE._("HelpDialog",[
       ["b",{style:{fontSize:"120%"}},[["Help","MathJax Help"]]],
-      ["div",{id: "MathJax_HelpContent"},[
+      ["div",{id: "MathJax_HelpContent", tabIndex: 0},[
         ["p",{},[["MathJax",
           "*MathJax* is a JavaScript library that allows page authors to include " +
           "mathematics within their web pages.  As a reader, you don't need to do " +
@@ -173,8 +179,9 @@
   HELP.Keydown = function(event) {
     if (event.keyCode === KEY.ESCAPE ||
         (this.id === 'MathJax_HelpClose' &&
-         (event.keyCode === KEY.SPACE || event.keyCode === KEY.Return))) {
+         (event.keyCode === KEY.SPACE || event.keyCode === KEY.RETURN))) {
       HELP.Remove(event);
+      FALSE(event);
     }
   },
 

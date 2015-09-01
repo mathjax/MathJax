@@ -1026,7 +1026,7 @@
         display:"inline-block", "text-align":"left", "font-size":"80%",
         "max-height":"20em", overflow:"auto",
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
-      }},jax],["br"],["br"],
+      }, tabIndex: 0},jax],["br"],["br"],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
       ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",
                onclick:MENU.About.Remove,
@@ -1053,8 +1053,9 @@
   MENU.About.Keydown = function(event) {
     if (event.keyCode === KEY.ESCAPE ||
         (this.id === 'MathJax_AboutClose' &&
-         (event.keyCode === KEY.SPACE || event.keyCode === KEY.Return))) {
+         (event.keyCode === KEY.SPACE || event.keyCode === KEY.RETURN))) {
       MENU.About.Remove(event);
+      FALSE(event);
     }
   },
   MENU.About.GetJax = function (jax,JAX,type,noTypeCheck) {
