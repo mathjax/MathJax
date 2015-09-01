@@ -1,0 +1,44 @@
+<table border="1" cellpadding="8">
+    <tr>
+        <th>
+            Equation
+        </th>
+        <th>
+            English
+        </th>
+        <th>
+            Arabic
+        </th>
+    </tr>
+    <tr>
+        <td>
+            Enter your equation here:
+            <input id="dynamic-equation"
+                   value="x = 10" type="text" />
+            <br />
+            <button id="show-dynamic-equation">Show</button>
+        </td>
+        <td id="dynamic-en"></td>
+        <td id="dynamic-ar"></td>
+    </tr>
+    {{#equations}}
+    <tr>
+        <td>
+            <code>{{.}}</code>
+        </td>
+        <td>
+            <script type="math/tex; mode=display">
+                {{.}}
+            </script>
+        </td>
+        <td>
+            <script type="math/tex; mode=display">
+                \ar
+                {{.}}
+            </script>
+        </td>
+    </tr>
+    {{/equations}}
+</table>
+<br />
+<br />

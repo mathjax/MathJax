@@ -1,57 +1,114 @@
 <!doctype html>
-<html>
+<html lang="ar">
 <head>
     <title>MathJax Dynamic Math Test Page</title>
-    <link href='https://fonts.googleapis.com/css?family=Amiri&subset=arabic,latin' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/earlyaccess/droidarabicnaskh.css' rel='stylesheet' type='text/css'>
+
+    <link href='//fonts.googleapis.com/css?family=Amiri&amp;subset=arabic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/earlyaccess/droidarabicnaskh.css' rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript" src="//media.readthedocs.org/javascript/jquery/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/2.1.3/mustache.js"></script>
 
     <script type="text/javascript"
-            src="//cdn.mathjax.org/mathjax/2.4-latest/MathJax.js?config=TeX-MML-AM_HTMLorMML-full&delayStartupUntil=configured">
+            src="/unpacked/MathJax.js?config=TeX-MML-AM_HTMLorMML-full&amp;delayStartupUntil=configured">
     </script>
+
+    <script type="text/javascript">
+        MathJax.Hub.Config({
+            'HTML-CSS': {
+                scale: 200
+            }
+        });
+
+    </script>
+
     <script type="text/javascript" src="/rtl_test/rtl_config.js"></script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            var equations = [
+                'x=\\frac{11+y}{1+2z^2}',
+                'x=\\frac{1+y}{1+2z^2}',
+                'x=\\frac{1+y}{1+2x^2}',
+                '2 = \\left( \\frac{\\left(3-x\\right) \\times 2}{3-x} \\right)',
+                'x={-b\\pm\\sqrt{b^2-4ac} \\over 2a}',
+                '\\int_0^\\infty e^{-x^2} dx=\\frac{\\sqrt{\\pi}}{2}',
+                'x = 10^{20}_5',
+                '\\sum_{n=1}^\\infty {1\\over n^2} = {\\pi^2\\over 6}',
+            ];
+
+            $.get('/rtl_test/equations.html', function (template) {
+                var rendered = Mustache.render(template, {
+                    equations: equations
+                });
+
+                $('#equations').html(rendered);
+
+
+                var render = function () {
+                    var $scriptTemplate = $('<script type="math/tex; mode=display"><\/script>');
+                    var equation = $('#dynamic-equation').val();
+
+                    $('#dynamic-ar').html(
+                            $scriptTemplate.clone().html(
+                                            '\\ar ' + equation + ''
+                            )
+                    );
+
+                    $('#dynamic-en').html(
+                            $scriptTemplate.clone().html(
+                                    equation
+                            )
+                    );
+
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                };
+
+                $('#dynamic-equation').change(render);
+                $('#show-dynamic-equation').click(render);
+
+                MathJax.Hub.Configured();
+
+                render();
+            });
+        });
+    </script>
+
     <style>
         #wrapper {
-            width: 30%;
+            width: 80%;
             margin: 0 auto;
+            padding-top: 40px;
+        }
+
+        table {
+            margin: 0 auto;
+        }
+
+        hr {
+            margin-top: 30px;
+            margin-bottom: 30px;;
         }
 
         .MathJax_Display {
             margin: 20px auto;
+        }
+
+        .blue {
+            color: blue !important;
+        }
+
+        .shadow {
+            text-shadow: 0 0 3px black;
         }
     </style>
 </head>
 <body>
 
 <div id="wrapper">
-    <br/>
-    <br/>
-    $$
-    \rtlequation{ \ع{س} = {-\ع{ب} \pm \sqrt{\ع{ب}^\ع{2}-\ع{4}\ع{أ}\ع{ج}} \over \ع{2}\ع{أ}}}
-    $$
-
-    <br/>
-    <br/>
-
-    <div id="eq-2">
-
-        $$
-        \م{
-        \ع{ص}^\ع{8}
-        =
-        \ع{ص}+\ع{8}
-        }
-        $$
+    <div id="equations">
 
     </div>
-
-
-    <br/>
-
-    $$
-    \markrtl
-    x = 10^{20}_5
-    $$
-
 </div>
 </body>
 </html>
