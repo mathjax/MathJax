@@ -306,8 +306,8 @@
         var node = MENU.CurrentNode() || event.target;
         if (!x && !y && node) {
           var rect = node.getBoundingClientRect();
-          x = rect.right;
-          y = rect.bottom;
+          x = (rect.right + rect.left) / 2;
+          y = (rect.bottom + rect.top) / 2;
         }
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
            {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
