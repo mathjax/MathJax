@@ -305,9 +305,11 @@
       if (!parent) {
         var node = MENU.CurrentNode() || event.target;
         if (!x && !y && node) {
+          var offsetX = window.pageXOffset || document.documentElement.scrollLeft;
+          var offsetY = window.pageYOffset || document.documentElement.scrollTop;
           var rect = node.getBoundingClientRect();
-          x = (rect.right + rect.left) / 2;
-          y = (rect.bottom + rect.top) / 2;
+          x = (rect.right + rect.left) / 2 + offsetX;
+          y = (rect.bottom + rect.top) / 2 + offsetY;
         }
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
            {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
