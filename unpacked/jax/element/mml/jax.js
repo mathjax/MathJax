@@ -264,6 +264,7 @@ MathJax.ElementJax.mml.Augment({
     noInheritAttribute: {
       texClass: true
     },
+    getRemoved: {},
     linebreakContainer: false,
     
     Init: function () {
@@ -312,6 +313,7 @@ MathJax.ElementJax.mml.Augment({
       var obj = this.inherit; var root = obj;
       while (obj) {
         var value = obj[name]; if (value == null && obj.attr) {value = obj.attr[name]}
+        if (obj.removedStyles && obj.getRemoved[name] && value == null) value = obj.removedStyles[obj.getRemoved[name]];
         if (value != null && obj.noInheritAttribute && !obj.noInheritAttribute[name]) {
           var noInherit = obj.noInherit[this.type];
           if (!(noInherit && noInherit[name])) {return value}
@@ -399,6 +401,13 @@ MathJax.ElementJax.mml.Augment({
     isEmbellished: function () {return false},
     Core: function () {return this},
     CoreMO: function () {return this},
+    childIndex: function(child) {
+      if (child == null) return;
+      for (var i = 0, m = this.data.length; i < m; i++) if (child === this.data[i]) return i;
+    },
+    CoreIndex: function () {
+      return (this.inferRow ? this.data[0]||this : this).childIndex(this.Core());
+    },
     hasNewline: function () {
       if (this.isEmbellished()) {return this.CoreMO().hasNewline()}
       if (this.isToken || this.linebreakContainer) {return false}
@@ -915,9 +924,7 @@ MathJax.ElementJax.mml.Augment({
       if (level == null) {
         level = this.Get("scriptlevel");
       } else if (String(level).match(/^ *[-+]/)) {
-        delete this.scriptlevel;
-        var LEVEL = this.Get("scriptlevel");
-        this.scriptlevel = level;
+        var LEVEL = this.Get("scriptlevel",null,true);
         level = LEVEL + parseInt(level);
       }
       return level;
@@ -927,6 +934,7 @@ MathJax.ElementJax.mml.Augment({
       mpadded: {width: true, height: true, depth: true, lspace: true, voffset: true},
       mtable:  {width: true, height: true, depth: true, align: true}
     },
+    getRemoved: {fontfamily:"fontFamily", fontweight:"fontWeight", fontstyle:"fontStyle", fontsize:"fontSize"},
     setTeXclass: MML.mbase.setChildTeXclass
   });
 
@@ -991,7 +999,7 @@ MathJax.ElementJax.mml.Augment({
         //
         //  Clear flag for using MML spacing even though form is specified
         //
-        this.data.open.useMMLspacing &= ~this.data.open.SPACE_ATTR.form;
+        this.data.open.useMMLspacing = 0;
       }
       //
       //  Create fake nodes for the separators
@@ -1000,8 +1008,10 @@ MathJax.ElementJax.mml.Augment({
         while (values.separators.length < this.data.length)
           {values.separators += values.separators.charAt(values.separators.length-1)}
         for (var i = 1, m = this.data.length; i < m; i++) {
-          if (this.data[i])
-            {this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}))}
+          if (this.data[i]) {
+            this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}))
+            this.data["sep"+i].useMMLspacing = 0;
+          }
         }
       }
       //
@@ -1014,7 +1024,7 @@ MathJax.ElementJax.mml.Augment({
         //
         //  Clear flag for using MML spacing even though form is specified
         //
-        this.data.close.useMMLspacing &= ~this.data.close.SPACE_ATTR.form;
+        this.data.close.useMMLspacing = 0;
       }
     },
     texClass: MML.TEXCLASS.OPEN,

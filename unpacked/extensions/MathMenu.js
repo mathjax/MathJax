@@ -1148,12 +1148,13 @@
         ),
         ITEM.RULE(),
         ITEM.SUBMENU(["Renderer","Math Renderer"],    {hidden:!CONFIG.showRenderer},
-          ITEM.RADIO("HTML-CSS",  "renderer", {action: MENU.Renderer}),
-          ITEM.RADIO("Fast HTML", "renderer", {action: MENU.Renderer, value:"CommonHTML"}),
-          ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"}),
-          ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer}),
+          ITEM.RADIO("HTML-CSS",   "renderer", {action: MENU.Renderer}),
+          ITEM.RADIO("Common HTML","renderer", {action: MENU.Renderer, value:"CommonHTML"}),
+          ITEM.RADIO("Fast HTML",  "renderer", {action: MENU.Renderer, value:"FastHTML"}),
+          ITEM.RADIO("MathML",     "renderer", {action: MENU.Renderer, value:"NativeMML"}),
+          ITEM.RADIO("SVG",        "renderer", {action: MENU.Renderer}),
           ITEM.RULE(),
-          ITEM.CHECKBOX("Fast Preview", "CHTMLpreview")
+          ITEM.CHECKBOX("Fast Preview", "FHTMLpreview")
         ),
         ITEM.SUBMENU("MathPlayer",  {hidden:!HUB.Browser.isMSIE || !CONFIG.showMathPlayer,
                                                     disabled:!HUB.Browser.hasMathPlayer},

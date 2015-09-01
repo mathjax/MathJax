@@ -84,12 +84,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.SVGsaveData(svg);
       return svg;
     },
-    toCommonHTML: function (span) {
-        span = this.CHTMLcreateSpan(span);
-        this.CHTMLhandleStyle(span);
-        this.CHTMLhandleColor(span);
-        this.CHTMLaddChild(span,this.choice(),{});
-        return span;
+    toCommonHTML: function (node) {
+        node = this.CHTMLcreateNode(node);
+        this.CHTMLhandleStyle(node);
+        this.CHTMLhandleColor(node);
+        this.CHTMLaddChild(node,this.choice(),{});
+        return node;
     }
   });
   
