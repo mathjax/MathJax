@@ -735,7 +735,7 @@
         move(event, item);
       }
       if (rtl) { return; }
-      if (menuNode.menuItem !== MENU.menu && event.shiftKey) {
+      if (menuNode.menuItem !== MENU.menu) {
         this.Deactivate(item);
       }
       var parentNodes = menuNode.previousSibling.childNodes;
