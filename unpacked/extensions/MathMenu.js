@@ -731,12 +731,13 @@
     },
     MoveHorizontal: function(event, item, move, rtl) {
       var menuNode = ITEM.GetMenuNode(item);
-      if (menuNode.menuItem === MENU.menu) {
-        if (!event.shiftKey) { return; }
+      if (menuNode.menuItem === MENU.menu && event.shiftKey) {
         move(event, item);
       }
       if (rtl) { return; }
-      this.Deactivate(item);
+      if (menuNode.menuItem !== MENU.menu && event.shiftKey) {
+        this.Deactivate(item);
+      }
       var parentNodes = menuNode.previousSibling.childNodes;
       var length = parentNodes.length;
       while (length--) {
@@ -873,6 +874,10 @@
         return;
       }
       if (this.disabled) {
+        return;
+      }
+      if (!this.submenu.posted) {
+        this.Activate(event, menu);
         return;
       }
       var submenuNodes = ITEM.GetMenuNode(menu).nextSibling.childNodes;
