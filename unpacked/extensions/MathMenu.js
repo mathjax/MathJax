@@ -1049,6 +1049,7 @@
         (this.id === 'MathJax_AboutClose' &&
          (event.keyCode === KEY.SPACE || event.keyCode === KEY.RETURN))) {
       MENU.About.Remove(event);
+      MENU.CurrentNode().focus();
       FALSE(event);
     }
   },

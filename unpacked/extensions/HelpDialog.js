@@ -181,6 +181,7 @@
         (this.id === 'MathJax_HelpClose' &&
          (event.keyCode === KEY.SPACE || event.keyCode === KEY.RETURN))) {
       HELP.Remove(event);
+      MENU.CurrentNode().focus();
       FALSE(event);
     }
   },
