@@ -732,15 +732,21 @@
       this.MoveHorizontal(event, item, MENU.Left, this.isRTL());
     },
     MoveHorizontal: function(event, item, move, rtl) {
-      if (ITEM.GetMenuNode(item).menuItem === MENU.menu) {
+      var menuNode = ITEM.GetMenuNode(item);
+      if (menuNode.menuItem === MENU.menu) {
         move(event, item);
       }
       if (rtl) { return; }
       this.Deactivate(item);
-      var sibling = item.parentNode.previousSibling;
-      var actives = sibling.getElementsByClassName('MathJax_MenuActive');
-      if (actives.length > 0) {
-        MENU.Focus(actives[0]);
+      var parentNodes = menuNode.previousSibling.childNodes;
+      var length = parentNodes.length;
+      while (length--) {
+        var parent = parentNodes[length];
+        if (parent.menuItem.submenu &&
+            parent.menuItem.submenu === menuNode.menuItem) {
+          MENU.Focus(parent);
+          break;
+        }
       }
       this.RemoveSubmenus(item);
     },
