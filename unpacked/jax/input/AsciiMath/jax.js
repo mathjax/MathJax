@@ -623,6 +623,8 @@ var AMsymbols = [
 {input:"frac", tag:"mfrac", output:"/",    tex:null, ttype:BINARY},
 {input:"/",    tag:"mfrac", output:"/",    tex:null, ttype:INFIX},
 {input:"stackrel", tag:"mover", output:"stackrel", tex:null, ttype:BINARY},
+{input:"overset", tag:"mover", output:"stackrel", tex:null, ttype:BINARY},
+{input:"underset", tag:"munder", output:"stackrel", tex:null, ttype:BINARY},
 {input:"_",    tag:"msub",  output:"_",    tex:null, ttype:INFIX},
 {input:"^",    tag:"msup",  output:"^",    tex:null, ttype:INFIX},
 {input:"hat", tag:"mover", output:"\u005E", tex:null, ttype:UNARY, acc:true},
@@ -929,7 +931,7 @@ function AMparseSexpr(str) { //parses str and returns [node,tailstr]
 	node.setAttribute("mathcolor",st);
 	return [node,result2[1]];
     }
-    if (symbol.input=="root" || symbol.input=="stackrel") 
+    if (symbol.input=="root" || symbol.output=="stackrel") 
       newFrag.appendChild(result2[0]);
     newFrag.appendChild(result[0]);
     if (symbol.input=="frac") newFrag.appendChild(result2[0]);
