@@ -1018,7 +1018,7 @@
     ]]);
     MENU.About.div = MENU.Background(MENU.About);
     var about = HTML.addElement(MENU.About.div,"div",{
-      id: "MathJax_About", tabIndex:0
+      id: "MathJax_About", tabIndex: 0, onkeydown: MENU.About.Keydown
     },[
       ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
       _(font.replace(/ /g,""),"using "+font),["br"],["br"],
@@ -1030,7 +1030,7 @@
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
       ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",
                onclick:MENU.About.Remove,
-               onkeydown:MENU.About.Remove, tabIndex:0,
+               onkeydown: MENU.About.Keydown, tabIndex: 0,
                'aria-label': "Close", 'aria-describedby': "Close window"},
         [["span",{},"\u00D7"]]]
     ]);
@@ -1050,6 +1050,13 @@
   MENU.About.Remove = function (event) {
     if (MENU.About.div) {document.body.removeChild(MENU.About.div); delete MENU.About.div}
   };
+  MENU.About.Keydown = function(event) {
+    if (event.keyCode === KEY.ESCAPE ||
+        (this.id === 'MathJax_AboutClose' &&
+         (event.keyCode === KEY.SPACE || event.keyCode === KEY.Return))) {
+      MENU.About.Remove(event);
+    }
+  },
   MENU.About.GetJax = function (jax,JAX,type,noTypeCheck) {
     var info = [];
     for (var id in JAX) {if (JAX.hasOwnProperty(id) && JAX[id]) {

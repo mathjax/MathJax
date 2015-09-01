@@ -101,7 +101,7 @@
   HELP.Post = function () {
     this.div = MENU.Background(this);
     var help = HTML.addElement(this.div,"div",{
-      id: "MathJax_Help", tabIndex: "0"
+      id: "MathJax_Help", tabIndex: 0, onkeydown: HELP.Keydown
     },LOCALE._("HelpDialog",[
       ["b",{style:{fontSize:"120%"}},[["Help","MathJax Help"]]],
       ["div",{id: "MathJax_HelpContent"},[
@@ -149,7 +149,7 @@
       ]],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
       ["span",{id: "MathJax_HelpClose", onclick: HELP.Remove,
-               onkeydown: HELP.Remove, tabIndex: '0',
+               onkeydown: HELP.Keydown, tabIndex: 0,
                'aria-label': 'Close', 'aria-describedby': 'Close window'},
         [["span",{},["\u00D7"]]]
       ]
@@ -170,6 +170,13 @@
   HELP.Remove = function (event) {
     if (HELP.div) {document.body.removeChild(HELP.div); delete HELP.div}
   };
+  HELP.Keydown = function(event) {
+    if (event.keyCode === KEY.ESCAPE ||
+        (this.id === 'MathJax_HelpClose' &&
+         (event.keyCode === KEY.SPACE || event.keyCode === KEY.Return))) {
+      HELP.Remove(event);
+    }
+  },
 
   MathJax.Callback.Queue(
     HUB.Register.StartupHook("End Config",{}), // wait until config is complete
