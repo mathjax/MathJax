@@ -214,9 +214,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         } else {
           //  Get total width minus column spacing
           WW = HTMLCSS.length2em(values.width,mu);
-          for (i = 0, m = Math.min(J+1,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
+          for (i = 0, m = Math.min(J,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
           //  Determine individual column widths
-          WW /= J+1;
+          WW /= J;
           for (i = 0, m = Math.min(J+1,CWIDTH.length); i < m; i++) {W[i] = WW}
         }
       } else {
@@ -242,7 +242,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             if (WP > .98) {Wf = Wp/(Wt+Wp); WW = Wt + Wp} else {WW = Wt / (1-WP)}
           } else {
             WW = HTMLCSS.length2em(values.width,mu);
-            for (i = 0, m = Math.min(J+1,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
+            for (i = 0, m = Math.min(J,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
           }
           //  Determine the relative column widths
           for (i = 0, m = P.length; i < m; i++) {
@@ -405,11 +405,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           line = HTMLCSS.createRule(stack,1.25/HTMLCSS.em,0,fW); HTMLCSS.addBox(stack,line);
           line.bbox = {h:1.25/HTMLCSS.em, d:0, w:fW, rw:fW, lw:0};
           HTMLCSS.placeBox(line,0,y - D[i] - (dy-D[i]-H[i+1])/2,true);
-          if (RLINES[i] === "dashed" || hasRelativeWidth) {
-            line.style.borderTop = line.style.height+" "+RLINES[i]; line.style.height = 0;
-            line.style.width = line.style.borderLeftWidth; line.style.borderLeft = "";
-            if (hasRelativeWidth) {line.style.width = "100%"}
-          }
+          if (RLINES[i] === "dashed") line.style.borderTopStyle = "dashed";
+          if (hasRelativeWidth) line.style.width = "100%"
         }
         y -= dy;
       }

@@ -868,9 +868,9 @@
               else {svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")")}
           } else if (nodeName === "line" || nodeName === "polygon" ||
                      nodeName === "path" || nodeName === "a") {
-            var transform = svg.element.getAttribute("transform");
+            var transform = svg.element.getAttribute("transform") || "";
             if (transform) transform = " "+transform;
-            transform = "translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+") "+transform;
+            transform = "translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")"+transform;
             svg.element.setAttribute("transform",transform);
           } else {
             svg.element.setAttribute("x",Math.floor(svg.x/svg.scale));
@@ -2122,7 +2122,7 @@
             if (shift) {
               HUB.Insert(style,({
                 left: {marginLeft: SVG.Ex(shift)},
-                right: {marginRight: SVG.Ex(-shift)},
+                right: {marginRight: SVG.Ex(-shift), marginLeft: SVG.Ex(Math.max(0,shift-(l+svg.w+r)))},
                 center: {marginLeft: SVG.Ex(shift), marginRight: SVG.Ex(-shift)}
               })[values.indentalign]);
             }

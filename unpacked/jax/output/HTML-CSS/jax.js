@@ -2945,7 +2945,6 @@
             node.style.textAlign = values.indentalign;
             // ### FIXME: make percentage widths respond to changes in container
             if (shift) {
-              shift *= HTMLCSS.scale;
               HUB.Insert(span.style,({
                 left: {marginLeft: HTMLCSS.Em(shift)},
                 right: {marginRight: HTMLCSS.Em(-shift)},
@@ -2960,7 +2959,7 @@
 	        color.style.marginLeft = HTMLCSS.Em(L);
 	        color.style.marginRight =
 	          HTMLCSS.Em(R + (values.indentalign === "right" ?
-                      Math.min(0,span.bbox.w+shift) - span.bbox.w : 0));
+                      span.bbox.w+shift - span.bbox.w : 0));
 		if (HTMLCSS.msieColorBug && values.indentalign === "right") {
                   if (parseFloat(color.style.marginLeft) > 0) {
                     var padding = MathJax.HTML.addElement(color.parentNode,"span");
