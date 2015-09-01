@@ -94,7 +94,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       
       roundedbox: function (child,cbox,bb,p,t,SOLID) {
         var r = Math.min(cbox.w,cbox.h+cbox.d+2*p)/4;
-        HTML.addElement(child.parentNode,"mjx-box",{
+        CHTML.addElement(child.parentNode,"mjx-box",{
           style: {
             padding:CHTML.Em(p-t), border:SOLID, "border-radius":CHTML.Em(r),
             height:CHTML.Em(cbox.h+cbox.d), "vertical-align":CHTML.Em(-bb.D),
@@ -159,7 +159,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       /********************************************************/
       
       verticalstrike: function (child,cbox,bb,p,t,SOLID) {
-        HTML.addElement(child.parentNode,"mjx-box",{
+        CHTML.addElement(child.parentNode,"mjx-box",{
           style: {
             "border-left":SOLID,
             height:CHTML.Em(bb.H+bb.D), "vertical-align":CHTML.Em(-bb.D),
@@ -171,7 +171,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       /********************************************************/
       
       horizontalstrike: function (child,cbox,bb,p,t,SOLID) {
-        HTML.addElement(child.parentNode,"mjx-box",{
+        CHTML.addElement(child.parentNode,"mjx-box",{
           style: {
             "border-top":SOLID,
             height:CHTML.Em((bb.H+bb.D)/2-t/2), "vertical-align":CHTML.Em(-bb.D),

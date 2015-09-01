@@ -47,7 +47,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Warning: causes reflow
       //
       var w = node.offsetWidth, h = node.offsetHeight;
-      var strut = MathJax.HTML.addElement(node,"mjx-hd-test",{style:{height:h+"px"}});
+      var strut = CHTML.addElement(node,"mjx-hd-test",{style:{height:h+"px"}});
       bbox.d = bbox.b = (node.offsetHeight - h)/CHTML.em;
       bbox.w = bbox.r = w/CHTML.em; bbox.h = bbox.t = h/CHTML.em - bbox.d;
       node.removeChild(strut);

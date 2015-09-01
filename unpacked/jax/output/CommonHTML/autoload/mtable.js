@@ -42,7 +42,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       var state = {rows:[], labels:[], labeled: false};
       node = this.CHTMLdefaultNode(node,{noBBox:true, childOptions:state});
-      var table = HTML.Element("mjx-table");
+      var table = CHTML.Element("mjx-table");
       while (node.firstChild) table.appendChild(node.firstChild);
       node.appendChild(table);
       //
@@ -235,7 +235,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           //  (setting style.height seems to work very strangely)
           //
           if (state.HD && j === 0) {
-            HTML.addElement(row[j].parentNode,"mjx-mtd",{style:{padding:T+" 0 "+B}},
+            CHTML.addElement(row[j].parentNode,"mjx-mtd",{style:{padding:T+" 0 "+B}},
               [["mjx-box",{style:{
                 height:CHTML.Em(state.HH+state.DD),
                 "vertical-align":CHTML.Em(-state.DD)
@@ -453,10 +453,10 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       //  Create boxes for table and labels
       //
-      var box = HTML.addElement(node,"mjx-box",{
+      var box = CHTML.addElement(node,"mjx-box",{
         style:{width:"100%","text-align":indent.indentalign}
       }); box.appendChild(table);
-      var labels = HTML.Element("mjx-stack");
+      var labels = CHTML.Element("mjx-stack");
       table.style.display = "inline-table"; if (!table.style.width) table.style.width = "auto";
       labels.style.verticalAlign = "top";
       table.style.verticalAlign = CHTML.Em(state.T-state.B-state.H[0]);
@@ -545,7 +545,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       if (!options) options = {rows:[],labels:[]};
       var row = []; options.rows.push(row);
-      var label = HTML.Element("mjx-label"); options.labels.push(label);
+      var label = CHTML.Element("mjx-label"); options.labels.push(label);
       this.CHTMLaddChild(label,0,options);
       options.labeled = true;
       //

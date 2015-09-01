@@ -57,7 +57,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           this.Append(err); err.toCommonHTML(node); this.data.pop();
           bbox.combine(err.CHTML,0,0,1);
         } else {
-          var img = MathJax.HTML.addElement(node,"img",{
+          var img = CHTML.addElement(node,"img",{
             isMathJax:true, src:values.src, alt:values.alt, title:values.alt
           });
           var w = bbox.img.img.width/CHTML.em, h = bbox.img.img.height/CHTML.em;
