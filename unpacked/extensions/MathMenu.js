@@ -864,6 +864,10 @@
       }
       MENU.Focus(menu);
     },
+    MoveVertical: function(event, item, move) {
+      this.ClearTimer();
+      this.SUPER(arguments).MoveVertical.apply(this, arguments);
+    },
     MoveHorizontal: function(event, menu, move, rtl) {
       if (this.disabled) {
         return;
