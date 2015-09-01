@@ -3,9 +3,9 @@
 
 /*************************************************************
  *
- *  MathJax/jax/output/FastHTML/jax.js
+ *  MathJax/jax/output/PreviewHTML/jax.js
  *
- *  Implements the FastHTML OutputJax that displays mathematics
+ *  Implements the PreviewHTML OutputJax that displays mathematics
  *  using HTML to position the characters from math fonts
  *  in their proper locations.
  *  
@@ -27,7 +27,7 @@
  */
 
 
-(function (AJAX,HUB,HTML,FHTML) {
+(function (AJAX,HUB,HTML,PHTML) {
   var MML;
 
   var EVENT, TOUCH, HOVER; // filled in later
@@ -130,7 +130,7 @@
   var BIGDIMEN = 1000000;
   var V = "V", H = "H";
 
-  FHTML.Augment({
+  PHTML.Augment({
     settings: HUB.config.menuSettings,
     config: {styles: STYLES},
 
@@ -168,9 +168,9 @@
       //
       //  Set up styles and preload web fonts
       //
-      return AJAX.Styles(this.config.styles,["InitializeFHTML",this]);
+      return AJAX.Styles(this.config.styles,["InitializePHTML",this]);
     },
-    InitializeFHTML: function () {
+    InitializePHTML: function () {
     },
     
     preTranslate: function (state) {
@@ -185,16 +185,16 @@
         //  Remove any existing output
         //
         prev = script.previousSibling;
-        if (prev && String(prev.className).match(/^MathJax_FHTML(_Display)?( MathJax_Processing)?$/))
+        if (prev && String(prev.className).match(/^MathJax_PHTML(_Display)?( MathJax_Processing)?$/))
           {prev.parentNode.removeChild(prev)}
         //
         //  Add the span, and a div if in display mode,
         //  then set the role and mark it as being processed
         //
         jax = script.MathJax.elementJax; if (!jax) continue;
-        jax.FHTML = {display: (jax.root.Get("display") === "block")}
+        jax.PHTML = {display: (jax.root.Get("display") === "block")}
         span = div = HTML.Element("span",{
-	  className:"MathJax_FHTML", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
+	  className:"MathJax_PHTML", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
 	  onclick:EVENT.Click, ondblclick:EVENT.DblClick
@@ -203,8 +203,8 @@
 	  span.ontouchstart = TOUCH.start;
 	  span.ontouchend = TOUCH.end;
 	}
-        if (jax.FHTML.display) {
-          div = HTML.Element("div",{className:"MathJax_FHTML_Display"});
+        if (jax.PHTML.display) {
+          div = HTML.Element("div",{className:"MathJax_PHTML_Display"});
           div.appendChild(span);
         }
         //
@@ -221,13 +221,13 @@
       //
       var jax = script.MathJax.elementJax, math = jax.root,
           span = document.getElementById(jax.inputID+"-Frame"),
-          div = (jax.FHTML.display ? span.parentNode : span);
+          div = (jax.PHTML.display ? span.parentNode : span);
       //
       //  Typeset the math
       //
-      this.initFHTML(math,span);
+      this.initPHTML(math,span);
 //      math.setTeXclass();
-      try {math.toFastHTML(span)} catch (err) {
+      try {math.toPreviewHTML(span)} catch (err) {
         if (err.restart) {while (span.firstChild) {span.removeChild(span.firstChild)}}
         throw err;
       }
@@ -244,7 +244,7 @@
         //
         div.className += " MathJax_Processed";
         if (script.MathJax.preview) {
-          jax.FHTML.preview = script.MathJax.preview;
+          jax.PHTML.preview = script.MathJax.preview;
           delete script.MathJax.preview;
         }
       }
@@ -260,7 +260,7 @@
           //  Remove the processed marker
           //
           script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
-          var data = script.MathJax.elementJax.FHTML;
+          var data = script.MathJax.elementJax.PHTML;
           //
           //  Remove the preview, if any
           //
@@ -274,13 +274,13 @@
     },
 
     getJaxFromMath: function (math) {
-      if (math.parentNode.className === "MathJax_FHTML_Display") {math = math.parentNode}
+      if (math.parentNode.className === "MathJax_PHTML_Display") {math = math.parentNode}
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
       return HUB.getJaxFor(math);
     },
-    getHoverSpan: function (jax,math) {return jax.root.FHTMLspanElement()},
+    getHoverSpan: function (jax,math) {return jax.root.PHTMLspanElement()},
     getHoverBBox: function (jax,span,math) {
-      var bbox = jax.root.FHTML, em = jax.FHTML.outerEm;
+      var bbox = jax.root.PHTML, em = jax.PHTML.outerEm;
       var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
       if (bbox.width) {BBOX.width = bbox.width}
       return BBOX;
@@ -291,7 +291,7 @@
       //  Re-render at larger size
       //
       span.className = "MathJax";
-      this.idPostfix = "-zoom"; jax.root.toFHTML(span,span); this.idPostfix = "";
+      this.idPostfix = "-zoom"; jax.root.toPHTML(span,span); this.idPostfix = "";
       //
       //  Get height and width of zoomed math and original math
       //
@@ -305,15 +305,15 @@
       return {Y:-EVENT.getBBox(span).h, mW:mW, mH:mH, zW:zW, zH:zH};
     },
 
-    initFHTML: function (math,span) {},
+    initPHTML: function (math,span) {},
 
     Remove: function (jax) {
       var span = document.getElementById(jax.inputID+"-Frame");
       if (span) {
-        if (jax.FHTML.display) {span = span.parentNode}
+        if (jax.PHTML.display) {span = span.parentNode}
         span.parentNode.removeChild(span);
       }
-      delete jax.FHTML;
+      delete jax.PHTML;
     },
     
     ID: 0, idPostfix: "",
@@ -452,87 +452,87 @@
     MML = MathJax.ElementJax.mml;
 
     MML.mbase.Augment({
-      toFastHTML: function (span,options) {
-        return this.FHTMLdefaultSpan(span,options);
+      toPreviewHTML: function (span,options) {
+        return this.PHTMLdefaultSpan(span,options);
       },
 
-      FHTMLdefaultSpan: function (span,options) {
+      PHTMLdefaultSpan: function (span,options) {
         if (!options) options = {};
-        span = this.FHTMLcreateSpan(span);
-        this.FHTMLhandleStyle(span);
-        this.FHTMLhandleColor(span);
-        if (this.isToken) this.FHTMLhandleToken(span);
-        for (var i = 0, m = this.data.length; i < m; i++) this.FHTMLaddChild(span,i,options);
+        span = this.PHTMLcreateSpan(span);
+        this.PHTMLhandleStyle(span);
+        this.PHTMLhandleColor(span);
+        if (this.isToken) this.PHTMLhandleToken(span);
+        for (var i = 0, m = this.data.length; i < m; i++) this.PHTMLaddChild(span,i,options);
         return span;
       },
-      FHTMLaddChild: function (span,i,options) {
+      PHTMLaddChild: function (span,i,options) {
         var child = this.data[i];
         if (child) {
           if (options.childSpans)
             span = HTML.addElement(span,"span",{className:options.className});
-          child.toFastHTML(span);
+          child.toPreviewHTML(span);
           if (!options.noBBox) {
-            this.FHTML.w += child.FHTML.w + child.FHTML.l + child.FHTML.r;
-            if (child.FHTML.h > this.FHTML.h) this.FHTML.h = child.FHTML.h;
-            if (child.FHTML.d > this.FHTML.d) this.FHTML.d = child.FHTML.d;
-            if (child.FHTML.t > this.FHTML.t) this.FHTML.t = child.FHTML.t;
-            if (child.FHTML.b > this.FHTML.b) this.FHTML.b = child.FHTML.b;
+            this.PHTML.w += child.PHTML.w + child.PHTML.l + child.PHTML.r;
+            if (child.PHTML.h > this.PHTML.h) this.PHTML.h = child.PHTML.h;
+            if (child.PHTML.d > this.PHTML.d) this.PHTML.d = child.PHTML.d;
+            if (child.PHTML.t > this.PHTML.t) this.PHTML.t = child.PHTML.t;
+            if (child.PHTML.b > this.PHTML.b) this.PHTML.b = child.PHTML.b;
           }
         } else if (options.forceChild) {HTML.addElement(span,"span")}
       },
-      FHTMLstretchChild: function (i,H,D) {
+      PHTMLstretchChild: function (i,H,D) {
         var data = this.data[i];
-        if (data && data.FHTMLcanStretch("Vertical",H,D)) {
-          var bbox = this.FHTML, dbox = data.FHTML, w = dbox.w;
-          data.FHTMLstretchV(H,D);
+        if (data && data.PHTMLcanStretch("Vertical",H,D)) {
+          var bbox = this.PHTML, dbox = data.PHTML, w = dbox.w;
+          data.PHTMLstretchV(H,D);
           bbox.w += dbox.w - w;
           if (dbox.h > bbox.h) bbox.h = dbox.h;
           if (dbox.d > bbox.d) bbox.d = dbox.d;
         }
       },
 
-      FHTMLcreateSpan: function (span) {
-        if (!this.FHTML) this.FHTML = {};
-        this.FHTML = {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
+      PHTMLcreateSpan: function (span) {
+        if (!this.PHTML) this.PHTML = {};
+        this.PHTML = {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
         if (this.inferred) return span;
         //  ### FIXME:  This is a hack to handle the different spacing of the
         //  ### integral sign in Times compared to CM fonts
-        if (this.type === "mo" && this.data.join("") === "\u222B") {FHTML.lastIsInt = true}
-        else if (this.type !== "mspace" || this.width !== "negativethinmathspace") {FHTML.lastIsInt = false}
+        if (this.type === "mo" && this.data.join("") === "\u222B") {PHTML.lastIsInt = true}
+        else if (this.type !== "mspace" || this.width !== "negativethinmathspace") {PHTML.lastIsInt = false}
         //  ###
-        if (!this.FHTMLspanID) {this.FHTMLspanID = FHTML.GetID()};
-        var id = (this.id || "MJXf-Span-"+this.FHTMLspanID);
+        if (!this.PHTMLspanID) {this.PHTMLspanID = PHTML.GetID()};
+        var id = (this.id || "MJXf-Span-"+this.PHTMLspanID);
         return HTML.addElement(span,"span",{className:"MJXf-"+this.type, id:id});
       },
-      FHTMLspanElement: function () {
-        if (!this.FHTMLspanID) {return null}
-        return document.getElementById(this.id||"MJXf-Span-"+this.FHTMLspanID);
+      PHTMLspanElement: function () {
+        if (!this.PHTMLspanID) {return null}
+        return document.getElementById(this.id||"MJXf-Span-"+this.PHTMLspanID);
       },
 
-      FHTMLhandleToken: function (span) {
+      PHTMLhandleToken: function (span) {
         var values = this.getValues("mathvariant");
         if (values.mathvariant !== MML.VARIANT.NORMAL) {
-          span.className += " "+FHTML.VARIANT[values.mathvariant];
+          span.className += " "+PHTML.VARIANT[values.mathvariant];
         }
       },
 
-      FHTMLhandleStyle: function (span) {
+      PHTMLhandleStyle: function (span) {
         if (this.style) span.style.cssText = this.style;
       },
 
-      FHTMLhandleColor: function (span) {
+      PHTMLhandleColor: function (span) {
         if (this.mathcolor) {span.style.color = this.mathcolor}
         if (this.mathbackground) {span.style.backgroundColor = this.mathbackground}
       },
 
-      FHTMLhandleScriptlevel: function (span) {
+      PHTMLhandleScriptlevel: function (span) {
         // ### FIXME:  Need to prevent getting too small
         // ### and should keep track of scaling so it can be compensated for
         var level = this.Get("scriptlevel");
         if (level) span.className += " MJXf-script";
       },
 
-      FHTMLhandleText: function (span,text) {
+      PHTMLhandleText: function (span,text) {
         var c, n;
         var H = 0, D = 0, W = 0;
         for (var i = 0, m = text.length; i < m; i++) {
@@ -547,31 +547,31 @@
             if (c.match(/[acegm-su-z]/)) {h = .45} else if (c.match(/[ij]/)) {h = .75}
             if (c.match(/[ijlt]/)) w = .28;
           }
-          if (FHTML.DELIMITERS[c]) {w = FHTML.DELIMITERS[c].w || .4}
+          if (PHTML.DELIMITERS[c]) {w = PHTML.DELIMITERS[c].w || .4}
           // ### FIXME:  handle Greek
           // ### Combining diacriticals (all sets), spacing modifiers
           // ### arrows (all sets), widths of braces
           if (h > H) H = h; if (d > D) D = d; W += w;
         }
-        if (!this.CHML) this.FHTML = {};
-        this.FHTML = {h:.9, d:.3, w:W, l:0, r:0, t:H, b:D};
+        if (!this.CHML) this.PHTML = {};
+        this.PHTML = {h:.9, d:.3, w:W, l:0, r:0, t:H, b:D};
         HTML.addText(span,text);
       },
 
-      FHTMLbboxFor: function (n) {
-        if (this.data[n] && this.data[n].FHTML) return this.data[n].FHTML;
+      PHTMLbboxFor: function (n) {
+        if (this.data[n] && this.data[n].PHTML) return this.data[n].PHTML;
         return {w:0, h:0, d:0, l:0, r:0, t:0, b:0};
       },
 
-      FHTMLcanStretch: function (direction,H,D) {
+      PHTMLcanStretch: function (direction,H,D) {
         if (this.isEmbellished()) {
           var core = this.Core();
-          if (core && core !== this) {return core.FHTMLcanStretch(direction,H,D)}
+          if (core && core !== this) {return core.PHTMLcanStretch(direction,H,D)}
         }
         return false;
       },
-      FHTMLstretchV: function (h,d) {},
-      FHTMLstretchH: function (w) {},
+      PHTMLstretchV: function (h,d) {},
+      PHTMLstretchH: function (w) {},
 
       CoreParent: function () {
         var parent = this;
@@ -591,166 +591,166 @@
     });
 
     MML.chars.Augment({
-      toFastHTML: function (span) {
+      toPreviewHTML: function (span) {
         var text = this.toString().replace(/[\u2061-\u2064]/g,"");
-        this.FHTMLhandleText(span,text);
+        this.PHTMLhandleText(span,text);
       }
     });
     MML.entity.Augment({
-      toFastHTML: function (span) {
+      toPreviewHTML: function (span) {
         var text = this.toString().replace(/[\u2061-\u2064]/g,"");
-        this.FHTMLhandleText(span,text);
+        this.PHTMLhandleText(span,text);
       }
     });
 
     MML.math.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span);
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span);
         if (this.Get("display") === "block") {span.className += " MJXf-display"}
         return span;
       }
     });
 
     MML.mo.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span);
-        this.FHTMLadjustAccent(span);
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span);
+        this.PHTMLadjustAccent(span);
         var values = this.getValues("lspace","rspace","scriptlevel","displaystyle","largeop");
         if (values.scriptlevel === 0) {
-          this.FHTML.l = FHTML.length2em(values.lspace);
-          this.FHTML.r = FHTML.length2em(values.rspace);
-          span.style.marginLeft = FHTML.Em(this.FHTML.l);
-          span.style.marginRight = FHTML.Em(this.FHTML.r);
+          this.PHTML.l = PHTML.length2em(values.lspace);
+          this.PHTML.r = PHTML.length2em(values.rspace);
+          span.style.marginLeft = PHTML.Em(this.PHTML.l);
+          span.style.marginRight = PHTML.Em(this.PHTML.r);
         } else {
-          this.FHTML.l = .15;
-          this.FHTML.r = .1;
+          this.PHTML.l = .15;
+          this.PHTML.r = .1;
         }
         if (values.displaystyle && values.largeop) {
           var box = HTML.Element("span",{className:"MJXf-largeop"});
           box.appendChild(span.firstChild); span.appendChild(box);
-          this.FHTML.h *= 1.2; this.FHTML.d *= 1.2;
+          this.PHTML.h *= 1.2; this.PHTML.d *= 1.2;
           if (this.data.join("") === "\u222B") box.className += " MJXf-int";
         }
         // ### FIXME:  Handle embellished op spacing
         // ### FIXME:  Remap minus signs
         return span;
       },
-      FHTMLadjustAccent: function (span) {
+      PHTMLadjustAccent: function (span) {
         var parent = this.CoreParent();
         if (parent && parent.isa(MML.munderover) && 
             this.CoreText(parent.data[parent.base]).length === 1) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
           var c = this.data.join(""), C;
-          if (over && this === over.CoreMO() && parent.Get("accent")) {C = FHTML.REMAPACCENT[c]}
-          else if (under && this === under.CoreMO() && parent.Get("accentunder")) {C = FHTML.REMAPACCENTUNDER[c]}
+          if (over && this === over.CoreMO() && parent.Get("accent")) {C = PHTML.REMAPACCENT[c]}
+          else if (under && this === under.CoreMO() && parent.Get("accentunder")) {C = PHTML.REMAPACCENTUNDER[c]}
           if (C) c = span.innerHTML = C;
-          if (c.match(/[\u02C6-\u02DC\u00A8]/)) {this.FHTML.acc = -.52}
-          else if (c === "\u2192") {this.FHTML.acc = -.15; this.FHTML.vec = true}
+          if (c.match(/[\u02C6-\u02DC\u00A8]/)) {this.PHTML.acc = -.52}
+          else if (c === "\u2192") {this.PHTML.acc = -.15; this.PHTML.vec = true}
         }
       },
-      FHTMLcanStretch: function (direction,H,D) {
+      PHTMLcanStretch: function (direction,H,D) {
         if (!this.Get("stretchy")) {return false}
         var c = this.data.join("");
         if (c.length > 1) {return false}
-        c = FHTML.DELIMITERS[c];
+        c = PHTML.DELIMITERS[c];
         var stretch = (c && c.dir === direction.substr(0,1));
         if (stretch) {
-          stretch = (this.FHTML.h !== H || this.FHTML.d !== D ||
+          stretch = (this.PHTML.h !== H || this.PHTML.d !== D ||
             (this.Get("minsize",true) || this.Get("maxsize",true)));
         }
         return stretch;
       },
-      FHTMLstretchV: function (h,d) {
-        var span = this.FHTMLspanElement(), bbox = this.FHTML; //bbox.w = .4; // ## adjust width
+      PHTMLstretchV: function (h,d) {
+        var span = this.PHTMLspanElement(), bbox = this.PHTML; //bbox.w = .4; // ## adjust width
         var values = this.getValues("symmetric","maxsize","minsize");
         if (values.symmetric) {H = 2*Math.max(h-.25,d+.25)} else {H = h + d}
-        values.maxsize = FHTML.length2em(values.maxsize,bbox.h+bbox.d);
-        values.minsize = FHTML.length2em(values.minsize,bbox.h+bbox.d);
+        values.maxsize = PHTML.length2em(values.maxsize,bbox.h+bbox.d);
+        values.minsize = PHTML.length2em(values.minsize,bbox.h+bbox.d);
         H = Math.max(values.minsize,Math.min(values.maxsize,H));
         var scale = H/(bbox.h+bbox.d-.3);  // ### adjusted for extra tall bbox
-        var box = HTML.Element("span",{style:{"font-size":FHTML.Em(scale)}});
+        var box = HTML.Element("span",{style:{"font-size":PHTML.Em(scale)}});
         if (scale > 1.25) {
           var sX = Math.ceil(1.25/scale * 10);
           box.className = "MJXf-right MJXf-scale"+sX;
-          box.style.marginLeft = FHTML.Em(bbox.w*(sX/10-1)+.07);
+          box.style.marginLeft = PHTML.Em(bbox.w*(sX/10-1)+.07);
           bbox.w *= scale*sX/10;
         }
         box.appendChild(span.firstChild); span.appendChild(box);
-        if (values.symmetric) span.style.verticalAlign = FHTML.Em(.25*(1-scale));
+        if (values.symmetric) span.style.verticalAlign = PHTML.Em(.25*(1-scale));
       }
     });
 
     MML.mspace.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span);
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span);
         var values = this.getValues("height","depth","width");
-        var w = FHTML.length2em(values.width),
-            h = FHTML.length2em(values.height),
-            d = FHTML.length2em(values.depth);
-        var bbox = this.FHTML;
+        var w = PHTML.length2em(values.width),
+            h = PHTML.length2em(values.height),
+            d = PHTML.length2em(values.depth);
+        var bbox = this.PHTML;
         bbox.w = w; bbox.h = h; bbox.d = d;
         if (w < 0) {
           //  ### FIXME:  lastIsInt hack
-          if (!FHTML.lastIsInt) span.style.marginLeft = FHTML.Em(w);
+          if (!PHTML.lastIsInt) span.style.marginLeft = PHTML.Em(w);
           w = 0;
         }
-        span.style.width = FHTML.Em(w);
-        span.style.height = FHTML.Em(h+d);
-        if (d) span.style.verticalAlign = FHTML.Em(-d);
+        span.style.width = PHTML.Em(w);
+        span.style.height = PHTML.Em(h+d);
+        if (d) span.style.verticalAlign = PHTML.Em(-d);
         return span;
       }
     });
 
     MML.mpadded.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span,{
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span,{
           childSpans:true, className:"MJXf-box", forceChild:true
         });
         var child = span.firstChild;
         var values = this.getValues("width","height","depth","lspace","voffset");
-        var dimen = this.FHTMLdimen(values.lspace);
+        var dimen = this.PHTMLdimen(values.lspace);
         var T = 0, B = 0, L = dimen.len, R = -dimen.len, V = 0;
         if (values.width !== "") {
-          dimen = this.FHTMLdimen(values.width,"w",0);
-          if (dimen.pm) {R += dimen.len} else {span.style.width = FHTML.Em(dimen.len)}
+          dimen = this.PHTMLdimen(values.width,"w",0);
+          if (dimen.pm) {R += dimen.len} else {span.style.width = PHTML.Em(dimen.len)}
         }
         if (values.height !== "") {
-          dimen = this.FHTMLdimen(values.height,"h",0);
-          if (!dimen.pm) T += -this.FHTMLbboxFor(0).h;
+          dimen = this.PHTMLdimen(values.height,"h",0);
+          if (!dimen.pm) T += -this.PHTMLbboxFor(0).h;
           T += dimen.len;
         }
         if (values.depth !== "")  {
-          dimen = this.FHTMLdimen(values.depth,"d",0);
-          if (!dimen.pm) {B += -this.FHTMLbboxFor(0).d; V += -dimen.len}
+          dimen = this.PHTMLdimen(values.depth,"d",0);
+          if (!dimen.pm) {B += -this.PHTMLbboxFor(0).d; V += -dimen.len}
           B += dimen.len;
         }
         if (values.voffset !== "") {
-          dimen = this.FHTMLdimen(values.voffset);
+          dimen = this.PHTMLdimen(values.voffset);
           T -= dimen.len; B += dimen.len;
           V += dimen.len;
         }
-        if (T) child.style.marginTop = FHTML.Em(T);
-        if (B) child.style.marginBottom = FHTML.Em(B);
-        if (L) child.style.marginLeft = FHTML.Em(L);
-        if (R) child.style.marginRight = FHTML.Em(R);
-        if (V) span.style.verticalAlign = FHTML.Em(V);
+        if (T) child.style.marginTop = PHTML.Em(T);
+        if (B) child.style.marginBottom = PHTML.Em(B);
+        if (L) child.style.marginLeft = PHTML.Em(L);
+        if (R) child.style.marginRight = PHTML.Em(R);
+        if (V) span.style.verticalAlign = PHTML.Em(V);
         return span;
       },
-      FHTMLdimen: function (length,d,m) {
+      PHTMLdimen: function (length,d,m) {
         if (m == null) {m = -BIGDIMEN}
         length = String(length);
         var match = length.match(/width|height|depth/);
-        var size = (match ? this.FHTML[match[0].charAt(0)] : (d ? this.FHTML[d] : 0));
-        return {len: FHTML.length2em(length,size)||0, pm: !!length.match(/^[-+]/)};
+        var size = (match ? this.PHTML[match[0].charAt(0)] : (d ? this.PHTML[d] : 0));
+        return {len: PHTML.length2em(length,size)||0, pm: !!length.match(/^[-+]/)};
       }
     });
 
     MML.munderover.Augment({
-      toFastHTML: function (span) {
+      toPreviewHTML: function (span) {
 	var values = this.getValues("displaystyle","accent","accentunder","align");
 	if (!values.displaystyle && this.data[this.base] != null &&
 	    this.data[this.base].CoreMO().Get("movablelimits")) {
-          span = MML.msubsup.prototype.toFastHTML.call(this,span);
+          span = MML.msubsup.prototype.toPreviewHTML.call(this,span);
           //
           //  Change class to msubsup for CSS rules.
           //  ### FIXME: should this be handled via adding another class instead?
@@ -758,11 +758,11 @@
           span.className = span.className.replace(/munderover/,"msubsup");
           return span;
         }
-        span = this.FHTMLdefaultSpan(span,{childSpans:true, className:"", noBBox:true});
-        var obox = this.FHTMLbboxFor(this.over),
-            ubox = this.FHTMLbboxFor(this.under),
-            bbox = this.FHTMLbboxFor(this.base),
-            BBOX = this.FHTML, acc = obox.acc;
+        span = this.PHTMLdefaultSpan(span,{childSpans:true, className:"", noBBox:true});
+        var obox = this.PHTMLbboxFor(this.over),
+            ubox = this.PHTMLbboxFor(this.under),
+            bbox = this.PHTMLbboxFor(this.base),
+            BBOX = this.PHTML, acc = obox.acc;
         if (this.data[this.over]) {
           span.lastChild.firstChild.style.marginLeft = obox.l =
             span.lastChild.firstChild.style.marginRight = obox.r = 0;
@@ -770,14 +770,14 @@
           over.firstChild.appendChild(span.lastChild);
           if (span.childNodes.length > (this.data[this.under] ? 1 : 0))
             over.firstChild.appendChild(span.firstChild);
-          this.data[this.over].FHTMLhandleScriptlevel(over.firstChild.firstChild);
+          this.data[this.over].PHTMLhandleScriptlevel(over.firstChild.firstChild);
           if (acc != null) {
             if (obox.vec) {
               over.firstChild.firstChild.firstChild.style.fontSize = "60%";
               obox.h *= .6; obox.d *= .6; obox.w *= .6;
             }
             acc = acc - obox.d + .1; if (bbox.t != null) {acc += bbox.t - bbox.h}
-            over.firstChild.firstChild.style.marginBottom = FHTML.Em(acc);
+            over.firstChild.firstChild.style.marginBottom = PHTML.Em(acc);
           }
           if (span.firstChild) {span.insertBefore(over,span.firstChild)}
             else {span.appendChild(over)}
@@ -785,7 +785,7 @@
         if (this.data[this.under]) {
           span.lastChild.firstChild.style.marginLeft = ubox.l =
             span.lastChild.firstChild.marginRight = ubox.r = 0;
-          this.data[this.under].FHTMLhandleScriptlevel(span.lastChild);
+          this.data[this.under].PHTMLhandleScriptlevel(span.lastChild);
         }
         BBOX.w = Math.max(.8*obox.w,.8*ubox.w,bbox.w);
         BBOX.h = .8*(obox.h+obox.d+(acc||0)) + bbox.h;
@@ -795,8 +795,8 @@
     });
 
     MML.msubsup.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span,{noBBox:true});
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span,{noBBox:true});
         if (!this.data[this.base]) {
           if (span.firstChild) {span.insertBefore(HTML.Element("span"),span.firstChild)}
             else {span.appendChild(HTML.Element("span"))}
@@ -804,55 +804,55 @@
         var base = this.data[this.base], sub = this.data[this.sub], sup = this.data[this.sup];
         if (!base) base = {bbox: {h:.8, d:.2}};
         span.firstChild.style.marginRight = ".05em";
-        var h = Math.max(.4,base.FHTML.h-.4),
-            d = Math.max(.2,base.FHTML.d+.1);
-        var bbox = this.FHTML;
+        var h = Math.max(.4,base.PHTML.h-.4),
+            d = Math.max(.2,base.PHTML.d+.1);
+        var bbox = this.PHTML;
         if (sup && sub) {
           var box = HTML.Element("span",{className:"MJXf-script-box", style:{
-            height: FHTML.Em(h+sup.FHTML.h*.8 + d+sub.FHTML.d*.8),
-            "vertical-align": FHTML.Em(-d-sub.FHTML.d*.8)
+            height: PHTML.Em(h+sup.PHTML.h*.8 + d+sub.PHTML.d*.8),
+            "vertical-align": PHTML.Em(-d-sub.PHTML.d*.8)
           }},[
             ["span",{},[["span",{},[["span",{
-              style:{"margin-bottom":FHTML.Em(-(sup.FHTML.d-.05))}
+              style:{"margin-bottom":PHTML.Em(-(sup.PHTML.d-.05))}
             }]]]]],
             ["span",{},[["span",{},[["span",{
-              style:{"margin-top":FHTML.Em(-(sup.FHTML.h-.05))}
+              style:{"margin-top":PHTML.Em(-(sup.PHTML.h-.05))}
             }]]]]]
           ]);
-          sub.FHTMLhandleScriptlevel(box.firstChild);
-          sup.FHTMLhandleScriptlevel(box.lastChild);
+          sub.PHTMLhandleScriptlevel(box.firstChild);
+          sup.PHTMLhandleScriptlevel(box.lastChild);
           box.firstChild.firstChild.firstChild.appendChild(span.lastChild);
           box.lastChild.firstChild.firstChild.appendChild(span.lastChild);
           span.appendChild(box);
-          bbox.h = Math.max(base.FHTML.h,sup.FHTML.h*.8+h);
-          bbox.d = Math.max(base.FHTML.d,sub.FHTML.d*.8+d);
-          bbox.w = base.FHTML.w + Math.max(sup.FHTML.w,sub.FHTML.w) + .07;
+          bbox.h = Math.max(base.PHTML.h,sup.PHTML.h*.8+h);
+          bbox.d = Math.max(base.PHTML.d,sub.PHTML.d*.8+d);
+          bbox.w = base.PHTML.w + Math.max(sup.PHTML.w,sub.PHTML.w) + .07;
         } else if (sup) {
-          span.lastChild.style.verticalAlign = FHTML.Em(h);
-          sup.FHTMLhandleScriptlevel(span.lastChild);
-          bbox.h = Math.max(base.FHTML.h,sup.FHTML.h*.8+h);
-          bbox.d = Math.max(base.FHTML.d,sup.FHTML.d*.8-h);
-          bbox.w = base.FHTML.w + sup.FHTML.w + .07;
+          span.lastChild.style.verticalAlign = PHTML.Em(h);
+          sup.PHTMLhandleScriptlevel(span.lastChild);
+          bbox.h = Math.max(base.PHTML.h,sup.PHTML.h*.8+h);
+          bbox.d = Math.max(base.PHTML.d,sup.PHTML.d*.8-h);
+          bbox.w = base.PHTML.w + sup.PHTML.w + .07;
         } else if (sub) {
-          span.lastChild.style.verticalAlign = FHTML.Em(-d);
-          sub.FHTMLhandleScriptlevel(span.lastChild);
-          bbox.h = Math.max(base.FHTML.h,sub.FHTML.h*.8-d);
-          bbox.d = Math.max(base.FHTML.d,sub.FHTML.d*.8+d);
-          bbox.w = base.FHTML.w + sub.FHTML.w + .07;
+          span.lastChild.style.verticalAlign = PHTML.Em(-d);
+          sub.PHTMLhandleScriptlevel(span.lastChild);
+          bbox.h = Math.max(base.PHTML.h,sub.PHTML.h*.8-d);
+          bbox.d = Math.max(base.PHTML.d,sub.PHTML.d*.8+d);
+          bbox.w = base.PHTML.w + sub.PHTML.w + .07;
         }
         return span;
       }
     });
 
     MML.mfrac.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span,{
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span,{
           childSpans:true, className:"MJXf-box", forceChild:true, noBBox:true
         });
         var values = this.getValues("linethickness","displaystyle");
         if (!values.displaystyle) {
-          if (this.data[0]) this.data[0].FHTMLhandleScriptlevel(span.firstChild);
-          if (this.data[1]) this.data[1].FHTMLhandleScriptlevel(span.lastChild);
+          if (this.data[0]) this.data[0].PHTMLhandleScriptlevel(span.firstChild);
+          if (this.data[1]) this.data[1].PHTMLhandleScriptlevel(span.lastChild);
         }
         var denom = HTML.Element("span",{className:"MJXf-box",style:{"margin-top":"-.8em"}},[
           ["span",{className:"MJXf-denom"},[                        // inline-table
@@ -861,20 +861,20 @@
         ]);
         denom.firstChild.lastChild.appendChild(span.lastChild);
         span.appendChild(denom);
-        var nbox = this.FHTMLbboxFor(0), dbox = this.FHTMLbboxFor(1), bbox = this.FHTML;
+        var nbox = this.PHTMLbboxFor(0), dbox = this.PHTMLbboxFor(1), bbox = this.PHTML;
         bbox.w = Math.max(nbox.w,dbox.w) * .8;
         bbox.h = nbox.h+nbox.d + .1 + .25;
         bbox.d = dbox.h+dbox.d - .25;
         bbox.l = bbox.r = .125;
-        values.linethickness = Math.max(0,FHTML.length2em(values.linethickness||"0",0));
+        values.linethickness = Math.max(0,PHTML.length2em(values.linethickness||"0",0));
         if (values.linethickness) {
           var rule = denom.firstChild.firstChild.firstChild;
-          var t = FHTML.Em(values.linethickness);
+          var t = PHTML.Em(values.linethickness);
           rule.style.borderTop = (values.linethickness < .15 ? "1px" : t)+" solid";
           rule.style.margin = t+" 0";
           t = values.linethickness;
-          denom.style.marginTop = FHTML.Em(3*t-.9);
-          span.style.verticalAlign = FHTML.Em(1.5*t + .1);
+          denom.style.marginTop = PHTML.Em(3*t-.9);
+          span.style.verticalAlign = PHTML.Em(1.5*t + .1);
           bbox.h += 1.5*t - .1; bbox.d += 1.5*t;
         }
         return span;
@@ -882,16 +882,16 @@
     });
 
     MML.msqrt.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span,{
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span,{
           childSpans:true, className:"MJXf-box", forceChild:true, noBBox:true
         });
-        this.FHTMLlayoutRoot(span,span.firstChild);
+        this.PHTMLlayoutRoot(span,span.firstChild);
         return span;
       },
-      FHTMLlayoutRoot: function (span,base) {
-        var bbox = this.FHTMLbboxFor(0);
-        var scale = Math.ceil((bbox.h+bbox.d+.14)*100), t = FHTML.Em(14/scale);
+      PHTMLlayoutRoot: function (span,base) {
+        var bbox = this.PHTMLbboxFor(0);
+        var scale = Math.ceil((bbox.h+bbox.d+.14)*100), t = PHTML.Em(14/scale);
         var surd = HTML.Element("span",{className:"MJXf-surd"},[
           ["span",{style:{"font-size":scale+"%","margin-top":t}},["\u221A"]]
         ]);
@@ -902,89 +902,89 @@
         if (scale > 150) {
           var sX = Math.ceil(150/scale * 10);
           surd.firstChild.className = "MJXf-right MJXf-scale"+sX;
-          surd.firstChild.style.marginLeft = FHTML.Em(W*(sX/10-1)/scale*100);
+          surd.firstChild.style.marginLeft = PHTML.Em(W*(sX/10-1)/scale*100);
           W = W*sX/10;
-          root.firstChild.style.borderTopWidth = FHTML.Em(.08/Math.sqrt(sX/10));
+          root.firstChild.style.borderTopWidth = PHTML.Em(.08/Math.sqrt(sX/10));
         }
         root.appendChild(base);
         span.appendChild(surd);
         span.appendChild(root);
-        this.FHTML.h = bbox.h + .18; this.FHTML.d = bbox.d;
-        this.FHTML.w = bbox.w + W; 
+        this.PHTML.h = bbox.h + .18; this.PHTML.d = bbox.d;
+        this.PHTML.w = bbox.w + W; 
         return span;
       }
     });
 
     MML.mroot.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span,{
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span,{
           childSpans:true, className:"MJXf-box", forceChild:true, noBBox:true
         });
-        var rbox = this.FHTMLbboxFor(1), root = span.removeChild(span.lastChild);
-        var sqrt = this.FHTMLlayoutRoot(HTML.Element("span"),span.firstChild);
+        var rbox = this.PHTMLbboxFor(1), root = span.removeChild(span.lastChild);
+        var sqrt = this.PHTMLlayoutRoot(HTML.Element("span"),span.firstChild);
         root.className = "MJXf-script";  // ### FIXME: should be scriptscript
         var scale = parseInt(sqrt.firstChild.firstChild.style.fontSize);
         var v = .55*(scale/120) + rbox.d*.8, r = -.6*(scale/120);
         if (scale > 150) {r *= .95*Math.ceil(150/scale*10)/10}
-        root.style.marginRight = FHTML.Em(r); root.style.verticalAlign = FHTML.Em(v);
-        if (-r > rbox.w*.8) root.style.marginLeft = FHTML.Em(-r-rbox.w*.8); // ### depends on rbox.w
+        root.style.marginRight = PHTML.Em(r); root.style.verticalAlign = PHTML.Em(v);
+        if (-r > rbox.w*.8) root.style.marginLeft = PHTML.Em(-r-rbox.w*.8); // ### depends on rbox.w
         span.appendChild(root); span.appendChild(sqrt);
-        this.FHTML.w += Math.max(0,rbox.w*.8+r);
-        this.FHTML.h = Math.max(this.FHTML.h,rbox.h*.8+v);
+        this.PHTML.w += Math.max(0,rbox.w*.8+r);
+        this.PHTML.h = Math.max(this.PHTML.h,rbox.h*.8+v);
         return span;
       },
-      FHTMLlayoutRoot: MML.msqrt.prototype.FHTMLlayoutRoot
+      PHTMLlayoutRoot: MML.msqrt.prototype.PHTMLlayoutRoot
     });
     
     MML.mfenced.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLcreateSpan(span);
-        this.FHTMLhandleStyle(span);
-        this.FHTMLhandleColor(span);
+      toPreviewHTML: function (span) {
+        span = this.PHTMLcreateSpan(span);
+        this.PHTMLhandleStyle(span);
+        this.PHTMLhandleColor(span);
         //
         //  Make row of open, data, sep, ... data, close
         //
         this.addFakeNodes();
-        this.FHTMLaddChild(span,"open",{});
+        this.PHTMLaddChild(span,"open",{});
         for (var i = 0, m = this.data.length; i < m; i++) {
-          this.FHTMLaddChild(span,"sep"+i,{});
-          this.FHTMLaddChild(span,i,{});
+          this.PHTMLaddChild(span,"sep"+i,{});
+          this.PHTMLaddChild(span,i,{});
         }
-        this.FHTMLaddChild(span,"close",{});
+        this.PHTMLaddChild(span,"close",{});
         //
         //  Check for streching the elements
         //
-        var H = this.FHTML.h, D = this.FHTML.d;
-        this.FHTMLstretchChild("open",H,D);
+        var H = this.PHTML.h, D = this.PHTML.d;
+        this.PHTMLstretchChild("open",H,D);
         for (i = 0, m = this.data.length; i < m; i++) {
-          this.FHTMLstretchChild("sep"+i,H,D);
-          this.FHTMLstretchChild(i,H,D);
+          this.PHTMLstretchChild("sep"+i,H,D);
+          this.PHTMLstretchChild(i,H,D);
         }
-        this.FHTMLstretchChild("close",H,D);
+        this.PHTMLstretchChild("close",H,D);
         return span;
       }
     });
 
     MML.mrow.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span);
-        var H = this.FHTML.h, D = this.FHTML.d;
-        for (var i = 0, m = this.data.length; i < m; i++) this.FHTMLstretchChild(i,H,D);
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span);
+        var H = this.PHTML.h, D = this.PHTML.d;
+        for (var i = 0, m = this.data.length; i < m; i++) this.PHTMLstretchChild(i,H,D);
         return span;
       }
     });
 
     MML.mstyle.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span);
-        this.FHTMLhandleScriptlevel(span);
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span);
+        this.PHTMLhandleScriptlevel(span);
         return span;
       }
     });
 
     MML.TeXAtom.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span);
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span);
         // ### FIXME: handle TeX class?
         span.className = "MJXf-mrow";
         return span;
@@ -992,8 +992,8 @@
     });
 
     MML.mtable.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLdefaultSpan(span,{noBBox:true});
+      toPreviewHTML: function (span) {
+        span = this.PHTMLdefaultSpan(span,{noBBox:true});
         var values = this.getValues("columnalign","rowalign","columnspacing","rowspacing",
                                     "columnwidth","equalcolumns","equalrows",
                                     "columnlines","rowlines","frame","framespacing",
@@ -1003,8 +1003,8 @@
             RSPACE = SPLIT(values.rowspacing),
             CALIGN = SPLIT(values.columnalign),
             RALIGN = SPLIT(values.rowalign);
-        for (i = 0, m = CSPACE.length; i < m; i++) {CSPACE[i] = FHTML.length2em(CSPACE[i])}
-        for (i = 0, m = RSPACE.length; i < m; i++) {RSPACE[i] = FHTML.length2em(RSPACE[i])}
+        for (i = 0, m = CSPACE.length; i < m; i++) {CSPACE[i] = PHTML.length2em(CSPACE[i])}
+        for (i = 0, m = RSPACE.length; i < m; i++) {RSPACE[i] = PHTML.length2em(RSPACE[i])}
 
         var table = HTML.Element("span");
         while (span.firstChild) table.appendChild(span.firstChild);
@@ -1013,17 +1013,17 @@
         for (i = 0, m = this.data.length; i < m; i++) {
           var row = this.data[i];
           if (row) {
-            var rspace = FHTML.arrayEntry(RSPACE,i-1), ralign = FHTML.arrayEntry(RALIGN,i);
-            var rbox = row.FHTML, rspan = row.FHTMLspanElement();
+            var rspace = PHTML.arrayEntry(RSPACE,i-1), ralign = PHTML.arrayEntry(RALIGN,i);
+            var rbox = row.PHTML, rspan = row.PHTMLspanElement();
             rspan.style.verticalAlign = ralign;
             var k = (row.type === "mlabeledtr" ? 1 : 0);
             for (j = 0, n = row.data.length; j < n-k; j++) {
               var cell = row.data[j+k];
               if (cell) {
-                var cspace = FHTML.arrayEntry(CSPACE,j-1), calign = FHTML.arrayEntry(CALIGN,j);
-                var cspan = cell.FHTMLspanElement();
-                if (j) {rbox.w += cspace; cspan.style.paddingLeft = FHTML.Em(cspace)}
-                if (i) cspan.style.paddingTop = FHTML.Em(rspace);
+                var cspace = PHTML.arrayEntry(CSPACE,j-1), calign = PHTML.arrayEntry(CALIGN,j);
+                var cspan = cell.PHTMLspanElement();
+                if (j) {rbox.w += cspace; cspan.style.paddingLeft = PHTML.Em(cspace)}
+                if (i) cspan.style.paddingTop = PHTML.Em(rspace);
                 cspan.style.textAlign = calign;
               }
             }
@@ -1031,49 +1031,49 @@
             if (rbox.w > W) W = rbox.w;
           }
         }
-        var bbox = this.FHTML;
+        var bbox = this.PHTML;
         bbox.w = W; bbox.h = H/2 + .25; bbox.d = H/2 - .25;
         bbox.l = bbox.r = .125;
         return span;
       }
     });
     MML.mlabeledtr.Augment({
-      FHTMLdefaultSpan: function (span,options) {
+      PHTMLdefaultSpan: function (span,options) {
         if (!options) options = {};
-        span = this.FHTMLcreateSpan(span);
-        this.FHTMLhandleStyle(span);
-        this.FHTMLhandleColor(span);
-        if (this.isToken) this.FHTMLhandleToken(span);
+        span = this.PHTMLcreateSpan(span);
+        this.PHTMLhandleStyle(span);
+        this.PHTMLhandleColor(span);
+        if (this.isToken) this.PHTMLhandleToken(span);
         // skip label for now
-        for (var i = 1, m = this.data.length; i < m; i++) this.FHTMLaddChild(span,i,options);
+        for (var i = 1, m = this.data.length; i < m; i++) this.PHTMLaddChild(span,i,options);
         return span;
       }
     });
 
     MML.semantics.Augment({
-      toFastHTML: function (span) {
-        span = this.FHTMLcreateSpan(span);
+      toPreviewHTML: function (span) {
+        span = this.PHTMLcreateSpan(span);
         if (this.data[0]) {
-          this.data[0].toFastHTML(span);
-          MathJax.Hub.Insert(this.data[0].FHTML||{},this.FHTML);
+          this.data[0].toPreviewHTML(span);
+          MathJax.Hub.Insert(this.data[0].PHTML||{},this.PHTML);
         }
         return span;
       }
     });
-    MML.annotation.Augment({toFastHTML: function(span) {}});
-    MML["annotation-xml"].Augment({toFastHTML: function(span) {}});
+    MML.annotation.Augment({toPreviewHTML: function(span) {}});
+    MML["annotation-xml"].Augment({toPreviewHTML: function(span) {}});
 
     //
     //  Loading isn't complete until the element jax is modified,
     //  but can't call loadComplete within the callback for "mml Jax Ready"
-    //  (it would call FastHTML's Require routine, asking for the mml jax again)
+    //  (it would call PreviewHTML's Require routine, asking for the mml jax again)
     //  so wait until after the mml jax has finished processing.
     //  
     //  We also need to wait for the onload handler to run, since the loadComplete
     //  will call Config and Startup, which need to modify the body.
     //
     MathJax.Hub.Register.StartupHook("onLoad",function () {
-      setTimeout(MathJax.Callback(["loadComplete",FHTML,"jax.js"]),0);
+      setTimeout(MathJax.Callback(["loadComplete",PHTML,"jax.js"]),0);
     });
   });
 
@@ -1082,4 +1082,4 @@
       {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
   });
     
-})(MathJax.Ajax,MathJax.Hub,MathJax.HTML,MathJax.OutputJax.FastHTML);
+})(MathJax.Ajax,MathJax.Hub,MathJax.HTML,MathJax.OutputJax.PreviewHTML);

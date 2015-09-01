@@ -25,6 +25,6 @@
  */
 
 MathJax.Callback.Queue(
-  ["Require",MathJax.Ajax,"[MathJax]/extensions/FHTML-preview.js"],
+  ["Require",MathJax.Ajax,"[MathJax]/extensions/fast-preview.js"],
   ["loadComplete",MathJax.Ajax,"[MathJax]/extensions/CHTML-preview.js"]
 );

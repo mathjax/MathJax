@@ -3,10 +3,10 @@
 
 /*************************************************************
  *
- *  MathJax/jax/output/FastHTML/config.js
+ *  MathJax/jax/output/PreviewHTML/config.js
  *  
- *  Initializes the FastHTML OutputJax  (the main definition is in
- *  MathJax/jax/input/FastHTML/jax.js, which is loaded when needed).
+ *  Initializes the PreviewHTML OutputJax  (the main definition is in
+ *  MathJax/jax/input/PreviewHTML/jax.js, which is loaded when needed).
  *
  *  ---------------------------------------------------------------------
  *  
@@ -25,11 +25,11 @@
  *  limitations under the License.
  */
 
-MathJax.OutputJax.FastHTML = MathJax.OutputJax({
-  id: "FastHTML",
+MathJax.OutputJax.PreviewHTML = MathJax.OutputJax({
+  id: "PreviewHTML",
   version: "2.5.0",
-  directory: MathJax.OutputJax.directory + "/FastHTML",
-  extensionDir: MathJax.OutputJax.extensionDir + "/FastHTML",
+  directory: MathJax.OutputJax.directory + "/PreviewHTML",
+  extensionDir: MathJax.OutputJax.extensionDir + "/PreviewHTML",
   
   config: {
     scale: 100, minScaleAdjust: 50, // global math scaling factor, and minimum adjusted scale factor
@@ -48,6 +48,6 @@ MathJax.OutputJax.FastHTML = MathJax.OutputJax({
   }
 });
 
-if (!MathJax.Hub.config.delayJaxRegistration) {MathJax.OutputJax.FastHTML.Register("jax/mml")}
+if (!MathJax.Hub.config.delayJaxRegistration) {MathJax.OutputJax.PreviewHTML.Register("jax/mml")}
 
-MathJax.OutputJax.FastHTML.loadComplete("config.js");
+MathJax.OutputJax.PreviewHTML.loadComplete("config.js");

@@ -3,9 +3,9 @@
 
 /*************************************************************
  *
- *  MathJax/extensions/FHTML-preview.js
+ *  MathJax/extensions/fast-preview.js
  *  
- *  Implements a fast preview using the FastHTML output jax
+ *  Implements a fast preview using the PreviewHTML output jax
  *  and then a slower update to the more accurate HTML-CSS output
  *  (or whatever the user has selected).
  *  
@@ -31,14 +31,14 @@
   var SETTINGS = HUB.config.menuSettings;
   var msieColorBug = BROWSER.isMSIE && (document.documentMode||0) < 8;
 
-  var FHTMLpreview = MathJax.Extension["FHTML-preview"] = {
+  var FastPreview = MathJax.Extension["fast-preview"] = {
     version: "2.5.3",
 
     //
     //  Configuration for the chunking of the main output
     //  after the previews have been created, and other configuration.
     //
-    config: HUB.CombineConfig("FHTML-preview",{
+    config: HUB.CombineConfig("fast-preview",{
       Chunks: {EqnChunk: 10000, EqnChunkFactor: 1, EqnChunkDelay: 0},
       color: "inherit!important",
       updateTime: 30, updateDelay: 6,
@@ -51,18 +51,18 @@
     //
     Config: function () {
       if (HUB.config["CHTML-preview"])
-        MathJax.Hub.Config({"FHTML-preview": HUB.config["CHTML-preview"]});
+        MathJax.Hub.Config({"fast-preview": HUB.config["CHTML-preview"]});
       var update, delay, style, done, saved;
       var config = this.config;
 
-      if (!config.disabled && SETTINGS.FHTMLpreview == null)
-        HUB.Config({menuSettings:{FHTMLpreview:true}});
-      if (SETTINGS.FHTMLpreview) {
+      if (!config.disabled && SETTINGS.FastPreview == null)
+        HUB.Config({menuSettings:{FastPreview:true}});
+      if (SETTINGS.FastPreview) {
         MathJax.Ajax.Styles({".MathJax_Preview .MJXf-math":{color:config.color}});
         HUB.Config({"HTML-CSS": config.Chunks, CommonHTML: config.Chunks, SVG: config.Chunks});
       }
       HUB.Register.MessageHook("Begin Math Output",function () {
-        if (!done && SETTINGS.FHTMLpreview && SETTINGS.renderer !== "FastHTML") {
+        if (!done && SETTINGS.FastPreview && SETTINGS.renderer !== "PreviewHTML") {
           update = HUB.processUpdateTime; delay = HUB.processUpdateDelay;
           style = HUB.config.messageStyle;
           HUB.processUpdateTime = config.updateTime;
@@ -84,10 +84,10 @@
 
     //
     //  Insert a preview span, if there isn't one already,
-    //  and call the FastHTML output jax to create the preview
+    //  and call the PreviewHTML output jax to create the preview
     //
     Preview: function (data) {
-      if (!SETTINGS.FHTMLpreview || SETTINGS.renderer === "FastHTML") return;
+      if (!SETTINGS.FastPreview || SETTINGS.renderer === "PreviewHTML") return;
       var preview = data.script.MathJax.preview || data.script.previousSibling;
       if (!preview || preview.className !== MathJax.Hub.config.preRemoveClass) {
         preview = HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
@@ -100,17 +100,17 @@
     },
     postFilter: function (preview,data) {
       //
-      //  Load the FastHTML jax if it is not already loaded
+      //  Load the PreviewHTML jax if it is not already loaded
       //
-      if (!data.math.root.toFastHTML) {
+      if (!data.math.root.toPreviewHTML) {
         var queue = MathJax.Callback.Queue();
         queue.Push(
-          ["Require",MathJax.Ajax,"[MathJax]/jax/output/FastHTML/config.js"],
-          ["Require",MathJax.Ajax,"[MathJax]/jax/output/FastHTML/jax.js"]
+          ["Require",MathJax.Ajax,"[MathJax]/jax/output/PreviewHTML/config.js"],
+          ["Require",MathJax.Ajax,"[MathJax]/jax/output/PreviewHTML/jax.js"]
         );
         HUB.RestartAfter(queue.Push({}));
       }
-      data.math.root.toFastHTML(preview);
+      data.math.root.toPreviewHTML(preview);
     },
 
     //
@@ -120,7 +120,7 @@
     Register: function (name) {
       HUB.Register.StartupHook(name+" Jax Require",function () {
         var jax = MathJax.InputJax[name];
-        jax.postfilterHooks.Add(["Preview",MathJax.Extension["FHTML-preview"]],50);
+        jax.postfilterHooks.Add(["Preview",MathJax.Extension["fast-preview"]],50);
       });
     }
   }
@@ -128,15 +128,15 @@
   //
   //  Hook into each input jax
   //
-  FHTMLpreview.Register("TeX");
-  FHTMLpreview.Register("MathML");
-  FHTMLpreview.Register("AsciiMath");
+  FastPreview.Register("TeX");
+  FastPreview.Register("MathML");
+  FastPreview.Register("AsciiMath");
   
-  HUB.Register.StartupHook("End Config",["Config",FHTMLpreview]);
+  HUB.Register.StartupHook("End Config",["Config",FastPreview]);
   
-  HUB.Startup.signal.Post("FHTML-preview Ready");
+  HUB.Startup.signal.Post("fast-preview Ready");
 
 })(MathJax.Hub,MathJax.HTML,MathJax.Hub.Browser);
 
-MathJax.Ajax.loadComplete("[MathJax]/extensions/FHTML-preview.js");
+MathJax.Ajax.loadComplete("[MathJax]/extensions/fast-preview.js");
 
