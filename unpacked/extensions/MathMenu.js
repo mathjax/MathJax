@@ -193,12 +193,6 @@
       },
       ".MathJax_MenuClose:hover span": {
         "background-color":"#CCC!important"
-      },
-      ".MathJax:focus": {
-        display:"inline-block",
-        outline:"none",
-        border:"1px dotted",
-        margin:"-1px"
       }
     }
   });
