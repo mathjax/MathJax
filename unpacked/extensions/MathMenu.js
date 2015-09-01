@@ -1148,7 +1148,7 @@
       var table = w.document.body.firstChild;
       setTimeout(function () {
         var H = (w.outerHeight-w.innerHeight)||30, W = (w.outerWidth-w.innerWidth)||30, x, y;
-        W = Math.max(100,Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25));
+        W = Math.max(140,Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25));
         H = Math.max(40,Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25));
         if (MENU.prototype.msieHeightBug) {H += 35}; // for title bar in XP
         w.resizeTo(W,H);
