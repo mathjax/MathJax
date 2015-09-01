@@ -545,6 +545,7 @@
       MENU.posted = false;
     },
     MoveHorizontal: function(event, menu, move) {
+      if (!event.shiftKey) { return; }
       var jaxs = MENU.AllNodes();
       var len = jaxs.length;
       if (len === 0) {
@@ -734,6 +735,7 @@
     MoveHorizontal: function(event, item, move, rtl) {
       var menuNode = ITEM.GetMenuNode(item);
       if (menuNode.menuItem === MENU.menu) {
+        if (!event.shiftKey) { return; }
         move(event, item);
       }
       if (rtl) { return; }
@@ -869,11 +871,11 @@
       this.SUPER(arguments).MoveVertical.apply(this, arguments);
     },
     MoveHorizontal: function(event, menu, move, rtl) {
-      if (this.disabled) {
-        return;
-      }
       if (!rtl) {
         this.SUPER(arguments).MoveHorizontal.apply(this, arguments);
+        return;
+      }
+      if (this.disabled) {
         return;
       }
       var submenuNodes = ITEM.GetMenuNode(menu).nextSibling.childNodes;
