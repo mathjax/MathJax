@@ -416,6 +416,9 @@
     Down: function(event, menu) {
       var node = menu.firstChild;
       node.menuItem.Activate(event, node);
+    },
+    Space: function(event, menu) {
+      this.Remove(event, menu);
     }
   },{
 
