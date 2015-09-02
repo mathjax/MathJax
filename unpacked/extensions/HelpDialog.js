@@ -156,7 +156,7 @@
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
       ["span",{id: "MathJax_HelpClose", onclick: HELP.Remove,
                onkeydown: HELP.Keydown, tabIndex: 0,
-               'aria-label': 'Close', 'aria-describedby': 'Close window'},
+               "aria-label": "Close", "aria-describedby": "Close window"},
         [["span",{},["\u00D7"]]]
       ]
     ]));
@@ -178,7 +178,7 @@
   };
   HELP.Keydown = function(event) {
     if (event.keyCode === KEY.ESCAPE ||
-        (this.id === 'MathJax_HelpClose' &&
+        (this.id === "MathJax_HelpClose" &&
          (event.keyCode === KEY.SPACE || event.keyCode === KEY.RETURN))) {
       HELP.Remove(event);
       MENU.CurrentNode().focus();

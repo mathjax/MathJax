@@ -343,7 +343,7 @@
       var oldX = window.pageXOffset || document.documentElement.scrollLeft;
       var oldY = window.pageYOffset || document.documentElement.scrollTop;
       MENU.Focus(menu);
-      if (event.type === 'keydown') {
+      if (event.type === "keydown") {
         MENU.skipMouseoverFromKey = true;
         setTimeout(function() {delete MENU.skipMouseoverFromKey;}, CONFIG.delay);
       }
@@ -498,7 +498,7 @@
     active: null,   // The focused in HTML node in the menu.
 
     GetNode: function(jax) {
-      var node = document.getElementById(jax.inputID + '-Frame');
+      var node = document.getElementById(jax.inputID + "-Frame");
       return node.isMathJax ? node : node.firstChild;
     },
     CurrentNode: function() {
@@ -691,7 +691,7 @@
         {onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
          onmousedown: MENU.Mousedown, role: this.role,
          onkeydown: MENU.Keydown,
-         'aria-disabled': !!this.disabled},
+         "aria-disabled": !!this.disabled},
         def);
       def = this.SUPER(arguments).Attributes.call(this, def);
       if (this.disabled) {
@@ -1033,7 +1033,7 @@
       ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",
                onclick:MENU.About.Remove,
                onkeydown: MENU.About.Keydown, tabIndex: 0,
-               'aria-label': "Close", 'aria-describedby': "Close window"},
+               "aria-label": "Close", "aria-describedby": "Close window"},
         [["span",{},"\u00D7"]]]
     ]);
     about.focus();
@@ -1054,7 +1054,7 @@
   };
   MENU.About.Keydown = function(event) {
     if (event.keyCode === KEY.ESCAPE ||
-        (this.id === 'MathJax_AboutClose' &&
+        (this.id === "MathJax_AboutClose" &&
          (event.keyCode === KEY.SPACE || event.keyCode === KEY.RETURN))) {
       MENU.About.Remove(event);
       MENU.CurrentNode().focus();
