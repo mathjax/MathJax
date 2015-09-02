@@ -544,16 +544,12 @@
       MENU.posted = false;
     },
     MoveHorizontal: function(event, menu, move) {
-      if (!event.shiftKey) { return; }
+      if (!event.shiftKey) return;
       var jaxs = MENU.AllNodes();
       var len = jaxs.length;
-      if (len === 0) {
-        return;
-      }
+      if (len === 0) return;
       var next = jaxs[MENU.Mod(move(MENU.IndexOf(jaxs, MENU.CurrentNode())), len)];
-      if (next === MENU.CurrentNode()) {
-        return;
-      }
+      if (next === MENU.CurrentNode()) return;
       MENU.menu.Remove(event, menu);
       MENU.jax = MathJax.Hub.getJaxFor(next);
       MENU.FocusNode(next);
@@ -709,9 +705,7 @@
         }
       }
       var index = MENU.IndexOf(items, this);
-      if (index === -1) {
-        return;
-      }
+      if (index === -1) return;
       var len = items.length;
       var children = menuNode.childNodes;
       do {
@@ -737,7 +731,7 @@
       if (menuNode.menuItem === MENU.menu && event.shiftKey) {
         move(event, item);
       }
-      if (rtl) { return; }
+      if (rtl) return;
       if (menuNode.menuItem !== MENU.menu) {
         this.Deactivate(item);
       }
@@ -876,9 +870,7 @@
         this.SUPER(arguments).MoveHorizontal.apply(this, arguments);
         return;
       }
-      if (this.disabled) {
-        return;
-      }
+      if (this.disabled) return;
       if (!this.submenu.posted) {
         this.Activate(event, menu);
         return;
