@@ -556,6 +556,7 @@
       }
       MENU.menu.Remove(event, menu);
       MENU.jax = MathJax.Hub.getJaxFor(next);
+      MENU.FocusNode(next);
       MENU.menu.Post(null);
     },
     Right: function(event, menu) {
