@@ -2564,11 +2564,11 @@ MathJax.Hub.Startup = {
           jax.unshift(name);
         }
         if (SETTINGS.CHTMLpreview != null) {
-          if (SETTINGS.FHTMLpreview == null) SETTINGS.FHTMLpreview = SETTINGS.CHTMLpreview;
+          if (SETTINGS.FastPreview == null) SETTINGS.FastPreview = SETTINGS.CHTMLpreview;
           delete SETTINGS.CHTMLpreview;
         }
-        if (SETTINGS.FHTMLpreview && !MathJax.Extension["FHTML-preview"])
-          MathJax.Hub.config.extensions.push("FHTML-preview.js");
+        if (SETTINGS.FastPreview && !MathJax.Extension["fast-preview"])
+          MathJax.Hub.config.extensions.push("fast-preview.js");
       },MathJax.Hub.config],
       ["Post",this.signal,"End Cookie"]
     );
