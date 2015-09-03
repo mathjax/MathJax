@@ -1290,7 +1290,8 @@
 
       SVGgetVariant: function () {
 	var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
-	var variant = values.mathvariant; if (this.variantForm) {variant = "-TeX-variant"}
+	var variant = values.mathvariant;
+        if (this.variantForm) variant = "-"+SVG.fontInUse+"-variant";
         values.hasVariant = this.Get("mathvariant",true);  // null if not explicitly specified
         if (!values.hasVariant) {
           values.family = values.fontfamily;
@@ -1468,7 +1469,7 @@
         //  Primes must come from another font
         //
         if (isScript && this.data.join("").match(/['`"\u00B4\u2032-\u2037\u2057]/))
-          {variant = SVG.FONTDATA.VARIANT["-TeX-variant"]}
+          {variant = SVG.FONTDATA.VARIANT["-"+SVG.fontInUse+"-variant"]}
         //
         //  Typeset contents
         //
