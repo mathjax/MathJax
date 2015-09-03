@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/pt-br/pt-br.js
+ *  MathJax/localization/scn/scn.js
  *
  *  Copyright (c) 2009-2015 The MathJax Consortium
  *
@@ -21,8 +21,8 @@
  *
  */
 
-MathJax.Localization.addTranslation("pt-br",null,{
-  menuTitle: "portugu\u00EAs do Brasil",
+MathJax.Localization.addTranslation("scn",null,{
+  menuTitle: "sicilianu",
   version: "2.5.0",
   isLoaded: true,
   domains: {
@@ -30,17 +30,16 @@ MathJax.Localization.addTranslation("pt-br",null,{
         version: "2.5.0",
         isLoaded: true,
         strings: {
-          CookieConfig: "O MathJax encontrou um cookie com configura\u00E7\u00F5es de usu\u00E1rio que inclui c\u00F3digo a ser executado. Deseja execut\u00E1-lo?\n\n(Voc\u00EA deve pressionar Cancelar a n\u00E3o ser que voc\u00EA mesmo tenha criado o cookie.)",
-          MathProcessingError: "Erro no processamento das f\u00F3rmulas",
-          MathError: "Erro na f\u00F3rmula matem\u00E1tica",
-          LoadFile: "Carregando %1",
-          Loading: "Carregando",
-          LoadFailed: "O arquivo n\u00E3o pode ser carregado: %1",
-          ProcessMath: "Processando f\u00F3rmula: %1%%",
-          Processing: "Processando",
-          TypesetMath: "Realizando a Diagrama\u00E7\u00E3o das F\u00F3rmulas: %1%%",
-          Typesetting: "Realizando a Diagrama\u00E7\u00E3o",
-          MathJaxNotSupported: "Seu navegador n\u00E3o suporta MathJax"
+          MathProcessingError: "Erruri nt\u00E2 labburazzioni d\u00EE f\u00F2rmuli matim\u00E0tichi",
+          MathError: "Erruri nt\u00E2 matim\u00E0tica",
+          LoadFile: "Carricamentu di %1",
+          Loading: "Carricamentu",
+          LoadFailed: "Nun rinisc\u00ECu u carricamentu di: %1",
+          ProcessMath: "Labburazzioni d\u00EE f\u00F2rmuli matim\u00E0tichi: %1%%",
+          Processing: "Labburazzioni",
+          TypesetMath: "Mpagginazzioni d\u00EE f\u00F2rmuli matim\u00E0tichi: %1%%",
+          Typesetting: "Mpagginazzioni",
+          MathJaxNotSupported: "U to browser nun supporta MathJax"
         }
     },
     "FontWarnings": {},
@@ -59,4 +58,4 @@ MathJax.Localization.addTranslation("pt-br",null,{
     }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/pt-br/pt-br.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/scn/scn.js");

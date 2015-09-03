@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/pt/HTML-CSS.js
+ *  MathJax/localization/scn/HTML-CSS.js
  *
  *  Copyright (c) 2009-2015 The MathJax Consortium
  *
@@ -21,16 +21,16 @@
  *
  */
 
-MathJax.Localization.addTranslation("pt","HTML-CSS",{
+MathJax.Localization.addTranslation("scn","HTML-CSS",{
         version: "2.5.0",
         isLoaded: true,
         strings: {
-          LoadWebFont: "A carregar fonte baseada em web %1",
-          CantLoadWebFont: "N\u00E3o foi poss\u00EDvel carregar a fonte baseada em web %1",
-          FirefoxCantLoadWebFont: "O Firefox n\u00E3o pode carregar fontes baseadas em web a partir de um host remoto",
-          CantFindFontUsing: "N\u00E3o \u00E9 poss\u00EDvel encontrar uma fonte v\u00E1lida usando %1",
-          WebFontsNotAvailable: "Fontes baseadas em web n\u00E3o est\u00E3o dispon\u00EDveis -- a usar fontes feitas com imagens em vez disso"
+          LoadWebFont: "Scarricamentu d\u00FB tipu di car\u00E0ttiri web %1",
+          CantLoadWebFont: "Nun si potti scarricari u tipu di car\u00E0ttiri web %1",
+          FirefoxCantLoadWebFont: "Firefox nun po\u2019 scarricari tipi di car\u00E0ttiri web di n\u2019host rimotu",
+          CantFindFontUsing: "Nun si potti truvari nu tipu di car\u00E0ttiri bonu tra %1",
+          WebFontsNotAvailable: "I tipi di car\u00E0ttiri web nun sunnu dispun\u00ECbbili, \u00F4 so postu s\u2019adupirannu mm\u00E0ggini fatti a\u2019 tipu di car\u00E0ttiri"
         }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/pt/HTML-CSS.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/scn/HTML-CSS.js");

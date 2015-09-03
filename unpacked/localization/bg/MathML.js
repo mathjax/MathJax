@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/localization/pt/HTML-CSS.js
+ *  MathJax/localization/bg/MathML.js
  *
  *  Copyright (c) 2009-2015 The MathJax Consortium
  *
@@ -21,16 +21,12 @@
  *
  */
 
-MathJax.Localization.addTranslation("pt","HTML-CSS",{
+MathJax.Localization.addTranslation("bg","MathML",{
         version: "2.5.0",
         isLoaded: true,
         strings: {
-          LoadWebFont: "A carregar fonte baseada em web %1",
-          CantLoadWebFont: "N\u00E3o foi poss\u00EDvel carregar a fonte baseada em web %1",
-          FirefoxCantLoadWebFont: "O Firefox n\u00E3o pode carregar fontes baseadas em web a partir de um host remoto",
-          CantFindFontUsing: "N\u00E3o \u00E9 poss\u00EDvel encontrar uma fonte v\u00E1lida usando %1",
-          WebFontsNotAvailable: "Fontes baseadas em web n\u00E3o est\u00E3o dispon\u00EDveis -- a usar fontes feitas com imagens em vez disso"
+
         }
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/localization/pt/HTML-CSS.js");
+MathJax.Ajax.loadComplete("[MathJax]/localization/bg/MathML.js");
