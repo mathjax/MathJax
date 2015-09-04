@@ -121,6 +121,9 @@ MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
     // No XSLT support. Do not change the <math> content.
     MATHML.mml3XSLT = null;
   }
+  
+  // Tweak CSS to avoid some browsers rearranging HTML output
+  MathJax.Ajax.Styles(".MathJax span { direction: ltr !important; display: inline-block !important;}");
 
   MathJax.Hub.Startup.signal.Post("MathML mml3.js Ready");
 });
