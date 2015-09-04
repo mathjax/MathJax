@@ -1149,6 +1149,7 @@ MathJax.Localization = {
     // the languages that use a remap but are not translated at all.
     //
     "ast": {menuTitle: "asturianu"},
+    "bg": {menuTitle: "\u0431\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438"},
     "bcc": {menuTitle: "\u0628\u0644\u0648\u0686\u06CC"},
     "br": {menuTitle: "brezhoneg"},
     "ca": {menuTitle: "catal\u00E0"},
@@ -1170,6 +1171,7 @@ MathJax.Localization = {
     "kn": {menuTitle: "\u0C95\u0CA8\u0CCD\u0CA8\u0CA1"},
     "ko": {menuTitle: "\uD55C\uAD6D\uC5B4"},
     "lb": {menuTitle: "L\u00EBtzebuergesch"},
+    "lt": {menuTitle: "lietuvi\u0173"},
     "mk": {menuTitle: "\u043C\u0430\u043A\u0435\u0434\u043E\u043D\u0441\u043A\u0438"},
     "nl": {menuTitle: "Nederlands"},
     "oc": {menuTitle: "occitan"},
@@ -1178,6 +1180,7 @@ MathJax.Localization = {
     "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
     "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
     "sco": {menuTitle: "Scots"},
+    "scn": {menuTitle: "sicilianu"},
     "sl": {menuTitle: "sloven\u0161\u010Dina"},
     "sv": {menuTitle: "svenska"},
     "tr": {menuTitle: "T\u00FCrk\u00E7e"},
@@ -2561,11 +2564,11 @@ MathJax.Hub.Startup = {
           jax.unshift(name);
         }
         if (SETTINGS.CHTMLpreview != null) {
-          if (SETTINGS.FHTMLpreview == null) SETTINGS.FHTMLpreview = SETTINGS.CHTMLpreview;
+          if (SETTINGS.FastPreview == null) SETTINGS.FastPreview = SETTINGS.CHTMLpreview;
           delete SETTINGS.CHTMLpreview;
         }
-        if (SETTINGS.FHTMLpreview && !MathJax.Extension["FHTML-preview"])
-          MathJax.Hub.config.extensions.push("FHTML-preview.js");
+        if (SETTINGS.FastPreview && !MathJax.Extension["fast-preview"])
+          MathJax.Hub.config.extensions.push("fast-preview.js");
       },MathJax.Hub.config],
       ["Post",this.signal,"End Cookie"]
     );
