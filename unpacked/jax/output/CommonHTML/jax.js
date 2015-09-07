@@ -371,7 +371,9 @@
           id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
-          onclick:EVENT.Click, ondblclick:EVENT.DblClick
+	  onclick:EVENT.Click, ondblclick:EVENT.DblClick,
+          // Added for keyboard accessible menu.
+          onkeydown: EVENT.Keydown, tabIndex: "0"  
         });
         if (jax.CHTML.display) {
           //
