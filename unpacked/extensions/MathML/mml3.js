@@ -80,7 +80,7 @@ MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
    */
   var BROWSER = MathJax.Hub.Browser;
   var exslt = '';
-  if (BROWSER.isMsEdge) {
+  if (BROWSER.isMsEdge || BROWSER.isMSIE) {
     exslt = 'urn:schemas-microsoft-com:xslt'
   } else {
     exslt = 'http://exslt.org/common';
