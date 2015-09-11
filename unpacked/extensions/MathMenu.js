@@ -992,13 +992,8 @@
    */
   MENU.About = function () {
     var HTMLCSS = OUTPUT["HTML-CSS"] || {};
-    var font =
-       (HTMLCSS.imgFonts ? "image" :
-       (HTMLCSS.fontInUse ?
-         (HTMLCSS.webFonts ? "web" : "local")+" "+HTMLCSS.fontInUse :
-       (OUTPUT.SVG ? "web SVG" : "generic")) ) + " fonts";
-    var format = (!HTMLCSS.webFonts || HTMLCSS.imgFonts ? null :
-        HTMLCSS.allowWebFonts.replace(/otf/,"woff or otf") + " fonts");
+    var font = MENU.About.GetFont();
+    var format = MENU.About.GetFormat();
     var jax = ["MathJax.js v"+MathJax.fileversion,["br"]];
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
     MENU.About.GetJax(jax,MathJax.InputJax,["InputJax","%1 Input Jax v%2"]);
@@ -1062,6 +1057,20 @@
     info.sort();
     for (var i = 0, m = info.length; i < m; i++) {jax.push(info[i],["br"])}
     return jax;
+  };
+  MENU.About.GetFont = function () {
+    var jax = MathJax.Hub.outputJax["jax/mml"][0] || {};
+    var font = {
+      SVG: "web SVG",
+      CommonHTML: "web TeX",
+      "HTML-CSS": (jax.imgFonts ? "image" : (jax.webFonts ? "web" : "local")+" "+jax.fontInUse)
+    }[jax.id] || "generic";
+    return font + " fonts";
+  };
+  MENU.About.GetFormat = function () {
+    var jax = MathJax.Hub.outputJax["jax/mml"][0] || {};
+    if (jax.id !== "HTML-CSS"|| !jax.webFonts || jax.imgFonts) return;
+    return jax.allowWebFonts.replace(/otf/,"woff or otf") + " fonts";
   };
 
 
