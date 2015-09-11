@@ -1020,7 +1020,7 @@
       ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",
                onclick:MENU.About.Remove,
                onkeydown: MENU.About.Keydown, tabIndex: 0,
-               "aria-label": "Close", "aria-describedby": "Close window"},
+               "aria-label": "Close", "aria-describedby": _("CloseWindow","Close window")},
         [["span",{},"\u00D7"]]]
     ]);
     about.focus();
