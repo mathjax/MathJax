@@ -2569,6 +2569,8 @@ MathJax.Hub.Startup = {
         }
         if (SETTINGS.FastPreview && !MathJax.Extension["fast-preview"])
           MathJax.Hub.config.extensions.push("fast-preview.js");
+        if (config.menuSettings.assistiveMML && !MathJax.Extension.AssistiveMML)
+          MathJax.Hub.config.extensions.push("AssistiveMML.js");
       },MathJax.Hub.config],
       ["Post",this.signal,"End Cookie"]
     );

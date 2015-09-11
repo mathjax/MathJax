@@ -1471,7 +1471,8 @@
           ITEM.RADIO("MathML",     "renderer", {action: MENU.Renderer, value:"NativeMML"}),
           ITEM.RADIO("SVG",        "renderer", {action: MENU.Renderer}),
           ITEM.RULE(),
-          ITEM.CHECKBOX("Fast Preview", "FastPreview")
+          ITEM.CHECKBOX("Fast Preview", "FastPreview"),
+          ITEM.CHECKBOX("Assistive MathML", "assistiveMML", {hidden:!CONFIG.showAssistiveMML})
         ),
         ITEM.SUBMENU("MathPlayer",  {hidden:!HUB.Browser.isMSIE || !CONFIG.showMathPlayer,
                                                     disabled:!HUB.Browser.hasMathPlayer},
@@ -1558,7 +1559,11 @@
     MENU.cookie.showLocale = CONFIG.showLocale = show; MENU.saveCookie();
     MENU.menu.Find("Language").hidden = !show;
   };
-
+  MENU.showAssistiveMML = function (show) {
+    MENU.cookie.showAssistiveMML = CONFIG.showAssistiveMML = show; MENU.saveCookie();
+    MENU.menu.Find("Math Settings","Math Renderer","Assistive MathML").hidden = !show;
+  };
+  
   MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     if (!MathJax.OutputJax["HTML-CSS"].config.imageFont)
       {MENU.menu.Find("Math Settings","Font Preference","TeX (image)").disabled = true}
