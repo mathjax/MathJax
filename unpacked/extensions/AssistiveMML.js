@@ -66,10 +66,7 @@
       if (!SETTINGS.assistiveMML) return;
       var state = {
         jax: HUB.getAllJax(node), i: 0,
-        callback: MathJax.Callback(function () {
-          console.log("MathML time: "+((new Date().getTime())-state.start));
-        }),
-        start: new Date().getTime()
+        callback: MathJax.Callback({})
       };
       this.HandleMML(state);
       return state.callback;
