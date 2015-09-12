@@ -383,6 +383,7 @@
         HOVER.UnHover(MENU.jax);
       }
       MENU.Unfocus(menu);
+      if (event.type === "mousedown") MENU.CurrentNode().blur();
       return FALSE(event);
     },
 
