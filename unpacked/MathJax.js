@@ -1048,7 +1048,9 @@ MathJax.HTML = {
           {def.style[id.replace(/-([a-z])/g,this.ucMatch)] = style[id]}}
       }
       MathJax.Hub.Insert(obj,def);
-      for (var id in def) {if (id.substr(0,5) === "aria-") obj.setAttribute(id,def[id])}
+      for (var id in def) {
+        if (id === "role" || id.substr(0,5) === "aria-") obj.setAttribute(id,def[id]);
+      }
     }
     if (contents) {
       if (!(contents instanceof Array)) {contents = [contents]}
