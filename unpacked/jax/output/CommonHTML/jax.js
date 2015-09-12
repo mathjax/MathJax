@@ -360,7 +360,7 @@
         //  Remove any existing output
         //
         prev = script.previousSibling;
-	if (prev && prev.nodeName.toLowerCase() === "mjx-chtml")
+	if (prev && prev.className.substr(0,9) === "mjx-chtml")
 	  prev.parentNode.removeChild(prev);
         //
         //  Add the node for the math and mark it as being processed
