@@ -324,8 +324,9 @@
       if (type.substr(0,4) === "mjx-") {
         if (!def) def = {};
         if (def.className) def.className = type+" "+def.className; else def.className = type;
+        type = "span";
       }
-      return this.HTMLElement("span",def,content);
+      return this.HTMLElement(type,def,content);
     },
     addElement: function (node,type,def,content) {
       return node.appendChild(this.Element(type,def,content));
