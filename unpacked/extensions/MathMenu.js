@@ -311,7 +311,7 @@
 
       div.appendChild(menu);
       this.posted = true;
-      menu.style.width = (menu.offsetWidth+2) + "px";
+      if (menu.offsetWidth) menu.style.width = (menu.offsetWidth+2) + "px";
       if (event) {
         var x = event.pageX, y = event.pageY;
       }
@@ -321,7 +321,7 @@
       }
       if (!parent) {
         var node = MENU.CurrentNode() || event.target;
-        if (!x && !y && node) {
+        if ((event.type === "keydown" || (!x && !y)) && node) {
           var offsetX = window.pageXOffset || document.documentElement.scrollLeft;
           var offsetY = window.pageYOffset || document.documentElement.scrollTop;
           var rect = node.getBoundingClientRect();
