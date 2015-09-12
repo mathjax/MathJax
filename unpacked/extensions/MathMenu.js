@@ -152,10 +152,19 @@
       ".MathJax_MenuDisabled": {
         color:"GrayText"
       },
-
       ".MathJax_MenuActive": {
         "background-color": (isPC ? "Highlight" : "#606872"),
         color: (isPC ? "HighlightText" : "white")
+      },
+
+      ".MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus": {
+        "background-color": "#E8E8E8"
+      },
+      ".MathJax_ContextMenu:focus": {
+        outline:"none"
+      },
+      ".MathJax_ContextMenu .MathJax_MenuItem:focus": {
+        outline:"none"
       },
 
       "#MathJax_AboutClose": {
@@ -282,6 +291,8 @@
         menuItem: this, className: "MathJax_Menu", onkeydown: MENU.Keydown,
         role: "navigation"
       });
+      if (event.type === "contextmenu" || event.type === "mouseover")
+        menu.className += " MathJax_ContextMenu";
       if (!forceLTR) {MathJax.Localization.setCSS(menu)}
 
       for (var i = 0, m = this.items.length; i < m; i++) {this.items[i].Create(menu)}
