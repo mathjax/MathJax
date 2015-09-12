@@ -155,8 +155,8 @@
       ]],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
       ["span",{id: "MathJax_HelpClose", onclick: HELP.Remove,
-               onkeydown: HELP.Keydown, tabIndex: 0,
-               "aria-label": "Close", "aria-describedby": "Close window"},
+               onkeydown: HELP.Keydown, tabIndex: 0, "aria-label": "Close",
+               "aria-describedby": LOCALE._(["HelpDialog","CloseWindow"],"Close window")},
         [["span",{},["\u00D7"]]]
       ]
     ]));
