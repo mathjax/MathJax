@@ -1048,10 +1048,11 @@ MathJax.HTML = {
           {def.style[id.replace(/-([a-z])/g,this.ucMatch)] = style[id]}}
       }
       MathJax.Hub.Insert(obj,def);
+      for (var id in def) {if (id.substr(0,5) === "aria-") obj.setAttribute(id,def[id])}
     }
     if (contents) {
       if (!(contents instanceof Array)) {contents = [contents]}
-      for (var i = 0; i < contents.length; i++) {
+      for (var i = 0, m = contents.length; i < m; i++) {
         if (contents[i] instanceof Array) {
           obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
         } else if (type === "script") { // IE throws an error if script is added as a text node
