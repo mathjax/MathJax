@@ -3090,7 +3090,6 @@ MathJax.Hub.Startup = {
     isMac:       (navigator.platform.substr(0,3) === "Mac"),
     isPC:        (navigator.platform.substr(0,3) === "Win"),
     isMSIE:      ("ActiveXObject" in window && "clipboardData" in window),
-    isMsEdge:    (!!AGENT.match(/Edge\//)),
     isFirefox:   (!!AGENT.match(/Gecko\//) && !AGENT.match(/like Gecko/)),
     isSafari:    (!!AGENT.match(/ (Apple)?WebKit\//) && !AGENT.match(/ like iPhone /) &&
                      (!window.chrome || window.chrome.loadTimes == null)),
