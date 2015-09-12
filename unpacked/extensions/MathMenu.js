@@ -93,6 +93,9 @@
         "-khtml-box-shadow":"0px 10px 20px #808080",  // Konqueror
         filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
       },
+      "#MathJax_About.MathJax_MousePost": {
+        outline:"none"
+      },
 
       ".MathJax_Menu": {
         position:"absolute", "background-color":"white", color:"black",
@@ -202,6 +205,9 @@
       },
       ".MathJax_MenuClose:hover span": {
         "background-color":"#CCC!important"
+      },
+      ".MathJax_MenuClose:hover:focus": {
+        outline:"none"
       }
     }
   });
@@ -1001,7 +1007,7 @@
   /*
    *  Handle the ABOUT box
    */
-  MENU.About = function () {
+  MENU.About = function (event) {
     var HTMLCSS = OUTPUT["HTML-CSS"] || {};
     var font = MENU.About.GetFont();
     var format = MENU.About.GetFormat();
@@ -1034,6 +1040,7 @@
                "aria-label": "Close", "aria-describedby": _("CloseWindow","Close window")},
         [["span",{},"\u00D7"]]]
     ]);
+    if (event.type === "mouseup") about.className += " MathJax_MousePost";
     about.focus();
     MathJax.Localization.setCSS(about);
     var doc = (document.documentElement||{});
@@ -1088,9 +1095,9 @@
   /*
    *  Handle the MathJax HELP menu
    */
-  MENU.Help = function () {
+  MENU.Help = function (event) {
     AJAX.Require("[MathJax]/extensions/HelpDialog.js",
-                 function () {MathJax.Extension.Help.Dialog()});
+                 function () {MathJax.Extension.Help.Dialog({type:event.type})});
   };
 
   /*
