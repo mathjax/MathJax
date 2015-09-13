@@ -505,9 +505,9 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       if (end.length === 0) {
         var NODE = this.CHTMLnodeElement(),
-            stack = NODE.getElementsByTagName("mjx-stack")[0],
-            sup = NODE.getElementsByTagName("mjx-sup")[0],
-            sub = NODE.getElementsByTagName("mjx-sub")[0];
+            stack = CHTML.getNode(NODE,"mjx-stack"),
+            sup = CHTML.getNode(NODE,"mjx-sup"),
+            sub = CHTML.getNode(NODE,"mjx-sub");
         if (stack)      node.appendChild(stack);
           else if (sup) node.appendChild(sup);
           else if (sub) node.appendChild(sub);
@@ -569,9 +569,9 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       if (start.length < 1) {
         NODE = this.CHTMLnodeElement();
-        var prestack = NODE.getElementsByTagName("mjx-prestack")[0],
-            presup = NODE.getElementsByTagName("mjx-presup")[0],
-            presub = NODE.getElementsByTagName("mjx-presub")[0];
+        var prestack = CHTML.getNode(NODE,"mjx-prestack"),
+            presup = CHTML.getNode(NODE,"mjx-presup"),
+            presub = CHTML.getNode(NODE,"mjx-presub");
         if (prestack)      node.appendChild(prestack);
           else if (presup) node.appendChild(presup);
           else if (presub) node.appendChild(presub);
@@ -598,9 +598,9 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       if (end.length === 0) {
         NODE = this.CHTMLnodeElement();
-        var stack = NODE.getElementsByTagName("mjx-stack")[0],
-            sup = NODE.getElementsByTagName("mjx-sup")[0],
-            sub = NODE.getElementsByTagName("mjx-sub")[0];
+        var stack = CHTML.getNode(NODE,"mjx-stack"),
+            sup = CHTML.getNode(NODE,"mjx-sup"),
+            sub = CHTML.getNode(NODE,"mjx-sub");
         if (stack)      node.appendChild(stack);
           else if (sup) node.appendChild(sup);
           else if (sub) node.appendChild(sub);

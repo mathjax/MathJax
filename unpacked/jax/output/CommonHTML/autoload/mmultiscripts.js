@@ -45,7 +45,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       var base, bbox;
       if (stretch) {
-        base = node.getElementsByTagName("mjx-base")[0];
+        base = CHTML.getNode(node,"mjx-base");
       } else {
         this.CHTMLaddChild(node,0,{type:"mjx-base", noBBox:true, forceChild:true});
         base = node.firstChild;
@@ -137,10 +137,10 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //
     CHTMLgetScripts: function (BOX,BBOX,stretch,node) {
       if (stretch) {
-        BOX.sub = node.getElementsByTagName("mjx-sub")[0];
-        BOX.sup = node.getElementsByTagName("mjx-sup")[0];
-        BOX.presub = node.getElementsByTagName("mjx-presub")[0];
-        BOX.presup = node.getElementsByTagName("mjx-presup")[0];
+        BOX.sub = CHTML.getNode(node,"mjx-sub");
+        BOX.sup = CHTML.getNode(node,"mjx-sup");
+        BOX.presub = CHTML.getNode(node,"mjx-presub");
+        BOX.presup = CHTML.getNode(node,"mjx-presup");
         BBOX.sub = this.CHTMLbbox.sub;
         BBOX.sup = this.CHTMLbbox.sup;
         BBOX.presub = this.CHTMLbbox.presub;
