@@ -3180,6 +3180,9 @@ MathJax.Hub.Startup = {
                           AGENT.match(/ Fennec\//) != null ||
                           AGENT.match(/Mobile/) != null);
     },
+    Chrome: function (browser) {
+      browser.noContextMenu = browser.isMobile = !!navigator.userAgent.match(/ Mobile[ \/]/);
+    },
     Opera: function (browser) {browser.version = opera.version()},
     Edge: function (browser) {
       browser.isMobile = !!navigator.userAgent.match(/ Phone/);
