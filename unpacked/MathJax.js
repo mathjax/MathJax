@@ -3092,11 +3092,13 @@ MathJax.Hub.Startup = {
     isMac:       (navigator.platform.substr(0,3) === "Mac"),
     isPC:        (navigator.platform.substr(0,3) === "Win"),
     isMSIE:      ("ActiveXObject" in window && "clipboardData" in window),
+    isEdge:      ("MSGestureEvent" in window && "chrome" in window &&
+                     window.chrome.loadTimes == null),
     isFirefox:   (!!AGENT.match(/Gecko\//) && !AGENT.match(/like Gecko/)),
     isSafari:    (!!AGENT.match(/ (Apple)?WebKit\//) && !AGENT.match(/ like iPhone /) &&
-                     (!window.chrome || window.chrome.loadTimes == null)),
-    isChrome:    (window.chrome != null && window.chrome.loadTimes != null),
-    isOpera:     (window.opera != null && window.opera.version != null),
+                     (!window.chrome || window.chrome.app == null)),
+    isChrome:    ("chrome" in window && window.chrome.loadTimes != null),
+    isOpera:     ("opera" in window && window.opera.version != null),
     isKonqueror: ("konqueror" in window && navigator.vendor == "KDE"),
     versionAtLeast: function (v) {
       var bv = (this.version).split('.'); v = (new String(v)).split('.');
@@ -3124,7 +3126,7 @@ MathJax.Hub.Startup = {
       HUB.Browser = HUB.Insert(new String(browser),BROWSERS);
       var VERSION = new RegExp(
         ".*(Version/| Trident/.*; rv:)((?:\\d+\\.)+\\d+)|" +                      // for Safari, Opera10, and IE11+
-        ".*("+browser+")"+(browser == "MSIE" ? " " : "/")+"((?:\\d+\\.)*\\d+)|"+  // for one of the main browser
+        ".*("+browser+")"+(browser == "MSIE" ? " " : "/")+"((?:\\d+\\.)*\\d+)|"+  // for one of the main browsers
         "(?:^|\\(| )([a-z][-a-z0-9._: ]+|(?:Apple)?WebKit)/((?:\\d+\\.)+\\d+)");  // for unrecognized browser
       var MATCH = VERSION.exec(xAGENT) || ["","","","unknown","0.0"];
       HUB.Browser.name = (MATCH[1] != "" ? browser : (MATCH[3] || MATCH[5]));
@@ -3179,7 +3181,11 @@ MathJax.Hub.Startup = {
                           AGENT.match(/Mobile/) != null);
     },
     Opera: function (browser) {browser.version = opera.version()},
+    Edge: function (browser) {
+      browser.isMobile = !!navigator.userAgent.match(/ Phone/);
+    },
     MSIE: function (browser) {
+      browser.isMobile = !!navigator.userAgent.match(/ Phone/);
       browser.isIE9 = !!(document.documentMode && (window.performance || window.msPerformance));
       MathJax.HTML.setScriptBug = !browser.isIE9 || document.documentMode < 9;
       MathJax.Hub.msieHTMLCollectionBug = (document.documentMode < 9);
