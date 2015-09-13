@@ -282,7 +282,7 @@
      *  Display the menu
      */
     Post: function (event,parent,forceLTR) {
-      if (!event) {event = window.event};
+      if (!event) {event = window.event||{}}
       var div = document.getElementById("MathJax_MenuFrame");
       if (!div) {
         div = MENU.Background(this);
@@ -312,10 +312,8 @@
       div.appendChild(menu);
       this.posted = true;
       if (menu.offsetWidth) menu.style.width = (menu.offsetWidth+2) + "px";
-      if (event) {
-        var x = event.pageX, y = event.pageY;
-      }
-      if (!x && !y && event && event.clientX && event.clientY) {
+      var x = event.pageX, y = event.pageY;
+      if (!x && !y && "clientX" in event) {
         x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
         y = event.clientY + document.body.scrollTop  + document.documentElement.scrollTop;
       }
@@ -331,7 +329,7 @@
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
            {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
         if (MENU.isMobile) {x = Math.max(5,x-Math.floor(menu.offsetWidth/2)); y -= 20}
-        if (event) {MENU.skipUp = event.isContextMenu;}
+        MENU.skipUp = event.isContextMenu;
       } else {
         var side = "left", mw = parent.offsetWidth;
         x = (MENU.isMobile ? 30 : mw - 2); y = 0;
