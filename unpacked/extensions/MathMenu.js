@@ -1213,6 +1213,7 @@
             if (BROWSER.isChrome && BROWSER.version.substr(0,3) !== "24.") {message = MESSAGE.MML.WebKit}
             else if (BROWSER.isSafari && !BROWSER.versionAtLeast("5.0")) {message = MESSAGE.MML.WebKit}
             else if (BROWSER.isMSIE) {if (!BROWSER.hasMathPlayer) {message = MESSAGE.MML.MSIE}}
+            else if (BROWSER.isEdge) {message = MESSAGE.MML.WebKit}
             else {message = MESSAGE.MML[BROWSER]}
             warned = "warnedMML";
           }
