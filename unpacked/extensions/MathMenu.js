@@ -1048,8 +1048,8 @@
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
       ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",
                onclick:MENU.About.Remove,
-               onkeydown: MENU.About.Keydown, tabIndex: 0,
-               "aria-label": "Close", "aria-describedby": "Close window"},
+               onkeydown: MENU.About.Keydown, tabIndex: 0, role: "button",
+               "aria-label": "Close window"},
         [["span",{},"\u00D7"]]]
     ]);
     about.focus();
