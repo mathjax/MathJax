@@ -351,6 +351,8 @@
       MML.mspace.Augment({mmlSelfClosing: true});
       MML.none.Augment({mmlSelfClosing: true});
       MML.mprescripts.Augment({mmlSelfClosing:true});
+      MML.maligngroup.Augment({mmlSelfClosing:true});
+      MML.malignmark.Augment({mmlSelfClosing:true});
     }
   });
   

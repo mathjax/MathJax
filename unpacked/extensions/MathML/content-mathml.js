@@ -93,6 +93,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
     /* Transform a Content MathML element into Presentation MathML, and return the new element
     */
     transformElement: function(element) {
+      if (element.nodeName.indexOf(":") >= 0) element = CToP.cloneNode(element,true); // removes namespaces
       var mathNode = CToP.cloneNode(element);
       for (var j = 0, l = element.childNodes.length; j<l; j++ ) {
         CToP.applyTransform(mathNode,element.childNodes[j],0);
@@ -137,10 +138,10 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
     /* Create an element with given name, belonging to the MathML namespace
     */
     createElement: function(name) {
-      var math = (isMSIE ? document.createElement("m:"+name) :
-          document.createElementNS("http://www.w3.org/1998/Math/MathML",name));
-      math.isMathJax = true;
-      return math;
+      name = name.replace(/^.*:/,"");  // remove namespace
+      return (document.createElementNS ?
+                 document.createElementNS("http://www.w3.org/1998/Math/MathML",name) :
+                 document.createElement("m:"+name));
     },
 
     /* Get node's children

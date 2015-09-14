@@ -7,16 +7,8 @@
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "Davide Cervone",
-            "homepage": "https://github.com/dpvc"
-        },
-        {
-            "name": "Christian Perfect",
-            "homepage": "https://github.com/christianp"
-        },
-        {
-            "name": "Peter Krautzberger",
-            "homepage": "https://github.com/pkra"
+            "name": "MathJax Consortium",
+            "homepage": "https://github.com/mathjax"
         }
     ]
 }

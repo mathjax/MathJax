@@ -51,7 +51,7 @@ MathJax.Localization.addTranslation("bcc",null,{
     "TeX": {}
   },
   plural: function (n) {
-      return 1; // other 
+      return 1; // other
     },
   number: function (n) {
       return n;
