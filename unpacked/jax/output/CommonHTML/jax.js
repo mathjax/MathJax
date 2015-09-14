@@ -324,8 +324,9 @@
       if (type.substr(0,4) === "mjx-") {
         if (!def) def = {};
         if (def.className) def.className = type+" "+def.className; else def.className = type;
+        type = "span";
       }
-      return this.HTMLElement("span",def,content);
+      return this.HTMLElement(type,def,content);
     },
     addElement: function (node,type,def,content) {
       return node.appendChild(this.Element(type,def,content));
@@ -333,6 +334,22 @@
     HTMLElement: HTML.Element,
     ucMatch: HTML.ucMatch,
     setScript: HTML.setScript,
+    
+    //
+    //  This replaces node.getElementsByTagName(type)[0]
+    //  and should be replaced by that if we go back to using
+    //  custom tags
+    //
+    getNode: (document.getElementsByClassName ? 
+      function (node,type) {return node.getElementsByClassName(type)[0]} :
+      function (node,type) {
+        var nodes = node.getElementsByTagName("span");
+        var name = RegExp("\\b"+type+"\\b");
+        for (var i = 0, m = nodes.length; i < m; i++) {
+          if (name.test(nodes[i].className)) return nodes[i];
+        }
+      }
+    ),
     
 
     /********************************************/
@@ -360,7 +377,7 @@
         //  Remove any existing output
         //
         prev = script.previousSibling;
-	if (prev && prev.nodeName.toLowerCase() === "mjx-chtml")
+	if (prev && prev.className && String(prev.className).substr(0,9) === "mjx-chtml")
 	  prev.parentNode.removeChild(prev);
         //
         //  Add the node for the math and mark it as being processed
@@ -371,7 +388,9 @@
           id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
-          onclick:EVENT.Click, ondblclick:EVENT.DblClick
+	  onclick:EVENT.Click, ondblclick:EVENT.DblClick,
+          // Added for keyboard accessible menu.
+          onkeydown: EVENT.Keydown, tabIndex: "0"  
         });
         if (jax.CHTML.display) {
           //
@@ -1325,7 +1344,7 @@
         if (child) {
           var type = options.childNodes;
           if (type) {
-            if (type instanceof Array) type = type[i];
+            if (type instanceof Array) type = type[i]||"span";
             node = CHTML.addElement(node,type);
           }
           cnode = child.toCommonHTML(node,options.childOptions);
@@ -1664,6 +1683,9 @@
     MML.math.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
+        var alttext = this.Get("alttext");
+        if (alttext && !node.getAttribute("aria-label")) node.setAttribute("aria-label",alttext);
+        if (!node.getAttribute("role")) node.setAttribute("role","math");
         if (this.CHTML.pwidth) {
           node.parentNode.style.width = this.CHTML.pwidth;
           node.parentNode.style.minWidth = this.CHTML.mwidth;
@@ -2029,9 +2051,9 @@
         //
         var base, under, over, nodes = [];
         if (stretch) {
-          base = node.getElementsByTagName("mjx-op")[0];
-          under = node.getElementsByTagName("mjx-under")[0];
-          over = node.getElementsByTagName("mjx-over")[0];
+          base = CHTML.getNode(node,"mjx-op");
+          under = CHTML.getNode(node,"mjx-under");
+          over = CHTML.getNode(node,"mjx-over");
           nodes[0] = base; nodes[1] = under||over; nodes[2] = over;
         } else {
           var types = ["mjx-op","mjx-under","mjx-over"];
@@ -2229,9 +2251,9 @@
         //
         var base, sub, sup;
         if (stretch) {
-          base = node.getElementsByTagName("mjx-base")[0];
-          sub = node.getElementsByTagName("mjx-sub")[0];
-          sup = node.getElementsByTagName("mjx-sup")[0];
+          base = CHTML.getNode(node,"mjx-base");
+          sub = CHTML.getNode(node,"mjx-sub");
+          sup = CHTML.getNode(node,"mjx-sup");
         } else {
           var types = ["mjx-base","mjx-sub","mjx-sup"];
           if (this.sup === 1) types[1] = types[2];

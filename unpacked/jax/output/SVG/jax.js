@@ -220,7 +220,9 @@
  	  className:"MathJax_SVG", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
-	  onclick:EVENT.Click, ondblclick:EVENT.DblClick
+	  onclick:EVENT.Click, ondblclick:EVENT.DblClick,
+          // Added for keyboard accessible menu.
+          onkeydown: EVENT.Keydown, tabIndex: "0"
         });
 	if (HUB.Browser.noContextMenu) {
 	  span.ontouchstart = TOUCH.start;
@@ -2098,9 +2100,8 @@
           //  Add it to the MathJax span
           //
           var alttext = this.Get("alttext");
-          if (alttext && !svg.element.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
-          if (!svg.element.getAttribute("role")) span.setAttribute("role","math");
-//        span.setAttribute("tabindex",0);  // causes focus outline, so disable for now
+          if (alttext && !svg.element.getAttribute("aria-label")) svg.element.setAttribute("aria-label",alttext);
+          if (!svg.element.getAttribute("role")) svg.element.setAttribute("role","img");
           span.appendChild(svg.element);
           svg.element = null;
           //

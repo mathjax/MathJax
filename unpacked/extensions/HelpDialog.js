@@ -29,7 +29,13 @@
 
   var STIXURL = "http://www.stixfonts.org/";
   var MENU = MathJax.Menu;
+  var FALSE, KEY;
+  HUB.Register.StartupHook("MathEvents Ready",function () {
+    FALSE = MathJax.Extension.MathEvents.Event.False;
+    KEY = MathJax.Extension.MathEvents.Event.KEY;
+  });
 
+  
   var CONFIG = HUB.CombineConfig("HelpDialog",{
 
     styles: {
@@ -101,10 +107,10 @@
   HELP.Post = function () {
     this.div = MENU.Background(this);
     var help = HTML.addElement(this.div,"div",{
-      id: "MathJax_Help"
+      id: "MathJax_Help", tabIndex: 0, onkeydown: HELP.Keydown
     },LOCALE._("HelpDialog",[
       ["b",{style:{fontSize:"120%"}},[["Help","MathJax Help"]]],
-      ["div",{id: "MathJax_HelpContent"},[
+      ["div",{id: "MathJax_HelpContent", tabIndex: 0},[
         ["p",{},[["MathJax",
           "*MathJax* is a JavaScript library that allows page authors to include " +
           "mathematics within their web pages.  As a reader, you don't need to do " +
@@ -148,10 +154,13 @@
         ]
       ]],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
-      ["span",{id: "MathJax_HelpClose", onclick: HELP.Remove},
+      ["span",{id: "MathJax_HelpClose", onclick: HELP.Remove,
+               onkeydown: HELP.Keydown, tabIndex: 0,
+               "aria-label": "Close", "aria-describedby": "Close window"},
         [["span",{},["\u00D7"]]]
       ]
     ]));
+    help.focus();
     LOCALE.setCSS(help);
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;
@@ -167,6 +176,15 @@
   HELP.Remove = function (event) {
     if (HELP.div) {document.body.removeChild(HELP.div); delete HELP.div}
   };
+  HELP.Keydown = function(event) {
+    if (event.keyCode === KEY.ESCAPE ||
+        (this.id === "MathJax_HelpClose" &&
+         (event.keyCode === KEY.SPACE || event.keyCode === KEY.RETURN))) {
+      HELP.Remove(event);
+      MENU.CurrentNode().focus();
+      FALSE(event);
+    }
+  },
 
   MathJax.Callback.Queue(
     HUB.Register.StartupHook("End Config",{}), // wait until config is complete

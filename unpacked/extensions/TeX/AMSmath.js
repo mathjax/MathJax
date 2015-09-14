@@ -134,14 +134,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       aligned:       ['AlignedAMSArray',null,null,null,'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0]),".5em",'D'],
       gathered:      ['AlignedAMSArray',null,null,null,'c',null,".5em",'D'],
 
-      subarray:      ['Array',null,null,null,null,COLS([0,0,0,0]),"0.1em",'S',1],
+      subarray:      ['Array',null,null,null,null,COLS([0]),"0.1em",'S',1],
       smallmatrix:   ['Array',null,null,null,'c',COLS([1/3]),".2em",'S',1],
       
       'equation':    ['EquationBegin','Equation',true],
       'equation*':   ['EquationBegin','EquationStar',false],
 
-      eqnarray:      ['AMSarray',null,true,true, 'rcl',MML.LENGTH.THICKMATHSPACE,".5em"],
-      'eqnarray*':   ['AMSarray',null,false,true,'rcl',MML.LENGTH.THICKMATHSPACE,".5em"]
+      eqnarray:      ['AMSarray',null,true,true, 'rcl',COLS([0]),".5em"],
+      'eqnarray*':   ['AMSarray',null,false,true,'rcl',COLS([0]),".5em"]
     },
     
     delimiter: {
