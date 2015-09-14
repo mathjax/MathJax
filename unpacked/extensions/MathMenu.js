@@ -280,7 +280,7 @@
         onmouseup: MENU.Mouseup, ondblclick: FALSE,
         ondragstart: FALSE, onselectstart: FALSE, oncontextmenu: FALSE,
         menuItem: this, className: "MathJax_Menu", onkeydown: MENU.Keydown,
-        role: "navigation"
+        role: "menu"
       });
       if (!forceLTR) {MathJax.Localization.setCSS(menu)}
 
@@ -897,9 +897,8 @@
     role: "menuitemradio",
 
     Attributes: function(def) {
-      if (CONFIG.settings[this.variable] === this.value) {
-        def = HUB.Insert({"aria-checked": "true"}, def);
-      }
+      var checked = CONFIG.settings[this.variable] === this.value ? "true" : "false";
+      def = HUB.Insert({"aria-checked": checked}, def);
       def = this.SUPER(arguments).Attributes.call(this, def);
       return def;
     },
@@ -947,9 +946,8 @@
     role: "menuitemcheckbox",
 
     Attributes: function(def) {
-      if (CONFIG.settings[this.variable]) {
-        def = HUB.Insert({"aria-checked": "true"}, def);
-      }
+      var checked = CONFIG.settings[this.variable] ? "true" : "false";
+      def = HUB.Insert({"aria-checked": checked}, def);
       def = this.SUPER(arguments).Attributes.call(this, def);
       return def;
     },
