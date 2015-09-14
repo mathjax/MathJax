@@ -45,7 +45,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       var base, bbox;
       if (stretch) {
-        base = node.getElementsByTagName("mjx-base")[0];
+        base = CHTML.getNode(node,"mjx-base");
       } else {
         this.CHTMLaddChild(node,0,{type:"mjx-base", noBBox:true, forceChild:true});
         base = node.firstChild;
@@ -137,10 +137,10 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //
     CHTMLgetScripts: function (BOX,BBOX,stretch,node) {
       if (stretch) {
-        BOX.sub = node.getElementsByTagName("mjx-sub")[0];
-        BOX.sup = node.getElementsByTagName("mjx-sup")[0];
-        BOX.presub = node.getElementsByTagName("mjx-presub")[0];
-        BOX.presup = node.getElementsByTagName("mjx-presup")[0];
+        BOX.sub = CHTML.getNode(node,"mjx-sub");
+        BOX.sup = CHTML.getNode(node,"mjx-sup");
+        BOX.presub = CHTML.getNode(node,"mjx-presub");
+        BOX.presup = CHTML.getNode(node,"mjx-presup");
         BBOX.sub = this.CHTMLbbox.sub;
         BBOX.sup = this.CHTMLbbox.sup;
         BBOX.presub = this.CHTMLbbox.presub;
@@ -182,7 +182,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           BBOX = state.BBOX[type] = CHTML.BBOX.empty();
           if (state.w) {
             BOX.style.paddingLeft = CHTML.Em(state.w);
-            BBOX.w = BBOX.r = state.w;
+            BBOX.w = BBOX.r = state.w; BBOX.x = state.w;
           }
         }
         data.toCommonHTML(BOX);
@@ -198,7 +198,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //  right-justify the scripts, otherwise, left-justify them.
     //
     CHTMLpadScript: function (type,w,bbox,state) {
-      if (!bbox) bbox = {w:0, fake:1};
+      if (!bbox) bbox = {w:0, fake:1, rscale:1};
       var BBOX = state.BBOX[type], dx = 0, dw = 0;
       if (BBOX) {
         if (bbox.rscale*bbox.w < w) {
@@ -252,7 +252,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     CHTMLplaceSubSup: function (sub,sbox,sup,Sbox,x,delta,u,v,s) {
       sub.style.paddingRight = CHTML.Em(s); sbox.w += s;
       sup.style.paddingBottom = CHTML.Em(u+v-Sbox.d-sbox.h);
-      sup.style.paddingLeft = CHTML.Em(delta);
+      sup.style.paddingLeft = CHTML.Em(delta+(Sbox.x||0));
       sup.style.paddingRight = CHTML.Em(s); Sbox.w += s;
       sup.parentNode.style.verticalAlign = CHTML.Em(-v);
       this.CHTML.combine(sbox,x,-v);
@@ -272,7 +272,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     CHTMLplacePresubPresup: function (presub,pbox,presup,Pbox,delta,u,v,s) {
       presub.style.paddingLeft = CHTML.Em(s);
       presup.style.paddingBottom = CHTML.Em(u+v-Pbox.d-pbox.h);
-      presup.style.paddingLeft = CHTML.Em(delta+s);
+      presup.style.paddingLeft = CHTML.Em(delta+s+(Pbox.x||0));
       presup.style.paddingRight = CHTML.Em(-delta);
       presup.parentNode.style.verticalAlign = CHTML.Em(-v);
       this.CHTML.combine(pbox,s,-v);

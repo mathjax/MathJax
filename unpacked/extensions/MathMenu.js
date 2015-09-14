@@ -295,7 +295,7 @@
         onmouseup: MENU.Mouseup, ondblclick: FALSE,
         ondragstart: FALSE, onselectstart: FALSE, oncontextmenu: FALSE,
         menuItem: this, className: "MathJax_Menu", onkeydown: MENU.Keydown,
-        role: "navigation"
+        role: "menu"
       });
       if (event.type === "contextmenu" || event.type === "mouseover")
         menu.className += " MathJax_ContextMenu";
@@ -614,7 +614,8 @@
         {onmouseup: MENU.Mouseup,
          ondragstart: FALSE, onselectstart: FALSE, onselectend: FALSE,
          ontouchstart: MENU.Touchstart, ontouchend: MENU.Touchend,
-         className: "MathJax_MenuItem", menuItem: this},
+         className: "MathJax_MenuItem", role: this.role,
+         menuItem: this},
         def);
     },
 
@@ -695,14 +696,12 @@
    *  Abstract class of menu items that are focusable and perform some action
    */
   MENU.ENTRY = MENU.ITEM.Subclass({
-
     role: "menuitem",  // Aria role.
 
     Attributes: function(def) {
       def = HUB.Insert(
         {onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
-         onmousedown: MENU.Mousedown, role: this.role,
-         onkeydown: MENU.Keydown,
+         onmousedown: MENU.Mousedown, onkeydown: MENU.Keydown,
          "aria-disabled": !!this.disabled},
         def);
       def = this.SUPER(arguments).Attributes.call(this, def);
@@ -814,6 +813,11 @@
     marker: "\u25BA",  // the submenu arrow
     markerRTL: "\u25C4", // the submenu arrow for RTL
 
+    Attributes: function(def) {
+      def = HUB.Insert({"aria-haspopup": "true"}, def);
+      def = this.SUPER(arguments).Attributes.call(this, def);
+      return def;
+    },
     Init: function (name,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; var i = 1;
@@ -907,6 +911,12 @@
     marker: (isPC ? "\u25CF" : "\u2713"),   // the checkmark
     role: "menuitemradio",
 
+    Attributes: function(def) {
+      var checked = CONFIG.settings[this.variable] === this.value ? "true" : "false";
+      def = HUB.Insert({"aria-checked": checked}, def);
+      def = this.SUPER(arguments).Attributes.call(this, def);
+      return def;
+    },
     Init: function (name,variable,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
@@ -914,7 +924,9 @@
     },
     Label: function (def,menu) {
       var span = {className:"MathJax_MenuRadioCheck" + this.rtlClass()};
-      if (CONFIG.settings[this.variable] !== this.value) {span = {style:{display:"none"}}}
+      if (CONFIG.settings[this.variable] !== this.value) {
+        span = {style:{display:"none"}};
+      }
       return [["span",span,[this.marker]]," "+this.Name()];
     },
     Mouseup: function (event,menu) {
@@ -922,8 +934,9 @@
         var child = menu.parentNode.childNodes;
         for (var i = 0, m = child.length; i < m; i++) {
           var item = child[i].menuItem;
-          if (item && item.variable === this.variable)
-            {child[i].firstChild.style.display = "none"}
+          if (item && item.variable === this.variable) {
+            child[i].firstChild.style.display = "none";
+          }
         }
         menu.firstChild.display = "";
         CONFIG.settings[this.variable] = this.value;
@@ -945,6 +958,12 @@
     marker: "\u2713",   // the checkmark
     role: "menuitemcheckbox",
 
+    Attributes: function(def) {
+      var checked = CONFIG.settings[this.variable] ? "true" : "false";
+      def = HUB.Insert({"aria-checked": checked}, def);
+      def = this.SUPER(arguments).Attributes.call(this, def);
+      return def;
+    },
     Init: function (name,variable,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
@@ -994,6 +1013,13 @@
    *  A rule in a menu
    */
   MENU.ITEM.RULE = MENU.ITEM.Subclass({
+    role: "separator",
+    
+    Attributes: function(def) {
+      def = HUB.Insert({"aria-orientation": "vertical"}, def);
+      def = this.SUPER(arguments).Attributes.call(this, def);
+      return def;
+    },
     Label: function (def,menu) {
       def.className += " MathJax_MenuRule";
       return null;
@@ -1035,8 +1061,8 @@
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
       ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",
                onclick:MENU.About.Remove,
-               onkeydown: MENU.About.Keydown, tabIndex: 0,
-               "aria-label": "Close", "aria-describedby": _("CloseWindow","Close window")},
+               onkeydown: MENU.About.Keydown, tabIndex: 0, role: "button",
+               "aria-label": _("CloseWindow","Close window")},
         [["span",{},"\u00D7"]]]
     ]);
     if (event.type === "mouseup") about.className += " MathJax_MousePost";
@@ -1230,6 +1256,7 @@
             if (BROWSER.isChrome && BROWSER.version.substr(0,3) !== "24.") {message = MESSAGE.MML.WebKit}
             else if (BROWSER.isSafari && !BROWSER.versionAtLeast("5.0")) {message = MESSAGE.MML.WebKit}
             else if (BROWSER.isMSIE) {if (!BROWSER.hasMathPlayer) {message = MESSAGE.MML.MSIE}}
+            else if (BROWSER.isEdge) {message = MESSAGE.MML.WebKit}
             else {message = MESSAGE.MML[BROWSER]}
             warned = "warnedMML";
           }

@@ -2100,9 +2100,8 @@
           //  Add it to the MathJax span
           //
           var alttext = this.Get("alttext");
-          if (alttext && !svg.element.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
-          if (!svg.element.getAttribute("role")) span.setAttribute("role","math");
-//        span.setAttribute("tabindex",0);  // causes focus outline, so disable for now
+          if (alttext && !svg.element.getAttribute("aria-label")) svg.element.setAttribute("aria-label",alttext);
+          if (!svg.element.getAttribute("role")) svg.element.setAttribute("role","img");
           svg.element.setAttribute("focusable","false");
           span.appendChild(svg.element);
           svg.element = null;
