@@ -604,7 +604,6 @@
     },
 
     Create: function (menu) {
-      console.log('create');
       if (!this.hidden) {
         var def = this.Attributes();
         var label = this.Label(def,menu);
@@ -915,7 +914,6 @@
       return [["span",span,[this.marker]]," "+this.Name()];
     },
     Mouseup: function (event,menu) {
-      console.log(menu);
       if (!this.disabled) {
         var child = menu.parentNode.childNodes;
         for (var i = 0, m = child.length; i < m; i++) {
@@ -926,7 +924,6 @@
         }
         menu.firstChild.display = "";
         CONFIG.settings[this.variable] = this.value;
-        console.log('Changing');
         MENU.cookie[this.variable] = CONFIG.settings[this.variable]; MENU.saveCookie();
         SIGNAL.Post(["radio button",this]);
       }
