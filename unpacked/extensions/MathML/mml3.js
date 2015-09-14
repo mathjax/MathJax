@@ -80,7 +80,7 @@ MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
    */
   var BROWSER = MathJax.Hub.Browser;
   var exslt = '';
-  if (BROWSER.isMsEdge || BROWSER.isMSIE) {
+  if (BROWSER.isEdge || BROWSER.isMSIE) {
     exslt = 'urn:schemas-microsoft-com:xslt'
   } else {
     exslt = 'http://exslt.org/common';
@@ -767,7 +767,16 @@ MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
   }
   
   // Tweak CSS to avoid some browsers rearranging HTML output
-  MathJax.Ajax.Styles(".MathJax span { direction: ltr !important; display: inline-block !important;}");
+  MathJax.Ajax.Styles({
+    ".MathJax .mi, .MathJax .mo, .MathJax .mn, .MathJax .mtext": {
+      direction: "ltr",
+      display: "inline-block"
+    },
+    ".MathJax .ms, .MathJax .mspace, .MathJax .mglyph": {
+      direction: "ltr",
+      display: "inline-block"
+    }
+  });
 
   MathJax.Hub.Startup.signal.Post("MathML mml3.js Ready");
 });
