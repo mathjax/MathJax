@@ -162,7 +162,7 @@
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
       ["span",{id: "MathJax_HelpClose", onclick: HELP.Remove,
                onkeydown: HELP.Keydown, tabIndex: 0, role: "button",
-	       "aria-label": LOCALE._(["HelpDialog","CloseWindow"],"Close window")},
+	       "aria-label": LOCALE._(["HelpDialog","CloseDialog"],"Close help dialog")},
         [["span",{},["\u00D7"]]]
       ]
     ]));

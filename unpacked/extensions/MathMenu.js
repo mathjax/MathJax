@@ -1062,7 +1062,7 @@
       ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",
                onclick:MENU.About.Remove,
                onkeydown: MENU.About.Keydown, tabIndex: 0, role: "button",
-               "aria-label": _("CloseWindow","Close window")},
+               "aria-label": _("CloseAboutDialog","Close about MathJax dialog")},
         [["span",{},"\u00D7"]]]
     ]);
     if (event.type === "mouseup") about.className += " MathJax_MousePost";
