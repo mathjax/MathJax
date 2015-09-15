@@ -17,8 +17,8 @@
  */
 
 MathJax.Hub.Config({
-  extensions: ["tex2jax.js","mml2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","TeX/noErrors.js","TeX/noUndefined.js","TeX/AMSmath.js","TeX/AMSsymbols.js","FHTML-preview.js"],
-  jax: ["input/TeX","input/MathML","output/SVG","output/FastHTML"]
+  extensions: ["tex2jax.js","mml2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","TeX/noErrors.js","TeX/noUndefined.js","TeX/AMSmath.js","TeX/AMSsymbols.js","fast-preview.js","AssistiveMML.js"],
+  jax: ["input/TeX","input/MathML","output/SVG","output/PreviewHTML"]
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/config/TeX-AMS-MML_SVG.js");

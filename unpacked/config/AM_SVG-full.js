@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  /MathJax/unpacked/config/TeX-AMS_HTML-full.js
+ *  /MathJax/unpacked/config/AM_SVG-full.js
  *  
  *  Copyright (c) 2010-2015 The MathJax Consortium
  *
@@ -17,8 +17,8 @@
  */
 
 MathJax.Hub.Config({
-  extensions: ["tex2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","TeX/noErrors.js","TeX/noUndefined.js","TeX/AMSmath.js","TeX/AMSsymbols.js","fast-preview.js","AssistiveMML.js"],
-  jax: ["input/TeX","output/HTML-CSS","output/PreviewHTML"]
+  extensions: ["asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","fast-preview.js","AssistiveMML.js"],
+  jax: ["input/AsciiMath","output/SVG","output/PreviewHTML"]
 });
 
-MathJax.Ajax.loadComplete("[MathJax]/config/TeX-AMS_HTML-full.js");
+MathJax.Ajax.loadComplete("[MathJax]/config/AM_SVG-full.js");
