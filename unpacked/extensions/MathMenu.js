@@ -725,7 +725,8 @@
       var children = menuNode.childNodes;
       do {
         index = MENU.Mod(move(index), len);
-      } while (items[index].hidden || !children[index].role);
+      } while (items[index].hidden || !children[index].role ||
+               children[index].role === "separator");
       this.Deactivate(item);
       items[index].Activate(event, children[index]);
     },
