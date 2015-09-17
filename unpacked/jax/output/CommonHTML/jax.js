@@ -323,6 +323,7 @@
     Element: function (type,def,content) {
       if (type.substr(0,4) === "mjx-") {
         if (!def) def = {};
+        if (def.isMathJax == null) def.isMathJax = true;
         if (def.className) def.className = type+" "+def.className; else def.className = type;
         type = "span";
       }
@@ -396,7 +397,7 @@
           //
           // Zoom box requires an outer container to get the positioning right.
           //
-          var NODE = CHTML.Element("mjx-chtml",{className:"MJXc-display"});
+          var NODE = CHTML.Element("mjx-chtml",{className:"MJXc-display",isMathJax:false});
           NODE.appendChild(node); node = NODE;
         }
         if (HUB.Browser.noContextMenu) {
@@ -596,7 +597,7 @@
       //  Re-render at larger size
       //
       this.getMetrics(jax);
-      var node = CHTML.addElement(span,"mjx-chtml",{style:{"font-size":Math.floor(CHTML.scale*100)+"%"}});
+      var node = CHTML.addElement(span,"mjx-chtml",{style:{"font-size":Math.floor(CHTML.scale*100)+"%"},isMathJax:false});
       this.idPostfix = "-zoom"; jax.root.toCommonHTML(node); this.idPostfix = "";
       //
       //  Adjust margins to prevent overlaps at the edges

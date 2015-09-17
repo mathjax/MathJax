@@ -58,6 +58,9 @@
         "-khtml-box-shadow":"0px 10px 20px #808080",  // Konqueror
         filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
       },
+      "#MathJax_Help.MathJax_MousePost": {
+        outline:"none"
+      },
       
       "#MathJax_HelpContent": {
         overflow:"auto", "text-align":"left", "font-size":"80%",
@@ -93,6 +96,9 @@
       },
       "#MathJax_HelpClose:hover span": {
         "background-color":"#CCC!important"
+      },
+      "#MathJax_HelpClose:hover:focus": {
+        outline:"none"
       }
     }
   });
@@ -100,11 +106,11 @@
   /*
    *  Handle the Help Dialog box
    */
-  HELP.Dialog = function () {
-    LOCALE.loadDomain("HelpDialog",["Post",HELP]);
+  HELP.Dialog = function (event) {
+    LOCALE.loadDomain("HelpDialog",["Post",HELP,event]);
   };
   
-  HELP.Post = function () {
+  HELP.Post = function (event) {
     this.div = MENU.Background(this);
     var help = HTML.addElement(this.div,"div",{
       id: "MathJax_Help", tabIndex: 0, onkeydown: HELP.Keydown
@@ -156,10 +162,11 @@
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
       ["span",{id: "MathJax_HelpClose", onclick: HELP.Remove,
                onkeydown: HELP.Keydown, tabIndex: 0, role: "button",
-               "aria-label": "Close window"},
+	       "aria-label": LOCALE._(["HelpDialog","CloseDialog"],"Close help dialog")},
         [["span",{},["\u00D7"]]]
       ]
     ]));
+    if (event.type === "mouseup") help.className += " MathJax_MousePost";
     help.focus();
     LOCALE.setCSS(help);
     var doc = (document.documentElement||{});

@@ -1048,10 +1048,13 @@ MathJax.HTML = {
           {def.style[id.replace(/-([a-z])/g,this.ucMatch)] = style[id]}}
       }
       MathJax.Hub.Insert(obj,def);
+      for (var id in def) {
+        if (id === "role" || id.substr(0,5) === "aria-") obj.setAttribute(id,def[id]);
+      }
     }
     if (contents) {
       if (!(contents instanceof Array)) {contents = [contents]}
-      for (var i = 0; i < contents.length; i++) {
+      for (var i = 0, m = contents.length; i < m; i++) {
         if (contents[i] instanceof Array) {
           obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
         } else if (type === "script") { // IE throws an error if script is added as a text node
@@ -2351,18 +2354,26 @@ MathJax.Hub = {
     //
     var errorSettings = this.config.errorSettings;
     var errorText = LOCALIZE(errorSettings.messageId,errorSettings.message);
-    var error = MathJax.HTML.Element("span",
-                 {className:"MathJax_Error", jaxID:"Error", isMathJax:true},errorText);
+    var error = MathJax.HTML.Element("span", {
+      className:"MathJax_Error", jaxID:"Error", isMathJax:true,
+      id: script.MathJax.error.inputID+"-Frame"
+    },errorText);
     //
     //  Attach the menu events
     //
     if (MathJax.Extension.MathEvents) {
-      error.oncontextmenu = MathJax.Extension.MathEvents.Event.Menu;
-      error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
+      var EVENT = MathJax.Extension.MathEvents.Event;
+      error.oncontextmenu = EVENT.Menu;
+      error.onmousedown = EVENT.Mousedown;
+      error.onkeydown = EVENT.Keydown;
+      error.tabIndex = 0;
     } else {
       MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js",function () {
-        error.oncontextmenu = MathJax.Extension.MathEvents.Event.Menu;
-        error.onmousedown = MathJax.Extension.MathEvents.Event.Mousedown;
+        var EVENT = MathJax.Extension.MathEvents.Event;
+        error.oncontextmenu = EVENT.Menu;
+        error.onmousedown = EVENT.Mousedown;
+        error.keydown = EVENT.Keydown;
+        error.tabIndex = 0;
       });
     }
     //
@@ -3033,15 +3044,17 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.5.0", config: {},
+    id: "Error", version: "2.5.0", config: {}, errors: 0,
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
     Jax: function (text,script) {
       var jax = MathJax.Hub.inputJax[script.type.replace(/ *;(.|\s)*/,"")];
+      this.errors++;
       return {
         inputJax: (jax||{id:"Error"}).id,  // Use Error InputJax as fallback
         outputJax: "Error",
+        inputID: "MathJax-Error-"+this.errors,
         sourceMenuTitle: /*_(MathMenu)*/ ["ErrorMessage","Error Message"],
         sourceMenuFormat: "Error",
         originalText: MathJax.HTML.getScript(script),

@@ -161,6 +161,7 @@
     // Keydown event handler. Should only fire on Space key.
     //
     Keydown: function (event, math) {
+      if (!event) event = window.event;
       if (event.keyCode === EVENT.KEY.SPACE) {
         EVENT.ContextMenu(event, this);
       };

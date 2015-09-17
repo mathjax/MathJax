@@ -93,6 +93,9 @@
         "-khtml-box-shadow":"0px 10px 20px #808080",  // Konqueror
         filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
       },
+      "#MathJax_About.MathJax_MousePost": {
+        outline:"none"
+      },
 
       ".MathJax_Menu": {
         position:"absolute", "background-color":"white", color:"black",
@@ -152,10 +155,19 @@
       ".MathJax_MenuDisabled": {
         color:"GrayText"
       },
-
       ".MathJax_MenuActive": {
         "background-color": (isPC ? "Highlight" : "#606872"),
         color: (isPC ? "HighlightText" : "white")
+      },
+
+      ".MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus": {
+        "background-color": "#E8E8E8"
+      },
+      ".MathJax_ContextMenu:focus": {
+        outline:"none"
+      },
+      ".MathJax_ContextMenu .MathJax_MenuItem:focus": {
+        outline:"none"
       },
 
       "#MathJax_AboutClose": {
@@ -193,6 +205,9 @@
       },
       ".MathJax_MenuClose:hover span": {
         "background-color":"#CCC!important"
+      },
+      ".MathJax_MenuClose:hover:focus": {
+        outline:"none"
       }
     }
   });
@@ -267,7 +282,7 @@
      *  Display the menu
      */
     Post: function (event,parent,forceLTR) {
-      if (!event) {event = window.event};
+      if (!event) {event = window.event||{}}
       var div = document.getElementById("MathJax_MenuFrame");
       if (!div) {
         div = MENU.Background(this);
@@ -282,6 +297,8 @@
         menuItem: this, className: "MathJax_Menu", onkeydown: MENU.Keydown,
         role: "menu"
       });
+      if (event.type === "contextmenu" || event.type === "mouseover")
+        menu.className += " MathJax_ContextMenu";
       if (!forceLTR) {MathJax.Localization.setCSS(menu)}
 
       for (var i = 0, m = this.items.length; i < m; i++) {this.items[i].Create(menu)}
@@ -294,17 +311,15 @@
 
       div.appendChild(menu);
       this.posted = true;
-      menu.style.width = (menu.offsetWidth+2) + "px";
-      if (event) {
-        var x = event.pageX, y = event.pageY;
-      }
-      if (!x && !y && event && event.clientX && event.clientY) {
+      if (menu.offsetWidth) menu.style.width = (menu.offsetWidth+2) + "px";
+      var x = event.pageX, y = event.pageY;
+      if (!x && !y && "clientX" in event) {
         x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
         y = event.clientY + document.body.scrollTop  + document.documentElement.scrollTop;
       }
       if (!parent) {
         var node = MENU.CurrentNode() || event.target;
-        if (!x && !y && node) {
+        if ((event.type === "keydown" || (!x && !y)) && node) {
           var offsetX = window.pageXOffset || document.documentElement.scrollLeft;
           var offsetY = window.pageYOffset || document.documentElement.scrollTop;
           var rect = node.getBoundingClientRect();
@@ -314,7 +329,7 @@
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
            {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
         if (MENU.isMobile) {x = Math.max(5,x-Math.floor(menu.offsetWidth/2)); y -= 20}
-        if (event) {MENU.skipUp = event.isContextMenu;}
+        MENU.skipUp = event.isContextMenu;
       } else {
         var side = "left", mw = parent.offsetWidth;
         x = (MENU.isMobile ? 30 : mw - 2); y = 0;
@@ -366,6 +381,7 @@
         HOVER.UnHover(MENU.jax);
       }
       MENU.Unfocus(menu);
+      if (event.type === "mousedown") MENU.CurrentNode().blur();
       return FALSE(event);
     },
 
@@ -1016,7 +1032,7 @@
   /*
    *  Handle the ABOUT box
    */
-  MENU.About = function () {
+  MENU.About = function (event) {
     var HTMLCSS = OUTPUT["HTML-CSS"] || {};
     var font = MENU.About.GetFont();
     var format = MENU.About.GetFormat();
@@ -1046,9 +1062,10 @@
       ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",
                onclick:MENU.About.Remove,
                onkeydown: MENU.About.Keydown, tabIndex: 0, role: "button",
-               "aria-label": "Close window"},
+               "aria-label": _("CloseAboutDialog","Close about MathJax dialog")},
         [["span",{},"\u00D7"]]]
     ]);
+    if (event.type === "mouseup") about.className += " MathJax_MousePost";
     about.focus();
     MathJax.Localization.setCSS(about);
     var doc = (document.documentElement||{});
@@ -1103,9 +1120,9 @@
   /*
    *  Handle the MathJax HELP menu
    */
-  MENU.Help = function () {
+  MENU.Help = function (event) {
     AJAX.Require("[MathJax]/extensions/HelpDialog.js",
-                 function () {MathJax.Extension.Help.Dialog()});
+                 function () {MathJax.Extension.Help.Dialog({type:event.type})});
   };
 
   /*

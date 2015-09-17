@@ -2102,6 +2102,7 @@
           var alttext = this.Get("alttext");
           if (alttext && !svg.element.getAttribute("aria-label")) svg.element.setAttribute("aria-label",alttext);
           if (!svg.element.getAttribute("role")) svg.element.setAttribute("role","img");
+          svg.element.setAttribute("focusable","false");
           span.appendChild(svg.element);
           svg.element = null;
           //
