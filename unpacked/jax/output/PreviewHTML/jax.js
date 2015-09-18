@@ -34,9 +34,9 @@
 
   var FONTS = "'Times New Roman',Times,STIXGeneral,serif";
   var STYLES = {
-    ".MJXf-script": {"font-size":".8em"},
+    ".MJXp-script": {"font-size":".8em"},
 
-    ".MJXf-right": {
+    ".MJXp-right": {
       "-webkit-transform-origin":"right",
       "-moz-transform-origin":"right",
       "-ms-transform-origin":"right",
@@ -44,17 +44,17 @@
       "transform-origin":"right"
     },
 
-    ".MJXf-bold": {"font-weight":"bold"},
-    ".MJXf-italic": {"font-style":"italic"},
-    ".MJXf-scr": {"font-family":"MathJax_Script,"+FONTS},
-    ".MJXf-frak": {"font-family":"MathJax_Fraktur,"+FONTS},
-    ".MJXf-sf": {"font-family":"MathJax_SansSerif,"+FONTS},
-    ".MJXf-cal": {"font-family":"MathJax_Caligraphic,"+FONTS},
-    ".MJXf-mono": {"font-family":"MathJax_Typewriter,"+FONTS},
-    ".MJXf-largeop": {"font-size":"150%"},
-    ".MJXf-largeop.MJXf-int": {"vertical-align":"-.2em"},
+    ".MJXp-bold": {"font-weight":"bold"},
+    ".MJXp-italic": {"font-style":"italic"},
+    ".MJXp-scr": {"font-family":"MathJax_Script,"+FONTS},
+    ".MJXp-frak": {"font-family":"MathJax_Fraktur,"+FONTS},
+    ".MJXp-sf": {"font-family":"MathJax_SansSerif,"+FONTS},
+    ".MJXp-cal": {"font-family":"MathJax_Caligraphic,"+FONTS},
+    ".MJXp-mono": {"font-family":"MathJax_Typewriter,"+FONTS},
+    ".MJXp-largeop": {"font-size":"150%"},
+    ".MJXp-largeop.MJXp-int": {"vertical-align":"-.2em"},
 
-    ".MJXf-math": {
+    ".MJXp-math": {
       "display": "inline-block",
       "line-height": "1.2",
       "text-indent": "0",
@@ -62,49 +62,49 @@
       "white-space":"nowrap",
       "border-collapse":"collapse"
     },
-    ".MJXf-display": {
+    ".MJXp-display": {
       "display": "block",
       "text-align": "center",
       "margin": "1em 0"
     },
-    ".MJXf-math span": {"display": "inline-block"},
-    ".MJXf-box":  {"display":"block!important", "text-align": "center"},
-    ".MJXf-box:after": {"content": '" "'},  // needed for when there is no DOCTYPE
-    ".MJXf-rule": {"display":"block!important", "margin-top":".1em"},
-    ".MJXf-char": {"display":"block!important"},
+    ".MJXp-math span": {"display": "inline-block"},
+    ".MJXp-box":  {"display":"block!important", "text-align": "center"},
+    ".MJXp-box:after": {"content": '" "'},  // needed for when there is no DOCTYPE
+    ".MJXp-rule": {"display":"block!important", "margin-top":".1em"},
+    ".MJXp-char": {"display":"block!important"},
 
-    ".MJXf-mo": {"margin": "0 .15em"},
+    ".MJXp-mo": {"margin": "0 .15em"},
 
-    ".MJXf-mfrac": {"margin": "0 .125em", "vertical-align":".25em"},
-    ".MJXf-denom": {"display": "inline-table!important", "width":"100%"},
-    ".MJXf-denom > *": {"display": "table-row!important"},
+    ".MJXp-mfrac": {"margin": "0 .125em", "vertical-align":".25em"},
+    ".MJXp-denom": {"display": "inline-table!important", "width":"100%"},
+    ".MJXp-denom > *": {"display": "table-row!important"},
 
-    ".MJXf-surd": {"vertical-align":"top"},
-    ".MJXf-surd > *": {"display":"block!important"},
+    ".MJXp-surd": {"vertical-align":"top"},
+    ".MJXp-surd > *": {"display":"block!important"},
 
-    ".MJXf-script-box > * ": {"display":"table!important", "height":"50%"},
-    ".MJXf-script-box > * > *": {"display":"table-cell!important","vertical-align":"top"},
-    ".MJXf-script-box > *:last-child > *": {"vertical-align":"bottom"},
-    ".MJXf-script-box > * > * > *": {"display":"block!important"},
+    ".MJXp-script-box > * ": {"display":"table!important", "height":"50%"},
+    ".MJXp-script-box > * > *": {"display":"table-cell!important","vertical-align":"top"},
+    ".MJXp-script-box > *:last-child > *": {"vertical-align":"bottom"},
+    ".MJXp-script-box > * > * > *": {"display":"block!important"},
 
-    ".MJXf-mphantom": {"visibility": "hidden"},
+    ".MJXp-mphantom": {"visibility": "hidden"},
 
-    ".MJXf-munderover": {"display":"inline-table!important"},
-    ".MJXf-over": {"display":"inline-block!important","text-align":"center"},
-    ".MJXf-over > *": {"display":"block!important"},
-    ".MJXf-munderover > *": {"display":"table-row!important"},
+    ".MJXp-munderover": {"display":"inline-table!important"},
+    ".MJXp-over": {"display":"inline-block!important","text-align":"center"},
+    ".MJXp-over > *": {"display":"block!important"},
+    ".MJXp-munderover > *": {"display":"table-row!important"},
 
-    ".MJXf-mtable": {"vertical-align":".25em", "margin":"0 .125em"},
-    ".MJXf-mtable > *": {"display":"inline-table!important", "vertical-align":"middle"},
-    ".MJXf-mtr": {"display":"table-row!important"},
-    ".MJXf-mtd": {"display":"table-cell!important","text-align":"center","padding":".5em 0 0 .5em"},
-    ".MJXf-mtr > .MJXf-mtd:first-child": {"padding-left":0},
-    ".MJXf-mtr:first-child > .MJXf-mtd": {"padding-top":0},
-    ".MJXf-mlabeledtr": {"display":"table-row!important"},
-    ".MJXf-mlabeledtr > .MJXf-mtd:first-child": {"padding-left":0},
-    ".MJXf-mlabeledtr:first-child > .MJXf-mtd": {"padding-top":0},
+    ".MJXp-mtable": {"vertical-align":".25em", "margin":"0 .125em"},
+    ".MJXp-mtable > *": {"display":"inline-table!important", "vertical-align":"middle"},
+    ".MJXp-mtr": {"display":"table-row!important"},
+    ".MJXp-mtd": {"display":"table-cell!important","text-align":"center","padding":".5em 0 0 .5em"},
+    ".MJXp-mtr > .MJXp-mtd:first-child": {"padding-left":0},
+    ".MJXp-mtr:first-child > .MJXp-mtd": {"padding-top":0},
+    ".MJXp-mlabeledtr": {"display":"table-row!important"},
+    ".MJXp-mlabeledtr > .MJXp-mtd:first-child": {"padding-left":0},
+    ".MJXp-mlabeledtr:first-child > .MJXp-mtd": {"padding-top":0},
     
-    ".MJXf-merror": {
+    ".MJXp-merror": {
       "background-color": "#FFFF88",
       color:   "#CC0000",
       border:  "1px solid #CC0000",
@@ -117,7 +117,7 @@
   (function () {
     for (var i = 0; i < 10; i++) {
       var scale = "scaleX(."+i+")";
-      STYLES[".MJXf-scale"+i] = {
+      STYLES[".MJXp-scale"+i] = {
         "-webkit-transform":scale,
         "-moz-transform":scale,
         "-ms-transform":scale,
@@ -322,16 +322,16 @@
     GetID: function () {this.ID++; return this.ID},
 
     VARIANT: {
-      "bold": "MJXf-bold",
-      "italic": "MJXf-italic",
-      "bold-italic": "MJXf-bold MJXf-italic",
-      "script": "MJXf-scr",
-      "bold-script": "MJXf-scr MJXf-bold",
-      "fraktur": "MJXf-frak",
-      "bold-fraktur": "MJXf-frak MJXf-bold",
-      "monospace": "MJXf-mono",
-      "sans-serif": "MJXf-sf",
-      "-tex-caligraphic": "MJXf-cal"
+      "bold": "MJXp-bold",
+      "italic": "MJXp-italic",
+      "bold-italic": "MJXp-bold MJXp-italic",
+      "script": "MJXp-scr",
+      "bold-script": "MJXp-scr MJXp-bold",
+      "fraktur": "MJXp-frak",
+      "bold-fraktur": "MJXp-frak MJXp-bold",
+      "monospace": "MJXp-mono",
+      "sans-serif": "MJXp-sf",
+      "-tex-caligraphic": "MJXp-cal"
     },
     MATHSPACE: {
       veryverythinmathspace:  1/18,
@@ -503,12 +503,12 @@
         else if (this.type !== "mspace" || this.width !== "negativethinmathspace") {PHTML.lastIsInt = false}
         //  ###
         if (!this.PHTMLspanID) {this.PHTMLspanID = PHTML.GetID()};
-        var id = (this.id || "MJXf-Span-"+this.PHTMLspanID);
-        return HTML.addElement(span,"span",{className:"MJXf-"+this.type, id:id});
+        var id = (this.id || "MJXp-Span-"+this.PHTMLspanID);
+        return HTML.addElement(span,"span",{className:"MJXp-"+this.type, id:id});
       },
       PHTMLspanElement: function () {
         if (!this.PHTMLspanID) {return null}
-        return document.getElementById(this.id||"MJXf-Span-"+this.PHTMLspanID);
+        return document.getElementById(this.id||"MJXp-Span-"+this.PHTMLspanID);
       },
 
       PHTMLhandleToken: function (span) {
@@ -531,7 +531,7 @@
         // ### FIXME:  Need to prevent getting too small
         // ### and should keep track of scaling so it can be compensated for
         var level = this.Get("scriptlevel");
-        if (level) span.className += " MJXf-script";
+        if (level) span.className += " MJXp-script";
       },
 
       PHTMLhandleText: function (span,text) {
@@ -608,7 +608,7 @@
     MML.math.Augment({
       toPreviewHTML: function (span) {
         span = this.PHTMLdefaultSpan(span);
-        if (this.Get("display") === "block") {span.className += " MJXf-display"}
+        if (this.Get("display") === "block") {span.className += " MJXp-display"}
         return span;
       }
     });
@@ -628,10 +628,10 @@
           this.PHTML.r = .1;
         }
         if (values.displaystyle && values.largeop) {
-          var box = HTML.Element("span",{className:"MJXf-largeop"});
+          var box = HTML.Element("span",{className:"MJXp-largeop"});
           box.appendChild(span.firstChild); span.appendChild(box);
           this.PHTML.h *= 1.2; this.PHTML.d *= 1.2;
-          if (this.data.join("") === "\u222B") box.className += " MJXf-int";
+          if (this.data.join("") === "\u222B") box.className += " MJXp-int";
         }
         // ### FIXME:  Handle embellished op spacing
         // ### FIXME:  Remap minus signs
@@ -673,7 +673,7 @@
         var box = HTML.Element("span",{style:{"font-size":PHTML.Em(scale)}});
         if (scale > 1.25) {
           var sX = Math.ceil(1.25/scale * 10);
-          box.className = "MJXf-right MJXf-scale"+sX;
+          box.className = "MJXp-right MJXp-scale"+sX;
           box.style.marginLeft = PHTML.Em(bbox.w*(sX/10-1)+.07);
           bbox.w *= scale*sX/10;
         }
@@ -706,7 +706,7 @@
     MML.mpadded.Augment({
       toPreviewHTML: function (span) {
         span = this.PHTMLdefaultSpan(span,{
-          childSpans:true, className:"MJXf-box", forceChild:true
+          childSpans:true, className:"MJXp-box", forceChild:true
         });
         var child = span.firstChild;
         var values = this.getValues("width","height","depth","lspace","voffset");
@@ -768,7 +768,7 @@
         if (this.data[this.over]) {
           span.lastChild.firstChild.style.marginLeft = obox.l =
             span.lastChild.firstChild.style.marginRight = obox.r = 0;
-          var over = HTML.Element("span",{},[["span",{className:"MJXf-over"}]]);
+          var over = HTML.Element("span",{},[["span",{className:"MJXp-over"}]]);
           over.firstChild.appendChild(span.lastChild);
           if (span.childNodes.length > (this.data[this.under] ? 1 : 0))
             over.firstChild.appendChild(span.firstChild);
@@ -810,7 +810,7 @@
             d = Math.max(.2,base.PHTML.d+.1);
         var bbox = this.PHTML;
         if (sup && sub) {
-          var box = HTML.Element("span",{className:"MJXf-script-box", style:{
+          var box = HTML.Element("span",{className:"MJXp-script-box", style:{
             height: PHTML.Em(h+sup.PHTML.h*.8 + d+sub.PHTML.d*.8),
             "vertical-align": PHTML.Em(-d-sub.PHTML.d*.8)
           }},[
@@ -849,16 +849,16 @@
     MML.mfrac.Augment({
       toPreviewHTML: function (span) {
         span = this.PHTMLdefaultSpan(span,{
-          childSpans:true, className:"MJXf-box", forceChild:true, noBBox:true
+          childSpans:true, className:"MJXp-box", forceChild:true, noBBox:true
         });
         var values = this.getValues("linethickness","displaystyle");
         if (!values.displaystyle) {
           if (this.data[0]) this.data[0].PHTMLhandleScriptlevel(span.firstChild);
           if (this.data[1]) this.data[1].PHTMLhandleScriptlevel(span.lastChild);
         }
-        var denom = HTML.Element("span",{className:"MJXf-box"},[
-          ["span",{className:"MJXf-denom"},[                        // inline-table
-            ["span",{},[["span",{className:"MJXf-rule",style:{height:"1em"}}]]],
+        var denom = HTML.Element("span",{className:"MJXp-box"},[
+          ["span",{className:"MJXp-denom"},[                        // inline-table
+            ["span",{},[["span",{className:"MJXp-rule",style:{height:"1em"}}]]],
             ["span"]                                                // spans are table-row
           ]]
         ]);
@@ -890,7 +890,7 @@
     MML.msqrt.Augment({
       toPreviewHTML: function (span) {
         span = this.PHTMLdefaultSpan(span,{
-          childSpans:true, className:"MJXf-box", forceChild:true, noBBox:true
+          childSpans:true, className:"MJXp-box", forceChild:true, noBBox:true
         });
         this.PHTMLlayoutRoot(span,span.firstChild);
         return span;
@@ -898,16 +898,16 @@
       PHTMLlayoutRoot: function (span,base) {
         var bbox = this.PHTMLbboxFor(0);
         var scale = Math.ceil((bbox.h+bbox.d+.14)*100), t = PHTML.Em(14/scale);
-        var surd = HTML.Element("span",{className:"MJXf-surd"},[
+        var surd = HTML.Element("span",{className:"MJXp-surd"},[
           ["span",{style:{"font-size":scale+"%","margin-top":t}},["\u221A"]]
         ]);
-        var root = HTML.Element("span",{className:"MJXf-root"},[
-          ["span",{className:"MJXf-rule",style:{"border-top":".08em solid"}}]
+        var root = HTML.Element("span",{className:"MJXp-root"},[
+          ["span",{className:"MJXp-rule",style:{"border-top":".08em solid"}}]
         ]);
         var W = (1.2/2.2)*scale/100; // width-of-surd = (height/H-to-W-ratio)
         if (scale > 150) {
           var sX = Math.ceil(150/scale * 10);
-          surd.firstChild.className = "MJXf-right MJXf-scale"+sX;
+          surd.firstChild.className = "MJXp-right MJXp-scale"+sX;
           surd.firstChild.style.marginLeft = PHTML.Em(W*(sX/10-1)/scale*100);
           W = W*sX/10;
           root.firstChild.style.borderTopWidth = PHTML.Em(.08/Math.sqrt(sX/10));
@@ -924,11 +924,11 @@
     MML.mroot.Augment({
       toPreviewHTML: function (span) {
         span = this.PHTMLdefaultSpan(span,{
-          childSpans:true, className:"MJXf-box", forceChild:true, noBBox:true
+          childSpans:true, className:"MJXp-box", forceChild:true, noBBox:true
         });
         var rbox = this.PHTMLbboxFor(1), root = span.removeChild(span.lastChild);
         var sqrt = this.PHTMLlayoutRoot(HTML.Element("span"),span.firstChild);
-        root.className = "MJXf-script";  // ### FIXME: should be scriptscript
+        root.className = "MJXp-script";  // ### FIXME: should be scriptscript
         var scale = parseInt(sqrt.firstChild.firstChild.style.fontSize);
         var v = .55*(scale/120) + rbox.d*.8, r = -.6*(scale/120);
         if (scale > 150) {r *= .95*Math.ceil(150/scale*10)/10}
@@ -992,7 +992,7 @@
       toPreviewHTML: function (span) {
         span = this.PHTMLdefaultSpan(span);
         // ### FIXME: handle TeX class?
-        span.className = "MJXf-mrow";
+        span.className = "MJXp-mrow";
         return span;
       }
     });
