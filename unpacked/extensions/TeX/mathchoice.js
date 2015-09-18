@@ -85,11 +85,18 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       return svg;
     },
     toCommonHTML: function (node) {
-        node = this.CHTMLcreateNode(node);
-        this.CHTMLhandleStyle(node);
-        this.CHTMLhandleColor(node);
-        this.CHTMLaddChild(node,this.choice(),{});
-        return node;
+      node = this.CHTMLcreateNode(node);
+      this.CHTMLhandleStyle(node);
+      this.CHTMLhandleColor(node);
+      this.CHTMLaddChild(node,this.choice(),{});
+      return node;
+    },
+    toPreviewHTML: function(span) {
+      span = this.PHTMLcreateSpan(span);
+      this.PHTMLhandleStyle(span);
+      this.PHTMLhandleColor(span);
+      this.PHTMLaddChild(span,this.choice(),{});
+      return span;
     }
   });
   
