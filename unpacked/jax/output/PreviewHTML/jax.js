@@ -856,9 +856,10 @@
           if (this.data[0]) this.data[0].PHTMLhandleScriptlevel(span.firstChild);
           if (this.data[1]) this.data[1].PHTMLhandleScriptlevel(span.lastChild);
         }
-        var denom = HTML.Element("span",{className:"MJXf-box",style:{"margin-top":"-.8em"}},[
+        var denom = HTML.Element("span",{className:"MJXf-box"},[
           ["span",{className:"MJXf-denom"},[                        // inline-table
-            ["span",{},[["span",{className:"MJXf-rule"}]]],["span"] // spans are table-row
+            ["span",{},[["span",{className:"MJXf-rule",style:{height:"1em"}}]]],
+            ["span"]                                                // spans are table-row
           ]]
         ]);
         denom.firstChild.lastChild.appendChild(span.lastChild);
@@ -872,12 +873,15 @@
         if (values.linethickness) {
           var rule = denom.firstChild.firstChild.firstChild;
           var t = PHTML.Em(values.linethickness);
-          rule.style.borderTop = (values.linethickness < .15 ? "1px" : t)+" solid";
+          rule.style.borderTop = "none";
+          rule.style.borderBottom = (values.linethickness < .15 ? "1px" : t)+" solid";
           rule.style.margin = t+" 0";
           t = values.linethickness;
-          denom.style.marginTop = PHTML.Em(3*t-.9);
+          denom.style.marginTop = PHTML.Em(3*t-1.2);
           span.style.verticalAlign = PHTML.Em(1.5*t + .1);
           bbox.h += 1.5*t - .1; bbox.d += 1.5*t;
+        } else {
+          denom.style.marginTop = "-.7em";
         }
         return span;
       }
