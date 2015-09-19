@@ -1040,15 +1040,15 @@ MathJax.HTML = {
   //        " for more details.)"]);
   // 
   Element: function (type,def,contents) {
-    var obj = document.createElement(type);
+    var obj = document.createElement(type), id;
     if (def) {
       if (def.style) {
         var style = def.style; def.style = {};
-        for (var id in style) {if (style.hasOwnProperty(id))
+        for (id in style) {if (style.hasOwnProperty(id))
           {def.style[id.replace(/-([a-z])/g,this.ucMatch)] = style[id]}}
       }
       MathJax.Hub.Insert(obj,def);
-      for (var id in def) {
+      for (id in def) {
         if (id === "role" || id.substr(0,5) === "aria-") obj.setAttribute(id,def[id]);
       }
     }

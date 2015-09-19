@@ -623,7 +623,7 @@
       if (!this.hidden) {
         var def = this.Attributes();
         var label = this.Label(def,menu);
-        var node = HTML.addElement(menu, "div", def, label);
+        HTML.addElement(menu, "div", def, label);
       }
     },
     Name: function () {return _(this.name[0],this.name[1])},
@@ -1034,7 +1034,6 @@
    *  Handle the ABOUT box
    */
   MENU.About = function (event) {
-    var HTMLCSS = OUTPUT["HTML-CSS"] || {};
     var font = MENU.About.GetFont();
     var format = MENU.About.GetFormat();
     var jax = ["MathJax.js v"+MathJax.fileversion,["br"]];

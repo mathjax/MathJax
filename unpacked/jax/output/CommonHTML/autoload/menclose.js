@@ -27,7 +27,6 @@
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
   var VERSION = "2.6.0-beta";
   var MML = MathJax.ElementJax.mml,
-      HTML = MathJax.HTML,
       CHTML = MathJax.OutputJax.CommonHTML;
   
   var SVGNS = "http://www.w3.org/2000/svg";
@@ -107,7 +106,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       
       circle: function (child,cbox,bb,p,t,SOLID) {
         var H = bb.H, D = bb.D, W = bb.W;
-        svg = this.CHTMLsvg(child,bb,t);
+        var svg = this.CHTMLsvg(child,bb,t);
         this.CHTMLsvgElement(svg.firstChild,"ellipse",{
           rx:CHTML.Px(W/2-t/2), ry:CHTML.Px((H+D)/2-t/2),
           cx:CHTML.Px(W/2),   cy:CHTML.Px((H+D)/2)
@@ -184,7 +183,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       
       updiagonalstrike: function (child,cbox,bb,p,t,SOLID) {
         var H = bb.H, D = bb.D, W = bb.W;
-        svg = this.CHTMLsvg(child,bb,t);
+        var svg = this.CHTMLsvg(child,bb,t);
         this.CHTMLsvgElement(svg.firstChild,"line",{
           x1:CHTML.Px(t/2), y1:CHTML.Px(H+D-t), x2:CHTML.Px(W-t), y2:CHTML.Px(t/2)
         });
@@ -194,7 +193,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       
       downdiagonalstrike: function (child,cbox,bb,p,t,SOLID) {
         var H = bb.H, D = bb.D, W = bb.W;
-        svg = this.CHTMLsvg(child,bb,t);
+        var svg = this.CHTMLsvg(child,bb,t);
         this.CHTMLsvgElement(svg.firstChild,"line",{
           x1:CHTML.Px(t/2), y1:CHTML.Px(t/2), x2:CHTML.Px(W-t), y2:CHTML.Px(H+D-t)
         });
@@ -206,7 +205,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         var H = bb.H + bb.D - t, W = bb.W - t/2;
         var a = Math.atan2(H,W)*(-180/Math.PI).toFixed(3);
         var R = Math.sqrt(H*H + W*W);
-        svg = this.CHTMLsvg(child,bb,t);
+        var svg = this.CHTMLsvg(child,bb,t);
         var g = this.CHTMLsvgElement(svg.firstChild,"g",{
           fill:"currentColor",
           transform:"translate("+this.CHTMLpx(t/2)+" "+this.CHTMLpx(H+t/2)+") rotate("+a+")"
@@ -227,9 +226,11 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       /********************************************************/
       
       phasorangle: function (child,cbox,bb,p,t,SOLID) {
-        var P = p, H = bb.H, D = bb.D, p = (H+D)/2, W = bb.W + p - P; bb.W = W; bb.L = p;
+        var P = p, H = bb.H, D = bb.D;
+        p = (H+D)/2;
+        var W = bb.W + p - P; bb.W = W; bb.L = p;
         child.style.margin = "0 0 0 "+CHTML.Em(p-P);
-        svg = this.CHTMLsvg(child,bb,t);
+        var svg = this.CHTMLsvg(child,bb,t);
         this.CHTMLsvgElement(svg.firstChild,"path",{
           d: "M "+this.CHTMLpx(p)+",1 " +
              "L 1,"+this.CHTMLpx(H+D-t)+" L "+this.CHTMLpx(W)+","+this.CHTMLpx(H+D-t)
@@ -242,7 +243,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         bb.W += 1.5*p; bb.L += 1.5*p;
         var H = bb.H, D = bb.D, W = bb.W;
         child.style.margin = "0 0 0 "+CHTML.Em(1.5*p);
-        svg = this.CHTMLsvg(child,bb,t);
+        var svg = this.CHTMLsvg(child,bb,t);
         this.CHTMLsvgElement(svg.firstChild,"path",{
           d: "M "+this.CHTMLpx(W)+",1 L 1,1 "+
              "a"+this.CHTMLpx(p)+","+this.CHTMLpx((H+D)/2-t/2)+" 0 0,1 1,"+this.CHTMLpx(H+D-1.5*t)
@@ -255,7 +256,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         bb.W += 1.5*p; bb.L += 1.5*p;
         var H = bb.H, D = bb.D, W = bb.W;
         child.style.margin = "0 0 0 "+CHTML.Em(1.5*p);
-        svg = this.CHTMLsvg(child,bb,t);
+        var svg = this.CHTMLsvg(child,bb,t);
         this.CHTMLsvgElement(svg.firstChild,"path",{
           d: "M 1,"+this.CHTMLpx(.6*(H+D)) +
              " L "+this.CHTMLpx(p)+","+this.CHTMLpx(H+D) +

@@ -27,7 +27,6 @@
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
   var VERSION = "2.6.0-beta";
   var MML = MathJax.ElementJax.mml,
-      HTML = MathJax.HTML,
       CHTML = MathJax.OutputJax.CommonHTML;
 
   MML.mmultiscripts.Augment({

@@ -27,7 +27,7 @@
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
   var VERSION = "2.6.0-beta";
   var MML = MathJax.ElementJax.mml,
-      HTML = MathJax.HTML, CONFIG = MathJax.Hub.config,
+      CONFIG = MathJax.Hub.config,
       CHTML = MathJax.OutputJax.CommonHTML,
       SPLIT = MathJax.Hub.SplitList;
   
@@ -179,7 +179,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //  Add styles to cells to handle borders, spacing, alignment, etc.
     //
     CHTMLadjustCells: function(values,state) {
-      var ROWS = state.rows, H = state.H, D = state.D,
+      var ROWS = state.rows,
           CSPACE = state.CSPACE, CLINES = state.CLINES,
           RSPACE = state.RSPACE, RLINES = state.RLINES,
           CALIGN = state.CALIGN, RALIGN = state.RALIGN,
@@ -187,14 +187,14 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       CSPACE[state.J] *= 2; RSPACE[ROWS.length-1] *= 2; // since halved below
       var LH = CHTML.FONTDATA.lineH * values.useHeight,
           LD = CHTML.FONTDATA.lineD * values.useHeight;
-      var T = "0", B, R, L, border, HD, cbox, align;
+      var T = "0", B, R, L, border, cbox, align;
       if (values.fspace) T = CHTML.Em(state.FSPACE[1]);
       for (var i = 0, m = ROWS.length; i < m; i++) {
         var row = ROWS[i], rdata = this.data[i];
         //
         //  Space and borders between rows
         //
-        B = RSPACE[i]/2; border = F = null; L = "0";
+        B = RSPACE[i]/2; border = null; L = "0";
         if (RLINES[i] !== MML.LINES.NONE) {
           border = "1px "+RLINES[i];
           B -= 1/CHTML.em/2;

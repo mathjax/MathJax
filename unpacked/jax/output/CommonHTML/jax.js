@@ -190,7 +190,6 @@
   /************************************************************/
   
   var BIGDIMEN = 1000000;
-  var V = "V", H = "H";
   var LINEBREAKS = {}, CONFIG = MathJax.Hub.config;
 
   CHTML.Augment({
@@ -726,7 +725,7 @@
     //  require looking through the data again.
     //
     getCharList: function (variant,n) {
-      var id, M, list = [], cache = variant.cache, N = n;
+      var id, M, list = [], cache = variant.cache, nn = n;
       if (cache[n]) return cache[n];
       var RANGES = this.FONTDATA.RANGES, VARIANT = this.FONTDATA.VARIANT;
       if (n >= RANGES[0].low && n <= RANGES[RANGES.length-1].high) {
@@ -764,7 +763,7 @@
         if (variant.cache[n]) {list = variant.cache[n]}
           else {variant.cache[n] = list = [this.lookupChar(variant,n)]}
       }
-      cache[N] = list;
+      cache[nn] = list;
       return list;
     },
     //
@@ -895,7 +894,7 @@
       //
       //  Character from the known fonts
       //
-      char: function (item,node,bbox,state,m) {
+      "char": function (item,node,bbox,state,m) {
         var font = item.font;
         if (state.className && font.className !== state.className) this.flushText(node,state);
         if (!state.a) state.a = font.centerline/1000;
@@ -924,7 +923,7 @@
       //  An unknown character (one not in the font data)
       //
       unknown: function (item,node,bbox,state) {
-        this.char(item,node,bbox,state,0);
+        (this["char"])(item,node,bbox,state,0);
         var C = item.font[item.n];
         if (C[5].a) {
           state.a = C[5].a;
@@ -1494,7 +1493,7 @@
 
       CHTMLhandleStyle: function (node) {
         if (!this.style) return;
-        var BBOX = this.CHTML, style = node.style;
+        var style = node.style;
         style.cssText = this.style; this.removedStyles = {};
         for (var i = 0, m = CHTML.removeStyles.length; i < m; i++) {
           var id = CHTML.removeStyles[i];
@@ -1832,7 +1831,6 @@
         //  something, so put them over a space and remove the space's width
         //
         node = node.firstChild;
-        var char = node.textContent;
         var space = CHTML.Element("mjx-span",{style:{width:".25em","margin-left":"-.25em"}});
         node.insertBefore(space,node.firstChild);
       },
@@ -1996,7 +1994,7 @@
         }
         var cbox = this.CHTMLbboxFor(0);
         var values = this.getValues("width","height","depth","lspace","voffset");
-        var dimen, x = 0, y = 0, w = cbox.w, h = cbox.h, d = cbox.d;
+        var x = 0, y = 0, w = cbox.w, h = cbox.h, d = cbox.d;
         child.style.width = 0; child.style.margin = CHTML.Em(-h)+" 0 "+CHTML.Em(-d);
         if (values.width !== "")  w = this.CHTMLdimen(values.width,"w",w,0);
         if (values.height !== "") h = this.CHTMLdimen(values.height,"h",h,0);
@@ -2124,7 +2122,7 @@
       //
       CHTMLaddOverscript: function (over,boxes,values,delta,base,stretch) {
         var BBOX = this.CHTML;
-        var w, z1, z2, z3 = CHTML.TEX.big_op_spacing5, k;
+        var z1, z2, z3 = CHTML.TEX.big_op_spacing5, k;
         var obox = boxes[this.over], bbox = boxes[this.base], scale = obox.rscale;
         //
         //  Put the base and script into a stack
@@ -2171,8 +2169,8 @@
       //
       CHTMLaddUnderscript: function (under,boxes,values,delta,node,stack,stretch) {
         var BBOX = this.CHTML;
-        var w, x = 0, z1, z2, z3 = CHTML.TEX.big_op_spacing5, k;
-        var ubox = boxes[this.under], bbox = boxes[this.base], scale = ubox.rscale;
+        var z1, z2, z3 = CHTML.TEX.big_op_spacing5, k;
+        var ubox = boxes[this.under], scale = ubox.rscale;
         //
         //  Create a table for the underscript
         //

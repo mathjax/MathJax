@@ -27,7 +27,7 @@
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
   var VERSION = "2.6.0-beta";
   var MML = MathJax.ElementJax.mml,
-      HTML = MathJax.HTML, CONFIG = MathJax.Hub.config,
+      CONFIG = MathJax.Hub.config,
       CHTML = MathJax.OutputJax.CommonHTML;
       
   //
@@ -170,7 +170,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     },
     CHTMLaddWidth: function (i,info,scanW) {
       if (this.data[i]) {
-        var node = this.data[i].CHTMLnodeElement(), bbox = this.data[i].CHTML;
+        var bbox = this.data[i].CHTML;
         scanW += bbox.w + (bbox.L||0) + (bbox.R||0);
         info.W = info.scanW = scanW; info.w = 0;
       }
@@ -563,7 +563,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     },
     
     CHTMLmoveLine: function (start,end,node,state,values) {
-      var NODE = this.CHTMLnodeElement(), data = this.CHTML, BOX = this.CHTMLbbox, NODE;
+      var NODE = this.CHTMLnodeElement(), BOX = this.CHTMLbbox, w;
       //
       //  If this is the start, move the prescripts, if any.
       //
@@ -575,7 +575,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         if (prestack)      node.appendChild(prestack);
           else if (presup) node.appendChild(presup);
           else if (presub) node.appendChild(presub);
-        var w = state.bbox.w, bbox;
+        w = state.bbox.w;
         if (presup) state.bbox.combine(BOX.presup,w+BOX.presup.X,BOX.presup.Y);
         if (presub) state.bbox.combine(BOX.presub,w+BOX.presub.X,BOX.presub.Y);
       }
@@ -604,7 +604,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         if (stack)      node.appendChild(stack);
           else if (sup) node.appendChild(sup);
           else if (sub) node.appendChild(sub);
-        var w = state.bbox.w, bbox;
+        w = state.bbox.w;
         if (sup) state.bbox.combine(BOX.sup,w,BOX.sup.Y);
         if (sub) state.bbox.combine(BOX.sub,w,BOX.sub.Y);
       }
@@ -638,7 +638,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       //  Get the default penalty for this location
       //
-      var W = info.scanW, mo = (info.embellished||this); delete info.embellished;
+      var W = info.scanW; delete info.embellished;
       var w = this.CHTML.w + (this.CHTML.L||0) + (this.CHTML.R||0);
       if (values.linebreakstyle === MML.LINEBREAKSTYLE.AFTER) {W += w; w = 0}
       if (W - info.shift === 0 && values.linebreak !== MML.LINEBREAK.NEWLINE)
