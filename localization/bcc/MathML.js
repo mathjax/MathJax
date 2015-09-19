@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("bcc","MathML",{version:"2.5.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/bcc/MathML.js");
+MathJax.Localization.addTranslation("bcc","MathML",{version:"2.6.0-beta",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/bcc/MathML.js");
