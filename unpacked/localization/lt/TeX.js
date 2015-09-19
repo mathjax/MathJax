@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("lt","TeX",{
-        version: "2.5.0",
+        version: "2.6.0-beta",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Per daug atidarom\u0173j\u0173 arba per ma\u017Eai u\u017Edarom\u0173j\u0173 riestini\u0173 skliausteli\u0173",

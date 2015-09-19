@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("lt","HTML-CSS",{
-        version: "2.5.0",
+        version: "2.6.0-beta",
         isLoaded: true,
         strings: {
           LoadWebFont: "\u012Ekeliamas tinklo \u0161riftas %1",

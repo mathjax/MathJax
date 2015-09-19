@@ -32,7 +32,7 @@
   var msieColorBug = BROWSER.isMSIE && (document.documentMode||0) < 8;
 
   var FastPreview = MathJax.Extension["fast-preview"] = {
-    version: "2.5.3",
+    version: "2.6.0-beta",
 
     //
     //  Configuration for the chunking of the main output

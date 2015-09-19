@@ -45,9 +45,9 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
-MathJax.version = "2.5";
-MathJax.fileversion = "2.5.3";
-MathJax.cdnVersion = "2.5.3";  // specifies a revision to break caching
+MathJax.version = "2.6.0-beta";
+MathJax.fileversion = "2.6.0-beta";
+MathJax.cdnVersion = "2.6.0-beta";  // specifies a revision to break caching
 MathJax.cdnFileVersions = {};  // can be used to specify revisions for individual files
 
 /**********************************************************/
@@ -2857,7 +2857,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "Jax",
-    version: "2.5.0",
+    version: "2.6.0-beta",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -2903,7 +2903,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "InputJax",
-    version: "2.5.0",
+    version: "2.6.0-beta",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -2936,7 +2936,7 @@ MathJax.Hub.Startup = {
     Remove: function (jax) {}
   },{
     id: "OutputJax",
-    version: "2.5.0",
+    version: "2.6.0-beta",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
@@ -3020,7 +3020,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "2.5.0",
+    version: "2.6.0-beta",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -3044,7 +3044,7 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.5.0", config: {}, errors: 0,
+    id: "Error", version: "2.6.0-beta", config: {}, errors: 0,
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
@@ -3063,7 +3063,7 @@ MathJax.Hub.Startup = {
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.5.0", config: {},
+    id: "Error", version: "2.6.0-beta", config: {},
     sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"]
   };
   

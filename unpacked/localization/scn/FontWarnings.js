@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("scn","FontWarnings",{
-        version: "2.5.0",
+        version: "2.6.0-beta",
         isLoaded: true,
         strings: {
           webFont: "MathJax sta\u2019 adupirannu tipi di car\u00E0ttiri scarricati di Internet pi\u2019 mmustrari a matim\u00E0tica nta sta p\u00E0ggina. Scarricari sti tipi si pigghia tempu, dunca sta p\u00E0ggina si purr\u00ECa mpagginari cchiu\u2019 viatu si\u2019 i tipi di car\u00E0ttiri p\u00E2 matim\u00E0tica f\u00F9ssiru istallati dirittamenti nt\u00E2 cartella d\u00EE car\u00E0ttiri d\u00FB to sistema.",

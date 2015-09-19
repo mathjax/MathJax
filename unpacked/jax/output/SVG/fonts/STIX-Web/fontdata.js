@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-    var VERSION = "2.5.0";
+    var VERSION = "2.6.0-beta";
 
   var ALPHABETSBOLDITALIC = "STIXMathJax_Alphabets-bold-italic",
       ALPHABETSBOLD = "STIXMathJax_Alphabets-bold",
