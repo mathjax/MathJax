@@ -1,6 +1,9 @@
 <table border="1" cellpadding="8">
     <tr>
         <th>
+            #ID Name
+        </th>
+        <th>
             Equation
         </th>
         <th>
@@ -11,6 +14,9 @@
         </th>
     </tr>
     <tr>
+        <td>
+            <strong>#Test Equation</strong>
+        </td>
         <td>
             Enter your equation here:
             <input id="dynamic-equation"
@@ -24,17 +30,21 @@
     {{#equations}}
     <tr>
         <td>
-            <code>{{.}}</code>
+            <strong>{{id}}</strong>
+        </td>
+        <td>
+            <code>{{equation}}</code>
         </td>
         <td>
             <script type="math/tex; mode=display">
-                {{.}}
+                {{equation}}
             </script>
         </td>
         <td>
             <script type="math/tex; mode=display">
-                \ar
-                {{.}}
+                \ar{
+                    {{equation}}
+                }
             </script>
         </td>
     </tr>

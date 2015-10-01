@@ -16,7 +16,7 @@
     <script type="text/javascript">
         MathJax.Hub.Config({
             'HTML-CSS': {
-                scale: 200
+                scale: 125
             }
         });
 
@@ -26,16 +26,41 @@
 
     <script type="text/javascript">
         jQuery(function ($) {
-            var equations = [
-                'x=\\frac{11+y}{1+2z^2}',
-                'x=\\frac{1+y}{1+2z^2}',
-                'x=\\frac{1+y}{1+2x^2}',
-                '2 = \\left( \\frac{\\left(3-x\\right) \\times 2}{3-x} \\right)',
-                'x={-b\\pm\\sqrt{b^2-4ac} \\over 2a}',
-                '\\int_0^\\infty e^{-x^2} dx=\\frac{\\sqrt{\\pi}}{2}',
-                'x = 10^{20}_5',
-                '\\sum_{n=1}^\\infty {1\\over n^2} = {\\pi^2\\over 6}',
-            ];
+            var toObjectList = function (obj, idName, valueName) {
+                idName = idName || 'id';
+                valueName = valueName || 'value';
+
+                var objectList = [];
+                for (var id in obj) {
+                    if (obj.hasOwnProperty(id)) {
+                        var entry = {};
+                        entry[idName] = id;
+                        entry[valueName] = obj[id];
+                        objectList.push(entry);
+                    }
+                }
+
+                return objectList;
+            };
+
+
+            var equations = toObjectList({
+                '#1 Fraction 1': 'x=\\frac{11+y}{1+2z^2}',
+                '#2 Fraction 2': 'x=\\frac{1+y}{1+2z^2}',
+                '#3 Fraction 3': 'x=\\frac{1+y}{1+2x^2}',
+                '#4 Big fraction': '2 = \\left( \\frac{\\left(3-x\\right) \\times 2}{3-x} \\right)',
+                '#5 Square': 'x={-b\\pm\\sqrt{b^2-4ac} \\over 2a}',
+                '#6 Integration': '\\int_0^\\infty e^{-x^2} dx=\\frac{\\sqrt{\\pi}}{2}',
+                '#7 Superscript and subscript': 'x = 10^{20}_5',
+                '#8 Sum': '\\sum_{n=1}^\\infty {1\\over n^2} = {\\pi^2\\over 6}',
+                '#9 Lightspeed': '\\lspeed = 299792458{m \\over \\scnd}',
+                '#10 Initial charge': 'q = 10',
+                '#11 Energy': 'E = x',
+                '#12 Meter': 'x = 10m',
+                '#13 Misc symbols A': 'a = \\varepsilon_\\zero + \\varepsilon',
+                '#14 Misc symbols B': 'b = \\phi + \\lambda + \\theta + \\Phi',
+                '#15 Misc symbols C': 'c = \\eta + €',
+            }, 'id', 'equation');
 
             $.get('equations.html', function (template) {
                 var rendered = Mustache.render(template, {
@@ -51,7 +76,7 @@
 
                     $('#dynamic-ar').html(
                             $scriptTemplate.clone().html(
-                                            '\\ar ' + equation + ''
+                                    '\\ar{' + equation + '}'
                             )
                     );
 
@@ -76,7 +101,6 @@
 
     <style>
         #wrapper {
-            width: 80%;
             margin: 0 auto;
             padding-top: 40px;
         }
