@@ -36,6 +36,9 @@
                         var entry = {};
                         entry[idName] = id;
                         entry[valueName] = obj[id];
+
+                        entry._index = objectList.length;
+
                         objectList.push(entry);
                     }
                 }

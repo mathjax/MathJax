@@ -15,7 +15,7 @@
     </tr>
     <tr>
         <td>
-            <strong>#Test Equation</strong>
+            <strong>#0 Test Equation</strong>
         </td>
         <td>
             Enter your equation here:
@@ -28,9 +28,11 @@
         <td id="dynamic-ar"></td>
     </tr>
     {{#equations}}
-    <tr>
+    <tr id="eq_{{_index}}">
         <td>
-            <strong>{{id}}</strong>
+            <a href="#eq_{{_index}}">
+                <strong>{{id}}</strong>
+            </a>
         </td>
         <td>
             <code>{{equation}}</code>
