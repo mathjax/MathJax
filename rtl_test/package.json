@@ -1,0 +1,22 @@
+{
+  "name": "mathjax-rtl",
+  "version": "1.0.0",
+  "description": "mathjax-rtl",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Edraak/MathJax.git"
+  },
+  "keywords": [],
+  "author": "Omar Al-Ithawi <i@omardo.com>",
+  "license": "MIT",
+  "bugs": {
+    "email": "Omar Al-Ithawi <i@omardo.com>"
+  },
+  "homepage": "https://github.com/Edraak/MathJax",
+  "devDependencies": {
+    "browser-sync": "^2.8.2"
+  }
+}

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ar">
+<head>
+    <title>MathJax Dynamic Math Test Page</title>
+
+    <link href='//fonts.googleapis.com/css?family=Amiri&amp;subset=arabic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/earlyaccess/droidarabicnaskh.css' rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript" src="//media.readthedocs.org/javascript/jquery/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/2.1.3/mustache.js"></script>
+
+    <script type="text/javascript"
+            src="../unpacked/MathJax.js?config=TeX-MML-AM_HTMLorMML-full&amp;delayStartupUntil=configured">
+    </script>
+
+    <script type="text/javascript">
+        MathJax.Hub.Config({
+            'HTML-CSS': {
+                scale: 125
+            }
+        });
+
+    </script>
+
+    <script type="text/javascript" src="rtl_config.js"></script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            var toObjectList = function (obj, idName, valueName) {
+                idName = idName || 'id';
+                valueName = valueName || 'value';
+
+                var objectList = [];
+                for (var id in obj) {
+                    if (obj.hasOwnProperty(id)) {
+                        var entry = {};
+                        entry[idName] = id;
+                        entry[valueName] = obj[id];
+
+                        entry._index = objectList.length;
+
+                        objectList.push(entry);
+                    }
+                }
+
+                return objectList;
+            };
+
+
+            var equations = toObjectList({
+                '#0 Fraction 1': 'x=\\frac{11+y}{1+2z^2}',
+                '#1 Fraction 2': 'x=\\frac{1+y}{1+2z^2}',
+                '#2 Fraction 3': 'x=\\frac{1+y}{1+2x^2}',
+                '#3 Big fraction': '2 = \\left( \\frac{\\left(3-x\\right) \\times 2}{3-x} \\right)',
+                '#4 Square': 'x={-b\\pm\\sqrt{b^2-4ac} \\over 2a}',
+                '#5 Integration': '\\int_0^\\infty e^{-x^2} dx=\\frac{\\sqrt{\\pi}}{2}',
+                '#6 Superscript and subscript': 'x = 10^{20}_5',
+                '#7 Sum': '\\sum_{n=1}^\\infty {1\\over n^2} = {\\pi^2\\over 6}',
+                '#8 Lightspeed': '\\lspeed = 299792458{m \\over \\scnd}',
+                '#9 Initial charge': 'q = 10',
+                '#10 Energy': 'E = x',
+                '#11 Meter': 'x = 10m',
+                '#12 Misc symbols A': 'a = \\varepszero + \\varepsilon',
+                '#13 Misc symbols B': 'b = \\phi + \\lambda + \\theta + \\Phi',
+                '#14 Misc symbols C': 'c = \\eta + €',
+            }, 'id', 'equation');
+
+            $.get('equations.html', function (template) {
+                var rendered = Mustache.render(template, {
+                    equations: equations
+                });
+
+                $('#equations').html(rendered);
+
+
+                var render = function () {
+                    var $scriptTemplate = $('<script type="math/tex; mode=display"><\/script>');
+                    var equation = $('#dynamic-equation').val();
+
+                    $('#dynamic-ar').html(
+                            $scriptTemplate.clone().html(
+                                    '\\ar{' + equation + '}'
+                            )
+                    );
+
+                    $('#dynamic-en').html(
+                            $scriptTemplate.clone().html(
+                                    equation
+                            )
+                    );
+
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                };
+
+                $('#dynamic-equation').change(render);
+                $('#show-dynamic-equation').click(render);
+
+                MathJax.Hub.Configured();
+
+                render();
+            });
+        });
+    </script>
+
+    <style>
+        #wrapper {
+            margin: 0 auto;
+            padding-top: 40px;
+        }
+
+        table {
+            margin: 0 auto;
+        }
+
+        hr {
+            margin-top: 30px;
+            margin-bottom: 30px;;
+        }
+
+        .MathJax_Display {
+            margin: 20px auto;
+        }
+
+        .blue {
+            color: blue !important;
+        }
+
+        .shadow {
+            text-shadow: 0 0 3px black;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrapper">
+    <div id="equations">
+
+    </div>
+</div>
+</body>
+</html>

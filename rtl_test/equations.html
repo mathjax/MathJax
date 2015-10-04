@@ -1,0 +1,56 @@
+<table border="1" cellpadding="8">
+    <tr>
+        <th>
+            #ID Name
+        </th>
+        <th>
+            Equation
+        </th>
+        <th>
+            English
+        </th>
+        <th>
+            Arabic
+        </th>
+    </tr>
+    <tr>
+        <td>
+            <strong>Test Equation</strong>
+        </td>
+        <td>
+            Enter your equation here:
+            <input id="dynamic-equation"
+                   value="x = 10" type="text" />
+            <br />
+            <button id="show-dynamic-equation">Show</button>
+        </td>
+        <td id="dynamic-en"></td>
+        <td id="dynamic-ar"></td>
+    </tr>
+    {{#equations}}
+    <tr id="eq_{{_index}}">
+        <td>
+            <a href="#eq_{{_index}}">
+                <strong>{{id}}</strong>
+            </a>
+        </td>
+        <td>
+            <code>{{equation}}</code>
+        </td>
+        <td>
+            <script type="math/tex; mode=display">
+                {{equation}}
+            </script>
+        </td>
+        <td>
+            <script type="math/tex; mode=display">
+                \ar{
+                    {{equation}}
+                }
+            </script>
+        </td>
+    </tr>
+    {{/equations}}
+</table>
+<br />
+<br />
