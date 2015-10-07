@@ -67,6 +67,9 @@
       "margin":     "1em 0",
       padding:      0
     },
+    ".mjx-chtml[tabindex], *:focus .mjx-chtml[tabindex]": {
+      display: "inline-table"  // see issue #1282
+    },
 
     ".mjx-math":   {
       "display":         "inline-block",
