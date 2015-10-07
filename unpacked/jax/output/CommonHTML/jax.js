@@ -1099,13 +1099,12 @@
         }
       }
       node.appendChild(right);
-      this.adjustHeights([left,ext,mid,ext2,right],hbox);
       if (ebox.D) ebox.d = ebox.D;
-      hbox.t = hbox.h; hbox.b = hbox.d;
-      var mt = ebox.h - hbox.h - ebox.a, mb = ebox.d - hbox.d + ebox.a;
+      hbox.t = hbox.h; hbox.b = hbox.d; hbox.h = ebox.h; hbox.d = ebox.d;
+      this.adjustHeights([left,ext,mid,ext2,right],hbox);
+      var mt = ebox.h - hbox.t - ebox.a, mb = ebox.d - hbox.b + ebox.a;
       if (mt) node.style.marginTop = CHTML.Em(mt);
       if (mb) node.style.marginBottom = CHTML.Em(mb);
-      hbox.h = ebox.h; hbox.d = ebox.d;
       if (BBOX) {hbox.scale = BBOX.scale; hbox.rscale = BBOX.rscale}
       return hbox;
     },
@@ -1114,10 +1113,12 @@
       //  To get alignment right in horizontal delimiters, we force all
       //  the elements to the same height and depth
       //
-      var T = CHTML.Em(bbox.h), D = CHTML.Em(bbox.d);
+      var T = CHTML.Em(bbox.t), D = CHTML.Em(bbox.b);
+      if (bbox.d < 0) {bbox.D = bbox.d; bbox.d = 0; D = CHTML.Em(-bbox.D+bbox.b)}
       for (var i = 0, m = nodes.length; i < m; i++) if (nodes[i]) {
         nodes[i].style.paddingTop = T;
         nodes[i].style.paddingBottom = D;
+        nodes[i].style.marginTop = nodes[i].style.marginBottom = 0;
       }
     },
     createChar: function (node,data,scale,font) {
