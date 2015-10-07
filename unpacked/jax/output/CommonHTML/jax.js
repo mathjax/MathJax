@@ -2527,9 +2527,17 @@
     MML.mrow.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
-        var bbox = this.CHTML, H = bbox.h, D = bbox.d;
-        for (var i = 0, m = this.data.length; i < m; i++) this.CHTMLstretchChildV(i,H,D);
-        if (this.CHTMLlineBreaks()) this.CHTMLmultiline(node);
+        var bbox = this.CHTML, H = bbox.h, D = bbox.d, hasNegative;
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          this.CHTMLstretchChildV(i,H,D);
+          if (this.data[i] && this.data[i].CHTML && this.data[i].CHTML.w < 0) hasNegative = true;
+        }
+        if (this.CHTMLlineBreaks()) {
+          this.CHTMLmultiline(node);
+        } else {
+          if (hasNegative && bbox.w) node.style.width = CHTML.Em(Math.max(0,bbox.w));
+          if (bbox.w < 0) node.style.marginRight = CHTML.Em(bbox.w);
+        }
         return node;
       },
       CHTMLlineBreaks: function () {
