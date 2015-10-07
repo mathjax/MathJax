@@ -266,20 +266,9 @@
         },
 
         // Focus elements for keyboard tabbing.
-        ".MathJax:focus": (
-          (MathJax.Hub.Browser.isSafari || MathJax.Hub.Browser.isChrome) ? {
-            display:"inline-block",
-            outline:"none",
-            margin:"-3px",
-            padding:"3px",
-            "-webkit-box-shadow": "0px 0px 5px #345, inset 0px 0px 5px #345",
-            "box-shadow": "0px 0px 5px #345, inset 0px 0px 5px #345"
-          } : {
-            display:"inline-block",
-            outline:"none",
-            border:"1px dotted",
-            margin:"-1px"
-          }),
+        ".MathJax:focus, *:focus .MathJax": {
+            display:"inline-table" // see issue #1282
+        },
 
         ".MathJax_Display": {
           position: "relative",
