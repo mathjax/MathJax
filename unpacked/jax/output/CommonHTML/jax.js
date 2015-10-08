@@ -1477,8 +1477,8 @@
 
       CHTMLhandleScale: function (node) {
         var scale = 1, parent = this.parent, pscale = (parent ? parent.CHTML.scale : 1);
-        var values = this.getValues("scriptlevel","fontsize","mathsize");
-        if (!this.isToken) values.mathsize = 1;
+        var values = this.getValues("scriptlevel","fontsize");
+        values.mathsize = this.Get("mathsize",null,!this.isToken);
         if (values.scriptlevel !== 0) {
           if (values.scriptlevel > 2) values.scriptlevel = 2;
           scale = Math.pow(this.Get("scriptsizemultiplier"),values.scriptlevel);
@@ -2373,7 +2373,7 @@
         var nbox = this.CHTMLbboxFor(0), dbox = this.CHTMLbboxFor(1),
             BBOX = CHTML.BBOX.empty(this.CHTML), nscale = nbox.rscale, dscale = dbox.rscale;
         values.linethickness = Math.max(0,CHTML.thickness2em(values.linethickness||"0",BBOX.scale));
-        var mt = CHTML.TEX.min_rule_thickness/CHTML.em/BBOX.scale, a = CHTML.TEX.axis_height;
+        var mt = CHTML.TEX.min_rule_thickness/CHTML.em, a = CHTML.TEX.axis_height;
         var t = values.linethickness, p,q, u,v;
         if (values.bevelled) {
           frac.className += " MJXc-bevelled";
