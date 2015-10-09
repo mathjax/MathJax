@@ -2404,7 +2404,7 @@
             q = (u - nbox.d*nscale) - (a + t/2); if (q < p) u += (p - q);
             q = (a - t/2) - (dbox.h*dscale - v); if (q < p) v += (p - q);
             frac.style.verticalAlign = CHTML.Em(t/2-v);
-            num.style.borderBottom = CHTML.Em(t/nscale)+" solid";
+            num.style.borderBottom = CHTML.Px(t/nscale*nbox.scale)+" solid";
             num.className += " MJXc-fpad";   nbox.L = nbox.R = .1;
             denom.className += " MJXc-fpad"; dbox.L = dbox.R = .1;
           }
@@ -2455,7 +2455,7 @@
         H = bbox.h + q + t;
         var x = this.CHTMLaddRoot(node,sbox,sbox.h+sbox.d-H);
         base.style.paddingTop = CHTML.Em(q); 
-        base.style.borderTop = CHTML.Em(T)+" solid";
+        base.style.borderTop = CHTML.Px(T*bbox.scale)+" solid";
         sqrt.style.paddingTop = CHTML.Em(2*t-T);  // use wider line, but don't affect height
         bbox.h += q + 2*t;
         BBOX.combine(sbox,x,H-sbox.h);
