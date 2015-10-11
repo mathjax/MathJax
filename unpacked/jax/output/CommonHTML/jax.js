@@ -972,8 +972,8 @@
       if (list.length) this.addCharList(node.firstChild,list,bbox);
       bbox.clean();
       if (bbox.d < 0) {bbox.D = bbox.d; bbox.d = 0}
-      if (bbox.h - bbox.a) node.firstChild.style[bbox.h - bbox.a < 0 ? "marginTop" : "paddingTop"] = this.Em(bbox.h-bbox.a);
-      if (bbox.d > -bbox.b) node.firstChild.style.paddingBottom = this.Em(bbox.d+bbox.b);
+      if (bbox.h - bbox.a) node.firstChild.style[bbox.h - bbox.a < 0 ? "marginTop" : "paddingTop"] = this.EmRounded(bbox.h-bbox.a);
+      if (bbox.d > -bbox.b) node.firstChild.style.paddingBottom = this.EmRounded(bbox.d+bbox.b);
       return bbox;
     },
 
@@ -1195,6 +1195,11 @@
     Em: function (m) {
       if (Math.abs(m) < .001) return "0";
       return (m.toFixed(3).replace(/\.?0+$/,""))+"em";
+    },
+    EmRounded: function (m) {
+      m = (Math.round(m*CHTML.em)+.05)/CHTML.em;
+      if (Math.abs(m) < .0006) {return "0em"}
+      return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
     unEm: function (m) {
       return parseFloat(m);
