@@ -388,7 +388,7 @@
         jax = script.MathJax.elementJax; if (!jax) continue;
         jax.CHTML = {display: (jax.root.Get("display") === "block")}
         node = CHTML.Element("mjx-chtml",{
-          id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
+          id:jax.inputID+"-Frame", className:"MathJax_CHTML", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
 	  onclick:EVENT.Click, ondblclick:EVENT.DblClick,
