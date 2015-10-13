@@ -52,6 +52,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
                                   "columnwidth","equalcolumns","equalrows",
                                   "columnlines","rowlines","frame","framespacing",
                                   "align","width","side","minlabelspacing","useHeight");
+      var t = CHTML.TEX.min_rule_thickness/CHTML.em;
+      state.t = CHTML.Px(t*this.CHTML.scale,1);
       //
       //  Create the table
       //
@@ -63,7 +65,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         state.DD = Math.max.apply(Math,state.D);
       }
       this.CHTMLadjustCells(values,state);
-      if (values.frame) table.style.border = "1px "+values.frame;
+      if (values.frame) table.style.border = state.t+" "+values.frame;
       this.CHTMLalignV(values,state,node);
       this.CHTMLcolumnWidths(values,state,node);
       this.CHTMLstretchCells(values,state);
@@ -196,7 +198,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //
         B = RSPACE[i]/2; border = null; L = "0";
         if (RLINES[i] !== MML.LINES.NONE) {
-          border = "1px "+RLINES[i];
+          border = state.t+" "+RLINES[i];
           B -= 1/CHTML.em/2;
         }
         B = CHTML.Em(Math.max(0,B));
@@ -215,7 +217,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           //
           R = CSPACE[j]/2;
           if (CLINES[j] !== MML.LINES.NONE) {
-            cell.borderRight = "1px "+CLINES[j];
+            cell.borderRight = state.t+" "+CLINES[j];
             R -= 1/CHTML.em/2;
           }
           R = CHTML.Em(Math.max(0,R));
