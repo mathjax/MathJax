@@ -600,6 +600,7 @@
       //
       this.getMetrics(jax);
       var node = CHTML.addElement(span,"mjx-chtml",{style:{"font-size":Math.floor(CHTML.scale*100)+"%"},isMathJax:false});
+      CHTML.CHTMLnode = node;
       this.idPostfix = "-zoom"; jax.root.toCommonHTML(node); this.idPostfix = "";
       //
       //  Adjust margins to prevent overlaps at the edges
