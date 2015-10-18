@@ -2122,7 +2122,27 @@
           variant = "normal";
         }
         return HTMLCSS.FONTDATA.VARIANT[variant];
+      },
+      
+      HTMLdrawBBox: function (span) {
+        var bbox = span.bbox;
+        var box = HTMLCSS.Element("span",
+          {style:{"font-size":span.style.fontSize, display:"inline-block",
+                  opacity:.25,"margin-left":HTMLCSS.Em(-bbox.w)}},[
+          ["span",{style:{
+            height:HTMLCSS.Em(bbox.h),width:HTMLCSS.Em(bbox.w),
+            "background-color":"red", display:"inline-block"
+          }}],
+          ["span",{style:{
+            height:HTMLCSS.Em(bbox.d),width:HTMLCSS.Em(bbox.w),
+            "margin-left":HTMLCSS.Em(-bbox.w),"vertical-align":HTMLCSS.Em(-bbox.d),
+            "background-color":"green", display:"inline-block"
+          }}]
+        ]);
+        if (span.nextSibling) {span.parentNode.insertBefore(box,span.nextSibling)}
+          else {span.parentNode.appendChild(box)}
       }
+
     },{
       HTMLautoload: function () {
 	var file = HTMLCSS.autoloadDir+"/"+this.type+".js";
@@ -2560,7 +2580,7 @@
           var space = HTMLCSS.TeX.nulldelimiterspace * this.mscale;
           var style = span.childNodes[HTMLCSS.msiePaddingWidthBug ? 1 : 0].style;
           style.marginLeft = style.marginRight = HTMLCSS.Em(space);
-          span.bbox.w += 2*space; span.bbox.r += 2*space;
+          span.bbox.w += 2*space; span.bbox.rw += 2*space;
 	}
         this.SUPER(arguments).HTMLhandleSpace.call(this,span);
       }
