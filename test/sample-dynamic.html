@@ -54,6 +54,7 @@ input {margin-top: .7em}
     //
     window.UpdateMath = function (TeX) {
       QUEUE.Push(HIDEBOX,["Text",math,"\\displaystyle{"+TeX+"}"],SHOWBOX);
+      MathJax.Hub.Queue(["resetEquationNumbers",MathJax.InputJax.TeX]);
     }
   })();
 </script>
