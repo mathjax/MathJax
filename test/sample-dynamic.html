@@ -53,8 +53,12 @@ input {margin-top: .7em}
     //  so we don't see a flash as the math is cleared and replaced.
     //
     window.UpdateMath = function (TeX) {
-      QUEUE.Push(HIDEBOX,["Text",math,"\\displaystyle{"+TeX+"}"],SHOWBOX);
-      MathJax.Hub.Queue(["resetEquationNumbers",MathJax.InputJax.TeX]);
+      QUEUE.Push(
+          HIDEBOX,
+          ["resetEquationNumbers",MathJax.InputJax.TeX],
+          ["Text",math,"\\displaystyle{"+TeX+"}"],
+          SHOWBOX
+      );
     }
   })();
 </script>
