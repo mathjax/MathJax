@@ -1433,9 +1433,9 @@
       this.placeBox(right,x,0,true);
       span.bbox = {
         w: x+right.bbox.rw, lw: 0, rw: x+right.bbox.rw,
-        H: Math.max(left.bbox.h,rep.bbox.h,right.bbox.h,mid.bbox.h),
-        D: Math.max(left.bbox.d,rep.bbox.d,right.bbox.d,mid.bbox.d),
-        h: rep.bbox.h, d: rep.bbox.d, exactW: true
+        h: Math.max(left.bbox.h,rep.bbox.h,right.bbox.h,mid.bbox.h),
+        d: Math.max(left.bbox.d,rep.bbox.d,right.bbox.d,mid.bbox.d),
+        exactW: true
       }
       span.scale = scale;
       span.isMultiChar = true;
