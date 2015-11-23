@@ -136,30 +136,22 @@
       //  Typeset the math
       //
       this.initPlainSource(math, span);
-      //      math.setTeXclass();
-      // try {math.toPreviewHTML(span)} catch (err) {
-      //   if (err.restart) {while (span.firstChild) {span.removeChild(span.firstChild)}}
-      //   throw err;
-      // }
-
-      //NEWSTUFF
       if (jax.inputJax === "MathML") {
-        console.log("Yay! MathML!");
-        if (jax.root.data[0].data.length > 0) {
-          if (jax.root.data[0].data[0].type === "semantics") {
-              if (jax.root.data[0].data[0].data[1].attr.encoding === "application/x-tex"){
-                span.innerHTML = jax.root.data[0].data[0].data[1].data[0].data[0];
-                console.log("yay Annotation TeX");
-              }
+        if ((jax.root.data[0].data.length > 0) && (jax.root.data[0].data[0].type === "semantics")) {
+          var annotations = jax.root.data[0].data[0].data.map(function(node) {
+            return node.attr.encoding;
+          });
+          var texIndex = annotations.indexOf("application/x-tex");
+          var asciiIndex = annotations.indexOf("text/x-asciimath");
+          if (texIndex > -1) {
+            source = jax.root.data[0].data[0].data[texIndex].data[0].data[0];
+          } else if (asciiIndex > -1) {
+            source = jax.root.data[0].data[0].data[asciiIndex].data[0].data[0];
           }
-
-        } else {
-          span.innerHTML = jax.originalText;
         }
+      } else {
+        span.innerHTML = jax.originalText;
       }
-      // span.innerHTML = jax.originalText;
-
-
 
       //
       //  Put it in place, and remove the processing marker
