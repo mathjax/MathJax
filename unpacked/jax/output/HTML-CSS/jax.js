@@ -1249,8 +1249,8 @@
         if (!this.msieClipRectBug && !bbox.noclip && !noclip) {
           var dd = 3/this.em;
           var H = (bbox.H == null ? bbox.h : bbox.H), D = (bbox.D == null ? bbox.d : bbox.D);
-          var t = HH - H - dd, b = HH + D + dd, l = 'auto', r = 'auto';
-          span.style.clip = "rect("+l+" "+r+" "+this.Em(b)+" "+this.Em(l)+")";
+          var t = HH - H - dd, b = HH + D + dd, l = -1000, r = 1000;
+          span.style.clip = "rect("+this.Em(t)+" "+this.Em(r)+" "+this.Em(b)+" "+this.Em(l)+")";
         }
       }
       // Place the box
