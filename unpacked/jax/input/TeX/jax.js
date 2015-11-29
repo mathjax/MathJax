@@ -802,6 +802,8 @@
         underline:           ['UnderOver','005F'],
         overbrace:           ['UnderOver','23DE',1],
         underbrace:          ['UnderOver','23DF',1],
+        overparen:           ['UnderOver','23DC'],
+        underparen:          ['UnderOver','23DD'],
         overrightarrow:      ['UnderOver','2192'],
         underrightarrow:     ['UnderOver','2192'],
         overleftarrow:       ['UnderOver','2190'],
@@ -2018,31 +2020,38 @@
      */
     InternalMath: function (text,level) {
       var def = (this.stack.env.font ? {mathvariant: this.stack.env.font} : {});
-      var mml = [], i = 0, k = 0, c, match = '';
+      var mml = [], i = 0, k = 0, c, match = '', braces = 0;
       if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
         while (i < text.length) {
           c = text.charAt(i++);
           if (c === '$') {
-            if (match === '$') {
+            if (match === '$' && braces === 0) {
               mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1),{}).mml().With(def)));
               match = ''; k = i;
             } else if (match === '') {
               if (k < i-1) mml.push(this.InternalText(text.slice(k,i-1),def));
               match = '$'; k = i;
             }
-          } else if (c === '}' && match === '}') {
-            mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i),{}).mml().With(def)));
-            match = ''; k = i;
+          } else if (c === '{' && match !== '') {
+            braces++;
+          } else if (c === '}') {
+            if (match === '}' && braces === 0) {
+              mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i),{}).mml().With(def)));
+              match = ''; k = i;
+            } else if (match !== '') {
+              if (braces) braces--;
+            }
           } else if (c === '\\') {
             if (match === '' && text.substr(i).match(/^(eq)?ref\s*\{/)) {
+              var len = RegExp["$&"].length;
               if (k < i-1) mml.push(this.InternalText(text.slice(k,i-1),def));
-              match = '}'; k = i-1;
+              match = '}'; k = i-1; i += len;
             } else {
               c = text.charAt(i++);
               if (c === '(' && match === '') {
                 if (k < i-2) mml.push(this.InternalText(text.slice(k,i-2),def));
                 match = ')'; k = i;
-              } else if (c === ')' && match === ')') {
+              } else if (c === ')' && match === ')' && braces === 0) {
                 mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml().With(def)));
                 match = ''; k = i;
               } else if (c.match(/[${}\\]/) && match === '')  {
@@ -2210,7 +2219,7 @@
     mathPalette: function (fence,side) {
       if (fence === '{' || fence === '}') {fence = "\\"+fence}
       var D = '{\\bigg'+side+' '+fence+'}', T = '{\\big'+side+' '+fence+'}';
-      return TEX.Parse('\\mathchoice'+D+T+T+T).mml();
+      return TEX.Parse('\\mathchoice'+D+T+T+T,{}).mml();
     },
     
     //

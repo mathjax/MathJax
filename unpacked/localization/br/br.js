@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("br",null,{
   menuTitle: "brezhoneg",
-  version: "2.5.0",
+  version: "2.6.0-beta",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.5.0",
+        version: "2.6.0-beta",
         isLoaded: true,
         strings: {
           MathProcessingError: "Fazi o treta\u00F1 ar formulenn",

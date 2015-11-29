@@ -5,6 +5,7 @@
 <!-- Copyright (c) 2012-2015 The MathJax Consortium -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
@@ -12,7 +13,7 @@
     tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] }
   });
 </script>
-<script type="text/javascript" src="../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/javascript" src="../MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 
 <script>
 var Preview = {
@@ -23,6 +24,7 @@ var Preview = {
 
   timeout: null,     // store setTimout id
   mjRunning: false,  // true when MathJax is processing
+  mjPending: false,  // true when a typeset has been queued
   oldText: null,     // used to check if an update is needed
 
   //
@@ -67,15 +69,20 @@ var Preview = {
   //  
   CreatePreview: function () {
     Preview.timeout = null;
-    if (this.mjRunning) return;
+    if (this.mjPending) return;
     var text = document.getElementById("MathInput").value;
     if (text === this.oldtext) return;
-    this.buffer.innerHTML = this.oldtext = text;
-    this.mjRunning = true;
-    MathJax.Hub.Queue(
-      ["Typeset",MathJax.Hub,this.buffer],
-      ["PreviewDone",this]
-    );
+    if (this.mjRunning) {
+      this.mjPending = true;
+      MathJax.Hub.Queue(["CreatePreview",this]);
+    } else {
+      this.buffer.innerHTML = this.oldtext = text;
+      this.mjRunning = true;
+      MathJax.Hub.Queue(
+	["Typeset",MathJax.Hub,this.buffer],
+	["PreviewDone",this]
+      );
+    }
   },
 
   //
@@ -83,7 +90,7 @@ var Preview = {
   //  and swap the buffers to show the results.
   //
   PreviewDone: function () {
-    this.mjRunning = false;
+    this.mjRunning = this.mjPending = false;
     this.SwapBuffers();
   }
 
@@ -99,12 +106,19 @@ Preview.callback.autoReset = true;  // make sure it can run more than once
 </head>
 <body>
 
-Type text in the box below:<br/>
+<p> Type text (mixed with MathML, TeX or asciimath) in the box below for a live preview.</p>
 
 <textarea id="MathInput" cols="60" rows="10" onkeyup="Preview.Update()" style="margin-top:5px">
 </textarea>
-<br/><br/>
-Preview is shown here:
+<p>Configured delimiters: 
+<ul>
+<li>TeX, inline mode: <code>\(...\)</code> or <code>$...$</code></li>
+<li>TeX, display mode: <code>\[...\]</code> or <code> $$...$$</code></li>
+<li>Asciimath: <code>`...`</code>.</li>
+</ul>
+</p>
+
+<p>Preview is shown here:</p>
 <div id="MathPreview" style="border:1px solid; padding: 3px; width:50%; margin-top:5px"></div>
 <div id="MathBuffer" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; 
 visibility:hidden; position:absolute; top:0; left: 0"></div>
