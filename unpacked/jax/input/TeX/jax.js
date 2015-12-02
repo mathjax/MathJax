@@ -266,6 +266,7 @@
         if (item.isEntry) {this.EndEntry(); this.clearEnv(); return false}
         if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return false}
         this.EndTable(); this.clearEnv();
+        var scriptlevel = this.arraydef.scriptlevel; delete this.arraydef.scriptlevel;
         var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
         if (this.frame.length === 4) {
           mml.frame = (this.frame.dashed ? "dashed" : "solid");
@@ -276,6 +277,7 @@
           if ((this.arraydef.columnlines||"none") != "none" ||
               (this.arraydef.rowlines||"none") != "none") {mml.padding = 0} // HTML-CSS jax implements this
         }
+        if (scriptlevel) {mml = MML.mstyle(mml).With({scriptlevel: scriptlevel})}
         if (this.open || this.close) {mml = TEX.fenced(this.open,mml,this.close)}
         mml = STACKITEM.mml(mml);
         if (this.requireClose) {
