@@ -798,8 +798,8 @@
         limits:            ['Limits',1],
         nolimits:          ['Limits',0],
 
-        overline:            ['UnderOver','00AF'],
-        underline:           ['UnderOver','005F'],
+        overline:            ['UnderOver','00AF',null,1],
+        underline:           ['UnderOver','005F',null,1],
         overbrace:           ['UnderOver','23DE',1],
         underbrace:          ['UnderOver','23DF',1],
         overparen:           ['UnderOver','23DC'],
@@ -1428,7 +1428,7 @@
       this.Push(MML.TeXAtom(MML.munderover(c,null,mml).With({accent: true})));
     },
     
-    UnderOver: function (name,c,stack) {
+    UnderOver: function (name,c,stack,noaccent) {
       var pos = {o: "over", u: "under"}[name.charAt(1)];
       var base = this.ParseArg(name);
       if (base.Get("movablelimits")) {base.movablelimits = false}
@@ -1439,7 +1439,7 @@
       var mml = MML.munderover(base,null,null);
       mml.SetData(
         mml[pos], 
-        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:(pos==="under")}))
+        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:!noaccent}))
       );
       if (stack) {mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true})}
       this.Push(mml.With({subsupOK:true}));
