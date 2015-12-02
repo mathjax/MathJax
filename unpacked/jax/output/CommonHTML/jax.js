@@ -2264,6 +2264,7 @@
           base = CHTML.getNode(node,"mjx-base");
           sub = CHTML.getNode(node,"mjx-sub");
           sup = CHTML.getNode(node,"mjx-sup");
+          stack = CHTML.getNode(node,"mjx-stack");
         } else {
           var types = ["mjx-base","mjx-sub","mjx-sup"];
           if (this.sup === 1) types[1] = types[2];
