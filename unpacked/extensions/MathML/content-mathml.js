@@ -66,7 +66,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       /* mathvariant to use with corresponding <ci> type attribute */
       cistyles: {
         vector: 'bold-italic',
-      matrix: 'bold-upright'
+        matrix: 'bold-upright'
       },
 
       /* Symbol names to translate to characters
@@ -208,7 +208,12 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
         if (CToP.tokens[contentMMLNode.nodeName]) {
           CToP.tokens[contentMMLNode.nodeName](parentNode,contentMMLNode,precedence);
         } else if (contentMMLNode.childNodes.length === 0) {
-          CToP.appendToken(parentNode,'mi',contentMMLNode.nodeName);
+          var mml = CToP.MML[contentMMLNode.nodeName];
+          if (mml && mml.isa && mml.isa(CToP.mbase)) {
+            parentNode.appendChild(CToP.cloneNode(contentMMLNode));
+          } else {
+            CToP.appendToken(parentNode,'mi',contentMMLNode.nodeName);
+          }
         } else {
           var clonedChild = CToP.cloneNode(contentMMLNode);
           parentNode.appendChild(clonedChild);
@@ -1712,6 +1717,8 @@ MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {
   var MATHML = MathJax.InputJax.MathML;
 
   var CToP = MathJax.Extension["MathML/content-mathml"];
+  CToP.mbase = MathJax.ElementJax.mml.mbase;
+  CToP.MML = MathJax.ElementJax.mml;
 
   MATHML.DOMfilterHooks.Add(function (data) {
     data.math = CToP.transformElement(data.math);
