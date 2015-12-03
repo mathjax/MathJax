@@ -34,6 +34,7 @@
   var EVENT, TOUCH, HOVER; // filled in later
 
   var STRUTHEIGHT = 1,
+      EFUZZ = .1,                  // overlap needed for stretchy delimiters
       HFUZZ = .025, DFUZZ = .025;  // adjustments to bounding box of character boxes
 
   var STYLES = {
@@ -665,6 +666,9 @@
     pxPerInch: 96,
     em: 16,
     
+    maxStretchyParts: 1000,            // limit the number of parts allowed for
+                                       // stretchy operators. See issue 366.
+
     FONTDEF: {},
     TEXDEF: {
       x_height:         .442,
@@ -1009,11 +1013,11 @@
     },
     extendDelimiterV: function (node,H,delim,BBOX,font) {
       node = CHTML.addElement(node,"mjx-delim-v"); var tmp = CHTML.Element("span");
-      var top, bot, mid, ext, tbox, bbox, mbox, ebox, k = 1;
+      var top, bot, mid, ext, tbox, bbox, mbox, ebox, k = 1, c;
       tbox = this.createChar(tmp,(delim.top||delim.ext),1,font); top = tmp.removeChild(tmp.firstChild);
       bbox = this.createChar(tmp,(delim.bot||delim.ext),1,font); bot = tmp.removeChild(tmp.firstChild);
       mbox = ebox = CHTML.BBOX.zero();
-      var h = tbox.h + tbox.d + bbox.h + bbox.d;
+      var h = tbox.h + tbox.d + bbox.h + bbox.d - EFUZZ;
       node.appendChild(top);
       if (delim.mid) {
         mbox = this.createChar(tmp,delim.mid,1,font); mid = tmp.removeChild(tmp.firstChild);
@@ -1022,30 +1026,27 @@
       if (delim.min && H < h*delim.min) H = h*delim.min;
       if (H > h) {
         ebox = this.createChar(tmp,delim.ext,1,font); ext = tmp.removeChild(tmp.firstChild);
-        if (delim.fullExtenders) {
-          var n = Math.ceil((H-h)/(k*(ebox.h+ebox.d)*.9));
-          H = .9*n*k*(ebox.h+ebox.d) + h;
-        }
-        var s = 1.1*(H - h)/k + .3;  // space to cover by extender
-        s /= (ebox.h+ebox.d);        // scale factor;
-        this.Transform(ext,
-          "translateY("+CHTML.Em(-ebox.d+.25-s*ebox.a)+") scaleY("+s.toFixed(3).replace(/0+$/,"")+")",
-          "left "+CHTML.Em(ebox.d)
-        );
-        ext.style.paddingTop=ext.style.paddingBottom = 0;
-        top.style.marginBottom = CHTML.Em((H-h)/k);
+        var eH = ebox.h + ebox.d, eh = eH - EFUZZ, n, N;
+        N = n = Math.min(Math.ceil((H-h)/(k*eh)),this.maxStretchyParts);
+        if (delim.fullExtenders) H = n*k*eh + h; else eh = (H-h)/(k*n);
+        c = ebox.d+ebox.a-eH/2; // for centering of extenders
+        ext.style.margin = ext.style.padding = "";
+        ext.style.lineHeight = CHTML.Em(eh);
+        ext.style.marginBottom = CHTML.Em(c-EFUZZ/2/k);
+        ext.style.marginTop = CHTML.Em(-c-EFUZZ/2/k);
+        var TEXT = ext.textContent, text = "\n"+TEXT;
+        while (--n > 0) TEXT += text;
+        ext.firstChild.textContent = TEXT;
         node.appendChild(ext);
         if (delim.mid) {
           node.appendChild(mid);
-          mid.style.marginBottom = top.style.marginBottom;
           node.appendChild(ext.cloneNode(true));
         }
       } else {
-        H = h - .25; top.style.marginBottom = "-.25em";
-        if (delim.mid) {
-          node.appendChild(mid);
-          mid.style.marginBottom = "-.3em"; H -= .1;
-        }
+        c = (H-h-EFUZZ) / k;
+        top.style.marginBottom = CHTML.Em(c+parseFloat(top.style.marginBottom||"0"));
+        if (delim.mid) node.appendChild(mid);
+        bot.style.marginTop = CHTML.Em(c+parseFloat(bot.style.marginTop||"0"));
       }
       node.appendChild(bot);
       var vbox = CHTML.BBOX({
