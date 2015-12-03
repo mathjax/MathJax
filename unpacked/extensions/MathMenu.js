@@ -1213,8 +1213,9 @@
    *  Handle rescaling all the math
    */
   MENU.Scale = function () {
-    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML, SVG = OUTPUT.SVG;
-    var SCALE = (HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
+    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML,
+        SVG = OUTPUT.SVG, CHTML = OUTPUT.CommonHTML;
+    var SCALE = (CHTML||HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
     var scale = prompt(_("ScaleMath","Scale all mathematics (compared to surrounding text) by"),SCALE+"%");
     if (scale) {
       if (scale.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
@@ -1222,10 +1223,12 @@
         if (scale) {
           if (scale !== SCALE) {
             if (HTMLCSS) {HTMLCSS.config.scale = scale}
+            if (CHTML)   {CHTML.config.scale = scale}
             if (nMML)    {nMML.config.scale = scale}
             if (SVG)     {SVG.config.scale = scale}
             MENU.cookie.scale = scale;
-            MENU.saveCookie(); HUB.Rerender();
+            MENU.saveCookie(); 
+            HUB.Queue(["Rerender",HUB]);
           }
         } else {alert(_("NonZeroScale","The scale should not be zero"))}
       } else {alert(_("PercentScale",
