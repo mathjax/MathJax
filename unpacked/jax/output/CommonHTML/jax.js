@@ -96,12 +96,7 @@
     ".mjx-prestack > .mjx-presup": {display:"block"},
     ".mjx-prestack > .mjx-presub": {display:"block"},
     
-    ".mjx-delim-v > .mjx-char": {transform:"scale(1)"},  // for Firefox to get horizontal alignment better
-    ".mjx-delim-h": {display:"block"},
-    ".mjx-delim-h > .mjx-char": {
-      transform:"scale(1)",
-      display:"inline-block"
-    },
+    ".mjx-delim-h > .mjx-char": {display:"inline-block"},
     
     ".mjx-surd": {"vertical-align":"top"},
     
@@ -1026,10 +1021,10 @@
       if (delim.min && H < h*delim.min) H = h*delim.min;
       if (H > h) {
         ebox = this.createChar(tmp,delim.ext,1,font); ext = tmp.removeChild(tmp.firstChild);
-        var eH = ebox.h + ebox.d, eh = eH - EFUZZ, n, N;
-        N = n = Math.min(Math.ceil((H-h)/(k*eh)),this.maxStretchyParts);
+        var eH = ebox.h + ebox.d, eh = eH - EFUZZ;
+        var n = Math.min(Math.ceil((H-h)/(k*eh)),this.maxStretchyParts);
         if (delim.fullExtenders) H = n*k*eh + h; else eh = (H-h)/(k*n);
-        c = ebox.d+ebox.a-eH/2; // for centering of extenders
+        c = ebox.d + ebox.a - eH/2; // for centering of extenders
         ext.style.margin = ext.style.padding = "";
         ext.style.lineHeight = CHTML.Em(eh);
         ext.style.marginBottom = CHTML.Em(c-EFUZZ/2/k);
@@ -1065,64 +1060,62 @@
       lbox = this.createChar(tmp,(delim.left||delim.rep),1,font); left = tmp.removeChild(tmp.firstChild);
       rbox = this.createChar(tmp,(delim.right||delim.rep),1,font); right = tmp.removeChild(tmp.firstChild);
       ebox = this.createChar(tmp,delim.rep,1,font); ext = tmp.removeChild(tmp.firstChild);
+      left.style.marginLeft = CHTML.Em(-lbox.l);
+      right.style.marginRight = CHTML.Em(rbox.r-rbox.w);
       node.appendChild(left); 
       var hbox = CHTML.BBOX.zero(); 
-      hbox.h = Math.max(lbox.h,rbox.h); hbox.d = Math.max(lbox.d,rbox.d);
-      left.style.marginLeft = CHTML.Em(-lbox.l); left.style.marginRight = CHTML.Em(lbox.r-lbox.w);
-      right.style.marginleft = CHTML.Em(-rbox.l); right.style.marginRight = CHTML.Em(rbox.r-rbox.w);
-      var w = (lbox.r - lbox.l) + (rbox.r - rbox.l) - .05;
+      hbox.h = Math.max(lbox.h,rbox.h,ebox.h);
+      hbox.d = Math.max(lbox.D||lbox.d,rbox.D||rbox.d,ebox.D||ebox.d);
+      var w = (lbox.r - lbox.l) + (rbox.r - rbox.l) - EFUZZ;
       if (delim.mid) {
         mbox = this.createChar(tmp,delim.mid,1,font);
         mid = tmp.removeChild(tmp.firstChild);
-        w += mbox.w; k = 2;
+        mid.style.marginleft = CHTML.Em(-mbox.l); mid.style.marginRight = CHTML.Em(mbox.r-mbox.w);
+        w += mbox.r - mbox.l + EFUZZ; k = 2;
         if (mbox.h > hbox.h) hbox.h = mbox.h;
         if (mbox.d > hbox.d) hbox.d = mbox.d;
       }
       if (delim.min && W < w*delim.min) W = w*delim.min;
-      right.style.marginLeft = CHTML.Em((W-w-rbox.l)/k);
       hbox.w = hbox.r = W;
       if (W > w) {
-        if (ebox.h > hbox.h) hbox.h = ebox.h;
-        if (ebox.d > hbox.d) hbox.d = ebox.d;
-        var s = (W - w)/k + .2;  // space to cover by extender
-        s /= (ebox.r - ebox.l);  // scale factor
-        this.Transform(ext,
-          "translateX("+CHTML.Em(-ebox.l-.1)+") scaleX("+s.toFixed(3).replace(/0+$/,"")+")",
-          CHTML.Em(ebox.l)+" center"
-        );
-        ext.style.width = 0;
+        var eW = ebox.r-ebox.l, ew = eW - EFUZZ;
+        var n = Math.min(Math.ceil((W-w)/(k*ew)),this.maxStretchyParts);
+        if (delim.fullExtenders) W = n*k*ew + w; else ew = (W-w)/(k*n);
+        var c = (eW - ew + EFUZZ/k) / 2; // for centering of extenders
+        ext.style.marginLeft = CHTML.Em(-ebox.l-c);
+        ext.style.marginRight = CHTML.Em(ebox.r-ebox.w+c);
+        ext.style.letterSpacing = CHTML.Em(-(ebox.w-ew));
+        left.style.marginRight = CHTML.Em(lbox.r-lbox.w);
+        right.style.marginleft = CHTML.Em(-rbox.l);
+        var TEXT = ext.textContent, text = TEXT;
+        while (--n > 0) TEXT += text;
+        ext.firstChild.textContent = TEXT;
         node.appendChild(ext);
         if (delim.mid) {
           node.appendChild(mid);
-          mid.style.marginLeft = right.style.marginLeft;
           ext2 = node.appendChild(ext.cloneNode(true));
         }
       } else {
-        if (delim.mid) {
-          node.appendChild(mid);
-          mid.style.marginLeft = CHTML.Em((W-w)/k);
-        }
+        c = (W-w-EFUZZ/k) / 2;
+        left.style.marginRight = CHTML.Em(lbox.r-lbox.w+c);
+        if (delim.mid) node.appendChild(mid);
+        right.style.marginLeft = CHTML.Em(-rbox.l+c);
       }
       node.appendChild(right);
-      if (ebox.D) ebox.d = ebox.D;
-      hbox.t = hbox.h; hbox.b = hbox.d; hbox.h = ebox.h; hbox.d = ebox.d;
-      this.adjustHeights([left,ext,mid,ext2,right],hbox);
-      var mt = ebox.h - hbox.t - ebox.a, mb = ebox.d - hbox.b + ebox.a;
-      if (mt) node.style.marginTop = CHTML.Em(mt);
-      if (mb) node.style.marginBottom = CHTML.Em(mb);
+      this.adjustHeights([left,ext,mid,ext2,right],[lbox,ebox,mbox,ebox,rbox],hbox);
       if (BBOX) {hbox.scale = BBOX.scale; hbox.rscale = BBOX.rscale}
       return hbox;
     },
-    adjustHeights: function (nodes,bbox) {
+    adjustHeights: function (nodes,box,bbox) {
       //
       //  To get alignment right in horizontal delimiters, we force all
       //  the elements to the same height and depth
       //
-      var T = CHTML.Em(bbox.t), D = CHTML.Em(bbox.b);
-      if (bbox.d < 0) {bbox.D = bbox.d; bbox.d = 0; D = CHTML.Em(-bbox.D+bbox.b)}
+      var T = bbox.h, B = bbox.d;
+      if (bbox.d < 0) {B = -bbox.d; bbox.D = bbox.d; bbox.d = 0}
       for (var i = 0, m = nodes.length; i < m; i++) if (nodes[i]) {
-        nodes[i].style.paddingTop = T;
-        nodes[i].style.paddingBottom = D;
+        nodes[i].style.paddingTop = CHTML.Em(T-box[i].a);
+        nodes[i].style.paddingBottom = CHTML.Em(B+box[i].a);
         nodes[i].style.marginTop = nodes[i].style.marginBottom = 0;
       }
     },
