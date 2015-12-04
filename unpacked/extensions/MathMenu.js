@@ -1213,19 +1213,25 @@
    *  Handle rescaling all the math
    */
   MENU.Scale = function () {
-    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML, SVG = OUTPUT.SVG;
-    var SCALE = (HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
+    var JAX = ["CommonHTML","HTML-CSS","SVG","NativeMML","PreviewHTML"], m = JAX.length,
+        SCALE = 100, i, jax;
+    for (i = 0; i < m; i++) {
+      jax = OUTPUT[JAX[i]];
+      if (jax) {SCALE = jax.config.scale; break}
+    }
     var scale = prompt(_("ScaleMath","Scale all mathematics (compared to surrounding text) by"),SCALE+"%");
     if (scale) {
       if (scale.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         scale = parseFloat(scale);
         if (scale) {
           if (scale !== SCALE) {
-            if (HTMLCSS) {HTMLCSS.config.scale = scale}
-            if (nMML)    {nMML.config.scale = scale}
-            if (SVG)     {SVG.config.scale = scale}
-            MENU.cookie.scale = scale;
-            MENU.saveCookie(); HUB.Rerender();
+            for (i = 0; i < m; i++) {
+              jax = OUTPUT[JAX[i]];
+              if (jax) jax.config.scale = scale;
+            }
+            MENU.cookie.scale = HUB.config.scale = scale;
+            MENU.saveCookie(); 
+            HUB.Queue(["Rerender",HUB]);
           }
         } else {alert(_("NonZeroScale","The scale should not be zero"))}
       } else {alert(_("PercentScale",
