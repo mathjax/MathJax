@@ -801,7 +801,7 @@
         nolimits:          ['Limits',0],
 
         overline:            ['UnderOver','00AF',null,1],
-        underline:           ['UnderOver','005F',null,1],
+        underline:           ['UnderOver','005F'],
         overbrace:           ['UnderOver','23DE',1],
         underbrace:          ['UnderOver','23DF',1],
         overparen:           ['UnderOver','23DC'],
