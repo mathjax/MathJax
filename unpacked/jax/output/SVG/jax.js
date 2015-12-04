@@ -639,7 +639,7 @@
         }
       }
       if (text.length == 1 && font.skew && font.skew[n]) {svg.skew = font.skew[n]*1000}
-      if (svg.element.childNodes.length === 1) {
+      if (svg.element.childNodes.length === 1 && !svg.element.firstChild.getAttribute("x")) {
         svg.element = svg.element.firstChild;
         svg.removeable = false; svg.scale = scale;
       }
