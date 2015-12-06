@@ -45,6 +45,7 @@
       var i, m, item, top;
       for (i = 0, m = arguments.length; i < m; i++) {
         item = arguments[i]; if (!item) continue;
+console.log(item.type);
         if (item instanceof MML.mbase) {item = STACKITEM.mml(item)}
         item.global = this.global;
         top = (this.data.length ? this.Top().checkItem(item) : true);
@@ -58,6 +59,7 @@
             this.env = item.env;
           } else {item.env = this.env}
         }
+console.log(this.toString());
       }
     },
     Pop: function () {
@@ -343,7 +345,8 @@
     type: "fn",
     checkItem: function (item) {
       if (this.data[0]) {
-        if (item.type !== "fn" && item.type !== "left") {
+        if (item.isOpen) {return true}
+        if (item.type !== "fn") {
           if (item.type !== "mml" || !item.data[0]) {return [this.data[0],item]}
           if (item.data[0].isa(MML.mspace)) {return [this.data[0],item]}
           var mml = item.data[0]; if (mml.isEmbellished()) {mml = mml.CoreMO()}
