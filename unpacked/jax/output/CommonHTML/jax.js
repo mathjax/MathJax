@@ -1691,7 +1691,10 @@
     MML.math.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
-        if (this.CHTML.w < 0) node.parentNode.style.marginRight = CHTML.Em(this.CHTML.w);
+        if (this.CHTML.w < 0) {
+          node.parentNode.style.width = "0px";
+          node.parentNode.style.marginRight = CHTML.Em(this.CHTML.w);
+        }
         var alttext = this.Get("alttext");
         if (alttext && !node.getAttribute("aria-label")) node.setAttribute("aria-label",alttext);
         if (!node.getAttribute("role")) node.setAttribute("role","math");
