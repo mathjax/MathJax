@@ -45,7 +45,6 @@
       var i, m, item, top;
       for (i = 0, m = arguments.length; i < m; i++) {
         item = arguments[i]; if (!item) continue;
-console.log(item.type);
         if (item instanceof MML.mbase) {item = STACKITEM.mml(item)}
         item.global = this.global;
         top = (this.data.length ? this.Top().checkItem(item) : true);
@@ -59,7 +58,6 @@ console.log(item.type);
             this.env = item.env;
           } else {item.env = this.env}
         }
-console.log(this.toString());
       }
     },
     Pop: function () {
