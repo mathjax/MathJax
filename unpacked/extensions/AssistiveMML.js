@@ -98,8 +98,9 @@
             isMathJax: true, className: "MJX_Assistive_MathML"
           });
 	  span.innerHTML = mml;
+	  frame.setAttribute("role", "presentation");
           frame.firstChild.setAttribute("aria-hidden","true");
-          span.setAttribute("aria-readonly","true");
+          span.setAttribute("role", "presentation");
         }
         state.i++;
       }
