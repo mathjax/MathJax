@@ -1518,6 +1518,9 @@
         } else if (BBOX.pwidth) {
           BBOX.mwidth = BBOX.w;
           style.width = "100%";
+        } else if (BBOX.w < 0) {
+          style.width = "0px";
+          style.marginRight = CHTML.Em(BBOX.w);
         }
         if (!this.style) return;
         // ### FIXME:  adjust for width, height, vertical-align?
@@ -1688,6 +1691,10 @@
     MML.math.Augment({
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
+        if (this.CHTML.w < 0) {
+          node.parentNode.style.width = "0px";
+          node.parentNode.style.marginRight = CHTML.Em(this.CHTML.w);
+        }
         var alttext = this.Get("alttext");
         if (alttext && !node.getAttribute("aria-label")) node.setAttribute("aria-label",alttext);
         if (!node.getAttribute("role")) node.setAttribute("role","math");
