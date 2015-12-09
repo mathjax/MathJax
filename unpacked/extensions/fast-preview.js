@@ -33,6 +33,7 @@
 
   var FastPreview = MathJax.Extension["fast-preview"] = {
     version: "2.6.0-beta",
+    enabled: true,
 
     //
     //  Configuration for the chunking of the main output
@@ -62,7 +63,7 @@
         HUB.Config({"HTML-CSS": config.Chunks, CommonHTML: config.Chunks, SVG: config.Chunks});
       }
       HUB.Register.MessageHook("Begin Math Output",function () {
-        if (!done && SETTINGS.FastPreview && SETTINGS.renderer !== "PreviewHTML") {
+        if (!done && SETTINGS.FastPreview && this.enabled && SETTINGS.renderer !== "PreviewHTML") {
           update = HUB.processUpdateTime; delay = HUB.processUpdateDelay;
           style = HUB.config.messageStyle;
           HUB.processUpdateTime = config.updateTime;
@@ -81,13 +82,19 @@
         }
       });
     },
+    
+    //
+    //  Allow page to override user settings (for things like editor previews)
+    //
+    Disable: function () {this.enabled = false},
+    Enable: function () {this.enabled = true},
 
     //
     //  Insert a preview span, if there isn't one already,
     //  and call the PreviewHTML output jax to create the preview
     //
     Preview: function (data) {
-      if (!SETTINGS.FastPreview || SETTINGS.renderer === "PreviewHTML") return;
+      if (!SETTINGS.FastPreview || !this.enabled || SETTINGS.renderer === "PreviewHTML") return;
       var preview = data.script.MathJax.preview || data.script.previousSibling;
       if (!preview || preview.className !== MathJax.Hub.config.preRemoveClass) {
         preview = HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
