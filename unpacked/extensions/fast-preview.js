@@ -29,6 +29,7 @@
 (function (HUB,HTML,BROWSER) {
   
   var SETTINGS = HUB.config.menuSettings;
+  var JAX = MathJax.OutputJax;
   var msieColorBug = BROWSER.isMSIE && (document.documentMode||0) < 8;
 
   var FastPreview = MathJax.Extension["fast-preview"] = {
@@ -63,7 +64,7 @@
         HUB.Config({"HTML-CSS": config.Chunks, CommonHTML: config.Chunks, SVG: config.Chunks});
       }
       HUB.Register.MessageHook("Begin Math Output",function () {
-        if (!done && SETTINGS.FastPreview && this.enabled && SETTINGS.renderer !== "PreviewHTML") {
+        if (!done && FastPreview.Active()) {
           update = HUB.processUpdateTime; delay = HUB.processUpdateDelay;
           style = HUB.config.messageStyle;
           HUB.processUpdateTime = config.updateTime;
@@ -88,13 +89,18 @@
     //
     Disable: function () {this.enabled = false},
     Enable: function () {this.enabled = true},
+    
+    Active: function () {
+      return SETTINGS.FastPreview && this.enabled &&
+             !(JAX[SETTINGS.renderer]||{}).noFastPreview;
+    },
 
     //
     //  Insert a preview span, if there isn't one already,
     //  and call the PreviewHTML output jax to create the preview
     //
     Preview: function (data) {
-      if (!SETTINGS.FastPreview || !this.enabled || SETTINGS.renderer === "PreviewHTML") return;
+      if (!this.Active()) return;
       var preview = data.script.MathJax.preview || data.script.previousSibling;
       if (!preview || preview.className !== MathJax.Hub.config.preRemoveClass) {
         preview = HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
