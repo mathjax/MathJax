@@ -5,10 +5,10 @@
   "keywords": [
     "math",
     "svg",
-    "MathML",
-    "TeX",
-    "LaTeX",
-    "AsciiMath",
+    "mathml",
+    "tex",
+    "latex",
+    "asciimath",
     "browser",
     "browser-only"
   ],
