@@ -7,7 +7,10 @@
     "svg",
     "MathML",
     "TeX",
-    "AsciiMath"
+    "LaTeX",
+    "AsciiMath",
+    "browser",
+    "browser-only"
   ],
   "maintainers": [
     "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
