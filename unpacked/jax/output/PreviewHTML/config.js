@@ -30,6 +30,7 @@ MathJax.OutputJax.PreviewHTML = MathJax.OutputJax({
   version: "2.6.0-beta",
   directory: MathJax.OutputJax.directory + "/PreviewHTML",
   extensionDir: MathJax.OutputJax.extensionDir + "/PreviewHTML",
+  noFastPreview: true,  // don't do fast preview for this output jax
   
   config: {
     scale: 100, minScaleAdjust: 50, // global math scaling factor, and minimum adjusted scale factor
