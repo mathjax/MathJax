@@ -136,22 +136,22 @@
       //  Typeset the math
       //
       this.initPlainSource(math, span);
+      var source = jax.originalText;
       if (jax.inputJax === "MathML") {
         if ((jax.root.data[0].data.length > 0) && (jax.root.data[0].data[0].type === "semantics")) {
-          var annotations = jax.root.data[0].data[0].data.map(function(node) {
-            return node.attr.encoding;
-          });
-          var texIndex = annotations.indexOf("application/x-tex");
-          var asciiIndex = annotations.indexOf("text/x-asciimath");
-          if (texIndex > -1) {
-            source = jax.root.data[0].data[0].data[texIndex].data[0].data[0];
-          } else if (asciiIndex > -1) {
-            source = jax.root.data[0].data[0].data[asciiIndex].data[0].data[0];
+          var annotations = jax.root.data[0].data[0].data;
+          for (var a = 0; a < annotations.length; a++){
+            if (annotations[a].attr.encoding === "application/x-tex"){
+              source = jax.root.data[0].data[0].data[a].data[0].data[0];
+              break;
+            }
+            if (annotations[a].attr.encoding === "text/x-asciimath") {
+              source = jax.root.data[0].data[0].data[a].data[0].data[0];
+            }
           }
         }
-      } else {
-        span.innerHTML = jax.originalText;
       }
+      span.innerHTML = source;
 
       //
       //  Put it in place, and remove the processing marker
