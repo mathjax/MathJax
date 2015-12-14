@@ -334,7 +334,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         var labelspace = SVG.length2em(values.minlabelspacing,mu,SVG.cwidth);
         var labelW = labelspace + C[LABEL].w, labelshift = 0, tw = svg.w;
         var dIndent = SVG.length2em(this.displayIndent,mu,SVG.cwidth);
-        var s = (CALIGN[LABEL] === MML.INDENTALIGN.RIGHT ? -1 : 1);
+        s = (CALIGN[LABEL] === MML.INDENTALIGN.RIGHT ? -1 : 1);
         if (indent.indentalign === MML.INDENTALIGN.CENTER) {
           var dx = (SVG.cwidth-tw)/2; shift += dIndent;
           if (labelW + s*labelshift > dx + s*shift) {
