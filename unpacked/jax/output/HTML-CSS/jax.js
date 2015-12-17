@@ -266,9 +266,8 @@
         },
 
         // Focus elements for keyboard tabbing.
-        ".MathJax:focus, *:focus .MathJax": {
-            display:"inline-table", // see issue #1282
-            "border-spacing":"3px", margin:"-3px"
+        ".MathJax:focus, body :focus .MathJax": {
+          display:"inline-table" // see issues #1282 and #1338
         },
 
         ".MathJax_Display": {
