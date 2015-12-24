@@ -148,7 +148,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
 //      tip.style.filter = CHTML.config.styles["#MathJax_CHTML_Tooltip"].filter;
       if (this === currentTip) return;
       tip.style.left = x+"px"; tip.style.top = y+"px";
-      tip.innerHTML = '<mjx-chtml><mjx-math></mjx-math></mjx-chtml>';
+      tip.innerHTML = '<span class="mjx-chtml"><span class="mjx-math"></span></span>';
       CHTML.getMetrics(jax);
       try {this.data[1].toCommonHTML(tip.firstChild.firstChild)}  catch(err) {
         if (!err.restart) throw err;

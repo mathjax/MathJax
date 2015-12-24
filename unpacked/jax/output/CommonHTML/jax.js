@@ -828,7 +828,7 @@
       var c = this.unicodeChar(n);
       var HDW = this.getHDW(c,unknown.className);
       // ### FIXME:  provide a means of setting the height and depth for individual characters
-      unknown[n] = [.8,.2,HDW.w,0,HDW.w,{a:(HDW.h-HDW.d)/2, h:HDW.h, d:HDW.d}];
+      unknown[n] = [.8,.2,HDW.w,0,HDW.w,{a:Math.max(0,(HDW.h-HDW.d)/2), h:HDW.h, d:HDW.d}];
       unknown[n].c = c;
     },
     styledText: function (variant,text) {
@@ -842,7 +842,7 @@
       var unknown = this.STYLEDTEXT[id];
       if (!unknown["_"+text]) {
         var HDW = this.getHDW(text,variant.className||"",style);
-        unknown["_"+text] = [.8,.2,HDW.w,0,HDW.w,{a:(HDW.h-HDW.d)/2, h:HDW.h, d:HDW.d}];
+        unknown["_"+text] = [.8,.2,HDW.w,0,HDW.w,{a:Math.max(0,(HDW.h-HDW.d)/2), h:HDW.h, d:HDW.d}];
         unknown["_"+text].c = text;
       }
       return {type:"unknown", n:"_"+text, font:unknown, style:style, rscale:variant.rscale};
@@ -1031,7 +1031,7 @@
         ext.style.marginTop = CHTML.Em(-c-EFUZZ/2/k);
         var TEXT = ext.textContent, text = "\n"+TEXT;
         while (--n > 0) TEXT += text;
-        ext.firstChild.textContent = TEXT;
+        ext.textContent = TEXT;
         node.appendChild(ext);
         if (delim.mid) {
           node.appendChild(mid);
@@ -1089,7 +1089,7 @@
         right.style.marginleft = CHTML.Em(-rbox.l);
         var TEXT = ext.textContent, text = TEXT;
         while (--n > 0) TEXT += text;
-        ext.firstChild.textContent = TEXT;
+        ext.textContent = TEXT;
         node.appendChild(ext);
         if (delim.mid) {
           node.appendChild(mid);
@@ -1516,7 +1516,7 @@
           BBOX.mwidth = this.data[0].CHTML.mwidth;
           style.width = "100%";
         } else if (BBOX.pwidth) {
-          BBOX.mwidth = BBOX.w;
+          BBOX.mwidth = CHTML.Em(BBOX.w);
           style.width = "100%";
         } else if (BBOX.w < 0) {
           style.width = "0px";
@@ -1526,7 +1526,7 @@
         // ### FIXME:  adjust for width, height, vertical-align?
         for (var i = 0, m = CHTML.BBOX.styleAdjust.length; i < m; i++) {
           var data = CHTML.BBOX.styleAdjust[i];
-          if (style[data[0]]) BBOX.adjust(style[data[0]],data[1],data[2],data[3]);
+          if (data && style[data[0]]) BBOX.adjust(style[data[0]],data[1],data[2],data[3]);
         }
       },
 
@@ -1573,7 +1573,7 @@
           if (!values.weight && values.mathvariant.match(/bold/)) values.weight = "bold";
           if (!values.style && values.mathvariant.match(/italic/)) values.style = "italic";
           this.CHTMLvariant = {fonts:[], noRemap:true, cache:{}, style: {
-            "font-family":values.family, "font-weight":values.weight, "font-style":values.style
+            "font-family":values.family, "font-weight":values.weight||"normal", "font-style":values.style||"normal"
           }};
           return;
         }
@@ -1700,7 +1700,7 @@
         if (!node.getAttribute("role")) node.setAttribute("role","math");
         if (this.CHTML.pwidth) {
           node.parentNode.style.width = this.CHTML.pwidth;
-          node.parentNode.style.minWidth = this.CHTML.mwidth;
+          node.parentNode.style.minWidth = this.CHTML.mwidth||CHTML.Em(this.CHTML.w);
         } else if (!this.isMultiline && this.Get("display") === "block") {
           var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
           if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) values.indentalign = values.indentalignfirst;
@@ -1984,7 +1984,7 @@
         bbox.w = bbox.r = w; bbox.h = bbox.t = h; bbox.d = bbox.b = d; bbox.l = 0;
         if (w < 0) {node.style.marginRight = CHTML.Em(w); w = 0}
         node.style.width = CHTML.Em(w);
-        node.style.height = CHTML.Em(h+d);
+        node.style.height = CHTML.Em(Math.max(0,h+d));
         if (d) node.style.verticalAlign = CHTML.Em(-d);
         this.CHTMLhandleBBox(node);
         this.CHTMLhandleColor(node);

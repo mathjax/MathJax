@@ -306,6 +306,11 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     }
   });
   
+  //
+  //  Just use default toCommonHTML for EI8
+  //
+  if (!document.createElementNS) delete MML.menclose.prototype.toCommonHTML;
+  
   MathJax.Hub.Startup.signal.Post("CommonHTML menclose Ready");
   MathJax.Ajax.loadComplete(CHTML.autoloadDir+"/menclose.js");
 });

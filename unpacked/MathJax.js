@@ -1042,7 +1042,7 @@ MathJax.HTML = {
   Element: function (type,def,contents) {
     var obj = document.createElement(type), id;
     if (def) {
-      if (def.style) {
+      if (def.hasOwnProperty("style")) {
         var style = def.style; def.style = {};
         for (id in style) {if (style.hasOwnProperty(id))
           {def.style[id.replace(/-([a-z])/g,this.ucMatch)] = style[id]}}
