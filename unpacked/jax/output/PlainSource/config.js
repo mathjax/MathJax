@@ -29,15 +29,15 @@ MathJax.OutputJax.PlainSource = MathJax.OutputJax({
   extensionDir: MathJax.OutputJax.extensionDir + "/PlainSource",
 
   config: {
-    matchFontHeight: false,   // try to match math font height to surrounding font?
-    scale: 100,              // scaling factor for all math
-    minScaleAdjust: 50,      // minimum scaling to adjust to surrounding text
-                             //  (since the code for that is a bit delicate)
-
     styles: {
-      "div.MathJax_PlainSource": {
+      ".MathJax_PlainSource_Display": {
         "text-align": "center",
-        margin: ".75em 0px"
+        margin: ".75em 0px",
+        "white-space":"pre"
+      },
+      ".MathJax_PlainSource_Display > span": {
+        display: "inline-block",
+        "text-align": "left"
       }
     }
   }

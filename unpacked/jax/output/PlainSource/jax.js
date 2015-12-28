@@ -24,28 +24,15 @@
 
 
 (function(AJAX, HUB, HTML, PlainSource) {
-  var MML;
 
   var EVENT, TOUCH, HOVER; // filled in later
-
 
   PlainSource.Augment({
     settings: HUB.config.menuSettings,
 
-    hideProcessedMath: false, // use display:none until all math is processed
-
-    maxStretchyParts: 1000, // limit the number of parts allowed for
-    // stretchy operators. See issue 366.
-
     Config: function() {
-      if (!this.require) {
-        this.require = []
-      }
+      if (!this.require) this.require = [];
       this.SUPER(arguments).Config.call(this);
-      var settings = this.settings;
-      if (settings.scale) {
-        this.config.scale = settings.scale
-      }
       this.require.push(MathJax.OutputJax.extensionDir + "/MathEvents.js");
     },
 
@@ -61,13 +48,13 @@
       this.Mouseover = HOVER.Mouseover;
       this.Mouseout = HOVER.Mouseout;
       this.Mousemove = HOVER.Mousemove;
-
+      return AJAX.Styles(this.config.styles);
     },
 
     preTranslate: function(state) {
       var scripts = state.jax[this.id],
-        i, m = scripts.length,
-        script, prev, span, div, jax;
+          i, m = scripts.length,
+          script, prev, span, div, jax;
       //
       //  Loop through the scripts
       //
@@ -79,7 +66,7 @@
         //
         prev = script.previousSibling;
         if (prev && String(prev.className).match(/^MathJax_PlainSource(_Display)?( MathJax_Processing)?$/)) {
-          prev.parentNode.removeChild(prev)
+          prev.parentNode.removeChild(prev);
         }
         //
         //  Add the span, and a div if in display mode,
@@ -105,7 +92,7 @@
           // Added for keyboard accessible menu.
           onkeydown: EVENT.Keydown,
           tabIndex: "0"
-        });
+        },[["span"]]);
         if (HUB.Browser.noContextMenu) {
           span.ontouchstart = TOUCH.start;
           span.ontouchend = TOUCH.end;
@@ -116,8 +103,6 @@
           });
           div.appendChild(span);
         }
-        //
-        div.className += " MathJax_Processing";
         script.parentNode.insertBefore(div, script);
       }
     },
@@ -129,9 +114,9 @@
       //  Get the data about the math
       //
       var jax = script.MathJax.elementJax,
-        math = jax.root,
-        span = document.getElementById(jax.inputID + "-Frame"),
-        div = (jax.PlainSource.display ? span.parentNode : span);
+          math = jax.root,
+          span = document.getElementById(jax.inputID + "-Frame"),
+          div = (jax.PlainSource.display ? span.parentNode : span);
       //
       //  Typeset the math
       //
@@ -151,58 +136,26 @@
           }
         }
       }
-      span.innerHTML = source;
-
-      //
-      //  Put it in place, and remove the processing marker
-      //
-      div.className = div.className.split(/ /)[0];
-      //
-      //  Check if we are hiding the math until more is processed
-      //
-      if (this.hideProcessedMath) {
-        //
-        //  Hide the math and don't let its preview be removed
-        //
-        div.className += " MathJax_Processed";
-        if (script.MathJax.preview) {
-          jax.PlainSource.preview = script.MathJax.preview;
-          delete script.MathJax.preview;
-        }
-      }
+      jax.PlainSource.source = source;
+      HTML.addText(span.firstChild,source);
     },
 
-    postTranslate: function(state) {
-      var scripts = state.jax[this.id];
-      if (!this.hideProcessedMath) return;
-      for (var i = 0, m = scripts.length; i < m; i++) {
-        var script = scripts[i];
-        if (script && script.MathJax.elementJax) {
-          //
-          //  Remove the processed marker
-          //
-          script.previousSibling.className = script.previousSibling.className.split(/ /)[0];
-          var data = script.MathJax.elementJax.PlainSource;
-          //
-          //  Remove the preview, if any
-          //
-          if (data.preview) {
-            data.preview.innerHTML = "";
-            script.MathJax.preview = data.preview;
-            delete data.preview;
-          }
-        }
-      }
-    },
+    postTranslate: function(state) {},
 
     getJaxFromMath: function(math) {
-      if (math.parentNode.className === "MathJax_PlainSource_Display") {
-        math = math.parentNode
-      }
-      do {
-        math = math.nextSibling
-      } while (math && math.nodeName.toLowerCase() !== "script");
+      if (math.parentNode.className === "MathJax_PlainSource_Display") math = math.parentNode;
+      do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
       return HUB.getJaxFor(math);
+    },
+    
+    Zoom: function (jax,span,math,Mw,Mh) {
+      var pad = Math.round(span.parentNode.offsetWidth / 2);
+      span.style.whiteSpace = "pre";
+      HTML.addText(span,jax.PlainSource.source);
+      var mW = math.offsetWidth, mH = math.offsetHeight,
+          zW = span.offsetWidth, zH = span.offsetHeight;
+      var Y = -Math.round((zH+mH)/2) - (jax.PlainSource.display ? 0 : pad);
+      return {mW:mW, mH:mH, zW:zW, zH:zH, Y:Y};
     },
 
     initPlainSource: function(math, span) {},
@@ -210,14 +163,11 @@
     Remove: function(jax) {
       var span = document.getElementById(jax.inputID + "-Frame");
       if (span) {
-        if (jax.PlainSource.display) {
-          span = span.parentNode
-        }
+        if (jax.PlainSource.display) span = span.parentNode;
         span.parentNode.removeChild(span);
       }
       delete jax.PlainSource;
-    },
-
+    }
 
   });
 
