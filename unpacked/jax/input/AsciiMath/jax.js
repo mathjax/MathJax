@@ -457,6 +457,9 @@ var AMsymbols = [
 {input:"\\\\", tag:"mo", output:"\\",   tex:"backslash", ttype:CONST},
 {input:"setminus", tag:"mo", output:"\\", tex:null, ttype:CONST},
 {input:"xx", tag:"mo", output:"\u00D7", tex:"times", ttype:CONST},
+{input:"|><", tag:"mo", output:"\u22C9", tex:"ltimes", ttype:CONST},
+{input:"><|", tag:"mo", output:"\u22CA", tex:"rtimes", ttype:CONST},
+{input:"|><|", tag:"mo", output:"\u22C8", tex:"bowtie", ttype:CONST},
 {input:"-:", tag:"mo", output:"\u00F7", tex:"div", ttype:CONST},
 {input:"divide",   tag:"mo", output:"-:", tex:null, ttype:DEFINITION},
 {input:"@",  tag:"mo", output:"\u2218", tex:"circ", ttype:CONST},
@@ -549,6 +552,7 @@ var AMsymbols = [
 {input:"'",   tag:"mo", output:"\u2032",  tex:"prime", ttype:CONST},
 {input:"tilde", tag:"mover", output:"~", tex:null, ttype:UNARY, acc:true},
 {input:"\\ ",  tag:"mo", output:"\u00A0", tex:null, ttype:CONST},
+{input:"frown",  tag:"mo", output:"\u2322", tex:null, ttype:CONST},
 {input:"quad", tag:"mo", output:"\u00A0\u00A0", tex:null, ttype:CONST},
 {input:"qquad", tag:"mo", output:"\u00A0\u00A0\u00A0\u00A0", tex:null, ttype:CONST},
 {input:"cdots", tag:"mo", output:"\u22EF", tex:null, ttype:CONST},
@@ -1059,8 +1063,10 @@ function AMparseExpr(str,rightbracket) {
   if (symbol.ttype == RIGHTBRACKET || symbol.ttype == LEFTRIGHT) {
 //    if (AMnestingDepth > 0) AMnestingDepth--;
     var len = newFrag.childNodes.length;
-    if (len>0 && newFrag.childNodes[len-1].nodeName == "mrow" ) { //matrix
-    	    //removed to allow row vectors: //&& len>1 && 
+    if (len>0 && newFrag.childNodes[len-1].nodeName == "mrow" 
+            && newFrag.childNodes[len-1].lastChild
+            && newFrag.childNodes[len-1].lastChild.firstChild ) { //matrix
+      	    //removed to allow row vectors: //&& len>1 && 
     	    //newFrag.childNodes[len-2].nodeName == "mo" &&
     	    //newFrag.childNodes[len-2].firstChild.nodeValue == ","
       var right = newFrag.childNodes[len-1].lastChild.firstChild.nodeValue;
