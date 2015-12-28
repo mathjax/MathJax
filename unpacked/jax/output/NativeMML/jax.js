@@ -1353,7 +1353,6 @@
       nMML.msieIE8HeightBug = (mode === 8);
     },
     Opera: function (browser) {
-      nMML.operaPositionBug = true;
       nMML.stretchyMoBug = true;
       nMML.tableLabelBug = true;
       nMML.mfencedBug = true;
