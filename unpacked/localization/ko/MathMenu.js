@@ -94,7 +94,14 @@ MathJax.Localization.addTranslation("ko","MathMenu",{
           NoOriginalForm: "\uC6D0\uB798 \uC591\uC2DD\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4",
           Close: "\uB2EB\uAE30",
           EqSource: "MathJax \uC218\uC2DD \uC790\uB8CC",
-          MSIESVGWarning: "SVG \uD30C\uC77C \uD615\uC2DD\uB294 Internet Explorer 9 \uC774\uD558\uC5D0\uC11C \uBCF4\uC774\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uB530\uB77C\uC11C, SVG \uD615\uC2DD\uC73C\uB85C \uBCC0\uACBD\uD558\uB294 \uAC83\uC740 \uC218\uC2DD\uC774 \uC798 \uBCF4\uC774\uC9C0 \uC54A\uAC8C \uB9CC\uB4E4 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+          MSIESVGWarning: "SVG \uD30C\uC77C \uD615\uC2DD\uB294 Internet Explorer 9 \uC774\uD558\uC5D0\uC11C \uBCF4\uC774\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uB530\uB77C\uC11C, SVG \uD615\uC2DD\uC73C\uB85C \uBCC0\uACBD\uD558\uB294 \uAC83\uC740 \uC218\uC2DD\uC774 \uC798 \uBCF4\uC774\uC9C0 \uC54A\uAC8C \uB9CC\uB4E4 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+          STIXWeb: "STIX (\uC6F9)",
+          AsanaMathWeb: "Asana Math (\uC6F9)",
+          GyrePagellaWeb: "Gyre Pagella (\uC6F9)",
+          GyreTermesWeb: "Gyre Termes (\uC6F9)",
+          LatinModernWeb: "Latin Modern (\uC6F9)",
+          NeoEulerWeb: "Neo Euler (\uC6F9)",
+          SwitchAnyway: "\uB80C\uB354\uB7EC\uB97C \uC815\uB9D0 \uBC14\uAFB8\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?\n\n(\uBC14\uAFB8\uB824\uBA74 OK\uB97C, \uD604\uC7AC \uB80C\uB354\uB7EC\uB85C \uACC4\uC18D\uD558\uB824\uBA74 CANCEL\uC744 \uB204\uB974\uC138\uC694)"
         }
 });
 
