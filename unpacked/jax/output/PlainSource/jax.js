@@ -115,8 +115,7 @@
       //
       var jax = script.MathJax.elementJax,
           math = jax.root,
-          span = document.getElementById(jax.inputID + "-Frame"),
-          div = (jax.PlainSource.display ? span.parentNode : span);
+          span = document.getElementById(jax.inputID + "-Frame");
       //
       //  Typeset the math
       //
