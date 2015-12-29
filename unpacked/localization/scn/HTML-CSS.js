@@ -26,10 +26,10 @@ MathJax.Localization.addTranslation("scn","HTML-CSS",{
         isLoaded: true,
         strings: {
           LoadWebFont: "Scarricamentu d\u00FB tipu di car\u00E0ttiri web %1",
-          CantLoadWebFont: "Nun si potti scarricari u tipu di car\u00E0ttiri web %1",
-          FirefoxCantLoadWebFont: "Firefox nun po\u2019 scarricari tipi di car\u00E0ttiri web di n\u2019host rimotu",
-          CantFindFontUsing: "Nun si potti truvari nu tipu di car\u00E0ttiri bonu tra %1",
-          WebFontsNotAvailable: "I tipi di car\u00E0ttiri web nun sunnu dispun\u00ECbbili, \u00F4 so postu s\u2019adupirannu mm\u00E0ggini fatti a\u2019 tipu di car\u00E0ttiri"
+          CantLoadWebFont: "Nun si potti scarricari lu tipu di car\u00E0ttiri web %1",
+          FirefoxCantLoadWebFont: "Firefox nun p\u00F2 scarricari tipi di car\u00E0ttiri web di n'host rimotu",
+          CantFindFontUsing: "Nun si potti attruvari nu tipu di car\u00E0ttiri bonu tra %1",
+          WebFontsNotAvailable: "Li tipi di car\u00E0ttiri web nun sunnu dispun\u00ECbbili, \u00F4 s\u00F2 postu s'ad\u00F2piranu mm\u00E0ggini fatti a tipu di car\u00E0ttiri"
         }
 });
 

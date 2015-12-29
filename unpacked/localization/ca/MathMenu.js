@@ -75,7 +75,7 @@ MathJax.Localization.addTranslation("ca","MathMenu",{
           Scale: "Escalar totes les f\u00F3mules...",
           Discoverable: "Iluminar quan el ratol\u00ED passi per sobre",
           Locale: "Idioma",
-          LoadLocale: "Carregar de la URL...",
+          LoadLocale: "Carrega des de l'URL...",
           About: "Sobre MathJax",
           Help: "Ajuda de MathJax",
           localTeXfonts: "usar fonts TeX locals",
