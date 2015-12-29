@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("lt",null,{
   menuTitle: "lietuvi\u0173",
-  version: "2.6.0-beta",
+  version: "2.6.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.6.0-beta",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           MathProcessingError: "Matematikos apdorojimo klaida",

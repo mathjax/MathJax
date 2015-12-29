@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("en","TeX",{
-        version: "2.6.0-beta",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Extra open brace or missing close brace",
