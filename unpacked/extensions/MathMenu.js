@@ -42,7 +42,7 @@
       [["MathMenu",id]].concat([].slice.call(arguments,1))
     );
   };
-  
+
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE, isIE9 = ((document.documentMode||0) > 8);
   var ROUND = (isPC ? null : "5px");
 
@@ -591,7 +591,7 @@
                 }
                 return -1;
               }),
-    
+
     saveCookie: function () {HTML.Cookie.Set("menu",this.cookie)},
     getCookie: function () {this.cookie = HTML.Cookie.Get("menu")}
 
@@ -1015,7 +1015,7 @@
    */
   MENU.ITEM.RULE = MENU.ITEM.Subclass({
     role: "separator",
-    
+
     Attributes: function(def) {
       def = HUB.Insert({"aria-orientation": "vertical"}, def);
       def = this.SUPER(arguments).Attributes.call(this, def);
@@ -1520,6 +1520,7 @@
           ITEM.RADIO("Fast HTML",  "renderer", {action: MENU.Renderer, value:"PreviewHTML"}),
           ITEM.RADIO("MathML",     "renderer", {action: MENU.Renderer, value:"NativeMML"}),
           ITEM.RADIO("SVG",        "renderer", {action: MENU.Renderer}),
+          ITEM.RADIO("PlainSource","renderer", {action: MENU.Renderer, value:"PlainSource"}),
           ITEM.RULE(),
           ITEM.CHECKBOX("Fast Preview", "FastPreview"),
           ITEM.CHECKBOX("Assistive MathML", "assistiveMML", {hidden:!CONFIG.showAssistiveMML})
@@ -1613,7 +1614,7 @@
     MENU.cookie.showAssistiveMML = CONFIG.showAssistiveMML = show; MENU.saveCookie();
     MENU.menu.Find("Math Settings","Math Renderer","Assistive MathML").hidden = !show;
   };
-  
+
   MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     if (!MathJax.OutputJax["HTML-CSS"].config.imageFont)
       {MENU.menu.Find("Math Settings","Font Preference","TeX (image)").disabled = true}
