@@ -22,10 +22,10 @@
  */
 
 MathJax.Localization.addTranslation("nl","HelpDialog",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
-          Help: "MathJax Help",
+          Help: "MathJax-hulp",
           MathJax: "*MathJax* is een JavaScript bibliotheek die het mogelijk maakt dat auteurs wiskunde kunnen toevoegen aan hun web-pagina's. Als een lezer hoeft u niks te doen om dat mogelijk te maken.",
           Browsers: "*Browsers*: MathJax werkt met alle moderne browsers, inclusief IE6+, Firefox 3+, Chrome 0.2+, Safari 2+, Opera 9.6+ en de meeste mobiele browsers.",
           Menu: "*Math menu*:MathJax voegt een context menu toe aan vergelijkingen. Rechtsklik of Ctrl-klik op willekeurige wiskunde om het menu weer te geven.",

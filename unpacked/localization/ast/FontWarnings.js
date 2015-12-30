@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("ast","FontWarnings",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax ta usando fontes basaes en web p'amosar les matem\u00E1tiques d'esta p\u00E1xina. Lleva un tiempu descargales, de manera que la p\u00E1xina apaecer\u00E1 m\u00E1s r\u00E1pidamente si instala direutamente les fontes matem\u00E1tiques na carpeta de fontes del so sistema.",

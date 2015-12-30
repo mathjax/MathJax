@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-    var VERSION = "2.5.0";
+    var VERSION = "2.6.0";
 
   var ALPHABETS = "GyrePagellaMathJax_Alphabets",
       ARROWS = "GyrePagellaMathJax_Arrows",
@@ -542,6 +542,9 @@
           HW: [[0.820,MAIN], [0.980,SIZE1], [1.172,SIZE2], [1.402,SIZE3], [1.678,SIZE4], [2.010,SIZE5], [2.408,SIZE6], [2.612,SIZE6,1.085]],
           stretch: {bot:[0x23A6,SYMBOLS], ext:[0x23A5,SYMBOLS]}
         },
+        0x2312: {alias: 0x23DC, dir:H},
+        0x2322: {alias: 0x23DC, dir:H},
+        0x2323: {alias: 0x23DD, dir:H},
         0x2329:
         {
           dir: V,

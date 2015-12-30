@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fa","TeX",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u0622\u06A9\u0648\u0644\u0627\u062F \u0628\u0627\u0632 \u0627\u0636\u0627\u0641\u06CC \u06CC\u0627 \u0641\u0642\u062F\u0627\u0646 \u0622\u06A9\u0648\u0644\u0627\u062F \u0628\u0633\u062A\u0647",

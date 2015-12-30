@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax["SVG"];
   
@@ -49,6 +49,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var selected = this.selected();
       if (selected.type == "null") {this.SVGsaveData(svg);return svg;}
       svg.Add(this.SVGdataStretched(this.Get("selection")-1,HW,D));
+      svg.removeable = false;
       this.SVGhandleHitBox(svg);
       this.SVGhandleSpace(svg);
       this.SVGhandleColor(svg);
@@ -56,10 +57,12 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       return svg;
     },
     SVGhandleHitBox: function (svg) {
-      var frame = SVG.addElement(svg.element,"rect",
+      var frame = SVG.Element("rect",
         {width:svg.w, height:svg.h+svg.d, y:-svg.d, fill:"none", "pointer-events":"all"});
+      svg.element.insertBefore(frame,svg.element.firstChild);
       var type = this.Get("actiontype");
-      if (this.SVGaction[type]) {this.SVGaction[type].call(this,svg,frame,this.Get("selection"))}
+      if (this.SVGaction[type])
+        {this.SVGaction[type].call(this,svg,svg.element,this.Get("selection"))}
     },
     SVGstretchH: MML.mbase.prototype.SVGstretchH,
     SVGstretchV: MML.mbase.prototype.SVGstretchV,

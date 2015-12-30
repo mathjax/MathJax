@@ -28,7 +28,7 @@
  */
 
 (function (HUB,AJAX) {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
   
   var CONFIG = MathJax.Hub.CombineConfig("MatchWebFonts",{
     matchFor: {

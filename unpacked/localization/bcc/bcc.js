@@ -24,11 +24,11 @@
 MathJax.Localization.addTranslation("bcc",null,{
   menuTitle: "\u0628\u0644\u0648\u0686\u06CC",
   fontDirection: "rtl",
-  version: "2.5.0",
+  version: "2.6.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           MathProcessingError: "\u062E\u0637\u0627\u06CC \u067E\u0631\u062F\u0627\u0632\u0634 \u0631\u06CC\u0627\u0636\u06CC",
@@ -51,7 +51,7 @@ MathJax.Localization.addTranslation("bcc",null,{
     "TeX": {}
   },
   plural: function (n) {
-      return 1; // other 
+      return 1; // other
     },
   number: function (n) {
       return n;

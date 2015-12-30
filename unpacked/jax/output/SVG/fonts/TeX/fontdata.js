@@ -26,7 +26,7 @@
  */
 
 (function (SVG,MML,AJAX,HUB) {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -565,6 +565,9 @@
         0x295F: EXTRAH, // rightwards harpoon with barb down from bar
         0x2960: EXTRAV, // up harpoon with barb left from bar
         0x2961: EXTRAV, // down harpoon with barb left from bar
+        0x2312: {alias: 0x23DC, dir:H}, // arc
+        0x2322: {alias: 0x23DC, dir:H}, // frown
+        0x2323: {alias: 0x23DD, dir:H}, // smile
         0x27F5: {alias: 0x2190, dir:H}, // long left arrow
         0x27F6: {alias: 0x2192, dir:H}, // long right arrow
         0x27F7: {alias: 0x2194, dir:H}, // long left-right arrow

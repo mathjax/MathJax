@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -205,9 +205,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
 
         //  Get total width minus column spacing
         WW = SVG.length2em(values.width,mu);
-        for (i = 0, m = Math.min(J+1,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
+        for (i = 0, m = Math.min(J,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
         //  Determine individual column widths
-        WW /= J+1;
+        WW /= J;
         for (i = 0, m = Math.min(J+1,CWIDTH.length); i < m; i++) {W[i] = WW}
       } else {
         //
@@ -227,7 +227,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           if (WP > .98) {Wf = Wp/(Wt+Wp); WW = Wt + Wp} else {WW = Wt / (1-WP)}
         } else {
           WW = SVG.length2em(values.width,mu);
-          for (i = 0, m = Math.min(J+1,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
+          for (i = 0, m = Math.min(J,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
         }
         //  Determine the relative column widths
         for (i = 0, m = P.length; i < m; i++) {
@@ -331,17 +331,33 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         if (indent.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {indent.indentshift = indent.indentshiftfirst}
         if (indent.indentshift === "auto" || indent.indentshift === "") {indent.indentshift = "0"}
         var shift = SVG.length2em(indent.indentshift,mu,SVG.cwidth);
-        var labelshift = SVG.length2em(values.minlabelspacing,mu,SVG.cwidth);
-        if (this.displayIndent !== "0") {
-          var dIndent = SVG.length2em(this.displayIndent,mu,SVG.cwidth);
-          shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -dIndent: dIndent);
+        var labelspace = SVG.length2em(values.minlabelspacing,mu,SVG.cwidth);
+        var labelW = labelspace + C[LABEL].w, labelshift = 0, tw = svg.w;
+        var dIndent = SVG.length2em(this.displayIndent,mu,SVG.cwidth);
+        s = (CALIGN[LABEL] === MML.INDENTALIGN.RIGHT ? -1 : 1);
+        if (indent.indentalign === MML.INDENTALIGN.CENTER) {
+          var dx = (SVG.cwidth-tw)/2; shift += dIndent;
+          if (labelW + s*labelshift > dx + s*shift) {
+            indent.indentalign = CALIGN[LABEL];
+            shift = s*(labelW + s*labelshift); tw += labelW + Math.max(0,shift);
+          }
+        } else if (CALIGN[LABEL] === indent.indentalign) {
+          if (dIndent < 0) {labelshift = s*dIndent; dIndent = 0}
+          shift += s*dIndent; if (labelW > s*shift) shift = s*labelW; shift += labelshift;
+          tw += s*shift;
+        } else {
+          shift -= s*dIndent;
+          if (tw - s*shift + labelW > SVG.cwidth) {
+            shift = s*(tw + labelW - SVG.cwidth);
+            if (s*shift > 0) {tw = SVG.cwidth + s*shift; shift = 0}
+          }
         }
         var eqn = svg; svg = this.SVG();
-        svg.w = svg.r = SVG.cwidth; svg.hasIndent = true;
-        svg.Align(C[LABEL],CALIGN[LABEL],labelshift,0);
+        svg.hasIndent = true;
+        svg.w = svg.r = Math.max(tw,SVG.cwidth); 
+        svg.Align(C[LABEL],CALIGN[LABEL],0,0,labelshift);
         svg.Align(eqn,indent.indentalign,0,0,shift);
-        svg.tw += C[LABEL].w + shift +
-          (indent.indentalign === MML.INDENTALIGN.CENTER ? 8 : 4)*labelshift;
+        svg.tw = tw;
       }
       
       this.SVGsaveData(svg);

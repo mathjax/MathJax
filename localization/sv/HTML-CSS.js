@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("sv","HTML-CSS",{version:"2.5.0",isLoaded:true,strings:{LoadWebFont:"L\u00E4ser in webbtypsnittet %1",CantLoadWebFont:"Kan inte l\u00E4sa in webbtypsnittet %1",FirefoxCantLoadWebFont:"Firefox kan inte l\u00E4sa in webbteckensnitt fr\u00E5n en fj\u00E4rrv\u00E4rd",CantFindFontUsing:"Kan inte hitta ett giltigt teckensnitt med hj\u00E4lp av %1",WebFontsNotAvailable:"Webbtypsnitt \u00E4r inte tillg\u00E4ngliga. Anv\u00E4nder bildtypsnitt ist\u00E4llet"}});MathJax.Ajax.loadComplete("[MathJax]/localization/sv/HTML-CSS.js");
+MathJax.Localization.addTranslation("sv","HTML-CSS",{version:"2.6.0",isLoaded:true,strings:{LoadWebFont:"L\u00E4ser in webbtypsnittet %1",CantLoadWebFont:"Kan inte l\u00E4sa in webbtypsnittet %1",FirefoxCantLoadWebFont:"Firefox kan inte l\u00E4sa in webbteckensnitt fr\u00E5n en fj\u00E4rrv\u00E4rd",CantFindFontUsing:"Kan inte hitta ett giltigt teckensnitt med hj\u00E4lp av %1",WebFontsNotAvailable:"Webbtypsnitt \u00E4r inte tillg\u00E4ngliga. Anv\u00E4nder bildtypsnitt ist\u00E4llet"}});MathJax.Ajax.loadComplete("[MathJax]/localization/sv/HTML-CSS.js");

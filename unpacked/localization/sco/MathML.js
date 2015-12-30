@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("sco","MathML",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           BadMglyph: "Bad mglyph: %1",

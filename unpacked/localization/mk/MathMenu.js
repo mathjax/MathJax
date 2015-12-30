@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("mk","MathMenu",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           Show: "\u041F\u0440\u0438\u043A\u0430\u0436\u0438 \u0458\u0430 \u043C\u0430\u0442\u0435\u043C\u0430\u0442\u0438\u043A\u0430\u0442\u0430 \u043A\u0430\u043A\u043E",

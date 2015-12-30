@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("ko","MathML",{version:"2.5.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/ko/MathML.js");
+MathJax.Localization.addTranslation("ko","MathML",{version:"2.6.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/ko/MathML.js");

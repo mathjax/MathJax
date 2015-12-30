@@ -18,8 +18,8 @@
 
 MathJax.Hub.Config({
   config: ["MMLorHTML.js"],
-  extensions: ["mml2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","CHTML-preview.js"],
-  jax: ["input/MathML","output/HTML-CSS","output/NativeMML","output/CommonHTML"]
+  extensions: ["mml2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","fast-preview.js","AssistiveMML.js"],
+  jax: ["input/MathML","output/HTML-CSS","output/NativeMML","output/PreviewHTML"]
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/config/MML_HTMLorMML-full.js");

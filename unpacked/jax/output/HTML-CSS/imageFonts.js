@@ -25,7 +25,7 @@
  */
 
 (function (HUB,HTMLCSS,AJAX) {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
   
   HUB.Register.LoadHook(HTMLCSS.fontDir + "/fontdata.js",function () {
 

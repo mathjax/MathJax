@@ -457,6 +457,9 @@ var AMsymbols = [
 {input:"\\\\", tag:"mo", output:"\\",   tex:"backslash", ttype:CONST},
 {input:"setminus", tag:"mo", output:"\\", tex:null, ttype:CONST},
 {input:"xx", tag:"mo", output:"\u00D7", tex:"times", ttype:CONST},
+{input:"|><", tag:"mo", output:"\u22C9", tex:"ltimes", ttype:CONST},
+{input:"><|", tag:"mo", output:"\u22CA", tex:"rtimes", ttype:CONST},
+{input:"|><|", tag:"mo", output:"\u22C8", tex:"bowtie", ttype:CONST},
 {input:"-:", tag:"mo", output:"\u00F7", tex:"div", ttype:CONST},
 {input:"divide",   tag:"mo", output:"-:", tex:null, ttype:DEFINITION},
 {input:"@",  tag:"mo", output:"\u2218", tex:"circ", ttype:CONST},
@@ -549,6 +552,7 @@ var AMsymbols = [
 {input:"'",   tag:"mo", output:"\u2032",  tex:"prime", ttype:CONST},
 {input:"tilde", tag:"mover", output:"~", tex:null, ttype:UNARY, acc:true},
 {input:"\\ ",  tag:"mo", output:"\u00A0", tex:null, ttype:CONST},
+{input:"frown",  tag:"mo", output:"\u2322", tex:null, ttype:CONST},
 {input:"quad", tag:"mo", output:"\u00A0\u00A0", tex:null, ttype:CONST},
 {input:"qquad", tag:"mo", output:"\u00A0\u00A0\u00A0\u00A0", tex:null, ttype:CONST},
 {input:"cdots", tag:"mo", output:"\u22EF", tex:null, ttype:CONST},
@@ -623,6 +627,8 @@ var AMsymbols = [
 {input:"frac", tag:"mfrac", output:"/",    tex:null, ttype:BINARY},
 {input:"/",    tag:"mfrac", output:"/",    tex:null, ttype:INFIX},
 {input:"stackrel", tag:"mover", output:"stackrel", tex:null, ttype:BINARY},
+{input:"overset", tag:"mover", output:"stackrel", tex:null, ttype:BINARY},
+{input:"underset", tag:"munder", output:"stackrel", tex:null, ttype:BINARY},
 {input:"_",    tag:"msub",  output:"_",    tex:null, ttype:INFIX},
 {input:"^",    tag:"msup",  output:"^",    tex:null, ttype:INFIX},
 {input:"hat", tag:"mover", output:"\u005E", tex:null, ttype:UNARY, acc:true},
@@ -929,7 +935,7 @@ function AMparseSexpr(str) { //parses str and returns [node,tailstr]
 	node.setAttribute("mathcolor",st);
 	return [node,result2[1]];
     }
-    if (symbol.input=="root" || symbol.input=="stackrel") 
+    if (symbol.input=="root" || symbol.output=="stackrel") 
       newFrag.appendChild(result2[0]);
     newFrag.appendChild(result[0]);
     if (symbol.input=="frac") newFrag.appendChild(result2[0]);
@@ -1057,8 +1063,10 @@ function AMparseExpr(str,rightbracket) {
   if (symbol.ttype == RIGHTBRACKET || symbol.ttype == LEFTRIGHT) {
 //    if (AMnestingDepth > 0) AMnestingDepth--;
     var len = newFrag.childNodes.length;
-    if (len>0 && newFrag.childNodes[len-1].nodeName == "mrow" ) { //matrix
-    	    //removed to allow row vectors: //&& len>1 && 
+    if (len>0 && newFrag.childNodes[len-1].nodeName == "mrow" 
+            && newFrag.childNodes[len-1].lastChild
+            && newFrag.childNodes[len-1].lastChild.firstChild ) { //matrix
+      	    //removed to allow row vectors: //&& len>1 && 
     	    //newFrag.childNodes[len-2].nodeName == "mo" &&
     	    //newFrag.childNodes[len-2].firstChild.nodeValue == ","
       var right = newFrag.childNodes[len-1].lastChild.firstChild.nodeValue;

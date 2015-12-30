@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -214,9 +214,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         } else {
           //  Get total width minus column spacing
           WW = HTMLCSS.length2em(values.width,mu);
-          for (i = 0, m = Math.min(J+1,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
+          for (i = 0, m = Math.min(J,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
           //  Determine individual column widths
-          WW /= J+1;
+          WW /= J;
           for (i = 0, m = Math.min(J+1,CWIDTH.length); i < m; i++) {W[i] = WW}
         }
       } else {
@@ -242,7 +242,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             if (WP > .98) {Wf = Wp/(Wt+Wp); WW = Wt + Wp} else {WW = Wt / (1-WP)}
           } else {
             WW = HTMLCSS.length2em(values.width,mu);
-            for (i = 0, m = Math.min(J+1,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
+            for (i = 0, m = Math.min(J,CSPACE.length); i < m; i++) {WW -= CSPACE[i]}
           }
           //  Determine the relative column widths
           for (i = 0, m = P.length; i < m; i++) {
@@ -405,11 +405,8 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           line = HTMLCSS.createRule(stack,1.25/HTMLCSS.em,0,fW); HTMLCSS.addBox(stack,line);
           line.bbox = {h:1.25/HTMLCSS.em, d:0, w:fW, rw:fW, lw:0};
           HTMLCSS.placeBox(line,0,y - D[i] - (dy-D[i]-H[i+1])/2,true);
-          if (RLINES[i] === "dashed" || hasRelativeWidth) {
-            line.style.borderTop = line.style.height+" "+RLINES[i]; line.style.height = 0;
-            line.style.width = line.style.borderLeftWidth; line.style.borderLeft = "";
-            if (hasRelativeWidth) {line.style.width = "100%"}
-          }
+          if (RLINES[i] === "dashed") line.style.borderTopStyle = "dashed";
+          if (hasRelativeWidth) line.style.width = "100%"
         }
         y -= dy;
       }
@@ -428,24 +425,31 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         if (indent.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {indent.indentshift = indent.indentshiftfirst}
         if (indent.indentshift === "auto") {indent.indentshift = "0"}
         var shift = HTMLCSS.length2em(indent.indentshift,mu,HTMLCSS.cwidth);
-        var labelshift = HTMLCSS.length2em(values.minlabelspacing,mu,HTMLCSS.cwidth);
-        if (this.displayIndent !== "0") {
-          var dIndent = HTMLCSS.length2em(this.displayIndent,mu,HTMLCSS.cwidth);
-          shift += (indent.indentAlign === MML.INDENTALIGN.RIGHT ? -dIndent: dIndent);
+        var labelspace = HTMLCSS.length2em(values.minlabelspacing,mu,HTMLCSS.cwidth);
+        var labelW = labelspace + C[LABEL].bbox.w, labelshift = 0, tw = mw;
+        var dIndent = HTMLCSS.length2em(this.displayIndent,mu,HTMLCSS.cwidth);
+        s = (CALIGN[LABEL] === MML.INDENTALIGN.RIGHT ? -1 : 1);
+        if (indent.indentalign === MML.INDENTALIGN.CENTER) {
+          tw += 2 * (labelW - s*(shift + dIndent));
+          shift += dIndent;
+        } else if (CALIGN[LABEL] === indent.indentalign) {
+          if (dIndent < 0) {labelshift = s*dIndent; dIndent = 0}
+          shift += s*dIndent; if (labelW > s*shift) shift = s*labelW; shift += labelshift;
+          tw += s*shift;
+        } else {
+          tw += labelW - s*shift + dIndent;
+          shift -= s*dIndent;
         }
         var eqn = HTMLCSS.createStack(span,false,"100%");
         HTMLCSS.addBox(eqn,stack); HTMLCSS.alignBox(stack,indent.indentalign,0,shift);
-
         C[LABEL].parentNode.parentNode.removeChild(C[LABEL].parentNode);
         HTMLCSS.addBox(eqn,C[LABEL]); HTMLCSS.alignBox(C[LABEL],CALIGN[LABEL],0);
         if (HTMLCSS.msieRelativeWidthBug) {stack.style.top = C[LABEL].style.top = ""}
         if (hasRelativeWidth) {stack.style.width = values.width; span.bbox.width = "100%"}
-        C[LABEL].style.marginRight = C[LABEL].style.marginLeft = HTMLCSS.Em(labelshift);
-        if (indent.indentalign === MML.INDENTALIGN.CENTER) {mw += 4*labelshift + 2*C[LABEL].bbox.w}
-          else if (indent.indentalign !== CALIGN[LABEL]) {mw += 2*labelshift + C[LABEL].bbox.w}
-        mw = Math.max(0,mw+shift); span.bbox.tw = mw + 2*labelshift;
-        span.style.minWidth = span.bbox.minWidth = HTMLCSS.Em(mw);
-        eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(mw/HTMLCSS.scale);
+        C[LABEL].style[s === 1 ? "marginLeft" : "marginRight"] = HTMLCSS.Em(s*labelshift);
+        span.bbox.tw = tw;
+        span.style.minWidth = span.bbox.minWidth = HTMLCSS.Em(tw);
+        eqn.style.minWidth = eqn.bbox.minWidth = HTMLCSS.Em(tw/scale);
       }
       //
       //  Finish the table

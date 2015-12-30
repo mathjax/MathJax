@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.InputJax.AsciiMath=MathJax.InputJax({id:"AsciiMath",version:"2.5.0",directory:MathJax.InputJax.directory+"/AsciiMath",extensionDir:MathJax.InputJax.extensionDir+"/AsciiMath",config:{fixphi:true,useMathMLspacing:true,displaystyle:true,decimalsign:"."}});MathJax.InputJax.AsciiMath.Register("math/asciimath");MathJax.InputJax.AsciiMath.loadComplete("config.js");
+MathJax.InputJax.AsciiMath=MathJax.InputJax({id:"AsciiMath",version:"2.6.0",directory:MathJax.InputJax.directory+"/AsciiMath",extensionDir:MathJax.InputJax.extensionDir+"/AsciiMath",config:{fixphi:true,useMathMLspacing:true,displaystyle:true,decimalsign:"."}});MathJax.InputJax.AsciiMath.Register("math/asciimath");MathJax.InputJax.AsciiMath.loadComplete("config.js");

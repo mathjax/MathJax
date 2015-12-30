@@ -25,23 +25,26 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
   MML.ms.Augment({
     toHTML: function (span) {
       span = this.HTMLhandleSize(this.HTMLcreateSpan(span));
-      var values = this.getValues("lquote","rquote");
-      var text = this.data.join("");  // FIXME:  handle mglyph?
-      this.HTMLhandleVariant(span,this.HTMLgetVariant(),values.lquote+text+values.rquote);
+      var values = this.getValues("lquote","rquote","mathvariant");
+      if (!this.hasValue("lquote") || values.lquote === '"') values.lquote = "\u201C";
+      if (!this.hasValue("rquote") || values.rquote === '"') values.rquote = "\u201D";
+      if (values.lquote === "\u201C" && values.mathvariant === "monospace") values.lquote = '"';
+      if (values.rquote === "\u201D" && values.mathvariant === "monospace") values.rquote = '"';
+      var text = values.lquote+this.data.join("")+values.rquote;  // FIXME:  handle mglyph?
+      this.HTMLhandleVariant(span,this.HTMLgetVariant(),text);
       this.HTMLhandleSpace(span);
       this.HTMLhandleColor(span);
       this.HTMLhandleDir(span);
       return span;
     }
   });
-  MML.ms.prototype.defaults.mathvariant = 'monospace';
   
   MathJax.Hub.Startup.signal.Post("HTML-CSS ms Ready");
   MathJax.Ajax.loadComplete(HTMLCSS.autoloadDir+"/ms.js");

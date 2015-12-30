@@ -27,7 +27,7 @@
 
 MathJax.OutputJax.SVG = MathJax.OutputJax({
   id: "SVG",
-  version: "2.5.0",
+  version: "2.6.0",
   directory: MathJax.OutputJax.directory + "/SVG",
   extensionDir: MathJax.OutputJax.extensionDir + "/SVG",
   autoloadDir: MathJax.OutputJax.directory + "/SVG/autoload",
@@ -36,7 +36,7 @@ MathJax.OutputJax.SVG = MathJax.OutputJax({
   config: {
     scale: 100, minScaleAdjust: 50, // global math scaling factor, and minimum adjusted scale factor
     font: "TeX",                    // currently the only font available
-    blacker: 10,                    // stroke-width to make fonts blacker
+    blacker: 1,                     // stroke-width to make fonts blacker
     mtextFontInherit: false,        // to make <mtext> be in page font rather than MathJax font
     undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",  // fonts to use for missing characters
 

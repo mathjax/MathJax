@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("ce",null,{
   menuTitle: "\u041D\u043E\u0445\u0447\u0438\u0439\u043D \u043C\u043E\u0442\u0442",
-  version: "2.5.0",
+  version: "2.6.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           MathProcessingError: "\u041C\u0430\u0442\u0435\u043C\u0430\u0442\u0438\u043A\u0438\u043D \u043A\u0435\u0447\u0434\u0430\u0440\u0430\u043D \u0433\u04C0\u0430\u043B\u0430\u0442",

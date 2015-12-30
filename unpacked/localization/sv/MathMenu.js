@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("sv","MathMenu",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           MathMLcode: "MathML-kod",

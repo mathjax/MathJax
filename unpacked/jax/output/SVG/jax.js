@@ -34,6 +34,9 @@
   var XLINKNS = "http://www.w3.org/1999/xlink";
 
   SVG.Augment({
+    HFUZZ: 2,     // adjustments for height and depth of final svg element
+    DFUZZ: 2,     //   to get baselines right (fragile).
+    
     config: {
       styles: {
         ".MathJax_SVG": {
@@ -217,7 +220,9 @@
  	  className:"MathJax_SVG", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
-	  onclick:EVENT.Click, ondblclick:EVENT.DblClick
+	  onclick:EVENT.Click, ondblclick:EVENT.DblClick,
+          // Added for keyboard accessible menu.
+          onkeydown: EVENT.Keydown, tabIndex: "0"
         });
 	if (HUB.Browser.noContextMenu) {
 	  span.ontouchstart = TOUCH.start;
@@ -477,19 +482,19 @@
     },
     
     Em: function (m) {
-      if (Math.abs(m) < .0006) {return "0em"}
+      if (Math.abs(m) < .0006) return "0";
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
     Ex: function (m) {
-      m = Math.round(m / this.TeX.x_height * this.ex) / this.ex;  // try to use closest pixel size
-      if (Math.abs(m) < .0006) {return "0ex"}
+      m = m / this.TeX.x_height;
+      if (Math.abs(m) < .0006) return "0";
       return m.toFixed(3).replace(/\.?0+$/,"") + "ex";
     },
     Percent: function (m) {
       return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
     },
     Fixed: function (m,n) {
-      if (Math.abs(m) < .0006) {return "0"}
+      if (Math.abs(m) < .0006) return "0";
       return m.toFixed(n||3).replace(/\.?0+$/,"");
     },
     length2em: function (length,mu,size) {
@@ -634,7 +639,7 @@
         }
       }
       if (text.length == 1 && font.skew && font.skew[n]) {svg.skew = font.skew[n]*1000}
-      if (svg.element.childNodes.length === 1) {
+      if (svg.element.childNodes.length === 1 && !svg.element.firstChild.getAttribute("x")) {
         svg.element = svg.element.firstChild;
         svg.removeable = false; svg.scale = scale;
       }
@@ -863,7 +868,10 @@
               else {svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")")}
           } else if (nodeName === "line" || nodeName === "polygon" ||
                      nodeName === "path" || nodeName === "a") {
-            svg.element.setAttribute("transform","translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")");
+            var transform = svg.element.getAttribute("transform") || "";
+            if (transform) transform = " "+transform;
+            transform = "translate("+Math.floor(svg.x)+","+Math.floor(svg.y)+")"+transform;
+            svg.element.setAttribute("transform",transform);
           } else {
             svg.element.setAttribute("x",Math.floor(svg.x/svg.scale));
             svg.element.setAttribute("y",Math.floor(svg.y/svg.scale));
@@ -1068,14 +1076,14 @@
 	var variant = this.SVGgetVariant();
         var svg = this.SVG(); this.SVGgetScale(svg);
         this.SVGhandleSpace(svg);
-	for (var i = 0, m = this.data.length; i < m; i++) {
+        for (var i = 0, m = this.data.length; i < m; i++) {
           if (this.data[i]) {
             var child = svg.Add(this.data[i].toSVG(variant,svg.scale),svg.w,0,true);
             if (child.skew) {svg.skew = child.skew}
           }
         }
         svg.Clean(); var text = this.data.join("");
-	if (svg.skew && text.length !== 1) {delete svg.skew}
+        if (svg.skew && text.length !== 1) {delete svg.skew}
         if (svg.r > svg.w && text.length === 1 && !variant.noIC)
           {svg.ic = svg.r - svg.w; svg.w = svg.r}
 	this.SVGhandleColor(svg);
@@ -1284,7 +1292,8 @@
 
       SVGgetVariant: function () {
 	var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
-	var variant = values.mathvariant; if (this.variantForm) {variant = "-TeX-variant"}
+	var variant = values.mathvariant;
+        if (this.variantForm) variant = "-"+SVG.fontInUse+"-variant";
         values.hasVariant = this.Get("mathvariant",true);  // null if not explicitly specified
         if (!values.hasVariant) {
           values.family = values.fontfamily;
@@ -1396,6 +1405,12 @@
       SVGlineBreaks: function () {return false}
       
     },{
+      SVGemptySVG: function () {
+        var svg = this.SVG();
+        svg.Clean();
+        this.SVGsaveData(svg);
+	return svg;
+      },
       SVGautoload: function () {
 	var file = SVG.autoloadDir+"/"+this.type+".js";
 	HUB.RestartAfter(AJAX.Require(file));
@@ -1456,7 +1471,7 @@
         //  Primes must come from another font
         //
         if (isScript && this.data.join("").match(/['`"\u00B4\u2032-\u2037\u2057]/))
-          {variant = SVG.FONTDATA.VARIANT["-TeX-variant"]}
+          {variant = SVG.FONTDATA.VARIANT["-"+SVG.fontInUse+"-variant"]}
         //
         //  Typeset contents
         //
@@ -2063,30 +2078,33 @@
           //  Style the <svg> to get the right size and placement
           //
           var l = Math.max(-svg.l,0), r = Math.max(svg.r-svg.w,0);
-          var style = svg.element.style;
+          var style = svg.element.style, px = SVG.TeX.x_height/SVG.ex;
+          var H = (Math.ceil(svg.H/px)+1)*px+SVG.HFUZZ,  // round to pixels and add padding
+              D = (Math.ceil(svg.D/px)+1)*px+SVG.DFUZZ;
           svg.element.setAttribute("width",SVG.Ex(l+svg.w+r));
-          svg.element.setAttribute("height",SVG.Ex(svg.H+svg.D+2*SVG.em));
-          style.verticalAlign = SVG.Ex(-svg.D-2*SVG.em); // remove extra pixel added below plus padding from above
-          style.marginLeft = SVG.Ex(-l); style.marginRight = SVG.Ex(-r);
-          svg.element.setAttribute("viewBox",SVG.Fixed(-l,1)+" "+SVG.Fixed(-svg.H-SVG.em,1)+" "+
-                                             SVG.Fixed(l+svg.w+r,1)+" "+SVG.Fixed(svg.H+svg.D+2*SVG.em,1));
-          style.marginTop = style.marginBottom = "1px"; // 1px above and below to prevent lines from touching
+          svg.element.setAttribute("height",SVG.Ex(H+D));
+          style.verticalAlign = SVG.Ex(-D);
+          if (l) style.marginLeft = SVG.Ex(-l);
+          if (r) style.marginRight = SVG.Ex(-r);
+          svg.element.setAttribute("viewBox",SVG.Fixed(-l,1)+" "+SVG.Fixed(-H,1)+" "+
+                                             SVG.Fixed(l+svg.w+r,1)+" "+SVG.Fixed(H+D,1));
           //
           //  If there is extra height or depth, hide that
           //
-          if (svg.H > svg.h) {style.marginTop = SVG.Ex(svg.h-svg.H)}
-          if (svg.D > svg.d) {
-            style.marginBottom = SVG.Ex(svg.d-svg.D);
-            style.verticalAlign = SVG.Ex(-svg.d);
-          }
+	  if (svg.H > svg.h) style.marginTop = SVG.Ex(svg.h-H);
+	  if (svg.D > svg.d) {
+	    style.marginBottom = SVG.Ex(svg.d-D);
+	    style.verticalAlign = SVG.Ex(-svg.d);
+	  }
           //
           //  Add it to the MathJax span
           //
           var alttext = this.Get("alttext");
-          if (alttext && !svg.element.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
-          if (!svg.element.getAttribute("role")) span.setAttribute("role","math");
-//        span.setAttribute("tabindex",0);  // causes focus outline, so disable for now
-          span.appendChild(svg.element); svg.element = null;
+          if (alttext && !svg.element.getAttribute("aria-label")) svg.element.setAttribute("aria-label",alttext);
+          if (!svg.element.getAttribute("role")) svg.element.setAttribute("role","img");
+          svg.element.setAttribute("focusable","false");
+          span.appendChild(svg.element);
+          svg.element = null;
           //
           //  Handle indentalign and indentshift for single-line displays
           //
@@ -2105,7 +2123,7 @@
             if (shift) {
               HUB.Insert(style,({
                 left: {marginLeft: SVG.Ex(shift)},
-                right: {marginRight: SVG.Ex(-shift)},
+                right: {marginRight: SVG.Ex(-shift), marginLeft: SVG.Ex(Math.max(0,shift-(l+svg.w+r)))},
                 center: {marginLeft: SVG.Ex(shift), marginRight: SVG.Ex(-shift)}
               })[values.indentalign]);
             }
@@ -2132,6 +2150,14 @@
 	return svg;
       }
     });
+
+    //
+    //  Make sure these don't generate output
+    //
+    MML.maligngroup.Augment({toSVG: MML.mbase.SVGemptySVG});
+    MML.malignmark.Augment({toSVG: MML.mbase.SVGemptySVG});
+    MML.mprescripts.Augment({toSVG: MML.mbase.SVGemptySVG});
+    MML.none.Augment({toSVG: MML.mbase.SVGemptySVG});
 
     //
     //  Loading isn't complete until the element jax is modified,

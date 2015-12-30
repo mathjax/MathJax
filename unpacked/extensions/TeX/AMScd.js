@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMScd"] = {
-  version: "2.5.0",
+  version: "2.6.0",
   config: MathJax.Hub.CombineConfig("TeX.CD",{
     colspace: "5pt",
     rowspace: "5pt",

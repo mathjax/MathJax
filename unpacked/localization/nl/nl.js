@@ -23,22 +23,22 @@
 
 MathJax.Localization.addTranslation("nl",null,{
   menuTitle: "Nederlands",
-  version: "2.5.0",
+  version: "2.6.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax heeft een gebruikersconfiguratie cookie aangetroffen dat code bevat die uitgevoerd moet worden. Wilt u deze uitvoeren?\n\\n\n(U zou op annuleren moeten drukken tenzij u het cookie zelf ingesteld heeft.)",
-          MathProcessingError: "Wiskunde verwerkingsfout",
-          MathError: "Wiskunde fout",
+          MathProcessingError: "Mathverwerkingsfout",
+          MathError: "Mathfout",
           LoadFile: "Bezig met laden van %1",
           Loading: "Bezig met laden",
-          LoadFailed: "Bestand kan niet geladen worden: %1",
-          ProcessMath: "Berekening verwerken: %1",
+          LoadFailed: "Het bestand kon niet geladen worden: %1",
+          ProcessMath: "Berekening aan het verwerken: %1%%",
           Processing: "Bezig met verwerken",
-          TypesetMath: "Berekening opmaken: %1",
+          TypesetMath: "Berekening aan het opmaken: %1%%",
           Typesetting: "Opmaken",
           MathJaxNotSupported: "Uw browser ondersteunt MathJax niet"
         }

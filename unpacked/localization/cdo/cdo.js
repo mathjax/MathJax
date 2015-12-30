@@ -23,19 +23,19 @@
 
 MathJax.Localization.addTranslation("cdo",null,{
   menuTitle: "M\u00ECng-d\u0115\u0324ng-ng\u1E73\u0304",
-  version: "2.5.0",
+  version: "2.6.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax\u5DF2\u7D93\u8A0E\u8457\u5305\u62EC\u6703\u904B\u884C\u5176\u4EE3\u78BC\u5176\u7528\u6236\u914D\u7F6Ecookie\u3002\u6C5D\u6709\u60F3\u904B\u884C\u7121\uFF1F\n\n\uFF08\u9664\u958B\u9019\u78BA\u5BE6\u662F\u6C5D\u81EA\u5BB6\u7279\u610F\u8A2D\u5176cookie\uFF0C\u82E5\u7121\u6C5D\u8457\u9EDE\u53D6\u6D88\u3002\uFF09",
           MathProcessingError: "\u6578\u5B78\u8655\u7406\u932F\u8AA4",
           MathError: "\u6578\u5B78\u932F\u8AA4",
-          LoadFile: "\u8F09\u5E95%1",
-          Loading: "\u8F09\u5E95",
-          LoadFailed: "\u6587\u4EF6\u8F09\u5E95\u5931\u6557\uFF1A%1",
+          LoadFile: "\u8F09\u5165%1",
+          Loading: "\u8F09\u5165",
+          LoadFailed: "\u6587\u4EF6\u8F09\u5165\u5931\u6557\uFF1A%1",
           ProcessMath: "\u8655\u7406\u6578\u5B78\uFF1A%1%%",
           Processing: "\u6546\uD844\uDD4F\u8655\u7406",
           TypesetMath: "\u6392\u7248\u6578\u5B78\uFF1A%1%%",

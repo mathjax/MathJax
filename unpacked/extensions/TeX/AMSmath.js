@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.5.1",
+  version: "2.6.0",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -99,6 +99,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       
       DeclareMathOperator: 'HandleDeclareOp',
       operatorname:        'HandleOperatorName',
+      SkipLimits:          'SkipLimits',
       
       genfrac:     'Genfrac',
       frac:       ['Genfrac',"","","",""],
@@ -133,14 +134,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       aligned:       ['AlignedAMSArray',null,null,null,'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0]),".5em",'D'],
       gathered:      ['AlignedAMSArray',null,null,null,'c',null,".5em",'D'],
 
-      subarray:      ['Array',null,null,null,null,COLS([0,0,0,0]),"0.1em",'S',1],
+      subarray:      ['Array',null,null,null,null,COLS([0]),"0.1em",'S',1],
       smallmatrix:   ['Array',null,null,null,'c',COLS([1/3]),".2em",'S',1],
       
       'equation':    ['EquationBegin','Equation',true],
       'equation*':   ['EquationBegin','EquationStar',false],
 
-      eqnarray:      ['AMSarray',null,true,true, 'rcl',MML.LENGTH.THICKMATHSPACE,".5em"],
-      'eqnarray*':   ['AMSarray',null,false,true,'rcl',MML.LENGTH.THICKMATHSPACE,".5em"]
+      eqnarray:      ['AMSarray',null,true,true, 'rcl',"0 "+MML.LENGTH.THICKMATHSPACE,".5em"],
+      'eqnarray*':   ['AMSarray',null,false,true,'rcl',"0 "+MML.LENGTH.THICKMATHSPACE,".5em"]
     },
     
     delimiter: {
@@ -210,7 +211,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle \DeclareMathOperator
      */
     HandleDeclareOp: function (name) {
-      var limits = (this.GetStar() ? "" : "\\nolimits");
+      var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
       var cs = this.trimSpaces(this.GetArgument(name));
       if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
       var op = this.GetArgument(name);
@@ -219,13 +220,18 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     HandleOperatorName: function (name) {
-      var limits = (this.GetStar() ? "" : "\\nolimits");
+      var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
       var op = this.trimSpaces(this.GetArgument(name));
       op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
       this.string = '\\mathop{\\rm '+op+'}'+limits+" "+this.string.slice(this.i);
       this.i = 0;
     },
     
+    SkipLimits: function (name) {
+      var c = this.GetNext(), i = this.i;
+      if (c === "\\" && ++this.i && this.GetCS() !== "limits") this.i = i;
+    },
+
     /*
      *  Record presence of \shoveleft and \shoveright
      */
@@ -333,7 +339,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       while (n > 0) {align += "rl"; spacing.push("0em 0em"); n--}
       spacing = spacing.join(" ");
       if (taggable) {return this.AMSarray(begin,numbered,taggable,align,spacing)}
-      var array = this.Array.call(this,begin,null,null,align,spacing,".5em",'D');
+      var array = this.AMSarray(begin,numbered,taggable,align,spacing);
       return this.setArrayAlign(array,valign);
     },
     
@@ -400,7 +406,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     GetDelimiterArg: function (name) {
       var c = this.trimSpaces(this.GetArgument(name));
       if (c == "") return null;
-      if (TEXDEF.delimiter[c]) return c;
+      if (c in TEXDEF.delimiter) return c;
       TEX.Error(["MissingOrUnrecognizedDelim","Missing or unrecognized delimiter for %1",name]);
     },
     
@@ -571,22 +577,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           var def = {
             side: TEX.config.TagSide,
             minlabelspacing: TEX.config.TagIndent,
-            columnalign: mml.displayAlign,
             displaystyle: "inherit"   // replaced by TeX input jax Translate() function with actual value
           };
-          if (mml.displayAlign === MML.INDENTALIGN.LEFT) {
-            def.width = "100%";
-            if (mml.displayIndent !== "0") {
-              def.columnwidth = mml.displayIndent + " fit"; def.columnspacing = "0"
-              row = [row[0],MML.mtd(),row[1]];
-            }
-          } else if (mml.displayAlign === MML.INDENTALIGN.RIGHT) {
-            def.width = "100%";
-            if (mml.displayIndent !== "0") {
-              def.columnwidth = "fit "+mml.displayIndent; def.columnspacing = "0"
-              row[2] = MML.mtd();
-            }
-          }
           mml = MML.mtable(MML.mlabeledtr.apply(MML,row)).With(def);
         }
         return STACKITEM.mml(mml);

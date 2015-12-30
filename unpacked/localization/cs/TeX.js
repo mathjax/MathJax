@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("cs","TeX",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "P\u0159eb\u00FDvaj\u00EDc\u00ED otv\u00EDrac\u00ED nebo chyb\u011Bj\u00EDc\u00ED zav\u00EDrac\u00ED slo\u017Een\u00E1 z\u00E1vorka",

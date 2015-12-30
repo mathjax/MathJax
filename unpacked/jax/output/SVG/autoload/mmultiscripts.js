@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG;
   
@@ -100,14 +100,19 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var sup, sub, BOX = [];
       var i = 1, m = this.data.length, W = 0;
       for (var k = 0; k < 4; k += 2) {
-        while (i < m && this.data[i].type !== "mprescripts") {
+        while (i < m && (this.data[i]||{}).type !== "mprescripts") {
+          var box = [null,null,null,null];
           for (var j = k; j < k+2; j++) {
-            if (this.data[i] && this.data[i].type !== "none") {
+            if (this.data[i] && this.data[i].type !== "none" && this.data[i].type !== "mprescripts") {
               if (!BOX[j]) {BOX[j] = SVG.BBOX.G()}
-              BOX[j].Add(this.data[i].toSVG().With({x:W}));
+              box[j] = this.data[i].toSVG();
             }
-            i++;
+            if ((this.data[i]||{}).type !== "mprescripts") i++;
           }
+          var isPre = (k === 2);
+          if (isPre) W += Math.max((box[k]||{w:0}).w,(box[k+1]||{w:0}).w);
+          if (box[k])   BOX[k].Add(box[k].With({x:W-(isPre?box[k].w:0)}));
+          if (box[k+1]) BOX[k+1].Add(box[k+1].With({x:W-(isPre?box[k+1].w:0)}));
           sub = BOX[k]||{w:0}; sup = BOX[k+1]||{w:0};
           sub.w = sup.w = W = Math.max(sub.w,sup.w);
         }

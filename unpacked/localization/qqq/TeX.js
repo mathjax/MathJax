@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("qqq","TeX",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "This appears in TeX expressions when open and close braces do not match e.g. \u003Ccode\u003E\\( { \\)\u003C/code\u003E\n\nSee also:\n* {{msg-mathjax|Tex-ExtraCloseMissingOpen}}",

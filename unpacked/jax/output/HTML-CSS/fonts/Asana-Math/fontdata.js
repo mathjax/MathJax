@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-    var VERSION = "2.5.0";
+    var VERSION = "2.6.0";
 
   var ALPHABETS = "AsanaMathJax_Alphabets",
       ARROWS = "AsanaMathJax_Arrows",
@@ -463,6 +463,9 @@
           HW: [[0.885,MAIN], [1.470,SIZE1], [2.041,SIZE2], [2.552,SIZE3], [2.615,SIZE3,1.025]],
           stretch: {bot:[0x23A6,SYMBOLS], ext:[0x23A5,SYMBOLS]}
         },
+        0x2312: {alias: 0x23DC, dir:H},
+        0x2322: {alias: 0x23DC, dir:H},
+        0x2323: {alias: 0x23DD, dir:H},
         0x2329: {alias: 0x27E8, dir: V},
         0x232A: {alias: 0x27E9, dir: V},
         0x23AA:

@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-    var VERSION = "2.5.0";
+    var VERSION = "2.6.0";
 
   var ALPHABETS = "LatinModernMathJax_Alphabets",
       ARROWS = "LatinModernMathJax_Arrows",
@@ -539,6 +539,9 @@
           HW: [[1.000,MAIN], [1.100,SIZE1], [1.200,SIZE2], [1.450,SIZE3], [1.800,SIZE4], [2.100,SIZE5], [2.400,SIZE6], [3.000,SIZE7]],
           stretch: {bot:[0x23A6,SYMBOLS], ext:[0x23A5,SYMBOLS]}
         },
+        0x2312: {alias: 0x23DC, dir:H},
+        0x2322: {alias: 0x23DC, dir:H},
+        0x2323: {alias: 0x23DD, dir:H},
         0x2329:
         {
           dir: V,

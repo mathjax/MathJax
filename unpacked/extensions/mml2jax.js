@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "2.5.0",
+  version: "2.6.0",
   config: {
     preview: "mathml"       // Use the <math> element as the
                             //   preview.  Set to "none" for no preview,
@@ -99,8 +99,8 @@ MathJax.Extension.mml2jax = {
     }
     for (var i = 0, m = math.length; i < m; i++) {
       var parent = math[i].parentNode;
-      if (parent && parent.className !== preview && !math[i].prefix === !namespace)
-        {array.push(math[i])}
+      if (parent && parent.className !== preview &&
+         !parent.isMathJax && !math[i].prefix === !namespace) array.push(math[i]);
     }
   },
   

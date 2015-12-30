@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("fr","MathMenu",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           Show: "Afficher sous forme",
@@ -51,7 +51,7 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
           Command: "Commande",
           Control: "Contr\u00F4le",
           Shift: "Maj",
-          ZoomFactor: "Facteur de grossissement",
+          ZoomFactor: "Facteur de grossissement d'\u00E9chelle",
           Renderer: "Outil de rendu math\u00E9matique",
           MPHandles: "Laisser MathPlayer g\u00E9rer :",
           MenuEvents: "\u00C9v\u00E9nements de menu",

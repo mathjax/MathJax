@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("mk","TeX",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u0418\u043C\u0430\u0442\u0435 \u043D\u0435\u043F\u043E\u0442\u0440\u0435\u0431\u043D\u0430 \u043F\u043E\u0447\u0435\u0442\u043D\u0430 \u0437\u0430\u0433\u0440\u0430\u0434\u0430 \u0438\u043B\u0438 \u043D\u0435\u0434\u043E\u0441\u0442\u0430\u0441\u0443\u0432\u0430 \u0437\u0430\u0432\u0440\u0448\u043D\u0430",

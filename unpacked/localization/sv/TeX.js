@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("sv","TeX",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Extra v\u00E4nsterklammerparentes eller h\u00F6gerklammerparentes saknas",

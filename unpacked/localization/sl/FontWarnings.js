@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("sl","FontWarnings",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax za prikaza matematike na tej strani uporablja spletne pisave. Da se te nalo\u017Eijo, vzame nekaj \u010Dasa. Stran bi se hitreje izrisovala, \u010De bi bile matemati\u010Dne pisave name\u0161\u010Dene neposredno v mapi s pisavami va\u0161ega sistema.",

@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-    var VERSION = "2.5.0";
+    var VERSION = "2.6.0";
 
   var ALPHABETS = "GyrePagellaMathJax_Alphabets",
       ARROWS = "GyrePagellaMathJax_Arrows",
@@ -539,6 +539,9 @@
           HW: [[820,MAIN], [980,SIZE1], [1172,SIZE2], [1402,SIZE3], [1678,SIZE4], [2009,SIZE5], [2408,SIZE6], [2612,SIZE6,1.085]],
           stretch: {bot:[0x23A6,SYMBOLS], ext:[0x23A5,SYMBOLS]}
         },
+        0x2312: {alias: 0x23DC, dir:H},
+        0x2322: {alias: 0x23DC, dir:H},
+        0x2323: {alias: 0x23DD, dir:H},
         0x2329:
         {
           dir: V,

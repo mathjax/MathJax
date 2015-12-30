@@ -22,10 +22,10 @@
  */
 
 MathJax.Localization.addTranslation("nl","MathML",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
-          BadMglyph: "Verkeerde mglyph: %1",
+          BadMglyph: "Onjuiste mglyph: %1",
           BadMglyphFont: "Verkeerd lettertype: %1",
           MathPlayer: "MathJax was niet in staat MathPlayer in te stellen.\n\\n\nAls MathPlay niet ge\u00EFnstalleerd is dan dient u dat eerst te doen.\nAnders kan het zijn dat beveiligingsinstellingen de uitvoering van ActiveX-besturingselementen verhinderen. Gebruik de keuze Internet Opties in het Extra menu en selecteer het tabblag Beveiligingsinstellingen en druk op de Aangepaste niveau knop. Controleer dat de instellingen voor 'Het uitvoeren van ActiveX-besturingselementen' en 'Gedrag van binaire elementen en scripts' ingeschakeld zijn.\n\\n\nMomenteel zult u foutmeldingen zien in plaats van opgemaakte wiskunde",
           CantCreateXMLParser: "MathJax kan geen XML verwerker cre\u00EBren voor MathML. Controleer dat de 'ActiveX-besturingselementen die zijn gemarkeerd als veilig voor scripts uitvoeren in scripts' beveiligingsinstelling ingeschakeld is (gebruik de Internet Opties keuze in het Extra menu en selecteer het paneel Beveiliging, druk dan op de Aangepaste niveau knop om dit te controleren.)\n\\n\nHet zal voor MathML vergelijkingen niet mogelijk zijn verwerkt te worden door MathJax.",

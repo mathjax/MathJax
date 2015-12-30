@@ -5,6 +5,7 @@
 <!-- Copyright (c) 2010-2015 The MathJax Consortium -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script type="text/javascript" src="../MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
@@ -52,7 +53,12 @@ input {margin-top: .7em}
     //  so we don't see a flash as the math is cleared and replaced.
     //
     window.UpdateMath = function (TeX) {
-      QUEUE.Push(HIDEBOX,["Text",math,"\\displaystyle{"+TeX+"}"],SHOWBOX);
+      QUEUE.Push(
+          HIDEBOX,
+          ["resetEquationNumbers",MathJax.InputJax.TeX],
+          ["Text",math,"\\displaystyle{"+TeX+"}"],
+          SHOWBOX
+      );
     }
   })();
 </script>

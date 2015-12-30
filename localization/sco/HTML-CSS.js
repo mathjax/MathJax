@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("sco","HTML-CSS",{version:"2.5.0",isLoaded:true,strings:{LoadWebFont:"Laidin wab font %1",CantLoadWebFont:"Canna laid wab font %1",FirefoxCantLoadWebFont:"Firefox canna laid wab fonts fae ae remote host",CantFindFontUsing:"Canna fynd ae valid font uisin %1",WebFontsNotAvailable:"Wab fonts no available. Uisin eimage fonts instead"}});MathJax.Ajax.loadComplete("[MathJax]/localization/sco/HTML-CSS.js");
+MathJax.Localization.addTranslation("sco","HTML-CSS",{version:"2.6.0",isLoaded:true,strings:{LoadWebFont:"Laidin wab font %1",CantLoadWebFont:"Canna laid wab font %1",FirefoxCantLoadWebFont:"Firefox canna laid wab fonts fae ae remote host",CantFindFontUsing:"Canna fynd ae valid font uisin %1",WebFontsNotAvailable:"Wab fonts no available. Uisin eimage fonts instead"}});MathJax.Ajax.loadComplete("[MathJax]/localization/sco/HTML-CSS.js");

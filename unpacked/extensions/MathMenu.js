@@ -4,21 +4,21 @@
 /*************************************************************
  *
  *  MathJax/extensions/MathMenu.js
- *  
+ *
  *  Implements a right-mouse (or CTRL-click) menu over mathematics
  *  elements that gives the user the ability to copy the source,
  *  change the math size, and zoom settings.
  *
  *  ---------------------------------------------------------------------
- *  
+ *
  *  Copyright (c) 2010-2015 The MathJax Consortium
- * 
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,10 +27,10 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
 
-  var SIGNAL = MathJax.Callback.Signal("menu")  // signal for menu events
-  
+  var SIGNAL = MathJax.Callback.Signal("menu");  // signal for menu events
+
   MathJax.Extension.MathMenu = {
     version: VERSION,
     signal: SIGNAL
@@ -45,10 +45,9 @@
 
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE, isIE9 = ((document.documentMode||0) > 8);
   var ROUND = (isPC ? null : "5px");
-  
+
   var CONFIG = HUB.CombineConfig("MathMenu",{
     delay: 150,                                    // the delay for submenus
-    closeImg: AJAX.urlRev(OUTPUT.imageDir+"/CloseX-31.png"), // image for close "X" for mobiles
 
     showRenderer: true,                            //  show the "Math Renderer" menu?
     showMathPlayer: true,                          //  show the "MathPlayer" menu?
@@ -73,7 +72,7 @@
       left: Math.round((screen.width - 400)/2),
       top:  Math.round((screen.height - 300)/3)
     },
-    
+
     styles: {
       "#MathJax_About": {
         position:"fixed", left:"50%", width:"auto", "text-align":"center",
@@ -93,6 +92,9 @@
         "-moz-box-shadow":"0px 10px 20px #808080",    // Forefox 3.5
         "-khtml-box-shadow":"0px 10px 20px #808080",  // Konqueror
         filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')" // IE
+      },
+      "#MathJax_About.MathJax_MousePost": {
+        outline:"none"
       },
 
       ".MathJax_Menu": {
@@ -121,8 +123,8 @@
       },
 
       ".MathJax_MenuArrow": {
-        position:"absolute", right:".5em", color:"#666666",
-        "font-family": (isMSIE ? "'Arial unicode MS'" : null)
+        position:"absolute", right:".5em", "padding-top":".25em", color:"#666666",
+        "font-family": (isMSIE ? "'Arial unicode MS'" : null), "font-size": ".75em"
       },
       ".MathJax_MenuActive .MathJax_MenuArrow": {color:"white"},
       ".MathJax_MenuArrow.RTL": {left:".5em", right:"auto"},
@@ -144,46 +146,135 @@
         padding: (isPC ? "2px 2em 4px 1.33em" : "1px 2em 3px 1.33em"),
         "font-style":"italic"
       },
-    
+
       ".MathJax_MenuRule": {
         "border-top": (isPC ? "1px solid #CCCCCC" : "1px solid #DDDDDD"),
         margin: (isPC ? "4px 1px 0px" : "4px 3px")
       },
-     
+
       ".MathJax_MenuDisabled": {
         color:"GrayText"
       },
-     
       ".MathJax_MenuActive": {
         "background-color": (isPC ? "Highlight" : "#606872"),
         color: (isPC ? "HighlightText" : "white")
       },
-      
-      ".MathJax_Menu_Close": {
-          position:"absolute",
-          width: "31px", height: "31px",
-          top:"-15px", left:"-15px"
+
+      ".MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus": {
+        "background-color": "#E8E8E8"
+      },
+      ".MathJax_ContextMenu:focus": {
+        outline:"none"
+      },
+      ".MathJax_ContextMenu .MathJax_MenuItem:focus": {
+        outline:"none"
+      },
+
+      "#MathJax_AboutClose": {
+        top:".2em", right:".2em"
+      },
+      ".MathJax_Menu .MathJax_MenuClose": {
+        top:"-10px", left:"-10px"
+      },
+
+      ".MathJax_MenuClose": {
+        position:"absolute",
+        cursor:"pointer",
+        display:"inline-block",
+        border:"2px solid #AAA",
+        "border-radius":"18px",
+        "-webkit-border-radius": "18px",             // Safari and Chrome
+        "-moz-border-radius": "18px",                // Firefox
+        "-khtml-border-radius": "18px",              // Konqueror
+        "font-family":"'Courier New',Courier",
+        "font-size":"24px",
+        color:"#F0F0F0"
+      },
+      ".MathJax_MenuClose span": {
+        display:"block", "background-color":"#AAA", border:"1.5px solid",
+        "border-radius":"18px",
+        "-webkit-border-radius": "18px",             // Safari and Chrome
+        "-moz-border-radius": "18px",                // Firefox
+        "-khtml-border-radius": "18px",              // Konqueror
+        "line-height":0,
+        padding:"8px 0 6px"     // may need to be browser-specific
+      },
+      ".MathJax_MenuClose:hover": {
+        color:"white!important",
+        border:"2px solid #CCC!important"
+      },
+      ".MathJax_MenuClose:hover span": {
+        "background-color":"#CCC!important"
+      },
+      ".MathJax_MenuClose:hover:focus": {
+        outline:"none"
       }
     }
   });
-  
-  var FALSE, HOVER;
+
+  var FALSE, HOVER, KEY;
   HUB.Register.StartupHook("MathEvents Ready",function () {
     FALSE = MathJax.Extension.MathEvents.Event.False;
     HOVER = MathJax.Extension.MathEvents.Hover;
+    KEY = MathJax.Extension.MathEvents.Event.KEY;
   });
-  
+
+
+  /*************************************************************/
+  /*
+   *  Abstract class of all keyboard navigatable objects.
+   */
+  var NAV = MathJax.Object.Subclass({
+    /*
+     * Moving in the list of items.
+     */
+    Keydown: function(event, menu) {
+      switch (event.keyCode) {
+      case KEY.ESCAPE:
+        this.Remove(event, menu);
+        break;
+      case KEY.RIGHT:
+        this.Right(event, menu);
+        break;
+      case KEY.LEFT:
+        this.Left(event, menu);
+        break;
+      case KEY.UP:
+        this.Up(event, menu);
+        break;
+      case KEY.DOWN:
+        this.Down(event, menu);
+        break;
+      case KEY.RETURN:
+      case KEY.SPACE:
+        this.Space(event, menu);
+        break;
+      default:
+        return;
+        break;
+      }
+      return FALSE(event);
+    },
+    Escape: function(event, menu) { },
+    Right: function(event, menu) { },
+    Left: function(event, menu) { },
+    Up: function(event, menu) { },
+    Down: function(event, menu) { },
+    Space: function(event, menu) { }
+  }, {});
+
+
   /*************************************************************/
   /*
    *  The main menu class
    */
-  var MENU = MathJax.Menu = MathJax.Object.Subclass({
+  var MENU = MathJax.Menu = NAV.Subclass({
     version: VERSION,
     items: [],
     posted: false,
     title: null,
     margin: 5,
-    
+
     Init: function (def) {this.items = [].slice.call(arguments,0)},
     With: function (def) {if (def) {HUB.Insert(this,def)}; return this},
 
@@ -191,7 +282,7 @@
      *  Display the menu
      */
     Post: function (event,parent,forceLTR) {
-      if (!event) {event = window.event};
+      if (!event) {event = window.event||{}}
       var div = document.getElementById("MathJax_MenuFrame");
       if (!div) {
         div = MENU.Background(this);
@@ -203,28 +294,38 @@
       var menu = HTML.Element("div",{
         onmouseup: MENU.Mouseup, ondblclick: FALSE,
         ondragstart: FALSE, onselectstart: FALSE, oncontextmenu: FALSE,
-        menuItem: this, className: "MathJax_Menu"
+        menuItem: this, className: "MathJax_Menu", onkeydown: MENU.Keydown,
+        role: "menu"
       });
+      if (event.type === "contextmenu" || event.type === "mouseover")
+        menu.className += " MathJax_ContextMenu";
       if (!forceLTR) {MathJax.Localization.setCSS(menu)}
 
       for (var i = 0, m = this.items.length; i < m; i++) {this.items[i].Create(menu)}
       if (MENU.isMobile) {
         HTML.addElement(menu,"span",{
-          className: "MathJax_Menu_Close", menu: parent,
+          className: "MathJax_MenuClose", menu: parent,
           ontouchstart: MENU.Close, ontouchend: FALSE, onmousedown: MENU.Close, onmouseup: FALSE
-        },[["img",{src: CONFIG.closeImg, style:{width:"100%",height:"100%"}}]]);
+        },[["span",{},"\u00D7"]]);
       }
-      
+
       div.appendChild(menu);
       this.posted = true;
-      
-      menu.style.width = (menu.offsetWidth+2) + "px";
+      if (menu.offsetWidth) menu.style.width = (menu.offsetWidth+2) + "px";
       var x = event.pageX, y = event.pageY;
-      if (!x && !y) {
+      if (!x && !y && "clientX" in event) {
         x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
         y = event.clientY + document.body.scrollTop  + document.documentElement.scrollTop;
       }
       if (!parent) {
+        var node = MENU.CurrentNode() || event.target;
+        if ((event.type === "keydown" || (!x && !y)) && node) {
+          var offsetX = window.pageXOffset || document.documentElement.scrollLeft;
+          var offsetY = window.pageYOffset || document.documentElement.scrollTop;
+          var rect = node.getBoundingClientRect();
+          x = (rect.right + rect.left) / 2 + offsetX;
+          y = (rect.bottom + rect.top) / 2 + offsetY;
+        }
         if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
            {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
         if (MENU.isMobile) {x = Math.max(5,x-Math.floor(menu.offsetWidth/2)); y -= 20}
@@ -249,10 +350,19 @@
           menu.style["KhtmlBorderRadiusTop"+side] = 0;  // Konqueror
         }
       }
-      
+
       menu.style.left = x+"px"; menu.style.top = y+"px";
-      
       if (document.selection && document.selection.empty) {document.selection.empty()}
+
+      // Focusing while keeping the scroll position.
+      var oldX = window.pageXOffset || document.documentElement.scrollLeft;
+      var oldY = window.pageYOffset || document.documentElement.scrollTop;
+      MENU.Focus(menu);
+      if (event.type === "keydown") {
+        MENU.skipMouseoverFromKey = true;
+        setTimeout(function() {delete MENU.skipMouseoverFromKey;}, CONFIG.delay);
+      }
+      window.scrollTo(oldX, oldY);
       return FALSE(event);
     },
 
@@ -270,6 +380,8 @@
         delete MENU.jax.hover.nofade;
         HOVER.UnHover(MENU.jax);
       }
+      MENU.Unfocus(menu);
+      if (event.type === "mousedown") MENU.CurrentNode().blur();
       return FALSE(event);
     },
 
@@ -283,15 +395,15 @@
       for (var i = 0, m = this.items.length; i < m; i++) {
         if (this.items[i].name[n] === name) {
           if (names.length) {
-            if (!this.items[i].menu) {return null}
-            return this.items[i].menu.FindN(n,names[0],names.slice(1));
+            if (!this.items[i].submenu) {return null}
+            return this.items[i].submenu.FindN(n,names[0],names.slice(1));
           }
           return this.items[i];
         }
       }
       return null;
     },
-    
+
     /*
      *  Find the index of a menu item (so we can insert before or after it)
      */
@@ -301,25 +413,49 @@
       for (var i = 0, m = this.items.length; i < m; i++)
         {if (this.items[i].name[n] === name) {return i}}
       return null;
+    },
+
+    Right: function(event, menu) {
+      MENU.Right(event, menu);
+    },
+    Left: function(event, menu) {
+      MENU.Left(event, menu);
+    },
+    Up: function(event, menu) {
+      var node = menu.lastChild;
+      node.menuItem.Activate(event, node);
+    },
+    Down: function(event, menu) {
+      var node = menu.firstChild;
+      node.menuItem.Activate(event, node);
+    },
+    Space: function(event, menu) {
+      this.Remove(event, menu);
     }
-    
   },{
-    
+
     config: CONFIG,
 
-    div: null,     // the DOM elements for the menu and submenus
-
-    Close:      function (event)
-      {return MENU.Event(event,this.menu||this.parentNode,(this.menu?"Touchend":"Remove"))},
     Remove:     function (event) {return MENU.Event(event,this,"Remove")},
     Mouseover:  function (event) {return MENU.Event(event,this,"Mouseover")},
     Mouseout:   function (event) {return MENU.Event(event,this,"Mouseout")},
     Mousedown:  function (event) {return MENU.Event(event,this,"Mousedown")},
     Mouseup:    function (event) {return MENU.Event(event,this,"Mouseup")},
+    Keydown:    function (event) {return MENU.Event(event,this,"Keydown")},
+    /*
+     *  Events for mobile devices.
+     */
     Touchstart: function (event) {return MENU.Event(event,this,"Touchstart")},
     Touchend:   function (event) {return MENU.Event(event,this,"Touchend")},
+    Close:      function (event) {
+      return MENU.Event(event,this.menu||this.parentNode,(this.menu?"Touchend":"Remove"));
+    },
     Event: function (event,menu,type,force) {
       if (MENU.skipMouseover && type === "Mouseover" && !force) {return FALSE(event)}
+      if (MENU.skipMouseoverFromKey && type === "Mouseover") {
+        delete MENU.skipMouseoverFromKey;
+        return FALSE(event);
+      }
       if (MENU.skipUp) {
         if (type.match(/Mouseup|Touchend/)) {delete MENU.skipUp; return FALSE(event)}
         if (type === "Touchstart" ||
@@ -330,7 +466,6 @@
       if (item && item[type]) {return item[type](event,menu)}
       return null;
     },
-
     /*
      *  Style for the background DIV
      */
@@ -340,7 +475,8 @@
     },
 
     Background: function (menu) {
-      var div = HTML.addElement(document.body,"div",{style:this.BGSTYLE, id:"MathJax_MenuFrame"},
+      var div = HTML.addElement(document.body,"div",
+                    {style:this.BGSTYLE, id:"MathJax_MenuFrame"},
                     [["div",{style: this.BGSTYLE, menuItem: menu, onmousedown: this.Remove}]]);
       var bg = div.firstChild;
       if (MENU.msieBackgroundBug) {
@@ -369,65 +505,164 @@
         bg.style.height = document.body.scrollHeight + "px";
       }
     },
-    
+
+    /*************************************************************/
+    /*
+     *  Keyboard navigation of menu.
+     */
+    posted: false,  // Is a menu open?
+    active: null,   // The focused in HTML node in the menu.
+
+    GetNode: function(jax) {
+      var node = document.getElementById(jax.inputID + "-Frame");
+      return node.isMathJax ? node : node.firstChild;
+    },
+    CurrentNode: function() {
+      return MENU.GetNode(MENU.jax);
+    },
+    AllNodes: function() {
+      var jaxs = MathJax.Hub.getAllJax();
+      var nodes = [];
+      for (var i = 0, jax; jax = jaxs[i]; i++) {
+        nodes.push(MENU.GetNode(jax));
+      }
+      return nodes;
+    },
+    ActiveNode: function() {
+      return MENU.active;
+    },
+    FocusNode: function(node) {
+      MENU.active = node;
+      node.focus();
+    },
+    //
+    // Focus is a global affair, since we only ever want a single focused item.
+    //
+    Focus: function(menu) {
+      !MENU.posted ? MENU.Activate(menu) : MENU.ActiveNode().tabIndex = -1;
+      menu.tabIndex = 0;
+      MENU.FocusNode(menu);
+    },
+    Activate: function(event, menu) {
+      var jaxs = MENU.AllNodes();
+      for (var j = 0, jax; jax = jaxs[j]; j++) {
+        jax.tabIndex = -1;
+      }
+      MENU.posted = true;
+    },
+    Unfocus: function() {
+      MENU.ActiveNode().tabIndex = -1;
+      var jaxs = MENU.AllNodes();
+      for (var j = 0, jax; jax = jaxs[j]; j++) {
+        jax.tabIndex = 0;
+      }
+      MENU.FocusNode(MENU.CurrentNode());
+      MENU.posted = false;
+    },
+    MoveHorizontal: function(event, menu, move) {
+      if (!event.shiftKey) return;
+      var jaxs = MENU.AllNodes();
+      var len = jaxs.length;
+      if (len === 0) return;
+      var next = jaxs[MENU.Mod(move(MENU.IndexOf(jaxs, MENU.CurrentNode())), len)];
+      if (next === MENU.CurrentNode()) return;
+      MENU.menu.Remove(event, menu);
+      MENU.jax = MathJax.Hub.getJaxFor(next);
+      MENU.FocusNode(next);
+      MENU.menu.Post(null);
+    },
+    Right: function(event, menu) {
+      MENU.MoveHorizontal(event, menu, function(x) {return x + 1;});
+    },
+    Left: function(event, menu) {
+      MENU.MoveHorizontal(event, menu, function(x) {return x - 1;});
+    },
+
+    //TODO: Move to utility class.
+    // Computes a mod n.
+    Mod: function(a, n) {
+      return ((a % n) + n) % n;
+    },
+    IndexOf: (Array.prototype.indexOf ?
+              function (A, item, start) {return A.indexOf(item, start);} :
+              function (A, item, start) {
+                for (var i = (start || 0), j = A.length; i < j; i++) {
+                  if (item === A[i]) return i;
+                }
+                return -1;
+              }),
+
     saveCookie: function () {HTML.Cookie.Set("menu",this.cookie)},
-    getCookie: function () {this.cookie = HTML.Cookie.Get("menu")},
-    
-    //
-    //  Preload images so they show up with the menu
-    //
-    getImages: function () {
-      if (MENU.isMobile) {var close = new Image(); close.src = CONFIG.closeImg}
-    }
+    getCookie: function () {this.cookie = HTML.Cookie.Get("menu")}
 
   });
 
+  MathJax.Menu.NAV = NAV;
+
   /*************************************************************/
   /*
-   *  The menu item root subclass
+   *  Abstract class of menu items.
    */
-  var ITEM = MENU.ITEM = MathJax.Object.Subclass({
-    name: "", // the menu item's label as [id,label] pair
+  var ITEM = MENU.ITEM = NAV.Subclass({
+
+    name: "", // The menu item's label as [id,label] pair.
+    node: null,  // The HTML node of the item.
+    menu: null,  // The parent menu containing that item. HTML node.
+
+    Attributes: function(def) {
+      return HUB.Insert(
+        {onmouseup: MENU.Mouseup,
+         ondragstart: FALSE, onselectstart: FALSE, onselectend: FALSE,
+         ontouchstart: MENU.Touchstart, ontouchend: MENU.Touchend,
+         className: "MathJax_MenuItem", role: this.role,
+         menuItem: this},
+        def);
+    },
 
     Create: function (menu) {
       if (!this.hidden) {
-        var def = {
-          onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
-          onmouseup: MENU.Mouseup, onmousedown: MENU.Mousedown,
-          ondragstart: FALSE, onselectstart: FALSE, onselectend: FALSE,
-          ontouchstart: MENU.Touchstart, ontouchend: MENU.Touchend,
-          className: "MathJax_MenuItem", menuItem: this
-        };
-        if (this.disabled) {def.className += " MathJax_MenuDisabled"}
-        HTML.addElement(menu,"div",def,this.Label(def,menu));
+        var def = this.Attributes();
+        var label = this.Label(def,menu);
+        HTML.addElement(menu, "div", def, label);
       }
     },
     Name: function () {return _(this.name[0],this.name[1])},
 
     Mouseover: function (event,menu) {
-      if (!this.disabled) {this.Activate(menu)}
-      if (!this.menu || !this.menu.posted) {
-        var menus = document.getElementById("MathJax_MenuFrame").childNodes,
-            items = menu.parentNode.childNodes;
-        for (var i = 0, m = items.length; i < m; i++) {
-          var item = items[i].menuItem;
-          if (item && item.menu && item.menu.posted) {item.Deactivate(items[i])}
-        }
-        m = menus.length-1;
-        while (m >= 0 && menu.parentNode.menuItem !== menus[m].menuItem) {
-          menus[m].menuItem.posted = false;
-          menus[m].parentNode.removeChild(menus[m]);
-          m--;
-        }
-        if (this.Timer && !MENU.isMobile) {this.Timer(event,menu)}
+      if (menu.parentNode === MENU.ActiveNode().parentNode) {
+       this.Deactivate(MENU.ActiveNode());
       }
+      this.Activate(event, menu);
     },
     Mouseout: function (event,menu) {
-      if (!this.menu || !this.menu.posted) {this.Deactivate(menu)}
-      if (this.timer) {clearTimeout(this.timer); delete this.timer}
+      this.Deactivate(menu);
     },
     Mouseup: function (event,menu) {return this.Remove(event,menu)},
-    
+
+
+    DeactivateSubmenus: function(menu) {
+      var menus = document.getElementById("MathJax_MenuFrame").childNodes,
+          items = ITEM.GetMenuNode(menu).childNodes;
+      for (var i = 0, m = items.length; i < m; i++) {
+        var item = items[i].menuItem;
+        // Deactivates submenu items.
+        if (item && item.submenu && item.submenu.posted &&
+            item !== menu.menuItem) {
+          item.Deactivate(items[i]);
+        }
+      }
+      this.RemoveSubmenus(menu, menus);
+    },
+    RemoveSubmenus: function(menu, menus) {
+      menus = menus || document.getElementById("MathJax_MenuFrame").childNodes;
+      var m = menus.length-1;
+      while (m >= 0 && ITEM.GetMenuNode(menu).menuItem !== menus[m].menuItem) {
+        menus[m].menuItem.posted = false;
+        menus[m].parentNode.removeChild(menus[m]);
+        m--;
+      }
+    },
+
     Touchstart: function (event,menu) {return this.TouchEvent(event,menu,"Mousedown")},
     Touchend: function (event,menu)   {return this.TouchEvent(event,menu,"Mouseup")},
     TouchEvent: function (event,menu,type) {
@@ -440,26 +675,117 @@
       MENU.Event(event,menu,type);
       return false;
     },
-    
+
     Remove: function (event,menu) {
       menu = menu.parentNode.menuItem;
       return menu.Remove(event,menu);
     },
 
-    Activate: function (menu) {this.Deactivate(menu); menu.className += " MathJax_MenuActive"},
-    Deactivate: function (menu) {menu.className = menu.className.replace(/ MathJax_MenuActive/,"")},
-
     With: function (def) {if (def) {HUB.Insert(this,def)}; return this},
-    
+
     isRTL: function () {return MENU.isRTL},
     rtlClass: function () {return (this.isRTL() ? " RTL" : "")}
+  }, {
+    GetMenuNode: function(item) {
+      return item.parentNode;
+    }
+  });
+
+  /*************************************************************/
+  /*
+   *  Abstract class of menu items that are focusable and perform some action
+   */
+  MENU.ENTRY = MENU.ITEM.Subclass({
+    role: "menuitem",  // Aria role.
+
+    Attributes: function(def) {
+      def = HUB.Insert(
+        {onmouseover: MENU.Mouseover, onmouseout: MENU.Mouseout,
+         onmousedown: MENU.Mousedown, onkeydown: MENU.Keydown,
+         "aria-disabled": !!this.disabled},
+        def);
+      def = this.SUPER(arguments).Attributes.call(this, def);
+      if (this.disabled) {
+        def.className += " MathJax_MenuDisabled";
+      }
+      return def;
+    },
+    MoveVertical: function(event, item, move) {
+      var menuNode = ITEM.GetMenuNode(item);
+      var items = [];
+      for (var i = 0, allItems = menuNode.menuItem.items, it;
+           it = allItems[i]; i++) {
+        if (!it.hidden) {
+          items.push(it);
+        }
+      }
+      var index = MENU.IndexOf(items, this);
+      if (index === -1) return;
+      var len = items.length;
+      var children = menuNode.childNodes;
+      do {
+        index = MENU.Mod(move(index), len);
+      } while (items[index].hidden || !children[index].role ||
+               children[index].role === "separator");
+      this.Deactivate(item);
+      items[index].Activate(event, children[index]);
+    },
+    Up: function(event, item) {
+      this.MoveVertical(event, item, function(x) { return x - 1; });
+    },
+    Down: function(event, item) {
+      this.MoveVertical(event, item, function(x) { return x + 1; });
+    },
+    Right: function(event, item) {
+      this.MoveHorizontal(event, item, MENU.Right, !this.isRTL());
+    },
+    Left: function(event, item) {
+      this.MoveHorizontal(event, item, MENU.Left, this.isRTL());
+    },
+    MoveHorizontal: function(event, item, move, rtl) {
+      var menuNode = ITEM.GetMenuNode(item);
+      if (menuNode.menuItem === MENU.menu && event.shiftKey) {
+        move(event, item);
+      }
+      if (rtl) return;
+      if (menuNode.menuItem !== MENU.menu) {
+        this.Deactivate(item);
+      }
+      var parentNodes = menuNode.previousSibling.childNodes;
+      var length = parentNodes.length;
+      while (length--) {
+        var parent = parentNodes[length];
+        if (parent.menuItem.submenu &&
+            parent.menuItem.submenu === menuNode.menuItem) {
+          MENU.Focus(parent);
+          break;
+        }
+      }
+      this.RemoveSubmenus(item);
+    },
+    Space: function (event, menu) {
+      this.Mouseup(event, menu);
+    },
+
+    Activate: function (event, menu) {
+      this.Deactivate(menu);
+      if (!this.disabled) {
+        menu.className += " MathJax_MenuActive";
+      }
+      this.DeactivateSubmenus(menu);
+      MENU.Focus(menu);
+    },
+    Deactivate: function (menu) {
+      menu.className = menu.className.replace(/ MathJax_MenuActive/,"");
+    }
+
   });
 
   /*************************************************************/
   /*
    *  A menu item that performs a command when selected
    */
-  MENU.ITEM.COMMAND = MENU.ITEM.Subclass({
+  MENU.ITEM.COMMAND = MENU.ENTRY.Subclass({
     action: function () {},
 
     Init: function (name,action,def) {
@@ -467,7 +793,7 @@
       this.name = name; this.action = action;
       this.With(def);
     },
-    
+
     Label: function (def,menu) {return [this.Name()]},
     Mouseup: function (event,menu) {
       if (!this.disabled) {
@@ -483,52 +809,97 @@
   /*
    *  A menu item that posts a submenu
    */
-  MENU.ITEM.SUBMENU = MENU.ITEM.Subclass({
-    menu: null,        // the submenu
-    marker: (isPC && !HUB.Browser.isSafari ? "\u25B6" : "\u25B8"),  // the menu arrow
-    markerRTL: (isPC && !HUB.Browser.isSafari ? "\u25B0" : "\u25C2"),
+  MENU.ITEM.SUBMENU = MENU.ENTRY.Subclass({
+    submenu: null,        // the submenu
+    marker: "\u25BA",  // the submenu arrow
+    markerRTL: "\u25C4", // the submenu arrow for RTL
 
+    Attributes: function(def) {
+      def = HUB.Insert({"aria-haspopup": "true"}, def);
+      def = this.SUPER(arguments).Attributes.call(this, def);
+      return def;
+    },
     Init: function (name,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; var i = 1;
       if (!(def instanceof MENU.ITEM)) {this.With(def), i++}
-      this.menu = MENU.apply(MENU,[].slice.call(arguments,i));
+      this.submenu = MENU.apply(MENU,[].slice.call(arguments,i));
     },
     Label: function (def,menu) {
-      this.menu.posted = false;
+      this.submenu.posted = false;
       return [this.Name()+" ",["span",{
         className:"MathJax_MenuArrow" + this.rtlClass()
       },[this.isRTL() ? this.markerRTL : this.marker]]];
     },
     Timer: function (event,menu) {
-      if (this.timer) {clearTimeout(this.timer)}
-      event = {clientX: event.clientX, clientY: event.clientY}; // MSIE can't pass the event below
+      this.ClearTimer();
+      event = {type: event.type,
+               clientX: event.clientX, clientY: event.clientY}; // MSIE can't pass the event below
       this.timer = setTimeout(CALLBACK(["Mouseup",this,event,menu]),CONFIG.delay);
     },
+    ClearTimer: function() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+    },
     Touchend: function (event,menu) {
-      var forceout = this.menu.posted;
+      var forceout = this.submenu.posted;
       var result = this.SUPER(arguments).Touchend.apply(this,arguments);
       if (forceout) {this.Deactivate(menu); delete ITEM.lastItem; delete ITEM.lastMenu}
       return result;
     },
+    Mouseout: function(event, menu) {
+      if (!this.submenu.posted) {
+        this.Deactivate(menu);
+      }
+      this.ClearTimer();
+    },
+    Mouseover: function(event, menu) {
+      this.Activate(event, menu);
+    },
     Mouseup: function (event,menu) {
       if (!this.disabled) {
-        if (!this.menu.posted) {
-          if (this.timer) {clearTimeout(this.timer); delete this.timer}
-          this.menu.Post(event,menu,this.ltr);
+        if (!this.submenu.posted) {
+          this.ClearTimer();
+          this.submenu.Post(event, menu, this.ltr);
+          MENU.Focus(menu);
         } else {
-         var menus = document.getElementById("MathJax_MenuFrame").childNodes,
-              m = menus.length-1;
-          while (m >= 0) {
-            var child = menus[m];
-            child.menuItem.posted = false;
-            child.parentNode.removeChild(child);
-            if (child.menuItem === this.menu) {break};
-            m--;
-          }
+          this.DeactivateSubmenus(menu);
         }
       }
       return FALSE(event);
+    },
+    Activate: function (event, menu) {
+      if (!this.disabled) {
+        this.Deactivate(menu);
+        menu.className += " MathJax_MenuActive";
+      }
+      if (!this.submenu.posted) {
+        this.DeactivateSubmenus(menu);
+        if (!MENU.isMobile) {
+          this.Timer(event,menu);
+        }
+      }
+      MENU.Focus(menu);
+    },
+    MoveVertical: function(event, item, move) {
+      this.ClearTimer();
+      this.SUPER(arguments).MoveVertical.apply(this, arguments);
+    },
+    MoveHorizontal: function(event, menu, move, rtl) {
+      if (!rtl) {
+        this.SUPER(arguments).MoveHorizontal.apply(this, arguments);
+        return;
+      }
+      if (this.disabled) return;
+      if (!this.submenu.posted) {
+        this.Activate(event, menu);
+        return;
+      }
+      var submenuNodes = ITEM.GetMenuNode(menu).nextSibling.childNodes;
+      if (submenuNodes.length > 0) {
+        this.submenu.items[0].Activate(event, submenuNodes[0]);
+      }
     }
   });
 
@@ -536,10 +907,17 @@
   /*
    *  A menu item that is one of several radio buttons
    */
-  MENU.ITEM.RADIO = MENU.ITEM.Subclass({
+  MENU.ITEM.RADIO = MENU.ENTRY.Subclass({
     variable: null,     // the variable name
     marker: (isPC ? "\u25CF" : "\u2713"),   // the checkmark
+    role: "menuitemradio",
 
+    Attributes: function(def) {
+      var checked = CONFIG.settings[this.variable] === this.value ? "true" : "false";
+      def = HUB.Insert({"aria-checked": checked}, def);
+      def = this.SUPER(arguments).Attributes.call(this, def);
+      return def;
+    },
     Init: function (name,variable,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
@@ -547,7 +925,9 @@
     },
     Label: function (def,menu) {
       var span = {className:"MathJax_MenuRadioCheck" + this.rtlClass()};
-      if (CONFIG.settings[this.variable] !== this.value) {span = {style:{display:"none"}}}
+      if (CONFIG.settings[this.variable] !== this.value) {
+        span = {style:{display:"none"}};
+      }
       return [["span",span,[this.marker]]," "+this.Name()];
     },
     Mouseup: function (event,menu) {
@@ -555,10 +935,11 @@
         var child = menu.parentNode.childNodes;
         for (var i = 0, m = child.length; i < m; i++) {
           var item = child[i].menuItem;
-          if (item && item.variable === this.variable)
-            {child[i].firstChild.style.display = "none"}
+          if (item && item.variable === this.variable) {
+            child[i].firstChild.style.display = "none";
+          }
         }
-        menu.firstChild.display = ""; 
+        menu.firstChild.display = "";
         CONFIG.settings[this.variable] = this.value;
         MENU.cookie[this.variable] = CONFIG.settings[this.variable]; MENU.saveCookie();
         SIGNAL.Post(["radio button",this]);
@@ -573,10 +954,17 @@
   /*
    *  A menu item that is checkable
    */
-  MENU.ITEM.CHECKBOX = MENU.ITEM.Subclass({
+  MENU.ITEM.CHECKBOX = MENU.ENTRY.Subclass({
     variable: null,     // the variable name
     marker: "\u2713",   // the checkmark
+    role: "menuitemcheckbox",
 
+    Attributes: function(def) {
+      var checked = CONFIG.settings[this.variable] ? "true" : "false";
+      def = HUB.Insert({"aria-checked": checked}, def);
+      def = this.SUPER(arguments).Attributes.call(this, def);
+      return def;
+    },
     Init: function (name,variable,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
@@ -603,16 +991,22 @@
   /*
    *  A menu item that is a label
    */
-  MENU.ITEM.LABEL = MENU.ITEM.Subclass({
+  MENU.ITEM.LABEL = MENU.ENTRY.Subclass({
+    role: "menuitem",  // Aria role.
+
     Init: function (name,def) {
       if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.With(def);
     },
     Label: function (def,menu) {
-      delete def.onmouseover, delete def.onmouseout; delete def.onmousedown;
       def.className += " MathJax_MenuLabel";
       return [this.Name()];
-    }
+    },
+    Activate: function(event, menu) {
+      this.Deactivate(menu);
+      MENU.Focus(menu);
+    },
+    Mouseup: function (event,menu) { }
   });
 
   /*************************************************************/
@@ -620,28 +1014,28 @@
    *  A rule in a menu
    */
   MENU.ITEM.RULE = MENU.ITEM.Subclass({
+    role: "separator",
+
+    Attributes: function(def) {
+      def = HUB.Insert({"aria-orientation": "vertical"}, def);
+      def = this.SUPER(arguments).Attributes.call(this, def);
+      return def;
+    },
     Label: function (def,menu) {
-      delete def.onmouseover, delete def.onmouseout; delete def.onmousedown;
       def.className += " MathJax_MenuRule";
       return null;
     }
   });
-  
+
   /*************************************************************/
   /*************************************************************/
 
   /*
    *  Handle the ABOUT box
    */
-  MENU.About = function () {
-    var HTMLCSS = OUTPUT["HTML-CSS"] || {};
-    var font = 
-       (HTMLCSS.imgFonts ? "image" :
-       (HTMLCSS.fontInUse ?
-         (HTMLCSS.webFonts ? "web" : "local")+" "+HTMLCSS.fontInUse :
-       (OUTPUT.SVG ? "web SVG" : "generic")) ) + " fonts";
-    var format = (!HTMLCSS.webFonts || HTMLCSS.imgFonts ? null :
-        HTMLCSS.allowWebFonts.replace(/otf/,"woff or otf") + " fonts");
+  MENU.About = function (event) {
+    var font = MENU.About.GetFont();
+    var format = MENU.About.GetFormat();
     var jax = ["MathJax.js v"+MathJax.fileversion,["br"]];
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
     MENU.About.GetJax(jax,MathJax.InputJax,["InputJax","%1 Input Jax v%2"]);
@@ -650,27 +1044,29 @@
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}]);
     MENU.About.GetJax(jax,MathJax.Extension,["Extension","%1 Extension v%2"],true);
     jax.push(["div",{style:{"border-top":"groove 2px",margin:".25em 0"}}],["center",{},[
-      HUB.Browser + " v"+HUB.Browser.version + (format ? 
+      HUB.Browser + " v"+HUB.Browser.version + (format ?
         " \u2014 " + _(format.replace(/ /g,""),format) : "")
     ]]);
     MENU.About.div = MENU.Background(MENU.About);
     var about = HTML.addElement(MENU.About.div,"div",{
-      id: "MathJax_About"
+      id: "MathJax_About", tabIndex: 0, onkeydown: MENU.About.Keydown
     },[
       ["b",{style:{fontSize:"120%"}},["MathJax"]]," v"+MathJax.version,["br"],
       _(font.replace(/ /g,""),"using "+font),["br"],["br"],
       ["span",{style:{
         display:"inline-block", "text-align":"left", "font-size":"80%",
-        "max-height":"20em", overflow:"auto", 
+        "max-height":"20em", overflow:"auto",
         "background-color":"#E4E4E4", padding:".4em .6em", border:"1px inset"
-      }},jax],["br"],["br"],
+      }, tabIndex: 0},jax],["br"],["br"],
       ["a",{href:"http://www.mathjax.org/"},["www.mathjax.org"]],
-      ["img", {
-        src: CONFIG.closeImg,
-        style: {width:"21px", height:"21px", position:"absolute", top:".2em", right:".2em"},
-        onclick: MENU.About.Remove
-      }]
+      ["span",{className:"MathJax_MenuClose",id:"MathJax_AboutClose",
+               onclick:MENU.About.Remove,
+               onkeydown: MENU.About.Keydown, tabIndex: 0, role: "button",
+               "aria-label": _("CloseAboutDialog","Close about MathJax dialog")},
+        [["span",{},"\u00D7"]]]
     ]);
+    if (event.type === "mouseup") about.className += " MathJax_MousePost";
+    about.focus();
     MathJax.Localization.setCSS(about);
     var doc = (document.documentElement||{});
     var H = window.innerHeight || doc.clientHeight || doc.scrollHeight || 0;
@@ -686,6 +1082,15 @@
   MENU.About.Remove = function (event) {
     if (MENU.About.div) {document.body.removeChild(MENU.About.div); delete MENU.About.div}
   };
+  MENU.About.Keydown = function(event) {
+    if (event.keyCode === KEY.ESCAPE ||
+        (this.id === "MathJax_AboutClose" &&
+         (event.keyCode === KEY.SPACE || event.keyCode === KEY.RETURN))) {
+      MENU.About.Remove(event);
+      MENU.CurrentNode().focus();
+      FALSE(event);
+    }
+  },
   MENU.About.GetJax = function (jax,JAX,type,noTypeCheck) {
     var info = [];
     for (var id in JAX) {if (JAX.hasOwnProperty(id) && JAX[id]) {
@@ -696,16 +1101,30 @@
     for (var i = 0, m = info.length; i < m; i++) {jax.push(info[i],["br"])}
     return jax;
   };
+  MENU.About.GetFont = function () {
+    var jax = MathJax.Hub.outputJax["jax/mml"][0] || {};
+    var font = {
+      SVG: "web SVG",
+      CommonHTML: "web TeX",
+      "HTML-CSS": (jax.imgFonts ? "image" : (jax.webFonts ? "web" : "local")+" "+jax.fontInUse)
+    }[jax.id] || "generic";
+    return font + " fonts";
+  };
+  MENU.About.GetFormat = function () {
+    var jax = MathJax.Hub.outputJax["jax/mml"][0] || {};
+    if (jax.id !== "HTML-CSS"|| !jax.webFonts || jax.imgFonts) return;
+    return jax.allowWebFonts.replace(/otf/,"woff or otf") + " fonts";
+  };
 
-  
+
   /*
    *  Handle the MathJax HELP menu
    */
-  MENU.Help = function () {
+  MENU.Help = function (event) {
     AJAX.Require("[MathJax]/extensions/HelpDialog.js",
-                 function () {MathJax.Extension.Help.Dialog()});
+                 function () {MathJax.Extension.Help.Dialog({type:event.type})});
   };
-  
+
   /*
    *  Handle showing of element's source
    */
@@ -776,7 +1195,7 @@
       var table = w.document.body.firstChild;
       setTimeout(function () {
         var H = (w.outerHeight-w.innerHeight)||30, W = (w.outerWidth-w.innerWidth)||30, x, y;
-        W = Math.max(100,Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25));
+        W = Math.max(140,Math.min(Math.floor(.5*screen.width),table.offsetWidth+W+25));
         H = Math.max(40,Math.min(Math.floor(.5*screen.height),table.offsetHeight+H+25));
         if (MENU.prototype.msieHeightBug) {H += 35}; // for title bar in XP
         w.resizeTo(W,H);
@@ -789,38 +1208,44 @@
       },50);
     }
   };
-  
+
   /*
    *  Handle rescaling all the math
    */
   MENU.Scale = function () {
-    var HTMLCSS = OUTPUT["HTML-CSS"], nMML = OUTPUT.NativeMML, SVG = OUTPUT.SVG;
-    var SCALE = (HTMLCSS||nMML||SVG||{config:{scale:100}}).config.scale;
+    var JAX = ["CommonHTML","HTML-CSS","SVG","NativeMML","PreviewHTML"], m = JAX.length,
+        SCALE = 100, i, jax;
+    for (i = 0; i < m; i++) {
+      jax = OUTPUT[JAX[i]];
+      if (jax) {SCALE = jax.config.scale; break}
+    }
     var scale = prompt(_("ScaleMath","Scale all mathematics (compared to surrounding text) by"),SCALE+"%");
     if (scale) {
       if (scale.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         scale = parseFloat(scale);
         if (scale) {
           if (scale !== SCALE) {
-            if (HTMLCSS) {HTMLCSS.config.scale = scale}
-            if (nMML)    {nMML.config.scale = scale}
-            if (SVG)     {SVG.config.scale = scale}
-            MENU.cookie.scale = scale;
-            MENU.saveCookie(); HUB.Rerender();
+            for (i = 0; i < m; i++) {
+              jax = OUTPUT[JAX[i]];
+              if (jax) jax.config.scale = scale;
+            }
+            MENU.cookie.scale = HUB.config.scale = scale;
+            MENU.saveCookie(); 
+            HUB.Queue(["Rerender",HUB]);
           }
         } else {alert(_("NonZeroScale","The scale should not be zero"))}
       } else {alert(_("PercentScale",
                       "The scale should be a percentage (e.g., 120%%)"))}
     }
   };
-  
+
   /*
    *  Handle loading the zoom code
    */
   MENU.Zoom = function () {
     if (!MathJax.Extension.MathZoom) {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
   };
-  
+
   /*
    *  Handle changing the renderer
    */
@@ -834,9 +1259,10 @@
       switch (CONFIG.settings.renderer) {
         case "NativeMML":
           if (!CONFIG.settings.warnedMML) {
-            if (BROWSER.isChrome && BROWSER.version.substr(0,3) !== "24.") {message = MESSAGE.MML.WebKit} 
+            if (BROWSER.isChrome && BROWSER.version.substr(0,3) !== "24.") {message = MESSAGE.MML.WebKit}
             else if (BROWSER.isSafari && !BROWSER.versionAtLeast("5.0")) {message = MESSAGE.MML.WebKit}
             else if (BROWSER.isMSIE) {if (!BROWSER.hasMathPlayer) {message = MESSAGE.MML.MSIE}}
+            else if (BROWSER.isEdge) {message = MESSAGE.MML.WebKit}
             else {message = MESSAGE.MML[BROWSER]}
             warned = "warnedMML";
           }
@@ -846,7 +1272,7 @@
           if (!CONFIG.settings.warnedSVG) {
             if (BROWSER.isMSIE && !isIE9) {message = MESSAGE.SVG.MSIE}
           }
-          break;  
+          break;
       }
       if (message) {
         message = _(message[0],message[1]);
@@ -879,7 +1305,7 @@
       MSIE:    ["MSIENativeMMLWarning",
                  "Internet Explorer requires the MathPlayer plugin " +
                  "in order to process MathML output."],
-      
+
       Opera:   ["OperaNativeMMLWarning",
                  "Opera's support for MathML is limited, so switching to " +
                  "MathML output may cause some expressions to render poorly."],
@@ -892,7 +1318,7 @@
                  "Your browser's native MathML does not implement all the features " +
                  "used by MathJax, so some expressions may not render properly."]
     },
-    
+
     SVG: {
       MSIE:    ["MSIESVGWarning",
                  "SVG is not implemented in Internet Explorer prior to " +
@@ -902,6 +1328,17 @@
     }
   };
   
+  MENU.AssistiveMML = function (item,restart) {
+    var AMML = MathJax.Extension.AssistiveMML;
+    if (!AMML) {
+      //  Try to load the extension, but only try once.
+      if (!restart)
+        AJAX.Require("[MathJax]/extensions/AssistiveMML.js",["AssistiveMML",MENU,item,true]);
+      return;
+    }
+    MathJax.Hub.Queue([(CONFIG.settings.assistiveMML ? "Add" : "Remove")+"AssistiveMathML",AMML]);
+  };
+
   /*
    *  Handle setting the HTMLCSS fonts
    */
@@ -909,7 +1346,7 @@
     var HTMLCSS = OUTPUT["HTML-CSS"]; if (!HTMLCSS) return;
     document.location.reload();
   };
-  
+
   /*
    *  Handle selection of locale and rerender the page
    */
@@ -931,7 +1368,7 @@
       });
     }
   };
-  
+
   /*
    *  Handle setting MathPlayer events
    */
@@ -964,7 +1401,7 @@
       "The MathJax contextual menu will be disabled, but you can " +
       "Alt-Click on an expression to obtain the MathJax menu instead."]
   };
-  
+
   /*************************************************************/
   /*************************************************************/
 
@@ -1000,7 +1437,7 @@
   //
   MENU.CreateLocaleMenu = function () {
     if (!MENU.menu) return;
-    var menu = MENU.menu.Find("Language").menu, items = menu.items;
+    var menu = MENU.menu.Find("Language").submenu, items = menu.items;
     //
     //  Get the names of the languages and sort them
     //
@@ -1026,7 +1463,7 @@
   //
   MENU.CreateAnnotationMenu = function () {
     if (!MENU.menu) return;
-    var menu = MENU.menu.Find("Show Math As","Annotation").menu;
+    var menu = MENU.menu.Find("Show Math As","Annotation").submenu;
     var annotations = CONFIG.semanticsAnnotations;
     for (var a in annotations) {
       if (annotations.hasOwnProperty(a)) {
@@ -1089,12 +1526,15 @@
         ),
         ITEM.RULE(),
         ITEM.SUBMENU(["Renderer","Math Renderer"],    {hidden:!CONFIG.showRenderer},
-          ITEM.RADIO("HTML-CSS",  "renderer", {action: MENU.Renderer}),
-          ITEM.RADIO("Fast HTML", "renderer", {action: MENU.Renderer, value:"CommonHTML"}),
-          ITEM.RADIO("MathML",    "renderer", {action: MENU.Renderer, value:"NativeMML"}),
-          ITEM.RADIO("SVG",       "renderer", {action: MENU.Renderer}),
+          ITEM.RADIO("HTML-CSS",   "renderer", {action: MENU.Renderer}),
+          ITEM.RADIO("Common HTML","renderer", {action: MENU.Renderer, value:"CommonHTML"}),
+          ITEM.RADIO("Fast HTML",  "renderer", {action: MENU.Renderer, value:"PreviewHTML"}),
+          ITEM.RADIO("MathML",     "renderer", {action: MENU.Renderer, value:"NativeMML"}),
+          ITEM.RADIO("SVG",        "renderer", {action: MENU.Renderer}),
+          ITEM.RADIO("PlainSource","renderer", {action: MENU.Renderer, value:"PlainSource"}),
           ITEM.RULE(),
-          ITEM.CHECKBOX("Fast Preview", "CHTMLpreview")
+          ITEM.CHECKBOX("Fast Preview", "FastPreview"),
+          ITEM.CHECKBOX("Assistive MathML", "assistiveMML", {action:MENU.AssistiveMML})
         ),
         ITEM.SUBMENU("MathPlayer",  {hidden:!HUB.Browser.isMSIE || !CONFIG.showMathPlayer,
                                                     disabled:!HUB.Browser.hasMathPlayer},
@@ -1141,11 +1581,11 @@
     if (MENU.isMobile) {
       (function () {
         var settings = CONFIG.settings;
-        var trigger = MENU.menu.Find("Math Settings","Zoom Trigger").menu;
+        var trigger = MENU.menu.Find("Math Settings","Zoom Trigger").submenu;
         trigger.items[0].disabled = trigger.items[1].disabled = true;
         if (settings.zoom === "Hover" || settings.zoom == "Click") {settings.zoom = "None"}
         trigger.items = trigger.items.slice(0,4);
-    
+
         if (navigator.appVersion.match(/[ (]Android[) ]/)) {
           MENU.ITEM.SUBMENU.Augment({marker: "\u00BB"});
         }
@@ -1155,7 +1595,7 @@
     MENU.CreateLocaleMenu();
     MENU.CreateAnnotationMenu();
   });
-  
+
   MENU.showRenderer = function (show) {
     MENU.cookie.showRenderer = CONFIG.showRenderer = show; MENU.saveCookie();
     MENU.menu.Find("Math Settings","Math Renderer").hidden = !show;
@@ -1181,17 +1621,16 @@
     MENU.cookie.showLocale = CONFIG.showLocale = show; MENU.saveCookie();
     MENU.menu.Find("Language").hidden = !show;
   };
-  
+
   MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     if (!MathJax.OutputJax["HTML-CSS"].config.imageFont)
       {MENU.menu.Find("Math Settings","Font Preference","TeX (image)").disabled = true}
   });
-  
+
   /*************************************************************/
 
   CALLBACK.Queue(
     HUB.Register.StartupHook("End Config",{}), // wait until config is complete
-    ["getImages",MENU],
     ["Styles",AJAX,CONFIG.styles],
     ["Post",HUB.Startup.signal,"MathMenu Ready"],
     ["loadComplete",AJAX,"[MathJax]/extensions/MathMenu.js"]

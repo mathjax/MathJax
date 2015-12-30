@@ -26,9 +26,9 @@
  */
 
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
   
-  var MML = MathJax.ElementJax.mml
+  var MML = MathJax.ElementJax.mml,
       SETTINGS = MathJax.Hub.config.menuSettings;
   
   MML.mbase.Augment({

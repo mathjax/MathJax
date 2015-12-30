@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("vi","TeX",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "D\u1EA5u ngo\u1EB7c m\u1EDF c\u00F2n d\u01B0 ho\u1EB7c d\u1EA5u ngo\u1EB7c \u0111\u00F3ng b\u1ECB thi\u1EBFu",

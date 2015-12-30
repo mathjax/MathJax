@@ -22,10 +22,10 @@
  */
 
 MathJax.Localization.addTranslation("fa","MathMenu",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
-          Show: "\u0646\u0645\u0627\u06CC\u0634 \u0631\u06CC\u0627\u0636\u06CC\u0627\u062A \u0628\u0647\u200C\u0639\u0646\u0648\u0627\u0646",
+          Show: "\u0646\u0645\u0627\u06CC\u0634 \u0631\u06CC\u0627\u0636\u06CC\u0627\u062A \u0628\u0647 \u0639\u0646\u0648\u0627\u0646",
           MathMLcode: "\u06A9\u062F MathML",
           OriginalMathML: "MathML \u0627\u0635\u0644\u06CC",
           TeXCommands: "\u062F\u0633\u062A\u0648\u0631\u0627\u062A \u062A\u06A9",

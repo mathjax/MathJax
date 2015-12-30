@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("de","TeX",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Zus\u00E4tzliche \u00F6ffnende oder fehlende schlie\u00DFende Klammer",
@@ -39,9 +39,9 @@ MathJax.Localization.addTranslation("de","TeX",{
           MissingBoxFor: "Fehlende Box: %1",
           MissingCloseBrace: "Fehlende schlie\u00DFende Klammer",
           UndefinedControlSequence: "Nicht definierter Befehl: %1",
-          DoubleExponent: "Doppeltes Superskript: verwende Klammern zum Gruppieren",
-          DoubleSubscripts: "Doppeltes Subskript: verwende Klammern zum Gruppieren",
-          DoubleExponentPrime: "Prime f\u00FChrt zu doppeltem Superskript: verwende Klammern zum Gruppieren",
+          DoubleExponent: "Doppeltes Superskript: Klammern f\u00FCr eine eindeutige Zuordnung verwenden",
+          DoubleSubscripts: "Doppeltes Subskript: Klammern f\u00FCr eine eindeutige Zuordnung verwenden",
+          DoubleExponentPrime: "Prime f\u00FChrt zu doppeltem Superskript: Klammern f\u00FCr eine eindeutige Zuordnung verwenden",
           CantUseHash1: "Das Zeichen '#' ist ein Makroparameter und kann nicht im Mathematikmodus verwendet werden.",
           MisplacedMiddle: "%1 muss zwischen '\\left' und '\\right' stehen",
           MisplacedLimits: "%1 ist nur bei Operatoren erlaubt",
@@ -55,12 +55,12 @@ MathJax.Localization.addTranslation("de","TeX",{
           MaxMacroSub2: "Maximale Anzahl an Substitutionen ist erreicht; wird eine rekursive LaTeX-Umgebung verwendet?",
           MissingArgFor: "Fehlendes Argument in %1",
           ExtraAlignTab: "Zus\u00E4tzliches \u0026 im '\\cases' Text",
-          BracketMustBeDimension: "Das geklammerte Argument f\u00FCr %1 muss eine Dimension sein",
-          InvalidEnv: "Ung\u00FCltiger Umgebungsname %1",
-          UnknownEnv: "Ung\u00FCltige Umgebung %1",
+          BracketMustBeDimension: "Das Argument f\u00FCr %1 muss eine Dimension sein",
+          InvalidEnv: "Ung\u00FCltiger Umgebungsname: \u201E%1\u201C",
+          UnknownEnv: "Ung\u00FCltige Umgebung: \u201E%1\u201C",
           ExtraCloseLooking: "Zus\u00E4tzliche schlie\u00DFende Klammer w\u00E4hrend der Suche nach %1",
           MissingCloseBracket: "Argument zu %1 wurde nicht mit ']' geschlossen",
-          MissingOrUnrecognizedDelim: "Fehlender oder nichterkannter Delimiter bei %1",
+          MissingOrUnrecognizedDelim: "Fehlendes oder nicht erkanntes Begrenzungszeichen bei %1",
           MissingDimOrUnits: "Fehlende Dimension oder Einheiten bei %1",
           TokenNotFoundForCommand: "Konnte %1 nicht f\u00FCr %2 finden",
           MathNotTerminated: "Formel in Textbox nicht abgeschlossen",
@@ -70,8 +70,8 @@ MathJax.Localization.addTranslation("de","TeX",{
           MultipleLabel: "Label '%1' \u00FCberdefiniert",
           CommandAtTheBeginingOfLine: "%1 muss am Zeilenanfang stehen",
           IllegalAlign: "Ung\u00FCltige Ausrichtung in %1",
-          BadMathStyleFor: "Schlechtes 'math style' Argument: %1",
-          PositiveIntegerArg: "Argument bei %1 muss positiv und ganzzahlig sein",
+          BadMathStyleFor: "Falsches \u201Emath style\u201C-Argument: %1",
+          PositiveIntegerArg: "Das Argument von %1 muss eine positive Ganzzahl sein",
           ErroneousNestingEq: "Fehlerhafte Verschachtelung von Gleichungen",
           MultlineRowsOneCol: "Zeilen in der %1-Umgebung m\u00FCssen genau eine Spalte haben",
           MultipleBBoxProperty: "%1 wurde zweimal in %2 angegeben",
@@ -85,17 +85,17 @@ MathJax.Localization.addTranslation("de","TeX",{
           InvalidNumber: "Ung\u00FCltige Zahl",
           NewextarrowArg1: "Das erste Argument von %1 muss Name einer Befehlsfolge sein",
           NewextarrowArg2: "Zweites Argument von %1 m\u00FCssen zwei ganze Zahlen sein, durch Komma getrennt",
-          NewextarrowArg3: "Drittes argument von %1 m\u00FCssen Unicode-Nummern sein",
+          NewextarrowArg3: "Das dritte Argument von %1 muss die Nummer eines Unicode-Zeichens sein",
           NoClosingChar: "Kann schlie\u00DFende %1 nicht finden",
           IllegalControlSequenceName: "Ung\u00FCltige Befehlsfolge f\u00FCr %1",
           IllegalParamNumber: "Ung\u00FCltige Anzahl von Parametern in %1",
           MissingCS: "%1 muss von Befehlsfolge gefolgt werden",
-          CantUseHash2: "Ung\u00FCltige Verwendung von # im Template von %1",
-          SequentialParam: "Parameter von %1 m\u00FCssen durch nummeriert sein",
+          CantUseHash2: "Ung\u00FCltige Verwendung von # in Definition von %1",
+          SequentialParam: "Parameter von %1 m\u00FCssen fortlaufend nummeriert sein",
           MissingReplacementString: "Ersetzende Zeichenkette f\u00FCr Definition von %1 fehlt",
           MismatchUseDef: "Verwendung von %1 passt nicht zur Definition",
           RunawayArgument: "Nichtgeschlossenes Argument f\u00FCr %1?",
-          NoClosingDelim: "Kein schliessender Delimiter f\u00FCr %1"
+          NoClosingDelim: "Kein schlie\u00DFendes Begrenzungszeichen f\u00FCr %1 gefunden"
         }
 });
 

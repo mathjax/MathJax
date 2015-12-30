@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
 
   var ALPHABETSBOLDITALIC = "STIXMathJax_Alphabets-bold-italic",
       ALPHABETSBOLD = "STIXMathJax_Alphabets-bold",
@@ -567,6 +567,9 @@
           HW: [[0.926,MAIN], [1.230,SIZE1], [1.350,SIZE1,1.098], [1.845,SIZE2], [2.460,SIZE3], [3.075,SIZE4]],
           stretch: {bot:[0xE009,SIZE5], ext:[0xE00A,SIZE5]}
         },
+        0x2312: {alias: 0x23DC, dir:H},
+        0x2322: {alias: 0x23DC, dir:H},
+        0x2323: {alias: 0x23DD, dir:H},
         0x2329: {alias: 0x27E8, dir: V},
         0x232A: {alias: 0x27E9, dir: V},
         0x23AA: EXTRAV,

@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("br","FontWarnings",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax a implij ar fonto\u00F9 web evit diskwel ar jedado\u00F9 war ar bajenn-ma\u00F1. Pell eo ar re-se o pellgarga\u00F1 ha diskwelet e vefe buanoc'h ma vefe stailhfec'h fonto\u00F9 jedoniezh war-eeun e teuliad fonto\u00F9 ho reizhiad.",

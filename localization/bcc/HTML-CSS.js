@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("bcc","HTML-CSS",{version:"2.5.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/bcc/HTML-CSS.js");
+MathJax.Localization.addTranslation("bcc","HTML-CSS",{version:"2.6.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/bcc/HTML-CSS.js");

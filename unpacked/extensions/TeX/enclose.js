@@ -32,7 +32,7 @@
  */
 
 MathJax.Extension["TeX/enclose"] = {
-  version: "2.5.0",
+  version: "2.6.0",
   
   //
   //  The attributes allowed in \enclose{notation}[attributes]{math}

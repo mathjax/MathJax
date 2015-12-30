@@ -22,12 +22,12 @@
  */
 
 MathJax.Localization.addTranslation("es","MathML",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           BadMglyph: "\u00ABmglyph\u00BB da\u00F1ado: %1",
           BadMglyphFont: "Tipo de letra da\u00F1ado: %1",
-          MathPlayer: "MathJax no fue capaz de configurar MathPlayer.\n\nSi no est\u00E1 instalado MathPlayer, tienes que instalarlo primero.\nDe lo contrario, la configuraci\u00F3n de seguridad puede impedir que los controles de ActiveX\nfuncionen. Utiliza el elemento en opciones de internet en el men\u00FA Herramientas y selecciona la ficha Seguridad, luego presiona el\nbot\u00F3n de nivel personalizado. Comprueba que la configuraci\u00F3n de\n\"Ejecutar controles ActiveX\" y \"comportamientos binarios y script\"\nest\u00E1n activados.\n\nActualmente ver\u00E1s los mensajes de error en lugar de la\ntipograf\u00EDa matem\u00E1tica",
+          MathPlayer: "MathJax no fue capaz de configurar MathPlayer.\n\nSi no est\u00E1 instalado MathPlayer, tienes que instalarlo primero.\nDe lo contrario, la configuraci\u00F3n de seguridad puede impedir que los controles de ActiveX\nfuncionen. Utiliza el elemento en opciones de Internet en el men\u00FA Herramientas y selecciona la ficha Seguridad, luego presiona el\nbot\u00F3n de nivel personalizado. Comprueba que la configuraci\u00F3n de\n\"Ejecutar controles ActiveX\" y \"comportamientos binarios y script\"\nest\u00E1n activados.\n\nActualmente ver\u00E1s los mensajes de error en lugar de la\ntipograf\u00EDa matem\u00E1tica",
           CantCreateXMLParser: "MathJax no puede crear un analizador de XML para MathML. Comprueba que la configuraci\u00F3n de seguridad \"controles de secuencia de comandos ActiveX marcados como seguros para scripts\" est\u00E1 habilitada (utiliza el elemento en opciones de Internet en el men\u00FA Herramientas y selecciona el panel de seguridad, luego presiona el bot\u00F3n de nivel personalizado para comprobarlo).\n\nLas ecuaciones MathML no podr\u00E1n ser procesadas por MathJax",
           UnknownNodeType: "Tipo de nodo desconocido: %1",
           UnexpectedTextNode: "Nodo de texto inesperado: %1",

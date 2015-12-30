@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.5.0";
+  var VERSION = "2.6.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG;
   
@@ -33,17 +33,20 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     toSVG: function () {
       this.SVGgetStyles();
       var svg = this.SVG(); this.SVGhandleSpace(svg);
-      var values = this.getValues("lquote","rquote");
+      var values = this.getValues("lquote","rquote","mathvariant");
+      if (!this.hasValue("lquote") || values.lquote === '"') values.lquote = "\u201C";
+      if (!this.hasValue("rquote") || values.rquote === '"') values.rquote = "\u201D";
+      if (values.lquote === "\u201C" && values.mathvariant === "monospace") values.lquote = '"';
+      if (values.rquote === "\u201D" && values.mathvariant === "monospace") values.rquote = '"';
       var variant = this.SVGgetVariant(), scale = this.SVGgetScale();
-      var text = this.data.join("");  // FIXME:  handle mglyph?
-      svg.Add(this.SVGhandleVariant(variant,scale,values.lquote+text+values.rquote));
+      var text = values.lquote+this.data.join("")+values.rquote;  // FIXME:  handle mglyph?
+      svg.Add(this.SVGhandleVariant(variant,scale,text));
       svg.Clean();
       this.SVGhandleColor(svg);
       this.SVGsaveData(svg);
       return svg;
     }
   });
-  MML.ms.prototype.defaults.mathvariant = 'monospace';
   
   MathJax.Hub.Startup.signal.Post("SVG ms Ready");
   MathJax.Ajax.loadComplete(SVG.autoloadDir+"/ms.js");

@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/mhchem"] = {
-  version: "2.5.0"
+  version: "2.6.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -42,10 +42,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var CE = MathJax.Object.Subclass({
     string: "",   // the \ce string being parsed
     i: 0,         // the current position in the string
-    tex: "",      // the processed TeX result
+    tex: "",      // the partially processed TeX result
+    TEX: "",      // the full TeX result
     atom: false,  // last processed token is an atom
     sup: "",      // pending superscript
     sub: "",      // pending subscript
+    presup: "",   // pending pre-superscript
+    presub: "",   // pending pre-subscript
     
     //
     //  Store the string when a CE object is created
@@ -121,8 +124,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         else if (c.match(/[0-9]/)) {this.ParseNumber()}
         else {this["Parse"+(this.ParseTable[c]||"Other")](c)}
       }
-      this.FinishAtom();
-      return this.tex;
+      this.FinishAtom(true);
+      return this.TEX;
     },
     
     //
@@ -298,23 +301,34 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     //  Handle the super and subscripts for an atom
     //  
-    FinishAtom: function () {
-      if (this.sup || this.sub) {
-        if (this.sup && this.sub && !this.atom) {
-          //
-          // right-justify super- and subscripts when they are before the atom
-          //
-          var sup = this.sup, sub = this.sub;
-          if (!sup.match(/\d/)) {sup += "\\vphantom{0}"} // force common heights
-          if (!sub.match(/\d/)) {sub += "\\vphantom{0}"}
-          this.tex += "\\raise 1pt{\\scriptstyle\\begin{CEscriptstack}"+sup+"\\\\"+
-                         sub+"\\end{CEscriptstack}}\\kern-.125em ";
+    FinishAtom: function (force) {
+      if (this.sup || this.sub || this.presup || this.presub) {
+        if (!force && !this.atom) {
+          if (this.tex === "" && !this.sup && !this.sub) return;
+          if (!this.presup && !this.presub &&
+                (this.tex === "" || this.tex === "{" ||
+                (this.tex === "}" && this.TEX.substr(-1) === "{"))) {
+            this.presup = this.sup, this.presub = this.sub;  // save for later
+            this.sub = this.sup = "";
+            this.TEX += this.tex; this.tex = "";
+            return;
+          }
+        }
+        if (this.sub && !this.sup) {this.sup = "\\Space{0pt}{0pt}{.2em}"} // forces subscripts to align properly
+        if ((this.presup || this.presub) && this.tex !== "{") {
+          if (!this.presup && !this.sup) {this.presup = "\\Space{0pt}{0pt}{.2em}"}
+          this.tex = "\\CEprescripts{"+(this.presub||"\\CEnone")+"}{"+(this.presup||"\\CEnone")+"}"
+                   + "{"+(this.tex !== "}" ? this.tex : "")+"}"
+                   + "{"+(this.sub||"\\CEnone")+"}{"+(this.sup||"\\CEnone")+"}"
+                   + (this.tex === "}" ? "}" : "");
+          this.presub = this.presup = "";
         } else {
-          if (!this.sup) {this.sup = "\\Space{0pt}{0pt}{.2em}"} // forces subscripts to align properly
-          this.tex += "^{"+this.sup+"}_{"+this.sub+"}";
+          if (this.sup) this.tex += "^{"+this.sup+"}";
+          if (this.sub) this.tex += "_{"+this.sub+"}";
         }
         this.sup = this.sub = "";
       }
+      this.TEX += this.tex; this.tex = "";
       this.atom = false;
     },
     
@@ -376,7 +390,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       ce:   'CE',
       cf:   'CE',
       cee:  'CE',
-  
+      
       //
       //  Make these load AMSmath package (redefined below when loaded)
       //
@@ -396,6 +410,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       hyphen: ["Macro","\\text{-}"],
       
       //
+      //  Handle prescripts and none
+      //
+      CEprescripts: "CEprescripts",
+      CEnone: "CEnone",
+
+      //
       //  Needed for \bond for the ~ forms
       //
       tripledash: ["Macro","\\raise3mu{\\tiny\\text{-}\\kern2mu\\text{-}\\kern2mu\\text{-}}"]
@@ -405,8 +425,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //  Needed for \bond for the ~ forms
     //
     environment: {
-      CEstack:       ['Array',null,null,null,'r',null,"0.001em",'T',1],
-      CEscriptstack: ['Array',null,null,null,'r',null,"0.2em",'S',1]
+      CEstack:       ['Array',null,null,null,'r',null,"0.001em",'T',1]
     }
   },null,true);
   
@@ -445,6 +464,22 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var arg = this.GetArgument(name);
       var tex = CE(arg).Parse();
       this.string = tex + this.string.substr(this.i); this.i = 0;
+    },
+    
+    //
+    //  Implements \CEprescripts{presub}{presup}{base}{sub}{sup}
+    //
+    CEprescripts: function (name) {
+      var presub = this.ParseArg(name),
+          presup = this.ParseArg(name),
+          base = this.ParseArg(name),
+          sub = this.ParseArg(name),
+          sup = this.ParseArg(name);
+      var MML = MathJax.ElementJax.mml;
+      this.Push(MML.mmultiscripts(base,sub,sup,MML.mprescripts(),presub,presup));
+    },
+    CEnone: function (name) {
+      this.Push(MathJax.ElementJax.mml.none());
     }
     
   });

@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("ru","MathMenu",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           Show: "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u043A\u043E\u0434 \u0444\u043E\u0440\u043C\u0443\u043B\u044B \u0432\u00A0\u0432\u0438\u0434\u0435:",

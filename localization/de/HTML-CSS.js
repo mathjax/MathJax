@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("de","HTML-CSS",{version:"2.5.0",isLoaded:true,strings:{LoadWebFont:"Lade Webfont %1",CantLoadWebFont:"Webschriftart %1 konnte nicht geladen werden",FirefoxCantLoadWebFont:"Firefox kann keine Webschriften von einem Remotehost laden",CantFindFontUsing:"Es konnte keine g\u00FCltige Schriftart aus %1 gefunden werden",WebFontsNotAvailable:"Webschriften sind nicht verf\u00FCgbar. Verwende stattdessen Bildschriften."}});MathJax.Ajax.loadComplete("[MathJax]/localization/de/HTML-CSS.js");
+MathJax.Localization.addTranslation("de","HTML-CSS",{version:"2.6.0",isLoaded:true,strings:{LoadWebFont:"Lade Webfont %1",CantLoadWebFont:"Webschriftart %1 konnte nicht geladen werden",FirefoxCantLoadWebFont:"Firefox kann keine Webschriften von einem Remotehost laden",CantFindFontUsing:"Es konnte keine g\u00FCltige Schriftart aus %1 gefunden werden",WebFontsNotAvailable:"Webschriften sind nicht verf\u00FCgbar. Verwende stattdessen Bildschriften."}});MathJax.Ajax.loadComplete("[MathJax]/localization/de/HTML-CSS.js");

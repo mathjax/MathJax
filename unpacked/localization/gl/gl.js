@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("gl",null,{
   menuTitle: "galego",
-  version: "2.5.0",
+  version: "2.6.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax atopou unha cookie de configuraci\u00F3n de usuario que incl\u00FAe c\u00F3digo executable. Quere executar ese c\u00F3digo?\n\n(Deber\u00EDa premer en \"Cancelar\", a menos que vostede crease a cookie.)",

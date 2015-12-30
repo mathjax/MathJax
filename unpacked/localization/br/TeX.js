@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("br","TeX",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Briataenn digeri\u00F1 a re pe briataenn serri\u00F1 diank",
@@ -90,7 +90,8 @@ MathJax.Localization.addTranslation("br","TeX",{
           IllegalControlSequenceName: "N'eo ket aotreet anv ar c'hontroll seka\u00F1s evit an urzh %1",
           IllegalParamNumber: "Niver direizh a arventenno\u00F9 evit an urzh %1",
           MissingCS: "%1 a rank beza\u00F1 heuliet gant ur seka\u00F1s kontrolla\u00F1",
-          MissingReplacementString: "Ar chadennad arouezenno\u00F9 erlec'hia\u00F1 a vank evit an termenadur %1."
+          MissingReplacementString: "Ar chadennad arouezenno\u00F9 erlec'hia\u00F1 a vank evit an termenadur %1.",
+          DoubleExponentPrime: "Un ask a zegas un usskrid doubl : implijit briataenno\u00F9 evit sklaeraat"
         }
 });
 

@@ -23,11 +23,11 @@
 
 MathJax.Localization.addTranslation("zh-hans",null,{
   menuTitle: "\u4E2D\u6587\uFF08\u7B80\u4F53\uFF09",
-  version: "2.5.0",
+  version: "2.6.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax\u5DF2\u627E\u5230\u7528\u6237\u914D\u7F6E\uFF0C\u5176\u4E2D\u5305\u542B\u8981\u8FD0\u884C\u4EE3\u7801\u6240\u4F9D\u8D56\u7684cookie\u3002\u60A8\u60F3\u8FD0\u884C\u5B83\u4E48\uFF1F\n\n\uFF08\u60A8\u5E94\u8BE5\u81EA\u884C\u6309\u53D6\u6D88\u9664\u975E\u60A8\u8BBE\u7F6E\u4E86\u81EA\u5DF1\u7684cookie\u3002\uFF09",

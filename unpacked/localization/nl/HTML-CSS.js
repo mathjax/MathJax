@@ -22,14 +22,14 @@
  */
 
 MathJax.Localization.addTranslation("nl","HTML-CSS",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
-          LoadWebFont: "Web-lettertype %1 aan het laden",
+          LoadWebFont: "Weblettertype %1 aan het laden",
           CantLoadWebFont: "Het weblettertype %1 kan niet geladen worden.",
           FirefoxCantLoadWebFont: "Firefox kan geen web-lettertypes laden van een externe host",
           CantFindFontUsing: "Kan met gebruik van %1 geen geldig lettertype vinden",
-          WebFontsNotAvailable: "Web-lettertypes niet beschikbaar. In plaats daarvan worden beeld-lettertypes gebruikt"
+          WebFontsNotAvailable: "Weblettertypes zijn niet beschikbaar. In plaats daarvan worden afbeeldingslettertypes gebruikt"
         }
 });
 

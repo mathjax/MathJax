@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("zh-hans","TeX",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u6709\u591A\u4F59\u7684\u5DE6\u62EC\u53F7\u6216\u7F3A\u5C11\u53F3\u62EC\u53F7",
@@ -41,7 +41,7 @@ MathJax.Localization.addTranslation("zh-hans","TeX",{
           UndefinedControlSequence: "\u672A\u5B9A\u4E49\u7684\u63A7\u5236\u6570\u5217%1",
           DoubleExponent: "\u4E24\u4E2A\u6307\u6570\uFF1A\u4F7F\u7528\u5927\u62EC\u53F7\u6765\u6F84\u6E05",
           DoubleSubscripts: "\u53CC\u4E0B\u6807\uFF1A\u4F7F\u7528\u62EC\u53F7\u6765\u660E\u786E",
-          CantUseHash1: "\u60A8\u65E0\u6CD5\u5728\u6570\u5B66\u6A21\u5F0F\u4E2D\u4F7F\u7528'\u5B8F\u53C2\u6570\u5B57\u7B26#'",
+          CantUseHash1: "\u60A8\u4E0D\u80FD\u5728\u6570\u5B66\u6A21\u5F0F\u4E2D\u4F7F\u7528\u201C\u5B8F\u53C2\u6570\u5B57\u7B26#\u201D",
           MisplacedMiddle: "%1\u5FC5\u987B\u5728\\left\u548C\\right\u4E4B\u5185",
           MisplacedLimits: "%1\u53EA\u5141\u8BB8\u5728\u8FD0\u7B97\u7B26\u4E0A",
           MisplacedMoveRoot: "%1\u53EA\u80FD\u5728\u6839\u4E2D\u51FA\u73B0",

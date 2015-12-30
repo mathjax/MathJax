@@ -22,7 +22,7 @@
  */
 
 MathJax.Localization.addTranslation("pt-br","TeX",{
-        version: "2.5.0",
+        version: "2.6.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Sobrou uma chave de abertura ou faltou uma de fechamento",
@@ -71,7 +71,7 @@ MathJax.Localization.addTranslation("pt-br","TeX",{
           CommandAtTheBeginingOfLine: "%1 deve vir no in\u00EDcio da linha",
           IllegalAlign: "Foi especificado um alinhamento ilegal em %1",
           BadMathStyleFor: "Estilo de f\u00F3rmulas matem\u00E1ticas ruim para %1",
-          PositiveIntegerArg: "O argumento para %1 deve ser um inteiro positivo",
+          PositiveIntegerArg: "O argumento para %1 deve ser um numero inteiro positivo",
           ErroneousNestingEq: "Aninhamento incorreto de estruturas de equa\u00E7\u00F5es",
           MultlineRowsOneCol: "As linhas do ambiente %1 devem ter apenas uma coluna",
           MultipleBBoxProperty: "%1 foi especificado duas vezes em %2",
