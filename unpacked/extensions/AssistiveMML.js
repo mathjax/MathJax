@@ -56,24 +56,40 @@
       if (!this.config.disabled && SETTINGS.assistiveMML == null)
         HUB.Config({menuSettings:{assistiveMML:true}});
       AJAX.Styles(this.config.styles);
-      HUB.Register.MessageHook("End Math",function (msg) {AssistiveMML.EndMathHook(msg[1])});
+      HUB.Register.MessageHook("End Math",function (msg) {
+        if (SETTINGS.assistiveMML) return AssistiveMML.AddAssistiveMathML(msg[1])
+      });
     },
     
     //
-    //  The hook for the End Math signal.
     //  This sets up a state object that lists the jax and index into the jax,
     //    and a dummy callback that is used to synchronizing with MathJax.
     //    It will be called when the jax are all processed, and that will
     //    let the MathJax queue continue (it will block until then).
     //
-    EndMathHook: function (node) {
-      if (!SETTINGS.assistiveMML) return;
+    AddAssistiveMathML: function (node) {
       var state = {
         jax: HUB.getAllJax(node), i: 0,
         callback: MathJax.Callback({})
       };
       this.HandleMML(state);
       return state.callback;
+    },
+
+    //
+    //  This removes the data-mathml attribute and the assistive MathML from
+    //  all the jax.
+    //
+    RemoveAssistiveMathML: function (node) {
+      var jax = HUB.getAllJax(node), frame;
+      for (var i = 0, m = jax.length; i < m; i++) {
+        frame = document.getElementById(jax[i].inputID+"-Frame");
+        if (frame && frame.getAttribute("data-mathml")) {
+          frame.removeAttribute("data-mathml");
+          if (frame.lastChild && frame.lastChild.className.match(/MJX_Assistive_MathML/))
+            frame.removeChild(frame.lastChild);
+        }
+      }
     },
 
     //
@@ -105,9 +121,9 @@
           });
           span.innerHTML = mml;
           frame.style.position = "relative";
-          frame.setAttribute("role", "presentation");
+          frame.setAttribute("role","presentation");
           frame.firstChild.setAttribute("aria-hidden","true");
-          span.setAttribute("role", "presentation");
+          span.setAttribute("role","presentation");
         }
         state.i++;
       }

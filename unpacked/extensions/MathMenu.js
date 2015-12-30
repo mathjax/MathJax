@@ -1327,6 +1327,17 @@
                  "not display properly."]
     }
   };
+  
+  MENU.AssistiveMML = function (item,restart) {
+    var AMML = MathJax.Extension.AssistiveMML;
+    if (!AMML) {
+      //  Try to load the extension, but only try once.
+      if (!restart)
+        AJAX.Require("[MathJax]/extensions/AssistiveMML.js",["AssistiveMML",MENU,item,true]);
+      return;
+    }
+    MathJax.Hub.Queue([(CONFIG.settings.assistiveMML ? "Add" : "Remove")+"AssistiveMathML",AMML]);
+  };
 
   /*
    *  Handle setting the HTMLCSS fonts
@@ -1523,7 +1534,7 @@
           ITEM.RADIO("PlainSource","renderer", {action: MENU.Renderer, value:"PlainSource"}),
           ITEM.RULE(),
           ITEM.CHECKBOX("Fast Preview", "FastPreview"),
-          ITEM.CHECKBOX("Assistive MathML", "assistiveMML", {hidden:!CONFIG.showAssistiveMML})
+          ITEM.CHECKBOX("Assistive MathML", "assistiveMML", {action:MENU.AssistiveMML})
         ),
         ITEM.SUBMENU("MathPlayer",  {hidden:!HUB.Browser.isMSIE || !CONFIG.showMathPlayer,
                                                     disabled:!HUB.Browser.hasMathPlayer},
@@ -1609,10 +1620,6 @@
   MENU.showLocale = function (show) {
     MENU.cookie.showLocale = CONFIG.showLocale = show; MENU.saveCookie();
     MENU.menu.Find("Language").hidden = !show;
-  };
-  MENU.showAssistiveMML = function (show) {
-    MENU.cookie.showAssistiveMML = CONFIG.showAssistiveMML = show; MENU.saveCookie();
-    MENU.menu.Find("Math Settings","Math Renderer","Assistive MathML").hidden = !show;
   };
 
   MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
