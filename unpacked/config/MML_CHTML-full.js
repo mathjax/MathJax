@@ -17,8 +17,8 @@
  */
 
 MathJax.Hub.Config({
-  extensions: ["mml2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","AssistiveMML.js"],
-  jax: ["input/MathML","output/CommonHTML"]
+  extensions: ["mml2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","fast-preview.js","AssistiveMML.js"],
+  jax: ["input/MathML","output/CommonHTML","output/PreviewHTML"]
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/config/MML_CHTML-full.js");

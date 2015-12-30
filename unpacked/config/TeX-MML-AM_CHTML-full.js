@@ -17,8 +17,8 @@
  */
 
 MathJax.Hub.Config({
-  extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","TeX/noErrors.js","TeX/noUndefined.js","TeX/AMSmath.js","TeX/AMSsymbols.js","AssistiveMML.js"],
-  jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"]
+  extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","TeX/noErrors.js","TeX/noUndefined.js","TeX/AMSmath.js","TeX/AMSsymbols.js","fast-preview.js","AssistiveMML.js"],
+  jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML","output/PreviewHTML"]
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/config/TeX-MML-AM_CHTML-full.js");
