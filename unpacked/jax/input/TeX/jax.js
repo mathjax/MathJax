@@ -2021,7 +2021,6 @@
     
     /*
      *  Break up a string into text and math blocks
-     *  @@@ FIXME:  pass environment to TEX.Parse? @@@
      */
     InternalMath: function (text,level) {
       var def = (this.stack.env.font ? {mathvariant: this.stack.env.font} : {});
@@ -2031,7 +2030,7 @@
           c = text.charAt(i++);
           if (c === '$') {
             if (match === '$' && braces === 0) {
-              mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1),{}).mml().With(def)));
+              mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1),{}).mml()));
               match = ''; k = i;
             } else if (match === '') {
               if (k < i-1) mml.push(this.InternalText(text.slice(k,i-1),def));
@@ -2057,7 +2056,7 @@
                 if (k < i-2) mml.push(this.InternalText(text.slice(k,i-2),def));
                 match = ')'; k = i;
               } else if (c === ')' && match === ')' && braces === 0) {
-                mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml().With(def)));
+                mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml()));
                 match = ''; k = i;
               } else if (c.match(/[${}\\]/) && match === '')  {
                 i--; text = text.substr(0,i-1) + text.substr(i); // remove \ from \$, \{, \}, or \\
