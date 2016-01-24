@@ -1367,6 +1367,7 @@
       }
       op.movesupsub = (limits ? true : false);
       op.Core().movablelimits = false;
+      if (op.movablelimits) op.movablelimits = false;
     },
     
     Over: function (name,open,close) {
