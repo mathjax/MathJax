@@ -186,8 +186,15 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
   MML.munderover.Augment({
     toMathML: function (space) {
       var tag = this.type;
-      if (this.data[this.under] == null) {tag = "mover"}
-      if (this.data[this.over] == null)  {tag = "munder"}
+      var base = this.data[this.base];
+      if (base && base.isa(MML.TeXAtom) && base.movablelimits && !base.Get("displaystyle")) {
+        type = "msubsup";
+        if (this.data[this.under] == null) {tag = "msup"}
+        if (this.data[this.over] == null)  {tag = "msub"}
+      } else {
+        if (this.data[this.under] == null) {tag = "mover"}
+        if (this.data[this.over] == null)  {tag = "munder"}
+      }
       var attr = this.toMathMLattributes();
       delete this.data[0].inferred;
       var data = [];

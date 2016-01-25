@@ -2054,13 +2054,14 @@
     MML.munderover.Augment({
       toCommonHTML: function (node,stretch) {
         var values = this.getValues("displaystyle","accent","accentunder","align");
-        if (!values.displaystyle && this.data[this.base] != null &&
-            this.data[this.base].CoreMO().Get("movablelimits"))
+        var base = this.data[this.base];
+        if (!values.displaystyle && base != null &&
+            (base.movablelimits || base.CoreMO().Get("movablelimits")))
                 return MML.msubsup.prototype.toCommonHTML.call(this,node,stretch);
         //
         //  Get the nodes for base and limits
         //
-        var base, under, over, nodes = [];
+        var under, over, nodes = [];
         if (stretch) {
           base = CHTML.getNode(node,"mjx-op");
           under = CHTML.getNode(node,"mjx-under");
