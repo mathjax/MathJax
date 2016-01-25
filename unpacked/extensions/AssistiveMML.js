@@ -44,7 +44,16 @@
           height: "1px!important",
           width: "1px!important",
           overflow: "hidden!important",
-          display:"block!important"
+          display:"block!important",
+          //
+          //  Don't allow the assistive MathML become part of the selection
+          //
+          "-webkit-touch-callout": "none",
+          "-webkit-user-select": "none",
+          "-khtml-user-select": "none",
+          "-moz-user-select": "none",
+          "-ms-user-select": "none",
+          "user-select": "none"
         },
         ".MJX_Assistive_MathML.MJX_Assistive_MathML_Block": {
           width: "100%!important"
@@ -115,7 +124,7 @@
           }
           frame.setAttribute("data-mathml",mml);
           span = HTML.addElement(frame,"span",{
-            isMathJax: true,
+            isMathJax: true, unselectable: "on",
             className: "MJX_Assistive_MathML"
               + (jax.root.Get("display") === "block" ? " MJX_Assistive_MathML_Block" : "")
           });
