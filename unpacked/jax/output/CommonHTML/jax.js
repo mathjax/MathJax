@@ -2111,6 +2111,7 @@
           bbox[i] = this.CHTMLbboxFor(i); bbox[i].x = bbox[i].y = 0;
           if (this.data[i]) bbox[i].stretch = this.data[i].CHTMLcanStretch("Horizontal");
           scale = (i === this.base ? 1 : bbox[i].rscale);
+          if (i !== this.base) {delete bbox[i].L; delete bbox[i].R} // these are overriden by CSS
           W = Math.max(W,scale*(bbox[i].w + (bbox[i].L||0) + (bbox[i].R||0)));
           if (!bbox[i].stretch && W > w) w = W;
         }
