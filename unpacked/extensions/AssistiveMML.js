@@ -31,7 +31,7 @@
   var AssistiveMML = MathJax.Extension["AssistiveMML"] = {
     version: "2.6.0",
     
-    config: {
+    config: HUB.CombineConfig("AssistiveMML",{
       disabled: false,
       styles: {
         ".MJX_Assistive_MathML": {
@@ -50,7 +50,7 @@
           width: "100%!important"
         }
       }
-    },
+    }),
     
     Config: function () {
       if (!this.config.disabled && SETTINGS.assistiveMML == null)
