@@ -334,21 +334,32 @@
     ucMatch: HTML.ucMatch,
     setScript: HTML.setScript,
     
-    //
-    //  This replaces node.getElementsByTagName(type)[0]
-    //  and should be replaced by that if we go back to using
-    //  custom tags
-    //
-    getNode: (document.getElementsByClassName ? 
-      function (node,type) {return node.getElementsByClassName(type)[0]} :
+    getNodesByClass: (document.getElementsByClassName ? 
+      function (node,type) {return node.getElementsByClassName(type)} :
       function (node,type) {
+        var NODES = [];
         var nodes = node.getElementsByTagName("span");
         var name = RegExp("\\b"+type+"\\b");
         for (var i = 0, m = nodes.length; i < m; i++) {
-          if (name.test(nodes[i].className)) return nodes[i];
+          if (name.test(nodes[i].className)) NODES.push = nodes[i];
         }
       }
     ),
+    getNode: function (node,type) {
+      var nodes = this.getNodesByClass(node,type);
+      if (nodes.length === 1) return nodes[0];
+      var closest = nodes[0], N = this.getNodeDepth(node,closest);
+      for (var i = 1, m = nodes.length; i < m; i++) {
+        var n = this.getNodeDepth(node,nodes[i]);
+        if (n < N) {closest = nodes[i]; N = n}
+      }
+      return closest;
+    },
+    getNodeDepth: function (parent,node) {
+      var n = 0;
+      while (node && node !== parent) {node = node.parentNode; n++}
+      return n;
+    },
     
 
     /********************************************/
@@ -2070,9 +2081,9 @@
         //
         var under, over, nodes = [];
         if (stretch) {
-          base = CHTML.getNode(node,"mjx-op");
-          under = CHTML.getNode(node,"mjx-under");
-          over = CHTML.getNode(node,"mjx-over");
+          if (this.data[this.base])  base = CHTML.getNode(node,"mjx-op");
+          if (this.data[this.under]) under = CHTML.getNode(node,"mjx-under");
+          if (this.data[this.over])  over = CHTML.getNode(node,"mjx-over");
           nodes[0] = base; nodes[1] = under||over; nodes[2] = over;
         } else {
           var types = ["mjx-op","mjx-under","mjx-over"];
@@ -2256,7 +2267,12 @@
         this.CHTML = BBOX;
       },
       CHTMLstretchV: MML.mbase.CHTMLstretchV,
-      CHTMLstretchH: MML.mbase.CHTMLstretchH
+      CHTMLstretchH: MML.mbase.CHTMLstretchH,
+      CHTMLchildNode: function (node,i) {
+        var types = ["mjx-op","mjx-under","mjx-over"];
+        if (this.over === 1) types[1] = types[2];
+        return CHTML.getNode(node,types[i]);
+      }
     });
 
     /********************************************************/
@@ -2271,9 +2287,9 @@
         //
         var base, sub, sup;
         if (stretch) {
-          base = CHTML.getNode(node,"mjx-base");
-          sub = CHTML.getNode(node,"mjx-sub");
-          sup = CHTML.getNode(node,"mjx-sup");
+          if (this.data[this.base]) base = CHTML.getNode(node,"mjx-base");
+          if (this.data[this.sub])  sub = CHTML.getNode(node,"mjx-sub");
+          if (this.data[this.sup])  sup = CHTML.getNode(node,"mjx-sup");
           stack = CHTML.getNode(node,"mjx-stack");
         } else {
           var types = ["mjx-base","mjx-sub","mjx-sup"];
@@ -2362,7 +2378,12 @@
         return node;
       },
       CHTMLstretchV: MML.mbase.CHTMLstretchV,
-      CHTMLstretchH: MML.mbase.CHTMLstretchH
+      CHTMLstretchH: MML.mbase.CHTMLstretchH,
+      CHTMLchildNode: function (node,i) {
+        var types = ["mjx-base","mjx-sub","mjx-sup"];
+        if (this.over === 1) types[1] = types[2];
+        return CHTML.getNode(node,types[i]);
+      }
     });
 
     /********************************************************/
