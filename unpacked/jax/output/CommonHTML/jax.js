@@ -858,10 +858,17 @@
       var test2 = CHTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name},[["mjx-char",{style:styles},[c,["mjx-box"]]]]);
       test1.firstChild.style.fontSize = test2.firstChild.style.fontSize = "";
       var em = 5*CHTML.em;
-      var d = (test2.offsetHeight-1000)/em;
-      var w = test1.offsetWidth/em, h = test1.offsetHeight/em - d;
+      var H1 = test1.offsetHeight, H2 = test2.offsetHeight, W = test1.offsetWidth;
       CHTML.CHTMLnode.removeChild(test1);
       CHTML.CHTMLnode.removeChild(test2);
+      if (H2 === 0) {
+        em = 5*CHTML.defaultEm;
+        var test = document.body.appendChild(document.createElement("div"));
+        test.appendChild(test1); test.appendChild(test2);
+        H1 = test1.offsetHeight, H2 = test2.offsetHeight, W = test1.offsetWidth;
+        document.body.removeChild(test);
+      }
+      var d = (H2-1000)/em, w = W/em, h = H1/em - d;
       return {h:h, d:d, w:w}
     },
     
