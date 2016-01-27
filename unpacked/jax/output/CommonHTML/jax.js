@@ -343,6 +343,7 @@
         for (var i = 0, m = nodes.length; i < m; i++) {
           if (name.test(nodes[i].className)) NODES.push = nodes[i];
         }
+        return NODES;
       }
     ),
     getNode: function (node,type) {
