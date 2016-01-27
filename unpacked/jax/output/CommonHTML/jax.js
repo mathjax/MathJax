@@ -81,7 +81,8 @@
 
     ".mjx-numerator":   {display:"block", "text-align":"center"},
     ".mjx-denominator": {display:"block", "text-align":"center"},
-    ".MJXc-fpad": {"padding-left":".1em", "padding-right":".1em"},
+    ".MJXc-stacked":    {height:0, position:"relative"},
+    ".MJXc-stacked > *":  {position: "absolute"},
     ".MJXc-bevelled > *": {display:"inline-block"},
     
     ".mjx-stack":  {display:"inline-block"},
@@ -128,8 +129,9 @@
     ".mjx-row":    {display:"table-row"},
     ".mjx-cell":   {display:"table-cell"},
     ".mjx-table":  {display:"table", width:"100%"},
-    ".mjx-line":   {display:"block", width:"100%", "border-top":"0 solid"},
+    ".mjx-line":   {display:"block", height:0},
     ".mjx-strut":  {width:0, "padding-top":STRUTHEIGHT+"em"},
+    ".mjx-vsize":  {width:0},
 
     ".MJXc-space1": {"margin-left":".167em"},
     ".MJXc-space2": {"margin-left":".222em"},
@@ -1626,7 +1628,7 @@
       CHTMLdrawBBox: function (node,bbox) {
         if (!bbox) bbox = this.CHTML;
         var box = CHTML.Element("mjx-box",
-          {style:{"font-size":node.style.fontSize, opacity:.25,"margin-left":CHTML.Em(-(bbox.w+(bbox.R||0)))}},[
+          {style:{opacity:.25,"margin-left":CHTML.Em(-(bbox.w+(bbox.R||0)))}},[
           ["mjx-box",{style:{
             height:CHTML.Em(bbox.h),width:CHTML.Em(bbox.w),
             "background-color":"red"
@@ -2409,22 +2411,22 @@
           BBOX.combine(dbox,nscale*nbox.w+bbox.w-delta,v);
           BBOX.clean();
         } else {
+          frac.className += " MJXc-stacked";
           if (isDisplay) {u = CHTML.TEX.num1; v = CHTML.TEX.denom1}
             else {u = (t === 0 ? CHTML.TEX.num3 : CHTML.TEX.num2); v = CHTML.TEX.denom2}
           if (t === 0) { // \atop
             p = Math.max((isDisplay ? 7 : 3) * CHTML.TEX.rule_thickness, 2*mt); // force to at least 2 px
             q = (u - nbox.d*nscale) - (dbox.h*dscale - v);
             if (q < p) {u += (p - q)/2; v += (p - q)/2}
-            frac.style.verticalAlign = CHTML.Em(-v);
           } else { // \over
             p = Math.max((isDisplay ? 2 : 0) * mt + t, t/2 + 1.5*mt);
             t = Math.max(t,mt);
             q = (u - nbox.d*nscale) - (a + t/2); if (q < p) u += (p - q);
             q = (a - t/2) - (dbox.h*dscale - v); if (q < p) v += (p - q);
-            frac.style.verticalAlign = CHTML.Em(t/2-v);
-            num.style.borderBottom = CHTML.Px(t/nscale*nbox.scale,1)+" solid";
-            num.className += " MJXc-fpad";   nbox.L = nbox.R = .1;
-            denom.className += " MJXc-fpad"; dbox.L = dbox.R = .1;
+            nbox.L = nbox.R = dbox.L = dbox.R = .1;  // account for padding in BBOX width
+            var rule = CHTML.addElement(frac,"mjx-line",{style: {
+              "border-bottom":CHTML.Px(t*BBOX.scale,1)+" solid", top: CHTML.Em(-t/2-a)
+            }});
           }
           //
           //  Determine the new bounding box and place the parts
@@ -2432,9 +2434,24 @@
           BBOX.combine(nbox,0,u);
           BBOX.combine(dbox,0,-v);
           BBOX.clean();
-          u -= nscale*nbox.d + a + t/2; v -= dscale*dbox.h - a + t/2;
-          if (u) num.style[u > 0 ? "paddingBottom" : "marginBottom"] = CHTML.Em(u/nscale);
-          if (v) denom.style[v > 0 ? "paddingTop" : "marginTop"] = CHTML.Em(v/dscale);
+          //
+          //  Force elements to the correct width
+          //
+          frac.style.width = CHTML.Em(BBOX.w);
+          num.style.width = CHTML.Em(BBOX.w/nscale);
+          denom.style.width = CHTML.Em(BBOX.w/dscale);
+          if (rule) rule.style.width = frac.style.width;
+          //
+          //  Place the numerator and denominator in relation to the baseline
+          //
+          num.style.top = CHTML.Em(-BBOX.h/nscale);
+          denom.style.bottom = CHTML.Em(-BBOX.d/dscale);
+          //
+          //  Force the size of the surrounding box, since everything is absolutely positioned
+          //
+          CHTML.addElement(node,"mjx-vsize",{style: {
+            height: CHTML.Em(BBOX.h+BBOX.d), verticalAlign: CHTML.Em(-BBOX.d)
+          }});
         }
         //
         //  Add nulldelimiterspace around the fraction
