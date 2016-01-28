@@ -1264,6 +1264,7 @@
         {if (mo.defaults.hasOwnProperty(id) && mi[id] != null) {mo[id] = mi[id]}}
       for (id in MML.copyAttributes)
         {if (MML.copyAttributes.hasOwnProperty(id) && mi[id] != null) {mo[id] = mi[id]}}
+      mo.lspace = mo.rspace = "0";  // prevent mo from having space in NativeMML
       return mo;
     },
     
