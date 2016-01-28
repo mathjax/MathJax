@@ -94,8 +94,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       projlim:    ['NamedOp','proj&thinsp;lim'],
       varliminf:  ['Macro','\\mathop{\\underline{\\mmlToken{mi}{lim}}}'],
       varlimsup:  ['Macro','\\mathop{\\overline{\\mmlToken{mi}{lim}}}'],
-      varinjlim:  ['Macro','\\mathop{\\underrightarrow{\\mmlToken{mi}{lim}\\Rule{-1pt}{0pt}{1pt}}\\Rule{0pt}{0pt}{.45em}}'],
-      varprojlim: ['Macro','\\mathop{\\underleftarrow{\\mmlToken{mi}{lim}\\Rule{-1pt}{0pt}{1pt}}\\Rule{0pt}{0pt}{.45em}}'],
+      varinjlim:  ['Macro','\\mathop{\\underrightarrow{\\mmlToken{mi}{lim}}}'],
+      varprojlim: ['Macro','\\mathop{\\underleftarrow{\\mmlToken{mi}{lim}}}'],
       
       DeclareMathOperator: 'HandleDeclareOp',
       operatorname:        'HandleOperatorName',
