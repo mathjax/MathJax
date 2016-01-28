@@ -1265,6 +1265,7 @@
       for (id in MML.copyAttributes)
         {if (MML.copyAttributes.hasOwnProperty(id) && mi[id] != null) {mo[id] = mi[id]}}
       mo.lspace = mo.rspace = "0";  // prevent mo from having space in NativeMML
+      mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
       return mo;
     },
     
