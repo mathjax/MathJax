@@ -546,6 +546,9 @@
     Activate: function(event, menu) {
       var jaxs = MENU.AllNodes();
       for (var j = 0, jax; jax = jaxs[j]; j++) {
+        if (jax.tabIndex > 0) {
+          jax.oldTabIndex = jax.tabIndex;
+        }
         jax.tabIndex = -1;
       }
       MENU.posted = true;
@@ -554,7 +557,12 @@
       MENU.ActiveNode().tabIndex = -1;
       var jaxs = MENU.AllNodes();
       for (var j = 0, jax; jax = jaxs[j]; j++) {
-        jax.tabIndex = 0;
+        if (jax.oldTabIndex !== undefined) {
+          jax.tabIndex = jax.oldTabIndex
+          delete jax.oldTabIndex;
+        } else {
+          jax.tabIndex = HUB.getTabOrder();
+        }
       }
       MENU.FocusNode(MENU.CurrentNode());
       MENU.posted = false;
@@ -1534,7 +1542,8 @@
           ITEM.RADIO("PlainSource","renderer", {action: MENU.Renderer, value:"PlainSource"}),
           ITEM.RULE(),
           ITEM.CHECKBOX("Fast Preview", "FastPreview"),
-          ITEM.CHECKBOX("Assistive MathML", "assistiveMML", {action:MENU.AssistiveMML})
+          ITEM.CHECKBOX("Assistive MathML", "assistiveMML", {action:MENU.AssistiveMML}),
+          ITEM.CHECKBOX("Include in Tab Order", "inTabOrder", {action:CONFIG.inTabOrder})
         ),
         ITEM.SUBMENU("MathPlayer",  {hidden:!HUB.Browser.isMSIE || !CONFIG.showMathPlayer,
                                                     disabled:!HUB.Browser.hasMathPlayer},
