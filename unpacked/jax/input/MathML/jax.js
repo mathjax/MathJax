@@ -76,7 +76,7 @@
       var mml, type = node.nodeName.toLowerCase().replace(/^[a-z]+:/,"");
       var match = (CLASS.match(/(^| )MJX-TeXAtom-([^ ]*)/));
       if (match) {
-        mml = this.TeXAtom(match[2],!CLASS.match(/MJX-fixedlimits/));
+        mml = this.TeXAtom(match[2],match[2] === "OP" && !CLASS.match(/MJX-fixedlimits/));
       } else if (!(MML[type] && MML[type].isa && MML[type].isa(MML.mbase))) {
         MathJax.Hub.signal.Post(["MathML Jax - unknown node type",type]);
         return MML.Error(_("UnknownNodeType","Unknown node type: %1",type));
