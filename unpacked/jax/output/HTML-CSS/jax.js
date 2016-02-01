@@ -1606,6 +1606,8 @@
               + String.fromCharCode((N&0x3FF)+0xDC00);
         }
       }
+      if (HTMLCSS.ffFontOptimizationBug && c[4] - c[2] > 125)
+        {span.style.textRendering = "optimizeLegibility"}
       if (C.rfix) {this.addText(span,text+C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
       if (c[2] || !this.msieAccentBug || text.length) {return text + C.c}
       //  Handle IE accent clipping bug
@@ -3107,7 +3109,8 @@
         HTMLCSS.Augment({
           ffVerticalAlignBug: !browser.versionAtLeast("20.0"),  // not sure when this bug was fixed
           AccentBug: true,
-          allowWebFonts: webFonts
+          allowWebFonts: webFonts,
+          ffFontOptimizationBug: true
         });
       },
 
