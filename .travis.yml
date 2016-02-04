@@ -5,3 +5,6 @@ sudo: false
 script:
   - npm install
   - npm test
+branches:
+  only:
+    - master
