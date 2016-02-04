@@ -8,3 +8,10 @@ script:
 branches:
   only:
     - master
+deploy:
+  provider: npm
+  email: manager@mathjax.org
+  api_key:
+    secure: bvV24vukT5rVQLyo5GOI1ZM23wbVGeu+AQMkq6IYFFAoggZR9VRCASrwRPfrdzgQYpW2m2al3YaQ/0PvEaOckP+fapqkPtsefjrHaTURxrzPb/KYmiLCN5uhYbJPDSXuFCuNqzMU0zFh3savedWiQZfaaXirLYB3aeDPqCbmqTI=
+  on:
+    tags: true
