@@ -23,5 +23,8 @@
     "type": "git",
     "url": "git://github.com/mathjax/MathJax.git"
   },
-  "main": "./MathJax.js"
+  "main": "./MathJax.js",
+  "scripts": {
+    "test": "echo 'No tests here!'"
+  }
 }
