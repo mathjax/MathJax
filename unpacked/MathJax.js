@@ -1896,7 +1896,7 @@ MathJax.Hub = {
       mpContext: false,    //  true means pass menu events to MathPlayer in IE
       mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
       texHints: true,      //  include class names for TeXAtom elements
-      inTabOrder: false,    // set to false if math elements should be included in the tabindex
+      inTabOrder: true,    //  set to false if math elements should be included in the tabindex
       semantics: false     //  add semantics tag with original form in MathML output
     },
     
