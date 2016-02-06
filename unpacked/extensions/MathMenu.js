@@ -544,12 +544,18 @@
       MENU.FocusNode(menu);
     },
     Activate: function(event, menu) {
-      MENU.UnsetTabIndex();
+      var jaxs = MENU.AllNodes();
+      for (var j = 0, jax; jax = jaxs[j]; j++) {
+        jax.tabIndex = -1;
+      }
       MENU.posted = true;
     },
     Unfocus: function() {
       MENU.ActiveNode().tabIndex = -1;
-      MENU.SetTabIndex();
+      var jaxs = MENU.AllNodes();
+      for (var j = 0, jax; jax = jaxs[j]; j++) {
+        jax.tabIndex = 0;
+      }
       MENU.FocusNode(MENU.CurrentNode());
       MENU.posted = false;
     },
@@ -570,26 +576,6 @@
     },
     Left: function(event, menu) {
       MENU.MoveHorizontal(event, menu, function(x) {return x - 1;});
-    },
-    UnsetTabIndex: function () {
-      var jaxs = MENU.AllNodes();
-      for (var j = 0, jax; jax = jaxs[j]; j++) {
-        if (jax.tabIndex > 0) {
-          jax.oldTabIndex = jax.tabIndex;
-        }
-        jax.tabIndex = -1;
-      }
-    },
-    SetTabIndex: function () {
-      var jaxs = MENU.AllNodes();
-      for (var j = 0, jax; jax = jaxs[j]; j++) {
-        if (jax.oldTabIndex !== undefined) {
-          jax.tabIndex = jax.oldTabIndex
-          delete jax.oldTabIndex;
-        } else {
-          jax.tabIndex = HUB.getTabOrder();
-        }
-      }
     },
 
     //TODO: Move to utility class.
@@ -1342,9 +1328,6 @@
     }
   };
   
-  /*
-   *  Toggle assistive MML settings
-   */
   MENU.AssistiveMML = function (item,restart) {
     var AMML = MathJax.Extension.AssistiveMML;
     if (!AMML) {
@@ -1551,8 +1534,7 @@
           ITEM.RADIO("PlainSource","renderer", {action: MENU.Renderer, value:"PlainSource"}),
           ITEM.RULE(),
           ITEM.CHECKBOX("Fast Preview", "FastPreview"),
-          ITEM.CHECKBOX("Assistive MathML", "assistiveMML", {action:MENU.AssistiveMML}),
-          ITEM.CHECKBOX("Include in Tab Order", "inTabOrder")
+          ITEM.CHECKBOX("Assistive MathML", "assistiveMML", {action:MENU.AssistiveMML})
         ),
         ITEM.SUBMENU("MathPlayer",  {hidden:!HUB.Browser.isMSIE || !CONFIG.showMathPlayer,
                                                     disabled:!HUB.Browser.hasMathPlayer},
