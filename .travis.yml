@@ -8,7 +8,7 @@ script:
 branches:
   only:
     - master
-    - /^(\d+\.)+(\d+\.)+(\d+)?(-)?(.+)$/
+    - /^\d+\.\d+/
 deploy:
   provider: npm
   email: manager@mathjax.org
