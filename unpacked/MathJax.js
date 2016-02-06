@@ -2129,6 +2129,7 @@ MathJax.Hub = {
           if (script.MathJax.state !== STATE.PENDING) {this.scriptAction[action](script)}
         }
         if (!script.MathJax) {script.MathJax = {state: STATE.PENDING}}
+        if (script.MathJax.error) delete script.MathJax.error;
         if (script.MathJax.state !== STATE.PROCESSED) {state.scripts.push(script)}
       }
     }
@@ -2371,7 +2372,7 @@ MathJax.Hub = {
           HUB = MathJax.Hub;
       error.oncontextmenu = EVENT.Menu;
       error.onmousedown = EVENT.Mousedown;
-      error.keydown = EVENT.Keydown;
+      error.onkeydown = EVENT.Keydown;
       error.tabIndex = HUB.getTabOrder(HUB.getJaxFor(script));
     });
     //
