@@ -2352,7 +2352,8 @@ MathJax.Hub = {
     if (err.line||err.lineNumber) message += "\n"+LOCALIZE("ErrorLine","line: %1",err.line||err.lineNumber);
     message += "\n\n"+LOCALIZE("ErrorTips","Debugging tips: use %1, inspect %2 in the browser console","'unpacked/MathJax.js'","'MathJax.Hub.lastError'");
     script.MathJax.error = MathJax.OutputJax.Error.Jax(message,script);
-
+    if (script.MathJax.elementJax)
+      script.MathJax.error.inputID = script.MathJax.elementJax.inputID;
     //
     //  Create the [Math Processing Error] span
     //
@@ -2361,28 +2362,23 @@ MathJax.Hub = {
     var error = MathJax.HTML.Element("span", {
       className:"MathJax_Error", jaxID:"Error", isMathJax:true,
       id: script.MathJax.error.inputID+"-Frame"
-    },errorText);
+    },[["span",null,errorText]]);
     //
     //  Attach the menu events
     //
-    if (MathJax.Extension.MathEvents) {
-      var EVENT = MathJax.Extension.MathEvents.Event;
+    MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js",function () {
+      var EVENT = MathJax.Extension.MathEvents.Event
+          HUB = MathJax.Hub;
       error.oncontextmenu = EVENT.Menu;
       error.onmousedown = EVENT.Mousedown;
-      error.onkeydown = EVENT.Keydown;
-      error.tabIndex = this.getTabOrder(this.getJaxFor(script));
-    } else {
-      MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js",function () {
-        var EVENT = MathJax.Extension.MathEvents.Event;
-        error.oncontextmenu = EVENT.Menu;
-        error.onmousedown = EVENT.Mousedown;
-        error.keydown = EVENT.Keydown;
-        error.tabIndex = this.getTabOrder(this.getJaxFor(script));
-      });
-    }
+      error.keydown = EVENT.Keydown;
+      error.tabIndex = HUB.getTabOrder(HUB.getJaxFor(script));
+    });
     //
     //  Insert the error into the page and remove any preview
     //
+    var node = document.getElementById(error.id);
+    if (node) node.parentNode.removeChild(node);
     script.parentNode.insertBefore(error,script);
     if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
     //
