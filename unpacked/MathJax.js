@@ -2368,14 +2368,14 @@ MathJax.Hub = {
       error.oncontextmenu = EVENT.Menu;
       error.onmousedown = EVENT.Mousedown;
       error.onkeydown = EVENT.Keydown;
-      error.tabIndex = this.getTabOrder();
+      error.tabIndex = this.getTabOrder(this.getJaxFor(script));
     } else {
       MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js",function () {
         var EVENT = MathJax.Extension.MathEvents.Event;
         error.oncontextmenu = EVENT.Menu;
         error.onmousedown = EVENT.Mousedown;
         error.keydown = EVENT.Keydown;
-        error.tabIndex = this.getTabOrder();
+        error.tabIndex = this.getTabOrder(this.getJaxFor(script));
       });
     }
     //
@@ -2463,7 +2463,7 @@ MathJax.Hub = {
     return dst;
   },
 
-  getTabOrder: function() {
+  getTabOrder: function(script) {
     return this.config.menuSettings.inTabOrder ? 0 : -1;
   },
 

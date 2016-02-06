@@ -587,7 +587,7 @@
           jax.tabIndex = jax.oldTabIndex
           delete jax.oldTabIndex;
         } else {
-          jax.tabIndex = HUB.getTabOrder();
+          jax.tabIndex = HUB.getTabOrder(jax);
         }
       }
     },
