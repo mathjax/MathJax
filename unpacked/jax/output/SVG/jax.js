@@ -222,7 +222,7 @@
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
 	  onclick:EVENT.Click, ondblclick:EVENT.DblClick,
           // Added for keyboard accessible menu.
-          onkeydown: EVENT.Keydown, tabIndex: "0"
+          onkeydown: EVENT.Keydown, tabIndex: HUB.getTabOrder()
         });
 	if (HUB.Browser.noContextMenu) {
 	  span.ontouchstart = TOUCH.start;

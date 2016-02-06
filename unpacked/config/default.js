@@ -246,6 +246,7 @@ MathJax.Hub.Config({
     mpContext: false,    //  true means pass menu events to MathPlayer in IE
     mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
     texHints: true,      //  include class names for TeXAtom elements
+    inTabOrder: true,    //  set to true if math elements should be included in the tabindex
     semantics: false     //  add semantics tag with original form in MathML output
   },
   

@@ -1880,7 +1880,7 @@ MathJax.Hub = {
     showMathMenu: true,      // attach math context menu to typeset math?
     showMathMenuMSIE: true,  // separtely determine if MSIE should have math menu
                              //  (since the code for that is a bit delicate)
-
+    
     menuSettings: {
       zoom: "None",        //  when to do MathZoom
       CTRL: false,         //    require CTRL for MathZoom?
@@ -1896,6 +1896,7 @@ MathJax.Hub = {
       mpContext: false,    //  true means pass menu events to MathPlayer in IE
       mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
       texHints: true,      //  include class names for TeXAtom elements
+      inTabOrder: true,    //  set to false if math elements should be included in the tabindex
       semantics: false     //  add semantics tag with original form in MathML output
     },
     
@@ -2367,14 +2368,14 @@ MathJax.Hub = {
       error.oncontextmenu = EVENT.Menu;
       error.onmousedown = EVENT.Mousedown;
       error.onkeydown = EVENT.Keydown;
-      error.tabIndex = 0;
+      error.tabIndex = this.getTabOrder();
     } else {
       MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js",function () {
         var EVENT = MathJax.Extension.MathEvents.Event;
         error.oncontextmenu = EVENT.Menu;
         error.onmousedown = EVENT.Mousedown;
         error.keydown = EVENT.Keydown;
-        error.tabIndex = 0;
+        error.tabIndex = this.getTabOrder();
       });
     }
     //
@@ -2460,6 +2461,10 @@ MathJax.Hub = {
       }
     }}
     return dst;
+  },
+
+  getTabOrder: function() {
+    return this.config.menuSettings.inTabOrder ? 0 : -1;
   },
 
   // Old browsers (e.g. Internet Explorer <= 8) do not support trim().
