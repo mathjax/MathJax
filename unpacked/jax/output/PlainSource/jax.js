@@ -91,7 +91,7 @@
           ondblclick: EVENT.DblClick,
           // Added for keyboard accessible menu.
           onkeydown: EVENT.Keydown,
-          tabIndex: "0"
+          tabIndex: HUB.getTabOrder(jax)
         },[["span"]]);
         if (HUB.Browser.noContextMenu) {
           span.ontouchstart = TOUCH.start;

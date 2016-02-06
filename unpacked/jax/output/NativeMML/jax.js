@@ -328,7 +328,7 @@
         container.ondblclick    = EVENT.DblClick;
         // Added for keyboard accessible menu.
         container.onkeydown = EVENT.Keydown;
-        container.tabIndex = "0";
+        container.tabIndex = HUB.getTabOrder(jax);
 	if (HUB.Browser.noContextMenu) {
 	  container.ontouchstart = TOUCH.start;
 	  container.ontouchend   = TOUCH.end;
