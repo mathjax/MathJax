@@ -2464,7 +2464,8 @@ MathJax.Hub = {
   },
 
   getTabOrder: function() {
-    return this.config.menuSettings.inTabOrder ? 0 : -1},
+    return this.config.menuSettings.inTabOrder ? 0 : -1;
+  },
 
   // Old browsers (e.g. Internet Explorer <= 8) do not support trim().
   SplitList: ("trim" in String.prototype ?
