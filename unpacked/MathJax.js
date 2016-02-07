@@ -2368,7 +2368,7 @@ MathJax.Hub = {
     //  Attach the menu events
     //
     MathJax.Ajax.Require("[MathJax]/extensions/MathEvents.js",function () {
-      var EVENT = MathJax.Extension.MathEvents.Event
+      var EVENT = MathJax.Extension.MathEvents.Event,
           HUB = MathJax.Hub;
       error.oncontextmenu = EVENT.Menu;
       error.onmousedown = EVENT.Mousedown;
