@@ -199,7 +199,7 @@
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
 	  onclick:EVENT.Click, ondblclick:EVENT.DblClick,
           // Added for keyboard accessible menu.
-          onkeydown: EVENT.Keydown, tabIndex: "0"  
+          onkeydown: EVENT.Keydown, tabIndex: HUB.getTabOrder(jax)
         });
 	if (HUB.Browser.noContextMenu) {
 	  span.ontouchstart = TOUCH.start;
@@ -750,8 +750,9 @@
     MML.munderover.Augment({
       toPreviewHTML: function (span) {
 	var values = this.getValues("displaystyle","accent","accentunder","align");
-	if (!values.displaystyle && this.data[this.base] != null &&
-	    this.data[this.base].CoreMO().Get("movablelimits")) {
+        var base = this.data[this.base];
+	if (!values.displaystyle && base != null &&
+	    (base.movablelimits || base.CoreMO().Get("movablelimits"))) {
           span = MML.msubsup.prototype.toPreviewHTML.call(this,span);
           //
           //  Change class to msubsup for CSS rules.

@@ -81,7 +81,8 @@
 
     ".mjx-numerator":   {display:"block", "text-align":"center"},
     ".mjx-denominator": {display:"block", "text-align":"center"},
-    ".MJXc-fpad": {"padding-left":".1em", "padding-right":".1em"},
+    ".MJXc-stacked":    {height:0, position:"relative"},
+    ".MJXc-stacked > *":  {position: "absolute"},
     ".MJXc-bevelled > *": {display:"inline-block"},
     
     ".mjx-stack":  {display:"inline-block"},
@@ -128,8 +129,9 @@
     ".mjx-row":    {display:"table-row"},
     ".mjx-cell":   {display:"table-cell"},
     ".mjx-table":  {display:"table", width:"100%"},
-    ".mjx-line":   {display:"block", width:"100%", "border-top":"0 solid"},
+    ".mjx-line":   {display:"block", height:0},
     ".mjx-strut":  {width:0, "padding-top":STRUTHEIGHT+"em"},
+    ".mjx-vsize":  {width:0},
 
     ".MJXc-space1": {"margin-left":".167em"},
     ".MJXc-space2": {"margin-left":".222em"},
@@ -334,21 +336,33 @@
     ucMatch: HTML.ucMatch,
     setScript: HTML.setScript,
     
-    //
-    //  This replaces node.getElementsByTagName(type)[0]
-    //  and should be replaced by that if we go back to using
-    //  custom tags
-    //
-    getNode: (document.getElementsByClassName ? 
-      function (node,type) {return node.getElementsByClassName(type)[0]} :
+    getNodesByClass: (document.getElementsByClassName ? 
+      function (node,type) {return node.getElementsByClassName(type)} :
       function (node,type) {
+        var NODES = [];
         var nodes = node.getElementsByTagName("span");
         var name = RegExp("\\b"+type+"\\b");
         for (var i = 0, m = nodes.length; i < m; i++) {
-          if (name.test(nodes[i].className)) return nodes[i];
+          if (name.test(nodes[i].className)) NODES.push = nodes[i];
         }
+        return NODES;
       }
     ),
+    getNode: function (node,type) {
+      var nodes = this.getNodesByClass(node,type);
+      if (nodes.length === 1) return nodes[0];
+      var closest = nodes[0], N = this.getNodeDepth(node,closest);
+      for (var i = 1, m = nodes.length; i < m; i++) {
+        var n = this.getNodeDepth(node,nodes[i]);
+        if (n < N) {closest = nodes[i]; N = n}
+      }
+      return closest;
+    },
+    getNodeDepth: function (parent,node) {
+      var n = 0;
+      while (node && node !== parent) {node = node.parentNode; n++}
+      return n;
+    },
     
 
     /********************************************/
@@ -389,7 +403,7 @@
           onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout, onmousemove:EVENT.Mousemove,
 	  onclick:EVENT.Click, ondblclick:EVENT.DblClick,
           // Added for keyboard accessible menu.
-          onkeydown: EVENT.Keydown, tabIndex: "0"  
+          onkeydown: EVENT.Keydown, tabIndex: HUB.getTabOrder(jax)
         });
         if (jax.CHTML.display) {
           //
@@ -858,10 +872,17 @@
       var test2 = CHTML.addElement(CHTML.CHTMLnode,"mjx-chartest",{className:name},[["mjx-char",{style:styles},[c,["mjx-box"]]]]);
       test1.firstChild.style.fontSize = test2.firstChild.style.fontSize = "";
       var em = 5*CHTML.em;
-      var d = (test2.offsetHeight-1000)/em;
-      var w = test1.offsetWidth/em, h = test1.offsetHeight/em - d;
+      var H1 = test1.offsetHeight, H2 = test2.offsetHeight, W = test1.offsetWidth;
       CHTML.CHTMLnode.removeChild(test1);
       CHTML.CHTMLnode.removeChild(test2);
+      if (H2 === 0) {
+        em = 5*CHTML.defaultEm;
+        var test = document.body.appendChild(document.createElement("div"));
+        test.appendChild(test1); test.appendChild(test2);
+        H1 = test1.offsetHeight, H2 = test2.offsetHeight, W = test1.offsetWidth;
+        document.body.removeChild(test);
+      }
+      var d = (H2-1000)/em, w = W/em, h = H1/em - d;
       return {h:h, d:d, w:w}
     },
     
@@ -1619,7 +1640,7 @@
       CHTMLdrawBBox: function (node,bbox) {
         if (!bbox) bbox = this.CHTML;
         var box = CHTML.Element("mjx-box",
-          {style:{"font-size":node.style.fontSize, opacity:.25,"margin-left":CHTML.Em(-(bbox.w+(bbox.R||0)))}},[
+          {style:{opacity:.25,"margin-left":CHTML.Em(-(bbox.w+(bbox.R||0)))}},[
           ["mjx-box",{style:{
             height:CHTML.Em(bbox.h),width:CHTML.Em(bbox.w),
             "background-color":"red"
@@ -2054,17 +2075,18 @@
     MML.munderover.Augment({
       toCommonHTML: function (node,stretch) {
         var values = this.getValues("displaystyle","accent","accentunder","align");
-        if (!values.displaystyle && this.data[this.base] != null &&
-            this.data[this.base].CoreMO().Get("movablelimits"))
+        var base = this.data[this.base];
+        if (!values.displaystyle && base != null &&
+            (base.movablelimits || base.CoreMO().Get("movablelimits")))
                 return MML.msubsup.prototype.toCommonHTML.call(this,node,stretch);
         //
         //  Get the nodes for base and limits
         //
-        var base, under, over, nodes = [];
+        var under, over, nodes = [];
         if (stretch) {
-          base = CHTML.getNode(node,"mjx-op");
-          under = CHTML.getNode(node,"mjx-under");
-          over = CHTML.getNode(node,"mjx-over");
+          if (this.data[this.base])  base = CHTML.getNode(node,"mjx-op");
+          if (this.data[this.under]) under = CHTML.getNode(node,"mjx-under");
+          if (this.data[this.over])  over = CHTML.getNode(node,"mjx-over");
           nodes[0] = base; nodes[1] = under||over; nodes[2] = over;
         } else {
           var types = ["mjx-op","mjx-under","mjx-over"];
@@ -2111,6 +2133,7 @@
           bbox[i] = this.CHTMLbboxFor(i); bbox[i].x = bbox[i].y = 0;
           if (this.data[i]) bbox[i].stretch = this.data[i].CHTMLcanStretch("Horizontal");
           scale = (i === this.base ? 1 : bbox[i].rscale);
+          if (i !== this.base) {delete bbox[i].L; delete bbox[i].R} // these are overriden by CSS
           W = Math.max(W,scale*(bbox[i].w + (bbox[i].L||0) + (bbox[i].R||0)));
           if (!bbox[i].stretch && W > w) w = W;
         }
@@ -2247,7 +2270,12 @@
         this.CHTML = BBOX;
       },
       CHTMLstretchV: MML.mbase.CHTMLstretchV,
-      CHTMLstretchH: MML.mbase.CHTMLstretchH
+      CHTMLstretchH: MML.mbase.CHTMLstretchH,
+      CHTMLchildNode: function (node,i) {
+        var types = ["mjx-op","mjx-under","mjx-over"];
+        if (this.over === 1) types[1] = types[2];
+        return CHTML.getNode(node,types[i]);
+      }
     });
 
     /********************************************************/
@@ -2262,9 +2290,9 @@
         //
         var base, sub, sup;
         if (stretch) {
-          base = CHTML.getNode(node,"mjx-base");
-          sub = CHTML.getNode(node,"mjx-sub");
-          sup = CHTML.getNode(node,"mjx-sup");
+          if (this.data[this.base]) base = CHTML.getNode(node,"mjx-base");
+          if (this.data[this.sub])  sub = CHTML.getNode(node,"mjx-sub");
+          if (this.data[this.sup])  sup = CHTML.getNode(node,"mjx-sup");
           stack = CHTML.getNode(node,"mjx-stack");
         } else {
           var types = ["mjx-base","mjx-sub","mjx-sup"];
@@ -2353,7 +2381,12 @@
         return node;
       },
       CHTMLstretchV: MML.mbase.CHTMLstretchV,
-      CHTMLstretchH: MML.mbase.CHTMLstretchH
+      CHTMLstretchH: MML.mbase.CHTMLstretchH,
+      CHTMLchildNode: function (node,i) {
+        var types = ["mjx-base","mjx-sub","mjx-sup"];
+        if (this.over === 1) types[1] = types[2];
+        return CHTML.getNode(node,types[i]);
+      }
     });
 
     /********************************************************/
@@ -2400,22 +2433,22 @@
           BBOX.combine(dbox,nscale*nbox.w+bbox.w-delta,v);
           BBOX.clean();
         } else {
+          frac.className += " MJXc-stacked";
           if (isDisplay) {u = CHTML.TEX.num1; v = CHTML.TEX.denom1}
             else {u = (t === 0 ? CHTML.TEX.num3 : CHTML.TEX.num2); v = CHTML.TEX.denom2}
           if (t === 0) { // \atop
             p = Math.max((isDisplay ? 7 : 3) * CHTML.TEX.rule_thickness, 2*mt); // force to at least 2 px
             q = (u - nbox.d*nscale) - (dbox.h*dscale - v);
             if (q < p) {u += (p - q)/2; v += (p - q)/2}
-            frac.style.verticalAlign = CHTML.Em(-v);
           } else { // \over
             p = Math.max((isDisplay ? 2 : 0) * mt + t, t/2 + 1.5*mt);
             t = Math.max(t,mt);
             q = (u - nbox.d*nscale) - (a + t/2); if (q < p) u += (p - q);
             q = (a - t/2) - (dbox.h*dscale - v); if (q < p) v += (p - q);
-            frac.style.verticalAlign = CHTML.Em(t/2-v);
-            num.style.borderBottom = CHTML.Px(t/nscale*nbox.scale,1)+" solid";
-            num.className += " MJXc-fpad";   nbox.L = nbox.R = .1;
-            denom.className += " MJXc-fpad"; dbox.L = dbox.R = .1;
+            nbox.L = nbox.R = dbox.L = dbox.R = .1;  // account for padding in BBOX width
+            var rule = CHTML.addElement(frac,"mjx-line",{style: {
+              "border-bottom":CHTML.Px(t*BBOX.scale,1)+" solid", top: CHTML.Em(-t/2-a)
+            }});
           }
           //
           //  Determine the new bounding box and place the parts
@@ -2423,9 +2456,24 @@
           BBOX.combine(nbox,0,u);
           BBOX.combine(dbox,0,-v);
           BBOX.clean();
-          u -= nscale*nbox.d + a + t/2; v -= dscale*dbox.h - a + t/2;
-          if (u) num.style[u > 0 ? "paddingBottom" : "marginBottom"] = CHTML.Em(u/nscale);
-          if (v) denom.style[v > 0 ? "paddingTop" : "marginTop"] = CHTML.Em(v/dscale);
+          //
+          //  Force elements to the correct width
+          //
+          frac.style.width = CHTML.Em(BBOX.w);
+          num.style.width = CHTML.Em(BBOX.w/nscale);
+          denom.style.width = CHTML.Em(BBOX.w/dscale);
+          if (rule) rule.style.width = frac.style.width;
+          //
+          //  Place the numerator and denominator in relation to the baseline
+          //
+          num.style.top = CHTML.Em(-BBOX.h/nscale);
+          denom.style.bottom = CHTML.Em(-BBOX.d/dscale);
+          //
+          //  Force the size of the surrounding box, since everything is absolutely positioned
+          //
+          CHTML.addElement(node,"mjx-vsize",{style: {
+            height: CHTML.Em(BBOX.h+BBOX.d), verticalAlign: CHTML.Em(-BBOX.d)
+          }});
         }
         //
         //  Add nulldelimiterspace around the fraction

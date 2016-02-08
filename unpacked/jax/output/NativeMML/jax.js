@@ -328,7 +328,7 @@
         container.ondblclick    = EVENT.DblClick;
         // Added for keyboard accessible menu.
         container.onkeydown = EVENT.Keydown;
-        container.tabIndex = "0";
+        container.tabIndex = HUB.getTabOrder(jax);
 	if (HUB.Browser.noContextMenu) {
 	  container.ontouchstart = TOUCH.start;
 	  container.ontouchend   = TOUCH.end;
@@ -533,7 +533,10 @@
         var CLASS = []; if (this["class"]) {CLASS.push(this["class"])}
         if (this.isa(MML.TeXAtom)) {
           var TEXCLASS = ["ORD","OP","BIN","REL","OPEN","CLOSE","PUNCT","INNER","VCENTER"][this.texClass];
-          if (TEXCLASS) {CLASS.push("MJX-TeXAtom-"+TEXCLASS)}
+          if (TEXCLASS) {
+            CLASS.push("MJX-TeXAtom-"+TEXCLASS)
+            if (TEXCLASS === "OP" && !this.movablelimits) CLASS.push("MJX-fixedlimits");
+          }
         }
         if (this.mathvariant && this.NativeMMLvariants[this.mathvariant])
           {CLASS.push("MJX"+this.mathvariant)}
@@ -630,12 +633,19 @@
     MML.munderover.Augment({
       //
       //  Use proper version of munder, mover, or munderover, depending on
-      //  which items are present
+      //  which items are present.  Handle movablelimits on TeXAtom base.
       //
       toNativeMML: function (parent) {
 	var type = this.type;
-	if (this.data[this.under] == null) {type = "mover"}
-	if (this.data[this.over] == null)  {type = "munder"}
+        var base = this.data[this.base];
+        if (base && base.isa(MML.TeXAtom) && base.movablelimits && !base.Get("displaystyle")) {
+          type = "msubsup";
+          if (this.data[this.under] == null) {type = "msup"}
+          if (this.data[this.over] == null)  {type = "msub"}
+        } else {
+          if (this.data[this.under] == null) {type = "mover"}
+          if (this.data[this.over] == null)  {type = "munder"}
+        }
 	var tag = this.NativeMMLelement(type);
 	this.NativeMMLattributes(tag);
 	if (this.data[0]) {delete this.data[0].inferred}

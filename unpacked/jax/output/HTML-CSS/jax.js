@@ -578,7 +578,7 @@
           onmousemove:EVENT.Mousemove, onclick:EVENT.Click,
           ondblclick:EVENT.DblClick,
           // Added for keyboard accessible menu.
-          onkeydown: EVENT.Keydown, tabIndex: "0"
+          onkeydown: EVENT.Keydown, tabIndex: HUB.getTabOrder(jax)
         });
 	if (HUB.Browser.noContextMenu) {
 	  span.ontouchstart = TOUCH.start;
@@ -1606,6 +1606,8 @@
               + String.fromCharCode((N&0x3FF)+0xDC00);
         }
       }
+      if (HTMLCSS.ffFontOptimizationBug && c[4] - c[2] > 125)
+        {span.style.textRendering = "optimizeLegibility"}
       if (C.rfix) {this.addText(span,text+C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
       if (c[2] || !this.msieAccentBug || text.length) {return text + C.c}
       //  Handle IE accent clipping bug
@@ -2713,8 +2715,9 @@
     MML.munderover.Augment({
       toHTML: function (span,HW,D) {
 	var values = this.getValues("displaystyle","accent","accentunder","align");
-	if (!values.displaystyle && this.data[this.base] != null &&
-	    this.data[this.base].CoreMO().Get("movablelimits"))
+        var base = this.data[this.base];
+	if (!values.displaystyle && base != null &&
+	    (base.movablelimits || base.CoreMO().Get("movablelimits")))
 	      {return MML.msubsup.prototype.toHTML.call(this,span)}
 	span = this.HTMLcreateSpan(span); var scale = this.HTMLgetScale();
 	var stack = HTMLCSS.createStack(span);
@@ -2753,8 +2756,8 @@
           if (box.bbox.w > WW) {WW = box.bbox.w}
         }}
 	var t = HTMLCSS.TeX.rule_thickness * this.mscale, factor = HTMLCSS.FONTDATA.TeX_factor;
-	var base = boxes[this.base] || {bbox: this.HTMLzeroBBox()};
 	var x, y, z1, z2, z3, dw, k, delta = 0;
+	base = boxes[this.base] || {bbox: this.HTMLzeroBBox()};
         if (base.bbox.ic) {delta = 1.3*base.bbox.ic + .05} // adjust faked IC to be more in line with expeted results
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
@@ -3106,7 +3109,8 @@
         HTMLCSS.Augment({
           ffVerticalAlignBug: !browser.versionAtLeast("20.0"),  // not sure when this bug was fixed
           AccentBug: true,
-          allowWebFonts: webFonts
+          allowWebFonts: webFonts,
+          ffFontOptimizationBug: true
         });
       },
 
