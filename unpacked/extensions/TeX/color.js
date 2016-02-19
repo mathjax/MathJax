@@ -223,7 +223,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var model = this.GetBrackets(name),
           color = this.GetArgument(name);
       color = COLOR.getColor(model,color);
-      var mml = STACKITEM.style().With({styles:{mathcolor:color}});
+      var mml = STACKITEM.style().With({styles:{mathcolor:color, "class": "mjx-extension-color"}});
       this.stack.env.color = color;
       this.Push(mml);
     },
@@ -235,7 +235,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var old = this.stack.env.color; this.stack.env.color = color;
       var math = this.ParseArg(name);
       if (old) {this.stack.env.color} else {delete this.stack.env.color}
-      this.Push(MML.mstyle(math).With({mathcolor: color}));
+      this.Push(MML.mstyle(math).With({mathcolor: color, "class": "mjx-extension-color"}));
     },
 
     //
@@ -255,7 +255,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var cname = this.GetArgument(name),
           arg = this.InternalMath(this.GetArgument(name));
       this.Push(MML.mpadded.apply(MML,arg).With({
-        mathbackground:COLOR.getColor("named",cname)
+        mathbackground:COLOR.getColor("named",cname), 
+        "class": "mjx-extension-color"
       }).With(COLOR.padding()));
     },
     
@@ -268,7 +269,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           arg = this.InternalMath(this.GetArgument(name));
       this.Push(MML.mpadded.apply(MML,arg).With({
         mathbackground: COLOR.getColor("named",cname),
-        style: "border: "+COLOR.config.border+" solid "+COLOR.getColor("named",fname)
+        style: "border: "+COLOR.config.border+" solid "+COLOR.getColor("named",fname),
+        "class": "mjx-extension-color"
       }).With(COLOR.padding()));
     }
 
