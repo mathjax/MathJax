@@ -33,6 +33,13 @@
   var SVGNS   = "http://www.w3.org/2000/svg";
   var XLINKNS = "http://www.w3.org/1999/xlink";
 
+  //
+  //  Get the URL of the page (for use with xlink:href) when there
+  //  is a <base> element on the page.
+  //  
+  var SVGURL = String(document.location).replace(/#.*$/,"");
+  if (document.getElementsByTagName("base").length === 0) SVGURL = "";
+
   SVG.Augment({
     HFUZZ: 2,     // adjustments for height and depth of final svg element
     DFUZZ: 2,     //   to get baselines right (fragile).
@@ -1052,7 +1059,7 @@
       if (cache) {
         def = {}; if (transform) {def.transform = transform}
         this.element = SVG.Element("use",def);
-        this.element.setAttributeNS(XLINKNS,"href","#"+id);
+        this.element.setAttributeNS(XLINKNS,"href",SVGURL+"#"+id);
       }
       this.h = (h+t) * scale; this.d = (d+t) * scale; this.w = (w+t/2) *scale;
       this.l = (l+t/2) * scale; this.r = (r+t/2) * scale;
