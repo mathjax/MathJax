@@ -2380,7 +2380,7 @@ MathJax.Hub = {
     //
     var node = document.getElementById(error.id);
     if (node) node.parentNode.removeChild(node);
-    script.parentNode.insertBefore(error,script);
+    if (script.parentNode) script.parentNode.insertBefore(error,script);
     if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
     //
     //  Save the error for debugging purposes
