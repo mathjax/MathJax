@@ -100,7 +100,7 @@
     //  and call the PreviewHTML output jax to create the preview
     //
     Preview: function (data) {
-      if (!this.Active()) return;
+      if (!this.Active() || !data.script.parentNode) return;
       var preview = data.script.MathJax.preview || data.script.previousSibling;
       if (!preview || preview.className !== MathJax.Hub.config.preRemoveClass) {
         preview = HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
