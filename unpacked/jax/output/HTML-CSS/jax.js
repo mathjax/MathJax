@@ -2613,7 +2613,7 @@
 	if (surd.bbox.h + surd.bbox.d > H) {q = ((surd.bbox.h+surd.bbox.d) - (H-t))/2}
 	var ruleC = HTMLCSS.FONTDATA.DELIMITERS[HTMLCSS.FONTDATA.RULECHAR];
 	if (!ruleC || W < ruleC.HW[0][0]*scale || scale < .75) {
-	  HTMLCSS.createRule(rule,0,t,W);
+	  HTMLCSS.createRule(rule,0,t,W); rule.bbox.h = -t;
 	} else {
 	  HTMLCSS.createDelimiter(rule,HTMLCSS.FONTDATA.RULECHAR,W,scale);
 	}
