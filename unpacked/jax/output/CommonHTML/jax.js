@@ -123,7 +123,7 @@
 
     ".mjx-box":    {display:"inline-block"},
     ".mjx-block":  {display:"block"},
-    ".mjx-span":   {display:"span"},
+    ".mjx-span":   {display:"inline"},
     ".mjx-char":   {display:"block", "white-space":"pre"},
     ".mjx-itable": {display:"inline-table"},
     ".mjx-row":    {display:"table-row"},
