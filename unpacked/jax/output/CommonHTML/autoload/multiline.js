@@ -348,6 +348,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //
         var node = this.CHTMLnodeElement();
         line.appendChild(node);
+        if (this.CHTML.pwidth && !line.style.width) line.style.width = this.CHTML.pwidth;
         //
         //  If it is last, remove right margin
         //  If it is first, remove left margin
