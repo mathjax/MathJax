@@ -1711,6 +1711,12 @@ MathJax.Message = {
     return text;
   },
   
+  clearCounts: function () {
+    delete this.loading;
+    delete this.processing;
+    delete this.typesetting;
+  },
+  
   Set: function (text,n,clearDelay) {
     if (n == null) {n = this.log.length; this.log[n] = {}}
     //
@@ -2116,6 +2122,7 @@ MathJax.Hub = {
   },
   
   prepareScripts: function (action,element,state) {
+    MathJax.Message.clearCounts();
     if (arguments.callee.disabled) return;
     var scripts = this.elementScripts(element);
     var STATE = MathJax.ElementJax.STATE;
