@@ -45,7 +45,9 @@ MathJax.InputJax.TeX = MathJax.InputJax({
       formatURL:    function (id) {return '#'+escape(id)},
       useLabelIds:  true
     }
-  }
+  },
+  
+  resetEquationNumbers: function () {}  // filled in by AMSmath extension
 });
 MathJax.InputJax.TeX.Register("math/tex");
 
