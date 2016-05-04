@@ -189,7 +189,7 @@
           {prev.parentNode.removeChild(prev)}
         //
         //  Add the span, and a div if in display mode,
-        //  then set the role and mark it as being processed
+        //  then mark it as being processed
         //
         jax = script.MathJax.elementJax; if (!jax) continue;
         jax.PHTML = {display: (jax.root.Get("display") === "block")}

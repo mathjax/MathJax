@@ -567,7 +567,7 @@
           {prev.parentNode.removeChild(prev)}
         //
         //  Add the span, and a div if in display mode,
-        //  then set the role and mark it as being processed
+        //  then mark it as being processed
         //
         jax = script.MathJax.elementJax; if (!jax) continue;
         jax.HTMLCSS = {display: (jax.root.Get("display") === "block")}
@@ -2902,7 +2902,6 @@
           span = this.HTMLcreateSpan(nobr);
           var alttext = this.Get("alttext");
           if (alttext && !span.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
-          if (!span.getAttribute("role")) span.setAttribute("role","math");
 	  stack = HTMLCSS.createStack(span); box = HTMLCSS.createBox(stack);
           // Move font-size from outer span to stack to avoid line separation 
           // problem in strict HTML mode
