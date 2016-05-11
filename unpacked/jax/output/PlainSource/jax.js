@@ -65,7 +65,7 @@
         //  Remove any existing output
         //
         prev = script.previousSibling;
-        if (prev && String(prev.className).match(/^MathJax_PlainSource(_Display)?( MathJax_Processing)?$/)) {
+        if (prev && String(prev.className).match(/^MathJax(_PlainSource)?(_Display)?( MathJax_Process(ing|ed))?$/)) {
           prev.parentNode.removeChild(prev);
         }
         //

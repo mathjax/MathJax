@@ -2182,7 +2182,7 @@ MathJax.Hub = {
         //
         //  Check if already processed or needs processing
         //
-        if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) {state.i++; continue};
+        if (!script.parentNode || !script.MathJax || script.MathJax.state === STATE.PROCESSED) {state.i++; continue};
         if (!script.MathJax.elementJax || script.MathJax.state === STATE.UPDATE) {
           this.checkScriptSiblings(script);                 // remove preJax/postJax etc.
           var type = script.type.replace(/ *;(.|\s)*/,"");  // the input jax type
@@ -2286,7 +2286,7 @@ MathJax.Hub = {
         //  Check that there is an element jax
         //
         script = state.scripts[state.i];
-        if (!script || !script.MathJax || script.MathJax.error) {state.i++; continue}
+        if (!script || !script.parentNode || !script.MathJax || script.MathJax.error) {state.i++; continue}
         var jax = script.MathJax.elementJax; if (!jax) {state.i++; continue}
         //
         //  Call the output Jax's Process method (which will be its Translate()

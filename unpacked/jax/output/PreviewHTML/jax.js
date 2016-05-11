@@ -185,7 +185,7 @@
         //  Remove any existing output
         //
         prev = script.previousSibling;
-        if (prev && String(prev.className).match(/^MathJax_PHTML(_Display)?( MathJax_Processing)?$/))
+        if (prev && String(prev.className).match(/^MathJax(_PHTML)?(_Display)?( MathJax_Process(ing|ed))?$/))
           {prev.parentNode.removeChild(prev)}
         //
         //  Add the span, and a div if in display mode,

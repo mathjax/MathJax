@@ -745,9 +745,9 @@
       //
       for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
         script = scripts[i];
-        if (script && script.MathJax.elementJax) {
-          var div = script.MathJax.elementJax.HTMLCSS.div;
-          div.className = div.className.split(/ /)[0];
+        if (script && script.parentNode && script.MathJax.elementJax) {
+          var div = (script.MathJax.elementJax.HTMLCSS||{}).div;
+          if (div) {div.className = div.className.split(/ /)[0]}
           if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
         }
       }
@@ -756,7 +756,7 @@
       //
       for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
         script = scripts[i];
-        if (script && script.MathJax.elementJax) {
+        if (script && script.parentNode && script.MathJax.elementJax) {
           jax = script.MathJax.elementJax; this.getMetrics(jax);
           jax.root.toHTML(jax.HTMLCSS.span,jax.HTMLCSS.div,this.PHASE.II);
         }
@@ -766,7 +766,7 @@
       //
       for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
         script = scripts[i];
-        if (script && script.MathJax.elementJax) {
+        if (script && script.parentNode && script.MathJax.elementJax) {
           //
           //  Finish the math with its measured size (toHTML phase III)
           //
