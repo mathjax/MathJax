@@ -69,8 +69,7 @@
           prev.parentNode.removeChild(prev);
         }
         //
-        //  Add the span, and a div if in display mode,
-        //  then set the role and mark it as being processed
+        //  Add the span, and a div if in display mode
         //
         jax = script.MathJax.elementJax;
         if (!jax) continue;
