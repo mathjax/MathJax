@@ -258,7 +258,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   });
   
   TEX.Environment = function (name) {
-    TEXDEF.environment[name] = ['BeginEnv','EndEnv'].concat([].slice.call(arguments,1));
+    TEXDEF.environment[name] = ['BeginEnv',[null,'EndEnv']].concat([].slice.call(arguments,1));
     TEXDEF.environment[name].isUser = true;
   }
 
