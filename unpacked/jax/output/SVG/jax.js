@@ -37,8 +37,8 @@
   //  Get the URL of the page (for use with xlink:href) when there
   //  is a <base> element on the page.
   //  
-  var SVGURL = String(document.location).replace(/#.*$/,"");
-  if (document.getElementsByTagName("base").length === 0) SVGURL = "";
+  var SVGURL = (document.getElementsByTagName("base").length === 0) ? "" :
+                String(document.location).replace(/#.*$/,"");
 
   SVG.Augment({
     HFUZZ: 2,     // adjustments for height and depth of final svg element
