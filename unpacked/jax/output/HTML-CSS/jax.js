@@ -2938,7 +2938,7 @@
           //    which makes it work even when minimum font size is in effect).
           //
           var W = math.bbox.w;
-          if (Math.abs(W) < .006) W = 0; else W = Math.max(0,Math.round(W*this.em)+.25);
+          W = Math.abs(W) < .006 ? 0 : Math.max(0,Math.round(W*this.em)+.25);
           span.style.width = HTMLCSS.EmRounded(W/HTMLCSS.outerEm);
           span.style.display = "inline-block";
           //
