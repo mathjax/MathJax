@@ -1,24 +1,24 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+﻿/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
 
 /*************************************************************
  *
  *  MathJax/extensions/TeX/mhchem.js
- *  
+ *
  *  Implements the \ce command for handling chemical formulas
  *  from the mhchem LaTeX package.
- *  
+ *
  *  ---------------------------------------------------------------------
- *  
+ *
  *  Copyright (c) 2011-2015 The MathJax Consortium
  *  Copyright (c) 2015-2016 Martin Hensel
- * 
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,9 +31,9 @@ MathJax.Extension["TeX/mhchem"] = {
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-  
+
   var TEX = MathJax.InputJax.TeX;
-  
+
   /*
    *  This is the main class for handing the \ce and related commands.
    *  Its main method is Parse() which takes the argument to \ce and
@@ -42,1191 +42,1222 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
   var CE = MathJax.Object.Subclass({
     string: '',   // the \ce string being parsed
-    
+
     //
     //  Store the string when a CE object is created
     //
     Init: function (string) { this.string = string; },
-    
+
+
     //
     //  This converts the CE string to a TeX string.
     //
     Parse: function () {
       try {
-        var a = (new this.MhchemParser()).parse(this.string);
-        return this.texify(a);
+        return texify.go(mhchemParser.go(this.string));
       } catch (ex) {
         TEX.Error(ex);
       }
-    },
+    }
+  });
+
+  //
+  // Core parser for mhchem syntax  (recursive)
+  //
+  var mhchemParser = {};
+  //
+  // Parses mchem \ce syntax
+  //
+  // Call like
+  //   go('H2O');
+  //
+  // Looks through mhchemParser.transitions, to execute a matching action
+  // (recursive)
+  //
+  mhchemParser.go = function(input, stateMachine) {
+    if (!input) { return input; }
+    if (stateMachine === undefined) { stateMachine = 'ce'; }
+    var state = '0';
 
     //
-    // Core parser for mhchem syntax  (recursive)
+    // String buffers for parsing:
     //
-    MhchemParser: function MhchemParser() {
-      'use strict';
-      var that = {};
+    // buffer.a == amount
+    // buffer.o == element
+    // buffer.b == left-side superscript
+    // buffer.p == left-side subscript
+    // buffer.q == right-side subscript
+    // buffer.d == right-side superscript
+    //
+    // buffer.r == arrow
+    // buffer.rdt == arrow, script above, type
+    // buffer.rd == arrow, script above, content
+    // buffer.rqt == arrow, script below, type
+    // buffer.rq == arrow, script below, content
+    //
+    // buffer.param1
+    // buffer.text
+    // buffer.rm
+    // etc.
+    //
+    // buffer.parenthesisLevel == int, starting at 0
+    // buffer.sb == bool, space before
+    // buffer.beginsWithBond == bool
+    //
+    // These letters are also used as state names.
+    //
+    // Other states:
+    // 0 == begin of main part
+    // 1 == next entity
+    // 2 == next atom
+    // frac, overset, ...
+    // c == macro
+    //
+    var buffer = { parenthesisLevel: 0 };
 
-      //
-      // Parses mchem \ce syntax
-      //
-      // Call like
-      //   parse('H2O');
-      //
-      // Looks through that.transitions, to execute a matching action
-      // (recursive)
-      //
-      that.parse = function(input, stateMachine) {
-        if (!input) { return input; }
-        if (stateMachine === undefined) { stateMachine = 'ce'; }
-        var state = '0';
+    input = input.replace(/[\u2212\u2013\u2014\u2010]/g, '-');
 
-        var lastInput, watchdog;
-        var output = [];
-        while (true) {
-          if (lastInput !== input) {
-            watchdog = 10;
-            lastInput = input;
-          } else {
-            watchdog--;
-          }
-          //
-          // Look for matching string in transition table
-          //
-          iterateTransitions:
-          for (var iT=0; iT<that.stateMachines[stateMachine].transitions.length; iT++) {
-            var t = that.stateMachines[stateMachine].transitions[iT];
-            var matchArray = [].concat(t.match);
-            for (var iM=0; iM<matchArray.length; iM++) {
-              var matches = that.match(matchArray[iM], input);
-              if (matches) {
-                //
-                // Look for matching state
-                //
-                for (var iA=0; iA<t.actions.length; iA++) {
-                  if (('|'+t.actions[iA].state+'|').indexOf('|'+state+'|') !== -1  ||
-                   t.actions[iA].state === '*') {
-                    //
-                    // Execute action  (recursive)
-                    //
-                    var actions = [].concat(t.actions[iA].action);
-                    for (var iAA=0; iAA<actions.length; iAA++) {
-                      var a = actions[iAA];
-                      var o;
-                      if (typeof a === 'string') {
-                        if (that.stateMachines[stateMachine].actions[a]) {
-                          o = that.stateMachines[stateMachine].actions[a](matches.match);
-                        } else if (that.actions[a]) {
-                          o = that.actions[a](matches.match);
-                        } else {
-                          throw ['InternalMhchemErrorNonExistingAction', 'Internal mhchem Error – Trying to use non-existing action'];
-                        }
-                        output = that.concatNotUndefined(output, o);
-                      } else if (typeof a === 'function') {
-                        o = a(matches.match);
-                        output = that.concatNotUndefined(output, o);
-                      } else if (a  &&  a.type) {
-                        if (that.stateMachines[stateMachine].actions[a.type]) {
-                          o = that.stateMachines[stateMachine].actions[a.type](matches.match, a.option);
-                        } else if (that.actions[a.type]) {
-                          o = that.actions[a.type](matches.match, a.option);
-                        } else {
-                          throw ['InternalMhchemErrorNonExistingAction', 'Internal mhchem Error – Trying to use non-existing action'];
-                        }
-                        output = that.concatNotUndefined(output, o);
-                      }
-                    }
-                    //
-                    // Set next state,
-                    // Shorten input,
-                    // Continue with next character
-                    //   (= apply only one transition per position)
-                    //
-                    state = t.actions[iA].nextState || state;
-                    if (input.length > 0) {
-                      if (!t.actions[iA].revisit) {
-                        input = matches.remainder;
-                      }
-                      if (!t.actions[iA].toContinue) {
-                        break iterateTransitions;
-                      }
-                    } else {
-                      return output;
-                    }
-                  }
-                }
-              }
-            }
-          }
-          //
-          // Prevent infinite loop
-          //
-          if (watchdog <= 0) {
-            throw ['MhchemErrorUnexpectedCharacter', 'mhchem Error – Unexpected character'];
-          }
-        }
-      };
-      that.concatNotUndefined = function(a, b) {
-        if (!b) { return a; }
-        if (!a) { return [].concat(b); }
-        return a.concat(b);
-      };
-
+    var lastInput, watchdog;
+    var output = [];
+    while (true) {
+      if (lastInput !== input) {
+        watchdog = 10;
+        lastInput = input;
+      } else {
+        watchdog--;
+      }
       //
-      // Matching helpers (mostly RegExps)
+      // Look for matching string in transition table
       //
-      that.match = function (m, input) {
-        var f = {
-          'empty': /^$/,
-          'else': /^./,
-          'space': /^\s+/,
-          'a-z': /^[a-z]/,
-          'letters': /^(?:[a-zA-Zα-ωΑ-Ω]|(?:\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)(?:\ |(?![a-zA-Z]))))+/,
-          '\\greek': /^\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)(?:\ |(?![a-zA-Z]))/,
-          'one lowercase letter $': /^(?:\$?[a-zα-ω]\$?|\$?\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)\$?(?:\ |(?![a-zA-Z])))$/,
-          'digits': /^[0-9]+/,
-          '-9.,9': /^-?(?:[0-9]+(?:[.,][0-9]+)?|[0-9]*(?:\.[0-9]+))/,
-          '-9.,9 no missing 0': /^-?[0-9]+(?:[.,][0-9]+)?/,
-          'state of aggregation $':  function (input) {
-            var a = this['_findObserveGroups'](input, '', /^\([a-z]{1,3}(?=[\),])/, ')', '');
-            if (a  &&  a.remainder.match(/^(\s|$)/))  return a;
-            return null;
-          },
-          '\{[(': /^(?:\\\{|\[|\()/,
-          ')]\}': /^(?:\)|\]|\\\})/,
-          ',': /^,/,
-          '.': /^\./,
-          '.$': /^\.(?=\s|$|\{\})/,
-          "*": /^\*/,
-          '^{(...)}': function (input) { return this['_findObserveGroups'](input, '^{', '', '', '}'); },
-          '^($...$)': function (input) { return this['_findObserveGroups'](input, '^', '$', '$', ''); },
-          '^(...)': /^\^([0-9]+|[^\\]|\\(?:[a-zA-Z]+(?=\s|$|\{|\})|[^a-zA-Z]))/,
-          '_{(...)}': function (input) { return this['_findObserveGroups'](input, '_{', '', '', '}'); },
-          '_($...$)': function (input) { return this['_findObserveGroups'](input, '_', '$', '$', ''); },
-          '_(...)': /^_(-?[0-9]+|[^\\]|\\(?:[a-zA-Z]+(?=\s|$|\{|\})|[^a-zA-Z]))/,
-          '{}': /^\{\}/,
-          '{...}': function (input) { return this['_findObserveGroups'](input, '', '{', '}', ''); },
-          '{(...)}': function (input) { return this['_findObserveGroups'](input, '{', '', '', '}'); },
-          '$...$': function (input) { return this['_findObserveGroups'](input, '', '$', '$', ''); },
-          '${(...)}$': function (input) { return this['_findObserveGroups'](input, '${', '', '', '}$'); },
-          '$(...)$': function (input) { return this['_findObserveGroups'](input, '$', '', '', '$'); },
-          '=': /^=/,
-          '#': /^#/,
-          '+': /^\+/,
-          '-$': /^-(?=[\s_{},/]|$|\([a-z]+\))/,  // end = space, {, }, $, state-of-aggregation
-          '-9': /^-(?=\d)/,
-          '-': /^-/,
-          'operator': /^(?:\+|(?:-|=|\\pm|\$\\pm\$)(?=\s|$))/,
-          'arrowUpDown': /^(?:v|\(v\)|\^|\(\^\))(?=\s|$)/,
-          '\\bond{(...)}': function (input) { return this['_findObserveGroups'](input, '\\bond{', '', '', '}'); },
-          '->': /^(?:<->|<-->|->|<-|<=>>|<<=>|<=>)/,
-          'CMT': /^[CMT](?=\[)/,
-          '[(...)]': function (input) { return this['_findObserveGroups'](input, '[', '', '', ']'); },
-          '&': /^&/,
-          '\\\\': /^\\\\/,
-          '\\,': /^\\(?:[,\ $])/,
-          '\\x': /^\\(?:[a-zA-Z]+|\{|\}|[_])/,
-          '\\frac{(...)}': function (input) { return this['_findObserveGroups'](input, '\\frac{', '', '', '}'); },
-          '\\overset{(...)}': function (input) { return this['_findObserveGroups'](input, '\\overset{', '', '', '}'); },
-          '\\underset{(...)}': function (input) { return this['_findObserveGroups'](input, '\\underset{', '', '', '}'); },
-          '\\underbrace{(...)}': function (input) { return this['_findObserveGroups'](input, '\\underbrace{', '', '', '}_'); },
-          '\\ce{(...)}': function (input) { return this['_findObserveGroups'](input, '\\ce{', '', '', '}'); },
-          '\\color{(...)}': /^\\color\{?(\\[a-z]+)\}?(?=\{)/,
-          'oxidation$': /^-?[IVX]+$/,
-          '1/2$': /^[0-9]+\/[0-9]+$/,
-          'amount': function (input) {
-            var match;
-            var a = this['_findObserveGroups'](input, '', '$', '$', '');
-            if (a) {
-              match = a.match.match(/^\$\(?(?:[0-9]*[a-z]?[+\-])?[0-9]*[a-z](?:[+\-][0-9]*[a-z]?)?\)?\$$/);
-              if (match) {
-                return { match: match[0], remainder: input.substr(match[0].length) };
-              }
-            } else {
-              match = input.match(/^(?:\([0-9]+\/[0-9]+\)|[0-9]+\/[0-9]+|[0-9]+[.,][0-9]+|\.[0-9]+|[0-9]+|[a-z](?=\s|$)|[0-9]*n(?=[A-Z]))/);
-              if (match) {
-                return { match: match[0], remainder: input.substr(match[0].length) };
-              }
-            }
-            return null;
-          },
-          'formula$': function (input) {
-            if (input.match(/^\([a-z]+\)$/)) {  // state of aggregation = no formula
-              return null;
-            }
-            var match = input.match(/^(?:[a-z]|(?:[0-9\ \+\-\,\.\(\)]+[a-z])+[0-9\ \+\-\,\.\(\)]*|(?:[a-z][0-9\ \+\-\,\.\(\)]+)+[a-z]?)$/);
-            if (match) {
-              return { match: match[0], remainder: input.substr(match[0].length) };
-            }
-            return null;
-          },
-          '_findObserveGroups': function (input, begExcl, begIncl, endIncl, endExcl) {
-            var match = this['__match'](input, begExcl);
-            if (match === null)  return null;
-            input = input.substr(match.length);
-            match = this['__match'](input, begIncl);
-            if (match === null)  return null;
-            var e = this['__findObserveGroups'](input, match.length, endIncl || endExcl);
-            if (e === null)  return null;
-            return { 
-              match: input.substring(0, (endIncl ? e.endMatchEnd : e.endMatchBegin)), 
-              remainder: input.substr(e.endMatchEnd)
-            };
-          },
-          '__match': function (input, pattern) {
-            if (typeof pattern === 'string') {
-              if (input.indexOf(pattern) !== 0)  return null;
-              return pattern;
-            } else {
-              var match = input.match(pattern);
-              if (!match)  return null;
-              return match[0];
-            }
-          },
-          '__findObserveGroups': function (input, i, endChars) {
-            var braces = 0;
-            while (i < input.length) {
-              var a = input.charAt(i);
-              var match = this['__match'](input.substr(i), endChars);
-              if (match  &&  braces === 0) {
-                return { endMatchBegin: i, endMatchEnd: i + match.length };
-              } else if (a === '{') {
-                braces++;
-              } else if (a === '}') {
-                if (braces === 0) {
-                  throw ['ExtraCloseMissingOpen', 'Extra close brace or missing open brace'];
+      iterateTransitions:
+      for (var iT=0; iT<mhchemParser.stateMachines[stateMachine].transitions.length; iT++) {
+        var t = mhchemParser.stateMachines[stateMachine].transitions[iT];
+        var matches = mhchemParser.match(t.match, input);
+        if (matches) {
+          var tasks = t.actions[state]  ||  t.actions['*']  || null;
+          if (tasks) {
+            //
+            // Execute action  (recursive)
+            //
+            var actions = mhchemParser.concatNotUndefined([], tasks.action);
+            for (var iAA=0; iAA<actions.length; iAA++) {
+              var a = actions[iAA];
+              var o;
+              if (typeof a === 'string') {
+                if (mhchemParser.stateMachines[stateMachine].actions[a]) {
+                  o = mhchemParser.stateMachines[stateMachine].actions[a](buffer, matches.match);
+                } else if (mhchemParser.actions[a]) {
+                  o = mhchemParser.actions[a](buffer, matches.match);
                 } else {
-                  braces--;
+                  throw ['InternalMhchemErrorNonExistingAction', 'Internal mhchem Error \u2013 Trying to use non-existing action (' + a + ')'];
                 }
+                output = mhchemParser.concatNotUndefined(output, o);
+              } else if (typeof a === 'function') {
+                o = a(buffer, matches.match);
+                output = mhchemParser.concatNotUndefined(output, o);
+              } else if (a.type) {
+                if (mhchemParser.stateMachines[stateMachine].actions[a.type]) {
+                  o = mhchemParser.stateMachines[stateMachine].actions[a.type](buffer, matches.match, a.option);
+                } else if (mhchemParser.actions[a.type]) {
+                  o = mhchemParser.actions[a.type](buffer, matches.match, a.option);
+                } else {
+                  throw ['InternalMhchemErrorNonExistingAction', 'Internal mhchem Error \u2013 Trying to use non-existing action'];
+                }
+                output = mhchemParser.concatNotUndefined(output, o);
               }
-              i++;
             }
-            if (braces > 0) {
-              return null;
+            //
+            // Set next state,
+            // Shorten input,
+            // Continue with next character
+            //   (= apply only one transition per position)
+            //
+            state = tasks.nextState || state;
+            if (input.length > 0) {
+              if (!tasks.revisit) {
+                input = matches.remainder;
+              }
+              if (!tasks.toContinue) {
+                break iterateTransitions;
+              }
+            } else {
+              return output;
             }
-            return null;
           }
-        };
-        if (f[m] === undefined) {
-          throw ['InternalMhchemErrorNonExistingPattern', 'Internal mhchem Error – Trying to use non-existing pattern'];
-        } else if (typeof f[m] === 'function') {
-          return f[m](input);
-        } else {  // RegExp
-          var match = input.match(f[m]);
+        }
+      }
+      //
+      // Prevent infinite loop
+      //
+      if (watchdog <= 0) {
+        throw ['MhchemErrorUnexpectedCharacter', 'mhchem Error \u2013 Unexpected character'];
+      }
+    }
+  };
+  mhchemParser.concatNotUndefined = function(a, b) {
+    if (!b) { return a; }
+    if (!a) { return [].concat(b); }
+    return a.concat(b);
+  };
+
+  //
+  // Matching helpers (mostly RegExps)
+  //
+  mhchemParser.match = function (m, input) {
+    var f = {
+      // property names must not look like integers ('2') for correct property traversal order, later on
+      'empty': /^$/,
+      'else': /^./,
+      'else2': /^./,
+      'space': /^\s/,
+      'spaces': /^\s+/,
+      'a-z': /^[a-z]+/,
+      'letters': /^(?:[a-zA-Z\u03B1-\u03C9\u0391-\u03A9?@]|(?:\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)(?:\ |(?![a-zA-Z]))))+/,
+      '\\greek': /^\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)(?:\ |(?![a-zA-Z]))/,
+      'one lowercase latin letter $': /^(?:([a-z])(?:$|[^a-zA-Z]))$/,
+      'one lowercase greek letter $': /^(?:\$?[\u03B1-\u03C9]\$?|\$?\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)\$?(?:$|[^a-zA-Z]))$/,
+      'digits': /^[0-9]+/,
+      '-9.,9': /^-?(?:[0-9]+(?:[.,][0-9]+)?|[0-9]*(?:\.[0-9]+))/,
+      '-9.,9 no missing 0': /^-?[0-9]+(?:[.,][0-9]+)?/,
+      'state of aggregation $':  function (input) {
+        var a = this['_findObserveGroups'](input, '', /^\([a-z]{1,3}(?=[\),])/, ')', '');
+        if (a  &&  a.remainder.match(/^($|[\s,;])/))  return a;
+        return null;
+      },
+      '\{[(': /^(?:\\\{|\[|\()/,
+      ')]\}': /^(?:\)|\]|\\\})/,
+      ', ': /^[,;]\s*/,
+      ',': /^[,;]/,
+      '.': /^[.\u22C5\u00B7\u2022]/,
+      '...': /^\.\.\.(?=$|[^.])/,
+      '.$': /^\.(?=\s|$|\{\})/,
+      "*": /^\*/,
+      '^{(...)}': function (input) { return this['_findObserveGroups'](input, '^{', '', '', '}'); },
+      '^($...$)': function (input) { return this['_findObserveGroups'](input, '^', '$', '$', ''); },
+      '^(...)1': /^\^([0-9]+|[^\\])/,
+      '^(...)2': /^\^(\\[a-zA-Z]+)\s?/,
+      '_{(...)}': function (input) { return this['_findObserveGroups'](input, '_{', '', '', '}'); },
+      '_($...$)': function (input) { return this['_findObserveGroups'](input, '_', '$', '$', ''); },
+      '_(...)1': /^_(-?[0-9]+|[^\\])/,
+      '_(...)2': /^_(\\[a-zA-Z]+)\s?/,
+      '{}': /^\{\}/,
+      '{...}': function (input) { return this['_findObserveGroups'](input, '', '{', '}', ''); },
+      '{(...)}': function (input) { return this['_findObserveGroups'](input, '{', '', '', '}'); },
+      '$...$': function (input) { return this['_findObserveGroups'](input, '', '$', '$', ''); },
+      '${(...)}$': function (input) { return this['_findObserveGroups'](input, '${', '', '', '}$'); },
+      '$(...)$': function (input) { return this['_findObserveGroups'](input, '$', '', '', '$'); },
+      '=<>': /^[=<>]/,
+      '#': /^[#\u2261]/,
+      '+': /^\+/,
+      '-$': /^-(?=[\s_},;/]|$|\([a-z]+\))/,  // -space -, -; -] -$ -state-of-aggregation
+      '-9': /^-(?=\d)/,
+      '-': /^-/,
+      'operator': /^(?:\+|(?:[\-=<>]|<<|>>|\\pm|\$\\pm\$|\\approx|\$\\approx\$)(?=\s|$))/,
+      'arrowUpDown': /^(?:v|\(v\)|\^|\(\^\))(?=$|[\s,;])/,
+      '\\bond{(...)}': function (input) { return this['_findObserveGroups'](input, '\\bond{', '', '', '}'); },
+      '->': /^(?:<->|<-->|->|<-|<=>>|<<=>|<=>|[\u2192\u27F6\u21CC])/,
+      'CMT': /^[CMT](?=\[)/,
+      '[(...)]': function (input) { return this['_findObserveGroups'](input, '[', '', '', ']'); },
+      '&': /^&/,
+      '\\\\': /^\\\\/,
+      '\\,': /^\\(?:[,\ ;:!_%&]|\{|\})/,
+      '\\x': /^\\(?:[a-zA-Z]+)/,
+      'orbital': /^[1-9][spdf](?=$|[^a-zA-Z])/,
+      'others': /^[:\/'\u2019~|]/,
+      '\\frac{(...)}': function (input) { return this['_findObserveGroups'](input, '\\frac{', '', '', '}'); },
+      '\\overset{(...)}': function (input) { return this['_findObserveGroups'](input, '\\overset{', '', '', '}'); },
+      '\\underset{(...)}': function (input) { return this['_findObserveGroups'](input, '\\underset{', '', '', '}'); },
+      '\\underbrace{(...)}': function (input) { return this['_findObserveGroups'](input, '\\underbrace{', '', '', '}_'); },
+      '\\ce{(...)}': function (input) { return this['_findObserveGroups'](input, '\\ce{', '', '', '}'); },
+      '\\color{(...)}': /^\\color\{?(\\[a-z]+)\}?(?=\{)/,
+      'oxidation$': /^-?[IVX]+$/,
+      '1/2$': /^[0-9]+\/[0-9]+$/,
+      'amount nX': /^[a-z](?=\s*[A-Z])/,
+      'amount': function (input) {
+        var match;
+        var a = this['_findObserveGroups'](input, '', '$', '$', '');
+        if (a) {
+          match = a.match.match(/^\$\(?(?:[0-9]*[a-z]?[+\-])?[0-9]*[a-z](?:[+\-][0-9]*[a-z]?)?\)?\$$/);
           if (match) {
-            var mm = match[1];
-            if (mm === undefined) { mm = match[0]; }
-            return { match: mm, remainder: input.substr(match[0].length) };
+            return { match: match[0], remainder: input.substr(match[0].length) };
           }
+        } else {
+          match = input.match(/^(?:(?:\([0-9]+\/[0-9]+\)|[0-9]+\/[0-9]+|[0-9]+[.,][0-9]+|\.[0-9]+|[0-9]+|[0-9]+)(?:[a-z](?=[A-Z]))?)/);
+          if (match) {
+            return { match: match[0], remainder: input.substr(match[0].length) };
+          }
+        }
+        return null;
+      },
+      'formula$': function (input) {
+        if (input.match(/^\([a-z]+\)$/)) {  // state of aggregation = no formula
           return null;
         }
-      };
-
-      //
-      // String buffers for parsing:
-      //
-      // that.buffer.a = amount
-      // that.buffer.o = element
-      // that.buffer.b = left-side superscript
-      // that.buffer.p = left-side subscript
-      // that.buffer.q = right-side subscript
-      // that.buffer.d = right-side superscript
-      //
-      // that.buffer.r = arrow
-      // that.buffer.rdt = arrow, script above, type
-      // that.buffer.rd = arrow, script above, content
-      // that.buffer.rqt = arrow, script below, type
-      // that.buffer.rq = arrow, script below, content
-      //
-      // that.buffer.param1
-      // that.buffer.text
-      // that.buffer.rm
-      // etc.
-      //
-      // that.buffer.sb = bool, space before
-      //
-      // that.buffer.beginsWithBond = bool
-      //
-      // These letters are also used as state names.
-      //
-      // Other states:
-      // 0 - begin of main part
-      // 1 - next entity
-      // 2 - next atom
-      // frac, overset, ...
-      // c - macro
-      //
-      that.buffer = {};
-
-      //
-      // Generic state machine actions
-      //
-      that.actions = {
-        'a=': function (m) { that.buffer.a = (that.buffer.a || '') + m; },
-        'b=': function (m) { that.buffer.b = (that.buffer.b || '') + m; },
-        'p=': function (m) { that.buffer.p = (that.buffer.p || '') + m; },
-        'o=': function (m) { that.buffer.o = (that.buffer.o || '') + m; },
-        'q=': function (m) { that.buffer.q = (that.buffer.q || '') + m; },
-        'd=': function (m) { that.buffer.d = (that.buffer.d || '') + m; },
-        'rm=': function (m) { that.buffer.rm = (that.buffer.rm || '') + m; },
-        'text=': function (m) { that.buffer.text = (that.buffer.text || '') + m; },
-        'color1=': function(m) { that.buffer.color1 = m; },
-        'insert': function (m, a) { return { type: a }; },
-        'copy': function (m) { return m; },
-        'rm': function (m) { return { type: 'rm', p1: m }; },
-        'text': function (m) { return (new MhchemParser()).parse(m, 'text'); },
-        '{text}': function (m) {
-          var ret = [ '{' ];
-          ret = that.concatNotUndefined(ret, (new MhchemParser()).parse(m, 'text'));
-          ret = that.concatNotUndefined(ret, '}');
-          return ret;
-        },
-        'tex-math': function (m) { return (new MhchemParser()).parse(m, 'tex-math'); },
-        'tex-math tight': function (m) { return (new MhchemParser()).parse(m, 'tex-math tight'); },
-        'bond': function (m, k) { return { type: 'bond', kind: k || m }; },
-        'ce': function (m) { return (new MhchemParser()).parse(m); },
-        '1/2': function (m) {
-          var n = m.match(/^([0-9]+)\/([0-9]+)$/);
-          return { type: 'frac', p1: n[1], p2: n[2] };
-        },
-        '9,9': function (m) { return (new MhchemParser()).parse(m, '9,9'); }
-      };
-
-      //
-      // State machine definitions
-      //
-      that.stateMachines = {};
-      //
-      // State machine transitions of main parser
-      //
-      that.stateMachines['ce'] = {};
-      that.stateMachines['ce'].transitions = [
-        {
-          match: 'empty',
-          actions: [ { state: '*', action: 'output' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: '0|1', action: 'beginsWithBond=false', revisit: true, toContinue: true } ]
-        }, {
-          match: 'space',
-          actions: [ { state: 'a', nextState: 'as' },
-                     { state: '0|2', action: 'sb=false' },
-                     { state: '1', action: 'sb=true' },
-                     { state: 'r|rt|rd|rdt|rdq', action: 'output', nextState: '0' },
-                     { state: '*', action: [ 'output', 'sb=true' ], nextState: '1'} ]
-        }, {
-          match: '&',
-          actions: [ { state: '*', action: [ 'output', 'copy' ], nextState: '0' } ]
-        }, {
-          match: '\\\\',
-          actions: [ { state: '*', action: [ 'output', 'copy', { type: 'insert', option: 'space' } ], nextState: '0' } ]  // space, so that we don't get \\[
-        }, {
-          match: [ 'operator', 'arrowUpDown' ],
-          actions: [ { state: '0|1|2', action: [ 'operator' ], nextState: '0' } ]
-        }, {
-          match: '->',
-          actions: [ { state: '0|1|2', action: 'r=', nextState: 'r' },
-                     { state: '*', action: [ 'output', 'r=' ], nextState: 'r' } ]
-        }, {
-          match: 'CMT',
-          actions: [ { state: 'r', action: 'rdt=', nextState: 'rt' },
-                     { state: 'rd', action: 'rqt=', nextState: 'rdt' }]
-        }, {
-          match: '[(...)]',
-          actions: [ { state: 'r|rt', action: 'rd=', nextState: 'rd' },
-                     { state: 'rd|rdt', action: 'rq=', nextState: 'rdq' }]
-        }, {
-          match: 'amount',
-          actions: [ { state: '0|1|2|a', action: 'a=', nextState: 'a' } ]
-        }, {
-          match: [ '.$', '.', '*' ],
-          actions: [ { state: '*', action: [ 'output', { type: 'insert', option: 'addition compound' } ], nextState: '2' } ]
-        }, {
-          match: 'letters',
-          actions: [ { state: '0|1|2|a|as|b|p|bp', action: 'o=', nextState: 'o' },
-                     { state: 'o', action: 'o=' },
-                     { state: 'q|dq', action: ['output', 'o='], nextState: 'o' },
-                     { state: 'd|D|qd|qD', action: 'o after d', nextState: 'o'} ]
-        }, {
-          match: 'digits',
-          actions: [ { state: 'o', action: 'q=', nextState: 'q' },
-                     { state: 'd|D', action: 'q=', nextState: 'dq' } ]
-        }, {
-          match: 'state of aggregation $',
-          actions: [ { state: '0', action: [ 'output', 'sb=false', 'o=', 'output' ], nextState: '1' },
-                     { state: '*', action: [ 'output', 'state of aggregation' ], nextState: '1' } ]
-        }, {
-          match: '\{[(',
-          actions: [ { state: 'a|as|o', action: [ 'o=', 'output' ], nextState: '1' },
-                     { state: '0|1|2', action: [ 'o=', 'output' ], nextState: '1' },
-                     { state: '*', action: [ 'output', 'o=', 'output' ], nextState: '1' } ]
-        }, {
-          match: ')]\}',
-          actions: [ { state: '0|1|2|b|p|bp|o', action: 'o=', nextState: 'o' },
-                     { state: 'd|D|q|qd|qD|dq', action: [ 'output', 'o=' ], nextState: 'o' } ]
-        }, {
-          match: ',',
-          actions: [ { state: 'o|q|d|D|qd|qD|dq', action: [ 'output', { type: 'insert', option: 'comma enumeration' } ], nextState: '0' } ]
-        }, {
-          match: [ '^{(...)}', '^($...$)' ],
-          actions: [ { state: '0|1|2|as', action: 'b=', nextState: 'b' },
-                     { state: 'p', action: 'b=', nextState: 'bp' },
-                     { state: 'o', action: 'd= kv', nextState: 'D' },
-                     { state: 'q', action: 'd=', nextState: 'qD' },
-                     { state: 'd|D|qd|qD|dq', action: [ 'output', 'd=' ], nextState: 'D' } ]
-        }, {
-          match: [ '^(...)' ],
-          actions: [ { state: '0|1|2|as', action: 'b=', nextState: 'b' },
-                     { state: 'p', action: 'b=', nextState: 'bp' },
-                     { state: 'o', action: 'd= kv', nextState: 'd' },
-                     { state: 'q', action: 'd=', nextState: 'qd' },
-                     { state: 'd|D|qd|qD|dq', action: [ 'output', 'd=' ], nextState: 'd' } ]
-        }, {
-          match: [ '_{(...)}', '_($...$)', '_(...)' ],
-          actions: [ { state: '0|1|2|as', action: 'p=', nextState: 'p' },
-                     { state: 'b', action: 'p=', nextState: 'bp' },
-                     { state: 'o', action: 'q=', nextState: 'q' },
-                     { state: 'd|D', action: 'q=', nextState: 'dq' },
-                     { state: 'q|qd|qD|dq', action: [ 'output', 'q=' ], nextState: 'q' } ]
-        }, {
-          match: '+',
-          actions: [ { state: 'o',  action: 'd= kv',  nextState: 'd' },
-                     { state: 'd|D',  action: 'd=', nextState: 'd' },
-                     { state: 'q',  action: 'd=',  nextState: 'qd' },
-                     { state: 'qd|qD', action: 'd=', nextState: 'qd' },
-                     { state: 'dq', action: [ 'output', 'd=' ], nextState: 'd' } ]
-        }, {
-          match: '-$',
-          actions: [ { state: 'o|q',  action: [ 'charge or bond', 'output' ],  nextState: 'qd' },
-                     { state: 'd',  action: 'd=', nextState: 'd' },
-                     { state: 'D',  action: [ 'output', { type: 'bond', option: '-' } ], nextState: '2' },
-                     { state: 'q',  action: 'd=',  nextState: 'qd' },
-                     { state: 'qd', action: 'd=', nextState: 'qd' },
-                     { state: 'qD|dq', action: [ 'output', { type: 'bond', option: '-' } ], nextState: '2' } ]
-        }, {
-          match: '-9',
-          actions: [ { state: '2|o',  action: [ 'output', { type: 'insert', option: 'hyphen' } ], nextState: '2' } ]
-        }, {
-          match: '-',
-          actions: [ { state: '0|1',  action: [ 'beginsWithBond=true', { type: 'bond', option: '-' } ], nextState: '2' },
-                     { state: '2',  action: { type: 'bond', option: '-' } },
-                     { state: 'a',  action: [ 'output', { type: 'insert', option: 'hyphen' } ], nextState: '1' },
-                     { state: 'b',  action: 'b=' },
-                     { state: 'o',  action: '- after o', nextState: '1' },
-                     { state: 'q',  action: '- after o', nextState: '1' },
-                     { state: 'd|qd|dq',  action: '- after d', nextState: '1' },
-                     { state: 'D|qD',  action: [ 'output', { type: 'bond', option: '-' } ], nextState: '2' } ]
-        }, {
-          match: '=',
-          actions: [ { state: '0|1|2|o|q|d|D|qd|qD|dq', action: [ 'output', { type: 'bond', option: '=' } ], nextState: '1' } ]
-        }, {
-          match: '#',
-          actions: [ { state: '0|1|2|o', action: [ 'output', { type: 'bond', option: '#' } ], nextState: '1' } ]
-        }, {
-          match: '{}',
-          actions: [ { state: '*',  action: 'output',  nextState: '1' } ]
-        }, {
-          match: '{(...)}',
-          actions: [ { state: 'frac', action: 'frac-output', nextState: '1' },
-                     { state: 'overset', action: 'overset-output', nextState: '1' },
-                     { state: 'underset', action: 'underset-output', nextState: '1' },
-                     { state: 'underbrace', action: 'underbrace-output', nextState: '1' },
-                     { state: 'color', action: 'color-output', nextState: '1' } ]
-        }, {
-          match: '{...}',
-          actions: [ { state: '0|1|2|a|as|b|p|bp', action: 'o=', nextState: 'o' },
-                     { state: 'o|d|D|q|qd|qD|dq', action: [ 'output', 'o=' ], nextState: 'o' },
-                     { state: 'c0', action: 'copy', nextState: 'c1' },
-                     { state: 'c1', action: 'copy', nextState: '1' } ]
-        }, {
-          match: '$...$',
-          actions: [ { state: '0|1|2', action: 'o=', nextState: 'o' },  // not 'amount'
-                     { state: 'as|o', action: 'o=' },
-                     { state: 'b|p|bp|q|d|D|qd|qD|dq', action: [ 'output', 'o=' ], nextState: 'o' } ]
-        }, {
-          match: '\\bond{(...)}',
-          actions: [ { state: '*', action: [ 'output', 'bond' ], nextState: '1' } ]
-        }, {
-          match: '\\frac{(...)}',
-          actions: [ { state: '*', action: [ 'output', 'param1=' ], nextState: 'frac' } ]
-        }, {
-          match: '\\overset{(...)}',
-          actions: [ { state: '*', action: [ 'output', 'param1=' ], nextState: 'overset' } ]
-        }, {
-          match: '\\underset{(...)}',
-          actions: [ { state: '*', action: [ 'output', 'param1=' ], nextState: 'underset' } ]
-        }, {
-          match: '\\underbrace{(...)}',
-          actions: [ { state: '*', action: [ 'output', 'param1=' ], nextState: 'underbrace' } ]
-        }, {
-          match: '\\color{(...)}',
-          actions: [ { state: '*', action: [ 'output', 'param1=' ], nextState: 'color' } ]
-        }, {
-          match: '\\ce{(...)}',
-          actions: [ { state: '*', action: [ 'output', 'ce' ], nextState: '1' } ]
-        }, {
-          match: '\\,',
-          actions: [ { state: '*', action: [ 'output', 'copy' ], nextState: '1' } ]
-        }, {
-          match: '\\x',
-          actions: [ { state: '*', action: [ 'output', 'copy' ], nextState: 'c0' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: 'c0', action: 'copy', nextState: '1' },
-                     { state: 'c1', nextState: '0', revisit: true },
-                     { state: 'a', action: 'a to o', nextState: 'o', revisit: true },
-                     { state: 'r|rt|rd|rdt|rdq', action: [ 'output' ], nextState: '0', revisit: true },
-                     { state: '*', action: [ 'output', 'copy' ], nextState: '1' } ]
+        var match = input.match(/^(?:[a-z]|(?:[0-9\ \+\-\,\.\(\)]+[a-z])+[0-9\ \+\-\,\.\(\)]*|(?:[a-z][0-9\ \+\-\,\.\(\)]+)+[a-z]?)$/);
+        if (match) {
+          return { match: match[0], remainder: input.substr(match[0].length) };
         }
-      ];
-      //
-      // Parsing actions (e.g. store a value into a buffer) for main parser
-      //
-      that.stateMachines['ce'].actions = {
-        'o after d': function (m) {
-          var ret;
-          if (that.buffer.d.match(/^[0-9]+$/)) {
-            var tmp = that.buffer.d;
-            that.buffer.d = undefined;
-            ret = this['output']();
-            that.buffer.b = tmp;
-          } else {
-            ret = this['output']();
-          }
-          that.actions['o='](m);
-          return ret;
-        },
-        'd= kv': function (m) {
-          that.buffer.d = m;
-          that.buffer['d-type'] = 'kv';
-        },
-        'charge or bond': function (m) {
-          if (that.buffer.beginsWithBond) {
-            var ret = that.concatNotUndefined(ret, this['output']());
-            ret = that.concatNotUndefined(ret, that.actions['bond'](m, '-'));
-            return ret;
-          } else {
-            that.buffer.d = m;
-          }
-        },
-        '- after o': function (m) {
-          var e = !that.buffer.b && !that.buffer.p;
-          var n = that.match('one lowercase letter $', that.buffer.o || '');
-          var ret = that.concatNotUndefined(null, this['output']());
-          if (e && n && n.remainder === '') {
-            ret = that.concatNotUndefined(ret, { type: 'hyphen' });
-          } else {
-            ret = that.concatNotUndefined(ret, that.actions['bond'](m, '-'));
-          }
-          return ret;
-        },
-        '- after d': function (m) {
-          var c1 = !that.buffer.b && !that.buffer.p;
-          var c2 = that.match('one lowercase letter $', that.buffer.o || '');
-          var c3 = that.match('digits', that.buffer.d);
-          var ret;
-          if (c1  &&  c2  &&  c2.remainder === '') {
-            ret = that.concatNotUndefined(null, this['output']());
-            ret = that.concatNotUndefined(ret, { type: 'hyphen' });
-          } else if (c3  &&  c3.remainder === '') {
-            ret = that.concatNotUndefined(null, that.actions['d='](m));
-            ret = that.concatNotUndefined(ret, this['output']());
-          } else {
-            ret = that.concatNotUndefined(null, this['output']());
-            ret = that.concatNotUndefined(ret, that.actions['bond'](m, '-'));
-          }
-          return ret;
-        },
-        'a to o': function (m) {
-            that.buffer.o = that.buffer.a;
-            that.buffer.a = undefined;
-        },
-        'sb=true': function (m) { that.buffer.sb = true; },
-        'sb=false': function (m) { that.buffer.sb = false; },
-        'beginsWithBond=true': function (m) { that.buffer.beginsWithBond = true; },
-        'beginsWithBond=false': function (m) { that.buffer.beginsWithBond = false; },
-        'state of aggregation': function (m) {
-            m = (new MhchemParser()).parse(m, 'o');
-            return { type: 'state of aggregation', p1: m };
-        },
-        'output': function (m) {
-          if (!that.buffer.r) {
-            var ret = [];
-            if (!that.buffer.a && !that.buffer.b && !that.buffer.p &&
-             !that.buffer.o && !that.buffer.q && !that.buffer.d) {
-              ret = null;
+        return null;
+      },
+      'entities': /^(?:pH|pOH|pK|iPr|iBu)(?=$|[^a-zA-Z])/,
+      '_findObserveGroups': function (input, begExcl, begIncl, endIncl, endExcl) {
+        var match = this['__match'](input, begExcl);
+        if (match === null)  return null;
+        input = input.substr(match.length);
+        match = this['__match'](input, begIncl);
+        if (match === null)  return null;
+        var e = this['__findObserveGroups'](input, match.length, endIncl || endExcl);
+        if (e === null)  return null;
+        return {
+          match: input.substring(0, (endIncl ? e.endMatchEnd : e.endMatchBegin)),
+          remainder: input.substr(e.endMatchEnd)
+        };
+      },
+      '__match': function (input, pattern) {
+        if (typeof pattern === 'string') {
+          if (input.indexOf(pattern) !== 0)  return null;
+          return pattern;
+        } else {
+          var match = input.match(pattern);
+          if (!match)  return null;
+          return match[0];
+        }
+      },
+      '__findObserveGroups': function (input, i, endChars) {
+        var braces = 0;
+        while (i < input.length) {
+          var a = input.charAt(i);
+          var match = this['__match'](input.substr(i), endChars);
+          if (match  &&  braces === 0) {
+            return { endMatchBegin: i, endMatchEnd: i + match.length };
+          } else if (a === '{') {
+            braces++;
+          } else if (a === '}') {
+            if (braces === 0) {
+              throw ['ExtraCloseMissingOpen', 'Extra close brace or missing open brace'];
             } else {
-              if (that.buffer.sb) {
-                ret.push({ type: 'entitySkip' });
+              braces--;
+            }
+          }
+          i++;
+        }
+        if (braces > 0) {
+          return null;
+        }
+        return null;
+      }
+    };
+    if (f[m] === undefined) {
+      throw ['InternalMhchemErrorNonExistingPattern', 'Internal mhchem Error \u2013 Trying to use non-existing pattern (' + m + ')'];
+    } else if (typeof f[m] === 'function') {
+      return f[m](input);
+    } else {  // RegExp
+      var match = input.match(f[m]);
+      if (match) {
+        var mm = match[1];
+        if (mm === undefined) { mm = match[0]; }
+        return { match: mm, remainder: input.substr(match[0].length) };
+      }
+      return null;
+    }
+  };
+
+  //
+  // Generic state machine actions
+  //
+  mhchemParser.actions = {
+    'a=': function (buffer, m) { buffer.a = (buffer.a || '') + m; },
+    'b=': function (buffer, m) { buffer.b = (buffer.b || '') + m; },
+    'p=': function (buffer, m) { buffer.p = (buffer.p || '') + m; },
+    'o=': function (buffer, m) { buffer.o = (buffer.o || '') + m; },
+    'q=': function (buffer, m) { buffer.q = (buffer.q || '') + m; },
+    'd=': function (buffer, m) { buffer.d = (buffer.d || '') + m; },
+    'rm=': function (buffer, m) { buffer.rm = (buffer.rm || '') + m; },
+    'text=': function (buffer, m) { buffer.text = (buffer.text || '') + m; },
+    'param1=': function (buffer, m) { buffer.param1 = m; },
+    'insert': function (buffer, m, a) { return { type: a }; },
+    'insert+p': function (buffer, m, a) { return { type: a, p1: m }; },
+    'copy': function (buffer, m) { return m; },
+    'rm': function (buffer, m) { return { type: 'rm', p1: m }; },
+    'text': function (buffer, m) { return mhchemParser.go(m, 'text'); },
+    '{text}': function (buffer, m) {
+      var ret = [ '{' ];
+      ret = mhchemParser.concatNotUndefined(ret, mhchemParser.go(m, 'text'));
+      ret = mhchemParser.concatNotUndefined(ret, '}');
+      return ret;
+    },
+    'tex-math': function (buffer, m) { return mhchemParser.go(m, 'tex-math'); },
+    'tex-math tight': function (buffer, m) { return mhchemParser.go(m, 'tex-math tight'); },
+    'bond': function (buffer, m, k) { return { type: 'bond', kind: k || m }; },
+    'ce': function (buffer, m) { return mhchemParser.go(m); },
+    '1/2': function (buffer, m) {
+      var n = m.match(/^([0-9]+)\/([0-9]+)$/);
+      return { type: 'frac', p1: n[1], p2: n[2] };
+    },
+    '9,9': function (buffer, m) { return mhchemParser.go(m, '9,9'); }
+  };
+
+  //
+  // State machine definitions
+  //
+  mhchemParser.stateMachines = {};
+  //
+  // convert  { 'a': { '*': { action: 'output' } } }  to  [ { match: 'a', actions: { '*': { action: 'output' } } } ]
+  // with expansion of 'a|b' to 'a' and 'b' (at 2 places)
+  //
+  mhchemParser.createTransitions = function (o) {
+    //
+    // 1. o ==> oo, expanding 'a|b'
+    //
+    var oo = {};
+    for (var a in o) {
+      if (a.indexOf('|') !== -1) {
+        var s = a.split('|');
+        for (var i=0; i<s.length; i++) {
+          oo[s[i]] = o[a];
+        }
+      } else {
+        oo[a] = o[a];
+      }
+    }
+    //
+    // 2. oo ==> transition array
+    //
+    var transitions = [];
+    for (var a in oo) {
+      var actions = {};
+      for (var b in oo[a]) {
+        //
+        // expanding action-state:'a|b' if needed
+        //
+        if (b.indexOf('|') !== -1) {
+          var s = b.split('|');
+          for (var i=0; i<s.length; i++) {
+            actions[s[i]] = oo[a][b];
+          }
+        } else {
+          actions[b] = oo[a][b];
+        }
+      }
+      transitions.push( { match: a, actions: actions } );
+    }
+    return transitions;
+  };
+  //
+  // Transitions and actions of main parser
+  //
+  mhchemParser.stateMachines['ce'] = {
+    transitions: mhchemParser.createTransitions({
+      'empty': {
+        '*': { action: 'output' } },
+      'else':  {
+        '0|1': { action: 'beginsWithBond=false', revisit: true, toContinue: true } },
+      'CMT': {
+        'r': { action: 'rdt=', nextState: 'rt' },
+        'rd': { action: 'rqt=', nextState: 'rdt' } },
+      'arrowUpDown': {
+        '0|1|as': { action: [ 'sb=false', 'output', 'operator' ], nextState: '0' } },
+      'entities': {
+        '0|1': { action: 'o=', nextState: 'o' } },
+      'amount nX': {
+        '0|1|2': { action: 'a=', nextState: 'a' } },
+      'letters': {
+        '0|1|2|a|as|b|p|bp': { action: 'o=', nextState: 'o' },
+        'o': { action: 'o=' },
+        'q|dq': { action: ['output', 'o='], nextState: 'o' },
+        'd|D|qd|qD': { action: 'o after d', nextState: 'o'} },
+      'orbital': {
+        '0|1|2': { action: 'o=', nextState: 'o' } },
+      'amount': {
+        '0|1|2': { action: 'a=', nextState: 'a' },
+        'as': { action: [ 'output', 'sb=true', 'a=' ], nextState: 'a' } },
+      'digits': {
+        'o': { action: 'q=', nextState: 'q' },
+        'd|D': { action: 'q=', nextState: 'dq' },
+        'q': { action: [ 'output', 'o=' ], nextState: 'o' } },
+      'space': {
+        'a': { nextState: 'as' },
+        '0': { action: 'sb=false' },
+        '1|2': { action: 'sb=true' },
+        'r|rt|rd|rdt|rdq': { action: 'output', nextState: '0' },
+        'c0': { action: [ 'output', { type: 'insert', option: 'space' } ], nextState: '1' },
+        '*': { action: [ 'output', 'sb=true' ], nextState: '1'} },
+      '&': {
+        '*': { action: [ 'output', 'copy' ], nextState: '0' } },
+      '\\\\': {
+        '*': { action: [ 'output', 'copy', { type: 'insert', option: 'space' } ], nextState: '0' } },  // space, so that we don't get \\[
+      '+': {
+        'a': { action: [ 'sb=false', 'output', 'operator' ], nextState: '0' },
+        'o': { action: 'd= kv',  nextState: 'd' },
+        'd|D': { action: 'd=', nextState: 'd' },
+        'q': { action: 'd=',  nextState: 'qd' },
+        'qd|qD': { action: 'd=', nextState: 'qd' },
+        'dq': { action: [ 'output', 'd=' ], nextState: 'd' } },
+      'operator': {
+        '0|1|as': { action: [ 'sb=false', 'output', 'operator' ], nextState: '0' } },
+      '->': {
+        '0|1|2': { action: 'r=', nextState: 'r' },
+        'a|as': { action: [ 'output', 'r=' ], nextState: 'r' },
+        '*': { action: [ 'output', 'r=' ], nextState: 'r' } },
+      '[(...)]': {
+        'r|rt': { action: 'rd=', nextState: 'rd' },
+        'rd|rdt': { action: 'rq=', nextState: 'rdq' } },
+      '...': {
+        'o|d|D|dq|qd|qD': { action: [ 'output', { type: 'bond', option: '...' } ], nextState: '2' },
+        '*': { action: [ { type: 'output', option: true }, { type: 'insert', option: 'ellipsis' } ], nextState: '1' } },
+      '.$|.|*': {
+        '*': { action: [ 'output', { type: 'insert', option: 'addition compound' } ], nextState: '0' } },
+      'state of aggregation $': {
+        '0': { action: [ 'output', 'sb=false', 'o=', 'output' ], nextState: '1' },
+        '*': { action: [ 'output', 'state of aggregation' ], nextState: '1' } },
+      '\{[(': {
+        'a|as|o': { action: [ 'o=', 'output', 'parenthesisLevel++' ], nextState: '1' },
+        '0|1|2': { action: [ 'o=', 'output', 'parenthesisLevel++' ], nextState: '1' },
+        '*': { action: [ 'output', 'o=', 'output', 'parenthesisLevel++' ], nextState: '1' } },
+      ')]\}': {
+        '0|1|2|b|p|bp|o': { action: [ 'o=', 'parenthesisLevel--' ], nextState: 'o' },
+        'a|as|d|D|q|qd|qD|dq': { action: [ 'output', 'o=', 'parenthesisLevel--' ], nextState: 'o' } },
+      ', ': {
+        '*': { action: [ { type: 'output', option: true }, 'comma' ], nextState: '0' } },
+      '^{(...)}|^($...$)': {
+        '0|1|as': { action: 'b=', nextState: 'b' },
+        'p': { action: 'b=', nextState: 'bp' },
+        '2|o': { action: 'd= kv', nextState: 'D' },
+        'q': { action: 'd=', nextState: 'qD' },
+        'd|D|qd|qD|dq': { action: [ 'output', 'd=' ], nextState: 'D' } },
+      '^(...)1|^(...)2': {
+        '0|1|as': { action: 'b=', nextState: 'b' },
+        'p': { action: 'b=', nextState: 'bp' },
+        '2|o': { action: 'd= kv', nextState: 'd' },
+        'q': { action: 'd=', nextState: 'qd' },
+        'd|D|qd|qD|dq': { action: [ 'output', 'd=' ], nextState: 'd' } },
+      '_{(...)}|_($...$)|_(...)1|_(...)2': {
+        '0|1|as': { action: 'p=', nextState: 'p' },
+        'b': { action: 'p=', nextState: 'bp' },
+        '2|o': { action: 'q=', nextState: 'q' },
+        'd|D': { action: 'q=', nextState: 'dq' },
+        'q|qd|qD|dq': { action: [ 'output', 'q=' ], nextState: 'q' } },
+      '-$': {
+        'o|q': { action: [ 'charge or bond', 'output' ],  nextState: 'qd' },
+        'd': { action: 'd=', nextState: 'd' },
+        'D': { action: [ 'output', { type: 'bond', option: '-' } ], nextState: '2' },
+        'q': { action: 'd=',  nextState: 'qd' },
+        'qd': { action: 'd=', nextState: 'qd' },
+        'qD|dq': { action: [ 'output', { type: 'bond', option: '-' } ], nextState: '2' } },
+      '-9': {
+        '2|o': { action: [ 'output', { type: 'insert', option: 'hyphen' } ], nextState: '2' } },
+      '-': {
+        '0|1': { action: [ 'beginsWithBond=true', { type: 'bond', option: '-' } ], nextState: '2' },
+        '2': { action: { type: 'bond', option: '-' } },
+        'a': { action: [ 'output', { type: 'insert', option: 'hyphen' } ], nextState: '1' },
+        'as': { action: [ { type: 'output', option: true }, { type: 'bond', option: '-' } ], nextState: '2' },
+        'b': { action: 'b=' },
+        'o': { action: '- after o', nextState: '1' },
+        'q': { action: '- after o', nextState: '1' },
+        'd|qd|dq': { action: '- after d', nextState: '1' },
+        'D|qD|p': { action: [ 'output', { type: 'bond', option: '-' } ], nextState: '2' } },
+      '=<>': {
+        '0|1|2|a|as|o|q|d|D|qd|qD|dq': { action: [ { type: 'output', option: true }, 'bond' ], nextState: '2' } },
+      '#': {
+        '0|1|2|a|as|o': { action: [ { type: 'output', option: true }, { type: 'bond', option: '#' } ], nextState: '2' } },
+      '{}': {
+        '*': { action: { type: 'output', option: true },  nextState: '1' } },
+      '{(...)}': {
+        'frac': { action: 'frac-output', nextState: '1' },
+        'overset': { action: 'overset-output', nextState: '1' },
+        'underset': { action: 'underset-output', nextState: '1' },
+        'underbrace': { action: 'underbrace-output', nextState: '1' },
+        'color': { action: 'color-output', nextState: '2' } },
+      '{...}': {
+        '0|1|2|a|as|b|p|bp': { action: 'o=', nextState: 'o' },
+        'o|d|D|q|qd|qD|dq': { action: [ 'output', 'o=' ], nextState: 'o' },
+        'c0': { action: 'copy', nextState: 'c1' },
+        'c1': { action: 'copy', nextState: '1' } },
+      '$...$': {
+        '0|1|2': { action: 'o=', nextState: 'o' },  // not 'amount'
+        'as|o': { action: 'o=' },
+        'b|p|bp|q|d|D|qd|qD|dq': { action: [ 'output', 'o=' ], nextState: 'o' } },
+      '\\bond{(...)}': {
+        '*': { action: [ { type: 'output', option: true }, 'bond' ], nextState: '2' } },
+      '\\frac{(...)}': {
+        '*': { action: [ { type: 'output', option: true }, 'param1=' ], nextState: 'frac' } },
+      '\\overset{(...)}': {
+        '*': { action: [ { type: 'output', option: true }, 'param1=' ], nextState: 'overset' } },
+      '\\underset{(...)}': {
+        '*': { action: [ { type: 'output', option: true }, 'param1=' ], nextState: 'underset' } },
+      '\\underbrace{(...)}': {
+        '*': { action: [ { type: 'output', option: true }, 'param1=' ], nextState: 'underbrace' } },
+      '\\color{(...)}': {
+        '*': { action: [ { type: 'output', option: true }, 'param1=' ], nextState: 'color' } },
+      '\\ce{(...)}': {
+        '*': { action: [ { type: 'output', option: true }, 'ce' ], nextState: '1' } },
+      '\\,': {
+        '*': { action: [ { type: 'output', option: true }, 'copy' ], nextState: '1' } },
+      '\\x': {
+        '*': { action: [ { type: 'output', option: true }, 'copy' ], nextState: 'c0' } },
+      'others': {
+        '*': { action: [ { type: 'output', option: true }, 'copy' ], nextState: '1' } },
+      'else2': {
+        'c0': { action: 'copy', nextState: '1' },
+        'c1': { nextState: '0', revisit: true },
+        'a': { action: 'a to o', nextState: 'o', revisit: true },
+        'r|rt|rd|rdt|rdq': { action: [ 'output' ], nextState: '0', revisit: true },
+        '*': { action: [ 'output', 'copy' ], nextState: '1' } }
+    }),
+    actions: {
+      'o after d': function (buffer, m) {
+        var ret;
+        if (buffer.d.match(/^[0-9]+$/)) {
+          var tmp = buffer.d;
+          buffer.d = undefined;
+          ret = this['output'](buffer);
+          buffer.b = tmp;
+        } else {
+          ret = this['output'](buffer);
+        }
+        mhchemParser.actions['o='](buffer, m);
+        return ret;
+      },
+      'd= kv': function (buffer, m) {
+        buffer.d = m;
+        buffer['d-type'] = 'kv';
+      },
+      'charge or bond': function (buffer, m) {
+        if (buffer.beginsWithBond) {
+          var ret = mhchemParser.concatNotUndefined(ret, this['output'](buffer));
+          ret = mhchemParser.concatNotUndefined(ret, mhchemParser.actions['bond'](buffer, m, '-'));
+          return ret;
+        } else {
+          buffer.d = m;
+        }
+      },
+      '- after o': function (buffer, m) {
+        var c2 = mhchemParser.match('one lowercase latin letter $', buffer.o || '');
+        var c3 = mhchemParser.match('one lowercase greek letter $', buffer.o || '');
+        var c4 = mhchemParser.match('orbital', buffer.o || '');
+        if (c2 && c2.remainder === '') {
+          buffer.o = '$' + buffer.o + '$';
+          var ret = mhchemParser.concatNotUndefined(null, this['output'](buffer));
+          ret = mhchemParser.concatNotUndefined(ret, { type: 'hyphen' });
+        } else if (c3 && c3.remainder === '') {
+          var ret = mhchemParser.concatNotUndefined(null, this['output'](buffer));
+          ret = mhchemParser.concatNotUndefined(ret, { type: 'hyphen' });
+        } else if (c4 && c4.remainder === '') {
+          var ret = mhchemParser.concatNotUndefined(null, this['output'](buffer));
+          ret = mhchemParser.concatNotUndefined(ret, { type: 'hyphen' });
+        } else {
+          var ret = mhchemParser.concatNotUndefined(null, this['output'](buffer));
+          ret = mhchemParser.concatNotUndefined(ret, mhchemParser.actions['bond'](buffer, m, '-'));
+        }
+        return ret;
+      },
+      '- after d': function (buffer, m) {
+        var c2 = mhchemParser.match('one lowercase latin letter $', buffer.o || '');
+        var c3 = mhchemParser.match('one lowercase greek letter $', buffer.o || '');
+        var c4 = mhchemParser.match('orbital', buffer.o || '');
+        var c5 = mhchemParser.match('digits', buffer.d);
+        var ret;
+        if (c2 && c2.remainder === '') {
+          buffer.o = '$' + buffer.o + '$';
+          ret = mhchemParser.concatNotUndefined(null, this['output'](buffer));
+          ret = mhchemParser.concatNotUndefined(ret, { type: 'hyphen' });
+        } else if (c3 && c3.remainder === '') {
+          ret = mhchemParser.concatNotUndefined(null, this['output'](buffer));
+          ret = mhchemParser.concatNotUndefined(ret, { type: 'hyphen' });
+        } else if (c4 && c4.remainder === '') {
+          var ret = mhchemParser.concatNotUndefined(null, this['output'](buffer));
+          ret = mhchemParser.concatNotUndefined(ret, { type: 'hyphen' });
+        } else if (c5 && c5.remainder === '') {
+          ret = mhchemParser.concatNotUndefined(null, mhchemParser.actions['d='](buffer, m));
+          ret = mhchemParser.concatNotUndefined(ret, this['output'](buffer));
+        } else {
+          ret = mhchemParser.concatNotUndefined(null, this['output'](buffer));
+          ret = mhchemParser.concatNotUndefined(ret, mhchemParser.actions['bond'](buffer, m, '-'));
+        }
+        return ret;
+      },
+      'a to o': function (buffer, m) {
+          buffer.o = buffer.a;
+          buffer.a = undefined;
+      },
+      'sb=true': function (buffer, m) { buffer.sb = true; },
+      'sb=false': function (buffer, m) { buffer.sb = false; },
+      'beginsWithBond=true': function (buffer, m) { buffer.beginsWithBond = true; },
+      'beginsWithBond=false': function (buffer, m) { buffer.beginsWithBond = false; },
+      'parenthesisLevel++': function (buffer, m) { buffer.parenthesisLevel++; },
+      'parenthesisLevel--': function (buffer, m) { buffer.parenthesisLevel--; },
+      'state of aggregation': function (buffer, m) {
+          m = mhchemParser.go(m, 'o');
+          return { type: 'state of aggregation', p1: m };
+      },
+      'comma': function (buffer, m) {
+        var a = m.replace(/\s*$/, '');
+        var withSpace = (a !== m);
+        if (withSpace  &&  buffer.parenthesisLevel === 0) {
+          return { type: 'comma enumeration L', p1: a };
+        } else {
+          return { type: 'comma enumeration M', p1: a };
+        }
+      },
+      'output': function (buffer, m, forceSb) {
+        if (!buffer.r) {
+          var ret = [];
+          if (!buffer.a && !buffer.b && !buffer.p &&
+           !buffer.o && !buffer.q && !buffer.d &&
+           !(forceSb && buffer.sb)) {
+            ret = null;
+          } else {
+            if (buffer.sb) {
+              ret.push({ type: 'entitySkip' });
+            }
+            if (!buffer.o && !buffer.q && !buffer.d &&
+             !buffer.b && !buffer.p) {
+              buffer.o = mhchemParser.go(buffer.a, 'o');
+              buffer.a = undefined;
+            } else if (!buffer.o && !buffer.q && !buffer.d) {
+              buffer.o = mhchemParser.go(buffer.a, 'o');
+              buffer.d = mhchemParser.go(buffer.b, 'bd');
+              buffer.q = mhchemParser.go(buffer.p, 'pq');
+              buffer.a = buffer.b = buffer.p = undefined;
+            } else {
+              if (buffer.o && buffer['d-type']=='kv' && !buffer.q) {
+                buffer['d-type'] = undefined;
               }
-              if (!that.buffer.o && !that.buffer.q && !that.buffer.d &&
-               !that.buffer.b && !that.buffer.p) {
-                that.buffer.o = (new MhchemParser()).parse(that.buffer.a, 'o');
-                that.buffer.a = undefined;
-              } else if (!that.buffer.o && !that.buffer.q && !that.buffer.d) {
-                that.buffer.o = (new MhchemParser()).parse(that.buffer.a, 'o');
-                that.buffer.d = (new MhchemParser()).parse(that.buffer.b, 'bd');
-                that.buffer.q = (new MhchemParser()).parse(that.buffer.p, 'pq');
-                that.buffer.a = that.buffer.b = that.buffer.p = undefined;
-              } else {
-                if (that.buffer.o && that.buffer['d-type']=='kv' && !that.buffer.q) {
-                  that.buffer['d-type'] = undefined;
-                }
-                that.buffer.a = (new MhchemParser()).parse(that.buffer.a, 'a');
-                that.buffer.b = (new MhchemParser()).parse(that.buffer.b, 'bd');
-                that.buffer.p = (new MhchemParser()).parse(that.buffer.p, 'pq');
-                that.buffer.o = (new MhchemParser()).parse(that.buffer.o, 'o');
-                that.buffer.d = (new MhchemParser()).parse(that.buffer.d, 'bd');
-                that.buffer.q = (new MhchemParser()).parse(that.buffer.q, 'pq');
-              }
-              ret.push({
-                type: 'chemfive',
-                a: that.buffer.a,
-                b: that.buffer.b,
-                p: that.buffer.p,
-                o: that.buffer.o,
-                q: that.buffer.q,
-                d: that.buffer.d,
-                'd-type': that.buffer['d-type']
-              });
+              buffer.a = mhchemParser.go(buffer.a, 'a');
+              buffer.b = mhchemParser.go(buffer.b, 'bd');
+              buffer.p = mhchemParser.go(buffer.p, 'pq');
+              buffer.o = mhchemParser.go(buffer.o, 'o');
+              buffer.d = mhchemParser.go(buffer.d, 'bd');
+              buffer.q = mhchemParser.go(buffer.q, 'pq');
             }
-            that.buffer = { beginsWithBond: that.buffer.beginsWithBond };
-            return ret;
-          } else {  // r
-            if (that.buffer.rdt === 'M') {
-              that.buffer.rd = (new MhchemParser()).parse(that.buffer.rd, 'tex-math');
-            } else if (that.buffer.rdt === 'T') {
-              that.buffer.rd = [ { type: 'text', p1: that.buffer.rd } ];
-            } else {
-              that.buffer.rd = (new MhchemParser()).parse(that.buffer.rd);
+            ret.push({
+              type: 'chemfive',
+              a: buffer.a,
+              b: buffer.b,
+              p: buffer.p,
+              o: buffer.o,
+              q: buffer.q,
+              d: buffer.d,
+              'd-type': buffer['d-type']
+            });
+          }
+          for (var p in buffer) {
+            if (p !== 'parenthesisLevel'  &&  p !== 'beginsWithBond') {
+              delete buffer[p];
             }
-            if (that.buffer.rqt === 'M') {
-              that.buffer.rq = (new MhchemParser()).parse(that.buffer.rq, 'tex-math');
-            } else if (that.buffer.rqt === 'T') {
-              that.buffer.rq = [ { type: 'text', p1: that.buffer.rq } ];
-            } else {
-              that.buffer.rq = (new MhchemParser()).parse(that.buffer.rq);
+          }
+          return ret;
+        } else {  // r
+          if (buffer.rdt === 'M') {
+            buffer.rd = mhchemParser.go(buffer.rd, 'tex-math');
+          } else if (buffer.rdt === 'T') {
+            buffer.rd = [ { type: 'text', p1: buffer.rd } ];
+          } else {
+            buffer.rd = mhchemParser.go(buffer.rd);
+          }
+          if (buffer.rqt === 'M') {
+            buffer.rq = mhchemParser.go(buffer.rq, 'tex-math');
+          } else if (buffer.rqt === 'T') {
+            buffer.rq = [ { type: 'text', p1: buffer.rq } ];
+          } else {
+            buffer.rq = mhchemParser.go(buffer.rq);
+          }
+          ret = {
+            type: 'arrow',
+            r: buffer.r,
+            rd: buffer.rd,
+            rq: buffer.rq
+          };
+          for (var p in buffer) {
+            if (p !== 'parenthesisLevel') {
+              delete buffer[p];
             }
-            ret = {
-              type: 'arrow',
-              r: that.buffer.r,
-              rd: that.buffer.rd,
-              rq: that.buffer.rq
-            };
-            that.buffer = {};
-            return ret;
           }
-        },
-        'param1=': function (m) { that.buffer.param1 = m; },
-        'frac-output': function (m) {
-          that.buffer.param1 = (new MhchemParser()).parse(that.buffer.param1);
-          return { type: 'frac-ce', p1: that.buffer.param1, p2: (new MhchemParser()).parse(m) };
-        },
-        'overset-output': function (m) {
-          that.buffer.param1 = (new MhchemParser()).parse(that.buffer.param1);
-          return { type: 'overset', p1: that.buffer.param1, p2: (new MhchemParser()).parse(m) };
-        },
-        'underset-output': function (m) {
-          that.buffer.param1 = (new MhchemParser()).parse(that.buffer.param1);
-          return { type: 'underset', p1: that.buffer.param1, p2: (new MhchemParser()).parse(m) };
-        },
-        'underbrace-output': function (m) {
-          that.buffer.param1 = (new MhchemParser()).parse(that.buffer.param1);
-          return { type: 'underbrace', p1: that.buffer.param1, p2: (new MhchemParser()).parse(m) };
-        },
-        'color-output': function (m) {
-          var color2 = (new MhchemParser()).parse(m);
-          return { type: 'color', color1: that.buffer.param1, color2: color2 };
-        },
-        'r=': function (m) { that.buffer.r = (that.buffer.r || '') + m; },
-        'rdt=': function (m) { that.buffer.rdt = (that.buffer.rdt || '') + m; },
-        'rd=': function (m) { that.buffer.rd = (that.buffer.rd || '') + m; },
-        'rqt=': function (m) { that.buffer.rqt = (that.buffer.rqt || '') + m; },
-        'rq=': function (m) { that.buffer.rq = (that.buffer.rq || '') + m; },
-        'operator': function (m) {
-          var ret = that.concatNotUndefined(null, this['output']());
-          return that.concatNotUndefined(ret, { type: 'operator', kind: m });
+          return ret;
         }
-      };
-      //
-      // Transitions and actions of a parser
-      //
-      that.stateMachines['a'] = {};
-      that.stateMachines['a'].transitions = [
-        {
-          match: 'empty',
-          actions: [ { state: '*' } ]
-        }, {
-          match: '1/2$',
-          actions: [ { state: '0', action: '1/2' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: '0', nextState: '1', revisit: true } ]
-        }, {
-          match: '$(...)$',
-          actions: [ { state: '*', action: 'tex-math tight', nextState: '1' } ]
-        }, {
-          match: ',',
-          actions: [ { state: '*', action: { type: 'insert', option: 'commaDecimal' } } ]
-        }, {
-          match: 'else',
-          actions: [ { state: '*', action: 'copy' } ]
-        }
-      ];
-      that.stateMachines['a'].actions = {};
-      //
-      // Transitions and actions of o parser
-      //
-      that.stateMachines['o'] = {};
-      that.stateMachines['o'].transitions = [
-        {
-          match: 'empty',
-          actions: [ { state: '*' } ]
-        }, {
-          match: '1/2$',
-          actions: [ { state: '0', action: '1/2' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: '0', nextState: '1', revisit: true } ]
-        }, {
-          match: 'letters',
-          actions: [ { state: '*', action: 'rm' } ]
-        }, {
-          match: '\\x',
-          actions: [ { state: '*', action: 'copy' } ]
-        }, {
-          match: [ '${(...)}$', '$(...)$' ],
-          actions: [ { state: '*', action: 'tex-math' } ]
-        }, {
-          match: '{(...)}',
-          actions: [ { state: '*',  action: '{text}' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: '*', action: 'copy' } ]
-        }
-      ];
-      that.stateMachines['o'].actions = {};
-      //
-      // Transitions and actions of text parser
-      //
-      that.stateMachines['text'] = {};
-      that.stateMachines['text'].transitions = [
-        {
-          match: 'empty',
-          actions: [ { state: '*', action: 'output' } ]
-        }, {
-          match: '\\greek',
-          actions: [ { state: '*', action: [ 'output', 'rm' ] } ]
-        }, {
-          match: '{...}',
-          actions: [ { state: 'c0', action: 'copy', nextState: 'c1' },
-                     { state: 'c1', action: 'copy', nextState: '0' },
-                     { state: '*', action: 'text=' } ]
-        }, {
-          match: [ '${(...)}$', '$(...)$' ],
-          actions: [ { state: '*', action: 'tex-math' } ]
-        }, {
-          match: '\\,',
-          actions: [ { state: '*', action: [ 'output', 'copy' ], nextState: '0' } ]
-        }, {
-          match: '\\x',
-          actions: [ { state: '*', action: [ 'output', 'copy' ], nextState: 'c0' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: 'c0', action: 'copy', nextState: '0' },
-                     { state: 'c1', nextState: '0', revisit: true },
-                     { state: '*', action: 'text=' } ]
-        }
-      ];
-      that.stateMachines['text'].actions = {
-        'output': function (m) { if (that.buffer.text) {
-            var ret = { type: 'text', p1: that.buffer.text }; }
-            that.buffer = {};
-            return ret;
-        }
-      };
-      //
-      // Transitions and actions of pq parser
-      //
-      that.stateMachines['pq'] = {};
-      that.stateMachines['pq'].transitions = [
-        {
-          match: 'empty',
-          actions: [ { state: '*' } ]
-        }, {
-          match: 'state of aggregation $',
-          actions: [ { state: '*', action: 'state of aggregation' } ]
-        }, {
-          match: 'formula$',
-          actions: [ { state: '0', nextState: 'f', revisit: true } ]
-        }, {
-          match: '1/2$',
-          actions: [ { state: '0', action: '1/2' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: '0', nextState: '!f', revisit: true } ]
-        }, {
-          match: [ '${(...)}$', '$(...)$' ],
-          actions: [ { state: '*', action: 'tex-math' } ]
-        }, {
-          match: '{...}',
-          actions: [ { state: 'c0', action: 'copy', nextState: 'c1' },
-                     { state: 'c1', action: 'copy', nextState: '!f' } ]
-        }, {
-          match: '{(...)}',
-          actions: [ { state: '*', action: 'text' } ]
-        }, {
-          match: 'a-z',
-          actions: [ { state: 'f',  action: 'tex-math' } ]
-        }, {
-          match: 'letters',
-          actions: [ { state: '*', action: 'rm' } ]
-        }, {
-          match: '-9.,9',
-          actions: [ { state: '*', action: '9,9'  } ]
-        },{
-          match: ',',
-          actions: [ { state: '*', action: { type: 'insert', option: 'comma enumeration small' } } ]
-        }, {
-          match: '\\ce{(...)}',
-          actions: [ { state: '*', action: 'ce' } ]
-        }, {
-          match: '\\,',
-          actions: [ { state: '*', action: 'copy', nextState: '0' } ]
-        }, {
-          match: '\\x',
-          actions: [ { state: '!f', action: 'copy', nextState: 'c0' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: 'c0', action: 'copy', nextState: '0' },
-                     { state: 'c1', nextState: '0', revisit: true },
-                     { state: '*', action: 'copy' } ]
-        }
-      ];
-      that.stateMachines['pq'].actions = {
-        'state of aggregation': function (m) {
-            m = (new MhchemParser()).parse(m, 'o');
-            return { type: 'state of aggregation subscript', p1: m };
-        }
-      };
-      //
-      // Transitions and actions of bd parser
-      //
-      that.stateMachines['bd'] = {};
-      that.stateMachines['bd'].transitions = [
-        {
-          match: 'empty',
-          actions: [ { state: '*' } ]
-        }, {
-          match: 'oxidation$',
-          actions: [ { state: '0', action: 'oxidation' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: '0', nextState: '1', revisit: true } ]
-        }, {
-          match: '-9.,9 no missing 0',
-          actions: [ { state: '*', action: '9,9' } ]
-        }, {
-          match: '.',
-          actions: [ { state: '*', action: { type: 'insert', option: 'electron dot' }, nextState: '1' } ]
-        }, {
-          match: 'a-z',
-          actions: [ { state: '*',  action: 'tex-math' } ]
-        }, {
-          match: 'letters',
-          actions: [ { state: '*',  action: 'rm' } ]
-        }, {
-          match: [ '${(...)}$', '$(...)$' ],
-          actions: [ { state: '*', action: 'tex-math' } ]
-        }, {
-          match: '{...}',
-          actions: [ { state: 'c0', action: 'copy', nextState: 'c1' },
-                     { state: 'c1', action: 'copy', nextState: '0' } ]
-        }, {
-          match: '{(...)}',
-          actions: [ { state: '*', action: 'text' } ]
-        }, {
-          match: '\\ce{(...)}',
-          actions: [ { state: '*', action: 'ce' } ]
-        }, {
-          match: '\\,',
-          actions: [ { state: '*', action: 'copy' } ]
-        }, {
-          match: '\\x',
-          actions: [ { state: '*', action: 'copy', nextState: 'c0' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: 'c0', action: 'copy', nextState: '0' },
-                     { state: 'c1', nextState: '0', revisit: true },
-                     { state: '*', action: 'copy' } ]
-        }
-      ];
-      that.stateMachines['bd'].actions = {
-        'oxidation': function (m) { return { type: 'oxidation', p1: m }; }
-      };
-      //
-      // Transitions and actions of tex-math parser
-      //
-      that.stateMachines['tex-math'] = {};
-      that.stateMachines['tex-math'].transitions = [
-        {
-          match: 'empty',
-          actions: [ { state: '*', action: 'output' } ]
-        }, {
-          match: '\\ce{(...)}',
-          actions: [ { state: '*', action: [ 'output', 'ce' ] } ]
-        }, {
-          match: [ '{...}', '\\,', '\\x' ],
-          actions: [ { state: '*', action: 'o=' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: '*', action: 'o=' } ]
-        }
-      ];
-      that.stateMachines['tex-math'].actions = {
-        'output': function (m) {
-          if (that.buffer.o) {
-            var ret = { type: 'tex-math', p1: that.buffer.o };
-            that.buffer = {};
-            return ret;
+      },
+      'frac-output': function (buffer, m) {
+        buffer.param1 = mhchemParser.go(buffer.param1);
+        return { type: 'frac-ce', p1: buffer.param1, p2: mhchemParser.go(m) };
+      },
+      'overset-output': function (buffer, m) {
+        buffer.param1 = mhchemParser.go(buffer.param1);
+        return { type: 'overset', p1: buffer.param1, p2: mhchemParser.go(m) };
+      },
+      'underset-output': function (buffer, m) {
+        buffer.param1 = mhchemParser.go(buffer.param1);
+        return { type: 'underset', p1: buffer.param1, p2: mhchemParser.go(m) };
+      },
+      'underbrace-output': function (buffer, m) {
+        buffer.param1 = mhchemParser.go(buffer.param1);
+        return { type: 'underbrace', p1: buffer.param1, p2: mhchemParser.go(m) };
+      },
+      'color-output': function (buffer, m) {
+        var color2 = mhchemParser.go(m);
+        return { type: 'color', color1: buffer.param1, color2: color2 };
+      },
+      'r=': function (buffer, m) { buffer.r = (buffer.r || '') + m; },
+      'rdt=': function (buffer, m) { buffer.rdt = (buffer.rdt || '') + m; },
+      'rd=': function (buffer, m) { buffer.rd = (buffer.rd || '') + m; },
+      'rqt=': function (buffer, m) { buffer.rqt = (buffer.rqt || '') + m; },
+      'rq=': function (buffer, m) { buffer.rq = (buffer.rq || '') + m; },
+      'operator': function (buffer, m) { return { type: 'operator', kind: m }; }
+    }
+  };
+  //
+  // Transitions and actions of a parser
+  //
+  mhchemParser.stateMachines['a'] = {
+    transitions: mhchemParser.createTransitions({
+      'empty': {
+        '*': {} },
+      '1/2$': {
+        '0': { action: '1/2' } },
+      'else': {
+        '0': { nextState: '1', revisit: true } },
+      '$(...)$': {
+        '*': { action:'tex-math tight', nextState: '1' } },
+      ',': {
+        '*': { action:{ type: 'insert', option: 'commaDecimal' } } },
+      'else2': {
+        '*': { action: 'copy' } }
+    }),
+    actions: {}
+  };
+  //
+  // Transitions and actions of o parser
+  //
+  mhchemParser.stateMachines['o'] = {
+    transitions: mhchemParser.createTransitions({
+      'empty': {
+        '*': {} },
+      '1/2$': {
+        '0': { action: '1/2' } },
+      'orbital': {
+        '0': { nextState: 'orbital', revisit: true } },
+      'else': {
+        '0': { nextState: '1', revisit: true } },
+      'letters': {
+        'orbital': { action: 'tex-math' },
+        '*': { action: 'rm' } },
+      '\\x': {
+        '*': { action: 'copy' } },
+      '${(...)}$|$(...)$': {
+        '*': { action: 'tex-math' } },
+      '{(...)}': {
+        '*': { action: '{text}' } },
+      'else2': {
+        '*': { action: 'copy' } }
+    }),
+    actions: {}
+  };
+  //
+  // Transitions and actions of text parser
+  //
+  mhchemParser.stateMachines['text'] = {
+    transitions: mhchemParser.createTransitions({
+      'empty': {
+        '*': { action: 'output' } },
+      '\\greek': {
+        '*': { action: [ 'output', 'rm' ] } },
+      '{...}': {
+        'c0': { action: 'copy', nextState: 'c1' },
+        'c1': { action: 'copy', nextState: '0' },
+        '*': { action: 'text=' } },
+      '${(...)}$|$(...)$': {
+        '*': { action: 'tex-math' } },
+      '\\,': {
+        '*': { action: [ 'output', 'copy' ], nextState: '0' } },
+      '\\x': {
+        '*': { action: [ 'output', 'copy' ], nextState: 'c0' } },
+      'else': {
+        'c0': { action: 'copy', nextState: '0' },
+        'c1': { nextState: '0', revisit: true },
+        '*': { action: 'text=' } }
+    }),
+    actions: {
+      'output': function (buffer, m) { if (buffer.text) {
+          var ret = { type: 'text', p1: buffer.text }; }
+          for (var p in buffer) {
+            delete buffer[p];
           }
-          return null;
-        }
-      };
-      //
-      // Transitions and actions of tex-math-tight parser
-      //
-      that.stateMachines['tex-math tight'] = {};
-      that.stateMachines['tex-math tight'].transitions = [
-        {
-          match: 'empty',
-          actions: [ { state: '*', action: 'output' } ]
-        }, {
-          match: '\\ce{(...)}',
-          actions: [ { state: '*', action: [ 'output', 'ce' ] } ]
-        }, {
-          match: [ '{...}', '\\,', '\\x' ],
-          actions: [ { state: '*', action: 'o=' } ]
-        }, {
-          match: [ '-', '+' ],
-          actions: [ { state: '*', action: 'tight operator' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: '*', action: 'o=' } ]
-        }
-      ];
-      that.stateMachines['tex-math tight'].actions = {
-        'tight operator': function (m) { that.buffer.o = (that.buffer.o || '') + '{'+m+'}'; },
-        'output': function (m) {
-          if (that.buffer.o) {
-            var ret = { type: 'tex-math', p1: that.buffer.o };
-            that.buffer = {};
-            return ret;
+          return ret;
+      }
+    }
+  };
+  //
+  // Transitions and actions of pq parser
+  //
+  mhchemParser.stateMachines['pq'] = {
+    transitions: mhchemParser.createTransitions({
+      'empty': {
+        '*': {} },
+      'state of aggregation $': {
+        '*': { action: 'state of aggregation' } },
+      'formula$': {
+        '0': { nextState: 'f', revisit: true } },
+      '1/2$': {
+        '0': { action: '1/2' } },
+      'else': {
+        '0': { nextState: '!f', revisit: true } },
+      '${(...)}$|$(...)$': {
+        '*': { action: 'tex-math' } },
+      '{...}': {
+        'c0': { action: 'copy', nextState: 'c1' },
+        'c1': { action: 'copy', nextState: '!f' } },
+      '{(...)}': {
+        'color': { action: 'color-output', nextState: '!f' },
+        '*': { action: 'text' } },
+      'a-z': {
+        'f': { action: 'tex-math' } },
+      'letters': {
+        '*': { action: 'rm' } },
+      '-9.,9': {
+        '*': { action: '9,9'  } },
+      ',': {
+        '*': { action: { type: 'insert+p', option: 'comma enumeration S' } } },
+      '\\color{(...)}': {
+        '*': { action: 'param1=', nextState: 'color' } },
+      '\\ce{(...)}': {
+        '*': { action: 'ce' } },
+      '\\,': {
+        '*': { action: 'copy', nextState: '0' } },
+      '\\x': {
+        '!f': { action: 'copy', nextState: 'c0' } },
+      'else2': {
+        'c0': { action: 'copy', nextState: '0' },
+        'c1': { nextState: '0', revisit: true },
+        '*': { action: 'copy' } }
+    }),
+    actions: {
+      'state of aggregation': function (buffer, m) {
+          m = mhchemParser.go(m, 'o');
+          return { type: 'state of aggregation subscript', p1: m };
+      },
+      'color-output': function (buffer, m) {
+        var color2 = mhchemParser.go(m, 'pq');
+        return { type: 'color', color1: buffer.param1, color2: color2 };
+      }
+    }
+  };
+  //
+  // Transitions and actions of bd parser
+  //
+  mhchemParser.stateMachines['bd'] = {
+    transitions: mhchemParser.createTransitions({
+      'empty': {
+        '*': {} },
+      'oxidation$': {
+        '0': { action: 'oxidation' } },
+      'formula$': {
+        '0': { nextState: 'f', revisit: true } },
+      'else': {
+        '0': { nextState: '1', revisit: true } },
+      '-9.,9 no missing 0': {
+        '*': { action: '9,9' } },
+      '.': {
+        '*': { action: { type: 'insert', option: 'electron dot' }, nextState: '1' } },
+      'a-z': {
+        'f': { action: 'tex-math' } },
+      'letters': {
+        '*': { action: 'rm' } },
+      '${(...)}$|$(...)$': {
+        '*': { action: 'tex-math' } },
+      '{...}': {
+        'c0': { action: 'copy', nextState: 'c1' },
+        'c1': { action: 'copy', nextState: '0' } },
+      '{(...)}': {
+        'color': { action: 'color-output', nextState: '!f' },
+        '*': { action: 'text' } },
+      '\\color{(...)}': {
+        '*': { action: 'param1=', nextState: 'color' } },
+      '\\ce{(...)}': {
+        '*': { action: 'ce' } },
+      '\\,': {
+        '*': { action: 'copy' } },
+      '\\x': {
+        '*': { action: 'copy', nextState: 'c0' } },
+      'else2': {
+        'c0': { action: 'copy', nextState: '0' },
+        'c1': { nextState: '0', revisit: true },
+        '*': { action: 'copy' } }
+    }),
+    actions: {
+      'oxidation': function (buffer, m) { return { type: 'oxidation', p1: m }; },
+      'color-output': function (buffer, m) {
+        var color2 = mhchemParser.go(m, 'bd');
+        return { type: 'color', color1: buffer.param1, color2: color2 };
+      }
+    }
+  };
+  //
+  // Transitions and actions of tex-math parser
+  //
+  mhchemParser.stateMachines['tex-math'] = {
+    transitions: mhchemParser.createTransitions({
+      'empty': {
+        '*': { action: 'output' } },
+      '\\ce{(...)}': {
+        '*': { action: [ 'output', 'ce' ] } },
+      '{...}|\\,|\\x': {
+        '*': { action: 'o=' } },
+      'else': {
+        '*': { action: 'o=' } }
+    }),
+    actions: {
+      'output': function (buffer, m) {
+        if (buffer.o) {
+          var ret = { type: 'tex-math', p1: buffer.o };
+          for (var p in buffer) {
+            delete buffer[p];
           }
-          return null;
+          return ret;
         }
-      };
-      //
-      // Transitions and actions of 9,9 parser
-      //
-      that.stateMachines['9,9'] = {};
-      that.stateMachines['9,9'].transitions = [
-        {
-          match: 'empty',
-          actions: [ { state: '*' } ]
-        }, {
-          match: ',',
-          actions: [ { state: '*', action: 'comma' } ]
-        }, {
-          match: 'else',
-          actions: [ { state: '*', action: 'copy' } ]
+        return null;
+      }
+    }
+  };
+  //
+  // Transitions and actions of tex-math-tight parser
+  //
+  mhchemParser.stateMachines['tex-math tight'] = {
+    transitions: mhchemParser.createTransitions({
+      'empty': {
+        '*': { action: 'output' } },
+      '\\ce{(...)}': {
+        '*': { action: [ 'output', 'ce' ] } },
+      '{...}|\\,|\\x': {
+        '*': { action: 'o=' } },
+      '-|+': {
+        '*': { action: 'tight operator' } },
+      'else': {
+        '*': { action: 'o=' } }
+    }),
+    actions: {
+      'tight operator': function (buffer, m) { buffer.o = (buffer.o || '') + '{'+m+'}'; },
+      'output': function (buffer, m) {
+        if (buffer.o) {
+          var ret = { type: 'tex-math', p1: buffer.o };
+          for (var p in buffer) {
+            delete buffer[p];
+          }
+          return ret;
         }
-      ];
-      that.stateMachines['9,9'].actions = {
-        'comma': function (m) { return { type: 'commaDecimal' }; }
-      };
+        return null;
+      }
+    }
+  };
+  //
+  // Transitions and actions of 9,9 parser
+  //
+  mhchemParser.stateMachines['9,9'] = {
+    transitions: mhchemParser.createTransitions({
+      'empty': {
+        '*': {} },
+      ',': {
+        '*': { action: 'comma' } },
+      'else': {
+        '*': { action: 'copy' } }
+    }),
+    actions: {
+      'comma': function (buffer, m) { return { type: 'commaDecimal' }; }
+    }
+  };
 
-      return that;
+  //
+  // Take MhchemParser output and convert it to TeX
+  // (recursive)
+  //
+  var texify = {
+    types: {
+      'chemfive': function (buf) {
+        var res = '';
+        buf.a = texify.go(buf.a);
+        buf.b = texify.go(buf.b);
+        buf.p = texify.go(buf.p);
+        buf.o = texify.go(buf.o);
+        buf.q = texify.go(buf.q);
+        buf.d = texify.go(buf.d);
+        //
+        // a
+        //
+        if (buf.a) { res += buf.a + '\\,'; }
+        //
+        // b and p
+        //
+        if (buf.b || buf.p) {
+          res += '{\\vphantom{X}}';
+          res += '^{\\hphantom{'+(buf.b||'')+'}}_{\\hphantom{'+(buf.p||'')+'}}';
+          res += '{\\vphantom{X}}';
+          res += '^{\\smash[t]{\\vphantom{2}}\\llap{'+(buf.b||'')+'}}';
+          res += '_{\\vphantom{2}\\llap{\\smash[t]{'+(buf.p||'')+'}}}';
+          res += '\\mskip-0mu ';
+        }
+        //
+        // o
+        //
+        if (buf.o) { res += buf.o; }
+        //
+        // q and d
+        //
+        if (buf.d  &&  buf['d-type'] === 'kv') {
+          res += '{\\vphantom{X}}';
+          res += '^{'+buf.d+'}';
+        }
+        if (buf.q) {
+          res += '{\\vphantom{X}}';
+          res += '_{\\smash[t]{'+buf.q+'}}';
+        }
+        if (buf.d  &&  buf['d-type'] !== 'kv') {
+          res += '{\\vphantom{X}}';
+          res += '^{'+buf.d+'}';
+        }
+        return res;
+      },
+      'rm': function (buf) { return '\\mathrm{'+buf.p1+'}'; },
+      'text': function (buf) { return '\\text{'+buf.p1+'}'; },
+      'oxidation': function (buf) { return '\\mathrm{'+buf.p1+'}'; },
+      'state of aggregation': function (buf) { return '\\mskip3mu '+texify.go(buf.p1); },
+      'state of aggregation subscript': function (buf) { return '\\mskip2mu '+texify.go(buf.p1)+'\\mskip1mu '; },
+      'bond': function (buf) {
+        var ret = texify.bonds[buf.kind]
+        if (!ret) {
+          throw ['MhchemErrorUnknownBond', 'mhchem Error \u2013 Unknown bond type (' + buf.kind + ')'];
+        }
+        return ret;
+      },
+      'frac': function (buf) {
+          var c = '\\frac{' + buf.p1 + '}{' + buf.p2 + '}';
+          return '\\mathchoice{\\textstyle'+c+'}{'+c+'}{'+c+'}{'+c+'}';
+       },
+      'tex-math': function (buf) { return buf.p1 + ' '; },
+      'frac-ce': function (buf) {
+        return '\\frac{' + texify.go(buf.p1) + '}{' + texify.go(buf.p2) + '}';
+      },
+      'overset': function (buf) {
+        return '\\overset{' + texify.go(buf.p1) + '}{' + texify.go(buf.p2) + '}';
+      },
+      'underset': function (buf) {
+        return '\\underset{' + texify.go(buf.p1) + '}{' + texify.go(buf.p2) + '}';
+      },
+      'underbrace': function (buf) {
+        return '\\underbrace{' + texify.go(buf.p1) + '}_{' + texify.go(buf.p2) + '}';
+      },
+      'color': function (buf) {
+        return '{\\color{' + buf.color1 + '}{' + texify.go(buf.color2) + '}}';
+      },
+      'arrow': function (buf) {
+        buf.rd = texify.go(buf.rd);
+        buf.rq = texify.go(buf.rq);
+        var arrow = texify.arrows[buf.r];
+        if (buf.rd || buf.rq) {
+          if (buf.rq) {arrow += "[{"+buf.rq+"}]";}
+          arrow += "{"+buf.rd+"}";
+          arrow = ' \\mkern3mu\\mathrel{\\x'+arrow+'}\\mkern3mu ';
+        } else {
+          arrow = ' \\mkern3mu\\long'+arrow+'\\mkern3mu ';
+        }
+        return arrow;
+      },
+      'operator': function(buf) { return texify.operators[buf.kind]; }
+    },
+    arrows: {
+      '->': 'rightarrow',
+      '\u2192': 'rightarrow',
+      '\u27F6': 'rightarrow',
+      '<-': 'leftarrow',
+      '<->': 'leftrightarrow',
+      '<-->': 'leftrightarrows',
+      '<=>': 'rightleftharpoons',
+      '\u21CC': 'rightleftharpoons',
+      '<=>>': 'Rightleftharpoons',
+      '<<=>': 'Leftrightharpoons'
+    },
+    bonds: {
+      '-': '{-}',
+      '1': '{-}',
+      '=': '{=}',
+      '2': '{=}',
+      '#': '{\\equiv}',
+      '3': '{\\equiv}',
+      '~': '{\\tripledash}',
+      '~-': '{\\begin{CEstack}{}\\tripledash\\\\-\\end{CEstack}}',
+      '~=': '{\\raise2mu {\\begin{CEstack}{}\\tripledash\\\\-\\\\-\\end{CEstack}}}',
+      '~--': '{\\raise2mu {\\begin{CEstack}{}\\tripledash\\\\-\\\\-\\end{CEstack}}}',
+      '-~-': '{\\raise2mu {\\begin{CEstack}{}-\\\\\\tripledash\\\\-\\end{CEstack}}}',
+      '...': '{{\\cdot}{\\cdot}{\\cdot}}',
+      '....': '{{\\cdot}{\\cdot}{\\cdot}{\\cdot}}',
+      '->': '{\\rightarrow}',
+      '<-': '{\\leftarrow}',
+      '<': '{<}',
+      '>': '{>}'
+    },
+    entities: {
+      'space': ' ',
+      'entitySkip': '~',
+      'commaDecimal': '{,}',
+      'comma enumeration L': '{{0}}\\mkern6mu ',
+      'comma enumeration M': '{{0}}\\mkern3mu ',
+      'comma enumeration S': '{{0}}\\mkern1mu ',
+      'hyphen': '\\text{-}',
+      'addition compound': '\\,{\\cdot}\\,',
+      'electron dot': '\\mkern1mu \\bullet\\mkern1mu ',
+      '^': 'uparrow',
+      'v': 'downarrow',
+      'ellipsis': '\\ldots '
+    },
+    operators: {
+      '+': ' \\mkern3mu+\\mkern3mu ',
+      '-': ' \\mkern3mu-\\mkern3mu ',
+      '=': ' \\mkern3mu=\\mkern3mu ',
+      '<': ' \\mkern3mu<\\mkern3mu ',
+      '>': ' \\mkern3mu>\\mkern3mu ',
+      '<<': ' \\mkern3mu\\ll\\mkern3mu ',
+      '>>': ' \\mkern3mu\\gg\\mkern3mu ',
+      '\\pm': ' \\mkern3mu\\pm\\mkern3mu ',
+      '$\\pm$': ' \\mkern3mu\\pm\\mkern3mu ',
+      '\\approx': ' \\mkern3mu\\approx\\mkern3mu ',
+      '$\\approx$': ' \\mkern3mu\\approx\\mkern3mu ',
+      'v': ' \\downarrow{} ',
+      '(v)': ' \\downarrow{} ',
+      '^': ' \\uparrow{} ',
+      '(^)': ' \\uparrow{} '
     },
 
-    //
-    // Take MhchemParser output and convert it to TeX
-    // (recursive)
-    //
-    texify: function texify(input) {
+    go: function (input) {
       if (!input) { return input; }
-      var types = {
-        'chemfive': function (buf) {
-          var res = '';
-          buf.a = texify(buf.a);
-          buf.b = texify(buf.b);
-          buf.p = texify(buf.p);
-          buf.o = texify(buf.o);
-          buf.q = texify(buf.q);
-          buf.d = texify(buf.d);
-          //
-          // a
-          //
-          if (buf.a) { res += buf.a + '\\,'; }
-          //
-          // b and p
-          //
-          if (buf.b || buf.p) {
-            res += '\\mskip1.5mu ';
-            res += '{\\vphantom{X}}';
-            res += '^{\\hphantom{'+(buf.b||'')+'}}_{\\hphantom{'+(buf.p||'')+'}}';
-            res += '\\mskip-1mu ';
-            res += '{\\vphantom{X}}';
-            res += '^{\\smash[t]{\\vphantom{2}}\\llap{'+(buf.b||'')+'}}';
-            res += '_{\\vphantom{2}\\llap{\\smash[t]{'+(buf.p||'')+'}}}';
-          }
-          //
-          // o
-          //
-          if (buf.o) { res += buf.o; }
-          //
-          // q and d
-          //
-          if (buf.d  &&  buf['d-type'] === 'kv') {
-            res += '{\\vphantom{X}}';
-            res += '^{'+buf.d+'}';
-          }
-          if (buf.q) {
-            res += '{\\vphantom{X}}';
-            res += '_{\\smash[t]{'+buf.q+'}}';
-          }
-          if (buf.d  &&  buf['d-type'] !== 'kv') {
-            res += '{\\vphantom{X}}';
-            res += '^{'+buf.d+'}';
-          }
-          return res;
-        },
-        'rm': function (buf) { return '\\mathrm{'+buf.p1+'}'; },
-        'text': function (buf) { return '\\text{'+buf.p1+'}'; },
-        'oxidation': function (buf) { return '\\mathrm{'+buf.p1+'}'; },
-        'state of aggregation': function (buf) { return '\\mskip3mu '+texify(buf.p1); },
-        'state of aggregation subscript': function (buf) { return '\\mskip2mu '+texify(buf.p1)+'\\mskip1mu '; },
-        'bond': function (buf) {
-          var bonds = {
-            '-': '{-}',
-            '1': '{-}',
-            '=': '{=}',
-            '2': '{=}',
-            '#': '{\\equiv}',
-            '3': '{\\equiv}',
-            '~': '{\\tripledash}',
-            '~-': '{\\begin{CEstack}{}\\tripledash\\\\-\\end{CEstack}}',
-            '~=': '{\\raise2mu {\\begin{CEstack}{}\\tripledash\\\\-\\\\-\\end{CEstack}}}',
-            '~--': '{\\raise2mu {\\begin{CEstack}{}\\tripledash\\\\-\\\\-\\end{CEstack}}}',
-            '-~-': '{\\raise2mu {\\begin{CEstack}{}-\\\\\\tripledash\\\\-\\end{CEstack}}}',
-            '...': '{{\\cdot}{\\cdot}{\\cdot}}',
-            '....': '{{\\cdot}{\\cdot}{\\cdot}{\\cdot}}',
-            '->': '{\\rightarrow}',
-            '<-': '{\\leftarrow}'
-          };
-          if (!bonds[buf.kind]) {
-            throw ['MhchemErrorUnknownBond', 'mhchem Error – Unknown bond type'];
-          }
-          return bonds[buf.kind];
-        },
-        'frac': function (buf) {
-            var c = '\\frac{' + buf.p1 + '}{' + buf.p2 + '}';
-            return '\\mathchoice{\\textstyle'+c+'}{'+c+'}{'+c+'}{'+c+'}';
-         },
-        'tex-math': function (buf) { return buf.p1 + '{}'; },
-        'frac-ce': function (buf) {
-          return '\\frac{' + texify(buf.p1) + '}{' + texify(buf.p2) + '}';
-        },
-        'overset': function (buf) {
-          return '\\overset{' + texify(buf.p1) + '}{' + texify(buf.p2) + '}';
-        },
-        'underset': function (buf) {
-          return '\\underset{' + texify(buf.p1) + '}{' + texify(buf.p2) + '}';
-        },
-        'underbrace': function (buf) {
-          return '\\underbrace{' + texify(buf.p1) + '}_{' + texify(buf.p2) + '}';
-        },
-        'color': function (buf) {
-          return '\\color{' + buf.color1 + '}{' + texify(buf.color2) + '}';
-        },
-        'arrow': function (buf) {
-          var arrows = {
-            '->': 'rightarrow',
-            '<-': 'leftarrow',
-            '<->': 'leftrightarrow',
-            '<-->': 'leftrightarrows',
-            '<=>': 'rightleftharpoons',
-            '<=>>': 'Rightleftharpoons',
-            '<<=>': 'Leftrightharpoons'
-          };
-          buf.rd = texify(buf.rd);
-          buf.rq = texify(buf.rq);
-          var arrow = arrows[buf.r];
-          if (buf.rd || buf.rq) {
-            if (buf.rq) {arrow += "[{"+buf.rq+"}]";}
-            arrow += "{"+buf.rd+"}";
-            arrow = ' \\mkern3mu\\mathrel{\\x'+arrow+'}\\mkern3mu ';
-          } else {
-            arrow = ' \\mkern3mu\\long'+arrow+'\\mkern3mu ';
-          }
-          return arrow;
-        },
-        'operator': function(buf) {
-          var operators = {
-            '+': ' \\mkern3mu+\\mkern3mu ',
-            '-': ' \\mkern3mu-\\mkern3mu ',
-            '=': ' \\mkern3mu=\\mkern3mu ',
-            '\\pm': ' \\mkern3mu\\pm\\mkern3mu ',
-            '$\\pm$': ' \\mkern3mu\\pm\\mkern3mu ',
-            'v': ' \\downarrow{} ',
-            '(v)': ' \\downarrow{} ',
-            '^': ' \\uparrow{} ',
-            '(^)': ' \\uparrow{} '
-          };
-          return operators[buf.kind];
-        }
-      };
-      var entities = {
-        'space': ' ',
-        'entitySkip': '\\,',
-        'commaDecimal': '{,}',
-        'comma enumeration': '{,}\\mkern3mu ',
-        'comma enumeration small': '{,}\\mkern1mu ',
-        'hyphen': '\\text{-}',
-        'addition compound': '\\,{\\cdot}\\,',
-        'electron dot': '\\mkern1mu \\bullet\\mkern1mu ',
-        '^': 'uparrow',
-        'v': 'downarrow'
-      };
-
       var res = '';
       for (var i=0; i<input.length; i++) {
         if (typeof input[i] === 'string') {
           res += input[i];
-        } else if (types[input[i].type]) {
-          res += types[input[i].type](input[i]);
-        } else if (entities[input[i].type]) {
-          res += entities[input[i].type];
+        } else if (this.types[input[i].type]) {
+          res += this.types[input[i].type](input[i]);
+        } else if (this.entities[input[i].type]) {
+          if (input[i].p1 !== undefined) {
+            res += this.entities[input[i].type].replace('{0}', input[i].p1);
+          } else {
+            res += this.entities[input[i].type];
+          }
         } else {
-          throw ['InternalMhchemErrorUnknownMhchemParserOutput', 'Internal mhchem Error – Unknown MhchemParser output'];
+          throw ['InternalMhchemErrorUnknownMhchemParserOutput', 'Internal mhchem Error \u2013 Unknown MhchemParser output'];
         }
       }
       return res;
     }
-    
-  });
-  
+
+  };
+
   MathJax.Extension["TeX/mhchem"].CE = CE;
-  
+
   /***************************************************************************/
-  
+
   TEX.Definitions.Add({
     macros: {
       //
       //  Set up the macros for chemistry
       //
       ce:   'CE',
-      
+
       //
       //  Make these load AMSmath package (redefined below when loaded)
       //
@@ -1242,15 +1273,15 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
       //
       //  Add \hyphen used in some mhchem examples
-      //  
+      //
       hyphen: ["Macro","\\text{-}"],
-      
+
       //
       //  Needed for \bond for the ~ forms
       //
       tripledash: ["Macro","\\raise3mu{\\tiny\\text{-}\\kern2mu\\text{-}\\kern2mu\\text{-}}"]
     },
-    
+
     //
     //  Needed for \bond for the ~ forms
     //
@@ -1258,7 +1289,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       CEstack:       ['Array',null,null,null,'r',null,"0.001em",'T',1]
     }
   },null,true);
-  
+
   if (!MathJax.Extension["TeX/AMSmath"]) {
     TEX.Definitions.Add({
       macros: {
@@ -1267,7 +1298,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       }
     },null,true);
   }
-  
+
   //
   //  These arrows need to wait until AMSmath is loaded
   //
@@ -1295,9 +1326,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var tex = CE(arg).Parse();
       this.string = tex + this.string.substr(this.i); this.i = 0;
     }
-    
+
   });
-  
+
   //
   //  Indicate that the extension is ready
   //
