@@ -167,7 +167,7 @@
 
       // Used in preTranslate to get linebreak width
       this.linebreakSpan = HTML.Element("span",null,
-        [["hr",{style: {width:"auto", size:1, padding:0, border:0, margin:0}}]]);
+        [["hr",{style: {display:"inline-block", width:"auto", size:1, padding:0, border:0, margin:0}}]]);
 
       // Set up styles
       return AJAX.Styles(this.config.styles,["InitializeSVG",this]);
