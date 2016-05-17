@@ -1463,6 +1463,7 @@ MathJax.ElementJax.mml.Augment({
   
   MML.TeXAtom = MML.mbase.Subclass({
     type: "texatom",
+    linebreakContainer: true,
     inferRow: true, notParent: true,
     texClass: MML.TEXCLASS.ORD,
     Core: MML.mbase.childCore,
