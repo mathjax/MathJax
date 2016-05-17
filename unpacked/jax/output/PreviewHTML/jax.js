@@ -767,8 +767,10 @@
             bbox = this.PHTMLbboxFor(this.base),
             BBOX = this.PHTML, acc = obox.acc;
         if (this.data[this.over]) {
-          span.lastChild.firstChild.style.marginLeft = obox.l =
-            span.lastChild.firstChild.style.marginRight = obox.r = 0;
+          if (span.lastChild.firstChild){
+            span.lastChild.firstChild.style.marginLeft = obox.l =
+              span.lastChild.firstChild.style.marginRight = obox.r = 0;
+          }
           var over = HTML.Element("span",{},[["span",{className:"MJXp-over"}]]);
           over.firstChild.appendChild(span.lastChild);
           if (span.childNodes.length > (this.data[this.under] ? 1 : 0))
@@ -786,8 +788,10 @@
             else {span.appendChild(over)}
         }
         if (this.data[this.under]) {
-          span.lastChild.firstChild.style.marginLeft = ubox.l =
-            span.lastChild.firstChild.marginRight = ubox.r = 0;
+          if (span.lastChild.firstChild) {
+            span.lastChild.firstChild.style.marginLeft = ubox.l =
+              span.lastChild.firstChild.marginRight = ubox.r = 0;
+          }
           this.data[this.under].PHTMLhandleScriptlevel(span.lastChild);
         }
         BBOX.w = Math.max(.8*obox.w,.8*ubox.w,bbox.w);
