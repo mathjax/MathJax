@@ -1433,6 +1433,8 @@
       var def = {accent: true}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       var mml = this.mmlToken(MML.mo(MML.entity("#x"+accent)).With(def));
       mml.stretchy = (stretchy ? true : false);
+      var mo = (c.isEmbellished() ? c.CoreMO() : c);
+      if (mo.isa(MML.mo)) mo.movablelimits = false;
       this.Push(MML.TeXAtom(MML.munderover(c,null,mml).With({accent: true})));
     },
     
