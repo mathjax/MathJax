@@ -1007,8 +1007,8 @@
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
     EmRounded: function (m) {
-      m = (Math.round(m*HTMLCSS.em)+.05)/HTMLCSS.em;
       if (Math.abs(m) < .0006) {return "0em"}
+      m = (Math.round(m*HTMLCSS.em)+.05)/HTMLCSS.em;
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
     unEm: function (m) {
@@ -2936,7 +2936,9 @@
           //    Add the width to the span (outside the MathJax class, so uses outer em size,
           //    which makes it work even when minimum font size is in effect).
           //
-          span.style.width = HTMLCSS.Em(Math.max(0,Math.round(math.bbox.w*this.em)+.25)/HTMLCSS.outerEm);
+          var W = math.bbox.w;
+          W = Math.abs(W) < .006 ? 0 : Math.max(0,Math.round(W*this.em)+.25);
+          span.style.width = HTMLCSS.EmRounded(W/HTMLCSS.outerEm);
           span.style.display = "inline-block";
           //
           //  Adjust bbox to match outer em-size
