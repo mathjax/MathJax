@@ -483,7 +483,7 @@
 
       // Used in preTranslate to get linebreak width
       this.linebreakSpan = this.Element("span",null,
-        [["hr",{style: {width:"100%", size:1, padding:0, border:0, margin:0}}]]);
+        [["hr",{style: {display:"inline-block", width:"100%", size:1, padding:0, border:0, margin:0}}]]);
 
       // Set up styles and preload web fonts
       return AJAX.Styles(this.config.styles,["InitializeHTML",this]);
