@@ -282,8 +282,8 @@
         },
         
         ".MathJax.MathJax_FullWidth": {
-          display: "table-cell!important",
-          width: "10000em!important"
+          display: (oldIE ? "block" : "table-cell") + "!important",
+          width: (oldIE ? "100%" : "10000em") + "!important"
         },
 
         ".MathJax img, .MathJax nobr, .MathJax a": {
@@ -339,7 +339,7 @@
           "min-height": 0, "max-height":"none"
         },
         ".MathJax_LineBox": {
-          display: (oldIE ? "inline-block" : "table-cell") + "!important",
+          display: (oldIE ? "block" : "table-cell") + "!important",
           width: (oldIE ? "100%" : "10000em") + "!important",
           "min-width":0, "max-width":"none",
           padding:0, border:0, margin:0
