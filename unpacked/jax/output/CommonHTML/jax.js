@@ -337,19 +337,28 @@
     setScript: HTML.setScript,
     
     //
-    //  Look through the children of a node for one with the given type
-    //  but don't step into child nodes that are from MathML elements
-    //  themselves (they will have IDs).
+    //  Look through the direct children of a node for one with the given
+    //  type (but if the node has intervening containers for its children,
+    //  step into them; note that elements corresponding to MathML nodes
+    //  will have id's so we don't step into them).
+    //  
+    //  This is used by munderover and msubsup to locate their child elements
+    //  when they are part of an embellished operator that is being stretched.
+    //  We don't use querySelector because we want to find only the direct child
+    //  nodes, not nodes that might be nested deeper in the tree (see issue #1447).
     //
     getNode: function (node,type) {
-      var name = RegExp("\\b"+type+"\\b");
-      for (var i = 0, m = node.childNodes.length; i < m; i++) {
-        var child = node.childNodes[i];
-        if (name.test(child.className)) return child;
-        if (child.id == null) return this.getNode(child,type);
+      while (node && node.childNodes.length === 1 && node.firstChild.id == null)
+        node = node.firstChild;
+      if (node) {
+        var name = RegExp("\\b"+type+"\\b");
+        for (var i = 0, m = node.childNodes.length; i < m; i++) {
+          var child = node.childNodes[i];
+          if (name.test(child.className)) return child;
+        }
       }
+      return null;
     },
-
 
     /********************************************/
     
