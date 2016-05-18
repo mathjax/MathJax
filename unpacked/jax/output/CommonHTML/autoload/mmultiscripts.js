@@ -179,8 +179,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         if (!BOX) {
           //
           //  Add the box to the node temporarily so that it is in the DOM
-          //  (to CHTMLnodeElement() can be used in the toCommonHTML() below)
-          //  See issue #1480
+          //  (so that CHTMLnodeElement() can be used in the toCommonHTML() below).
+          //  See issue #1480.
           //
           BOX = state.BOX[type] = CHTML.addElement(node,"mjx-"+type);
           BBOX = state.BBOX[type] = CHTML.BBOX.empty();
