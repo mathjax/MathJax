@@ -48,7 +48,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     Init: function (string) { this.string = string; },
 
-
     //
     //  This converts the CE string to a TeX string.
     //
@@ -210,7 +209,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       'else': /^./,
       'else2': /^./,
       'space': /^\s/,
-      'spaces': /^\s+/,
+      'space A': /^\s(?=[A-Z\\$])/,
       'a-z': /^[a-z]+/,
       'letters': /^(?:[a-zA-Z\u03B1-\u03C9\u0391-\u03A9?@]|(?:\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)(?:\ |(?![a-zA-Z]))))+/,
       '\\greek': /^\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)(?:\ |(?![a-zA-Z]))/,
@@ -272,7 +271,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       '\\color{(...)}': /^\\color\{?(\\[a-z]+)\}?(?=\{)/,
       'oxidation$': /^-?[IVX]+$/,
       '1/2$': /^[0-9]+\/[0-9]+$/,
-      'amount nX': /^[a-z](?=\s*[A-Z])/,
       'amount': function (input) {
         var match;
         var a = this['_findObserveGroups'](input, '', '$', '$', '');
@@ -282,7 +280,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
             return { match: match[0], remainder: input.substr(match[0].length) };
           }
         } else {
-          match = input.match(/^(?:(?:\([0-9]+\/[0-9]+\)|[0-9]+\/[0-9]+|[0-9]+[.,][0-9]+|\.[0-9]+|[0-9]+|[0-9]+)(?:[a-z](?=[A-Z]))?)/);
+          match = input.match(/^(?:(?:(?:\([0-9]+\/[0-9]+\)|[0-9]+\/[0-9]+|[0-9]+[.,][0-9]+|\.[0-9]+|[0-9]+|[0-9]+)(?:[a-z](?=\s*[A-Z]))?)|[a-z](?=\s*[A-Z]))/);
           if (match) {
             return { match: match[0], remainder: input.substr(match[0].length) };
           }
@@ -459,26 +457,24 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         '0|1|as': { action: [ 'sb=false', 'output', 'operator' ], nextState: '0' } },
       'entities': {
         '0|1': { action: 'o=', nextState: 'o' } },
-      'amount nX': {
-        '0|1|2': { action: 'a=', nextState: 'a' } },
-      'letters': {
-        '0|1|2|a|as|b|p|bp': { action: 'o=', nextState: 'o' },
-        'o': { action: 'o=' },
-        'q|dq': { action: ['output', 'o='], nextState: 'o' },
-        'd|D|qd|qD': { action: 'o after d', nextState: 'o'} },
       'orbital': {
         '0|1|2': { action: 'o=', nextState: 'o' } },
       'amount': {
-        '0|1|2': { action: 'a=', nextState: 'a' },
-        'as': { action: [ 'output', 'sb=true', 'a=' ], nextState: 'a' } },
+        '0|1|2': { action: 'a=', nextState: 'a' } },
+      'letters': {
+        '0|1|2|a|as|b|p|bp|o': { action: 'o=', nextState: 'o' },
+        'q|dq': { action: ['output', 'o='], nextState: 'o' },
+        'd|D|qd|qD': { action: 'o after d', nextState: 'o' } },
       'digits': {
         'o': { action: 'q=', nextState: 'q' },
         'd|D': { action: 'q=', nextState: 'dq' },
         'q': { action: [ 'output', 'o=' ], nextState: 'o' } },
+      'space A': {
+        'b|p|bp': {} },
       'space': {
         'a': { nextState: 'as' },
         '0': { action: 'sb=false' },
-        '1|2': { action: 'sb=true' },
+        '1': { action: 'sb=true' },
         'r|rt|rd|rdt|rdq': { action: 'output', nextState: '0' },
         'c0': { action: [ 'output', { type: 'insert', option: 'space' } ], nextState: '1' },
         '*': { action: [ 'output', 'sb=true' ], nextState: '1'} },
@@ -487,7 +483,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       '\\\\': {
         '*': { action: [ 'output', 'copy', { type: 'insert', option: 'space' } ], nextState: '0' } },  // space, so that we don't get \\[
       '+': {
-        'a': { action: [ 'sb=false', 'output', 'operator' ], nextState: '0' },
+        'a|as': { action: [ 'sb=false', 'output', 'operator' ], nextState: '0' },
         'o': { action: 'd= kv',  nextState: 'd' },
         'd|D': { action: 'd=', nextState: 'd' },
         'q': { action: 'd=',  nextState: 'qd' },
@@ -504,7 +500,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         'rd|rdt': { action: 'rq=', nextState: 'rdq' } },
       '...': {
         'o|d|D|dq|qd|qD': { action: [ 'output', { type: 'bond', option: '...' } ], nextState: '2' },
-        '*': { action: [ { type: 'output', option: true }, { type: 'insert', option: 'ellipsis' } ], nextState: '1' } },
+        '*': { action: [ { type: 'output', option: 1 }, { type: 'insert', option: 'ellipsis' } ], nextState: '1' } },
       '.$|.|*': {
         '*': { action: [ 'output', { type: 'insert', option: 'addition compound' } ], nextState: '0' } },
       'state of aggregation $': {
@@ -518,7 +514,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         '0|1|2|b|p|bp|o': { action: [ 'o=', 'parenthesisLevel--' ], nextState: 'o' },
         'a|as|d|D|q|qd|qD|dq': { action: [ 'output', 'o=', 'parenthesisLevel--' ], nextState: 'o' } },
       ', ': {
-        '*': { action: [ { type: 'output', option: true }, 'comma' ], nextState: '0' } },
+        '*': { action: [ 'output', 'comma' ], nextState: '0' } },
       '^{(...)}|^($...$)': {
         '0|1|as': { action: 'b=', nextState: 'b' },
         'p': { action: 'b=', nextState: 'bp' },
@@ -550,18 +546,18 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         '0|1': { action: [ 'beginsWithBond=true', { type: 'bond', option: '-' } ], nextState: '2' },
         '2': { action: { type: 'bond', option: '-' } },
         'a': { action: [ 'output', { type: 'insert', option: 'hyphen' } ], nextState: '1' },
-        'as': { action: [ { type: 'output', option: true }, { type: 'bond', option: '-' } ], nextState: '2' },
+        'as': { action: [ { type: 'output', option: 2 }, { type: 'bond', option: '-' } ], nextState: '2' },
         'b': { action: 'b=' },
         'o': { action: '- after o', nextState: '1' },
         'q': { action: '- after o', nextState: '1' },
         'd|qd|dq': { action: '- after d', nextState: '1' },
         'D|qD|p': { action: [ 'output', { type: 'bond', option: '-' } ], nextState: '2' } },
       '=<>': {
-        '0|1|2|a|as|o|q|d|D|qd|qD|dq': { action: [ { type: 'output', option: true }, 'bond' ], nextState: '2' } },
+        '0|1|2|a|as|o|q|d|D|qd|qD|dq': { action: [ { type: 'output', option: 2 }, 'bond' ], nextState: '2' } },
       '#': {
-        '0|1|2|a|as|o': { action: [ { type: 'output', option: true }, { type: 'bond', option: '#' } ], nextState: '2' } },
+        '0|1|2|a|as|o': { action: [ { type: 'output', option: 2 }, { type: 'bond', option: '#' } ], nextState: '2' } },
       '{}': {
-        '*': { action: { type: 'output', option: true },  nextState: '1' } },
+        '*': { action: { type: 'output', option: 1 },  nextState: '1' } },
       '{(...)}': {
         'frac': { action: 'frac-output', nextState: '1' },
         'overset': { action: 'overset-output', nextState: '1' },
@@ -571,35 +567,37 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       '{...}': {
         '0|1|2|a|as|b|p|bp': { action: 'o=', nextState: 'o' },
         'o|d|D|q|qd|qD|dq': { action: [ 'output', 'o=' ], nextState: 'o' },
-        'c0': { action: 'copy', nextState: 'c1' },
-        'c1': { action: 'copy', nextState: '1' } },
+        'c0': { action: 'o=', nextState: 'c1' },
+        'c1': { action: [ 'o=', 'output' ], nextState: '2' } },
       '$...$': {
-        '0|1|2': { action: 'o=', nextState: 'o' },  // not 'amount'
+        'a': { action: 'a=' },  // 2$n$
+        '0|1|2|as|b|p|bp|o': { action: 'o=', nextState: 'o' },  // not 'amount'
         'as|o': { action: 'o=' },
-        'b|p|bp|q|d|D|qd|qD|dq': { action: [ 'output', 'o=' ], nextState: 'o' } },
+        'q|d|D|qd|qD|dq': { action: [ 'output', 'o=' ], nextState: 'o' } },
       '\\bond{(...)}': {
-        '*': { action: [ { type: 'output', option: true }, 'bond' ], nextState: '2' } },
+        '*': { action: [ { type: 'output', option: 2 }, 'bond' ], nextState: '2' } },
       '\\frac{(...)}': {
-        '*': { action: [ { type: 'output', option: true }, 'param1=' ], nextState: 'frac' } },
+        '*': { action: [ { type: 'output', option: 1 }, 'param1=' ], nextState: 'frac' } },
       '\\overset{(...)}': {
-        '*': { action: [ { type: 'output', option: true }, 'param1=' ], nextState: 'overset' } },
+        '*': { action: [ { type: 'output', option: 2 }, 'param1=' ], nextState: 'overset' } },
       '\\underset{(...)}': {
-        '*': { action: [ { type: 'output', option: true }, 'param1=' ], nextState: 'underset' } },
+        '*': { action: [ { type: 'output', option: 2 }, 'param1=' ], nextState: 'underset' } },
       '\\underbrace{(...)}': {
-        '*': { action: [ { type: 'output', option: true }, 'param1=' ], nextState: 'underbrace' } },
+        '*': { action: [ { type: 'output', option: 2 }, 'param1=' ], nextState: 'underbrace' } },
       '\\color{(...)}': {
-        '*': { action: [ { type: 'output', option: true }, 'param1=' ], nextState: 'color' } },
+        '*': { action: [ { type: 'output', option: 2 }, 'param1=' ], nextState: 'color' } },
       '\\ce{(...)}': {
-        '*': { action: [ { type: 'output', option: true }, 'ce' ], nextState: '1' } },
+        '*': { action: [ { type: 'output', option: 2 }, 'ce' ], nextState: '2' } },
       '\\,': {
-        '*': { action: [ { type: 'output', option: true }, 'copy' ], nextState: '1' } },
+        '*': { action: [ { type: 'output', option: 1 }, 'copy' ], nextState: '1' } },
       '\\x': {
-        '*': { action: [ { type: 'output', option: true }, 'copy' ], nextState: 'c0' } },
+        '0|1|2|a|as|b|p|bp|o': { action: 'o=', nextState: 'c0' },
+        '*': { action: ['output', 'o='], nextState: 'c0' } },
       'others': {
-        '*': { action: [ { type: 'output', option: true }, 'copy' ], nextState: '1' } },
+        '*': { action: [ { type: 'output', option: 1 }, 'copy' ], nextState: '1' } },
       'else2': {
-        'c0': { action: 'copy', nextState: '1' },
-        'c1': { nextState: '0', revisit: true },
+        'c0': { action: [ 'o=', 'output' ], nextState: '2' },
+        'c1': { action: 'output', nextState: '0', revisit: true },
         'a': { action: 'a to o', nextState: 'o', revisit: true },
         'r|rt|rd|rdt|rdq': { action: [ 'output' ], nextState: '0', revisit: true },
         '*': { action: [ 'output', 'copy' ], nextState: '1' } }
@@ -699,22 +697,25 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           return { type: 'comma enumeration M', p1: a };
         }
       },
-      'output': function (buffer, m, forceSb) {
+      'output': function (buffer, m, entityFollows) {
+        // entityFollows:
+        //   undefined = if we have nothing else to output, also ignore the just read space (buffer.sb)
+        //   1 = an entity follows, never omit the space if there was one before (can only apply to state 2)
+        //   2 = 1 + the entity can have an amount, so output a\, instead of converting it to o (can only apply to states a|as)
         if (!buffer.r) {
           var ret = [];
           if (!buffer.a && !buffer.b && !buffer.p &&
            !buffer.o && !buffer.q && !buffer.d &&
-           !(forceSb && buffer.sb)) {
+           !entityFollows) {
             ret = null;
           } else {
             if (buffer.sb) {
               ret.push({ type: 'entitySkip' });
             }
-            if (!buffer.o && !buffer.q && !buffer.d &&
-             !buffer.b && !buffer.p) {
+            if (!buffer.o && !buffer.q && !buffer.d && !buffer.b && !buffer.p && entityFollows!==2) {
               buffer.o = mhchemParser.go(buffer.a, 'o');
               buffer.a = undefined;
-            } else if (!buffer.o && !buffer.q && !buffer.d) {
+            } else if (!buffer.o && !buffer.q && !buffer.d && (buffer.b || buffer.p)) {
               buffer.o = mhchemParser.go(buffer.a, 'o');
               buffer.d = mhchemParser.go(buffer.b, 'bd');
               buffer.q = mhchemParser.go(buffer.p, 'pq');
@@ -841,12 +842,17 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         'orbital': { action: 'tex-math' },
         '*': { action: 'rm' } },
       '\\x': {
-        '*': { action: 'copy' } },
+        '*': { action: 'copy', nextState: 'c0' } },
       '${(...)}$|$(...)$': {
         '*': { action: 'tex-math' } },
+      '{...}': {
+        'c0': { action: 'copy', nextState: 'c1' },
+        'c1': { action: 'copy', nextState: '0' } },
       '{(...)}': {
         '*': { action: '{text}' } },
       'else2': {
+        'c0': { action: 'copy', nextState: '0' },
+        'c1': { nextState: '0', revisit: true },
         '*': { action: 'copy' } }
     }),
     actions: {}
