@@ -128,42 +128,40 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       //
       // Look for matching string in transition table
       //
+      var machine = mhchemParser.stateMachines[stateMachine];
+      var iTmax = machine.transitions.length;
       iterateTransitions:
-      for (var iT=0; iT<mhchemParser.stateMachines[stateMachine].transitions.length; iT++) {
-        var t = mhchemParser.stateMachines[stateMachine].transitions[iT];
+      for (var iT=0; iT<iTmax; iT++) {
+        var t = machine.transitions[iT];
         var matches = mhchemParser.match(t.match, input);
         if (matches) {
           var tasks = t.actions[state]  ||  t.actions['*']  || null;
           if (tasks) {
             //
-            // Execute action  (recursive)
+            // Execute action
             //
             var actions = mhchemParser.concatNotUndefined([], tasks.action);
-            for (var iAA=0; iAA<actions.length; iAA++) {
-              var a = actions[iAA];
+            var iAmax = actions.length;
+            for (var iA=0; iA<iAmax; iA++) {
+              var a = actions[iA];
               var o;
+              var option = undefined;
+              if (a.type) {
+                option = a.option;
+                a = a.type;
+              }
               if (typeof a === 'string') {
-                if (mhchemParser.stateMachines[stateMachine].actions[a]) {
-                  o = mhchemParser.stateMachines[stateMachine].actions[a](buffer, matches.match);
+                if (machine.actions[a]) {
+                  o = machine.actions[a](buffer, matches.match, option);
                 } else if (mhchemParser.actions[a]) {
-                  o = mhchemParser.actions[a](buffer, matches.match);
+                  o = mhchemParser.actions[a](buffer, matches.match, option);
                 } else {
                   throw ['InternalMhchemErrorNonExistingAction', 'Internal mhchem Error \u2013 Trying to use non-existing action (' + a + ')'];
                 }
-                output = mhchemParser.concatNotUndefined(output, o);
               } else if (typeof a === 'function') {
                 o = a(buffer, matches.match);
-                output = mhchemParser.concatNotUndefined(output, o);
-              } else if (a.type) {
-                if (mhchemParser.stateMachines[stateMachine].actions[a.type]) {
-                  o = mhchemParser.stateMachines[stateMachine].actions[a.type](buffer, matches.match, a.option);
-                } else if (mhchemParser.actions[a.type]) {
-                  o = mhchemParser.actions[a.type](buffer, matches.match, a.option);
-                } else {
-                  throw ['InternalMhchemErrorNonExistingAction', 'Internal mhchem Error \u2013 Trying to use non-existing action'];
-                }
-                output = mhchemParser.concatNotUndefined(output, o);
               }
+              output = mhchemParser.concatNotUndefined(output, o);
             }
             //
             // Set next state,
@@ -200,157 +198,164 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   };
 
   //
-  // Matching helpers (mostly RegExps)
+  // Matching patterns
+  // either regexps or function that return null or {match:'a', remainder:'bc'}
   //
-  mhchemParser.match = function (m, input) {
-    var f = {
-      // property names must not look like integers ('2') for correct property traversal order, later on
-      'empty': /^$/,
-      'else': /^./,
-      'else2': /^./,
-      'space': /^\s/,
-      'space A': /^\s(?=[A-Z\\$])/,
-      'a-z': /^[a-z]+/,
-      'letters': /^(?:[a-zA-Z\u03B1-\u03C9\u0391-\u03A9?@]|(?:\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)(?:\ |(?![a-zA-Z]))))+/,
-      '\\greek': /^\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)(?:\ |(?![a-zA-Z]))/,
-      'one lowercase latin letter $': /^(?:([a-z])(?:$|[^a-zA-Z]))$/,
-      'one lowercase greek letter $': /^(?:\$?[\u03B1-\u03C9]\$?|\$?\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)\$?(?:$|[^a-zA-Z]))$/,
-      'digits': /^[0-9]+/,
-      '-9.,9': /^-?(?:[0-9]+(?:[.,][0-9]+)?|[0-9]*(?:\.[0-9]+))/,
-      '-9.,9 no missing 0': /^-?[0-9]+(?:[.,][0-9]+)?/,
-      'state of aggregation $':  function (input) {
-        var a = this['_findObserveGroups'](input, '', /^\([a-z]{1,3}(?=[\),])/, ')', '');
-        if (a  &&  a.remainder.match(/^($|[\s,;])/))  return a;
-        return null;
-      },
-      '\{[(': /^(?:\\\{|\[|\()/,
-      ')]\}': /^(?:\)|\]|\\\})/,
-      ', ': /^[,;]\s*/,
-      ',': /^[,;]/,
-      '.': /^[.\u22C5\u00B7\u2022]/,
-      '...': /^\.\.\.(?=$|[^.])/,
-      '.$': /^\.(?=\s|$|\{\})/,
-      "*": /^\*/,
-      '^{(...)}': function (input) { return this['_findObserveGroups'](input, '^{', '', '', '}'); },
-      '^($...$)': function (input) { return this['_findObserveGroups'](input, '^', '$', '$', ''); },
-      '^(...)1': /^\^([0-9]+|[^\\])/,
-      '^(...)2': /^\^(\\[a-zA-Z]+)\s?/,
-      '_{(...)}': function (input) { return this['_findObserveGroups'](input, '_{', '', '', '}'); },
-      '_($...$)': function (input) { return this['_findObserveGroups'](input, '_', '$', '$', ''); },
-      '_(...)1': /^_(-?[0-9]+|[^\\])/,
-      '_(...)2': /^_(\\[a-zA-Z]+)\s?/,
-      '{}': /^\{\}/,
-      '{...}': function (input) { return this['_findObserveGroups'](input, '', '{', '}', ''); },
-      '{(...)}': function (input) { return this['_findObserveGroups'](input, '{', '', '', '}'); },
-      '$...$': function (input) { return this['_findObserveGroups'](input, '', '$', '$', ''); },
-      '${(...)}$': function (input) { return this['_findObserveGroups'](input, '${', '', '', '}$'); },
-      '$(...)$': function (input) { return this['_findObserveGroups'](input, '$', '', '', '$'); },
-      '=<>': /^[=<>]/,
-      '#': /^[#\u2261]/,
-      '+': /^\+/,
-      '-$': /^-(?=[\s_},;/]|$|\([a-z]+\))/,  // -space -, -; -] -$ -state-of-aggregation
-      '-9': /^-(?=\d)/,
-      '-': /^-/,
-      'operator': /^(?:\+|(?:[\-=<>]|<<|>>|\\pm|\$\\pm\$|\\approx|\$\\approx\$)(?=\s|$))/,
-      'arrowUpDown': /^(?:v|\(v\)|\^|\(\^\))(?=$|[\s,;])/,
-      '\\bond{(...)}': function (input) { return this['_findObserveGroups'](input, '\\bond{', '', '', '}'); },
-      '->': /^(?:<->|<-->|->|<-|<=>>|<<=>|<=>|[\u2192\u27F6\u21CC])/,
-      'CMT': /^[CMT](?=\[)/,
-      '[(...)]': function (input) { return this['_findObserveGroups'](input, '[', '', '', ']'); },
-      '&': /^&/,
-      '\\\\': /^\\\\/,
-      '\\,': /^\\(?:[,\ ;:!_%&]|\{|\})/,
-      '\\x': /^\\(?:[a-zA-Z]+)/,
-      'orbital': /^[1-9][spdf](?=$|[^a-zA-Z])/,
-      'others': /^[:\/'\u2019~|]/,
-      '\\frac{(...)}': function (input) { return this['_findObserveGroups'](input, '\\frac{', '', '', '}'); },
-      '\\overset{(...)}': function (input) { return this['_findObserveGroups'](input, '\\overset{', '', '', '}'); },
-      '\\underset{(...)}': function (input) { return this['_findObserveGroups'](input, '\\underset{', '', '', '}'); },
-      '\\underbrace{(...)}': function (input) { return this['_findObserveGroups'](input, '\\underbrace{', '', '', '}_'); },
-      '\\ce{(...)}': function (input) { return this['_findObserveGroups'](input, '\\ce{', '', '', '}'); },
-      '\\color{(...)}': /^\\color\{?(\\[a-z]+)\}?(?=\{)/,
-      'oxidation$': /^-?[IVX]+$/,
-      '1/2$': /^[0-9]+\/[0-9]+$/,
-      'amount': function (input) {
-        var match;
-        var a = this['_findObserveGroups'](input, '', '$', '$', '');
-        if (a) {
-          match = a.match.match(/^\$\(?(?:[0-9]*[a-z]?[+\-])?[0-9]*[a-z](?:[+\-][0-9]*[a-z]?)?\)?\$$/);
-          if (match) {
-            return { match: match[0], remainder: input.substr(match[0].length) };
-          }
-        } else {
-          match = input.match(/^(?:(?:(?:\([0-9]+\/[0-9]+\)|[0-9]+\/[0-9]+|[0-9]+[.,][0-9]+|\.[0-9]+|[0-9]+|[0-9]+)(?:[a-z](?=\s*[A-Z]))?)|[a-z](?=\s*[A-Z]))/);
-          if (match) {
-            return { match: match[0], remainder: input.substr(match[0].length) };
-          }
-        }
-        return null;
-      },
-      'formula$': function (input) {
-        if (input.match(/^\([a-z]+\)$/)) {  // state of aggregation = no formula
-          return null;
-        }
-        var match = input.match(/^(?:[a-z]|(?:[0-9\ \+\-\,\.\(\)]+[a-z])+[0-9\ \+\-\,\.\(\)]*|(?:[a-z][0-9\ \+\-\,\.\(\)]+)+[a-z]?)$/);
+  mhchemParser.patterns = {
+    // property names must not look like integers ('2') for correct property traversal order, later on
+    'empty': /^$/,
+    'else': /^./,
+    'else2': /^./,
+    'space': /^\s/,
+    'space A': /^\s(?=[A-Z\\$])/,
+    'a-z': /^[a-z]+/,
+    'letters': /^(?:[a-zA-Z\u03B1-\u03C9\u0391-\u03A9?@]|(?:\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)(?:\ |(?![a-zA-Z]))))+/,
+    '\\greek': /^\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)(?:\ |(?![a-zA-Z]))/,
+    'one lowercase latin letter $': /^(?:([a-z])(?:$|[^a-zA-Z]))$/,
+    'one lowercase greek letter $': /^(?:\$?[\u03B1-\u03C9]\$?|\$?\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Alpha|Beta|Gamma|Delta|Epsilon|Zeta|Eta|Theta|Iota|Kappa|Lambda|Mu|Nu|Xi|Omicron|Pi|Rho|Sigma|Tau|Upsilon|Phi|Chi|Psi|Omega)\$?(?:$|[^a-zA-Z]))$/,
+    'digits': /^[0-9]+/,
+    '-9.,9': /^-?(?:[0-9]+(?:[.,][0-9]+)?|[0-9]*(?:\.[0-9]+))/,
+    '-9.,9 no missing 0': /^-?[0-9]+(?:[.,][0-9]+)?/,
+    'state of aggregation $':  function (input) {
+      var a = this['_findObserveGroups'](input, '', /^\([a-z]{1,3}(?=[\),])/, ')', '');
+      if (a  &&  a.remainder.match(/^($|[\s,;])/))  return a;
+      return null;
+    },
+    '\{[(': /^(?:\\\{|\[|\()/,
+    ')]\}': /^(?:\)|\]|\\\})/,
+    ', ': /^[,;]\s*/,
+    ',': /^[,;]/,
+    '.': /^[.\u22C5\u00B7\u2022]/,
+    '...': /^\.\.\.(?=$|[^.])/,
+    '.$': /^\.(?=\s|$|\{\})/,
+    "*": /^\*/,
+    '^{(...)}': function (input) { return this['_findObserveGroups'](input, '^{', '', '', '}'); },
+    '^($...$)': function (input) { return this['_findObserveGroups'](input, '^', '$', '$', ''); },
+    '^(...)1': /^\^([0-9]+|[^\\])/,
+    '^(...)2': /^\^(\\[a-zA-Z]+)\s?/,
+    '_{(...)}': function (input) { return this['_findObserveGroups'](input, '_{', '', '', '}'); },
+    '_($...$)': function (input) { return this['_findObserveGroups'](input, '_', '$', '$', ''); },
+    '_(...)1': /^_(-?[0-9]+|[^\\])/,
+    '_(...)2': /^_(\\[a-zA-Z]+)\s?/,
+    '{}': /^\{\}/,
+    '{...}': function (input) { return this['_findObserveGroups'](input, '', '{', '}', ''); },
+    '{(...)}': function (input) { return this['_findObserveGroups'](input, '{', '', '', '}'); },
+    '$...$': function (input) { return this['_findObserveGroups'](input, '', '$', '$', ''); },
+    '${(...)}$': function (input) { return this['_findObserveGroups'](input, '${', '', '', '}$'); },
+    '$(...)$': function (input) { return this['_findObserveGroups'](input, '$', '', '', '$'); },
+    '=<>': /^[=<>]/,
+    '#': /^[#\u2261]/,
+    '+': /^\+/,
+    '-$': /^-(?=[\s_},;/]|$|\([a-z]+\))/,  // -space -, -; -] -$ -state-of-aggregation
+    '-9': /^-(?=\d)/,
+    '-': /^-/,
+    'operator': /^(?:\+|(?:[\-=<>]|<<|>>|\\pm|\$\\pm\$|\\approx|\$\\approx\$)(?=\s|$))/,
+    'arrowUpDown': /^(?:v|\(v\)|\^|\(\^\))(?=$|[\s,;])/,
+    '\\bond{(...)}': function (input) { return this['_findObserveGroups'](input, '\\bond{', '', '', '}'); },
+    '->': /^(?:<->|<-->|->|<-|<=>>|<<=>|<=>|[\u2192\u27F6\u21CC])/,
+    'CMT': /^[CMT](?=\[)/,
+    '[(...)]': function (input) { return this['_findObserveGroups'](input, '[', '', '', ']'); },
+    '&': /^&/,
+    '\\\\': /^\\\\/,
+    '\\,': /^\\(?:[,\ ;:!_%&]|\{|\})/,
+    '\\x': /^\\(?:[a-zA-Z]+)/,
+    'orbital': /^[1-9][spdf](?=$|[^a-zA-Z])/,
+    'others': /^[:\/'\u2019~|]/,
+    '\\frac{(...)}': function (input) { return this['_findObserveGroups'](input, '\\frac{', '', '', '}'); },
+    '\\overset{(...)}': function (input) { return this['_findObserveGroups'](input, '\\overset{', '', '', '}'); },
+    '\\underset{(...)}': function (input) { return this['_findObserveGroups'](input, '\\underset{', '', '', '}'); },
+    '\\underbrace{(...)}': function (input) { return this['_findObserveGroups'](input, '\\underbrace{', '', '', '}_'); },
+    '\\ce{(...)}': function (input) { return this['_findObserveGroups'](input, '\\ce{', '', '', '}'); },
+    '\\color{(...)}': /^\\color\{?(\\[a-z]+)\}?(?=\{)/,
+    'oxidation$': /^-?[IVX]+$/,
+    '1/2$': /^[0-9]+\/[0-9]+$/,
+    'amount': function (input) {
+      var match;
+      var a = this['_findObserveGroups'](input, '', '$', '$', '');
+      if (a) {
+        match = a.match.match(/^\$\(?(?:[0-9]*[a-z]?[+\-])?[0-9]*[a-z](?:[+\-][0-9]*[a-z]?)?\)?\$$/);
         if (match) {
           return { match: match[0], remainder: input.substr(match[0].length) };
         }
-        return null;
-      },
-      'entities': /^(?:pH|pOH|pK|iPr|iBu)(?=$|[^a-zA-Z])/,
-      '_findObserveGroups': function (input, begExcl, begIncl, endIncl, endExcl) {
-        var match = this['__match'](input, begExcl);
-        if (match === null)  return null;
-        input = input.substr(match.length);
-        match = this['__match'](input, begIncl);
-        if (match === null)  return null;
-        var e = this['__findObserveGroups'](input, match.length, endIncl || endExcl);
-        if (e === null)  return null;
-        return {
-          match: input.substring(0, (endIncl ? e.endMatchEnd : e.endMatchBegin)),
-          remainder: input.substr(e.endMatchEnd)
-        };
-      },
-      '__match': function (input, pattern) {
-        if (typeof pattern === 'string') {
-          if (input.indexOf(pattern) !== 0)  return null;
-          return pattern;
-        } else {
-          var match = input.match(pattern);
-          if (!match)  return null;
-          return match[0];
+      } else {
+        match = input.match(/^(?:(?:(?:\([0-9]+\/[0-9]+\)|[0-9]+\/[0-9]+|[0-9]+[.,][0-9]+|\.[0-9]+|[0-9]+|[0-9]+)(?:[a-z](?=\s*[A-Z]))?)|[a-z](?=\s*[A-Z]))/);
+        if (match) {
+          return { match: match[0], remainder: input.substr(match[0].length) };
         }
-      },
-      '__findObserveGroups': function (input, i, endChars) {
-        var braces = 0;
-        while (i < input.length) {
-          var a = input.charAt(i);
-          var match = this['__match'](input.substr(i), endChars);
-          if (match  &&  braces === 0) {
-            return { endMatchBegin: i, endMatchEnd: i + match.length };
-          } else if (a === '{') {
-            braces++;
-          } else if (a === '}') {
-            if (braces === 0) {
-              throw ['ExtraCloseMissingOpen', 'Extra close brace or missing open brace'];
-            } else {
-              braces--;
-            }
-          }
-          i++;
-        }
-        if (braces > 0) {
-          return null;
-        }
+      }
+      return null;
+    },
+    'formula$': function (input) {
+      if (input.match(/^\([a-z]+\)$/)) {  // state of aggregation = no formula
         return null;
       }
-    };
-    if (f[m] === undefined) {
+      var match = input.match(/^(?:[a-z]|(?:[0-9\ \+\-\,\.\(\)]+[a-z])+[0-9\ \+\-\,\.\(\)]*|(?:[a-z][0-9\ \+\-\,\.\(\)]+)+[a-z]?)$/);
+      if (match) {
+        return { match: match[0], remainder: input.substr(match[0].length) };
+      }
+      return null;
+    },
+    'entities': /^(?:pH|pOH|pK|iPr|iBu)(?=$|[^a-zA-Z])/,
+    '_findObserveGroups': function (input, begExcl, begIncl, endIncl, endExcl) {
+      var match = this['__match'](input, begExcl);
+      if (match === null)  return null;
+      input = input.substr(match.length);
+      match = this['__match'](input, begIncl);
+      if (match === null)  return null;
+      var e = this['__findObserveGroups'](input, match.length, endIncl || endExcl);
+      if (e === null)  return null;
+      return {
+        match: input.substring(0, (endIncl ? e.endMatchEnd : e.endMatchBegin)),
+        remainder: input.substr(e.endMatchEnd)
+      };
+    },
+    '__match': function (input, pattern) {
+      if (typeof pattern === 'string') {
+        if (input.indexOf(pattern) !== 0)  return null;
+        return pattern;
+      } else {
+        var match = input.match(pattern);
+        if (!match)  return null;
+        return match[0];
+      }
+    },
+    '__findObserveGroups': function (input, i, endChars) {
+      var braces = 0;
+      while (i < input.length) {
+        var a = input.charAt(i);
+        var match = this['__match'](input.substr(i), endChars);
+        if (match  &&  braces === 0) {
+          return { endMatchBegin: i, endMatchEnd: i + match.length };
+        } else if (a === '{') {
+          braces++;
+        } else if (a === '}') {
+          if (braces === 0) {
+            throw ['ExtraCloseMissingOpen', 'Extra close brace or missing open brace'];
+          } else {
+            braces--;
+          }
+        }
+        i++;
+      }
+      if (braces > 0) {
+        return null;
+      }
+      return null;
+    }
+  };
+  
+  //
+  // Matching function
+  // e.g. match('a', input) will look for the regexp called 'a' and see if it matches
+  // returns null or {match:'a', remainder:'bc'}
+  //
+  mhchemParser.match = function (m, input) {
+    if (mhchemParser.patterns[m] === undefined) {
       throw ['InternalMhchemErrorNonExistingPattern', 'Internal mhchem Error \u2013 Trying to use non-existing pattern (' + m + ')'];
-    } else if (typeof f[m] === 'function') {
-      return f[m](input);
+    } else if (typeof mhchemParser.patterns[m] === 'function') {
+      return mhchemParser.patterns[m](input);
     } else {  // RegExp
-      var match = input.match(f[m]);
+      var match = input.match(mhchemParser.patterns[m]);
       if (match) {
         var mm = match[1];
         if (mm === undefined) { mm = match[0]; }
