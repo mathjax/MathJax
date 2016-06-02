@@ -1307,6 +1307,7 @@
     updateFrom: function (cbox) {
       this.h = cbox.h; this.d = cbox.d; this.w = cbox.w; this.r = cbox.r; this.l = cbox.l;
       this.t = cbox.t; this.b = cbox.b;
+      if (cbox.pwidth) this.pwidth = cbox.pwidth;
       if (cbox.D) this.D = cbox.D; else delete this.D;
     },
     adjust: function (m,x,X,M) {
@@ -1324,7 +1325,8 @@
     empty: function (bbox) {
       if (!bbox) bbox = CHTML.BBOX.zero();
       bbox.h = bbox.d = bbox.r = bbox.t = bbox.b = -BIGDIMEN;
-      bbox.w = 0;  bbox.l = BIGDIMEN;
+      bbox.w = 0; bbox.l = BIGDIMEN;
+      delete bbox.pwidth;
       return bbox;
     },
     //
@@ -2659,6 +2661,7 @@
 	if (this.data[0]) {
 	  this.data[0].toCommonHTML(node);
 	  this.CHTML.updateFrom(this.data[0].CHTML);
+          this.CHTMLhandleBBox(node);
 	}
         return node;
       }
