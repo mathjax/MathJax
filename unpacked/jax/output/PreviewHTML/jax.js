@@ -276,7 +276,7 @@
     },
 
     getJaxFromMath: function (math) {
-      if (math.parentNode.className === "MathJax_PHTML_Display") {math = math.parentNode}
+      if (math.parentNode.className.match(/MathJax_PHTML_Display/)) {math = math.parentNode}
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
       return HUB.getJaxFor(math);
     },

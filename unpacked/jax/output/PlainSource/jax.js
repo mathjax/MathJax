@@ -141,7 +141,7 @@
     postTranslate: function(state) {},
 
     getJaxFromMath: function(math) {
-      if (math.parentNode.className === "MathJax_PlainSource_Display") math = math.parentNode;
+      if (math.parentNode.className.match(/MathJax_PlainSource_Display/)) math = math.parentNode;
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
       return HUB.getJaxFor(math);
     },
