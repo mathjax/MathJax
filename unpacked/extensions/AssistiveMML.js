@@ -128,7 +128,7 @@
             className: "MJX_Assistive_MathML"
               + (jax.root.Get("display") === "block" ? " MJX_Assistive_MathML_Block" : "")
           });
-          span.innerHTML = mml;
+          try {span.innerHTML = mml} catch (err) {}
           frame.style.position = "relative";
           frame.setAttribute("role","presentation");
           frame.firstChild.setAttribute("aria-hidden","true");
