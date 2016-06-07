@@ -2,7 +2,7 @@
  *
  *  MathJax/extensions/TeX/mediawiki-texvc.js
  *  
- *  Implements macros used by Wikimedia with their texvc preprocessor.
+ *  Implements macros used by mediawiki with their texvc preprocessor.
  *
  *  ---------------------------------------------------------------------
  *  
