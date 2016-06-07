@@ -197,7 +197,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //  Space and borders between rows
         //
         B = RSPACE[i]/2; border = null; L = "0";
-        if (RLINES[i] !== MML.LINES.NONE) {
+        if (RLINES[i] !== MML.LINES.NONE && RLINES[i] !== "") {
           border = state.t+" "+RLINES[i];
           B -= 1/CHTML.em/2;
         }
