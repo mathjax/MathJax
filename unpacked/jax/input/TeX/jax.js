@@ -1335,9 +1335,11 @@
     
     Middle: function (name) {
       var delim = this.GetDelimiter(name);
+      this.Push(MML.TeXAtom().With({texClass:MML.TEXCLASS.CLOSE}));
       if (this.stack.Top().type !== "left")
         {TEX.Error(["MisplacedMiddle","%1 must be within \\left and \\right",name])}
       this.Push(MML.mo(delim).With({stretchy:true}));
+      this.Push(MML.TeXAtom().With({texClass:MML.TEXCLASS.OPEN}));
     },
     
     NamedFn: function (name,id) {
