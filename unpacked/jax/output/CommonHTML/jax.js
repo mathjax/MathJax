@@ -336,34 +336,29 @@
     ucMatch: HTML.ucMatch,
     setScript: HTML.setScript,
     
-    getNodesByClass: (document.getElementsByClassName ? 
-      function (node,type) {return node.getElementsByClassName(type)} :
-      function (node,type) {
-        var NODES = [];
-        var nodes = node.getElementsByTagName("span");
-        var name = RegExp("\\b"+type+"\\b");
-        for (var i = 0, m = nodes.length; i < m; i++) {
-          if (name.test(nodes[i].className)) NODES.push = nodes[i];
-        }
-        return NODES;
-      }
-    ),
+    //
+    //  Look through the direct children of a node for one with the given
+    //  type (but if the node has intervening containers for its children,
+    //  step into them; note that elements corresponding to MathML nodes
+    //  will have id's so we don't step into them).
+    //  
+    //  This is used by munderover and msubsup to locate their child elements
+    //  when they are part of an embellished operator that is being stretched.
+    //  We don't use querySelector because we want to find only the direct child
+    //  nodes, not nodes that might be nested deeper in the tree (see issue #1447).
+    //
     getNode: function (node,type) {
-      var nodes = this.getNodesByClass(node,type);
-      if (nodes.length === 1) return nodes[0];
-      var closest = nodes[0], N = this.getNodeDepth(node,closest);
-      for (var i = 1, m = nodes.length; i < m; i++) {
-        var n = this.getNodeDepth(node,nodes[i]);
-        if (n < N) {closest = nodes[i]; N = n}
+      while (node && node.childNodes.length === 1 && node.firstChild.id == null)
+        node = node.firstChild;
+      if (node) {
+        var name = RegExp("\\b"+type+"\\b");
+        for (var i = 0, m = node.childNodes.length; i < m; i++) {
+          var child = node.childNodes[i];
+          if (name.test(child.className)) return child;
+        }
       }
-      return closest;
+      return null;
     },
-    getNodeDepth: function (parent,node) {
-      var n = 0;
-      while (node && node !== parent) {node = node.parentNode; n++}
-      return n;
-    },
-    
 
     /********************************************/
     
