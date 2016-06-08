@@ -71,6 +71,10 @@
     ".mjx-chtml[tabindex]:focus, body :focus .mjx-chtml[tabindex]": {
       display: "inline-table"  // see issues #1282 and #1338
     },
+    ".mjx-full-width": {
+      display: "table-cell",
+      width:   "10000em"
+    },
 
     ".mjx-math":   {
       "display":         "inline-block",
@@ -170,6 +174,12 @@
       position:  "absolute",
       width:"1px", height:"60ex"
     },
+    ".mjx-line-box-test": {
+      display: "table-cell!important",
+      width: "10000em!important",
+      "min-width":0, "max-width":"none",
+      padding:0, border:0, margin:0
+    },
     
     "#MathJax_CHTML_Tooltip": {
       "background-color": "InfoBackground", color: "InfoText",
@@ -233,6 +243,11 @@
       this.TestSpan = CHTML.Element("mjx-test",{style:{left:"1em"}},[["mjx-ex-box-test"]]);
 
       //
+      // Used in preTranslate to get linebreak width
+      //
+      this.linebreakSpan = HTML.Element("span",{className:"mjx-line-box-test"});
+
+      //
       //  Set up styles and preload web fonts
       //
       return AJAX.Styles(this.config.styles,["InitializeCHTML",this]);
@@ -260,9 +275,11 @@
       //  Get the default sizes (need styles in place to do this)
       //
       document.body.appendChild(this.TestSpan);
+      document.body.appendChild(this.linebreakSpan);
       this.defaultEm    = this.getFontSize(this.TestSpan);
       this.defaultEx    = this.TestSpan.firstChild.offsetHeight/60;
-      this.defaultWidth = this.TestSpan.offsetWidth;
+      this.defaultWidth = this.linebreakSpan.offsetWidth;
+      document.body.removeChild(this.linebreakSpan);
       document.body.removeChild(this.TestSpan);
     },
     getFontSize: (window.getComputedStyle ? 
@@ -417,6 +434,7 @@
         //
         //  Add test nodes for determineing scales and linebreak widths
         //
+        script.parentNode.insertBefore(this.linebreakSpan.cloneNode(true),script);
         script.parentNode.insertBefore(this.TestSpan.cloneNode(true),script);
       }
       //
@@ -429,12 +447,10 @@
         jax = script.MathJax.elementJax; if (!jax) continue;
         em = CHTML.getFontSize(test);
         ex = test.firstChild.offsetHeight/60;
-        if (ex === 0 || ex === "NaN") ex = this.defaultEx
-        node = test;
-        while (node) {
-          cwidth = node.offsetWidth; if (cwidth) break;
-          cwidth = CHTML.getMaxWidth(node); if (cwidth) break;
-          node = node.parentNode;
+        cwidth = Math.max(0,test.previousSibling.offsetWidth-2);
+        if (ex === 0 || ex === "NaN") {
+          ex = this.defaultEx;
+          cwidth = this.defaultWidth;
         }
         if (relwidth) maxwidth = cwidth;
         scale = (this.config.matchFontHeight ? ex/this.TEX.x_height/em : 1);
@@ -450,7 +466,9 @@
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         test = scripts[i].previousSibling;
+        span = test.previousSibling;
         jax = scripts[i].MathJax.elementJax; if (!jax) continue;
+        span.parentNode.removeChild(span);
         test.parentNode.removeChild(test);
       }
       state.CHTMLeqn = state.CHTMLlast = 0; state.CHTMLi = -1;
@@ -1720,8 +1738,8 @@
         var alttext = this.Get("alttext");
         if (alttext && !node.getAttribute("aria-label")) node.setAttribute("aria-label",alttext);
         if (this.CHTML.pwidth) {
-          node.parentNode.style.width = this.CHTML.pwidth;
           node.parentNode.style.minWidth = this.CHTML.mwidth||CHTML.Em(this.CHTML.w);
+          node.parentNode.className += " mjx-full-width";
         } else if (!this.isMultiline && this.Get("display") === "block") {
           var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
           if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) values.indentalign = values.indentalignfirst;
