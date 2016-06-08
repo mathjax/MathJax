@@ -401,11 +401,11 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       y = Y;
       for (i = 0, m = A.length-1; i < m; i++) {
         dy = Math.max(0,D[i]+H[i+1]+RSPACE[i]);
-        if (RLINES[i] !== "none") {
+        if (RLINES[i] !== MML.LINES.NONE && RLINES[i] !== "") {
           line = HTMLCSS.createRule(stack,1.25/HTMLCSS.em,0,fW); HTMLCSS.addBox(stack,line);
           line.bbox = {h:1.25/HTMLCSS.em, d:0, w:fW, rw:fW, lw:0};
           HTMLCSS.placeBox(line,0,y - D[i] - (dy-D[i]-H[i+1])/2,true);
-          if (RLINES[i] === "dashed") line.style.borderTopStyle = "dashed";
+          if (RLINES[i] === MML.LINES.DASHED) line.style.borderTopStyle = "dashed";
           if (hasRelativeWidth) line.style.width = "100%"
         }
         y -= dy;

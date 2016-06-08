@@ -308,7 +308,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       y = Y - lw/2;
       for (i = 0, m = A.length-1; i < m; i++) {
         dy = Math.max(0,D[i]+H[i+1]+RSPACE[i]);
-        if (RLINES[i] !== "none")
+        if (RLINES[i] !== MML.LINES.NONE && RLINES[i] !== "")
           {svg.Add(BBOX.HLINE(fW,lw,RLINES[i]),0,y-D[i]-(dy-D[i]-H[i+1])/2)}
         y -= dy;
       }
