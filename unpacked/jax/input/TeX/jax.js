@@ -258,10 +258,9 @@
   });
   
   STACKITEM.array = STACKITEM.Subclass({
-    type: "array", isOpen: true, arraydef: {},
+    type: "array", isOpen: true, copyEnv: false, arraydef: {},
     Init: function () {
       this.table = []; this.row = []; this.frame = []; this.hfill = [];
-      this.copyEnv = false;
       this.SUPER(arguments).Init.apply(this,arguments);
     },
     checkItem: function (item) {
