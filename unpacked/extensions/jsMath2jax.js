@@ -73,10 +73,13 @@ MathJax.Extension.jsMath2jax = {
   },
   
   createPreview: function (node) {
+    var previewClass = MathJax.Hub.config.preRemoveClass;
     var preview = this.config.preview;
+    if (preview === "none") return;
+    if ((node.previousSibling||{}).className === previewClass) return;
     if (preview === "TeX") {preview = [this.filterPreview(node.innerHTML)]}
     if (preview) {
-      preview = MathJax.HTML.Element("span",{className: MathJax.Hub.config.preRemoveClass},preview);
+      preview = MathJax.HTML.Element("span",{className:previewClass},preview);
       node.parentNode.insertBefore(preview,node);
     }
   },
