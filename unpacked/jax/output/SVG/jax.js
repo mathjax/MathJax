@@ -1566,6 +1566,31 @@
 	return svg;
       }
     });
+    
+    MML.mn.Augment({
+      SVGremapMinus: function (text) {return text.replace(/^-/,"\u2212")},
+      toSVG: function () {
+        this.SVGgetStyles();
+	var variant = this.SVGgetVariant();
+        var svg = this.SVG(); this.SVGgetScale(svg);
+        this.SVGhandleSpace(svg);
+        var remap = this.SVGremapMinus;
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          if (this.data[i]) {
+            var child = svg.Add(this.data[i].toSVG(variant,svg.scale,remap),svg.w,0,true);
+            if (child.skew) {svg.skew = child.skew}
+            remap = null;
+          }
+        }
+        svg.Clean(); var text = this.data.join("");
+        if (svg.skew && text.length !== 1) {delete svg.skew}
+        if (svg.r > svg.w && text.length === 1 && !variant.noIC)
+          {svg.ic = svg.r - svg.w; svg.w = svg.r}
+	this.SVGhandleColor(svg);
+        this.SVGsaveData(svg);
+	return svg;
+      },
+    }),
 
     MML.mtext.Augment({
       toSVG: function () {
