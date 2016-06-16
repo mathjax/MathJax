@@ -72,7 +72,8 @@
       
       VARIANT: {
         "normal": {fonts: [GENERAL,NONUNI,SIZE1],
-                   remap: {0x2205: [0x2205,"-STIX-variant"]}}, // \emptyset
+                   remap: {0x2205: [0x2205,"-STIX-variant"], // \emptyset
+                           0x7C: [0x7C,"-STIX-variant"]}},   // absolute value
         "bold":   {fonts: [BOLD,"STIXNonUnicode-bold","STIXSizeOneSym-bold"], bold:true},
         "italic": {fonts: [ITALIC,NONUNII,GENERAL,NONUNI,SIZE1], italic:true},
         "bold-italic": {fonts: [BITALIC,"STIXNonUnicode-bold-italic"], bold:true, italic:true},
@@ -97,7 +98,8 @@
                    remap: {0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2270: 0xE011, 0x2271: 0xE00E,
                            0x22E0: 0xE04B, 0x22E1: 0xE04F, 0x2288: 0xE016, 0x2289: 0xE018,
                            0x25B3: 0x25B5, 0x25BD: 0x25BF,
-                           0x2205: [0x2205,MML.VARIANT.NORMAL]}},  // \varnothing
+                           0x2205: [0x2205,MML.VARIANT.NORMAL],    // \varnothing
+                           0x007C: [0x007C,MML.VARIANT.NORMAL]}},  // absolute value
         "-tex-caligraphic": {fonts: [ITALIC,NONUNII,NONUNI,SIZE1], offsetA: 0xE22D, noLowerCase: 1},
         "-tex-oldstyle": {offsetN: 0xE261,
                    remap: {0xE262: 0xE265, 0xE263: 0xE269, 0xE264: 0xE26D, 0xE265: 0xE271,
