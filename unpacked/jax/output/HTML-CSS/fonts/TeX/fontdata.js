@@ -161,6 +161,7 @@
         0xB7: 0x22C5,                   // center dot
         0x2B9: 0x2032,                  // prime,
         0x3D2: 0x3A5,                   // Upsilon
+        0x2206: 0x394,                  // increment
         0x2015: 0x2014, 0x2017: 0x5F,   // horizontal bars
         0x2022: 0x2219, 0x2044: 0x2F,   // bullet, fraction slash
         0x2305: 0x22BC, 0x2306: 0x2A5E, // barwedge, doublebarwedge
