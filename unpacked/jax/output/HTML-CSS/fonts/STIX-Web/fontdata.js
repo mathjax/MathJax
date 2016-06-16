@@ -531,7 +531,7 @@
           HW: [[0.879,MAIN]],
           stretch: {ext:[0x2225,MAIN]}
         },
-        0x222B: EXTRAH,
+        0x222B: EXTRAV,
         0x222C: EXTRAV,
         0x222D: EXTRAV,
         0x222E: EXTRAV,

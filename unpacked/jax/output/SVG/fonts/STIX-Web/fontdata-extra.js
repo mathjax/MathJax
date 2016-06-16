@@ -415,9 +415,9 @@
       },
       0x222B:
       {
-        dir: H,
+        dir: V,
         HW: [[607,MAIN], [979,SIZE1]],
-        stretch: {top:[0xE03C,SIZE5], rep:[0xE03D,SIZE5], bot:[0xE03E,SIZE5]}
+        stretch: {top:[0xE03C,SIZE5], ext:[0xE03D,SIZE5], bot:[0xE03E,SIZE5]}
       },
       0x222C:
       {

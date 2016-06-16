@@ -406,6 +406,7 @@
         0x21C3: EXTRAV, // down harpoon with barb left
         0x21DA: EXTRAH, // left triple arrow
         0x21DB: EXTRAH, // right triple arrow
+        0x222B: EXTRAV, // integral
         0x23B4: EXTRAH, // top square bracket
         0x23B5: EXTRAH, // bottom square bracket
         0x23DC: EXTRAH, // top paren
