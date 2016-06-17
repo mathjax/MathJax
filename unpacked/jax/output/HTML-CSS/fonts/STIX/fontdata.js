@@ -42,6 +42,7 @@
       SIZE4   = "STIXSizeFourSym",
       SIZE5   = "STIXSizeFiveSym";
   var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
+  var ARROWREP = [0x2212,GENERAL,0,0,0,-.26,-.26];   // remove extra height/depth added below
 
   HTMLCSS.Augment({
     FONTDATA: {
@@ -225,7 +226,7 @@
         },
         0x2190: // left arrow
         {
-          dir: H, HW: [[.926,GENERAL]], stretch: {left:[0x2190,GENERAL], rep:[0x2212,GENERAL]}
+          dir: H, HW: [[.926,GENERAL]], stretch: {left:[0x2190,GENERAL], rep:ARROWREP}
         },
         0x2191: // \uparrow
         {
@@ -233,7 +234,7 @@
         },
         0x2192: // right arrow
         {
-          dir: H, HW: [[.926,GENERAL]], stretch: {rep:[0x2212,GENERAL], right:[0x2192,GENERAL]}
+          dir: H, HW: [[.926,GENERAL]], stretch: {rep:ARROWREP, right:[0x2192,GENERAL]}
         },
         0x2193: // \downarrow
         {
@@ -242,7 +243,7 @@
         0x2194: // left-right arrow
         {
           dir: H, HW: [[.926,GENERAL]],
-          stretch: {left:[0x2190,GENERAL], rep:[0x2212,GENERAL], right:[0x2192,GENERAL]}
+          stretch: {left:[0x2190,GENERAL], rep:ARROWREP, right:[0x2192,GENERAL]}
         },
         0x2195: // \updownarrow
         {
@@ -1508,6 +1509,9 @@
     0x221A: [943,11,737,67,767]        // SQUARE ROOT
   };
 
+  
+  HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x2212][0] = HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x002B][0]; // minus is sized as plus
+  HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x2212][1] = HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x002B][1]; // minus is sized as plus
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x22EE][0] += 400;  // adjust height for \vdots
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x22F1][0] += 500;  // adjust height for \ddots
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x2212][1] += 100;  // adjust depth for minus (arrow extender)

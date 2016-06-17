@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-    var VERSION = "2.6.0";
+  var VERSION = "2.6.0";
 
   var ALPHABETSBOLDITALIC = "STIXMathJax_Alphabets-bold-italic",
       ALPHABETSBOLD = "STIXMathJax_Alphabets-bold",
@@ -80,6 +80,7 @@
       VARIANTS = "STIXMathJax_Variants";
 
   var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
+  var ARROWREP = [0x2212,MAIN,0,0,0,-.26,-.26];
 
   SVG.Augment({
     FONTDATA: {
@@ -396,7 +397,7 @@
         {
           dir: H,
           HW: [[786,MAIN]],
-          stretch: {left:[0x2190,MAIN], rep:[0x23AF,SYMBOLS]}
+          stretch: {left:[0x2190,MAIN], rep:ARROWREP}
         },
         0x2191:
         {
@@ -408,7 +409,7 @@
         {
           dir: H,
           HW: [[786,MAIN]],
-          stretch: {rep:[0x23AF,SYMBOLS], right:[0x2192,MAIN]}
+          stretch: {rep:ARROWREP, right:[0x2192,MAIN]}
         },
         0x2193:
         {
@@ -420,7 +421,7 @@
         {
           dir: H,
           HW: [[850,MAIN]],
-          stretch: {left:[0x2190,MAIN], rep:[0x23AF,SYMBOLS], right:[0x2192,MAIN]}
+          stretch: {left:[0x2190,MAIN], rep:ARROWREP, right:[0x2192,MAIN]}
         },
         0x2195:
         {
@@ -741,7 +742,8 @@
   MathJax.Hub.Register.LoadHook(SVG.fontDir+"/Main/Regular/Main.js",function () {
     SVG.FONTDATA.FONTS[MAIN][0x22EE][0] += 400;  // adjust height for \vdots
     SVG.FONTDATA.FONTS[MAIN][0x22F1][0] += 500;  // adjust height for \ddots
-    SVG.FONTDATA.FONTS[MAIN][0x2212][1] += 100;  // adjust depth for minus (arrow extender)
+    SVG.FONTDATA.FONTS[MAIN][0x2212][0] = SVG.FONTDATA.FONTS[MAIN][0x002B][0]; // - needs height and depth of +
+    SVG.FONTDATA.FONTS[MAIN][0x2212][1] = SVG.FONTDATA.FONTS[MAIN][0x002B][1]; // - needs height and depth of +
     SVG.FONTDATA.FONTS[MAIN][0x003D][1] += 100;  // adjust depth for = (double arrow extender)
   });
   MathJax.Hub.Register.LoadHook(SVG.fontDir+"/Size5/Regular/Main.js",function () {

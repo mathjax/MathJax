@@ -37,8 +37,8 @@
       SIZE3  = "MathJax_Size3",
       SIZE4  = "MathJax_Size4";
   var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
-  var ARROWREP = [0x2212,MAIN,0,0,0,0,.1];   // add depth for arrow extender
-  var DARROWREP = [0x3D,MAIN,0,0,0,0,.1];    // add depth for arrow extender
+  var ARROWREP = [0x2212,MAIN,0,0,0,-.31,-.31];  // remove extra height/depth added below
+  var DARROWREP = [0x3D,MAIN,0,0,0,0,.1];        // add depth for arrow extender
 
   var UNDEFINEDFAMILY = CHTML.config.undefinedFamily;
 
@@ -1588,6 +1588,8 @@
     0xE154: [120,0,400,-10,410]        // stix-oblique open face capital letter A
   };
 
+  CHTML.FONTDATA.FONTS[MAIN][0x2212][0] = CHTML.FONTDATA.FONTS[MAIN][0x002B][0]; // minus is sized as plus
+  CHTML.FONTDATA.FONTS[MAIN][0x2212][1] = CHTML.FONTDATA.FONTS[MAIN][0x002B][1]; // minus is sized as plus
   CHTML.FONTDATA.FONTS[MAIN][0x22EE][0] += 400;  // adjust height for \vdots
   CHTML.FONTDATA.FONTS[MAIN][0x22F1][0] += 700;  // adjust height for \ddots
   CHTML.FONTDATA.FONTS[SIZE4][0x23AA][0] -= 20;

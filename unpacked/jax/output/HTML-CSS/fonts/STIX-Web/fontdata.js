@@ -80,6 +80,7 @@
       VARIANTS = "STIXMathJax_Variants";
 
   var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
+  var ARROWREP = [0x2212,MAIN,0,0,0,-.26,-.26];
 
   HTMLCSS.Augment({
     FONTDATA: {
@@ -399,7 +400,7 @@
         {
           dir: H,
           HW: [[0.786,MAIN]],
-          stretch: {left:[0x2190,MAIN], rep:[0x23AF,SYMBOLS]}
+          stretch: {left:[0x2190,MAIN], rep:ARROWREP}
         },
         0x2191:
         {
@@ -411,7 +412,7 @@
         {
           dir: H,
           HW: [[0.786,MAIN]],
-          stretch: {rep:[0x23AF,SYMBOLS], right:[0x2192,MAIN]}
+          stretch: {rep:ARROWREP, right:[0x2192,MAIN]}
         },
         0x2193:
         {
@@ -423,7 +424,7 @@
         {
           dir: H,
           HW: [[0.850,MAIN]],
-          stretch: {left:[0x2190,MAIN], rep:[0x23AF,SYMBOLS], right:[0x2192,MAIN]}
+          stretch: {left:[0x2190,MAIN], rep:ARROWREP, right:[0x2192,MAIN]}
         },
         0x2195:
         {
@@ -744,7 +745,8 @@
   MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Main/Regular/Main.js",function () {
     HTMLCSS.FONTDATA.FONTS[MAIN][0x22EE][0] += 400;  // adjust height for \vdots
     HTMLCSS.FONTDATA.FONTS[MAIN][0x22F1][0] += 500;  // adjust height for \ddots
-    HTMLCSS.FONTDATA.FONTS[MAIN][0x2212][1] += 100;  // adjust depth for minus (arrow extender)
+    HTMLCSS.FONTDATA.FONTS[MAIN][0x2212][0] = HTMLCSS.FONTDATA.FONTS[MAIN][0x002B][0]; // - needs height and depth of +
+    HTMLCSS.FONTDATA.FONTS[MAIN][0x2212][1] = HTMLCSS.FONTDATA.FONTS[MAIN][0x002B][1]; // - needs height and depth of +
     HTMLCSS.FONTDATA.FONTS[MAIN][0x003D][1] += 100;  // adjust depth for = (double arrow extender)
   });
   MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Size5/Regular/Main.js",function () {
