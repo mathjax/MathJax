@@ -339,6 +339,9 @@
           "min-height": 0, "max-height":"none"
         },
         ".MathJax_LineBox": {
+          display: (oldIE ? "block" : "table") + "!important"
+        },
+        ".MathJax_LineBox span": {
           display: (oldIE ? "block" : "table-cell") + "!important",
           width: (oldIE ? "100%" : "10000em") + "!important",
           "min-width":0, "max-width":"none",
@@ -495,7 +498,7 @@
       );
 
       // Used in preTranslate to get linebreak width
-      this.linebreakSpan = MathJax.HTML.Element("span",{className:"MathJax_LineBox"});
+      this.linebreakSpan = MathJax.HTML.Element("span",{className:"MathJax_LineBox"},[["span"]]);
 
       // Set up styles and preload web fonts
       return AJAX.Styles(this.config.styles,["InitializeHTML",this]);
@@ -551,7 +554,7 @@
       document.body.appendChild(this.linebreakSpan);
       this.defaultEx    = this.EmExSpan.firstChild.offsetHeight/60;
       this.defaultEm    = this.EmExSpan.lastChild.firstChild.offsetHeight/60;
-      this.defaultWidth = this.linebreakSpan.offsetWidth;
+      this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
       document.body.removeChild(this.linebreakSpan);
       document.body.removeChild(this.EmExSpan);
     },
@@ -621,7 +624,7 @@
         jax = script.MathJax.elementJax; if (!jax) continue;
         ex = test.firstChild.offsetHeight/60;
         em = test.lastChild.firstChild.offsetHeight/60;
-        cwidth = Math.max(0,div.previousSibling.offsetWidth - 2);
+        cwidth = Math.max(0,div.previousSibling.firstChild.offsetWidth - 2);
         if (relwidth) {maxwidth = cwidth}
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
