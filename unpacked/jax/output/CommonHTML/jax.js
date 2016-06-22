@@ -72,7 +72,7 @@
       display: "inline-table"  // see issues #1282 and #1338
     },
     ".mjx-full-width": {
-      display: "table-cell",
+      display: "table-cell!important",
       width:   "10000em"
     },
 
