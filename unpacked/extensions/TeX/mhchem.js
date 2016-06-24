@@ -26,8 +26,18 @@
  */
 
 MathJax.Extension["TeX/mhchem"] = {
-  version: "2.6.0"
+  version: "2.6.0",
+  config: MathJax.Hub.CombineConfig("TeX.mhchem",{
+    legacy: true
+  })
 };
+
+if (!MathJax.Extension["TeX/mhchem"].config.legacy) {
+  MathJax.Callback.Queue(
+    ["Require",MathJax.Ajax,"[Contrib]/mhchem/mhchem.js"],
+    ["loadComplete",MathJax.Ajax,"[MathJax]/extensions/TeX/mhchem.js"]
+  );
+} else {
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
@@ -492,3 +502,4 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/mhchem.js");
+}
