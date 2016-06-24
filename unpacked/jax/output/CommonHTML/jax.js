@@ -404,6 +404,7 @@
         prev = script.previousSibling;
 	if (prev && prev.className && String(prev.className).substr(0,9) === "mjx-chtml")
 	  prev.parentNode.removeChild(prev);
+        if (script.MathJax.preview) script.MathJax.preview.style.display = "none";
         //
         //  Add the node for the math and mark it as being processed
         //
@@ -465,11 +466,12 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        test = scripts[i].previousSibling;
+        test = scripts.previousSibling;
         span = test.previousSibling;
-        jax = scripts[i].MathJax.elementJax; if (!jax) continue;
+        jax = scripts.MathJax.elementJax; if (!jax) continue;
         span.parentNode.removeChild(span);
         test.parentNode.removeChild(test);
+        if (script.MathJax.preview) script.MathJax.preview.style.display = "";
       }
       state.CHTMLeqn = state.CHTMLlast = 0; state.CHTMLi = -1;
       state.CHTMLchunk = this.config.EqnChunk;
