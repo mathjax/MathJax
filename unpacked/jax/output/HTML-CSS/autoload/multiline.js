@@ -67,7 +67,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       var parent = this;
       while (parent.inferred || (parent.parent && parent.parent.type === "mrow" &&
-             parent.parent.data.length === 1)) {parent = parent.parent}
+             parent.isEmbellished())) {parent = parent.parent}
       var isTop = ((parent.type === "math" && parent.Get("display") === "block") ||
                     parent.type === "mtd");
       parent.isMultiline = true;

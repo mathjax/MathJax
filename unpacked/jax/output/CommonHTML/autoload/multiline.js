@@ -68,7 +68,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       var parent = this;
       while (parent.inferred || (parent.parent && parent.parent.type === "mrow" &&
-             parent.parent.data.length === 1)) {parent = parent.parent}
+             parent.parent.isEmbellished())) {parent = parent.parent}
       var isTop = ((parent.type === "math" && parent.Get("display") === "block") ||
                     parent.type === "mtd");
       parent.isMultiline = true;
@@ -234,6 +234,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       else                   align = prev.indentalign || def.indentalign;
       if (align === MML.INDENTALIGN.INDENTALIGN) align = prev.indentalign || def.indentalign;
       if (align === MML.INDENTALIGN.AUTO) align = (state.isTop ? CONFIG.displayAlign : MML.INDENTALIGN.LEFT);
+console.log(align,state.isTop);
       return align;
     },
     CHTMLgetShift: function (state,values,align,noadjust) {
