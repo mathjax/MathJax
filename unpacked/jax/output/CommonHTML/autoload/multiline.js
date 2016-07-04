@@ -234,7 +234,6 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       else                   align = prev.indentalign || def.indentalign;
       if (align === MML.INDENTALIGN.INDENTALIGN) align = prev.indentalign || def.indentalign;
       if (align === MML.INDENTALIGN.AUTO) align = (state.isTop ? CONFIG.displayAlign : MML.INDENTALIGN.LEFT);
-console.log(align,state.isTop);
       return align;
     },
     CHTMLgetShift: function (state,values,align,noadjust) {
