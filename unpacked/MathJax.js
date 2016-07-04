@@ -659,6 +659,8 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
   
   var PATH = {};
   PATH[BASENAME] = "";  // empty path gets the root URL
+  PATH.Contrib = (String(location.protocol).match(/^https?:/) ? "" : "http:") +
+                   "//cdn.mathjax.org/mathjax/contrib";   // the third-party extensions
   
   BASE.Ajax = {
     loaded: {},         // files already loaded
@@ -1711,6 +1713,12 @@ MathJax.Message = {
     return text;
   },
   
+  clearCounts: function () {
+    delete this.loading;
+    delete this.processing;
+    delete this.typesetting;
+  },
+  
   Set: function (text,n,clearDelay) {
     if (n == null) {n = this.log.length; this.log[n] = {}}
     //
@@ -2116,6 +2124,7 @@ MathJax.Hub = {
   },
   
   prepareScripts: function (action,element,state) {
+    MathJax.Message.clearCounts();
     if (arguments.callee.disabled) return;
     var scripts = this.elementScripts(element);
     var STATE = MathJax.ElementJax.STATE;
@@ -2182,7 +2191,7 @@ MathJax.Hub = {
         //
         //  Check if already processed or needs processing
         //
-        if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) {state.i++; continue};
+        if (!script.parentNode || !script.MathJax || script.MathJax.state === STATE.PROCESSED) {state.i++; continue};
         if (!script.MathJax.elementJax || script.MathJax.state === STATE.UPDATE) {
           this.checkScriptSiblings(script);                 // remove preJax/postJax etc.
           var type = script.type.replace(/ *;(.|\s)*/,"");  // the input jax type
@@ -2286,7 +2295,7 @@ MathJax.Hub = {
         //  Check that there is an element jax
         //
         script = state.scripts[state.i];
-        if (!script || !script.MathJax || script.MathJax.error) {state.i++; continue}
+        if (!script || !script.parentNode || !script.MathJax || script.MathJax.error) {state.i++; continue}
         var jax = script.MathJax.elementJax; if (!jax) {state.i++; continue}
         //
         //  Call the output Jax's Process method (which will be its Translate()
@@ -2380,7 +2389,7 @@ MathJax.Hub = {
     //
     var node = document.getElementById(error.id);
     if (node) node.parentNode.removeChild(node);
-    script.parentNode.insertBefore(error,script);
+    if (script.parentNode) script.parentNode.insertBefore(error,script);
     if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
     //
     //  Save the error for debugging purposes

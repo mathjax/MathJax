@@ -1335,9 +1335,11 @@
     
     Middle: function (name) {
       var delim = this.GetDelimiter(name);
+      this.Push(MML.TeXAtom().With({texClass:MML.TEXCLASS.CLOSE}));
       if (this.stack.Top().type !== "left")
         {TEX.Error(["MisplacedMiddle","%1 must be within \\left and \\right",name])}
       this.Push(MML.mo(delim).With({stretchy:true}));
+      this.Push(MML.TeXAtom().With({texClass:MML.TEXCLASS.OPEN}));
     },
     
     NamedFn: function (name,id) {
@@ -1433,6 +1435,8 @@
       var def = {accent: true}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       var mml = this.mmlToken(MML.mo(MML.entity("#x"+accent)).With(def));
       mml.stretchy = (stretchy ? true : false);
+      var mo = (c.isEmbellished() ? c.CoreMO() : c);
+      if (mo.isa(MML.mo)) mo.movablelimits = false;
       this.Push(MML.TeXAtom(MML.munderover(c,null,mml).With({accent: true})));
     },
     

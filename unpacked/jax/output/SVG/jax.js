@@ -33,6 +33,13 @@
   var SVGNS   = "http://www.w3.org/2000/svg";
   var XLINKNS = "http://www.w3.org/1999/xlink";
 
+  //
+  //  Get the URL of the page (for use with xlink:href) when there
+  //  is a <base> element on the page.
+  //  
+  var SVGURL = (document.getElementsByTagName("base").length === 0) ? "" :
+                String(document.location).replace(/#.*$/,"");
+
   SVG.Augment({
     HFUZZ: 2,     // adjustments for height and depth of final svg element
     DFUZZ: 2,     //   to get baselines right (fragile).
@@ -92,6 +99,12 @@
           width:"1px", height:"60ex",
           "min-height": 0, "max-height":"none",
           padding:0, border: 0, margin: 0
+        },
+        ".MathJax_SVG_LineBox": {
+          display: "table-cell!important",
+          width: "10000em!important",
+          "min-width":0, "max-width":"none",
+          padding:0, border:0, margin:0
         },
         
         "#MathJax_SVG_Tooltip": {
@@ -166,8 +179,7 @@
       );
 
       // Used in preTranslate to get linebreak width
-      this.linebreakSpan = HTML.Element("span",null,
-        [["hr",{style: {width:"auto", size:1, padding:0, border:0, margin:0}}]]);
+      this.linebreakSpan = HTML.Element("span",{className:"MathJax_SVG_LineBox"});
 
       // Set up styles
       return AJAX.Styles(this.config.styles,["InitializeSVG",this]);
@@ -183,7 +195,7 @@
       document.body.appendChild(this.ExSpan);
       document.body.appendChild(this.linebreakSpan);
       this.defaultEx    = this.ExSpan.firstChild.offsetHeight/60;
-      this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
+      this.defaultWidth = this.linebreakSpan.offsetWidth;
       document.body.removeChild(this.linebreakSpan);
       document.body.removeChild(this.ExSpan);
     },
@@ -207,7 +219,7 @@
         //  Remove any existing output
         //
         prev = script.previousSibling;
-        if (prev && String(prev.className).match(/^MathJax(_SVG)?(_Display)?( MathJax(_SVG)?_Processing)?$/))
+        if (prev && String(prev.className).match(/^MathJax(_SVG)?(_Display)?( MathJax(_SVG)?_Process(ing|ed))?$/))
           {prev.parentNode.removeChild(prev)}
         //
         //  Add the span, and a div if in display mode,
@@ -249,16 +261,15 @@
         test = script.previousSibling; div = test.previousSibling;
         jax = script.MathJax.elementJax; if (!jax) continue;
         ex = test.firstChild.offsetHeight/60;
-        cwidth = div.previousSibling.firstChild.offsetWidth;
-        if (relwidth) {maxwidth = cwidth}
+        cwidth = Math.max(0,(div.previousSibling.offsetWidth-2) / this.config.scale * 100);
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
           // (this will cause a reflow for each math element that is hidden)
           this.hiddenDiv.appendChild(div);
           jax.SVG.isHidden = true;
           ex = this.defaultEx; cwidth = this.defaultWidth;
-          if (relwidth) {maxwidth = cwidth}
         }
+        if (relwidth) {maxwidth = cwidth}
         jax.SVG.ex = ex;
         jax.SVG.em = em = ex / SVG.TeX.x_height * 1000; // scale ex to x_height
         jax.SVG.cwidth = cwidth/em * 1000;
@@ -406,7 +417,7 @@
     },
 
     getJaxFromMath: function (math) {
-      if (math.parentNode.className === "MathJax_SVG_Display") {math = math.parentNode}
+      if (math.parentNode.className.match(/MathJax_SVG_Display/)) {math = math.parentNode}
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
       return HUB.getJaxFor(math);
     },
@@ -1052,7 +1063,7 @@
       if (cache) {
         def = {}; if (transform) {def.transform = transform}
         this.element = SVG.Element("use",def);
-        this.element.setAttributeNS(XLINKNS,"href","#"+id);
+        this.element.setAttributeNS(XLINKNS,"href",SVGURL+"#"+id);
       }
       this.h = (h+t) * scale; this.d = (d+t) * scale; this.w = (w+t/2) *scale;
       this.l = (l+t/2) * scale; this.r = (r+t/2) * scale;
@@ -2082,13 +2093,14 @@
           var style = svg.element.style, px = SVG.TeX.x_height/SVG.ex;
           var H = (Math.ceil(svg.H/px)+1)*px+SVG.HFUZZ,  // round to pixels and add padding
               D = (Math.ceil(svg.D/px)+1)*px+SVG.DFUZZ;
-          svg.element.setAttribute("width",SVG.Ex(l+svg.w+r));
+          var w = l + svg.w + r;
+          svg.element.setAttribute("width",SVG.Ex(w));
           svg.element.setAttribute("height",SVG.Ex(H+D));
           style.verticalAlign = SVG.Ex(-D);
           if (l) style.marginLeft = SVG.Ex(-l);
           if (r) style.marginRight = SVG.Ex(-r);
           svg.element.setAttribute("viewBox",SVG.Fixed(-l,1)+" "+SVG.Fixed(-H,1)+" "+
-                                             SVG.Fixed(l+svg.w+r,1)+" "+SVG.Fixed(H+D,1));
+                                             SVG.Fixed(w,1)+" "+SVG.Fixed(H+D,1));
           //
           //  If there is extra height or depth, hide that
           //
@@ -2097,6 +2109,12 @@
 	    style.marginBottom = SVG.Ex(svg.d-D);
 	    style.verticalAlign = SVG.Ex(-svg.d);
 	  }
+          //
+          //  The approximate ex can cause full-width equations to be too wide,
+          //    so if they are close to full width, make sure they aren't too big.
+          //
+          if (Math.abs(w-SVG.cwidth) < 10)
+            style.maxWidth = SVG.Fixed(SVG.cwidth*SVG.em/1000);
           //
           //  Add it to the MathJax span
           //
@@ -2124,7 +2142,7 @@
             if (shift) {
               HUB.Insert(style,({
                 left: {marginLeft: SVG.Ex(shift)},
-                right: {marginRight: SVG.Ex(-shift), marginLeft: SVG.Ex(Math.max(0,shift-(l+svg.w+r)))},
+                right: {marginRight: SVG.Ex(-shift), marginLeft: SVG.Ex(Math.max(0,shift-w))},
                 center: {marginLeft: SVG.Ex(shift), marginRight: SVG.Ex(-shift)}
               })[values.indentalign]);
             }

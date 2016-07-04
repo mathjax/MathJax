@@ -71,6 +71,10 @@
     ".mjx-chtml[tabindex]:focus, body :focus .mjx-chtml[tabindex]": {
       display: "inline-table"  // see issues #1282 and #1338
     },
+    ".mjx-full-width": {
+      display: "table-cell",
+      width:   "10000em"
+    },
 
     ".mjx-math":   {
       "display":         "inline-block",
@@ -123,7 +127,7 @@
 
     ".mjx-box":    {display:"inline-block"},
     ".mjx-block":  {display:"block"},
-    ".mjx-span":   {display:"span"},
+    ".mjx-span":   {display:"inline"},
     ".mjx-char":   {display:"block", "white-space":"pre"},
     ".mjx-itable": {display:"inline-table"},
     ".mjx-row":    {display:"table-row"},
@@ -169,6 +173,12 @@
     ".mjx-ex-box-test": {
       position:  "absolute",
       width:"1px", height:"60ex"
+    },
+    ".mjx-line-box-test": {
+      display: "table-cell!important",
+      width: "10000em!important",
+      "min-width":0, "max-width":"none",
+      padding:0, border:0, margin:0
     },
     
     "#MathJax_CHTML_Tooltip": {
@@ -233,6 +243,11 @@
       this.TestSpan = CHTML.Element("mjx-test",{style:{left:"1em"}},[["mjx-ex-box-test"]]);
 
       //
+      // Used in preTranslate to get linebreak width
+      //
+      this.linebreakSpan = HTML.Element("span",{className:"mjx-line-box-test"});
+
+      //
       //  Set up styles and preload web fonts
       //
       return AJAX.Styles(this.config.styles,["InitializeCHTML",this]);
@@ -260,9 +275,11 @@
       //  Get the default sizes (need styles in place to do this)
       //
       document.body.appendChild(this.TestSpan);
+      document.body.appendChild(this.linebreakSpan);
       this.defaultEm    = this.getFontSize(this.TestSpan);
       this.defaultEx    = this.TestSpan.firstChild.offsetHeight/60;
-      this.defaultWidth = this.TestSpan.offsetWidth;
+      this.defaultWidth = this.linebreakSpan.offsetWidth;
+      document.body.removeChild(this.linebreakSpan);
       document.body.removeChild(this.TestSpan);
     },
     getFontSize: (window.getComputedStyle ? 
@@ -336,34 +353,29 @@
     ucMatch: HTML.ucMatch,
     setScript: HTML.setScript,
     
-    getNodesByClass: (document.getElementsByClassName ? 
-      function (node,type) {return node.getElementsByClassName(type)} :
-      function (node,type) {
-        var NODES = [];
-        var nodes = node.getElementsByTagName("span");
-        var name = RegExp("\\b"+type+"\\b");
-        for (var i = 0, m = nodes.length; i < m; i++) {
-          if (name.test(nodes[i].className)) NODES.push = nodes[i];
-        }
-        return NODES;
-      }
-    ),
+    //
+    //  Look through the direct children of a node for one with the given
+    //  type (but if the node has intervening containers for its children,
+    //  step into them; note that elements corresponding to MathML nodes
+    //  will have id's so we don't step into them).
+    //  
+    //  This is used by munderover and msubsup to locate their child elements
+    //  when they are part of an embellished operator that is being stretched.
+    //  We don't use querySelector because we want to find only the direct child
+    //  nodes, not nodes that might be nested deeper in the tree (see issue #1447).
+    //
     getNode: function (node,type) {
-      var nodes = this.getNodesByClass(node,type);
-      if (nodes.length === 1) return nodes[0];
-      var closest = nodes[0], N = this.getNodeDepth(node,closest);
-      for (var i = 1, m = nodes.length; i < m; i++) {
-        var n = this.getNodeDepth(node,nodes[i]);
-        if (n < N) {closest = nodes[i]; N = n}
+      while (node && node.childNodes.length === 1 && node.firstChild.id == null)
+        node = node.firstChild;
+      if (node) {
+        var name = RegExp("\\b"+type+"\\b");
+        for (var i = 0, m = node.childNodes.length; i < m; i++) {
+          var child = node.childNodes[i];
+          if (name.test(child.className)) return child;
+        }
       }
-      return closest;
+      return null;
     },
-    getNodeDepth: function (parent,node) {
-      var n = 0;
-      while (node && node !== parent) {node = node.parentNode; n++}
-      return n;
-    },
-    
 
     /********************************************/
     
@@ -422,6 +434,7 @@
         //
         //  Add test nodes for determineing scales and linebreak widths
         //
+        script.parentNode.insertBefore(this.linebreakSpan.cloneNode(true),script);
         script.parentNode.insertBefore(this.TestSpan.cloneNode(true),script);
       }
       //
@@ -434,12 +447,10 @@
         jax = script.MathJax.elementJax; if (!jax) continue;
         em = CHTML.getFontSize(test);
         ex = test.firstChild.offsetHeight/60;
-        if (ex === 0 || ex === "NaN") ex = this.defaultEx
-        node = test;
-        while (node) {
-          cwidth = node.offsetWidth; if (cwidth) break;
-          cwidth = CHTML.getMaxWidth(node); if (cwidth) break;
-          node = node.parentNode;
+        cwidth = Math.max(0,test.previousSibling.offsetWidth-2);
+        if (ex === 0 || ex === "NaN") {
+          ex = this.defaultEx;
+          cwidth = this.defaultWidth;
         }
         if (relwidth) maxwidth = cwidth;
         scale = (this.config.matchFontHeight ? ex/this.TEX.x_height/em : 1);
@@ -455,7 +466,9 @@
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         test = scripts[i].previousSibling;
+        span = test.previousSibling;
         jax = scripts[i].MathJax.elementJax; if (!jax) continue;
+        span.parentNode.removeChild(span);
         test.parentNode.removeChild(test);
       }
       state.CHTMLeqn = state.CHTMLlast = 0; state.CHTMLi = -1;
@@ -744,6 +757,10 @@
     getCharList: function (variant,n) {
       var id, M, list = [], cache = variant.cache, nn = n;
       if (cache[n]) return cache[n];
+      if (n > 0xFFFF && this.FONTDATA.RemapPlane1) {
+        var nv = this.FONTDATA.RemapPlane1(n,variant);
+        n = nv.n; variant = nv.variant;
+      }
       var RANGES = this.FONTDATA.RANGES, VARIANT = this.FONTDATA.VARIANT;
       if (n >= RANGES[0].low && n <= RANGES[RANGES.length-1].high) {
         for (id = 0, M = RANGES.length; id < M; id++) {
@@ -1303,6 +1320,7 @@
     updateFrom: function (cbox) {
       this.h = cbox.h; this.d = cbox.d; this.w = cbox.w; this.r = cbox.r; this.l = cbox.l;
       this.t = cbox.t; this.b = cbox.b;
+      if (cbox.pwidth) this.pwidth = cbox.pwidth;
       if (cbox.D) this.D = cbox.D; else delete this.D;
     },
     adjust: function (m,x,X,M) {
@@ -1320,7 +1338,8 @@
     empty: function (bbox) {
       if (!bbox) bbox = CHTML.BBOX.zero();
       bbox.h = bbox.d = bbox.r = bbox.t = bbox.b = -BIGDIMEN;
-      bbox.w = 0;  bbox.l = BIGDIMEN;
+      bbox.w = 0; bbox.l = BIGDIMEN;
+      delete bbox.pwidth;
       return bbox;
     },
     //
@@ -1718,10 +1737,9 @@
         }
         var alttext = this.Get("alttext");
         if (alttext && !node.getAttribute("aria-label")) node.setAttribute("aria-label",alttext);
-        if (!node.getAttribute("role")) node.setAttribute("role","math");
         if (this.CHTML.pwidth) {
-          node.parentNode.style.width = this.CHTML.pwidth;
           node.parentNode.style.minWidth = this.CHTML.mwidth||CHTML.Em(this.CHTML.w);
+          node.parentNode.className += " mjx-full-width";
         } else if (!this.isMultiline && this.Get("display") === "block") {
           var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
           if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) values.indentalign = values.indentalignfirst;
@@ -2656,6 +2674,7 @@
 	if (this.data[0]) {
 	  this.data[0].toCommonHTML(node);
 	  this.CHTML.updateFrom(this.data[0].CHTML);
+          this.CHTMLhandleBBox(node);
 	}
         return node;
       }

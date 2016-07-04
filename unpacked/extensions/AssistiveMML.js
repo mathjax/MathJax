@@ -115,7 +115,8 @@
       while (state.i < m) {
         jax = state.jax[state.i];
         frame = document.getElementById(jax.inputID+"-Frame");
-        if (jax.outputJax !== "NativeMML" && frame && !frame.getAttribute("data-mathml")) {
+        if (jax.outputJax !== "NativeMML" && jax.outputJax !== "PlainSource" &&
+            frame && !frame.getAttribute("data-mathml")) {
           try {
             mml = jax.root.toMathML("").replace(/\n */g,"").replace(/<!--.*?-->/g,"");
           } catch (err) {
@@ -128,7 +129,7 @@
             className: "MJX_Assistive_MathML"
               + (jax.root.Get("display") === "block" ? " MJX_Assistive_MathML_Block" : "")
           });
-          span.innerHTML = mml;
+          try {span.innerHTML = mml} catch (err) {}
           frame.style.position = "relative";
           frame.setAttribute("role","presentation");
           frame.firstChild.setAttribute("aria-hidden","true");
