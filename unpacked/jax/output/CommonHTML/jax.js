@@ -2610,7 +2610,7 @@
         }
         if (this.CHTMLlineBreaks()) {
           this.CHTMLmultiline(node);
-          if (options.autowidth) node.style.width = "";
+          if ((options||{}).autowidth) node.style.width = "";
         } else {
           if (hasNegative && bbox.w) node.style.width = CHTML.Em(Math.max(0,bbox.w));
           if (bbox.w < 0) node.style.marginRight = CHTML.Em(bbox.w);
