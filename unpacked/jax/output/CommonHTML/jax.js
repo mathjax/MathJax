@@ -2413,6 +2413,7 @@
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{
           childNodes:["mjx-numerator","mjx-denominator"],
+          childOptions: {autowidth: true},
           forceChild:true, noBBox:true, minChildren:2
         });
         var values = this.getValues("linethickness","displaystyle",
@@ -2600,7 +2601,7 @@
     /********************************************************/
     
     MML.mrow.Augment({
-      toCommonHTML: function (node) {
+      toCommonHTML: function (node,options) {
         node = this.CHTMLdefaultNode(node);
         var bbox = this.CHTML, H = bbox.h, D = bbox.d, hasNegative;
         for (var i = 0, m = this.data.length; i < m; i++) {
@@ -2609,6 +2610,7 @@
         }
         if (this.CHTMLlineBreaks()) {
           this.CHTMLmultiline(node);
+          if (options.autowidth) node.style.width = "";
         } else {
           if (hasNegative && bbox.w) node.style.width = CHTML.Em(Math.max(0,bbox.w));
           if (bbox.w < 0) node.style.marginRight = CHTML.Em(bbox.w);

@@ -1291,7 +1291,7 @@
         if (bbox.tw) {BBOX.tw = bbox.tw}
       }
     },
-    alignBox: function (span,align,y,dx) {
+    alignBox: function (span,align,y,dx,noskip) {
       if (dx == null) {dx = 0}
       this.placeBox(span,dx,y); // set y position (and left aligned)
       if (this.msiePlaceBoxBug) {
@@ -1302,7 +1302,7 @@
         while (node && node.nodeName !== "#text") {node = node.previousSibling}
         if (node) {span.removeChild(node)}
       }
-      var bbox = span.bbox; if (bbox.isMultiline) return;
+      var bbox = span.bbox; if (bbox.isMultiline && !noskip) return;
       var isRelative = bbox.width != null && !bbox.isFixed;
       var r = 0, c = dx-bbox.w/2, l = "50%";
       if (this.initialSkipBug) {r = bbox.w-bbox.rw-.1; c += bbox.lw}
@@ -2581,8 +2581,8 @@
 	    HTMLCSS.createRule(rule,t,0,W+2*t);
 	    HTMLCSS.placeBox(rule,0,a-t/2);
 	  }
-	  HTMLCSS.alignBox(num,values.numalign,u);
-	  HTMLCSS.alignBox(den,values.denomalign,-v);
+	  HTMLCSS.alignBox(num,values.numalign,u,0,true);
+	  HTMLCSS.alignBox(den,values.denomalign,-v,0,true);
 	}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
