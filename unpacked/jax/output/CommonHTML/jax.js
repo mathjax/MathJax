@@ -1882,7 +1882,7 @@
         //  something, so put them over a space and remove the space's width
         //
         node = node.firstChild;
-        var space = CHTML.Element("mjx-span",{style:{width:".25em","margin-left":"-.25em"}});
+        var space = CHTML.Element("mjx-box",{style:{width:".25em","margin-left":"-.25em"}});
         node.insertBefore(space,node.firstChild);
       },
       CHTMLcenterOp: function (node) {
