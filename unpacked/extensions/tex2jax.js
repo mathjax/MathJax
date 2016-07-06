@@ -263,7 +263,7 @@ MathJax.Extension.tex2jax = {
         } else {
           math.nodeValue += next.nodeValue;
         }
-      } else{
+      } else {
         var ignore = this.ignoreTags[next.nodeName.toLowerCase()];
         math.nodeValue += (ignore == null ? " " : ignore);
       }
