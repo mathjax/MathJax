@@ -81,7 +81,13 @@
       "border-collapse": "separate",
       "border-spacing":  0,
     },
-    ".mjx-math *": {display:"inline-block", "text-align":"left"},
+    ".mjx-math *": {
+      display:"inline-block",
+      "-webkit-box-sizing": "content-box!important",
+      "-moz-box-sizing": "content-box!important",
+      "box-sizing": "content-box!important",          // override bootstrap settings
+      "text-align":"left"
+    },
 
     ".mjx-numerator":   {display:"block", "text-align":"center"},
     ".mjx-denominator": {display:"block", "text-align":"center"},
