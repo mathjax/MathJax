@@ -312,6 +312,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (this.CHTML.R && margin !== "marginRight") state.bbox.w += this.CHTML.R;
       if (end.length === 0) {
         node = this.CHTMLnodeElement();
+        if (this.href) node = node.parentNode;
         node.parentNode.removeChild(node);
         node.nextMathJaxNode.id = node.id;
       }
@@ -326,6 +327,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //
     CHTMLcreateSliceNode: function (node) {
       var NODE = this.CHTMLnodeElement(), n = 0;
+      if (this.href) NODE = NODE.parentNode;
       var LAST = NODE; while (LAST.nextMathJaxNode) {LAST = LAST.nextMathJaxNode; n++}
       var SLICE = NODE.cloneNode(false); LAST.nextMathJaxNode = SLICE; SLICE.nextMathJaxNode = null;
       SLICE.id += "-MJX-Continue-"+n;
@@ -347,6 +349,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //  Move node
         //
         var node = this.CHTMLnodeElement();
+        if (this.href) node = node.parentNode;
         line.appendChild(node);
         if (this.CHTML.pwidth && !line.style.width) line.style.width = this.CHTML.pwidth;
         //
@@ -565,7 +568,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     },
     
     CHTMLmoveLine: function (start,end,node,state,values) {
-      var NODE = this.CHTMLnodeElement(), BOX = this.CHTMLbbox, w;
+      var NODE, BOX = this.CHTMLbbox, w;
       //
       //  If this is the start, move the prescripts, if any.
       //

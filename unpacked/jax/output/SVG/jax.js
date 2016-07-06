@@ -1127,22 +1127,7 @@
         // FIXME:  if an element is split by linebreaking, the ID will be the same on both parts
         // FIXME:  if an element has an id, its zoomed copy will have the same ID
         if (this.id) {svg.removeable = false; SVG.Element(svg.element,{"id":this.id})}
-        if (this.href) {
-	  var a = SVG.Element("a",{"class":"mjx-svg-href"});
-	  a.setAttributeNS(XLINKNS,"href",this.href);
-          a.onclick = this.SVGlink;
-          SVG.addElement(a,"rect",{width:svg.w, height:svg.h+svg.d, y:-svg.d,
-                                   fill:"none", stroke:"none", "pointer-events":"all"});
-          if (svg.type === "svg") {
-            // for svg element, put <a> inside the main <g> element
-            var g = svg.element.firstChild;
-            while (g.firstChild) {a.appendChild(g.firstChild)}
-            g.appendChild(a);
-          } else {
-            a.appendChild(svg.element); svg.element = a;
-          }
-          svg.removeable = false;
-        }
+        if (this.href) {this.SVGaddHref(svg)}
         if (SVG.config.addMMLclasses) {
           this.SVGaddClass(svg.element,"mjx-svg-"+this.type);
           svg.removeable = false;
@@ -1181,6 +1166,22 @@
             }
           }
         }
+      },
+      SVGaddHref: function (svg) {
+	var a = SVG.Element("a",{"class":"mjx-svg-href"});
+        a.setAttributeNS(XLINKNS,"href",this.href);
+        a.onclick = this.SVGlink;
+        SVG.addElement(a,"rect",{width:svg.w, height:svg.h+svg.d, y:-svg.d,
+                                 fill:"none", stroke:"none", "pointer-events":"all"});
+        if (svg.type === "svg") {
+          // for svg element, put <a> inside the main <g> element
+          var g = svg.element.firstChild;
+          while (g.firstChild) {a.appendChild(g.firstChild)}
+          g.appendChild(a);
+        } else {
+          a.appendChild(svg.element); svg.element = a;
+        }
+        svg.removeable = false;
       },
       //
       //  WebKit currently scrolls to the BOTTOM of an svg element if it contains the
