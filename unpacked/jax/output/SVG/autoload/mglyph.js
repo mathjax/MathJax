@@ -82,7 +82,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         } else {
           var mu = this.SVGgetMu(svg);
           svg.Add(BBOX.MGLYPH(this.img.img,values.width,values.height,values.valign,mu,
-                              {src:values.src, alt:values.alt, title:values.alt}));
+                              {alt:values.alt, title:values.alt}));
         }
       }
       svg.Clean();

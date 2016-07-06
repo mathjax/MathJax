@@ -187,8 +187,6 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           CALIGN = state.CALIGN, RALIGN = state.RALIGN,
           RCALIGN = state.RCALIGN;
       CSPACE[state.J] *= 2; RSPACE[ROWS.length-1] *= 2; // since halved below
-      var LH = CHTML.FONTDATA.lineH * values.useHeight,
-          LD = CHTML.FONTDATA.lineD * values.useHeight;
       var T = "0", B, R, L, border, cbox, align;
       if (values.fspace) T = CHTML.Em(state.FSPACE[1]);
       for (var i = 0, m = ROWS.length; i < m; i++) {
@@ -197,7 +195,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //  Space and borders between rows
         //
         B = RSPACE[i]/2; border = null; L = "0";
-        if (RLINES[i] !== MML.LINES.NONE) {
+        if (RLINES[i] !== MML.LINES.NONE && RLINES[i] !== "") {
           border = state.t+" "+RLINES[i];
           B -= 1/CHTML.em/2;
         }
@@ -245,11 +243,12 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
             );
           }
           //
-          //  Pad cells that are too short
+          //  Adjust height and depth of cells
           //
           cell = row[j].firstChild.style;
-          if (cbox.h < LH) cell.marginTop    = CHTML.Em(LH-cbox.h);
-          if (cbox.d < LD) cell.marginBottom = CHTML.Em(LD-cbox.d);
+          var H = Math.max(1,cbox.h);
+          if (H !== state.H[i]) cell.marginTop = CHTML.Em(state.H[i]-H);
+          if (cbox.d < state.D[i]) cell.marginBottom = CHTML.Em(state.D[i]-cbox.d);
         }
         T = B;
       }
@@ -494,7 +493,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         if (LABELS[i] && this.data[i].data[0]) {
           labels.appendChild(LABELS[i]);
           var lbox = this.data[i].data[0].CHTML;
-          T += h - lbox.h;
+          T += h - Math.max(1,lbox.h);
           if (T) LABELS[i].style.marginTop = CHTML.Em(T);
           T = d - lbox.d;
         } else {
@@ -563,6 +562,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
   MML.mtd.Augment({
     toCommonHTML: function (node,options) {
       node = this.CHTMLdefaultNode(node,options);
+      CHTML.addElement(node.firstChild,"mjx-strut");  // forces height to 1em (we adjust later)
       //
       //  Determine if this is stretchy or not
       //

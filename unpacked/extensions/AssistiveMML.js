@@ -115,7 +115,8 @@
       while (state.i < m) {
         jax = state.jax[state.i];
         frame = document.getElementById(jax.inputID+"-Frame");
-        if (jax.outputJax !== "NativeMML" && frame && !frame.getAttribute("data-mathml")) {
+        if (jax.outputJax !== "NativeMML" && jax.outputJax !== "PlainSource" &&
+            frame && !frame.getAttribute("data-mathml")) {
           try {
             mml = jax.root.toMathML("").replace(/\n */g,"").replace(/<!--.*?-->/g,"");
           } catch (err) {

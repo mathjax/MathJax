@@ -154,8 +154,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           state.i++; state.w = 0;
           sub = "presub"; sup = "presup";
         } else {
-          var sbox = this.CHTMLaddScript(sub,state);
-          var Sbox = this.CHTMLaddScript(sup,state);
+          var sbox = this.CHTMLaddScript(sub,state,node);
+          var Sbox = this.CHTMLaddScript(sup,state,node);
           var w = Math.max((sbox ? sbox.rscale*sbox.w : 0),(Sbox ? Sbox.rscale*Sbox.w : 0));
           this.CHTMLpadScript(sub,w,sbox,state);
           this.CHTMLpadScript(sup,w,Sbox,state);
@@ -172,12 +172,17 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //  and padding the box to account for any <none/> elements.
     //  Return the bounding box for the script for later use.
     //
-    CHTMLaddScript: function (type,state) {
+    CHTMLaddScript: function (type,state,node) {
       var BOX, BBOX, data = this.data[state.i];
       if (data && data.type !== "none" && data.type !== "mprescripts") {
         BOX = state.BOX[type];
         if (!BOX) {
-          BOX = state.BOX[type] = CHTML.Element("mjx-"+type);
+          //
+          //  Add the box to the node temporarily so that it is in the DOM
+          //  (so that CHTMLnodeElement() can be used in the toCommonHTML() below).
+          //  See issue #1480.
+          //
+          BOX = state.BOX[type] = CHTML.addElement(node,"mjx-"+type);
           BBOX = state.BBOX[type] = CHTML.BBOX.empty();
           if (state.w) {
             BOX.style.paddingLeft = CHTML.Em(state.w);
