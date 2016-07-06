@@ -53,8 +53,10 @@
         else if (top) {
           this.data.push(item);
           if (item.env) {
-            for (var id in this.env)
-              {if (this.env.hasOwnProperty(id)) {item.env[id] = this.env[id]}}
+            if (item.copyEnv !== false) {
+              for (var id in this.env)
+                {if (this.env.hasOwnProperty(id)) {item.env[id] = this.env[id]}}
+            }
             this.env = item.env;
           } else {item.env = this.env}
         }
@@ -256,9 +258,9 @@
   });
   
   STACKITEM.array = STACKITEM.Subclass({
-    type: "array", isOpen: true, arraydef: {},
+    type: "array", isOpen: true, copyEnv: false, arraydef: {},
     Init: function () {
-      this.table = []; this.row = []; this.env = {}; this.frame = []; this.hfill = [];
+      this.table = []; this.row = []; this.frame = []; this.hfill = [];
       this.SUPER(arguments).Init.apply(this,arguments);
     },
     checkItem: function (item) {
