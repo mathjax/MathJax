@@ -72,6 +72,15 @@ MathJax.Extension.tex2jax = {
 
   },
   
+  //
+  //  Tags to ignore when searching for TeX in the page
+  //
+  ignoreTags: {
+    br: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9 ? "\n" : " "),
+    wbr: "",
+    "#comment": ""
+  },
+  
   PreProcess: function (element) {
     if (!this.configured) {
       this.config = MathJax.Hub.CombineConfig("tex2jax",this.config);
@@ -164,8 +173,7 @@ MathJax.Extension.tex2jax = {
       if (this.search.matched) {element = this.encloseMath(element)}
       if (element) {
         do {prev = element; element = element.nextSibling}
-          while (element && (element.nodeName.toLowerCase() === 'br' ||
-                             element.nodeName.toLowerCase() === '#comment'));
+          while (element && this.ignoreTags[element.nodeName.toLowerCase()] != null);
         if (!element || element.nodeName !== '#text')
           {return (this.search.close ? this.prevEndMatch() : prev)}
       }
@@ -242,25 +250,24 @@ MathJax.Extension.tex2jax = {
   },
   
   encloseMath: function (element) {
-    var search = this.search, close = search.close, CLOSE, math;
+    var search = this.search, close = search.close, CLOSE, math, next;
     if (search.cpos === close.length) {close = close.nextSibling}
        else {close = close.splitText(search.cpos)}
     if (!close) {CLOSE = close = MathJax.HTML.addText(search.close.parentNode,"")}
     search.close = close;
     math = (search.opos ? search.open.splitText(search.opos) : search.open);
-    while (math.nextSibling && math.nextSibling !== close) {
-      if (math.nextSibling.nodeValue !== null) {
-        if (math.nextSibling.nodeName === "#comment") {
-          math.nodeValue += math.nextSibling.nodeValue.replace(/^\[CDATA\[((.|\n|\r)*)\]\]$/,"$1");
+    while ((next = math.nextSibling) && next !== close) {
+      if (next.nodeValue !== null) {
+        if (next.nodeName === "#comment") {
+          math.nodeValue += next.nodeValue.replace(/^\[CDATA\[((.|\n|\r)*)\]\]$/,"$1");
         } else {
-          math.nodeValue += math.nextSibling.nodeValue;
+          math.nodeValue += next.nodeValue;
         }
-      } else if (this.msieNewlineBug) {
-        math.nodeValue += (math.nextSibling.nodeName.toLowerCase() === "br" ? "\n" : " ");
-      } else {
-        math.nodeValue += " ";
+      } else{
+        var ignore = this.ignoreTags[next.nodeName.toLowerCase()];
+        math.nodeValue += (ignore == null ? " " : ignore);
       }
-      math.parentNode.removeChild(math.nextSibling);
+      math.parentNode.removeChild(next);
     }
     var TeX = math.nodeValue.substr(search.olen,math.nodeValue.length-search.olen-search.clen);
     math.parentNode.removeChild(math);
@@ -294,10 +301,8 @@ MathJax.Extension.tex2jax = {
     return script;
   },
   
-  filterPreview: function (tex) {return tex},
-  
-  msieNewlineBug: (MathJax.Hub.Browser.isMSIE && document.documentMode < 9)
-  
+  filterPreview: function (tex) {return tex}
+
 };
 
 // We register the preprocessors with the following priorities:
