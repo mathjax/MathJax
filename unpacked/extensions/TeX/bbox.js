@@ -67,8 +67,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         if (match) {
           if (def)
             {TEX.Error(["MultipleBBoxProperty","%1 specified twice in %2","Padding",name])}
-          var pad = match[1]+match[3];
-          def = {height:"+"+pad, depth:"+"+pad, lspace:pad, width:"+"+(2*match[1])+match[3]};
+          var pad = this.BBoxPadding(match[1]+match[3]);
+          if (pad) def = {height:"+"+pad, depth:"+"+pad, lspace:pad, width:"+"+(2*match[1])+match[3]};
         } else if (part.match(/^([a-z0-9]+|\#[0-9a-f]{6}|\#[0-9a-f]{3})$/i)) {
           if (background)
             {TEX.Error(["MultipleBBoxProperty","%1 specified twice in %2","Background",name])}
@@ -91,7 +91,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       }
       this.Push(math);
     },
-    BBoxStyle: function (styles) {return styles}
+    BBoxStyle: function (styles) {return styles},
+    BBoxPadding: function (pad) {return pad}
   });
 
   MathJax.Hub.Startup.signal.Post("TeX bbox Ready");

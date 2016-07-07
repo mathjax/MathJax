@@ -395,7 +395,11 @@
     //  Filter the styles for \bbox
     //
     TEX.Parse.Augment({
-      BBoxStyle: function (styles) {return SAFE.filterStyles(styles)}
+      BBoxStyle: function (styles) {return SAFE.filterStyles(styles)},
+      BBoxPadding: function (pad) {
+        var styles = SAFE.filterStyles("padding: "+pad);
+        return (styles ? pad : 0);
+      }
     });
 
   });
