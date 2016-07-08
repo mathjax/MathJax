@@ -580,6 +580,7 @@
         prev = script.previousSibling;
         if (prev && String(prev.className).match(/^MathJax(_Display)?( MathJax_Processing)?$/))
           {prev.parentNode.removeChild(prev)}
+        if (script.MathJax.preview) script.MathJax.preview.style.display = "none";
         //
         //  Add the span, and a div if in display mode,
         //  then mark it as being processed
@@ -655,6 +656,7 @@
         if (!jax.HTMLCSS.isHidden) {span = span.previousSibling}
         span.parentNode.removeChild(span);
         test.parentNode.removeChild(test);
+        if (script.MathJax.preview) script.MathJax.preview.style.display = "";
       }
       //
       //  Set state variables used for displaying equations in chunks
