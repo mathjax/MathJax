@@ -180,7 +180,8 @@
       position:  "absolute",
       width:"1px", height:"60ex"
     },
-    ".mjx-line-box-test": {
+    ".mjx-line-box-test": {display: "table!important"},
+    ".mjx-line-box-test span": {
       display: "table-cell!important",
       width: "10000em!important",
       "min-width":0, "max-width":"none",
@@ -251,7 +252,7 @@
       //
       // Used in preTranslate to get linebreak width
       //
-      this.linebreakSpan = HTML.Element("span",{className:"mjx-line-box-test"});
+      this.linebreakSpan = HTML.Element("span",{className:"mjx-line-box-test"},[["span"]]);
 
       //
       //  Set up styles and preload web fonts
@@ -284,7 +285,7 @@
       document.body.appendChild(this.linebreakSpan);
       this.defaultEm    = this.getFontSize(this.TestSpan);
       this.defaultEx    = this.TestSpan.firstChild.offsetHeight/60;
-      this.defaultWidth = this.linebreakSpan.offsetWidth;
+      this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
       document.body.removeChild(this.linebreakSpan);
       document.body.removeChild(this.TestSpan);
     },
@@ -453,7 +454,7 @@
         jax = script.MathJax.elementJax; if (!jax) continue;
         em = CHTML.getFontSize(test);
         ex = test.firstChild.offsetHeight/60;
-        cwidth = Math.max(0,test.previousSibling.offsetWidth-2);
+        cwidth = Math.max(0,test.previousSibling.firstChild.offsetWidth-2);
         if (ex === 0 || ex === "NaN") {
           ex = this.defaultEx;
           cwidth = this.defaultWidth;

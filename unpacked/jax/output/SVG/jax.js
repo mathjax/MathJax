@@ -100,7 +100,8 @@
           "min-height": 0, "max-height":"none",
           padding:0, border: 0, margin: 0
         },
-        ".MathJax_SVG_LineBox": {
+        ".MathJax_SVG_LineBox": {display: "table!important"},
+        ".MathJax_SVG_LineBox span": {
           display: "table-cell!important",
           width: "10000em!important",
           "min-width":0, "max-width":"none",
@@ -179,7 +180,7 @@
       );
 
       // Used in preTranslate to get linebreak width
-      this.linebreakSpan = HTML.Element("span",{className:"MathJax_SVG_LineBox"});
+      this.linebreakSpan = HTML.Element("span",{className:"MathJax_SVG_LineBox"},[["span"]]);
 
       // Set up styles
       return AJAX.Styles(this.config.styles,["InitializeSVG",this]);
@@ -195,7 +196,7 @@
       document.body.appendChild(this.ExSpan);
       document.body.appendChild(this.linebreakSpan);
       this.defaultEx    = this.ExSpan.firstChild.offsetHeight/60;
-      this.defaultWidth = this.linebreakSpan.offsetWidth;
+      this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
       document.body.removeChild(this.linebreakSpan);
       document.body.removeChild(this.ExSpan);
     },
@@ -261,7 +262,7 @@
         test = script.previousSibling; div = test.previousSibling;
         jax = script.MathJax.elementJax; if (!jax) continue;
         ex = test.firstChild.offsetHeight/60;
-        cwidth = Math.max(0,(div.previousSibling.offsetWidth-2) / this.config.scale * 100);
+        cwidth = Math.max(0,(div.previousSibling.firstChild.offsetWidth-2) / this.config.scale * 100);
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
           // (this will cause a reflow for each math element that is hidden)
