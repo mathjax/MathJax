@@ -372,14 +372,13 @@
     //  nodes, not nodes that might be nested deeper in the tree (see issue #1447).
     //
     getNode: function (node,type) {
-      while (node && node.childNodes.length === 1 && node.firstChild.id == null)
-        node = node.firstChild;
-      if (node) {
-        var name = RegExp("\\b"+type+"\\b");
+      var name = RegExp("\\b"+type+"\\b");
+      while (node) {
         for (var i = 0, m = node.childNodes.length; i < m; i++) {
           var child = node.childNodes[i];
           if (name.test(child.className)) return child;
         }
+        node = (node.firstChild && (node.firstChild.id||"") === "" ? node.firstChild : null);
       }
       return null;
     },
@@ -1395,12 +1394,10 @@
       },
       CHTMLaddChild: function (node,i,options) {
         var child = this.data[i], cnode;
+        var type = options.childNodes;
+        if (type instanceof Array) type = type[i]||"span";
         if (child) {
-          var type = options.childNodes;
-          if (type) {
-            if (type instanceof Array) type = type[i]||"span";
-            node = CHTML.addElement(node,type);
-          }
+          if (type) node = CHTML.addElement(node,type);
           cnode = child.toCommonHTML(node,options.childOptions);
           if (type && child.CHTML.rscale !== 1) {
             // move scale factor to outer container (which seems to be more accurate)
@@ -1414,7 +1411,9 @@
             if (cbox.skew) bbox.skew = cbox.skew;
             if (cbox.pwidth) bbox.pwidth = cbox.pwidth;
           }
-        } else if (options.forceChild) {cnode = CHTML.addElement(node,"mjx-box")}
+        } else if (options.forceChild) {
+          cnode = CHTML.addElement(node,(type||"mjx-box"));
+        }
         return cnode;
       },
       
@@ -1424,6 +1423,7 @@
         return node;
       },
       CHTMLcoreNode: function (node) {
+        if (this.inferRow && this.data[0]) return this.data[0].CHTMLcoreNode(node.firstChild);
         return this.CHTMLchildNode(node,this.CoreIndex());
       },
       
