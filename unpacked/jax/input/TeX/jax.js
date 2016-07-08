@@ -714,8 +714,8 @@
         '\\arrowvert':      '23D0',
         '\\Arrowvert':      '2016',
         '\\bracevert':      '23AA',  // non-standard
-        '\\Vert':           ['2225',{texClass:MML.TEXCLASS.ORD}],
-        '\\|':              ['2225',{texClass:MML.TEXCLASS.ORD}],
+        '\\Vert':           ['2016',{texClass:MML.TEXCLASS.ORD}],
+        '\\|':              ['2016',{texClass:MML.TEXCLASS.ORD}],
         '\\vert':           ['|',{texClass:MML.TEXCLASS.ORD}],
         '\\uparrow':        '2191',
         '\\downarrow':      '2193',

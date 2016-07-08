@@ -145,10 +145,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     delimiter: {
-      '\\lvert':     ['2223',{texClass:MML.TEXCLASS.OPEN}],
-      '\\rvert':     ['2223',{texClass:MML.TEXCLASS.CLOSE}],
-      '\\lVert':     ['2225',{texClass:MML.TEXCLASS.OPEN}],
-      '\\rVert':     ['2225',{texClass:MML.TEXCLASS.CLOSE}]
+      '\\lvert':     ['007C',{texClass:MML.TEXCLASS.OPEN}],
+      '\\rvert':     ['007C',{texClass:MML.TEXCLASS.CLOSE}],
+      '\\lVert':     ['2016',{texClass:MML.TEXCLASS.OPEN}],
+      '\\rVert':     ['2016',{texClass:MML.TEXCLASS.CLOSE}]
     }
   },null,true);
     
