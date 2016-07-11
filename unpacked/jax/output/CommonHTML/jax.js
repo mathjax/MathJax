@@ -473,9 +473,9 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        test = scripts.previousSibling;
+        test = script.previousSibling;
         span = test.previousSibling;
-        jax = scripts.MathJax.elementJax; if (!jax) continue;
+        jax = script.MathJax.elementJax; if (!jax) continue;
         span.parentNode.removeChild(span);
         test.parentNode.removeChild(test);
         if (script.MathJax.preview) script.MathJax.preview.style.display = "";
