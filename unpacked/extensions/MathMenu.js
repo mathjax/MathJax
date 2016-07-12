@@ -314,7 +314,7 @@
       if (menu.offsetWidth) menu.style.width = (menu.offsetWidth+2) + "px";
       var x = event.pageX, y = event.pageY;
       var bbox = document.body.getBoundingClientRect();
-      var styles = window.getComputedStyle(document.body);
+      var styles = (window.getComputedStyle ? window.getComputedStyle(document.body) : {marginLeft: "0px"});
       var bodyRight = bbox.right - Math.min(0,bbox.left) + parseFloat(styles.marginLeft);
       if (!x && !y && "clientX" in event) {
         x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
