@@ -190,7 +190,18 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
     */
     appendToken: function(parentNode,name,textContent) {
       var element = CToP.createElement(name);
-      element.appendChild(document.createTextNode(textContent));
+      if (name === 'mn' && textContent.substr(0,1) === "-") {
+        //
+        // use <mrow><mo>&#x2212;</mo><mn>n</mn></mrow> instead of <mn>-n</mn>
+        //
+        element.appendChild(document.createTextNode(textContent.substr(1)));
+        var mrow = CToP.createElement('mrow');
+        CToP.appendToken(mrow,'mo','\u2212');
+        mrow.appendChild(element);
+        element = mrow;
+      } else {
+        element.appendChild(document.createTextNode(textContent));
+      }
       parentNode.appendChild(element);
       return element;
     },

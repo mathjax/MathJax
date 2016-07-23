@@ -2244,11 +2244,17 @@
     });
 
     MML.mn.Augment({
+      HTMLremapMinus: function (text) {return text.replace(/^-/,"\u2212")},
       toHTML: function (span) {
 	span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
 	var variant = this.HTMLgetVariant();
-	for (var i = 0, m = this.data.length; i < m; i++)
-	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
+        var remap = this.HTMLremapMinus;
+	for (var i = 0, m = this.data.length; i < m; i++) {
+          if (this.data[i]) {
+            this.data[i].toHTML(span,variant,remap);
+            remap = null;
+          }
+        }
 	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (this.data.join("").length !== 1) {delete span.bbox.skew}
 	this.HTMLhandleSpace(span);

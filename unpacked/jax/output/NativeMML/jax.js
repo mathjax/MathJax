@@ -890,6 +890,22 @@
           }
         }
       });
+      
+      MML.mn.Augment({
+        NativeMMLremapMinus: function (text) {return text.replace(/^-/,"\u2212")},
+        toNativeMML: function (parent) {
+          var tag = this.NativeMMLelement(this.type);
+          this.NativeMMLattributes(tag);
+          var remap = this.NativeMMLremapMinus;
+          for (var i = 0, m = this.data.length; i < m; i++) {
+            if (this.data[i]) {
+              this.data[i].toNativeMML(tag,remap);
+              remap = null;
+            }
+          }
+          parent.appendChild(tag);
+        }
+      });
 
       var fontDir = AJAX.fileURL(MathJax.OutputJax.fontDir+"/HTML-CSS/TeX/otf");
 
@@ -1179,8 +1195,10 @@
       //
       //  Add a text node
       //
-      toNativeMML: function (parent) {
-	parent.appendChild(document.createTextNode(this.toString()));
+      toNativeMML: function (parent,remap) {
+        var text = this.toString();
+        if (remap) text = remap(text);
+	parent.appendChild(document.createTextNode(text));
       }
     });
 

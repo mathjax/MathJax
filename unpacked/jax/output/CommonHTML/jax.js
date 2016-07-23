@@ -1794,8 +1794,9 @@
     /********************************************************/
     
     MML.mn.Augment({
+      CHTMLremapMinus: function (text) {return text.replace(/^-/,"\u2212")},
       toCommonHTML: function (node) {
-        node = this.CHTMLdefaultNode(node);
+        node = this.CHTMLdefaultNode(node,{childOptions:{remap:this.CHTMLremapMinus}});
         var bbox = this.CHTML, text = this.data.join("");
         if (bbox.skew != null && text.length !== 1) delete bbox.skew;
         if (bbox.r > bbox.w && text.length === 1 && !this.CHTMLvariant.noIC) {
