@@ -53,8 +53,10 @@
         else if (top) {
           this.data.push(item);
           if (item.env) {
-            for (var id in this.env)
-              {if (this.env.hasOwnProperty(id)) {item.env[id] = this.env[id]}}
+            if (item.copyEnv !== false) {
+              for (var id in this.env)
+                {if (this.env.hasOwnProperty(id)) {item.env[id] = this.env[id]}}
+            }
             this.env = item.env;
           } else {item.env = this.env}
         }
@@ -256,9 +258,9 @@
   });
   
   STACKITEM.array = STACKITEM.Subclass({
-    type: "array", isOpen: true, arraydef: {},
+    type: "array", isOpen: true, copyEnv: false, arraydef: {},
     Init: function () {
-      this.table = []; this.row = []; this.env = {}; this.frame = []; this.hfill = [];
+      this.table = []; this.row = []; this.frame = []; this.hfill = [];
       this.SUPER(arguments).Init.apply(this,arguments);
     },
     checkItem: function (item) {
@@ -712,8 +714,8 @@
         '\\arrowvert':      '23D0',
         '\\Arrowvert':      '2016',
         '\\bracevert':      '23AA',  // non-standard
-        '\\Vert':           ['2225',{texClass:MML.TEXCLASS.ORD}],
-        '\\|':              ['2225',{texClass:MML.TEXCLASS.ORD}],
+        '\\Vert':           ['2016',{texClass:MML.TEXCLASS.ORD}],
+        '\\|':              ['2016',{texClass:MML.TEXCLASS.ORD}],
         '\\vert':           ['|',{texClass:MML.TEXCLASS.ORD}],
         '\\uparrow':        '2191',
         '\\downarrow':      '2193',
@@ -2214,9 +2216,11 @@
      */
     fenced: function (open,mml,close) {
       var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
-      mrow.Append(MML.mo(open).With({fence:true, stretchy:true, texClass:MML.TEXCLASS.OPEN}));
-      if (mml.type === "mrow") {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
-      mrow.Append(MML.mo(close).With({fence:true, stretchy:true, texClass:MML.TEXCLASS.CLOSE}));
+      mrow.Append(
+        MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN}),
+        mml,
+        MML.mo(close).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.CLOSE})
+      );
       return mrow;
     },
     /*

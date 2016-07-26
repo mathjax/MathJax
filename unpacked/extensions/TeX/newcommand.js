@@ -51,11 +51,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Implement \newcommand{\name}[n][default]{...}
      */
     NewCommand: function (name) {
-      var cs = this.trimSpaces(this.GetArgument(name)),
+      var CS = this.GetArgument(name), cs = this.trimSpaces(CS),
           n  = this.GetBrackets(name),
           opt = this.GetBrackets(name),
           def = this.GetArgument(name);
       if (cs.charAt(0) === "\\") {cs = cs.substr(1)}
+      if (cs === "" && CS.substr(CS.length-1,1) === " ") {cs += " "}
       if (!cs.match(/^(.|[a-z]+)$/i)) {
         TEX.Error(["IllegalControlSequenceName",
                    "Illegal control sequence name for %1",name]);
@@ -120,10 +121,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         name = this.GetCSname(name);
         macro = this.csFindMacro(name);
         if (!macro) {
-          if (TEXDEF.mathchar0mi[name])            {macro = ["csMathchar0mi",TEXDEF.mathchar0mi[name]]} else
-          if (TEXDEF.mathchar0mo[name])            {macro = ["csMathchar0mo",TEXDEF.mathchar0mo[name]]} else
-          if (TEXDEF.mathchar7[name])              {macro = ["csMathchar7",TEXDEF.mathchar7[name]]}     else 
-          if (TEXDEF.delimiter["\\"+name] != null) {macro = ["csDelimiter",TEXDEF.delimiter["\\"+name]]}
+          if (TEXDEF.mathchar0mi[name])            {macro = ["csMathchar0mi",TEXDEF.mathchar0mi[name]]}  else
+          if (TEXDEF.mathchar0mo[name])            {macro = ["csMathchar0mo",TEXDEF.mathchar0mo[name]]}  else
+          if (TEXDEF.mathchar7[name])              {macro = ["csMathchar7",TEXDEF.mathchar7[name]]}      else 
+          if (TEXDEF.delimiter["\\"+name] != null) {macro = ["csDelimiter",TEXDEF.delimiter["\\"+name]]} else
+          return;
         }
       } else {macro = ["Macro",c]; this.i++}
       this.setDef(cs,macro);
@@ -145,8 +147,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         TEX.Error(["MissingCS",
                    "%1 must be followed by a control sequence", cmd])
       }
-      var cs = this.trimSpaces(this.GetArgument(cmd));
-      return cs.substr(1);
+      var cs = this.GetArgument(cmd), CS = this.trimSpaces(cs);
+      if (CS == "\\" && cs.substr(cs.length-1,1) === " ") {CS += " "}
+      return CS.substr(1);
     },
     
     /*

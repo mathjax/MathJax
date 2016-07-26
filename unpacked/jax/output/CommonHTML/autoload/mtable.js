@@ -59,11 +59,6 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       this.CHTMLgetBoxSizes(values,state);
       this.CHTMLgetAttributes(values,state);
-      if (values.equalrows) {
-        state.HD = true;
-        state.HH = Math.max.apply(Math,state.H);
-        state.DD = Math.max.apply(Math,state.D);
-      }
       this.CHTMLadjustCells(values,state);
       if (values.frame) table.style.border = state.t+" "+values.frame;
       this.CHTMLalignV(values,state,node);
@@ -109,6 +104,12 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           if (cbox.d > D[i]) D[i] = cbox.d;
           if (cbox.w > W[j]) W[j] = cbox.w;
         }
+      }
+      if (values.equalrows) {
+        state.HD = true;
+        var HH = Math.max.apply(Math,H);
+        var DD = Math.max.apply(Math,D);
+        for (var i = 0, m = H.length; i < m; i++) {H[i] = HH; D[i] = DD}
       }
       state.H = H; state.D = D; state.W = W, state.J = J;
     },
@@ -187,19 +188,23 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           CALIGN = state.CALIGN, RALIGN = state.RALIGN,
           RCALIGN = state.RCALIGN;
       CSPACE[state.J] *= 2; RSPACE[ROWS.length-1] *= 2; // since halved below
-      var T = "0", B, R, L, border, cbox, align;
-      if (values.fspace) T = CHTML.Em(state.FSPACE[1]);
+      var T = "0", B, R, L, border, cbox, align, lastB = 0;
+      if (values.fspace) {
+        lastB = state.FSPACE[1];
+        T = CHTML.Em(state.FSPACE[1]);
+      }
+      state.RHD = []; state.RH = [];
       for (var i = 0, m = ROWS.length; i < m; i++) {
         var row = ROWS[i], rdata = this.data[i];
         //
         //  Space and borders between rows
         //
         B = RSPACE[i]/2; border = null; L = "0";
-        if (RLINES[i] !== MML.LINES.NONE && RLINES[i] !== "") {
-          border = state.t+" "+RLINES[i];
-          B -= 1/CHTML.em/2;
-        }
-        B = CHTML.Em(Math.max(0,B));
+        if (RLINES[i] !== MML.LINES.NONE && RLINES[i] !== "") border = state.t+" "+RLINES[i];
+        state.RH[i] = lastB + state.H[i];                 // distance to baseline in row
+        lastB = Math.max(0,B);
+        state.RHD[i] = state.RH[i] + lastB + state.D[i];  // total height of row
+        B = CHTML.Em(lastB);
         //
         //  Frame space for initial cell
         //
@@ -219,7 +224,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
             R -= 1/CHTML.em/2;
           }
           R = CHTML.Em(Math.max(0,R));
-          cell.padding = T+" "+R+" "+B+" "+L;
+          cell.padding = T+" "+R+" 0px "+L;
           if (border) cell.borderBottom = border;
           L = R;
           //
@@ -231,25 +236,12 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           align = (rdata.data[j-s].columnalign||RCALIGN[i][j]||CALIGN[j]);
           if (align !== MML.ALIGN.CENTER) cell.textAlign = align;
           //
-          //  Equal heights forced by adding an element of the proper size
-          //  (setting style.height seems to work very strangely)
+          //  Adjust baseline of cells to match cell height
           //
-          if (state.HD && j === 0) {
-            CHTML.addElement(row[j].parentNode,"mjx-mtd",{style:{padding:T+" 0 "+B}},
-              [["mjx-box",{style:{
-                height:CHTML.Em(state.HH+state.DD),
-                "vertical-align":CHTML.Em(-state.DD)
-              }}]]
-            );
-          }
-          //
-          //  Adjust height and depth of cells
-          //
-          cell = row[j].firstChild.style;
           var H = Math.max(1,cbox.h);
-          if (H !== state.H[i]) cell.marginTop = CHTML.Em(state.H[i]-H);
-          if (cbox.d < state.D[i]) cell.marginBottom = CHTML.Em(state.D[i]-cbox.d);
+          if (H !== state.H[i]) row[j].firstChild.style.marginTop = CHTML.Em(state.H[i]-H);
         }
+        row.node.style.height = CHTML.Em(state.RHD[i]);
         T = B;
       }
       CSPACE[state.J] /= 2; RSPACE[ROWS.length-1] /= 2; // back to normal
@@ -277,9 +269,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       var T = 0, B = 0, a = CHTML.TEX.axis_height;
       if (values.fspace) T += state.FSPACE[1];
       if (values.frame) {T += 2/CHTML.em; B += 1/CHTML.em}
-      var h = state.HH, d = state.DD;
       for (var i = 0; i < M; i++) {
-        if (!state.HD) {h = H[i]; d = D[i]}
+        var h = H[i], d = D[i];
         T += h + d + RSPACE[i];
         if (n) {
           if (i === n-1) {
@@ -411,10 +402,9 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     CHTMLstretchCells: function (values,state) {
       var ROWS = state.rows, H = state.H, D = state.D, W = state.W,
           J = state.J, M = ROWS.length-1;
-      var h = state.HH, d = state.DD;
       for (var i = 0; i <= M; i++) {
         var row = ROWS[i], rdata = this.data[i];
-        if (!state.HD) {h = H[i]; d = D[i]}
+        var h = H[i], d = D[i];
         for (var j = 0; j <= J; j++) {
           var cell = row[j], cdata = rdata.data[j];
           if (!cdata) continue;
@@ -457,7 +447,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       var box = CHTML.addElement(node,"mjx-box",{
         style:{width:"100%","text-align":indent.indentalign}
       }); box.appendChild(table);
-      var labels = CHTML.Element("mjx-stack");
+      var labels = CHTML.Element("mjx-itable");
       table.style.display = "inline-table"; if (!table.style.width) table.style.width = "auto";
       labels.style.verticalAlign = "top";
       table.style.verticalAlign = CHTML.Em(state.T-state.B-state.H[0]);
@@ -485,21 +475,18 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       //  Vertically align the labels with their rows
       //
-      var LABELS = state.labels, T = 0, H = state.H, D = state.D, RSPACE = state.RSPACE;
+      var LABELS = state.labels, T = 0;
       if (values.fspace) T = state.FSPACE[0] + (values.frame ? 1/CHTML.em : 0);
-      var h = state.HH, d = state.DD;
       for (var i = 0, m = LABELS.length; i < m; i++) {
-        if (!state.HD) {h = H[i]; d = D[i]}
         if (LABELS[i] && this.data[i].data[0]) {
           labels.appendChild(LABELS[i]);
           var lbox = this.data[i].data[0].CHTML;
-          T += h - Math.max(1,lbox.h);
-          if (T) LABELS[i].style.marginTop = CHTML.Em(T);
-          T = d - lbox.d;
+          T = state.RH[i] - Math.max(1,lbox.h);
+          if (T) LABELS[i].firstChild.firstChild.style.marginTop = CHTML.Em(T);
+          LABELS[i].style.height = CHTML.Em(state.RHD[i]);
         } else {
-          T += h + d;
+          CHTML.addElement(labels,"mjx-label",{style:{height:CHTML.Em(state.RHD[i])}});
         }
-        T += RSPACE[i];
       }
       //
       //  Propagate full-width equations, and reserve room for equation plus label
@@ -521,7 +508,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Add a new row with no label
       //
       if (!options) options = {rows:[],labels:[]};
-      var row = []; options.rows.push(row);
+      var row = []; options.rows.push(row); row.node = node;
       options.labels.push(null);
       //
       //  Add the cells to the row
@@ -545,7 +532,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Add a new row, and get the label
       //
       if (!options) options = {rows:[],labels:[]};
-      var row = []; options.rows.push(row);
+      var row = []; options.rows.push(row); row.node = node;
       var label = CHTML.Element("mjx-label"); options.labels.push(label);
       this.CHTMLaddChild(label,0,options);
       if (this.data[0]) options.labeled = true;

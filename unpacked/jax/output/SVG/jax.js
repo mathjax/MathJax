@@ -100,7 +100,8 @@
           "min-height": 0, "max-height":"none",
           padding:0, border: 0, margin: 0
         },
-        ".MathJax_SVG_LineBox": {
+        ".MathJax_SVG_LineBox": {display: "table!important"},
+        ".MathJax_SVG_LineBox span": {
           display: "table-cell!important",
           width: "10000em!important",
           "min-width":0, "max-width":"none",
@@ -179,7 +180,7 @@
       );
 
       // Used in preTranslate to get linebreak width
-      this.linebreakSpan = HTML.Element("span",{className:"MathJax_SVG_LineBox"});
+      this.linebreakSpan = HTML.Element("span",{className:"MathJax_SVG_LineBox"},[["span"]]);
 
       // Set up styles
       return AJAX.Styles(this.config.styles,["InitializeSVG",this]);
@@ -195,7 +196,7 @@
       document.body.appendChild(this.ExSpan);
       document.body.appendChild(this.linebreakSpan);
       this.defaultEx    = this.ExSpan.firstChild.offsetHeight/60;
-      this.defaultWidth = this.linebreakSpan.offsetWidth;
+      this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
       document.body.removeChild(this.linebreakSpan);
       document.body.removeChild(this.ExSpan);
     },
@@ -221,6 +222,7 @@
         prev = script.previousSibling;
         if (prev && String(prev.className).match(/^MathJax(_SVG)?(_Display)?( MathJax(_SVG)?_Process(ing|ed))?$/))
           {prev.parentNode.removeChild(prev)}
+        if (script.MathJax.preview) script.MathJax.preview.style.display = "none";
         //
         //  Add the span, and a div if in display mode,
         //  then set the role and mark it as being processed
@@ -261,7 +263,7 @@
         test = script.previousSibling; div = test.previousSibling;
         jax = script.MathJax.elementJax; if (!jax) continue;
         ex = test.firstChild.offsetHeight/60;
-        cwidth = Math.max(0,(div.previousSibling.offsetWidth-2) / this.config.scale * 100);
+        cwidth = Math.max(0,(div.previousSibling.firstChild.offsetWidth-2) / this.config.scale * 100);
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
           // (this will cause a reflow for each math element that is hidden)
@@ -285,6 +287,7 @@
         if (!jax.SVG.isHidden) {span = span.previousSibling}
         span.parentNode.removeChild(span);
         test.parentNode.removeChild(test);
+        if (script.MathJax.preview) script.MathJax.preview.style.display = "";
       }
       //
       //  Set state variables used for displaying equations in chunks
@@ -1127,22 +1130,7 @@
         // FIXME:  if an element is split by linebreaking, the ID will be the same on both parts
         // FIXME:  if an element has an id, its zoomed copy will have the same ID
         if (this.id) {svg.removeable = false; SVG.Element(svg.element,{"id":this.id})}
-        if (this.href) {
-	  var a = SVG.Element("a",{"class":"mjx-svg-href"});
-	  a.setAttributeNS(XLINKNS,"href",this.href);
-          a.onclick = this.SVGlink;
-          SVG.addElement(a,"rect",{width:svg.w, height:svg.h+svg.d, y:-svg.d,
-                                   fill:"none", stroke:"none", "pointer-events":"all"});
-          if (svg.type === "svg") {
-            // for svg element, put <a> inside the main <g> element
-            var g = svg.element.firstChild;
-            while (g.firstChild) {a.appendChild(g.firstChild)}
-            g.appendChild(a);
-          } else {
-            a.appendChild(svg.element); svg.element = a;
-          }
-          svg.removeable = false;
-        }
+        if (this.href) {this.SVGaddHref(svg)}
         if (SVG.config.addMMLclasses) {
           this.SVGaddClass(svg.element,"mjx-svg-"+this.type);
           svg.removeable = false;
@@ -1181,6 +1169,22 @@
             }
           }
         }
+      },
+      SVGaddHref: function (svg) {
+	var a = SVG.Element("a",{"class":"mjx-svg-href"});
+        a.setAttributeNS(XLINKNS,"href",this.href);
+        a.onclick = this.SVGlink;
+        SVG.addElement(a,"rect",{width:svg.w, height:svg.h+svg.d, y:-svg.d,
+                                 fill:"none", stroke:"none", "pointer-events":"all"});
+        if (svg.type === "svg") {
+          // for svg element, put <a> inside the main <g> element
+          var g = svg.element.firstChild;
+          while (g.firstChild) {a.appendChild(g.firstChild)}
+          g.appendChild(a);
+        } else {
+          a.appendChild(svg.element); svg.element = a;
+        }
+        svg.removeable = false;
       },
       //
       //  WebKit currently scrolls to the BOTTOM of an svg element if it contains the
@@ -1566,6 +1570,31 @@
 	return svg;
       }
     });
+    
+    MML.mn.Augment({
+      SVGremapMinus: function (text) {return text.replace(/^-/,"\u2212")},
+      toSVG: function () {
+        this.SVGgetStyles();
+	var variant = this.SVGgetVariant();
+        var svg = this.SVG(); this.SVGgetScale(svg);
+        this.SVGhandleSpace(svg);
+        var remap = this.SVGremapMinus;
+        for (var i = 0, m = this.data.length; i < m; i++) {
+          if (this.data[i]) {
+            var child = svg.Add(this.data[i].toSVG(variant,svg.scale,remap),svg.w,0,true);
+            if (child.skew) {svg.skew = child.skew}
+            remap = null;
+          }
+        }
+        svg.Clean(); var text = this.data.join("");
+        if (svg.skew && text.length !== 1) {delete svg.skew}
+        if (svg.r > svg.w && text.length === 1 && !variant.noIC)
+          {svg.ic = svg.r - svg.w; svg.w = svg.r}
+	this.SVGhandleColor(svg);
+        this.SVGsaveData(svg);
+	return svg;
+      },
+    }),
 
     MML.mtext.Augment({
       toSVG: function () {

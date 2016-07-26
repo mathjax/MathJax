@@ -37,8 +37,8 @@
       SIZE3  = "MathJax_Size3",
       SIZE4  = "MathJax_Size4";
   var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
-  var ARROWREP = [0x2212,MAIN,0,0,0,0,.1];   // add depth for arrow extender
-  var DARROWREP = [0x3D,MAIN,0,0,0,0,.1];    // add depth for arrow extender
+  var ARROWREP = [0x2212,MAIN,0,0,0,-.31,-.31];  // remove extra height/depth added below
+  var DARROWREP = [0x3D,MAIN,0,0,0,0,.1];        // add depth for arrow extender
 
   var UNDEFINEDFAMILY = CHTML.config.undefinedFamily;
 
@@ -179,6 +179,7 @@
       0xB7: 0x22C5,                   // center dot
       0x2B9: 0x2032,                  // prime,
       0x3D2: 0x3A5,                   // Upsilon
+      0x2206: 0x394,                  // increment
       0x2015: 0x2014, 0x2017: 0x5F,   // horizontal bars
       0x2022: 0x2219, 0x2044: 0x2F,   // bullet, fraction slash
       0x2305: 0x22BC, 0x2306: 0x2A5E, // barwedge, doublebarwedge
@@ -1588,6 +1589,8 @@
     0xE154: [120,0,400,-10,410]        // stix-oblique open face capital letter A
   };
 
+  CHTML.FONTDATA.FONTS[MAIN][0x2212][0] = CHTML.FONTDATA.FONTS[MAIN][0x002B][0]; // minus is sized as plus
+  CHTML.FONTDATA.FONTS[MAIN][0x2212][1] = CHTML.FONTDATA.FONTS[MAIN][0x002B][1]; // minus is sized as plus
   CHTML.FONTDATA.FONTS[MAIN][0x22EE][0] += 400;  // adjust height for \vdots
   CHTML.FONTDATA.FONTS[MAIN][0x22F1][0] += 700;  // adjust height for \ddots
   CHTML.FONTDATA.FONTS[SIZE4][0x23AA][0] -= 20;

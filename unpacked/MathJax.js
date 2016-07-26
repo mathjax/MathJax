@@ -2505,6 +2505,11 @@ MathJax.Hub.Startup = {
   Config: function () {
     this.queue.Push(["Post",this.signal,"Begin Config"]);
     //
+    //  Make sure root is set before loading any files
+    //
+    if (MathJax.AuthorConfig && MathJax.AuthorConfig.root)
+      MathJax.Ajax.config.root = MathJax.AuthorConfig.root;
+    //
     //  If a locale is given as a parameter,
     //    set the locale and the default menu value for the locale
     //
@@ -2554,15 +2559,15 @@ MathJax.Hub.Startup = {
   //
   ConfigBlocks: function () {
     var scripts = document.getElementsByTagName("script");
-    var last = null, queue = MathJax.Callback.Queue();
+    var queue = MathJax.Callback.Queue();
     for (var i = 0, m = scripts.length; i < m; i++) {
       var type = String(scripts[i].type).replace(/ /g,"");
       if (type.match(/^text\/x-mathjax-config(;.*)?$/) && !type.match(/;executed=true/)) {
         scripts[i].type += ";executed=true";
-        last = queue.Push(scripts[i].innerHTML+";\n1;");
+        queue.Push(scripts[i].innerHTML+";\n1;");
       }
     }
-    return last;
+    return queue.Push(function () {MathJax.Ajax.config.root = MathJax.Hub.config.root});
   },
 
   //

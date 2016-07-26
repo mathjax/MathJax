@@ -65,7 +65,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       var parent = this;
       while (parent.inferred || (parent.parent && parent.parent.type === "mrow" &&
-             parent.parent.data.length === 1)) {parent = parent.parent}
+             parent.isEmbellished())) {parent = parent.parent}
       var isTop = ((parent.type === "math" && parent.Get("display") === "block") ||
                     parent.type === "mtd");
       parent.isMultiline = true;
@@ -308,6 +308,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var slice = BBOX();
       this.SVGmoveLine(start,end,slice,state,values);
       slice.Clean();
+      if (this.href) {this.SVGaddHref(slice)}
       this.SVGhandleColor(slice);
       svg.Add(slice,svg.w,0,true);
       return slice;

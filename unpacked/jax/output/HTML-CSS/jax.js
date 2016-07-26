@@ -339,6 +339,9 @@
           "min-height": 0, "max-height":"none"
         },
         ".MathJax_LineBox": {
+          display: (oldIE ? "block" : "table") + "!important"
+        },
+        ".MathJax_LineBox span": {
           display: (oldIE ? "block" : "table-cell") + "!important",
           width: (oldIE ? "100%" : "10000em") + "!important",
           "min-width":0, "max-width":"none",
@@ -495,7 +498,7 @@
       );
 
       // Used in preTranslate to get linebreak width
-      this.linebreakSpan = MathJax.HTML.Element("span",{className:"MathJax_LineBox"});
+      this.linebreakSpan = MathJax.HTML.Element("span",{className:"MathJax_LineBox"},[["span"]]);
 
       // Set up styles and preload web fonts
       return AJAX.Styles(this.config.styles,["InitializeHTML",this]);
@@ -551,7 +554,7 @@
       document.body.appendChild(this.linebreakSpan);
       this.defaultEx    = this.EmExSpan.firstChild.offsetHeight/60;
       this.defaultEm    = this.EmExSpan.lastChild.firstChild.offsetHeight/60;
-      this.defaultWidth = this.linebreakSpan.offsetWidth;
+      this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
       document.body.removeChild(this.linebreakSpan);
       document.body.removeChild(this.EmExSpan);
     },
@@ -577,6 +580,7 @@
         prev = script.previousSibling;
         if (prev && String(prev.className).match(/^MathJax(_Display)?( MathJax_Processing)?$/))
           {prev.parentNode.removeChild(prev)}
+        if (script.MathJax.preview) script.MathJax.preview.style.display = "none";
         //
         //  Add the span, and a div if in display mode,
         //  then mark it as being processed
@@ -621,7 +625,7 @@
         jax = script.MathJax.elementJax; if (!jax) continue;
         ex = test.firstChild.offsetHeight/60;
         em = test.lastChild.firstChild.offsetHeight/60;
-        cwidth = Math.max(0,div.previousSibling.offsetWidth - 2);
+        cwidth = Math.max(0,div.previousSibling.firstChild.offsetWidth - 2);
         if (relwidth) {maxwidth = cwidth}
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
@@ -652,6 +656,7 @@
         if (!jax.HTMLCSS.isHidden) {span = span.previousSibling}
         span.parentNode.removeChild(span);
         test.parentNode.removeChild(test);
+        if (script.MathJax.preview) script.MathJax.preview.style.display = "";
       }
       //
       //  Set state variables used for displaying equations in chunks
@@ -2239,11 +2244,17 @@
     });
 
     MML.mn.Augment({
+      HTMLremapMinus: function (text) {return text.replace(/^-/,"\u2212")},
       toHTML: function (span) {
 	span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
 	var variant = this.HTMLgetVariant();
-	for (var i = 0, m = this.data.length; i < m; i++)
-	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
+        var remap = this.HTMLremapMinus;
+	for (var i = 0, m = this.data.length; i < m; i++) {
+          if (this.data[i]) {
+            this.data[i].toHTML(span,variant,remap);
+            remap = null;
+          }
+        }
 	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (this.data.join("").length !== 1) {delete span.bbox.skew}
 	this.HTMLhandleSpace(span);
@@ -2624,7 +2635,7 @@
 	if (surd.isMultiChar || (HTMLCSS.AdjustSurd && HTMLCSS.imgFonts)) {surd.bbox.w *= .95}
 	if (surd.bbox.h + surd.bbox.d > H) {q = ((surd.bbox.h+surd.bbox.d) - (H-t))/2}
 	var ruleC = HTMLCSS.FONTDATA.DELIMITERS[HTMLCSS.FONTDATA.RULECHAR];
-	if (!ruleC || W < ruleC.HW[0][0]*scale || scale < .75) {
+	if (!ruleC || W < (ruleC.HW[0]||[0])[0]*scale || scale < .75) {
 	  HTMLCSS.createRule(rule,0,t,W); rule.bbox.h = -t;
 	} else {
 	  HTMLCSS.createDelimiter(rule,HTMLCSS.FONTDATA.RULECHAR,W,scale);
