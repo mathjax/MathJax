@@ -526,6 +526,7 @@
         0x2015: {alias: 0x2013, dir:H}, // horizontal line
         0x2017: {alias: 0x2013, dir:H}, // horizontal line
         0x203E: {alias: 0x00AF, dir:H}, // overline
+        0x20D7: {alias: 0x2192, dir:H}, // combinining over right arrow (vector arrow)
         0x2215: {alias: 0x002F, dir:V}, // division slash
         0x2329: {alias: 0x27E8, dir:V}, // langle
         0x232A: {alias: 0x27E9, dir:V}, // rangle

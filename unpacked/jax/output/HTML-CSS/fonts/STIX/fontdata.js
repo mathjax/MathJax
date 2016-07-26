@@ -379,6 +379,7 @@
         0x0332: {alias: 0x23AF, dir:H}, // combining low line
         0x2015: {alias: 0x23AF, dir:H}, // horizontal line
         0x2017: {alias: 0x23AF, dir:H}, // horizontal line
+        0x20D7: {alias: 0x2192, dir:H}, // combinining over right arrow (vector arrow)
         0x2212: {alias: 0x23AF, dir:H}, // minus
         0x2215: {alias: 0x002F, dir:V}, // division slash
         0x2329: {alias: 0x27E8, dir:V}, // langle
