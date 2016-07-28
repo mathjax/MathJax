@@ -234,12 +234,17 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (param == null) {return this.GetArgument(name)}
       var i = this.i, j = 0, hasBraces = 0;
       while (this.i < this.string.length) {
-        if (this.string.charAt(this.i) === '{') {
+        var c = this.string.charAt(this.i);
+        if (c === '{') {
           if (this.i === i) {hasBraces = 1}
           this.GetArgument(name); j = this.i - i;
         } else if (this.MatchParam(param)) {
           if (hasBraces) {i++; j -= 2}
           return this.string.substr(i,j);
+	} else if (c === "\\") {
+	  this.i++; j++; hasBraces = 0;
+	  var match = this.string.substr(this.i).match(/[a-z]+|./i);
+	  if (match) {this.i += match[0].length; j = this.i - i}
         } else {
           this.i++; j++; hasBraces = 0;
         }
@@ -254,6 +259,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     MatchParam: function (param) {
       if (this.string.substr(this.i,param.length) !== param) {return 0}
+      if (param.match(/\\[a-z]+/i) &&
+          this.string.charAt(this.i+param.length).match(/[a-z]/i)) {return 0}
       this.i += param.length;
       return 1;
     }
