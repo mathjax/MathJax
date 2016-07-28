@@ -259,7 +259,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     MatchParam: function (param) {
       if (this.string.substr(this.i,param.length) !== param) {return 0}
-      if (param.match(/\\[a-z]+/i) &&
+      if (param.match(/\\[a-z]+$/i) &&
           this.string.charAt(this.i+param.length).match(/[a-z]/i)) {return 0}
       this.i += param.length;
       return 1;
