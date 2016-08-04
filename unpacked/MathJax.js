@@ -705,7 +705,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
     //  Cache-breaking revision number for file
     //
     fileRev: function (file) {
-      var rev = BASE.cdnFileVersions[name] || BASE.cdnVersion;
+      var rev = BASE.cdnFileVersions[file] || BASE.cdnVersion || '';
       if (rev) {rev = "?rev="+rev}
       return rev;
     },
