@@ -313,6 +313,9 @@
       this.posted = true;
       if (menu.offsetWidth) menu.style.width = (menu.offsetWidth+2) + "px";
       var x = event.pageX, y = event.pageY;
+      var bbox = document.body.getBoundingClientRect();
+      var styles = (window.getComputedStyle ? window.getComputedStyle(document.body) : {marginLeft: "0px"});
+      var bodyRight = bbox.right - Math.min(0,bbox.left) + parseFloat(styles.marginLeft);
       if (!x && !y && "clientX" in event) {
         x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
         y = event.clientY + document.body.scrollTop  + document.documentElement.scrollTop;
@@ -326,8 +329,8 @@
           x = (rect.right + rect.left) / 2 + offsetX;
           y = (rect.bottom + rect.top) / 2 + offsetY;
         }
-        if (x + menu.offsetWidth > document.body.offsetWidth - this.margin)
-           {x = document.body.offsetWidth - menu.offsetWidth - this.margin}
+        if (x + menu.offsetWidth > bodyRight - this.margin)
+          {x = bodyRight - menu.offsetWidth - this.margin}
         if (MENU.isMobile) {x = Math.max(5,x-Math.floor(menu.offsetWidth/2)); y -= 20}
         MENU.skipUp = event.isContextMenu;
       } else {
@@ -339,7 +342,7 @@
         }
         if (!MENU.isMobile) {
           if ((MENU.isRTL && x - mw - menu.offsetWidth > this.margin) ||
-              (!MENU.isRTL && x + menu.offsetWidth > document.body.offsetWidth - this.margin))
+              (!MENU.isRTL && x + menu.offsetWidth > bodyRight - this.margin))
             {side = "right"; x = Math.max(this.margin,x - mw - menu.offsetWidth + 6)}
         }
         if (!isPC) {
