@@ -113,7 +113,6 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       t = Math.max(1/SVG.em,t);  // see issue #414
       var H = base.h+p+t, D = base.d+p+t, W = base.w+2*(p+t);
       var dx = 0, w, h, i, m, borders = [false,false,false,false];
-      if (!values.mathcolor) {values.mathcolor = "currenColor"}
 
       // perform some reduction e.g. eliminate duplicate notations.
       var nl = MathJax.Hub.SplitList(values.notation), notation = {};
