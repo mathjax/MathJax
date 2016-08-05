@@ -55,7 +55,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       HTMLCSS.addBox(stack,frame); stack.insertBefore(frame,base); // move base to above background
       var T = 0, B = 0, R = 0, L = 0, dx = 0, dy = 0; var svg, vml;
       var w, h, r;
-      if (!values.mathcolor) {values.mathcolor = "black"} else {span.style.color = values.mathcolor}
+      if (!values.mathcolor) {values.mathcolor = "currentColor"} else {span.style.color = values.mathcolor}
 
       // perform some reduction e.g. eliminate duplicate notations.
       var nl = MathJax.Hub.SplitList(values.notation), notation = {};
