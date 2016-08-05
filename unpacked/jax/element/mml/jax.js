@@ -376,7 +376,7 @@ MathJax.ElementJax.mml.Augment({
       if (prev === MML.TEXCLASS.VCENTER) {prev = MML.TEXCLASS.ORD}
       if (tex  === MML.TEXCLASS.VCENTER) {tex  = MML.TEXCLASS.ORD}
       var space = this.TEXSPACE[prev][tex];
-      if (this.prevLevel > 0 && this.Get("scriptlevel") > 0 && space >= 0) {return ""}
+      if ((this.prevLevel > 0 || this.Get("scriptlevel") > 0) && space >= 0) {return ""}
       return this.TEXSPACELENGTH[Math.abs(space)];
     },
     TEXSPACELENGTH:[
