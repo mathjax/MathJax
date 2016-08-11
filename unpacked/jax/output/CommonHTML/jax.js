@@ -1748,7 +1748,7 @@
         if (alttext && !node.getAttribute("aria-label")) node.setAttribute("aria-label",alttext);
         if (this.CHTML.pwidth) {
           node.parentNode.style.minWidth = this.CHTML.mwidth||CHTML.Em(this.CHTML.w);
-          node.parentNode.className += " mjx-full-width";
+          node.parentNode.className = "mjx-full-width "+node.parentNode.className;
         } else if (!this.isMultiline && this.Get("display") === "block") {
           var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
           if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) values.indentalign = values.indentalignfirst;
