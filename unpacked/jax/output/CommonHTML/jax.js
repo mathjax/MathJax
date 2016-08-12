@@ -1706,12 +1706,12 @@
       //
       CHTMLstretchV: function (h,d) {
         this.Core().CHTMLstretchV(h,d);
-        this.toCommonHTML(this.CHTMLnodeElement(),true);
+        this.toCommonHTML(this.CHTMLnodeElement(),{stretch:true});
         return this.CHTML;
       },
       CHTMLstretchH: function (node,w) {
         this.CHTMLstretchCoreH(node,w);
-        this.toCommonHTML(node,true);
+        this.toCommonHTML(node,{stretch:true});
         return this.CHTML;
       }      
     });
@@ -2044,9 +2044,9 @@
     /********************************************************/
     
     MML.mpadded.Augment({
-      toCommonHTML: function (node,stretch) {
+      toCommonHTML: function (node,options) {
         var child;
-        if (stretch) {
+        if (options && options.stretch) {
           node = node.firstChild; child = node.firstChild;
         } else {
           node = this.CHTMLdefaultNode(node,{childNodes:"mjx-box", forceChild:true});
@@ -2101,7 +2101,7 @@
     /********************************************************/
     
     MML.munderover.Augment({
-      toCommonHTML: function (node,stretch) {
+      toCommonHTML: function (node,options) {
         var values = this.getValues("displaystyle","accent","accentunder","align");
         var base = this.data[this.base];
         if (!values.displaystyle && base != null &&
@@ -2110,12 +2110,13 @@
         //
         //  Get the nodes for base and limits
         //
-        var under, over, nodes = [];
-        if (stretch) {
+        var under, over, nodes = [], stretch = false;
+        if (options && options.stretch) {
           if (this.data[this.base])  base = CHTML.getNode(node,"mjx-op");
           if (this.data[this.under]) under = CHTML.getNode(node,"mjx-under");
           if (this.data[this.over])  over = CHTML.getNode(node,"mjx-over");
           nodes[0] = base; nodes[1] = under||over; nodes[2] = over;
+          stretch = true;
         } else {
           var types = ["mjx-op","mjx-under","mjx-over"];
           if (this.over === 1) types[1] = types[2];
@@ -2309,7 +2310,7 @@
     /********************************************************/
     
     MML.msubsup.Augment({
-      toCommonHTML: function (node,stretch) {
+      toCommonHTML: function (node,options) {
         var values = this.getValues(
            "displaystyle","subscriptshift","superscriptshift","texprimestyle"
         );
@@ -2317,7 +2318,7 @@
         //  Get the nodes for base and limits
         //
         var base, sub, sup;
-        if (stretch) {
+        if (options && options.stretch) {
           if (this.data[this.base]) base = CHTML.getNode(node,"mjx-base");
           if (this.data[this.sub])  sub = CHTML.getNode(node,"mjx-sub");
           if (this.data[this.sup])  sup = CHTML.getNode(node,"mjx-sup");
@@ -2655,8 +2656,8 @@
     /********************************************************/
     
     MML.TeXAtom.Augment({
-      toCommonHTML: function (node,stretch) {
-        if (!stretch) node = this.CHTMLdefaultNode(node);
+      toCommonHTML: function (node,options) {
+        if (!options || !options.stretch) node = this.CHTMLdefaultNode(node);
         if (this.texClass === MML.TEXCLASS.VCENTER) {
           var a = CHTML.TEX.axis_height, BBOX = this.CHTML;
           var v = a-(BBOX.h+BBOX.d)/2+BBOX.d;
@@ -2669,12 +2670,12 @@
       },
       CHTMLstretchV: function (h,d) {
         this.CHTML.updateFrom(this.Core().CHTMLstretchV(h,d));
-        this.toCommonHTML(this.CHTMLnodeElement(),true);
+        this.toCommonHTML(this.CHTMLnodeElement(),{stretch:true});
         return this.CHTML;
       },
       CHTMLstretchH: function (node,w) {
         this.CHTML.updateFrom(this.CHTMLstretchCoreH(node,w));
-        this.toCommonHTML(node,true);
+        this.toCommonHTML(node,{stretch:true});
         return this.CHTML;
       }
     });
