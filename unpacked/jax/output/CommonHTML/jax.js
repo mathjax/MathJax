@@ -502,6 +502,7 @@
       //
       var jax = script.MathJax.elementJax, math = jax.root,
           node = document.getElementById(jax.inputID+"-Frame");
+      if (!node) return;
       this.getMetrics(jax);
       if (this.scale !== 1) node.style.fontSize = jax.CHTML.fontSize;
       //
