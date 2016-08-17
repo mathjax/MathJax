@@ -1341,7 +1341,7 @@
         return;
       }
       if (!scale) {scale = 1};
-      if (!(HW instanceof Array)) {HW = [HW,HW]}
+      if (!(Object.prototype.toString.call(HW) === "[object Array]")) {HW = [HW,HW]}
       var hw = HW[1]; HW = HW[0];
       var delim = {alias: code};
       while (delim.alias) {
@@ -1544,7 +1544,7 @@
         } else if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
           n = this.FONTDATA.REMAP[n];
         }
-        if (n instanceof Array) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]} 
+        if (Object.prototype.toString.call(n) === "[object Array]") {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]} 
         if (typeof(n) === "string") {
           text = n+text.substr(i+1);
           m = text.length; i = -1;
@@ -1641,7 +1641,7 @@
       if (!variant.FONTS) {
         var FONTS = this.FONTDATA.FONTS;
         var fonts = (variant.fonts || this.FONTDATA.VARIANT.normal.fonts);
-        if (!(fonts instanceof Array)) {fonts = [fonts]}
+        if (!(Object.prototype.toString.call(fonts) === "[object Array]")) {fonts = [fonts]}
         if (variant.fonts != fonts) {variant.fonts = fonts}
         variant.FONTS = [];
         for (i = 0, m = fonts.length; i < m; i++) {

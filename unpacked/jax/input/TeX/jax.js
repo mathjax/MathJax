@@ -48,7 +48,7 @@
         if (item instanceof MML.mbase) {item = STACKITEM.mml(item)}
         item.global = this.global;
         top = (this.data.length ? this.Top().checkItem(item) : true);
-        if (top instanceof Array) {this.Pop(); this.Push.apply(this,top)}
+        if (Object.prototype.toString.call(top) === "[object Array]") {this.Pop(); this.Push.apply(this,top)}
         else if (top instanceof STACKITEM) {this.Pop(); this.Push(top)}
         else if (top) {
           this.data.push(item);
@@ -1103,7 +1103,7 @@
     ControlSequence: function (c) {
       var name = this.GetCS(), macro = this.csFindMacro(name);
       if (macro) {
-        if (!(macro instanceof Array)) {macro = [macro]}
+        if (!(Object.prototype.toString.call(macro) === "[object Array]")) {macro = [macro]}
         var fn = macro[0]; if (!(fn instanceof Function)) {fn = this[fn]}
         fn.apply(this,[c+name].concat(macro.slice(1)));
       } else if (TEXDEF.mathchar0mi[name])            {this.csMathchar0mi(name,TEXDEF.mathchar0mi[name])}
@@ -1122,7 +1122,7 @@
     //
     csMathchar0mi: function (name,mchar) {
       var def = {mathvariant: MML.VARIANT.ITALIC};
-      if (mchar instanceof Array) {def = mchar[1]; mchar = mchar[0]}
+      if (Object.prototype.toString.call(mchar) === "[object Array]") {def = mchar[1]; mchar = mchar[0]}
       this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
     },
     //
@@ -1130,7 +1130,7 @@
     //
     csMathchar0mo: function (name,mchar) {
       var def = {stretchy: false};
-      if (mchar instanceof Array) {def = mchar[1]; def.stretchy = false; mchar = mchar[0]}
+      if (Object.prototype.toString.call(mchar) === "[object Array]") {def = mchar[1]; def.stretchy = false; mchar = mchar[0]}
       this.Push(this.mmlToken(MML.mo(MML.entity("#x"+mchar)).With(def)));
     },
     //
@@ -1138,7 +1138,7 @@
     //
     csMathchar7: function (name,mchar) {
       var def = {mathvariant: MML.VARIANT.NORMAL};
-      if (mchar instanceof Array) {def = mchar[1]; mchar = mchar[0]}
+      if (Object.prototype.toString.call(mchar) === "[object Array]") {def = mchar[1]; mchar = mchar[0]}
       if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
     },
@@ -1147,7 +1147,7 @@
     //
     csDelimiter: function (name,delim) {
       var def = {};
-      if (delim instanceof Array) {def = delim[1]; delim = delim[0]}
+      if (Object.prototype.toString.call(delim) === "[object Array]") {def = delim[1]; delim = delim[0]}
       if (delim.length === 4) {delim = MML.entity('#x'+delim)} else {delim = MML.chars(delim)}
       this.Push(this.mmlToken(MML.mo(delim).With({fence: false, stretchy: false}).With(def)));
     },
@@ -1294,7 +1294,7 @@
       if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
       if (TEXDEF.remap[c]) {
         c = TEXDEF.remap[c];
-        if (c instanceof Array) {def = c[1]; c = c[0]}
+        if (Object.prototype.toString.call(c) === "[object Array]") {def = c[1]; c = c[0]}
         mo = MML.mo(MML.entity('#x'+c)).With(def);
       } else {
         mo = MML.mo(c).With(def);
@@ -1789,7 +1789,7 @@
       if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
       var cmd = this.envFindName(env);
       if (!cmd) {TEX.Error(["UnknownEnv","Unknown environment '%1'",env])}
-      if (!(cmd instanceof Array)) {cmd = [cmd]}
+      if (!(Object.prototype.toString.call(cmd) === "[object Array]")) {cmd = [cmd]}
       var end = (cmd[1] instanceof Array ? cmd[1][0] : cmd[1]);
       var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       if (name === "\\end") {
@@ -1867,7 +1867,7 @@
     convertDelimiter: function (c) {
       if (c) {c = TEXDEF.delimiter[c]}
       if (c == null) {return null}
-      if (c instanceof Array) {c = c[0]}
+      if (Object.prototype.toString.call(c) === "[object Array]") {c = c[0]}
       if (c.length === 4) {c = String.fromCharCode(parseInt(c,16))}
       return c;
     },
@@ -2199,7 +2199,7 @@
       //
       //  Translate message if it is ["id","message",args]
       //
-      if (message instanceof Array) {message = _.apply(_,message)}
+      if (Object.prototype.toString.call(message) === "[object Array]") {message = _.apply(_,message)}
       throw HUB.Insert(Error(message),{texError: true});
     },
     

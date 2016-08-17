@@ -669,7 +669,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //    use it to modify the default penalty
       //
       var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO];
-      if (!(linebreak instanceof Array)) {
+      if (!(Object.prototype.toString.call(linebreak) === "[object Array]")) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}
@@ -718,7 +718,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit &&
           !this.mathbackground && !this.background)
         linebreak = [(w+PENALTY.spaceoffset)*PENALTY.spacefactor];
-      if (!(linebreak instanceof Array)) {
+      if (!(Object.prototype.toString.call(linebreak) === "[object Array]")) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}
