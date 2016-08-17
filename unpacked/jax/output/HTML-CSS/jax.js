@@ -683,7 +683,7 @@
       //  Get the data about the math
       //
       var jax = script.MathJax.elementJax, math = jax.root,
-          span = document.getElementById(jax.inputID+"-Frame"),
+          span = script.previousSibling;
           div = (jax.HTMLCSS.display ? (span||{}).parentNode : span);
       if (!div) return;
       //
@@ -775,7 +775,8 @@
         script = scripts[i];
         if (script && script.parentNode && script.MathJax.elementJax) {
           jax = script.MathJax.elementJax; this.getMetrics(jax);
-          jax.root.toHTML(jax.HTMLCSS.span,jax.HTMLCSS.div,this.PHASE.II);
+          if (jax.HTMLCSS.span && jax.HTMLCSS.div) 
+            jax.root.toHTML(jax.HTMLCSS.span,jax.HTMLCSS.div,this.PHASE.II);
         }
       }
       //
@@ -788,14 +789,16 @@
           //  Finish the math with its measured size (toHTML phase III)
           //
           jax = script.MathJax.elementJax; this.getMetrics(jax);
-          jax.root.toHTML(jax.HTMLCSS.span,jax.HTMLCSS.div,this.PHASE.III);
-          if (jax.HTMLCSS.isHidden) script.parentNode.insertBefore(jax.HTMLCSS.div,script);
-          delete jax.HTMLCSS.span; delete jax.HTMLCSS.div;
-          //
-          //  The math is now fully processed
-          //
-          script.MathJax.state = jax.STATE.PROCESSED;
-          HUB.signal.Post(["New Math",script.MathJax.elementJax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
+          if (jax.HTMLCSS.span && jax.HTMLCSS.div) {
+            jax.root.toHTML(jax.HTMLCSS.span,jax.HTMLCSS.div,this.PHASE.III);
+            if (jax.HTMLCSS.isHidden) script.parentNode.insertBefore(jax.HTMLCSS.div,script);
+            delete jax.HTMLCSS.span; delete jax.HTMLCSS.div;
+            //
+            //  The math is now fully processed
+            //
+            script.MathJax.state = jax.STATE.PROCESSED;
+            HUB.signal.Post(["New Math",script.MathJax.elementJax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
+          }
         }
       }
       if (this.forceReflow) {

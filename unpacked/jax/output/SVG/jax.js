@@ -228,7 +228,10 @@
         //  then set the role and mark it as being processed
         //
         jax = script.MathJax.elementJax; if (!jax) continue;
-        jax.SVG = {display: (jax.root.Get("display") === "block")}
+        jax.SVG = {
+          display: (jax.root.Get("display") === "block"),
+          preview: (jax.SVG||{}).preview            // in case typeset calls are interleaved
+        };
         span = div = HTML.Element("span",{
           style: {"font-size": this.config.scale+"%", display:"inline-block"},
  	  className:"MathJax_SVG", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
@@ -312,7 +315,7 @@
       //  Get the data about the math
       //
       var jax = script.MathJax.elementJax, math = jax.root,
-          span = document.getElementById(jax.inputID+"-Frame"),
+          span = script.previousSibling;
           div = (jax.SVG.display ? (span||{}).parentNode : span),
           localCache = (SVG.config.useFontCache && !SVG.config.useGlobalCache);
       if (!div) return;

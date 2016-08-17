@@ -415,7 +415,10 @@
         //  Add the node for the math and mark it as being processed
         //
         jax = script.MathJax.elementJax; if (!jax) continue;
-        jax.CHTML = {display: (jax.root.Get("display") === "block")}
+        jax.CHTML = {
+          display: (jax.root.Get("display") === "block"),
+          preview: (jax.CHTML||{}).preview     // in case typeset calls are interleaved
+        };
         node = CHTML.Element("mjx-chtml",{
           id:jax.inputID+"-Frame", className:"MathJax_CHTML", isMathJax:true, jaxID:this.id,
           oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
