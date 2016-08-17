@@ -578,7 +578,7 @@
         //  Remove any existing output
         //
         prev = script.previousSibling;
-        if (prev && String(prev.className).match(/^MathJax(_Display)?( MathJax_Processing)?$/))
+        if (prev && String(prev.className).match(/^MathJax(_Display)?( MathJax_Process(ing|ed))?$/))
           {prev.parentNode.removeChild(prev)}
         if (script.MathJax.preview) script.MathJax.preview.style.display = "none";
         //
