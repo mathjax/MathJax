@@ -683,8 +683,8 @@
       //  Get the data about the math
       //
       var jax = script.MathJax.elementJax, math = jax.root,
-          span = script.previousSibling;
-          div = (jax.HTMLCSS.display ? (span||{}).parentNode : span);
+          div = script.previousSibling;
+          span = (jax.HTMLCSS.display ? (div||{}).firstChild||div : div);
       if (!div) return;
       //
       //  Set the font metrics

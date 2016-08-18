@@ -315,8 +315,8 @@
       //  Get the data about the math
       //
       var jax = script.MathJax.elementJax, math = jax.root,
-          span = script.previousSibling;
-          div = (jax.SVG.display ? (span||{}).parentNode : span),
+          div = script.previousSibling;
+          span = (jax.SVG.display ? (div||{}).firstChild||div : div),
           localCache = (SVG.config.useFontCache && !SVG.config.useGlobalCache);
       if (!div) return;
       //
