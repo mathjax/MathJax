@@ -315,11 +315,11 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       this.HTMLcleanBBox(slice.bbox);
       if (end.length === 0) {
         span = this.HTMLspanElement();
+        var SPAN = span;
         if (this.href) span = span.parentNode;
         span.parentNode.removeChild(span);
-        span.nextMathJaxSpan.id = span.id; var n = 0;
-        while (span = span.nextMathJaxSpan) {
-          var SPAN = span;
+        span.nextMathJaxSpan.id = SPAN.id; var n = 0;
+        while ((SPAN = SPAN.nextMathJaxSpan)) {
           if (SPAN.nodeName.toLowerCase() === "a") SPAN = SPAN.firstChild;
           var color = this.HTMLhandleColor(SPAN);
           if (color) {color.id += "-MathJax-Continue-"+n; n++}
