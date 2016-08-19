@@ -797,7 +797,7 @@
       } else if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
         n = this.FONTDATA.REMAP[n];
       }
-      if (n instanceof Array) {variant = VARIANT[n[1]]; n = n[0]} 
+      if (Object.prototype.toString.call(n) === "[object Array]") {variant = VARIANT[n[1]]; n = n[0]} 
       if (typeof(n) === "string") {
         var string = {text:n, i:0, length:n.length};
         while (string.i < string.length) {
@@ -1036,7 +1036,7 @@
         CHTML.addElement(node,"mjx-box",{style:{width:bbox.w}});
         return bbox;
       }
-      if (!(HW instanceof Array)) HW = [HW,HW];
+      if (!(Object.prototype.toString.call(HW) === "[object Array]")) HW = [HW,HW];
       var hw = HW[1]; HW = HW[0];
       var delim = {alias: code};
       while (delim.alias) {
@@ -1399,7 +1399,7 @@
       CHTMLaddChild: function (node,i,options) {
         var child = this.data[i], cnode;
         var type = options.childNodes;
-        if (type instanceof Array) type = type[i]||"span";
+        if (Object.prototype.toString.call(type) === "[object Array]") type = type[i]||"span";
         if (child) {
           if (type) node = CHTML.addElement(node,type);
           cnode = child.toCommonHTML(node,options.childOptions);
@@ -1946,7 +1946,7 @@
             {H = [Math.max(H*CHTML.TEX.delimiterfactor/1000,H-CHTML.TEX.delimitershortfall),H]}
           while (node.firstChild) node.removeChild(node.firstChild);
           this.CHTML = bbox = CHTML.createDelimiter(node,this.data.join("").charCodeAt(0),H,bbox);
-          bbox.sH = (H instanceof Array ? H[1] : H);
+          bbox.sH = (Object.prototype.toString.call(H) === "[object Array]" ? H[1] : H);
           //
           //  Reposition as needed
           //

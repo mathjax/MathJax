@@ -806,7 +806,7 @@
     action: function () {},
 
     Init: function (name,action,def) {
-      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      if (!(Object.prototype.toString.call(name) === "[object Array]")) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.action = action;
       this.With(def);
     },
@@ -837,7 +837,7 @@
       return def;
     },
     Init: function (name,def) {
-      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      if (!(Object.prototype.toString.call(name) === "[object Array]")) {name = [name,name]}  // make [id,label] pair
       this.name = name; var i = 1;
       if (!(def instanceof MENU.ITEM)) {this.With(def), i++}
       this.submenu = MENU.apply(MENU,[].slice.call(arguments,i));
@@ -936,7 +936,7 @@
       return def;
     },
     Init: function (name,variable,def) {
-      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      if (!(Object.prototype.toString.call(name) === "[object Array]")) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
       if (this.value == null) {this.value = this.name[0]}
     },
@@ -983,7 +983,7 @@
       return def;
     },
     Init: function (name,variable,def) {
-      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      if (!(Object.prototype.toString.call(name) === "[object Array]")) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
     },
     Label: function (def,menu) {
@@ -1012,7 +1012,7 @@
     role: "menuitem",  // Aria role.
 
     Init: function (name,def) {
-      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      if (!(Object.prototype.toString.call(name) === "[object Array]")) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.With(def);
     },
     Label: function (def,menu) {

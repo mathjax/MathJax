@@ -291,11 +291,11 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
             {args = [].slice.call(args,i)}
       else {args = [].slice.call(arguments,0)}
     }
-    if (args instanceof Array && args.length === 1) {args = args[0]}
+    if (Object.prototype.toString.call(args) === "[object Array]" && args.length === 1) {args = args[0]}
     if (typeof args === 'function') {
       if (args.execute === CALLBACK.prototype.execute) {return args}
       return CALLBACK({hook: args});
-    } else if (args instanceof Array) {
+    } else if (Object.prototype.toString.call(args) === "[object Array]") {
       if (typeof(args[0]) === 'string' && args[1] instanceof Object &&
                  typeof args[1][args[0]] === 'function') {
         return CALLBACK({hook: args[1][args[0]], object: args[1], data: args.slice(2)});
@@ -343,7 +343,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
     }
   };
   var WAITSIGNAL = function (callback,signals) {
-    if (!(signals instanceof Array)) {signals = [signals]}
+    if (!(Object.prototype.toString.call(signals) === "[object Array]")) {signals = [signals]}
     if (!callback.signal) {
       callback.oldExecute = callback.execute;
       callback.execute = WAITEXECUTE;
@@ -442,8 +442,8 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
   //
   var EXECUTEHOOKS = function (hooks,data,reset) {
     if (!hooks) {return null}
-    if (!(hooks instanceof Array)) {hooks = [hooks]}
-    if (!(data instanceof Array))  {data = (data == null ? [] : [data])}
+    if (!(Object.prototype.toString.call(hooks) === "[object Array]")) {hooks = [hooks]}
+    if (!(Object.prototype.toString.call(data) === "[object Array]"))  {data = (data == null ? [] : [data])}
     var handler = HOOKS(reset);
     for (var i = 0, m = hooks.length; i < m; i++) {handler.Add(hooks[i])}
     return handler.Execute.apply(handler,data);
@@ -592,7 +592,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
     //  Execute the message hooks for the given message
     //
     ExecuteHooks: function (msg) {
-      var type = ((msg instanceof Array) ? msg[0] : msg);
+      var type = ((Object.prototype.toString.call(msg) === "[object Array]") ? msg[0] : msg);
       if (!this.hooks[type]) {return null}
       return this.hooks[type].Execute(msg);
     },
@@ -1055,7 +1055,7 @@ MathJax.HTML = {
       }
     }
     if (contents) {
-      if (!(contents instanceof Array)) {contents = [contents]}
+      if (!(Object.prototype.toString.call(contents) === "[object Array]")) {contents = [contents]}
       for (var i = 0, m = contents.length; i < m; i++) {
         if (contents[i] instanceof Array) {
           obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
@@ -1220,7 +1220,7 @@ MathJax.Localization = {
     }),
   
   _: function (id,phrase) {
-    if (phrase instanceof Array) {return this.processSnippet(id,phrase)}
+    if (Object.prototype.toString.call(phrase) === "[object Array]") {return this.processSnippet(id,phrase)}
     return this.processString(this.lookupPhrase(id,phrase),[].slice.call(arguments,2));
   },
   
@@ -1310,7 +1310,7 @@ MathJax.Localization = {
         //    [id,string,args] or [domain,snippet]
         var data = snippet[i];
         if (typeof data[1] === "string") {        // [id,string,args]
-          var id = data[0]; if (!(id instanceof Array)) {id = [domain,id]}
+          var id = data[0]; if (!(Object.prototype.toString.call(id) === "[object Array]")) {id = [domain,id]}
           var phrase = this.lookupPhrase(id,data[1]);
           result = result.concat(this.processMarkdown(phrase,data.slice(2),domain));
         } else if (data[1] instanceof Array) {    // [domain,snippet]
@@ -1349,7 +1349,7 @@ MathJax.Localization = {
         //  Select the tag to use by number of stars (three stars requires two tags)
         //
         data = this.processString(parts[i+2],args,domain);
-        if (!(data instanceof Array)) {data = [data]}
+        if (!(Object.prototype.toString.call(data) === "[object Array]")) {data = [data]}
         data = [["b","i","i"][parts[i+1].length-1],{},data]; // number of stars determines type
         if (parts[i+1].length === 3) {data = ["b",{},data]}  // bold-italic
       } else if (parts[i+3]) { //  backtics (for code)
@@ -1358,14 +1358,14 @@ MathJax.Localization = {
         //  Make a <code> tag
         //
         data = this.processString(parts[i+4].replace(/^\s/,"").replace(/\s$/,""),args,domain);
-        if (!(data instanceof Array)) {data = [data]}
+        if (!(Object.prototype.toString.call(data) === "[object Array]")) {data = [data]}
         data = ["code",{},data];
       } else if (parts[i+5]) { //  hyperlink
         //
         //  Process the link text, and make an <a> tag with the URL
         //
         data = this.processString(parts[i+5],args,domain);
-        if (!(data instanceof Array)) {data = [data]}
+        if (!(Object.prototype.toString.call(data) === "[object Array]")) {data = [data]}
         data = ["a",{href:this.processString(parts[i+6],args),target:"_blank"},data];
       } else {
         //
@@ -1400,7 +1400,7 @@ MathJax.Localization = {
       //  Then concatenate the snippet to the current one
       //
       string = this.processString(string,args,domain);
-      if (!(string instanceof Array)) {string = [string]}
+      if (!(Object.prototype.toString.call(string) === "[object Array]")) {string = [string]}
       result = result.concat(string);
     }
     return result;
@@ -1411,7 +1411,7 @@ MathJax.Localization = {
     //  Get the domain and messageID
     //
     if (!domain) {domain = "_"}
-    if (id instanceof Array) {domain = (id[0] || "_"); id = (id[1] || "")}
+    if (Object.prototype.toString.call(id) === "[object Array]") {domain = (id[0] || "_"); id = (id[1] || "")}
     //
     //  Check if the data is available and if not,
     //    load it and throw a restart error so the calling
@@ -1725,8 +1725,8 @@ MathJax.Message = {
     //  Translate message if it is [id,message,arguments]
     //
     var id = "";
-    if (text instanceof Array) {
-      id = text[0]; if (id instanceof Array) {id = id[1]}
+    if (Object.prototype.toString.call(text) === "[object Array]") {
+      id = text[0]; if (Object.prototype.toString.call(id) === "[object Array]") {id = id[1]}
       //
       // Localization._() will throw a restart error if a localization file
       //   needs to be loaded, so trap that and redo the Set() call
@@ -2404,11 +2404,11 @@ MathJax.Hub = {
   },
   
   elementCallback: function (element,callback) {
-    if (callback == null && (element instanceof Array || typeof element === 'function'))
+    if (callback == null && (Object.prototype.toString.call(element) === "[object Array]" || typeof element === 'function'))
       {try {MathJax.Callback(element); callback = element; element = null} catch(e) {}}
     if (element == null) {element = this.config.elements || []}
     if (this.isHTMLCollection(element)) {element = this.HTMLCollection2Array(element)}
-    if (!(element instanceof Array)) {element = [element]}
+    if (!(Object.prototype.toString.call(element) === "[object Array]")) {element = [element]}
     element = [].concat(element); // make a copy so the original isn't changed
     for (var i = 0, m = element.length; i < m; i++)
       {if (typeof(element[i]) === 'string') {element[i] = document.getElementById(element[i])}}
@@ -2424,7 +2424,7 @@ MathJax.Hub = {
   
   elementScripts: function (element) {
     var scripts = [];
-    if (element instanceof Array || this.isHTMLCollection(element)) {
+    if (Object.prototype.toString.call(element) === "[object Array]" || this.isHTMLCollection(element)) {
       for (var i = 0, m = element.length; i < m; i++) {
         var alreadyDone = 0;
         for (var j = 0; j < i && !alreadyDone; j++)
@@ -2778,7 +2778,7 @@ MathJax.Hub.Startup = {
   //
   loadArray: function (files,dir,name,synchronous) {
     if (files) {
-      if (!(files instanceof Array)) {files = [files]}
+      if (!(Object.prototype.toString.call(files) === "[object Array]")) {files = [files]}
       if (files.length) {
         var queue = MathJax.Callback.Queue(), callback = {}, file;
         for (var i = 0, m = files.length; i < m; i++) {
@@ -2888,11 +2888,11 @@ MathJax.Hub.Startup = {
     Process: function (script,state) {
       var queue = CALLBACK.Queue(), file;
       // Load any needed element jax
-      var jax = this.elementJax; if (!(jax instanceof Array)) {jax = [jax]}
+      var jax = this.elementJax; if (!(Object.prototype.toString.call(jax) === "[object Array]")) {jax = [jax]}
       for (var i = 0, m = jax.length; i < m; i++) {
         file = BASE.ElementJax.directory+"/"+jax[i]+"/"+this.JAXFILE;
         if (!this.require) {this.require = []}
-          else if (!(this.require instanceof Array)) {this.require = [this.require]};
+          else if (!(this.Object.prototype.toString.call(require) === "[object Array]")) {this.require = [this.require]};
         this.require.push(file);  // so Startup will wait for it to be loaded
         queue.Push(AJAX.Require(file));
       }
@@ -2947,7 +2947,7 @@ MathJax.Hub.Startup = {
         {jax[mimetype].unshift(this)} else {jax[mimetype].push(this)}
       //  Make sure the element jax is loaded before Startup is called
       if (!this.require) {this.require = []}
-        else if (!(this.require instanceof Array)) {this.require = [this.require]};
+        else if (!(this.Object.prototype.toString.call(require) === "[object Array]")) {this.require = [this.require]};
       this.require.push(BASE.ElementJax.directory+"/"+(mimetype.split(/\//)[1])+"/"+this.JAXFILE);
     },
     Remove: function (jax) {}

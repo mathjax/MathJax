@@ -97,7 +97,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var cs     = this.GetCSname(name),
           params = this.GetTemplate(name,"\\"+cs),
           def    = this.GetArgument(name);
-      if (!(params instanceof Array)) {this.setDef(cs,['Macro',def,params])}
+      if (!(Object.prototype.toString.call(params) === "[object Array]")) {this.setDef(cs,['Macro',def,params])}
         else {this.setDef(cs,['MacroWithTemplate',def].concat(params))}
     },
     
