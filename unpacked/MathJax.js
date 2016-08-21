@@ -2084,6 +2084,7 @@ MathJax.Hub = {
       var delay = ["Delay",MathJax.Callback,this.processSectionDelay];
       if (!delay[2]) {delay = {}}
       queue.Push(
+        ["clearCounts",MathJax.Message],
         ["Post",this.signal,["Begin "+action,elements]],
         ["Post",this.signal,["Begin Math",elements,action]],
         ["prepareScripts",this,action,elements,state],
@@ -2100,7 +2101,8 @@ MathJax.Hub = {
         ["prepareOutput",this,state,"postProcess"],
         delay,
         ["Post",this.signal,["End Math",elements,action]],
-        ["Post",this.signal,["End "+action,elements]]
+        ["Post",this.signal,["End "+action,elements]],
+        ["clearCounts",MathJax.Message]
       );
     }
     return queue.Push(ec.callback);
@@ -2124,7 +2126,6 @@ MathJax.Hub = {
   },
   
   prepareScripts: function (action,element,state) {
-    MathJax.Message.clearCounts();
     if (arguments.callee.disabled) return;
     var scripts = this.elementScripts(element);
     var STATE = MathJax.ElementJax.STATE;
