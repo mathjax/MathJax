@@ -261,6 +261,7 @@
       //  Determine the scaling factors for each script
       //  (this only requires one reflow rather than a reflow for each equation)
       //
+      var hidden = [];
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
         test = script.previousSibling; div = test.previousSibling;
@@ -269,8 +270,7 @@
         cwidth = Math.max(0,(div.previousSibling.firstChild.offsetWidth-2) / this.config.scale * 100);
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
-          // (this will cause a reflow for each math element that is hidden)
-          this.hiddenDiv.appendChild(div);
+          hidden.push(div);
           jax.SVG.isHidden = true;
           ex = this.defaultEx; cwidth = this.defaultWidth;
         }
@@ -279,6 +279,10 @@
         jax.SVG.em = em = ex / SVG.TeX.x_height * 1000; // scale ex to x_height
         jax.SVG.cwidth = cwidth/em * 1000;
         jax.SVG.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/em*1000) : SVG.BIGDIMEN);
+      }
+      for (i = 0, n = hidden.length; i < n; i++) {
+        this.hiddenDiv.appendChild(hidden[i]);
+        this.addElement(this.hiddenDiv,"br");
       }
       //
       //  Remove the test spans used for determining scales and linebreak widths
@@ -314,10 +318,15 @@
       //
       //  Get the data about the math
       //
-      var jax = script.MathJax.elementJax, math = jax.root,
-          div = script.previousSibling;
-          span = (jax.SVG.display ? (div||{}).firstChild||div : div),
+      var jax = script.MathJax.elementJax, math = jax.root, div, span,
           localCache = (SVG.config.useFontCache && !SVG.config.useGlobalCache);
+      if (jax.SVG.isHidden) {
+        span = document.getElementById(jax.inputID+"-Frame");
+        div = (jax.SVG.display ? span.parentElement : span);
+      } else {
+        div = script.previousSibling;
+        span = (jax.SVG.display ? (div||{}).firstChild||div : div);
+      }
       if (!div) return;
       //
       //  Set the font metrics

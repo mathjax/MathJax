@@ -606,6 +606,7 @@
         } else if (this.msieDisappearingBug) {span.style.display = "inline-block"}
         div.className += " MathJax_Processing";
         script.parentNode.insertBefore(div,script);
+        jax.HTMLCSS.span = span; jax.HTMLCSS.div = div;  // save for use in Translate()
         //
         //  Add the test span for determining scales and linebreak widths
         //
@@ -626,14 +627,13 @@
         ex = test.firstChild.offsetHeight/60;
         em = test.lastChild.firstChild.offsetHeight/60;
         cwidth = Math.max(0,div.previousSibling.firstChild.offsetWidth - 2);
-        if (relwidth) {maxwidth = cwidth}
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
           hidden.push(div);
           jax.HTMLCSS.isHidden = true;
           ex = this.defaultEx; em = this.defaultEm; cwidth = this.defaultWidth;
-          if (relwidth) {maxwidth = cwidth}
         }
+        if (relwidth) {maxwidth = cwidth}
         scale = (this.config.matchFontHeight ? ex/this.TeX.x_height/em : 1);
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
         jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
@@ -683,8 +683,7 @@
       //  Get the data about the math
       //
       var jax = script.MathJax.elementJax, math = jax.root,
-          div = script.previousSibling;
-          span = (jax.HTMLCSS.display ? (div||{}).firstChild||div : div);
+          div = jax.HTMLCSS.div, span = jax.HTMLCSS.div;
       if (!div) return;
       //
       //  Set the font metrics
@@ -699,7 +698,6 @@
       this.savePreview(script);
       try {
         math.setTeXclass();
-        jax.HTMLCSS.span = span; jax.HTMLCSS.div = div;  // save for phase II and III
         math.toHTML(span,div,this.PHASE.I);
       } catch (err) {
         if (err.restart) {while (span.firstChild) {span.removeChild(span.firstChild)}}
