@@ -1386,8 +1386,8 @@
         if (!options) options = {};
         node = this.CHTMLcreateNode(node); this.CHTML = CHTML.BBOX.empty();
         this.CHTMLhandleStyle(node);
-        this.CHTMLhandleScale(node);
         if (this.isToken) this.CHTMLgetVariant();
+        this.CHTMLhandleScale(node);
         var m = Math.max((options.minChildren||0),this.data.length);
         for (var i = 0; i < m; i++) this.CHTMLaddChild(node,i,options);
         if (!options.noBBox) this.CHTML.clean();
@@ -1543,6 +1543,8 @@
           values.fontsize = this.removedStyles.fontSize;
         if (values.fontsize && !this.mathsize) values.mathsize = values.fontsize;
         if (values.mathsize !== 1) scale *= CHTML.length2em(values.mathsize,1,1);
+        var variant = this.CHTMLvariant;
+        if (variant && variant.style && variant.style["font-family"]) scale /= CHTML.scale;
         this.CHTML.scale = scale; pscale = this.CHTML.rscale = scale/pscale;
         if (Math.abs(pscale-1) < .001) pscale = 1;
         if (node && pscale !== 1) node.style.fontSize = CHTML.Percent(pscale);
@@ -1817,8 +1819,8 @@
       toCommonHTML: function (node) {
         node = this.CHTMLcreateNode(node);
         this.CHTMLhandleStyle(node);
-        this.CHTMLhandleScale(node);
         this.CHTMLgetVariant();
+        this.CHTMLhandleScale(node);
         CHTML.BBOX.empty(this.CHTML);
         
         var values = this.getValues("displaystyle","largeop");

@@ -34,8 +34,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (!stretch) {
         node = this.CHTMLcreateNode(node);
         this.CHTMLhandleStyle(node);
-        this.CHTMLhandleScale(node);
         this.CHTMLgetVariant();
+        this.CHTMLhandleScale(node);
       }
       CHTML.BBOX.empty(this.CHTML);
 
