@@ -386,6 +386,7 @@
           //
           if (data.preview) {
             data.preview.innerHTML = "";
+            data.preview.style.display = "none";
             script.MathJax.preview = data.preview;
             delete data.preview;
           }

@@ -2306,7 +2306,10 @@ MathJax.Hub = {
         result = MathJax.OutputJax[jax.outputJax].Process(script,state);
         if (result !== false) {
           script.MathJax.state = STATE.PROCESSED;
-          if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+          if (script.MathJax.preview) {
+            script.MathJax.preview.innerHTML = "";
+            script.MathJax.preview.style.display = "none";
+          }
           //
           //  Signal that new math is available
           //
@@ -2390,7 +2393,10 @@ MathJax.Hub = {
     var node = document.getElementById(error.id);
     if (node) node.parentNode.removeChild(node);
     if (script.parentNode) script.parentNode.insertBefore(error,script);
-    if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+    if (script.MathJax.preview) {
+      script.MathJax.preview.innerHTML = "";
+      script.MathJax.preview.style.display = "none";
+    }
     //
     //  Save the error for debugging purposes
     //  Report the error as a signal
