@@ -1544,7 +1544,8 @@
         if (values.fontsize && !this.mathsize) values.mathsize = values.fontsize;
         if (values.mathsize !== 1) scale *= CHTML.length2em(values.mathsize,1,1);
         var variant = this.CHTMLvariant;
-        if (variant && variant.style && variant.style["font-family"]) scale /= CHTML.scale;
+        if (variant && variant.style && variant.style["font-family"])
+          scale *= (CHTML.config.scale/100)/CHTML.scale;
         this.CHTML.scale = scale; pscale = this.CHTML.rscale = scale/pscale;
         if (Math.abs(pscale-1) < .001) pscale = 1;
         if (node && pscale !== 1) node.style.fontSize = CHTML.Percent(pscale);
