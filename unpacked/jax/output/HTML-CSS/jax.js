@@ -685,7 +685,7 @@
       //
       var jax = script.MathJax.elementJax, math = jax.root,
           div = jax.HTMLCSS.div, span = jax.HTMLCSS.span;
-      if (!div) return;
+      if (!document.getElementById(span.id)) return;
       //
       //  Set the font metrics
       //
