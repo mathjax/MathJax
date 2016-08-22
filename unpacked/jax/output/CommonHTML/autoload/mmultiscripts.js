@@ -31,7 +31,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
 
   MML.mmultiscripts.Augment({
     toCommonHTML: function (node,options) {
-      if (!options || !options.stretch) {
+      var stretch = (options||{}).stretch;
+      if (!stretch) {
         node = this.CHTMLcreateNode(node);
         this.CHTMLhandleStyle(node);
         this.CHTMLhandleScale(node);
