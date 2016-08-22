@@ -145,6 +145,7 @@
           var val = value.toLowerCase();
           if (val === "true" || val === "false") {
             if (typeof (defaults[name]) === "boolean" || defaults[name] === MML.INHERIT ||
+               mml.type === "math" || mml.type === "mstyle" ||
                (defaults[name] === MML.AUTO && 
                (mml.defaultDef == null || typeof(mml.defaultDef[name]) === "boolean"))) {
               value = (val === "true");
