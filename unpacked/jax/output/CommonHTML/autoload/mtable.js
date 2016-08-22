@@ -228,18 +228,29 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           if (border) cell.borderBottom = border;
           L = R;
           //
-          //  Handle vertical and horizontal alignment
+          //  Handle vertical alignment
           //
           align = (rdata.data[j-s].rowalign||this.data[i].rowalign||RALIGN[i]);
-          align = ({top:"top", bottom:"bottom", center:"middle"})[align];
-          if (align) cell.verticalAlign = align;
+          var H = Math.max(1,cbox.h), D = Math.max(.2,cbox.d),
+              HD = (state.H[i]+state.D[i]) - (H+D),
+              child = row[j].firstChild.style;
+          if (align === MML.ALIGN.TOP) {
+            if (HD) child.marginBottom = CHTML.Em(HD);
+            cell.verticalAlign = "top";
+          } else if (align === MML.ALIGN.BOTTOM) {
+            cell.verticalAlign = "bottom";
+            if (HD) child.marginTop = CHTML.Em(HD);
+          } else if (align === MML.ALIGN.CENTER) {
+            if (HD) child.marginTop = child.marginBottom = CHTML.Em(HD/2);
+            cell.verticalAlign = "middle";
+          } else {
+            if (H !== state.H[i]) child.marginTop = CHTML.Em(state.H[i]-H);
+          }
+          //
+          //  Handle horizontal alignment
+          //
           align = (rdata.data[j-s].columnalign||RCALIGN[i][j]||CALIGN[j]);
           if (align !== MML.ALIGN.CENTER) cell.textAlign = align;
-          //
-          //  Adjust baseline of cells to match cell height
-          //
-          var H = Math.max(1,cbox.h);
-          if (H !== state.H[i]) row[j].firstChild.style.marginTop = CHTML.Em(state.H[i]-H);
         }
         row.node.style.height = CHTML.Em(state.RHD[i]);
         T = B;
