@@ -282,6 +282,7 @@
         },
         
         ".MathJax.MathJax_FullWidth": {
+          "text-align": "center",
           display: (oldIE ? "block" : "table-cell") + "!important",
           width: (oldIE ? "100%" : "10000em") + "!important"
         },
@@ -3000,7 +3001,7 @@
               var indent = HTMLCSS.length2em(this.displayIndent,1,HTMLCSS.scale*HTMLCSS.cwidth);
               shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
             }
-            node.style.textAlign = values.indentalign;
+            SPAN.style.textAlign = node.style.textAlign = values.indentalign;
             // ### FIXME: make percentage widths respond to changes in container
             if (shift) {
               HUB.Insert(span.style,({

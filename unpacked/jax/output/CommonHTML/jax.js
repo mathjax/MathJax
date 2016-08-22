@@ -72,6 +72,7 @@
       display: "inline-table"  // see issues #1282 and #1338
     },
     ".mjx-full-width": {
+      "text-align": "center",
       display: "table-cell!important",
       width:   "10000em"
     },
@@ -1753,7 +1754,9 @@
         if (this.CHTML.pwidth) {
           node.parentNode.style.minWidth = this.CHTML.mwidth||CHTML.Em(this.CHTML.w);
           node.parentNode.className = "mjx-full-width "+node.parentNode.className;
-        } else if (!this.isMultiline && this.Get("display") === "block") {
+          node.style.width = this.CHTML.pwidth;
+        }
+        if (!this.isMultiline && this.Get("display") === "block") {
           var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
           if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) values.indentalign = values.indentalignfirst;
           if (values.indentalign === MML.INDENTALIGN.AUTO) values.indentalign = CONFIG.displayAlign;
@@ -1765,7 +1768,7 @@
             shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
           }
           var styles = node.parentNode.parentNode.style;
-          styles.textAlign = values.indentalign;
+          node.parentNode.style.textAlign = styles.textAlign = values.indentalign;
           // ### FIXME: make percentage widths respond to changes in container
           if (shift) {
             shift *= CHTML.em/CHTML.outerEm;
