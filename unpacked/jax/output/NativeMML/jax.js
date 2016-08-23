@@ -518,8 +518,10 @@
             skip = MML.skipAttributes, copy = MML.copyAttributes;
         if (!this.attrNames) {
           for (var id in defaults) {if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {
-	    if (this[id] != null && this[id] !== defaults[id]) 
-              tag.setAttribute(id,this.NativeMMLattribute(this[id]));
+	    if (this[id] != null && this[id] !== defaults[id]) {
+              if (this.Get(id,null,1) !== this[id]) 
+                tag.setAttribute(id,this.NativeMMLattribute(this[id]));
+            }
           }}
         }
 	for (var i = 0, m = names.length; i < m; i++) {
