@@ -1755,8 +1755,7 @@
           node.parentNode.style.minWidth = this.CHTML.mwidth||CHTML.Em(this.CHTML.w);
           node.parentNode.className = "mjx-full-width "+node.parentNode.className;
           node.style.width = this.CHTML.pwidth;
-        }
-        if (!this.isMultiline && this.Get("display") === "block") {
+        } else if (!this.isMultiline && this.Get("display") === "block") {
           var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
           if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) values.indentalign = values.indentalignfirst;
           if (values.indentalign === MML.INDENTALIGN.AUTO) values.indentalign = CONFIG.displayAlign;
