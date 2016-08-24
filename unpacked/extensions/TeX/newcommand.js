@@ -51,12 +51,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Implement \newcommand{\name}[n][default]{...}
      */
     NewCommand: function (name) {
-      var CS = this.GetArgument(name), cs = this.trimSpaces(CS),
+      var cs = this.trimSpaces(this.GetArgument(name)),
           n  = this.GetBrackets(name),
           opt = this.GetBrackets(name),
           def = this.GetArgument(name);
       if (cs.charAt(0) === "\\") {cs = cs.substr(1)}
-      if (cs === "" && CS.substr(CS.length-1,1) === " ") {cs += " "}
       if (!cs.match(/^(.|[a-z]+)$/i)) {
         TEX.Error(["IllegalControlSequenceName",
                    "Illegal control sequence name for %1",name]);
@@ -147,9 +146,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         TEX.Error(["MissingCS",
                    "%1 must be followed by a control sequence", cmd])
       }
-      var cs = this.GetArgument(cmd), CS = this.trimSpaces(cs);
-      if (CS == "\\" && cs.substr(cs.length-1,1) === " ") {CS += " "}
-      return CS.substr(1);
+      var cs = this.trimSpaces(this.GetArgument(cmd));
+      return cs.substr(1);
     },
     
     /*

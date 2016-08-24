@@ -1877,7 +1877,9 @@
      */
     trimSpaces: function (text) {
       if (typeof(text) != 'string') {return text}
-      return text.replace(/^\s+|\s+$/g,'');
+      var TEXT = text.replace(/^\s+|\s+$/g,'');
+      if (TEXT.match(/\\$/) && text.match(/ $/)) TEXT += " ";
+      return TEXT;
     },
 
     /*
