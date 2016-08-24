@@ -764,7 +764,10 @@
         if (script && script.parentNode && script.MathJax.elementJax) {
           var div = (script.MathJax.elementJax.HTMLCSS||{}).div;
           if (div) {div.className = div.className.split(/ /)[0]}
-          if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+          if (script.MathJax.preview) {
+            script.MathJax.preview.innerHTML = "";
+            script.MathJax.preview.style.display = "none";
+          }
         }
       }
       //
