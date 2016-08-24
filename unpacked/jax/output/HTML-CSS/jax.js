@@ -28,6 +28,7 @@
 
 (function (AJAX,HUB,HTMLCSS) {
   var MML, isMobile = HUB.Browser.isMobile;
+  var isArray = MathJax.Object.isArray;
 
   var MESSAGE = function () {
     var data = [].slice.call(arguments,0);
@@ -416,7 +417,7 @@
       if (settings.scale) {config.scale = settings.scale}
       if (font && font !== "Auto" && this.fontName[font]) {
         config.availableFonts = []; delete config.fonts;
-        if (this.fontName[font] instanceof Array) {
+        if (isArray(this.fontName[font])) {
           config.preferredFont = this.fontName[font][0];
           config.webFont = this.fontName[font][1];
         } else {
@@ -1549,7 +1550,7 @@
         } else if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
           n = this.FONTDATA.REMAP[n];
         }
-        if (n instanceof Array) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]} 
+        if (isArray(n)) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]} 
         if (typeof(n) === "string") {
           text = n+text.substr(i+1);
           m = text.length; i = -1;

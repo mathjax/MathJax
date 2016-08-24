@@ -29,6 +29,7 @@
 
 (function (AJAX,HUB,HTML,SVG) {
   var MML;
+  var isArray = MathJax.Object.isArray;
 
   var SVGNS   = "http://www.w3.org/2000/svg";
   var XLINKNS = "http://www.w3.org/1999/xlink";
@@ -634,7 +635,7 @@
         } else if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
           n = this.FONTDATA.REMAP[n];
         }
-        if (n instanceof Array) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]}
+        if (isArray(n)) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]}
         if (typeof(n) === "string") {
           text = n+text.substr(i+1);
           m = text.length; i = -1;

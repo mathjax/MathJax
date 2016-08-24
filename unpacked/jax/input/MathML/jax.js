@@ -289,7 +289,7 @@
       //
       //  Translate message if it is ["id","message",args]
       //
-      if (message instanceof Array) {message = _.apply(_,message)}
+      if (MathJax.Object.isArray(message)) {message = _.apply(_,message)}
       throw MathJax.Hub.Insert(Error(message),{mathmlError: true});
     },
     //

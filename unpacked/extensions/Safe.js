@@ -227,7 +227,7 @@
       value = this.length2em(value);
       if (value == null) return false;
       var mM = [-CONFIG.lengthMax,CONFIG.lengthMax];
-      if (CONFIG.styleLengths[name] instanceof Array) mM = CONFIG.styleLengths[name];
+      if (MathJax.Object.isArray(CONFIG.styleLengths[name])) mM = CONFIG.styleLengths[name];
       return (value >= mM[0] && value <= mM[1]);
     },
     //

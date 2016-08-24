@@ -42,6 +42,8 @@
       [["MathMenu",id]].concat([].slice.call(arguments,1))
     );
   };
+  
+  var isArray = MathJax.Object.isArray;
 
   var isPC = HUB.Browser.isPC, isMSIE = HUB.Browser.isMSIE, isIE9 = ((document.documentMode||0) > 8);
   var ROUND = (isPC ? null : "5px");
@@ -806,7 +808,7 @@
     action: function () {},
 
     Init: function (name,action,def) {
-      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      if (!isArray(name)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.action = action;
       this.With(def);
     },
@@ -837,7 +839,7 @@
       return def;
     },
     Init: function (name,def) {
-      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      if (!isArray(name)) {name = [name,name]}  // make [id,label] pair
       this.name = name; var i = 1;
       if (!(def instanceof MENU.ITEM)) {this.With(def), i++}
       this.submenu = MENU.apply(MENU,[].slice.call(arguments,i));
@@ -936,7 +938,7 @@
       return def;
     },
     Init: function (name,variable,def) {
-      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      if (!isArray(name)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
       if (this.value == null) {this.value = this.name[0]}
     },
@@ -983,7 +985,7 @@
       return def;
     },
     Init: function (name,variable,def) {
-      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      if (!isArray(name)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.variable = variable; this.With(def);
     },
     Label: function (def,menu) {
@@ -1012,7 +1014,7 @@
     role: "menuitem",  // Aria role.
 
     Init: function (name,def) {
-      if (!(name instanceof Array)) {name = [name,name]}  // make [id,label] pair
+      if (!isArray(name)) {name = [name,name]}  // make [id,label] pair
       this.name = name; this.With(def);
     },
     Label: function (def,menu) {

@@ -118,7 +118,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         //  so they can be made global when merged with the root stack.
         //
         while (n > 0) {this.stack[n].Undef(name,type); n--}
-        if (!(value instanceof Array)) {value = [value]}
+        if (!MathJax.Object.isArray(value)) {value = [value]}
         if (this.isEqn) {value.global = true}
       }
       this.stack[n].Def(name,value,type);
