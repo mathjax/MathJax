@@ -37,8 +37,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       node = this.CHTMLcreateNode(node);
       this.CHTMLhandleStyle(node);
-      this.CHTMLhandleScale(node);
       this.CHTMLgetVariant();
+      this.CHTMLhandleScale(node);
       CHTML.BBOX.empty(this.CHTML);
       //
       //  Get the quotes to use
