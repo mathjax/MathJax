@@ -25,6 +25,14 @@
  *  limitations under the License.
  */
 
+
+//
+//  Don't replace [Contrib]/mhchem if it is already loaded
+//
+if (MathJax.Extension["TeX/mhchem"]) {
+  MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/mhchem.js");
+} else {
+  
 MathJax.Extension["TeX/mhchem"] = {
   version: "2.6.0",
   config: MathJax.Hub.CombineConfig("TeX.mhchem",{
@@ -32,6 +40,9 @@ MathJax.Extension["TeX/mhchem"] = {
   })
 };
 
+//
+//  Load [Contrib]/mhchem if not configured for legacy vesion
+//
 if (!MathJax.Extension["TeX/mhchem"].config.legacy) {
   MathJax.Callback.Queue(
     ["Require",MathJax.Ajax,"[Contrib]/mhchem/mhchem.js"],
@@ -502,4 +513,5 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/mhchem.js");
-}
+
+}}
