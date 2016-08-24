@@ -550,7 +550,8 @@ MathJax.Hub.Config({
 //    formatTag:    function (n) {return '('+n+')'},        // format for \tag and \eqref
 //    formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/[:'"<>&]/g,"")},
 //                                                          // element ID to use for reference
-//    formatURL:    function (id) {return '#'+escape(id)},  // URL to use for references
+//    formatURL:    function (id,base) {return base+'#'+escape(id)},
+//                                                          // URL to use for references
       useLabelIds: true    // make element ID's use \label name rather than equation number
     },
 

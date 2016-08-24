@@ -53,6 +53,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     return WW.join(" ");
   };
   
+  //
+  //  Get the URL of the page (for use with formatURL) when there
+  //  is a <base> element on the page.
+  //  
+  var baseURL = (document.getElementsByTagName("base").length === 0) ? "" :
+                String(document.location).replace(/#.*$/,"");
+
+  
   /******************************************************************************/
   
   TEXDEF.Add({
@@ -203,7 +211,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (!ref) {ref = {tag:"???",id:""}; AMS.badref = !AMS.refUpdate}
       var tag = ref.tag; if (eqref) {tag = CONFIG.formatTag(tag)}
       this.Push(MML.mrow.apply(MML,this.InternalMath(tag)).With({
-        href:CONFIG.formatURL(ref.id), "class":"MathJax_ref"
+        href:CONFIG.formatURL(ref.id,baseURL), "class":"MathJax_ref"
       }));
     },
     
