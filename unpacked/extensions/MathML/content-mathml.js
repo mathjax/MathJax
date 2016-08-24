@@ -1319,9 +1319,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
               CToP.applyTransform(mrow,children[1],2);
             } else if (arg.nodeName === 'apply' && children.length>2 && children[0].nodeName === 'times' && children[1].nodeName === 'cn' && (n = Number(CToP.getTextContent(children[1]))) < 0) {
               CToP.appendToken(mrow,'mo','\u2212');
-              arg = arg.cloneNode(true);
-              children = CToP.getChildren(arg);
-              children[1].textContent = -n;
+              children[1].textContent = -n;     // OK to change MathML since it is being discarded afterward
               CToP.applyTransform(mrow,arg,2);
             } else{
               CToP.appendToken(mrow,'mo','+');
