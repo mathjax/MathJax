@@ -382,12 +382,13 @@ function createMmlNode(t,frag) {
 }
 
 function newcommand(oldstr,newstr) {
-  AMsymbols = AMsymbols.concat([{input:oldstr, tag:"mo", output:newstr, 
-                                 tex:null, ttype:DEFINITION}]);
-  // ####  Added from Version 2.0.1 #### //
-  AMsymbols.sort(compareNames);
-  for (i=0; i<AMsymbols.length; i++) AMnames[i] = AMsymbols[i].input;
-  // ####  End of Addition #### //
+  AMsymbols.push({input:oldstr, tag:"mo", output:newstr, tex:null, ttype:DEFINITION});
+  refreshSymbols();
+}
+
+function newsymbol(symbolobj) {
+  AMsymbols.push(symbolobj);
+  refreshSymbols();
 }
 
 // character lists for Mozilla/Netscape fonts
@@ -666,14 +667,15 @@ function compareNames(s1,s2) {
 var AMnames = []; //list of input symbols
 
 function initSymbols() {
-  var texsymbols = [], i;
-  for (i=0; i<AMsymbols.length; i++)
+  var i;
+  var symlen = AMsymbols.length;
+  for (i=0; i<symlen; i++) {
     if (AMsymbols[i].tex) {
-      texsymbols[texsymbols.length] = {input:AMsymbols[i].tex, 
+      AMsymbols.push({input:AMsymbols[i].tex, 
         tag:AMsymbols[i].tag, output:AMsymbols[i].output, ttype:AMsymbols[i].ttype,
-        acc:(AMsymbols[i].acc||false)};
+        acc:(AMsymbols[i].acc||false)});
     }
-  AMsymbols = AMsymbols.concat(texsymbols);
+  }
   refreshSymbols();
 }
 
@@ -684,8 +686,7 @@ function refreshSymbols(){
 }
 
 function define(oldstr,newstr) {
-  AMsymbols = AMsymbols.concat([{input:oldstr, tag:"mo", output:newstr, 
-                                 tex:null, ttype:DEFINITION}]);
+  AMsymbols.push({input:oldstr, tag:"mo", output:newstr, tex:null, ttype:DEFINITION});
   refreshSymbols(); // this may be a problem if many symbols are defined!
 }
 
@@ -1316,6 +1317,7 @@ else if(typeof window.attachEvent != 'undefined'){
 
 //expose some functions to outside
 asciimath.newcommand = newcommand;
+asciimath.newsymbol = newsymbol;
 asciimath.AMprocesssNode = AMprocessNode;
 asciimath.parseMath = parseMath;
 asciimath.translate = translate;
@@ -1409,6 +1411,7 @@ ASCIIMATH.Augment({
     
     define: define,
     newcommand: newcommand,
+    newsymbol: newsymbol,
     symbols: AMsymbols,
     names: AMnames,
         
