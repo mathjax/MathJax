@@ -33,6 +33,8 @@
     return MathJax.Localization._.apply(MathJax.Localization,
       [["TeX", id]].concat([].slice.call(arguments,1)));
   };
+  
+  var isArray = MathJax.Object.isArray;
 
   var STACK = MathJax.Object.Subclass({
     Init: function (env,inner) {
@@ -414,7 +416,7 @@
     Add: function (src,dst,nouser) {
       if (!dst) {dst = this}
       for (var id in src) {if (src.hasOwnProperty(id)) {
-        if (typeof src[id] === 'object' && !(src[id] instanceof Array) &&
+        if (typeof src[id] === 'object' && !isArray(src[id]) &&
            (typeof dst[id] === 'object' || typeof dst[id] === 'function')) 
              {this.Add(src[id],dst[id],src[id],nouser)}
           else if (!dst[id] || !dst[id].isUser || !nouser) {dst[id] = src[id]}
@@ -1103,7 +1105,7 @@
     ControlSequence: function (c) {
       var name = this.GetCS(), macro = this.csFindMacro(name);
       if (macro) {
-        if (!(macro instanceof Array)) {macro = [macro]}
+        if (!isArray(macro)) {macro = [macro]}
         var fn = macro[0]; if (!(fn instanceof Function)) {fn = this[fn]}
         fn.apply(this,[c+name].concat(macro.slice(1)));
       } else if (TEXDEF.mathchar0mi[name])            {this.csMathchar0mi(name,TEXDEF.mathchar0mi[name])}
@@ -1122,7 +1124,7 @@
     //
     csMathchar0mi: function (name,mchar) {
       var def = {mathvariant: MML.VARIANT.ITALIC};
-      if (mchar instanceof Array) {def = mchar[1]; mchar = mchar[0]}
+      if (isArray(mchar)) {def = mchar[1]; mchar = mchar[0]}
       this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
     },
     //
@@ -1130,7 +1132,7 @@
     //
     csMathchar0mo: function (name,mchar) {
       var def = {stretchy: false};
-      if (mchar instanceof Array) {def = mchar[1]; def.stretchy = false; mchar = mchar[0]}
+      if (isArray(mchar)) {def = mchar[1]; def.stretchy = false; mchar = mchar[0]}
       this.Push(this.mmlToken(MML.mo(MML.entity("#x"+mchar)).With(def)));
     },
     //
@@ -1138,7 +1140,7 @@
     //
     csMathchar7: function (name,mchar) {
       var def = {mathvariant: MML.VARIANT.NORMAL};
-      if (mchar instanceof Array) {def = mchar[1]; mchar = mchar[0]}
+      if (isArray(mchar)) {def = mchar[1]; mchar = mchar[0]}
       if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
     },
@@ -1147,7 +1149,7 @@
     //
     csDelimiter: function (name,delim) {
       var def = {};
-      if (delim instanceof Array) {def = delim[1]; delim = delim[0]}
+      if (isArray(delim)) {def = delim[1]; delim = delim[0]}
       if (delim.length === 4) {delim = MML.entity('#x'+delim)} else {delim = MML.chars(delim)}
       this.Push(this.mmlToken(MML.mo(delim).With({fence: false, stretchy: false}).With(def)));
     },
@@ -1294,7 +1296,7 @@
       if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
       if (TEXDEF.remap[c]) {
         c = TEXDEF.remap[c];
-        if (c instanceof Array) {def = c[1]; c = c[0]}
+        if (isArray(c)) {def = c[1]; c = c[0]}
         mo = MML.mo(MML.entity('#x'+c)).With(def);
       } else {
         mo = MML.mo(c).With(def);
@@ -1789,11 +1791,11 @@
       if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
       var cmd = this.envFindName(env);
       if (!cmd) {TEX.Error(["UnknownEnv","Unknown environment '%1'",env])}
-      if (!(cmd instanceof Array)) {cmd = [cmd]}
-      var end = (cmd[1] instanceof Array ? cmd[1][0] : cmd[1]);
+      if (!isArray(cmd)) {cmd = [cmd]}
+      var end = (isArray(cmd[1]) ? cmd[1][0] : cmd[1]);
       var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       if (name === "\\end") {
-        if (!isEnd && cmd[1] instanceof Array && this[cmd[1][1]]) {
+        if (!isEnd && isArray(cmd[1]) && this[cmd[1][1]]) {
           mml = this[cmd[1][1]].apply(this,[mml].concat(cmd.slice(2)));
         } else {
           mml = STACKITEM.end().With({name: env});
@@ -1867,7 +1869,7 @@
     convertDelimiter: function (c) {
       if (c) {c = TEXDEF.delimiter[c]}
       if (c == null) {return null}
-      if (c instanceof Array) {c = c[0]}
+      if (isArray(c)) {c = c[0]}
       if (c.length === 4) {c = String.fromCharCode(parseInt(c,16))}
       return c;
     },
@@ -2201,7 +2203,7 @@
       //
       //  Translate message if it is ["id","message",args]
       //
-      if (message instanceof Array) {message = _.apply(_,message)}
+      if (isArray(message)) {message = _.apply(_,message)}
       throw HUB.Insert(Error(message),{texError: true});
     },
     

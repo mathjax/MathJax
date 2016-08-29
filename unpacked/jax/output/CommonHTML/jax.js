@@ -30,6 +30,7 @@
 
 (function (AJAX,HUB,HTML,CHTML) {
   var MML;
+  var isArray = MathJax.Object.isArray;
 
   var EVENT, TOUCH, HOVER; // filled in later
 
@@ -799,7 +800,7 @@
       } else if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
         n = this.FONTDATA.REMAP[n];
       }
-      if (n instanceof Array) {variant = VARIANT[n[1]]; n = n[0]} 
+      if (isArray(n)) {variant = VARIANT[n[1]]; n = n[0]} 
       if (typeof(n) === "string") {
         var string = {text:n, i:0, length:n.length};
         while (string.i < string.length) {
