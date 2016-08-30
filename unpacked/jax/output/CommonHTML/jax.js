@@ -389,7 +389,7 @@
     
     preTranslate: function (state) {
       var scripts = state.jax[this.id], i, m = scripts.length,
-          script, prev, node, jax, ex, em;
+          script, prev, node, test, span, jax, ex, em;
       //
       //  Get linebreaking information
       //
