@@ -180,8 +180,6 @@
   
   var navigator = {appName: "MathJax"};  // hide the true navigator object
   
-  var i; // avoid global variable used in code below
-  
 /******************************************************************
  *
  *   The following section is ASCIIMathML.js Version 2.2
