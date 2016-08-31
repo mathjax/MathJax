@@ -93,8 +93,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     CHTMLgetBoxSizes: function (values,state) {
       var LH = CHTML.FONTDATA.lineH * values.useHeight,
           LD = CHTML.FONTDATA.lineD * values.useHeight;
-      var H = [], D = [], W = [], J = -1;
-      for (var i = 0, m = this.data.length; i < m; i++) {
+      var H = [], D = [], W = [], J = -1, i, m;
+      for (i = 0, m = this.data.length; i < m; i++) {
         var  row = this.data[i], s = (row.type === "mtr" ? 0 : LABEL);
         H[i] = LH; D[i] = LD;
         for (var j = s, M = row.data.length + s; j < M; j++) {
@@ -109,7 +109,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         state.HD = true;
         var HH = Math.max.apply(Math,H);
         var DD = Math.max.apply(Math,D);
-        for (var i = 0, m = H.length; i < m; i++) {H[i] = HH; D[i] = DD}
+        for (i = 0, m = H.length; i < m; i++) {H[i] = HH; D[i] = DD}
       }
       state.H = H; state.D = D; state.W = W, state.J = J;
     },
