@@ -203,7 +203,7 @@
     },
 
     preTranslate: function (state) {
-      var scripts = state.jax[this.id], i, m = scripts.length,
+      var scripts = state.jax[this.id], i, m = scripts.length, n,
           script, prev, span, div, test, jax, ex, em, maxwidth, relwidth = false, cwidth,
           linebreak = this.config.linebreaks.automatic, width = this.config.linebreaks.width;
       if (linebreak) {
