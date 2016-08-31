@@ -679,6 +679,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
       root: "",         // URL of root directory to load from
       path: PATH        // paths to named URL's (e.g., [MathJax]/...)
     },
+    params:  {},        // filled in from MathJax.js?...
 
     STATUS: {
       OK: 1,         // file is loading or did load OK
@@ -728,13 +729,17 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
         for (var i in file)
           {if (file.hasOwnProperty(i)) {type = i.toUpperCase(); file = file[i]}}
       } else {type = file.split(/\./).pop().toUpperCase()}
-      file = this.fileURL(file);
-      // FIXME: check that URL is OK
-      if (this.loaded[file]) {
-        callback(this.loaded[file]);
+      if (this.params.noContrib && file.substr(0,9) === "[Contrib]") {
+        callback(this.STATUS.ERROR);
       } else {
-        var FILE = {}; FILE[type] = file;
-        this.Load(FILE,callback);
+        file = this.fileURL(file);
+        // FIXME: check that URL is OK
+        if (this.loaded[file]) {
+          callback(this.loaded[file]);
+        } else {
+          var FILE = {}; FILE[type] = file;
+          this.Load(FILE,callback);
+        }
       }
       return callback;
     },
@@ -3123,12 +3128,14 @@ MathJax.Hub.Startup = {
         for (var j = 0, m = params.length; j < m; j++) {
           var KV = params[j].match(/(.*)=(.*)/);
           if (KV) {STARTUP.params[unescape(KV[1])] = unescape(KV[2])}
+             else {STARTUP.params[params[j]] = true}
         }
       }
       CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'')
         // convert mathjax/latest to mathjax/x.y-latest so that all files are the same version
         .replace(/^(https?:\/\/cdn.mathjax.org\/mathjax\/)(latest)/,"$1"+BASE.version.split(/\./).slice(0,2).join(".")+"-$2");
       BASE.Ajax.config.root = CONFIG.root;
+      BASE.Ajax.params = STARTUP.params;
       break;
     }
   }
