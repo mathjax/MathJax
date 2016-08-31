@@ -1,6 +1,3 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  /MathJax/unpacked/config/AM_HTMLorMML-full.js
@@ -18,7 +15,7 @@
 
 MathJax.Hub.Config({
   config: ["MMLorHTML.js"],
-  extensions: ["asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","fast-preview.js","AssistiveMML.js"],
+  extensions: ["asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","fast-preview.js","AssistiveMML.js","[Contrib]/a11y/accessibility-menu.js"],
   jax: ["input/AsciiMath","output/HTML-CSS","output/NativeMML","output/PreviewHTML"]
 });
 
