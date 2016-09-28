@@ -1555,9 +1555,7 @@
           ITEM.RADIO(["SVG","SVG"],                 "renderer", {action: MENU.Renderer}),
           ITEM.RADIO(["PlainSource","Plain Source"],"renderer", {action: MENU.Renderer, value:"PlainSource"}),
           ITEM.RULE(),
-          ITEM.CHECKBOX(["FastPreview","Fast Preview"], "FastPreview"),
-          ITEM.CHECKBOX(["AssistiveMML","Assistive MathML"], "assistiveMML", {action:MENU.AssistiveMML}),
-          ITEM.CHECKBOX(["InTabOrder","Include in Tab Order"], "inTabOrder")
+          ITEM.CHECKBOX(["FastPreview","Fast Preview"], "FastPreview")
         ),
         ITEM.SUBMENU("MathPlayer",  {hidden:!HUB.Browser.isMSIE || !CONFIG.showMathPlayer,
                                                     disabled:!HUB.Browser.hasMathPlayer},
@@ -1590,6 +1588,10 @@
         ITEM.COMMAND(["Scale","Scale All Math ..."],MENU.Scale),
         ITEM.RULE().With({hidden:!CONFIG.showDiscoverable, name:["","discover_rule"]}),
         ITEM.CHECKBOX(["Discoverable","Highlight on Hover"], "discoverable", {hidden:!CONFIG.showDiscoverable})
+      ),
+      ITEM.SUBMENU(["Accessibility","Accessibility"],
+        ITEM.CHECKBOX(["AssistiveMML","Assistive MathML"], "assistiveMML", {action:MENU.AssistiveMML}),
+        ITEM.CHECKBOX(["InTabOrder","Include in Tab Order"], "inTabOrder")
       ),
       ITEM.SUBMENU(["Locale","Language"],                  {hidden:!CONFIG.showLocale, ltr:true},
         ITEM.RADIO("en", "locale",  {action: MENU.Locale}),
