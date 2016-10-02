@@ -46,7 +46,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       def.transform = "translate(0,"+H+") matrix(1 0 0 -1 0 0)";
       def.preserveAspectRatio = "none";
       this.SUPER(arguments).Init.call(this,def);
-      this.element.setAttributeNS(XLINKNS,"href",img.src);
+      this.element.setAttributeNS(XLINKNS,"href",img.SRC);
       this.w = this.r = W; this.h = this.H = H + y;
       this.d = this.D = -y; this.l = 0;
     }
@@ -71,7 +71,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           img = this.img.img;
           img.onload  = MathJax.Callback(["SVGimgLoaded",this]);
           img.onerror = MathJax.Callback(["SVGimgError",this]);
-          img.src = values.src;
+          img.src = img.SRC = values.src;
           MathJax.Hub.RestartAfter(img.onload);
         }
         if (this.img.status !== "OK") {
