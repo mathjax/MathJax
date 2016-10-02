@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("cdo","MathMenu",{version:"2.7.0-beta",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/cdo/MathMenu.js");
+MathJax.Localization.addTranslation("cdo","MathMenu",{version:"2.7.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/cdo/MathMenu.js");

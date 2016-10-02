@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("eo","HelpDialog",{version:"2.7.0-beta",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/eo/HelpDialog.js");
+MathJax.Localization.addTranslation("eo","HelpDialog",{version:"2.7.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/eo/HelpDialog.js");

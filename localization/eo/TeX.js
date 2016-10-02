@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("eo","TeX",{version:"2.7.0-beta",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/eo/TeX.js");
+MathJax.Localization.addTranslation("eo","TeX",{version:"2.7.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/eo/TeX.js");
