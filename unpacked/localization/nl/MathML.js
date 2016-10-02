@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("nl","MathML",{
-        version: "2.7.0-beta",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           BadMglyph: "Onjuiste mglyph: %1",

@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sco","HTML-CSS",{
-        version: "2.7.0-beta",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           LoadWebFont: "Laidin wab font %1",

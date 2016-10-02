@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("de","TeX",{
-        version: "2.7.0-beta",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Zus\u00E4tzliche \u00F6ffnende, oder fehlende schlie\u00DFende Klammer",

@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sv","MathML",{
-        version: "2.7.0-beta",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           BadMglyph: "D\u00E5lig mglyph: %1",

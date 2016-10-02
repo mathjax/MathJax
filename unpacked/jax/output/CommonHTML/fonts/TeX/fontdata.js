@@ -26,7 +26,7 @@
  */
 
 (function (CHTML,MML,AJAX) {
-  var VERSION = "2.7.0-beta";
+  var VERSION = "2.7.0";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-Bold",

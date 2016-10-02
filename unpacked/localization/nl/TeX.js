@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("nl","TeX",{
-        version: "2.7.0-beta",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Overtollige openende accolade of ontbrekende afsluitende accolade",

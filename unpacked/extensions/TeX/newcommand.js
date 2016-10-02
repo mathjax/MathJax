@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/newcommand"] = {
-  version: "2.7.0-beta"
+  version: "2.7.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {

@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ko","HelpDialog",{
-        version: "2.7.0-beta",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           Help: "MathJax \uB3C4\uC6C0\uB9D0",

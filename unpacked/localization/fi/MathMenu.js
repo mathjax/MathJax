@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("fi","MathMenu",{
-        version: "2.7.0-beta",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           MathMLcode: "MathML-koodi",
