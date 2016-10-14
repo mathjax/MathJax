@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/ru/TeX.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("ru","TeX",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u041B\u0438\u0448\u043D\u044F\u044F \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u044E\u0449\u0430\u044F \u0441\u043A\u043E\u0431\u043A\u0430 \u0438\u043B\u0438 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0449\u0430\u044F \u0437\u0430\u043A\u0440\u044B\u0432\u0430\u044E\u0449\u0430\u044F \u0441\u043A\u043E\u0431\u043A\u0430",

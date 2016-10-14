@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2015 The MathJax Consortium
+ *  Copyright (c) 2010-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
       
@@ -67,7 +67,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       var parent = this;
       while (parent.inferred || (parent.parent && parent.parent.type === "mrow" &&
-             parent.parent.data.length === 1)) {parent = parent.parent}
+             parent.isEmbellished())) {parent = parent.parent}
       var isTop = ((parent.type === "math" && parent.Get("display") === "block") ||
                     parent.type === "mtd");
       parent.isMultiline = true;
@@ -315,10 +315,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       this.HTMLcleanBBox(slice.bbox);
       if (end.length === 0) {
         span = this.HTMLspanElement();
+        var SPAN = span;
+        if (this.href) span = span.parentNode;
         span.parentNode.removeChild(span);
-        span.nextMathJaxSpan.id = span.id; var n = 0;
-        while (span = span.nextMathJaxSpan) {
-          var color = this.HTMLhandleColor(span);
+        span.nextMathJaxSpan.id = SPAN.id; var n = 0;
+        while ((SPAN = SPAN.nextMathJaxSpan)) {
+          if (SPAN.nodeName.toLowerCase() === "a") SPAN = SPAN.firstChild;
+          var color = this.HTMLhandleColor(SPAN);
           if (color) {color.id += "-MathJax-Continue-"+n; n++}
         }
       }
@@ -333,6 +336,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     //
     HTMLcreateSliceSpan: function (span) {
       var SPAN = this.HTMLspanElement(), n = 0;
+      if (this.href) SPAN = SPAN.parentNode;
       var LAST = SPAN; while (LAST.nextMathJaxSpan) {LAST = LAST.nextMathJaxSpan; n++}
       var SLICE = SPAN.cloneNode(false); LAST.nextMathJaxSpan = SLICE; SLICE.nextMathJaxSpan = null;
       SLICE.id += "-MathJax-Continue-"+n;
@@ -357,6 +361,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
 	var color = document.getElementById("MathJax-Color-"+this.spanID+HTMLCSS.idPostfix);
         if (color) {line.appendChild(color)}
         var span = this.HTMLspanElement();
+        if (this.href) span = span.parentNode;
         line.appendChild(span);
         //
         //  If it is last, remove right padding
@@ -515,7 +520,9 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (end.length === 0) {
         var s = this.data[this.sup] || this.data[this.sub];
         if (s && this.HTMLnotEmpty(s)) {
-          var box = s.HTMLspanElement().parentNode, stack = box.parentNode;
+          var box = s.HTMLspanElement().parentNode;
+          if (s.href) box = box.parentNode;
+          var stack = box.parentNode;
           if (this.data[this.base]) {stack.removeChild(stack.firstChild)}
 	  for (box = stack.firstChild; box; box = box.nextSibling)
 	    {box.style.left = HTMLCSS.Em(HTMLCSS.unEm(box.style.left)-this.HTMLbaseW)}
@@ -679,7 +686,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //    use it to modify the default penalty
       //
       var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO];
-      if (!(linebreak instanceof Array)) {
+      if (!MathJax.Object.isArray(linebreak)) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}
@@ -729,7 +736,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit &&
           !this.mathbackground && !this.background)
         {linebreak = [(w+PENALTY.spaceoffset)*PENALTY.spacefactor]}
-      if (!(linebreak instanceof Array)) {
+      if (!MathJax.Object.isArray(linebreak)) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}

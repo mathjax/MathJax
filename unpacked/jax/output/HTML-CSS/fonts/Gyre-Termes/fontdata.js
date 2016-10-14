@@ -4,7 +4,7 @@
  *  
  *  Initializes the HTML-CSS OutputJax to use the Gyre-Termes fonts
 
- *  Copyright (c) 2013-2015 The MathJax Consortium
+ *  Copyright (c) 2013-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-    var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
 
   var ALPHABETS = "GyreTermesMathJax_Alphabets",
       ARROWS = "GyreTermesMathJax_Arrows",
@@ -141,7 +141,7 @@
              offsetA: 0x1D670,
              offsetN: 0x1D7F6
           },
-        "-Gyre-Termes-variant": {fonts: [VARIANTS,MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,NONUNICODE,SIZE1]},
+          "-Gyre-Termes-variant": {fonts: [VARIANTS,MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,NONUNICODE,SIZE1]},
           "-tex-caligraphic": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1], italic: true},
           "-tex-oldstyle": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1]},
           "-tex-caligraphic-bold": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1], italic: true, bold: true},
@@ -160,7 +160,7 @@
            remap: {0x03F5: 52, 0x03D1: 53, 0x03F0: 54, 0x03D5: 55, 0x03F1: 56, 0x03D6: 57, 0x03F4: 17}}
       ],
 
-      RULECHAR: 0x0305,
+      RULECHAR: 0x2212,
 
       REMAP: {
         0x25C2: 0x25C0,
@@ -207,7 +207,7 @@
           HW: [[0.816,MAIN], [0.976,SIZE1], [1.168,SIZE2], [1.398,SIZE3], [1.674,SIZE4], [2.006,SIZE5], [2.404,SIZE6], [2.780,SIZE6,1.157]],
           stretch: {bot:[0x23A0,SYMBOLS], ext:[0x239F,SYMBOLS], top:[0x239E,SYMBOLS]}
         },
-        0x2D: {alias: 0x305, dir: H},
+        0x2D: {alias: 0x2212, dir: H},
         0x2F:
         {
           dir: V,
@@ -259,7 +259,7 @@
         0x7E: {alias: 0x303, dir: H},
         0xAF: {alias: 0x332, dir: H},
         0x2C6: {alias: 0x302, dir: H},
-        0x2C9: {alias: 0x305, dir: H},
+        0x2C9: {alias: 0x2212, dir: H},
         0x2DC: {alias: 0x303, dir: H},
         0x302:
         {
@@ -297,15 +297,15 @@
         },
         0x333: EXTRAH,
         0x33F: EXTRAH,
-        0x2015: {alias: 0x305, dir: H},
+        0x2015: {alias: 0x2212, dir: H},
         0x2016:
         {
           dir: V,
           HW: [[0.800,MAIN], [0.960,SIZE1], [1.152,SIZE2], [1.382,SIZE3], [1.658,SIZE4], [1.990,SIZE5], [2.388,SIZE6]],
           stretch: {bot:[0xE12A,SIZE6], ext:[0xE12B,SIZE6], top:[0xE12C,SIZE6]}
         },
-        0x2017: {alias: 0x305, dir: H},
-        0x203E: {alias: 0x305, dir: H},
+        0x2017: {alias: 0x2212, dir: H},
+        0x203E: {alias: 0x2212, dir: H},
         0x2044:
         {
           dir: V,
@@ -477,8 +477,8 @@
         0x2212:
         {
           dir: H,
-          HW: [[0.500,MAIN]],
-          stretch: {left:[0xE127,SIZE6], rep:[0xE128,SIZE6], right:[0xE129,SIZE6]}
+          HW: [],
+          stretch: {rep:[0x2212,MAIN,0,0,0,-.224,-.224]}
         },
         0x2215: {alias: 0x2044, dir: V},
         0x221A:
@@ -561,7 +561,7 @@
           HW: [[0.596,SYMBOLS]],
           stretch: {ext:[0x23AA,SYMBOLS]}
         },
-        0x23AF: {alias: 0x305, dir: H},
+        0x23AF: {alias: 0x2212, dir: H},
         0x23B0:
         {
           dir: V,
@@ -598,7 +598,7 @@
         },
         0x23E0: EXTRAH,
         0x23E1: EXTRAH,
-        0x2500: {alias: 0x305, dir: H},
+        0x2500: {alias: 0x2212, dir: H},
         0x27A1: EXTRAH,
         0x27E6: EXTRAV,
         0x27E7: EXTRAV,
@@ -672,6 +672,10 @@
       }
 
     }
+  });
+  MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Main/Regular/Main.js",function () {
+    HTMLCSS.FONTDATA.FONTS[MAIN][0x2212][0] = HTMLCSS.FONTDATA.FONTS[MAIN][0x002B][0]; // - needs height and depth of +
+    HTMLCSS.FONTDATA.FONTS[MAIN][0x2212][1] = HTMLCSS.FONTDATA.FONTS[MAIN][0x002B][1]; // - needs height and depth of +
   });
   MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Size1/Regular/Main.js",function () {
     var i;

@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2015 The MathJax Consortium
+ *  Copyright (c) 2010-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -55,7 +55,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       HTMLCSS.addBox(stack,frame); stack.insertBefore(frame,base); // move base to above background
       var T = 0, B = 0, R = 0, L = 0, dx = 0, dy = 0; var svg, vml;
       var w, h, r;
-      if (!values.mathcolor) {values.mathcolor = "black"} else {span.style.color = values.mathcolor}
+      if (!values.mathcolor) {values.mathcolor = "currentColor"} else {span.style.color = values.mathcolor}
 
       // perform some reduction e.g. eliminate duplicate notations.
       var nl = MathJax.Hub.SplitList(values.notation), notation = {};

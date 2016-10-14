@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,HTML) {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -42,6 +42,7 @@
       SIZE4   = "STIXSizeFourSym",
       SIZE5   = "STIXSizeFiveSym";
   var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
+  var ARROWREP = [0x2212,GENERAL,0,0,0,-.26,-.26];   // remove extra height/depth added below
 
   HTMLCSS.Augment({
     FONTDATA: {
@@ -72,7 +73,8 @@
       
       VARIANT: {
         "normal": {fonts: [GENERAL,NONUNI,SIZE1],
-                   remap: {0x2205: [0x2205,"-STIX-variant"]}}, // \emptyset
+                   remap: {0x2205: [0x2205,"-STIX-variant"], // \emptyset
+                           0x7C: [0x7C,"-STIX-variant"]}},   // absolute value
         "bold":   {fonts: [BOLD,"STIXNonUnicode-bold","STIXSizeOneSym-bold"], bold:true},
         "italic": {fonts: [ITALIC,NONUNII,GENERAL,NONUNI,SIZE1], italic:true},
         "bold-italic": {fonts: [BITALIC,"STIXNonUnicode-bold-italic"], bold:true, italic:true},
@@ -97,7 +99,8 @@
                    remap: {0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2270: 0xE011, 0x2271: 0xE00E,
                            0x22E0: 0xE04B, 0x22E1: 0xE04F, 0x2288: 0xE016, 0x2289: 0xE018,
                            0x25B3: 0x25B5, 0x25BD: 0x25BF,
-                           0x2205: [0x2205,MML.VARIANT.NORMAL]}},  // \varnothing
+                           0x2205: [0x2205,MML.VARIANT.NORMAL],    // \varnothing
+                           0x007C: [0x007C,MML.VARIANT.NORMAL]}},  // absolute value
         "-tex-caligraphic": {fonts: [ITALIC,NONUNII,NONUNI,SIZE1], offsetA: 0xE22D, noLowerCase: 1},
         "-tex-oldstyle": {offsetN: 0xE261,
                    remap: {0xE262: 0xE265, 0xE263: 0xE269, 0xE264: 0xE26D, 0xE265: 0xE271,
@@ -140,6 +143,7 @@
       REMAPACCENT: {
         "\u007E": "\u0303",
         "\u2192": "\u20D7",
+        "\u2190": "\u20D6",
         "\u0060": "\u0300",
         "\u005E": "\u0302",
         "\u00B4": "\u0301",
@@ -222,7 +226,7 @@
         },
         0x2190: // left arrow
         {
-          dir: H, HW: [[.926,GENERAL]], stretch: {left:[0x2190,GENERAL], rep:[0x2212,GENERAL]}
+          dir: H, HW: [[.926,GENERAL]], stretch: {left:[0x2190,GENERAL], rep:ARROWREP}
         },
         0x2191: // \uparrow
         {
@@ -230,7 +234,7 @@
         },
         0x2192: // right arrow
         {
-          dir: H, HW: [[.926,GENERAL]], stretch: {rep:[0x2212,GENERAL], right:[0x2192,GENERAL]}
+          dir: H, HW: [[.926,GENERAL]], stretch: {rep:ARROWREP, right:[0x2192,GENERAL]}
         },
         0x2193: // \downarrow
         {
@@ -239,7 +243,7 @@
         0x2194: // left-right arrow
         {
           dir: H, HW: [[.926,GENERAL]],
-          stretch: {left:[0x2190,GENERAL], rep:[0x2212,GENERAL], right:[0x2192,GENERAL]}
+          stretch: {left:[0x2190,GENERAL], rep:ARROWREP, right:[0x2192,GENERAL]}
         },
         0x2195: // \updownarrow
         {
@@ -375,6 +379,7 @@
         0x0332: {alias: 0x23AF, dir:H}, // combining low line
         0x2015: {alias: 0x23AF, dir:H}, // horizontal line
         0x2017: {alias: 0x23AF, dir:H}, // horizontal line
+        0x20D7: {alias: 0x2192, dir:H}, // combinining over right arrow (vector arrow)
         0x2212: {alias: 0x23AF, dir:H}, // minus
         0x2215: {alias: 0x002F, dir:V}, // division slash
         0x2329: {alias: 0x27E8, dir:V}, // langle
@@ -405,6 +410,7 @@
         0x21C3: EXTRAV, // down harpoon with barb left
         0x21DA: EXTRAH, // left triple arrow
         0x21DB: EXTRAH, // right triple arrow
+        0x222B: EXTRAV, // integral
         0x23B4: EXTRAH, // top square bracket
         0x23B5: EXTRAH, // bottom square bracket
         0x23DC: EXTRAH, // top paren
@@ -1504,6 +1510,9 @@
     0x221A: [943,11,737,67,767]        // SQUARE ROOT
   };
 
+  
+  HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x2212][0] = HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x002B][0]; // minus is sized as plus
+  HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x2212][1] = HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x002B][1]; // minus is sized as plus
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x22EE][0] += 400;  // adjust height for \vdots
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x22F1][0] += 500;  // adjust height for \ddots
   HTMLCSS.FONTDATA.FONTS['STIXGeneral'][0x2212][1] += 100;  // adjust depth for minus (arrow extender)

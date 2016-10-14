@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2015 The MathJax Consortium
+ *  Copyright (c) 2010-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -142,8 +142,15 @@
         value = this.filterAttribute(name,value);
         var defaults = (mml.type === "mstyle" ? MML.math.prototype.defaults : mml.defaults);
         if (value != null) {
-          if (value.toLowerCase() === "true") {value = true}
-            else if (value.toLowerCase() === "false") {value = false}
+          var val = value.toLowerCase();
+          if (val === "true" || val === "false") {
+            if (typeof (defaults[name]) === "boolean" || defaults[name] === MML.INHERIT ||
+               mml.type === "math" || mml.type === "mstyle" ||
+               (defaults[name] === MML.AUTO && 
+               (mml.defaultDef == null || typeof(mml.defaultDef[name]) === "boolean"))) {
+              value = (val === "true");
+            }
+          }
           if (defaults[name] != null || MML.copyAttributes[name])
             {mml[name] = value} else {mml.attr[name] = value}
           mml.attrNames.push(name);
@@ -282,7 +289,7 @@
       //
       //  Translate message if it is ["id","message",args]
       //
-      if (message instanceof Array) {message = _.apply(_,message)}
+      if (MathJax.Object.isArray(message)) {message = _.apply(_,message)}
       throw MathJax.Hub.Insert(Error(message),{mathmlError: true});
     },
     //

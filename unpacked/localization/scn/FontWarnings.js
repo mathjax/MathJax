@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/scn/FontWarnings.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("scn","FontWarnings",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax sta adupirannu tipi di car\u00E0ttiri scarricati di Internet p'ammmustrari la matim\u00E0tica nta sta p\u00E0ggina. Scarricari sti tipi si pigghia tempu, dunca sta p\u00E0ggina si purr\u00ECa mpagginari cchi\u00F9 viloci si li tipi di car\u00E0ttiri p\u00E2 matim\u00E0tica f\u00F9ssiru istallati direttamenti nt\u00E2 cartella d\u00EE car\u00E0ttiri d\u00FB t\u00F2 sistema.",

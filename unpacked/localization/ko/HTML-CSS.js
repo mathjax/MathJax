@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/ko/HTML-CSS.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("ko","HTML-CSS",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           LoadWebFont: "%1 \uC6F9\uD3F0\uD2B8\uB97C \uBD88\uB7EC\uC624\uACE0 \uC788\uC2B5\uB2C8\uB2E4...",

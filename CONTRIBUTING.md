@@ -174,7 +174,7 @@ useful things you could do.
 
 If you want to get involved with testing MathJax, there is a set of QA
 Documentation [in our testing
-framework](https://github.com/MathJax/MathJax-testing).
+framework](https://github.com/MathJax/MathJax-test).
 
 Essentially though, [check out the latest develop
 branch](#working-on-mathJax-core), take it for a spin, and if you find

@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/fi/fi.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,14 +17,13 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("fi",null,{
   menuTitle: "suomi",
-  version: "2.6.0",
+  version: "2.7.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax on l\u00F6yt\u00E4nyt ev\u00E4steen, joka sis\u00E4lt\u00E4\u00E4 asetuksia ja ohjelmakoodia. Haluatko ajaa sen?\n\n(Peru, ellet ole luonut ev\u00E4stett\u00E4 itse.)",

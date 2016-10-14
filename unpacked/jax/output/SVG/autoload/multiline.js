@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2015 The MathJax Consortium
+ *  Copyright (c) 2011-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -65,7 +65,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       var parent = this;
       while (parent.inferred || (parent.parent && parent.parent.type === "mrow" &&
-             parent.parent.data.length === 1)) {parent = parent.parent}
+             parent.isEmbellished())) {parent = parent.parent}
       var isTop = ((parent.type === "math" && parent.Get("display") === "block") ||
                     parent.type === "mtd");
       parent.isMultiline = true;
@@ -308,6 +308,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       var slice = BBOX();
       this.SVGmoveLine(start,end,slice,state,values);
       slice.Clean();
+      if (this.href) {this.SVGaddHref(slice)}
       this.SVGhandleColor(slice);
       svg.Add(slice,svg.w,0,true);
       return slice;
@@ -605,7 +606,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //    use it to modify the default penalty
       //
       var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO];
-      if (!(linebreak instanceof Array)) {
+      if (!MathJax.Object.isArray(linebreak)) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}
@@ -654,7 +655,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit*1000 &&
           !this.mathbackground && !this.backrgound)
         {linebreak = [(w/1000+PENALTY.spaceoffset)*PENALTY.spacefactor]}
-      if (!(linebreak instanceof Array)) {
+      if (!MathJax.Object.isArray(linebreak)) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}

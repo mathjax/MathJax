@@ -9,7 +9,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.6.1",
+  version: "2.7.0",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -52,6 +52,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       {WW[i] = TEX.Parse.prototype.Em(W[i])}
     return WW.join(" ");
   };
+  
+  //
+  //  Get the URL of the page (for use with formatURL) when there
+  //  is a <base> element on the page.
+  //  
+  var baseURL = (document.getElementsByTagName("base").length === 0) ? "" :
+                String(document.location).replace(/#.*$/,"");
+
   
   /******************************************************************************/
   
@@ -145,10 +153,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     delimiter: {
-      '\\lvert':     ['2223',{texClass:MML.TEXCLASS.OPEN}],
-      '\\rvert':     ['2223',{texClass:MML.TEXCLASS.CLOSE}],
-      '\\lVert':     ['2225',{texClass:MML.TEXCLASS.OPEN}],
-      '\\rVert':     ['2225',{texClass:MML.TEXCLASS.CLOSE}]
+      '\\lvert':     ['007C',{texClass:MML.TEXCLASS.OPEN}],
+      '\\rvert':     ['007C',{texClass:MML.TEXCLASS.CLOSE}],
+      '\\lVert':     ['2016',{texClass:MML.TEXCLASS.OPEN}],
+      '\\rVert':     ['2016',{texClass:MML.TEXCLASS.CLOSE}]
     }
   },null,true);
     
@@ -203,7 +211,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (!ref) {ref = {tag:"???",id:""}; AMS.badref = !AMS.refUpdate}
       var tag = ref.tag; if (eqref) {tag = CONFIG.formatTag(tag)}
       this.Push(MML.mrow.apply(MML,this.InternalMath(tag)).With({
-        href:CONFIG.formatURL(ref.id), "class":"MathJax_ref"
+        href:CONFIG.formatURL(ref.id,baseURL), "class":"MathJax_ref"
       }));
     },
     
@@ -595,7 +603,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   TEX.prefilterHooks.Add(function (data) {
     AMS.display = data.display;
     AMS.number = AMS.startNumber;  // reset equation numbers (in case the equation restarted)
-    AMS.eqlabels = AMS.eqIDs = {}; AMS.badref = false;
+    AMS.eqlabels = {};
+    AMS.eqIDs = {}; 
+    AMS.badref = false;
     if (AMS.refUpdate) {AMS.number = data.script.MathJax.startNumber}
   });
   TEX.postfilterHooks.Add(function (data) {
@@ -629,7 +639,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   //
   TEX.resetEquationNumbers = function (n,keepLabels) {
     AMS.startNumber = (n || 0);
-    if (!keepLabels) {AMS.labels = AMS.IDs = {}}
+    if (!keepLabels) {
+      AMS.labels = {};
+      AMS.IDs = {};
+    }
   }
 
   /******************************************************************************/

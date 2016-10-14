@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/SVG/fonts/TeX/svg/Main/Italic/Main.js
  *
- *  Copyright (c) 2011-2015 The MathJax Consortium
+ *  Copyright (c) 2011-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,8 +30,7 @@ MathJax.OutputJax.SVG.FONTDATA.FONTS['MathJax_Main-italic'] = {
     [0x300,0x36F,"CombDiacritMarks"],
     [0x370,0x3FF,"GreekAndCoptic"],
     [0x2000,0x206F,"GeneralPunctuation"],
-    [0x2100,0x214F,"LetterlikeSymbols"],
-    [0x2200,0x22FF,"MathOperators"]
+    [0x2100,0x214F,"LetterlikeSymbols"]
   ],
 
     // POUND SIGN

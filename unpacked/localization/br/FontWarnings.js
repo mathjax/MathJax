@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/br/FontWarnings.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("br","FontWarnings",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax a implij ar fonto\u00F9 web evit diskwel ar jedado\u00F9 war ar bajenn-ma\u00F1. Pell eo ar re-se o pellgarga\u00F1 ha diskwelet e vefe buanoc'h ma vefe stailhfec'h fonto\u00F9 jedoniezh war-eeun e teuliad fonto\u00F9 ho reizhiad.",

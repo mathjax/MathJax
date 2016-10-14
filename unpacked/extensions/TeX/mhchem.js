@@ -10,7 +10,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2015 The MathJax Consortium
+ *  Copyright (c) 2011-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,9 +25,30 @@
  *  limitations under the License.
  */
 
+
+//
+//  Don't replace [Contrib]/mhchem if it is already loaded
+//
+if (MathJax.Extension["TeX/mhchem"]) {
+  MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/mhchem.js");
+} else {
+  
 MathJax.Extension["TeX/mhchem"] = {
-  version: "2.6.0"
+  version: "2.7.0",
+  config: MathJax.Hub.CombineConfig("TeX.mhchem",{
+    legacy: true
+  })
 };
+
+//
+//  Load [Contrib]/mhchem if not configured for legacy vesion
+//
+if (!MathJax.Extension["TeX/mhchem"].config.legacy) {
+  MathJax.Callback.Queue(
+    ["Require",MathJax.Ajax,"[Contrib]/mhchem/mhchem.js"],
+    ["loadComplete",MathJax.Ajax,"[MathJax]/extensions/TeX/mhchem.js"]
+  );
+} else {
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
@@ -492,3 +513,5 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/mhchem.js");
+
+}}

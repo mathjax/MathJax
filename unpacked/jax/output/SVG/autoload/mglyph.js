@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2015 The MathJax Consortium
+ *  Copyright (c) 2011-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX,
@@ -46,7 +46,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       def.transform = "translate(0,"+H+") matrix(1 0 0 -1 0 0)";
       def.preserveAspectRatio = "none";
       this.SUPER(arguments).Init.call(this,def);
-      this.element.setAttributeNS(XLINKNS,"href",img.src);
+      this.element.setAttributeNS(XLINKNS,"href",img.SRC);
       this.w = this.r = W; this.h = this.H = H + y;
       this.d = this.D = -y; this.l = 0;
     }
@@ -71,7 +71,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           img = this.img.img;
           img.onload  = MathJax.Callback(["SVGimgLoaded",this]);
           img.onerror = MathJax.Callback(["SVGimgError",this]);
-          img.src = values.src;
+          img.src = img.SRC = values.src;
           MathJax.Hub.RestartAfter(img.onload);
         }
         if (this.img.status !== "OK") {
@@ -82,7 +82,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
         } else {
           var mu = this.SVGgetMu(svg);
           svg.Add(BBOX.MGLYPH(this.img.img,values.width,values.height,values.valign,mu,
-                              {src:values.src, alt:values.alt, title:values.alt}));
+                              {alt:values.alt, title:values.alt}));
         }
       }
       svg.Clean();

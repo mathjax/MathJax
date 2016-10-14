@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2015 The MathJax Consortium
+ *  Copyright (c) 2011-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -308,7 +308,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       y = Y - lw/2;
       for (i = 0, m = A.length-1; i < m; i++) {
         dy = Math.max(0,D[i]+H[i+1]+RSPACE[i]);
-        if (RLINES[i] !== "none")
+        if (RLINES[i] !== MML.LINES.NONE && RLINES[i] !== "")
           {svg.Add(BBOX.HLINE(fW,lw,RLINES[i]),0,y-D[i]-(dy-D[i]-H[i+1])/2)}
         y -= dy;
       }

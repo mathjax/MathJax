@@ -11,7 +11,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2014-2015 The MathJax Consortium
+ *  Copyright (c) 2014-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@
   var msieColorBug = BROWSER.isMSIE && (document.documentMode||0) < 8;
 
   var FastPreview = MathJax.Extension["fast-preview"] = {
-    version: "2.6.0",
+    version: "2.7.0",
     enabled: true,
 
     //
@@ -100,7 +100,7 @@
     //  and call the PreviewHTML output jax to create the preview
     //
     Preview: function (data) {
-      if (!this.Active()) return;
+      if (!this.Active() || !data.script.parentNode) return;
       var preview = data.script.MathJax.preview || data.script.previousSibling;
       if (!preview || preview.className !== MathJax.Hub.config.preRemoveClass) {
         preview = HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});

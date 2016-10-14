@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/nl/HelpDialog.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("nl","HelpDialog",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           Help: "MathJax-hulp",
@@ -34,7 +30,7 @@ MathJax.Localization.addTranslation("nl","HelpDialog",{
           Language: "Via *Taal* kunt u de taal kiezen die MathJax gebruikt voor de menu's en waarschuwingsboodschappen.",
           Zoom: "*Wiskunde zoom*: Als u moeite heeft met het lezen van een vergelijking dan kan MathJax deze vergroten zodat u het beter kunt zien.",
           Accessibilty: "*Toegankelijkheid*: MathJax werkt automatisch samen met schermlezers waardoor wiskunde toegankelijk wordt voor slechtzienden.",
-          Fonts: "*Lettertypes*: MathJax zal bepaalde wiskunde lettertypes gebruiken als die ge\u00EFnstalleerd zijn op uw computer; anders zal het web-gebaseerde lettertypes gebruiken. Alhoewel het niet noodzakelijk is, zullen lokaal ge\u00EFnstalleerde lettertypes het zetwerk versnellen. We raden aan om de [STIX fonts](%1) te installeren."
+          Fonts: "*Lettertypes*: MathJax gebruikt bepaalde wiskunde lettertypes als die ge\u00EFnstalleerd zijn op uw computer; anders gebruikt het webgebaseerde lettertypes. Alhoewel het niet noodzakelijk is, versnellen lokaal ge\u00EFnstalleerde lettertypes het zetwerk. We raden aan om de [STIX fonts](%1) te installeren."
         }
 });
 

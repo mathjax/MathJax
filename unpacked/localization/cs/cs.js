@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/cs/cs.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,14 +17,13 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("cs",null,{
   menuTitle: "\u010De\u0161tina",
-  version: "2.6.0",
+  version: "2.7.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax nalezl cookie u\u017Eivatelsk\u00E9 konfigurace obsahuj\u00EDc\u00ED spustiteln\u00FD k\u00F3d. Chcete ho spustit?\n\n(Pokud jste cookie nenastavili sami, m\u011Bli byste stisknout Storno.)",

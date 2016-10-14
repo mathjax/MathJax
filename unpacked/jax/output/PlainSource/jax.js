@@ -7,7 +7,7 @@
  *
  *  ---------------------------------------------------------------------
  *
- *  Copyright (c) 2015 The MathJax Consortium
+ *  Copyright (c) 2015-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -65,12 +65,11 @@
         //  Remove any existing output
         //
         prev = script.previousSibling;
-        if (prev && String(prev.className).match(/^MathJax_PlainSource(_Display)?( MathJax_Processing)?$/)) {
+        if (prev && String(prev.className).match(/^MathJax(_PlainSource)?(_Display)?( MathJax_Process(ing|ed))?$/)) {
           prev.parentNode.removeChild(prev);
         }
         //
-        //  Add the span, and a div if in display mode,
-        //  then set the role and mark it as being processed
+        //  Add the span, and a div if in display mode
         //
         jax = script.MathJax.elementJax;
         if (!jax) continue;
@@ -142,7 +141,7 @@
     postTranslate: function(state) {},
 
     getJaxFromMath: function(math) {
-      if (math.parentNode.className === "MathJax_PlainSource_Display") math = math.parentNode;
+      if (math.parentNode.className.match(/MathJax_PlainSource_Display/)) math = math.parentNode;
       do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
       return HUB.getJaxFor(math);
     },

@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/de/MathMenu.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,12 +17,11 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("de","MathMenu",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
-          Show: "Zeige Mathe als",
+          Show: "Zeige mathematischen Ausdruck als",
           MathMLcode: "MathML-Code",
           OriginalMathML: "Original-MathML",
           TeXCommands: "TeX-Befehle",
@@ -57,7 +53,7 @@ MathJax.Localization.addTranslation("de","MathMenu",{
           MenuEvents: "Men\u00FCereignisse",
           MouseEvents: "Mausereignisse",
           MenuAndMouse: "Maus- und Men\u00FCereignisse",
-          FontPrefs: "Schrifteinstellungen",
+          FontPrefs: "Schriftarteinstellungen",
           ForHTMLCSS: "F\u00FCr HTML-CSS:",
           Auto: "Automatisch",
           TeXLocal: "TeX (Lokal)",
@@ -87,16 +83,16 @@ MathJax.Localization.addTranslation("de","MathMenu",{
           wofforotffonts: "WOFF- oder OTF-Schriften",
           eotffonts: "EOT-Schriften",
           svgfonts: "SVG-Schriften",
-          WebkitNativeMMLWarning: "Dein Browser scheint kein natives MathML zu unterst\u00FCtzen. Ein Wechsel auf MathML-Ausgabe kann dazu f\u00FChren, dass die Inhalte auf der Seite unlesbar werden.",
+          WebkitNativeMMLWarning: "Ihr Browser scheint kein natives MathML zu unterst\u00FCtzen. Ein Wechsel auf MathML-Ausgabe kann dazu f\u00FChren, dass die Inhalte auf der Seite unlesbar werden.",
           MSIENativeMMLWarning: "Um die MathML-Ausgabe verarbeiten zu k\u00F6nnen, ben\u00F6tigt der Internet Explorer das MathPlayer-Plugin.",
           OperaNativeMMLWarning: "Die Unterst\u00FCtzung f\u00FCr MathML bei Opera ist beschr\u00E4nkt. Deshalb kann ein Wechsel auf MathML-Ausgabe verursachen, dass einige Ausdr\u00FCcke nur schlecht gerendert werden k\u00F6nnen.",
-          SafariNativeMMLWarning: "Das native MathML deines Browsers implementiert nicht alle Funktionen, die von MathJax verwendet werden. Deshalb k\u00F6nnen einige Ausdr\u00FCcke nicht richtig gerendert werden.",
-          FirefoxNativeMMLWarning: "Das native MathML deines Browsers implementiert nicht alle Funktionen, die von MathJax verwendet werden. Deshalb k\u00F6nnen einige Ausdr\u00FCcke nicht richtig gerendert werden.",
-          MSIESVGWarning: "SVG ist nicht implementiert in Internet Explorer \u00E4lter als IE9 oder wenn IE8 und niedriger emuliert werden. Der Wechsel auf SVG-Ausgabe hat zur Folge, dass die Inhalte nicht richtig dargestellt werden.",
+          SafariNativeMMLWarning: "Das native MathML Ihres Browsers unterst\u00FCtzt nicht alle Funktionen, die von MathJax verwendet werden. Deshalb k\u00F6nnen einige Ausdr\u00FCcke nicht richtig gerendert werden.",
+          FirefoxNativeMMLWarning: "Das native MathML Ihres Browsers unterst\u00FCtzt nicht alle Funktionen, die von MathJax verwendet werden. Deshalb k\u00F6nnen einige Ausdr\u00FCcke nicht richtig gerendert werden.",
+          MSIESVGWarning: "SVG wird nicht vom Internet Explorer \u00E4lter als IE9 unterst\u00FCtzt oder wenn IE8 und niedriger emuliert werden. Der Wechsel auf SVG-Ausgabe hat zur Folge, dass die Inhalte nicht richtig dargestellt werden.",
           LoadURL: "\u00DCbersetzungsdaten von dieser URL laden:",
           BadURL: "Die URL sollte f\u00FCr eine JavaScript-Datei sein, die MathJax-\u00DCbersetzungsdaten definiert. JavaScript-Dateinamen sollten enden mit \u201E.js\u201C.",
           BadData: "\u00DCbersetzungsdaten konnten nicht von %1 geladen werden",
-          SwitchAnyway: "Renderer wechseln?\n\n(OK w\u00E4hlen zum Wechseln, ABBRECHEN zum Fortfahren mit dem aktuellen Renderer)",
+          SwitchAnyway: "Den Renderer trotzdem wechseln?\n\n(OK w\u00E4hlen zum Wechseln, ABBRECHEN w\u00E4hlen, um mit dem gegenw\u00E4rtigen Renderer fortzufahren)",
           ScaleMath: "Alle Inhalte skalieren (verglichen mit dem umflie\u00DFenden Text) um",
           NonZeroScale: "Der Wert sollte nicht null sein",
           PercentScale: "Der Wert sollte ein Prozentsatz sein (z.\u0026nbsp;B. 120%%)",

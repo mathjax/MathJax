@@ -4,7 +4,7 @@
  *  
  *  Initializes the HTML-CSS OutputJax to use the STIX-Web fonts
 
- *  Copyright (c) 2013-2015 The MathJax Consortium
+ *  Copyright (c) 2013-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
 
   var ALPHABETSBOLDITALIC = "STIXMathJax_Alphabets-bold-italic",
       ALPHABETSBOLD = "STIXMathJax_Alphabets-bold",
@@ -80,6 +80,7 @@
       VARIANTS = "STIXMathJax_Variants";
 
   var H = "H", V = "V", EXTRAH = {load:"extra", dir:H}, EXTRAV = {load:"extra", dir:V};
+  var ARROWREP = [0x2212,MAIN,0,0,0,-.26,-.26];
 
   HTMLCSS.Augment({
     FONTDATA: {
@@ -151,9 +152,8 @@
       },
 
       VARIANT: {
-          "normal": {fonts: [MAIN,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,SIZE1]},
-          "bold": {fonts: [MAINBOLD,NORMALBOLD,FRAKTURBOLD,DOUBLESTRUCKBOLD,SANSSERIFBOLD,LATINBOLD,ALPHABETSBOLD,MARKSBOLD,ARROWSBOLD,OPERATORSBOLD,SYMBOLSBOLD,SHAPESBOLD,MISCBOLD,VARIANTSBOLD,SIZE1], bold:true
-},
+          "normal": {remap: {0x007C: [0x007C, "-STIX-Web-variant"]}, fonts: [MAIN,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,SIZE1]},
+          "bold": {fonts: [MAINBOLD,NORMALBOLD,FRAKTURBOLD,DOUBLESTRUCKBOLD,SANSSERIFBOLD,LATINBOLD,ALPHABETSBOLD,MARKSBOLD,ARROWSBOLD,OPERATORSBOLD,SYMBOLSBOLD,SHAPESBOLD,MISCBOLD,VARIANTSBOLD,SIZE1], bold:true},
           "italic": {fonts: [MAINITALIC,NORMALITALIC,SCRIPTITALIC,DOUBLESTRUCKITALIC,SANSSERIFITALIC,LATINITALIC,ALPHABETSITALIC,MARKSITALIC,MISCITALIC,VARIANTSITALIC,SIZE1], italic:true},
           "bold-italic": {fonts: [MAINBOLDITALIC,NORMALBOLDITALIC,SCRIPTBOLDITALIC,DOUBLESTRUCKBOLDITALIC,SANSSERIFBOLDITALIC,LATINBOLDITALIC,ALPHABETSBOLDITALIC,MARKSBOLDITALIC,SHAPESBOLDITALIC,MISCBOLDITALIC,VARIANTSBOLDITALIC,SIZE1], bold: true, italic:true},
           "double-struck": {
@@ -211,7 +211,7 @@
              offsetA: 0x1D670,
              offsetN: 0x1D7F6
           },
-        "-STIX-Web-variant": {remap: { 0x2A87: 0xE010, 0x2A88: 0xE00F, 0x25B3: 0x25B5, 0x25BD: 0x25BF }, fonts: [VARIANTS,SHAPES,OPERATORS,MAIN,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,SYMBOLS,MISC,SIZE1]},
+          "-STIX-Web-variant": {remap: {0x2A87: 0xE010, 0x2A88: 0xE00F, 0x25B3: 0x25B5, 0x25BD: 0x25BF, 0x007C: [0x007C, MML.VARIANT.NORMAL]}, fonts: [VARIANTS,SHAPES,OPERATORS,MAIN,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,SYMBOLS,MISC,SIZE1]},
           "-tex-caligraphic": {offsetA: 0xE22D, noLowerCase: 1, fonts: [VARIANTSITALIC,MAINITALIC,NORMALITALIC,SCRIPTITALIC,DOUBLESTRUCKITALIC,SANSSERIFITALIC,LATINITALIC,ALPHABETSITALIC,MARKSITALIC,MISCITALIC,SIZE1], italic: true},
           "-tex-oldstyle": {offsetN: 0xE261, remap: {0xE262: 0xE265, 0xE263: 0xE269, 0xE264: 0xE26D, 0xE265: 0xE271, 0xE266: 0xE275, 0xE267: 0xE279, 0xE268: 0xE27D, 0xE269: 0xE281, 0xE26A: 0xE285}, fonts: [VARIANTS,MAIN,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,SIZE1]},
           "-tex-caligraphic-bold": {offsetA: 0xE247, noLowerCase: 1, fonts: [VARIANTSBOLDITALIC,MAINBOLDITALIC,NORMALBOLDITALIC,SCRIPTBOLDITALIC,DOUBLESTRUCKBOLDITALIC,SANSSERIFBOLDITALIC,LATINBOLDITALIC,ALPHABETSBOLDITALIC,MARKSBOLDITALIC,SHAPESBOLDITALIC,MISCBOLDITALIC,SIZE1], italic: true, bold: true},
@@ -246,6 +246,7 @@
       REMAPACCENT: {
         "\u007E": "\u0303",
         "\u2192": "\u20D7",
+        "\u2190": "\u20D6",
         "\u0060": "\u0300",
         "\u005E": "\u0302",
         "\u00B4": "\u0301",
@@ -399,7 +400,7 @@
         {
           dir: H,
           HW: [[0.786,MAIN]],
-          stretch: {left:[0x2190,MAIN], rep:[0x23AF,SYMBOLS]}
+          stretch: {left:[0x2190,MAIN], rep:ARROWREP}
         },
         0x2191:
         {
@@ -411,7 +412,7 @@
         {
           dir: H,
           HW: [[0.786,MAIN]],
-          stretch: {rep:[0x23AF,SYMBOLS], right:[0x2192,MAIN]}
+          stretch: {rep:ARROWREP, right:[0x2192,MAIN]}
         },
         0x2193:
         {
@@ -423,7 +424,7 @@
         {
           dir: H,
           HW: [[0.850,MAIN]],
-          stretch: {left:[0x2190,MAIN], rep:[0x23AF,SYMBOLS], right:[0x2192,MAIN]}
+          stretch: {left:[0x2190,MAIN], rep:ARROWREP, right:[0x2192,MAIN]}
         },
         0x2195:
         {
@@ -530,7 +531,7 @@
           HW: [[0.879,MAIN]],
           stretch: {ext:[0x2225,MAIN]}
         },
-        0x222B: EXTRAH,
+        0x222B: EXTRAV,
         0x222C: EXTRAV,
         0x222D: EXTRAV,
         0x222E: EXTRAV,
@@ -744,7 +745,8 @@
   MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Main/Regular/Main.js",function () {
     HTMLCSS.FONTDATA.FONTS[MAIN][0x22EE][0] += 400;  // adjust height for \vdots
     HTMLCSS.FONTDATA.FONTS[MAIN][0x22F1][0] += 500;  // adjust height for \ddots
-    HTMLCSS.FONTDATA.FONTS[MAIN][0x2212][1] += 100;  // adjust depth for minus (arrow extender)
+    HTMLCSS.FONTDATA.FONTS[MAIN][0x2212][0] = HTMLCSS.FONTDATA.FONTS[MAIN][0x002B][0]; // - needs height and depth of +
+    HTMLCSS.FONTDATA.FONTS[MAIN][0x2212][1] = HTMLCSS.FONTDATA.FONTS[MAIN][0x002B][1]; // - needs height and depth of +
     HTMLCSS.FONTDATA.FONTS[MAIN][0x003D][1] += 100;  // adjust depth for = (double arrow extender)
   });
   MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Size5/Regular/Main.js",function () {

@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/he/MathMenu.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("he","MathMenu",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           Show: "\u05DC\u05D4\u05E6\u05D9\u05D2 \u05E0\u05D5\u05E1\u05D7\u05D0\u05D5\u05EA \u05D1\u05EA\u05D5\u05E8",

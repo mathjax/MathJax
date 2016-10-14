@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/pl/pl.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,14 +17,13 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("pl",null,{
   menuTitle: "polski",
-  version: "2.6.0",
+  version: "2.7.0",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax znalaz\u0142 konfiguracj\u0119 zapisan\u0105 w ciasteczku, kt\u00F3ra zawiera kod do uruchomienia. Czy chcesz go uruchomi\u0107?\n\n(Powiniene\u015B nacisn\u0105\u0107 Anuluj, je\u015Bli to nie Ty stworzy\u0142e\u015B t\u0119 konfiguracj\u0119.)",

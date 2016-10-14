@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/es/FontWarnings.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("es","FontWarnings",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           webFont: "MathJax utiliza tipos de letra web para mostrar la notaci\u00F3n matem\u00E1tica de esta p\u00E1gina. Estos tardan un poco en descargarse, por lo que instalarlos en el equipo acelerar\u00E1 la renderizaci\u00F3n de la p\u00E1gina.",

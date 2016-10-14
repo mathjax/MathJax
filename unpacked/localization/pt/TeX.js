@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/pt/TeX.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("pt","TeX",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Chaveta de abertura a mais ou chaveta de fecho a menos",
@@ -42,13 +38,13 @@ MathJax.Localization.addTranslation("pt","TeX",{
           DoubleExponent: "Expoente duplo: use chavetas para clarificar",
           DoubleSubscripts: "Subscrito duplo: use chavetas para clarificar",
           DoubleExponentPrime: "\u00C9 amb\u00EDguo a que diz respeito a plica (\u2032): use chavetas para clarificar",
-          CantUseHash1: "Voc\u00EA n\u00E3o pode usar o caractere # que indica um par\u00E2metro de macro no modo matem\u00E1tico",
+          CantUseHash1: "N\u00E3o pode usar o car\u00E1cter # que indica um par\u00E2metro de macro no modo matem\u00E1tico",
           MisplacedMiddle: "%1 deve estar entre \\left e \\right",
           MisplacedLimits: "%1 s\u00F3 \u00E9 permitido em operadores",
           MisplacedMoveRoot: "%1 s\u00F3 pode ser usado dentro de uma raiz",
           MultipleCommand: "Repeti\u00E7\u00E3o de %1",
           IntegerArg: "O argumento de %1 deve ser um inteiro",
-          NotMathMLToken: "%1 n\u00E3o \u00E9 um elemento de token v\u00E1lido",
+          NotMathMLToken: "%1 n\u00E3o \u00E9 um elemento de chave",
           InvalidMathMLAttr: "Atributo MathML inv\u00E1lido: %1",
           UnknownAttrForElement: "%1 n\u00E3o \u00E9 um atributo reconhecido para %2",
           MaxMacroSub1: "Foi excedido o m\u00E1ximo de substitui\u00E7\u00F5es de macros do MathJax; h\u00E1 alguma chamada a uma macro recursiva?",

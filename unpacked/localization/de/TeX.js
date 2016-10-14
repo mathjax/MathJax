@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/de/TeX.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,28 +17,27 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("de","TeX",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
-          ExtraOpenMissingClose: "Zus\u00E4tzliche \u00F6ffnende oder fehlende schlie\u00DFende Klammer",
-          ExtraCloseMissingOpen: "Zus\u00E4tzliche schlie\u00DFende oder fehlende \u00F6ffnende Klammer",
+          ExtraOpenMissingClose: "Zus\u00E4tzliche \u00F6ffnende, oder fehlende schlie\u00DFende Klammer",
+          ExtraCloseMissingOpen: "Zus\u00E4tzliche schlie\u00DFende, oder fehlende \u00F6ffnende Klammer",
           MissingLeftExtraRight: "Fehlendes '\\left' oder zus\u00E4tzliches '\\right'",
-          MissingScript: "Fehlendes Argument im Sub- oder Superskript",
+          MissingScript: "Fehlendes Argument im Hoch- oder Tiefstellen",
           ExtraLeftMissingRight: "Zus\u00E4tzliches '\\left' oder fehlendes '\\right'",
-          Misplaced: "%1 falsch plaziert",
-          MissingOpenForSub: "Fehlende \u00F6ffnende Klammer im Subskript",
-          MissingOpenForSup: "Fehlende \u00F6ffnende Klammer im Superskript",
+          Misplaced: "%1 falsch gesetzt",
+          MissingOpenForSub: "Fehlende \u00F6ffnende Klammer beim Tiefstellen",
+          MissingOpenForSup: "Fehlende \u00F6ffnende Klammer beim Hochstellen",
           AmbiguousUseOf: "Mehrdeutige Verwendung von %1",
           EnvBadEnd: "\\begin{%1} endet mit \\end{%2}",
           EnvMissingEnd: "\\end{%1} fehlt",
-          MissingBoxFor: "Fehlende Box: %1",
+          MissingBoxFor: "Fehlender Rahmen f\u00FCr: %1",
           MissingCloseBrace: "Fehlende schlie\u00DFende Klammer",
           UndefinedControlSequence: "Nicht definierter Befehl: %1",
-          DoubleExponent: "Doppeltes Superskript: Klammern f\u00FCr eine eindeutige Zuordnung verwenden",
-          DoubleSubscripts: "Doppeltes Subskript: Klammern f\u00FCr eine eindeutige Zuordnung verwenden",
-          DoubleExponentPrime: "Prime f\u00FChrt zu doppeltem Superskript: Klammern f\u00FCr eine eindeutige Zuordnung verwenden",
+          DoubleExponent: "Doppeltes Hochstellen: Klammern f\u00FCr eine eindeutige Zuordnung verwenden",
+          DoubleSubscripts: "Doppeltes Tiefstellen: Klammern f\u00FCr eine eindeutige Zuordnung verwenden",
+          DoubleExponentPrime: "Prime f\u00FChrt zu doppeltem Hochstellen: Klammern f\u00FCr eine eindeutige Zuordnung verwenden",
           CantUseHash1: "Das Zeichen '#' ist ein Makroparameter und kann nicht im Mathematikmodus verwendet werden.",
           MisplacedMiddle: "%1 muss zwischen '\\left' und '\\right' stehen",
           MisplacedLimits: "%1 ist nur bei Operatoren erlaubt",
@@ -51,11 +47,11 @@ MathJax.Localization.addTranslation("de","TeX",{
           NotMathMLToken: "%1 ist kein Token-Element",
           InvalidMathMLAttr: "Unzul\u00E4ssiges MathML-Attribut: %1",
           UnknownAttrForElement: "%1 ist kein zul\u00E4ssiges Attribut f\u00FCr %2",
-          MaxMacroSub1: "Maximale Anzahl an Makros ist erreicht; wird ein rekursiver Makroaufruf verwendet?",
-          MaxMacroSub2: "Maximale Anzahl an Substitutionen ist erreicht; wird eine rekursive LaTeX-Umgebung verwendet?",
+          MaxMacroSub1: "Maximale Anzahl an Makro-Ersetzungen ist erreicht; wird ein rekursiver Makroaufruf verwendet?",
+          MaxMacroSub2: "Maximale Anzahl an Ersetzungen ist erreicht; wird eine rekursive LaTeX-Umgebung verwendet?",
           MissingArgFor: "Fehlendes Argument in %1",
-          ExtraAlignTab: "Zus\u00E4tzliches \u0026 im '\\cases' Text",
-          BracketMustBeDimension: "Das Argument f\u00FCr %1 muss eine Dimension sein",
+          ExtraAlignTab: "Zus\u00E4tzlicher Ausrichtungstabulator im '\\cases' Text",
+          BracketMustBeDimension: "Das Klammer-Argument f\u00FCr %1 muss eine Dimension sein",
           InvalidEnv: "Ung\u00FCltiger Umgebungsname: \u201E%1\u201C",
           UnknownEnv: "Ung\u00FCltige Umgebung: \u201E%1\u201C",
           ExtraCloseLooking: "Zus\u00E4tzliche schlie\u00DFende Klammer w\u00E4hrend der Suche nach %1",
@@ -63,19 +59,19 @@ MathJax.Localization.addTranslation("de","TeX",{
           MissingOrUnrecognizedDelim: "Fehlendes oder nicht erkanntes Begrenzungszeichen bei %1",
           MissingDimOrUnits: "Fehlende Dimension oder Einheiten bei %1",
           TokenNotFoundForCommand: "Konnte %1 nicht f\u00FCr %2 finden",
-          MathNotTerminated: "Formel in Textbox nicht abgeschlossen",
-          IllegalMacroParam: "Ung\u00FCltiger Makroparameter",
+          MathNotTerminated: "Mathematischer Ausdruck im Textfeld nicht abgeschlossen",
+          IllegalMacroParam: "Ung\u00FCltiger Makroparameterbezug",
           MaxBufferSize: "Interne Puffergr\u00F6\u00DFe \u00FCberschritten; wird ein rekursiver Makroaufruf verwendet?",
           CommandNotAllowedInEnv: "%1 ist in der Umgebung %2 nicht erlaubt",
-          MultipleLabel: "Label '%1' \u00FCberdefiniert",
+          MultipleLabel: "Bezeichner '%1' mehrfach definiert",
           CommandAtTheBeginingOfLine: "%1 muss am Zeilenanfang stehen",
           IllegalAlign: "Ung\u00FCltige Ausrichtung in %1",
           BadMathStyleFor: "Falsches \u201Emath style\u201C-Argument: %1",
-          PositiveIntegerArg: "Das Argument von %1 muss eine positive Ganzzahl sein",
+          PositiveIntegerArg: "Das Argument zu %1 muss eine positive Ganzzahl sein",
           ErroneousNestingEq: "Fehlerhafte Verschachtelung von Gleichungen",
           MultlineRowsOneCol: "Zeilen in der %1-Umgebung m\u00FCssen genau eine Spalte haben",
           MultipleBBoxProperty: "%1 wurde zweimal in %2 angegeben",
-          InvalidBBoxProperty: "'%1' scheint keine Farbe, Padding-Dimension oder Stil zu sein",
+          InvalidBBoxProperty: "'%1' scheint keine Farbe, Abstands-Dimension oder Stil zu sein",
           ExtraEndMissingBegin: "Zus\u00E4tzliches %1 oder fehlendes \\begingroup",
           GlobalNotFollowedBy: "'%1' nicht von '\\let', '\\def' oder '\\newcommand' gefolgt",
           UndefinedColorModel: "Farbmodell '%1' nicht definiert",

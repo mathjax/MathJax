@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/newcommand"] = {
-  version: "2.6.0"
+  version: "2.7.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -120,10 +120,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         name = this.GetCSname(name);
         macro = this.csFindMacro(name);
         if (!macro) {
-          if (TEXDEF.mathchar0mi[name])            {macro = ["csMathchar0mi",TEXDEF.mathchar0mi[name]]} else
-          if (TEXDEF.mathchar0mo[name])            {macro = ["csMathchar0mo",TEXDEF.mathchar0mo[name]]} else
-          if (TEXDEF.mathchar7[name])              {macro = ["csMathchar7",TEXDEF.mathchar7[name]]}     else 
-          if (TEXDEF.delimiter["\\"+name] != null) {macro = ["csDelimiter",TEXDEF.delimiter["\\"+name]]}
+          if (TEXDEF.mathchar0mi[name])            {macro = ["csMathchar0mi",TEXDEF.mathchar0mi[name]]}  else
+          if (TEXDEF.mathchar0mo[name])            {macro = ["csMathchar0mo",TEXDEF.mathchar0mo[name]]}  else
+          if (TEXDEF.mathchar7[name])              {macro = ["csMathchar7",TEXDEF.mathchar7[name]]}      else 
+          if (TEXDEF.delimiter["\\"+name] != null) {macro = ["csDelimiter",TEXDEF.delimiter["\\"+name]]} else
+          return;
         }
       } else {macro = ["Macro",c]; this.i++}
       this.setDef(cs,macro);
@@ -231,12 +232,17 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (param == null) {return this.GetArgument(name)}
       var i = this.i, j = 0, hasBraces = 0;
       while (this.i < this.string.length) {
-        if (this.string.charAt(this.i) === '{') {
+        var c = this.string.charAt(this.i);
+        if (c === '{') {
           if (this.i === i) {hasBraces = 1}
           this.GetArgument(name); j = this.i - i;
         } else if (this.MatchParam(param)) {
           if (hasBraces) {i++; j -= 2}
           return this.string.substr(i,j);
+	} else if (c === "\\") {
+	  this.i++; j++; hasBraces = 0;
+	  var match = this.string.substr(this.i).match(/[a-z]+|./i);
+	  if (match) {this.i += match[0].length; j = this.i - i}
         } else {
           this.i++; j++; hasBraces = 0;
         }
@@ -251,6 +257,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     MatchParam: function (param) {
       if (this.string.substr(this.i,param.length) !== param) {return 0}
+      if (param.match(/\\[a-z]+$/i) &&
+          this.string.charAt(this.i+param.length).match(/[a-z]/i)) {return 0}
       this.i += param.length;
       return 1;
     }
@@ -258,7 +266,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   });
   
   TEX.Environment = function (name) {
-    TEXDEF.environment[name] = ['BeginEnv','EndEnv'].concat([].slice.call(arguments,1));
+    TEXDEF.environment[name] = ['BeginEnv',[null,'EndEnv']].concat([].slice.call(arguments,1));
     TEXDEF.environment[name].isUser = true;
   }
 

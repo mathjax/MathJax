@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/lki/MathMenu.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("lki","MathMenu",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           Show: "\u0646\u0645\u0627\u06CC\u0634 \u0631\u06CC\u0627\u0636\u06CC\u0627\u062A \u0628\u0647 \u0639\u0646\u0648\u0627\u0646",
@@ -36,7 +32,7 @@ MathJax.Localization.addTranslation("lki","MathMenu",{
           TeX: "\u062A\u06A9",
           StarMath: "StarMath",
           Maple: "Maple",
-          ContentMathML: "MathML \u0645\u062D\u062A\u0648\u0627",
+          ContentMathML: "MathML \u0646\u06C6\u0645 \u062C\u0650\u06A9(\u0645\u062D\u062A\u0648\u0627)",
           OpenMath: "OpenMath",
           texHints: "\u0646\u0645\u0627\u06CC\u0634 \u0646\u06A9\u062A\u0647\u200C\u0647\u0627\u06CC \u062A\u06A9 \u062F\u0631 MathML",
           Settings: "\u062A\u0646\u0638\u06CC\u0645\u0627\u062A \u0631\u06CC\u0627\u0636\u06CC\u0627\u062A",
@@ -57,7 +53,7 @@ MathJax.Localization.addTranslation("lki","MathMenu",{
           MenuEvents: "\u0631\u0648\u06CC\u062F\u0627\u062F\u0647\u0627\u06CC \u0645\u0646\u0648",
           MouseEvents: "\u0631\u0648\u06CC\u062F\u0627\u062F\u0647\u0627\u06CC \u0645\u0648\u0634\u0648\u0627\u0631\u0647",
           MenuAndMouse: "\u0631\u0648\u06CC\u062F\u0627\u062F\u0647\u0627\u06CC \u0645\u0648\u0634\u0648\u0627\u0631\u0647 \u0648 \u0645\u0646\u0648",
-          FontPrefs: "\u062A\u0631\u062C\u06CC\u062D\u0627\u062A \u0642\u0644\u0645",
+          FontPrefs: "\u062A\u0645\u0627\u0631\u0632\u0648\u0648\u06D5\u0644(\u062A\u0631\u062C\u06CC\u062D\u0627\u062A)\u0641\u0648\u0648\u0646\u062A",
           ForHTMLCSS: "\u0628\u0631\u0627\u06CC \u0627\u0686\u200C\u062A\u06CC\u200C\u0627\u0645\u200C\u0627\u0644-\u0633\u06CC\u200C\u0627\u0633\u200C\u0627\u0633:",
           Auto: "\u062E\u0648\u062F\u06A9\u0627\u0631",
           TeXLocal: "\u062A\u06A9 (\u0645\u062D\u0644\u06CC)",

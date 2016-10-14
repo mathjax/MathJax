@@ -10,7 +10,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015 The MathJax Consortium
+ *  Copyright (c) 2015-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
   var SETTINGS = HUB.config.menuSettings;
   
   var AssistiveMML = MathJax.Extension["AssistiveMML"] = {
-    version: "2.6.1",
+    version: "2.7.0",
     
     config: HUB.CombineConfig("AssistiveMML",{
       disabled: false,
@@ -115,7 +115,8 @@
       while (state.i < m) {
         jax = state.jax[state.i];
         frame = document.getElementById(jax.inputID+"-Frame");
-        if (jax.outputJax !== "NativeMML" && frame && !frame.getAttribute("data-mathml")) {
+        if (jax.outputJax !== "NativeMML" && jax.outputJax !== "PlainSource" &&
+            frame && !frame.getAttribute("data-mathml")) {
           try {
             mml = jax.root.toMathML("").replace(/\n */g,"").replace(/<!--.*?-->/g,"");
           } catch (err) {
@@ -128,7 +129,7 @@
             className: "MJX_Assistive_MathML"
               + (jax.root.Get("display") === "block" ? " MJX_Assistive_MathML_Block" : "")
           });
-          span.innerHTML = mml;
+          try {span.innerHTML = mml} catch (err) {}
           frame.style.position = "relative";
           frame.setAttribute("role","presentation");
           frame.firstChild.setAttribute("aria-hidden","true");

@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/nl/TeX.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("nl","TeX",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Overtollige openende accolade of ontbrekende afsluitende accolade",
@@ -42,7 +38,7 @@ MathJax.Localization.addTranslation("nl","TeX",{
           DoubleExponent: "Dubbele exponent: gebruik accolades om te verduidelijken",
           DoubleSubscripts: "Dubbele subschriften: gebruik accolades om te verduidelijken",
           DoubleExponentPrime: "Priem veroorzaakt een dubbele exponent: Gebruik accolades om te verduidelijken.",
-          CantUseHash1: "U kunt 'macro parameter karakter #' niet gebruiken in mathmodus",
+          CantUseHash1: "U kunt 'macroparameterteken #' niet gebruiken in mathmodus",
           MisplacedMiddle: "%1 moet zich tussen \\left en \\right bevinden",
           MisplacedLimits: "%1 is alleen toegestaan op bewerkingstekens",
           MisplacedMoveRoot: "%1 kan alleen voorkomen in een root",

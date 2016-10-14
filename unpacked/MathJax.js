@@ -12,7 +12,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,9 +45,9 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
-MathJax.version = "2.6.1";
-MathJax.fileversion = "2.6.1";
-MathJax.cdnVersion = "2.6.1";  // specifies a revision to break caching
+MathJax.version = "2.7.0";
+MathJax.fileversion = "2.7.0";
+MathJax.cdnVersion = "2.7.0";  // specifies a revision to break caching
 MathJax.cdnFileVersions = {};  // can be used to specify revisions for individual files
 
 /**********************************************************/
@@ -154,6 +154,12 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
 
     })
   });
+  
+  BASE.Object.isArray = Array.isArray || function (obj) {
+    return Object.prototype.toString.call(obj) === "[object Array]";
+  };
+  
+  BASE.Object.Array = Array;
 
 })("MathJax");
 
@@ -211,6 +217,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
 (function (BASENAME) {
   var BASE = window[BASENAME];
   if (!BASE) {BASE = window[BASENAME] = {}}
+  var isArray = BASE.Object.isArray;
   //
   //  Create a callback from an associative array
   //
@@ -279,8 +286,8 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
       }
     }
     TESTEVAL = null;
-  }
-
+  };
+  
   //
   //  Create a callback from various types of data
   //
@@ -291,11 +298,11 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
             {args = [].slice.call(args,i)}
       else {args = [].slice.call(arguments,0)}
     }
-    if (args instanceof Array && args.length === 1) {args = args[0]}
+    if (isArray(args) && args.length === 1) {args = args[0]}
     if (typeof args === 'function') {
       if (args.execute === CALLBACK.prototype.execute) {return args}
       return CALLBACK({hook: args});
-    } else if (args instanceof Array) {
+    } else if (isArray(args)) {
       if (typeof(args[0]) === 'string' && args[1] instanceof Object &&
                  typeof args[1][args[0]] === 'function') {
         return CALLBACK({hook: args[1][args[0]], object: args[1], data: args.slice(2)});
@@ -343,7 +350,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
     }
   };
   var WAITSIGNAL = function (callback,signals) {
-    if (!(signals instanceof Array)) {signals = [signals]}
+    if (!isArray(signals)) {signals = [signals]}
     if (!callback.signal) {
       callback.oldExecute = callback.execute;
       callback.execute = WAITEXECUTE;
@@ -442,8 +449,8 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
   //
   var EXECUTEHOOKS = function (hooks,data,reset) {
     if (!hooks) {return null}
-    if (!(hooks instanceof Array)) {hooks = [hooks]}
-    if (!(data instanceof Array))  {data = (data == null ? [] : [data])}
+    if (!isArray(hooks)) {hooks = [hooks]}
+    if (!isArray(data))  {data = (data == null ? [] : [data])}
     var handler = HOOKS(reset);
     for (var i = 0, m = hooks.length; i < m; i++) {handler.Add(hooks[i])}
     return handler.Execute.apply(handler,data);
@@ -592,7 +599,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
     //  Execute the message hooks for the given message
     //
     ExecuteHooks: function (msg) {
-      var type = ((msg instanceof Array) ? msg[0] : msg);
+      var type = (isArray(msg) ? msg[0] : msg);
       if (!this.hooks[type]) {return null}
       return this.hooks[type].Execute(msg);
     },
@@ -659,6 +666,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
   
   var PATH = {};
   PATH[BASENAME] = "";  // empty path gets the root URL
+  PATH.Contrib = "https://cdn.mathjax.org/mathjax/contrib";   // the third-party extensions
   
   BASE.Ajax = {
     loaded: {},         // files already loaded
@@ -670,6 +678,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
       root: "",         // URL of root directory to load from
       path: PATH        // paths to named URL's (e.g., [MathJax]/...)
     },
+    params:  {},        // filled in from MathJax.js?...
 
     STATUS: {
       OK: 1,         // file is loading or did load OK
@@ -703,9 +712,9 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
     //  Cache-breaking revision number for file
     //
     fileRev: function (file) {
-      var rev = BASE.cdnFileVersions[name] || BASE.cdnVersion;
-      if (rev) {rev = "?rev="+rev}
-      return rev;
+      var V = BASE.cdnFileVersions[file] || BASE.cdnVersion || '';
+      if (V) {V = "?V="+V}
+      return V;
     },
     urlRev: function (file) {return this.fileURL(file)+this.fileRev(file)},
     
@@ -719,13 +728,17 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
         for (var i in file)
           {if (file.hasOwnProperty(i)) {type = i.toUpperCase(); file = file[i]}}
       } else {type = file.split(/\./).pop().toUpperCase()}
-      file = this.fileURL(file);
-      // FIXME: check that URL is OK
-      if (this.loaded[file]) {
-        callback(this.loaded[file]);
+      if (this.params.noContrib && file.substr(0,9) === "[Contrib]") {
+        callback(this.STATUS.ERROR);
       } else {
-        var FILE = {}; FILE[type] = file;
-        this.Load(FILE,callback);
+        file = this.fileURL(file);
+        // FIXME: check that URL is OK
+        if (this.loaded[file]) {
+          callback(this.loaded[file]);
+        } else {
+          var FILE = {}; FILE[type] = file;
+          this.Load(FILE,callback);
+        }
       }
       return callback;
     },
@@ -1001,7 +1014,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
       for (id in styles) {if (styles.hasOwnProperty(id)) {
         if (typeof styles[id] === 'string') {
           string += id + " {"+styles[id]+"}\n";
-        } else if (styles[id] instanceof Array) {
+        } else if (BASE.Object.isArray(styles[id])) {
           for (var i = 0; i < styles[id].length; i++) {
             style = {}; style[id] = styles[id][i];
             string += this.StyleString(style);
@@ -1053,9 +1066,9 @@ MathJax.HTML = {
       }
     }
     if (contents) {
-      if (!(contents instanceof Array)) {contents = [contents]}
+      if (!MathJax.Object.isArray(contents)) {contents = [contents]}
       for (var i = 0, m = contents.length; i < m; i++) {
-        if (contents[i] instanceof Array) {
+        if (MathJax.Object.isArray(contents[i])) {
           obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
         } else if (type === "script") { // IE throws an error if script is added as a text node
           this.setScript(obj, contents[i]);
@@ -1160,6 +1173,7 @@ MathJax.Localization = {
     "cs": {menuTitle: "\u010De\u0161tina"},
     "da": {menuTitle: "dansk"},
     "de": {menuTitle: "Deutsch"},
+    "diq": {menuTitle: "Zazaki"},
     "en": {menuTitle: "English", isLoaded: true},
     "eo": {menuTitle: "Esperanto"},
     "es": {menuTitle: "espa\u00F1ol"},
@@ -1174,6 +1188,7 @@ MathJax.Localization = {
     "kn": {menuTitle: "\u0C95\u0CA8\u0CCD\u0CA8\u0CA1"},
     "ko": {menuTitle: "\uD55C\uAD6D\uC5B4"},
     "lb": {menuTitle: "L\u00EBtzebuergesch"},
+    "lki": {menuTitle: "\u0644\u06D5\u06A9\u06CC"},
     "lt": {menuTitle: "lietuvi\u0173"},
     "mk": {menuTitle: "\u043C\u0430\u043A\u0435\u0434\u043E\u043D\u0441\u043A\u0438"},
     "nl": {menuTitle: "Nederlands"},
@@ -1218,7 +1233,7 @@ MathJax.Localization = {
     }),
   
   _: function (id,phrase) {
-    if (phrase instanceof Array) {return this.processSnippet(id,phrase)}
+    if (MathJax.Object.isArray(phrase)) {return this.processSnippet(id,phrase)}
     return this.processString(this.lookupPhrase(id,phrase),[].slice.call(arguments,2));
   },
   
@@ -1228,9 +1243,9 @@ MathJax.Localization = {
     //    If the argument is a snippet (and we are processing snippets) do so,
     //    Otherwise, if it is a number, convert it for the lacale
     //
-    var i, m;
+    var i, m, isArray = MathJax.Object.isArray;
     for (i = 0, m = args.length; i < m; i++) {
-      if (domain && args[i] instanceof Array) {args[i] = this.processSnippet(domain,args[i])}
+      if (domain && isArray(args[i])) {args[i] = this.processSnippet(domain,args[i])}
     }
     //
     //  Split string at escapes and process them individually
@@ -1280,7 +1295,7 @@ MathJax.Localization = {
     for (i = 0; i < m; i++) {
       part += parts[i]; i++;  // add the string and move on to substitution result
       if (i < m) {
-        if (parts[i] instanceof Array)  {        // substitution was a snippet
+        if (isArray(parts[i]))  {                // substitution was a snippet
           snippet.push(part);                        // add the accumulated string
           snippet = snippet.concat(parts[i]);        // concatenate the substution snippet
           part = "";                                 // start accumulating a new string
@@ -1300,7 +1315,7 @@ MathJax.Localization = {
     //   strings or snippets to translate
     //
     for (var i = 0, m = snippet.length; i < m; i++) {
-      if (snippet[i] instanceof Array) {
+      if (MathJax.Object.isArray(snippet[i])) {
         //
         //  This could be a sub-snippet:
         //    ["tag"] or ["tag",{properties}] or ["tag",{properties},snippet]
@@ -1308,10 +1323,10 @@ MathJax.Localization = {
         //    [id,string,args] or [domain,snippet]
         var data = snippet[i];
         if (typeof data[1] === "string") {        // [id,string,args]
-          var id = data[0]; if (!(id instanceof Array)) {id = [domain,id]}
+          var id = data[0]; if (!MathJax.Object.isArray(id)) {id = [domain,id]}
           var phrase = this.lookupPhrase(id,data[1]);
           result = result.concat(this.processMarkdown(phrase,data.slice(2),domain));
-        } else if (data[1] instanceof Array) {    // [domain,snippet]
+        } else if (MathJax.Object.isArray(data[1])) {    // [domain,snippet]
           result = result.concat(this.processSnippet.apply(this,data));
         } else if (data.length >= 3) {            // ["tag",{properties},snippet]
           result.push([data[0],data[1],this.processSnippet(domain,data[2])]);
@@ -1347,7 +1362,7 @@ MathJax.Localization = {
         //  Select the tag to use by number of stars (three stars requires two tags)
         //
         data = this.processString(parts[i+2],args,domain);
-        if (!(data instanceof Array)) {data = [data]}
+        if (!MathJax.Object.isArray(data)) {data = [data]}
         data = [["b","i","i"][parts[i+1].length-1],{},data]; // number of stars determines type
         if (parts[i+1].length === 3) {data = ["b",{},data]}  // bold-italic
       } else if (parts[i+3]) { //  backtics (for code)
@@ -1356,14 +1371,14 @@ MathJax.Localization = {
         //  Make a <code> tag
         //
         data = this.processString(parts[i+4].replace(/^\s/,"").replace(/\s$/,""),args,domain);
-        if (!(data instanceof Array)) {data = [data]}
+        if (!MathJax.Object.isArray(data)) {data = [data]}
         data = ["code",{},data];
       } else if (parts[i+5]) { //  hyperlink
         //
         //  Process the link text, and make an <a> tag with the URL
         //
         data = this.processString(parts[i+5],args,domain);
-        if (!(data instanceof Array)) {data = [data]}
+        if (!MathJax.Object.isArray(data)) {data = [data]}
         data = ["a",{href:this.processString(parts[i+6],args),target:"_blank"},data];
       } else {
         //
@@ -1398,7 +1413,7 @@ MathJax.Localization = {
       //  Then concatenate the snippet to the current one
       //
       string = this.processString(string,args,domain);
-      if (!(string instanceof Array)) {string = [string]}
+      if (!MathJax.Object.isArray(string)) {string = [string]}
       result = result.concat(string);
     }
     return result;
@@ -1409,7 +1424,7 @@ MathJax.Localization = {
     //  Get the domain and messageID
     //
     if (!domain) {domain = "_"}
-    if (id instanceof Array) {domain = (id[0] || "_"); id = (id[1] || "")}
+    if (MathJax.Object.isArray(id)) {domain = (id[0] || "_"); id = (id[1] || "")}
     //
     //  Check if the data is available and if not,
     //    load it and throw a restart error so the calling
@@ -1711,14 +1726,20 @@ MathJax.Message = {
     return text;
   },
   
+  clearCounts: function () {
+    delete this.loading;
+    delete this.processing;
+    delete this.typesetting;
+  },
+  
   Set: function (text,n,clearDelay) {
     if (n == null) {n = this.log.length; this.log[n] = {}}
     //
     //  Translate message if it is [id,message,arguments]
     //
     var id = "";
-    if (text instanceof Array) {
-      id = text[0]; if (id instanceof Array) {id = id[1]}
+    if (MathJax.Object.isArray(text)) {
+      id = text[0]; if (MathJax.Object.isArray(id)) {id = id[1]}
       //
       // Localization._() will throw a restart error if a localization file
       //   needs to be loaded, so trap that and redo the Set() call
@@ -2076,6 +2097,7 @@ MathJax.Hub = {
       var delay = ["Delay",MathJax.Callback,this.processSectionDelay];
       if (!delay[2]) {delay = {}}
       queue.Push(
+        ["clearCounts",MathJax.Message],
         ["Post",this.signal,["Begin "+action,elements]],
         ["Post",this.signal,["Begin Math",elements,action]],
         ["prepareScripts",this,action,elements,state],
@@ -2092,7 +2114,8 @@ MathJax.Hub = {
         ["prepareOutput",this,state,"postProcess"],
         delay,
         ["Post",this.signal,["End Math",elements,action]],
-        ["Post",this.signal,["End "+action,elements]]
+        ["Post",this.signal,["End "+action,elements]],
+        ["clearCounts",MathJax.Message]
       );
     }
     return queue.Push(ec.callback);
@@ -2182,7 +2205,7 @@ MathJax.Hub = {
         //
         //  Check if already processed or needs processing
         //
-        if (!script.MathJax || script.MathJax.state === STATE.PROCESSED) {state.i++; continue};
+        if (!script.parentNode || !script.MathJax || script.MathJax.state === STATE.PROCESSED) {state.i++; continue};
         if (!script.MathJax.elementJax || script.MathJax.state === STATE.UPDATE) {
           this.checkScriptSiblings(script);                 // remove preJax/postJax etc.
           var type = script.type.replace(/ *;(.|\s)*/,"");  // the input jax type
@@ -2286,7 +2309,7 @@ MathJax.Hub = {
         //  Check that there is an element jax
         //
         script = state.scripts[state.i];
-        if (!script || !script.MathJax || script.MathJax.error) {state.i++; continue}
+        if (!script || !script.parentNode || !script.MathJax || script.MathJax.error) {state.i++; continue}
         var jax = script.MathJax.elementJax; if (!jax) {state.i++; continue}
         //
         //  Call the output Jax's Process method (which will be its Translate()
@@ -2297,7 +2320,10 @@ MathJax.Hub = {
         result = MathJax.OutputJax[jax.outputJax].Process(script,state);
         if (result !== false) {
           script.MathJax.state = STATE.PROCESSED;
-          if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+          if (script.MathJax.preview) {
+            script.MathJax.preview.innerHTML = "";
+            script.MathJax.preview.style.display = "none";
+          }
           //
           //  Signal that new math is available
           //
@@ -2380,8 +2406,11 @@ MathJax.Hub = {
     //
     var node = document.getElementById(error.id);
     if (node) node.parentNode.removeChild(node);
-    script.parentNode.insertBefore(error,script);
-    if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+    if (script.parentNode) script.parentNode.insertBefore(error,script);
+    if (script.MathJax.preview) {
+      script.MathJax.preview.innerHTML = "";
+      script.MathJax.preview.style.display = "none";
+    }
     //
     //  Save the error for debugging purposes
     //  Report the error as a signal
@@ -2395,11 +2424,11 @@ MathJax.Hub = {
   },
   
   elementCallback: function (element,callback) {
-    if (callback == null && (element instanceof Array || typeof element === 'function'))
+    if (callback == null && (MathJax.Object.isArray(element) || typeof element === 'function'))
       {try {MathJax.Callback(element); callback = element; element = null} catch(e) {}}
     if (element == null) {element = this.config.elements || []}
     if (this.isHTMLCollection(element)) {element = this.HTMLCollection2Array(element)}
-    if (!(element instanceof Array)) {element = [element]}
+    if (!MathJax.Object.isArray(element)) {element = [element]}
     element = [].concat(element); // make a copy so the original isn't changed
     for (var i = 0, m = element.length; i < m; i++)
       {if (typeof(element[i]) === 'string') {element[i] = document.getElementById(element[i])}}
@@ -2415,7 +2444,7 @@ MathJax.Hub = {
   
   elementScripts: function (element) {
     var scripts = [];
-    if (element instanceof Array || this.isHTMLCollection(element)) {
+    if (MathJax.Object.isArray(element) || this.isHTMLCollection(element)) {
       for (var i = 0, m = element.length; i < m; i++) {
         var alreadyDone = 0;
         for (var j = 0; j < i && !alreadyDone; j++)
@@ -2452,7 +2481,7 @@ MathJax.Hub = {
   Insert: function (dst,src) {
     for (var id in src) {if (src.hasOwnProperty(id)) {
       // allow for concatenation of arrays?
-      if (typeof src[id] === 'object' && !(src[id] instanceof Array) &&
+      if (typeof src[id] === 'object' && !(MathJax.Object.isArray(src[id])) &&
          (typeof dst[id] === 'object' || typeof dst[id] === 'function')) {
         this.Insert(dst[id],src[id]);
       } else {
@@ -2495,6 +2524,11 @@ MathJax.Hub.Startup = {
   //
   Config: function () {
     this.queue.Push(["Post",this.signal,"Begin Config"]);
+    //
+    //  Make sure root is set before loading any files
+    //
+    if (MathJax.AuthorConfig && MathJax.AuthorConfig.root)
+      MathJax.Ajax.config.root = MathJax.AuthorConfig.root;
     //
     //  If a locale is given as a parameter,
     //    set the locale and the default menu value for the locale
@@ -2545,15 +2579,15 @@ MathJax.Hub.Startup = {
   //
   ConfigBlocks: function () {
     var scripts = document.getElementsByTagName("script");
-    var last = null, queue = MathJax.Callback.Queue();
+    var queue = MathJax.Callback.Queue();
     for (var i = 0, m = scripts.length; i < m; i++) {
       var type = String(scripts[i].type).replace(/ /g,"");
       if (type.match(/^text\/x-mathjax-config(;.*)?$/) && !type.match(/;executed=true/)) {
         scripts[i].type += ";executed=true";
-        last = queue.Push(scripts[i].innerHTML+";\n1;");
+        queue.Push(scripts[i].innerHTML+";\n1;");
       }
     }
-    return last;
+    return queue.Push(function () {MathJax.Ajax.config.root = MathJax.Hub.config.root});
   },
 
   //
@@ -2764,7 +2798,7 @@ MathJax.Hub.Startup = {
   //
   loadArray: function (files,dir,name,synchronous) {
     if (files) {
-      if (!(files instanceof Array)) {files = [files]}
+      if (!MathJax.Object.isArray(files)) {files = [files]}
       if (files.length) {
         var queue = MathJax.Callback.Queue(), callback = {}, file;
         for (var i = 0, m = files.length; i < m; i++) {
@@ -2860,7 +2894,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "Jax",
-    version: "2.6.0",
+    version: "2.7.0",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -2874,11 +2908,11 @@ MathJax.Hub.Startup = {
     Process: function (script,state) {
       var queue = CALLBACK.Queue(), file;
       // Load any needed element jax
-      var jax = this.elementJax; if (!(jax instanceof Array)) {jax = [jax]}
+      var jax = this.elementJax; if (!BASE.Object.isArray(jax)) {jax = [jax]}
       for (var i = 0, m = jax.length; i < m; i++) {
         file = BASE.ElementJax.directory+"/"+jax[i]+"/"+this.JAXFILE;
         if (!this.require) {this.require = []}
-          else if (!(this.require instanceof Array)) {this.require = [this.require]};
+          else if (!BASE.Object.isArray(this.require)) {this.require = [this.require]};
         this.require.push(file);  // so Startup will wait for it to be loaded
         queue.Push(AJAX.Require(file));
       }
@@ -2906,7 +2940,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "InputJax",
-    version: "2.6.0",
+    version: "2.7.0",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -2933,13 +2967,13 @@ MathJax.Hub.Startup = {
         {jax[mimetype].unshift(this)} else {jax[mimetype].push(this)}
       //  Make sure the element jax is loaded before Startup is called
       if (!this.require) {this.require = []}
-        else if (!(this.require instanceof Array)) {this.require = [this.require]};
+        else if (!BASE.Object.isArray(this.require)) {this.require = [this.require]};
       this.require.push(BASE.ElementJax.directory+"/"+(mimetype.split(/\//)[1])+"/"+this.JAXFILE);
     },
     Remove: function (jax) {}
   },{
     id: "OutputJax",
-    version: "2.6.0",
+    version: "2.7.0",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
@@ -3023,7 +3057,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "2.6.0",
+    version: "2.7.0",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -3047,7 +3081,7 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.6.0", config: {}, errors: 0,
+    id: "Error", version: "2.7.0", config: {}, errors: 0,
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
@@ -3066,7 +3100,7 @@ MathJax.Hub.Startup = {
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.6.0", config: {},
+    id: "Error", version: "2.7.0", config: {},
     sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"]
   };
   
@@ -3093,12 +3127,14 @@ MathJax.Hub.Startup = {
         for (var j = 0, m = params.length; j < m; j++) {
           var KV = params[j].match(/(.*)=(.*)/);
           if (KV) {STARTUP.params[unescape(KV[1])] = unescape(KV[2])}
+             else {STARTUP.params[params[j]] = true}
         }
       }
       CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'')
         // convert mathjax/latest to mathjax/x.y-latest so that all files are the same version
         .replace(/^(https?:\/\/cdn.mathjax.org\/mathjax\/)(latest)/,"$1"+BASE.version.split(/\./).slice(0,2).join(".")+"-$2");
       BASE.Ajax.config.root = CONFIG.root;
+      BASE.Ajax.params = STARTUP.params;
       break;
     }
   }

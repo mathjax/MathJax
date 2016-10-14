@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2015 The MathJax Consortium
+ *  Copyright (c) 2010-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "2.6.0",
+  version: "2.7.0",
   config: {
     preview: "mathml"       // Use the <math> element as the
                             //   preview.  Set to "none" for no preview,
@@ -203,6 +203,8 @@ MathJax.Extension.mml2jax = {
     var preview = this.config.preview;
     if (preview === "none") return;
     var isNodePreview = false;
+    var previewClass = MathJax.Hub.config.preRemoveClass;
+    if ((script.previousSibling||{}).className === previewClass) return;
     if (preview === "mathml") {
       isNodePreview = true;
       // mathml preview does not work with IE < 9, so fallback to alttext.
@@ -225,10 +227,10 @@ MathJax.Extension.mml2jax = {
     if (preview) {
       var span;
       if (isNodePreview) {
-        span = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass});
+        span = MathJax.HTML.Element("span",{className:previewClass});
         span.appendChild(preview);
       } else {
-        span = MathJax.HTML.Element("span",{className:MathJax.Hub.config.preRemoveClass},preview);
+        span = MathJax.HTML.Element("span",{className:previewClass},preview);
       }
       script.parentNode.insertBefore(span,script);
     }

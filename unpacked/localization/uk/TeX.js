@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/uk/TeX.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("uk","TeX",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u0417\u0430\u0439\u0432\u0430 \u0432\u0456\u0434\u043A\u0440\u0438\u0442\u0430 \u0444\u0456\u0433\u0443\u0440\u043D\u0430 \u0434\u0443\u0436\u043A\u0430 \u0430\u0431\u043E \u0432\u0456\u0434\u0441\u0443\u0442\u043D\u044F \u0437\u0430\u043A\u0440\u0438\u0442\u0430 \u0444\u0456\u0433\u0443\u0440\u043D\u0430 \u0434\u0443\u0436\u043A\u0430",

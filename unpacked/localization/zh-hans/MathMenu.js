@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/zh-hans/MathMenu.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("zh-hans","MathMenu",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           Show: "\u6570\u5F0F\u663E\u793A\u5F62\u5F0F",
@@ -37,7 +33,7 @@ MathJax.Localization.addTranslation("zh-hans","MathMenu",{
           StarMath: "StarMath",
           Maple: "\u67AB\u53F6",
           ContentMathML: "MathML\u5185\u5BB9",
-          OpenMath: "\u5F00\u6E90\u6570\u5B66",
+          OpenMath: "OpenMath",
           texHints: "\u5728MathML\u4E2D\u663E\u793ATeX\u63D0\u793A",
           Settings: "\u6570\u5B66\u8BBE\u7F6E",
           ZoomTrigger: "\u7F29\u653E\u89E6\u53D1",

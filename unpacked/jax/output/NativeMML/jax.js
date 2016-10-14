@@ -10,7 +10,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2015 The MathJax Consortium
+ *  Copyright (c) 2010-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -518,8 +518,10 @@
             skip = MML.skipAttributes, copy = MML.copyAttributes;
         if (!this.attrNames) {
           for (var id in defaults) {if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {
-	    if (this[id] != null && this[id] !== defaults[id]) 
-              tag.setAttribute(id,this.NativeMMLattribute(this[id]));
+	    if (this[id] != null && this[id] !== defaults[id]) {
+              if (this.Get(id,null,1) !== this[id]) 
+                tag.setAttribute(id,this.NativeMMLattribute(this[id]));
+            }
           }}
         }
 	for (var i = 0, m = names.length; i < m; i++) {
@@ -890,6 +892,22 @@
           }
         }
       });
+      
+      MML.mn.Augment({
+        NativeMMLremapMinus: function (text) {return text.replace(/^-/,"\u2212")},
+        toNativeMML: function (parent) {
+          var tag = this.NativeMMLelement(this.type);
+          this.NativeMMLattributes(tag);
+          var remap = this.NativeMMLremapMinus;
+          for (var i = 0, m = this.data.length; i < m; i++) {
+            if (this.data[i]) {
+              this.data[i].toNativeMML(tag,remap);
+              remap = null;
+            }
+          }
+          parent.appendChild(tag);
+        }
+      });
 
       var fontDir = AJAX.fileURL(MathJax.OutputJax.fontDir+"/HTML-CSS/TeX/otf");
 
@@ -1179,8 +1197,10 @@
       //
       //  Add a text node
       //
-      toNativeMML: function (parent) {
-	parent.appendChild(document.createTextNode(this.toString()));
+      toNativeMML: function (parent,remap) {
+        var text = this.toString();
+        if (remap) text = remap(text);
+	parent.appendChild(document.createTextNode(text));
       }
     });
 

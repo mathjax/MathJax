@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/nl/MathML.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,15 +17,14 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("nl","MathML",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           BadMglyph: "Onjuiste mglyph: %1",
           BadMglyphFont: "Verkeerd lettertype: %1",
-          MathPlayer: "MathJax was niet in staat MathPlayer in te stellen.\n\\n\nAls MathPlay niet ge\u00EFnstalleerd is dan dient u dat eerst te doen.\nAnders kan het zijn dat beveiligingsinstellingen de uitvoering van ActiveX-besturingselementen verhinderen. Gebruik de keuze Internet Opties in het Extra menu en selecteer het tabblag Beveiligingsinstellingen en druk op de Aangepaste niveau knop. Controleer dat de instellingen voor 'Het uitvoeren van ActiveX-besturingselementen' en 'Gedrag van binaire elementen en scripts' ingeschakeld zijn.\n\\n\nMomenteel zult u foutmeldingen zien in plaats van opgemaakte wiskunde",
-          CantCreateXMLParser: "MathJax kan geen XML verwerker cre\u00EBren voor MathML. Controleer dat de 'ActiveX-besturingselementen die zijn gemarkeerd als veilig voor scripts uitvoeren in scripts' beveiligingsinstelling ingeschakeld is (gebruik de Internet Opties keuze in het Extra menu en selecteer het paneel Beveiliging, druk dan op de Aangepaste niveau knop om dit te controleren.)\n\\n\nHet zal voor MathML vergelijkingen niet mogelijk zijn verwerkt te worden door MathJax.",
+          MathPlayer: "MathJax was niet in staat MathPlayer in te stellen.\n\nAls MathPlay niet ge\u00EFnstalleerd is, doe dat dan eerst.\nAnders kan het zijn dat beveiligingsinstellingen de uitvoering van ActiveX-besturingselementen verhinderen. Gebruik de keuze Internet Opties in het menu Extra en selecteer het tabblad Beveiligingsinstellingen en druk op de knop Aangepaste niveau.\nControleer dat de instellingen voor \"Uitvoeren van ActiveX-besturingselementen\" en \"Gedrag van binaire elementen en scripts\" ingeschakeld zijn.\n\nMomenteel zie u foutmeldingen in plaats van opgemaakte wiskunde.",
+          CantCreateXMLParser: "MathJax kan geen XML-verwerker cre\u00EBren voor MathML. Controleer of de beveiligingsinstelling \"ActiveX-besturingselementen die zijn gemarkeerd als veilig voor uitvoeren in scripts\" is ingeschakeld. Gebruik de keuze Internet Opties in het menu Extra en selecteer het paneel Beveiliging, druk dan op de knop Aangepast niveau om dit te controleren.\n\nMathML-vergelijkingen kunnen niet verwerkt worden door MathJax.",
           UnknownNodeType: "Onbekend knooptype: %1",
           UnexpectedTextNode: "Onverwachte tekstknoop: %1",
           ErrorParsingMathML: "Fout tijdens verwerken MathML",

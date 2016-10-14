@@ -28,7 +28,7 @@
  *  The remainder falls under the copyright that follows.
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2015 The MathJax Consortium
+ *  Copyright (c) 2013-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
   });
 
   var CToP = {
-    version: "2.6.0",
+    version: "2.7.0",
     settings: CONFIG,
 
     /* Transform the given <math> elements from Content MathML to Presentation MathML and replace the original elements
@@ -190,7 +190,19 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
     */
     appendToken: function(parentNode,name,textContent) {
       var element = CToP.createElement(name);
-      element.appendChild(document.createTextNode(textContent));
+      textContent = textContent.replace(/^\s+/,"").replace(/\s+$/,"");
+      if (name === 'mn' && textContent.substr(0,1) === "-") {
+        //
+        // use <mrow><mo>&#x2212;</mo><mn>n</mn></mrow> instead of <mn>-n</mn>
+        //
+        element.appendChild(document.createTextNode(textContent.substr(1)));
+        var mrow = CToP.createElement('mrow');
+        CToP.appendToken(mrow,'mo','\u2212');
+        mrow.appendChild(element);
+        element = mrow;
+      } else {
+        element.appendChild(document.createTextNode(textContent));
+      }
       parentNode.appendChild(element);
       return element;
     },
@@ -1305,9 +1317,9 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
             } else if (arg.nodeName === 'apply' && children.length === 2 && children[0].nodeName === 'minus') {
               CToP.appendToken(mrow,'mo','\u2212');
               CToP.applyTransform(mrow,children[1],2);
-            } else if (arg.nodeName === 'apply' && children.length>2 && children[0].nodeName === 'times' && children[1].nodeName === 'cn' && ( n = Number(CToP.getTextContent(children[1])) < 0)) {
+            } else if (arg.nodeName === 'apply' && children.length>2 && children[0].nodeName === 'times' && children[1].nodeName === 'cn' && (n = Number(CToP.getTextContent(children[1]))) < 0) {
               CToP.appendToken(mrow,'mo','\u2212');
-              CToP.getTextContent(children[1]) = -n;// fix me: modifying document
+              children[1].textContent = -n;     // OK to change MathML since it is being discarded afterward
               CToP.applyTransform(mrow,arg,2);
             } else{
               CToP.appendToken(mrow,'mo','+');

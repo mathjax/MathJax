@@ -70,7 +70,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2015 The MathJax Consortium
+ *  Copyright (c) 2010-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
 
   var STIXURL = "http://www.stixfonts.org/";
   var MATHJAXURL = "https://github.com/mathjax/MathJax/tree/master/fonts/HTML-CSS/TeX/otf";
@@ -247,7 +247,7 @@
     } else {delete CONFIG.messageStyle.filter}
     CONFIG.messageStyle.maxWidth = (document.body.clientWidth-75) + "px";
     var i = 0; while (i < data.length) {
-      if (data[i] instanceof Array) {
+      if (MathJax.Object.isArray(data[i])) {
         if (data[i].length === 1 && CONFIG.HTML[data[i][0]]) {
           data.splice.apply(data,[i,1].concat(CONFIG.HTML[data[i][0]]));
         } else if (typeof data[i][1] === "string") {

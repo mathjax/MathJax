@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/pt-br/HelpDialog.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,13 +17,12 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("pt-br","HelpDialog",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           Help: "Ajuda do MathJax",
-          MathJax: "*MathJax* \u00E9 uma biblioteca em JavaScript que permite aos autores a inclus\u00E3o de conte\u00FAdo matem\u00E1tico em suas p\u00E1ginas web. Como um renderizador, voc\u00EA n\u00E3o precisa fazer qualquer coisa para que isso ocorra.",
+          MathJax: "*MathJax* \u00E9 uma biblioteca em JavaScript que permite aos autores a inclus\u00E3o de conte\u00FAdo matem\u00E1tico em suas p\u00E1ginas web. Como um renderizador, voc\u00EA n\u00E3o precisa fazer nada para que isso ocorra.",
           Browsers: "*Navegadores*: O MathJax funciona em todos os navegadores modernos incluindo IE6+, Firefox 3+, Chrome 0.2+, Safari 2+, Opera 9.6+ e a maioria dos navegadores para dispositivos m\u00F3veis.",
           Menu: "*Menu de F\u00F3rmulas*: O MathJax acrescenta um menu de contexto \u00E0s equa\u00E7\u00F5es. Clique com o bot\u00E3o direito ou pressione CTRL ao clicar em qualquer f\u00F3rmula matem\u00E1tica para acessar o menu.",
           ShowMath: "*Mostrar F\u00F3rmulas Como* permite que visualize o c\u00F3digo da f\u00F3rmula para copiar e colar (como MathML ou em seu formato original).",

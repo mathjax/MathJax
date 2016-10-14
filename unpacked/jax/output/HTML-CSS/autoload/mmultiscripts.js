@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2015 The MathJax Consortium
+ *  Copyright (c) 2010-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -139,14 +139,14 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
             var w = box[k+1].bbox.w - box[k].bbox.w;
             if (w > 0) {
               if (isPre) {
-                box[k].style.paddingLeft = HTMLCSS.Em(w/(box[k].scale||1));
+                this.HTMLmoveColor(box[k],w,1);
                 BOX[k].w += w;
               } else {
                 HTMLCSS.createBlank(sub,w);
               }
             } else if (w < 0) {
               if (isPre) {
-                box[k+1].style.paddingLeft = HTMLCSS.Em(-w/(box[k+1].scale||1));
+                this.HTMLmoveColor(box[k+1],-w,-1);
                 BOX[k+1].w += -w;
               } else {
                 HTMLCSS.createBlank(sup,-w);
@@ -178,6 +178,16 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
         }
       }
       return BOX;
+    },
+    HTMLmoveColor: function (box,w,sign) {
+      var W = w/(box.scale||1);
+      box.style.paddingLeft = HTMLCSS.Em(W);
+      var color = box.previousSibling;
+      if (color && (color.id||"").match(/^MathJax-Color-/)) {
+        color.style.marginLeft = HTMLCSS.Em(W+parseFloat(color.style.marginLeft));
+        color.style.marginRight = HTMLCSS.Em(sign*(W-parseFloat(color.style.marginRight)));
+      }
+      
     },
     HTMLstretchH: MML.mbase.HTMLstretchH,
     HTMLstretchV: MML.mbase.HTMLstretchV

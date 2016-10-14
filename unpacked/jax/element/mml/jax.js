@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ MathJax.ElementJax.mml = MathJax.ElementJax({
   mimeType: "jax/mml"
 },{
   id: "mml",
-  version: "2.6.0",
+  version: "2.7.0",
   directory: MathJax.ElementJax.directory + "/mml",
   extensionDir: MathJax.ElementJax.extensionDir + "/mml",
   optableDir: MathJax.ElementJax.directory + "/mml/optable"
@@ -376,7 +376,7 @@ MathJax.ElementJax.mml.Augment({
       if (prev === MML.TEXCLASS.VCENTER) {prev = MML.TEXCLASS.ORD}
       if (tex  === MML.TEXCLASS.VCENTER) {tex  = MML.TEXCLASS.ORD}
       var space = this.TEXSPACE[prev][tex];
-      if (this.prevLevel > 0 && this.Get("scriptlevel") > 0 && space >= 0) {return ""}
+      if ((this.prevLevel > 0 || this.Get("scriptlevel") > 0) && space >= 0) {return ""}
       return this.TEXSPACELENGTH[Math.abs(space)];
     },
     TEXSPACELENGTH:[
@@ -1463,6 +1463,7 @@ MathJax.ElementJax.mml.Augment({
   
   MML.TeXAtom = MML.mbase.Subclass({
     type: "texatom",
+    linebreakContainer: true,
     inferRow: true, notParent: true,
     texClass: MML.TEXCLASS.ORD,
     Core: MML.mbase.childCore,

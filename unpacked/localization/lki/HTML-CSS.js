@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/lki/HTML-CSS.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("lki","HTML-CSS",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           LoadWebFont: "\u0628\u0627\u0631\u06AF\u06CC\u0631\u06CC \u0642\u0644\u0645 \u0648\u0628\u06CC %1",

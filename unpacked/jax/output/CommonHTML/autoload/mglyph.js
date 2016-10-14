@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015 The MathJax Consortium
+ *  Copyright (c) 2015-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   var MML = MathJax.ElementJax.mml,
       CHTML = MathJax.OutputJax.CommonHTML,
       LOCALE = MathJax.Localization;
@@ -60,15 +60,15 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           var img = CHTML.addElement(node,"img",{
             isMathJax:true, src:values.src, alt:values.alt, title:values.alt
           });
-          var w = bbox.img.img.width/CHTML.em, h = bbox.img.img.height/CHTML.em;
-          if (values.width !== "")  img.style.width  = CHTML.Em(this.CHTMLlength2em(values.width,w));
-          if (values.height !== "") img.style.height = CHTML.Em(this.CHTMLlength2em(values.height,h));
-          //
-          //  Warning:  causes page reflows
-          //
-          bbox.w = bbox.r = img.offsetWidth/CHTML.em; bbox.h = bbox.t = img.offsetHeight/CHTML.em;
+          var w = values.width, h = values.height;
+          var W = bbox.img.img.width/CHTML.em, H = bbox.img.img.height/CHTML.em;
+          var WW = W, HH = H;
+          if (w !== "") {W = this.CHTMLlength2em(w,WW); H = (WW ? W/WW * HH : 0)}
+          if (h !== "") {H = this.CHTMLlength2em(h,HH); if (w === "") W = (HH ? H/HH * WW : 0)}
+          img.style.width  = CHTML.Em(W); bbox.w = bbox.r = W;
+          img.style.height = CHTML.Em(H); bbox.h = bbox.t = H;
           if (values.valign) {
-            bbox.d = bbox.b = -this.CHTMLlength2em(values.valign,h);
+            bbox.d = bbox.b = -this.CHTMLlength2em(values.valign,HH);
             img.style.verticalAlign = CHTML.Em(-bbox.d);
             bbox.h -= bbox.d; bbox.t = bbox.h;
           }

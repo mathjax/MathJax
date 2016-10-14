@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015 The MathJax Consortium
+ *  Copyright (c) 2015-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   var MML = MathJax.ElementJax.mml,
       CONFIG = MathJax.Hub.config,
       CHTML = MathJax.OutputJax.CommonHTML;
@@ -68,7 +68,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       var parent = this;
       while (parent.inferred || (parent.parent && parent.parent.type === "mrow" &&
-             parent.parent.data.length === 1)) {parent = parent.parent}
+             parent.parent.isEmbellished())) {parent = parent.parent}
       var isTop = ((parent.type === "math" && parent.Get("display") === "block") ||
                     parent.type === "mtd");
       parent.isMultiline = true;
@@ -312,6 +312,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (this.CHTML.R && margin !== "marginRight") state.bbox.w += this.CHTML.R;
       if (end.length === 0) {
         node = this.CHTMLnodeElement();
+        if (this.href) node = node.parentNode;
         node.parentNode.removeChild(node);
         node.nextMathJaxNode.id = node.id;
       }
@@ -326,6 +327,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //
     CHTMLcreateSliceNode: function (node) {
       var NODE = this.CHTMLnodeElement(), n = 0;
+      if (this.href) NODE = NODE.parentNode;
       var LAST = NODE; while (LAST.nextMathJaxNode) {LAST = LAST.nextMathJaxNode; n++}
       var SLICE = NODE.cloneNode(false); LAST.nextMathJaxNode = SLICE; SLICE.nextMathJaxNode = null;
       SLICE.id += "-MJX-Continue-"+n;
@@ -347,7 +349,9 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //  Move node
         //
         var node = this.CHTMLnodeElement();
+        if (this.href) node = node.parentNode;
         line.appendChild(node);
+        if (this.CHTML.pwidth && !line.style.width) line.style.width = this.CHTML.pwidth;
         //
         //  If it is last, remove right margin
         //  If it is first, remove left margin
@@ -564,7 +568,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     },
     
     CHTMLmoveLine: function (start,end,node,state,values) {
-      var NODE = this.CHTMLnodeElement(), BOX = this.CHTMLbbox, w;
+      var NODE, BOX = this.CHTMLbbox, w;
       //
       //  If this is the start, move the prescripts, if any.
       //
@@ -665,7 +669,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //    use it to modify the default penalty
       //
       var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO];
-      if (!(linebreak instanceof Array)) {
+      if (!MathJax.Object.isArray(linebreak)) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}
@@ -714,7 +718,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit &&
           !this.mathbackground && !this.background)
         linebreak = [(w+PENALTY.spaceoffset)*PENALTY.spacefactor];
-      if (!(linebreak instanceof Array)) {
+      if (!MathJax.Object.isArray(linebreak)) {
         //  for breaks past the width, don't modify penalty
         if (offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}

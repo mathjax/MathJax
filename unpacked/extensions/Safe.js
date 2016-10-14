@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2015 The MathJax Consortium
+ *  Copyright (c) 2013-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
  */
 
 (function (HUB,AJAX) {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   
   var CONFIG = MathJax.Hub.CombineConfig("Safe",{
     allow: {
@@ -43,6 +43,7 @@
     },
     sizeMin: .7,        // \scriptsize
     sizeMax: 1.44,      // \large
+    lengthMax: 3,       // largest padding/border/margin, etc. in em's
     safeProtocols: {
       http: true,
       https: true,
@@ -86,6 +87,40 @@
       noUndefined: false,
       unicode: true,
       verb: true
+    },
+    //
+    //  CSS styles that have Top/Right/Bottom/Left versions
+    //
+    styleParts: {
+      border: true,
+      padding: true,
+      margin: true,
+      outline: true
+    },
+    //
+    //  CSS styles that are lengths needing max/min testing
+    //    A string value means test that style value;
+    //    An array gives [min,max] in em's
+    //    Otherwise use [-lengthMax,lengthMax] from above
+    //
+    styleLengths: {
+      borderTop: "borderTopWidth",
+      borderRight: "borderRightWidth",
+      borderBottom: "borderBottomWidth",
+      borderLeft: "borderLeftWidth",
+      paddingTop: true,
+      paddingRight: true,
+      paddingBottom: true,
+      paddingLeft: true,
+      marginTop: true,
+      marginRight: true,
+      marginBottom: true,
+      marginLeft: true,
+      outlineTop: true,
+      outlineRight: true,
+      outlineBottom: true,
+      outlineLeft: true,
+      fontSize: [.7,1.44]
     }
   });
   
@@ -149,14 +184,23 @@
         //
         //  Set the div1 styles to the given styles, and clear div2
         //  
-        var STYLE1 = this.div1.style, STYLE2 = this.div2.style;
+        var STYLE1 = this.div1.style, STYLE2 = this.div2.style, value;
         STYLE1.cssText = styles; STYLE2.cssText = "";
         //
         //  Check each allowed style and transfer OK ones to div2
+        //  If the style has Top/Right/Bottom/Left, look at all four separately
         //
         for (var name in CONFIG.safeStyles) {if (CONFIG.safeStyles.hasOwnProperty(name)) {
-          var value = this.filterStyle(name,STYLE1[name]);
-          if (value != null) {STYLE2[name] = value}
+          if (CONFIG.styleParts[name]) {
+            for (var i = 0; i < 4; i++) {
+              var NAME = name+["Top","Right","Bottom","Left"][i]
+              value = this.filterStyle(NAME,STYLE1);
+              if (value) {STYLE2[NAME] = value}
+            }
+          } else {
+            value = this.filterStyle(name,STYLE1);
+            if (value) {STYLE2[name] = value}
+          }
         }}
         //
         //  Return the div2 style string
@@ -168,11 +212,43 @@
     //
     //  Filter an individual name:value style pair
     //
-    filterStyle: function (name,value) {
-      if (typeof value !== "string") {return null}
+    filterStyle: function (name,styles) {
+      var value = styles[name];
+      if (typeof value !== "string" || value === "") {return null}
       if (value.match(/^\s*expression/)) {return null}
       if (value.match(/javascript:/)) {return null}
-      return (CONFIG.safeStyles[name] ? value : null);
+      var NAME = name.replace(/Top|Right|Left|Bottom/,"");
+      if (!CONFIG.safeStyles[name] && !CONFIG.safeStyles[NAME]) {return null}
+      if (!CONFIG.styleLengths[name]) {return value}
+      return (this.filterStyleLength(name,value,styles) ? value : null);
+    },
+    filterStyleLength: function (name,value,styles) {
+      if (typeof CONFIG.styleLengths[name] === "string") value = styles[CONFIG.styleLengths[name]];
+      value = this.length2em(value);
+      if (value == null) return false;
+      var mM = [-CONFIG.lengthMax,CONFIG.lengthMax];
+      if (MathJax.Object.isArray(CONFIG.styleLengths[name])) mM = CONFIG.styleLengths[name];
+      return (value >= mM[0] && value <= mM[1]);
+    },
+    //
+    //  Conversion of units to em's
+    //
+    unit2em: {
+      em: 1,
+      ex: .5,         // assume 1ex = .5em
+      ch: .5,         // assume 1ch = .5em
+      rem: 1,         // assume 1rem = 1em
+      px: 1/16,       // assume 1em = 16px
+      mm: 96/25.4/16, // 25.4mm = 96px
+      cm: 96/2.54/16, // 2.54cm = 96px
+      'in': 96/16,      // 1in = 96px
+      pt: 96/72/16,   // 72pt = 1in
+      pc: 96/6/16     // 1pc = 12pt
+    },
+    length2em: function (value) {
+      var match = value.match(/(.+)(em|ex|ch|rem|px|mm|cm|in|pt|pc)/);
+      if (!match) return null;
+      return parseFloat(match[1])*this.unit2em[match[2]];
     },
     
     //
@@ -319,7 +395,11 @@
     //  Filter the styles for \bbox
     //
     TEX.Parse.Augment({
-      BBoxStyle: function (styles) {return SAFE.filterStyles(styles)}
+      BBoxStyle: function (styles) {return SAFE.filterStyles(styles)},
+      BBoxPadding: function (pad) {
+        var styles = SAFE.filterStyles("padding: "+pad);
+        return (styles ? pad : 0);
+      }
     });
 
   });

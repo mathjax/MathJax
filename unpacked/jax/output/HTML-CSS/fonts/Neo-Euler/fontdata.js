@@ -4,7 +4,7 @@
  *  
  *  Initializes the HTML-CSS OutputJax to use the Neo-Euler fonts
 
- *  Copyright (c) 2013-2015 The MathJax Consortium
+ *  Copyright (c) 2013-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-    var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
 
   var ALPHABETS = "NeoEulerMathJax_Alphabets",
       ARROWS = "NeoEulerMathJax_Arrows",
@@ -132,7 +132,7 @@
              offsetA: 0x1D670,
              offsetN: 0x1D7F6
           },
-        "-Neo-Euler-variant": {fonts: [VARIANTS,MAIN,NORMAL,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,NONUNICODE,SIZE1]},
+          "-Neo-Euler-variant": {fonts: [VARIANTS,MAIN,NORMAL,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,NONUNICODE,SIZE1]},
           "-tex-caligraphic": {fonts: [MAIN,NORMAL,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,VARIANTS,NONUNICODE,SIZE1], italic: true},
           "-tex-oldstyle": {offsetN: 0xE200, fonts: [VARIANTS,MAIN,NORMAL,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,NONUNICODE,SIZE1]},
           "-tex-caligraphic-bold": {fonts: [MAIN,NORMAL,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,VARIANTS,NONUNICODE,SIZE1], italic: true, bold: true},
@@ -151,7 +151,7 @@
            remap: {0x03F5: 52, 0x03D1: 53, 0x03F0: 54, 0x03D5: 55, 0x03F1: 56, 0x03D6: 57, 0x03F4: 17}}
       ],
 
-      RULECHAR: 0x00AF,
+      RULECHAR: 0x2212,
 
       REMAP: {
         0x20F0: 0x002A,
@@ -341,7 +341,11 @@
         0x220F: EXTRAV,
         0x2210: EXTRAV,
         0x2211: EXTRAV,
-        0x2212: {alias: 0xAF, dir: H},
+        0x2212: {
+          dir: H,
+          HW: [],
+          stretch: {rep:[0x2212,MAIN,0,0,0,-.31,-.31]}
+        },
         0x2215:
         {
           dir: V,
@@ -485,6 +489,10 @@
       }
 
     }
+  });
+  MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Main/Regular/Main.js",function () {
+    HTMLCSS.FONTDATA.FONTS[MAIN][0x2212][0] = HTMLCSS.FONTDATA.FONTS[MAIN][0x002B][0]; // - needs height and depth of +
+    HTMLCSS.FONTDATA.FONTS[MAIN][0x2212][1] = HTMLCSS.FONTDATA.FONTS[MAIN][0x002B][1]; // - needs height and depth of +
   });
   MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Size5/Regular/Main.js",function () {
     var u;

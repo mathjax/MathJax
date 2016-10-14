@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2015 The MathJax Consortium
+ *  Copyright (c) 2011-2016 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/begingroup"] = {
-  version: "2.6.0"
+  version: "2.7.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -118,7 +118,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         //  so they can be made global when merged with the root stack.
         //
         while (n > 0) {this.stack[n].Undef(name,type); n--}
-        if (!(value instanceof Array)) {value = [value]}
+        if (!MathJax.Object.isArray(value)) {value = [value]}
         if (this.isEqn) {value.global = true}
       }
       this.stack[n].Def(name,value,type);

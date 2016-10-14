@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/pt/MathMenu.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("pt","MathMenu",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           Show: "Mostrar f\u00F3rmulas como",
@@ -41,7 +37,7 @@ MathJax.Localization.addTranslation("pt","MathMenu",{
           texHints: "Mostrar dicas de TeX em MathML",
           Settings: "Configura\u00E7\u00F5es das f\u00F3rmulas",
           ZoomTrigger: "Ativador do zoom",
-          Hover: "Passar o cursor",
+          Hover: "Passar o rato",
           Click: "Clique",
           DoubleClick: "Duplo clique",
           NoZoom: "Sem zoom",
@@ -99,7 +95,7 @@ MathJax.Localization.addTranslation("pt","MathMenu",{
           SwitchAnyway: "Mudar para este renderizador mesmo assim?\n\n(Pressione OK para mudar, CANCELAR para continuar com o renderizador atual)",
           ScaleMath: "Redimensionar todas as f\u00F3rmulas matem\u00E1ticas (em rela\u00E7\u00E3o ao texto \u00E0 sua volta) em",
           NonZeroScale: "A escala n\u00E3o deve ser zero",
-          PercentScale: "A escala deve ser uma porcentagem (por exemplo, 120%%)",
+          PercentScale: "A escala deve ser uma percentagem (por exemplo, 120%%)",
           IE8warning: "Isto desabilitar\u00E1 o menu MathJax e os recursos de zoom, mas voc\u00EA poder\u00E1 usar Alt-Clique em uma express\u00E3o para obter o menu MathJax em vez disso.\n\nDeseja realmente alterar as configura\u00E7\u00F5es do MathPlayer?",
           IE9warning: "O menu de contexto do MathJax ser\u00E1 desabilitado, mas pode usar Alt-Clique numa express\u00E3o para obter o menu MathJax em vez disso.",
           NoOriginalForm: "Sem uma forma original dispon\u00EDvel",

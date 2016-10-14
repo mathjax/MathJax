@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015 The MathJax Consortium
+ *  Copyright (c) 2015-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 (function (CHTML) {
-  var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
   
   var DELIMITERS = CHTML.FONTDATA.DELIMITERS;
 
@@ -35,7 +35,9 @@
       SIZE1  = "MathJax_Size1",
       SIZE4  = "MathJax_Size4";
   var H = "H", V = "V";
-  
+  var ARROWREP = [0x2212,MAIN,0,0,0,-.31,-.31];  // remove extra height/depth added below
+  var DARROWREP = [0x3D,MAIN,0,0,0,0,.1];        // add depth for arrow extender
+
   var delim = {
     0x003D: // equal sign
     {
@@ -43,16 +45,16 @@
     },
     0x219E: // left two-headed arrow
     {
-      dir: H, HW: [[1,AMS]], stretch: {left:[0x219E,AMS], rep:[0x2212,MAIN]}
+      dir: H, HW: [[1,AMS]], stretch: {left:[0x219E,AMS], rep:ARROWREP}
     },
     0x21A0: // right two-headed arrow
     {
-      dir: H, HW: [[1,AMS]], stretch: {right:[0x21A0,AMS], rep:[0x2212,MAIN]}
+      dir: H, HW: [[1,AMS]], stretch: {right:[0x21A0,AMS], rep:ARROWREP}
     },
     0x21A4: // left arrow from bar
     {
       dir: H, HW: [],
-      stretch: {min:1, left:[0x2190,MAIN], rep:[0x2212,MAIN], right:[0x2223,SIZE1,0,-.05,.9]}
+      stretch: {min:1, left:[0x2190,MAIN], rep:ARROWREP, right:[0x2223,SIZE1,0,-.05,.9]}
     },
     0x21A5: // up arrow from bar
     {
@@ -62,7 +64,7 @@
     0x21A6: // right arrow from bar
     {
       dir: H, HW: [[1,MAIN]],
-      stretch: {left:[0x2223,SIZE1,-.09,-.05,.9], rep:[0x2212,MAIN], right:[0x2192,MAIN]}
+      stretch: {left:[0x2223,SIZE1,-.09,-.05,.9], rep:ARROWREP, right:[0x2192,MAIN]}
     },
     0x21A7: // down arrow from bar
     {
@@ -82,12 +84,12 @@
     0x21BC: // left harpoon with barb up
     {
       dir: H, HW: [[1,MAIN]],
-      stretch: {left:[0x21BC,MAIN], rep:[0x2212,MAIN]}
+      stretch: {left:[0x21BC,MAIN], rep:ARROWREP}
     },
     0x21BD: // left harpoon with barb down
     {
       dir: H, HW: [[1,MAIN]],
-      stretch: {left:[0x21BD,MAIN], rep:[0x2212,MAIN]}
+      stretch: {left:[0x21BD,MAIN], rep:ARROWREP}
     },
     0x21BE: // up harpoon with barb right
     {
@@ -102,12 +104,12 @@
     0x21C0: // right harpoon with barb up
     {
       dir: H, HW: [[1,MAIN]],
-      stretch: {right:[0x21C0,MAIN], rep:[0x2212,MAIN]}
+      stretch: {right:[0x21C0,MAIN], rep:ARROWREP}
     },
     0x21C1: // right harpoon with barb down
     {
       dir: H, HW: [[1,MAIN]],
-      stretch: {right:[0x21C1,MAIN], rep:[0x2212,MAIN]}
+      stretch: {right:[0x21C1,MAIN], rep:ARROWREP}
     },
     0x21C2: // down harpoon with barb right
     {
@@ -162,17 +164,17 @@
     0x2906: // leftwards double arrow from bar
     {
       dir: H, HW: [],
-      stretch: {min:1, left:[0x21D0,MAIN], rep:[0x3D,MAIN], right:[0x2223,SIZE1,0,-.1]}
+      stretch: {min:1, left:[0x21D0,MAIN], rep:DARROWREP, right:[0x2223,SIZE1,0,-.1]}
     },
     0x2907: // rightwards double arrow from bar
     {
       dir: H, HW: [],
-      stretch: {min:.7, left:[0x22A8,AMS,0,-.12], rep:[0x3D,MAIN], right:[0x21D2,MAIN]}
+      stretch: {min:.7, left:[0x22A8,AMS,0,-.12], rep:DARROWREP, right:[0x21D2,MAIN]}
     },
     0x294E: // left barb up right barb up harpoon
     {
       dir: H, HW: [],
-      stretch: {min:.5, left:[0x21BC,MAIN], rep:[0x2212,MAIN], right:[0x21C0,MAIN]}
+      stretch: {min:.5, left:[0x21BC,MAIN], rep:ARROWREP, right:[0x21C0,MAIN]}
     },
     0x294F: // up barb right down barb right harpoon
     {
@@ -182,7 +184,7 @@
     0x2950: // left barb dow right barb down harpoon
     {
       dir: H, HW: [],
-      stretch: {min:.5, left:[0x21BD,MAIN], rep:[0x2212,MAIN], right:[0x21C1,MAIN]}
+      stretch: {min:.5, left:[0x21BD,MAIN], rep:ARROWREP, right:[0x21C1,MAIN]}
     },
     0x2951: // up barb left down barb left harpoon
     {
@@ -192,12 +194,12 @@
     0x295A: // leftwards harpoon with barb up from bar
     {
       dir: H, HW: [],
-      stretch: {min:1, left:[0x21BC,MAIN], rep:[0x2212,MAIN], right:[0x2223,SIZE1,0,-.05,.9]}
+      stretch: {min:1, left:[0x21BC,MAIN], rep:ARROWREP, right:[0x2223,SIZE1,0,-.05,.9]}
     },
     0x295B: // rightwards harpoon with barb up from bar
     {
       dir: H, HW: [],
-      stretch: {min:1, left:[0x2223,SIZE1,-.05,-.05,.9], rep:[0x2212,MAIN], right:[0x21C0,MAIN]}
+      stretch: {min:1, left:[0x2223,SIZE1,-.05,-.05,.9], rep:ARROWREP, right:[0x21C0,MAIN]}
     },
     0x295C: // up harpoon with barb right from bar
     {
@@ -212,12 +214,12 @@
     0x295E: // leftwards harpoon with barb down from bar
     {
       dir: H, HW: [],
-      stretch: {min:1, left:[0x21BD,MAIN], rep:[0x2212,MAIN], right:[0x2223,SIZE1,0,-.05,.9]}
+      stretch: {min:1, left:[0x21BD,MAIN], rep:ARROWREP, right:[0x2223,SIZE1,0,-.05,.9]}
     },
     0x295F: // rightwards harpoon with barb down from bar
     {
       dir: H, HW: [],
-      stretch: {min:1, left:[0x2223,SIZE1,-.05,-.05,.9], rep:[0x2212,MAIN], right:[0x21C1,MAIN]}
+      stretch: {min:1, left:[0x2223,SIZE1,-.05,-.05,.9], rep:ARROWREP, right:[0x21C1,MAIN]}
     },
     0x2960: // up harpoon with barb left from bar
     {

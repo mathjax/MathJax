@@ -4,7 +4,7 @@
  *  
  *  Initializes the SVG OutputJax to use the Asana-Math fonts
 
- *  Copyright (c) 2013-2015 The MathJax Consortium
+ *  Copyright (c) 2013-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-    var VERSION = "2.6.0";
+  var VERSION = "2.7.0";
 
   var ALPHABETS = "AsanaMathJax_Alphabets",
       ARROWS = "AsanaMathJax_Arrows",
@@ -138,7 +138,7 @@
              offsetA: 0x1D670,
              offsetN: 0x1D7F6
           },
-        "-Asana-Math-variant": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1]},
+          "-Asana-Math-variant": {fonts: [MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,NONUNICODE,SIZE1]},
           "-tex-caligraphic": {offsetA: 0xE20A, noLowerCase: 1, fonts: [VARIANTS,MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,NONUNICODE,SIZE1], italic: true},
           "-tex-oldstyle": {offsetN: 0xE200, fonts: [VARIANTS,MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,NONUNICODE,SIZE1]},
           "-tex-caligraphic-bold": {offsetA: 0xE224, noLowerCase: 1, fonts: [VARIANTS,MAIN,NORMAL,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,NONUNICODE,SIZE1], italic: true, bold: true},
@@ -157,7 +157,7 @@
            remap: {0x03F5: 52, 0x03D1: 53, 0x03F0: 54, 0x03D5: 55, 0x03F1: 56, 0x03D6: 57, 0x03F4: 17}}
       ],
 
-      RULECHAR: 0x0305,
+      RULECHAR: 0x2212,
 
       REMAP: {
         0x25C2: 0x25C0,
@@ -205,7 +205,7 @@
           HW: [[941,MAIN], [1471,SIZE1], [2041,SIZE2], [2552,SIZE3], [2615,SIZE3,1.025]],
           stretch: {bot:[0x23A0,SYMBOLS], ext:[0x239F,SYMBOLS], top:[0x239E,SYMBOLS]}
         },
-        0x2D: {alias: 0x305, dir: H},
+        0x2D: {alias: 0x2212, dir: H},
         0x2F: {alias: 0x2044, dir: H},
         0x3D:
         {
@@ -251,9 +251,9 @@
           stretch: {bot:[0x23AD,SYMBOLS], ext:[0x23AA,SYMBOLS], mid:[0x23AC,SYMBOLS], top:[0x23AB,SYMBOLS]}
         },
         0x7E: {alias: 0x303, dir: H},
-        0xAF: {alias: 0x305, dir: H},
+        0xAF: {alias: 0x2212, dir: H},
         0x2C6: {alias: 0x302, dir: H},
-        0x2C9: {alias: 0x305, dir: H},
+        0x2C9: {alias: 0x2212, dir: H},
         0x2DC: {alias: 0x303, dir: H},
         0x302:
         {
@@ -285,15 +285,15 @@
         },
         0x333: EXTRAH,
         0x33F: EXTRAH,
-        0x2015: {alias: 0x305, dir: H},
+        0x2015: {alias: 0x2212, dir: H},
         0x2016:
         {
           dir: V,
           HW: [[885,MAIN], [1275,SIZE1], [1555,SIZE2], [1897,SIZE3], [2315,SIZE4]],
           stretch: {ext:[0xE005,SIZE6], top:[0xE005,SIZE6]}
         },
-        0x2017: {alias: 0x305, dir: H},
-        0x203E: {alias: 0x305, dir: H},
+        0x2017: {alias: 0x2212, dir: H},
+        0x203E: {alias: 0x2212, dir: H},
         0x2044:
         {
           dir: V,
@@ -402,7 +402,10 @@
         },
         0x2210: EXTRAV,
         0x2211: EXTRAV,
-        0x2212: {alias: 0x305, dir: H},
+        0x2212: {
+          dir: H, HW: [],
+          stretch: {rep:[0x2212,MAIN,0,0,0,-.23,-.23]}
+        },
         0x2215: {alias: 0x2044, dir: V},
         0x221A:
         {
@@ -503,7 +506,7 @@
         },
         0x23E0: EXTRAH,
         0x23E1: EXTRAH,
-        0x2500: {alias: 0x305, dir: H},
+        0x2500: {alias: 0x2212, dir: H},
         0x2758: {alias: 0x2223, dir: V},
         0x27C5:
         {
@@ -589,6 +592,10 @@
       }
 
     }
+  });
+  MathJax.Hub.Register.LoadHook(SVG.fontDir+"/Main/Regular/Main.js",function () {
+    SVG.FONTDATA.FONTS[MAIN][0x2212][0] = SVG.FONTDATA.FONTS[MAIN][0x002B][0]; // - needs height and depth of +
+    SVG.FONTDATA.FONTS[MAIN][0x2212][1] = SVG.FONTDATA.FONTS[MAIN][0x002B][1]; // - needs height and depth of +
   });
   MathJax.Hub.Register.LoadHook(SVG.fontDir+"/Size6/Regular/Main.js",function () {
     var u;

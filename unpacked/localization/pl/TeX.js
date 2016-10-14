@@ -1,11 +1,8 @@
-/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
-/* vim: set ts=2 et sw=2 tw=80: */
-
 /*************************************************************
  *
  *  MathJax/localization/pl/TeX.js
  *
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +17,8 @@
  *  limitations under the License.
  *
  */
-
 MathJax.Localization.addTranslation("pl","TeX",{
-        version: "2.6.0",
+        version: "2.7.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Nadmiarowy nawias otwieraj\u0105cy lub brakuj\u0105cy nawias zamykaj\u0105cy",
@@ -33,16 +29,16 @@ MathJax.Localization.addTranslation("pl","TeX",{
           Misplaced: "\u0179le umiejscowiony %1",
           MissingOpenForSub: "Brakuj\u0105cy nawias otwieraj\u0105cy dla indeksu dolnego",
           MissingOpenForSup: "Brakuj\u0105cy nawias otwieraj\u0105cy dla indeksu g\u00F3rnego",
-          AmbiguousUseOf: "Nierozpoznane u\u017Cycie %1",
+          AmbiguousUseOf: "Niejednoznaczne u\u017Cycie %1",
           EnvBadEnd: "\\begin{%1} zosta\u0142 zako\u0144czony \\end{%2}",
-          EnvMissingEnd: "Brakuje \\end{%1}",
-          MissingBoxFor: "Brakuje pude\u0142ka (box) dla %1",
-          MissingCloseBrace: "Brakuje nawiasu zamykaj\u0105cego",
+          EnvMissingEnd: "Brakuj\u0105ce \\end{%1}",
+          MissingBoxFor: "Brakuj\u0105ce pude\u0142ko (box) dla %1",
+          MissingCloseBrace: "Brakuj\u0105cy nawias zamykaj\u0105cy",
           UndefinedControlSequence: "Nieznana komenda steruj\u0105ca %1",
           DoubleExponent: "Podw\u00F3jna pot\u0119ga: u\u017Cyj nawias\u00F3w, aby unikn\u0105\u0107 niejednoznaczno\u015Bci",
           DoubleSubscripts: "Podw\u00F3jny indeks: u\u017Cyj nawias\u00F3w, aby unikn\u0105\u0107 niejednoznaczno\u015Bci",
           DoubleExponentPrime: "Znak ' oznacza podw\u00F3jny wyk\u0142adnik: u\u017Cyj nawias\u00F3w, aby unikn\u0105\u0107 niejednoznaczno\u015Bci",
-          CantUseHash1: "Nie mo\u017Cesz u\u017Cywa\u0107 znaku # w trybie matematycznym",
+          CantUseHash1: "Nie mo\u017Cesz u\u017Cywa\u0107 znaku parametru makra # w trybie matematycznym",
           MisplacedMiddle: "%1 musi by\u0107 pomi\u0119dzy \\left i \\right",
           MisplacedLimits: "%1 jest dozwolony tylko dla operator\u00F3w",
           MisplacedMoveRoot: "%1 mo\u017Ce pojawi\u0107 si\u0119 tylko w ramach korzenia (root)",
