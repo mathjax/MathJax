@@ -868,6 +868,7 @@
         mskip:              'Hskip',
         mspace:             'Hskip',
         mkern:              'Hskip',
+        rule:               'rule',
         Rule:              ['Rule'],
         Space:             ['Rule','blank'],
     
@@ -1581,12 +1582,25 @@
           h = this.GetDimen(name),
           d = this.GetDimen(name);
       var mml, def = {width:w, height:h, depth:d};
-      if (style !== 'blank') {
-        if (parseFloat(w) && parseFloat(h)+parseFloat(d))
-          {def.mathbackground = (this.stack.env.color || "black")}
-        mml = MML.mpadded(MML.mrow()).With(def);
-      } else {
-        mml = MML.mspace().With(def);
+      if (style !== 'blank') def.mathbackground = (this.stack.env.color || "black");
+      this.Push(MML.mspace().With(def));
+    },
+    rule: function (name) {
+      var v = this.GetBrackets(name),
+          w = this.GetDimen(name),
+          h = this.GetDimen(name);
+      var mml = MML.mspace().With({
+        width: w, height:h,
+        mathbackground: (this.stack.env.color || "black")
+      });
+      if (v) {
+        mml = MML.mpadded(mml).With({voffset: v});
+        if (v.match(/^\-/)) {
+          mml.height = v;
+          mml.depth = '+' + v.substr(1);
+        } else {
+          mml.height = '+' + v;
+        }
       }
       this.Push(mml);
     },
