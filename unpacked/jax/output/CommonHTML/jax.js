@@ -179,7 +179,8 @@
       height:            "1px"
     },
     ".mjx-ex-box-test": {
-      position:  "absolute",
+      position: "absolute",
+      overflow: "hidden",
       width:"1px", height:"60ex"
     },
     ".mjx-line-box-test": {display: "table!important"},
