@@ -1582,7 +1582,9 @@
           h = this.GetDimen(name),
           d = this.GetDimen(name);
       var mml, def = {width:w, height:h, depth:d};
-      if (style !== 'blank') def.mathbackground = (this.stack.env.color || "black");
+      if (style !== 'blank') {
+        def.mathbackground = (this.stack.env.color || "black");
+      }
       this.Push(MML.mspace().With(def));
     },
     rule: function (name) {
