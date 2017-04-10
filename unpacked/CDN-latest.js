@@ -95,12 +95,16 @@
            if (request.status === 200) {
              var json = JSON.parse(request.responseText);
              if (json instanceof Array) json = json[0];
-             setVersion(json[cdn.version]);
-             loadMathJax(cdn.mathjax + json[cdn.version] + unpacked + '/MathJax.js' + config);
+             var version = json[cdn.version];
+             if (version.substr(0,1) === '2') {
+               setVersion(version);
+               loadMathJax(cdn.mathjax + json[cdn.version] + unpacked + '/MathJax.js' + config);
+               return;
+             }
            } else {
              Error("Problem aquiring MathJax version: status = " + request.status);
-             laodDefaultMathJax();
            }
+           laodDefaultMathJax();
          }
        }
        request.open('GET', cdn.api, true); 
