@@ -81,7 +81,7 @@
    function loadDefaultMathJax() {
      var script = getScript();
      if (script) {
-       loadMathJax(script.src.replace(/CDN-latest\.js/,"MathJax.js"));
+       loadMathJax(script.src.replace(/\/latest\.js/, "/MathJax.js"));
      } else {
        Error("Can't determine the URL for loading MathJax");
      }
@@ -118,8 +118,8 @@
    var script = getScript();
    var cdn = getCDN(script);
    if (cdn) {
-     var config = script.src.replace(/.*?(\?|$)/,"$1");
-     var unpacked = (script.src.match(/\/unpacked\/CDN-latest\.js/) ? "/unpacked" : "");
+     var config = script.src.replace(/.*?(\?|$)/, "$1");
+     var unpacked = (script.src.match(/\/unpacked\/latest\.js/) ? "/unpacked" : "");
      var version = getVersion();
      if (version) {
        loadMathJax(cdn.mathjax + version + unpacked + '/MathJax.js' + config);
