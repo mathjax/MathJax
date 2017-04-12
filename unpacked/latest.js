@@ -96,7 +96,7 @@
              var json = JSON.parse(request.responseText);
              if (json instanceof Array) json = json[0];
              var version = json[cdn.version];
-             if (version.substr(0,1) === '2') {
+             if (version.substr(0,2) === '2.') {
                setVersion(version);
                loadMathJax(cdn.mathjax + json[cdn.version] + unpacked + '/MathJax.js' + config);
                return;
