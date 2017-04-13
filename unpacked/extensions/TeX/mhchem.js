@@ -41,11 +41,14 @@ MathJax.Extension["TeX/mhchem"] = {
 };
 
 //
-//  Load [Contrib]/mhchem if not configured for legacy vesion
+//  Load [mhchem]/mhchem.js if not configured for legacy vesion
 //
 if (!MathJax.Extension["TeX/mhchem"].config.legacy) {
+  if (!MathJax.Ajax.config.path.mhchem) {
+    MathJax.Ajax.config.path.mhchem = MathJax.Hub.config.root + "/extensions/TeX/mhchem3";
+  }
   MathJax.Callback.Queue(
-    ["Require",MathJax.Ajax,"[Contrib]/mhchem/mhchem.js"],
+    ["Require",MathJax.Ajax,"[mhchem]/mhchem.js"],
     ["loadComplete",MathJax.Ajax,"[MathJax]/extensions/TeX/mhchem.js"]
   );
 } else {
