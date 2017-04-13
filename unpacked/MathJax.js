@@ -3130,9 +3130,7 @@ MathJax.Hub.Startup = {
              else {STARTUP.params[params[j]] = true}
         }
       }
-      CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'')
-        // convert mathjax/latest to mathjax/x.y-latest so that all files are the same version
-        .replace(/^(https?:\/\/cdn.mathjax.org\/mathjax\/)(latest)/,"$1"+BASE.version.split(/\./).slice(0,2).join(".")+"-$2");
+      CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'');
       BASE.Ajax.config.root = CONFIG.root;
       BASE.Ajax.params = STARTUP.params;
       break;
