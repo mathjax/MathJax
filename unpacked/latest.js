@@ -119,6 +119,7 @@
    var cdn = getCDN(script);
    if (cdn) {
      var config = script.src.replace(/.*?(\?|$)/, "$1");
+     config += (config ? '&' : '?') + 'latest';
      var unpacked = (script.src.match(/\/unpacked\/latest\.js/) ? "/unpacked" : "");
      var version = getVersion();
      if (version) {
