@@ -665,7 +665,8 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
   };
   
   var PATH = {};
-  PATH[BASENAME] = "";  // empty path gets the root URL
+  PATH[BASENAME] = "";                                        // empty path gets the root URL
+  PATH.a11y = '[MathJax]/extensions/a11y';                    // a11y extensions
   PATH.Contrib = "https://cdn.mathjax.org/mathjax/contrib";   // the third-party extensions
   
   BASE.Ajax = {
@@ -689,9 +690,10 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
     //  Return a complete URL to a file (replacing any root names)
     //
     fileURL: function (file) {
-      var match = file.match(/^\[([-._a-z0-9]+)\]/i);
-      if (match && match[1] in PATH)
-        {file = (PATH[match[1]]||this.config.root) + file.substr(match[1].length+2)}
+      var match;
+      while ((match = file.match(/^\[([-._a-z0-9]+)\]/i)) && PATH.hasOwnProperty(match[1])) {
+        file = (PATH[match[1]]||this.config.root) + file.substr(match[1].length+2);
+      }
       return file;
     },
     //
@@ -700,12 +702,16 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
     fileName: function (url) {
       var root = this.config.root;
       if (url.substr(0,root.length) === root) {url = "["+BASENAME+"]"+url.substr(root.length)}
-      else {
+      do {
+        var recheck = false;
         for (var id in PATH) {if (PATH.hasOwnProperty(id) && PATH[id]) {
-          if (url.substr(0,PATH[id].length) === PATH[id])
-            {url = "["+id+"]"+url.substr(PATH[id].length); break}
+          if (url.substr(0,PATH[id].length) === PATH[id]) {
+            url = "["+id+"]"+url.substr(PATH[id].length);
+            recheck = true;
+            break;
+          }
         }}
-      }
+      } while (recheck);
       return url;
     },
     //
