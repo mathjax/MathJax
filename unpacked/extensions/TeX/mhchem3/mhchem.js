@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/extensions/TeX/mhchem3/mhchem.js
+ *  MathJax/extensions/TeX/mhchem.js
  *
  *  Implements the \ce command for handling chemical formulas
  *  from the mhchem LaTeX package.
@@ -33,7 +33,7 @@
 
 
 MathJax.Extension["TeX/mhchem"] = {
-  version: "3.0.6"
+  version: "3.2.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -341,16 +341,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       return null;
     },
     'uprightEntities': /^(?:pH|pOH|pC|pK|iPr|iBu)(?=$|[^a-zA-Z])/,
-    'pK(a)': /^pK([abw]|eq|sp)(?=$|[^a-zA-Z0-9])/,  // acid/base dissociation constant, freezing/boiling-point depression, ionic product for water, equilibrium constants
-    'pK_(a)': /^pK_([abw])/,
-    'pK_{(a)}': /^pK_{([abw]|eq|sp)}/,
-    'pK(a1)': /^pK([ab])([123])(?=$|[^a-zA-Z0-9])/,
-    'pK_{(a1)}': /^pK_{([ab])([123])}/,
-    'K(a)': /^K([abwfcp]|eq|sp)(?=$|[^a-zA-Z0-9])/,
-    'K_(a)': /^K_([abwfcpCP])/,
-    'K_{(a)}': /^K_{([abwfcpCP]|eq|sp)}/,
-    'K(a1)': /^K([ab])([123])(?=$|[^a-zA-Z0-9])/,
-    'K_{(a1)}': /^K_{([ab])([123])}/,
     '/': /^\s*(\/)\s*/,
     '//': /^\s*(\/\/)\s*/,
     '*': /^\s*\*\s*/,
@@ -557,14 +547,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         'rd': { action: 'rqt=', nextState: 'rdt' } },
       'arrowUpDown': {
         '0|1|2|as': { action: [ 'sb=false', 'output', 'operator' ], nextState: '1' } },
-      'pK(a)|pK_(a)|pK_{(a)}': {
-        '0|1|2': { action: [ { type: 'output', option: 1 }, { type: 'insert+p1', option: 'pKa' } ], nextState: '1' } },
-      'K(a)|K_(a)|K_{(a)}': {
-        '0|1|2': { action: [ { type: 'output', option: 1 }, { type: 'insert+p1', option: 'Ka' } ], nextState: '1' } },
-      'pK(a1)|pK_{(a1)}': {
-        '0|1|2': { action: [ { type: 'output', option: 1 }, { type: 'insert+p1+p2', option: 'pKa1' } ], nextState: '1' } },
-      'K(a1)|K_{(a1)}': {
-        '0|1|2': { action: [ { type: 'output', option: 1 }, { type: 'insert+p1+p2', option: 'Ka1' } ], nextState: '1' } },
       'uprightEntities': {
         '0|1|2': { action: [ 'o=', 'output' ], nextState: '1' } },
       'orbital': {
@@ -1571,10 +1553,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       '^': "uparrow",
       'v': "downarrow",
       'ellipsis': "\\ldots ",
-      'pKa': "\\mathrm{p}K_{\\mathrm{{0}}}",
-      'Ka': "K_{\\mathrm{{0}}}",
-      'pKa1': "\\mathrm{p}K_{\\mathrm{{0}_{{1}}}}",
-      'Ka1': "K_{\\mathrm{{0}_{{1}}}}",
       '/': "/",
       ' / ': "\\,/\\,",
       '1st-level escape': "{0} "  // &, \\\\, \\hline
@@ -1712,4 +1690,4 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
 });
 
-MathJax.Ajax.loadComplete("[mhchem]/mhchem.js");
+MathJax.Ajax.loadComplete("[mhchem]/unpacked/mhchem.js");
