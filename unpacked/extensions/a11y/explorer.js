@@ -32,7 +32,7 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
   });
 
   var Assistive = MathJax.Extension.explorer = {
-    version: '1.2.1',
+    version: '1.2.2',
     dependents: [],            // the extensions that depend on this one
     //
     // Default configurations.
@@ -273,6 +273,8 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
   });
   MathJax.Extension.explorer.LiveRegion = LiveRegion;
 
+  var A11Y_PATH = MathJax.Ajax.fileURL(MathJax.Ajax.config.path.a11y);
+  
   var Explorer = MathJax.Extension.explorer.Explorer = {
     liveRegion: LiveRegion(),
     walker: null,
@@ -280,9 +282,8 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
     hoverer: null,
     flamer: null,
     speechDiv: null,
-    earconFile: MathJax.Ajax.config.path.a11y+'/invalid_keypress' +
-        (['Firefox', 'Chrome', 'Opera'].
-        indexOf(MathJax.Hub.Browser.name) !== -1 ?
+    earconFile: A11Y_PATH + '/invalid_keypress' +
+        (['Firefox', 'Chrome', 'Opera'].indexOf(MathJax.Hub.Browser.name) !== -1 ?
         '.ogg' : '.mp3'),
     expanded: false,
     focusoutEvent: MathJax.Hub.Browser.isFirefox ? 'blur' : 'focusout',
