@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/lki/MathMenu.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("lki","MathMenu",{
-        version: "2.7.0",
+        version: "2.7.1",
         isLoaded: true,
         strings: {
           Show: "\u0646\u0645\u0627\u06CC\u0634 \u0631\u06CC\u0627\u0636\u06CC\u0627\u062A \u0628\u0647 \u0639\u0646\u0648\u0627\u0646",
