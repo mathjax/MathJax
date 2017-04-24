@@ -23,7 +23,7 @@
  */
 
 MathJax.Extension["semantic-enrich"] = {
-  version: "1.2.0",
+  version: "1.2.1",
   config: MathJax.Hub.CombineConfig("semantic-enrich",{disabled: false}),
   dependents: [],     // the extensions that depend on this one
   running: false,
@@ -99,7 +99,7 @@ MathJax.Extension["semantic-enrich"] = {
   //  Load SRE and use the signal to tell MathJax when it is loaded.
   //  Since SRE waits for the mml element jax, load that too.
   //
-  if (!PATH.SRE) PATH.SRE = PATH.a11y;
+  if (!PATH.SRE) PATH.SRE = MathJax.Ajax.fileURL(PATH.a11y);
   MathJax.Ajax.Load("[SRE]/mathjax-sre.js");
   MathJax.Hub.Register.StartupHook("Sre Ready",["loadComplete",MathJax.Ajax,"[SRE]/mathjax-sre.js"]);
 })();
