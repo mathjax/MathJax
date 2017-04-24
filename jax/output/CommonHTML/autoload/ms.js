@@ -1,7 +1,7 @@
 /*
  *  /MathJax/jax/output/CommonHTML/autoload/ms.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function(){var c="2.7.0";var a=MathJax.ElementJax.mml,b=MathJax.OutputJax.CommonHTML;a.ms.Augment({toCommonHTML:function(e){e=this.CHTMLcreateNode(e);this.CHTMLhandleStyle(e);this.CHTMLgetVariant();this.CHTMLhandleScale(e);b.BBOX.empty(this.CHTML);var d=this.getValues("lquote","rquote","mathvariant");if(!this.hasValue("lquote")||d.lquote==='"'){d.lquote="\u201C"}if(!this.hasValue("rquote")||d.rquote==='"'){d.rquote="\u201D"}if(d.lquote==="\u201C"&&d.mathvariant==="monospace"){d.lquote='"'}if(d.rquote==="\u201D"&&d.mathvariant==="monospace"){d.rquote='"'}var f=d.lquote+this.data.join("")+d.rquote;this.CHTMLhandleText(e,f,this.CHTMLvariant);this.CHTML.clean();this.CHTMLhandleSpace(e);this.CHTMLhandleBBox(e);this.CHTMLhandleColor(e);return e}});MathJax.Hub.Startup.signal.Post("CommonHTML ms Ready");MathJax.Ajax.loadComplete(b.autoloadDir+"/ms.js")});
+MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function(){var c="2.7.1";var a=MathJax.ElementJax.mml,b=MathJax.OutputJax.CommonHTML;a.ms.Augment({toCommonHTML:function(e){e=this.CHTMLcreateNode(e);this.CHTMLhandleStyle(e);this.CHTMLgetVariant();this.CHTMLhandleScale(e);b.BBOX.empty(this.CHTML);var d=this.getValues("lquote","rquote","mathvariant");if(!this.hasValue("lquote")||d.lquote==='"'){d.lquote="\u201C"}if(!this.hasValue("rquote")||d.rquote==='"'){d.rquote="\u201D"}if(d.lquote==="\u201C"&&d.mathvariant==="monospace"){d.lquote='"'}if(d.rquote==="\u201D"&&d.mathvariant==="monospace"){d.rquote='"'}var f=d.lquote+this.data.join("")+d.rquote;this.CHTMLhandleText(e,f,this.CHTMLvariant);this.CHTML.clean();this.CHTMLhandleSpace(e);this.CHTMLhandleBBox(e);this.CHTMLhandleColor(e);return e}});MathJax.Hub.Startup.signal.Post("CommonHTML ms Ready");MathJax.Ajax.loadComplete(b.autoloadDir+"/ms.js")});

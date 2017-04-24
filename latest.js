@@ -1,134 +1,19 @@
-(function () {
+/*
+ *  /MathJax/latest.js
+ *
+ *  Copyright (c) 2009-2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 
-   var CDN = {
-     'cdnjs.cloudflare.com': {
-       api: 'https://api.cdnjs.com/libraries/mathjax?fields=version',
-       version: 'version',
-       mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/'
-     },
-     
-     'cdn.rawgit.com': {
-       api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
-       version: 'tag_name',
-       mathjax: 'https://cdn.rawgit.com/mathjax/MathJax/'
-     },
-     
-     'cdn.jsdelivr.net': {
-       api: 'https://api.jsdelivr.com/v1/jsdelivr/libraries?name=mathjax&lastversion=*',
-       version: 'lastversion',
-       mathjax: 'https://cdn.jsdelivr.net/mathjax/'
-     }
-   };
-   
-   function Error(message) {
-     if (console && console.log) console.log(message);
-   }
-   
-   function getScript() {
-     if (document.currentScript) return document.currentScript;
-     var scripts = document.getElementsByTagName("script");
-     for (var i = 0, m = scripts.length; i < m; i++) {
-       var script = scripts[i];
-       for (var cdn in CDN) {if (CDN.hasOwnProperty(cdn)) {
-         var url = CDN[cdn].mathjax;
-         if (script.src && script.src.substr(0,url.length) === url) return script;
-       }}
-     }
-   }
-   
-   function getCDN(script) {
-     if (!script) return;
-     var cdn = script.src.replace(/https:\/\//,'').replace(/[\/\?].*/,'');
-     return CDN[cdn];
-   }
-   
-   var cookiePattern = /(?:^|;\s*)mjx\.latest=([^;]*)(?:;|$)/;
-   function getVersion() {
-     var match;
-     try {match = cookiePattern.exec(document.cookie)} catch (err) {}
-     if (match && match[1] !== '') return match[1];
-   }
-   function setVersion(version) {
-     cookie = 'mjx.latest=' + version;
-     var time = new Date();
-     time.setDate(time.getDate() + 7);
-     cookie += '; expires=' + time.toGMTString();
-     cookie += '; path=/';
-     try {document.cookie = cookie} catch (err) {}
-   }
-   
-   function getXMLHttpRequest() {
-     if (window.XMLHttpRequest) return new XMLHttpRequest();
-     if (window.ActiveXObject) {
-       try {return new ActiveXObject("Msxml2.XMLHTTP")} catch (err) {}
-       try {return new ActiveXObject("Microsoft.XMLHTTP")} catch (err) {}
-     }
-   }
-   
-   function loadMathJax(url) {
-     var script = document.createElement('script');
-     script.type = 'text/javascript';
-     script.async = true;
-     script.src = url;
-     var head = document.head || document.getElementsByTagName('head')[0] || document.body;
-     if (head) {
-       head.appendChild(script);
-     } else {
-       Error("Can't find the document <head> element");
-     }
-   }
-   
-   function loadDefaultMathJax() {
-     var script = getScript();
-     if (script) {
-       loadMathJax(script.src.replace(/\/latest\.js/, "/MathJax.js"));
-     } else {
-       Error("Can't determine the URL for loading MathJax");
-     }
-   }
-   
-   function getLatestMathJax(cdn,config,unpacked) {
-     var request = getXMLHttpRequest();
-     if (request) {
-       request.onreadystatechange = function() {
-         if (request.readyState === 4) {
-           if (request.status === 200) {
-             var json = JSON.parse(request.responseText);
-             if (json instanceof Array) json = json[0];
-             var version = json[cdn.version];
-             if (version.substr(0,2) === '2.') {
-               setVersion(version);
-               loadMathJax(cdn.mathjax + json[cdn.version] + unpacked + '/MathJax.js' + config);
-               return;
-             }
-           } else {
-             Error("Problem aquiring MathJax version: status = " + request.status);
-           }
-           laodDefaultMathJax();
-         }
-       }
-       request.open('GET', cdn.api, true); 
-       request.send(null);
-     } else {
-       Error("Can't create XMLHttpRequest object");
-       loadDefaultMathJax();
-     }
-   }
-   
-   var script = getScript();
-   var cdn = getCDN(script);
-   if (cdn) {
-     var config = script.src.replace(/.*?(\?|$)/, "$1");
-     config += (config ? '&' : '?') + 'latest';
-     var unpacked = (script.src.match(/\/unpacked\/latest\.js/) ? "/unpacked" : "");
-     var version = getVersion();
-     if (version) {
-       loadMathJax(cdn.mathjax + version + unpacked + '/MathJax.js' + config);
-     } else {
-       getLatestMathJax(cdn, config, unpacked);
-     }
-   } else {
-     loadDefaultMathJax();
-   }
-
-})();
+(function(){var h={"cdnjs.cloudflare.com":{api:"https://api.cdnjs.com/libraries/mathjax?fields=version",version:"version",mathjax:"https://cdnjs.cloudflare.com/ajax/libs/mathjax/"},"cdn.rawgit.com":{api:"https://api.github.com/repos/mathjax/mathjax/releases/latest",version:"tag_name",mathjax:"https://cdn.rawgit.com/mathjax/MathJax/"},"cdn.jsdelivr.net":{api:"https://api.jsdelivr.com/v1/jsdelivr/libraries?name=mathjax&lastversion=*",version:"lastversion",mathjax:"https://cdn.jsdelivr.net/mathjax/"}};function g(q){if(console&&console.log){console.log(q)}}function e(){if(document.currentScript){return document.currentScript}var r=document.getElementsByTagName("script");for(var v=0,q=r.length;v<q;v++){var t=r[v];for(var s in h){if(h.hasOwnProperty(s)){var u=h[s].mathjax;if(t.src&&t.src.substr(0,u.length)===u){return t}}}}}function a(r){if(!r){return}var q=r.src.replace(/https:\/\//,"").replace(/[\/\?].*/,"");return h[q]}var l=/(?:^|;\s*)mjx\.latest=([^;]*)(?:;|$)/;function d(){var q;try{q=l.exec(document.cookie)}catch(r){}if(q&&q[1]!==""){return q[1]}}function c(q){cookie="mjx.latest="+q;var s=new Date();s.setDate(s.getDate()+7);cookie+="; expires="+s.toGMTString();cookie+="; path=/";try{document.cookie=cookie}catch(r){}}function j(){if(window.XMLHttpRequest){return new XMLHttpRequest()}if(window.ActiveXObject){try{return new ActiveXObject("Msxml2.XMLHTTP")}catch(q){}try{return new ActiveXObject("Microsoft.XMLHTTP")}catch(q){}}}function o(r){var q=document.createElement("script");q.type="text/javascript";q.async=true;q.src=r;var s=document.head||document.getElementsByTagName("head")[0]||document.body;if(s){s.appendChild(q)}else{g("Can't find the document <head> element")}}function i(){var q=e();if(q){o(q.src.replace(/\/latest\.js/,"/MathJax.js"))}else{g("Can't determine the URL for loading MathJax")}}function m(q,r,s){var t=j();if(t){t.onreadystatechange=function(){if(t.readyState===4){if(t.status===200){var v=JSON.parse(t.responseText);if(v instanceof Array){v=v[0]}var u=v[q.version];if(u.substr(0,2)==="2."){c(u);o(q.mathjax+v[q.version]+s+"/MathJax.js"+r);return}}else{g("Problem aquiring MathJax version: status = "+t.status)}laodDefaultMathJax()}};t.open("GET",q.api,true);t.send(null)}else{g("Can't create XMLHttpRequest object");i()}}var n=e();var p=a(n);if(p){var b=n.src.replace(/.*?(\?|$)/,"$1");b+=(b?"&":"?")+"latest";var f=(n.src.match(/\/unpacked\/latest\.js/)?"/unpacked":"");var k=d();if(k){o(p.mathjax+k+f+"/MathJax.js"+b)}else{m(p,b,f)}}else{i()}})();

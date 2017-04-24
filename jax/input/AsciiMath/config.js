@@ -1,7 +1,7 @@
 /*
  *  /MathJax/jax/input/AsciiMath/config.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.InputJax.AsciiMath=MathJax.InputJax({id:"AsciiMath",version:"2.7.0",directory:MathJax.InputJax.directory+"/AsciiMath",extensionDir:MathJax.InputJax.extensionDir+"/AsciiMath",config:{fixphi:true,useMathMLspacing:true,displaystyle:true,decimalsign:"."}});MathJax.InputJax.AsciiMath.Register("math/asciimath");MathJax.InputJax.AsciiMath.loadComplete("config.js");
+MathJax.InputJax.AsciiMath=MathJax.InputJax({id:"AsciiMath",version:"2.7.1",directory:MathJax.InputJax.directory+"/AsciiMath",extensionDir:MathJax.InputJax.extensionDir+"/AsciiMath",config:{fixphi:true,useMathMLspacing:true,displaystyle:true,decimalsign:"."}});MathJax.InputJax.AsciiMath.Register("math/asciimath");MathJax.InputJax.AsciiMath.loadComplete("config.js");
