@@ -14,7 +14,7 @@
  */
 
 MathJax.Hub.Config({
-  extensions: ["asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","fast-preview.js","AssistiveMML.js","a11y/accessibility-menu.js"],
+  extensions: ["asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","fast-preview.js","AssistiveMML.js","[a11y]/accessibility-menu.js"],
   jax: ["input/AsciiMath","output/CommonHTML","output/PreviewHTML"]
 });
 

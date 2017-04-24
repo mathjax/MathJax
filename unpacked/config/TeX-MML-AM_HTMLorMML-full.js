@@ -15,7 +15,7 @@
 
 MathJax.Hub.Config({
   config: ["MMLorHTML.js"],
-  extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","TeX/noErrors.js","TeX/noUndefined.js","TeX/AMSmath.js","TeX/AMSsymbols.js","fast-preview.js","AssistiveMML.js","a11y/accessibility-menu.js"],
+  extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","TeX/noErrors.js","TeX/noUndefined.js","TeX/AMSmath.js","TeX/AMSsymbols.js","fast-preview.js","AssistiveMML.js","[a11y]/accessibility-menu.js"],
   jax: ["input/TeX","input/MathML","input/AsciiMath","output/HTML-CSS","output/NativeMML","output/PreviewHTML"]
 });
 
