@@ -1,7 +1,7 @@
 /*
  *  /MathJax/localization/diq/FontWarnings.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("diq","FontWarnings",{version:"2.7.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/diq/FontWarnings.js");
+MathJax.Localization.addTranslation("diq","FontWarnings",{version:"2.7.1",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/diq/FontWarnings.js");

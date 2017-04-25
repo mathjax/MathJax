@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/sv/FontWarnings.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sv","FontWarnings",{
-        version: "2.7.0",
+        version: "2.7.1",
         isLoaded: true,
         strings: {
           webFont: "MathJax anv\u00E4nder webb-baserade teckensnitt f\u00F6r att visa matematik p\u00E5 denna sida.  Dessa tar tid att ladda ner, sidan skulle g\u00F6ra snabbare om du installerar matematik-typsnitt direkt i systemets teckensnittsmapp.",

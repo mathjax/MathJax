@@ -2,7 +2,7 @@
  *
  *  /MathJax/unpacked/config/MML_SVG-full.js
  *  
- *  Copyright (c) 2010-2016 The MathJax Consortium
+ *  Copyright (c) 2010-2017 The MathJax Consortium
  *
  *  Part of the MathJax library.
  *  See http://www.mathjax.org for details.
@@ -14,7 +14,7 @@
  */
 
 MathJax.Hub.Config({
-  extensions: ["mml2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","fast-preview.js","AssistiveMML.js","[Contrib]/a11y/accessibility-menu.js"],
+  extensions: ["mml2jax.js","MathEvents.js","MathZoom.js","MathMenu.js","toMathML.js","fast-preview.js","AssistiveMML.js","[a11y]/accessibility-menu.js"],
   jax: ["input/MathML","output/SVG","output/PreviewHTML"]
 });
 

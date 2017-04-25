@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/ko/FontWarnings.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ko","FontWarnings",{
-        version: "2.7.0",
+        version: "2.7.1",
         isLoaded: true,
         strings: {
           webFont: "MathJax\uB294 \uBB38\uC11C\uC758 \uC218\uC2DD\uC744 \uD45C\uD604\uD558\uAE30 \uC704\uD574 \uC6F9 \uAE30\uBC18 \uD3F0\uD2B8\uB97C \uC0AC\uC6A9\uD569\uB2C8\uB2E4. \uB2E4\uC6B4\uB85C\uB4DC\uD558\uB294\uB370 \uC2DC\uAC04\uC774 \uAC78\uB9AC\uC9C0\uB9CC, \uC2DC\uC2A4\uD15C \uD3F0\uD2B8 \uD3F4\uB354\uC5D0 \uC218\uC2DD \uD3F0\uD2B8\uAC00 \uC124\uCE58\uB418\uC5B4 \uC788\uB2E4\uBA74 \uBB38\uC11C\uAC00 \uB354 \uBE68\uB9AC \uD45C\uC2DC\uB420 \uAC83\uC785\uB2C8\uB2E4.",

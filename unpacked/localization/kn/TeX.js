@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/kn/TeX.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("kn","TeX",{
-        version: "2.7.0",
+        version: "2.7.1",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u0CB9\u0CC6\u0C9A\u0CCD\u0C9A\u0CBF\u0CA8 \u0CAE\u0CC1\u0C82\u0CAD\u0CBE\u0C97 \u0CAC\u0CCD\u0CB0\u0CC7\u0CB8\u0CCD \u0C85\u0CA5\u0CB5 \u0C95\u0CA1\u0CBF\u0CAE\u0CC6 \u0CAE\u0CC1\u0C9A\u0CCD\u0C9A\u0CA6 \u0CAC\u0CCD\u0CB0\u0CC7\u0CB8\u0CCD",
