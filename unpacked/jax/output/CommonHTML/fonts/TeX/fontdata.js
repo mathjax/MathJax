@@ -1647,9 +1647,6 @@
   };
   (function () {
     var STYLES = CHTML.config.styles, FONTS = CHTML.FONTDATA.FONTS;
-    var OTFDIR = AJAX.fileURL(CHTML.webfontDir+"/TeX/otf"),
-        EOTDIR = AJAX.fileURL(CHTML.webfontDir+"/TeX/eot"),
-        WOFFDIR = AJAX.fileURL(CHTML.webfontDir+"/TeX/woff");
     var faces = [];
     for (var name in FONTS) {if (FONTS.hasOwnProperty(name)) {
       var family = CHTML.FONTDATA.familyName(name), FAMILY = family;
@@ -1679,14 +1676,15 @@
       //
       //  The web font, if no local font found
       //
-      font = {
-        "font-family": family+"w",
-        "src /*1*/": "url('"+EOTDIR+"/"+name+"-"+variant+".eot')", // for IE8
-        "src /*2*/": [
-          "url('"+WOFFDIR+"/"+name+"-"+variant+".woff') format('woff')",
-          "url('"+OTFDIR+"/"+name+"-"+variant+".otf') format('opentype')"
-        ].join(", ")
-      };
+      font = {'font-family': family + 'w'};
+      var src = AJAX.fileURL(CHTML.webfontDir+"/TeX/eot/"+name+"-"+variant+".eot");
+      if (src) font['src /*1*/'] = "url('" + src + "')";
+      var urls = [];
+      src = AJAX.fileURL(CHTML.webfontDir+"/TeX/woff/"+name+"-"+variant+".woff");
+      if (src) urls.push("url('" + src + "') format('woff')");
+      src = AJAX.fileURL(CHTML.webfontDir+"/TeX/otf/"+name+"-"+variant+".otf");
+      if (src) urls.push("url('" + src + "') format('opentype')");
+      if (urls.length) font['src /*2*/'] = urls.join(', ');
       faces.push(font);
       //
       //  A class that looks for the local and web fonts
