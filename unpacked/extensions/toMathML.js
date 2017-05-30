@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2016 The MathJax Consortium
+ *  Copyright (c) 2010-2017 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
-  var VERSION = "2.7.0";
+  var VERSION = "2.7.1";
   
   var MML = MathJax.ElementJax.mml,
       SETTINGS = MathJax.Hub.config.menuSettings;

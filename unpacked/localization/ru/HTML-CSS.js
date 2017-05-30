@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/ru/HTML-CSS.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ru","HTML-CSS",{
-        version: "2.7.0",
+        version: "2.7.1",
         isLoaded: true,
         strings: {
           LoadWebFont: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0432\u0435\u0431-\u0448\u0440\u0438\u0444\u0442\u0430 %1",

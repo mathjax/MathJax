@@ -10,7 +10,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2016 The MathJax Consortium
+ *  Copyright (c) 2011-2017 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,18 +34,21 @@ if (MathJax.Extension["TeX/mhchem"]) {
 } else {
   
 MathJax.Extension["TeX/mhchem"] = {
-  version: "2.7.0",
+  version: "2.7.1",
   config: MathJax.Hub.CombineConfig("TeX.mhchem",{
     legacy: true
   })
 };
 
 //
-//  Load [Contrib]/mhchem if not configured for legacy vesion
+//  Load [mhchem]/mhchem.js if not configured for legacy vesion
 //
 if (!MathJax.Extension["TeX/mhchem"].config.legacy) {
+  if (!MathJax.Ajax.config.path.mhchem) {
+    MathJax.Ajax.config.path.mhchem = MathJax.Hub.config.root + "/extensions/TeX/mhchem3";
+  }
   MathJax.Callback.Queue(
-    ["Require",MathJax.Ajax,"[Contrib]/mhchem/mhchem.js"],
+    ["Require",MathJax.Ajax,"[mhchem]/mhchem.js"],
     ["loadComplete",MathJax.Ajax,"[MathJax]/extensions/TeX/mhchem.js"]
   );
 } else {

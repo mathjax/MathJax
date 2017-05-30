@@ -12,7 +12,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,9 +45,9 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
-MathJax.version = "2.7.0";
-MathJax.fileversion = "2.7.0";
-MathJax.cdnVersion = "2.7.0";  // specifies a revision to break caching
+MathJax.version = "2.7.1";
+MathJax.fileversion = "2.7.1";
+MathJax.cdnVersion = "2.7.1";  // specifies a revision to break caching
 MathJax.cdnFileVersions = {};  // can be used to specify revisions for individual files
 
 /**********************************************************/
@@ -665,7 +665,8 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
   };
   
   var PATH = {};
-  PATH[BASENAME] = "";  // empty path gets the root URL
+  PATH[BASENAME] = "";                                        // empty path gets the root URL
+  PATH.a11y = '[MathJax]/extensions/a11y';                    // a11y extensions
   PATH.Contrib = "https://cdn.mathjax.org/mathjax/contrib";   // the third-party extensions
   
   BASE.Ajax = {
@@ -689,9 +690,10 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
     //  Return a complete URL to a file (replacing any root names)
     //
     fileURL: function (file) {
-      var match = file.match(/^\[([-._a-z0-9]+)\]/i);
-      if (match && match[1] in PATH)
-        {file = (PATH[match[1]]||this.config.root) + file.substr(match[1].length+2)}
+      var match;
+      while ((match = file.match(/^\[([-._a-z0-9]+)\]/i)) && PATH.hasOwnProperty(match[1])) {
+        file = (PATH[match[1]]||this.config.root) + file.substr(match[1].length+2);
+      }
       return file;
     },
     //
@@ -700,12 +702,16 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
     fileName: function (url) {
       var root = this.config.root;
       if (url.substr(0,root.length) === root) {url = "["+BASENAME+"]"+url.substr(root.length)}
-      else {
+      do {
+        var recheck = false;
         for (var id in PATH) {if (PATH.hasOwnProperty(id) && PATH[id]) {
-          if (url.substr(0,PATH[id].length) === PATH[id])
-            {url = "["+id+"]"+url.substr(PATH[id].length); break}
+          if (url.substr(0,PATH[id].length) === PATH[id]) {
+            url = "["+id+"]"+url.substr(PATH[id].length);
+            recheck = true;
+            break;
+          }
         }}
-      }
+      } while (recheck);
       return url;
     },
     //
@@ -2894,7 +2900,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "Jax",
-    version: "2.7.0",
+    version: "2.7.1",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -2940,7 +2946,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "InputJax",
-    version: "2.7.0",
+    version: "2.7.1",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -2973,7 +2979,7 @@ MathJax.Hub.Startup = {
     Remove: function (jax) {}
   },{
     id: "OutputJax",
-    version: "2.7.0",
+    version: "2.7.1",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
@@ -3057,7 +3063,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "2.7.0",
+    version: "2.7.1",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -3081,7 +3087,7 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.7.0", config: {}, errors: 0,
+    id: "Error", version: "2.7.1", config: {}, errors: 0,
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
@@ -3100,7 +3106,7 @@ MathJax.Hub.Startup = {
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.7.0", config: {},
+    id: "Error", version: "2.7.1", config: {},
     sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"]
   };
   
@@ -3130,9 +3136,7 @@ MathJax.Hub.Startup = {
              else {STARTUP.params[params[j]] = true}
         }
       }
-      CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'')
-        // convert mathjax/latest to mathjax/x.y-latest so that all files are the same version
-        .replace(/^(https?:\/\/cdn.mathjax.org\/mathjax\/)(latest)/,"$1"+BASE.version.split(/\./).slice(0,2).join(".")+"-$2");
+      CONFIG.root = scripts[i].src.replace(/(^|\/)[^\/]*(\?.*)?$/,'');
       BASE.Ajax.config.root = CONFIG.root;
       BASE.Ajax.params = STARTUP.params;
       break;

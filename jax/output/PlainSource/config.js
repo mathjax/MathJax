@@ -1,7 +1,7 @@
 /*
  *  /MathJax/jax/output/PlainSource/config.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.OutputJax.PlainSource=MathJax.OutputJax({id:"PlainSource",version:"2.7.0",directory:MathJax.OutputJax.directory+"/PlainSource",extensionDir:MathJax.OutputJax.extensionDir+"/PlainSource",config:{styles:{".MathJax_PlainSource_Display":{"text-align":"center",margin:".75em 0px","white-space":"pre"},".MathJax_PlainSource_Display > span":{display:"inline-block","text-align":"left"}}}});if(!MathJax.Hub.config.delayJaxRegistration){MathJax.OutputJax.PlainSource.Register("jax/mml")}MathJax.OutputJax.PlainSource.loadComplete("config.js");
+MathJax.OutputJax.PlainSource=MathJax.OutputJax({id:"PlainSource",version:"2.7.1",directory:MathJax.OutputJax.directory+"/PlainSource",extensionDir:MathJax.OutputJax.extensionDir+"/PlainSource",config:{styles:{".MathJax_PlainSource_Display":{"text-align":"center",margin:".75em 0px","white-space":"pre"},".MathJax_PlainSource_Display > span":{display:"inline-block","text-align":"left"}}}});if(!MathJax.Hub.config.delayJaxRegistration){MathJax.OutputJax.PlainSource.Register("jax/mml")}MathJax.OutputJax.PlainSource.loadComplete("config.js");

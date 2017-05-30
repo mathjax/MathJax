@@ -10,7 +10,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015-2016 The MathJax Consortium
+ *  Copyright (c) 2015-2017 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
   var SETTINGS = HUB.config.menuSettings;
   
   var AssistiveMML = MathJax.Extension["AssistiveMML"] = {
-    version: "2.7.0",
+    version: "2.7.1",
     
     config: HUB.CombineConfig("AssistiveMML",{
       disabled: false,

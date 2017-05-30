@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2016 The MathJax Consortium
+ *  Copyright (c) 2013-2017 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
  */
 
 (function (HUB,AJAX) {
-  var VERSION = "2.7.0";
+  var VERSION = "2.7.1";
   
   var CONFIG = MathJax.Hub.CombineConfig("Safe",{
     allow: {
