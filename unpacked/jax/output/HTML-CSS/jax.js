@@ -2306,12 +2306,24 @@
           {if (this.data[i]) {this.data[i].toHTML(span,variant,this.remap,mapchars)}}
 	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (text.length !== 1) {delete span.bbox.skew}
+
         //
-        //  Handle combining characters by adding a non-breaking space and removing that width
+        //  Handle combining character bugs
         //
-	if (HTMLCSS.AccentBug && span.bbox.w === 0 && text.length === 1 && span.firstChild) {
-	  span.firstChild.nodeValue += HTMLCSS.NBSP;
-	  HTMLCSS.createSpace(span,0,0,-span.offsetWidth/HTMLCSS.em);
+	if (span.bbox.w === 0 && text.length === 1 && span.firstChild) {
+          if (HTMLCSS.AccentBug) {
+            //
+            //  adding a non-breaking space and removing that width
+            //
+            span.firstChild.nodeValue += HTMLCSS.NBSP;
+            HTMLCSS.createSpace(span,0,0,-span.offsetWidth/HTMLCSS.em);
+          }
+          if (HTMLCSS.combiningCharBug) {
+            //
+            //  Safari turns these into non-combining characters
+            //
+            span.style.marginLeft = HTMLCSS.Em(span.bbox.lw);
+          }
 	}
         //
         //  Handle large operator centering
@@ -3175,6 +3187,7 @@
           safariTextNodeBug: !v3p0,
           forceReflow: true,
           FontFaceBug: true,
+          combiningCharBug: parseInt(browser.webkit) >= 603,
           allowWebFonts: (v3p1 && !forceImages ? "otf" : false)
         });
         if (trueSafari) {
