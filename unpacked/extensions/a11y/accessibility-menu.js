@@ -52,11 +52,11 @@
       return SETTINGS[Accessibility.MakeOption(option)];
     },
     AddDefaults: function() {
-      var keys = KEYS(Accessibility.default);
+      var keys = KEYS(Accessibility['default']);
       for (var i = 0, key; key = keys[i]; i++) {
         var option = Accessibility.MakeOption(key);
         if (typeof(SETTINGS[option]) === 'undefined') {
-          SETTINGS[option] = Accessibility.default[key];
+          SETTINGS[option] = Accessibility['default'][key];
         }
       }
     },
@@ -87,7 +87,7 @@
       }
     },
     Register: function(module) {
-      Accessibility.default[module.option] = false;
+      Accessibility['default'][module.option] = false;
       Accessibility.modules.push(module);
     },
     Startup: function() {
