@@ -1415,8 +1415,13 @@
           if (!options.noBBox) {
             var bbox = this.CHTML, cbox = child.CHTML;
             bbox.append(cbox);
-            if (cbox.ic) {bbox.ic = cbox.ic} else {delete bbox.ic}
-            if (cbox.skew) bbox.skew = cbox.skew;
+            if (this.data.length === 1) {
+              if (cbox.ic) bbox.ic = cbox.ic;
+              if (cbox.skew) bbox.skew = cbox.skew;
+            } else {
+              delete bbox.ic;
+              delete bbox.skew;
+            }
             if (cbox.pwidth) bbox.pwidth = cbox.pwidth;
           }
         } else if (options.forceChild) {
