@@ -1686,19 +1686,28 @@
       this.Push(STACKITEM.cell().With({isEntry: true, name: name}));
       if (this.stack.Top().isCases) {
         var string = this.string;
-        var braces = 0, i = this.i, m = string.length;
+        var braces = 0, close = -1, i = this.i, m = string.length;
         while (i < m) {
           var c = string.charAt(i);
           if (c === "{") {braces++; i++}
-          else if (c === "}") {if (braces === 0) {m = 0} else {braces--; i++}}
-          else if (c === "&" && braces === 0) {
+          else if (c === "}") {
+            if (braces === 0) {
+              m = 0;
+            } else {
+              braces--;
+              if (braces === 0 && close < 0) {
+                close = i - this.i;
+              }
+              i++;
+            }
+          } else if (c === "&" && braces === 0) {
             TEX.Error(["ExtraAlignTab","Extra alignment tab in \\cases text"]);
           } else if (c === "\\") {
             if (string.substr(i).match(/^((\\cr)[^a-zA-Z]|\\\\)/)) {m = 0} else {i += 2}
           } else {i++}
         }
         var text = string.substr(this.i,i-this.i);
-        if (!text.match(/^\s*\\text[^a-zA-Z]/)) {
+        if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.length - 1) {
           this.Push.apply(this,this.InternalMath(text,0));
           this.i = i;
         }
