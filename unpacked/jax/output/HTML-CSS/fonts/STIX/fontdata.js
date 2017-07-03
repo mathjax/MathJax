@@ -299,7 +299,7 @@
         {
           dir: V, HW: [[.926,GENERAL],[1.230,SIZE1],[1.353,SIZE1,1.1],[1.845,SIZE2],
                        [2.048,SIZE2,1.11],[2.460,SIZE3],[2.472,SIZE3,1.005],[3.075,SIZE4]],
-          streth: {top:[0x23A4,SIZE1], ext:[0x23A5,SIZE1]}
+          stretch: {top:[0x23A4,SIZE1], ext:[0x23A5,SIZE1]}
         },
         0x230A: // \lfloor
         {
