@@ -2760,6 +2760,9 @@
 	      else if (HW != null) {this.data[this.base].HTMLstretchH(box,HW)}
 	      stretch[i] = (D == null && HW != null ? false :
 			   this.data[i].HTMLcanStretch("Horizontal"));
+              if (this.data[this.over] && values.accent) {
+                children[i].bbox.h = Math.max(children[i].bbox.h,HTMLCSS.TeX.x_height); // min height of 1ex (#1706)
+              }
 	    } else {
 	      stretch[i] = this.data[i].HTMLcanStretch("Horizontal");
               children[i].style.paddingLeft = children[i].style.paddingRight = "";
