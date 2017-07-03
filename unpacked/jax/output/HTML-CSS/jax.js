@@ -2607,7 +2607,7 @@
       },
       HTMLcanStretch: function (direction) {return false},
       HTMLhandleSpace: function (span) {
-	if (!this.texWithDelims && !this.useMMLspacing) {
+	if (!this.texWithDelims) {
           //
           //  Add nulldelimiterspace around the fraction
           //  (TeXBook pg 150 and Appendix G rule 15e)

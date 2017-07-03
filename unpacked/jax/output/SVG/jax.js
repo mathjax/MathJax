@@ -1833,7 +1833,7 @@
       },
       SVGcanStretch: function (direction) {return false},
       SVGhandleSpace: function (svg) {
-      	if (!this.texWithDelims && !this.useMMLspacing) {
+      	if (!this.texWithDelims) {
           //
           //  Add nulldelimiterspace around the fraction
           //   (TeXBook pg 150 and Appendix G rule 15e)
