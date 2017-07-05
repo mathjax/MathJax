@@ -389,6 +389,10 @@
       {
         dir: H, HW: [[.333+.25,MAIN],[.555+.25,SIZE1],[1+.33,SIZE2],[1.443+.33,SIZE3],[1.887,SIZE4]]
       },
+      0x2013: // en-dash
+      {
+        dir: H, HW: [[.5,MAIN]], stretch: {rep:[0x2013,MAIN]}
+      },
       0x2016: // vertical arrow extension
       {
         dir: V, HW: [[.602,SIZE1],[1,MAIN,null,0x2225]], stretch: {ext:[0x2225,MAIN]}
@@ -531,22 +535,23 @@
       },
       0x002D: {alias: 0x2212, dir:H}, // minus
       0x005E: {alias: 0x02C6, dir:H}, // wide hat
-      0x005F: {alias: 0x2212, dir:H}, // low line
+      0x005F: {alias: 0x2013, dir:H}, // low line
       0x007E: {alias: 0x02DC, dir:H}, // wide tilde
       0x02C9: {alias: 0x00AF, dir:H}, // macron
       0x0302: {alias: 0x02C6, dir:H}, // wide hat
       0x0303: {alias: 0x02DC, dir:H}, // wide tilde
       0x030C: {alias: 0x02C7, dir:H}, // wide caron
-      0x0332: {alias: 0x2212, dir:H}, // combining low line
-      0x2015: {alias: 0x2212, dir:H}, // horizontal line
-      0x2017: {alias: 0x2212, dir:H}, // horizontal line
+      0x0332: {alias: 0x2013, dir:H}, // combining low line
+      0x2014: {alias: 0x2013, dir:H}, // em-dash
+      0x2015: {alias: 0x2013, dir:H}, // horizontal line
+      0x2017: {alias: 0x2013, dir:H}, // horizontal line
       0x203E: {alias: 0x00AF, dir:H}, // overline
       0x20D7: {alias: 0x2192, dir:H}, // combinining over right arrow (vector arrow)
       0x2215: {alias: 0x002F, dir:V}, // division slash
       0x2329: {alias: 0x27E8, dir:V}, // langle
       0x232A: {alias: 0x27E9, dir:V}, // rangle
-      0x23AF: {alias: 0x2212, dir:H}, // horizontal line extension
-      0x2500: {alias: 0x2212, dir:H}, // horizontal line
+      0x23AF: {alias: 0x2013, dir:H}, // horizontal line extension
+      0x2500: {alias: 0x2013, dir:H}, // horizontal line
       0x2758: {alias: 0x2223, dir:V}, // vertical separator
       0x3008: {alias: 0x27E8, dir:V}, // langle
       0x3009: {alias: 0x27E9, dir:V}, // rangle
