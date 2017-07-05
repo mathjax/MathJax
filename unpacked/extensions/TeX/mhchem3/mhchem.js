@@ -1690,4 +1690,4 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
 });
 
-MathJax.Ajax.loadComplete("[mhchem]/unpacked/mhchem.js");
+MathJax.Ajax.loadComplete("[mhchem]/mhchem.js");
