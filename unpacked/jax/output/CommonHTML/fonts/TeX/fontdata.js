@@ -167,8 +167,6 @@
       {name: "greek", low: 0x03B1, high: 0x03F6, offset: "G"}
     ],
       
-    RULECHAR: 0x2212,
-      
     REMAP: {
       0x203E: 0x2C9,                  // overline
       0x20D0: 0x21BC, 0x20D1: 0x21C0, // combining left and right harpoons
