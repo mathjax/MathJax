@@ -232,8 +232,6 @@
       0x231C: 0x250C, 0x231D:0x2510,  // wrong placement of \ulcorner, \urcorner
       0x231E: 0x2514, 0x231F:0x2518,  // wrong placement of \llcorner, \lrcorner
 
-      0x20D7: "\uEEE2\uE160",         // HACK: for non-combining \vec (#1709)
-
       //
       //  compound symbols not in these fonts
       //  
@@ -264,7 +262,8 @@
     },
       
     REMAPACCENT: {
-      "\u2192":"\u20D7",
+      "\u20D7":"\uE160",  // HACK: for non-combining \vec (#1709)
+      "\u2192":"\uE160",
       "\u2032":"'",
       "\u2035":"`"
     },
@@ -1598,8 +1597,7 @@
   
   CHTML.FONTDATA.FONTS['MathJax_Vector'] = {
     centerline: 357, ascent: 714, descent: 0,
-    0x2192: [714,-516,500.1,29,471],     // vector arrow (w = 500.1 to avoid zero width)
-    0xEEE2: [0,0,-500,0,0,{space:1}]   // backspace
+    0x2192: [714,-516,500,29,471]      // vector arrow
   };
 
   CHTML.FONTDATA.FONTS[MAIN][0x2212][0] = CHTML.FONTDATA.FONTS[MAIN][0x002B][0]; // minus is sized as plus
