@@ -8,7 +8,7 @@
  *  Implements the CommonHTML OutputJax that displays mathematics
  *  using HTML and CSS to position the characters from math fonts
  *  in their proper locations.  Unlike the HTML-CSS output jax,
- *  this HTML is browswer and OS independent.
+ *  this HTML is browser and OS independent.
  *  
  *  ---------------------------------------------------------------------
  *  
@@ -196,7 +196,7 @@
       border: "1px solid black",
       "box-shadow": "2px 2px 5px #AAAAAA",         // Opera 10.5
       "-webkit-box-shadow": "2px 2px 5px #AAAAAA", // Safari 3 and Chrome
-      "-moz-box-shadow": "2px 2px 5px #AAAAAA",    // Forefox 3.5
+      "-moz-box-shadow": "2px 2px 5px #AAAAAA",    // Firefox 3.5
       "-khtml-box-shadow": "2px 2px 5px #AAAAAA",  // Konqueror
       padding: "3px 4px",
       "z-index": 401,
