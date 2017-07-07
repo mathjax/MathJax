@@ -1707,7 +1707,7 @@
           } else {i++}
         }
         var text = string.substr(this.i,i-this.i);
-        if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.length - 1) {
+        if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/,'').length - 1) {
           this.Push.apply(this,this.InternalMath(text,0));
           this.i = i;
         }
