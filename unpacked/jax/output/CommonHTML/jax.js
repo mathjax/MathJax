@@ -2156,8 +2156,8 @@
         //  Use a minimum height for accents (#1706)
         //  (same issues with the center line as above)
         //
-        if (values.accent && bbox.h < .431) {
-          base.style.marginTop = CHTML.Em(.431 - Math.max(bbox.h,.35));
+        if (values.accent && bbox.h < CHTML.TEX.x_height) {
+          base.style.marginTop = CHTML.Em(CHTML.TEX.x_height - Math.max(bbox.h,.35));
         }
         //
         //  Add over- and under-scripts
