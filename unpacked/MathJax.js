@@ -1200,7 +1200,7 @@ MathJax.Localization = {
     "nl": {menuTitle: "Nederlands"},
     "oc": {menuTitle: "occitan"},
     "pl": {menuTitle: "polski"},
-    "pt": {menuTitle: "portugus\u00EA"},
+    "pt": {menuTitle: "portugu\u00EAs"},
     "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
     "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
     "sco": {menuTitle: "Scots"},
