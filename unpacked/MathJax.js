@@ -298,7 +298,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
             {args = [].slice.call(args,i)}
       else {args = [].slice.call(arguments,0)}
     }
-    if (isArray(args) && args.length === 1) {args = args[0]}
+    if (isArray(args) && args.length === 1 && typeof(args[0]) === 'function') {args = args[0]}
     if (typeof args === 'function') {
       if (args.execute === CALLBACK.prototype.execute) {return args}
       return CALLBACK({hook: args});
