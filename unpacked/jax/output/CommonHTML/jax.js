@@ -1467,6 +1467,10 @@
           }
         }
       },
+      CHTMLupdateFrom: function (bbox) {
+        this.CHTML.updateFrom(bbox);
+        if (this.inferRow) this.data[0].CHTML.updateFrom(bbox);
+      },
 
       CHTMLcanStretch: function (direction,H,D) {
         var stretch = false;
@@ -1478,11 +1482,11 @@
         return stretch;
       },
       CHTMLstretchV: function (h,d) {
-        this.CHTML.updateFrom(this.Core().CHTMLstretchV(h,d));
+        this.CHTMLupdateFrom(this.Core().CHTMLstretchV(h,d));
         return this.CHTML;
       },
       CHTMLstretchH: function (node,w) {
-        this.CHTML.updateFrom(this.CHTMLstretchCoreH(node,w));
+        this.CHTMLupdateFrom(this.CHTMLstretchCoreH(node,w));
         return this.CHTML;
       },
       CHTMLstretchCoreH: function (node,w) {
@@ -1721,7 +1725,7 @@
         return this.CHTML;
       },
       CHTMLstretchH: function (node,w) {
-        this.CHTMLstretchCoreH(node,w);
+        this.CHTMLupdateFrom(this.CHTMLstretchCoreH(node,w));
         this.toCommonHTML(node,{stretch:true});
         return this.CHTML;
       }      
@@ -2681,12 +2685,12 @@
         return node;
       },
       CHTMLstretchV: function (h,d) {
-        this.CHTML.updateFrom(this.Core().CHTMLstretchV(h,d));
+        this.CHTMLupdateFrom(this.Core().CHTMLstretchV(h,d));
         this.toCommonHTML(this.CHTMLnodeElement(),{stretch:true});
         return this.CHTML;
       },
       CHTMLstretchH: function (node,w) {
-        this.CHTML.updateFrom(this.CHTMLstretchCoreH(node,w));
+        this.CHTMLupdateFrom(this.CHTMLstretchCoreH(node,w));
         this.toCommonHTML(node,{stretch:true});
         return this.CHTML;
       }
@@ -2699,7 +2703,7 @@
         node = this.CHTMLcreateNode(node);
 	if (this.data[0]) {
 	  this.data[0].toCommonHTML(node);
-	  this.CHTML.updateFrom(this.data[0].CHTML);
+	  this.CHTMLupdateFrom(this.data[0].CHTML);
           this.CHTMLhandleBBox(node);
 	}
         return node;
