@@ -129,7 +129,7 @@
            } else {
              Error("Problem aquiring MathJax version: status = " + request.status);
            }
-           laodDefaultMathJax();
+           loadDefaultMathJax();
          }
        }
        request.open('GET', cdn.api, true); 
