@@ -553,7 +553,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
-      if (this.row.length) {this.fixInitialMO(this.data)}
+      if (this.row.length % 2 === 1) {this.fixInitialMO(this.data)}
       this.row.push(MML.mtd.apply(MML,this.data));
       this.data = [];
     },
