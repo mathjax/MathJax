@@ -987,7 +987,7 @@
           if (bbox.a == null || state.a > bbox.a) bbox.a = state.a;
         }
         node = this.flushText(node,state,item.style);
-        node.style.width = CHTML.Em(C[2]);
+        if (C[2] < 3) node.style.width = CHTML.Em(C[2]); // only force width if not too large (#1718)
       },
       //
       //  Put the pending text into a box of the class, and
