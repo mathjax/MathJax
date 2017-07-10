@@ -245,7 +245,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     HandleShove: function (name,shove) {
       var top = this.stack.Top();
-      if (top.type !== "multline" || top.data.length) {
+      if (top.type !== "multline") {
+        TEX.Error(["CommandInMultline",
+                   "%1 can only appear within the multiline environment",name]);
+      }
+      if (top.data.length) {
         TEX.Error(["CommandAtTheBeginingOfLine",
                    "%1 must come at the beginning of the line",name]);
       }
