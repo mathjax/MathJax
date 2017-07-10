@@ -382,7 +382,7 @@
           var child = node.childNodes[i];
           if (child) {
             if (name.test(child.className)) return child;
-            if ((child.id || "") === "") nodes.push(child);
+            if (child.id === "") nodes.push(child);
           }
         }
         node = nodes.shift();
