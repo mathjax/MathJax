@@ -152,7 +152,7 @@
       RULECHAR: 0x2212,
       
       REMAP: {
-        0xA: 0x20,                      // carriage return
+        0xA: 0x20,                      // newline
         0x203E: 0x2C9,                  // overline
         0x20D0: 0x21BC, 0x20D1: 0x21C0, // combining left and right harpoons
         0x20D6: 0x2190, 0x20E1: 0x2194, // combining left arrow and lef-right arrow
