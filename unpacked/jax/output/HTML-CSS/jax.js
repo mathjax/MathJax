@@ -1586,8 +1586,9 @@
       var weight = (style.fontWeight||"normal");
       if (weight.match(/^\d+$/)) {weight = (parseInt(weight) >= 600 ? "bold" : "normal")}
       return (font.family.replace(/'/g,"") === style.fontFamily.replace(/'/g,"") &&
-             (font.style||"normal") === (style.fontStyle||"normal") &&
-             (font.weight||"normal") === weight);
+             (((font.style||"normal") === (style.fontStyle||"normal") &&
+             (font.weight||"normal") === weight) ||
+             (this.FontFaceBug && style.fontFamily !== '')));
     },
 
     handleFont: function (span,font,force) {
