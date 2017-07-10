@@ -2521,7 +2521,7 @@
         //  Add nulldelimiterspace around the fraction
         //  (TeXBook pg 150 and Appendix G rule 15e)
         //
-        if (!this.texWithDelims && !this.useMMLspacing) {
+        if (!this.texWithDelims) {
           var space = CHTML.TEX.nulldelimiterspace;
           frac.style.padding = "0 "+CHTML.Em(space);
           BBOX.l += space; BBOX.r += space; BBOX.w += 2*space;
