@@ -2155,6 +2155,20 @@
         var bbox = boxes[this.base], BBOX = this.CHTML;
         BBOX.w = W; BBOX.h = bbox.h; BBOX.d = bbox.d; // modified below
         //
+        // Adjust for bases shorter than the center line (#1657)
+        // (the center line really depends on the surrounding font, so
+        //  it should be measured along with ems and exs, but currently isn't.
+        //  so this value is an approximation that is reasonable for most fonts.)
+        //
+        if (bbox.h < .35) base.style.marginTop = CHTML.Em(bbox.h - .35);
+        //
+        //  Use a minimum height for accents (#1706)
+        //  (same issues with the center line as above)
+        //
+        if (values.accent && bbox.h < CHTML.TEX.x_height) {
+          base.style.marginTop = CHTML.Em(CHTML.TEX.x_height - Math.max(bbox.h,.35));
+        }
+        //
         //  Add over- and under-scripts
         //  
         var stack = base, delta = 0;
