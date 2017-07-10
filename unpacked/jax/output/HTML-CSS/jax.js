@@ -1244,7 +1244,7 @@
       // Place the box
       var HH, dx = 0;
       if (span.HH != null) {HH = span.HH}
-        else if (bbox) {HH = Math.max(3,bbox.h+bbox.d)}
+        else if (bbox) {HH = Math.max(3,3*(span.firstChild.scale||1),bbox.h+bbox.d)}
         else {HH = span.offsetHeight/this.em}
       if (!span.noAdjust) {
         HH += 1;
