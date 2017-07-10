@@ -1947,7 +1947,10 @@
 	    if (i == this.base) {
               boxes[i] = this.SVGdataStretched(i,HW,D);
 	      stretch[i] = (D != null || HW == null) && this.data[i].SVGcanStretch("Horizontal");
-	    } else {
+              if (this.data[this.over] && values.accent) {
+                boxes[i].h = Math.max(boxes[i].h,SVG.TeX.x_height); // min height of 1ex (#1706)
+              }
+            } else {
               boxes[i] = this.data[i].toSVG(); boxes[i].x = 0; delete boxes[i].X;
 	      stretch[i] = this.data[i].SVGcanStretch("Horizontal");
 	    }
