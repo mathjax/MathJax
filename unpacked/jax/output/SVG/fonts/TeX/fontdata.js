@@ -150,6 +150,7 @@
       RULECHAR: 0x2212,
       
       REMAP: {
+        0xA: 0x20,                      // newline
         0x00A0: 0x20,                   // non-breaking space
         0x203E: 0x2C9,                  // overline
         0x20D0: 0x21BC, 0x20D1: 0x21C0, // combining left and right harpoons
