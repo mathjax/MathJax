@@ -95,6 +95,7 @@
                  remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                          0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                          0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58,
+                         0xE160: [0x2192, "-TeX-vec"],    // HACK: for \vec (see #1709)
                          0x2016:0x2225,
                          0x2216:[0x2216,"-TeX-variant"],  // \smallsetminus
                          0x210F:[0x210F,"-TeX-variant"],  // \hbar
@@ -154,6 +155,7 @@
                    0x2216:[0x2216,MML.VARIANT.NORMAL], // \setminus
                    0x210F:[0x210F,MML.VARIANT.NORMAL]  // \hslash
                  }},
+      "-TeX-vec": {fonts: ["MathJax_Vector"], cache:{}},  // HACK: non-combining \vec
       "-largeOp": {fonts:[SIZE2,SIZE1,MAIN,AMS],cache:{}},
       "-smallOp": {fonts:[SIZE1,MAIN,AMS], cache:{}},
       "-tex-caligraphic-bold": {fonts:["MathJax_Caligraphic-Bold","MathJax_Main-Bold"], bold:true, cache:{}, chain:"normal",
@@ -258,7 +260,8 @@
     },
       
     REMAPACCENT: {
-      "\u2192":"\u20D7",
+      "\u20D7":"\uE160",  // HACK: for non-combining \vec (#1709)
+      "\u2192":"\uE160",
       "\u2032":"'",
       "\u2035":"`"
     },
@@ -1594,6 +1597,11 @@
     0xE153: [333,0,450,-10,474],       // stix-horizontal brace, upper right piece
     0xE154: [120,0,400,-10,410]        // stix-oblique open face capital letter A
   };
+  
+  CHTML.FONTDATA.FONTS['MathJax_Vector'] = {
+    centerline: 357, ascent: 714, descent: 0,
+    0x2192: [714,-516,500,29,471]      // vector arrow
+  };
 
   CHTML.FONTDATA.FONTS[MAIN][0x2212][0] = CHTML.FONTDATA.FONTS[MAIN][0x002B][0]; // minus is sized as plus
   CHTML.FONTDATA.FONTS[MAIN][0x2212][1] = CHTML.FONTDATA.FONTS[MAIN][0x002B][1]; // minus is sized as plus
@@ -1645,7 +1653,7 @@
   CHTML.FONTDATA.familyName = function (font) {
     font = font.replace(/^MathJax_/,"");
     var names = (font+"-Regular").split(/-/);
-    var suffix = names[0].toLowerCase().replace(/(?:igraphic|serif|writer|tur)$/,"") 
+    var suffix = names[0].toLowerCase().replace(/(?:igraphic|serif|writer|tur|tor)$/,"") 
                + "-" + names[1].replace(/[^A-Z]/g,"");
     return "MJXc-TeX-"+suffix;
   };
