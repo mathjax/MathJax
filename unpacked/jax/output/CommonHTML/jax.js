@@ -376,12 +376,16 @@
     //
     getNode: function (node,type) {
       var name = RegExp("\\b"+type+"\\b");
+      var nodes = [];
       while (node) {
         for (var i = 0, m = node.childNodes.length; i < m; i++) {
           var child = node.childNodes[i];
-          if (name.test(child.className)) return child;
+          if (child) {
+            if (name.test(child.className)) return child;
+            if (child.id === "") nodes.push(child);
+          }
         }
-        node = (node.firstChild && (node.firstChild.id||"") === "" ? node.firstChild : null);
+        node = nodes.shift();
       }
       return null;
     },
