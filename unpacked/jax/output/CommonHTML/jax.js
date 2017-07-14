@@ -2170,7 +2170,9 @@
         //  (same issues with the center line as above)
         //
         if (values.accent && bbox.h < CHTML.TEX.x_height) {
+          BBOX.h += CHTML.TEX.x_height - bbox.h;
           base.style.marginTop = CHTML.Em(CHTML.TEX.x_height - Math.max(bbox.h,.35));
+          bbox.h = CHTML.TEX.x_height;
         }
         //
         //  Add over- and under-scripts
