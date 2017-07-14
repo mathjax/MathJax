@@ -1313,7 +1313,7 @@
     },
     combine: function (cbox,x,y) {
       cbox.X = x; cbox.Y = y;  // save for use with line breaking
-      scale = cbox.rscale;
+      var scale = cbox.rscale;
       if (x + scale*cbox.r > this.r) this.r = x + scale*cbox.r;
       if (x + scale*cbox.l < this.l) this.l = x + scale*cbox.l;
       if (x + scale*(cbox.w+(cbox.L||0)+(cbox.R||0)) > this.w)
