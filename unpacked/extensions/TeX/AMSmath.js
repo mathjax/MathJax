@@ -247,7 +247,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var top = this.stack.Top();
       if (top.type !== "multline") {
         TEX.Error(["CommandInMultline",
-                   "%1 can only appear within the multiline environment",name]);
+                   "%1 can only appear within the multline environment",name]);
       }
       if (top.data.length) {
         TEX.Error(["CommandAtTheBeginingOfLine",
