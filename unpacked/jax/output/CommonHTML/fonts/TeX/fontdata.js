@@ -611,7 +611,8 @@
       0x27FB: {alias: 0x21A4, dir:H}, // long left arrow from bar
       0x27FC: {alias: 0x21A6, dir:H}, // long right arrow from bar
       0x27FD: {alias: 0x2906, dir:H}, // long left double arrow from bar
-      0x27FE: {alias: 0x2907, dir:H}  // long right double arrow from bar
+      0x27FE: {alias: 0x2907, dir:H}, // long right double arrow from bar
+      0xE160: {alias: 0x2190, dir:H}, // replacement vector arrow
     }
   };
   
