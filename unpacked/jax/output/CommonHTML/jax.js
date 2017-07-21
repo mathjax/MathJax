@@ -1005,10 +1005,10 @@
           //  Remap combining characters to non-combining versions since Safari
           //  handles them differently from everyone else.  (#1709)
           //
-          var char = this.flushText(node,state);
+          var chr = this.flushText(node,state);
           var r = (FONT[item.n]||font[item.n])[4] - (C[4] - C[2]);
-          char.style.marginLeft = CHTML.Em(-C[2]-r);
-          if (r < 0) char.style.marginRight = CHTML.Em(-r);
+          chr.style.marginLeft = CHTML.Em(-C[2]-r);
+          if (r < 0) chr.style.marginRight = CHTML.Em(-r);
         }
       },
       //

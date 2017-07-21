@@ -1581,7 +1581,7 @@
       var w = this.GetDimen(name),
           h = this.GetDimen(name),
           d = this.GetDimen(name);
-      var mml, def = {width:w, height:h, depth:d};
+      var def = {width:w, height:h, depth:d};
       if (style !== 'blank') {
         def.mathbackground = (this.stack.env.color || "black");
       }
