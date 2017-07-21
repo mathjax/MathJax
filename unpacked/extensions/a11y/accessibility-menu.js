@@ -41,9 +41,9 @@
   if (!PATH.a11y) PATH.a11y = HUB.config.root + "/extensions/a11y";
 
   var Accessibility = EXTENSIONS["accessibility-menu"] = {
-    version: '1.2.2',
+    version: '1.2.3',
     prefix: '', //'Accessibility-',
-    default: {},
+    defaults: {},
     modules: [],
     MakeOption: function(name) {
       return Accessibility.prefix + name;
@@ -52,11 +52,11 @@
       return SETTINGS[Accessibility.MakeOption(option)];
     },
     AddDefaults: function() {
-      var keys = KEYS(Accessibility.default);
+      var keys = KEYS(Accessibility.defaults);
       for (var i = 0, key; key = keys[i]; i++) {
         var option = Accessibility.MakeOption(key);
         if (typeof(SETTINGS[option]) === 'undefined') {
-          SETTINGS[option] = Accessibility.default[key];
+          SETTINGS[option] = Accessibility.defaults[key];
         }
       }
     },
@@ -87,7 +87,7 @@
       }
     },
     Register: function(module) {
-      Accessibility.default[module.option] = false;
+      Accessibility.defaults[module.option] = false;
       Accessibility.modules.push(module);
     },
     Startup: function() {
@@ -98,7 +98,7 @@
     },
     LoadExtensions: function () {
       var extensions = [];
-      for (var i = 0, mpdule; module = this.modules[i]; i++) {
+      for (var i = 0, module; module = this.modules[i]; i++) {
         if (SETTINGS[module.option]) extensions.push(module.module);
       }
       return (extensions.length ? HUB.Startup.loadArray(extensions) : null);
@@ -172,10 +172,12 @@
     },5);   // run before other extensions' menu hooks even if they are loaded first
   },5);
   
-  MathJax.Callback.Queue(
-    ["LoadExtensions",Accessibility],
-    ["loadComplete",MathJax.Ajax,"[a11y]/accessibility-menu.js"]
-  );
+  MathJax.Hub.Register.StartupHook("End Cookie", function () {
+    MathJax.Callback.Queue(
+      ["LoadExtensions",Accessibility],
+      ["loadComplete",MathJax.Ajax,"[a11y]/accessibility-menu.js"]
+    );
+  });
 
 })(MathJax.Hub,MathJax.Extension);
 

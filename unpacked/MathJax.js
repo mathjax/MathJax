@@ -45,9 +45,9 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
-MathJax.version = "2.7.1";
-MathJax.fileversion = "2.7.1";
-MathJax.cdnVersion = "2.7.1";  // specifies a revision to break caching
+MathJax.version = "2.7.2-beta.0";
+MathJax.fileversion = "2.7.2-beta.0";
+MathJax.cdnVersion = "2.7.2-beta.0";  // specifies a revision to break caching
 MathJax.cdnFileVersions = {};  // can be used to specify revisions for individual files
 
 /**********************************************************/
@@ -298,7 +298,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
             {args = [].slice.call(args,i)}
       else {args = [].slice.call(arguments,0)}
     }
-    if (isArray(args) && args.length === 1) {args = args[0]}
+    if (isArray(args) && args.length === 1 && typeof(args[0]) === 'function') {args = args[0]}
     if (typeof args === 'function') {
       if (args.execute === CALLBACK.prototype.execute) {return args}
       return CALLBACK({hook: args});
@@ -1200,7 +1200,7 @@ MathJax.Localization = {
     "nl": {menuTitle: "Nederlands"},
     "oc": {menuTitle: "occitan"},
     "pl": {menuTitle: "polski"},
-    "pt": {menuTitle: "portugus\u00EA"},
+    "pt": {menuTitle: "portugu\u00EAs"},
     "pt-br": {menuTitle: "portugu\u00EAs do Brasil"},
     "ru": {menuTitle: "\u0440\u0443\u0441\u0441\u043A\u0438\u0439"},
     "sco": {menuTitle: "Scots"},
@@ -2900,7 +2900,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "Jax",
-    version: "2.7.1",
+    version: "2.7.2-beta.0",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -2946,7 +2946,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "InputJax",
-    version: "2.7.1",
+    version: "2.7.2-beta.0",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -2979,7 +2979,7 @@ MathJax.Hub.Startup = {
     Remove: function (jax) {}
   },{
     id: "OutputJax",
-    version: "2.7.1",
+    version: "2.7.2-beta.0",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
@@ -3063,7 +3063,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "2.7.1",
+    version: "2.7.2-beta.0",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -3087,7 +3087,7 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.7.1", config: {}, errors: 0,
+    id: "Error", version: "2.7.2-beta.0", config: {}, errors: 0,
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
@@ -3106,7 +3106,7 @@ MathJax.Hub.Startup = {
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.7.1", config: {},
+    id: "Error", version: "2.7.2-beta.0", config: {},
     sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"]
   };
   

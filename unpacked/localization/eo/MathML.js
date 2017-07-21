@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("eo","MathML",{
-        version: "2.7.1",
+        version: "2.7.2-beta.0",
         isLoaded: true,
         strings: {
 

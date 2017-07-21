@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("pl","TeX",{
-        version: "2.7.1",
+        version: "2.7.2-beta.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Nadmiarowy nawias otwieraj\u0105cy lub brakuj\u0105cy nawias zamykaj\u0105cy",

@@ -78,7 +78,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
   });
 
   var CToP = {
-    version: "2.7.1",
+    version: "2.7.2-beta.0",
     settings: CONFIG,
 
     /* Transform the given <math> elements from Content MathML to Presentation MathML and replace the original elements
@@ -216,15 +216,16 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
         parentNode.appendChild(merror);
         return;
       }
+      var nodeName = contentMMLNode.nodeName.replace(/.*:/,'');
       if (contentMMLNode.nodeType === 1) {
-        if (CToP.tokens[contentMMLNode.nodeName]) {
-          CToP.tokens[contentMMLNode.nodeName](parentNode,contentMMLNode,precedence);
+        if (CToP.tokens[nodeName]) {
+          CToP.tokens[nodeName](parentNode,contentMMLNode,precedence);
         } else if (contentMMLNode.childNodes.length === 0) {
-          var mml = CToP.MML[contentMMLNode.nodeName];
+          var mml = CToP.MML[nodeName];
           if (mml && mml.isa && mml.isa(CToP.mbase)) {
             parentNode.appendChild(CToP.cloneNode(contentMMLNode));
           } else {
-            CToP.appendToken(parentNode,'mi',contentMMLNode.nodeName);
+            CToP.appendToken(parentNode,'mi',nodeName);
           }
         } else {
           var clonedChild = CToP.cloneNode(contentMMLNode);

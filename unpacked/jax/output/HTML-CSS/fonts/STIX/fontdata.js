@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,HTML) {
-  var VERSION = "2.7.1";
+  var VERSION = "2.7.2-beta.0";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -134,6 +134,7 @@
       RULECHAR: 0x203E,
       
       REMAP: {
+        0xA: 0x20,                      // newline
         0x2F3: 0x2DA, 0x2F4: 0x2CA,     // ring below, middle grave
         0xFE37: 0x23DE, 0xFE38: 0x23DF, // OverBrace, UnderBrace
         0x3008: 0x27E8, 0x3009: 0x27E9, // langle, rangle
@@ -299,7 +300,7 @@
         {
           dir: V, HW: [[.926,GENERAL],[1.230,SIZE1],[1.353,SIZE1,1.1],[1.845,SIZE2],
                        [2.048,SIZE2,1.11],[2.460,SIZE3],[2.472,SIZE3,1.005],[3.075,SIZE4]],
-          streth: {top:[0x23A4,SIZE1], ext:[0x23A5,SIZE1]}
+          stretch: {top:[0x23A4,SIZE1], ext:[0x23A5,SIZE1]}
         },
         0x230A: // \lfloor
         {

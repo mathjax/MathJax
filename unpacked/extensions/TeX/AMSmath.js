@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.7.1",
+  version: "2.7.2-beta.0",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -245,7 +245,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     HandleShove: function (name,shove) {
       var top = this.stack.Top();
-      if (top.type !== "multline" || top.data.length) {
+      if (top.type !== "multline") {
+        TEX.Error(["CommandInMultline",
+                   "%1 can only appear within the multline environment",name]);
+      }
+      if (top.data.length) {
         TEX.Error(["CommandAtTheBeginingOfLine",
                    "%1 must come at the beginning of the line",name]);
       }
@@ -549,7 +553,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
-      if (this.row.length) {this.fixInitialMO(this.data)}
+      if (this.row.length % 2 === 1) {this.fixInitialMO(this.data)}
       this.row.push(MML.mtd.apply(MML,this.data));
       this.data = [];
     },

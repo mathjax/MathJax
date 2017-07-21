@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "2.7.1";
+  var VERSION = "2.7.2-beta.0";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -152,6 +152,7 @@
       RULECHAR: 0x2212,
       
       REMAP: {
+        0xA: 0x20,                      // newline
         0x203E: 0x2C9,                  // overline
         0x20D0: 0x21BC, 0x20D1: 0x21C0, // combining left and right harpoons
         0x20D6: 0x2190, 0x20E1: 0x2194, // combining left arrow and lef-right arrow
@@ -517,13 +518,13 @@
         },
         0x002D: {alias: 0x2212, dir:H}, // minus
         0x005E: {alias: 0x02C6, dir:H}, // wide hat
-        0x005F: {alias: 0x2212, dir:H}, // low line
+        0x005F: {alias: 0x2013, dir:H}, // low line
         0x007E: {alias: 0x02DC, dir:H}, // wide tilde
         0x02C9: {alias: 0x00AF, dir:H}, // macron
         0x0302: {alias: 0x02C6, dir:H}, // wide hat
         0x0303: {alias: 0x02DC, dir:H}, // wide tilde
         0x030C: {alias: 0x02C7, dir:H}, // wide caron
-        0x0332: {alias: 0x2212, dir:H}, // combining low line
+        0x0332: {alias: 0x2013, dir:H}, // combining low line
         0x2014: {alias: 0x2013, dir:H}, // em-dash
         0x2015: {alias: 0x2013, dir:H}, // horizontal line
         0x2017: {alias: 0x2013, dir:H}, // horizontal line
@@ -532,8 +533,8 @@
         0x2215: {alias: 0x002F, dir:V}, // division slash
         0x2329: {alias: 0x27E8, dir:V}, // langle
         0x232A: {alias: 0x27E9, dir:V}, // rangle
-        0x23AF: {alias: 0x2212, dir:H}, // horizontal line extension
-        0x2500: {alias: 0x2212, dir:H}, // horizontal line
+        0x23AF: {alias: 0x2013, dir:H}, // horizontal line extension
+        0x2500: {alias: 0x2013, dir:H}, // horizontal line
         0x2758: {alias: 0x2223, dir:V}, // vertical separator
         0x3008: {alias: 0x27E8, dir:V}, // langle
         0x3009: {alias: 0x27E9, dir:V}, // rangle

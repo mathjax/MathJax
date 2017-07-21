@@ -27,7 +27,7 @@
 
 MathJax.InputJax.TeX = MathJax.InputJax({
   id: "TeX",
-  version: "2.7.1",
+  version: "2.7.2-beta.0",
   directory: MathJax.InputJax.directory + "/TeX",
   extensionDir: MathJax.InputJax.extensionDir + "/TeX",
   

@@ -34,6 +34,8 @@
   var SVGNS   = "http://www.w3.org/2000/svg";
   var XLINKNS = "http://www.w3.org/1999/xlink";
 
+  var EVENT, TOUCH, HOVER; // filled in later
+
   //
   //  Get the URL of the page (for use with xlink:href) when there
   //  is a <base> element on the page.
@@ -1833,7 +1835,7 @@
       },
       SVGcanStretch: function (direction) {return false},
       SVGhandleSpace: function (svg) {
-      	if (!this.texWithDelims && !this.useMMLspacing) {
+      	if (!this.texWithDelims) {
           //
           //  Add nulldelimiterspace around the fraction
           //   (TeXBook pg 150 and Appendix G rule 15e)
@@ -1947,7 +1949,10 @@
 	    if (i == this.base) {
               boxes[i] = this.SVGdataStretched(i,HW,D);
 	      stretch[i] = (D != null || HW == null) && this.data[i].SVGcanStretch("Horizontal");
-	    } else {
+              if (this.data[this.over] && values.accent) {
+                boxes[i].h = Math.max(boxes[i].h,SVG.TeX.x_height); // min height of 1ex (#1706)
+              }
+            } else {
               boxes[i] = this.data[i].toSVG(); boxes[i].x = 0; delete boxes[i].X;
 	      stretch[i] = this.data[i].SVGcanStretch("Horizontal");
 	    }
@@ -2056,7 +2061,7 @@
 	  }
 	} else {
 	  if (!sub) {
-	    values = this.getValues("displaystyle","texprimestyle");
+	    var values = this.getValues("displaystyle","texprimestyle");
 	    p = SVG.TeX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
 	    u = Math.max(u,p*scale,sup.d+(1/4)*x_height,min.superscriptshift);
             svg.Add(sup,x+delta,u);

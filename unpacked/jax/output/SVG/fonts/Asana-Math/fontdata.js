@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-  var VERSION = "2.7.1";
+  var VERSION = "2.7.2-beta.0";
 
   var ALPHABETS = "AsanaMathJax_Alphabets",
       ARROWS = "AsanaMathJax_Arrows",
@@ -160,6 +160,7 @@
       RULECHAR: 0x2212,
 
       REMAP: {
+        0xA: 0x20,
         0x25C2: 0x25C0,
         0x25C3: 0x25C1,
         0xFE38: 0x23DF,

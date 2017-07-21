@@ -1243,9 +1243,14 @@
       if (this.imgSpaceBug) {this.addText(span,this.imgSpace)}
       // Place the box
       var HH, dx = 0;
-      if (span.HH != null) {HH = span.HH}
-        else if (bbox) {HH = Math.max(3,bbox.h+bbox.d)}
-        else {HH = span.offsetHeight/this.em}
+      if (span.HH != null) {
+        HH = span.HH;
+      } else if (bbox) {
+        var child = span.firstChild;
+        HH = Math.max(3,3*(child ? child.scale||1 : 1),bbox.h+bbox.d)
+      } else {
+        HH = span.offsetHeight/this.em;
+      }
       if (!span.noAdjust) {
         HH += 1;
         HH = Math.round(HH*this.em)/this.em; // make this an integer number of pixels (for Chrome)
@@ -1586,8 +1591,9 @@
       var weight = (style.fontWeight||"normal");
       if (weight.match(/^\d+$/)) {weight = (parseInt(weight) >= 600 ? "bold" : "normal")}
       return (font.family.replace(/'/g,"") === style.fontFamily.replace(/'/g,"") &&
-             (font.style||"normal") === (style.fontStyle||"normal") &&
-             (font.weight||"normal") === weight);
+             (((font.style||"normal") === (style.fontStyle||"normal") &&
+             (font.weight||"normal") === weight) ||
+             (this.FontFaceBug && style.fontFamily !== '')));
     },
 
     handleFont: function (span,font,force) {
@@ -1632,7 +1638,11 @@
       if (HTMLCSS.ffFontOptimizationBug && c[4] - c[2] > 125)
         {span.style.textRendering = "optimizeLegibility"}
       if (C.rfix) {this.addText(span,text+C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
-      if (c[2] || !this.msieAccentBug || text.length) {return text + C.c}
+      if (c[2] || (!this.msieAccentBug && !this.combiningCharBug) || text.length) {return text + C.c}
+      if (this.combiningCharBug) {
+        HTMLCSS.addElement(span,"span",{style: {marginLeft:HTMLCSS.Em(c[3]/1000)}},[C.c]);
+        return "";
+      }
       //  Handle IE accent clipping bug
       HTMLCSS.createShift(span,c[3]/1000);
       HTMLCSS.createShift(span,(c[4]-c[3])/1000);
@@ -2306,12 +2316,16 @@
           {if (this.data[i]) {this.data[i].toHTML(span,variant,this.remap,mapchars)}}
 	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
 	if (text.length !== 1) {delete span.bbox.skew}
+
         //
-        //  Handle combining characters by adding a non-breaking space and removing that width
+        //  Handle combining character bugs
         //
 	if (HTMLCSS.AccentBug && span.bbox.w === 0 && text.length === 1 && span.firstChild) {
-	  span.firstChild.nodeValue += HTMLCSS.NBSP;
-	  HTMLCSS.createSpace(span,0,0,-span.offsetWidth/HTMLCSS.em);
+          //
+          //  adding a non-breaking space and removing that width
+          //
+          span.firstChild.nodeValue += HTMLCSS.NBSP;
+          HTMLCSS.createSpace(span,0,0,-span.offsetWidth/HTMLCSS.em);
 	}
         //
         //  Handle large operator centering
@@ -2607,7 +2621,7 @@
       },
       HTMLcanStretch: function (direction) {return false},
       HTMLhandleSpace: function (span) {
-	if (!this.texWithDelims && !this.useMMLspacing) {
+	if (!this.texWithDelims) {
           //
           //  Add nulldelimiterspace around the fraction
           //  (TeXBook pg 150 and Appendix G rule 15e)
@@ -2760,6 +2774,9 @@
 	      else if (HW != null) {this.data[this.base].HTMLstretchH(box,HW)}
 	      stretch[i] = (D == null && HW != null ? false :
 			   this.data[i].HTMLcanStretch("Horizontal"));
+              if (this.data[this.over] && values.accent) {
+                children[i].bbox.h = Math.max(children[i].bbox.h,HTMLCSS.TeX.x_height); // min height of 1ex (#1706)
+              }
 	    } else {
 	      stretch[i] = this.data[i].HTMLcanStretch("Horizontal");
               children[i].style.paddingLeft = children[i].style.paddingRight = "";
@@ -3175,6 +3192,7 @@
           safariTextNodeBug: !v3p0,
           forceReflow: true,
           FontFaceBug: true,
+          combiningCharBug: parseInt(browser.webkit) >= 603,
           allowWebFonts: (v3p1 && !forceImages ? "otf" : false)
         });
         if (trueSafari) {

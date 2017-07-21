@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-  var VERSION = "2.7.1";
+  var VERSION = "2.7.2-beta.0";
 
   var ALPHABETS = "NeoEulerMathJax_Alphabets",
       ARROWS = "NeoEulerMathJax_Arrows",
@@ -154,6 +154,7 @@
       RULECHAR: 0x2212,
 
       REMAP: {
+        0xA: 0x20,
         0x20F0: 0x002A,
         0x2022: 0x2219,
         0x22E3: "\u2292\u0338",

@@ -23,7 +23,7 @@
  */
 
 MathJax.Extension["semantic-enrich"] = {
-  version: "1.2.2",
+  version: "1.2.3",
   config: MathJax.Hub.CombineConfig("semantic-enrich",{disabled: false}),
   dependents: [],     // the extensions that depend on this one
   running: false,

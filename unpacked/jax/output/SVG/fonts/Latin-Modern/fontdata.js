@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-  var VERSION = "2.7.1";
+  var VERSION = "2.7.2-beta.0";
 
   var ALPHABETS = "LatinModernMathJax_Alphabets",
       ARROWS = "LatinModernMathJax_Arrows",
@@ -162,6 +162,7 @@
       RULECHAR: 0x2212,
 
       REMAP: {
+        0xA: 0x20,
         0x25C2: 0x25C0,
         0x3008: 0x27E8,
         0x3009: 0x27E9,
