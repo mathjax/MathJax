@@ -95,10 +95,10 @@
                  remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                          0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                          0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58,
-                         0xE160: [0x2192, "-TeX-vec"],    // HACK: for \vec (see #1709)
+                         0xE160:[0x2192, "-TeX-vec"],  // HACK for \vec (#1709)
                          0x2016:0x2225,
-                         0x2216:[0x2216,"-TeX-variant"],  // \smallsetminus
-                         0x210F:[0x210F,"-TeX-variant"],  // \hbar
+                         0x2216:[0x2216,"-TeX-variant",true],  // \smallsetminus
+                         0x210F:[0x210F,"-TeX-variant",true],  // \hbar
                          0x2032:[0x27,"sans-serif-italic"],  // HACK: a smaller prime
                          0x29F8:[0x002F,MML.VARIANT.ITALIC]}},
       "bold":   {fonts:[BOLD], bold:true, cache: {}, chain:"normal",
@@ -106,6 +106,7 @@
                  remap: {0x391:0x41, 0x392:0x42, 0x395:0x45, 0x396:0x5A, 0x397:0x48,
                          0x399:0x49, 0x39A:0x4B, 0x39C:0x4D, 0x39D:0x4E, 0x39F:0x4F,
                          0x3A1:0x50, 0x3A4:0x54, 0x3A7:0x58, 0x29F8:[0x002F,"bold-italic"],
+                         0xE160:[0x2192, "-TeX-vec-bold"],  // HACK for \vec (#1709)
                          0x2016:0x2225,
                          0x219A:"\u2190\u0338", 0x219B:"\u2192\u0338", 0x21AE:"\u2194\u0338",
                          0x21CD:"\u21D0\u0338", 0x21CE:"\u21D4\u0338", 0x21CF:"\u21D2\u0338",
@@ -152,10 +153,11 @@
                    0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2224: 0xE006, 0x2226: 0xE007,
                    0x2288: 0xE016, 0x2289: 0xE018, 0x228A: 0xE01A, 0x228B: 0xE01B,
                    0x2ACB: 0xE017, 0x2ACC: 0xE019, 0x03DC: 0xE008, 0x03F0: 0xE009,
-                   0x2216:[0x2216,MML.VARIANT.NORMAL], // \setminus
-                   0x210F:[0x210F,MML.VARIANT.NORMAL]  // \hslash
+                   0x2216:[0x2216,MML.VARIANT.NORMAL,true], // \setminus
+                   0x210F:[0x210F,MML.VARIANT.NORMAL,true]  // \hslash
                  }},
       "-TeX-vec": {fonts: ["MathJax_Vector"], cache:{}},  // HACK: non-combining \vec
+      "-TeX-vec-bold": {fonts: ["MathJax_Vector-Bold"], cache:{}},  // HACK: non-combining \vec
       "-largeOp": {fonts:[SIZE2,SIZE1,MAIN,AMS],cache:{}},
       "-smallOp": {fonts:[SIZE1,MAIN,AMS], cache:{}},
       "-tex-caligraphic-bold": {fonts:["MathJax_Caligraphic-Bold","MathJax_Main-Bold"], bold:true, cache:{}, chain:"normal",
@@ -172,11 +174,6 @@
     REMAP: {
       0xA: 0x20,                      // newline
       0x203E: 0x2C9,                  // overline
-      0x20D0: 0x21BC, 0x20D1: 0x21C0, // combining left and right harpoons
-      0x20D6: 0x2190, 0x20E1: 0x2194, // combining left arrow and lef-right arrow
-      0x20EC: 0x21C1, 0x20ED: 0x21BD, // combining low right and left harpoons
-      0x20EE: 0x2190, 0x20EF: 0x2192, // combining low left and right arrows
-      0x20F0: 0x2A,                   // combining asterisk
       0xFE37: 0x23DE, 0xFE38: 0x23DF, // OverBrace, UnderBrace
 
       0xB7: 0x22C5,                   // center dot
@@ -255,17 +252,34 @@
       0x2036: "\u2035\u2035",        // double back prime
       0x2037: "\u2035\u2035\u2035",  // trile back prime
       0x2057: "\u2032\u2032\u2032\u2032",  // quadruple prime
-      0x20DB: "...",                 // combining three dots above (only works with mover/under)
-      0x20DC: "...."                 // combining four dots above (only works with mover/under)
     },
       
     REMAPACCENT: {
+      "\u0300":"\u02CB",  // grave accent
+      "\u0301":"\u02CA",  // acute accent
+      "\u0302":"\u02C6",  // curcumflex
+      "\u0303":"\u02DC",  // tilde accent
+      "\u0304":"\u02C9",  // macron
+      "\u0306":"\u02D8",  // breve
+      "\u0307":"\u02D9",  // dot
+      "\u0308":"\u00A8",  // diaresis
+      "\u030A":"\u02DA",  // ring above
+      "\u030C":"\u02C7",  // caron
       "\u20D7":"\uE160",  // HACK: for non-combining \vec (#1709)
       "\u2192":"\uE160",
       "\u2032":"'",
-      "\u2035":"`"
+      "\u2035":"`",
+      "\u20D0":"\u21BC", "\u20D1":"\u21C0", // combining left and right harpoons
+      "\u20D6":"\u2190", "\u20E1":"\u2194", // combining left arrow and lef-right arrow
+      "\u20F0":"*",                         // combining asterisk
+      "\u20DB":"...",      // combining three dots above
+      "\u20DC":"...."       // combining four dots above
     },
     REMAPACCENTUNDER: {
+      "\u20EC":"\u21C1", "\u20ED":"\u21BD", // combining low right and left harpoons
+      "\u20EE":"\u2190", "\u20EF":"\u2192", // combining low left and right arrows
+      "\u20DB":"...",      // combining three dots above
+      "\u20DC":"...."       // combining four dots above
     },
 
     PLANE1MAP: [
@@ -548,7 +562,7 @@
       0x2015: {alias: 0x2013, dir:H}, // horizontal line
       0x2017: {alias: 0x2013, dir:H}, // horizontal line
       0x203E: {alias: 0x00AF, dir:H}, // overline
-      0x20D7: {alias: 0x2192, dir:H}, // combinining over right arrow (vector arrow)
+      0x20D7: {alias: 0x2192, dir:H}, // combining over right arrow (vector arrow)
       0x2215: {alias: 0x002F, dir:V}, // division slash
       0x2329: {alias: 0x27E8, dir:V}, // langle
       0x232A: {alias: 0x27E9, dir:V}, // rangle
@@ -1600,8 +1614,13 @@
   };
   
   CHTML.FONTDATA.FONTS['MathJax_Vector'] = {
-    centerline: 357, ascent: 714, descent: 0,
+    centerline: 257, ascent: 714, descent: 200,
     0x2192: [714,-516,500,29,471]      // vector arrow
+  };
+
+  CHTML.FONTDATA.FONTS['MathJax_Vector-Bold'] = {
+    centerline: 256, ascent: 723, descent: 210,
+    0x2192: [723,-513,575,33,542]      // vector arrow
   };
 
   CHTML.FONTDATA.FONTS[MAIN][0x2212][0] = CHTML.FONTDATA.FONTS[MAIN][0x002B][0]; // minus is sized as plus
@@ -1627,6 +1646,21 @@
   //  Add some spacing characters
   //
   MathJax.Hub.Insert(CHTML.FONTDATA.FONTS[MAIN],{
+    remapCombining: {
+      0x300: 0x2CB,                   // grave accent
+      0x301: 0x2CA,                   // acute accent
+      0x302: 0x2C6,                   // curcumflex
+      0x303: 0x2DC,                   // tilde accent
+      0x304: 0x2C9,                   // macron
+      0x306: 0x2D8,                   // breve
+      0x307: 0x2D9,                   // dot
+      0x308: 0xA8,                    // diaresis
+      0x30A: 0x2DA,                   // ring above
+//    0x30B: ??                       // double acute accent
+      0x30C: 0x2C7,                   // caron
+      0x338: [0x2F, ITALIC],              // \not
+      0x20D7: [0x2192, 'MathJax_Vector']  // \vec
+    },
     0x2000: [0,0,500,0,0,{space:1}],  // en space
     0x2001: [0,0,1000,0,0,{space:1}], // em quad
     0x2002: [0,0,500,0,0,{space:1}],  // en quad
@@ -1646,7 +1680,39 @@
     0xEEE1: [0,0,-300,0,0,{space:1}],
     0xEEE8: [0,0,25,0,0,{space:1}]
   });
-
+  MathJax.Hub.Insert(CHTML.FONTDATA.FONTS['MathJax_Main-Italic'],{
+    remapCombining: {
+      0x300: [0x2CB, MAIN],           // grave accent
+      0x301: [0x2CA, MAIN],           // acute accent
+      0x302: [0x2C6, MAIN],           // curcumflex
+      0x303: [0x2DC, MAIN],           // tilde accent
+      0x304: [0x2C9, MAIN],           // macron
+      0x306: [0x2D8, MAIN],           // breve
+      0x307: [0x2D9, MAIN],           // dot
+      0x308: [0xA8,  MAIN],           // diaresis
+      0x30A: [0x2DA, MAIN],           // ring above
+//    0x30B: ??                       // double acute accent
+      0x30C: [0x2C7, MAIN],           // caron
+      0x338: [0x2F,  'MathJax_Vector']  // \not
+    }
+  });
+  MathJax.Hub.Insert(CHTML.FONTDATA.FONTS['MathJax_Main-Bold'],{
+    remapCombining: {
+      0x300: 0x2CB,                   // grave accent
+      0x301: 0x2CA,                   // acute accent
+      0x302: 0x2C6,                   // curcumflex
+      0x303: 0x2DC,                   // tilde accent
+      0x304: 0x2C9,                   // macron
+      0x306: 0x2D8,                   // breve
+      0x307: 0x2D9,                   // dot
+      0x308: 0xA8,                    // diaresis
+      0x30A: 0x2DA,                   // ring above
+//    0x30B: ??                       // double acute accent
+      0x30C: 0x2C7,                   // caron
+      0x338: [0x2F, 'MathJax_Math-BoldItalic'], // \not
+      0x20D7: [0x2192, 'MathJax_Vector-Bold']   // \vec
+    }
+  });
       
   //
   //  Create @font-face stylesheet for the declared fonts

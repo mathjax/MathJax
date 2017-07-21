@@ -202,7 +202,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         B = RSPACE[i]/2; border = null; L = "0";
         if (RLINES[i] !== MML.LINES.NONE && RLINES[i] !== "") border = state.t+" "+RLINES[i];
         if (border || (CLINES[j] !== MML.LINES.NONE && CLINES[j] !== "")) {
-          while (row.length < CLINES.length) {
+          while (row.length <= state.J) {
             row.push(CHTML.addElement(row.node,"mjx-mtd",null,[['span']]));
           }
         }

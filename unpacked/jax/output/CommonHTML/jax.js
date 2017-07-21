@@ -211,6 +211,7 @@
   /************************************************************/
   
   var BIGDIMEN = 1000000;
+  var MAXREMAP = 5;
   var LINEBREAKS = {}, CONFIG = MathJax.Hub.config;
 
   CHTML.Augment({
@@ -775,7 +776,7 @@
     //  require looking through the data again.
     //
     getCharList: function (variant,n) {
-      var id, M, list = [], cache = variant.cache, nn = n;
+      var id, M, cache = variant.cache, nn = n;
       if (cache[n]) return cache[n];
       if (n > 0xFFFF && this.FONTDATA.RemapPlane1) {
         var nv = this.FONTDATA.RemapPlane1(n,variant);
@@ -799,13 +800,21 @@
           }
         }
       }
+      cache[nn] = this.remapChar(variant,n,0);
+      return cache[nn];
+    },
+    remapChar: function (variant,n,N) {
+      var list = [], VARIANT = this.FONTDATA.VARIANT;
       if (variant.remap && variant.remap[n]) {
         n = variant.remap[n];
         if (variant.remap.variant) {variant = VARIANT[variant.remap.variant]}
       } else if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
         n = this.FONTDATA.REMAP[n];
       }
-      if (isArray(n)) {variant = VARIANT[n[1]]; n = n[0]} 
+      if (isArray(n)) {
+        if (n[2]) N = MAXREMAP; // stop remapping
+        variant = VARIANT[n[1]]; n = n[0];
+      } 
       if (typeof(n) === "string") {
         var string = {text:n, i:0, length:n.length};
         while (string.i < string.length) {
@@ -815,9 +824,8 @@
         }
       } else {
         if (variant.cache[n]) {list = variant.cache[n]}
-          else {variant.cache[n] = list = [this.lookupChar(variant,n)]}
+          else {variant.cache[n] = list = this.lookupChar(variant,n,N)}
       }
-      cache[nn] = list;
       return list;
     },
     //
@@ -826,7 +834,7 @@
     //  variants as needed.  Return an undefined character if
     //  it isnt' found in the given variant.
     //
-    lookupChar: function (variant,n) {
+    lookupChar: function (variant,n,N) {
       var VARIANT = variant;
       while (variant) {
         for (var i = 0, m = variant.fonts.length; i < m; i++) {
@@ -834,20 +842,27 @@
           if (typeof(font) === "string") this.loadFont(font);
           var C = font[n];
           if (C) {
-            if (C.length === 5) C[5] = {};
-            if (C.c == null) {
-              C[0] /= 1000; C[1] /= 1000; C[2] /= 1000; C[3] /= 1000; C[4] /= 1000;
-              C.c = this.unicodeChar(n);
-            }
-            if (C[5].space) return {type:"space", w:C[2], font:font};
-            return {type:"char", font:font, n:n};
+            this.fixChar(C,n);
+            if (C[5].space) return [{type:"space", w:C[2], font:font}];
+            return [{type:"char", font:font, n:n}];
           } else if (font.Extra) {
             this.findBlock(font,n);
           }
         }
         variant = this.FONTDATA.VARIANT[variant.chain];
+        if (variant && variant.remap && variant.remap[n] && N++ < MAXREMAP) {
+          return this.remapChar(variant,n,N);
+        }
       }
-      return this.unknownChar(VARIANT,n);
+      return [this.unknownChar(VARIANT,n)];
+    },
+    fixChar: function (C,n) {
+      if (C.length === 5) C[5] = {};
+      if (C.c == null) {
+        C[0] /= 1000; C[1] /= 1000; C[2] /= 1000; C[3] /= 1000; C[4] /= 1000;
+        C.c = this.unicodeChar(n);
+      }
+      return C;
     },
     findBlock: function (font,n) {
       var extra = font.Extra, name = font.file, file;
@@ -956,19 +971,45 @@
       //  Character from the known fonts
       //
       "char": function (item,node,bbox,state,m) {
-        var font = item.font;
-        if (state.className && font.className !== state.className) this.flushText(node,state);
+        var font = item.font, remap = (font.remapCombining||{})[item.n];
+        if (font.className === state.className) {
+          remap = null;
+        } else if (state.className || (remap && state.text !== "")) {
+          this.flushText(node,state);
+        }
         if (!state.a) state.a = font.centerline/1000;
         if (state.a > (bbox.a||0)) bbox.a = state.a;
+        state.className = font.className;
         var C = font[item.n];
-        state.text += C.c; state.className = font.className;
+        if (remap) {
+          var FONT = font;
+          if (isArray(remap)) {
+            FONT = CHTML.FONTDATA.FONTS[remap[1]];
+            remap = remap[0];
+            if (typeof(FONT) === 'string') CHTML.loadFont(FONT);
+          }
+          if (FONT[item.n]) CHTML.fixChar(FONT[item.n],item.n);
+          C = CHTML.fixChar(FONT[remap],remap);
+          state.className = FONT.className;
+        }
+        state.text += C.c;
         if (bbox.h < C[0]+HFUZZ) bbox.t = bbox.h = C[0]+HFUZZ;
         if (bbox.d < C[1]+DFUZZ) bbox.b = bbox.d = C[1]+DFUZZ;
         if (bbox.l > bbox.w+C[3]) bbox.l = bbox.w+C[3];
         if (bbox.r < bbox.w+C[4]) bbox.r = bbox.w+C[4];
         bbox.w += C[2] * (item.rscale||1);
         if (m == 1 && font.skew && font.skew[item.n]) bbox.skew = font.skew[item.n];
-        if (C[5].rfix) this.flushText(node,state).style.marginRight = CHTML.Em(C[5].rfix/1000);
+        if (C[5] && C[5].rfix) this.flushText(node,state).style.marginRight = CHTML.Em(C[5].rfix/1000);
+        if (remap) {
+          //
+          //  Remap combining characters to non-combining versions since Safari
+          //  handles them differently from everyone else.  (#1709)
+          //
+          var char = this.flushText(node,state);
+          var r = (FONT[item.n]||font[item.n])[4] - (C[4] - C[2]);
+          char.style.marginLeft = CHTML.Em(-C[2]-r);
+          if (r < 0) char.style.marginRight = CHTML.Em(-r);
+        }
       },
       //
       //  Space characters (not actually in the fonts)
@@ -1891,8 +1932,7 @@
       },
       CHTMLadjustAccent: function (data) {
         var parent = this.CoreParent(); data.parent = parent;
-        if (data.text.length === 1 && parent && parent.isa(MML.munderover) && 
-            this.CoreText(parent.data[parent.base]).length === 1) {
+        if (data.text.length === 1 && parent && parent.isa(MML.munderover)) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
           if (over && this === over.CoreMO() && parent.Get("accent")) {
             data.remapchars = CHTML.FONTDATA.REMAPACCENT;

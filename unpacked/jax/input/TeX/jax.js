@@ -367,7 +367,7 @@
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml" && item.data[0].type.match(/^(mo|mi|mtext)$/)) {
         mml = item.data[0], c = mml.data.join("");
-        if (c.length === 1 && !mml.movesupsub) {
+        if (c.length === 1 && !mml.movesupsub && mml.data.length === 1) {
           c = STACKITEM.not.remap[c.charCodeAt(0)];
           if (c) {mml.SetData(0,MML.chars(String.fromCharCode(c)))}
             else {mml.Append(MML.chars("\u0338"))}

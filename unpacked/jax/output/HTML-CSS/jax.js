@@ -1243,9 +1243,14 @@
       if (this.imgSpaceBug) {this.addText(span,this.imgSpace)}
       // Place the box
       var HH, dx = 0;
-      if (span.HH != null) {HH = span.HH}
-        else if (bbox) {HH = Math.max(3,3*(span.firstChild.scale||1),bbox.h+bbox.d)}
-        else {HH = span.offsetHeight/this.em}
+      if (span.HH != null) {
+        HH = span.HH;
+      } else if (bbox) {
+        var child = span.firstChild;
+        HH = Math.max(3,3*(child ? child.scale||1 : 1),bbox.h+bbox.d)
+      } else {
+        HH = span.offsetHeight/this.em;
+      }
       if (!span.noAdjust) {
         HH += 1;
         HH = Math.round(HH*this.em)/this.em; // make this an integer number of pixels (for Chrome)
@@ -1633,7 +1638,11 @@
       if (HTMLCSS.ffFontOptimizationBug && c[4] - c[2] > 125)
         {span.style.textRendering = "optimizeLegibility"}
       if (C.rfix) {this.addText(span,text+C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
-      if (c[2] || !this.msieAccentBug || text.length) {return text + C.c}
+      if (c[2] || (!this.msieAccentBug && !this.combiningCharBug) || text.length) {return text + C.c}
+      if (this.combiningCharBug) {
+        HTMLCSS.addElement(span,"span",{style: {marginLeft:HTMLCSS.Em(c[3]/1000)}},[C.c]);
+        return "";
+      }
       //  Handle IE accent clipping bug
       HTMLCSS.createShift(span,c[3]/1000);
       HTMLCSS.createShift(span,(c[4]-c[3])/1000);
@@ -2311,20 +2320,12 @@
         //
         //  Handle combining character bugs
         //
-	if (span.bbox.w === 0 && text.length === 1 && span.firstChild) {
-          if (HTMLCSS.AccentBug) {
-            //
-            //  adding a non-breaking space and removing that width
-            //
-            span.firstChild.nodeValue += HTMLCSS.NBSP;
-            HTMLCSS.createSpace(span,0,0,-span.offsetWidth/HTMLCSS.em);
-          }
-          if (HTMLCSS.combiningCharBug) {
-            //
-            //  Safari turns these into non-combining characters
-            //
-            span.style.marginLeft = HTMLCSS.Em(span.bbox.lw);
-          }
+	if (HTMLCSS.AccentBug && span.bbox.w === 0 && text.length === 1 && span.firstChild) {
+          //
+          //  adding a non-breaking space and removing that width
+          //
+          span.firstChild.nodeValue += HTMLCSS.NBSP;
+          HTMLCSS.createSpace(span,0,0,-span.offsetWidth/HTMLCSS.em);
 	}
         //
         //  Handle large operator centering
