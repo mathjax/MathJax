@@ -1701,20 +1701,68 @@
     Entry: function (name) {
       this.Push(STACKITEM.cell().With({isEntry: true, name: name}));
       if (this.stack.Top().isCases) {
+        //
+        //  Make second column be in \text{...} (unless it is already
+        //  in a \text{...}, for backward compatibility).
+        //
         var string = this.string;
-        var braces = 0, i = this.i, m = string.length;
+        var braces = 0, close = -1, i = this.i, m = string.length;
+        //
+        //  Look through the string character by character...
+        //
         while (i < m) {
           var c = string.charAt(i);
-          if (c === "{") {braces++; i++}
-          else if (c === "}") {if (braces === 0) {m = 0} else {braces--; i++}}
-          else if (c === "&" && braces === 0) {
+          if (c === "{") {
+            //
+            //  Increase the nested brace count and go on
+            //
+            braces++;
+            i++;
+          } else if (c === "}") {
+            //
+            //  If there are too many close braces, just end (we will get an
+            //    error message later when the rest of the string is parsed)
+            //  Otherwise
+            //    decrease the nested brace count,
+            //    if it is now zero and we haven't already marked the end of the
+            //      first brace group, record the position (use to check for \text{} later)
+            //    go on to the next character.
+            //
+            if (braces === 0) {
+              m = 0;
+            } else {
+              braces--;
+              if (braces === 0 && close < 0) {
+                close = i - this.i;
+              }
+              i++;
+            }
+          } else if (c === "&" && braces === 0) {
+            //
+            //  Extra alignment tabs are not allowed in cases
+            //
             TEX.Error(["ExtraAlignTab","Extra alignment tab in \\cases text"]);
           } else if (c === "\\") {
+            //
+            //  If the macro is \cr or \\, end the search, otherwise skip the macro
+            //  (multi-letter names don't matter, as we will skip the rest of the
+            //   characters in the main loop)
+            //
             if (string.substr(i).match(/^((\\cr)[^a-zA-Z]|\\\\)/)) {m = 0} else {i += 2}
-          } else {i++}
+          } else {
+            //
+            //  Go on to the next character
+            //
+            i++;
+          }
         }
+        //
+        //  Check if the second column text is already in \text{},
+        //  If not, process the second column as text and continue parsing from there,
+        //    (otherwise process the second column as normal, since it is in \text{}
+        //
         var text = string.substr(this.i,i-this.i);
-        if (!text.match(/^\s*\\text[^a-zA-Z]/)) {
+        if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/,'').length - 1) {
           this.Push.apply(this,this.InternalMath(text,0));
           this.i = i;
         }
