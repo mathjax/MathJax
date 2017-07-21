@@ -41,7 +41,7 @@
   if (!PATH.a11y) PATH.a11y = HUB.config.root + "/extensions/a11y";
 
   var Collapsible = MathJax.Extension.collapsible = {
-    version: "1.2.2",
+    version: "1.2.3",
     config: HUB.CombineConfig("collapsible",{
       disabled: false
     }),
@@ -94,7 +94,7 @@
       punctuated: {
         endpunct: NOCOLLAPSE,
         startpunct: NOCOLLAPSE,
-        default: 12
+        value: 12
       }
     },
     //
@@ -108,7 +108,7 @@
       text: "...",
       appl: {
         "limit function": "lim",
-        default: "f()"
+        value: "f()"
       },
       fraction: "/",
       sqrt: "\u221A",
@@ -119,14 +119,14 @@
       vector: {
         binomial: "(:)",
         determinant: "|:|",
-        default: "\u27E8:\u27E9"
+        value: "\u27E8:\u27E9"
       },
       matrix: {
         squarematrix: "[::]",
         rowvector: "\u27E8\u22EF\u27E9",
         columnvector: "\u27E8\u22EE\u27E9",
         determinant: "|::|",
-        default: "(::)"
+        value: "(::)"
       },
       cases: "{:",
       infixop: {
@@ -134,11 +134,11 @@
         subtraction: "\u2212",
         multiplication: "\u22C5",
         implicit: "\u22C5",
-        default: "+"
+        value: "+"
       },
       punctuated: {
         text: "...",
-        default: ","
+        value: ","
       }
     },
 
@@ -224,10 +224,10 @@
       maction.attr[COMPLEXATTR] = maction.complexity;
       if (mml.type === "math") {
         var mrow = MML.mrow().With({
-          data: mml.data,
           complexity: mml.complexity,
           attrNames: [], attr: {}
         });
+        mrow.Append.apply(mrow,mml.data);
         for (var i = mml.attrNames.length-1, name; name = mml.attrNames[i]; i--) {
           if (name.substr(0,14) === "data-semantic-") {
             mrow.attr[name] = mml.attr[name];
@@ -265,10 +265,10 @@
         else if (this.COLLAPSE[type] && this.MARKER[type]) {
           var role = mml.attr["data-semantic-role"];
           var complexity = this.COLLAPSE[type];
-          if (typeof(complexity) !== "number") complexity = complexity[role] || complexity.default;
+          if (typeof(complexity) !== "number") complexity = complexity[role] || complexity.value;
           if (mml.complexity > complexity) {
             var marker = this.MARKER[type];
-            if (typeof(marker) !== "string") marker = marker[role] || marker.default;
+            if (typeof(marker) !== "string") marker = marker[role] || marker.value;
             mml = this.MakeAction(this.Marker(marker),mml);
           }
         }
@@ -348,7 +348,7 @@
     Collapse_appl: function (mml) {
       if (this.UncollapseChild(mml,2,2)) {
         var marker = this.MARKER.appl;
-        marker = marker[mml.attr["data-semantic-role"]] || marker.default;
+        marker = marker[mml.attr["data-semantic-role"]] || marker.value;
         mml = this.MakeAction(this.Marker(marker),mml);
       }
       return mml;

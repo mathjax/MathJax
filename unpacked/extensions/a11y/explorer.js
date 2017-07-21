@@ -32,12 +32,12 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
   });
 
   var Assistive = MathJax.Extension.explorer = {
-    version: '1.2.2',
+    version: '1.2.3',
     dependents: [],            // the extensions that depend on this one
     //
     // Default configurations.
     //
-    default: {
+    defaults: {
       walker: 'syntactic',
       highlight: 'none',
       background: 'blue',
@@ -56,7 +56,7 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
     },
 
     addDefaults: function() {
-      var defaults = MathJax.Hub.CombineConfig('explorer', Assistive.default);
+      var defaults = MathJax.Hub.CombineConfig('explorer', Assistive.defaults);
       var keys = Object.keys(defaults);
       for (var i = 0, key; key = keys[i]; i++) {
         if (typeof(SETTINGS[Assistive.prefix + key]) === 'undefined') {
