@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("br","TeX",{
-        version: "2.7.1",
+        version: "2.7.2-beta.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Briataenn digeri\u00F1 a re pe briataenn serri\u00F1 diank",

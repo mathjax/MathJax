@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("pt-br","HTML-CSS",{
-        version: "2.7.1",
+        version: "2.7.2-beta.0",
         isLoaded: true,
         strings: {
           LoadWebFont: "Carregando fonte baseada em web %1",

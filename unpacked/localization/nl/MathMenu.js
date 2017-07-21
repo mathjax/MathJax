@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("nl","MathMenu",{
-        version: "2.7.1",
+        version: "2.7.2-beta.0",
         isLoaded: true,
         strings: {
           Show: "Wiskunde weergeven als",

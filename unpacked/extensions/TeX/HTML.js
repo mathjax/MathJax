@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/HTML"] = {
-  version: "2.7.1"
+  version: "2.7.2-beta.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {

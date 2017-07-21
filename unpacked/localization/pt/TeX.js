@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("pt","TeX",{
-        version: "2.7.1",
+        version: "2.7.2-beta.0",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Chaveta de abertura a mais ou chaveta de fecho a menos",
