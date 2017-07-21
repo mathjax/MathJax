@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("diq","MathML",{version:"2.7.1",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/diq/MathML.js");
+MathJax.Localization.addTranslation("diq","MathML",{version:"2.7.2-beta.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/diq/MathML.js");
