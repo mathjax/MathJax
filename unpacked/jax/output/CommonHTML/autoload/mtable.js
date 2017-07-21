@@ -220,7 +220,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         for (var j = 0, M = row.length; j < M; j++) {
           var s = (rdata.type === "mtr" ? 0 : LABEL);
           var mtd = rdata.data[j-s] || {CHTML: CHTML.BBOX.zero()};
-          cell = row[j].style; cbox = mtd.CHTML;
+          var cell = row[j].style; cbox = mtd.CHTML;
           //
           //  Space and borders between columns
           //

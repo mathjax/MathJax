@@ -395,7 +395,7 @@
     
     preTranslate: function (state) {
       var scripts = state.jax[this.id], i, m = scripts.length,
-          script, prev, node, test, span, jax, ex, em;
+          script, prev, node, test, span, jax, ex, em, scale;
       //
       //  Get linebreaking information
       //
@@ -1354,7 +1354,7 @@
     },
     combine: function (cbox,x,y) {
       cbox.X = x; cbox.Y = y;  // save for use with line breaking
-      scale = cbox.rscale;
+      var scale = cbox.rscale;
       if (x + scale*cbox.r > this.r) this.r = x + scale*cbox.r;
       if (x + scale*cbox.l < this.l) this.l = x + scale*cbox.l;
       if (x + scale*(cbox.w+(cbox.L||0)+(cbox.R||0)) > this.w)
@@ -1367,7 +1367,7 @@
       if (scale*cbox.b - y > this.b) this.b = scale*cbox.b - y;
     },
     append: function (cbox) {
-      scale = cbox.rscale; var x = this.w;
+      var scale = cbox.rscale; var x = this.w;
       if (x + scale*cbox.r > this.r) this.r = x + scale*cbox.r;
       if (x + scale*cbox.l < this.l) this.l = x + scale*cbox.l;
       this.w += scale*(cbox.w+(cbox.L||0)+(cbox.R||0)) ;

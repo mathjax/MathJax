@@ -34,6 +34,8 @@
   var SVGNS   = "http://www.w3.org/2000/svg";
   var XLINKNS = "http://www.w3.org/1999/xlink";
 
+  var EVENT, TOUCH, HOVER; // filled in later
+
   //
   //  Get the URL of the page (for use with xlink:href) when there
   //  is a <base> element on the page.
@@ -2059,7 +2061,7 @@
 	  }
 	} else {
 	  if (!sub) {
-	    values = this.getValues("displaystyle","texprimestyle");
+	    var values = this.getValues("displaystyle","texprimestyle");
 	    p = SVG.TeX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
 	    u = Math.max(u,p*scale,sup.d+(1/4)*x_height,min.superscriptshift);
             svg.Add(sup,x+delta,u);
