@@ -31,6 +31,10 @@ MathJax.Ajax.Preloading(
   "[MathJax]/extensions/a11y/accessibility-menu.js"
 );
 
+MathJax.Hub.Config({
+  extensions: ['[a11y]/accessibility-menu.js']
+});
+
 MathJax.InputJax.MathML=MathJax.InputJax({id:"MathML",version:"2.7.2-beta.0",directory:MathJax.InputJax.directory+"/MathML",extensionDir:MathJax.InputJax.extensionDir+"/MathML",entityDir:MathJax.InputJax.directory+"/MathML/entities",config:{useMathMLspacing:false}});MathJax.InputJax.MathML.Register("math/mml");MathJax.InputJax.MathML.loadComplete("config.js");
 MathJax.OutputJax.CommonHTML=MathJax.OutputJax({id:"CommonHTML",version:"2.7.2-beta.0",directory:MathJax.OutputJax.directory+"/CommonHTML",extensionDir:MathJax.OutputJax.extensionDir+"/CommonHTML",autoloadDir:MathJax.OutputJax.directory+"/CommonHTML/autoload",fontDir:MathJax.OutputJax.directory+"/CommonHTML/fonts",webfontDir:MathJax.OutputJax.fontDir+"/HTML-CSS",config:{matchFontHeight:true,scale:100,minScaleAdjust:50,mtextFontInherit:false,undefinedFamily:"STIXGeneral,'Cambria Math','Arial Unicode MS',serif",EqnChunk:(MathJax.Hub.Browser.isMobile?20:100),EqnChunkFactor:1.5,EqnChunkDelay:100,linebreaks:{automatic:false,width:"container"}}});if(!MathJax.Hub.config.delayJaxRegistration){MathJax.OutputJax.CommonHTML.Register("jax/mml")}MathJax.OutputJax.CommonHTML.loadComplete("config.js");
 MathJax.OutputJax.PreviewHTML=MathJax.OutputJax({id:"PreviewHTML",version:"2.7.2-beta.0",directory:MathJax.OutputJax.directory+"/PreviewHTML",extensionDir:MathJax.OutputJax.extensionDir+"/PreviewHTML",noFastPreview:true,config:{scale:100,minScaleAdjust:50,mtextFontInherit:false,linebreaks:{automatic:false,width:"container"}}});if(!MathJax.Hub.config.delayJaxRegistration){MathJax.OutputJax.PreviewHTML.Register("jax/mml")}MathJax.OutputJax.PreviewHTML.loadComplete("config.js");

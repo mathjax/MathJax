@@ -41,6 +41,10 @@ MathJax.Ajax.Preloading(
   "[MathJax]/extensions/a11y/accessibility-menu.js"
 );
 
+MathJax.Hub.Config({
+  extensions: ['[a11y]/accessibility-menu.js']
+});
+
 MathJax.InputJax.TeX=MathJax.InputJax({id:"TeX",version:"2.7.2-beta.0",directory:MathJax.InputJax.directory+"/TeX",extensionDir:MathJax.InputJax.extensionDir+"/TeX",config:{TagSide:"right",TagIndent:"0.8em",MultLineWidth:"85%",equationNumbers:{autoNumber:"none",formatNumber:function(a){return a},formatTag:function(a){return"("+a+")"},formatID:function(a){return"mjx-eqn-"+String(a).replace(/[:"'<>&]/g,"")},formatURL:function(b,a){return a+"#"+escape(b)},useLabelIds:true}},resetEquationNumbers:function(){}});MathJax.InputJax.TeX.Register("math/tex");MathJax.InputJax.TeX.loadComplete("config.js");
 MathJax.InputJax.MathML=MathJax.InputJax({id:"MathML",version:"2.7.2-beta.0",directory:MathJax.InputJax.directory+"/MathML",extensionDir:MathJax.InputJax.extensionDir+"/MathML",entityDir:MathJax.InputJax.directory+"/MathML/entities",config:{useMathMLspacing:false}});MathJax.InputJax.MathML.Register("math/mml");MathJax.InputJax.MathML.loadComplete("config.js");
 MathJax.InputJax.AsciiMath=MathJax.InputJax({id:"AsciiMath",version:"2.7.2-beta.0",directory:MathJax.InputJax.directory+"/AsciiMath",extensionDir:MathJax.InputJax.extensionDir+"/AsciiMath",config:{fixphi:true,useMathMLspacing:true,displaystyle:true,decimalsign:"."}});MathJax.InputJax.AsciiMath.Register("math/asciimath");MathJax.InputJax.AsciiMath.loadComplete("config.js");
