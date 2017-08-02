@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("qqq","FontWarnings",{
-        version: "2.7.2-beta.0",
+        version: "2.7.2-beta.1",
         isLoaded: true,
         strings: {
           webFont: "This warning is displayed by the FontWarnings extension when web-based fonts are used.",

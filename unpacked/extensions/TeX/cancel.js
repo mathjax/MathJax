@@ -32,7 +32,7 @@
  */
 
 MathJax.Extension["TeX/cancel"] = {
-  version: "2.7.2-beta.0",
+  version: "2.7.2-beta.1",
 
   //
   //  The attributes allowed in \enclose{notation}[attributes]{math}

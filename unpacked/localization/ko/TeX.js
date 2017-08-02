@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ko","TeX",{
-        version: "2.7.2-beta.0",
+        version: "2.7.2-beta.1",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\uB2EB\uD788\uC9C0 \uC54A\uC740 \uC5EC\uB294 \uAD04\uD638\uAC00 \uC788\uC2B5\uB2C8\uB2E4.",

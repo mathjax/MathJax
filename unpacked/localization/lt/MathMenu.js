@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("lt","MathMenu",{
-        version: "2.7.2-beta.0",
+        version: "2.7.2-beta.1",
         isLoaded: true,
         strings: {
           Show: "Rodyti matematik\u0105 kaip",

@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("qqq","HelpDialog",{
-        version: "2.7.2-beta.0",
+        version: "2.7.2-beta.1",
         isLoaded: true,
         strings: {
           Help: "This is the title displayed at the top of the MathJax Help dialog.",

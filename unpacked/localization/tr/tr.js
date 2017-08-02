@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("tr",null,{
   menuTitle: "T\u00FCrk\u00E7e",
-  version: "2.7.2-beta.0",
+  version: "2.7.2-beta.1",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.2-beta.0",
+        version: "2.7.2-beta.1",
         isLoaded: true,
         strings: {
           MathProcessingError: "Matematik i\u015Fleme hatas\u0131",
