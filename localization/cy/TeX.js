@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("cy","TeX",{version:"2.7.2-beta.0",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/cy/TeX.js");
+MathJax.Localization.addTranslation("cy","TeX",{version:"2.7.2-beta.1",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/cy/TeX.js");
