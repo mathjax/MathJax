@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("it","TeX",{
-        version: "2.7.2-beta.0",
+        version: "2.7.2-beta.1",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Graffa d'apertura in pi\u00F9 o di chiusura mancante",
