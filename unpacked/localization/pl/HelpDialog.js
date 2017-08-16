@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/pl/HelpDialog.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("pl","HelpDialog",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Help: "Pomoc MathJax",
@@ -30,7 +30,8 @@ MathJax.Localization.addTranslation("pl","HelpDialog",{
           Language: "*J\u0119zyk* pozwala wybra\u0107 j\u0119zyk, w jakim wy\u015Bwietlane jest menu oraz komunikaty o b\u0142\u0119dach.",
           Zoom: "*Powi\u0119kszanie*: Je\u017Celi masz problem z odczytaniem wzoru, MathJax mo\u017Ce zwi\u0119kszy\u0107 wielko\u015B\u0107 liter, aby \u0142atwiej by\u0142o go odczyta\u0107.",
           Accessibilty: "*Dost\u0119pno\u015B\u0107*: MathJax dzia\u0142a automatycznie z czytnikami ekranowymi, aby wzory matematyczne by\u0142y dost\u0119pne dla niedowidz\u0105cych.",
-          Fonts: "*Czcionki*: MathJax u\u017Cyje czcionek matematycznych zainstalowanych w Twoim systemie. Je\u017Celi ich nie masz, to u\u017Cyje czcionek Web. Nie jest to wymagane, ale lokalnie dost\u0119pne czcionki przyspiesz\u0105 dzia\u0142anie MathJax. Sugerujemy zainstalowanie czcionek [STIX](%1)."
+          Fonts: "*Czcionki*: MathJax u\u017Cyje czcionek matematycznych zainstalowanych w Twoim systemie. Je\u017Celi ich nie masz, to u\u017Cyje czcionek Web. Nie jest to wymagane, ale lokalnie dost\u0119pne czcionki przyspiesz\u0105 dzia\u0142anie MathJax. Sugerujemy zainstalowanie czcionek [STIX](%1).",
+          CloseDialog: "Zamknij okno pomocy"
         }
 });
 

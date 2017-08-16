@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/cs/cs.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("cs",null,{
   menuTitle: "\u010De\u0161tina",
-  version: "2.7.2-beta.1",
+  version: "2.7.2",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax nalezl cookie u\u017Eivatelsk\u00E9 konfigurace obsahuj\u00EDc\u00ED spustiteln\u00FD k\u00F3d. Chcete ho spustit?\n\n(Pokud jste cookie nenastavili sami, m\u011Bli byste stisknout Storno.)",
@@ -36,7 +36,8 @@ MathJax.Localization.addTranslation("cs",null,{
           Processing: "Zpracov\u00E1v\u00E1 se",
           TypesetMath: "S\u00E1z\u00ED se matematika: %1 %%",
           Typesetting: "S\u00E1z\u00ED se",
-          MathJaxNotSupported: "V\u00E1\u0161 prohl\u00ED\u017Ee\u010D nepodporuje MathJax"
+          MathJaxNotSupported: "V\u00E1\u0161 prohl\u00ED\u017Ee\u010D nepodporuje MathJax",
+          ErrorTips: "Tipy pro lad\u011Bn\u00ED: pou\u017Eijte %%1, prozkoumejte %%2 v konzoli prohl\u00ED\u017Ee\u010De"
         }
     },
     "FontWarnings": {},

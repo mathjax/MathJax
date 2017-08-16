@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/ast/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ast","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Show: "Ver les f\u00F3rmules como",
@@ -100,7 +100,11 @@ MathJax.Localization.addTranslation("ast","MathMenu",{
           IE9warning: "El men\u00FA contestual de MathJax tar\u00E1 desactiv\u00E1u, pero pue facer Alt-Clic nuna espresi\u00F3n pa ver el men\u00FA MathJax.",
           NoOriginalForm: "Nun ta disponible denguna forma orixinal",
           Close: "Zarrar",
-          EqSource: "C\u00F3digu fonte d'ecuaci\u00F3n MathJax"
+          EqSource: "C\u00F3digu fonte d'ecuaci\u00F3n MathJax",
+          CloseAboutDialog: "Zarrar el di\u00E1logu de tocante a MathJax",
+          FastPreview: "Vista previa r\u00E1pida",
+          AssistiveMML: "Asistencia MathML",
+          InTabOrder: "Incluir nel orde de lling\u00FCetes"
         }
 });
 

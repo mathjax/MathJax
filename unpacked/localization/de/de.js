@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/de/de.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("de",null,{
   menuTitle: "Deutsch",
-  version: "2.7.2-beta.1",
+  version: "2.7.2",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax hat eine Cookie mit ausf\u00FChrbaren Code gefunden. Soll dieser Code ausgef\u00FChrt werden?\n\n(Klicken Sie 'Abbrechen' falls Sie das Cookie nicht selber akzeptiert haben.)",
@@ -36,7 +36,8 @@ MathJax.Localization.addTranslation("de",null,{
           Processing: "Verarbeite",
           TypesetMath: "mathematischer Ausdruck wird gesetzt: %1%%",
           Typesetting: "Formelsatz",
-          MathJaxNotSupported: "Ihr Webbrowser unterst\u00FCtzt MathJax nicht"
+          MathJaxNotSupported: "Ihr Webbrowser unterst\u00FCtzt MathJax nicht",
+          ErrorTips: "Fehlerbehebungs-Tipps: Verwende %%1, pr\u00FCfe %%2 in der Browserkonsole"
         }
     },
     "FontWarnings": {},

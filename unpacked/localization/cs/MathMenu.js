@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/cs/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("cs","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Show: "Zobrazit matematiku jako",
@@ -100,7 +100,11 @@ MathJax.Localization.addTranslation("cs","MathMenu",{
           IE9warning: "T\u00EDmto vypnete kontextov\u00E9 menu MathJaxu, ale budete si ho moci zobrazit pomoc\u00ED Alt+kliknut\u00ED na rovnici.",
           NoOriginalForm: "P\u016Fvodn\u00ED podoba nen\u00ED dostupn\u00E1",
           Close: "Zav\u0159\u00EDt",
-          EqSource: "Zdroj rovnice MathJax"
+          EqSource: "Zdroj rovnice MathJax",
+          CloseAboutDialog: "Zav\u0159\u00EDt okno o MathJaxu",
+          FastPreview: "Rychl\u00FD n\u00E1hled",
+          AssistiveMML: "Asistivn\u00ED MathML",
+          InTabOrder: "Za\u0159adit do posloupnosti tabul\u00E1toru"
         }
 });
 

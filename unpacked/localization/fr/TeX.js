@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/fr/TeX.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("fr","TeX",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Accolade ouvrante superflue ou accolade fermante manquante",
@@ -88,7 +88,7 @@ MathJax.Localization.addTranslation("fr","TeX",{
           MissingCS: "%1 doit \u00EAtre suivi d'une s\u00E9quence de contr\u00F4le",
           CantUseHash2: "Usage du caract\u00E8re # non autoris\u00E9 dans le mod\u00E8le pour la s\u00E9quence de contr\u00F4le %1",
           SequentialParam: "Les param\u00E8tres de la s\u00E9quence de contr\u00F4le %1 doivent \u00EAtre \u00E9num\u00E9r\u00E9s de fa\u00E7on s\u00E9quentielle",
-          MissingReplacementString: "Chaine de caract\u00E8re de remplacement manquante pour la d\u00E9finition %1",
+          MissingReplacementString: "Texte de remplacement manquant pour la d\u00E9finition %1",
           MismatchUseDef: "L\u2019utilisation de la commande %1 ne correspond pas \u00E0 sa d\u00E9finition",
           RunawayArgument: "Argument non termin\u00E9 pour la commande %1?",
           NoClosingDelim: "Impossible de trouver le d\u00E9limiteur fermant pour la commande %1"

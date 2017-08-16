@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/fr/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@
  *
  */
 MathJax.Localization.addTranslation("fr","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Show: "Afficher sous forme",
           MathMLcode: "Code MathML",
           OriginalMathML: "MathML d\u2019origine",
           TeXCommands: "Commandes TeX",
-          AsciiMathInput: "entr\u00E9e AsciiMathML",
+          AsciiMathInput: "Entr\u00E9e AsciiMathML",
           Original: "Format d\u2019origine",
           ErrorMessage: "Message d\u2019erreur",
           Annotation: "Annotation",
@@ -100,7 +100,11 @@ MathJax.Localization.addTranslation("fr","MathMenu",{
           IE9warning: "Le menu contextuel MathJax sera d\u00E9sactiv\u00E9, mais \u00E0 la place, vous pouvez Alt-cliquer sur une expression pour obtenir le menu MathJax.",
           NoOriginalForm: "Aucun format d\u2019origine disponible",
           Close: "Fermer",
-          EqSource: "Source de l\u2019\u00E9quation MathJax"
+          EqSource: "Source de l\u2019\u00E9quation MathJax",
+          CloseAboutDialog: "Fermer la bo\u00EEte de dialogue \u00C0 propos de MathJax",
+          FastPreview: "Aper\u00E7u rapide",
+          AssistiveMML: "MathML auxiliaire",
+          InTabOrder: "Inclure dans l\u2019ordre des onglets"
         }
 });
 

@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/ko/TeX.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ko","TeX",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\uB2EB\uD788\uC9C0 \uC54A\uC740 \uC5EC\uB294 \uAD04\uD638\uAC00 \uC788\uC2B5\uB2C8\uB2E4.",
@@ -55,7 +55,11 @@ MathJax.Localization.addTranslation("ko","TeX",{
           NoClosingChar: "\uB2EB\uB294 \uAD04\uD638 %1\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4",
           IllegalControlSequenceName: "%1\uC5D0 \uB300\uD55C \uC81C\uC5B4 \uC2DC\uD000\uC2A4 \uC774\uB984\uC774 \uC798\uBABB\uB418\uC5C8\uC2B5\uB2C8\uB2E4",
           IllegalParamNumber: "%1\uC5D0 \uC9C0\uC815\uB41C \uBCC0\uC218 \uC218\uAC00 \uC798\uBABB\uB418\uC5C8\uC2B5\uB2C8\uB2E4",
-          CantUseHash2: "%1\uC5D0 \uB300\uD55C \uD15C\uD50C\uB9BF\uC5D0 #\uC758 \uC0AC\uC6A9\uC774 \uC798\uBABB\uB418\uC5C8\uC2B5\uB2C8\uB2E4"
+          CantUseHash2: "%1\uC5D0 \uB300\uD55C \uD15C\uD50C\uB9BF\uC5D0 #\uC758 \uC0AC\uC6A9\uC774 \uC798\uBABB\uB418\uC5C8\uC2B5\uB2C8\uB2E4",
+          UndefinedControlSequence: "\uC815\uC758\uB418\uC9C0 \uC54A\uC740 \uCEE8\uD2B8\uB864 \uC2DC\uD000\uC2A4 %1",
+          MathNotTerminated: "\uD14D\uC2A4\uD2B8 \uC0C1\uC790\uC5D0\uC11C \uC218\uC2DD\uC774 \uC644\uC131\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4",
+          MissingCS: "%1 \uC55E\uC5D0 \uCEE8\uD2B8\uB864 \uC2DC\uD000\uC2A4\uAC00 \uC640\uC57C \uD569\uB2C8\uB2E4",
+          MismatchUseDef: "%1\uC758 \uC0AC\uC6A9\uC774 \uADF8\uAC83\uC758 \uC815\uC758\uC640 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4"
         }
 });
 

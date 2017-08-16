@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/diq/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@
  *
  */
 MathJax.Localization.addTranslation("diq","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
-          Show: "Matematiki ya b\u0131asne",
-          MathMLcode: "MathML kode",
+          Show: "Zey tebir\u00EA matematik\u00EAni b\u0131mocne",
+          MathMLcode: "MathML kod",
           OriginalMathML: "Original MathML",
           TeXCommands: "Direktif\u00EA TeXi",
           AsciiMathInput: "Dekerd\u0131\u015F\u00EA AsciiMathML",
@@ -49,7 +49,7 @@ MathJax.Localization.addTranslation("diq","MathMenu",{
           Shift: "Shift",
           ZoomFactor: "Faktora zoomi",
           Renderer: "Matematik v\u0131ra\u015Fto\u011F",
-          MenuEvents: "Hedisey menuy",
+          MenuEvents: "Hedisey\u00EA menuyi",
           MouseEvents: "Faaliyet\u00EA meriy",
           MenuAndMouse: "Faaliyet\u00EA meriy u menuy",
           FontPrefs: "Tercih\u00E9 qelem",

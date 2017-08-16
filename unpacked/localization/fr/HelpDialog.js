@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/fr/HelpDialog.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("fr","HelpDialog",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Help: "Aide MathJax",
@@ -30,7 +30,8 @@ MathJax.Localization.addTranslation("fr","HelpDialog",{
           Language: "*Langue* vous laisse s\u00E9lectionner la langue utilis\u00E9e par MathJax pour ses menus et ses messages d\u2019avertissement.",
           Zoom: "*Zoom des maths*: Si vous avez des difficult\u00E9s \u00E0 lire une \u00E9quation, MathJax peut l\u2019agrandir pour vous aider \u00E0 mieux la voir.",
           Accessibilty: "*Accessibilit\u00E9*: MathJax travaillera automatiquement avec les lecteurs d\u2019\u00E9cran pour rendre les math\u00E9matiques accessibles aux malvoyants.",
-          Fonts: "*Polices*: MathJax utilisera certaines polices math\u00E9matiques si elles sont install\u00E9es sur votre ordinateur\u202F; sinon, il utilisera les polices trouv\u00E9es sur le web. Bien que ce ne soit pas obligatoire, des polices install\u00E9es localement acc\u00E9l\u00E9reront la composition. Nous vous sugg\u00E9rons d\u2019installer les [polices STIX](%1)."
+          Fonts: "*Polices*: MathJax utilisera certaines polices math\u00E9matiques si elles sont install\u00E9es sur votre ordinateur\u202F; sinon, il utilisera les polices trouv\u00E9es sur le web. Bien que ce ne soit pas obligatoire, des polices install\u00E9es localement acc\u00E9l\u00E9reront la composition. Nous vous sugg\u00E9rons d\u2019installer les [polices STIX](%1).",
+          CloseDialog: "Fermer la bo\u00EEte de dialogue d\u2019aide"
         }
 });
 

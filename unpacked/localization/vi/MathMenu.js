@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/vi/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("vi","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Show: "Xem To\u00E1n D\u01B0\u1EDBi d\u1EA1ng",
@@ -100,7 +100,11 @@ MathJax.Localization.addTranslation("vi","MathMenu",{
           IE9warning: "Tr\u00ECnh \u0111\u01A1n ng\u1EEF c\u1EA3nh MathJax s\u1EBD b\u1ECB v\u00F4 hi\u1EC7u, nh\u01B0ng b\u1EA1n c\u00F3 th\u1EC3 b\u1EA5m gi\u1EEF Alt v\u00E0 nh\u1EA5n chu\u1ED9t v\u00E0o m\u1ED9t bi\u1EC3u th\u1EE9c \u0111\u1EC3 m\u1EDF tr\u00ECnh \u0111\u01A1n MathJax thay th\u1EBF.",
           NoOriginalForm: "H\u00ECnh th\u1EE9c g\u1ED1c kh\u00F4ng c\u00F3 s\u1EB5n",
           Close: "\u0110\u00F3ng",
-          EqSource: "M\u00E3 ngu\u1ED3n C\u00F4ng th\u1EE9c MathJax"
+          EqSource: "M\u00E3 ngu\u1ED3n C\u00F4ng th\u1EE9c MathJax",
+          CloseAboutDialog: "\u0110\u00F3ng h\u1ED9p tho\u1EA1i gi\u1EDBi thi\u1EC7u v\u1EC1 MathJax",
+          FastPreview: "Xem tr\u01B0\u1EDBc nhanh",
+          AssistiveMML: "MathML tr\u1EE3 n\u0103ng",
+          InTabOrder: "Bao g\u1ED3m trong th\u1EE9 t\u1EF1 Tab"
         }
 });
 
