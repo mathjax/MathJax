@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/nl/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("nl","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Show: "Wiskunde weergeven als",
@@ -100,7 +100,11 @@ MathJax.Localization.addTranslation("nl","MathMenu",{
           IE9warning: "Het context menu van MathJax wordt uitgeschakeld, maar u kunt in plaats daarvan door Alt-klikken op een expressie het MathJax menu weergeven.",
           NoOriginalForm: "Geen oorspronkelijke vorm beschikbaar",
           Close: "Sluiten",
-          EqSource: "MathJax Vergelijking Bron"
+          EqSource: "MathJax Vergelijking Bron",
+          CloseAboutDialog: "Over Mathjax sluiten",
+          FastPreview: "Snell voorvertoning",
+          AssistiveMML: "Assistieve MathML",
+          InTabOrder: "Opnemen in tabvolgorde"
         }
 });
 

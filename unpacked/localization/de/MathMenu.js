@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/de/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("de","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Show: "Zeige mathematischen Ausdruck als",
@@ -100,7 +100,11 @@ MathJax.Localization.addTranslation("de","MathMenu",{
           IE9warning: "Das MathJax-Kontextmen\u00FC wird deaktiviert, aber du kannst bei einem Ausdruck w\u00E4hrend des Mausklicks die Alt-Taste gedr\u00FCckt halten, um stattdessen das MathJax-Men\u00FC zu erhalten.",
           NoOriginalForm: "Keine Originalformel verf\u00FCgbar",
           Close: "Schlie\u00DFen",
-          EqSource: "MathJax-Gleichungsquelle"
+          EqSource: "MathJax-Gleichungsquelle",
+          CloseAboutDialog: "Dialog \u201E\u00DCber MathJax\u201C schlie\u00DFen",
+          FastPreview: "Schnelle Vorschau",
+          AssistiveMML: "Assistives MathML",
+          InTabOrder: "In Reiterreihenfolge einschlie\u00DFen"
         }
 });
 

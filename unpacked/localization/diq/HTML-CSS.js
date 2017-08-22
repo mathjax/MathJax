@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/diq/HTML-CSS.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@
  *
  */
 MathJax.Localization.addTranslation("diq","HTML-CSS",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
-
+          LoadWebFont: "Web font %1 bar beno",
+          CantLoadWebFont: "Font\u00EA web\u00EA %1'i bar n\u00EAb\u0131"
         }
 });
 

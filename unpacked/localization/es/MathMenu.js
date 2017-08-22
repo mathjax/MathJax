@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/es/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("es","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Show: "Mostrar las f\u00F3rmulas como",
@@ -83,9 +83,9 @@ MathJax.Localization.addTranslation("es","MathMenu",{
           wofforotffonts: "Tipos de letra WOFF u OTF",
           eotffonts: "Tipos de letra EOT",
           svgfonts: "Tipos de letra SVG",
-          WebkitNativeMMLWarning: "Tu navegador no parece soportar MathML de forma nativa, por lo que cambiar a la salida de MathML puede causar que la notaci\u00F3n matem\u00E1tica en la p\u00E1gina sea ilegible",
+          WebkitNativeMMLWarning: "Parece que tu navegador no admite MathML de manera nativa; si cambias a la salida MathML es posible que la notaci\u00F3n matem\u00E1tica de la p\u00E1gina se vuelva ilegible",
           MSIENativeMMLWarning: "Internet Explorer necesita el complemento MathPlayer para procesar la salida de MathML.",
-          OperaNativeMMLWarning: "El soporte de Opera para MathML es limitado, por lo que cambiar a la salida de MathML puede causar que algunas expresiones no se visualicen bien.",
+          OperaNativeMMLWarning: "La compatibilidad de Opera con MathML es limitada, por lo que cambiar a la salida de MathML puede causar que algunas expresiones no se visualicen bien.",
           SafariNativeMMLWarning: "El MathML nativo de tu navegador no implementa todas las funciones utilizadas por MathJax, por lo que algunas expresiones pueden no visualizarse correctamente.",
           FirefoxNativeMMLWarning: "El MathML nativo de tu navegador no implementa todas las funciones utilizadas por MathJax, por lo que algunas expresiones pueden no visualizarse correctamente.",
           MSIESVGWarning: "SVG no est\u00E1 implementado en Internet Explorer anterior a IE9 o cuando se est\u00E1 emulando IE8 o anteriores. Cambiar a la salida SVG har\u00E1 que la notaci\u00F3n matem\u00E1tica no se visualice correctamente.",
@@ -100,7 +100,11 @@ MathJax.Localization.addTranslation("es","MathMenu",{
           IE9warning: "El men\u00FA contextual de MathJax ser\u00E1 desactivado, pero puedes pulsar Alt-Clic en una expresi\u00F3n para obtener el men\u00FA MathJax en su lugar.",
           NoOriginalForm: "La forma original no est\u00E1 disponible",
           Close: "Cerrar",
-          EqSource: "C\u00F3digo de la ecuaci\u00F3n de MathJax"
+          EqSource: "C\u00F3digo de la ecuaci\u00F3n de MathJax",
+          CloseAboutDialog: "Cerrar el di\u00E1logo de acerca de MathJax",
+          FastPreview: "Vista previa r\u00E1pida",
+          AssistiveMML: "Asistente MathML",
+          InTabOrder: "Incluir en el Orden de Pesta\u00F1as"
         }
 });
 

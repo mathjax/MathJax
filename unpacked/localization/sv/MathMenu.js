@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/sv/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sv","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           MathMLcode: "MathML-kod",
@@ -100,7 +100,11 @@ MathJax.Localization.addTranslation("sv","MathMenu",{
           IE8warning: "Detta kommer att inaktivera MathJax-menyn och zoom-funktionen, men du kan Alt-klicka p\u00E5 ett uttryck att f\u00E5 MathJax-menyn ist\u00E4llet.\n\nVill du verkligen \u00E4ndra MathPlayer-inst\u00E4llningarna?",
           IE9warning: "MathJax kontextuella meny kommer att vara inaktiverade, men du kan Alt-Klicka p\u00E5 ett uttryck f\u00F6r att f\u00E5 MathJax-menyn ist\u00E4llet.",
           NoOriginalForm: "Inget ursprungligt format tillg\u00E4ngligt",
-          EqSource: "MathJax ekvationsk\u00E4lla"
+          EqSource: "MathJax ekvationsk\u00E4lla",
+          CloseAboutDialog: "St\u00E4ng dialogen \"Om MathJax\"",
+          FastPreview: "Snabb f\u00F6rhandsvisning",
+          AssistiveMML: "Assisterande MathML",
+          InTabOrder: "Inkludera i flikordning"
         }
 });
 

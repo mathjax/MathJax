@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/he/he.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@
 MathJax.Localization.addTranslation("he",null,{
   menuTitle: "\u05E2\u05D1\u05E8\u05D9\u05EA",
   fontDirection: "rtl",
-  version: "2.7.2-beta.1",
+  version: "2.7.2",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax \u05DE\u05E6\u05D0 \u05E2\u05D5\u05D2\u05D9\u05D9\u05EA \u05D4\u05D2\u05D3\u05E8\u05D5\u05EA \u05DE\u05E9\u05EA\u05DE\u05E9 \u05E9\u05DB\u05D5\u05DC\u05DC\u05EA \u05E7\u05D5\u05D3 \u05DC\u05D4\u05E8\u05E6\u05D4. \u05D4\u05D0\u05DD \u05DC\u05D4\u05E8\u05D9\u05E5 \u05D0\u05D5\u05EA\u05D5?\n\n(\u05D9\u05E9 \u05DC\u05DC\u05D7\u05D5\u05E5 \"\u05D1\u05D9\u05D8\u05D5\u05DC\" \u05D0\u05DC\u05D0 \u05D0\u05DD \u05D4\u05D2\u05D3\u05E8\u05EA \u05D0\u05EA \u05D4\u05E2\u05D5\u05D2\u05D9\u05D9\u05D4 \u05D1\u05E2\u05E6\u05DE\u05DA.)",
@@ -37,7 +37,8 @@ MathJax.Localization.addTranslation("he",null,{
           Processing: "\u05E2\u05D9\u05D1\u05D5\u05D3",
           TypesetMath: "\u05E1\u05D3\u05B7\u05E8 \u05E0\u05D5\u05E1\u05D7\u05D0\u05D5\u05EA: %1%%",
           Typesetting: "\u05E1\u05D3\u05B7\u05E8",
-          MathJaxNotSupported: "\u05D4\u05D3\u05E4\u05D3\u05E4\u05DF \u05E9\u05DC\u05DA \u05D0\u05D9\u05E0\u05D5 \u05EA\u05D5\u05DE\u05DA \u05D1\u05BEMathJax"
+          MathJaxNotSupported: "\u05D4\u05D3\u05E4\u05D3\u05E4\u05DF \u05E9\u05DC\u05DA \u05D0\u05D9\u05E0\u05D5 \u05EA\u05D5\u05DE\u05DA \u05D1\u05BEMathJax",
+          ErrorTips: "\u05E2\u05E6\u05D5\u05EA \u05DC\u05EA\u05D9\u05E7\u05D5\u05DF \u05E9\u05D2\u05D9\u05D0\u05D5\u05EA: \u05D4\u05E9\u05EA\u05DE\u05E9\u05D5 \u05D1\u05BE%%1, \u05D1\u05D3\u05E7\u05D5 \u05D0\u05EA %%2 \u05D1\u05DE\u05E1\u05D5\u05E3 \u05D4\u05D3\u05E4\u05D3\u05E4\u05DF"
         }
     },
     "FontWarnings": {},

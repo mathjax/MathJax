@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/he/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("he","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Show: "\u05DC\u05D4\u05E6\u05D9\u05D2 \u05E0\u05D5\u05E1\u05D7\u05D0\u05D5\u05EA \u05D1\u05EA\u05D5\u05E8",
@@ -100,7 +100,11 @@ MathJax.Localization.addTranslation("he","MathMenu",{
           IE9warning: "\u05EA\u05E4\u05E8\u05D9\u05D8 \u05D4\u05D4\u05E7\u05E9\u05E8 \u05E9\u05DC MathJax \u05D9\u05DB\u05D5\u05D1\u05D4, \u05D0\u05D1\u05DC \u05D0\u05E4\u05E9\u05E8 \u05DC\u05E2\u05E9\u05D5\u05EA \u05DC\u05D7\u05D9\u05E6\u05D4 \u05E2\u05DD Alt \u05E2\u05DC \u05D1\u05D9\u05D8\u05D5\u05D7 \u05DB\u05D3\u05D9 \u05DC\u05E7\u05D1\u05DC \u05D0\u05EA \u05EA\u05E4\u05E8\u05D9\u05D8 MathJax.",
           NoOriginalForm: "\u05D4\u05E6\u05D5\u05E8\u05D4 \u05D4\u05DE\u05E7\u05D5\u05E8\u05D9\u05EA \u05D0\u05D9\u05E0\u05D4 \u05D6\u05DE\u05D9\u05E0\u05D4",
           Close: "\u05E1\u05D2\u05D9\u05E8\u05D4",
-          EqSource: "\u05DE\u05E7\u05D5\u05E8 \u05D4\u05DE\u05E9\u05D5\u05D5\u05D0\u05D4 \u05E9\u05DC MathJax"
+          EqSource: "\u05DE\u05E7\u05D5\u05E8 \u05D4\u05DE\u05E9\u05D5\u05D5\u05D0\u05D4 \u05E9\u05DC MathJax",
+          CloseAboutDialog: "\u05E1\u05D2\u05D9\u05E8\u05EA \u05D7\u05DC\u05D5\u05DF \u05D3\u05D5\u05BE\u05E9\u05D9\u05D7 \u05D0\u05D5\u05D3\u05D5\u05EA MathJax",
+          FastPreview: "\u05EA\u05E6\u05D5\u05D2\u05D4 \u05DE\u05E7\u05D3\u05D9\u05DE\u05D4 \u05DE\u05D4\u05D9\u05E8\u05D4",
+          AssistiveMML: "MathML \u05E0\u05D2\u05D9\u05E9",
+          InTabOrder: "\u05DC\u05DB\u05DC\u05D5\u05DC \u05D1\u05E1\u05D3\u05E8 \u05D4\u05D8\u05D0\u05D1\u05D9\u05DD"
         }
 });
 
