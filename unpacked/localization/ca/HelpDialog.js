@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/ca/HelpDialog.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ca","HelpDialog",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Help: "Ajuda MathJax",
@@ -30,7 +30,8 @@ MathJax.Localization.addTranslation("ca","HelpDialog",{
           Language: "*Idioma* us permet seleccionar l'idioma emprat per MathJax en els seus men\u00FAs i missatges d'advert\u00E8ncia.",
           Zoom: "*Zoom*: Si teniu dificultats a l'hora de llegir una equaci\u00F3, MathJax pot ampliar-la per ajudar-vos a veure-la millor.",
           Accessibilty: "*Accessibilitat*: MathJax funciona autom\u00E0ticament amb lectors de pantalla, per a fer les expressions matem\u00E0tiques accessibles a aquells que tenen dificultats de visi\u00F3.",
-          Fonts: "*Fonts*: MathJax usa algunes fonts matem\u00E0tiques si estan instal\u00B7lades al vostre ordinador; si no les hi troba, usar\u00E0 fonts basades en la web. Encara que no \u00E9s necessari, si instal\u00B7leu les fonts localment, aix\u00F2i ajudar\u00E0 a qu\u00E8 la composici\u00F3 de la p\u00E0gina sigui m\u00E9s r\u00E0pida. Us suggerim que instal\u00B7leu les [fonts STIX](%1)."
+          Fonts: "*Fonts*: MathJax usa algunes fonts matem\u00E0tiques si estan instal\u00B7lades al vostre ordinador; si no les hi troba, usar\u00E0 fonts basades en la web. Encara que no \u00E9s necessari, si instal\u00B7leu les fonts localment, aix\u00F2i ajudar\u00E0 a qu\u00E8 la composici\u00F3 de la p\u00E0gina sigui m\u00E9s r\u00E0pida. Us suggerim que instal\u00B7leu les [fonts STIX](%1).",
+          CloseDialog: "Tanca el di\u00E0leg d'ajuda"
         }
 });
 

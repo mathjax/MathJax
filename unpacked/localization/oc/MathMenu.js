@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/oc/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("oc","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Show: "Afichar jos la forma",
@@ -80,7 +80,9 @@ MathJax.Localization.addTranslation("oc","MathMenu",{
           wofforotffonts: "poli\u00E7as woff o otf",
           eotffonts: "poli\u00E7as eot",
           svgfonts: "poli\u00E7as svg",
-          Close: "Tampar"
+          Close: "Tampar",
+          Scale: "Metre totes los maths a l\u2019escala\u2026",
+          CloseAboutDialog: "Tampar la b\u00F3stia de dial\u00F2g A prepaus de MathJax"
         }
 });
 

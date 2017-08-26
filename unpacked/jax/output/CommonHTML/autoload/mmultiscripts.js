@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
-  var VERSION = "2.7.2-beta.1";
+  var VERSION = "2.7.2";
   var MML = MathJax.ElementJax.mml,
       CHTML = MathJax.OutputJax.CommonHTML;
 

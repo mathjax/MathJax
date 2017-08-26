@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/da/HelpDialog.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("da","HelpDialog",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Help: "MathJax hj\u00E6lp",
@@ -30,7 +30,8 @@ MathJax.Localization.addTranslation("da","HelpDialog",{
           Language: "*Sprog* lader dig v\u00E6lge det sprog MathJax bruger i sine menuer og advarselsmeddelelser.",
           Zoom: "*Matematik zoom*: Hvis du har sv\u00E6rt ved at l\u00E6se en ligning, kan MathJax forst\u00F8rre den for at hj\u00E6lpe dig med at se den bedre.",
           Accessibilty: "*Tilg\u00E6ngelighed*: MathJax vil automatisk arbejde med sk\u00E6rml\u00E6sere for at g\u00F8re matematik tilg\u00E6ngeligt for synsh\u00E6mmede.",
-          Fonts: "*Skrifttyper*: MathJax vil bruge visse matematiske skrifttyper, hvis de er installeret p\u00E5 computeren. ellers vil det bruge web-baserede skrifttyper. Selvom det ikke er p\u00E5kr\u00E6vet, vil lokalt installerede skrifttyper fremskynde ops\u00E6tningen. Vi foresl\u00E5r at installere [STIX fonts](%1)."
+          Fonts: "*Skrifttyper*: MathJax vil bruge visse matematiske skrifttyper, hvis de er installeret p\u00E5 computeren. ellers vil det bruge web-baserede skrifttyper. Selvom det ikke er p\u00E5kr\u00E6vet, vil lokalt installerede skrifttyper fremskynde ops\u00E6tningen. Vi foresl\u00E5r at installere [STIX fonts](%1).",
+          CloseDialog: "Luk hj\u00E6lpedialogen"
         }
 });
 

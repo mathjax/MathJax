@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/sv/HelpDialog.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sv","HelpDialog",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Help: "MathJax-hj\u00E4lp",
@@ -30,7 +30,8 @@ MathJax.Localization.addTranslation("sv","HelpDialog",{
           Language: "*Spr\u00E5k* l\u00E5ter dig v\u00E4lja spr\u00E5ket som MathJax ska anv\u00E4nda f\u00F6r sina menyer och varningsmeddelanden.",
           Zoom: "*Matematik zoom*: Om du har sv\u00E5rt att l\u00E4sa en ekvation, kan MathJax f\u00F6rstora den f\u00F6r att hj\u00E4lpa dig se den b\u00E4ttre.",
           Accessibilty: "*Tillg\u00E4nglighet*: MathJax fungerar automatiskt med sk\u00E4rml\u00E4sare f\u00F6r att g\u00F6ra matematik tillg\u00E4nglig f\u00F6r synskadade.",
-          Fonts: "*Typsnitt*: MathJax kommer att anv\u00E4nda vissa matematiska teckensnitt om de \u00E4r installerade p\u00E5 din dator; annars anv\u00E4nder den webb-baserade teckensnitt. \u00C4ven om det inte kr\u00E4vs, kommer lokalt installerade teckensnitt att p\u00E5skynda typs\u00E4ttningen. Vi f\u00F6resl\u00E5r installation av [STIX-typsnitt](%1)."
+          Fonts: "*Typsnitt*: MathJax kommer att anv\u00E4nda vissa matematiska teckensnitt om de \u00E4r installerade p\u00E5 din dator; annars anv\u00E4nder den webb-baserade teckensnitt. \u00C4ven om det inte kr\u00E4vs, kommer lokalt installerade teckensnitt att p\u00E5skynda typs\u00E4ttningen. Vi f\u00F6resl\u00E5r installation av [STIX-typsnitt](%1).",
+          CloseDialog: "St\u00E4ng hj\u00E4lpdialogen"
         }
 });
 

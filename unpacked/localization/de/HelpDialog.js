@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/de/HelpDialog.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("de","HelpDialog",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Help: "MathJax Hilfe",
@@ -30,7 +30,8 @@ MathJax.Localization.addTranslation("de","HelpDialog",{
           Language: "*Sprache* l\u00E4sst dir die Sprache ausw\u00E4hlen, die von MathJax f\u00FCr die Men\u00FCs und Warnmeldungen verwendet wird.",
           Zoom: "*Zoom*: Wenn du beim Lesen einer Gleichung Schwierigkeiten hast, kann MathJax sie vergr\u00F6\u00DFern, damit du sie besser sehen kannst.",
           Accessibilty: "*Barrierefreiheit*: MathJax funktioniert automatisch mit Screenreadern, um die Inhalte f\u00FCr Sehbehinderte verf\u00FCgbar zu machen.",
-          Fonts: "*Schriftarten*: MathJax verwendet bestimmte Schriften, wenn sie auf deinem Computer installiert sind. Anderenfalls werden webbasierte Schriften verwendet. Obwohl das nicht erforderlich ist, beschleunigen lokal installierte Schriften die Schriftsetzung. Wir empfehlen die Installation der [STIX-Schriften](%1)."
+          Fonts: "*Schriftarten*: MathJax verwendet bestimmte Schriften, wenn sie auf deinem Computer installiert sind. Anderenfalls werden webbasierte Schriften verwendet. Obwohl das nicht erforderlich ist, beschleunigen lokal installierte Schriften die Schriftsetzung. Wir empfehlen die Installation der [STIX-Schriften](%1).",
+          CloseDialog: "Hilfedialog schlie\u00DFen"
         }
 });
 

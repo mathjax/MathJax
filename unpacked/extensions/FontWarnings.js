@@ -86,7 +86,7 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "2.7.2-beta.1";
+  var VERSION = "2.7.2";
 
   var STIXURL = "http://www.stixfonts.org/";
   var MATHJAXURL = "https://github.com/mathjax/MathJax/tree/master/fonts/HTML-CSS/TeX/otf";

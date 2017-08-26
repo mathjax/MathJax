@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/pt-br/MathMenu.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("pt-br","MathMenu",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Show: "Mostrar F\u00F3rmulas Como",
@@ -100,7 +100,11 @@ MathJax.Localization.addTranslation("pt-br","MathMenu",{
           IE9warning: "O menu de contexto do MathJax ser\u00E1 desabilitado, mas voc\u00EA pode usar Alt-Clique em uma express\u00E3o para obter o menu MathJax em vez disso.",
           NoOriginalForm: "Sem formulario original dispon\u00EDvel",
           Close: "Fechar",
-          EqSource: "Fonte da Equa\u00E7\u00E3o do MathJax"
+          EqSource: "Fonte da Equa\u00E7\u00E3o do MathJax",
+          CloseAboutDialog: "Fechar caixa sobre MathJax",
+          FastPreview: "Pr\u00E9-visualiza\u00E7\u00E3o r\u00E1pida",
+          AssistiveMML: "MAthML assistiva",
+          InTabOrder: "Incluir na ordem da guia"
         }
 });
 

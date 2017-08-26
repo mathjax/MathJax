@@ -27,7 +27,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,OUTPUT) {
-  var VERSION = "2.7.2-beta.1";
+  var VERSION = "2.7.2";
 
   var SIGNAL = MathJax.Callback.Signal("menu");  // signal for menu events
 

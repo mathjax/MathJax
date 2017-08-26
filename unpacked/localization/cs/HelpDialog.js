@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/cs/HelpDialog.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("cs","HelpDialog",{
-        version: "2.7.2-beta.1",
+        version: "2.7.2",
         isLoaded: true,
         strings: {
           Help: "N\u00E1pov\u011Bda k MathJaxu",
@@ -30,7 +30,8 @@ MathJax.Localization.addTranslation("cs","HelpDialog",{
           Language: "*Jazyk* v\u00E1m umo\u017En\u00ED zvolit si jazyk pou\u017E\u00EDvan\u00FD MathJaxem pro menu a chybov\u00E1 hl\u00E1\u0161en\u00ED.",
           Zoom: "*Matematick\u00FD zoom*: Pokud v\u00E1m d\u011Bl\u00E1 probl\u00E9my \u010Dten\u00ED rovnice, Mathjax v\u00E1m umo\u017En\u00ED ji zv\u011Bt\u0161it, abyste ji l\u00E9pe vid\u011Bli.",
           Accessibilty: "*P\u0159\u00EDstupnost*: MathJax automaticky funguje s \u010Dte\u010Dkami obrazovky, aby matematiku zp\u0159\u00EDstupnil zrakov\u011B posti\u017Een\u00FDm.",
-          Fonts: "*P\u00EDsma*: MathJax bude pou\u017E\u00EDvat jist\u00E1 matematick\u00E1 p\u00EDsma, pokud je m\u00E1te na po\u010D\u00EDta\u010Di nainstalovan\u00E9; v opa\u010Dn\u00E9m p\u0159\u00EDpad\u011B pou\u017Eije p\u00EDsma webov\u00E1. P\u0159esto\u017Ee to nen\u00ED nutn\u00E9, lok\u00E1ln\u011B nainstalovan\u00E1 p\u00EDsma urychl\u00ED sazbu. Doporu\u010Dujeme nainstalovat [p\u00EDsma STIX](%1)."
+          Fonts: "*P\u00EDsma*: MathJax bude pou\u017E\u00EDvat jist\u00E1 matematick\u00E1 p\u00EDsma, pokud je m\u00E1te na po\u010D\u00EDta\u010Di nainstalovan\u00E9; v opa\u010Dn\u00E9m p\u0159\u00EDpad\u011B pou\u017Eije p\u00EDsma webov\u00E1. P\u0159esto\u017Ee to nen\u00ED nutn\u00E9, lok\u00E1ln\u011B nainstalovan\u00E1 p\u00EDsma urychl\u00ED sazbu. Doporu\u010Dujeme nainstalovat [p\u00EDsma STIX](%1).",
+          CloseDialog: "Zav\u0159\u00EDt okno s n\u00E1pov\u011Bdou"
         }
 });
 
