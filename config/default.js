@@ -752,7 +752,7 @@ MathJax.Hub.Config({
     //
     //  When true, MathJax will not measure the widths or heights of the
     //  subexpressions as it creates its output, but instead will rely on
-    //  its internal calculautions based on teh bounding boxes of the
+    //  its internal calculations based on the bounding boxes of the
     //  characters it uses, and will only take measurements when it
     //  absolutely has to.  Since measurements cause display reflows, they
     //  slows down MathJax considerably, so without them MathJax runs
