@@ -196,7 +196,7 @@
   MathJax.Callback.Queue(
     HUB.Register.StartupHook("End Config",{}), // wait until config is complete
     ["Styles",AJAX,CONFIG.styles],
-    ["Post",HUB.Startup.signal,"HelpDialig Ready"],
+    ["Post",HUB.Startup.signal,"HelpDialog Ready"],
     ["loadComplete",AJAX,"[MathJax]/extensions/HelpDialog.js"]
   );
 
