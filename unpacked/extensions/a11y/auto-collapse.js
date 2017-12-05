@@ -179,7 +179,7 @@
     },
     
     //
-    //  Find the actions that need to be collapsed to acheive
+    //  Find the actions that need to be collapsed to achieve
     //  the correct width, and retain the sizes that would cause
     //  the equation to be expanded or collapsed further.
     //

@@ -1711,7 +1711,7 @@
 	  var values = this.getValues("height","depth","width","lspace","voffset"), X = 0, Y = 0;
 	  if (values.lspace)  {X = this.SVGlength2em(pad,values.lspace,mu)}
 	  if (values.voffset) {Y = this.SVGlength2em(pad,values.voffset,mu)}
-          var h = pad.h, d = pad.d, w = pad.w, y = pad.y; // these can change durring the Add() 
+          var h = pad.h, d = pad.d, w = pad.w, y = pad.y; // these can change during the Add() 
           svg.Add(pad,X,Y); svg.Clean();
           svg.h = h+y; svg.d = d-y; svg.w = w; svg.removeable = false;
 	  if (values.height !== "") {svg.h = this.SVGlength2em(svg,values.height,mu,"h",0)}

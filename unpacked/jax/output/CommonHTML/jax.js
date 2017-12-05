@@ -832,7 +832,7 @@
     //  After all remapping has been done, look up a character
     //  in the fonts for a given variant, chaining to other
     //  variants as needed.  Return an undefined character if
-    //  it isnt' found in the given variant.
+    //  it isn't found in the given variant.
     //
     lookupChar: function (variant,n,N) {
       var VARIANT = variant;
@@ -2243,7 +2243,7 @@
           bbox[i] = this.CHTMLbboxFor(i); bbox[i].x = bbox[i].y = 0;
           if (this.data[i]) bbox[i].stretch = this.data[i].CHTMLcanStretch("Horizontal");
           scale = (i === this.base ? 1 : bbox[i].rscale);
-          if (i !== this.base) {delete bbox[i].L; delete bbox[i].R} // these are overriden by CSS
+          if (i !== this.base) {delete bbox[i].L; delete bbox[i].R} // these are overridden by CSS
           W = Math.max(W,scale*(bbox[i].w + (bbox[i].L||0) + (bbox[i].R||0)));
           if (!bbox[i].stretch && W > w) w = W;
         }

@@ -127,7 +127,7 @@
                return;
              }
            } else {
-             Error("Problem aquiring MathJax version: status = " + request.status);
+             Error("Problem acquiring MathJax version: status = " + request.status);
            }
            loadDefaultMathJax();
          }
