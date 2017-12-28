@@ -989,7 +989,7 @@
         newenvironment:    ['Extension','newcommand'],
         renewenvironment:  ['Extension','newcommand'],
         def:               ['Extension','newcommand'],
-        let:               ['Extension','newcommand'],
+        'let':             ['Extension','newcommand'],
         
         verb:              ['Extension','verb'],
         
