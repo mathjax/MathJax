@@ -1554,6 +1554,7 @@ MathJax.Localization = {
     }
     var remap = this.strings[locale].remap;
     this.locale = remap ? remap : locale;
+    MathJax.Callback.Signal("Hub").Post(["Locale Reset", this.locale]);
   },
 
   //
