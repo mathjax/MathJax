@@ -41,7 +41,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       newenvironment:   'NewEnvironment',
       renewenvironment: 'NewEnvironment',
       def:              'MacroDef',
-      let:              'Let'
+      'let':            'Let'
     }
   },null,true);
 
