@@ -49,7 +49,7 @@
     ".MJXc-TeX-unknown-BI": {"font-family":UNDEFINEDFAMILY, "font-style":"italic", "font-weight":"bold"}
   });
 
-  CHTML.TEX = CHTML.TEXDEF;     // use default TeX paramaters
+  CHTML.TEX = CHTML.TEXDEF;     // use default TeX parameters
   CHTML.FONTDEF.TeX = {
     version: VERSION,
       

@@ -166,7 +166,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     //
-    //  Make a number or fraction preceeding an atom,
+    //  Make a number or fraction preceding an atom,
     //  or a subscript for an atom.
     //  
     ParseNumber: function () {

@@ -825,7 +825,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
         };
         //
         // Add this to the structure above after it is created to prevent recursion
-        //  when loading the initial localization file (before loading messsage is available)
+        //  when loading the initial localization file (before loading message is available)
         //
         this.loading[file].message = BASE.Message.File(name);
         script.onerror = timeout;  // doesn't work in IE and no apparent substitute
@@ -1359,7 +1359,7 @@ MathJax.Localization = {
     //  Split the string by the Markdown pattern
     //    (the text blocks are separated by
     //      c,stars,star-text,backtics,code-text,link-text,URL).
-    //  Start with teh first text string from the split.
+    //  Start with the first text string from the split.
     //
     var parts = phrase.split(this.markdownPattern);
     var string = parts[0];
@@ -1899,7 +1899,7 @@ MathJax.Hub = {
     postJax: null,   // pattern to remove from after math script tag
     displayAlign: 'center',       // how to align displayed equations (left, center, right)
     displayIndent: '0',           // indentation for displayed equations (when not centered)
-    preRemoveClass: 'MathJax_Preview', // class of objects to remove preceeding math script
+    preRemoveClass: 'MathJax_Preview', // class of objects to remove preceding math script
     showProcessingMessages: true, // display "Processing math: nn%" messages or not
     messageStyle: "normal",       // set to "none" or "simple" (for "Loading..." and "Processing...")
     delayStartupUntil: "none",    // set to "onload" to delay setup until the onload handler runs

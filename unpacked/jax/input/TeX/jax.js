@@ -2159,7 +2159,7 @@
     },
 
     /*
-     *  Replace macro paramters with their values
+     *  Replace macro parameters with their values
      */
     SubstituteArgs: function (args,string) {
       var text = ''; var newstring = ''; var c; var i = 0;

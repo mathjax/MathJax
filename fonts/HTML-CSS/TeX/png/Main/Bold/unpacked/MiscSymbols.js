@@ -4,7 +4,7 @@
  *  
  *  Defines the image size data needed for the HTML-CSS OutputJax
  *  to display mathematics using fallback images when the fonts
- *  are not availble to the client browser.
+ *  are not available to the client browser.
  *
  *  ---------------------------------------------------------------------
  *
