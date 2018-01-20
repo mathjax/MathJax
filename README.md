@@ -32,13 +32,9 @@ See <http://www.mathjax.org/> for additional details.
 ## Installation and Usage
 
 The MathJax installation and usage documentation is available in a
-separate GitHub repository at
+separate GitHub repository at https://github.com/mathjax/mathjax-docs
 
-      https://github.com/mathjax/mathjax-docs
-
-The HTML versions are now available at
-
-      http://docs.mathjax.org/
+The HTML versions are now available at http://docs.mathjax.org/
 
 where it is possible for you to submit corrections and modifications
 directly to the documentation on line.
