@@ -87,6 +87,10 @@
           "-o-transition": "none"
         },
         
+        ".MathJax_SVG > div": {
+          display: "inline-block"
+        },
+        
         ".mjx-svg-href": {
           fill: "blue", stroke: "blue"
         },
