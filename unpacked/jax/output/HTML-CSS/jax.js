@@ -1074,9 +1074,15 @@
     thickness2em: function (length,mu) {
       var thick = HTMLCSS.TeX.rule_thickness;
       if (length === MML.LINETHICKNESS.MEDIUM) {return thick}
-      if (length === MML.LINETHICKNESS.THIN) {return .67*thick}
-      if (length === MML.LINETHICKNESS.THICK) {return 1.67*thick}
+      if (length === MML.LINETHICKNESS.THIN)   {return .67*thick}
+      if (length === MML.LINETHICKNESS.THICK)  {return 1.67*thick}
       return this.length2em(length,mu,thick);
+    },
+    border2em: function (length,mu) {
+      if (length === MML.LINETHICKNESS.THIN)   {length = "1px"}
+      if (length === MML.LINETHICKNESS.MEDIUM) {length = "3px"}
+      if (length === MML.LINETHICKNESS.THICK)  {length = "5px"}
+      return this.length2em(length,mu);
     },
     
     getPadding: function (span) {
@@ -1094,7 +1100,7 @@
         var style = span.style[ID+"Style"];
         if (style) {
           has = true;
-          border[id] = this.length2em(span.style[ID+"Width"]);
+          border[id] = this.border2em(span.style[ID+"Width"] || MML.LINETHICKNESS.MEDIUM);
           css[ID] = [span.style[ID+"Width"],span.style[ID+"Style"],span.style[ID+"Color"]].join(" ");
         }
       }}
