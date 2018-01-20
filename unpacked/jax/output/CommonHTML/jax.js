@@ -1785,6 +1785,7 @@
     
     MML.chars.Augment({
       toCommonHTML: function (node,options) {
+        this.CHTML = null;
         if (options == null) options = {};
         var text = this.toString();
         if (options.remap) text = options.remap(text,options.remapchars);
