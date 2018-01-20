@@ -131,13 +131,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     /*
-     *  Routines to set the macro and environment definitions
-     *  (overridden by begingroup to make localized versions)
-     */
-    setDef: function (name,value) {value.isUser = true; TEXDEF.macros[name] = value},
-    setEnv: function (name,value) {value.isUser = true; TEXDEF.environment[name] = value},
-    
-    /*
      *  Get a CS name or give an error
      */
     GetCSname: function (cmd) {

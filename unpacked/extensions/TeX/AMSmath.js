@@ -224,7 +224,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
       var op = this.GetArgument(name);
       op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
-      TEX.Definitions.macros[cs] = ['Macro','\\mathop{\\rm '+op+'}'+limits];
+      this.setDef(cs, ['Macro', '\\mathop{\\rm '+op+'}'+limits]);
     },
     
     HandleOperatorName: function (name) {
