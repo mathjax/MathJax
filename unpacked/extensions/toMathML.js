@@ -56,7 +56,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
           skip = MML.skipAttributes, copy = MML.copyAttributes;
       var attr = [];
 
-      if (this.type === "math" && (!this.attr || !this.attr.xmlns))
+      if (this.type === "math" && (!this.attr || !('xmlns' in this.attr)))
         {attr.push('xmlns="http://www.w3.org/1998/Math/MathML"')}
       if (!this.attrNames) {
         for (var id in defaults) {if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {
