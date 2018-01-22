@@ -39,10 +39,6 @@ MathJax.Extension.tex2jax = {
       ['\\[','\\]']            //  be sure that you don't have an extra comma at the end)
     ],
 
-    balanceBraces: true,       // determines whether tex2jax requires braces to be
-                               // balanced within math delimiters (allows for nested
-                               // dollar signs).  Set to false to get pre-v2.0 compatibility.
-
     skipTags: ["script","noscript","style","textarea","pre","code","annotation","annotation-xml"],
                                // The names of the tags whose contents will not be
                                // scanned for math delimiters
