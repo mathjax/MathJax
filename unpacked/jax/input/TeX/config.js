@@ -41,8 +41,8 @@ MathJax.InputJax.TeX = MathJax.InputJax({
                            //  or "all" for all displayed equations
       formatNumber: function (n) {return n},
       formatTag:    function (n) {return '('+n+')'},
-      formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/[:"'<>&]/g,"")},
-      formatURL:    function (id,base) {return base+'#'+escape(id)},
+      formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/\s/g,"_")},
+      formatURL:    function (id,base) {return base+'#'+escapeURIComponent(id)},
       useLabelIds:  true
     }
   },
