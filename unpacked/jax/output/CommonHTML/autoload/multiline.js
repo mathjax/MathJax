@@ -172,7 +172,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     CHTMLaddWidth: function (i,info,scanW) {
       if (this.data[i]) {
         var bbox = this.data[i].CHTML;
-        scanW += bbox.w + (bbox.L||0) + (bbox.R||0);
+        scanW += (bbox.w + (bbox.L||0) + (bbox.R||0)) * (bbox.rscale || 1);
         info.W = info.scanW = scanW; info.w = 0;
       }
       return scanW;
