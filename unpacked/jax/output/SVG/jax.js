@@ -558,6 +558,12 @@
       if (length === MML.LINETHICKNESS.THICK)  {return 1.67*thick}
       return this.length2em(length,mu,thick);
     },
+    border2em: function (length,mu) {
+      if (length === MML.LINETHICKNESS.THIN)   {length = "1px"}
+      if (length === MML.LINETHICKNESS.MEDIUM) {length = "3px"}
+      if (length === MML.LINETHICKNESS.THICK)  {length = "5px"}
+      return this.length2em(length,mu);
+    },
 
     getPadding: function (styles) {
       var padding = {top:0, right:0, bottom:0, left:0}, has = false;
@@ -574,7 +580,7 @@
         var style = styles[ID+"Style"];
         if (style && style !== "none") {
           has = true;
-          border[id] = this.length2em(styles[ID+"Width"]);
+          border[id] = this.border2em(styles[ID+"Width"] || MML.LINETHICKNESS.MEDIUM);
           border[id+"Style"] = styles[ID+"Style"];
           border[id+"Color"] = styles[ID+"Color"];
           if (border[id+"Color"] === "initial") {border[id+"Color"] = ""}
