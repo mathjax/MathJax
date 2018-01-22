@@ -92,7 +92,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         );
       }
       cs = cs.substr(1); space = space.split(","); chr = parseInt(chr);
-      TEXDEF.macros[cs] = ['xArrow',chr,parseInt(space[0]),parseInt(space[1])];
+      this.setDef(cs, ['xArrow', chr, parseInt(space[0]), parseInt(space[1])]);
     }
   });
   

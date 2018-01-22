@@ -2163,6 +2163,13 @@
     },
 
     /*
+     *  Routines to set the macro and environment definitions
+     *  (overridden by begingroup to make localized versions)
+     */
+    setDef: function (name,value) {value.isUser = true; TEXDEF.macros[name] = value},
+    setEnv: function (name,value) {value.isUser = true; TEXDEF.environment[name] = value},
+    
+    /*
      *  Replace macro parameters with their values
      */
     SubstituteArgs: function (args,string) {
