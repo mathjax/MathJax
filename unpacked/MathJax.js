@@ -2706,7 +2706,7 @@ MathJax.Hub.Startup = {
   Hash: function () {
     if (MathJax.Hub.config.positionToHash && document.location.hash &&
         document.body && document.body.scrollIntoView) {
-      var name = document.location.hash.substr(1);
+      var name = decodeURIComponent(document.location.hash.substr(1));
       var target = document.getElementById(name);
       if (!target) {
         var a = document.getElementsByTagName("a");
