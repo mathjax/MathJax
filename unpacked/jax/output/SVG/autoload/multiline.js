@@ -310,6 +310,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       slice.Clean();
       if (this.href) {this.SVGaddHref(slice)}
       this.SVGhandleColor(slice);
+      if (start.length == 0) this.SVGhandleSpace(slice);
       svg.Add(slice,svg.w,0,true);
       return slice;
     },
