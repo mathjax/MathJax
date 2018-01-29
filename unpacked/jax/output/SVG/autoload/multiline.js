@@ -40,6 +40,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     badbreak:    [+200],
     auto:           [0],
     
+    maxwidth:     1.33,  // stop looking for breaks after this time the line-break width
     toobig:        800,
     nestfactor:    400,
     spacefactor:  -100,
@@ -162,7 +163,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Look through the line for breakpoints,
       //    (as long as we are not too far past the breaking width)
       //
-      while (i < m && info.scanW < 1.33*SVG.linebreakWidth) {
+      while (i < m && (info.scanW < PENALTY.maxwidth*SVG.linebreakWidth || info.w === 0)) {
         if (this.data[i]) {
           if (this.data[i].SVGbetterBreak(info,state)) {
             better = true; index = [i].concat(info.index); W = info.W; w = info.w;
@@ -370,7 +371,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Look through the line for breakpoints, including the open, close, and separators
       //    (as long as we are not too far past the breaking width)
       //
-      while (i < m && info.scanW < 1.33*SVG.linebreakWidth) {
+      while (i < m && (info.scanW < PENALTY.maxwidth*SVG.linebreakWidth || info.w === 0)) {
         var k = this.dataI[i];
         if (this.data[k]) {
           if (this.data[k].SVGbetterBreak(info,state)) {
