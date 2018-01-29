@@ -57,6 +57,7 @@
         }},[["div",{
           id: "MathJax_Font_Test",
           style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
+                  "min-width": 0, "max-width": "none",
                   padding:0, border:0, margin:0, whiteSpace:"nowrap",
                   textAlign:"left", textIndent:0, textTransform:"none",
                   lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
