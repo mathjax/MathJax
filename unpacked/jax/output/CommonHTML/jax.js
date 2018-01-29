@@ -2632,13 +2632,19 @@
         BBOX.clean();
         return node;
       },
-      CHTMLaddRoot: function () {return 0}
+      CHTMLaddRoot: function () {return 0},
+      CHTMLhandleBBox: function (node) {
+        var bbox = this.CHTMLbboxFor(0);
+        delete bbox.pwidth;
+        this.SUPER(arguments).CHTMLhandleBBox.apply(this,arguments);
+      }
     });
 
     /********************************************************/
     
     MML.mroot.Augment({
       toCommonHTML: MML.msqrt.prototype.toCommonHTML,
+      CHTMLhandleBBox: MML.msqrt.prototype.CHTMLhandleBBox,
       CHTMLaddRoot: function (sqrt,sbox,d) {
         if (!this.data[1]) return;
         var BBOX = this.CHTML, bbox = this.data[1].CHTML, root = sqrt.firstChild;
