@@ -42,7 +42,7 @@ MathJax.InputJax.TeX = MathJax.InputJax({
       formatNumber: function (n) {return n},
       formatTag:    function (n) {return '('+n+')'},
       formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/\s/g,"_")},
-      formatURL:    function (id,base) {return base+'#'+escapeURIComponent(id)},
+      formatURL:    function (id,base) {return base+'#'+encodeURIComponent(id)},
       useLabelIds:  true
     }
   },
