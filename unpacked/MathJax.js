@@ -1694,6 +1694,8 @@ MathJax.Message = {
         this.MoveFrame();
       }
       this.div = this.addDiv(frame); this.div.style.display = "none";
+    }
+    if (!this.text) {
       this.text = this.div.appendChild(document.createTextNode(""));
     }
     return true;
