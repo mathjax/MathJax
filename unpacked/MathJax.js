@@ -1678,7 +1678,7 @@ MathJax.Message = {
     //
     if (this.div && this.div.parentNode == null) {
       this.div = document.getElementById("MathJax_Message");
-      if (this.div) {this.text = this.div.firstChild}
+      this.text = (this.div ? this.div.firstChild : null);
     }
     if (!this.div) {
       var frame = document.body;
