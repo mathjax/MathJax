@@ -23,7 +23,7 @@
  */
 
 MathJax.Extension["semantic-enrich"] = {
-  version: "1.2.3",
+  version: "1.4.0",
   config: MathJax.Hub.CombineConfig("semantic-enrich",{disabled: false}),
   dependents: [],     // the extensions that depend on this one
   running: false,
@@ -143,7 +143,7 @@ MathJax.Callback.Queue(
             lookup = (ENRICH.running ? ENRICH.mstyleLookup[this.type]||[] : []);
         var attr = [], ATTR = (this.attr||{});
 
-        if (this.type === "math" && (!this.attr || !this.attr.xmlns))
+        if (this.type === "math" && (!this.attr || !('xmlns' in this.attr)))
           attr.push('xmlns="http://www.w3.org/1998/Math/MathML"');
         if (!this.attrNames) {
           for (var id in defaults) {if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {

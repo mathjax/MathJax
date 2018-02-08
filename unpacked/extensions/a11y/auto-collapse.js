@@ -33,7 +33,7 @@
   if (!PATH.a11y) PATH.a11y = HUB.config.root + "/extensions/a11y";
 
   var Collapse = MathJax.Extension["auto-collapse"] = {
-    version: "1.2.3",
+    version: "1.4.0",
     config: HUB.CombineConfig("auto-collapse",{
       disabled: false
     }),
@@ -179,7 +179,7 @@
     },
     
     //
-    //  Find the actions that need to be collapsed to achieve
+    //  Find the actions that need to be collapsed to acheive
     //  the correct width, and retain the sizes that would cause
     //  the equation to be expanded or collapsed further.
     //
