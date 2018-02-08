@@ -1,7 +1,7 @@
 /*
  *  /MathJax/jax/input/TeX/config.js
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.InputJax.TeX=MathJax.InputJax({id:"TeX",version:"2.7.2",directory:MathJax.InputJax.directory+"/TeX",extensionDir:MathJax.InputJax.extensionDir+"/TeX",config:{TagSide:"right",TagIndent:"0.8em",MultLineWidth:"85%",equationNumbers:{autoNumber:"none",formatNumber:function(a){return a},formatTag:function(a){return"("+a+")"},formatID:function(a){return"mjx-eqn-"+String(a).replace(/[:"'<>&]/g,"")},formatURL:function(b,a){return a+"#"+escape(b)},useLabelIds:true}},resetEquationNumbers:function(){}});MathJax.InputJax.TeX.Register("math/tex");MathJax.InputJax.TeX.loadComplete("config.js");
+MathJax.InputJax.TeX=MathJax.InputJax({id:"TeX",version:"2.7.3",directory:MathJax.InputJax.directory+"/TeX",extensionDir:MathJax.InputJax.extensionDir+"/TeX",config:{TagSide:"right",TagIndent:"0.8em",MultLineWidth:"85%",equationNumbers:{autoNumber:"none",formatNumber:function(a){return a},formatTag:function(a){return"("+a+")"},formatID:function(a){return"mjx-eqn-"+String(a).replace(/\s/g,"_")},formatURL:function(b,a){return a+"#"+encodeURIComponent(b)},useLabelIds:true}},resetEquationNumbers:function(){}});MathJax.InputJax.TeX.Register("math/tex");MathJax.InputJax.TeX.loadComplete("config.js");

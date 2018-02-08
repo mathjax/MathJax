@@ -12,7 +12,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -296,19 +296,6 @@ MathJax.Hub.Config({
       ['$$','$$'],
       ['\\[','\\]']
     ],
-
-    //
-    //  This value determines whether tex2jax requires braces to be
-    //  balanced within math delimiters (which allows for nested dollar
-    //  signs).  Set to false to get pre-v2.0 compatibility.  When true,
-    //  
-    //      $y = x^2 \hbox{ when $x > 2$}$.
-    //  
-    //  will be properly handled as a single expression.  When false, it
-    //  would be interpreted as two searpate expressions, each with 
-    //  improperly balanced braces.
-    // 
-    balanceBraces: true,
     
     //
     //  This array lists the names of the tags whose contents should not be
@@ -548,9 +535,9 @@ MathJax.Hub.Config({
                            //  or "all" to number all displayed equations
 //    formatNumber: function (n) {return n},                // format for equation number n
 //    formatTag:    function (n) {return '('+n+')'},        // format for \tag and \eqref
-//    formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/[:'"<>&]/g,"")},
+//    formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/\s/g,"_")},
 //                                                          // element ID to use for reference
-//    formatURL:    function (id,base) {return base+'#'+escape(id)},
+//    formatURL:    function (id,base) {return base+'#'+encodeURIComponent(id)},
 //                                                          // URL to use for references
       useLabelIds: true    // make element ID's use \label name rather than equation number
     },
