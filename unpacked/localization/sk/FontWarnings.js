@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/sk/FontWarnings.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sk","FontWarnings",{
-        version: "2.7.2",
+        version: "2.7.3",
         isLoaded: true,
         strings: {
           webFont: "MathJax pou\u017E\u00EDva k zobrazeniu matematiky na tejto str\u00E1nke webov\u00E9 p\u00EDsma. T\u00FDm trv\u00E1 stiahnutie nejak\u00FA dobu, tak\u017Ee str\u00E1nka by sa vykreslila r\u00FDchlej\u0161ie, ak by ste si tieto matematick\u00E9 p\u00EDsma nain\u0161talovali priamo do syst\u00E9movej zlo\u017Eky p\u00EDsiem.",

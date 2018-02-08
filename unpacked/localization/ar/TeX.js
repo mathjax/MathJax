@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/ar/TeX.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ar","TeX",{
-        version: "2.7.2",
+        version: "2.7.3",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u0642\u0648\u0633 \u0645\u0641\u062A\u0648\u062D \u0625\u0636\u0627\u0641\u064A \u0623\u0648 \u063A\u0644\u0642 \u0642\u0648\u0633 \u0645\u0641\u0642\u0648\u062F",
