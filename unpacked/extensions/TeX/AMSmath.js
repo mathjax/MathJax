@@ -9,7 +9,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.7.2",
+  version: "2.7.3",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -224,7 +224,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
       var op = this.GetArgument(name);
       op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
-      TEX.Definitions.macros[cs] = ['Macro','\\mathop{\\rm '+op+'}'+limits];
+      this.setDef(cs, ['Macro', '\\mathop{\\rm '+op+'}'+limits]);
     },
     
     HandleOperatorName: function (name) {
@@ -479,7 +479,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  If the initial child, skipping any initial space or
      *  empty braces (TeXAtom with child being an empty inferred row),
-     *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
+     *  is an <mo>, precede it by an empty <mi> to force the <mo> to
      *  be infix.
      */
     fixInitialMO: function (data) {
@@ -602,7 +602,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   /******************************************************************************/
 
   /*
-   *  Add pre- and post-filters to handle the equation number maintainance.
+   *  Add pre- and post-filters to handle the equation number maintenance.
    */
   TEX.prefilterHooks.Add(function (data) {
     AMS.display = data.display;

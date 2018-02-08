@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/ar/MathMenu.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ar","MathMenu",{
-        version: "2.7.2",
+        version: "2.7.3",
         isLoaded: true,
         strings: {
           Show: "\u062A\u0638\u0647\u0631 \u0627\u0644\u0631\u064A\u0627\u0636\u064A\u0627\u062A \u0643",

@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/newcommand"] = {
-  version: "2.7.2"
+  version: "2.7.3"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -41,7 +41,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       newenvironment:   'NewEnvironment',
       renewenvironment: 'NewEnvironment',
       def:              'MacroDef',
-      let:              'Let'
+      'let':            'Let'
     }
   },null,true);
 
@@ -129,13 +129,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       } else {macro = ["Macro",c]; this.i++}
       this.setDef(cs,macro);
     },
-    
-    /*
-     *  Routines to set the macro and environment definitions
-     *  (overridden by begingroup to make localized versions)
-     */
-    setDef: function (name,value) {value.isUser = true; TEXDEF.macros[name] = value},
-    setEnv: function (name,value) {value.isUser = true; TEXDEF.environment[name] = value},
     
     /*
      *  Get a CS name or give an error

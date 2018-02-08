@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/nl/HTML-CSS.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("nl","HTML-CSS",{
-        version: "2.7.2",
+        version: "2.7.3",
         isLoaded: true,
         strings: {
           LoadWebFont: "Weblettertype %1 aan het laden",

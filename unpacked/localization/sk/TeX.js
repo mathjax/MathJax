@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/sk/TeX.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sk","TeX",{
-        version: "2.7.2",
+        version: "2.7.3",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Prebyto\u010Dn\u00E1 otv\u00E1raj\u00FAca alebo uzavieracia z\u00E1tvorka",

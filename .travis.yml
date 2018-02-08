@@ -7,11 +7,11 @@ script:
 - npm test
 branches:
   only:
-  - "/^\\d+\\.\\d+/"
+  - /^\d+\.\d+/
 deploy:
   provider: npm
   email: manager@mathjax.org
   api_key:
-    secure: inYGps+hr2lFFtZ93ee0InerDO+ljwsHM7qBGUCwTfEZyvAbaZ8Xa/tkLc/s/IdhzEW79ZTTL/kd/r+SIoTAYqsSOCYtN+lvcK0fLxfzSaTVmr9E44UStz63Yl5wDPD8iq4ultQVLDp3Rbdo5KL9aMWKawA/pNV+QPpawXuUfkk=
+    secure: VDi7vBGTH3+3+EHoGRAHABgKV4CIBNHgJPxtLO14h+J8jwxLGxS/04pbNe5c5UxwAA05IqCXCuNovppQVJ3uWTpN9s1JUnbskXPPEEUF8jqut+/lAQEXTxCiYG8RH9YNgtx03aGYVW6WTjp7Li8sG5yJzMhx5+Yf5rOUXoGR++qWDRrKOxGbPCE2Bm0P/CNmPsb24ZLV6ojnt5MMPE+3ZiKlNP9vMN/W0MaugYLyEbXk/dpz5sbOVR3IJOIdhab2sCrc0aimE97jdvyRb7tYzCMPtntWUer9BEQk8nlWjIQKFyGKG85zPwlpmlXJNkfyTBQs9Wo2iL+hJpMbokKoSUygWpAcuvIs/iVc9kP0nE8pwCs7jl93qH1OnQsOw68h2vXosXbzK4lwR4RU3on1cw3BomFdjxkZdO9humjIx4Wmcb8X3ALMfixf+wLDILlZtOF/0C0xT54+58+PXgtyBNgfKAN3KF6R4gImtJP79kNGZL+GEaW0PA9AcrC82NU+LtEuuK7By5p+RIjKaNxZ4+bJW8TGapGooG854e7y2Z3i3DeadIcFTE7dRRjkomCQRxiVLOKdMb6aXhbQyP+usymo2cpveN/YbsQ3CpdD4A0ICCsdwqDZiY/FEfNAp6Y88l1Ujh+SUh6LR6X5VteCW/GYSKuN3fC0kyS+Vk/TMS0=
   on:
     tags: true

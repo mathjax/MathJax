@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/zh-hant/zh-hant.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("zh-hant",null,{
   menuTitle: "\u6C49\u8BED",
-  version: "2.7.2",
+  version: "2.7.3",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.2",
+        version: "2.7.3",
         isLoaded: true,
         strings: {
           MathProcessingError: "\u6578\u5B78\u8655\u7406\u932F\u8AA4",

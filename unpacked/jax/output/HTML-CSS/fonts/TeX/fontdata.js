@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "2.7.2";
+  var VERSION = "2.7.3";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -1822,7 +1822,7 @@
             0x2571:0xE2CE, 0x2572:0xE2CF, 0x25A0:0xE2D0, 0x25A1:0xE2D1, // \diagup, \diagdown, \blacksquare, \square
             0x25B2:0xE2D2, 0x25B6:0xE2D4, 0x25BC:0xE2D5,                // \blacktriangle, \blacktriangleright, \blacktriangledown
             0x25BD:0xE2D6, 0x25C0:0xE2D7, 0x25CA:0xE2D8,                // \vartriangledown, \blacktriangleleft, \lozenge
-            0x2234:0xE2D9, 0x2235:0xE2DA, 0x2252:0xE2DB, 0x2605:0xE2DC, // \therefor, \because, \fallingdotseq, \bigstar
+            0x2234:0xE2D9, 0x2235:0xE2DA, 0x2252:0xE2DB, 0x2605:0xE2DC, // \therefore, \because, \fallingdotseq, \bigstar
             0x223D:0xE2DD                                               // \backsim
           };
           var REMAPBOLD = {variant:"-WinIE6",
@@ -1844,7 +1844,7 @@
             0x2571:0xE2CE, 0x2572:0xE2CF, 0x25A0:0xE2D0, 0x25A1:0xE2D1, // \diagup, \diagdown, \blacksquare, \square
             0x25B2:0xE2D2, 0x25B6:0xE2D4, 0x25BC:0xE2D5,                // \blacktriangle, \blacktriangleright, \blacktriangledown
             0x25BD:0xE2D6, 0x25C0:0xE2D7, 0x25CA:0xE2D8,                // \vartriangledown, \blacktriangleleft, \lozenge
-            0x2234:0xE2D9, 0x2235:0xE2DA, 0x2252:0xE2DB, 0x2605:0xE2DC, // \therefor, \because, \fallingdotseq, \bigstar
+            0x2234:0xE2D9, 0x2235:0xE2DA, 0x2252:0xE2DB, 0x2605:0xE2DC, // \therefore, \because, \fallingdotseq, \bigstar
             0x223D:0xE2DD                                               // \backsim
           };
           var VARNORMAL = {offsetAR:0xE200, variantAR:"-WinIE6", remap: REMAP};

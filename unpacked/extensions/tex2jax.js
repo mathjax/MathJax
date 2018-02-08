@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "2.7.2",
+  version: "2.7.3",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
@@ -38,10 +38,6 @@ MathJax.Extension.tex2jax = {
       ['$$','$$'],             //  (comment out any you don't want, or add your own, but
       ['\\[','\\]']            //  be sure that you don't have an extra comma at the end)
     ],
-
-    balanceBraces: true,       // determines whether tex2jax requires braces to be
-                               // balanced within math delimiters (allows for nested
-                               // dollar signs).  Set to false to get pre-v2.0 compatibility.
 
     skipTags: ["script","noscript","style","textarea","pre","code","annotation","annotation-xml"],
                                // The names of the tags whose contents will not be

@@ -10,7 +10,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2017 The MathJax Consortium
+ *  Copyright (c) 2011-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ if (MathJax.Extension["TeX/mhchem"]) {
 } else {
   
 MathJax.Extension["TeX/mhchem"] = {
-  version: "2.7.2",
+  version: "2.7.3",
   config: MathJax.Hub.CombineConfig("TeX.mhchem",{
     legacy: true
   })
@@ -166,7 +166,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     //
-    //  Make a number or fraction preceeding an atom,
+    //  Make a number or fraction preceding an atom,
     //  or a subscript for an atom.
     //  
     ParseNumber: function () {

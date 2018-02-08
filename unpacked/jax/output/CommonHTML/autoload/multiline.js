@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015-2017 The MathJax Consortium
+ *  Copyright (c) 2015-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
-  var VERSION = "2.7.2";
+  var VERSION = "2.7.3";
   var MML = MathJax.ElementJax.mml,
       CONFIG = MathJax.Hub.config,
       CHTML = MathJax.OutputJax.CommonHTML;
@@ -40,6 +40,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     badbreak:    [+200],
     auto:           [0],
     
+    maxwidth:     1.33,  // stop looking for breaks after this time the line-break width
     toobig:        800,
     nestfactor:    400,
     spacefactor:  -100,
@@ -150,7 +151,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Look through the line for breakpoints,
       //    (as long as we are not too far past the breaking width)
       //
-      while (i < m && info.scanW < 1.33*CHTML.linebreakWidth) {
+      while (i < m && (info.scanW < PENALTY.maxwidth*CHTML.linebreakWidth || info.w === 0)) {
         if (this.data[i]) {
           if (this.data[i].CHTMLbetterBreak(info,state)) {
             better = true; index = [i].concat(info.index); W = info.W; w = info.w;
@@ -172,7 +173,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     CHTMLaddWidth: function (i,info,scanW) {
       if (this.data[i]) {
         var bbox = this.data[i].CHTML;
-        scanW += bbox.w + (bbox.L||0) + (bbox.R||0);
+        scanW += (bbox.w + (bbox.L||0) + (bbox.R||0)) * (bbox.scale || 1);
         info.W = info.scanW = scanW; info.w = 0;
       }
       return scanW;
@@ -400,7 +401,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Look through the line for breakpoints, including the open, close, and separators
       //    (as long as we are not too far past the breaking width)
       //
-      while (i < m && info.scanW < 1.33*CHTML.linebreakWidth) {
+      while (i < m && (info.scanW < PENALTY.maxwidth*CHTML.linebreakWidth || info.w === 0)) {
         var k = this.dataI[i];
         if (this.data[k]) {
           if (this.data[k].CHTMLbetterBreak(info,state)) {

@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/ar/ar.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@
 MathJax.Localization.addTranslation("ar",null,{
   menuTitle: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629",
   fontDirection: "rtl",
-  version: "2.7.2",
+  version: "2.7.3",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.2",
+        version: "2.7.3",
         isLoaded: true,
         strings: {
           MathProcessingError: "\u062E\u0637\u0623 \u0645\u0639\u0627\u0644\u062C\u0629 \u0631\u064A\u0627\u0636\u064A\u0629",

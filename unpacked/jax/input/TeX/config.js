@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 
 MathJax.InputJax.TeX = MathJax.InputJax({
   id: "TeX",
-  version: "2.7.2",
+  version: "2.7.3",
   directory: MathJax.InputJax.directory + "/TeX",
   extensionDir: MathJax.InputJax.extensionDir + "/TeX",
   
@@ -41,8 +41,8 @@ MathJax.InputJax.TeX = MathJax.InputJax({
                            //  or "all" for all displayed equations
       formatNumber: function (n) {return n},
       formatTag:    function (n) {return '('+n+')'},
-      formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/[:"'<>&]/g,"")},
-      formatURL:    function (id,base) {return base+'#'+escape(id)},
+      formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/\s/g,"_")},
+      formatURL:    function (id,base) {return base+'#'+encodeURIComponent(id)},
       useLabelIds:  true
     }
   },

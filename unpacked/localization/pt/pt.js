@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/pt/pt.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("pt",null,{
   menuTitle: "portugu\u00EAs",
-  version: "2.7.2",
+  version: "2.7.3",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.2",
+        version: "2.7.3",
         isLoaded: true,
         strings: {
           MathProcessingError: "Erro no processamento das f\u00F3rmulas",

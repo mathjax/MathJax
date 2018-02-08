@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/es/MathMenu.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("es","MathMenu",{
-        version: "2.7.2",
+        version: "2.7.3",
         isLoaded: true,
         strings: {
           Show: "Mostrar las f\u00F3rmulas como",

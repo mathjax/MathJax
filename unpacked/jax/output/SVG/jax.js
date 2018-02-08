@@ -11,7 +11,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2017 The MathJax Consortium
+ *  Copyright (c) 2011-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -85,6 +85,10 @@
           "-moz-transition": "none",
           "-ms-transition": "none",
           "-o-transition": "none"
+        },
+        
+        ".MathJax_SVG > div": {
+          display: "inline-block"
         },
         
         ".mjx-svg-href": {
@@ -558,6 +562,12 @@
       if (length === MML.LINETHICKNESS.THICK)  {return 1.67*thick}
       return this.length2em(length,mu,thick);
     },
+    border2em: function (length,mu) {
+      if (length === MML.LINETHICKNESS.THIN)   {length = "1px"}
+      if (length === MML.LINETHICKNESS.MEDIUM) {length = "3px"}
+      if (length === MML.LINETHICKNESS.THICK)  {length = "5px"}
+      return this.length2em(length,mu);
+    },
 
     getPadding: function (styles) {
       var padding = {top:0, right:0, bottom:0, left:0}, has = false;
@@ -574,7 +584,7 @@
         var style = styles[ID+"Style"];
         if (style && style !== "none") {
           has = true;
-          border[id] = this.length2em(styles[ID+"Width"]);
+          border[id] = this.border2em(styles[ID+"Width"] || MML.LINETHICKNESS.MEDIUM);
           border[id+"Style"] = styles[ID+"Style"];
           border[id+"Color"] = styles[ID+"Color"];
           if (border[id+"Color"] === "initial") {border[id+"Color"] = ""}
@@ -1711,7 +1721,7 @@
 	  var values = this.getValues("height","depth","width","lspace","voffset"), X = 0, Y = 0;
 	  if (values.lspace)  {X = this.SVGlength2em(pad,values.lspace,mu)}
 	  if (values.voffset) {Y = this.SVGlength2em(pad,values.voffset,mu)}
-          var h = pad.h, d = pad.d, w = pad.w, y = pad.y; // these can change durring the Add() 
+          var h = pad.h, d = pad.d, w = pad.w, y = pad.y; // these can change during the Add() 
           svg.Add(pad,X,Y); svg.Clean();
           svg.h = h+y; svg.d = d-y; svg.w = w; svg.removeable = false;
 	  if (values.height !== "") {svg.h = this.SVGlength2em(svg,values.height,mu,"h",0)}

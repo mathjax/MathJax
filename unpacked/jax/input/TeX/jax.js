@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -989,7 +989,7 @@
         newenvironment:    ['Extension','newcommand'],
         renewenvironment:  ['Extension','newcommand'],
         def:               ['Extension','newcommand'],
-        let:               ['Extension','newcommand'],
+        'let':             ['Extension','newcommand'],
         
         verb:              ['Extension','verb'],
         
@@ -2037,8 +2037,12 @@
       while (this.nextIsSpace()) {this.i++}
       var c = this.string.charAt(this.i); this.i++;
       if (this.i <= this.string.length) {
-        if (c == "\\") {c += this.GetCS(name)}
-        else if (c === "{" && braceOK) {this.i--; c = this.GetArgument(name)}
+        if (c == "\\") {
+          c += this.GetCS(name);
+        } else if (c === "{" && braceOK) {
+          this.i--;
+          c = this.GetArgument(name).replace(/^\s+/,'').replace(/\s+$/,'');
+        }
         if (TEXDEF.delimiter[c] != null) {return this.convertDelimiter(c)}
       }
       TEX.Error(["MissingOrUnrecognizedDelim",
@@ -2159,7 +2163,14 @@
     },
 
     /*
-     *  Replace macro paramters with their values
+     *  Routines to set the macro and environment definitions
+     *  (overridden by begingroup to make localized versions)
+     */
+    setDef: function (name,value) {value.isUser = true; TEXDEF.macros[name] = value},
+    setEnv: function (name,value) {value.isUser = true; TEXDEF.environment[name] = value},
+    
+    /*
+     *  Replace macro parameters with their values
      */
     SubstituteArgs: function (args,string) {
       var text = ''; var newstring = ''; var c; var i = 0;
@@ -2285,8 +2296,14 @@
     fenced: function (open,mml,close) {
       var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
       mrow.Append(
-        MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN}),
-        mml,
+        MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
+      );
+      if (mml.type === "mrow" && mml.inferred) {
+        mrow.Append.apply(mrow, mml.data);
+      } else {
+        mrow.Append(mml);
+      }
+      mrow.Append(
         MML.mo(close).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.CLOSE})
       );
       return mrow;

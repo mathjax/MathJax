@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2016-2017 The MathJax Consortium
+ *  Copyright (c) 2016-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@
   if (!PATH.a11y) PATH.a11y = HUB.config.root + "/extensions/a11y";
 
   var Collapsible = MathJax.Extension.collapsible = {
-    version: "1.2.3",
+    version: "1.4.0",
     config: HUB.CombineConfig("collapsible",{
       disabled: false
     }),

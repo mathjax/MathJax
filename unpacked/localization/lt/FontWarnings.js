@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/lt/FontWarnings.js
  *
- *  Copyright (c) 2009-2016 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("lt","FontWarnings",{
-        version: "2.7.2",
+        version: "2.7.3",
         isLoaded: true,
         strings: {
           webFont: "\u0160iame tinklalapyje matematikos tekst\u0105 \u201EMathJax\u201C rodo tinkle saugomais \u0161riftais, kuriems \u012Fkelti reikia laiko. Teksto rinkim\u0105 galima greitinti, matematikos \u0161riftus \u012Fdiegus naudotojo kompiuteryje.",

@@ -12,7 +12,7 @@
  *
  *  ---------------------------------------------------------------------
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,9 +45,9 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
-MathJax.version = "2.7.2";
-MathJax.fileversion = "2.7.2";
-MathJax.cdnVersion = "2.7.2";  // specifies a revision to break caching
+MathJax.version = "2.7.3";
+MathJax.fileversion = "2.7.3";
+MathJax.cdnVersion = "2.7.3";  // specifies a revision to break caching
 MathJax.cdnFileVersions = {};  // can be used to specify revisions for individual files
 
 /**********************************************************/
@@ -825,7 +825,7 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
         };
         //
         // Add this to the structure above after it is created to prevent recursion
-        //  when loading the initial localization file (before loading messsage is available)
+        //  when loading the initial localization file (before loading message is available)
         //
         this.loading[file].message = BASE.Message.File(name);
         script.onerror = timeout;  // doesn't work in IE and no apparent substitute
@@ -1359,7 +1359,7 @@ MathJax.Localization = {
     //  Split the string by the Markdown pattern
     //    (the text blocks are separated by
     //      c,stars,star-text,backtics,code-text,link-text,URL).
-    //  Start with teh first text string from the split.
+    //  Start with the first text string from the split.
     //
     var parts = phrase.split(this.markdownPattern);
     var string = parts[0];
@@ -1554,6 +1554,7 @@ MathJax.Localization = {
     }
     var remap = this.strings[locale].remap;
     this.locale = remap ? remap : locale;
+    MathJax.Callback.Signal("Hub").Post(["Locale Reset", this.locale]);
   },
 
   //
@@ -1677,7 +1678,7 @@ MathJax.Message = {
     //
     if (this.div && this.div.parentNode == null) {
       this.div = document.getElementById("MathJax_Message");
-      if (this.div) {this.text = this.div.firstChild}
+      this.text = (this.div ? this.div.firstChild : null);
     }
     if (!this.div) {
       var frame = document.body;
@@ -1693,6 +1694,8 @@ MathJax.Message = {
         this.MoveFrame();
       }
       this.div = this.addDiv(frame); this.div.style.display = "none";
+    }
+    if (!this.text) {
       this.text = this.div.appendChild(document.createTextNode(""));
     }
     return true;
@@ -1898,7 +1901,7 @@ MathJax.Hub = {
     postJax: null,   // pattern to remove from after math script tag
     displayAlign: 'center',       // how to align displayed equations (left, center, right)
     displayIndent: '0',           // indentation for displayed equations (when not centered)
-    preRemoveClass: 'MathJax_Preview', // class of objects to remove preceeding math script
+    preRemoveClass: 'MathJax_Preview', // class of objects to remove preceding math script
     showProcessingMessages: true, // display "Processing math: nn%" messages or not
     messageStyle: "normal",       // set to "none" or "simple" (for "Loading..." and "Processing...")
     delayStartupUntil: "none",    // set to "onload" to delay setup until the onload handler runs
@@ -2705,7 +2708,7 @@ MathJax.Hub.Startup = {
   Hash: function () {
     if (MathJax.Hub.config.positionToHash && document.location.hash &&
         document.body && document.body.scrollIntoView) {
-      var name = document.location.hash.substr(1);
+      var name = decodeURIComponent(document.location.hash.substr(1));
       var target = document.getElementById(name);
       if (!target) {
         var a = document.getElementsByTagName("a");
@@ -2904,7 +2907,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "Jax",
-    version: "2.7.2",
+    version: "2.7.3",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -2950,7 +2953,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "InputJax",
-    version: "2.7.2",
+    version: "2.7.3",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -2983,7 +2986,7 @@ MathJax.Hub.Startup = {
     Remove: function (jax) {}
   },{
     id: "OutputJax",
-    version: "2.7.2",
+    version: "2.7.3",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
@@ -3067,7 +3070,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "2.7.2",
+    version: "2.7.3",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -3091,7 +3094,7 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.7.2", config: {}, errors: 0,
+    id: "Error", version: "2.7.3", config: {}, errors: 0,
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
@@ -3110,7 +3113,7 @@ MathJax.Hub.Startup = {
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.7.2", config: {},
+    id: "Error", version: "2.7.3", config: {},
     sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"]
   };
 

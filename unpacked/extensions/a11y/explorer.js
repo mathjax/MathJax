@@ -6,7 +6,7 @@
  *
  *  ---------------------------------------------------------------------
  *
- *  Copyright (c) 2016-2017 The MathJax Consortium
+ *  Copyright (c) 2016-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,13 +32,13 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
   });
 
   var Assistive = MathJax.Extension.explorer = {
-    version: '1.2.3',
+    version: '1.4.0',
     dependents: [],            // the extensions that depend on this one
     //
     // Default configurations.
     //
     defaults: {
-      walker: 'syntactic',
+      walker: 'table',
       highlight: 'none',
       background: 'blue',
       foreground: 'black',
@@ -50,6 +50,7 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
     eagerComplexity: 80,
     prefix: 'Assistive-',
     hook: null,
+    locHook: null,
     oldrules: null,
     addMenuOption: function(key, value) {
       SETTINGS[Assistive.prefix + key] = value;
@@ -87,6 +88,7 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
       var ruleset = SETTINGS[Assistive.prefix + 'ruleset'];
       var cstr = ruleset.split('-');
       sre.System.getInstance().setupEngine({
+        locale: MathJax.Localization.locale,
         domain: Assistive.Domain(cstr[0]),
         style: cstr[1],
         rules: Assistive.RuleSet(cstr[0])
@@ -110,11 +112,13 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
           return ['AbstractionRules', 'SemanticTreeRules'];
         case 'mathspeak':
         default:
-          return ['AbstractionRules', 'MathspeakRules'];
+          return ['AbstractionRules', 'AbstractionSpanish',
+                  'MathspeakRules', 'MathspeakSpanish'];
       }
     },
 
     hook: null,
+    locHook: null,
     Enable: function(update, menu) {
       SETTINGS.explorer = true;
       if (menu) COOKIE.explorer = true;
@@ -128,6 +132,10 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
       if (!this.hook) {
         this.hook = MathJax.Hub.Register.MessageHook(
             'New Math', ['Register', this.Explorer]);
+      }
+      if (!this.locHook) {
+        this.locHook = MathJax.Hub.Register.MessageHook(
+          'Locale Reset', ['RemoveSpeech', this.Explorer]);
       }
       if (update) MathJax.Hub.Queue(['Reprocess', MathJax.Hub]);
     },
@@ -155,7 +163,6 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
           for (var i = 2, item; item = items[i]; i++) item.disabled = state;
           if (!state && menu.FindId('SpeechOutput') && !SETTINGS[Assistive.prefix + 'speech']) {
             menu.FindId('Subtitles').disabled = true;
-            menu.FindId('Generation').disabled = true;
           }
         }
       }
@@ -412,7 +419,7 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
         Explorer.AddMathLabel(mathml, id);
       }
       if (math.getAttribute('hasspeech')) return;
-      switch (Assistive.getOption('generation')) {
+      switch (MathJax.Hub.config.explorer.generation) {
         case 'eager':
           Explorer.AddSpeechEager(mathml, id);
           break;
@@ -483,6 +490,9 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
       }
       // If walker is active we redirect there.
       if (Explorer.walker && Explorer.walker.isActive()) {
+        if (typeof(Explorer.walker.modifier) !== 'undefined') {
+          Explorer.walker.modifier = event.shiftKey;
+        }
         var move = Explorer.walker.move(event.keyCode);
         if (move === null) return;
         if (move) {
@@ -586,13 +596,15 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
     //
     Walkers: {
       'syntactic': sre.SyntaxWalker,
+      'table': sre.TableWalker,
       'semantic': sre.SemanticWalker,
       'none': sre.DummyWalker
     },
     ActivateWalker: function(math, jax) {
       var speechOn = Assistive.getOption('speech');
-      var constructor = Explorer.Walkers[Assistive.getOption('walker')] ||
-          Explorer.Walkers['none'];
+      var constructor = Assistive.getOption('walker') ?
+            Explorer.Walkers[MathJax.Hub.config.explorer.walker] :
+            Explorer.Walkers['none'];
       var speechGenerator = speechOn ? new sre.DirectSpeechGenerator() :
           new sre.DummySpeechGenerator();
       Explorer.GetHighlighter(.2);
@@ -653,7 +665,7 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
     //
     SpeechOutput: function() {
       Explorer.Reset();
-      var speechItems = ['Subtitles', 'Generation'];
+      var speechItems = ['Subtitles'];
       speechItems.forEach(
           function(x) {
             var item = MathJax.Menu.menu.FindId('Accessibility', 'Explorer', x);
@@ -663,13 +675,26 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
       Explorer.Regenerate();
     },
     //
+    // Remove speech and resets SRE options.
+    //
+    RemoveSpeech: function() {
+      Assistive.setSpeechOption();
+      for (var i = 0, all = MathJax.Hub.getAllJax(), jax; jax = all[i]; i++) {
+        var math = document.getElementById(jax.inputID + '-Frame');
+        if (math) {
+          math.removeAttribute('hasspeech');
+          math.removeAttribute('haslabel');
+        }
+      }
+    },
+    //
     // Regenerates speech.
     //
     Regenerate: function() {
       for (var i = 0, all = MathJax.Hub.getAllJax(), jax; jax = all[i]; i++) {
         var math = document.getElementById(jax.inputID + '-Frame');
         if (math) {
-          math.removeAttribute('hasSpeech');
+          math.removeAttribute('hasspeech');
           Explorer.AddSpeech(math);
         }
       }
@@ -698,11 +723,7 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
           ITEM.SUBMENU(['Explorer', 'Explorer'],
               ITEM.CHECKBOX(['Active', 'Active'], 'explorer', {action: Switch}),
               ITEM.RULE(),
-              ITEM.SUBMENU(['Walker', 'Walker'],
-                  ITEM.RADIO(['nowalker', 'No walker'], 'Assistive-walker', {value:"none"}),
-                  ITEM.RADIO(['syntactic', 'Syntax walker'], 'Assistive-walker'),
-                  ITEM.RADIO(['semantic', 'Semantic walker'], 'Assistive-walker')
-              ),
+              ITEM.CHECKBOX(['Walker', 'Walker'], 'Assistive-walker'),
               ITEM.SUBMENU(['Highlight', 'Highlight'],
                   ITEM.RADIO(['none', 'None'], 'Assistive-highlight', reset),
                   ITEM.RADIO(['hover', 'Hover'], 'Assistive-highlight', reset),
@@ -733,15 +754,6 @@ MathJax.Hub.Register.StartupHook('Sre Ready', function() {
                             'Assistive-speech', {action: Explorer.SpeechOutput}),
               ITEM.CHECKBOX(['Subtitles', 'Subtitles'], 'Assistive-subtitle',
                             {disabled: !SETTINGS['Assistive-speech']}),
-              ITEM.SUBMENU(['Generation', 'Generation'],
-                            {disabled: !SETTINGS['Assistive-speech']},
-                  ITEM.RADIO(['eager', 'Eager'], 'Assistive-generation',
-                             {action: Explorer.Regenerate}),
-                  ITEM.RADIO(['mixed', 'Mixed'], 'Assistive-generation',
-                             {action: Explorer.Regenerate}),
-                  ITEM.RADIO(['lazy', 'Lazy'], 'Assistive-generation',
-                             {action: Explorer.Regenerate})
-              ),
               ITEM.RULE(),
               ITEM.SUBMENU(['Mathspeak', 'Mathspeak Rules'],
                   ITEM.RADIO(['mathspeak-default', 'Verbose'],

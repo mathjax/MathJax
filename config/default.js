@@ -12,7 +12,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ MathJax.Hub.Config({
   //  tag usually doesn't add content to the page, if there is a space before and after
   //  a MathJax SCRIPT tag, IE will remove the first space.  When MathJax inserts
   //  the typeset mathematics, this means there will be no space before it and the
-  //  preceeding text.  In order to avoid this, you should include some "guard characters"
+  //  preceding text.  In order to avoid this, you should include some "guard characters"
   //  before or after the math SCRIPT tag; define the patterns you want to use below.
   //  Note that these are used as regular expressions, so you will need to quote
   //  special characters.  Furthermore, since they are javascript strings, you must
@@ -134,7 +134,7 @@ MathJax.Hub.Config({
   postJax: null,
   
   //
-  //  The CSS class for a math preview to be removed preceeding a MathJax
+  //  The CSS class for a math preview to be removed preceding a MathJax
   //  SCRIPT tag.  If the tag just before the MathJax SCRIPT tag is of this
   //  class, its contents are removed when MathJax processes the SCRIPT
   //  tag.  This allows you to include a math preview in a form that will
@@ -296,19 +296,6 @@ MathJax.Hub.Config({
       ['$$','$$'],
       ['\\[','\\]']
     ],
-
-    //
-    //  This value determines whether tex2jax requires braces to be
-    //  balanced within math delimiters (which allows for nested dollar
-    //  signs).  Set to false to get pre-v2.0 compatibility.  When true,
-    //  
-    //      $y = x^2 \hbox{ when $x > 2$}$.
-    //  
-    //  will be properly handled as a single expression.  When false, it
-    //  would be interpreted as two searpate expressions, each with 
-    //  improperly balanced braces.
-    // 
-    balanceBraces: true,
     
     //
     //  This array lists the names of the tags whose contents should not be
@@ -323,7 +310,7 @@ MathJax.Hub.Config({
     //  not be processed by tex2jax (other than to look for the
     //  processClass pattern below).  Note that this is a regular
     //  expression, and so you need to be sure to quote any regexp special
-    //  characters.  The pattern is automatically preceeded by '(^| )(' and
+    //  characters.  The pattern is automatically preceded by '(^| )(' and
     //  followed by ')( |$)', so your pattern will have to match full words
     //  in the class name.  Assigning an element this class name will
     //  prevent `tex2jax` from processing its contents.
@@ -336,7 +323,7 @@ MathJax.Hub.Config({
     //  tags that have been marked as ignored or skipped above.  Note that
     //  this is a regular expression, and so you need to be sure to quote
     //  any regexp special characters.  The pattern is automatically
-    //  preceeded by '(^| )(' and followed by ')( |$)', so your pattern
+    //  preceded by '(^| )(' and followed by ')( |$)', so your pattern
     //  will have to match full words in the class name.  Use this to
     //  restart processing within an element that has been marked as
     //  ignored above.
@@ -410,7 +397,7 @@ MathJax.Hub.Config({
     //  not be processed by asciimath2jax (other than to look for the
     //  processClass pattern below).  Note that this is a regular
     //  expression, and so you need to be sure to quote any regexp special
-    //  characters.  The pattern is automatically preceeded by '(^| )(' and
+    //  characters.  The pattern is automatically preceded by '(^| )(' and
     //  followed by ')( |$)', so your pattern will have to match full words
     //  in the class name.  Assigning an element this class name will
     //  prevent `asciimath2jax` from processing its contents.
@@ -423,7 +410,7 @@ MathJax.Hub.Config({
     //  within tags that have been marked as ignored or skipped above.
     //  Note that this is a regular expression, and so you need to be sure
     //  to quote any regexp special characters.  The pattern is
-    //  automatically preceeded by '(^| )(' and followed by ')( |$)', so
+    //  automatically preceded by '(^| )(' and followed by ')( |$)', so
     //  your pattern will have to match full words in the class name.  Use
     //  this to restart processing within an element that has been marked
     //  as ignored above.
@@ -548,9 +535,9 @@ MathJax.Hub.Config({
                            //  or "all" to number all displayed equations
 //    formatNumber: function (n) {return n},                // format for equation number n
 //    formatTag:    function (n) {return '('+n+')'},        // format for \tag and \eqref
-//    formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/[:'"<>&]/g,"")},
+//    formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/\s/g,"_")},
 //                                                          // element ID to use for reference
-//    formatURL:    function (id,base) {return base+'#'+escape(id)},
+//    formatURL:    function (id,base) {return base+'#'+encodeURIComponent(id)},
 //                                                          // URL to use for references
       useLabelIds: true    // make element ID's use \label name rather than equation number
     },
@@ -752,7 +739,7 @@ MathJax.Hub.Config({
     //
     //  When true, MathJax will not measure the widths or heights of the
     //  subexpressions as it creates its output, but instead will rely on
-    //  its internal calculautions based on teh bounding boxes of the
+    //  its internal calculations based on the bounding boxes of the
     //  characters it uses, and will only take measurements when it
     //  absolutely has to.  Since measurements cause display reflows, they
     //  slows down MathJax considerably, so without them MathJax runs
@@ -814,7 +801,7 @@ MathJax.Hub.Config({
     //
     //  Configuration for <maction> tooltips
     //    (see also the #MathJax_Tooltip CSS in MathJax/jax/output/HTML-CSS/config.js,
-    //     which can be overriden using the styles values above).
+    //     which can be overridden using the styles values above).
     //
     tooltip: {
       delayPost: 600,          // milliseconds delay before tooltip is posted after mouseover
@@ -1005,7 +992,7 @@ MathJax.Hub.Config({
     //
     //  Configuration for <maction> tooltips
     //    (see also the #MathJax_Tooltip CSS in MathJax/jax/output/SVG/config.js,
-    //     which can be overriden using the styles values above).
+    //     which can be overridden using the styles values above).
     //
     tooltip: {
       delayPost: 600,          // milliseconds delay before tooltip is posted after mouseover

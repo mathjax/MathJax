@@ -11,7 +11,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@
         }},[["div",{
           id: "MathJax_Font_Test",
           style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
+                  "min-width": 0, "max-width": "none",
                   padding:0, border:0, margin:0, whiteSpace:"nowrap",
                   textAlign:"left", textIndent:0, textTransform:"none",
                   lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
@@ -197,7 +198,7 @@
     },
     loadError: function (font) {
       MESSAGE(["CantLoadWebFont","Can't load web font %1",HTMLCSS.fontInUse+"/"+font.directory],null,2000);
-      HUB.Startup.signal.Post(["HTML-CSS Jax - web font error",HTMLCSS.fontInUse+"/"+font.directory,font]);
+      HUB.Startup.signal.Post("HTML-CSS Jax - web font error for " + HTMLCSS.fontInUse+"/"+font.directory);
     },
     firefoxFontError: function (font) {
       MESSAGE(["FirefoxCantLoadWebFont","Firefox can't load web fonts from a remote host"],null,3000);
@@ -1074,9 +1075,15 @@
     thickness2em: function (length,mu) {
       var thick = HTMLCSS.TeX.rule_thickness;
       if (length === MML.LINETHICKNESS.MEDIUM) {return thick}
-      if (length === MML.LINETHICKNESS.THIN) {return .67*thick}
-      if (length === MML.LINETHICKNESS.THICK) {return 1.67*thick}
+      if (length === MML.LINETHICKNESS.THIN)   {return .67*thick}
+      if (length === MML.LINETHICKNESS.THICK)  {return 1.67*thick}
       return this.length2em(length,mu,thick);
+    },
+    border2em: function (length,mu) {
+      if (length === MML.LINETHICKNESS.THIN)   {length = "1px"}
+      if (length === MML.LINETHICKNESS.MEDIUM) {length = "3px"}
+      if (length === MML.LINETHICKNESS.THICK)  {length = "5px"}
+      return this.length2em(length,mu);
     },
     
     getPadding: function (span) {
@@ -1094,7 +1101,7 @@
         var style = span.style[ID+"Style"];
         if (style) {
           has = true;
-          border[id] = this.length2em(span.style[ID+"Width"]);
+          border[id] = this.border2em(span.style[ID+"Width"] || MML.LINETHICKNESS.MEDIUM);
           css[ID] = [span.style[ID+"Width"],span.style[ID+"Style"],span.style[ID+"Color"]].join(" ");
         }
       }}
@@ -1457,6 +1464,7 @@
         if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w};
         x -= (w - W)/2;
       }
+      x -= right.bbox.lw;
       this.placeBox(right,x,0,true);
       span.bbox = {
         w: x+right.bbox.rw, lw: 0, rw: x+right.bbox.rw,

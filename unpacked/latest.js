@@ -8,7 +8,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -127,7 +127,7 @@
                return;
              }
            } else {
-             Error("Problem aquiring MathJax version: status = " + request.status);
+             Error("Problem acquiring MathJax version: status = " + request.status);
            }
            loadDefaultMathJax();
          }

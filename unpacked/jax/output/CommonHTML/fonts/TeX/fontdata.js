@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015-2017 The MathJax Consortium
+ *  Copyright (c) 2015-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 (function (CHTML,MML,AJAX) {
-  var VERSION = "2.7.2";
+  var VERSION = "2.7.3";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-Bold",
@@ -49,7 +49,7 @@
     ".MJXc-TeX-unknown-BI": {"font-family":UNDEFINEDFAMILY, "font-style":"italic", "font-weight":"bold"}
   });
 
-  CHTML.TEX = CHTML.TEXDEF;     // use default TeX paramaters
+  CHTML.TEX = CHTML.TEXDEF;     // use default TeX parameters
   CHTML.FONTDEF.TeX = {
     version: VERSION,
       
