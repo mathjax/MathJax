@@ -962,8 +962,8 @@
     Check: function (data) {
       var svg = data.toSVG(); this.svg.push(svg);
       if (data.SVGcanStretch("Vertical")) {svg.mml = data}
-      if (svg.h > this.sh) {this.sh = svg.h}
-      if (svg.d > this.sd) {this.sd = svg.d}
+      if (svg.h + svg.y > this.sh) {this.sh = svg.h + svg.y}
+      if (svg.d - svg.y > this.sd) {this.sd = svg.d - svg.y}
     },
     Stretch: function () {
       for (var i = 0, m = this.svg.length; i < m; i++)
