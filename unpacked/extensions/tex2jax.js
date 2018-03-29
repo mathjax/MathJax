@@ -154,19 +154,23 @@ MathJax.Extension.tex2jax = {
     }
   },
   
-  scanText: function (element) {
+  scanText: function (element,pos) {
     if (element.nodeValue.replace(/\s+/,'') == '') {return element}
     var match, prev;
     this.search = {start: true};
     this.pattern = this.start;
     while (element) {
-      this.pattern.lastIndex = 0;
+      this.pattern.lastIndex = pos || 0;
       while (element && element.nodeName.toLowerCase() === '#text' &&
             (match = this.pattern.exec(element.nodeValue))) {
         if (this.search.start) {element = this.startMatch(match,element)}
                           else {element = this.endMatch(match,element)}
       }
-      if (this.search.matched) {element = this.encloseMath(element)}
+      if (this.search.matched) {
+        element = this.encloseMath(element);
+      } else if (!this.search.start) {
+        element = this.scanText(this.search.open, this.search.opos + this.search.olen);
+      }
       if (element) {
         do {prev = element; element = element.nextSibling}
           while (element && this.ignoreTags[element.nodeName.toLowerCase()] != null);
