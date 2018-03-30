@@ -305,7 +305,8 @@
 	  display: "inline", position: "static",
 	  border: 0, padding: 0, margin: 0,
 	  "vertical-align": 0, "line-height": "normal",
-	  "text-decoration": "none"
+	  "text-decoration": "none",
+          "box-sizing": "content-box"
 	},
 
         ".MathJax nobr": {
