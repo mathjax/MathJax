@@ -1464,12 +1464,12 @@
     
     Overset: function (name) {
       var top = this.ParseArg(name), base = this.ParseArg(name);
-      if (base.movablelimits) base.movablelimits = false;
+      base.movablelimits = false;
       this.Push(MML.mover(base,top));
     },
     Underset: function (name) {
       var bot = this.ParseArg(name), base = this.ParseArg(name);
-      if (base.movablelimits) base.movablelimits = false;
+      base.movablelimits = false;
       this.Push(MML.munder(base,bot));
     },
     
