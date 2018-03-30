@@ -2172,7 +2172,7 @@
           //    so if they are close to full width, make sure they aren't too big.
           //
           if (Math.abs(w-SVG.cwidth) < 10)
-            style.maxWidth = SVG.Fixed(SVG.cwidth*SVG.em/1000);
+            style.maxWidth = SVG.Fixed(SVG.cwidth*SVG.em/1000) + "px";
           //
           //  Add it to the MathJax span
           //
