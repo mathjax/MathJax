@@ -2193,10 +2193,19 @@
 
     },{
       HTMLautoload: function () {
+        this.toHTML = MML.mbase.HTMLautoloadFail;
 	var file = HTMLCSS.autoloadDir+"/"+this.type+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },
+      HTMLautoloadFail: function () {
+        throw Error("HTML-CSS can't autoload '"+ this.type + "'");
+      },
+      HTMLautoloadList: {},
       HTMLautoloadFile: function (name) {
+        if (MML.mbase.HTMLautoloadList.hasOwnProperty(name)) {
+          throw Error("HTML-CSS can't autoload file '"+name+"'");
+        }
+        MML.mbase.HTMLautoloadList[name] = true;
 	var file = HTMLCSS.autoloadDir+"/"+name+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },

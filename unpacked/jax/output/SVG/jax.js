@@ -1453,10 +1453,19 @@
 	return svg;
       },
       SVGautoload: function () {
+        this.toSVG = MML.mbase.SVGautoloadFail;
 	var file = SVG.autoloadDir+"/"+this.type+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },
+      SVGautoloadFail: function () {
+        throw Error("SVG can't autoload '"+ this.type + "'");
+      },
+      SVGautoloadList: {},
       SVGautoloadFile: function (name) {
+        if (MML.mbase.SVGautoloadList.hasOwnProperty(name)) {
+          throw Error("SVG can't autoload file '"+name+"'");
+        }
+        MML.mbase.SVGautoloadList[name] = true;
 	var file = SVG.autoloadDir+"/"+name+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       }
