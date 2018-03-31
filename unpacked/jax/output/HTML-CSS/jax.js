@@ -2193,7 +2193,7 @@
 
     },{
       HTMLautoload: function () {
-        this.toHTML = MML.mbase.HTMLautoloadFail;
+        this.constructor.Augment({toHTML: MML.mbase.HTMLautoloadFail});
 	var file = HTMLCSS.autoloadDir+"/"+this.type+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },

@@ -1759,7 +1759,7 @@
       //  Autoload files based on node type or file name
       //
       CHTMLautoload: function () {
-        this.toCommonHTML = MML.mbase.CHTMLautoloadFail;
+        this.constructor.Augment({toCommonHTML: MML.mbase.CHTMLautoloadFail});
 	var file = CHTML.autoloadDir+"/"+this.type+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },

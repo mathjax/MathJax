@@ -1453,7 +1453,7 @@
 	return svg;
       },
       SVGautoload: function () {
-        this.toSVG = MML.mbase.SVGautoloadFail;
+        this.constructor.Augment({toSVG: MML.mbase.SVGautoloadFail});
 	var file = SVG.autoloadDir+"/"+this.type+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },
