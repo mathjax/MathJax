@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ar","HelpDialog",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           Help: "\u0645\u0633\u0627\u0639\u062F\u0629 \u0645\u0627\u062B \u062C\u0627\u0643\u0633",

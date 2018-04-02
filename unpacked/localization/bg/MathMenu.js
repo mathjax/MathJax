@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("bg","MathMenu",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           Show: "\u041F\u043E\u043A\u0430\u0436\u0438 \u043A\u0430\u0442\u043E",

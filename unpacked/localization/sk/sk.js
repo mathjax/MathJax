@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("sk",null,{
   menuTitle: "sloven\u010Dina",
-  version: "2.7.3",
+  version: "2.7.4",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           MathProcessingError: "Chyba spracovania matematiky",

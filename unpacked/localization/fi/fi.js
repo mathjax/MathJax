@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("fi",null,{
   menuTitle: "suomi",
-  version: "2.7.3",
+  version: "2.7.4",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax on l\u00F6yt\u00E4nyt ev\u00E4steen, joka sis\u00E4lt\u00E4\u00E4 asetuksia ja ohjelmakoodia. Haluatko ajaa sen?\n\n(Peru, ellet ole luonut ev\u00E4stett\u00E4 itse.)",

@@ -26,7 +26,7 @@
  */
 
 MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
-  var VERSION = "2.7.3";
+  var VERSION = "2.7.4";
   
   var MML = MathJax.ElementJax.mml,
       SETTINGS = MathJax.Hub.config.menuSettings;
@@ -86,7 +86,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
       if (this.mathvariant && this.toMathMLvariants[this.mathvariant])
         {CLASS.push("MJX"+this.mathvariant)}
       if (this.variantForm) {CLASS.push("MJX-variant")}
-      if (CLASS.length) {attr.unshift('class="'+CLASS.join(" ")+'"')}
+      if (CLASS.length) {attr.unshift('class="'+this.toMathMLquote(CLASS.join(" "))+'"')}
     },
     toMathMLattribute: function (value) {
       if (typeof(value) === "string" &&
@@ -165,7 +165,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
         var xmlEscapedTex = jax.originalText.replace(/[&<>]/g, function(item) {
             return { '>': '&gt;', '<': '&lt;','&': '&amp;' }[item]
         });
-        data.push(space+'    <annotation encoding="'+annotation+'">'+xmlEscapedTex+"</annotation>");
+        data.push(space+'    <annotation encoding="'+this.toMathMLquote(annotation)+'">'+xmlEscapedTex+"</annotation>");
         data.push(space+"  </semantics>");
       }
       return space+"<"+tag+attr+">\n"+data.join("\n")+"\n"+space+"</"+tag+">";
@@ -221,7 +221,7 @@ MathJax.Hub.Register.LoadHook("[MathJax]/jax/element/mml/jax.js",function () {
   });
   
   MML.entity.Augment({
-    toMathML: function (space) {return (space||"") + "&"+this.data[0]+";<!-- "+this.toString()+" -->"}
+    toMathML: function (space) {return (space||"") + "&"+this.toMathMLquote(this.data[0])+";<!-- "+this.toString()+" -->"}
   });
   
   MML.xml.Augment({

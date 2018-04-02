@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,HTML) {
-  var VERSION = "2.7.3";
+  var VERSION = "2.7.4";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -94,7 +94,7 @@
         "sans-serif-italic": {fonts: [ITALIC,NONUNII], offsetA: 0x1D608, offsetN: 0xE1B4, offsetG: 0xE1BF, offsetE: 0xE1BF, italic:true},
         "sans-serif-bold-italic": {fonts: [BITALIC,"STIXNonUnicode-bold-italic"], offsetA: 0x1D63C, offsetN: 0xE1F6, offsetG: 0x1D790, bold:true, italic:true},
         "monospace": {offsetA: 0x1D670, offsetN: 0x1D7F6,
-                   remap: {0x20: [0x20,"-STIX-variant"]}}, // use a special space for monospace (see below)
+                   remap: {0x20: [0x20,"-STIX-variant"], 0xA0: [0xA0,"-STIX-variant"]}}, // use a special space for monospace (see below)
         "-STIX-variant": {fonts:["STIXVariants",NONUNI,GENERAL],
                    remap: {0x2A87: 0xE010, 0x2A88: 0xE00F, 0x2270: 0xE011, 0x2271: 0xE00E,
                            0x22E0: 0xE04B, 0x22E1: 0xE04F, 0x2288: 0xE016, 0x2289: 0xE018,
@@ -1526,6 +1526,8 @@
     // monospace mathvariant uses space from STIXVariants, so make it the right size
     HTMLCSS.FONTDATA.FONTS['STIXVariants'][0x20][2] += 275;       // fix error in character width
     HTMLCSS.FONTDATA.FONTS['STIXVariants'][0x20][5] = {rfix:275}; // fix error in character width
+    HTMLCSS.FONTDATA.FONTS['STIXVariants'][0xA0][2] += 275;       // fix error in character width
+    HTMLCSS.FONTDATA.FONTS['STIXVariants'][0xA0][5] = {rfix:275}; // fix error in character width
   });
 
   //

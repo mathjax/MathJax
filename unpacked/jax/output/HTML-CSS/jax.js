@@ -305,7 +305,8 @@
 	  display: "inline", position: "static",
 	  border: 0, padding: 0, margin: 0,
 	  "vertical-align": 0, "line-height": "normal",
-	  "text-decoration": "none"
+	  "text-decoration": "none",
+          "box-sizing": "content-box"
 	},
 
         ".MathJax nobr": {
@@ -2192,10 +2193,19 @@
 
     },{
       HTMLautoload: function () {
+        this.constructor.Augment({toHTML: MML.mbase.HTMLautoloadFail});
 	var file = HTMLCSS.autoloadDir+"/"+this.type+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },
+      HTMLautoloadFail: function () {
+        throw Error("HTML-CSS can't autoload '"+ this.type + "'");
+      },
+      HTMLautoloadList: {},
       HTMLautoloadFile: function (name) {
+        if (MML.mbase.HTMLautoloadList.hasOwnProperty(name)) {
+          throw Error("HTML-CSS can't autoload file '"+name+"'");
+        }
+        MML.mbase.HTMLautoloadList[name] = true;
 	var file = HTMLCSS.autoloadDir+"/"+name+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },
@@ -2783,7 +2793,7 @@
 	      stretch[i] = (D == null && HW != null ? false :
 			   this.data[i].HTMLcanStretch("Horizontal"));
               if (this.data[this.over] && values.accent) {
-                children[i].bbox.h = Math.max(children[i].bbox.h,HTMLCSS.TeX.x_height); // min height of 1ex (#1706)
+                children[i].bbox.h = Math.max(children[i].bbox.h,scale*HTMLCSS.TeX.x_height); // min height of 1ex (#1706)
               }
 	    } else {
 	      stretch[i] = this.data[i].HTMLcanStretch("Horizontal");

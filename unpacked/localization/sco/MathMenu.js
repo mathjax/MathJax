@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sco","MathMenu",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           Show: "Shaw maths aes",

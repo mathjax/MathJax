@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.mml2jax = {
-  version: "2.7.3",
+  version: "2.7.4",
   config: {
     preview: "mathml"       // Use the <math> element as the
                             //   preview.  Set to "none" for no preview,

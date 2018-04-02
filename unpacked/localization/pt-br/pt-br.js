@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("pt-br",null,{
   menuTitle: "portugu\u00EAs do Brasil",
-  version: "2.7.3",
+  version: "2.7.4",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           CookieConfig: "O MathJax encontrou um cookie com configura\u00E7\u00F5es de usu\u00E1rio que inclui c\u00F3digo a ser executado. Deseja execut\u00E1-lo?\n\n(Voc\u00EA deve pressionar Cancelar a n\u00E3o ser que voc\u00EA mesmo tenha criado o cookie.)",

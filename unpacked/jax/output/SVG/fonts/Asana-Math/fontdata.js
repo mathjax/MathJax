@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-  var VERSION = "2.7.3";
+  var VERSION = "2.7.4";
 
   var ALPHABETS = "AsanaMathJax_Alphabets",
       ARROWS = "AsanaMathJax_Arrows",

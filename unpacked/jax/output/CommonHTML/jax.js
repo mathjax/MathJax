@@ -1759,10 +1759,19 @@
       //  Autoload files based on node type or file name
       //
       CHTMLautoload: function () {
+        this.constructor.Augment({toCommonHTML: MML.mbase.CHTMLautoloadFail});
 	var file = CHTML.autoloadDir+"/"+this.type+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },
+      CHTMLautoloadFail: function () {
+        throw Error("CommonHTML can't autoload '"+ this.type + "'");
+      },
+      CHTMLautoloadList: {},
       CHTMLautoloadFile: function (name) {
+        if (MML.mbase.CHTMLautoloadList.hasOwnProperty(name)) {
+          throw Error("CommonHTML can't autoload file '"+name+"'");
+        }
+        MML.mbase.CHTMLautoloadList[name] = true;
 	var file = CHTML.autoloadDir+"/"+name+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },

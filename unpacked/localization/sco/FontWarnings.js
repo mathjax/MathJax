@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sco","FontWarnings",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           webFont: "MathJax is uisin wab-based fonts tae displey the mathematics oan this page.  Thir tak time tae doonlaid, sae the page wid render faster gif ye installed maths fonts directlie in yer system's font fauder.",

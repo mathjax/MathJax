@@ -62,7 +62,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/unicode"] = {
-  version: "2.7.3",
+  version: "2.7.4",
   unicode: {},
   config: MathJax.Hub.CombineConfig("TeX.unicode",{
     fonts: "STIXGeneral,'Arial Unicode MS'"
@@ -89,8 +89,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
           {HD = HD.replace(/ /g,"").split(/,/); font = this.GetBrackets(name)}
             else {font = HD; HD = null}
       }
-      var n = this.trimSpaces(this.GetArgument(name)),
-          N = parseInt(n.match(/^x/) ? "0"+n : n);
+      var n = this.trimSpaces(this.GetArgument(name)).replace(/^0x/,"x");
+      if (!n.match(/^(x[0-9A-Fa-f]+|[0-9]+)$/)) {
+        TEX.Error(["BadUnicode","Argument to \\unicode must be a number"]);
+      }
+      var N = parseInt(n.match(/^x/) ? "0"+n : n);
       if (!UNICODE[N]) {UNICODE[N] = [800,200,font,N]}
       else if (!font) {font = UNICODE[N][2]}
       if (HD) {
@@ -101,7 +104,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       if (font) {
         UNICODE[N][2] = def.fontfamily = font.replace(/"/g,"'");
         if (variant) {
-          if (variant.match(/bold/))   {def.fontweight = "bold"}
+          if (variant.match(/bold/)) {def.fontweight = "bold"}
           if (variant.match(/italic|-mathit/)) {def.fontstyle = "italic"}
         }
       } else if (variant) {def.mathvariant = variant}

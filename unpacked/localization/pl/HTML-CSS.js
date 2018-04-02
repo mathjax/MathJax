@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("pl","HTML-CSS",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           LoadWebFont: "\u0141aduj\u0119 czcionk\u0119 %1",

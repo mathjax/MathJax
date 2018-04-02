@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("lt","FontWarnings",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           webFont: "\u0160iame tinklalapyje matematikos tekst\u0105 \u201EMathJax\u201C rodo tinkle saugomais \u0161riftais, kuriems \u012Fkelti reikia laiko. Teksto rinkim\u0105 galima greitinti, matematikos \u0161riftus \u012Fdiegus naudotojo kompiuteryje.",

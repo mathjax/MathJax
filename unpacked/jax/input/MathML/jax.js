@@ -209,7 +209,7 @@
 	math = match[1].replace(/ (?!xmlns=)([a-z]+=(['"])http:.*?\2)/ig," xmlns:$1 $1") +
                math.substr(match[0].length);
       }
-      if (math.match(/^<math/i) && !math.match(/^<[^<>]* xmlns=/)) {
+      if (math.match(/^<math[ >]/i) && !math.match(/^<[^<>]* xmlns=/)) {
         // append the MathML namespace
         math = math.replace(/^<(math)/i,'<math xmlns="http://www.w3.org/1998/Math/MathML"')
       }

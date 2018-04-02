@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("pt","MathMenu",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           Show: "Mostrar f\u00F3rmulas como",

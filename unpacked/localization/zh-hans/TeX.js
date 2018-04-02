@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("zh-hans","TeX",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u6709\u591A\u4F59\u7684\u5DE6\u62EC\u53F7\u6216\u7F3A\u5C11\u53F3\u62EC\u53F7",

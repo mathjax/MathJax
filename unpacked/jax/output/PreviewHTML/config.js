@@ -27,7 +27,7 @@
 
 MathJax.OutputJax.PreviewHTML = MathJax.OutputJax({
   id: "PreviewHTML",
-  version: "2.7.3",
+  version: "2.7.4",
   directory: MathJax.OutputJax.directory + "/PreviewHTML",
   extensionDir: MathJax.OutputJax.extensionDir + "/PreviewHTML",
   noFastPreview: true,  // don't do fast preview for this output jax

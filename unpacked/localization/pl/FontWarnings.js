@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("pl","FontWarnings",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           webFont: "MathJax u\u017Cywa czcionek Web, aby wy\u015Bwietli\u0107 wzory matematyczne na tej stronie. Pobranie czcionek z sieci zajmuje chwil\u0119. Strona ta mog\u0142aby za\u0142adowa\u0107 si\u0119 szybciej, je\u015Bli zainstalowa\u0142by\u015B czcionki lokalnie w swoim systemie.",

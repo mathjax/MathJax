@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("nl","FontWarnings",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           webFont: "MathJax gebruikt web-gebaseerde lettertypes om wiskunde weer te geven op deze pagina. Het kost tijd om deze te downloaden, dus de pagina zou sneller weergegeven worden als u de wiskunde lettertypes direct in de lettertype map van uw systeem zou plaatsen.",

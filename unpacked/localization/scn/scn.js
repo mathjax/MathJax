@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("scn",null,{
   menuTitle: "sicilianu",
-  version: "2.7.3",
+  version: "2.7.4",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           MathProcessingError: "Erruri nt\u00E2 labburazzioni d\u00EE f\u00F2rmuli matim\u00E0tichi",

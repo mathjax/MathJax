@@ -27,7 +27,7 @@
  */
 
 (function (HUB,AJAX) {
-  var VERSION = "2.7.3";
+  var VERSION = "2.7.4";
   
   var CONFIG = MathJax.Hub.CombineConfig("Safe",{
     allow: {

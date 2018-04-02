@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "2.7.3",
+  version: "2.7.4",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
@@ -156,22 +156,29 @@ MathJax.Extension.tex2jax = {
   
   scanText: function (element) {
     if (element.nodeValue.replace(/\s+/,'') == '') {return element}
-    var match, prev;
+    var match, prev, pos = 0, rescan;
     this.search = {start: true};
     this.pattern = this.start;
     while (element) {
-      this.pattern.lastIndex = 0;
+      rescan = null;
+      this.pattern.lastIndex = pos; pos = 0;
       while (element && element.nodeName.toLowerCase() === '#text' &&
             (match = this.pattern.exec(element.nodeValue))) {
         if (this.search.start) {element = this.startMatch(match,element)}
                           else {element = this.endMatch(match,element)}
       }
-      if (this.search.matched) {element = this.encloseMath(element)}
+      if (this.search.matched) element = this.encloseMath(element);
+        else if (!this.search.start) rescan = this.search;
       if (element) {
         do {prev = element; element = element.nextSibling}
           while (element && this.ignoreTags[element.nodeName.toLowerCase()] != null);
-        if (!element || element.nodeName !== '#text')
-          {return (this.search.close ? this.prevEndMatch() : prev)}
+        if (!element || element.nodeName !== '#text') {
+          if (!rescan) return (this.search.close ? this.prevEndMatch() : prev);
+          element = rescan.open;
+          pos = rescan.opos + rescan.olen + (rescan.blen || 0);
+          this.search = {start: true};
+          this.pattern = this.start;
+        }
       }
     }
     return element;
@@ -189,7 +196,7 @@ MathJax.Extension.tex2jax = {
       this.search = {
         end: "\\end{"+match[1]+"}", mode: "; mode=display", pcount: 0,
         open: element, olen: 0, opos: this.pattern.lastIndex - match[0].length,
-        isBeginEnd: true
+        blen: match[1].length + 3, isBeginEnd: true
       };
       this.switchPattern(this.endPattern(this.search.end));
     } else if (match[0].substr(0,4) === "\\ref" || match[0].substr(0,6) === "\\eqref") {

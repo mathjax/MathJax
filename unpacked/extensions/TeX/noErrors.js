@@ -71,7 +71,7 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "2.7.3";
+  var VERSION = "2.7.4";
   
   var CONFIG = HUB.CombineConfig("TeX.noErrors",{
     disabled: false,               // set to true to return to original error messages

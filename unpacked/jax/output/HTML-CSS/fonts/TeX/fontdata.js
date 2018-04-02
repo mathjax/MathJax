@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "2.7.3";
+  var VERSION = "2.7.4";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
@@ -1587,6 +1587,10 @@
   MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Typewriter/Regular/BasicLatin.js",function () {
     HTMLCSS.FONTDATA.FONTS['MathJax_Typewriter'][0x20][2] += 275;       // fix error in character width
     HTMLCSS.FONTDATA.FONTS['MathJax_Typewriter'][0x20][5] = {rfix:275}; // fix error in character width
+  });
+  MathJax.Hub.Register.LoadHook(HTMLCSS.fontDir+"/Typewriter/Regular/Other.js",function () {
+    HTMLCSS.FONTDATA.FONTS['MathJax_Typewriter'][0xA0][2] += 275;       // fix error in character width
+    HTMLCSS.FONTDATA.FONTS['MathJax_Typewriter'][0xA0][5] = {rfix:275}; // fix error in character width
   });
   
   //

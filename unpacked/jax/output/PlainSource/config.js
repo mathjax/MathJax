@@ -24,7 +24,7 @@
 
 MathJax.OutputJax.PlainSource = MathJax.OutputJax({
   id: "PlainSource",
-  version: "2.7.3",
+  version: "2.7.4",
   directory: MathJax.OutputJax.directory + "/PlainSource",
   extensionDir: MathJax.OutputJax.extensionDir + "/PlainSource",
 

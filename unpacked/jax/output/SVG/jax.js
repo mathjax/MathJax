@@ -962,8 +962,8 @@
     Check: function (data) {
       var svg = data.toSVG(); this.svg.push(svg);
       if (data.SVGcanStretch("Vertical")) {svg.mml = data}
-      if (svg.h > this.sh) {this.sh = svg.h}
-      if (svg.d > this.sd) {this.sd = svg.d}
+      if (svg.h + svg.y > this.sh) {this.sh = svg.h + svg.y}
+      if (svg.d - svg.y > this.sd) {this.sd = svg.d - svg.y}
     },
     Stretch: function () {
       for (var i = 0, m = this.svg.length; i < m; i++)
@@ -1453,10 +1453,19 @@
 	return svg;
       },
       SVGautoload: function () {
+        this.constructor.Augment({toSVG: MML.mbase.SVGautoloadFail});
 	var file = SVG.autoloadDir+"/"+this.type+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       },
+      SVGautoloadFail: function () {
+        throw Error("SVG can't autoload '"+ this.type + "'");
+      },
+      SVGautoloadList: {},
       SVGautoloadFile: function (name) {
+        if (MML.mbase.SVGautoloadList.hasOwnProperty(name)) {
+          throw Error("SVG can't autoload file '"+name+"'");
+        }
+        MML.mbase.SVGautoloadList[name] = true;
 	var file = SVG.autoloadDir+"/"+name+".js";
 	HUB.RestartAfter(AJAX.Require(file));
       }
@@ -1960,7 +1969,7 @@
               boxes[i] = this.SVGdataStretched(i,HW,D);
 	      stretch[i] = (D != null || HW == null) && this.data[i].SVGcanStretch("Horizontal");
               if (this.data[this.over] && values.accent) {
-                boxes[i].h = Math.max(boxes[i].h,SVG.TeX.x_height); // min height of 1ex (#1706)
+                boxes[i].h = Math.max(boxes[i].h,scale*SVG.TeX.x_height); // min height of 1ex (#1706)
               }
             } else {
               boxes[i] = this.data[i].toSVG(); boxes[i].x = 0; delete boxes[i].X;
@@ -2172,7 +2181,7 @@
           //    so if they are close to full width, make sure they aren't too big.
           //
           if (Math.abs(w-SVG.cwidth) < 10)
-            style.maxWidth = SVG.Fixed(SVG.cwidth*SVG.em/1000);
+            style.maxWidth = SVG.Fixed(SVG.cwidth*SVG.em/1000) + "px";
           //
           //  Add it to the MathJax span
           //

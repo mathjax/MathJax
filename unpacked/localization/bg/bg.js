@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("bg",null,{
   menuTitle: " \u0431\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438",
-  version: "2.7.3",
+  version: "2.7.4",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           MathProcessingError: "\u0413\u0440\u0435\u0448\u043A\u0430 \u043F\u0440\u0438 \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0430\u0442\u0430",

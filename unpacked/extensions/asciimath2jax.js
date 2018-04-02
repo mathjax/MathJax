@@ -30,7 +30,7 @@
  */
 
 MathJax.Extension.asciimath2jax = {
-  version: "2.7.3",
+  version: "2.7.4",
   config: {
     delimiters: [['`','`']],   // The star/stop delimiter pairs for asciimath code
 
@@ -128,21 +128,29 @@ MathJax.Extension.asciimath2jax = {
   
   scanText: function (element) {
     if (element.nodeValue.replace(/\s+/,'') == '') {return element}
-    var match, prev;
+    var match, prev, pos = 0, rescan;
     this.search = {start: true};
     this.pattern = this.start;
     while (element) {
-      this.pattern.lastIndex = 0;
+      rescan = null;
+      this.pattern.lastIndex = pos || 0; pos = 0;
       while (element && element.nodeName.toLowerCase() === '#text' &&
             (match = this.pattern.exec(element.nodeValue))) {
         if (this.search.start) {element = this.startMatch(match,element)}
                           else {element = this.endMatch(match,element)}
       }
-      if (this.search.matched) {element = this.encloseMath(element)}
+      if (this.search.matched) element = this.encloseMath(element);
+        else if (!this.search.start) rescan = this.search;
       if (element) {
         do {prev = element; element = element.nextSibling}
           while (element && this.ignoreTags[element.nodeName.toLowerCase()] != null);
-        if (!element || element.nodeName !== '#text') {return prev}
+        if (!element || element.nodeName !== '#text') {
+          if (!rescan) return prev;
+          element = rescan.open;
+          pos = rescan.opos + rescan.olen;
+          this.search = {start: true};
+          this.pattern = this.start;
+        }
       }
     }
     return element;
