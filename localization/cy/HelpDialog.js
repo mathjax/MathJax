@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("cy","HelpDialog",{version:"2.7.3",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/cy/HelpDialog.js");
+MathJax.Localization.addTranslation("cy","HelpDialog",{version:"2.7.4",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/cy/HelpDialog.js");

@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("ia","MathML",{version:"2.7.3",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/ia/MathML.js");
+MathJax.Localization.addTranslation("ia","MathML",{version:"2.7.4",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/ia/MathML.js");

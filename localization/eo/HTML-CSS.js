@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("eo","HTML-CSS",{version:"2.7.3",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/eo/HTML-CSS.js");
+MathJax.Localization.addTranslation("eo","HTML-CSS",{version:"2.7.4",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/eo/HTML-CSS.js");
