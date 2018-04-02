@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("zh-hant","HTML-CSS",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           LoadWebFont: "\u7DB2\u9801\u5B57\u578B%1\u8F09\u5165\u4E2D",

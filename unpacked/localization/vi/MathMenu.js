@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("vi","MathMenu",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           Show: "Xem To\u00E1n D\u01B0\u1EDBi d\u1EA1ng",

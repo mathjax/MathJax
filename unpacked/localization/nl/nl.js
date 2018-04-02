@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("nl",null,{
   menuTitle: "Nederlands",
-  version: "2.7.3",
+  version: "2.7.4",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax heeft een gebruikersconfiguratie cookie aangetroffen dat code bevat die uitgevoerd moet worden. Wilt u deze uitvoeren?\n\\n\n(U zou op annuleren moeten drukken tenzij u het cookie zelf ingesteld heeft.)",

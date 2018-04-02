@@ -20,11 +20,11 @@
 MathJax.Localization.addTranslation("ar",null,{
   menuTitle: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629",
   fontDirection: "rtl",
-  version: "2.7.3",
+  version: "2.7.4",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           MathProcessingError: "\u062E\u0637\u0623 \u0645\u0639\u0627\u0644\u062C\u0629 \u0631\u064A\u0627\u0636\u064A\u0629",

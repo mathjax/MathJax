@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ia","FontWarnings",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           webFont: "MathJax utilisa typos de litteras discargate del web pro presentar le formulas mathematic in iste pagina. Istes require tempore pro esser discargate; le pagina apparerea plus rapidemente si vos installa le typos de characteres mathematic directemente in le dossier de typos de litteras de vostre computator.",

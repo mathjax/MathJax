@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("he","HelpDialog",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           Help: "\u05E2\u05D6\u05E8\u05D4 \u05E9\u05DC MathJax",

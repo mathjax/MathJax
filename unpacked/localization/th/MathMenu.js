@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("th","MathMenu",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           Show: "\u0E41\u0E2A\u0E14\u0E07\u0E2A\u0E21\u0E01\u0E32\u0E23\u0E04\u0E13\u0E34\u0E15\u0E28\u0E32\u0E2A\u0E15\u0E23\u0E4C\u0E43\u0E19\u0E23\u0E39\u0E1B",

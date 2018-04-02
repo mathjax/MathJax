@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-  var VERSION = "2.7.3";
+  var VERSION = "2.7.4";
 
   var ALPHABETS = "NeoEulerMathJax_Alphabets",
       ARROWS = "NeoEulerMathJax_Arrows",

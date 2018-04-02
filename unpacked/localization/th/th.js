@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("th",null,{
   menuTitle: "\u0E44\u0E17\u0E22",
-  version: "2.7.3",
+  version: "2.7.4",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           MathProcessingError: "\u0E01\u0E32\u0E23\u0E1B\u0E23\u0E30\u0E21\u0E27\u0E25\u0E1C\u0E25\u0E04\u0E13\u0E34\u0E15\u0E28\u0E32\u0E2A\u0E15\u0E23\u0E4C\u0E1C\u0E34\u0E14\u0E1E\u0E25\u0E32\u0E14",

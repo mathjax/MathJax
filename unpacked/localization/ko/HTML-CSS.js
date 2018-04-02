@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ko","HTML-CSS",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           LoadWebFont: "%1 \uC6F9\uD3F0\uD2B8\uB97C \uBD88\uB7EC\uC624\uACE0 \uC788\uC2B5\uB2C8\uB2E4...",

@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("scn","TeX",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Par\u00E8ntisi graffa graputa suverchia o par\u00E8ntisi graffa chiusa ammancanti",

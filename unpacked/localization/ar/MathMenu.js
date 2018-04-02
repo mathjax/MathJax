@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ar","MathMenu",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           Show: "\u062A\u0638\u0647\u0631 \u0627\u0644\u0631\u064A\u0627\u0636\u064A\u0627\u062A \u0643",

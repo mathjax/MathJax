@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("qqq","MathMenu",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           Show: "'Show math as' menu item. MathJax uses 'Math' as a distinct UI choice. Please translate it literally whenever possible.\n\nFollowed by the following menu subitems:\n* {{msg-mathjax|Mathmenu-MathMLcode}}\n* {{msg-mathjax|Mathmenu-Original}}\n* {{msg-mathjax|Mathmenu-Annotation}}\n* {{msg-mathjax|Mathmenu-texHints}} - checkbox label",

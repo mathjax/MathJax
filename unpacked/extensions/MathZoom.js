@@ -26,7 +26,7 @@
  */
 
 (function (HUB,HTML,AJAX,HTMLCSS,nMML) {
-  var VERSION = "2.7.3";
+  var VERSION = "2.7.4";
   
   var CONFIG = HUB.CombineConfig("MathZoom",{
     styles: {

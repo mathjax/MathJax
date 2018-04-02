@@ -26,7 +26,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,LOCALE,OUTPUT,INPUT) {
-  var VERSION = "2.7.3";
+  var VERSION = "2.7.4";
 
   var EXTENSION = MathJax.Extension;
   var ME = EXTENSION.MathEvents = {version: VERSION};

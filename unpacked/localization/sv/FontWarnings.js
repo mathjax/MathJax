@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sv","FontWarnings",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           webFont: "MathJax anv\u00E4nder webb-baserade teckensnitt f\u00F6r att visa matematik p\u00E5 denna sida.  Dessa tar tid att ladda ner, sidan skulle g\u00F6ra snabbare om du installerar matematik-typsnitt direkt i systemets teckensnittsmapp.",

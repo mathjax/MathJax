@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("zh-hans","MathML",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           BadMglyph: "\u9519\u8BEF\u7684\u79FB\u52A8\u5B57\u5F62\uFF1A%1",

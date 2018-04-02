@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ar","TeX",{
-        version: "2.7.3",
+        version: "2.7.4",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "\u0642\u0648\u0633 \u0645\u0641\u062A\u0648\u062D \u0625\u0636\u0627\u0641\u064A \u0623\u0648 \u063A\u0644\u0642 \u0642\u0648\u0633 \u0645\u0641\u0642\u0648\u062F",

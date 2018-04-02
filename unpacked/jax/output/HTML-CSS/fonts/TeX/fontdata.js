@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,AJAX) {
-  var VERSION = "2.7.3";
+  var VERSION = "2.7.4";
   
   var MAIN   = "MathJax_Main",
       BOLD   = "MathJax_Main-bold",
