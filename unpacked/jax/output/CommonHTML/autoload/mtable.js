@@ -409,8 +409,10 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Set variable width on DOM nodes
       //
       if (relWidth) {
-        this.CHTML.pwidth = values.width; this.CHTML.mwidth = CHTML.Em(TW);
-        node.style.width = node.firstChild.style.width = "100%";
+        node.style.width = this.CHTML.pwidth = "100%";
+        this.CHTML.mwidth = CHTML.Em(TW);
+        node.firstChild.style.width = values.width;
+        node.firstChild.style.margin = "auto";
       }
     },
     //
