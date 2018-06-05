@@ -189,8 +189,11 @@
       clear:   "both"
     },
     ".mjx-ex-box": {
+      display: "inline-block!important",
       position: "absolute",
       overflow: "hidden",
+      "min-height": 0, "max-height":"none",
+      padding:0, border: 0, margin: 0,
       width:"1px", height:"60ex"
     },
     ".mjx-test-inline .mjx-left-box": {
@@ -303,7 +306,7 @@
       test.className += " mjx-test-inline mjx-test-default";
       this.defaultEm    = this.getFontSize(test);
       this.defaultEx    = test.childNodes[1].offsetHeight/60;
-      this.defaultWidth = test.lastChild.offsetLeft - test.firstChild.offsetLeft;
+      this.defaultWidth = Math.max(0,test.lastChild.offsetLeft-test.firstChild.offsetLeft-2);
       document.body.removeChild(test);
     },
     getFontSize: (window.getComputedStyle ? 
@@ -485,6 +488,7 @@
           ex = this.defaultEx;
           cwidth = this.defaultWidth;
         }
+        if (cwidth === 0) cwidth = this.defaultWidth;
         if (relwidth) maxwidth = cwidth;
         scale = (this.config.matchFontHeight ? ex/this.TEX.x_height/em : 1);
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
