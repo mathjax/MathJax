@@ -670,7 +670,6 @@
         em = test.childNodes[2].offsetHeight/60;
         cwidth = Math.max(0, jax.HTMLCSS.display ? test.lastChild.offsetWidth - 1: 
                   test.lastChild.offsetLeft - test.firstChild.offsetLeft - 2);
-console.log(em,ex,cwidth);
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
           hidden.push(div);
