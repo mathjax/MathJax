@@ -182,10 +182,10 @@
     },
     ".mjx-test.mjx-test-inline": {
       display:           "inline!important",
-      "margin-right":    "-1px",
+      "margin-right":    "-1px"
     },
     ".mjx-test.mjx-test-default": {
-      display: "block",
+      display: "block!important",
       clear:   "both"
     },
     ".mjx-ex-box": {

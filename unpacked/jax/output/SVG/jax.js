@@ -118,10 +118,10 @@
         },
         ".MathJax_SVG_test.mjx-test-inline": {
           display:           "inline!important",
-          "margin-right":    "-1px",
+          "margin-right":    "-1px"
         },
         ".MathJax_SVG_test.mjx-test-default": {
-          display: "block",
+          display: "block!important",
           clear:   "both"
         },
         ".MathJax_SVG_ex_box": {

@@ -332,26 +332,62 @@
         },
         ".MathJax_Processed": {display:"none!important"},
         
-        ".MathJax_ExBox": {
-          display:"block!important", overflow:"hidden",
-          width:"1px", height:"60ex",
-          "min-height": 0, "max-height":"none"
+        ".MathJax_test": {
+          "font-style":      "normal",
+          "font-weight":     "normal",
+          "font-size":       "100%",
+          "font-size-adjust":"none",
+          "text-indent":     0,
+          "text-transform":  "none",
+          "letter-spacing":  "normal",
+          "word-spacing":    "normal",
+          overflow:          "hidden",
+          height:            "1px"
         },
-        ".MathJax .MathJax_EmBox": {
-          display:"block!important", overflow:"hidden",
-          width:"1px", height:"60em",
-          "min-height": 0, "max-height":"none"
-        },
-        ".MathJax_LineBox": {
+        ".MathJax_test.mjx-test-display": {
           display: (oldIE ? "block" : "table") + "!important"
         },
-        ".MathJax_LineBox span": {
+        ".MathJax_test.mjx-test-inline": {
+          display:           "inline!important",
+          "margin-right":    "-1px"
+        },
+        ".MathJax_test.mjx-test-default": {
+          display: "block!important",
+          clear:   "both"
+        },
+        ".MathJax_ex_box": {
+          display: "inline-block!important",
+          position: "absolute",
+          overflow: "hidden",
+          "min-height": 0, "max-height":"none",
+          padding:0, border: 0, margin: 0,
+          width:"1px", height:"60ex"
+        },
+        ".MathJax_em_box": {
+          display: "inline-block!important",
+          position: "absolute",
+          overflow: "hidden",
+          "min-height": 0, "max-height":"none",
+          padding:0, border: 0, margin: 0,
+          width:"1px", height:"60em"
+        },
+        ".mjx-test-inline .MathJax_left_box": {
+          display: "inline-block",
+          width: 0,
+          float:"left"
+        },
+        ".mjx-test-inline .MathJax_right_box": {
+          display: "inline-block",
+          width: 0,
+          float:"right"
+        },
+        ".mjx-test-display .MathJax_right_box": {
           display: (oldIE ? "block" : "table-cell") + "!important",
           width: (oldIE ? "100%" : "10000em") + "!important",
           "min-width":0, "max-width":"none",
           padding:0, border:0, margin:0
         },
-        
+
         ".MathJax .MathJax_HitBox": {
           cursor: "text",
           background: "white",
@@ -491,18 +527,20 @@
       }
 
       // Used in preTranslate to get scaling factors
-      this.EmExSpan = this.Element("span",
-        {style:{position:"absolute","font-size-adjust":"none"}},
+      this.TestSpan = this.Element("span",
+        {className:"MathJax_test"},
         [
-          ["span",{className:"MathJax_ExBox"}],
-          ["span",{className:"MathJax"},
-            [["span",{className:"MathJax_EmBox"}]]
-          ]
+          ["span",{className:"MathJax_left_box"}],
+          ["span",{className:"MathJax_ex_box"}],
+          ["span",{className:"MathJax_em_box"}],
+	  /* 
+	   * ["span",{className:"MathJax"},
+	   *   [["span",{className:"MathJax_em_box"}]]
+	   * ],
+	   */
+          ["span",{className:"MathJax_right_box"}]
         ]
       );
-
-      // Used in preTranslate to get linebreak width
-      this.linebreakSpan = MathJax.HTML.Element("span",{className:"MathJax_LineBox"},[["span"]]);
 
       // Set up styles and preload web fonts
       return AJAX.Styles(this.config.styles,["InitializeHTML",this]);
@@ -554,13 +592,12 @@
       //
       //  Get the default sizes (need styles in place to do this)
       //
-      document.body.appendChild(this.EmExSpan);
-      document.body.appendChild(this.linebreakSpan);
-      this.defaultEx    = this.EmExSpan.firstChild.offsetHeight/60;
-      this.defaultEm    = this.EmExSpan.lastChild.firstChild.offsetHeight/60;
-      this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
-      document.body.removeChild(this.linebreakSpan);
-      document.body.removeChild(this.EmExSpan);
+      var test = document.body.appendChild(this.TestSpan.cloneNode(true));
+      test.className += " mjx-test-inline mjx-test-default";
+      this.defaultEx    = test.childNodes[1].offsetHeight/60;
+      this.defaultEm    = test.childNodes[2].offsetHeight/60;
+      this.defaultWidth = Math.max(0,test.lastChild.offsetLeft-test.firstChild.offsetLeft-2);
+      document.body.removeChild(test);
     },
     
     preTranslate: function (state) {
@@ -614,8 +651,9 @@
         //
         //  Add the test span for determining scales and linebreak widths
         //
-        script.parentNode.insertBefore(this.EmExSpan.cloneNode(true),script);
-        div.parentNode.insertBefore(this.linebreakSpan.cloneNode(true),div)
+        test = this.TestSpan.cloneNode(true);
+        test.className += " mjx-test-" + (jax.HTMLCSS.display ? "display" : "inline");
+        script.parentNode.insertBefore(test,script);
       }
       //
       //  Determine the scaling factors for each script
@@ -628,15 +666,18 @@
         script = scripts[i]; if (!script.parentNode) continue;
         test = script.previousSibling; div = test.previousSibling;
         jax = script.MathJax.elementJax; if (!jax) continue;
-        ex = test.firstChild.offsetHeight/60;
-        em = test.lastChild.firstChild.offsetHeight/60;
-        cwidth = Math.max(0,div.previousSibling.firstChild.offsetWidth - 2);
+        ex = test.childNodes[1].offsetHeight/60;
+        em = test.childNodes[2].offsetHeight/60;
+        cwidth = Math.max(0, jax.HTMLCSS.display ? test.lastChild.offsetWidth - 1: 
+                  test.lastChild.offsetLeft - test.firstChild.offsetLeft - 2);
+console.log(em,ex,cwidth);
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
           hidden.push(div);
           jax.HTMLCSS.isHidden = true;
           ex = this.defaultEx; em = this.defaultEm; cwidth = this.defaultWidth;
         }
+        if (cwidth === 0) cwidth = this.defaultWidth;
         if (relwidth) {maxwidth = cwidth}
         scale = (this.config.matchFontHeight ? ex/this.TeX.x_height/em : 1);
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
@@ -654,12 +695,8 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        test = scripts[i].previousSibling;
         jax = scripts[i].MathJax.elementJax; if (!jax) continue;
-        span = test.previousSibling;
-        if (!jax.HTMLCSS.isHidden) {span = span.previousSibling}
-        span.parentNode.removeChild(span);
-        test.parentNode.removeChild(test);
+        script.parentNode.removeChild(script.previousSibling);
         if (script.MathJax.preview) script.MathJax.preview.style.display = "";
       }
       //
