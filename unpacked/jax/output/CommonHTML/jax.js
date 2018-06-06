@@ -273,7 +273,8 @@
       //
       // Used in preTranslate to get scaling factors and line width
       //
-      this.TestSpan = CHTML.Element("mjx-test",{},[["mjx-left-box"],["mjx-ex-box"],["mjx-right-box"]]);
+      this.TestSpan = CHTML.Element("mjx-test",{style:{left:"1em"}},
+          [["mjx-left-box"],["mjx-ex-box"],["mjx-right-box"]]);
 
       //
       //  Set up styles and preload web fonts
