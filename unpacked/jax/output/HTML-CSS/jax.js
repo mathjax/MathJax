@@ -533,11 +533,6 @@
           ["span",{className:"MathJax_left_box"}],
           ["span",{className:"MathJax_ex_box"}],
           ["span",{className:"MathJax_em_box"}],
-	  /* 
-	   * ["span",{className:"MathJax"},
-	   *   [["span",{className:"MathJax_em_box"}]]
-	   * ],
-	   */
           ["span",{className:"MathJax_right_box"}]
         ]
       );
