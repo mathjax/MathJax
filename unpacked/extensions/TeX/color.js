@@ -183,7 +183,7 @@ MathJax.Extension["TeX/color"] = {
    *  Get a named value
    */
   get_named: function (name) {
-    if (this.colors[name]) {return this.colors[name]}
+    if (this.colors.hasOwnProperty(name)) {return this.colors[name]}
     return name;
   },
   
