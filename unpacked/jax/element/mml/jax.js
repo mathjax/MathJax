@@ -560,7 +560,7 @@ MathJax.ElementJax.mml.Augment({
       texClass: MML.TEXCLASS.REL // for MML, but TeX sets ORD explicitly
     },
     SPACE_ATTR: {lspace: 0x01, rspace: 0x02, form: 0x04},
-    useMMLspacing: 0x07,
+    useMMLspacing: 0x03,
     autoDefault: function (name,nodefault) {
       var def = this.def;
       if (!def) {
@@ -1492,7 +1492,7 @@ MathJax.ElementJax.mml.Augment({
     INTEGRAL2:  [1,2,TEXCLASS.OP,{largeop: true, symmetric: true}],
     BIN3:       [3,3,TEXCLASS.BIN],
     BIN4:       [4,4,TEXCLASS.BIN],
-    BIN01:      [0,1,TEXCLASS.BIN],
+    BIN01:      [0,1,TEXCLASS.ORD],
     BIN5:       [5,5,TEXCLASS.BIN],
     TALLBIN:    [4,4,TEXCLASS.BIN,{stretchy: true}],
     BINOP:      [4,4,TEXCLASS.BIN,{largeop: true, movablelimits: true}],
