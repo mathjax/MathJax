@@ -3238,7 +3238,7 @@
           safariTextNodeBug: !v3p0,
           forceReflow: true,
           FontFaceBug: true,
-          combiningCharBug: parseInt(browser.webkit) >= 603,
+          combiningCharBug: parseInt(browser.webkit) >= 602,
           allowWebFonts: (v3p1 && !forceImages ? "otf" : false)
         });
         if (trueSafari) {
