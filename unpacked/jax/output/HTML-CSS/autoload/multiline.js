@@ -686,10 +686,10 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Get the penalty for this type of break and
       //    use it to modify the default penalty
       //
-      var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO];
+      var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO]||0;
       if (!MathJax.Object.isArray(linebreak)) {
-        //  for breaks past the width, don't modify penalty
-        if (offset >= 0) {penalty = linebreak * info.nest}
+        //  for breaks past the width, keep original penalty for newline
+        if (linebreak || offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}
       //
       //  If the penalty is no better than the current one, return false
@@ -733,13 +733,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Get the penalty for this type of break and
       //    use it to modify the default penalty
       //
-      var linebreak = PENALTY[linebreakValue];
+      var linebreak = PENALTY[linebreakValue]||0;
       if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit &&
           !this.mathbackground && !this.background)
         {linebreak = [(w+PENALTY.spaceoffset)*PENALTY.spacefactor]}
       if (!MathJax.Object.isArray(linebreak)) {
-        //  for breaks past the width, don't modify penalty
-        if (offset >= 0) {penalty = linebreak * info.nest}
+        //  for breaks past the width, keep original penalty for newline
+        if (linebreak || offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}
       //
       //  If the penalty is no better than the current one, return false
