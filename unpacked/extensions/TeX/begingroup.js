@@ -50,7 +50,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     //
     //  Find a macro or environment by name
     //
-    Find: function (name,type) {if (this[type].hasOwnProperty(name)) {return this[type][name]}},
+    Find: function (name,type) {if (this[type][name]) {return this[type][name]}},
     //
     //  Define or remove a macro or environment
     //

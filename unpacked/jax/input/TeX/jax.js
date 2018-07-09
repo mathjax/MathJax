@@ -1082,7 +1082,7 @@
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
         if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-        if (TEXDEF.special.hasOwnProperty(c)) {this[TEXDEF.special[c]](c)}
+        if (TEXDEF.special[c]) {this[TEXDEF.special[c]](c)}
         else if (TEXDEF.letter.test(c)) {this.Variable(c)}
         else if (TEXDEF.digit.test(c)) {this.Number(c)}
         else {this.Other(c)}
@@ -1109,19 +1109,17 @@
         if (!isArray(macro)) {macro = [macro]}
         var fn = macro[0]; if (!(fn instanceof Function)) {fn = this[fn]}
         fn.apply(this,[c+name].concat(macro.slice(1)));
-      } else if (TEXDEF.mathchar0mi.hasOwnProperty(name))    {this.csMathchar0mi(name,TEXDEF.mathchar0mi[name])}
-        else if (TEXDEF.mathchar0mo.hasOwnProperty(name))    {this.csMathchar0mo(name,TEXDEF.mathchar0mo[name])}
-        else if (TEXDEF.mathchar7.hasOwnProperty(name))      {this.csMathchar7(name,TEXDEF.mathchar7[name])}
-        else if (TEXDEF.delimiter.hasOwnProperty("\\"+name)) {this.csDelimiter(name,TEXDEF.delimiter["\\"+name])}
-        else                                                 {this.csUndefined(c+name)}
+      } else if (TEXDEF.mathchar0mi[name])            {this.csMathchar0mi(name,TEXDEF.mathchar0mi[name])}
+        else if (TEXDEF.mathchar0mo[name])            {this.csMathchar0mo(name,TEXDEF.mathchar0mo[name])}
+        else if (TEXDEF.mathchar7[name])              {this.csMathchar7(name,TEXDEF.mathchar7[name])}
+        else if (TEXDEF.delimiter["\\"+name] != null) {this.csDelimiter(name,TEXDEF.delimiter["\\"+name])}
+        else                                          {this.csUndefined(c+name)}
     },
     //
     //  Look up a macro in the macros list
     //  (overridden in begingroup extension)
     //
-    csFindMacro: function (name) {
-      return (TEXDEF.macros.hasOwnProperty(name) ? TEXDEF.macros[name] : null);
-    },
+    csFindMacro: function (name) {return TEXDEF.macros[name]},
     //
     //  Handle normal mathchar (as an mi)
     //
@@ -1297,7 +1295,7 @@
     Other: function (c) {
       var def, mo;
       if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
-      if (TEXDEF.remap.hasOwnProperty(c)) {
+      if (TEXDEF.remap[c]) {
         c = TEXDEF.remap[c];
         if (isArray(c)) {def = c[1]; c = c[0]}
         mo = MML.mo(MML.entity('#x'+c)).With(def);
@@ -1876,9 +1874,7 @@
       }
       this.Push(mml);
     },
-    envFindName: function (name) {
-      return (TEXDEF.environment.hasOwnProperty(name) ? TEXDEF.environment[name] : null);
-    },
+    envFindName: function (name) {return TEXDEF.environment[name]},
     
     Equation: function (begin,row) {return row},
     
@@ -1935,7 +1931,7 @@
      *  Convert delimiter to character
      */
     convertDelimiter: function (c) {
-      if (c) {c = (TEXDEF.delimiter.hasOwnProperty(c) ? TEXDEF.delimiter[c] : null)}
+      if (c) {c = TEXDEF.delimiter[c]}
       if (c == null) {return null}
       if (isArray(c)) {c = c[0]}
       if (c.length === 4) {c = String.fromCharCode(parseInt(c,16))}
@@ -2047,7 +2043,7 @@
           this.i--;
           c = this.GetArgument(name).replace(/^\s+/,'').replace(/\s+$/,'');
         }
-        if (TEXDEF.delimiter.hasOwnProperty(c)) {return this.convertDelimiter(c)}
+        if (TEXDEF.delimiter[c] != null) {return this.convertDelimiter(c)}
       }
       TEX.Error(["MissingOrUnrecognizedDelim",
                  "Missing or unrecognized delimiter for %1",name]);
