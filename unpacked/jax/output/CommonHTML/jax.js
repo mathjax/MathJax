@@ -2742,16 +2742,6 @@
 
     /********************************************************/
     
-    MML.mstyle.Augment({
-      toCommonHTML: function (node) {
-        node = this.CHTMLdefaultNode(node);
-        if (this.scriptlevel && this.data[0]) this.CHTML.rescale(this.data[0].CHTML.rscale);
-        return node;
-      }
-    });
-
-    /********************************************************/
-    
     MML.TeXAtom.Augment({
       toCommonHTML: function (node,options) {
         if (!options || !options.stretch) node = this.CHTMLdefaultNode(node);
