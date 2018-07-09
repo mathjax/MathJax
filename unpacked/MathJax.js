@@ -2042,17 +2042,20 @@ MathJax.Hub = {
 
   setRenderer: function (renderer,type) {
     if (!renderer) return;
-    if (!MathJax.OutputJax[renderer]) {
+    var JAX = MathJax.OutputJax[renderer];
+    if (!JAX) {
+      MathJax.OutputJax[renderer] = MathJax.OutputJax({id: "unknown", version:"1.0.0", isUnknown: true});
       this.config.menuSettings.renderer = "";
       var file = "[MathJax]/jax/output/"+renderer+"/config.js";
       return MathJax.Ajax.Require(file,["setRenderer",this,renderer,type]);
     } else {
       this.config.menuSettings.renderer = renderer;
       if (type == null) {type = "jax/mml"}
+      if (JAX.isUnknown) JAX.Register(type);
       var jax = this.outputJax;
       if (jax[type] && jax[type].length) {
         if (renderer !== jax[type][0].id) {
-          jax[type].unshift(MathJax.OutputJax[renderer]);
+          jax[type].unshift(JAX);
           return this.signal.Post(["Renderer Selected",renderer]);
         }
       }
@@ -2971,6 +2974,7 @@ MathJax.Hub.Startup = {
       load = AJAX.Require(file);
       return load;
     },
+    Process: function (state) {throw Error(this.id + " output jax failed to load properly")},
     Register: function (mimetype) {
       var jax = HUB.outputJax;
       if (!jax[mimetype]) {jax[mimetype] = []}
