@@ -29,7 +29,11 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
   var MML = MathJax.ElementJax.mml,
       CONFIG = MathJax.Hub.config,
       CHTML = MathJax.OutputJax.CommonHTML;
-      
+  //
+  //  Fake node used for testing end-of-line potential breakpoint
+  //
+  var MO = MML.mo().With({CHTML: CHTML.BBOX.empty()});
+  
   //
   //  Penalties for the various line breaks
   //
@@ -110,7 +114,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           },
           broken = false;
           
-      while (this.CHTMLbetterBreak(end,state) && 
+      while (this.CHTMLbetterBreak(end,state,true) && 
              (end.scanW >= CHTML.linebreakWidth || end.penalty === PENALTY.newline)) {
         this.CHTMLaddLine(stack,start,end.index,state,end.values,broken);
         start = end.index.slice(0); broken = true;
@@ -133,7 +137,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //
     //  Locate the next linebreak that is better than the current one
     //
-    CHTMLbetterBreak: function (info,state) {
+    CHTMLbetterBreak: function (info,state,toplevel) {
       if (this.isToken) return false;  // FIXME: handle breaking of token elements
       if (this.isEmbellished()) {
         info.embellished = this;
@@ -164,6 +168,13 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           scanW = (broken ? info.scanW : this.CHTMLaddWidth(i,info,scanW));
         }
         info.index = []; i++; broken = false;
+      }
+      //
+      //  Check if end-of-line is a better breakpoint
+      //
+      if (toplevel && better) {
+        MO.parent = this.parent; MO.inherit = this.inherit;
+        if (MO.CHTMLbetterBreak(info,state)) {better = false; index = info.index}
       }
       if (info.nest) {info.nest--}
       info.index = index;
