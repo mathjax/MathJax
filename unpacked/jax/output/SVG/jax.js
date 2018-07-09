@@ -1992,30 +1992,33 @@
 	    (base.movablelimits || base.CoreMO().Get("movablelimits")))
 	      {return MML.msubsup.prototype.toSVG.call(this)}
         var svg = this.SVG(), scale = this.SVGgetScale(svg); this.SVGhandleSpace(svg);
-	var boxes = [], stretch = [], box, i, m, W = -SVG.BIGDIMEN, WW = W;
+	var boxes = [], stretch = [], box, i, m, W = -SVG.BIGDIMEN, WW = W, ww;
 	for (i = 0, m = this.data.length; i < m; i++) {
 	  if (this.data[i] != null) {
 	    if (i == this.base) {
-              boxes[i] = this.SVGdataStretched(i,HW,D);
+              box = boxes[i] = this.SVGdataStretched(i,HW,D);
 	      stretch[i] = (D != null || HW == null) && this.data[i].SVGcanStretch("Horizontal");
               if (this.data[this.over] && values.accent) {
-                boxes[i].h = Math.max(boxes[i].h,scale*SVG.TeX.x_height); // min height of 1ex (#1706)
+                box.h = Math.max(box.h,scale*SVG.TeX.x_height); // min height of 1ex (#1706)
               }
             } else {
-              boxes[i] = this.data[i].toSVG(); boxes[i].x = 0; delete boxes[i].X;
+              box = boxes[i] = this.data[i].toSVG(); box.x = 0; delete box.X;
 	      stretch[i] = this.data[i].SVGcanStretch("Horizontal");
 	    }
-	    if (boxes[i].w > WW) {WW = boxes[i].w}
+            ww = box.w + box.x + (box.X || 0);
+	    if (ww > WW) {WW = ww}
 	    if (!stretch[i] && WW > W) {W = WW}
 	  }
 	}
 	if (D == null && HW != null) {W = HW} else if (W == -SVG.BIGDIMEN) {W = WW}
         for (i = WW = 0, m = this.data.length; i < m; i++) {if (this.data[i]) {
+          box = boxes[i];
           if (stretch[i]) {
-            boxes[i] = this.data[i].SVGstretchH(W);
-            if (i !== this.base) {boxes[i].x = 0; delete boxes[i].X}
+            box = boxes[i] = this.data[i].SVGstretchH(W);
+            if (i !== this.base) {box.x = 0; delete box.X}
           }
-          if (boxes[i].w > WW) {WW = boxes[i].w}
+          ww = box.w + box.x + (box.X || 0);
+          if (ww > WW) {WW = ww}
         }}
         var t = SVG.TeX.rule_thickness * this.mscale;
 	var x, y, z1, z2, z3, dw, k, delta = 0;
@@ -2032,14 +2035,15 @@
               boxes[i].Add(box); boxes[i].Clean();
               boxes[i].w = -box.l; box = boxes[i];
             }
-	    dw = {left:0, center:(WW-box.w)/2, right:WW-box.w}[values.align];
+            ww = box.w + box.x + (box.X || 0);
+	    dw = {left:0, center:(WW-ww)/2, right:WW-ww}[values.align];
 	    x = dw; y = 0;
 	    if (i == this.over) {
 	      if (accent) {
 		k = t * scale; z3 = 0;
 		if (base.skew) {
                   x += base.skew; svg.skew = base.skew;
-                  if (x+box.w > WW) {svg.skew += (WW-box.w-x)/2}
+                  if (x+ww > WW) {svg.skew += (WW-ww-x)/2}
                 }
 	      } else {
 		z1 = SVG.TeX.big_op_spacing1 * scale;
