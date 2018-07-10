@@ -489,7 +489,7 @@
           ex = this.defaultEx;
           cwidth = this.defaultWidth;
         }
-        if (cwidth === 0) cwidth = this.defaultWidth;
+        if (cwidth === 0 && !jax.CHTML.display) cwidth = this.defaultWidth;
         if (relwidth) maxwidth = cwidth;
         scale = (this.config.matchFontHeight ? ex/this.TEX.x_height/em : 1);
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);

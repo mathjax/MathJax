@@ -314,7 +314,7 @@
           jax.SVG.isHidden = true;
           ex = this.defaultEx; cwidth = this.defaultWidth;
         }
-        if (cwidth === 0) cwidth = this.defaultWidth;
+        if (cwidth === 0 && !jax.SVG.display) cwidth = this.defaultWidth;
         if (relwidth) {maxwidth = cwidth}
         jax.SVG.ex = ex;
         jax.SVG.em = em = ex / SVG.TeX.x_height * 1000; // scale ex to x_height

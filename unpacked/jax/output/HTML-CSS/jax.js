@@ -671,7 +671,7 @@
           jax.HTMLCSS.isHidden = true;
           ex = this.defaultEx; em = this.defaultEm; cwidth = this.defaultWidth;
         }
-        if (cwidth === 0) cwidth = this.defaultWidth;
+        if (cwidth === 0 && !jax.HTMLCSS.display) cwidth = this.defaultWidth;
         if (relwidth) {maxwidth = cwidth}
         scale = (this.config.matchFontHeight ? ex/this.TeX.x_height/em : 1);
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
