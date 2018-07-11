@@ -2353,7 +2353,7 @@
             isScript = (parent && parent.isa(MML.msubsup) && this !== parent.data[parent.base]),
             mapchars = (isScript?this.remapChars:null);
         if (HTMLCSS.isChar(text) && parent && parent.isa(MML.munderover) &&
-            HTMLCSS.isChar(his.CoreText(parent.data[parent.base]))) {
+            HTMLCSS.isChar(this.CoreText(parent.data[parent.base]))) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
           if (over && this === over.CoreMO() && parent.Get("accent")) {mapchars = HTMLCSS.FONTDATA.REMAPACCENT}
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {mapchars = HTMLCSS.FONTDATA.REMAPACCENTUNDER}
