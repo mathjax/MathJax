@@ -767,6 +767,15 @@
     /********************************************************/
     
     //
+    //  True if text holds a single (unicode) glyph
+    //
+    isChar: function (text) {
+      if (text.length === 1) return true;
+      if (text.length !== 2) return false;
+      var n = text.charCodeAt(0);
+      return (n >= 0xD800 && n < 0xDBFF);
+    },
+    //
     //  Get a unicode character by number (even when it takes two character)
     //
     unicodeChar: function (n) {
@@ -1874,8 +1883,8 @@
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node);
         var bbox = this.CHTML, text = this.data.join("");
-        if (bbox.skew != null && text.length !== 1) delete bbox.skew;
-        if (bbox.r > bbox.w && text.length === 1 && !this.CHTMLvariant.noIC) {
+        if (bbox.skew != null && !CHTML.isChar(text)) delete bbox.skew;
+        if (bbox.r > bbox.w && CHTML.isChar(text) && !this.CHTMLvariant.noIC) {
           bbox.ic = bbox.r - bbox.w; bbox.w = bbox.r;
           node.lastChild.style.paddingRight = CHTML.Em(bbox.ic);
         }
@@ -1890,8 +1899,8 @@
       toCommonHTML: function (node) {
         node = this.CHTMLdefaultNode(node,{childOptions:{remap:this.CHTMLremapMinus}});
         var bbox = this.CHTML, text = this.data.join("");
-        if (bbox.skew != null && text.length !== 1) delete bbox.skew;
-        if (bbox.r > bbox.w && text.length === 1 && !this.CHTMLvariant.noIC) {
+        if (bbox.skew != null && !CHTML.isChar(text)) delete bbox.skew;
+        if (bbox.r > bbox.w && CHTML.isChar(text) && !this.CHTMLvariant.noIC) {
           bbox.ic = bbox.r - bbox.w; bbox.w = bbox.r;
           node.lastChild.style.paddingRight = CHTML.Em(bbox.ic);
         }
@@ -1925,7 +1934,7 @@
               remapchars: values.remapchars
             }});
           }
-          if (values.text.length !== 1) delete this.CHTML.skew;
+          if (!CHTML.isChar(values.text)) delete this.CHTML.skew;
             else if (this.CHTML.w === 0 && this.CHTML.l < 0) this.CHTMLfixCombiningChar(node);
           if (values.largeop) this.CHTMLcenterOp(node);
         }
@@ -1958,7 +1967,7 @@
       },
       CHTMLadjustAccent: function (data) {
         var parent = this.CoreParent(); data.parent = parent;
-        if (data.text.length === 1 && parent && parent.isa(MML.munderover)) {
+        if (CHTML.isChar(data.text) && parent && parent.isa(MML.munderover)) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
           if (over && this === over.CoreMO() && parent.Get("accent")) {
             data.remapchars = CHTML.FONTDATA.REMAPACCENT;
@@ -1998,7 +2007,7 @@
       },
       CHTMLcanStretch: function (direction,H,D) {
         if (!this.Get("stretchy")) return false;
-        var c = this.data.join(""); if (c.length !== 1) return false;
+        var c = this.data.join(""); if (!CHTML.isChar(c)) return false;
         var values = {text: c};
         this.CHTMLadjustAccent(values);
         if (values.remapchars) c = values.remapchars[c]||c;
@@ -2469,7 +2478,7 @@
         if (bmml) {
           if ((bmml.type === "mrow" || bmml.type === "mstyle") && bmml.data.length === 1) bmml = bmml.data[0];
           if (bmml.type === "mi" || bmml.type === "mo") {
-            if (bmml.data.join("").length === 1 && bbox.rscale === 1 && !bbox.sH &&
+            if (CHTML.isChar(bmml.data.join("")) && bbox.rscale === 1 && !bbox.sH &&
                 !bmml.Get("largeop")) {u = v = 0}
           }
         }
