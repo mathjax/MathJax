@@ -709,7 +709,7 @@
           HUB.signal.Post(["SVG Jax - unknown char",n,variant]);
         }
       }
-      if (text.length == 1 && font.skew && font.skew[n]) {svg.skew = font.skew[n]*1000}
+      if (SVG.isChar(text) && font.skew && font.skew[n]) {svg.skew = font.skew[n]*1000}
       if (svg.element.childNodes.length === 1 && !svg.element.firstChild.getAttribute("x")) {
         svg.element = svg.element.firstChild;
         svg.removeable = false; svg.scale = scale;
@@ -735,6 +735,13 @@
         if (font[n]) {return font} else {this.findBlock(font,n)}
       }
       return {id:"unknown"};
+    },
+
+    isChar: function (text) {
+      if (text.length === 1) return true;
+      if (text.length !== 2) return false;
+      var n = text.charCodeAt(0);
+      return (n >= 0xD800 && n < 0xDBFF);
     },
 
     findBlock: function (font,c) {
@@ -1154,8 +1161,8 @@
           }
         }
         svg.Clean(); var text = this.data.join("");
-        if (svg.skew && text.length !== 1) {delete svg.skew}
-        if (svg.r > svg.w && text.length === 1 && !variant.noIC)
+        if (svg.skew && !SVG.isChar(text)) {delete svg.skew}
+        if (svg.r > svg.w && SVG.isChar(text) && !variant.noIC)
           {svg.ic = svg.r - svg.w; svg.w = svg.r}
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
@@ -1542,8 +1549,8 @@
         var parent = this.CoreParent(),
             isScript = (parent && parent.isa(MML.msubsup) && this !== parent.data[0]),
             mapchars = (isScript?this.remapChars:null);
-        if (this.data.join("").length === 1 && parent && parent.isa(MML.munderover) &&
-            this.CoreText(parent.data[parent.base]).length === 1) {
+        if (SVG.isChar(this.data.join("")) && parent && parent.isa(MML.munderover) &&
+            SVG.isChar(this.CoreText(parent.data[parent.base]))) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
           if (over && this === over.CoreMO() && parent.Get("accent")) {mapchars = SVG.FONTDATA.REMAPACCENT}
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {mapchars = SVG.FONTDATA.REMAPACCENTUNDER}
@@ -1565,7 +1572,7 @@
           }
         }
         svg.Clean();
-	if (this.data.join("").length !== 1) {delete svg.skew}
+	if (!SVG.isChar(this.data.join(""))) {delete svg.skew}
         //
         //  Handle large operator centering
         //
@@ -1586,7 +1593,7 @@
 	if (c.length > 1) {return false}
         var parent = this.CoreParent();
         if (parent && parent.isa(MML.munderover) && 
-            this.CoreText(parent.data[parent.base]).length === 1) {
+            SVG.isChar(this.CoreText(parent.data[parent.base]))) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
           if (over && this === over.CoreMO() && parent.Get("accent")) {c = SVG.FONTDATA.REMAPACCENT[c]||c}
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {c = SVG.FONTDATA.REMAPACCENTUNDER[c]||c}
@@ -1653,8 +1660,8 @@
           }
         }
         svg.Clean(); var text = this.data.join("");
-        if (svg.skew && text.length !== 1) {delete svg.skew}
-        if (svg.r > svg.w && text.length === 1 && !variant.noIC)
+        if (svg.skew && !SVG.isChar(text)) {delete svg.skew}
+        if (svg.r > svg.w && SVG.isChar(text) && !variant.noIC)
           {svg.ic = svg.r - svg.w; svg.w = svg.r}
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
@@ -2101,7 +2108,7 @@
         }
 	if (this.data[this.base] &&
 	   (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
-	  if (this.data[this.base].data.join("").length === 1 && base.scale === 1 &&
+	  if (SVG.isChar(this.data[this.base].data.join("")) && base.scale === 1 &&
 	      !base.stretched && !this.data[this.base].Get("largeop")) {u = v = 0}
 	}
 	var min = this.getValues("subscriptshift","superscriptshift");
