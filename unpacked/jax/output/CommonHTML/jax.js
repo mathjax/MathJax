@@ -1947,7 +1947,7 @@
         return node;
       },
       CHTMLhandleSpace: function (node) {
-        if (this.useMMLspacing) {
+        if (this.hasMMLspacing()) {
           var values = this.getValues("scriptlevel","lspace","rspace");
           values.lspace = Math.max(0,this.CHTMLlength2em(values.lspace));
           values.rspace = Math.max(0,this.CHTMLlength2em(values.rspace));

@@ -2097,7 +2097,7 @@
       },
 
       HTMLhandleSpace: function (span) {
-	if (this.useMMLspacing) {
+	if (this.hasMMLspacing()) {
 	  if (this.type !== "mo") return;
 	  var values = this.getValues("scriptlevel","lspace","rspace");
           if (values.scriptlevel <= 0 || this.hasValue("lspace") || this.hasValue("rspace")) {

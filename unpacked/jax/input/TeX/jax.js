@@ -1363,7 +1363,6 @@
         form: MML.FORM.PREFIX,
         texClass: MML.TEXCLASS.OP
       });
-      mml.useMMLspacing &= ~mml.SPACE_ATTR.form;  // don't count this explicit form setting
       this.Push(this.mmlToken(mml));
     },
     Limits: function (name,limits) {

@@ -338,6 +338,7 @@ MathJax.ElementJax.mml.Augment({
     adjustChild_scriptlevel:   function (i,nodef) {return this.Get("scriptlevel",nodef)},   // always inherit from parent
     adjustChild_displaystyle:  function (i,nodef) {return this.Get("displaystyle",nodef)},  // always inherit from parent
     adjustChild_texprimestyle: function (i,nodef) {return this.Get("texprimestyle",nodef)}, // always inherit from parent
+    hasMMLspacing: function () {return false},
     childPosition: function () {
       var child = this, parent = child.parent;
       while (parent.notParent) {child = parent; parent = child.parent}
@@ -559,12 +560,16 @@ MathJax.ElementJax.mml.Augment({
       indentshiftlast: MML.INDENTSHIFT.INDENTSHIFT,
       texClass: MML.TEXCLASS.REL // for MML, but TeX sets ORD explicitly
     },
-    SPACE_ATTR: {lspace: 0x01, rspace: 0x02, form: 0x04},
+    SPACE_ATTR: {lspace: 0x01, rspace: 0x02},
     useMMLspacing: 0x03,
+    hasMMLspacing: function () {
+      if (this.useMMLspacing) return true;
+      return this.form && (this.OPTABLE[this.form]||{})[this.data.join('')];
+    },
     autoDefault: function (name,nodefault) {
       var def = this.def;
       if (!def) {
-        if (name === "form") {this.useMMLspacing &= ~this.SPACE_ATTR.form; return this.getForm()}
+        if (name === "form") {return this.getForm()}
         var mo = this.data.join("");
         var forms = [this.Get("form"),MML.FORM.INFIX,MML.FORM.POSTFIX,MML.FORM.PREFIX];
         for (var i = 0, m = forms.length; i < m; i++) {
@@ -657,7 +662,7 @@ MathJax.ElementJax.mml.Augment({
     },
     setTeXclass: function (prev) {
       var values = this.getValues("form","lspace","rspace","fence"); // sets useMMLspacing
-      if (this.useMMLspacing) {this.texClass = MML.TEXCLASS.NONE; return this}
+      if (this.hasMMLspacing()) {this.texClass = MML.TEXCLASS.NONE; return this}
       if (values.fence && !this.texClass) {
         if (values.form === MML.FORM.PREFIX) {this.texClass = MML.TEXCLASS.OPEN}
         if (values.form === MML.FORM.POSTFIX) {this.texClass = MML.TEXCLASS.CLOSE}
@@ -996,10 +1001,6 @@ MathJax.ElementJax.mml.Augment({
         this.SetData("open",MML.mo(values.open).With({
           fence:true, form:MML.FORM.PREFIX, texClass:MML.TEXCLASS.OPEN
         }));
-        //
-        //  Clear flag for using MML spacing even though form is specified
-        //
-        this.data.open.useMMLspacing = 0;
       }
       //
       //  Create fake nodes for the separators
@@ -1008,10 +1009,8 @@ MathJax.ElementJax.mml.Augment({
         while (values.separators.length < this.data.length)
           {values.separators += values.separators.charAt(values.separators.length-1)}
         for (var i = 1, m = this.data.length; i < m; i++) {
-          if (this.data[i]) {
-            this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}))
-            this.data["sep"+i].useMMLspacing = 0;
-          }
+          if (this.data[i])
+            {this.SetData("sep"+i,MML.mo(values.separators.charAt(i-1)).With({separator:true}))}
         }
       }
       //
@@ -1021,10 +1020,6 @@ MathJax.ElementJax.mml.Augment({
         this.SetData("close",MML.mo(values.close).With({
           fence:true, form:MML.FORM.POSTFIX, texClass:MML.TEXCLASS.CLOSE
         }));
-        //
-        //  Clear flag for using MML spacing even though form is specified
-        //
-        this.data.close.useMMLspacing = 0;
       }
     },
     texClass: MML.TEXCLASS.OPEN,
@@ -1492,7 +1487,7 @@ MathJax.ElementJax.mml.Augment({
     INTEGRAL2:  [1,2,TEXCLASS.OP,{largeop: true, symmetric: true}],
     BIN3:       [3,3,TEXCLASS.BIN],
     BIN4:       [4,4,TEXCLASS.BIN],
-    BIN01:      [0,1,TEXCLASS.ORD],
+    BIN01:      [0,1,TEXCLASS.BIN],
     BIN5:       [5,5,TEXCLASS.BIN],
     TALLBIN:    [4,4,TEXCLASS.BIN,{stretchy: true}],
     BINOP:      [4,4,TEXCLASS.BIN,{largeop: true, movablelimits: true}],
