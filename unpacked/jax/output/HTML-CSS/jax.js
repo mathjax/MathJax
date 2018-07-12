@@ -869,8 +869,8 @@
       //
       //  get em sizes (taken from HTMLCSS.preTranslate)
       //
-      var emex = span.appendChild(this.EmExSpan.cloneNode(true));
-      var em = emex.lastChild.firstChild.offsetHeight/60;
+      var emex = span.appendChild(this.TestSpan.cloneNode(true));
+      var em = emex.childNodes[2].offsetHeight/60;
       this.em = MML.mbase.prototype.em = em;
       this.outerEm = em / jax.HTMLCSS.scale;
       emex.parentNode.removeChild(emex);

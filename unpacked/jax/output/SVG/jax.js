@@ -493,8 +493,8 @@
       //
       //  get em size (taken from this.preTranslate)
       //
-      var emex = span.appendChild(this.ExSpan.cloneNode(true));
-      var ex = emex.firstChild.offsetHeight/60;
+      var emex = span.appendChild(this.TestSpan.cloneNode(true));
+      var ex = emex.childNodes[1].offsetHeight/60;
       this.em = MML.mbase.prototype.em = ex / SVG.TeX.x_height * 1000; this.ex = ex;
       this.linebreakWidth = jax.SVG.lineWidth; this.cwidth = jax.SVG.cwidth;
       emex.parentNode.removeChild(emex);
