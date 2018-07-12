@@ -558,11 +558,11 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Get the bounding boxes and the width of the scripts
       //
       var bbox = this.CHTML, base = this.data[this.base].CHTML;
-      var dw = bbox.w - base.w - bbox.X;
+      var dw = bbox.w - base.w - (bbox.X||0);
       //
       //  Add in the width of the prescripts
       //  
-      info.scanW += bbox.X; scanW = info.scanW;
+      info.scanW += bbox.X||0; scanW = info.scanW;
       //
       //  Check if the base can be broken
       //
