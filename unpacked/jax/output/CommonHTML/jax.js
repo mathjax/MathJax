@@ -199,12 +199,12 @@
     ".mjx-test-inline .mjx-left-box": {
       display: "inline-block",
       width: 0,
-      float:"left"
+      "float":"left"
     },
     ".mjx-test-inline .mjx-right-box": {
       display: "inline-block",
       width: 0,
-      float:"right"
+      "float":"right"
     },
     ".mjx-test-display .mjx-right-box": {
       display: "table-cell!important",

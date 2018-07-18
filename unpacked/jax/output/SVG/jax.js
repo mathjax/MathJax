@@ -135,12 +135,12 @@
         ".mjx-test-inline .MathJax_SVG_left_box": {
           display: "inline-block",
           width: 0,
-          float:"left"
+          "float":"left"
         },
         ".mjx-test-inline .MathJax_SVG_right_box": {
           display: "inline-block",
           width: 0,
-          float:"right"
+          "float":"right"
         },
         ".mjx-test-display .MathJax_SVG_right_box": {
           display: "table-cell!important",

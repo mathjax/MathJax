@@ -374,12 +374,12 @@
         ".mjx-test-inline .MathJax_left_box": {
           display: "inline-block",
           width: 0,
-          float:"left"
+          "float":"left"
         },
         ".mjx-test-inline .MathJax_right_box": {
           display: "inline-block",
           width: 0,
-          float:"right"
+          "float":"right"
         },
         ".mjx-test-display .MathJax_right_box": {
           display: (oldIE ? "block" : "table-cell") + "!important",
