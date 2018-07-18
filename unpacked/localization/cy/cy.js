@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("cy",null,{
   menuTitle: "Cymraeg",
-  version: "2.7.4",
+  version: "2.7.5",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.4",
+        version: "2.7.5",
         isLoaded: true,
         strings: {
           MathProcessingError: "Gwall prosesu mathemateg",

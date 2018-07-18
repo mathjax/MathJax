@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/verb"] = {
-  version: "2.7.4"
+  version: "2.7.5"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
