@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("eo","MathMenu",{version:"2.7.4",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/eo/MathMenu.js");
+MathJax.Localization.addTranslation("eo","MathMenu",{version:"2.7.5",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/eo/MathMenu.js");

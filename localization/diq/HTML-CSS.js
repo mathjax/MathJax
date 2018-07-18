@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("diq","HTML-CSS",{version:"2.7.4",isLoaded:true,strings:{LoadWebFont:"Web font %1 bar beno",CantLoadWebFont:"Font\u00EA web\u00EA %1'i bar n\u00EAb\u0131"}});MathJax.Ajax.loadComplete("[MathJax]/localization/diq/HTML-CSS.js");
+MathJax.Localization.addTranslation("diq","HTML-CSS",{version:"2.7.5",isLoaded:true,strings:{LoadWebFont:"Web font %1 bar beno",CantLoadWebFont:"Font\u00EA web\u00EA %1'i bar n\u00EAb\u0131"}});MathJax.Ajax.loadComplete("[MathJax]/localization/diq/HTML-CSS.js");
