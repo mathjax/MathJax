@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.7.4";
+  var VERSION = "2.7.5";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -473,8 +473,10 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
     },
     HTMLhandleSpace: function (span) {
       span.bbox.keepPadding = true; span.bbox.exact = true;
-      if (!this.hasFrame && span.bbox.width == null)
-        {span.style.paddingLeft = span.style.paddingRight = HTMLCSS.Em(1/6)}
+      if (!this.hasFrame && span.bbox.width == null) {
+        span.firstChild.style.marginLeft = span.firstChild.style.marginRight = HTMLCSS.Em(1/6);
+        span.bbox.w += 1/3; span.bbox.rw += 1/3; span.bbox.lw += 1/6;
+      }
       this.SUPER(arguments).HTMLhandleSpace.call(this,span);
     }
   });

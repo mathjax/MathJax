@@ -25,11 +25,15 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.7.4";
+  var VERSION = "2.7.5";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
-      
+  //
+  //  Fake node used for testing end-of-line potential breakpoint
+  //
+  var MO = MML.mo().With({SVGdata: {w: 0, x:0}});
+
   //
   //  Penalties for the various line breaks
   //
@@ -115,7 +119,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       //  Break the expression at its best line breaks
       //
-      while (this.SVGbetterBreak(end,state) && 
+      while (this.SVGbetterBreak(end,state,true) && 
              (end.scanW >= SVG.linebreakWidth || end.penalty === PENALTY.newline)) {
         this.SVGaddLine(svg,start,end.index,state,end.values,broken);
         start = end.index.slice(0); broken = true;
@@ -145,7 +149,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
     //
     //  Locate the next linebreak that is better than the current one
     //
-    SVGbetterBreak: function (info,state) {
+    SVGbetterBreak: function (info,state,toplevel) {
       if (this.isToken) {return false}  // FIXME: handle breaking of token elements
       if (this.isEmbellished()) {
         info.embellished = this;
@@ -176,6 +180,13 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           scanW = (broken ? info.scanW : this.SVGaddWidth(i,info,scanW));
         }
         info.index = []; i++; broken = false;
+      }
+      //
+      //  Check if end-of-line is a better breakpoint
+      //
+      if (toplevel && better) {
+        MO.parent = this.parent; MO.inherit = this.inherit;
+        if (MO.SVGbetterBreak(info,state)) {better = false; index = info.index}
       }
       if (info.nest) {info.nest--}
       info.index = index;
@@ -607,10 +618,10 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Get the penalty for this type of break and
       //    use it to modify the default penalty
       //
-      var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO];
+      var linebreak = PENALTY[values.linebreak||MML.LINEBREAK.AUTO]||0;
       if (!MathJax.Object.isArray(linebreak)) {
-        //  for breaks past the width, don't modify penalty
-        if (offset >= 0) {penalty = linebreak * info.nest}
+        //  for breaks past the width, keep original penalty for newline
+        if (linebreak || offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}
       //
       //  If the penalty is no better than the current one, return false
@@ -653,13 +664,13 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //  Get the penalty for this type of break and
       //    use it to modify the default penalty
       //
-      var linebreak = PENALTY[linebreakValue];
+      var linebreak = PENALTY[linebreakValue]||0;
       if (linebreakValue === MML.LINEBREAK.AUTO && w >= PENALTY.spacelimit*1000 &&
           !this.mathbackground && !this.backrgound)
         {linebreak = [(w/1000+PENALTY.spaceoffset)*PENALTY.spacefactor]}
       if (!MathJax.Object.isArray(linebreak)) {
-        //  for breaks past the width, don't modify penalty
-        if (offset >= 0) {penalty = linebreak * info.nest}
+        //  for breaks past the width, keep original penalty for newline
+        if (linebreak || offset >= 0) {penalty = linebreak * info.nest}
       } else {penalty = Math.max(1,penalty + linebreak[0] * info.nest)}
       //
       //  If the penalty is no better than the current one, return false

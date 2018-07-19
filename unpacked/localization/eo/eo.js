@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("eo",null,{
   menuTitle: "Esperanto",
-  version: "2.7.4",
+  version: "2.7.5",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.4",
+        version: "2.7.5",
         isLoaded: true,
         strings: {
           Loading: "\u015Cargado",

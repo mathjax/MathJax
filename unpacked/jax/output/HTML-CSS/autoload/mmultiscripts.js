@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.7.4";
+  var VERSION = "2.7.5";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -64,7 +64,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       if (base.bbox.ic) {delta = base.bbox.ic}
       if (this.data[this.base] &&
          (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
-        if (this.data[this.base].data.join("").length === 1 && base.bbox.scale === 1 &&
+        if (HTMLCSS.isChar(this.data[this.base].data.join("")) && base.bbox.scale === 1 &&
             !this.data[this.base].Get("largeop")) {u = v = 0}
       }
       var min = this.getValues("subscriptshift","superscriptshift"), mu = this.HTMLgetMu(span);

@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.7.4";
+  var VERSION = "2.7.5";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG;
   
@@ -46,7 +46,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       if (base.ic) {delta = base.ic}
       if (this.data[this.base] &&
          (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
-        if (this.data[this.base].data.join("").length === 1 && base.scale === 1 &&
+        if (SVG.isChar(this.data[this.base].data.join("")) && base.scale === 1 &&
             !base.stretched && !this.data[this.base].Get("largeop")) {u = v = 0}
       }
       var min = this.getValues("subscriptshift","superscriptshift"), mu = this.SVGgetMu(svg);

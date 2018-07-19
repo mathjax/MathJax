@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
-  var VERSION = "2.7.4";
+  var VERSION = "2.7.5";
   var MML = MathJax.ElementJax.mml,
       CONFIG = MathJax.Hub.config,
       CHTML = MathJax.OutputJax.CommonHTML,
@@ -409,8 +409,10 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //  Set variable width on DOM nodes
       //
       if (relWidth) {
-        this.CHTML.pwidth = values.width; this.CHTML.mwidth = CHTML.Em(TW);
-        node.style.width = node.firstChild.style.width = "100%";
+        node.style.width = this.CHTML.pwidth = "100%";
+        this.CHTML.mwidth = CHTML.Em(TW);
+        node.firstChild.style.width = values.width;
+        node.firstChild.style.margin = "auto";
       }
     },
     //

@@ -332,26 +332,62 @@
         },
         ".MathJax_Processed": {display:"none!important"},
         
-        ".MathJax_ExBox": {
-          display:"block!important", overflow:"hidden",
-          width:"1px", height:"60ex",
-          "min-height": 0, "max-height":"none"
+        ".MathJax_test": {
+          "font-style":      "normal",
+          "font-weight":     "normal",
+          "font-size":       "100%",
+          "font-size-adjust":"none",
+          "text-indent":     0,
+          "text-transform":  "none",
+          "letter-spacing":  "normal",
+          "word-spacing":    "normal",
+          overflow:          "hidden",
+          height:            "1px"
         },
-        ".MathJax .MathJax_EmBox": {
-          display:"block!important", overflow:"hidden",
-          width:"1px", height:"60em",
-          "min-height": 0, "max-height":"none"
-        },
-        ".MathJax_LineBox": {
+        ".MathJax_test.mjx-test-display": {
           display: (oldIE ? "block" : "table") + "!important"
         },
-        ".MathJax_LineBox span": {
+        ".MathJax_test.mjx-test-inline": {
+          display:           "inline!important",
+          "margin-right":    "-1px"
+        },
+        ".MathJax_test.mjx-test-default": {
+          display: "block!important",
+          clear:   "both"
+        },
+        ".MathJax_ex_box": {
+          display: "inline-block!important",
+          position: "absolute",
+          overflow: "hidden",
+          "min-height": 0, "max-height":"none",
+          padding:0, border: 0, margin: 0,
+          width:"1px", height:"60ex"
+        },
+        ".MathJax_em_box": {
+          display: "inline-block!important",
+          position: "absolute",
+          overflow: "hidden",
+          "min-height": 0, "max-height":"none",
+          padding:0, border: 0, margin: 0,
+          width:"1px", height:"60em"
+        },
+        ".mjx-test-inline .MathJax_left_box": {
+          display: "inline-block",
+          width: 0,
+          "float":"left"
+        },
+        ".mjx-test-inline .MathJax_right_box": {
+          display: "inline-block",
+          width: 0,
+          "float":"right"
+        },
+        ".mjx-test-display .MathJax_right_box": {
           display: (oldIE ? "block" : "table-cell") + "!important",
           width: (oldIE ? "100%" : "10000em") + "!important",
           "min-width":0, "max-width":"none",
           padding:0, border:0, margin:0
         },
-        
+
         ".MathJax .MathJax_HitBox": {
           cursor: "text",
           background: "white",
@@ -491,18 +527,15 @@
       }
 
       // Used in preTranslate to get scaling factors
-      this.EmExSpan = this.Element("span",
-        {style:{position:"absolute","font-size-adjust":"none"}},
+      this.TestSpan = this.Element("span",
+        {className:"MathJax_test"},
         [
-          ["span",{className:"MathJax_ExBox"}],
-          ["span",{className:"MathJax"},
-            [["span",{className:"MathJax_EmBox"}]]
-          ]
+          ["span",{className:"MathJax_left_box"}],
+          ["span",{className:"MathJax_ex_box"}],
+          ["span",{className:"MathJax_em_box"}],
+          ["span",{className:"MathJax_right_box"}]
         ]
       );
-
-      // Used in preTranslate to get linebreak width
-      this.linebreakSpan = MathJax.HTML.Element("span",{className:"MathJax_LineBox"},[["span"]]);
 
       // Set up styles and preload web fonts
       return AJAX.Styles(this.config.styles,["InitializeHTML",this]);
@@ -554,13 +587,12 @@
       //
       //  Get the default sizes (need styles in place to do this)
       //
-      document.body.appendChild(this.EmExSpan);
-      document.body.appendChild(this.linebreakSpan);
-      this.defaultEx    = this.EmExSpan.firstChild.offsetHeight/60;
-      this.defaultEm    = this.EmExSpan.lastChild.firstChild.offsetHeight/60;
-      this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
-      document.body.removeChild(this.linebreakSpan);
-      document.body.removeChild(this.EmExSpan);
+      var test = document.body.appendChild(this.TestSpan.cloneNode(true));
+      test.className += " mjx-test-inline mjx-test-default";
+      this.defaultEx    = test.childNodes[1].offsetHeight/60;
+      this.defaultEm    = test.childNodes[2].offsetHeight/60;
+      this.defaultWidth = Math.max(0,test.lastChild.offsetLeft-test.firstChild.offsetLeft-2);
+      document.body.removeChild(test);
     },
     
     preTranslate: function (state) {
@@ -614,8 +646,9 @@
         //
         //  Add the test span for determining scales and linebreak widths
         //
-        script.parentNode.insertBefore(this.EmExSpan.cloneNode(true),script);
-        div.parentNode.insertBefore(this.linebreakSpan.cloneNode(true),div)
+        test = this.TestSpan.cloneNode(true);
+        test.className += " mjx-test-" + (jax.HTMLCSS.display ? "display" : "inline");
+        script.parentNode.insertBefore(test,script);
       }
       //
       //  Determine the scaling factors for each script
@@ -628,15 +661,17 @@
         script = scripts[i]; if (!script.parentNode) continue;
         test = script.previousSibling; div = test.previousSibling;
         jax = script.MathJax.elementJax; if (!jax) continue;
-        ex = test.firstChild.offsetHeight/60;
-        em = test.lastChild.firstChild.offsetHeight/60;
-        cwidth = Math.max(0,div.previousSibling.firstChild.offsetWidth - 2);
+        ex = test.childNodes[1].offsetHeight/60;
+        em = test.childNodes[2].offsetHeight/60;
+        cwidth = Math.max(0, jax.HTMLCSS.display ? test.lastChild.offsetWidth - 1: 
+                  test.lastChild.offsetLeft - test.firstChild.offsetLeft - 2);
         if (ex === 0 || ex === "NaN") {
           // can't read width, so move to hidden div for processing
           hidden.push(div);
           jax.HTMLCSS.isHidden = true;
           ex = this.defaultEx; em = this.defaultEm; cwidth = this.defaultWidth;
         }
+        if (cwidth === 0 && !jax.HTMLCSS.display) cwidth = this.defaultWidth;
         if (relwidth) {maxwidth = cwidth}
         scale = (this.config.matchFontHeight ? ex/this.TeX.x_height/em : 1);
         scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
@@ -654,12 +689,8 @@
       //
       for (i = 0; i < m; i++) {
         script = scripts[i]; if (!script.parentNode) continue;
-        test = scripts[i].previousSibling;
         jax = scripts[i].MathJax.elementJax; if (!jax) continue;
-        span = test.previousSibling;
-        if (!jax.HTMLCSS.isHidden) {span = span.previousSibling}
-        span.parentNode.removeChild(span);
-        test.parentNode.removeChild(test);
+        script.parentNode.removeChild(script.previousSibling);
         if (script.MathJax.preview) script.MathJax.preview.style.display = "";
       }
       //
@@ -767,10 +798,7 @@
         if (script && script.parentNode && script.MathJax.elementJax) {
           var div = (script.MathJax.elementJax.HTMLCSS||{}).div;
           if (div) {div.className = div.className.split(/ /)[0]}
-          if (script.MathJax.preview) {
-            script.MathJax.preview.innerHTML = "";
-            script.MathJax.preview.style.display = "none";
-          }
+          if (script.MathJax.preview) script.MathJax.preview.innerHTML = "";
         }
       }
       //
@@ -841,8 +869,8 @@
       //
       //  get em sizes (taken from HTMLCSS.preTranslate)
       //
-      var emex = span.appendChild(this.EmExSpan.cloneNode(true));
-      var em = emex.lastChild.firstChild.offsetHeight/60;
+      var emex = span.appendChild(this.TestSpan.cloneNode(true));
+      var em = emex.childNodes[2].offsetHeight/60;
       this.em = MML.mbase.prototype.em = em;
       this.outerEm = em / jax.HTMLCSS.scale;
       emex.parentNode.removeChild(emex);
@@ -1549,6 +1577,7 @@
               if (RANGES[id].remap && RANGES[id].remap[n]) {
                 n = N + RANGES[id].remap[n];
               } else {
+                if (RANGES[id].remapOnly) break;
                 n = n - RANGES[id].low + N;
                 if (RANGES[id].add) {n += RANGES[id].add}
               }
@@ -1594,7 +1623,7 @@
         span.bbox.h *= span.scale; span.bbox.d *= span.scale;
         span.bbox.w *= span.scale; span.bbox.lw *= span.scale; span.bbox.rw *= span.scale;
       }
-      if (text.length == 1 && font.skew && font.skew[n]) {span.bbox.skew = font.skew[n]}
+      if (HTMLCSS.isChar(text) && font.skew && font.skew[n]) {span.bbox.skew = font.skew[n]}
     },
     checkFont: function (font,style) {
       var weight = (style.fontWeight||"normal");
@@ -1696,6 +1725,13 @@
       if (!unknown[n]) {unknown[n] = [800,200,500,0,500,{isUnknown:true}]} // [h,d,w,lw,rw,{data}]
       HUB.signal.Post(["HTML-CSS Jax - unknown char",n,variant]);
       return unknown;
+    },
+    
+    isChar: function (text) {
+      if (text.length === 1) return true;
+      if (text.length !== 2) return false;
+      var n = text.charCodeAt(0);
+      return (n >= 0xD800 && n < 0xDBFF);
     },
 
     findBlock: function (font,c) {
@@ -2061,7 +2097,7 @@
       },
 
       HTMLhandleSpace: function (span) {
-	if (this.useMMLspacing) {
+	if (this.hasMMLspacing()) {
 	  if (this.type !== "mo") return;
 	  var values = this.getValues("scriptlevel","lspace","rspace");
           if (values.scriptlevel <= 0 || this.hasValue("lspace") || this.hasValue("rspace")) {
@@ -2264,8 +2300,8 @@
 	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
 	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
         var text = this.data.join(""), bbox = span.bbox;
-	if (bbox.skew && text.length !== 1) {delete bbox.skew}
-        if (bbox.rw > bbox.w && text.length === 1 && !variant.noIC) {
+	if (bbox.skew && !HTMLCSS.isChar(text)) {delete bbox.skew}
+        if (bbox.rw > bbox.w && HTMLCSS.isChar(text) && !variant.noIC) {
           bbox.ic = bbox.rw - bbox.w;
           HTMLCSS.createBlank(span,bbox.ic/this.mscale);
           bbox.w = bbox.rw;
@@ -2290,7 +2326,7 @@
           }
         }
 	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
-	if (this.data.join("").length !== 1) {delete span.bbox.skew}
+	if (!HTMLCSS.isChar(this.data.join(""))) {delete span.bbox.skew}
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
         this.HTMLhandleDir(span);
@@ -2316,8 +2352,8 @@
         var parent = this.CoreParent(),
             isScript = (parent && parent.isa(MML.msubsup) && this !== parent.data[parent.base]),
             mapchars = (isScript?this.remapChars:null);
-        if (text.length === 1 && parent && parent.isa(MML.munderover) &&
-            this.CoreText(parent.data[parent.base]).length === 1) {
+        if (HTMLCSS.isChar(text) && parent && parent.isa(MML.munderover) &&
+            HTMLCSS.isChar(this.CoreText(parent.data[parent.base]))) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
           if (over && this === over.CoreMO() && parent.Get("accent")) {mapchars = HTMLCSS.FONTDATA.REMAPACCENT}
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {mapchars = HTMLCSS.FONTDATA.REMAPACCENTUNDER}
@@ -2333,12 +2369,12 @@
 	for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant,this.remap,mapchars)}}
 	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
-	if (text.length !== 1) {delete span.bbox.skew}
+	if (!HTMLCSS.isChar(text)) {delete span.bbox.skew}
 
         //
         //  Handle combining character bugs
         //
-	if (HTMLCSS.AccentBug && span.bbox.w === 0 && text.length === 1 && span.firstChild) {
+	if (HTMLCSS.AccentBug && span.bbox.w === 0 && HTMLCSS.isChar(text) && span.firstChild) {
           //
           //  adding a non-breaking space and removing that width
           //
@@ -2382,7 +2418,7 @@
 	if (c.length > 1) {return false}
         var parent = this.CoreParent();
         if (parent && parent.isa(MML.munderover) && 
-            this.CoreText(parent.data[parent.base]).length === 1) {
+            HTMLCSS.isChar(this.CoreText(parent.data[parent.base]))) {
           var over = parent.data[parent.over], under = parent.data[parent.under];
           if (over && this === over.CoreMO() && parent.Get("accent")) {c = HTMLCSS.FONTDATA.REMAPACCENT[c]||c}
           else if (under && this === under.CoreMO() && parent.Get("accentunder")) {c = HTMLCSS.FONTDATA.REMAPACCENTUNDER[c]||c}
@@ -2444,7 +2480,7 @@
         for (var i = 0, m = this.data.length; i < m; i++)
           {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
         if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
-        if (this.data.join("").length !== 1) {delete span.bbox.skew}
+        if (!HTMLCSS.isChar(this.data.join(""))) {delete span.bbox.skew}
         this.HTMLhandleSpace(span);
         this.HTMLhandleColor(span);
         this.HTMLhandleDir(span);
@@ -2910,7 +2946,7 @@
         }
 	if (this.data[this.base] && HW == null && D == null &&
 	   (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
-	  if (this.data[this.base].data.join("").length === 1 && children[0].scale === 1 &&
+	  if (HTMLCSS.isChar(this.data[this.base].data.join("")) && children[0].scale === 1 &&
 	      !this.data[this.base].Get("largeop")) {u = v = 0}
 	}
 	var min = this.getValues("subscriptshift","superscriptshift");
@@ -3210,7 +3246,7 @@
           safariTextNodeBug: !v3p0,
           forceReflow: true,
           FontFaceBug: true,
-          combiningCharBug: parseInt(browser.webkit) >= 603,
+          combiningCharBug: parseInt(browser.webkit) >= 602,
           allowWebFonts: (v3p1 && !forceImages ? "otf" : false)
         });
         if (trueSafari) {

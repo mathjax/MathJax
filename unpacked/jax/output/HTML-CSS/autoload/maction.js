@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.7.4";
+  var VERSION = "2.7.5";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   
@@ -178,13 +178,13 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //
       //  get em sizes (taken from HTMLCSS.preTranslate)
       //
-      var emex = tip.insertBefore(HTMLCSS.EmExSpan.cloneNode(true),tip.firstChild);
-      var ex = emex.firstChild.offsetHeight/60,
-          em = emex.lastChild.firstChild.offsetHeight/60;
+      var emex = tip.insertBefore(HTMLCSS.TestSpan.cloneNode(true),tip.firstChild);
+      var ex = emex.childNodes[1].offsetHeight/60,
+          em = emex.childNodes[2].offsetHeight/60;
+      emex.parentNode.removeChild(emex);
       HTMLCSS.em = HTMLCSS.outerEm = MML.mbase.prototype.em = em;
       var scale = Math.floor(Math.max(HTMLCSS.config.minScaleAdjust/100,(ex/HTMLCSS.TeX.x_height)/em) * HTMLCSS.config.scale);
       tip.firstChild.style.fontSize = scale+"%";
-      emex.parentNode.removeChild(emex);
 
       var stack = HTMLCSS.createStack(tip.firstChild.firstChild);
       var box = HTMLCSS.createBox(stack);

@@ -31,7 +31,7 @@
 //  The configuration defaults, augmented by the user settings
 //  
 MathJax.Extension["TeX/color"] = {
-  version: "2.7.4",
+  version: "2.7.5",
 
   config: MathJax.Hub.CombineConfig("TeX.color",{
     padding: "5px",
@@ -183,7 +183,7 @@ MathJax.Extension["TeX/color"] = {
    *  Get a named value
    */
   get_named: function (name) {
-    if (this.colors[name]) {return this.colors[name]}
+    if (this.colors.hasOwnProperty(name)) {return this.colors[name]}
     return name;
   },
   

@@ -89,10 +89,10 @@
 
     ".MJXp-mphantom": {"visibility": "hidden"},
 
-    ".MJXp-munderover": {"display":"inline-table!important"},
+    ".MJXp-munderover, .MJXp-munder": {"display":"inline-table!important"},
     ".MJXp-over": {"display":"inline-block!important","text-align":"center"},
     ".MJXp-over > *": {"display":"block!important"},
-    ".MJXp-munderover > *": {"display":"table-row!important"},
+    ".MJXp-munderover > *, .MJXp-munder > *": {"display":"table-row!important"},
 
     ".MJXp-mtable": {"vertical-align":".25em", "margin":"0 .125em"},
     ".MJXp-mtable > *": {"display":"inline-table!important", "vertical-align":"middle"},
@@ -268,7 +268,6 @@
           //
           if (data.preview) {
             data.preview.innerHTML = "";
-            data.preview.style.display = "none";
             script.MathJax.preview = data.preview;
             delete data.preview;
           }

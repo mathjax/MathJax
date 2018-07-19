@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sl","TeX",{
-        version: "2.7.4",
+        version: "2.7.5",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Dodaten uklepaj ali manjkajo\u010D zaklepaj",

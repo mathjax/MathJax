@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("ce","HTML-CSS",{version:"2.7.4",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/ce/HTML-CSS.js");
+MathJax.Localization.addTranslation("ce","HTML-CSS",{version:"2.7.5",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/ce/HTML-CSS.js");

@@ -21,7 +21,7 @@
 
 (function (HTMLCSS,MML,AJAX) {
 
-  var VERSION = "2.7.4";
+  var VERSION = "2.7.5";
 
   var ALPHABETSBOLDITALIC = "STIXMathJax_Alphabets-bold-italic",
       ALPHABETSBOLD = "STIXMathJax_Alphabets-bold",
@@ -152,10 +152,29 @@
       },
 
       VARIANT: {
-          "normal": {remap: {0x007C: [0x007C, "-STIX-Web-variant"]}, fonts: [MAIN,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,SIZE1]},
-          "bold": {fonts: [MAINBOLD,NORMALBOLD,FRAKTURBOLD,DOUBLESTRUCKBOLD,SANSSERIFBOLD,LATINBOLD,ALPHABETSBOLD,MARKSBOLD,ARROWSBOLD,OPERATORSBOLD,SYMBOLSBOLD,SHAPESBOLD,MISCBOLD,VARIANTSBOLD,SIZE1], bold:true},
-          "italic": {fonts: [MAINITALIC,NORMALITALIC,SCRIPTITALIC,DOUBLESTRUCKITALIC,SANSSERIFITALIC,LATINITALIC,ALPHABETSITALIC,MARKSITALIC,MISCITALIC,VARIANTSITALIC,SIZE1], italic:true},
-          "bold-italic": {fonts: [MAINBOLDITALIC,NORMALBOLDITALIC,SCRIPTBOLDITALIC,DOUBLESTRUCKBOLDITALIC,SANSSERIFBOLDITALIC,LATINBOLDITALIC,ALPHABETSBOLDITALIC,MARKSBOLDITALIC,SHAPESBOLDITALIC,MISCBOLDITALIC,VARIANTSBOLDITALIC,SIZE1], bold: true, italic:true},
+          "normal": {
+            fonts: [MAIN,MONOSPACE,LATIN,ALPHABETS,MARKS,ARROWS,OPERATORS,SYMBOLS,SHAPES,MISC,VARIANTS,SIZE1],
+            remap: {0x007C: [0x007C, "-STIX-Web-variant"]}
+          },
+          "bold": {
+            fonts: [MAINBOLD,NORMALBOLD,FRAKTURBOLD,DOUBLESTRUCKBOLD,SANSSERIFBOLD,LATINBOLD,ALPHABETSBOLD,MARKSBOLD,ARROWSBOLD,OPERATORSBOLD,SYMBOLSBOLD,SHAPESBOLD,MISCBOLD,VARIANTSBOLD,SIZE1],
+            offsetA: 0x1D400,
+            offsetG: 0x1D6A8,
+            bold: true,
+            remap: {0x2202: 0x1D6DB, 0x2207: 0x1D6C1}
+          },
+          "italic": {
+            fonts: [MAINITALIC,NORMALITALIC,SCRIPTITALIC,DOUBLESTRUCKITALIC,SANSSERIFITALIC,LATINITALIC,ALPHABETSITALIC,MARKSITALIC,MISCITALIC,VARIANTSITALIC,SIZE1],
+            offsetA: 0x1D434, offsetG: 0x1D6E2,
+            remap: {0x1D455: 0x210E, 0x2202: 0x1D715, 0x2207: 0x1D6FB},
+            italic: true
+          },
+          "bold-italic": {
+            fonts: [MAINBOLDITALIC,NORMALBOLDITALIC,SCRIPTBOLDITALIC,DOUBLESTRUCKBOLDITALIC,SANSSERIFBOLDITALIC,LATINBOLDITALIC,ALPHABETSBOLDITALIC,MARKSBOLDITALIC,SHAPESBOLDITALIC,MISCBOLDITALIC,VARIANTSBOLDITALIC,SIZE1],
+            offsetA: 0x1D434, offsetG: 0x1D71C,
+            remap: {0x1D455: 0x210E, 0x2202: 0x1D74F, 0x2207: 0x1D735},
+            bold: true, italic: true
+          },
           "double-struck": {
             fonts: [DOUBLESTRUCK],
             offsetA: 0x1D538,
@@ -168,43 +187,50 @@
             remap: {0x1D506: 0x212D, 0x1D50B: 0x210C, 0x1D50C: 0x2111, 0x1D515: 0x211C, 0x1D51D: 0x2128}
           },
           "bold-fraktur": {
-            fonts: [FRAKTURBOLD], bold:true,
-            offsetA: 0x1D56C
+            fonts: [FRAKTURBOLD],
+            offsetA: 0x1D56C,
+            bold: true
           },
           "script": {
-            fonts: [SCRIPTITALIC], italic:true,
+            fonts: [SCRIPTITALIC],
             offsetA: 0x1D49C,
+            italic: true,
             remap: {0x1D49D: 0x212C, 0x1D4A0: 0x2130, 0x1D4A1: 0x2131, 0x1D4A3: 0x210B, 0x1D4A4: 0x2110, 0x1D4A7: 0x2112, 0x1D4A8: 0x2133, 0x1D4AD: 0x211B, 0x1D4BA: 0x212F, 0x1D4BC: 0x210A, 0x1D4C4: 0x2134}
           },
           "bold-script": {
-            fonts: [SCRIPTBOLDITALIC], bold:true, italic:true,
-            offsetA: 0x1D4D0
+            fonts: [SCRIPTBOLDITALIC],
+            offsetA: 0x1D4D0,
+            bold:true, italic: true
           },
           "sans-serif": {
             fonts: [SANSSERIF],
             offsetA: 0x1D5A0,
             offsetN: 0x1D7E2,
-            offsetG: 0xE17D,
-            offsetE: 0xE17D
+            offsetP: 0xE17D,
+            remap: {0x2202: 0xE17C}
           },
           "bold-sans-serif": {
-            fonts: [SANSSERIFBOLD], bold:true,
+            fonts: [SANSSERIFBOLD],
             offsetA: 0x1D5D4,
             offsetN: 0x1D7EC,
-            offsetG: 0x1D756
+            offsetG: 0x1D756,
+            remap: {0x2202: 0x1D789, 0x2207: 0x1D76F}
           },
           "sans-serif-italic": {
              fonts: [SANSSERIFITALIC], italic: true,
              offsetA: 0x1D608,
              offsetN: 0xE1B4,
-             offsetG: 0xE1BF,
-             offsetE: 0xE1BF
+             offsetP: 0xE1BF,
+             remap: {0x2202: 0xE1BE},
+             bold: true
           },
           "sans-serif-bold-italic": {
-             fonts: [SANSSERIFBOLDITALIC], bold:true, italic: true,
+             fonts: [SANSSERIFBOLDITALIC],
              offsetA: 0x1D63C,
              offsetN: 0xE1F6,
-             offsetG: 0x1D790
+             offsetG: 0x1D790,
+             remap: {0x2202: 0x1D7C3, 0x2207: 0x1D7A9},
+             bold: true, italic: true
           },
           "monospace": {
              fonts: [MONOSPACE],
@@ -225,10 +251,14 @@
         {name: "alpha", low: 0x61, high: 0x7A, offset: "A", add: 26},
         {name: "Alpha", low: 0x41, high: 0x5A, offset: "A"},
         {name: "number", low: 0x30, high: 0x39, offset: "N"},
-        {name: "greek-non-unicode", low: 0x03B1, high: 0x03C9, offset: "E", add: 25},
         {name: "greek", low: 0x03B1, high: 0x03C9, offset: "G", add: 26},
-        {name: "Greek", low: 0x0391, high: 0x03F6, offset: "G",
-           remap: {0x03F5: 52, 0x03D1: 53, 0x03F0: 54, 0x03D5: 55, 0x03F1: 56, 0x03D6: 57, 0x03F4: 17}}
+        {name: "Greek", low: 0x0391, high: 0x03A9, offset: "G"},
+        {name: "vargreek", low: 0x03D1, high: 0x03F6, offset: "G", remapOnly: true,
+           remap: {0x03F5: 52, 0x03D1: 53, 0x03F0: 54, 0x03D5: 55, 0x03F1: 56, 0x03D6: 57, 0x03F4: 17}},
+        {name: "PUAgreek", low: 0x03B1, high: 0x03C9, offset: "P", add: 25},
+        {name: "PUAGreek", low: 0x0391, high: 0x03A9, offset: "P"}, 
+        {name: "varPUAgreek", low: 0x03D1, high: 0x03F6, offset: "P", remapOnly: true,
+          remap: {0x03F5: 50, 0x03D1: 51, 0x03D5: 52, 0x03F1: 53, 0x03D6: 54, 0x03F4: 17}}
       ],
 
       RULECHAR: 0x23AF,

@@ -26,7 +26,7 @@
  */
 
 MathJax.Extension["TeX/newcommand"] = {
-  version: "2.7.4"
+  version: "2.7.5"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
@@ -120,10 +120,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
         name = this.GetCSname(name);
         macro = this.csFindMacro(name);
         if (!macro) {
-          if (TEXDEF.mathchar0mi[name])            {macro = ["csMathchar0mi",TEXDEF.mathchar0mi[name]]}  else
-          if (TEXDEF.mathchar0mo[name])            {macro = ["csMathchar0mo",TEXDEF.mathchar0mo[name]]}  else
-          if (TEXDEF.mathchar7[name])              {macro = ["csMathchar7",TEXDEF.mathchar7[name]]}      else 
-          if (TEXDEF.delimiter["\\"+name] != null) {macro = ["csDelimiter",TEXDEF.delimiter["\\"+name]]} else
+          if (TEXDEF.mathchar0mi.hasOwnProperty(name))    {macro = ["csMathchar0mi",TEXDEF.mathchar0mi[name]]}  else
+          if (TEXDEF.mathchar0mo.hasOwnProperty(name))    {macro = ["csMathchar0mo",TEXDEF.mathchar0mo[name]]}  else
+          if (TEXDEF.mathchar7.hasOwnProperty(name))      {macro = ["csMathchar7",TEXDEF.mathchar7[name]]}      else 
+          if (TEXDEF.delimiter.hasOwnProperty("\\"+name)) {macro = ["csDelimiter",TEXDEF.delimiter["\\"+name]]} else
           return;
         }
       } else {macro = ["Macro",c]; this.i++}
