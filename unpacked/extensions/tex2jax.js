@@ -168,7 +168,7 @@ MathJax.Extension.tex2jax = {
                           else {element = this.endMatch(match,element)}
       }
       if (this.search.matched) element = this.encloseMath(element);
-        else if (!this.search.start) rescan = this.search;
+        else if (!this.search.start && !this.search.close) rescan = this.search;
       if (element) {
         do {prev = element; element = element.nextSibling}
           while (element && this.ignoreTags[element.nodeName.toLowerCase()] != null);
