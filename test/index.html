@@ -16,8 +16,15 @@
 //
   MathJax.HTML.Cookie.Set("menu",{});
   MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
+    extensions: ["mml2jax.js", "tex2jax.js"],
     jax: ["input/TeX","output/HTML-CSS"],
+    mml2jax: {
+      outputTex: true
+    },
+    tex2jax: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    },
     "HTML-CSS": {
       availableFonts:[],
       styles: {".MathJax_Preview": {visibility: "hidden"}}
@@ -98,6 +105,12 @@ TeX code instead, MathJax is not working for you.
 <!------------------------------------------------------------------------>
 <hr>
 
+
+<p>
+<math mode="display">
+\frac{-b\pm\sqrt{b^2-4ac}}{2a}
+</math>
+</p>
 
 <p>
 \[
