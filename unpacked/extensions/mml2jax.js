@@ -29,14 +29,15 @@
 MathJax.Extension.mml2jax = {
   version: "2.7.5",
   config: {
-    preview: "mathml"       // Use the <math> element as the
+    preview: "mathml",      // Use the <math> element as the
                             //   preview.  Set to "none" for no preview,
                             //   set to "alttext" to use the alttext attribute
                             //   of the <math> element, set to "altimg" to use
                             //   an image described by the altimg* attributes
                             //   or set to an array specifying an HTML snippet
                             //   to use a fixed preview for all math
-
+    outputTex: false        // Produce "math/tex" script tags instead of
+                            //   "math/mml" script tags.
   },
   MMLnamespace: "http://www.w3.org/1998/Math/MathML",
   
@@ -122,18 +123,34 @@ MathJax.Extension.mml2jax = {
     var parent = math.parentNode;
     if (!parent || parent.className === MathJax.Hub.config.preRemoveClass) return;
     var script = document.createElement("script");
-    script.type = "math/mml";
+    if (this.config.outputTex) {
+      script.type = "math/tex";
+      if (math.hasAttribute("mode")) {
+        script.type += "; mode=" + math.getAttribute("mode");
+      }
+    } else {
+      script.type = "math/mml";
+    }
     parent.insertBefore(script,math);
-    if (this.AttributeBug) {
-      var html = this.OuterHTML(math);
-      if (this.CleanupHTML) {
+    if (this.config.outputTex) {
+      var html = math.innerHTML;
+      if (this.AttributeBug && this.CleanupHTML) {
         html = html.replace(/<\?import .*?>/i,"").replace(/<\?xml:namespace .*?\/>/i,"");
         html = html.replace(/&nbsp;/g,"&#xA0;");
       }
-      MathJax.HTML.setScript(script,html); parent.removeChild(math);
+      MathJax.HTML.setScript(script, html); parent.removeChild(math);
     } else {
-      var span = MathJax.HTML.Element("span"); span.appendChild(math);
-      MathJax.HTML.setScript(script,span.innerHTML);
+      if (this.AttributeBug) {
+        var html = this.OuterHTML(math);
+        if (this.CleanupHTML) {
+          html = html.replace(/<\?import .*?>/i,"").replace(/<\?xml:namespace .*?\/>/i,"");
+          html = html.replace(/&nbsp;/g,"&#xA0;");
+        }
+        MathJax.HTML.setScript(script,html); parent.removeChild(math);
+      } else {
+        var span = MathJax.HTML.Element("span"); span.appendChild(math);
+        MathJax.HTML.setScript(script,span.innerHTML);
+      }
     }
     if (this.config.preview !== "none") {this.createPreview(math,script)}
   },
