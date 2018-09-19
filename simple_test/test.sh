@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $DIR/test
+cd $DIR
 live-server
