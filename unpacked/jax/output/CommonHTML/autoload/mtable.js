@@ -362,7 +362,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       //  Adjust widths of columns
       //
-      if (setWidths) {
+      if (setWidths || (relWidth && hasFit)) {
         if (relWidth) {
           //
           //  Attach appropriate widths to the columns
