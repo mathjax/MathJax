@@ -85,7 +85,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
       natnums: ["Macro", "\\mathbb{N}"],
       Nu: ["Macro", "\\mathrm{N}"],
       O: ["Macro", "\\emptyset"],
-      oint: ["Macro", "\\unicodeInt{x222E}"],
       oiint: ["Macro", "\\unicodeInt{x222F}"],
       oiiint: ["Macro", "\\unicodeInt{x2230}"],
       ointctrclockwise: ["Macro", "\\unicodeInt{x2233}"],
