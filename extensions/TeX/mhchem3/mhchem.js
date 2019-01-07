@@ -8,7 +8,7 @@
  *  ---------------------------------------------------------------------
  *
  *  Copyright (c) 2011-2015 The MathJax Consortium
- *  Copyright (c) 2015-2017 Martin Hensel
+ *  Copyright (c) 2015-2018 Martin Hensel
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,311 +22,270 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-MathJax.Extension["TeX/mhchem"]={version:"3.2.0"},MathJax.Hub.Register.StartupHook("TeX Jax Ready",
-function(){var n=MathJax.InputJax.TeX,r=MathJax.Object.Subclass({string:"",Init:
-function(n){this.string=n},Parse:
-function(r){try{return o.go(t.go(this.string,r))}catch(r){n.Error(r)}}}),t={};t.go=
-function(n,r){if(!n)return n;void 0===r&&(r="ce");var o="0",e={};e.pL=0,n=n.replace(/[\u2212\u2013\u2014\u2010]/g,"-"),n=n.replace(/[\u2026]/g,"...");for(var a,u,i=[];;){a!==n?(u=10,a=n):u--;var s=t.c[r],l=s.e.length;n:for(var h=0;h<l;h++){var p=s.e[h],c=p.g[o]||p.g["*"]||null;if(c){var f=t.h(p.h,n);if(f){for(var m=t.j([],c.k),k=m.length,d=0;d<k;d++){var g,q=m[d],v=void 0;if(q.l&&(v=q.m,q=q.l),"string"==typeof q)if(s.g[q])g=s.g[q](e,f.h,v);else{if(!t.g[q])throw["MhchemBugA","mhchem bug A. Please report. ("+q+")"];g=t.g[q](e,f.h,v)}else"function"==typeof q&&(g=q(e,f.h));i=t.j(i,g)}if(o=c.n||o,!(n.length>0))return i;if(c.s||(n=f.t),!c.u)break n}}}if(u<=0)throw["MhchemBugU","mhchem bug U. Please report."]}},
-t.j=
-function(n,r){return r?n?n.concat(r):[].concat(r):n},t.w={"~C":/^$/,"~A":/^./,"~B":/^./,"%m":/^\s/,"%l":/^\s(?=[A-Z\\$])/,"~@":/^[a-z]/,x:/^x/,x$:/^x$/,i$:/^i$/,"~M":/^(?:[a-zA-Z\u03B1-\u03C9\u0391-\u03A9?@]|(?:\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Upsilon|Phi|Psi|Omega)(?:\s+|\{\}|(?![a-zA-Z]))))+/,"@z":/^\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Upsilon|Phi|Psi|Omega)(?:\s+|\{\}|(?![a-zA-Z]))/,"~P":/^(?:([a-z])(?:$|[^a-zA-Z]))$/,"@%":/^\$(?:([a-z])(?:$|[^a-zA-Z]))\$$/,"~O":/^(?:\$?[\u03B1-\u03C9]\$?|\$?\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\s*\$?)(?:\s+|\{\}|(?![a-zA-Z]))$/,"~u":/^[0-9]+/,"@h":/^[+\-]?(?:[0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+))/,"@g":/^[+\-]?[0-9]+(?:[.,][0-9]+)?/,"%T":
-function(n){var r=n.match(/^(\+\-|\+\/\-|\+|\-|\\pm\s?)?([0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+)?)(\((?:[0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+)?)\))?(?:([eE]|\s*(\*|x|\\times|\u00D7)\s*10\^)([+\-]?[0-9]+|\{[+\-]?[0-9]+\}))?/);return r&&r[0]?{h:r.splice(1),t:n.substr(r[0].length)}:null},aj:
-function(n){var r=n.match(/^(\+\-|\+\/\-|\+|\-|\\pm\s?)?([0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+)?)\^([+\-]?[0-9]+|\{[+\-]?[0-9]+\})/);return r&&r[0]?{h:r.splice(1),t:n.substr(r[0].length)}:null},"%n":
-function(n){var r=this["@W"](n,"",/^\([a-z]{1,3}(?=[\),])/,")","");if(r&&r.t.match(/^($|[\s,;\)\]\}])/))return r;var t=n.match(/^(?:\((?:\\ca\s?)?\$[amothc]\$\))/);return t?{h:t[0],t:n.substr(t[0].length)}:null},ae:/^_\{(\([a-z]{1,3}\))\}/,"@K":/^(?:\\\{|\[|\()/,"@c":/^(?:\)|\]|\\\})/,", ":/^[,;]\s*/,",":/^[,;]/,".":/^[.]/,". ":/^([.\u22C5\u00B7\u2022])\s*/,"@i":/^\.\.\.(?=$|[^.])/,"* ":/^([*])\s*/,"@P":
-function(n){return this["@W"](n,"^{","","","}")},"@L":
-function(n){return this["@W"](n,"^","$","$","")},"^a":/^\^([0-9]+|[^\\_])/,"@O":
-function(n){return this["@W"](n,"^",/^\\[a-zA-Z]+\{/,"}","","","{","}","",!0)},"@N":
-function(n){return this["@W"](n,"^",/^\\[a-zA-Z]+\{/,"}","")},"^\\x":/^\^(\\[a-zA-Z]+)\s*/,"%U":/^\^(-?\d+)/,"'":/^'/,"@Y":
-function(n){return this["@W"](n,"_{","","","}")},"@Q":
-function(n){return this["@W"](n,"_","$","$","")},_9:/^_([+\-]?[0-9]+|[^\\])/,"@T":
-function(n){return this["@W"](n,"_",/^\\[a-zA-Z]+\{/,"}","","","{","}","",!0)},"@S":
-function(n){return this["@W"](n,"_",/^\\[a-zA-Z]+\{/,"}","")},"@R":/^_(\\[a-zA-Z]+)\s*/,"^_":/^(?:\^(?=_)|\_(?=\^)|[\^_]$)/,"{}":/^\{\}/,"%B":
-function(n){return this["@W"](n,"","{","}","")},"%A":
-function(n){return this["@W"](n,"{","","","}")},"@~":
-function(n){return this["@W"](n,"","$","$","")},"@a":
-function(n){return this["@W"](n,"${","","","}$")},"@@":
-function(n){return this["@W"](n,"$","","","$")},"%D":/^[=<>]/,"#":/^[#\u2261]/,"+":/^\+/,"-$":/^-(?=[\s_},;\]\/]|$|\([a-z]+\))/,"-9":/^-(?=[0-9])/,"@f":/^-(?=(?:[spd]|sp)(?:$|[\s,;\)\]\}]))/,"-":/^-/,ai:/^(?:\\pm|\$\\pm\$|\+-|\+\/-)/,"~Q":/^(?:\+|(?:[\-=<>]|<<|>>|\\approx|\$\\approx\$)(?=\s|$|-?[0-9]))/,"~c":/^(?:v|\(v\)|\^|\(\^\))(?=$|[\s,;\)\]\}])/,"@r":
-function(n){return this["@W"](n,"\\bond{","","","}")},"->":/^(?:<->|<-->|->|<-|<=>>|<<=>|<=>|[\u2192\u27F6\u21CC])/,"@m":/^[CMT](?=\[)/,"@o":
-function(n){return this["@W"](n,"[","","","]")},al:/^(&|@q|\\hline)\s*/,"@p":/^(?:\\[,\ ;:])/,"@G":
-function(n){return this["@W"](n,"",/^\\[a-zA-Z]+\{/,"}","","","{","}","",!0)},"@F":
-function(n){return this["@W"](n,"",/^\\[a-zA-Z]+\{/,"}","")},"@t":/^\\ca(?:\s+|(?![a-zA-Z]))/,"@E":/^(?:\\[a-zA-Z]+\s*|\\[_&{}%])/,"~R":/^(?:[0-9]{1,2}[spdfgh]|[0-9]{0,2}sp)(?=$|[^a-zA-Z])/,"~S":/^[\/~|]/,"@y":
-function(n){return this["@W"](n,"\\frac{","","","}","{","","","}")},"@A":
-function(n){return this["@W"](n,"\\overset{","","","}","{","","","}")},"@C":
-function(n){return this["@W"](n,"\\underset{","","","}","{","","","}")},"@B":
-function(n){return this["@W"](n,"\\underbrace{","","","}_","{","","","}")},"@w":
-function(n){return this["@W"](n,"\\color{","","","}")},"@x":
-function(n){return this["@W"](n,"\\color{","","","}","{","","","}")},"@v":
-function(n){return this["@W"](n,"\\color","\\","",/^(?=\{)/,"{","","","}")},"@u":
-function(n){return this["@W"](n,"\\ce{","","","}")},"~Z":/^(?:[+-][IVX]+|\\pm\s*0|\$\\pm\$\s*0)$/,"a~":/^(?:[+-]?\s?[IVX]+|\\pm\s*0|\$\\pm\$\s*0)$/,"%d":/^[IVX]+/,"@j":/^[+\-]?(?:[0-9]+|\$[a-z]\$|[a-z])\/[0-9]+(?:\$[a-z]\$|[a-z])?$/,"~%":
-function(n){var r;if(r=n.match(/^(?:(?:(?:\([+\-]?[0-9]+\/[0-9]+\)|[+\-]?(?:[0-9]+|\$[a-z]\$|[a-z])\/[0-9]+|[+\-]?[0-9]+[.,][0-9]+|[+\-]?\.[0-9]+|[+\-]?[0-9]+)(?:[a-z](?=\s*[A-Z]))?)|[+\-]?[a-z](?=\s*[A-Z])|\+(?!\s))/))return{h:r[0],t:n.substr(r[0].length)};var t=this["@W"](n,"","$","$","");return t&&(r=t.h.match(/^\$(?:\(?[+\-]?(?:[0-9]*[a-z]?[+\-])?[0-9]*[a-z](?:[+\-][0-9]*[a-z]?)?\)?|\+|-)\$$/))?{h:r[0],t:n.substr(r[0].length)}:null},"~a":
-function(n){return this["~%"](n)},"@b":/^(?:[A-Z][a-z]{0,2}|i)(?=,)/,"~E":
-function(n){if(n.match(/^\([a-z]+\)$/))return null;var r=n.match(/^(?:[a-z]|(?:[0-9\ \+\-\,\.\(\)]+[a-z])+[0-9\ \+\-\,\.\(\)]*|(?:[a-z][0-9\ \+\-\,\.\(\)]+)+[a-z]?)$/);return r?{h:r[0],t:n.substr(r[0].length)}:null},"%z":/^(?:pH|pOH|pC|pK|iPr|iBu)(?=$|[^a-zA-Z])/,"/":/^\s*(\/)\s*/,"//":/^\s*(\/\/)\s*/,"*":/^\s*\*\s*/,"@W":
-function(n,r,t,o,e,a,u,i,s,l){var h=this["@V"](n,r);if(null===h)return null;if(n=n.substr(h.length),h=this["@V"](n,t),null===h)return null;var p=this["@U"](n,h.length,o||e);if(null===p)return null;var c=n.substring(0,o?p.y:p.z);if(a||u){var f=this["@W"](n.substr(p.y),a,u,i,s);if(null===f)return null;var m=[c,f.h];return l&&(m=m.join("")),{h:m,t:f.t}}return{h:c,t:n.substr(p.y)}},
-"@V":
-function(n,r){if("string"==typeof r)return 0!==n.indexOf(r)?null:r;var t=n.match(r);return t?t[0]:null},"@U":
-function(n,r,t){for(var o=0;r<n.length;){var e=n.charAt(r),a=this["@V"](n.substr(r),t);if(null!==a&&0===o)return{z:r,y:r+a.length};if("{"===e)o++;else if("}"===e){if(0===o)throw["ExtraCloseMissingOpen","Extra close brace or missing open brace"];o--}r++}return null}},
-t.h=
-function(n,r){var o=t.w[n];if(void 0===o)throw["MhchemBugP","mhchem bug P. Please report. ("+n+")"];if("function"==typeof o)return t.w[n](r);var e=r.match(o);if(e){var a;return a=e[2]?[e[1],e[2]]:e[1]?e[1]:e[0],{h:a,t:r.substr(e[0].length)}}return null},t.g={"a=":
-function(n,r){n.a=(n.a||"")+r},"b=":
-function(n,r){n.b=(n.b||"")+r},"p=":
-function(n,r){n.p=(n.p||"")+r},"o=":
-function(n,r){n.o=(n.o||"")+r},"q=":
-function(n,r){n.q=(n.q||"")+r},"d=":
-function(n,r){n.d=(n.d||"")+r},"%c":
-function(n,r){n.rm=(n.rm||"")+r},"%t":
-function(n,r){n.text=(n.text||"")+r},"~J":
-function(n,r,t){return{l:t}},
-"~K":
-function(n,r,t){return{l:t,p1:r}},
-"~L":
-function(n,r,t){return{l:t,p1:r[0],p2:r[1]}},
-"~s":
-function(n,r){return r},rm:
-function(n,r){return{l:"rm",p1:r}},
-"%s":
-function(n,r){return t.go(r,"%s")},"%C":
-function(n,r){var o=["{"];return o=t.j(o,t.go(r,"%s")),o=t.j(o,"}")},"%r":
-function(n,r){return t.go(r,"%r")},"%q":
-function(n,r){return t.go(r,"%q")},"~f":
-function(n,r,t){return{l:"~f",A:t||r}},
-"~m":
-function(n,r){return{l:"~l",B:r[0]}},
-ce:
-function(n,r){return t.go(r)},"@k":
-function(n,r){var o;r.match(/^[+\-]/)&&(o=[r.substr(0,1)],r=r.substr(1));var e=r.match(/^([0-9]+|\$[a-z]\$|[a-z])\/([0-9]+)(\$[a-z]\$|[a-z])?$/);return e[1]=e[1].replace(/\$/g,""),o=t.j(o,{l:"~F",p1:e[1],p2:e[2]}),e[3]&&(e[3]=e[3].replace(/\$/g,""),o=t.j(o,{l:"%r",p1:e[3]})),o},"@l":
-function(n,r){return t.go(r,"@l")}},
-t.c={},t.C=
-function(n){var r,t,o,e,a={};for(r in n)if(r.indexOf("|")!==-1)for(o=r.split("|"),e=0;e<o.length;e++)a[o[e]]=n[r];else a[r]=n[r];var u=[];for(r in a){var i={},s=a[r];for(t in s)if(t.indexOf("|")!==-1)for(o=t.split("|"),e=0;e<o.length;e++)i[o[e]]=s[t];else i[t]=s[t];u.push({h:r,g:i})}return u},t.c.ce={e:t.C({"~C":{"*":{k:"~T"}},
-"~A":{"0|1|2":{k:"%F",s:!0,u:!0}},
-"~Z":{0:{k:"a%"}},
-"@m":{r:{k:"%b",n:"rt"},rd:{k:"%g",n:"%i"}},
-"~c":{"0|1|2|as":{k:["%j","~T","~Q"],n:"1"}},
-"%z":{"0|1|2":{k:["o=","~T"],n:"1"}},
-"~R":{"0|1|2|3":{k:"o=",n:"o"}},
-"->":{"0|1|2|3":{k:"r=",n:"r"},"a|as":{k:["~T","r="],n:"r"},"*":{k:["~T","r="],n:"r"}},
-"+":{o:{k:"~t",n:"d"},"d|D":{k:"d=",n:"d"},q:{k:"d=",n:"qd"},"qd|qD":{k:"d=",n:"qd"},dq:{k:["~T","d="],n:"d"},3:{k:["%j","~T","~Q"],n:"0"}},
-"~%":{"0|2":{k:"a=",n:"a"}},
-ai:{"0|1|2|a|as":{k:["%j","~T",{l:"~Q",m:"\\pm"}],n:"0"}},
-"~Q":{"0|1|2|a|as":{k:["%j","~T","~Q"],n:"0"}},
-"-$":{"o|q":{k:["~g","~T"],n:"qd"},d:{k:"d=",n:"d"},D:{k:["~T",{l:"~f",m:"-"}],n:"3"},q:{k:"d=",n:"qd"},qd:{k:"d=",n:"qd"},"qD|dq":{k:["~T",{l:"~f",m:"-"}],n:"3"}},
-"-9":{"3|o":{k:["~T",{l:"~J",m:"~I"}],n:"3"}},
-"@f":{o:{k:{l:"@e",m:!0},n:"2"},d:{k:{l:"@d",m:!0},n:"2"}},
-"-":{"0|1|2":{k:[{l:"~T",m:1},"%E",{l:"~f",m:"-"}],n:"3"},3:{k:{l:"~f",m:"-"}},
-a:{k:["~T",{l:"~J",m:"~I"}],n:"2"},as:{k:[{l:"~T",m:2},{l:"~f",m:"-"}],n:"3"},b:{k:"b="},o:{k:"@e",n:"2"},q:{k:"@e",n:"2"},"d|qd|dq":{k:"@d",n:"2"},"D|qD|p":{k:["~T",{l:"~f",m:"-"}],n:"3"}},
-"~a":{"1|3":{k:"a=",n:"a"}},
-"~M":{"0|1|2|3|a|as|b|p|bp|o":{k:"o=",n:"o"},"q|dq":{k:["~T","o="],n:"o"},"d|D|qd|qD":{k:"~N",n:"o"}},
-"~u":{o:{k:"q=",n:"q"},"d|D":{k:"q=",n:"dq"},q:{k:["~T","o="],n:"o"},a:{k:"o=",n:"o"}},
-"%l":{"b|p|bp":{}},
-"%m":{a:{n:"as"},0:{k:"%j"},"1|2":{k:"%k"},"r|rt|rd|%i|%h":{k:"~T",n:"0"},"*":{k:["~T","%k"],n:"1"}},
-al:{"1|2":{k:["~T",{l:"~K",m:"al"}]},
-"*":{k:["~T",{l:"~K",m:"al"}],n:"0"}},
-"@o":{"r|rt":{k:"%a",n:"rd"},"rd|%i":{k:"%f",n:"%h"}},
-"@i":{"o|d|D|dq|qd|qD":{k:["~T",{l:"~f",m:"..."}],n:"3"},"*":{k:[{l:"~T",m:1},{l:"~J",m:"~z"}],n:"1"}},
-". |* ":{"*":{k:["~T",{l:"~J",m:"~~"}],n:"1"}},
-"%n":{"*":{k:["~T","%p"],n:"1"}},
-"@K":{"a|as|o":{k:["o=","~T","%G"],n:"2"},"0|1|2|3":{k:["o=","~T","%G"],n:"2"},"*":{k:["~T","o=","~T","%G"],n:"2"}},
-"@c":{"0|1|2|3|b|p|bp|o":{k:["o=","%H"],n:"o"},"a|as|d|D|q|qd|qD|dq":{k:["~T","o=","%H"],n:"o"}},
-", ":{"*":{k:["~T","~q"],n:"0"}},
+MathJax.Extension["TeX/mhchem"]={version:"3.3.0"},MathJax.Hub.Register.StartupHook("TeX Jax Ready",function(){var t=MathJax.InputJax.TeX,n=MathJax.Object.Subclass({string:"",
+Init:function(t){this.string=t},
+Parse:function(n){try{return a.go(e.go(this.string,n))}catch(n){t.Error(n)}}}),e={
+go:function(t,n){if(!t)return[];void 0===n&&(n="ce");var a,o="0",r={};r["@@"]=0,t=(t=(t=t.replace(/\n/g," ")).replace(/[\u2212\u2013\u2014\u2010]/g,"-")).replace(/[\u2026]/g,"...");for(var i=10,c=[];;){a!==t?(i=10,a=t):i--;var u=e.t[n],p=u.u[o]||u.u["*"];t:for(var s=0;s<p.length;s++){var _=e._.s(p[s].pattern,t);if(_){for(var f=p[s].task,h=0;h<f.h.length;h++){var x;if(u.m[f.h[h].l])x=u.m[f.h[h].l](r,_.s,f.h[h].S);else{if(!e.m[f.h[h].l])throw["MhchemBugA","mhchem bug A. Please report. ("+f.h[h].l+")"];x=e.m[f.h[h].l](r,_.s,f.h[h].S)}e.v(c,x)}if(o=f.g||o,!(t.length>0))return c;if(f.k||(t=_.$),!f.A)break t}}if(i<=0)throw["MhchemBugU","mhchem bug U. Please report."]}},
+v:function(t,n){if(n)if(Array.isArray(n))for(var e=0;e<n.length;e++)t.push(n[e]);else t.push(n)},_:{_:{"~z":/^$/,"~x":/^./,"~y":/^./,"%j":/^\s/,"%i":/^\s(?=[A-Z\\$])/,"`e":/^\s$/,"@X":/^[a-z]/,x:/^x/,x$:/^x$/,i$:/^i$/,"~J":/^(?:[a-zA-Z\u03B1-\u03C9\u0391-\u03A9?@]|(?:\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Upsilon|Phi|Psi|Omega)(?:\s+|\{\}|(?![a-zA-Z]))))+/,"@A":/^\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Upsilon|Phi|Psi|Omega)(?:\s+|\{\}|(?![a-zA-Z]))/,"~M":/^(?:([a-z])(?:$|[^a-zA-Z]))$/,"@a":/^\$(?:([a-z])(?:$|[^a-zA-Z]))\$$/,"~L":/^(?:\$?[\u03B1-\u03C9]\$?|\$?\\(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\s*\$?)(?:\s+|\{\}|(?![a-zA-Z]))$/,"~r":/^[0-9]+/,"@i":/^[+\-]?(?:[0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+))/,"@h":/^[+\-]?[0-9]+(?:[.,][0-9]+)?/,
+"%Q":function(t){var n=t.match(/^(\+\-|\+\/\-|\+|\-|\\pm\s?)?([0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+))?(\((?:[0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+))\))?(?:([eE]|\s*(\*|x|\\times|\u00D7)\s*10\^)([+\-]?[0-9]+|\{[+\-]?[0-9]+\}))?/);return n&&n[0]?{s:n.splice(1),$:t.substr(n[0].length)}:null},
+"`a":function(t){var n=t.match(/^(\+\-|\+\/\-|\+|\-|\\pm\s?)?([0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+)?)\^([+\-]?[0-9]+|\{[+\-]?[0-9]+\})/);return n&&n[0]?{s:n.splice(1),$:t.substr(n[0].length)}:null},
+"%k":function(t){var n=e._.M(t,"",/^\([a-z]{1,3}(?=[\),])/,")","");if(n&&n.$.match(/^($|[\s,;\)\]\}])/))return n;var a=t.match(/^(?:\((?:\\ca\s?)?\$[amothc]\$\))/);return a?{s:a[0],$:t.substr(a[0].length)}:null},"`~":/^_\{(\([a-z]{1,3}\))\}/,"@L":/^(?:\\\{|\[|\()/,"@d":/^(?:\)|\]|\\\})/,", ":/^[,;]\s*/,",":/^[,;]/,".":/^[.]/,". ":/^([.\u22C5\u00B7\u2022])\s*/,"@j":/^\.\.\.(?=$|[^.])/,"* ":/^([*])\s*/,
+"@Q":function(t){return e._.M(t,"^{","","","}")},
+"@M":function(t){return e._.M(t,"^","$","$","")},"^a":/^\^([0-9]+|[^\\_])/,
+"@P":function(t){return e._.M(t,"^",/^\\[a-zA-Z]+\{/,"}","","","{","}","",!0)},
+"@O":function(t){return e._.M(t,"^",/^\\[a-zA-Z]+\{/,"}","")},"^\\x":/^\^(\\[a-zA-Z]+)\s*/,"%R":/^\^(-?\d+)/,"'":/^'/,
+"@V":function(t){return e._.M(t,"_{","","","}")},
+"@R":function(t){return e._.M(t,"_","$","$","")},_9:/^_([+\-]?[0-9]+|[^\\])/,
+"@U":function(t){return e._.M(t,"_",/^\\[a-zA-Z]+\{/,"}","","","{","}","",!0)},
+"@T":function(t){return e._.M(t,"_",/^\\[a-zA-Z]+\{/,"}","")},"@S":/^_(\\[a-zA-Z]+)\s*/,"^_":/^(?:\^(?=_)|\_(?=\^)|[\^_]$)/,"{}":/^\{\}/,
+"%y":function(t){return e._.M(t,"","{","}","")},
+"%x":function(t){return e._.M(t,"{","","","}")},
+"@`":function(t){return e._.M(t,"","$","$","")},
+"@b":function(t){return e._.M(t,"${","","","}$")},
+"@%":function(t){return e._.M(t,"$","","","$")},"%A":/^[=<>]/,"#":/^[#\u2261]/,"+":/^\+/,"-$":/^-(?=[\s_},;\]/]|$|\([a-z]+\))/,"-9":/^-(?=[0-9])/,"@g":/^-(?=(?:[spd]|sp)(?:$|[\s,;\)\]\}]))/,"-":/^-/,"``":/^(?:\\pm|\$\\pm\$|\+-|\+\/-)/,"~N":/^(?:\+|(?:[\-=<>]|<<|>>|\\approx|\$\\approx\$)(?=\s|$|-?[0-9]))/,"~`":/^(?:v|\(v\)|\^|\(\^\))(?=$|[\s,;\)\]\}])/,
+"@s":function(t){return e._.M(t,"\\bond{","","","}")},"->":/^(?:<->|<-->|->|<-|<=>>|<<=>|<=>|[\u2192\u27F6\u21CC])/,"@n":/^[CMT](?=\[)/,
+"@p":function(t){return e._.M(t,"[","","","]")},"`c":/^(&|@r|\\hline)\s*/,"@q":/^(?:\\[,\ ;:])/,
+"@H":function(t){return e._.M(t,"",/^\\[a-zA-Z]+\{/,"}","","","{","}","",!0)},
+"@G":function(t){return e._.M(t,"",/^\\[a-zA-Z]+\{/,"}","")},"@u":/^\\ca(?:\s+|(?![a-zA-Z]))/,"@F":/^(?:\\[a-zA-Z]+\s*|\\[_&{}%])/,"~O":/^(?:[0-9]{1,2}[spdfgh]|[0-9]{0,2}sp)(?=$|[^a-zA-Z])/,"~P":/^[\/~|]/,
+"@z":function(t){return e._.M(t,"\\frac{","","","}","{","","","}")},
+"@B":function(t){return e._.M(t,"\\overset{","","","}","{","","","}")},
+"@D":function(t){return e._.M(t,"\\underset{","","","}","{","","","}")},
+"@C":function(t){return e._.M(t,"\\underbrace{","","","}_","{","","","}")},
+"@x":function(t){return e._.M(t,"\\color{","","","}")},
+"@y":function(t){return e._.M(t,"\\color{","","","}","{","","","}")},
+"@w":function(t){return e._.M(t,"\\color","\\","",/^(?=\{)/,"{","","","}")},
+"@v":function(t){return e._.M(t,"\\ce{","","","}")},"~W":/^(?:[+-][IVX]+|\\pm\s*0|\$\\pm\$\s*0)$/,"%Y":/^(?:[+-]?\s?[IVX]+|\\pm\s*0|\$\\pm\$\s*0)$/,"%a":/^[IVX]+/,"@k":/^[+\-]?(?:[0-9]+|\$[a-z]\$|[a-z])\/[0-9]+(?:\$[a-z]\$|[a-z])?$/,
+"~@":function(t){var n;if(n=t.match(/^(?:(?:(?:\([+\-]?[0-9]+\/[0-9]+\)|[+\-]?(?:[0-9]+|\$[a-z]\$|[a-z])\/[0-9]+|[+\-]?[0-9]+[.,][0-9]+|[+\-]?\.[0-9]+|[+\-]?[0-9]+)(?:[a-z](?=\s*[A-Z]))?)|[+\-]?[a-z](?=\s*[A-Z])|\+(?!\s))/))return{s:n[0],$:t.substr(n[0].length)};var a=e._.M(t,"","$","$","");return a&&(n=a.s.match(/^\$(?:\(?[+\-]?(?:[0-9]*[a-z]?[+\-])?[0-9]*[a-z](?:[+\-][0-9]*[a-z]?)?\)?|\+|-)\$$/))?{s:n[0],$:t.substr(n[0].length)}:null},
+"~~":function(t){return this["~@"](t)},"@c":/^(?:[A-Z][a-z]{0,2}|i)(?=,)/,
+"~B":function(t){if(t.match(/^\([a-z]+\)$/))return null;var n=t.match(/^(?:[a-z]|(?:[0-9\ \+\-\,\.\(\)]+[a-z])+[0-9\ \+\-\,\.\(\)]*|(?:[a-z][0-9\ \+\-\,\.\(\)]+)+[a-z]?)$/);return n?{s:n[0],$:t.substr(n[0].length)}:null},"%w":/^(?:pH|pOH|pC|pK|iPr|iBu)(?=$|[^a-zA-Z])/,"/":/^\s*(\/)\s*/,"//":/^\s*(\/\/)\s*/,"*":/^\s*[*.]\s*/},
+M:function(t,n,e,a,o,r,i,c,u,p){var s=function(t,n){if("string"==typeof n)return 0!==t.indexOf(n)?null:n;var e=t.match(n);return e?e[0]:null},_=s(t,n);if(null===_)return null;if(t=t.substr(_.length),null===(_=s(t,e)))return null;var f=function(t,n,e){for(var a=0;n<t.length;){var o=t.charAt(n),r=s(t.substr(n),e);if(null!==r&&0===a)return{P:n,T:n+r.length};if("{"===o)a++;else if("}"===o){if(0===a)throw["ExtraCloseMissingOpen","Extra close brace or missing open brace"];a--}n++}return null}(t,_.length,a||o);if(null===f)return null;var h=t.substring(0,a?f.T:f.P);if(r||i){var x=this.M(t.substr(f.T),r,i,c,u);if(null===x)return null;var m=[h,x.s];return{s:p?m.join(""):m,$:x.$}}return{s:h,$:t.substr(f.T)}},
+s:function(t,n){var a=e._._[t];if(void 0===a)throw["MhchemBugP","mhchem bug P. Please report. ("+t+")"];if("function"==typeof a)return e._._[t](n);var o=n.match(a);return o?{s:o[2]?[o[1],o[2]]:o[1]?o[1]:o[0],$:n.substr(o[0].length)}:null}},
+m:{
+"a=":function(t,n){t.a=(t.a||"")+n},
+"b=":function(t,n){t.b=(t.b||"")+n},
+"p=":function(t,n){t.p=(t.p||"")+n},
+"o=":function(t,n){t.o=(t.o||"")+n},
+"q=":function(t,n){t.q=(t.q||"")+n},
+"d=":function(t,n){t.d=(t.d||"")+n},
+"%`":function(t,n){t.rm=(t.rm||"")+n},
+"%q":function(t,n){t.F=(t.F||"")+n},
+"~G":function(t,n,e){return{l:e}},
+"~H":function(t,n,e){return{l:e,p1:n}},
+"~I":function(t,n,e){return{l:e,p1:n[0],p2:n[1]}},
+"~p":function(t,n){return n},
+rm:function(t,n){return{l:"rm",p1:n||""}},
+"%p":function(t,n){return e.go(n,"%p")},
+"%z":function(t,n){var a=["{"];return e.v(a,e.go(n,"%p")),a.push("}"),a},
+"%o":function(t,n){return e.go(n,"%o")},
+"%n":function(t,n){return e.go(n,"%n")},
+"~c":function(t,n,e){return{l:"~c",B:e||n}},
+"~j":function(t,n){return{l:"~i",color:n[0]}},
+ce:function(t,n){return e.go(n)},
+"@l":function(t,n){var e=[];n.match(/^[+\-]/)&&(e.push(n.substr(0,1)),n=n.substr(1));var a=n.match(/^([0-9]+|\$[a-z]\$|[a-z])\/([0-9]+)(\$[a-z]\$|[a-z])?$/);return a[1]=a[1].replace(/\$/g,""),e.push({l:"~C",p1:a[1],p2:a[2]}),a[3]&&(a[3]=a[3].replace(/\$/g,""),e.push({l:"%o",p1:a[3]})),e},
+"@m":function(t,n){return e.go(n,"@m")}},
+C:function(t){var n,e,a,o,r={};for(n in t)for(e in t[n])for(a=e.split("|"),t[n][e].stateArray=a,o=0;o<a.length;o++)r[a[o]]=[];for(n in t)for(e in t[n])for(a=t[n][e].stateArray||[],o=0;o<a.length;o++){var i=t[n][e];if(i.h){i.h=[].concat(i.h);for(var c=0;c<i.h.length;c++)"string"==typeof i.h[c]&&(i.h[c]={l:i.h[c]})}else i.h=[];for(var u=n.split("|"),p=0;p<u.length;p++)if("*"===a[o])for(var s in r)r[s].push({pattern:u[p],task:i});else r[a[o]].push({pattern:u[p],task:i})}return r},t:{}};e.t={ce:{u:e.C({"~z":{"*":{h:"~Q"}},
+"~x":{"0|1|2":{h:"~a",k:!0,A:!0}},
+"~W":{0:{h:"`@"}},
+"@n":{r:{h:"%%",g:"rt"},rd:{h:"%d",g:"%f"}},
+"~`":{"0|1|2|as":{h:["%g","~Q","~N"],g:"1"}},
+"%w":{"0|1|2":{h:["o=","~Q"],g:"1"}},
+"~O":{"0|1|2|3":{h:"o=",g:"o"}},
+"->":{"0|1|2|3":{h:"r=",g:"r"},"a|as":{h:["~Q","r="],g:"r"},"*":{h:["~Q","r="],g:"r"}},
+"+":{o:{h:"~q",g:"d"},"d|D":{h:"d=",g:"d"},q:{h:"d=",g:"qd"},"qd|qD":{h:"d=",g:"qd"},dq:{h:["~Q","d="],g:"d"},3:{h:["%g","~Q","~N"],g:"0"}},
+"~@":{"0|2":{h:"a=",g:"a"}},
+"``":{"0|1|2|a|as":{h:["%g","~Q",{l:"~N",S:"\\pm"}],g:"0"}},
+"~N":{"0|1|2|a|as":{h:["%g","~Q","~N"],g:"0"}},
+"-$":{"o|q":{h:["~d","~Q"],g:"qd"},d:{h:"d=",g:"d"},D:{h:["~Q",{l:"~c",S:"-"}],g:"3"},q:{h:"d=",g:"qd"},qd:{h:"d=",g:"qd"},"qD|dq":{h:["~Q",{l:"~c",S:"-"}],g:"3"}},
+"-9":{"3|o":{h:["~Q",{l:"~G",S:"~F"}],g:"3"}},
+"@g":{o:{h:["~Q",{l:"~G",S:"~F"}],g:"2"},d:{h:["~Q",{l:"~G",S:"~F"}],g:"2"}},
+"-":{"0|1|2":{h:[{l:"~Q",S:1},"~b",{l:"~c",S:"-"}],g:"3"},3:{h:{l:"~c",S:"-"}},
+a:{h:["~Q",{l:"~G",S:"~F"}],g:"2"},as:{h:[{l:"~Q",S:2},{l:"~c",S:"-"}],g:"3"},b:{h:"b="},o:{h:{l:"`d",S:!1},g:"2"},q:{h:{l:"`d",S:!1},g:"2"},"d|qd|dq":{h:{l:"`d",S:!0},g:"2"},"D|qD|p":{h:["~Q",{l:"~c",S:"-"}],g:"3"}},
+"~~":{"1|3":{h:"a=",g:"a"}},
+"~J":{"0|1|2|3|a|as|b|p|bp|o":{h:"o=",g:"o"},"q|dq":{h:["~Q","o="],g:"o"},"d|D|qd|qD":{h:"~K",g:"o"}},
+"~r":{o:{h:"q=",g:"q"},"d|D":{h:"q=",g:"dq"},q:{h:["~Q","o="],g:"o"},a:{h:"o=",g:"o"}},
+"%i":{"b|p|bp":{}},
+"%j":{a:{g:"as"},0:{h:"%g"},"1|2":{h:"%h"},"r|rt|rd|%f|%e":{h:"~Q",g:"0"},"*":{h:["~Q","%h"],g:"1"}},
+"`c":{"1|2":{h:["~Q",{l:"~H",S:"`c"}]},
+"*":{h:["~Q",{l:"~H",S:"`c"}],g:"0"}},
+"@p":{"r|rt":{h:"%~",g:"rd"},"rd|%f":{h:"%c",g:"%e"}},
+"@j":{"o|d|D|dq|qd|qD":{h:["~Q",{l:"~c",S:"..."}],g:"3"},"*":{h:[{l:"~Q",S:1},{l:"~G",S:"~w"}],g:"1"}},
+". |* ":{"*":{h:["~Q",{l:"~G",S:"@Y"}],g:"1"}},
+"%k":{"*":{h:["~Q","%m"],g:"1"}},
+"@L":{"a|as|o":{h:["o=","~Q","~X"],g:"2"},"0|1|2|3":{h:["o=","~Q","~X"],g:"2"},"*":{h:["~Q","o=","~Q","~X"],g:"2"}},
+"@d":{"0|1|2|3|b|p|bp|o":{h:["o=","~Y"],g:"o"},"a|as|d|D|q|qd|qD|dq":{h:["~Q","o=","~Y"],g:"o"}},
+", ":{"*":{h:["~Q","~n"],g:"0"}},
 "^_":{"*":{}},
-"@P|@L":{"0|1|2|as":{k:"b=",n:"b"},p:{k:"b=",n:"bp"},"3|o":{k:"~t",n:"D"},q:{k:"d=",n:"qD"},"d|D|qd|qD|dq":{k:["~T","d="],n:"D"}},
-"^a|@O|@N|^\\x|'":{"0|1|2|as":{k:"b=",n:"b"},p:{k:"b=",n:"bp"},"3|o":{k:"~t",n:"d"},q:{k:"d=",n:"qd"},"d|qd|D|qD":{k:"d="},dq:{k:["~T","d="],n:"d"}},
-ae:{"d|D|q|qd|qD|dq":{k:["~T","q="],n:"q"}},
-"@Y|@Q|_9|@T|@S|@R":{"0|1|2|as":{k:"p=",n:"p"},b:{k:"p=",n:"bp"},"3|o":{k:"q=",n:"q"},"d|D":{k:"q=",n:"dq"},"q|qd|qD|dq":{k:["~T","q="],n:"q"}},
-"%D":{"0|1|2|3|a|as|o|q|d|D|qd|qD|dq":{k:[{l:"~T",m:2},"~f"],n:"3"}},
-"#":{"0|1|2|3|a|as|o":{k:[{l:"~T",m:2},{l:"~f",m:"#"}],n:"3"}},
-"{}":{"*":{k:{l:"~T",m:1},n:"1"}},
-"%B":{"0|1|2|3|a|as|b|p|bp":{k:"o=",n:"o"},"o|d|D|q|qd|qD|dq":{k:["~T","o="],n:"o"}},
-"@~":{a:{k:"a="},"0|1|2|3|as|b|p|bp|o":{k:"o=",n:"o"},"as|o":{k:"o="},"q|d|D|qd|qD|dq":{k:["~T","o="],n:"o"}},
-"@r":{"*":{k:[{l:"~T",m:2},"~f"],n:"3"}},
-"@y":{"*":{k:[{l:"~T",m:1},"~H"],n:"3"}},
-"@A":{"*":{k:[{l:"~T",m:2},"~X"],n:"3"}},
-"@C":{"*":{k:[{l:"~T",m:2},"%y"],n:"3"}},
-"@B":{"*":{k:[{l:"~T",m:2},"%w"],n:"3"}},
-"@x|@v":{"*":{k:[{l:"~T",m:2},"~k"],n:"3"}},
-"@w":{"*":{k:[{l:"~T",m:2},"~m"]}},
-"@u":{"*":{k:[{l:"~T",m:2},"ce"],n:"3"}},
-"@p":{"*":{k:[{l:"~T",m:1},"~s"],n:"1"}},
-"@G|@F|@E":{"0|1|2|3|a|as|b|p|bp|o|c0":{k:["o=","~T"],n:"3"},"*":{k:["~T","o=","~T"],n:"3"}},
-"~S":{"*":{k:[{l:"~T",m:1},"~s"],n:"3"}},
-"~B":{a:{k:"@Z",n:"o",s:!0},as:{k:[{l:"~T"},"%k"],n:"1",s:!0},"r|rt|rd|%i|%h":{k:["~T"],n:"0",s:!0},"*":{k:["~T","~s"],n:"3"}}}),g:{"~N":
-function(n,r){var o;if(n.d.match(/^[0-9]+$/)){var e=n.d;n.d=void 0,o=this["~T"](n),n.b=e}else o=this["~T"](n);return t.g["o="](n,r),o},"~t":
-function(n,r){n.d=r,n["%I"]="kv"},"~g":
-function(n,r){if(n.yB){var o=t.j(o,this["~T"](n));return o=t.j(o,t.g["~f"](n,r,"-"))}n.d=r},"@e":
-function(n,r,o){var e=o||this["@X"](n,r),a=t.j(null,this["~T"](n,r));return a=e?t.j(a,{l:"~I"}):t.j(a,t.g["~f"](n,r,"-"))},"@d":
-function(n,r,o){var e,a=o||this["@X"](n,r);if(a)e=t.j(e,this["~T"](n,r)),e=t.j(e,{l:"~I"});else{var u=t.h("~u",n.d||"");u&&""===u.t?(e=t.j(null,t.g["d="](n,r)),e=t.j(e,this["~T"](n))):(e=t.j(e,this["~T"](n,r)),e=t.j(e,t.g["~f"](n,r,"-")))}return e},"@X":
-function(n,r){var o=t.h("~R",n.o||""),e=t.h("~O",n.o||""),a=t.h("~P",n.o||""),u=t.h("@%",n.o||""),i="-"===r&&(o&&""===o.t||e||a||u);return!i||n.a||n.b||n.p||n.d||n.q||o||!a||(n.o="$"+n.o+"$"),i},"@Z":
-function(n,r){n.o=n.a,n.a=void 0},"%k":
-function(n,r){n.sb=!0},"%j":
-function(n,r){n.sb=!1},"%E":
-function(n,r){n.yB=!0},"%F":
-function(n,r){n.yB=!1},"%G":
-function(n,r){n.pL++},"%H":
-function(n,r){n.pL--},"%p":
-function(n,r){return r=t.go(r,"o"),{l:"%p",p1:r}},
-"~q":
-function(n,r){var t=r.replace(/\s*$/,""),o=t!==r;return o&&0===n.pL?{l:"~n",p1:t}:{l:"~o",p1:t}},
-"~T":
-function(n,r,o){var e;n.r?("M"===n.rdt?n.rd=t.go(n.rd,"%r"):"T"===n.rdt?n.rd=[{l:"%s",p1:n.rd}]:n.rd=t.go(n.rd),"M"===n.rqt?n.rq=t.go(n.rq,"%r"):"T"===n.rqt?n.rq=[{l:"%s",p1:n.rq}]:n.rq=t.go(n.rq),e={l:"~b",r:n.r,rd:n.rd,rq:n.rq}):(e=[],n.a||n.b||n.p||n.o||n.q||n.d||o?(n.sb&&e.push({l:"~D"}),n.o||n.q||n.d||n.b||n.p||2===o?n.o||n.q||n.d||!n.b&&!n.p?n.o&&"kv"===n["%I"]&&t.h("a~",n.d||"")?n["%I"]="~Y":n.o&&"kv"===n["%I"]&&!n.q&&(n["%I"]=void 0):(n.o=n.a,n.d=n.b,n.q=n.p,n.a=n.b=n.p=void 0):(n.o=n.a,n.a=void 0),n.a=t.go(n.a,"a"),n.b=t.go(n.b,"bd"),n.p=t.go(n.p,"pq"),n.o=t.go(n.o,"o"),"~Y"===n["%I"]?n.d=t.go(n.d,"~Y"):n.d=t.go(n.d,"bd"),n.q=t.go(n.q,"pq"),e.push({l:"~h",a:n.a,b:n.b,p:n.p,o:n.o,q:n.q,d:n.d,"%I":n["%I"]})):e=null);for(var a in n)"pL"!==a&&"yB"!==a&&delete n[a];return e},"a%":
-function(n,r){var o=["{"];return o=t.j(o,t.go(r,"~Y")),o=o.concat(["}"])},"~H":
-function(n,r){return{l:"~G",p1:t.go(r[0]),p2:t.go(r[1])}},
-"~X":
-function(n,r){return{l:"~W",p1:t.go(r[0]),p2:t.go(r[1])}},
-"%y":
-function(n,r){return{l:"%x",p1:t.go(r[0]),p2:t.go(r[1])}},
-"%w":
-function(n,r){return{l:"%v",p1:t.go(r[0]),p2:t.go(r[1])}},
-"~k":
-function(n,r){return{l:"~j",F:r[0],G:t.go(r[1])}},
-"r=":
-function(n,r){n.r=(n.r||"")+r},"%b":
-function(n,r){n.rdt=(n.rdt||"")+r},"%a":
-function(n,r){n.rd=(n.rd||"")+r},"%g":
-function(n,r){n.rqt=(n.rqt||"")+r},"%f":
-function(n,r){n.rq=(n.rq||"")+r},"~Q":
-function(n,r,t){return{l:"~Q",A:t||r}}}},
-t.c.a={e:t.C({"~C":{"*":{}},
-"@j":{0:{k:"@k"}},
-"~A":{0:{n:"1",s:!0}},
-"@@":{"*":{k:"%q",n:"1"}},
-",":{"*":{k:{l:"~J",m:"~r"}}},
-"~B":{"*":{k:"~s"}}}),g:{}},
-t.c.o={e:t.C({"~C":{"*":{}},
-"@j":{0:{k:"@k"}},
-"~A":{0:{n:"1",s:!0}},
-"~M":{"*":{k:"rm"}},
-"@t":{"*":{k:{l:"~J",m:"~i"}}},
-"@G|@F|@E":{"*":{k:"~s"}},
-"@a|@@":{"*":{k:"%r"}},
-"%A":{"*":{k:"%C"}},
-"~B":{"*":{k:"~s"}}}),g:{}},
-t.c["%s"]={e:t.C({"~C":{"*":{k:"~T"}},
-"%B":{"*":{k:"%t"}},
-"@a|@@":{"*":{k:"%r"}},
-"@z":{"*":{k:["~T","rm"]}},
-"@p|@G|@F|@E":{"*":{k:["~T","~s"]}},
-"~A":{"*":{k:"%t"}}}),g:{"~T":
-function(n,r){if(n.text){var t={l:"%s",p1:n.text};for(var o in n)delete n[o];return t}return null}}},
-t.c.pq={e:t.C({"~C":{"*":{}},
-"%n":{"*":{k:"%p"}},
-i$:{0:{n:"!f",s:!0}},
-"@b":{0:{k:"rm",n:"0"}},
-"~E":{0:{n:"f",s:!0}},
-"@j":{0:{k:"@k"}},
-"~A":{0:{n:"!f",s:!0}},
-"@a|@@":{"*":{k:"%r"}},
-"%A":{"*":{k:"%s"}},
-"~@":{f:{k:"%r"}},
-"~M":{"*":{k:"rm"}},
-"@h":{"*":{k:"@l"}},
-",":{"*":{k:{l:"~K",m:"~p"}}},
-"@x|@v":{"*":{k:"~k"}},
-"@w":{"*":{k:"~m"}},
-"@u":{"*":{k:"ce"}},
-"@p|@G|@F|@E":{"*":{k:"~s"}},
-"~B":{"*":{k:"~s"}}}),g:{"%p":
-function(n,r){return r=t.go(r,"o"),{l:"%K",p1:r}},
-"~k":
-function(n,r){return{l:"~j",F:r[0],G:t.go(r[1],"pq")}}}},
-t.c.bd={e:t.C({"~C":{"*":{}},
-x$:{0:{n:"!f",s:!0}},
-"~E":{0:{n:"f",s:!0}},
-"~A":{0:{n:"!f",s:!0}},
-"@g":{"*":{k:"@l"}},
-".":{"*":{k:{l:"~J",m:"~y"}}},
-"~@":{f:{k:"%r"}},
-x:{"*":{k:{l:"~J",m:"@n"}}},
-"~M":{"*":{k:"rm"}},
-"'":{"*":{k:{l:"~J",m:"%%"}}},
-"@a|@@":{"*":{k:"%r"}},
-"%A":{"*":{k:"%s"}},
-"@x|@v":{"*":{k:"~k"}},
-"@w":{"*":{k:"~m"}},
-"@u":{"*":{k:"ce"}},
-"@p|@G|@F|@E":{"*":{k:"~s"}},
-"~B":{"*":{k:"~s"}}}),g:{"~k":
-function(n,r){return{l:"~j",F:r[0],G:t.go(r[1],"bd")}}}},
-t.c["~Y"]={e:t.C({"~C":{"*":{}},
-"%d":{"*":{k:"%e"}},
-"@a|@@":{"*":{k:"%r"}},
-"~A":{"*":{k:"~s"}}}),g:{"%e":
-function(n,r){return{l:"%d",p1:r}}}},
-t.c["%r"]={e:t.C({"~C":{"*":{k:"~T"}},
-"@u":{"*":{k:["~T","ce"]}},
-"%B|@p|@G|@F|@E":{"*":{k:"o="}},
-"~A":{"*":{k:"o="}}}),g:{"~T":
-function(n,r){if(n.o){var t={l:"%r",p1:n.o};for(var o in n)delete n[o];return t}return null}}},
-t.c["%q"]={e:t.C({"~C":{"*":{k:"~T"}},
-"@u":{"*":{k:["~T","ce"]}},
-"%B|@p|@G|@F|@E":{"*":{k:"o="}},
-"-|+":{"*":{k:"%u"}},
-"~A":{"*":{k:"o="}}}),g:{"%u":
-function(n,r){n.o=(n.o||"")+"{"+r+"}"},"~T":
-function(n,r){if(n.o){var t={l:"%r",p1:n.o};for(var o in n)delete n[o];return t}return null}}},
-t.c["@l"]={e:t.C({"~C":{"*":{}},
-",":{"*":{k:"~q"}},
-"~A":{"*":{k:"~s"}}}),g:{"~q":
-function(n,r){return{l:"~r"}}}},
-t.c.pu={e:t.C({"~C":{"*":{k:"~T"}},
-"@K|@c":{"0|a":{k:"~s"}},
-aj:{0:{k:"ak",n:"a"}},
-"%T":{0:{k:"%Z",n:"a"}},
-"%m":{"0|a":{}},
-ai:{"0|a":{k:{l:"~Q",m:"\\pm"},n:"0"}},
-"~Q":{"0|a":{k:"~s",n:"0"}},
-"//":{d:{k:"o=",n:"/"}},
-"/":{d:{k:"o=",n:"/"}},
-"%B|~A":{"0|d":{k:"d=",n:"d"},a:{k:["%m","d="],n:"d"},"/|q":{k:"q=",n:"q"}}}),g:{"%Z":
-function(n,r){var o=[];return"+-"===r[0]||"+/-"===r[0]?o.push("\\pm "):r[0]&&o.push(r[0]),r[1]&&(o=t.j(o,t.go(r[1],"%X")),r[2]&&(r[2].match(/[,.]/)?o=t.j(o,t.go(r[2],"%X")):o.push(r[2])),r[3]=r[4]||r[3],r[3]&&(r[3]=r[3].trim(),"e"===r[3]||"*"===r[3].substr(0,1)?o.push({l:"%N"}):o.push({l:"%P"}))),r[3]&&o.push("10^{"+r[5]+"}"),o},ak:
-function(n,r){var o=[];return"+-"===r[0]||"+/-"===r[0]?o.push("\\pm "):r[0]&&o.push(r[0]),o=t.j(o,t.go(r[1],"%X")),o.push("^{"+r[2]+"}"),o},"~Q":
-function(n,r,t){return{l:"~Q",A:t||r}},
-"%m":
-function(n,r){return{l:"%Q"}},
-"~T":
-function(n,r){var o,e=t.h("%A",n.d||"");e&&""===e.t&&(n.d=e.h);var a=t.h("%A",n.q||"");a&&""===a.t&&(n.q=a.h),n.d&&(n.d=n.d.replace(/\u00B0C|\^oC|\^{o}C/g,"{}^{\\circ}C"),n.d=n.d.replace(/\u00B0F|\^oF|\^{o}F/g,"{}^{\\circ}F")),n.q?(n.d=t.go(n.d,"pu"),n.q=n.q.replace(/\u00B0C|\^oC|\^{o}C/g,"{}^{\\circ}C"),n.q=n.q.replace(/\u00B0F|\^oF|\^{o}F/g,"{}^{\\circ}F"),n.q=t.go(n.q,"pu"),"//"===n.o?o={l:"%S",p1:n.d,p2:n.q}:(o=n.d,o=n.d.length>1||n.q.length>1?t.j(o,{l:"%V"}):t.j(o,{l:"/"}),o=t.j(o,n.q))):o=t.go(n.d,"%R");for(var u in n)delete n[u];return o}}},
-t.c["%R"]={e:t.C({"~C":{"*":{k:"~T"}},
-"*":{"*":{k:["~T","%N"],n:"0"}},
-"@E":{"*":{k:"%c"},n:"1"},"%m":{"*":{k:["~T","%m"],n:"0"}},
-"@P|%U":{1:{k:"%U"}},
-"@h":{0:{k:"%c",n:"0"},1:{k:"%U",n:"0"}},
-"%B|~A":{"*":{k:"%c",n:"1"}}}),g:{"%N":
-function(n,r){return{l:"%O"}},
-"%U":
-function(n,r){n.rm+="^{"+r+"}"},"%m":
-function(n,r){return{l:"ah"}},
-"~T":
-function(n,r){var o;if(n.rm){var e=t.h("%A",n.rm||"");o=e&&""===e.t?t.go(e.h,"pu"):{l:"rm",p1:n.rm}}for(var a in n)delete n[a];return o}}},
-t.c["%X"]={e:t.C({"~C":{0:{k:"~U"},o:{k:"~V"}},
-",":{0:{k:["~U","~q"],n:"o"}},
-".":{0:{k:["~U","~s"],n:"o"}},
-"~A":{"*":{k:"%t"}}}),g:{"~q":
-function(n,r){return{l:"~r"}},
-"~U":
-function(n,r){var t=[];if(n.text.length>4){var o=n.text.length%3;0===o&&(o=3);for(var e=n.text.length-3;e>0;e-=3)t.push(n.text.substr(e,3)),t.push({l:"%W"});t.push(n.text.substr(0,o)),t.reverse()}else t.push(n.text);for(var a in n)delete n[a];return t},"~V":
-function(n,r){var t=[];if(n.text.length>4){for(var o=n.text.length-3,e=0;e<o;e+=3)t.push(n.text.substr(e,3)),t.push({l:"%W"});t.push(n.text.substr(e))}else t.push(n.text);for(var a in n)delete n[a];return t}}};var o={H:{"~h":
-function(n){var r="";return n.a=o.go2(n.a),n.b=o.go2(n.b),n.p=o.go2(n.p),n.o=o.go2(n.o),n.q=o.go2(n.q),n.d=o.go2(n.d),n.a&&(n.a.match(/^[+\-]/)&&(n.a="{"+n.a+"}"),r+=n.a+"\\,"),(n.b||n.p)&&(r+="{\\vphantom{X}}",r+="^{\\hphantom{"+(n.b||"")+"}}_{\\hphantom{"+(n.p||"")+"}}",r+="{\\vphantom{X}}",r+="^{\\smash[t]{\\vphantom{2}}\\llap{"+(n.b||"")+"}}",r+="_{\\vphantom{2}\\llap{\\smash[t]{"+(n.p||"")+"}}}"),n.o&&(n.o.match(/^[+\-]/)&&(n.o="{"+n.o+"}"),r+=n.o),"kv"===n["%I"]?((n.d||n.q)&&(r+="{\\vphantom{X}}"),n.d&&(r+="^{"+n.d+"}"),n.q&&(r+="_{\\smash[t]{"+n.q+"}}")):"~Y"===n["%I"]?(n.d&&(r+="{\\vphantom{X}}",r+="^{"+n.d+"}"),n.q&&(r+="{\\vphantom{X}}",r+="_{\\smash[t]{"+n.q+"}}")):(n.q&&(r+="{\\vphantom{X}}",r+="_{\\smash[t]{"+n.q+"}}"),n.d&&(r+="{\\vphantom{X}}",r+="^{"+n.d+"}")),r},rm:
-function(n){return"\\mathrm{"+n.p1+"}"},"%s":
-function(n){return n.p1.match(/[\^_]/)?(n.p1=n.p1.replace(" ","~").replace("-","\\text{-}"),"\\mathrm{"+n.p1+"}"):"\\text{"+n.p1+"}"},"%d":
-function(n){return"\\mathrm{"+n.p1+"}"},"%p":
-function(n){return"\\mskip2mu "+o.go2(n.p1)},"%K":
-function(n){return"\\mskip1mu "+o.go2(n.p1)},"~f":
-function(n){var r=o.I[n.A];if(!r)throw["MhchemErrorBond","mhchem Error. Unknown bond type ("+n.A+")"];return r},"~F":
-function(n){var r="\\frac{"+n.p1+"}{"+n.p2+"}";return"\\mathchoice{\\textstyle"+r+"}{"+r+"}{"+r+"}{"+r+"}"},"%S":
-function(n){var r="\\frac{"+o.go2(n.p1)+"}{"+o.go2(n.p2)+"}";return"\\mathchoice{\\textstyle"+r+"}{"+r+"}{"+r+"}{"+r+"}"},"%r":
-function(n){return n.p1+" "},"~G":
-function(n){return"\\frac{"+o.go2(n.p1)+"}{"+o.go2(n.p2)+"}"},"~W":
-function(n){return"\\overset{"+o.go2(n.p1)+"}{"+o.go2(n.p2)+"}"},"%x":
-function(n){return"\\underset{"+o.go2(n.p1)+"}{"+o.go2(n.p2)+"}"},"%v":
-function(n){return"\\underbrace{"+o.go2(n.p1)+"}_{"+o.go2(n.p2)+"}"},"~j":
-function(n){return"{\\color{"+n.F+"}{"+o.go2(n.G)+"}}"},"~l":
-function(n){return"\\color{"+n.B+"}"},"~b":
-function(n){n.rd=o.go2(n.rd),n.rq=o.go2(n.rq);var r=o.J[n.r];return n.rd||n.rq?"<=>"===n.r||"<=>>"===n.r||"<<=>"===n.r||"<-->"===n.r?(r="\\long"+r,n.rd&&(r="\\overset{"+n.rd+"}{"+r+"}"),n.rq&&(r="\\underset{\\lower7mu{"+n.rq+"}}{"+r+"}"),r=" {}\\mathrel{"+r+"}{} "):(n.rq&&(r+="[{"+n.rq+"}]"),r+="{"+n.rd+"}",r=" {}\\mathrel{\\x"+r+"}{} "):r=" {}\\mathrel{\\long"+r+"}{} ",r},"~Q":
-function(n){return o.K[n.A]}},
-J:{"->":"rightarrow","\u2192":"rightarrow","\u27f6":"rightarrow","<-":"leftarrow","<->":"leftrightarrow","<-->":"leftrightarrows","<=>":"rightleftharpoons","\u21cc":"rightleftharpoons","<=>>":"Rightleftharpoons","<<=>":"Leftrightharpoons"},I:{"-":"{-}",1:"{-}","=":"{=}",2:"{=}","#":"{\\equiv}",3:"{\\equiv}","~":"{\\tripledash}","~-":"{\\rlap{\\lower.1em{-}}\\raise.1em{\\tripledash}}","~=":"{\\rlap{\\lower.2em{-}}\\rlap{\\raise.2em{\\tripledash}}-}","~--":"{\\rlap{\\lower.2em{-}}\\rlap{\\raise.2em{\\tripledash}}-}","-~-":"{\\rlap{\\lower.2em{-}}\\rlap{\\raise.2em{-}}\\tripledash}","...":"{{\\cdot}{\\cdot}{\\cdot}}","....":"{{\\cdot}{\\cdot}{\\cdot}{\\cdot}}","->":"{\\rightarrow}","<-":"{\\leftarrow}","<":"{<}",">":"{>}"},L:{"%m":" ","~D":"~","%Q":"~",ah:"\\mkern3mu ","%W":"\\mkern2mu ","~r":"{,}","~n":"{{0}}\\mkern6mu ","~o":"{{0}}\\mkern3mu ","~p":"{{0}}\\mkern1mu ","~I":"\\text{-}","~~":"\\,{\\cdot}\\,","~y":"\\mkern1mu \\bullet\\mkern1mu ","@n":"{\\times}","%%":"\\prime ","%N":"\\cdot ","%O":"\\mkern1mu{\\cdot}\\mkern1mu ","%P":"\\times ","~i":"{\\sim}","^":"uparrow",v:"downarrow","~z":"\\ldots ","/":"/","%V":"\\,/\\,",al:"{0} "},K:{"+":" {}+{} ","-":" {}-{} ","=":" {}={} ","<":" {}<{} ",">":" {}>{} ","<<":" {}\\ll{} ",">>":" {}\\gg{} ","\\pm":" {}\\pm{} ","\\approx":" {}\\approx{} ","$\\approx$":" {}\\approx{} ",v:" \\downarrow{} ","(v)":" \\downarrow{} ","^":" \\uparrow{} ","(^)":" \\uparrow{} "},go:
-function(n,r){if(!n)return n;for(var t="",o=!1,e=0;e<n.length;e++){var a=n[e];if("string"==typeof a)t+=a;else if(this.H[a.l])t+=this.H[a.l](a);else{if(!this.L[a.l])throw["MhchemBugT","mhchem bug T. Please report."];var u=this.L[a.l];u=u.replace("{0}",a.p1||""),u=u.replace("{1}",a.p2||""),t+=u,"al"===a.l&&(o=!0)}}return r||o||(t="{"+t+"}"),t},go2:
-function(n){return this.go(n,!0)}};MathJax.Extension["TeX/mhchem"].CE=r,n.Definitions.Add({macros:{ce:"CE",pu:"PU",xleftrightarrow:["Extension","AMSmath"],xrightleftharpoons:["Extension","AMSmath"],xRightleftharpoons:["Extension","AMSmath"],xLeftrightharpoons:["Extension","AMSmath"],longrightleftharpoons:["Macro","\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"],longRightleftharpoons:["Macro","\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}"],longLeftrightharpoons:["Macro","\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"],longleftrightarrows:["Macro","\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}"],tripledash:["Macro","\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}"]}},
-null,!0),MathJax.Extension["TeX/AMSmath"]||n.Definitions.Add({macros:{xrightarrow:["Extension","AMSmath"],xleftarrow:["Extension","AMSmath"]}},
-null,!0),MathJax.Hub.Register.StartupHook("TeX AMSmath Ready",
-function(){n.Definitions.Add({macros:{xleftrightarrow:["xArrow",8596,6,6],xrightleftharpoons:["xArrow",8652,5,7],xRightleftharpoons:["xArrow",8652,5,7],xLeftrightharpoons:["xArrow",8652,5,7]}},
-null,!0)}),n.Parse.Augment({CE:
-function(n){var t=this.GetArgument(n),o=r(t).Parse();this.string=o+this.string.substr(this.i),this.i=0},PU:
-function(n){var t=this.GetArgument(n),o=r(t).Parse("pu");this.string=o+this.string.substr(this.i),this.i=0}}),MathJax.Hub.Startup.signal.Post("TeX mhchem Ready")}),MathJax.Ajax.loadComplete("[mhchem]/mhchem.js");
+"@Q|@M":{"0|1|2|as":{h:"b=",g:"b"},p:{h:"b=",g:"bp"},"3|o":{h:"~q",g:"D"},q:{h:"d=",g:"qD"},"d|D|qd|qD|dq":{h:["~Q","d="],g:"D"}},
+"^a|@P|@O|^\\x|'":{"0|1|2|as":{h:"b=",g:"b"},p:{h:"b=",g:"bp"},"3|o":{h:"~q",g:"d"},q:{h:"d=",g:"qd"},"d|qd|D|qD":{h:"d="},dq:{h:["~Q","d="],g:"d"}},
+"`~":{"d|D|q|qd|qD|dq":{h:["~Q","q="],g:"q"}},
+"@V|@R|_9|@U|@T|@S":{"0|1|2|as":{h:"p=",g:"p"},b:{h:"p=",g:"bp"},"3|o":{h:"q=",g:"q"},"d|D":{h:"q=",g:"dq"},"q|qd|qD|dq":{h:["~Q","q="],g:"q"}},
+"%A":{"0|1|2|3|a|as|o|q|d|D|qd|qD|dq":{h:[{l:"~Q",S:2},"~c"],g:"3"}},
+"#":{"0|1|2|3|a|as|o":{h:[{l:"~Q",S:2},{l:"~c",S:"#"}],g:"3"}},
+"{}":{"*":{h:{l:"~Q",S:1},g:"1"}},
+"%y":{"0|1|2|3|a|as|b|p|bp":{h:"o=",g:"o"},"o|d|D|q|qd|qD|dq":{h:["~Q","o="],g:"o"}},
+"@`":{a:{h:"a="},"0|1|2|3|as|b|p|bp|o":{h:"o=",g:"o"},"as|o":{h:"o="},"q|d|D|qd|qD|dq":{h:["~Q","o="],g:"o"}},
+"@s":{"*":{h:[{l:"~Q",S:2},"~c"],g:"3"}},
+"@z":{"*":{h:[{l:"~Q",S:1},"~E"],g:"3"}},
+"@B":{"*":{h:[{l:"~Q",S:2},"~U"],g:"3"}},
+"@D":{"*":{h:[{l:"~Q",S:2},"%v"],g:"3"}},
+"@C":{"*":{h:[{l:"~Q",S:2},"%t"],g:"3"}},
+"@y|@w":{"*":{h:[{l:"~Q",S:2},"~h"],g:"3"}},
+"@x":{"*":{h:[{l:"~Q",S:2},"~j"]}},
+"@v":{"*":{h:[{l:"~Q",S:2},"ce"],g:"3"}},
+"@q":{"*":{h:[{l:"~Q",S:1},"~p"],g:"1"}},
+"@H|@G|@F":{"0|1|2|3|a|as|b|p|bp|o|c0":{h:["o=","~Q"],g:"3"},"*":{h:["~Q","o=","~Q"],g:"3"}},
+"~P":{"*":{h:[{l:"~Q",S:1},"~p"],g:"3"}},
+"~y":{a:{h:"@W",g:"o",k:!0},as:{h:["~Q","%h"],g:"1",k:!0},"r|rt|rd|%f|%e":{h:["~Q"],g:"0",k:!0},"*":{h:["~Q","~p"],g:"3"}}}),m:{
+"~K":function(t,n){var a;if((t.d||"").match(/^[0-9]+$/)){var o=t.d;t.d=void 0,a=this["~Q"](t),t.b=o}else a=this["~Q"](t);return e.m["o="](t,n),a},
+"~q":function(t,n){t.d=n,t.dType="kv"},
+"~d":function(t,n){if(t["@~"]){var a=[];return e.v(a,this["~Q"](t)),e.v(a,e.m["~c"](t,n,"-")),a}t.d=n},
+"`d":function(t,n,a){var o=e._.s("~O",t.o||""),r=e._.s("~L",t.o||""),i=e._.s("~M",t.o||""),c=e._.s("@a",t.o||""),u="-"===n&&(o&&""===o.$||r||i||c);!u||t.a||t.b||t.p||t.d||t.q||o||!i||(t.o="$"+t.o+"$");var p=[];return u?(e.v(p,this["~Q"](t)),p.push({l:"~F"})):(o=e._.s("~r",t.d||""),a&&o&&""===o.$?(e.v(p,e.m["d="](t,n)),e.v(p,this["~Q"](t))):(e.v(p,this["~Q"](t)),e.v(p,e.m["~c"](t,n,"-")))),p},
+"@W":function(t){t.o=t.a,t.a=void 0},
+"%h":function(t){t.sb=!0},
+"%g":function(t){t.sb=!1},
+"~b":function(t){t["@~"]=!0},
+"~a":function(t){t["@~"]=!1},
+"~X":function(t){t["@@"]++},
+"~Y":function(t){t["@@"]--},
+"%m":function(t,n){return{l:"%m",p1:e.go(n,"o")}},
+"~n":function(t,n){var e=n.replace(/\s*$/,"");return e!==n&&0===t["@@"]?{l:"~k",p1:e}:{l:"~l",p1:e}},
+"~Q":function(t,n,a){var o,r,i;t.r?(r="M"===t.rdt?e.go(t.rd,"%o"):"T"===t.rdt?[{l:"%p",p1:t.rd||""}]:e.go(t.rd),i="M"===t.rqt?e.go(t.rq,"%o"):"T"===t.rqt?[{l:"%p",p1:t.rq||""}]:e.go(t.rq),o={l:"~%",r:t.r,rd:r,rq:i}):(o=[],(t.a||t.b||t.p||t.o||t.q||t.d||a)&&(t.sb&&o.push({l:"~A"}),t.o||t.q||t.d||t.b||t.p||2===a?t.o||t.q||t.d||!t.b&&!t.p?t.o&&"kv"===t.dType&&e._.s("%Y",t.d||"")?t.dType="~V":t.o&&"kv"===t.dType&&!t.q&&(t.dType=void 0):(t.o=t.a,t.d=t.b,t.q=t.p,t.a=t.b=t.p=void 0):(t.o=t.a,t.a=void 0),o.push({l:"~e",a:e.go(t.a,"a"),b:e.go(t.b,"bd"),p:e.go(t.p,"pq"),o:e.go(t.o,"o"),q:e.go(t.q,"pq"),d:e.go(t.d,"~V"===t.dType?"~V":"bd"),dType:t.dType})));for(var c in t)"@@"!==c&&"@~"!==c&&delete t[c];return o},
+"`@":function(t,n){var a=["{"];return e.v(a,e.go(n,"~V")),a.push("}"),a},
+"~E":function(t,n){return{l:"~D",p1:e.go(n[0]),p2:e.go(n[1])}},
+"~U":function(t,n){return{l:"~T",p1:e.go(n[0]),p2:e.go(n[1])}},
+"%v":function(t,n){return{l:"%u",p1:e.go(n[0]),p2:e.go(n[1])}},
+"%t":function(t,n){return{l:"%s",p1:e.go(n[0]),p2:e.go(n[1])}},
+"~h":function(t,n){return{l:"~g",G:n[0],X:e.go(n[1])}},
+"r=":function(t,n){t.r=n},
+"%%":function(t,n){t.rdt=n},
+"%~":function(t,n){t.rd=n},
+"%d":function(t,n){t.rqt=n},
+"%c":function(t,n){t.rq=n},
+"~N":function(t,n,e){return{l:"~N",B:e||n}}}},
+a:{u:e.C({"~z":{"*":{}},
+"@k":{0:{h:"@l"}},
+"~x":{0:{g:"1",k:!0}},
+"@%":{"*":{h:"%n",g:"1"}},
+",":{"*":{h:{l:"~G",S:"~o"}}},
+"~y":{"*":{h:"~p"}}}),m:{}},
+o:{u:e.C({"~z":{"*":{}},
+"@k":{0:{h:"@l"}},
+"~x":{0:{g:"1",k:!0}},
+"~J":{"*":{h:"rm"}},
+"@u":{"*":{h:{l:"~G",S:"~f"}}},
+"@H|@G|@F":{"*":{h:"~p"}},
+"@b|@%":{"*":{h:"%o"}},
+"%x":{"*":{h:"%z"}},
+"~y":{"*":{h:"~p"}}}),m:{}},
+"%p":{u:e.C({"~z":{"*":{h:"~Q"}},
+"%y":{"*":{h:"%q"}},
+"@b|@%":{"*":{h:"%o"}},
+"@A":{"*":{h:["~Q","rm"]}},
+"@q|@H|@G|@F":{"*":{h:["~Q","~p"]}},
+"~x":{"*":{h:"%q"}}}),m:{
+"~Q":function(t){if(t.F){var n={l:"%p",p1:t.F};for(var e in t)delete t[e];return n}}}},
+pq:{u:e.C({"~z":{"*":{}},
+"%k":{"*":{h:"%m"}},
+i$:{0:{g:"!f",k:!0}},
+"@c":{0:{h:"rm",g:"0"}},
+"~B":{0:{g:"f",k:!0}},
+"@k":{0:{h:"@l"}},
+"~x":{0:{g:"!f",k:!0}},
+"@b|@%":{"*":{h:"%o"}},
+"%x":{"*":{h:"%p"}},
+"@X":{f:{h:"%o"}},
+"~J":{"*":{h:"rm"}},
+"@i":{"*":{h:"@m"}},
+",":{"*":{h:{l:"~H",S:"~m"}}},
+"@y|@w":{"*":{h:"~h"}},
+"@x":{"*":{h:"~j"}},
+"@v":{"*":{h:"ce"}},
+"@q|@H|@G|@F":{"*":{h:"~p"}},
+"~y":{"*":{h:"~p"}}}),m:{
+"%m":function(t,n){return{l:"%H",p1:e.go(n,"o")}},
+"~h":function(t,n){return{l:"~g",G:n[0],X:e.go(n[1],"pq")}}}},
+bd:{u:e.C({"~z":{"*":{}},
+x$:{0:{g:"!f",k:!0}},
+"~B":{0:{g:"f",k:!0}},
+"~x":{0:{g:"!f",k:!0}},
+"@h":{"*":{h:"@m"}},
+".":{"*":{h:{l:"~G",S:"~v"}}},
+"@X":{f:{h:"%o"}},
+x:{"*":{h:{l:"~G",S:"@o"}}},
+"~J":{"*":{h:"rm"}},
+"'":{"*":{h:{l:"~G",S:"%@"}}},
+"@b|@%":{"*":{h:"%o"}},
+"%x":{"*":{h:"%p"}},
+"@y|@w":{"*":{h:"~h"}},
+"@x":{"*":{h:"~j"}},
+"@v":{"*":{h:"ce"}},
+"@q|@H|@G|@F":{"*":{h:"~p"}},
+"~y":{"*":{h:"~p"}}}),m:{
+"~h":function(t,n){return{l:"~g",G:n[0],X:e.go(n[1],"bd")}}}},
+"~V":{u:e.C({"~z":{"*":{}},
+"%a":{"*":{h:"%b"}},
+"@b|@%":{"*":{h:"%o"}},
+"~x":{"*":{h:"~p"}}}),m:{
+"%b":function(t,n){return{l:"%a",p1:n||""}}}},
+"%o":{u:e.C({"~z":{"*":{h:"~Q"}},
+"@v":{"*":{h:["~Q","ce"]}},
+"%y|@q|@H|@G|@F":{"*":{h:"o="}},
+"~x":{"*":{h:"o="}}}),m:{
+"~Q":function(t){if(t.o){var n={l:"%o",p1:t.o};for(var e in t)delete t[e];return n}}}},
+"%n":{u:e.C({"~z":{"*":{h:"~Q"}},
+"@v":{"*":{h:["~Q","ce"]}},
+"%y|@q|@H|@G|@F":{"*":{h:"o="}},
+"-|+":{"*":{h:"%r"}},
+"~x":{"*":{h:"o="}}}),m:{
+"%r":function(t,n){t.o=(t.o||"")+"{"+n+"}"},
+"~Q":function(t){if(t.o){var n={l:"%o",p1:t.o};for(var e in t)delete t[e];return n}}}},
+"@m":{u:e.C({"~z":{"*":{}},
+",":{"*":{h:"~n"}},
+"~x":{"*":{h:"~p"}}}),m:{
+"~n":function(){return{l:"~o"}}}},
+pu:{u:e.C({"~z":{"*":{h:"~Q"}},
+"`e":{"*":{h:["~Q","%j"]}},
+"@L|@d":{"0|a":{h:"~p"}},
+"`a":{0:{h:"`b",g:"a"}},
+"%Q":{0:{h:"%W",g:"a"}},
+"%j":{"0|a":{}},
+"``":{"0|a":{h:{l:"~N",S:"\\pm"},g:"0"}},
+"~N":{"0|a":{h:"~p",g:"0"}},
+"//":{d:{h:"o=",g:"/"}},
+"/":{d:{h:"o=",g:"/"}},
+"%y|~x":{"0|d":{h:"d=",g:"d"},a:{h:["%j","d="],g:"d"},"/|q":{h:"q=",g:"q"}}}),m:{
+"%W":function(t,n){var a=[];return"+-"===n[0]||"+/-"===n[0]?a.push("\\pm "):n[0]&&a.push(n[0]),n[1]&&(e.v(a,e.go(n[1],"%U")),n[2]&&(n[2].match(/[,.]/)?e.v(a,e.go(n[2],"%U")):a.push(n[2])),n[3]=n[4]||n[3],n[3]&&(n[3]=n[3].trim(),"e"===n[3]||"*"===n[3].substr(0,1)?a.push({l:"%K"}):a.push({l:"%M"}))),n[3]&&a.push("10^{"+n[5]+"}"),a},
+"`b":function(t,n){var a=[];return"+-"===n[0]||"+/-"===n[0]?a.push("\\pm "):n[0]&&a.push(n[0]),e.v(a,e.go(n[1],"%U")),a.push("^{"+n[2]+"}"),a},
+"~N":function(t,n,e){return{l:"~N",B:e||n}},
+"%j":function(){return{l:"%N"}},
+"~Q":function(t){var n,a=e._.s("%x",t.d||"");a&&""===a.$&&(t.d=a.s);var o=e._.s("%x",t.q||"");if(o&&""===o.$&&(t.q=o.s),t.d&&(t.d=t.d.replace(/\u00B0C|\^oC|\^{o}C/g,"{}^{\\circ}C"),t.d=t.d.replace(/\u00B0F|\^oF|\^{o}F/g,"{}^{\\circ}F")),t.q){t.q=t.q.replace(/\u00B0C|\^oC|\^{o}C/g,"{}^{\\circ}C"),t.q=t.q.replace(/\u00B0F|\^oF|\^{o}F/g,"{}^{\\circ}F");var r={d:e.go(t.d,"pu"),q:e.go(t.q,"pu")};"//"===t.o?n={l:"%P",p1:r.d,p2:r.q}:(n=r.d,r.d.length>1||r.q.length>1?n.push({l:"%S"}):n.push({l:"/"}),e.v(n,r.q))}else n=e.go(t.d,"%O");for(var i in t)delete t[i];return n}}},
+"%O":{u:e.C({"~z":{"*":{h:"~Q"}},
+"*":{"*":{h:["~Q","%K"],g:"0"}},
+"@F":{"*":{h:"%`"}},
+"%j":{"*":{h:["~Q","%j"],g:"0"}},
+"@Q|%R":{1:{h:"%R"}},
+"@i":{0:{h:"%`",g:"0"},1:{h:"%R",g:"0"}},
+"%y|~x":{"*":{h:"%`",g:"1"}}}),m:{
+"%K":function(){return{l:"%L"}},
+"%R":function(t,n){t.rm+="^{"+n+"}"},
+"%j":function(){return{l:"`%"}},
+"~Q":function(t){var n=[];if(t.rm){var a=e._.s("%x",t.rm||"");n=a&&""===a.$?e.go(a.s,"pu"):{l:"rm",p1:t.rm}}for(var o in t)delete t[o];return n}}},
+"%U":{u:e.C({"~z":{0:{h:"~R"},o:{h:"~S"}},
+",":{0:{h:["~R","~n"],g:"o"}},
+".":{0:{h:["~R","~p"],g:"o"}},
+"~x":{"*":{h:"%q"}}}),m:{
+"~n":function(){return{l:"~o"}},
+"~R":function(t){var n=[];if(t.F=t.F||"",t.F.length>4){var e=t.F.length%3;0===e&&(e=3);for(var a=t.F.length-3;a>0;a-=3)n.push(t.F.substr(a,3)),n.push({l:"%T"});n.push(t.F.substr(0,e)),n.reverse()}else n.push(t.F);for(var o in t)delete t[o];return n},
+"~S":function(t){var n=[];if(t.F=t.F||"",t.F.length>4){for(var e=t.F.length-3,a=0;a<e;a+=3)n.push(t.F.substr(a,3)),n.push({l:"%T"});n.push(t.F.substr(a))}else n.push(t.F);for(var o in t)delete t[o];return n}}}};var a={
+go:function(t,n){if(!t)return"";for(var e="",o=!1,r=0;r<t.length;r++){var i=t[r];"string"==typeof i?e+=i:(e+=a.Z(i),"`c"===i.l&&(o=!0))}return n||o||!e||(e="{"+e+"}"),e},
+R:function(t){return t?a.go(t,!0):t},
+Z:function(t){var n;switch(t.l){case"~e":n="";var e={a:a.R(t.a),b:a.R(t.b),p:a.R(t.p),o:a.R(t.o),q:a.R(t.q),d:a.R(t.d)};e.a&&(e.a.match(/^[+\-]/)&&(e.a="{"+e.a+"}"),n+=e.a+"\\,"),(e.b||e.p)&&(n+="{\\vphantom{X}}",n+="^{\\hphantom{"+(e.b||"")+"}}_{\\hphantom{"+(e.p||"")+"}}",n+="{\\vphantom{X}}",n+="^{\\smash[t]{\\vphantom{2}}\\llap{"+(e.b||"")+"}}",n+="_{\\vphantom{2}\\llap{\\smash[t]{"+(e.p||"")+"}}}"),e.o&&(e.o.match(/^[+\-]/)&&(e.o="{"+e.o+"}"),n+=e.o),"kv"===t.dType?((e.d||e.q)&&(n+="{\\vphantom{X}}"),e.d&&(n+="^{"+e.d+"}"),e.q&&(n+="_{\\smash[t]{"+e.q+"}}")):"~V"===t.dType?(e.d&&(n+="{\\vphantom{X}}",n+="^{"+e.d+"}"),e.q&&(n+="{\\vphantom{X}}",n+="_{\\smash[t]{"+e.q+"}}")):(e.q&&(n+="{\\vphantom{X}}",n+="_{\\smash[t]{"+e.q+"}}"),e.d&&(n+="{\\vphantom{X}}",n+="^{"+e.d+"}"));break;case"rm":n="\\mathrm{"+t.p1+"}";break;case"%p":t.p1.match(/[\^_]/)?(t.p1=t.p1.replace(" ","~").replace("-","\\text{-}"),n="\\mathrm{"+t.p1+"}"):n="\\text{"+t.p1+"}";break;case"%a":n="\\mathrm{"+t.p1+"}";break;case"%m":n="\\mskip2mu "+a.R(t.p1);break;case"%H":n="\\mskip1mu "+a.R(t.p1);break;case"~c":if(!(n=a.j(t.B)))throw["MhchemErrorBond","mhchem Error. Unknown bond type ("+t.B+")"];break;case"~C":var o="\\frac{"+t.p1+"}{"+t.p2+"}";n="\\mathchoice{\\textstyle"+o+"}{"+o+"}{"+o+"}{"+o+"}";break;case"%P":var r="\\frac{"+a.R(t.p1)+"}{"+a.R(t.p2)+"}";n="\\mathchoice{\\textstyle"+r+"}{"+r+"}{"+r+"}{"+r+"}";break;case"%o":n=t.p1+" ";break;case"~D":n="\\frac{"+a.R(t.p1)+"}{"+a.R(t.p2)+"}";break;case"~T":n="\\overset{"+a.R(t.p1)+"}{"+a.R(t.p2)+"}";break;case"%u":n="\\underset{"+a.R(t.p1)+"}{"+a.R(t.p2)+"}";break;case"%s":n="\\underbrace{"+a.R(t.p1)+"}_{"+a.R(t.p2)+"}";break;case"~g":n="{\\color{"+t.G+"}{"+a.R(t.X)+"}}";break;case"~i":n="\\color{"+t.color+"}";break;case"~%":var i=a.R(t.rd),c=a.R(t.rq),u=a.H(t.r);i||c?"<=>"===t.r||"<=>>"===t.r||"<<=>"===t.r||"<--\x3e"===t.r?(u="\\long"+u,i&&(u="\\overset{"+i+"}{"+u+"}"),c&&(u="\\underset{\\lower7mu{"+c+"}}{"+u+"}"),u=" {}\\mathrel{"+u+"}{} "):(c&&(u+="[{"+c+"}]"),u=" {}\\mathrel{\\x"+(u+="{"+i+"}")+"}{} "):u=" {}\\mathrel{\\long"+u+"}{} ",n=u;break;case"~N":n=a.J(t.B);break;case"`c":n=t.p1+" ";break;case"%j":n=" ";break;case"~A":case"%N":n="~";break;case"`%":n="\\mkern3mu ";break;case"%T":n="\\mkern2mu ";break;case"~o":n="{,}";break;case"~k":n="{"+t.p1+"}\\mkern6mu ";break;case"~l":n="{"+t.p1+"}\\mkern3mu ";break;case"~m":n="{"+t.p1+"}\\mkern1mu ";break;case"~F":n="\\text{-}";break;case"@Y":n="\\,{\\cdot}\\,";break;case"~v":n="\\mkern1mu \\bullet\\mkern1mu ";break;case"@o":n="{\\times}";break;case"%@":n="\\prime ";break;case"%K":n="\\cdot ";break;case"%L":n="\\mkern1mu{\\cdot}\\mkern1mu ";break;case"%M":n="\\times ";break;case"~f":n="{\\sim}";break;case"^":n="uparrow";break;case"v":n="downarrow";break;case"~w":n="\\ldots ";break;case"/":n="/";break;case"%S":n="\\,/\\,";break;default:throw["MhchemBugT","mhchem bug T. Please report."]}return n},
+H:function(t){switch(t){case"->":case"\u2192":case"\u27f6":return"rightarrow";case"<-":return"leftarrow";case"<->":return"leftrightarrow";case"<--\x3e":return"leftrightarrows";case"<=>":case"\u21cc":return"rightleftharpoons";case"<=>>":return"Rightleftharpoons";case"<<=>":return"Leftrightharpoons";default:throw["MhchemBugT","mhchem bug T. Please report."]}},
+j:function(t){switch(t){case"-":case"1":return"{-}";case"=":case"2":return"{=}";case"#":case"3":return"{\\equiv}";case"~":return"{\\tripledash}";case"~-":return"{\\rlap{\\lower.1em{-}}\\raise.1em{\\tripledash}}";case"~=":case"~--":return"{\\rlap{\\lower.2em{-}}\\rlap{\\raise.2em{\\tripledash}}-}";case"-~-":return"{\\rlap{\\lower.2em{-}}\\rlap{\\raise.2em{-}}\\tripledash}";case"...":return"{{\\cdot}{\\cdot}{\\cdot}}";case"....":return"{{\\cdot}{\\cdot}{\\cdot}{\\cdot}}";case"->":return"{\\rightarrow}";case"<-":return"{\\leftarrow}";case"<":return"{<}";case">":return"{>}";default:throw["MhchemBugT","mhchem bug T. Please report."]}},
+J:function(t){switch(t){case"+":return" {}+{} ";case"-":return" {}-{} ";case"=":return" {}={} ";case"<":return" {}<{} ";case">":return" {}>{} ";case"<<":return" {}\\ll{} ";case">>":return" {}\\gg{} ";case"\\pm":return" {}\\pm{} ";case"\\approx":case"$\\approx$":return" {}\\approx{} ";case"v":case"(v)":return" \\downarrow{} ";case"^":case"(^)":return" \\uparrow{} ";default:throw["MhchemBugT","mhchem bug T. Please report."]}}};MathJax.Extension["TeX/mhchem"].CE=n,t.Definitions.Add({macros:{ce:"CE",pu:"PU",xleftrightarrow:["Extension","AMSmath"],xrightleftharpoons:["Extension","AMSmath"],xRightleftharpoons:["Extension","AMSmath"],xLeftrightharpoons:["Extension","AMSmath"],longrightleftharpoons:["Macro","\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"],longRightleftharpoons:["Macro","\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}"],longLeftrightharpoons:["Macro","\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"],longleftrightarrows:["Macro","\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}"],tripledash:["Macro","\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}"]}},
+null,!0),MathJax.Extension["TeX/AMSmath"]||t.Definitions.Add({macros:{xrightarrow:["Extension","AMSmath"],xleftarrow:["Extension","AMSmath"]}},
+null,!0),MathJax.Hub.Register.StartupHook("TeX AMSmath Ready",function(){t.Definitions.Add({macros:{xleftrightarrow:["xArrow",8596,6,6],xrightleftharpoons:["xArrow",8652,5,7],xRightleftharpoons:["xArrow",8652,5,7],xLeftrightharpoons:["xArrow",8652,5,7]}},
+null,!0)}),t.Parse.Augment({
+CE:function(t){var e=this.GetArgument(t),a=n(e).Parse();this.string=a+this.string.substr(this.i),this.i=0},
+PU:function(t){var e=this.GetArgument(t),a=n(e).Parse("pu");this.string=a+this.string.substr(this.i),this.i=0}}),MathJax.Hub.Startup.signal.Post("TeX mhchem Ready")}),MathJax.Ajax.loadComplete("[mhchem]/mhchem.js");
 
