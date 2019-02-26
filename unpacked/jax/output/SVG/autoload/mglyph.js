@@ -35,13 +35,13 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
 
   BBOX.MGLYPH = BBOX.Subclass({
     type: "image", removeable: false,
-    Init: function (img,w,h,align,mu,def) {
+    Init: function (img,w,h,align,mu,scale,def) {
       if (def == null) {def = {}}
       var W = img.width*1000/SVG.em, H = img.height*1000/SVG.em;
       var WW = W, HH = H, y = 0;
-      if (w !== "") {W = SVG.length2em(w,mu,WW); H = (WW ? W/WW * HH : 0)}
-      if (h !== "") {H = SVG.length2em(h,mu,HH); if (w === "") {W = (HH ? H/HH * WW : 0)}}
-      if (align !== "" && align.match(/\d/)) {y = SVG.length2em(align,mu); def.y = -y}
+      if (w !== "") {W = SVG.length2em(w,mu,WW) * scale; H = (WW ? W/WW * HH : 0)}
+      if (h !== "") {H = SVG.length2em(h,mu,HH) * scale; if (w === "") {W = (HH ? H/HH * WW : 0)}}
+      if (align !== "" && align.match(/\d/)) {y = SVG.length2em(align,mu) * scale; def.y = -y}
       def.height = Math.floor(H); def.width = Math.floor(W);
       def.transform = "translate(0,"+H+") matrix(1 0 0 -1 0 0)";
       def.preserveAspectRatio = "none";
@@ -81,7 +81,8 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
           this.Append(err); svg = err.toSVG(); this.data.pop();
         } else {
           var mu = this.SVGgetMu(svg);
-          svg.Add(BBOX.MGLYPH(this.img.img,values.width,values.height,values.valign,mu,
+          var SCALE = this.SVGgetScale();
+          svg.Add(BBOX.MGLYPH(this.img.img,values.width,values.height,values.valign,mu,SCALE,
                               {'aria-label':values.alt}));
         }
       }
