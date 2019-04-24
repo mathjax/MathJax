@@ -535,7 +535,11 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           var box = s.HTMLspanElement().parentNode;
           if (s.href) box = box.parentNode;
           var stack = box.parentNode;
-          if (this.data[this.base]) {stack.removeChild(stack.firstChild)}
+          if (this.data[this.base]) {
+            var ic = this.data[this.base].HTMLspanElement().bbox.ic;
+            if (ic) stack.style.marginLeft = HTMLCSS.Em(-ic);
+            stack.removeChild(stack.firstChild);
+          }
 	  for (box = stack.firstChild; box; box = box.nextSibling)
 	    {box.style.left = HTMLCSS.Em(HTMLCSS.unEm(box.style.left)-this.HTMLbaseW)}
           stack.bbox.w -= this.HTMLbaseW; stack.style.width = HTMLCSS.Em(stack.bbox.w);

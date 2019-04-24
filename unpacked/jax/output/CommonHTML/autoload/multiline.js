@@ -508,6 +508,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       if (this.data[this.base]) {
         var base = CHTML.addElement(node,"mjx-base");
+        var ic = this.data[this.base].CHTML.ic;
+        if (ic) base.style.marginRight = CHTML.Em(-ic);
         if (start.length > 1) {
           this.data[this.base].CHTMLmoveSlice(start.slice(1),end.slice(1),base,state,values,"marginLeft");
         } else {
