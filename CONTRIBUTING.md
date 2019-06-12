@@ -1,6 +1,8 @@
 # Contributing to MathJax
 
-You are interested in giving us a hand? That's awesome! We've put together some brief guidelines that should help you get started quickly and easily.
+You are interested in giving us a hand? That's awesome! We've put
+together some brief guidelines that should help you get started
+quickly and easily.
 
 There are lots and lots of ways to get involved, this document covers:
 
@@ -47,17 +49,33 @@ Guidelines for bug reports:
 1. **Use the GitHub issue search** &mdash; check if the issue has already been
    reported.
 
-2. **Check if the issue has been fixed** &mdash; look for [closed issues in the
-   current milestone](https://github.com/MathJax/MathJax/issues?&page=1&state=closed) or try to reproduce it
-   using the latest `develop` branch. Please note that we only pack MathJax for releases, so on the `develop` branch you have to use `/unpacked/MathJax.js` etc. to test.
+2. **Check if the issue has been fixed** &mdash; look for [closed
+   issues in the current
+   milestone](https://github.com/MathJax/MathJax/issues?&page=1&state=closed)
+   or try to reproduce it using the latest `develop` branch. Please
+   note that we only pack MathJax for releases, so on the `develop`
+   branch you have to use `/unpacked/MathJax.js` etc. to test.
 
-3. **Share a live sample of the problem** &mdash; without a live page it is usually impossible to debug problems; see also the Bug Report Template below.
+3. **Share a live sample of the problem** &mdash; without a live page
+   it is usually impossible to debug problems; see also the Bug Report
+   Template below.
 
-4. **Isolate the problem** &mdash; a live sample is a starting point but if you want to speed things up create a [reduced test
-   case](http://css-tricks.com/6263-reduced-test-cases/). Be specific about your setup (browser, OS versions etc). Use services like [jsbin](http://jsbin.com), [CodePen](http://codepen.io), [JSfiddle](http://jsfiddle.com) to make collaboration on minimal test cases easier for everyone. Use the unpacked copy of MathJax (`[...]/unpacked/MathJax.js` etc.) for better debugging.
+4. **Isolate the problem** &mdash; a live sample is a starting point
+   but if you want to speed things up create a [reduced test
+   case](http://css-tricks.com/6263-reduced-test-cases/). Be specific
+   about your setup (browser, OS versions etc). Use services like
+   [jsbin](http://jsbin.com), [CodePen](http://codepen.io),
+   [JSfiddle](http://jsfiddle.com) to make collaboration on minimal
+   test cases easier for everyone. Use the unpacked copy of MathJax
+   (`[...]/unpacked/MathJax.js` etc.) for better debugging.
 
-5. **Include a screenshot/cast as a last resort** &mdash; Is your issue about a layout
-   or design feature / bug but hard to reproduce or isolate? Then please provide a screenshot or screencast. Tools like [LICEcap](http://www.cockos.com/licecap/) or [SauceLabs](http://www.saucelabs.com) allow you to quickly and easily record a screencasts. Make it an animated gif, embed it directly into your GitHub issue -- kapow!
+5. **Include a screenshot/cast as a last resort** &mdash; Is your
+   issue about a layout or design feature / bug but hard to reproduce
+   or isolate? Then please provide a screenshot or screencast. Tools
+   like [LICEcap](http://www.cockos.com/licecap/) or
+   [SauceLabs](http://www.saucelabs.com) allow you to quickly and
+   easily record a screencasts. Make it an animated gif, embed it
+   directly into your GitHub issue -- kapow!
 
 6. Use the Bug Report template below or [click this
    link](https://github.com/MathJax/MathJax/issues/new?title=Bug%3A&body=%23%23%23%20Issue%20Summary%0A%0A%23%23%23%20Steps%20to%20Reproduce%0A%0A1.%20This%20is%20the%20first%20step%0A%0AThis%20is%20a%20bug%20because...%0A%0A%23%23%23%20Technical%20details%0A%0A*%20MathJax%20Version%3A%20master%20-%20latest%20commit%3A%20%20INSERT%20COMMIT%20REF%0A*%20Client%20OS%3A%20%0A*%20Browser%3A%20%0A*%20)
@@ -69,6 +87,7 @@ more information. Be sure to include the details of your environment.
 Here is a [real example](https://github.com/mathjax/MathJax/issues/820)
 
 Template Example ([click to use](https://github.com/MathJax/MathJax/issues/new?title=Bug%3A&body=%23%23%23%20Issue%20Summary%0A%0A%23%23%23%20Steps%20to%20Reproduce%0A%0A1.%20This%20is%20the%20first%20step%0A%0AThis%20is%20a%20bug%20because...%0A%0A%23%23%23%20Technical%20details%0A%0A*%20MathJax%20Version%3A%20master%20-%20latest%20commit%3A%20%20INSERT%20COMMIT%20REF%0A*%20Client%20OS%3A%20%0A*%20Browser%3A%20%0A*%20)):
+
 ```
 Short and descriptive example bug report title
 
@@ -216,6 +235,10 @@ repository.
 
 ## Conduct
 
+As a NumFOCUS fiscally sponsored project, MathJax is governed by the
+[NumFOCUS code of conduct](https://numfocus.org/code-of-conduct),
+which we summarize as follows:
+
 We are committed to providing a friendly, safe and welcoming environment for
 all, regardless of gender, sexual orientation, disability, ethnicity, religion,
 or similar personal characteristic.
@@ -229,26 +252,30 @@ circumstances.
 Please keep unstructured critique to a minimum. If you have solid ideas you
 want to experiment with, make a fork and see how it works.
 
-We will exclude you from interaction if you insult, demean or harass anyone.
-That is not welcome behaviour. We interpret the term "harassment" as
-including the definition in the
-[Citizen Code of Conduct](http://citizencodeofconduct.org/);
-if you have any lack of clarity about what might be included in that concept,
-please read their definition. In particular, we don't tolerate behavior that
+We will exclude you from interaction if you insult, demean or harass
+anyone.  That is not welcome behaviour. We interpret the term
+"harassment" as including the definition in the [Unacceptable
+Behavior](https://numfocus.org/code-of-conduct#unacceptable-behavior)
+section of the [NumFOCUS code of
+conduct](https://numfocus.org/code-of-conduct); if you have any lack
+of clarity about what might be included in that concept, please read
+that definition. In particular, we don't tolerate behavior that
 excludes people in socially marginalized groups.
 
-Private harassment is also unacceptable. No matter who you are, if you feel
-you have been or are being harassed or made uncomfortable by a community
-member, please contact one of the channel ops or any of the
+Private harassment is also unacceptable. No matter who you are, if you
+feel you have been or are being harassed or made uncomfortable by a
+community member, please contact one of the channel ops or any of the
 [MathJax](https://github.com/MathJax/MathJax) core team
-immediately. Whether you're a regular contributor or a newcomer, we care about
-making this community a safe place for you and we've got your back.
+immediately. Whether you're a regular contributor or a newcomer, we
+care about making this community a safe place for you and we've got
+your back.
 
 Likewise any spamming, trolling, flaming, baiting or other attention-stealing
 behaviour is not welcome.
 
-We also suggest to read [discourse's
+We also recommend that you read [discourse's
 rules](http://blog.discourse.org/2013/03/the-universal-rules-of-civilized-discourse/)
+for further suggestions on appropriate behavior.
 
 ## References
 
