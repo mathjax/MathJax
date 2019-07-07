@@ -159,9 +159,9 @@ To get it out of the way:
 - **[develop](https://github.com/MathJax/MathJax/tree/develop)** is
   the development branch. All work on the next release happens here so
   you should generally branch off `develop`. Do **NOT** use this branch
-  for a production site. 
+  for a production site.
 - **[master](https://github.com/MathJax/MathJax)** contains the latest
-  release of MathJax. This branch may be used in production. Do 
+  release of MathJax. This branch may be used in production. Do
   **NOT** use this branch to work on MathJax's source.
 
 ### Submitting Pull Requests
@@ -178,7 +178,7 @@ tested and merged.
 If you're not completely clear on how to submit / update / *do* Pull
 Requests, please check out our [source control
 policies](https://github.com/mathjax/MathJax/wiki/Source-control-policies). For
-more insights, chech the excellent in depth [Git Workflow
+more insights, check the excellent in depth [Git Workflow
 guide](https://github.com/TryGhost/Ghost/wiki/Git-Workflow) from
 Ghost, in particular
 
@@ -215,7 +215,7 @@ MathJax's main documentation can be found at [docs.mathjax.org](http://docs.math
 The source of the docs is hosted in the
 [mathjax/mathjax-docs](http://github.com/mathjax/mathjax-docs) repo here on GitHub.
 
-The documentation is generated using [Sphinx-doc](http://sphinx-doc.org/) and hosted on 
+The documentation is generated using [Sphinx-doc](http://sphinx-doc.org/) and hosted on
 [Read the docs](http://readthedocs.org).
 You can clone the repo and submit pull requests following the
 [pull-request](#submitting-pull-requests) guidelines.
