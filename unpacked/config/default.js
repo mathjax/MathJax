@@ -107,7 +107,7 @@ MathJax.Hub.Config({
   //  Patterns to remove from before and after math script tags.  If you are not
   //  using one of the preprocessors (e.g., tex2jax), you need to insert something
   //  extra into your HTML file in order to avoid a bug in Internet Explorer.  IE
-  //  removes spaces from the DOM that it thinks are redundent, and since a SCRIPT
+  //  removes spaces from the DOM that it thinks are redundant, and since a SCRIPT
   //  tag usually doesn't add content to the page, if there is a space before and after
   //  a MathJax SCRIPT tag, IE will remove the first space.  When MathJax inserts
   //  the typeset mathematics, this means there will be no space before it and the
@@ -180,7 +180,7 @@ MathJax.Hub.Config({
   //  Normally MathJax will perform its starup commands (loading of
   //  configuration, styles, jax, and so on) as soon as it can.  If you
   //  expect to be doing additional configuration on the page, however, you
-  //  may want to have it wait until the page's onload hander is called.  If so,
+  //  may want to have it wait until the page's onload handler is called.  If so,
   //  set this to "onload".
   //
   delayStartupUntil: "none",
@@ -501,7 +501,7 @@ MathJax.Hub.Config({
     TagSide: "right",
     
     //
-    //  This is the amound of indentation (from right or left) for the tags.
+    //  This is the amount of indentation (from right or left) for the tags.
     //
     TagIndent: "0.8em",
     
