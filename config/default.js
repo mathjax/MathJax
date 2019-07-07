@@ -11,15 +11,15 @@
  *  Use it to customize the MathJax settings.  See comments below.
  *
  *  ---------------------------------------------------------------------
- *  
+ *
  *  Copyright (c) 2009-2018 The MathJax Consortium
- * 
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,10 +32,10 @@
  *  This file lists most, but not all, of the options that can be set for
  *  MathJax and its various components.  Some additional options are
  *  available, however, and are listed in the various links at:
- *  
+ *
  *  http://www.mathjax.org/resources/docs/?configuration.html#configuration-options-by-component
  *
- *  You can add these to the configuration object below if you 
+ *  You can add these to the configuration object below if you
  *  want to change them from their default values.
  */
 
@@ -45,24 +45,24 @@ MathJax.Hub.Config({
   //  A comma-separated list of configuration files to load
   //  when MathJax starts up.  E.g., to define local macros, etc.
   //  The default directory is the MathJax/config directory.
-  //  
+  //
   //  Example:    config: ["local/local.js"],
   //  Example:    config: ["local/local.js","MMLtoHTML.js"],
   //
   config: [],
-  
+
   //
   //  A comma-separated list of CSS stylesheet files to be loaded
   //  when MathJax starts up.  The default directory is the
   //  MathJax/config directory.
-  // 
+  //
   //  Example:    styleSheets: ["MathJax.css"],
   //
   styleSheets: [],
-  
+
   //
   //  Styles to be defined dynamically at startup time.
-  //  
+  //
   //  Example:
   //      styles: {
   //        ".MathJax_Preview": {
@@ -71,43 +71,43 @@ MathJax.Hub.Config({
   //      },
   //
   styles: {},
-  
+
   //
   //  A comma-separated list of input and output jax to initialize at startup.
   //  Their main code is loaded only when they are actually used, so it is not
   //  inefficient to include jax that may not actually be used on the page.  These
   //  are found in the MathJax/jax directory.  The choices include
-  //  
+  //
   //      input/TeX
   //      input/MathML
   //      input/AsciiMath
-  //      
+  //
   //      output/HTML-CSS
   //      output/NativeMML
   //      output/SVG
-  // 
+  //
   //   If you change the input jax, you may need to include the appropriate
   //   preprocessor in the extensions array below.
-  //  
+  //
   jax: ["input/TeX", "output/HTML-CSS"],
-  
+
   //
   //  A comma-separated list of extensions to load at startup.  The default
   //  directory is MathJax/extensions.
-  //  
+  //
   //  Example:    extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
-  //  
+  //
   //  You may wish to include "mml2jax.js" if you are using "input/MathML" in the
   //  jax array above, and "asciimath2jax.js" if you using "input/AsciiMath".
   //  Include "jsmath2jax.js" if you are converting from using jsMath to MathJax.
   //
   extensions: ["tex2jax.js"],
-  
+
   //
   //  Patterns to remove from before and after math script tags.  If you are not
   //  using one of the preprocessors (e.g., tex2jax), you need to insert something
   //  extra into your HTML file in order to avoid a bug in Internet Explorer.  IE
-  //  removes spaces from the DOM that it thinks are redundent, and since a SCRIPT
+  //  removes spaces from the DOM that it thinks are redundant, and since a SCRIPT
   //  tag usually doesn't add content to the page, if there is a space before and after
   //  a MathJax SCRIPT tag, IE will remove the first space.  When MathJax inserts
   //  the typeset mathematics, this means there will be no space before it and the
@@ -123,7 +123,7 @@ MathJax.Hub.Config({
   //  both must be present in order to be  removed.
   //
   //  See also the preRemoveClass comments below.
-  //  
+  //
   //  Example:
   //      preJax: "\\\\\\\\",  // makes a double backslash the preJax text
   //    or
@@ -132,7 +132,7 @@ MathJax.Hub.Config({
   //
   preJax: null,
   postJax: null,
-  
+
   //
   //  The CSS class for a math preview to be removed preceding a MathJax
   //  SCRIPT tag.  If the tag just before the MathJax SCRIPT tag is of this
@@ -141,22 +141,22 @@ MathJax.Hub.Config({
   //  be displayed prior to MathJax performing its typesetting.  It also
   //  avoids the Internet Explorer space-removal bug, and can be used in
   //  place of preJax and postJax if that is more convenient.
-  //  
+  //
   //  For example
-  //  
+  //
   //      <span class="MathJax_Preview">[math]</span><script type="math/tex">...</script>
   //
   //  would display "[math]" in place of the math until MathJax is able to typeset it.
   //
   preRemoveClass: "MathJax_Preview",
-  
+
   //
   //  This value controls whether the "Processing Math: nn%" message are displayed
   //  in the lower left-hand corner.  Set to "false" to prevent those messages (though
   //  file loading and other messages will still be shown).
   //
   showProcessingMessages: true,
-  
+
   //
   //  This value controls the verbosity of the messages in the lower left-hand corner.
   //  Set it to "none" to eliminate all messages, or set it to "simple" to show
@@ -164,7 +164,7 @@ MathJax.Hub.Config({
   //  percentage of the mathematics processed.
   //
   messageStyle: "normal",
-  
+
   //
   //  These two parameters control the alignment and shifting of displayed equations.
   //  The first can be "left", "center", or "right", and determines the alignment of
@@ -172,15 +172,15 @@ MathJax.Hub.Config({
   //  an indentation from the left or right side for the displayed equations.  When
   //  the alignment is "center", the indent allows you to shift the center to the right
   //  or left (negative is left).
-  //  
+  //
   displayAlign: "center",
   displayIndent: "0",
-  
+
   //
   //  Normally MathJax will perform its starup commands (loading of
   //  configuration, styles, jax, and so on) as soon as it can.  If you
   //  expect to be doing additional configuration on the page, however, you
-  //  may want to have it wait until the page's onload hander is called.  If so,
+  //  may want to have it wait until the page's onload handler is called.  If so,
   //  set this to "onload".
   //
   delayStartupUntil: "none",
@@ -192,7 +192,7 @@ MathJax.Hub.Config({
   //  this value to true.
   //
   skipStartupTypeset: false,
-  
+
   //
   //  A list of element ID's that are the ones to process for mathematics
   //  when any of the Hub typesetting calls (Typeset, Process, Update, etc)
@@ -211,9 +211,9 @@ MathJax.Hub.Config({
   //  typesetting of the page.  This value controls whether MathJax will
   //  reposition the browser to the #hash location from the page URL after
   //  typesetting for the page.
-  //  
+  //
   positionToHash: true,
-  
+
   //
   //  These control whether to attach the MathJax contextual menu to the
   //  expressions typeset by MathJax.  Since the code for handling
@@ -221,7 +221,7 @@ MathJax.Hub.Config({
   //  controlled separately via (showMathMenuMSIE).  The latter is now
   //  deprecated in favor of the MathJax contextual menu settings for
   //  MathPlayer.
-  //  
+  //
   //  These values used to be listed in the separate output jax, but
   //  have been moved to this more central location since they are shared
   //  by all output jax.
@@ -233,7 +233,7 @@ MathJax.Hub.Config({
   //
   //  The default settings for the MathJax contextual menu (overridden by
   //  the MathJax cookie when users change the menu settings).
-  //  
+  //
   menuSettings: {
     zoom: "None",        //  when to do MathZoom
     CTRL: false,         //    require CTRL for MathZoom?
@@ -254,9 +254,9 @@ MathJax.Hub.Config({
     inTabOrder: true,    //  set to true if math elements should be included in the tabindex
     semantics: false     //  add semantics tag with original form in MathML output
   },
-  
+
   //
-  //  The message and style for when there is a processing error handling 
+  //  The message and style for when there is a processing error handling
   //  the mathematics (something has gone wrong with the input or output
   //  jax that prevents it from operating properly).
   //
@@ -265,7 +265,7 @@ MathJax.Hub.Config({
     style: {color: "#CC0000", "font-style":"italic"}  // style for message
   },
 
-  
+
   //============================================================================
   //
   //  These parameters control the tex2jax preprocessor (when you have included
@@ -296,7 +296,7 @@ MathJax.Hub.Config({
       ['$$','$$'],
       ['\\[','\\]']
     ],
-    
+
     //
     //  This array lists the names of the tags whose contents should not be
     //  processed by tex2jax (other than to look for ignore/process classes
@@ -329,7 +329,7 @@ MathJax.Hub.Config({
     //  ignored above.
     //
     processClass: "tex2jax_process",
-    
+
     //
     //  Set to "true" to allow \$ to produce a dollar without starting in-line
     //  math mode.  If you uncomment the ['$','$'] line above, you should change
@@ -348,7 +348,7 @@ MathJax.Hub.Config({
     //  Controls whether tex2jax processes \ref{...} commands outside
     //  of math mode.  Set to "false" to prevent processing of \ref
     //  except within math mode.
-    //  
+    //
     processRefs: true,
 
     //
@@ -361,14 +361,14 @@ MathJax.Hub.Config({
     //  to an array containing the description of an HTML snippet in order
     //  to use the same preview for all equations on the page (e.g., you
     //  could have it say "[math]" or load an image).
-    //  
+    //
     //  E.g.,     preview: ["[math]"],
     //  or        preview: [["img",{src: "http://myserver.com/images/mypic.jpg"}]]
-    //  
+    //
     preview: "TeX"
-    
+
   },
-  
+
   //============================================================================
   //
   //  These parameters control the asciimath2jax preprocessor (when you have included
@@ -416,7 +416,7 @@ MathJax.Hub.Config({
     //  as ignored above.
     //
     processClass: "asciimath2jax_process",
-    
+
     //  Controls whether asciimath2jax inserts MathJax_Preview spans to make a
     //  preview available, and what preview to use, when it locates in-line
     //  and display mathetics on the page.  The default is "AsciiMath", which
@@ -426,21 +426,21 @@ MathJax.Hub.Config({
     //  to an array containing the description of an HTML snippet in order
     //  to use the same preview for all equations on the page (e.g., you
     //  could have it say "[math]" or load an image).
-    //  
+    //
     //  E.g.,     preview: ["[math]"],
     //  or        preview: [["img",{src: "http://myserver.com/images/mypic.jpg"}]]
-    //  
+    //
     preview: "AsciiMath"
-    
+
   },
-  
+
   //============================================================================
   //
   //  These parameters control the mml2jax preprocessor (when you have included
   //  "mml2jax.js" in the extensions list above).
   //
   mml2jax: {
-    
+
     //
     //  Controls whether mml2jax inserts MathJax_Preview spans to make a
     //  preview available, and what preview to use, when it locates
@@ -455,21 +455,21 @@ MathJax.Hub.Config({
     //  description of an HTML snippet in order to use the same preview for
     //  all equations on the page (e.g., you could have it say "[math]" or
     //  load an image).
-    //  
+    //
     //  E.g.,     preview: ["[math]"],
     //  or        preview: [["img",{src: "http://myserver.com/images/mypic.jpg"}]]
-    //  
+    //
     preview: "mathml"
-    
+
   },
-  
+
   //============================================================================
   //
   //  These parameters control the jsMath2jax preprocessor (when you have included
   //  "jsMath2jax.js" in the extensions list above).
   //
   jsMath2jax: {
-    
+
     //
     //  Controls whether jsMath2jax inserts MathJax_Preview spans to make a
     //  preview available, and what preview to use, when it locates
@@ -480,12 +480,12 @@ MathJax.Hub.Config({
     //  the description of an HTML snippet in order to use the same preview
     //  for all equations on the page (e.g., you could have it say "[math]"
     //  or load an image).
-    //  
+    //
     //  E.g.,     preview: ["[math]"],
     //  or        preview: [["img",{src: "http://myserver.com/images/mypic.jpg"}]]
-    //  
+    //
     preview: "TeX"
-    
+
   },
 
   //============================================================================
@@ -499,17 +499,17 @@ MathJax.Hub.Config({
     //  Set to "left" to place on the left-hand side.
     //
     TagSide: "right",
-    
+
     //
-    //  This is the amound of indentation (from right or left) for the tags.
+    //  This is the amount of indentation (from right or left) for the tags.
     //
     TagIndent: "0.8em",
-    
+
     //
     //  This is the width to use for the multline environment
     //
     MultLineWidth: "85%",
-    
+
     //
     //  List of macros to define.  These are of the form
     //      name: value
@@ -517,19 +517,19 @@ MathJax.Hub.Config({
     //  The 'value' can also be [value,n] where 'value' is the replacement
     //  text and 'n' is the number of parameters for the macro.
     //  Note that backslashes must be doubled in the replacement string.
-    //  
+    //
     //  E.g.,
-    //  
+    //
     //      Macros: {
     //        RR: '{\\bf R}',
     //        bold: ['{\\bf #1}', 1]
     //      }
     //
     Macros: {},
-    
+
     //
     //  Equation numbering parameters.
-    //  
+    //
     equationNumbers: {
       autoNumber: "none",  // "AMS" for standard AMS environment numbering,
                            //  or "all" to number all displayed equations
@@ -567,13 +567,13 @@ MathJax.Hub.Config({
         mathcolor: "red"
       }
     },
-  
+
     //
     //  Controls the TeX/unicode extension
     unicode: {
       fonts: "STIXGeneral,'Arial Unicode MS'"  // the default font list for unknown characters
     }
-    
+
   },
 
   //============================================================================
@@ -588,7 +588,7 @@ MathJax.Hub.Config({
     //  and varphi will correspond to the LaTeX macros of the same name.
     //
     fixphi: true,
-    
+
     //
     //  Determines whether the MathML should be marked so that the HTML-CSS
     //  and SVG output jax will use MathML spacing rules rather than TeX
@@ -596,7 +596,7 @@ MathJax.Hub.Config({
     //  MathML rules are used by default.
     //
     useMathMLspacing: true,
-    
+
     //
     //  Determines whether limits are placed above and below operators,
     //  or next to them.  (AsciiMath doesn't have separate in-line and
@@ -604,15 +604,15 @@ MathJax.Hub.Config({
     //  you have over its output)
     //
     displaystyle: true,
-    
+
     //
     //  The character to use for decimal places when scanning for a number.
     //  If you change it to ",", beware of things like "(1,2)" which would need
     //  to be changed to "(1, 2)" to be parsed correctly.
-    // 
+    //
     decimal: "."
   },
-  
+
   //============================================================================
   //
   //  These parameters control the MathML input jax.
@@ -624,25 +624,25 @@ MathJax.Hub.Config({
     //
     useMathMLspacing: false
   },
-  
+
   //============================================================================
   //
   //  These parameters control the HTML-CSS output jax.
   //
   "HTML-CSS": {
-    
+
     //
-    //  This controls the global scaling of mathematics as compared to the 
+    //  This controls the global scaling of mathematics as compared to the
     //  surrounding text.  Values between 100 and 133 are usually good choices.
     //
     scale: 100,
-    
+
     //
     //  Don't allow the matching of math text to surrounding text to use a scaling
     //  factor smaller than this.
     //
     minScaleAdjust: 50,
-    
+
     //
     //  This is a list of the fonts to look for on a user's computer in
     //  preference to using MathJax's web-based fonts.  These must
@@ -653,24 +653,24 @@ MathJax.Hub.Config({
     //  you want to force MathJax to use web-based or image fonts.
     //
     availableFonts: ["STIX","TeX"],
-    
+
     //
     //  This is the preferred font to use when more than one of those
     //  listed above is available.
     //
     preferredFont: "TeX",
-    
+
     //
     //  This is the web-based font to use when none of the fonts listed
     //  above are available on the user's computer.  Note that currently
     //  only the TeX font is available in a web-based form.  Set this to
-    //  
+    //
     //      webFont: null,
     //
     //  if you want to prevent the use of web-based fonts.
     //
     webFont: "TeX",
-    
+
     //
     //  This is the font to use for image fallback mode (when none of the
     //  fonts listed above are available and the browser doesn't support
@@ -678,7 +678,7 @@ MathJax.Hub.Config({
     //  only the TeX font is available as an image font.  Set this to
     //
     //      imageFont: null,
-    //  
+    //
     //  if you want to prevent the use of image fonts (e.g., you have not
     //  installed the image fonts on your server).  In this case, only
     //  browsers that support web-based fonts will be able to view your pages
@@ -690,39 +690,39 @@ MathJax.Hub.Config({
     //  MathJax TeX fonts.
     //
     imageFont: "TeX",
-    
+
     //
     //  This is the font-family CSS value used for characters that are not
     //  in the selected font (e.g., for web-based fonts, this is where to
     //  look for characters not included in the MathJax_* fonts).  IE will
     //  stop looking after the first font that exists on the system (even
     //  if it doesn't contain the needed character), so order these carefully.
-    //  
+    //
     undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",
 
     //
     //  This setting controls whether <mtext> elements will be typeset
     //  using the math fonts or the font of the surrounding text.  When
-    //  false, the mathvariant="normal" font will be used; when true, 
+    //  false, the mathvariant="normal" font will be used; when true,
     //  the font will be inherited from the surrounding paragraph.
-    //  
+    //
     mtextFontInherit: false,
 
     //
     //  These values control how "chunky" the display of mathematical
     //  expressions will be.
-    //  
+    //
     //  EqnChunk is the number of equations that will be typeset before
     //  they appear on screen.  Larger values make for less visual flicker
     //  as the equations are drawn, but also mean longer delays before the
     //  reader sees anything.
-    //  
+    //
     //  EqChunkFactor is the factor by which the EqnChunk will grow after each
     //  chunk is displayed.
-    //  
+    //
     //  EqChunkDelay is the time (in milliseconds) to delay between chunks
     //  (to allow the browser to respond to other user interaction).
-    //  
+    //
     //  Set EqnChunk to 1, EqnChunkFactor to 1, and EqnChunkDelay to 10 to get
     //  the behavior from MathJax v1.1 and below.
     //
@@ -748,7 +748,7 @@ MathJax.Hub.Config({
     //
     noReflows: true,
 
-    
+
     //
     //  These settings control automatic line breaking.  It is off by
     //  default, so only explicit line breaks are performed (via
@@ -759,9 +759,9 @@ MathJax.Hub.Config({
     //  might need to use linebreak="goodbreak" or linebreak="badbreak" by
     //  hand in order to get better effects.  It is also possible to modify
     //  the penalty values; contact the MathJax user's forum for details.
-    //  
+    //
     linebreaks: {
-      
+
       //
       //  This controls the automatic breaking of expressions:
       //    when false, only process linebreak="newline",
@@ -771,23 +771,23 @@ MathJax.Hub.Config({
 
       //
       //  This controls how wide the lines of mathematics can be
-      //  
+      //
       //  Use an explicit width like "30em" for a fixed width.
       //  Use "container" to compute the size from the containing element.
       //  Use "nn% container" for a portion of the container.
       //  Use "nn%" for a portion of the window size.
-      //  
+      //
       //  The container-based widths may be slower, and may not produce the
       //  expected results if the layout width changes due to the removal
       //  of previews or inclusion of mathematics during typesetting.
-      //  
+      //
       width: "container"
     },
 
     //
     //  This allows you to define or modify the styles used to display
     //  various math elements created by MathJax.
-    //  
+    //
     //  Example:
     //      styles: {
     //        ".MathJax .merror": {
@@ -797,7 +797,7 @@ MathJax.Hub.Config({
     //      }
     //
     styles: {},
-    
+
     //
     //  Configuration for <maction> tooltips
     //    (see also the #MathJax_Tooltip CSS in MathJax/jax/output/HTML-CSS/config.js,
@@ -809,7 +809,7 @@ MathJax.Hub.Config({
       offsetX: 10, offsetY: 5  // pixels to offset tooltip from mouse position
     }
   },
-  
+
   //============================================================================
   //
   //  These parameters control the NativeMML output jax.
@@ -817,7 +817,7 @@ MathJax.Hub.Config({
   NativeMML: {
 
     //
-    //  This controls the global scaling of mathematics as compared to the 
+    //  This controls the global scaling of mathematics as compared to the
     //  surrounding text.  Values between 100 and 133 are usually good choices.
     //
     scale: 100,
@@ -827,7 +827,7 @@ MathJax.Hub.Config({
     //  factor smaller than this.
     //
     minScaleAdjust: 50,
-    
+
     //  This option indicates whether MathJax should try to correct the
     //  x-height of equations to match the size of the surrounding text.
     matchFontHeight: true,
@@ -835,7 +835,7 @@ MathJax.Hub.Config({
     //
     //  This allows you to define or modify the styles used to display
     //  various math elements created by MathJax.
-    //  
+    //
     //  Example:
     //      styles: {
     //        ".MathJax_MathML": {
@@ -845,52 +845,52 @@ MathJax.Hub.Config({
     //
     styles: {}
   },
-  
+
   //============================================================================
   //
   //  These parameters control the SVG output jax.
   //
   "SVG": {
-    
+
     //
-    //  This controls the global scaling of mathematics as compared to the 
+    //  This controls the global scaling of mathematics as compared to the
     //  surrounding text.  Values between 100 and 133 are usually good choices.
     //
     scale: 100,
-    
+
     //
     //  Don't allow the matching of math text to surrounding text to use a scaling
     //  factor smaller than this.
     //
     minScaleAdjust: 50,
-    
+
     //
     //  This specifies the font to use for SVG output (currently the only
     //  one available)
     //
     font: "TeX",
-    
+
     //
     //  This is the stroke width to use for all character paths (1em = 1000
     //  units).  This is a cheap way of getting slightly lighter or darker
     //  characters
     //
     blacker: 10,
-    
+
     //
     //  This is the font-family CSS value used for characters that are not
     //  in the selected font.  IE will stop looking after the first font
     //  that exists on the system (even if it doesn't contain the needed
     //  character), so order these carefully.
-    //  
+    //
     undefinedFamily: "STIXGeneral,'Arial Unicode MS',serif",
 
     //
     //  This setting controls whether <mtext> elements will be typeset
     //  using the math fonts or the font of the surrounding text.  When
-    //  false, the mathvariant="normal" font will be used; when true, 
+    //  false, the mathvariant="normal" font will be used; when true,
     //  the font will be inherited from the surrounding paragraph.
-    //  
+    //
     mtextFontInherit: false,
 
     //
@@ -900,24 +900,24 @@ MathJax.Hub.Config({
     //  nesting in order to produce a more efficient markup, but if you
     //  want to use CSS to style the elements as if they were MathML, you
     //  might need to set this to true.
-    //  
+    //
     addMMLclasses: false,
 
     //
     //  These values control how "chunky" the display of mathematical
     //  expressions will be.
-    //  
+    //
     //  EqnChunk is the number of equations that will be typeset before
     //  they appear on screen.  Larger values make for less visual flicker
     //  as the equations are drawn, but also mean longer delays before the
     //  reader sees anything.
-    //  
+    //
     //  EqChunkFactor is the factor by which the EqnChunk will grow after each
     //  chunk is displayed.
-    //  
+    //
     //  EqChunkDelay is the time (in milliseconds) to delay between chunks
     //  (to allow the browser to respond to other user interaction).
-    //  
+    //
     //  Set EqnChunk to 1, EqnChunkFactor to 1, and EwnChunkDelay to 10 to get
     //  the behavior from MathJax v1.1 and below.
     //
@@ -939,9 +939,9 @@ MathJax.Hub.Config({
     //  might need to use linebreak="goodbreak" or linebreak="badbreak" by
     //  hand in order to get better effects.  It is also possible to modify
     //  the penalty values; contact the MathJax user's forum for details.
-    //  
+    //
     linebreaks: {
-      
+
       //
       //  This controls the automatic breaking of expressions:
       //    when false, only process linebreak="newline",
@@ -951,16 +951,16 @@ MathJax.Hub.Config({
 
       //
       //  This controls how wide the lines of mathematics can be
-      //  
+      //
       //  Use an explicit width like "30em" for a fixed width.
       //  Use "container" to compute the size from the containing element.
       //  Use "nn% container" for a portion of the container.
       //  Use "nn%" for a portion of the window size.
-      //  
+      //
       //  The container-based widths may be slower, and may not produce the
       //  expected results if the layout width changes due to the removal
       //  of previews or inclusion of mathematics during typesetting.
-      //  
+      //
       width: "container"
     },
 
@@ -968,7 +968,7 @@ MathJax.Hub.Config({
     //  These are the styles used for merror elements in SVG output.  Note
     //  that only a limited number of style attributes are supported by
     //  SVG, but you can at least change the colors and borders.
-    //  
+    //
     //
     merrorStyle: {
       fontSize:"90%", color:"#C00", background:"#FF8",
@@ -978,7 +978,7 @@ MathJax.Hub.Config({
     //
     //  This allows you to define or modify the styles used to display
     //  various math elements created by MathJax.
-    //  
+    //
     //  Example:
     //      styles: {
     //        ".MathJax .merror": {
@@ -988,7 +988,7 @@ MathJax.Hub.Config({
     //      }
     //
     styles: {},
-    
+
     //
     //  Configuration for <maction> tooltips
     //    (see also the #MathJax_Tooltip CSS in MathJax/jax/output/SVG/config.js,
@@ -1000,10 +1000,10 @@ MathJax.Hub.Config({
       offsetX: 10, offsetY: 5  // pixels to offset tooltip from mouse position
     }
   },
-  
+
   //============================================================================
   //
-  //  These parameters control the contextual menus that are available on the 
+  //  These parameters control the contextual menus that are available on the
   //  mathematics within the page (provided the showMathMenu value is true above).
   //
   MathMenu: {
@@ -1012,9 +1012,9 @@ MathJax.Hub.Config({
     //  contextual menu.  When the mouse is still over a submenu label for
     //  this long, the menu will appear.  (The menu also will appear if you
     //  click on the label.)  It is in milliseconds.
-    //  
+    //
     delay: 150,
-    
+
     //
     //  This is the URL for the MathJax Help menu item.
     //
@@ -1030,7 +1030,7 @@ MathJax.Hub.Config({
     showFontMenu: false,
     showContext:  false,
     showDiscoverable: false,
-    
+
     //
     // These are the settings for the Annotation menu. If the <math> root has
     // a <semantics> child that contains one of the following annotation
@@ -1055,19 +1055,19 @@ MathJax.Hub.Config({
       directories: "no", personalbar: "no", resizable: "yes", scrollbars: "yes",
       width: 100, height: 50
     },
-    
+
     //
     //  This allows you to change the CSS that controls the menu
     //  appearance.  See the extensions/MathMenu.js file for details
     //  of the default settings.
     //
     styles: {}
-    
+
   },
-  
+
   //============================================================================
   //
-  //  These parameters control the contextual menus that are available on the 
+  //  These parameters control the contextual menus that are available on the
   //  mathematics within the page (provided the showMathMenu value is true above).
   //
   MathEvents: {
@@ -1075,7 +1075,7 @@ MathJax.Hub.Config({
     //  This is the time required for the mouse to be held still over a
     //  typeset equation in order for it to count as a hover (used when the
     //  zoom trigger is "Hover").  It is in milliseconds.
-    //  
+    //
     hover: 500
   },
 
