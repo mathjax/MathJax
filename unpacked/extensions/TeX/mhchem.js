@@ -10,7 +10,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2018 The MathJax Consortium
+ *  Copyright (c) 2011-2019 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ if (MathJax.Extension["TeX/mhchem"]) {
 } else {
   
 MathJax.Extension["TeX/mhchem"] = {
-  version: "2.7.5",
+  version: "2.7.6",
   config: MathJax.Hub.CombineConfig("TeX.mhchem",{
     legacy: true
   })

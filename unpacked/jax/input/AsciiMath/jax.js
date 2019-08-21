@@ -24,7 +24,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2012-2018 The MathJax Consortium
+ *  Copyright (c) 2012-2019 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
