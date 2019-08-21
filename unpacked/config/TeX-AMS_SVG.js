@@ -2,7 +2,7 @@
  *
  *  /MathJax/unpacked/config/TeX-AMS_SVG.js
  *  
- *  Copyright (c) 2010-2018 The MathJax Consortium
+ *  Copyright (c) 2010-2019 The MathJax Consortium
  *
  *  Part of the MathJax library.
  *  See http://www.mathjax.org for details.

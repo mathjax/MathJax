@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2018 The MathJax Consortium
+ *  Copyright (c) 2013-2019 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 
 MathJax.OutputJax.CommonHTML = MathJax.OutputJax({
   id: "CommonHTML",
-  version: "2.7.5",
+  version: "2.7.6",
   directory: MathJax.OutputJax.directory + "/CommonHTML",
   extensionDir: MathJax.OutputJax.extensionDir + "/CommonHTML",
   autoloadDir: MathJax.OutputJax.directory + "/CommonHTML/autoload",
