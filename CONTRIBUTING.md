@@ -23,10 +23,10 @@ There are lots and lots of ways to get involved, this document covers:
 
 If you're about to raise an issue because you think you've found a
 problem with MathJax, or you'd like to make a request for a new
-feature in the codebase, or any other reason… please read this first.
+feature in the codebase, or any other reason, please read this first.
 
-The GitHub issue tracker is the preferred channel for [bug reports](#bug-reports),
-[feature requests](#feature-requests), [change requests](#change-requests) and [submitting pull
+The [MathJax issue tracker](https://github.com/mathjax/MathJax-full/issues) is the preferred channel for [bug reports](#bug-reports),
+[feature requests](#feature-requests), [change requests](#change-requests), and [submitting pull
 requests](#submitting-pull-requests), but please respect the following restrictions:
 
 * Please **search for existing issues**. Help us keep duplicate issues
