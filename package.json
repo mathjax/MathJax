@@ -36,12 +36,12 @@
     "line": "echo '--------------------------------------------'",
     "title": "npm run --silent line && npm run --silent message --mathjax:message=\"${npm_package_config_title}\"",
     "preinstall:mj3": "npm run --silent title --mathjax:title='Installing MathJax...'",
-    "install:mj3": "npm install git://github.com/mathjax/MathJax-v3",
+    "install:mj3": "npm install git://github.com/mathjax/MathJax-src",
     "preinstall:mj3-deps": "npm run --silent message --mathjax:message='Installing MathJax Dependencies...'",
-    "install:mj3-deps": "cd node_modules/mathjax3 && npm install",
+    "install:mj3-deps": "cd node_modules/mathjax-full && npm install",
     "install:all": "npm run --silent install:mj3 && npm run --silent install:mj3-deps",
     "precompile": "npm run --silent title --mathjax:title='Compiling MathJax...'",
-    "compile": "cd node_modules/mathjax3 && npx tsc && cp mathjax3-ts/input/tex/mhchem/mhchem_* mathjax3/input/tex/mhchem",
+    "compile": "cd node_modules/mathjax-full && npm run --silent compile",
     "precomponents": "npm run --silent title --mathjax:title='Building MathJax Components...'",
     "components": "cd node_modules/mathjax3 && npm run --silent make-components | grep 'Building\\|Webpacking\\|Copying\\|npx'",
     "premove": "npm run --silent title --mathjax:title='Moving MathJax Components...'",
@@ -51,6 +51,6 @@
     "postmake-es5": "npm run --silent title --mathjax:title='Cleaning Up...' && npm run --silent clean:node"
   },
   "dependencies": {
-    "mathjax3": "git://github.com/mathjax/MathJax-v3.git"
+    "mathjax3": "git://github.com/mathjax/MathJax-src.git"
   }
 }
