@@ -26,7 +26,7 @@ problem with MathJax, or you'd like to make a request for a new
 feature in the codebase, or any other reason, please read this first.
 
 The [MathJax issue
-tracker](https://github.com/mathjax/MathJax-full/issues) is the
+tracker](https://github.com/mathjax/MathJax/issues) is the
 preferred channel for [bug reports](#bug-reports), [feature
 requests](#feature-requests), [change requests](#change-requests), and
 [submitting pull requests](#submitting-pull-requests), but please
@@ -54,10 +54,10 @@ Guidelines for bug reports:
 
 2. **Check if the issue has been fixed** &mdash; look for [closed
    issues in the current
-   milestone](https://github.com/mathjax/MathJax-full/issues?q=is%3Aclosed)
+   milestone](https://github.com/mathjax/MathJax/issues?q=is%3Aclosed)
    or try to reproduce it using the latest `develop` branch. Please
    note that you will need to
-   [compile MathJax and make the components](https://docs.mathjax/org/en/latest/web/hosting.html#getting-mathjax-via-git)
+   [compile MathJax and make the components](https://docs.mathjax.org/en/latest/web/hosting.html#getting-mathjax-via-git)
    in order to test MathJax from the source repository.
 
 3. **Share a live sample of the problem** &mdash; without a live page
@@ -81,7 +81,7 @@ Guidelines for bug reports:
    embed it directly into your GitHub issue.
 
 6. Use the [Bug Report Template](#template) below or [click this
-   link](https://github.com/MathJax/MathJax-full/issues/new?title=Bug%3A&body=%23%23%23%20Issue%20Summary%0A%0A%23%23%23%20Steps%20to%20Reproduce%0A%0A1.%20This%20is%20the%20first%20step%0A%0AThis%20is%20a%20bug%20because...%0A%0A%23%23%23%20Technical%20details%0A%0A*%20MathJax%20Version%3A%20master%20-%20latest%20commit%3A%20%20INSERT%20COMMIT%20REF%0A*%20Client%20OS%3A%20%0A*%20Browser%3A%20%0A*%20)
+   link](https://github.com/MathJax/MathJax/issues/new?title=Bug%3A&body=%23%23%23%20Issue%20Summary%0A%0A%23%23%23%20Steps%20to%20Reproduce%0A%0A1.%20This%20is%20the%20first%20step%0A%0AThis%20is%20a%20bug%20because...%0A%0A%23%23%23%20Technical%20details%0A%0A*%20MathJax%20Version%3A%20master%20-%20latest%20commit%3A%20%20INSERT%20COMMIT%20REF%0A*%20Client%20OS%3A%20%0A*%20Browser%3A%20%0A*%20)
    to start creating a bug report with the template automatically.
 
 A good bug report shouldn't leave others needing to request
@@ -146,26 +146,26 @@ a refactor, or an improvement to a feature, etc., please be sure to:
 
 ## Working on MathJax core
 
-You want to contribute code? Fantastic! Let's get you started.
+You want to contribute code? We describe how below.  First, note that the MathJax source code is in the <https://github.com/mathjax/MathJax-src> repository, not the <https://github.com/mathjax/MathJax> repository, which contains the packaged component files for distribution on CDNs and the [mathjax npm package](https://www.npmjs.com/package/mathjax) (the source code is included in the [mathjax-full npm package](https://www.npmjs.com/package/mathjax-src)).
 
 ### Key Branches & Tags
 
-MathJax uses several permanent branches in the [MathJax source repository](https://github.com/mathjax/MathJax-full):
+MathJax uses several permanent branches in the [MathJax source repository](https://github.com/mathjax/MathJax-src):
 
-- **[develop](https://github.com/mathjax/MathJax-full/tree/develop)**
+- **[develop](https://github.com/mathjax/MathJax-src/tree/develop)**
   is the development branch. All work on the next release happens here
   so you should generally branch off `develop` if you are going to
   submit  a pull request. Do **NOT** use this branch for a production
   site.
 
-- **[master](https://github.com/mathjax/MathJax-full)** contains the latest
+- **[master](https://github.com/mathjax/MathJax-src)** contains the latest
   release of MathJax. This branch may be used in production. Do 
   **NOT** use this branch to work on MathJax's source.
 
 These branches reflect version 3 of MathJax, which is substantially
 different from the version 2 codebase.  Version 2 will continue to be
 maintained while web sites transition to version 3, with work being
-done using the following branches in the [MathJax distribution
+done using the following branches  in the [MathJax distribution
 repository](https://github.com/mathjax/MathJax):
 
 - **[legacy-v2-develop](https://github.com/mathjax/MathJax/tree/legacy-v2-develop)** 

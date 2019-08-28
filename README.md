@@ -58,7 +58,7 @@ offer MathJax to the web.  In version 2, the files used on the web
 were also the source files for MathJax, but in version 3, the source
 files are no longer on the CDN, as they are not what are run in the
 browser.  Instead, the source files are available in a separate
-[MathJax source repository](https://github.com/mathjax/MathJax-full/).
+[MathJax source repository](https://github.com/mathjax/MathJax-src/).
 
 The components are stored in the `es5` director, and are in ES5 format
 for the widest possible compatibility.  In the future, we are likely
@@ -73,7 +73,7 @@ Note that since the contents of this repository are generated
 automatically, you should not submit pull requests that modify the
 contents of the `es5` directory.  If you wish to submit a modification
 to MathJax, you should make a pull request in the [MathJax source
-repository](https://github.com/mathjax/MathJax-full).
+repository](https://github.com/mathjax/MathJax-src).
 
 ## Community
 
@@ -81,7 +81,7 @@ The main MathJax website is <http://www.mathjax.org>, and it includes
 announcements and other important information.  A [MathJax user
 forum](http://groups.google.com/group/mathjax-users) for asking
 questions and getting assistance is hosted at Google, and the [MathJax
-bug tracker](https://github.com/mathjax/MathJax-full/issues) is hosted
+bug tracker](https://github.com/mathjax/MathJax/issues) is hosted
 at GitHub.
 
 Before reporting a bug, please check that it has not already been
@@ -93,9 +93,9 @@ bug tracker) for questions about how to use MathJax.
 
 * [MathJax Documentation](https://docs.mathjax.org)
 * [MathJax Components](https://github.com/mathjax/MathJax)
-* [MathJax Source Code](https://github.com/mathjax/MathJax-full)
+* [MathJax Source Code](https://github.com/mathjax/MathJax-src)
 * [MathJax Web Examples](https://github.com/mathjax/MathJax-demos-web)
 * [MathJax Node Examples](https://github.com/mathjax/MathJax-demos-node)
-* [MathJax Bug Tracker](https://github.com/mathjax/MathJax-full/issues)
+* [MathJax Bug Tracker](https://github.com/mathjax/MathJax/issues)
 * [MathJax Users' Group](http://groups.google.com/group/mathjax-users)
 
