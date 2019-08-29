@@ -43,14 +43,14 @@
     "precompile": "npm run --silent title --mathjax:title='Compiling MathJax...'",
     "compile": "cd node_modules/mathjax-full && npm run --silent compile",
     "precomponents": "npm run --silent title --mathjax:title='Building MathJax Components...'",
-    "components": "cd node_modules/mathjax3 && npm run --silent make-components | grep 'Building\\|Webpacking\\|Copying\\|npx'",
+    "components": "cd node_modules/mathjax-full && npm run --silent make-components",
     "premove": "npm run --silent title --mathjax:title='Moving MathJax Components...'",
-    "move": "npm run --silent clean:es5 && mv node_modules/mathjax3/es5 .",
+    "move": "npm run --silent clean:es5 && mv node_modules/mathjax-full/es5 .",
     "premake-es5": "npm run --silent clean:node",
     "make-es5": "npm run --silent install:all && npm run --silent compile && npm run --silent components && npm run --silent move",
     "postmake-es5": "npm run --silent title --mathjax:title='Cleaning Up...' && npm run --silent clean:node"
   },
   "dependencies": {
-    "mathjax3": "git://github.com/mathjax/MathJax-src.git"
+    "mathjax-full": "git://github.com/mathjax/MathJax-src.git"
   }
 }
