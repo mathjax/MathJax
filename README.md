@@ -27,7 +27,8 @@ Some of the main features of MathJax include:
 
 - Powerful API for integration with other web applications
 
-See <http://www.mathjax.org/> for additional details.
+See <http://www.mathjax.org/> for additional details about MathJax,
+and <https://docs.mathjax.org> for the MathJax documentation.
 
 ## MathJax Components
 
@@ -53,17 +54,102 @@ directly.
 ## What's in this Repository
 
 This repository contains only the component files for MathJax, not the
-source code for MathJax.  These are the files served by the CDNs that
-offer MathJax to the web.  In version 2, the files used on the web
-were also the source files for MathJax, but in version 3, the source
-files are no longer on the CDN, as they are not what are run in the
-browser.  Instead, the source files are available in a separate
-[MathJax source repository](https://github.com/mathjax/MathJax-src/).
+source code for MathJax (which are available in a separate [MathJax
+source repository](https://github.com/mathjax/MathJax-src/)).  These
+component files are the ones served by the CDNs that offer MathJax to
+the web.  In version 2, the files used on the web were also the source
+files for MathJax, but in version 3, the source files are no longer on
+the CDN, as they are not what are run in the browser.
 
 The components are stored in the `es5` director, and are in ES5 format
-for the widest possible compatibility.  In the future, we are likely
-to make an `es6` directory for ES6 versions of the components.  The
-`es5` directory is generated automatically from the contents of the
+for the widest possible compatibility.  In the future, we may make an
+`es6` directory containing ES6 versions of the components.
+
+## Installation and Use
+
+### Using MathJax components from a CDN on the web
+
+If you are loading MathJax from a CDN into a web page, there is no
+need to install anything.  Simply use a `script` tag that loads
+MathJax from the CDN.  E.g.,
+
+    <script id="MathJax-script" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.0.0/latest.js?tex-mml-chtml.js">
+    </script>
+
+See the
+[documentation](https//docs.mathjax.org/en/latest/index.html#browser-components)
+for more details.
+
+### Hosting your own copy of the MathJax Components
+
+If you want to host MathJax from your own server, you can do so by
+installing the `mathjax` package using `npm` and moving the `es5`
+directory to an appropriate location on your server:
+
+    npm install mathjax
+    mv node_modules/mathjax/es5 <path-to-server-location>/mathjax
+
+Alternatively, you can get the files via github:
+
+    git clone https://github.com/mathjax/MathJax.git mj-tmp
+    mv mj-tmp/es5 <path-to-server-location>/mathjax
+    rm -rf mj-tmp
+
+Then (in either case) you can use a script tag like the following:
+
+    <script id="MathJax-script" async
+        src="<url-to-your-site>/mathjax/tex-chtml.js"></script>
+
+where `<url-to-your-site>` is replaced by the URL to the location
+where you moved the MathJax files above.
+
+See the
+[documentation](https://docs.mathjax.org/en/latest/web/hosting.html)
+for details.
+
+### Using MathJax components in a node application
+
+To use MathJax components in a node application, install the `mathjax`
+package:
+
+    npm install mathjax
+
+and require `mathjax` within your application:
+
+    require('mathjax').init({ ... }).then((MathJax) => { ... });
+    
+where the first `{ ... }` is a MathJax configuration, and the second
+`{ ... }` is the code to run after MathJax has been loaded.  E.g.
+
+    require('mathjax').init({
+      loader: {load: ['input/tex', 'output/svg']}
+    }).then((MathJax) => {
+      const svg = MathJax.tex2svg('\\frac{1}{x^2-1}', {display: true});
+      console.log(MathJax.startup.adaptor.outerHTML(svg));
+    }).catch((err) => console.log(err.message));
+
+    
+See the
+[documentation](https//docs.mathjax.org/en/latest/index.html#server-nodejs)
+for more details.
+
+## Reducing the Size of the Components Directory
+
+Since the `es5` directory contains *all* the component files, so if
+you are only planning one use one configuration, you can reduce the
+size of the MathJax directory by removing unused components. For
+example, if you are using the `tex-chtml` component, then you can
+remove the `tex-mml-chtml.js`, `tex-svg.js`, `tex-mml-svg.js`,
+`tex-chtml-full.js`, and `tex-svg-full.js` configurations, which will
+save considerable space.  Indeed, you should be able to remove
+everything other than `tex-chtml.js` and the `input/tex/extensions`
+directory.
+
+
+## The Component Files and Pull Requests
+
+The `es5` directory is generated automatically from the contents of the
 MathJax source repository.  You can rebuild the components using the
 command
 
@@ -75,7 +161,7 @@ contents of the `es5` directory.  If you wish to submit a modification
 to MathJax, you should make a pull request in the [MathJax source
 repository](https://github.com/mathjax/MathJax-src).
 
-## Community
+## MathJax Community
 
 The main MathJax website is <http://www.mathjax.org>, and it includes
 announcements and other important information.  A [MathJax user
@@ -89,7 +175,7 @@ reported.  Also, please use the bug tracker (rather than the help
 forum) for reporting bugs, and use the user's forum (rather than the
 bug tracker) for questions about how to use MathJax.
 
-## Resources
+## MathJax Resources
 
 * [MathJax Documentation](https://docs.mathjax.org)
 * [MathJax Components](https://github.com/mathjax/MathJax)
