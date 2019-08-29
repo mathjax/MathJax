@@ -139,12 +139,15 @@ for more details.
 Since the `es5` directory contains *all* the component files, so if
 you are only planning one use one configuration, you can reduce the
 size of the MathJax directory by removing unused components. For
-example, if you are using the `tex-chtml` component, then you can
+example, if you are using the `tex-chtml.js` component, then you can
 remove the `tex-mml-chtml.js`, `tex-svg.js`, `tex-mml-svg.js`,
 `tex-chtml-full.js`, and `tex-svg-full.js` configurations, which will
 save considerable space.  Indeed, you should be able to remove
-everything other than `tex-chtml.js` and the `input/tex/extensions`
-directory.
+everything other than `tex-chtml.js`, and the `input/tex/extensions`, `output/chtml/fonts/woff-v2`, `adaptors`, `a11y`, and `sre` directories.  If you are using the results only on the web, you can remove `adaptors` as well.  
+
+If you are not using A11Y support (e.g., speech generation, or semantic enrichment), then you can remove `a11y` and `sre` as well (though in this case you may need to disable the assistive tools in the MathJax contextual menu in order to avoid MathJax trying to load them when they aren't there).
+
+If you are using SVG rather that CommonHTML output (e.g., `tex-svg.js` rather than `tex-chtml.js`), you can remove the `output/chtml/fonts/woff-v2` directopry.  If you are using MathML input rather than TeX (e.g., `mml-chtml.js` rather than `tex-chtml.js`), then you can remove `input/tex/extensions` as well.
 
 
 ## The Component Files and Pull Requests
