@@ -1546,8 +1546,9 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
 
             if (degree_node.nodeName === 'ci' ||
               degree_node.nodeName === 'cn') {
-                if (CToP.getTextContent(degree_node) == '1') {
-                  CToP.applyTransform(mrow,bvar,0);
+                var n = CToP.getTextContent(degree_node)
+                if (Number(n) == 1) {
+                  CToP.applyTransform(mrow, bvar, 0);
                   return;
                 }
               }
