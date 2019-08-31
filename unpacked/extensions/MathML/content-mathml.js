@@ -1540,22 +1540,25 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
       if (bvars.length === 0 && args.length === 2 && args[0].nodeName === 'list') {
         if (args[1].nodeName === 'lambda') {	// `d^(n+m)/(dx^n dy^m) f` form, through a lambda
 
-          function addDiff(mrow, n, degree_node) {
-            CToP.appendToken(mrow,'mo','\u2202');
-            var bvar = bvarNames[n];
+          /*
+          * Helper function to return a single presentation node containing
+          * the notation d^i or dx^i.
+          */
+          function diffNode(bvar_name_node, degree_node) {
+            var mrow = CToP.createElement('mrow')
+            CToP.appendToken(mrow, 'mo', '\u2202');
+            if (bvar_name_node) CToP.applyTransform(mrow, bvar_name_node, 0);
 
             if (degree_node.nodeName === 'ci' ||
               degree_node.nodeName === 'cn') {
-                var n = CToP.getTextContent(degree_node)
-                if (Number(n) == 1) {
-                  CToP.applyTransform(mrow, bvar, 0);
-                  return;
-                }
-              }
+              var n = CToP.getTextContent(degree_node);
+              if (Number(n) == 1) return mrow;
+            }
+
             var msup = CToP.createElement('msup');
-            CToP.applyTransform(msup, bvar, 0);
+            msup.appendChild(mrow);
             CToP.applyTransform(msup, degree_node, 0);
-            mrow.appendChild(msup);
+            return msup;
           }
 
           children = CToP.getChildren(args[1]);
@@ -1572,41 +1575,44 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
           }
 
           for (i = 0, l = lambdaSequence.length; i < l; i++ ) {
-            addDiff(bottomrow, i, lambdaSequence[i]);
+            var node = diffNode(bvarNames[i], lambdaSequence[i]);
+            bottomrow.appendChild(node);
           }
 
-          if (lambdaSequence.length != 1) {
-            var totalDegreeNode = CToP.createElement('apply')
-            totalDegreeNode.appendChild(CToP.createElement('plus'))
-            var numeric = 0;
-            for (i = 0, l = lambdaSequence.length; i<l; i++ ) {
-              var node = lambdaSequence[i];
-              var text = CToP.getTextContent(node);
-              var isNumber = /^\s*\d+\s*$/.test(text);
-              if (isNumber) {
-                numeric += Number(text);
-              } else {
-                totalDegreeNode.appendChild(node);
-              }
-            }
-            if (numeric != 0) CToP.appendToken(totalDegreeNode,'mn',String(numeric));
-
-            msup = CToP.createElement('msup');
-            CToP.appendToken(msup,'mo','\u2202');	// curly d
-            CToP.applyTransform(msup, totalDegreeNode, 0);
-            toprow.appendChild(msup);
-          } else {
-            var order = CToP.getTextContent(lambdaSequence[0])
-            if (Number(order) == 1) {
-              CToP.appendToken(toprow,'mo','\u2202');
+          // Compute the symbolic differential degree from adding the
+          // degrees implicitly given.
+          var non_numeric_terms = [];
+          var numeric_term = 0;
+          for (i = 0, l = lambdaSequence.length; i<l; i++ ) {
+            var node = lambdaSequence[i];
+            var text = CToP.getTextContent(node);
+            var isNumber = /^\s*\d+\s*$/.test(text);
+            if (isNumber) {
+              numeric_term += Number(text);
             } else {
-              msup = CToP.createElement('msup');
-              CToP.appendToken(msup,'mo','\u2202');	// curly d
-              CToP.appendToken(msup,'mn',String(order));
-              toprow.appendChild(msup);
+              non_numeric_terms.push(node);
             }
           }
 
+          var totalDegreeNode;
+          var l = non_numeric_terms.length;
+          if (l == 0) {
+            totalDegreeNode = CToP.createElement('ci');
+            CToP.setTextContent(totalDegreeNode, String(numeric_term));
+          } else {
+            totalDegreeNode = CToP.createElement('apply');
+            totalDegreeNode.appendChild(CToP.createElement('plus'));
+
+            for (var i = 0; i < l; i++) {
+              totalDegreeNode.appendChild(non_numeric_terms[i]);
+            }
+            if (numeric_term != 0) {
+              CToP.appendToken(totalDegreeNode,'mn',String(numeric_term));
+            }
+          }
+
+          var node = diffNode(false, totalDegreeNode);
+          toprow.appendChild(node);
         } else {	// `D_i_j f` form
           mrow = CToP.createElement('mrow');
           msub = CToP.createElement('msub');
