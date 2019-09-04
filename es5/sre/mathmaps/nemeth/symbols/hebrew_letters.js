@@ -1,0 +1,1 @@
+[{"locale":"nemeth"},{"category":"Lo","mappings":{"default":{"default":"⠄⡳⠭⠆⠂⠒⠢⠄"}},"key":"2135"},{"category":"Lo","mappings":{"default":{"default":"⠄⡳⠭⠆⠂⠒⠖⠄"}},"key":"2136"},{"category":"Lo","mappings":{"default":{"default":"⠄⡳⠭⠆⠂⠒⠶⠄"}},"key":"2137"},{"category":"Lo","mappings":{"default":{"default":"⠄⡳⠭⠆⠂⠒⠦⠄"}},"key":"2138"}]
