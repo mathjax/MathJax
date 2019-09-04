@@ -23,7 +23,7 @@
     "type": "git",
     "url": "git://github.com/mathjax/MathJax.git"
   },
-  "main": "es5/node-init.js",
+  "main": "es5/node-main.js",
   "files": [
     "/es5"
   ],
