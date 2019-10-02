@@ -90,7 +90,7 @@ directory to an appropriate location on your server:
     npm install mathjax
     mv node_modules/mathjax/es5 <path-to-server-location>/mathjax
 
-Alternatively, you can get the files via github:
+Alternatively, you can get the files via GitHub:
 
     git clone https://github.com/mathjax/MathJax.git mj-tmp
     mv mj-tmp/es5 <path-to-server-location>/mathjax
