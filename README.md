@@ -1,4 +1,4 @@
-# MathJax
+# Simple Math
 
 ## Beautiful math in all browsers
 
