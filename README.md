@@ -3,7 +3,7 @@
 ## Beautiful math in all browsers
 
 MathJax is an open-source JavaScript display engine for LaTeX, MathML,
-andAsciiMath notation that works in all modern browsers.  It was
+and AsciiMath notation that works in all modern browsers.  It was
 designed with the goal of consolidating the recent advances in web
 technologies into a single, definitive, math-on-the-web platform
 supporting the major browsers and operating systems.  It requires no
@@ -61,7 +61,7 @@ the web.  In version 2, the files used on the web were also the source
 files for MathJax, but in version 3, the source files are no longer on
 the CDN, as they are not what are run in the browser.
 
-The components are stored in the `es5` director, and are in ES5 format
+The components are stored in the `es5` directory, and are in ES5 format
 for the widest possible compatibility.  In the future, we may make an
 `es6` directory containing ES6 versions of the components.
 
@@ -90,7 +90,7 @@ directory to an appropriate location on your server:
     npm install mathjax
     mv node_modules/mathjax/es5 <path-to-server-location>/mathjax
 
-Alternatively, you can get the files via github:
+Alternatively, you can get the files via GitHub:
 
     git clone https://github.com/mathjax/MathJax.git mj-tmp
     mv mj-tmp/es5 <path-to-server-location>/mathjax
@@ -147,7 +147,7 @@ everything other than `tex-chtml.js`, and the `input/tex/extensions`, `output/ch
 
 If you are not using A11Y support (e.g., speech generation, or semantic enrichment), then you can remove `a11y` and `sre` as well (though in this case you may need to disable the assistive tools in the MathJax contextual menu in order to avoid MathJax trying to load them when they aren't there).
 
-If you are using SVG rather that CommonHTML output (e.g., `tex-svg.js` rather than `tex-chtml.js`), you can remove the `output/chtml/fonts/woff-v2` directopry.  If you are using MathML input rather than TeX (e.g., `mml-chtml.js` rather than `tex-chtml.js`), then you can remove `input/tex/extensions` as well.
+If you are using SVG rather that CommonHTML output (e.g., `tex-svg.js` rather than `tex-chtml.js`), you can remove the `output/chtml/fonts/woff-v2` directory.  If you are using MathML input rather than TeX (e.g., `mml-chtml.js` rather than `tex-chtml.js`), then you can remove `input/tex/extensions` as well.
 
 
 ## The Component Files and Pull Requests
