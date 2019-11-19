@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/CommonHTML/fonts/TeX/Main-Bold.js
+ *  /MathJax-v2/jax/output/CommonHTML/fonts/TeX/Main-Bold.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

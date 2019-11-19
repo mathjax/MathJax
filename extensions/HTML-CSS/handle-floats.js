@@ -1,5 +1,5 @@
 /*
- *  /MathJax/extensions/HTML-CSS/handle-floats.js
+ *  /MathJax-v2/extensions/HTML-CSS/handle-floats.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Extension["HTML-CSS/handle-floats"]={version:"2.7.6"};MathJax.Hub.Startup.signal.Post("HTML-CSS handle-floats Ready");MathJax.Ajax.loadComplete("[MathJax]/extensions/HTML-CSS/handle-floats.js");
+MathJax.Extension["HTML-CSS/handle-floats"]={version:"2.7.7"};MathJax.Hub.Startup.signal.Post("HTML-CSS handle-floats Ready");MathJax.Ajax.loadComplete("[MathJax]/extensions/HTML-CSS/handle-floats.js");

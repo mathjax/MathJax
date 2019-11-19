@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/NativeMML/jax.js
+ *  /MathJax-v2/jax/output/NativeMML/jax.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

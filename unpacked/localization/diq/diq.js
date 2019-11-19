@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("diq",null,{
   menuTitle: "Zazaki",
-  version: "2.7.6",
+  version: "2.7.7",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.6",
+        version: "2.7.7",
         isLoaded: true,
         strings: {
           MathProcessingError: "X\u0131raba kar\u00EA matematiki",

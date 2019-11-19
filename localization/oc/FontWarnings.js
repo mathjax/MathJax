@@ -1,5 +1,5 @@
 /*
- *  /MathJax/localization/oc/FontWarnings.js
+ *  /MathJax-v2/localization/oc/FontWarnings.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("oc","FontWarnings",{version:"2.7.6",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/oc/FontWarnings.js");
+MathJax.Localization.addTranslation("oc","FontWarnings",{version:"2.7.7",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/oc/FontWarnings.js");

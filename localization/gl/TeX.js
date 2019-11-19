@@ -1,5 +1,5 @@
 /*
- *  /MathJax/localization/gl/TeX.js
+ *  /MathJax-v2/localization/gl/TeX.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("gl","TeX",{version:"2.7.6",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/gl/TeX.js");
+MathJax.Localization.addTranslation("gl","TeX",{version:"2.7.7",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/gl/TeX.js");

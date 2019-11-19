@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/element/mml/optable/SupplementalArrowsA.js
+ *  /MathJax-v2/jax/element/mml/optable/SupplementalArrowsA.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

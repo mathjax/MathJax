@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/element/mml/optable/Dingbats.js
+ *  /MathJax-v2/jax/element/mml/optable/Dingbats.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

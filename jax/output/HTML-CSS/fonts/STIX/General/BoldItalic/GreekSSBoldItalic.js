@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/BoldItalic/GreekSSBoldItalic.js
+ *  /MathJax-v2/jax/output/HTML-CSS/fonts/STIX/General/BoldItalic/GreekSSBoldItalic.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

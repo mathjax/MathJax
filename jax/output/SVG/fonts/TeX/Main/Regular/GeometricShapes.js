@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/SVG/fonts/TeX/Main/Regular/GeometricShapes.js
+ *  /MathJax-v2/jax/output/SVG/fonts/TeX/Main/Regular/GeometricShapes.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

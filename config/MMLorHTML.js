@@ -1,5 +1,5 @@
 /*
- *  /MathJax/config/MMLorHTML.js
+ *  /MathJax-v2/config/MMLorHTML.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

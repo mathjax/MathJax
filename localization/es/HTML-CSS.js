@@ -1,5 +1,5 @@
 /*
- *  /MathJax/localization/es/HTML-CSS.js
+ *  /MathJax-v2/localization/es/HTML-CSS.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("es","HTML-CSS",{version:"2.7.6",isLoaded:true,strings:{LoadWebFont:"Cargando el tipo de letra web %1",CantLoadWebFont:"No se pudo cargar la fuente web %1",FirefoxCantLoadWebFont:"Firefox no puede cargar tipos de letra web desde un equipo remoto",CantFindFontUsing:"No se puede encontrar un tipo de letra v\u00E1lido mediante %1",WebFontsNotAvailable:"No hay fuentes web disponibles. Usando fuentes de imagen en su lugar"}});MathJax.Ajax.loadComplete("[MathJax]/localization/es/HTML-CSS.js");
+MathJax.Localization.addTranslation("es","HTML-CSS",{version:"2.7.7",isLoaded:true,strings:{LoadWebFont:"Cargando el tipo de letra web %1",CantLoadWebFont:"No se pudo cargar la fuente web %1",FirefoxCantLoadWebFont:"Firefox no puede cargar tipos de letra web desde un equipo remoto",CantFindFontUsing:"No se puede encontrar un tipo de letra v\u00E1lido mediante %1",WebFontsNotAvailable:"No hay fuentes web disponibles. Usando fuentes de imagen en su lugar"}});MathJax.Ajax.loadComplete("[MathJax]/localization/es/HTML-CSS.js");

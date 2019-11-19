@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/SVG/fonts/Gyre-Pagella/NonUnicode/Regular/Main.js
+ *  /MathJax-v2/jax/output/SVG/fonts/Gyre-Pagella/NonUnicode/Regular/Main.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
