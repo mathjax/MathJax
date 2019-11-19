@@ -50,7 +50,7 @@
     "make-es5": "npm run --silent install:all && npm run --silent compile && npm run --silent components && npm run --silent move",
     "postmake-es5": "npm run --silent title --mathjax:title='Cleaning Up...' && npm run --silent clean:node"
   },
-  "dependencies": {
+  "devDependencies": {
     "mathjax-full": "git://github.com/mathjax/MathJax-src.git"
   }
 }
