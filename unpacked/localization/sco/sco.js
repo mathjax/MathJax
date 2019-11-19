@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("sco",null,{
   menuTitle: "scots",
-  version: "2.7.6",
+  version: "2.7.7",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.6",
+        version: "2.7.7",
         isLoaded: true,
         strings: {
           MathProcessingError: "Maths processin mistak",

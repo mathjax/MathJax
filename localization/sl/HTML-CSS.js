@@ -1,5 +1,5 @@
 /*
- *  /MathJax/localization/sl/HTML-CSS.js
+ *  /MathJax-v2/localization/sl/HTML-CSS.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("sl","HTML-CSS",{version:"2.7.6",isLoaded:true,strings:{LoadWebFont:"Nalagam spletni font %1",CantLoadWebFont:"Spletne pisave %1 ni mogo\u010De nalo\u017Eiti",FirefoxCantLoadWebFont:"Firefox ne more nalo\u017Eiti spletnih pisav na oddaljenem gostitelju.",CantFindFontUsing:"Z uporabo %1 ne morem najti veljavne pisave.",WebFontsNotAvailable:"Web-Fonts niso na razpolago. Namesto njih uporabljam slikovne pisave."}});MathJax.Ajax.loadComplete("[MathJax]/localization/sl/HTML-CSS.js");
+MathJax.Localization.addTranslation("sl","HTML-CSS",{version:"2.7.7",isLoaded:true,strings:{LoadWebFont:"Nalagam spletni font %1",CantLoadWebFont:"Spletne pisave %1 ni mogo\u010De nalo\u017Eiti",FirefoxCantLoadWebFont:"Firefox ne more nalo\u017Eiti spletnih pisav na oddaljenem gostitelju.",CantFindFontUsing:"Z uporabo %1 ne morem najti veljavne pisave.",WebFontsNotAvailable:"Web-Fonts niso na razpolago. Namesto njih uporabljam slikovne pisave."}});MathJax.Ajax.loadComplete("[MathJax]/localization/sl/HTML-CSS.js");

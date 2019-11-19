@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sco","TeX",{
-        version: "2.7.6",
+        version: "2.7.7",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Eixtra apen brace or missin claise bracket",

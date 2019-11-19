@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Bold/NumberForms.js
+ *  /MathJax-v2/jax/output/HTML-CSS/fonts/STIX/General/Bold/NumberForms.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

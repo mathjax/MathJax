@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/SVG/fonts/TeX/Main/Regular/LetterlikeSymbols.js
+ *  /MathJax-v2/jax/output/SVG/fonts/TeX/Main/Regular/LetterlikeSymbols.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

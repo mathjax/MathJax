@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/element/mml/optable/MathOperators.js
+ *  /MathJax-v2/jax/element/mml/optable/MathOperators.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

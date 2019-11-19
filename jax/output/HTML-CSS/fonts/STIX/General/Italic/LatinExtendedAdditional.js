@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/HTML-CSS/fonts/STIX/General/Italic/LatinExtendedAdditional.js
+ *  /MathJax-v2/jax/output/HTML-CSS/fonts/STIX/General/Italic/LatinExtendedAdditional.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

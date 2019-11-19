@@ -78,7 +78,7 @@ MathJax.Extension["MathML/content-mathml"] = (function(HUB) {
   });
 
   var CToP = {
-    version: "2.7.6",
+    version: "2.7.7",
     settings: CONFIG,
 
     /* Transform the given <math> elements from Content MathML to Presentation MathML and replace the original elements

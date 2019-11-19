@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/SVG/fonts/TeX/AMS/Regular/EnclosedAlphanum.js
+ *  /MathJax-v2/jax/output/SVG/fonts/TeX/AMS/Regular/EnclosedAlphanum.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

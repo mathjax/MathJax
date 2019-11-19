@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,HTML) {
-  var VERSION = "2.7.6";
+  var VERSION = "2.7.7";
   
   HTMLCSS.allowWebFonts = false;
   

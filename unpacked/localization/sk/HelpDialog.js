@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sk","HelpDialog",{
-        version: "2.7.6",
+        version: "2.7.7",
         isLoaded: true,
         strings: {
           Help: "Pomoc k MathJaxu",

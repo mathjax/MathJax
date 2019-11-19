@@ -20,7 +20,7 @@
  */
 
 (function (SVG) {
-  var VERSION = "2.7.6";
+  var VERSION = "2.7.7";
 
   var DELIMITERS = SVG.FONTDATA.DELIMITERS;
 

@@ -1,5 +1,5 @@
 /*
- *  /MathJax/config/Safe.js
+ *  /MathJax-v2/config/Safe.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

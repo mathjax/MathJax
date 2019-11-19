@@ -1,5 +1,5 @@
 /*
- *  /MathJax/localization/oc/MathML.js
+ *  /MathJax-v2/localization/oc/MathML.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("oc","MathML",{version:"2.7.6",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/oc/MathML.js");
+MathJax.Localization.addTranslation("oc","MathML",{version:"2.7.7",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/oc/MathML.js");

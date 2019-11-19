@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/MathOperators.js
+ *  /MathJax-v2/jax/output/HTML-CSS/fonts/TeX/AMS/Regular/MathOperators.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

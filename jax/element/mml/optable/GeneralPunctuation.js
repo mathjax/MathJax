@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/element/mml/optable/GeneralPunctuation.js
+ *  /MathJax-v2/jax/element/mml/optable/GeneralPunctuation.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

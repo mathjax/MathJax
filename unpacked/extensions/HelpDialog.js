@@ -24,7 +24,7 @@
 (function (HUB,HTML,AJAX,OUTPUT,LOCALE) {
 
   var HELP = MathJax.Extension.Help = {
-    version: "2.7.6"
+    version: "2.7.7"
   };
 
   var STIXURL = "http://www.stixfonts.org/";

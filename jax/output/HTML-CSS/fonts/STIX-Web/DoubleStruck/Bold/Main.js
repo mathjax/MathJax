@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/output/HTML-CSS/fonts/STIX-Web/DoubleStruck/Bold/Main.js
+ *  /MathJax-v2/jax/output/HTML-CSS/fonts/STIX-Web/DoubleStruck/Bold/Main.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *

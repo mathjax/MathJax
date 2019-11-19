@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("lki","HelpDialog",{
-        version: "2.7.6",
+        version: "2.7.7",
         isLoaded: true,
         strings: {
           Help: "\u0631\u0627\u0647\u0646\u0645\u0627\u06CC MathJax",

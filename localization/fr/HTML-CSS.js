@@ -1,5 +1,5 @@
 /*
- *  /MathJax/localization/fr/HTML-CSS.js
+ *  /MathJax-v2/localization/fr/HTML-CSS.js
  *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("fr","HTML-CSS",{version:"2.7.6",isLoaded:true,strings:{LoadWebFont:"T\u00E9l\u00E9chargement de la police web %1",CantLoadWebFont:"Impossible de t\u00E9l\u00E9charger la police web %1",FirefoxCantLoadWebFont:"Firefox ne peut pas charger les polices web depuis un h\u00F4te distant",CantFindFontUsing:"Impossible de trouver une police valide en utilisant %1",WebFontsNotAvailable:"Polices web non disponibles. Les polices image seront utilis\u00E9es \u00E0 la place"}});MathJax.Ajax.loadComplete("[MathJax]/localization/fr/HTML-CSS.js");
+MathJax.Localization.addTranslation("fr","HTML-CSS",{version:"2.7.7",isLoaded:true,strings:{LoadWebFont:"T\u00E9l\u00E9chargement de la police web %1",CantLoadWebFont:"Impossible de t\u00E9l\u00E9charger la police web %1",FirefoxCantLoadWebFont:"Firefox ne peut pas charger les polices web depuis un h\u00F4te distant",CantFindFontUsing:"Impossible de trouver une police valide en utilisant %1",WebFontsNotAvailable:"Polices web non disponibles. Les polices image seront utilis\u00E9es \u00E0 la place"}});MathJax.Ajax.loadComplete("[MathJax]/localization/fr/HTML-CSS.js");
