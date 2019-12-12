@@ -78,7 +78,7 @@ MathJax from the CDN.  E.g.,
     </script>
 
 See the
-[documentation](https//docs.mathjax.org/en/latest/index.html#browser-components)
+[documentation](https://docs.mathjax.org/en/latest/index.html#browser-components)
 for more details.
 
 ### Hosting your own copy of the MathJax Components
