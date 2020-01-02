@@ -560,10 +560,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     EndRow: function () {
       var mtr = MML.mtr;
       if (!this.global.tag && this.numbered) {this.autoTag()}
-      if (this.global.tag && !this.global.notags) {
-        this.row = [this.getTag()].concat(this.row);
-        mtr = MML.mlabeledtr;
-      } else {this.clearTag()}
+      if (!this.global.notags) {
+        if (this.global.tag) {
+          this.row = [this.getTag()].concat(this.row);
+          mtr = MML.mlabeledtr;
+        } else {
+          this.clearTag();
+        }
+      }
       if (this.numbered) {delete this.global.notag}
       this.table.push(mtr.apply(MML,this.row)); this.row = [];
     },
