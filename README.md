@@ -1,6 +1,8 @@
 # MathJax
-
 ## Beautiful math in all browsers
+
+<img class="shield" alt="GitHub release version" src="https://img.shields.io/github/v/release/mathjax/MathJax-src?sort=semver"> <img class="shield" alt="GitHub release version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2?label=release v2">
+<a class="reference external image-reference" href="http://www.numfocus.org"><img alt="powered-by NumFocus" src="https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&amp;amp;colorA=E1523D&amp;amp;colorB=007D8A"></a>
 
 MathJax is an open-source JavaScript display engine for LaTeX, MathML,
 and AsciiMath notation that works in all modern browsers.  It was
@@ -87,8 +89,10 @@ If you want to host MathJax from your own server, you can do so by
 installing the `mathjax` package using `npm` and moving the `es5`
 directory to an appropriate location on your server:
 
-    npm install mathjax
+    npm install mathjax@3
     mv node_modules/mathjax/es5 <path-to-server-location>/mathjax
+
+Note that we are still making updates to version 2, so include `@3` when you install, since the latest chronological version may not be version 3.
 
 Alternatively, you can get the files via GitHub:
 
@@ -110,12 +114,13 @@ for details.
 
 ### Using MathJax components in a node application
 
-To use MathJax components in a node application, install the `mathjax`
-package:
+To use MathJax components in a node application, install the `mathjax` package:
 
-    npm install mathjax
+    npm install mathjax@3
 
-and require `mathjax` within your application:
+(we are still making updates to version 2, so you should include `@3` since the latest chronological version may not be version 3).
+
+Then require `mathjax` within your application:
 
     require('mathjax').init({ ... }).then((MathJax) => { ... });
     
@@ -147,7 +152,7 @@ everything other than `tex-chtml.js`, and the `input/tex/extensions`, `output/ch
 
 If you are not using A11Y support (e.g., speech generation, or semantic enrichment), then you can remove `a11y` and `sre` as well (though in this case you may need to disable the assistive tools in the MathJax contextual menu in order to avoid MathJax trying to load them when they aren't there).
 
-If you are using SVG rather that CommonHTML output (e.g., `tex-svg.js` rather than `tex-chtml.js`), you can remove the `output/chtml/fonts/woff-v2` directory.  If you are using MathML input rather than TeX (e.g., `mml-chtml.js` rather than `tex-chtml.js`), then you can remove `input/tex/extensions` as well.
+If you are using SVG rather than CommonHTML output (e.g., `tex-svg.js` rather than `tex-chtml.js`), you can remove the `output/chtml/fonts/woff-v2` directory.  If you are using MathML input rather than TeX (e.g., `mml-chtml.js` rather than `tex-chtml.js`), then you can remove `input/tex/extensions` as well.
 
 
 ## The Component Files and Pull Requests
