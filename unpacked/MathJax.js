@@ -1893,7 +1893,10 @@ MathJax.Hub = {
     config: [],      // list of configuration files to load
     styleSheets: [], // list of CSS files to load
     styles: {        // styles to generate in-line
-      ".MathJax_Preview": {color: "#888"}
+      ".MathJax_Preview": {
+        color: "#888",
+        display: "contents" // for RTL languages in Chrome (see issue #2190)
+      }
     },
     jax: [],         // list of input and output jax to load
     extensions: [],  // list of extensions to load
