@@ -282,17 +282,18 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //  contents
     //
     CHTMLsvg: function (node,bbox,t) {
-      if (!svg) {
-        var svg = document.createElementNS(SVGNS,"svg");
-        if (svg.style) {
-          svg.style.width = CHTML.Em(bbox.W);
-          svg.style.height = CHTML.Em(bbox.H+bbox.D);
-          svg.style.verticalAlign = CHTML.Em(-bbox.D);
-          svg.style.marginLeft = CHTML.Em(-bbox.W);
-        }
-        this.CHTMLsvgElement(svg,"g",{"stroke-width":CHTML.Px(t)});
-        node.parentNode.appendChild(svg);
+      var svg = document.createElementNS(SVGNS,"svg");
+      if (svg.style) {
+        svg.style.width = CHTML.Em(bbox.W);
+        svg.style.height = CHTML.Em(bbox.H+bbox.D);
+        svg.style.verticalAlign = CHTML.Em(-bbox.D);
+        svg.style.marginLeft = CHTML.Em(-bbox.W);
       }
+      var g = this.CHTMLsvgElement(svg,"g",{"stroke-width":CHTML.Px(t)});
+      if (this.CHTML.scale !== 1) {
+        g.setAttribute('transform', 'scale('+this.CHTML.scale+')');
+      }
+      node.parentNode.appendChild(svg);
       return svg;
     },
     //
