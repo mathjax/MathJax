@@ -1750,7 +1750,10 @@
 	if (this.data[0] != null) {
           this.SVGhandleSpace(svg); svg.Add(this.SVGdataStretched(0,HW,D)); svg.Clean();
           while (svg.element.firstChild) {svg.element.removeChild(svg.element.firstChild)}
-	}
+          svg.D = svg.d; svg.H = svg.h;
+          svg.r = Math.max(0, Math.min(svg.w, svg.r));
+          svg.l = Math.max(0, Math.min(svg.w, svg.l));
+        }
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
         if (svg.removeable && !svg.element.firstChild) {delete svg.element}
