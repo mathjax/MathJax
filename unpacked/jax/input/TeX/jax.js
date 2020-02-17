@@ -1328,7 +1328,7 @@
       var color = this.GetArgument(name);
       var old = this.stack.env.color; this.stack.env.color = color;
       var math = this.ParseArg(name);
-      if (old) {this.stack.env.color} else {delete this.stack.env.color}
+      if (old) {this.stack.env.color = old} else {delete this.stack.env.color}
       this.Push(MML.mstyle(math).With({mathcolor: color}));
     },
     
