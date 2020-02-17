@@ -235,7 +235,7 @@ MathJax.Extension.tex2jax = {
         this.switchPattern(this.start);
       }
     }
-    else if (match[0] === "{") {search.pcount++}
+    if (match[0] === "{") {search.pcount++}
     else if (match[0] === "}" && search.pcount) {search.pcount--}
     return element;
   },
