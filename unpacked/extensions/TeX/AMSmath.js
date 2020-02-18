@@ -550,7 +550,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.numbered = (numbered && CONFIG.autoNumber !== "none");
       this.save = {notags: stack.global.notags, notag: stack.global.notag};
       stack.global.notags = (taggable ? null : name);
-      stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
+      stack.global.tagged = !numbered && taggable && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
       if (this.row.length % 2 === 1) {this.fixInitialMO(this.data)}
@@ -560,10 +560,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     EndRow: function () {
       var mtr = MML.mtr;
       if (!this.global.tag && this.numbered) {this.autoTag()}
-      if (this.global.tag && !this.global.notags) {
-        this.row = [this.getTag()].concat(this.row);
-        mtr = MML.mlabeledtr;
-      } else {this.clearTag()}
+      if (!this.global.notags) {
+        if (this.global.tag) {
+          this.row = [this.getTag()].concat(this.row);
+          mtr = MML.mlabeledtr;
+        } else {
+          this.clearTag();
+        }
+      }
       if (this.numbered) {delete this.global.notag}
       this.table.push(mtr.apply(MML,this.row)); this.row = [];
     },
