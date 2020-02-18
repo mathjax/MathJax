@@ -486,7 +486,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       for (var i = 0, m = data.length; i < m; i++) {
         if (data[i] && (data[i].type !== "mspace" &&
            (data[i].type !== "texatom" || (data[i].data[0] && data[i].data[0].data.length)))) {
-          if (data[i].isEmbellished()) data.unshift(MML.mi());
+          if (data[i].isEmbellished() ||
+             (data[i].type === "texatom" && data[i].texClass === MML.TEXCLASS.REL)) data.unshift(MML.mi());
           break;
         }
       }
