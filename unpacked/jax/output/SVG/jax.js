@@ -1828,23 +1828,17 @@
     });
 
     MML.mstyle.Augment({
-      toSVG: function () {
+      toSVG: function (HW,D) {
         this.SVGgetStyles();
         var svg = this.SVG();
 	if (this.data[0] != null) {
           this.SVGhandleSpace(svg);
-          var math = svg.Add(this.data[0].toSVG()); svg.Clean();
+          var math = svg.Add(this.data[0].toSVG(HW,D)); svg.Clean();
           if (math.ic) {svg.ic = math.ic}
 	  this.SVGhandleColor(svg);
 	}
         this.SVGsaveData(svg);
 	return svg;
-      },
-      SVGstretchH: function (w) {
-	return (this.data[0] != null ? this.data[0].SVGstretchH(w) : BBOX.NULL());
-      },
-      SVGstretchV: function (h,d) {
-	return (this.data[0] != null ? this.data[0].SVGstretchV(h,d) : BBOX.NULL());
       }
     });
 
