@@ -1529,13 +1529,13 @@
     },
     
     Phantom: function (name,v,h) {
-      var box = MML.mphantom(this.ParseArg(name));
+      var mml = this.ParseArg(name);
       if (v || h) {
-        box = MML.mpadded(box);
-        if (h) {box.height = box.depth = 0}
-        if (v) {box.width = 0}
+        mml = MML.mpadded(mml);
+        if (h) {mml.height = mml.depth = 0}
+        if (v) {mml.width = 0}
       }
-      this.Push(MML.TeXAtom(box));
+      this.Push(MML.TeXAtom(MML.mphantom(mml)));
     },
     
     Smash: function (name) {
