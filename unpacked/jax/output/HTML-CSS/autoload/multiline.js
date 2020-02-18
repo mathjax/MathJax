@@ -129,10 +129,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Make top-level spans 100% wide.
       //  Finish up the space and add the color again
       //
-      if (isTop) {
-        stack.style.width = "100%";
-        if (parent.type === "math") {span.bbox.width = "100%"}
-      }
+      if (parent.type === "math") {stack.style.width = span.bbox.width = "100%"}
       this.HTMLhandleSpace(span);
       this.HTMLhandleColor(span);
       span.bbox.isMultiline = true;

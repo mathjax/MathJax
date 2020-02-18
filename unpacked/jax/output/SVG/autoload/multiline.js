@@ -94,7 +94,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //    in the top-level math element
       //
       svg = this.SVG();
-      if (isTop && parent.type !== "mtd") {
+      if (parent.type === "math") {
         if (SVG.linebreakWidth < SVG.BIGDIMEN) {svg.w = SVG.linebreakWidth}
           else {svg.w = SVG.cwidth}
       }
