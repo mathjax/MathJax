@@ -9,7 +9,7 @@
  *  when you load MathJax.js, e.g.
  *  
  *  <script
- *    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML,Safe">
+ *    src="http://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS_HTML,Safe">
  *  </script>
  *
  *  ---------------------------------------------------------------------

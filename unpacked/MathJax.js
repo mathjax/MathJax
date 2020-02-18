@@ -667,7 +667,6 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
   var PATH = {};
   PATH[BASENAME] = "";                                        // empty path gets the root URL
   PATH.a11y = '[MathJax]/extensions/a11y';                    // a11y extensions
-  PATH.Contrib = "https://cdn.mathjax.org/mathjax/contrib";   // the third-party extensions
 
   BASE.Ajax = {
     loaded: {},         // files already loaded
