@@ -112,6 +112,7 @@
     ".mjx-delim-h > .mjx-char": {display:"inline-block"},
     
     ".mjx-surd": {"vertical-align":"top"},
+    ".mjx-surd + .mjx-box": {display:"inline-flex"},
     
     ".mjx-mphantom *": {visibility:"hidden"},
 
@@ -2683,7 +2684,7 @@
         if (!this.data[1]) return;
         var BBOX = this.CHTML, bbox = this.data[1].CHTML, root = sqrt.firstChild;
         var scale = bbox.rscale;
-        var h = this.CHTMLrootHeight(bbox,sbox,scale)-d;
+        var h = this.CHTMLrootHeight(bbox,sbox,BBOX.scale)-d;
         var w = Math.min(bbox.w,bbox.r); // remove extra right-hand padding, if any
         var dx = Math.max(w,sbox.offset/scale); 
         if (h) root.style.verticalAlign = CHTML.Em(h/scale);
@@ -2694,7 +2695,7 @@
         return dx*scale;
       },
       CHTMLrootHeight: function (bbox,sbox,scale) {
-        return .45*(sbox.h+sbox.d-.9)+sbox.offset + Math.max(0,bbox.d-.075);
+        return .45*(sbox.h+sbox.d-.9*scale) + .6*scale + Math.max(0,bbox.d*bbox.scale-.075);
       }
     });
     
