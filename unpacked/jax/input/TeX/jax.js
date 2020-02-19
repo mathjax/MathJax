@@ -936,7 +936,7 @@
         displaylines:      ['Matrix',null,null,"center",null,".5em",'D'],
         cr:                 'Cr',
         '\\':               'CrLaTeX',
-        newline:            'Cr',
+        newline:           ['CrLaTeX',true],
         hline:             ['HLine','solid'],
         hdashline:         ['HLine','dashed'],
 //      noalign:            'HandleNoAlign',
@@ -1774,9 +1774,9 @@
       this.Push(STACKITEM.cell().With({isCR: true, name: name}));
     },
     
-    CrLaTeX: function (name) {
+    CrLaTeX: function (name, nobrackets) {
       var n;
-      if (this.string.charAt(this.i) === "[") {
+      if (!nobrackets && this.string.charAt(this.i) === "[") {
         n = this.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
         if (n && !this.matchDimen(n)) {
           TEX.Error(["BracketMustBeDimension",
