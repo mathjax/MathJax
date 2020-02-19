@@ -126,7 +126,7 @@
     
     ".mjx-annotation-xml": {"line-height":"normal"},
     
-    ".mjx-menclose > svg": {fill:"none", stroke:"currentColor"},
+    ".mjx-menclose > svg": {fill:"none", stroke:"currentColor", overflow:"visible"},
 
     ".mjx-mtr":    {display:"table-row"},
     ".mjx-mlabeledtr": {display:"table-row"},
