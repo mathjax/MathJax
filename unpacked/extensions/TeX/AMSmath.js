@@ -223,14 +223,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var cs = this.trimSpaces(this.GetArgument(name));
       if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
       var op = this.GetArgument(name);
-      op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
+      if (!op.match(/\\text/)) op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
       this.setDef(cs, ['Macro', '\\mathop{\\rm '+op+'}'+limits]);
     },
     
     HandleOperatorName: function (name) {
       var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
       var op = this.trimSpaces(this.GetArgument(name));
-      op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
+      if (!op.match(/\\text/)) op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
       this.string = '\\mathop{\\rm '+op+'}'+limits+" "+this.string.slice(this.i);
       this.i = 0;
     },
