@@ -11,7 +11,7 @@
  *  ---------------------------------------------------------------------
  *
  *  Copyright (c) 2011-2015 The MathJax Consortium
- *  Copyright (c) 2015-2018 Martin Hensel
+ *  Copyright (c) 2015-2019 Martin Hensel
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@
 
 
 MathJax.Extension["TeX/mhchem"] = {
-  version: "3.3.0"
+  version: "3.3.2"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
@@ -197,7 +197,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
     },
     concatArray: function (a, b) {
       if (b) {
-        if (Array.isArray(b)) {
+        if (Object.prototype.toString.call(b) === "[object Array]") {  // Array.isArray(b)
           for (var iB=0; iB<b.length; iB++) {
             a.push(b[iB]);
           }
@@ -233,16 +233,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
         '-9.,9': /^[+\-]?(?:[0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+))/,
         '-9.,9 no missing 0': /^[+\-]?[0-9]+(?:[.,][0-9]+)?/,
         '(-)(9.,9)(e)(99)': function (input) {
-          var m = input.match(/^(\+\-|\+\/\-|\+|\-|\\pm\s?)?([0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+))?(\((?:[0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+))\))?(?:([eE]|\s*(\*|x|\\times|\u00D7)\s*10\^)([+\-]?[0-9]+|\{[+\-]?[0-9]+\}))?/);
+          var m = input.match(/^(\+\-|\+\/\-|\+|\-|\\pm\s?)?([0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+))?(\((?:[0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+))\))?(?:(?:([eE])|\s*(\*|x|\\times|\u00D7)\s*10\^)([+\-]?[0-9]+|\{[+\-]?[0-9]+\}))?/);
           if (m && m[0]) {
-            return { match_: m.splice(1), remainder: input.substr(m[0].length) };
+            return { match_: m.slice(1), remainder: input.substr(m[0].length) };
           }
           return null;
         },
         '(-)(9)^(-9)': function (input) {
           var m = input.match(/^(\+\-|\+\/\-|\+|\-|\\pm\s?)?([0-9]+(?:[,.][0-9]+)?|[0-9]*(?:\.[0-9]+)?)\^([+\-]?[0-9]+|\{[+\-]?[0-9]+\})/);
           if (m && m[0]) {
-            return { match_: m.splice(1), remainder: input.substr(m[0].length) };
+            return { match_: m.slice(1), remainder: input.substr(m[0].length) };
           }
           return null;
         },
@@ -1179,26 +1179,24 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
           } else if (m[0]) {
             ret.push(m[0]);
           }
-          if (m[1]) {
+          if (m[1]) {  // 1.2
             mhchemParser.concatArray(ret, mhchemParser.go(m[1], 'pu-9,9'));
             if (m[2]) {
-              if (m[2].match(/[,.]/)) {
+              if (m[2].match(/[,.]/)) {  // 1.23456(0.01111)
                 mhchemParser.concatArray(ret, mhchemParser.go(m[2], 'pu-9,9'));
-              } else {
+              } else {  // 1.23456(1111)  - without spacings
                 ret.push(m[2]);
               }
             }
-            m[3] = m[4] || m[3];
-            if (m[3]) {
-              m[3] = m[3].trim();
-              if (m[3] === "e"  ||  m[3].substr(0, 1) === "*") {
+            if (m[3] || m[4]) {  // 1.2e7  1.2x10^7
+              if (m[3] === "e"  ||  m[4] === "*") {
                 ret.push({ type_: 'cdot' });
               } else {
                 ret.push({ type_: 'times' });
               }
             }
           }
-          if (m[3]) {
+          if (m[5]) {  // 10^7
             ret.push("10^{"+m[5]+"}");
           }
           return ret;
@@ -1511,7 +1509,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
               // arrows that cannot stretch correctly yet, https://github.com/mathjax/MathJax/issues/1491
               arrow = "\\long"+arrow;
               if (b6.rd) { arrow = "\\overset{"+b6.rd+"}{"+arrow+"}"; }
-              if (b6.rq) { arrow = "\\underset{\\lower7mu{"+b6.rq+"}}{"+arrow+"}"; }
+              if (b6.rq) {
+                if (buf.r === "<-->") {
+                  arrow = "\\underset{\\lower2mu{"+b6.rq+"}}{"+arrow+"}";
+                } else {
+                  arrow = "\\underset{\\lower6mu{"+b6.rq+"}}{"+arrow+"}";  // align with ->[][under]
+                }
+              }
               arrow = " {}\\mathrel{"+arrow+"}{} ";
             } else {
               if (b6.rq) { arrow += "[{"+b6.rq+"}]"; }
@@ -1705,14 +1709,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
       longrightleftharpoons: ["Macro", "\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"],
       longRightleftharpoons: ["Macro", "\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}"],
       longLeftrightharpoons: ["Macro", "\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}"],
-      longleftrightarrows:   ["Macro", "\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}"],
+      longleftrightarrows:   ["Macro", "\\raise-3mu{\\stackrel{\\longrightarrow}{\\raise2mu{\\smash{\\longleftarrow}}}}"],
 
       //
       //  Needed for \bond for the ~ forms
       //  Not perfectly aligned when zoomed in, but on 100%
       //
       tripledash: ["Macro", "\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}"]
-    },
+    }
   }, null, true);
 
   if (!MathJax.Extension["TeX/AMSmath"]) {
