@@ -1866,11 +1866,12 @@
           node.parentNode.style.textAlign = styles.textAlign = values.indentalign;
           // ### FIXME: make percentage widths respond to changes in container
           if (shift) {
+            if (values.indentalign === 'right') node.style.marginRight = CHTML.Em(-shift);
             shift *= CHTML.em/CHTML.outerEm;
             HUB.Insert(styles,({
-              left: {marginLeft: CHTML.Em(shift)},
-              right: {marginRight: CHTML.Em(-shift)},
-              center: {marginLeft: CHTML.Em(shift), marginRight: CHTML.Em(-shift)}
+              left: {textIndent: CHTML.Em(shift)},
+              right: {display: 'flex', flexDirection: 'row-reverse'},
+              center: {textIndent: CHTML.Em(2*shift)}
             })[values.indentalign]);
           }
         }
