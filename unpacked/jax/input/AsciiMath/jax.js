@@ -1061,7 +1061,8 @@ function AMparseIexpr(str) {
     }
     if (typeof sym1.func != 'undefined' && sym1.func) {
     	sym2 = AMgetSymbol(str);
-    	if (sym2.ttype != INFIX && sym2.ttype != RIGHTBRACKET) {
+    	if (sym2.ttype != INFIX && sym2.ttype != RIGHTBRACKET &&
+     	    (sym1.input.length>1 || sym2.ttype == LEFTBRACKET)) {
     		result = AMparseIexpr(str);
     		node = createMmlNode("mrow",node);
     		node.appendChild(result[0]);
