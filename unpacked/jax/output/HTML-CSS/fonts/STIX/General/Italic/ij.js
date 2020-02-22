@@ -21,6 +21,10 @@
 MathJax.Hub.Insert(
   MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['STIXGeneral-italic'],
   {
+    skew: {
+      0x1D6A4: .05,
+      0x1D6A5: .07,
+    },
     0x1D6A4: [441,11,278,47,235],      // MATHEMATICAL ITALIC SMALL DOTLESS I
     0x1D6A5: [441,207,278,-124,246]    // MATHEMATICAL ITALIC SMALL DOTLESS J
   }
