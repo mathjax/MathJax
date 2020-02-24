@@ -304,7 +304,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       return svg;
     },
     //
-    CHTMLsvgViewBox(svg) {
+    CHTMLsvgViewBox: function (svg) {
       var bbox = svg.getBBox();
       svg.setAttribute('viewBox', [bbox.x, bbox.y, bbox.width, bbox.height].join(' '));
     },
