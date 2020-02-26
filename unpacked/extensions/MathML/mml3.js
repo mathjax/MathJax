@@ -25,7 +25,7 @@
  *  The remainder falls under the copyright that follows.
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2019 The MathJax Consortium
+ *  Copyright (c) 2013-2020 The MathJax Consortium
  *  
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@
 
 
 MathJax.Extension["MathML/mml3"] = {
-  version: "2.7.7"
+  version: "2.7.8"
 };
 
 MathJax.Hub.Register.StartupHook("MathML Jax Ready",function () {

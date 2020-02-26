@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/ca/ca.js
  *
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2020 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("ca",null,{
   menuTitle: "catal\u00E0",
-  version: "2.7.7",
+  version: "2.7.8",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.7",
+        version: "2.7.8",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax ha trobat una galeta de configuraci\u00F3 d'usuari que inclou codi que s'ha d'executar. Voleu executar-lo?",

@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/oc/oc.js
  *
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2020 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("oc",null,{
   menuTitle: "occitan",
-  version: "2.7.7",
+  version: "2.7.8",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.7",
+        version: "2.7.8",
         isLoaded: true,
         strings: {
           MathProcessingError: "Error de tractament de la formula matematica",

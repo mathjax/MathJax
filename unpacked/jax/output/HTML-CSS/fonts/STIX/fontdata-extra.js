@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2019 The MathJax Consortium
+ *  Copyright (c) 2011-2020 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 (function (HTMLCSS) {
-  var VERSION = "2.7.7";
+  var VERSION = "2.7.8";
   
   var DELIMITERS = HTMLCSS.FONTDATA.DELIMITERS;
 

@@ -2,7 +2,7 @@
  *
  *  MathJax/localization/cy/cy.js
  *
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2020 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("cy",null,{
   menuTitle: "Cymraeg",
-  version: "2.7.7",
+  version: "2.7.8",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.7",
+        version: "2.7.8",
         isLoaded: true,
         strings: {
           MathProcessingError: "Gwall prosesu mathemateg",
