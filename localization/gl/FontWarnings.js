@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Localization.addTranslation("gl","FontWarnings",{version:"2.7.7",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/gl/FontWarnings.js");
+MathJax.Localization.addTranslation("gl","FontWarnings",{version:"2.7.8",isLoaded:true,strings:{}});MathJax.Ajax.loadComplete("[MathJax]/localization/gl/FontWarnings.js");
