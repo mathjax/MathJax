@@ -1,7 +1,7 @@
 # MathJax
 ## Beautiful math in all browsers
 
-<img class="shield" alt="GitHub release version" src="https://img.shields.io/github/v/release/mathjax/MathJax-src?sort=semver"> <img class="shield" alt="GitHub release version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2?label=release-v2">
+<img class="shield" alt="GitHub release version" src="https://img.shields.io/github/v/release/mathjax/MathJax-src.svg?sort=semver"> <img class="shield" alt="GitHub release version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2?label=release-v2.svg">
 <a class="reference external image-reference" href="http://www.numfocus.org"><img alt="powered-by NumFocus" src="https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&amp;amp;colorA=E1523D&amp;amp;colorB=007D8A"></a>
 
 MathJax is an open-source JavaScript display engine for LaTeX, MathML,
