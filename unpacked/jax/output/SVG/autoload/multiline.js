@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2019 The MathJax Consortium
+ *  Copyright (c) 2011-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
-  var VERSION = "2.7.7";
+  var VERSION = "2.7.8";
   var MML = MathJax.ElementJax.mml,
       SVG = MathJax.OutputJax.SVG,
       BBOX = SVG.BBOX;
@@ -94,7 +94,7 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //    in the top-level math element
       //
       svg = this.SVG();
-      if (isTop && parent.type !== "mtd") {
+      if (parent.type === "math") {
         if (SVG.linebreakWidth < SVG.BIGDIMEN) {svg.w = SVG.linebreakWidth}
           else {svg.w = SVG.cwidth}
       }
@@ -488,8 +488,9 @@ MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
       //
       if (end.length === 0) {
         var sup = this.data[this.sup], sub = this.data[this.sub], w = svg.w, data;
-        if (sup) {data = sup.SVGdata||{}; svg.Add(sup.toSVG(),w+(data.dx||0),data.dy)}
-        if (sub) {data = sub.SVGdata||{}; svg.Add(sub.toSVG(),w+(data.dx||0),data.dy)}
+        var ic = (this.data[this.base].SVGdata || {}).ic || 0;
+        if (sup) {data = sup.SVGdata||{}; svg.Add(sup.toSVG(),w+(data.dx||0)-ic,data.dy)}
+        if (sub) {data = sub.SVGdata||{}; svg.Add(sub.toSVG(),w+(data.dx||0)-ic,data.dy)}
       }
     }
 

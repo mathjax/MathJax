@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2019 The MathJax Consortium
+ *  Copyright (c) 2010-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.7.7";
+  var VERSION = "2.7.8";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"],
       LOCALE = MathJax.Localization;
@@ -69,17 +69,18 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           span.bbox = err.HTMLspanElement().bbox;
         } else {
           var mu = this.HTMLgetMu(span);
+          var scale = this.HTMLgetScale();
           img = HTMLCSS.addElement(span,"img",{isMathJax:true, src:values.src, alt:values.alt, title:values.alt});
           if (values.width)  {
-            img.style.width = HTMLCSS.Em(HTMLCSS.length2em(values.width,mu,this.img.img.width/HTMLCSS.em));
+            img.style.width = HTMLCSS.Em(HTMLCSS.length2em(values.width,mu,this.img.img.width/HTMLCSS.em) * scale);
           }
           if (values.height) {
-            img.style.height = HTMLCSS.Em(HTMLCSS.length2em(values.height,mu,this.img.img.height/HTMLCSS.em));
+            img.style.height = HTMLCSS.Em(HTMLCSS.length2em(values.height,mu,this.img.img.height/HTMLCSS.em) * scale);
           }
           span.bbox.w = span.bbox.rw = img.offsetWidth/HTMLCSS.em;
           span.bbox.h = img.offsetHeight/HTMLCSS.em;
           if (values.valign) {
-            span.bbox.d = -HTMLCSS.length2em(values.valign,mu,this.img.img.height/HTMLCSS.em);
+            span.bbox.d = -HTMLCSS.length2em(values.valign,mu,this.img.img.height/HTMLCSS.em) * scale;
             img.style.verticalAlign = HTMLCSS.Em(-span.bbox.d);
             span.bbox.h -= span.bbox.d;
           }

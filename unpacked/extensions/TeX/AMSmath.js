@@ -9,7 +9,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.7.7",
+  version: "2.7.8",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -223,14 +223,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       var cs = this.trimSpaces(this.GetArgument(name));
       if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
       var op = this.GetArgument(name);
-      op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
+      if (!op.match(/\\text/)) op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
       this.setDef(cs, ['Macro', '\\mathop{\\rm '+op+'}'+limits]);
     },
     
     HandleOperatorName: function (name) {
       var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
       var op = this.trimSpaces(this.GetArgument(name));
-      op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
+      if (!op.match(/\\text/)) op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
       this.string = '\\mathop{\\rm '+op+'}'+limits+" "+this.string.slice(this.i);
       this.i = 0;
     },
@@ -486,7 +486,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       for (var i = 0, m = data.length; i < m; i++) {
         if (data[i] && (data[i].type !== "mspace" &&
            (data[i].type !== "texatom" || (data[i].data[0] && data[i].data[0].data.length)))) {
-          if (data[i].isEmbellished()) data.unshift(MML.mi());
+          if (data[i].isEmbellished() ||
+             (data[i].type === "texatom" && data[i].texClass === MML.TEXCLASS.REL)) data.unshift(MML.mi());
           break;
         }
       }
@@ -550,7 +551,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.numbered = (numbered && CONFIG.autoNumber !== "none");
       this.save = {notags: stack.global.notags, notag: stack.global.notag};
       stack.global.notags = (taggable ? null : name);
-      stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
+      stack.global.tagged = !numbered && taggable && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
       if (this.row.length % 2 === 1) {this.fixInitialMO(this.data)}
@@ -560,10 +561,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     EndRow: function () {
       var mtr = MML.mtr;
       if (!this.global.tag && this.numbered) {this.autoTag()}
-      if (this.global.tag && !this.global.notags) {
-        this.row = [this.getTag()].concat(this.row);
-        mtr = MML.mlabeledtr;
-      } else {this.clearTag()}
+      if (!this.global.notags) {
+        if (this.global.tag) {
+          this.row = [this.getTag()].concat(this.row);
+          mtr = MML.mlabeledtr;
+        } else {
+          this.clearTag();
+        }
+      }
       if (this.numbered) {delete this.global.notag}
       this.table.push(mtr.apply(MML,this.row)); this.row = [];
     },

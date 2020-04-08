@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
  */
 
 MathJax.Extension.tex2jax = {
-  version: "2.7.7",
+  version: "2.7.8",
   config: {
     inlineMath: [              // The start/stop pairs for in-line math
 //    ['$','$'],               //  (comment out any you don't want, or add your own, but
@@ -168,7 +168,7 @@ MathJax.Extension.tex2jax = {
                           else {element = this.endMatch(match,element)}
       }
       if (this.search.matched) element = this.encloseMath(element);
-        else if (!this.search.start) rescan = this.search;
+        else if (!this.search.start && !this.search.close) rescan = this.search;
       if (element) {
         do {prev = element; element = element.nextSibling}
           while (element && this.ignoreTags[element.nodeName.toLowerCase()] != null);
@@ -235,7 +235,7 @@ MathJax.Extension.tex2jax = {
         this.switchPattern(this.start);
       }
     }
-    else if (match[0] === "{") {search.pcount++}
+    if (match[0] === "{") {search.pcount++}
     else if (match[0] === "}" && search.pcount) {search.pcount--}
     return element;
   },

@@ -2,7 +2,7 @@
  *
  *  MathJax/jax/output/HTML-CSS/fonts/STIX/General/Italic/MathItalic.js
  *
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2020 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,54 @@
 MathJax.Hub.Insert(
   MathJax.OutputJax['HTML-CSS'].FONTDATA.FONTS['STIXGeneral-italic'],
   {
+    skew: {
+      0x1D434: .16,
+      0x1D435: .14,
+      0x1D436: .12,
+      0x1D437: .1,
+      0x1D438: .1,
+      0x1D439: .1,
+      0x1D43A: .12,
+      0x1D43B: .1,
+      0x1D43C: .1,
+      0x1D43D: .1,
+      0x1D43E: .1,
+      0x1D43F: .05,
+      0x1D440: .08,
+      0x1D441: .08,
+      0x1D442: .12,
+      0x1D443: .05,
+      0x1D444: .12,
+      0x1D445: .1,
+      0x1D446: .12,
+      0x1D44B: .12,
+      0x1D44C: -.05,
+      0x1D44D: .1,
+      0x1D44E: .09,
+      0x1D44F: .03,
+      0x1D450: .09,
+      0x1D451: .2,
+      0x1D452: .09,
+      0x1D453: .19,
+      0x1D454: .08,
+      0x1D456: .08,
+      0x1D457: .16,
+      0x1D459: .09,
+      0x1D45A: .09,
+      0x1D45B: .05,
+      0x1D45C: .09,
+      0x1D45D: .09,
+      0x1D45E: .1,
+      0x1D45F: .07,
+      0x1D460: .07,
+      0x1D461: .07,
+      0x1D462: .05,
+      0x1D463: .08,
+      0x1D464: .1,
+      0x1D465: .05,
+      0x1D466: .1,
+      0x1D467: .07,
+    },
     0x1D434: [667,0,717,35,685],       // MATHEMATICAL ITALIC CAPITAL A
     0x1D435: [653,0,696,38,686],       // MATHEMATICAL ITALIC CAPITAL B
     0x1D436: [659,12,671,50,711],      // MATHEMATICAL ITALIC CAPITAL C

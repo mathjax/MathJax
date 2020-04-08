@@ -6,7 +6,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015-2019 The MathJax Consortium
+ *  Copyright (c) 2015-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 MathJax.Extension["TeX/mediawiki-texvc"] = {
-  version: "2.7.7"
+  version: "2.7.8"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
@@ -85,7 +85,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
       natnums: ["Macro", "\\mathbb{N}"],
       Nu: ["Macro", "\\mathrm{N}"],
       O: ["Macro", "\\emptyset"],
-      oint: ["Macro", "\\unicodeInt{x222E}"],
       oiint: ["Macro", "\\unicodeInt{x222F}"],
       oiiint: ["Macro", "\\unicodeInt{x2230}"],
       ointctrclockwise: ["Macro", "\\unicodeInt{x2233}"],

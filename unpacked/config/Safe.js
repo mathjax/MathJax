@@ -9,12 +9,12 @@
  *  when you load MathJax.js, e.g.
  *  
  *  <script
- *    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML,Safe">
+ *    src="http://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS_HTML,Safe">
  *  </script>
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2019 The MathJax Consortium
+ *  Copyright (c) 2013-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.

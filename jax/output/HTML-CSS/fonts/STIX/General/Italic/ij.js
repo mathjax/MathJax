@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXGeneral-italic"],{120484:[441,11,278,47,235],120485:[441,207,278,-124,246]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/Italic/ij.js");
+MathJax.Hub.Insert(MathJax.OutputJax["HTML-CSS"].FONTDATA.FONTS["STIXGeneral-italic"],{skew:{120484:0.05,120485:0.07,},120484:[441,11,278,47,235],120485:[441,207,278,-124,246]});MathJax.Ajax.loadComplete(MathJax.OutputJax["HTML-CSS"].fontDir+"/General/Italic/ij.js");

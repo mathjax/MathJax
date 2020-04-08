@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015-2019 The MathJax Consortium
+ *  Copyright (c) 2015-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
-  var VERSION = "2.7.7";
+  var VERSION = "2.7.8";
   var MML = MathJax.ElementJax.mml,
       CHTML = MathJax.OutputJax.CommonHTML;
   
@@ -111,6 +111,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           rx:CHTML.Px(W/2-t/2), ry:CHTML.Px((H+D)/2-t/2),
           cx:CHTML.Px(W/2),   cy:CHTML.Px((H+D)/2)
         });
+        this.CHTMLsvgViewBox(svg);
       },
 
       /********************************************************/
@@ -187,6 +188,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         this.CHTMLsvgElement(svg.firstChild,"line",{
           x1:CHTML.Px(t/2), y1:CHTML.Px(H+D-t), x2:CHTML.Px(W-t), y2:CHTML.Px(t/2)
         });
+        this.CHTMLsvgViewBox(svg);
       },
 
       /********************************************************/
@@ -197,6 +199,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         this.CHTMLsvgElement(svg.firstChild,"line",{
           x1:CHTML.Px(t/2), y1:CHTML.Px(t/2), x2:CHTML.Px(W-t), y2:CHTML.Px(H+D-t)
         });
+        this.CHTMLsvgViewBox(svg);
       },
 
       /********************************************************/
@@ -221,6 +224,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
              "L "+this.CHTMLpx(R-x-dx)+","+this.CHTMLpx(-y),
           stroke:"none"
         });
+        this.CHTMLsvgViewBox(svg);
       },
 
       /********************************************************/
@@ -235,6 +239,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           d: "M "+this.CHTMLpx(p)+",1 " +
              "L 1,"+this.CHTMLpx(H+D-t)+" L "+this.CHTMLpx(W)+","+this.CHTMLpx(H+D-t)
         });
+        this.CHTMLsvgViewBox(svg);
       },
 
       /********************************************************/
@@ -248,6 +253,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           d: "M "+this.CHTMLpx(W)+",1 L 1,1 "+
              "a"+this.CHTMLpx(p)+","+this.CHTMLpx((H+D)/2-t/2)+" 0 0,1 1,"+this.CHTMLpx(H+D-1.5*t)
         });
+        this.CHTMLsvgViewBox(svg);
       },
 
       /********************************************************/
@@ -262,6 +268,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
              " L "+this.CHTMLpx(p)+","+this.CHTMLpx(H+D) +
              " L "+this.CHTMLpx(2*p)+",1 L "+this.CHTMLpx(W)+",1"
         });
+        this.CHTMLsvgViewBox(svg);
       }
 
       /********************************************************/
@@ -282,18 +289,24 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
     //  contents
     //
     CHTMLsvg: function (node,bbox,t) {
-      if (!svg) {
-        var svg = document.createElementNS(SVGNS,"svg");
-        if (svg.style) {
-          svg.style.width = CHTML.Em(bbox.W);
-          svg.style.height = CHTML.Em(bbox.H+bbox.D);
-          svg.style.verticalAlign = CHTML.Em(-bbox.D);
-          svg.style.marginLeft = CHTML.Em(-bbox.W);
-        }
-        this.CHTMLsvgElement(svg,"g",{"stroke-width":CHTML.Px(t)});
-        node.parentNode.appendChild(svg);
+      var svg = document.createElementNS(SVGNS,"svg");
+      if (svg.style) {
+        svg.style.width = CHTML.Em(bbox.W);
+        svg.style.height = CHTML.Em(bbox.H+bbox.D);
+        svg.style.verticalAlign = CHTML.Em(-bbox.D);
+        svg.style.marginLeft = CHTML.Em(-bbox.W);
       }
+      var g = this.CHTMLsvgElement(svg,"g",{"stroke-width":CHTML.Px(t)});
+      if (this.CHTML.scale !== 1) {
+        g.setAttribute('transform', 'scale('+this.CHTML.scale+')');
+      }
+      node.parentNode.appendChild(svg);
       return svg;
+    },
+    //
+    CHTMLsvgViewBox: function (svg) {
+      var bbox = svg.getBBox();
+      svg.setAttribute('viewBox', [bbox.x, bbox.y, bbox.width, bbox.height].join(' '));
     },
     //
     //  Add an SVG element to the given svg node

@@ -1,4 +1,4 @@
-# MathJax <img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2">
+# MathJax <img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2.svg">
 
 
 ## Beautiful math in all browsers

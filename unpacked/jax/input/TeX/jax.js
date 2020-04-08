@@ -11,7 +11,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -936,7 +936,7 @@
         displaylines:      ['Matrix',null,null,"center",null,".5em",'D'],
         cr:                 'Cr',
         '\\':               'CrLaTeX',
-        newline:            'Cr',
+        newline:           ['CrLaTeX',true],
         hline:             ['HLine','solid'],
         hdashline:         ['HLine','dashed'],
 //      noalign:            'HandleNoAlign',
@@ -1328,7 +1328,7 @@
       var color = this.GetArgument(name);
       var old = this.stack.env.color; this.stack.env.color = color;
       var math = this.ParseArg(name);
-      if (old) {this.stack.env.color} else {delete this.stack.env.color}
+      if (old) {this.stack.env.color = old} else {delete this.stack.env.color}
       this.Push(MML.mstyle(math).With({mathcolor: color}));
     },
     
@@ -1529,13 +1529,13 @@
     },
     
     Phantom: function (name,v,h) {
-      var box = MML.mphantom(this.ParseArg(name));
+      var mml = this.ParseArg(name);
       if (v || h) {
-        box = MML.mpadded(box);
-        if (h) {box.height = box.depth = 0}
-        if (v) {box.width = 0}
+        mml = MML.mpadded(mml);
+        if (h) {mml.height = mml.depth = 0}
+        if (v) {mml.width = 0}
       }
-      this.Push(MML.TeXAtom(box));
+      this.Push(MML.TeXAtom(MML.mphantom(mml)));
     },
     
     Smash: function (name) {
@@ -1774,9 +1774,9 @@
       this.Push(STACKITEM.cell().With({isCR: true, name: name}));
     },
     
-    CrLaTeX: function (name) {
+    CrLaTeX: function (name, nobrackets) {
       var n;
-      if (this.string.charAt(this.i) === "[") {
+      if (!nobrackets && this.string.charAt(this.i) === "[") {
         n = this.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
         if (n && !this.matchDimen(n)) {
           TEX.Error(["BracketMustBeDimension",

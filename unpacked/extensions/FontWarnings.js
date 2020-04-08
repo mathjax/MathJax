@@ -70,7 +70,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2019 The MathJax Consortium
+ *  Copyright (c) 2010-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@
  */
 
 (function (HUB,HTML) {
-  var VERSION = "2.7.7";
+  var VERSION = "2.7.8";
 
   var STIXURL = "http://www.stixfonts.org/";
   var MATHJAXURL = "https://github.com/mathjax/MathJax/tree/master/fonts/HTML-CSS/TeX/otf";

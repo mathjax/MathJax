@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2010-2019 The MathJax Consortium
+ *  Copyright (c) 2010-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
-  var VERSION = "2.7.7";
+  var VERSION = "2.7.8";
   var MML = MathJax.ElementJax.mml,
       HTMLCSS = MathJax.OutputJax["HTML-CSS"];
   //
@@ -129,10 +129,7 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
       //  Make top-level spans 100% wide.
       //  Finish up the space and add the color again
       //
-      if (isTop) {
-        stack.style.width = "100%";
-        if (parent.type === "math") {span.bbox.width = "100%"}
-      }
+      if (parent.type === "math") {stack.style.width = span.bbox.width = "100%"}
       this.HTMLhandleSpace(span);
       this.HTMLhandleColor(span);
       span.bbox.isMultiline = true;
@@ -535,7 +532,11 @@ MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
           var box = s.HTMLspanElement().parentNode;
           if (s.href) box = box.parentNode;
           var stack = box.parentNode;
-          if (this.data[this.base]) {stack.removeChild(stack.firstChild)}
+          if (this.data[this.base]) {
+            var ic = this.data[this.base].HTMLspanElement().bbox.ic;
+            if (ic) stack.style.marginLeft = HTMLCSS.Em(-ic);
+            stack.removeChild(stack.firstChild);
+          }
 	  for (box = stack.firstChild; box; box = box.nextSibling)
 	    {box.style.left = HTMLCSS.Em(HTMLCSS.unEm(box.style.left)-this.HTMLbaseW)}
           stack.bbox.w -= this.HTMLbaseW; stack.style.width = HTMLCSS.Em(stack.bbox.w);

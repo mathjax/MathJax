@@ -10,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2020 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
  */
 
 (function (HTMLCSS,MML,HTML) {
-  var VERSION = "2.7.7";
+  var VERSION = "2.7.8";
   
   HTMLCSS.allowWebFonts = false;
   
@@ -79,7 +79,7 @@
                    remap: {0x2202: 0x1D6DB, 0x2207: 0x1D6C1}},
         "italic": {fonts: [ITALIC,NONUNII,GENERAL,NONUNI,SIZE1], offsetA: 0x1D434, offsetG: 0x1D6E2, italic:true,
                    remap: {0x1D455: 0x210E, 0x2202: 0x1D715, 0x2207: 0x1D6FB}},
-        "bold-italic": {fonts: [BITALIC,"STIXNonUnicode-bold-italic"], offsetA: 0x1D434, offsetG: 0x1D71C, bold:true, italic:true,
+        "bold-italic": {fonts: [BITALIC,"STIXNonUnicode-bold-italic"], offsetA: 0x1D468, offsetG: 0x1D71C, bold:true, italic:true,
                    remap: {0x1D455: 0x210E, 0x2202: 0x1D74F, 0x2207: 0x1D735}},
         "double-struck": {offsetA: 0x1D538, offsetN: 0x1D7D8,
                    remap: {0x1D53A: 0x2102, 0x1D53F: 0x210D, 0x1D545: 0x2115, 0x1D547: 0x2119,
@@ -391,7 +391,8 @@
         0x0332: {alias: 0x23AF, dir:H}, // combining low line
         0x2015: {alias: 0x23AF, dir:H}, // horizontal line
         0x2017: {alias: 0x23AF, dir:H}, // horizontal line
-        0x20D7: {alias: 0x2192, dir:H}, // combinining over right arrow (vector arrow)
+        0x20D6: {alias: 0x2190, dir:H}, // combining over left arrow
+        0x20D7: {alias: 0x2192, dir:H}, // combining over right arrow (vector arrow)
         0x2212: {alias: 0x23AF, dir:H}, // minus
         0x2215: {alias: 0x002F, dir:V}, // division slash
         0x2329: {alias: 0x27E8, dir:V}, // langle

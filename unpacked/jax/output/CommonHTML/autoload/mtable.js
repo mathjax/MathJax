@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015-2019 The MathJax Consortium
+ *  Copyright (c) 2015-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
-  var VERSION = "2.7.7";
+  var VERSION = "2.7.8";
   var MML = MathJax.ElementJax.mml,
       CONFIG = MathJax.Hub.config,
       CHTML = MathJax.OutputJax.CommonHTML,
@@ -362,7 +362,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       //  Adjust widths of columns
       //
-      if (setWidths) {
+      if (setWidths || (relWidth && hasFit)) {
         if (relWidth) {
           //
           //  Attach appropriate widths to the columns

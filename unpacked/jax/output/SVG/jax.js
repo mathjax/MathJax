@@ -11,7 +11,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2011-2019 The MathJax Consortium
+ *  Copyright (c) 2011-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -1750,7 +1750,10 @@
 	if (this.data[0] != null) {
           this.SVGhandleSpace(svg); svg.Add(this.SVGdataStretched(0,HW,D)); svg.Clean();
           while (svg.element.firstChild) {svg.element.removeChild(svg.element.firstChild)}
-	}
+          svg.D = svg.d; svg.H = svg.h;
+          svg.r = Math.max(0, Math.min(svg.w, svg.r));
+          svg.l = Math.max(0, Math.min(svg.w, svg.l));
+        }
 	this.SVGhandleColor(svg);
         this.SVGsaveData(svg);
         if (svg.removeable && !svg.element.firstChild) {delete svg.element}
@@ -1828,23 +1831,17 @@
     });
 
     MML.mstyle.Augment({
-      toSVG: function () {
+      toSVG: function (HW,D) {
         this.SVGgetStyles();
         var svg = this.SVG();
 	if (this.data[0] != null) {
           this.SVGhandleSpace(svg);
-          var math = svg.Add(this.data[0].toSVG()); svg.Clean();
+          var math = svg.Add(this.data[0].toSVG(HW,D)); svg.Clean();
           if (math.ic) {svg.ic = math.ic}
 	  this.SVGhandleColor(svg);
 	}
         this.SVGsaveData(svg);
 	return svg;
-      },
-      SVGstretchH: function (w) {
-	return (this.data[0] != null ? this.data[0].SVGstretchH(w) : BBOX.NULL());
-      },
-      SVGstretchV: function (h,d) {
-	return (this.data[0] != null ? this.data[0].SVGstretchV(h,d) : BBOX.NULL());
       }
     });
 

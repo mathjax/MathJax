@@ -12,7 +12,7 @@
  *  
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2013-2019 The MathJax Consortium
+ *  Copyright (c) 2013-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -112,6 +112,7 @@
     ".mjx-delim-h > .mjx-char": {display:"inline-block"},
     
     ".mjx-surd": {"vertical-align":"top"},
+    ".mjx-surd + .mjx-box": {display:"inline-flex"},
     
     ".mjx-mphantom *": {visibility:"hidden"},
 
@@ -126,7 +127,7 @@
     
     ".mjx-annotation-xml": {"line-height":"normal"},
     
-    ".mjx-menclose > svg": {fill:"none", stroke:"currentColor"},
+    ".mjx-menclose > svg": {fill:"none", stroke:"currentColor", overflow:"visible"},
 
     ".mjx-mtr":    {display:"table-row"},
     ".mjx-mlabeledtr": {display:"table-row"},
@@ -1865,11 +1866,12 @@
           node.parentNode.style.textAlign = styles.textAlign = values.indentalign;
           // ### FIXME: make percentage widths respond to changes in container
           if (shift) {
+            if (values.indentalign === 'right') node.style.marginRight = CHTML.Em(-shift);
             shift *= CHTML.em/CHTML.outerEm;
             HUB.Insert(styles,({
-              left: {marginLeft: CHTML.Em(shift)},
-              right: {marginRight: CHTML.Em(-shift)},
-              center: {marginLeft: CHTML.Em(shift), marginRight: CHTML.Em(-shift)}
+              left: {textIndent: CHTML.Em(shift)},
+              right: {display: 'flex', flexDirection: 'row-reverse'},
+              center: {textIndent: CHTML.Em(2*shift)}
             })[values.indentalign]);
           }
         }
@@ -2683,7 +2685,7 @@
         if (!this.data[1]) return;
         var BBOX = this.CHTML, bbox = this.data[1].CHTML, root = sqrt.firstChild;
         var scale = bbox.rscale;
-        var h = this.CHTMLrootHeight(bbox,sbox,scale)-d;
+        var h = this.CHTMLrootHeight(bbox,sbox,BBOX.scale)-d;
         var w = Math.min(bbox.w,bbox.r); // remove extra right-hand padding, if any
         var dx = Math.max(w,sbox.offset/scale); 
         if (h) root.style.verticalAlign = CHTML.Em(h/scale);
@@ -2694,7 +2696,7 @@
         return dx*scale;
       },
       CHTMLrootHeight: function (bbox,sbox,scale) {
-        return .45*(sbox.h+sbox.d-.9)+sbox.offset + Math.max(0,bbox.d-.075);
+        return .45*(sbox.h+sbox.d-.9*scale) + .6*scale + Math.max(0,bbox.d*bbox.scale-.075);
       }
     });
     

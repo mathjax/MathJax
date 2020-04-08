@@ -12,7 +12,7 @@
  *
  *  ---------------------------------------------------------------------
  *
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2020 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,9 +45,9 @@ if (window.MathJax) {window.MathJax = {AuthorConfig: window.MathJax}}
 
 // MathJax.isPacked = true; // This line is uncommented by the packer.
 
-MathJax.version = "2.7.7";
-MathJax.fileversion = "2.7.7";
-MathJax.cdnVersion = "2.7.7";  // specifies a revision to break caching
+MathJax.version = "2.7.8";
+MathJax.fileversion = "2.7.8";
+MathJax.cdnVersion = "2.7.8";  // specifies a revision to break caching
 MathJax.cdnFileVersions = {};  // can be used to specify revisions for individual files
 
 /**********************************************************/
@@ -667,7 +667,6 @@ MathJax.cdnFileVersions = {};  // can be used to specify revisions for individua
   var PATH = {};
   PATH[BASENAME] = "";                                        // empty path gets the root URL
   PATH.a11y = '[MathJax]/extensions/a11y';                    // a11y extensions
-  PATH.Contrib = "https://cdn.mathjax.org/mathjax/contrib";   // the third-party extensions
 
   BASE.Ajax = {
     loaded: {},         // files already loaded
@@ -1893,7 +1892,10 @@ MathJax.Hub = {
     config: [],      // list of configuration files to load
     styleSheets: [], // list of CSS files to load
     styles: {        // styles to generate in-line
-      ".MathJax_Preview": {color: "#888"}
+      ".MathJax_Preview": {
+        color: "#888",
+        display: "contents" // for RTL languages in Chrome (see issue #2190)
+      }
     },
     jax: [],         // list of input and output jax to load
     extensions: [],  // list of extensions to load
@@ -2910,7 +2912,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "Jax",
-    version: "2.7.7",
+    version: "2.7.8",
     directory: ROOT+"/jax",
     extensionDir: ROOT+"/extensions"
   });
@@ -2956,7 +2958,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "InputJax",
-    version: "2.7.7",
+    version: "2.7.8",
     directory: JAX.directory+"/input",
     extensionDir: JAX.extensionDir
   });
@@ -2990,7 +2992,7 @@ MathJax.Hub.Startup = {
     Remove: function (jax) {}
   },{
     id: "OutputJax",
-    version: "2.7.7",
+    version: "2.7.8",
     directory: JAX.directory+"/output",
     extensionDir: JAX.extensionDir,
     fontDir: ROOT+(BASE.isPacked?"":"/..")+"/fonts",
@@ -3074,7 +3076,7 @@ MathJax.Hub.Startup = {
     }
   },{
     id: "ElementJax",
-    version: "2.7.7",
+    version: "2.7.8",
     directory: JAX.directory+"/element",
     extensionDir: JAX.extensionDir,
     ID: 0,  // jax counter (for IDs)
@@ -3098,7 +3100,7 @@ MathJax.Hub.Startup = {
   //  Some "Fake" jax used to allow menu access for "Math Processing Error" messages
   //
   BASE.OutputJax.Error = {
-    id: "Error", version: "2.7.7", config: {}, errors: 0,
+    id: "Error", version: "2.7.8", config: {}, errors: 0,
     ContextMenu: function () {return BASE.Extension.MathEvents.Event.ContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     Mousedown:   function () {return BASE.Extension.MathEvents.Event.AltContextMenu.apply(BASE.Extension.MathEvents.Event,arguments)},
     getJaxFromMath: function (math) {return (math.nextSibling.MathJax||{}).error},
@@ -3117,7 +3119,7 @@ MathJax.Hub.Startup = {
     }
   };
   BASE.InputJax.Error = {
-    id: "Error", version: "2.7.7", config: {},
+    id: "Error", version: "2.7.8", config: {},
     sourceMenuTitle: /*_(MathMenu)*/ ["Original","Original Form"]
   };
 

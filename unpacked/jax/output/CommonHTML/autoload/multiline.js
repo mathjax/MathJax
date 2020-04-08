@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015-2019 The MathJax Consortium
+ *  Copyright (c) 2015-2020 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
-  var VERSION = "2.7.7";
+  var VERSION = "2.7.8";
   var MML = MathJax.ElementJax.mml,
       CONFIG = MathJax.Hub.config,
       CHTML = MathJax.OutputJax.CommonHTML;
@@ -125,7 +125,9 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       state.isLast = true;
       this.CHTMLaddLine(stack,start,[],state,ENDVALUES,broken);
 
-      node.style.width = stack.style.width = this.CHTML.pwidth = "100%";
+      if (parent.type === "math") {
+        node.style.width = stack.style.width = this.CHTML.pwidth = "100%";
+      }
       this.CHTML.mwidth = CHTML.Em(this.CHTML.w);
       this.CHTML.isMultiline = parent.CHTML.isMultiline = true;
       stack.style.verticalAlign = CHTML.Em(state.d - this.CHTML.d);
@@ -508,6 +510,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
       //
       if (this.data[this.base]) {
         var base = CHTML.addElement(node,"mjx-base");
+        var ic = this.data[this.base].CHTML.ic;
+        if (ic) base.style.marginRight = CHTML.Em(-ic);
         if (start.length > 1) {
           this.data[this.base].CHTMLmoveSlice(start.slice(1),end.slice(1),base,state,values,"marginLeft");
         } else {
