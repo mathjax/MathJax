@@ -1,7 +1,7 @@
 # MathJax
 ## Beautiful math in all browsers
 
-<img class="shield" alt="GitHub release version" src="https://img.shields.io/github/v/release/mathjax/MathJax-src.svg?sort=semver"> <img class="shield" alt="GitHub release version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2?label=release-v2.svg">
+<img class="shield" alt="GitHub release version" src="https://img.shields.io/github/v/release/mathjax/MathJax-src.svg?sort=semver"> <img class="shield" alt="GitHub release version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2.svg?label=release-v2">
 <a class="reference external image-reference" href="http://www.numfocus.org"><img alt="powered-by NumFocus" src="https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&amp;amp;colorA=E1523D&amp;amp;colorB=007D8A"></a>
 
 MathJax is an open-source JavaScript display engine for LaTeX, MathML,
@@ -75,13 +75,15 @@ If you are loading MathJax from a CDN into a web page, there is no
 need to install anything.  Simply use a `script` tag that loads
 MathJax from the CDN.  E.g.,
 
-    <script id="MathJax-script" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
+``` html
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+```
 
-See the
-[documentation](https://docs.mathjax.org/en/latest/index.html#browser-components)
-for more details.
+See the [MathJax
+documentation](https://docs.mathjax.org/en/latest/index.html#browser-components),
+the [MathJax Web Demos](https://github.com/mathjax/MathJax-demos-web),
+and the [MathJax Component
+Repository](https://github.com/mathjax/MathJax-demos-web) for more information.
 
 ### Hosting your own copy of the MathJax Components
 
@@ -89,21 +91,28 @@ If you want to host MathJax from your own server, you can do so by
 installing the `mathjax` package using `npm` and moving the `es5`
 directory to an appropriate location on your server:
 
-    npm install mathjax@3
-    mv node_modules/mathjax/es5 <path-to-server-location>/mathjax
+``` bash
+npm install mathjax@3
+mv node_modules/mathjax/es5 <path-to-server-location>/mathjax
+```
 
-Note that we are still making updates to version 2, so include `@3` when you install, since the latest chronological version may not be version 3.
+Note that we are still making updates to version 2, so include `@3`
+when you install, since the latest chronological version may not be
+version 3.
 
 Alternatively, you can get the files via GitHub:
 
-    git clone https://github.com/mathjax/MathJax.git mj-tmp
-    mv mj-tmp/es5 <path-to-server-location>/mathjax
-    rm -rf mj-tmp
+``` bash
+git clone https://github.com/mathjax/MathJax.git mj-tmp
+mv mj-tmp/es5 <path-to-server-location>/mathjax
+rm -rf mj-tmp
+```
 
 Then (in either case) you can use a script tag like the following:
 
-    <script id="MathJax-script" async
-        src="<url-to-your-site>/mathjax/tex-chtml.js"></script>
+``` html
+<script id="MathJax-script" async src="<url-to-your-site>/mathjax/tex-chtml.js"></script>
+```
 
 where `<url-to-your-site>` is replaced by the URL to the location
 where you moved the MathJax files above.
@@ -116,9 +125,12 @@ for details.
 
 To use MathJax components in a node application, install the `mathjax` package:
 
-    npm install mathjax@3
+``` bash
+npm install mathjax@3
+```
 
-(we are still making updates to version 2, so you should include `@3` since the latest chronological version may not be version 3).
+(we are still making updates to version 2, so you should include `@3`
+since the latest chronological version may not be version 3).
 
 Then require `mathjax` within your application:
 
@@ -138,10 +150,17 @@ require('mathjax').init({
 }).catch((err) => console.log(err.message));
 ```
 
-    
+**Note:** this technique is for node-based application only, not for
+browser applications.  This method sets up an alternative DOM
+implementation, which you don't need in the browser, and tells MathJax
+to use node's `require()` command to load external modules.  This
+setup will not work properly in the browser, even if you webpack it or
+bundle it in other ways.
+
 See the
-[documentation](https//docs.mathjax.org/en/latest/index.html#server-nodejs)
-for more details.
+[documentation](https://docs.mathjax.org/en/latest/index.html#server-nodejs)
+and the [MathJax Node
+Repository](https://github.com/mathjax/MathJax-demos-node) for more details.
 
 ## Reducing the Size of the Components Directory
 
@@ -152,11 +171,22 @@ example, if you are using the `tex-chtml.js` component, then you can
 remove the `tex-mml-chtml.js`, `tex-svg.js`, `tex-mml-svg.js`,
 `tex-chtml-full.js`, and `tex-svg-full.js` configurations, which will
 save considerable space.  Indeed, you should be able to remove
-everything other than `tex-chtml.js`, and the `input/tex/extensions`, `output/chtml/fonts/woff-v2`, `adaptors`, `a11y`, and `sre` directories.  If you are using the results only on the web, you can remove `adaptors` as well.  
+everything other than `tex-chtml.js`, and the `input/tex/extensions`,
+`output/chtml/fonts/woff-v2`, `adaptors`, `a11y`, and `sre`
+directories.  If you are using the results only on the web, you can
+remove `adaptors` as well.
 
-If you are not using A11Y support (e.g., speech generation, or semantic enrichment), then you can remove `a11y` and `sre` as well (though in this case you may need to disable the assistive tools in the MathJax contextual menu in order to avoid MathJax trying to load them when they aren't there).
+If you are not using A11Y support (e.g., speech generation, or
+semantic enrichment), then you can remove `a11y` and `sre` as well
+(though in this case you may need to disable the assistive tools in
+the MathJax contextual menu in order to avoid MathJax trying to load
+them when they aren't there).
 
-If you are using SVG rather than CommonHTML output (e.g., `tex-svg.js` rather than `tex-chtml.js`), you can remove the `output/chtml/fonts/woff-v2` directory.  If you are using MathML input rather than TeX (e.g., `mml-chtml.js` rather than `tex-chtml.js`), then you can remove `input/tex/extensions` as well.
+If you are using SVG rather than CommonHTML output (e.g., `tex-svg.js`
+rather than `tex-chtml.js`), you can remove the
+`output/chtml/fonts/woff-v2` directory.  If you are using MathML input
+rather than TeX (e.g., `mml-chtml.js` rather than `tex-chtml.js`),
+then you can remove `input/tex/extensions` as well.
 
 
 ## The Component Files and Pull Requests
@@ -165,7 +195,9 @@ The `es5` directory is generated automatically from the contents of the
 MathJax source repository.  You can rebuild the components using the
 command
 
-    npm run make-es5 --silent
+``` bash
+npm run make-es5 --silent
+```
 
 Note that since the contents of this repository are generated
 automatically, you should not submit pull requests that modify the
