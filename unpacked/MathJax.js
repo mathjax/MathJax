@@ -1933,7 +1933,7 @@ MathJax.Hub = {
       mpMouse: false,      //  true means pass mouse events to MathPlayer in IE
       texHints: true,      //  include class names for TeXAtom elements
       FastPreview: null,   //  use PreviewHTML output as preview?
-      assistiveMML: null,  //  include hidden MathML for screen readers?
+      assistiveMML: false, //  include hidden MathML for screen readers?
       inTabOrder: true,    //  set to false if math elements should be included in the tabindex
       semantics: false     //  add semantics tag with original form in MathML output
     },
