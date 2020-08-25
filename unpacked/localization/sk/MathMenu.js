@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sk","MathMenu",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           Show: "Zobrazi\u0165 matematiku ako",

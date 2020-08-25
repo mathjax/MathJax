@@ -34,7 +34,7 @@ if (MathJax.Extension["TeX/mhchem"]) {
 } else {
   
 MathJax.Extension["TeX/mhchem"] = {
-  version: "2.7.8",
+  version: "2.7.9",
   config: MathJax.Hub.CombineConfig("TeX.mhchem",{
     legacy: true
   })

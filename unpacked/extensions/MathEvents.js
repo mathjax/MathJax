@@ -26,7 +26,7 @@
  */
 
 (function (HUB,HTML,AJAX,CALLBACK,LOCALE,OUTPUT,INPUT) {
-  var VERSION = "2.7.8";
+  var VERSION = "2.7.9";
 
   var EXTENSION = MathJax.Extension;
   var ME = EXTENSION.MathEvents = {version: VERSION};
@@ -120,7 +120,10 @@
       LEFT: 37,
       UP: 38,
       RIGHT: 39,
-      DOWN: 40
+      DOWN: 40,
+      LESS: 188,
+      GREATER: 190,
+      DASH: 189
     },
 
     Mousedown: function (event) {return EVENT.Handler(event,"Mousedown",this)},

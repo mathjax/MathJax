@@ -21,7 +21,7 @@
 
 (function (SVG,MML,AJAX,HUB) {
 
-  var VERSION = "2.7.8";
+  var VERSION = "2.7.9";
 
   var ALPHABETS = "GyrePagellaMathJax_Alphabets",
       ARROWS = "GyrePagellaMathJax_Arrows",

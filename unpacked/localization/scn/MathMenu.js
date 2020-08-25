@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("scn","MathMenu",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           Show: "Ammustra la f\u00F2rmula sutta forma di",

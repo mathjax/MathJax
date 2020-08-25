@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("pt",null,{
   menuTitle: "portugu\u00EAs",
-  version: "2.7.8",
+  version: "2.7.9",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           MathProcessingError: "Erro no processamento das f\u00F3rmulas",

@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("kn","HelpDialog",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           Help: "\u0CAE\u0CBE\u0CA4\u0CCD \u0C9C\u0C95\u0CCD\u0CB7\u0CCD \u0CB8\u0CB9\u0CAF\u0CA4\u0CC6",

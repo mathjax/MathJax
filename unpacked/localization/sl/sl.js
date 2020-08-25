@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("sl",null,{
   menuTitle: "sloven\u0161\u010Dina",
-  version: "2.7.8",
+  version: "2.7.9",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax je na\u0161el pi\u0161kotek za uporabni\u0161ko konfiguracijo, ki vklju\u010Duje kodo za zagon. Ali jo \u017Eelite zagnati?\n\n(Pritisnite Prekli\u010Di, razen \u010De ste pi\u0161kotek sami nastavili.)",

@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("qqq","MathML",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           BadMglyph: "This error is displayed when processing a MathML mglyph element with a bad URL. Parameters:\n* %1 - the value of the src attribute",

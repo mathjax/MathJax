@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("da","MathMenu",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           Show: "Vis matematik som",

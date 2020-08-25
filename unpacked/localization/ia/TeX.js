@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ia","TeX",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
 

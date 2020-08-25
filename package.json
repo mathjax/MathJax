@@ -1,7 +1,7 @@
 {
   "name": "mathjax",
-  "version": "2.7.8",
-  "description": "Beautiful math in all browsers. MathJax is an open-source JavaScript display engine for LaTeX, MathML, and AsciiMath notation that works in all browsers.",
+  "version": "2.7.9",
+  "description": "Beautiful and accessible math in all browsers. MathJax is an open-source JavaScript display engine for LaTeX, MathML, and AsciiMath notation that works in all browsers.",
   "main": "./unpacked/MathJax.js",
   "keywords": [
     "math",

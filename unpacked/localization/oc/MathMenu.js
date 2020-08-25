@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("oc","MathMenu",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           Show: "Afichar jos la forma",

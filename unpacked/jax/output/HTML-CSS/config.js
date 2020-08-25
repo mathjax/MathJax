@@ -27,7 +27,7 @@
 
 MathJax.OutputJax["HTML-CSS"] = MathJax.OutputJax({
   id: "HTML-CSS",
-  version: "2.7.8",
+  version: "2.7.9",
   directory: MathJax.OutputJax.directory + "/HTML-CSS",
   extensionDir: MathJax.OutputJax.extensionDir + "/HTML-CSS",
   autoloadDir: MathJax.OutputJax.directory + "/HTML-CSS/autoload",

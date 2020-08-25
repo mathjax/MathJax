@@ -29,7 +29,7 @@
   var SETTINGS = HUB.config.menuSettings;
   
   var AssistiveMML = MathJax.Extension["AssistiveMML"] = {
-    version: "2.7.8",
+    version: "2.7.9",
     
     config: HUB.CombineConfig("AssistiveMML",{
       disabled: false,
@@ -112,6 +112,8 @@
     //
     HandleMML: function (state) {
       var m = state.jax.length, jax, mml, frame, span;
+      var MML = MathJax.ElementJax.mml;
+      MML.copyAttributes.id = 1;
       while (state.i < m) {
         jax = state.jax[state.i];
         frame = document.getElementById(jax.inputID+"-Frame");
@@ -120,6 +122,7 @@
           try {
             mml = jax.root.toMathML("").replace(/\n */g,"").replace(/<!--.*?-->/g,"");
           } catch (err) {
+            MML.copyAttributes.id = true;
             if (!err.restart) throw err; // an actual error
             return MathJax.Callback.After(["HandleMML",this,state],err.restart);
           }
@@ -137,6 +140,7 @@
         }
         state.i++;
       }
+      MML.copyAttributes.id = true;
       state.callback();
     }
     

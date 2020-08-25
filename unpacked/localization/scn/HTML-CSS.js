@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("scn","HTML-CSS",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           LoadWebFont: "Scarricamentu d\u00FB tipu di car\u00E0ttiri web %1",
