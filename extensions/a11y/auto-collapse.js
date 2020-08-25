@@ -1,1 +1,251 @@
-!function(a){var b=a.config.menuSettings,c={},d=MathJax.Ajax.config.path;d.a11y||(d.a11y=a.config.root+"/extensions/a11y");var e=MathJax.Extension["auto-collapse"]={version:"1.5.0",config:a.CombineConfig("auto-collapse",{disabled:!1}),dependents:[],Enable:function(d,e){b.autocollapse=!0,e&&(c.autocollapse=!0),this.config.disabled=!1,MathJax.Extension.collapsible.Enable(!1,e),d&&a.Queue(["Reprocess",a],["CollapseWideMath",this])},Disable:function(d,e){b.autocollapse=!1,e&&(c.autocollapse=!1),this.config.disabled=!0;for(var f=this.dependents.length-1;f>=0;f--){var g=this.dependents[f];g.Disable&&g.Disable(!1,e)}d&&a.Queue(["Rerender",a])},Dependent:function(a){this.dependents.push(a)},Startup:function(){var b=MathJax.Extension.collapsible;b&&b.Dependent(this),a.postInputHooks.Add(["Filter",e],150),a.Queue(function(){return e.CollapseWideMath()}),window.addEventListener?window.addEventListener("resize",e.resizeHandler,!1):window.attachEvent?window.attachEvent("onresize",e.resizeHandler):window.onresize=e.resizeHandler},Filter:function(a,b,c){a.enriched&&!this.config.disabled&&("block"===a.root.Get("display")||c.parentNode.childNodes.length<=3)&&(a.root.SRE={action:this.Actions(a.root)})},Actions:function(a){var b=[];return this.getActions(a,0,b),this.sortActions(b)},getActions:function(a,b,c){if(!a.isToken&&a.data){b++;for(var d=0,e=a.data.length;d<e;d++)if(a.data[d]){var f=a.data[d];f.collapsible?(c[b]||(c[b]=[]),c[b].push(f),this.getActions(f.data[1],b,c)):this.getActions(f,b,c)}}},sortActions:function(a){for(var b=[],c=0,d=a.length;c<d;c++)a[c]&&(b=b.concat(a[c].sort(this.sortActionsBy)));return b},sortActionsBy:function(a,b){return a=a.data[1].complexity,b=b.data[1].complexity,a<b?-1:a>b?1:0},CollapseWideMath:function(b){if(!this.config.disabled){this.GetContainerWidths(b);var c=a.getAllJax(b),d={collapse:[],jax:c,m:c.length,i:0,changed:!1};return this.collapseState(d)}},collapseState:function(b){for(var c=b.collapse;b.i<b.m;){var d=b.jax[b.i],e=d.root.SRE;if(b.changed=!1,e&&e.action.length&&(e.cwidth<e.m||e.cwidth>e.M)){var f=this.getActionWidths(d,b);if(f)return f;this.collapseActions(e,b),b.changed&&c.push(d.SourceElement())}b.i++}if(0!==c.length)return 1===c.length&&(c=c[0]),a.Rerender(c)},collapseActions:function(a,b){for(var c=a.width,d=c,e=1e6,f=a.action.length-1;f>=0;f--){var g=a.action[f],h=g.selection;c>a.cwidth?(g.selection=1,d=g.SREwidth,e=c):g.selection=2,c=g.SREwidth,a.DOMupdate?document.getElementById(g.id).setAttribute("selection",g.selection):g.selection!==h&&(b.changed=!0)}a.m=d,a.M=e},getActionWidths:function(a,b){if(!a.root.SRE.actionWidths){MathJax.OutputJax[a.outputJax].getMetrics(a);try{this.computeActionWidths(a)}catch(a){if(!a.restart)throw a;return MathJax.Callback.After(["collapseState",this,b],a.restart)}b.changed=!0}return null},computeActionWidths:function(a){var b,c=a.root.SRE,d=c.action,e={};for(c.width=a.sreGetRootWidth(e),b=d.length-1;b>=0;b--)d[b].selection=2;for(b=d.length-1;b>=0;b--){var f=d[b];null==f.SREwidth&&(f.selection=1,f.SREwidth=a.sreGetActionWidth(e,f))}c.actionWidths=!0},GetContainerWidths:function(b){var c,d,e,f,g,h=a.getAllJax(b),i=MathJax.HTML.Element("span",{style:{display:"block"}}),j=[];for(c=0,d=h.length;c<d;c++)f=h[c],g=f.root,SRE=g.SRE,SRE&&SRE.action.length&&(null==SRE.width&&(f.sreGetMetrics(),SRE.m=SRE.width,SRE.M=1e6),e=f.SourceElement(),e.previousSibling.style.display="none",e.parentNode.insertBefore(i.cloneNode(!1),e),j.push([f,e]));for(c=0,d=j.length;c<d;c++)f=j[c][0],e=j[c][1],e.previousSibling.offsetWidth&&(f.root.SRE.cwidth=e.previousSibling.offsetWidth*f.root.SRE.em);for(c=0,d=j.length;c<d;c++)f=j[c][0],e=j[c][1],e.parentNode.removeChild(e.previousSibling),e.previousSibling.style.display=""},timer:null,running:!1,retry:!1,saved_delay:0,resizeHandler:function(a){if(!e.config.disabled){if(e.running)return void(e.retry=!0);e.timer&&clearTimeout(e.timer),e.timer=setTimeout(e.resizeAction,100)}},resizeAction:function(){e.timer=null,e.running=!0,a.Queue(function(){e.saved_delay=a.processSectionDelay,a.processSectionDelay=0},["CollapseWideMath",e],["resizeCheck",e])},resizeCheck:function(){e.running=!1,a.processSectionDelay=e.saved_delay,e.retry&&(e.retry=!1,setTimeout(e.resizeHandler,0))}};a.Register.StartupHook("End Extensions",function(){null==b.autocollapse?b.autocollapse=!e.config.disabled:e.config.disabled=!b.autocollapse,a.Register.StartupHook("MathMenu Ready",function(){c=MathJax.Menu.cookie;var a,d=function(a){e[b.autocollapse?"Enable":"Disable"](!0,!0),MathJax.Menu.saveCookie()},f=MathJax.Menu.ITEM,g=MathJax.Menu.menu,h=f.CHECKBOX(["AutoCollapse","Auto Collapse"],"autocollapse",{action:d}),i=(g.FindId("Accessibility")||{}).submenu;i?(a=i.IndexOfId("AutoCollapse"),null!==a?i.items[a]=h:(a=i.IndexOfId("CollapsibleMath"),i.items.splice(a+1,0,h))):(a=g.IndexOfId("CollapsibleMath"),g.items.splice(a+1,0,h));var j=function(){e[b.autocollapse?"Enable":"Disable"]()};MathJax.Extension.collapse?j():MathJax.Hub.Register.StartupHook("Auto Collapse Ready",j)},25)},25)}(MathJax.Hub),MathJax.ElementJax.Augment({sreGetMetrics:function(){MathJax.OutputJax[this.outputJax].sreGetMetrics(this,this.root.SRE)},sreGetRootWidth:function(a){return MathJax.OutputJax[this.outputJax].sreGetRootWidth(this,a)},sreGetActionWidth:function(a,b){return MathJax.OutputJax[this.outputJax].sreGetActionWidth(this,a,b)}}),MathJax.OutputJax.Augment({getMetrics:function(){},sreGetMetrics:function(a,b){b.cwidth=1e6,b.width=0,b.em=12},sreGetRootWidth:function(a,b){return 0},sreGetActionWidth:function(a,b,c){return 0}}),MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function(){MathJax.OutputJax["HTML-CSS"].Augment({sreGetMetrics:function(a,b){b.width=a.root.data[0].HTMLspanElement().parentNode.bbox.w,b.em=1/a.HTMLCSS.em/a.HTMLCSS.scale},sreGetRootWidth:function(a,b){var c=a.root.data[0].HTMLspanElement();return b.box=c.parentNode,b.box.bbox.w},sreGetActionWidth:function(a,b,c){return a.root.data[0].toHTML(b.box).bbox.w}})}),MathJax.Hub.Register.StartupHook("SVG Jax Ready",function(){MathJax.OutputJax.SVG.Augment({getMetrics:function(a){this.em=MathJax.ElementJax.mml.mbase.prototype.em=a.SVG.em,this.ex=a.SVG.ex,this.linebreakWidth=a.SVG.lineWidth,this.cwidth=a.SVG.cwidth},sreGetMetrics:function(a,b){b.width=a.root.SVGdata.w/1e3,b.em=1/a.SVG.em},sreGetRootWidth:function(a,b){return b.span=document.getElementById(a.inputID+"-Frame"),a.root.SVGdata.w/1e3},sreGetActionWidth:function(a,b,c){this.mathDiv=b.span,b.span.appendChild(this.textSVG);try{a.root.data[0].toSVG()}catch(a){var d=a}if(b.span.removeChild(this.textSVG),d)throw d;return a.root.data[0].SVGdata.w/1e3}})}),MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function(){MathJax.OutputJax.CommonHTML.Augment({sreGetMetrics:function(a,b){b.width=a.root.CHTML.w,b.em=1/a.CHTML.em/a.CHTML.scale},sreGetRootWidth:function(a,b){return b.span=document.getElementById(a.inputID+"-Frame").firstChild,b.tmp=document.createElement("span"),b.tmp.className=b.span.className,a.root.CHTML.w/a.CHTML.scale},sreGetActionWidth:function(a,b,c){b.span.parentNode.replaceChild(b.tmp,b.span),MathJax.OutputJax.CommonHTML.CHTMLnode=b.tmp;try{a.root.data[0].toCommonHTML(b.tmp)}catch(a){var d=a}if(b.tmp.parentNode.replaceChild(b.span,b.tmp),d)throw d;return a.root.data[0].CHTML.w/a.CHTML.scale}})}),MathJax.Hub.Register.StartupHook("NativeMML Jax Ready",function(){MathJax.OutputJax.NativeMML.Augment({sreGetMetrics:function(a,b){var c=document.getElementById(a.inputID+"-Frame");b.width=c.offsetWidth,b.em=1,b.DOMupdate=!0},sreGetRootWidth:function(a,b){return b.span=document.getElementById(a.inputID+"-Frame").firstChild,b.span.offsetWidth},sreGetActionWidth:function(a,b,c){return document.getElementById(c.id).setAttribute("selection",1),b.span.offsetWidth}})}),MathJax.Ajax.Require("[a11y]/collapsible.js"),MathJax.Hub.Register.StartupHook("Collapsible Ready",function(){MathJax.Extension["auto-collapse"].Startup(),MathJax.Hub.Startup.signal.Post("Auto Collapse Ready"),MathJax.Ajax.loadComplete("[a11y]/auto-collapse.js")});
+!function(c) {
+    var s = c.config.menuSettings, r = {}, t = MathJax.Ajax.config.path;
+    t.a11y || (t.a11y = c.config.root + "/extensions/a11y");
+    var l = MathJax.Extension["auto-collapse"] = {
+        version: "1.6.0",
+        config: c.CombineConfig("auto-collapse", {
+            disabled: !1
+        }),
+        dependents: [],
+        Enable: function(t, e) {
+            s.autocollapse = !0, e && (r.autocollapse = !0), this.config.disabled = !1, MathJax.Extension.collapsible.Enable(!1, e), 
+            t && c.Queue([ "Reprocess", c ], [ "CollapseWideMath", this ]);
+        },
+        Disable: function(t, e) {
+            s.autocollapse = !1, e && (r.autocollapse = !1), this.config.disabled = !0;
+            for (var n = this.dependents.length - 1; 0 <= n; n--) {
+                var o = this.dependents[n];
+                o.Disable && o.Disable(!1, e);
+            }
+            t && c.Queue([ "Rerender", c ]);
+        },
+        Dependent: function(t) {
+            this.dependents.push(t);
+        },
+        Startup: function() {
+            var t = MathJax.Extension.collapsible;
+            t && t.Dependent(this), c.postInputHooks.Add([ "Filter", l ], 150), c.Queue(function() {
+                return l.CollapseWideMath();
+            }), window.addEventListener ? window.addEventListener("resize", l.resizeHandler, !1) : window.attachEvent ? window.attachEvent("onresize", l.resizeHandler) : window.onresize = l.resizeHandler;
+        },
+        Filter: function(t, e, n) {
+            t.enriched && !this.config.disabled && ("block" === t.root.Get("display") || n.parentNode.childNodes.length <= 3) && (t.root.SRE = {
+                action: this.Actions(t.root)
+            });
+        },
+        Actions: function(t) {
+            var e = [];
+            return this.getActions(t, 0, e), this.sortActions(e);
+        },
+        getActions: function(t, e, n) {
+            if (!t.isToken && t.data) {
+                e++;
+                for (var o, i = 0, a = t.data.length; i < a; i++) {
+                    t.data[i] && ((o = t.data[i]).collapsible ? (n[e] || (n[e] = []), n[e].push(o), 
+                    this.getActions(o.data[1], e, n)) : this.getActions(o, e, n));
+                }
+            }
+        },
+        sortActions: function(t) {
+            for (var e = [], n = 0, o = t.length; n < o; n++) t[n] && (e = e.concat(t[n].sort(this.sortActionsBy)));
+            return e;
+        },
+        sortActionsBy: function(t, e) {
+            return (t = t.data[1].complexity) < (e = e.data[1].complexity) ? -1 : e < t ? 1 : 0;
+        },
+        CollapseWideMath: function(t) {
+            if (!this.config.disabled) {
+                this.GetContainerWidths(t);
+                var e = c.getAllJax(t), n = {
+                    collapse: [],
+                    jax: e,
+                    m: e.length,
+                    i: 0,
+                    changed: !1
+                };
+                return this.collapseState(n);
+            }
+        },
+        collapseState: function(t) {
+            for (var e = t.collapse; t.i < t.m; ) {
+                var n = t.jax[t.i], o = n.root.SRE;
+                if (t.changed = !1, o && o.action.length && (o.cwidth < o.m || o.cwidth > o.M)) {
+                    var i = this.getActionWidths(n, t);
+                    if (i) return i;
+                    this.collapseActions(o, t), t.changed && e.push(n.SourceElement());
+                }
+                t.i++;
+            }
+            if (0 !== e.length) return 1 === e.length && (e = e[0]), c.Rerender(e);
+        },
+        collapseActions: function(t, e) {
+            for (var n = t.width, o = n, i = 1e6, a = t.action.length - 1; 0 <= a; a--) {
+                var s = t.action[a], r = s.selection;
+                n > t.cwidth ? (s.selection = 1, o = s.SREwidth, i = n) : s.selection = 2, n = s.SREwidth, 
+                t.DOMupdate ? document.getElementById(s.id).setAttribute("selection", s.selection) : s.selection !== r && (e.changed = !0);
+            }
+            t.m = o, t.M = i;
+        },
+        getActionWidths: function(t, e) {
+            if (!t.root.SRE.actionWidths) {
+                MathJax.OutputJax[t.outputJax].getMetrics(t);
+                try {
+                    this.computeActionWidths(t);
+                } catch (t) {
+                    if (!t.restart) throw t;
+                    return MathJax.Callback.After([ "collapseState", this, e ], t.restart);
+                }
+                e.changed = !0;
+            }
+            return null;
+        },
+        computeActionWidths: function(t) {
+            var e, n = t.root.SRE, o = n.action, i = {};
+            for (n.width = t.sreGetRootWidth(i), e = o.length - 1; 0 <= e; e--) o[e].selection = 2;
+            for (e = o.length - 1; 0 <= e; e--) {
+                var a = o[e];
+                null == a.SREwidth && (a.selection = 1, a.SREwidth = t.sreGetActionWidth(i, a));
+            }
+            n.actionWidths = !0;
+        },
+        GetContainerWidths: function(t) {
+            for (var e, n, o, i = c.getAllJax(t), a = MathJax.HTML.Element("span", {
+                style: {
+                    display: "block"
+                }
+            }), s = [], r = 0, l = i.length; r < l; r++) o = (n = i[r]).root, SRE = o.SRE, SRE && SRE.action.length && (null == SRE.width && (n.sreGetMetrics(), 
+            SRE.m = SRE.width, SRE.M = 1e6), (e = n.SourceElement()).previousSibling.style.display = "none", 
+            e.parentNode.insertBefore(a.cloneNode(!1), e), s.push([ n, e ]));
+            for (r = 0, l = s.length; r < l; r++) n = s[r][0], (e = s[r][1]).previousSibling.offsetWidth && (n.root.SRE.cwidth = e.previousSibling.offsetWidth * n.root.SRE.em);
+            for (r = 0, l = s.length; r < l; r++) n = s[r][0], (e = s[r][1]).parentNode.removeChild(e.previousSibling), 
+            e.previousSibling.style.display = "";
+        },
+        timer: null,
+        running: !1,
+        retry: !1,
+        saved_delay: 0,
+        resizeHandler: function(t) {
+            l.config.disabled || (l.running ? l.retry = !0 : (l.timer && clearTimeout(l.timer), 
+            l.timer = setTimeout(l.resizeAction, 100)));
+        },
+        resizeAction: function() {
+            l.timer = null, l.running = !0, c.Queue(function() {
+                l.saved_delay = c.processSectionDelay, c.processSectionDelay = 0;
+            }, [ "CollapseWideMath", l ], [ "resizeCheck", l ]);
+        },
+        resizeCheck: function() {
+            l.running = !1, c.processSectionDelay = l.saved_delay, l.retry && (l.retry = !1, 
+            setTimeout(l.resizeHandler, 0));
+        }
+    };
+    c.Register.StartupHook("End Extensions", function() {
+        null == s.autocollapse ? s.autocollapse = !l.config.disabled : l.config.disabled = !s.autocollapse, 
+        c.Register.StartupHook("MathMenu Ready", function() {
+            r = MathJax.Menu.cookie;
+            var t, e = MathJax.Menu.ITEM, n = MathJax.Menu.menu, o = e.CHECKBOX([ "AutoCollapse", "Auto Collapse" ], "autocollapse", {
+                action: function(t) {
+                    l[s.autocollapse ? "Enable" : "Disable"](!0, !0), MathJax.Menu.saveCookie();
+                }
+            }), i = (n.FindId("Accessibility") || {}).submenu;
+            i ? null !== (t = i.IndexOfId("AutoCollapse")) ? i.items[t] = o : (t = i.IndexOfId("CollapsibleMath"), 
+            i.items.splice(t + 1, 0, o)) : (t = n.IndexOfId("CollapsibleMath"), n.items.splice(t + 1, 0, o));
+            function a() {
+                l[s.autocollapse ? "Enable" : "Disable"]();
+            }
+            MathJax.Extension.collapse ? a() : MathJax.Hub.Register.StartupHook("Auto Collapse Ready", a);
+        }, 25);
+    }, 25);
+}(MathJax.Hub), MathJax.ElementJax.Augment({
+    sreGetMetrics: function() {
+        MathJax.OutputJax[this.outputJax].sreGetMetrics(this, this.root.SRE);
+    },
+    sreGetRootWidth: function(t) {
+        return MathJax.OutputJax[this.outputJax].sreGetRootWidth(this, t);
+    },
+    sreGetActionWidth: function(t, e) {
+        return MathJax.OutputJax[this.outputJax].sreGetActionWidth(this, t, e);
+    }
+}), MathJax.OutputJax.Augment({
+    getMetrics: function() {},
+    sreGetMetrics: function(t, e) {
+        e.cwidth = 1e6, e.width = 0, e.em = 12;
+    },
+    sreGetRootWidth: function(t, e) {
+        return 0;
+    },
+    sreGetActionWidth: function(t, e, n) {
+        return 0;
+    }
+}), MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready", function() {
+    MathJax.OutputJax["HTML-CSS"].Augment({
+        sreGetMetrics: function(t, e) {
+            e.width = t.root.data[0].HTMLspanElement().parentNode.bbox.w, e.em = 1 / t.HTMLCSS.em / t.HTMLCSS.scale;
+        },
+        sreGetRootWidth: function(t, e) {
+            var n = t.root.data[0].HTMLspanElement();
+            return e.box = n.parentNode, e.box.bbox.w;
+        },
+        sreGetActionWidth: function(t, e, n) {
+            return t.root.data[0].toHTML(e.box).bbox.w;
+        }
+    });
+}), MathJax.Hub.Register.StartupHook("SVG Jax Ready", function() {
+    MathJax.OutputJax.SVG.Augment({
+        getMetrics: function(t) {
+            this.em = MathJax.ElementJax.mml.mbase.prototype.em = t.SVG.em, this.ex = t.SVG.ex, 
+            this.linebreakWidth = t.SVG.lineWidth, this.cwidth = t.SVG.cwidth;
+        },
+        sreGetMetrics: function(t, e) {
+            e.width = t.root.SVGdata.w / 1e3, e.em = 1 / t.SVG.em;
+        },
+        sreGetRootWidth: function(t, e) {
+            return e.span = document.getElementById(t.inputID + "-Frame"), t.root.SVGdata.w / 1e3;
+        },
+        sreGetActionWidth: function(t, e, n) {
+            this.mathDiv = e.span, e.span.appendChild(this.textSVG);
+            try {
+                t.root.data[0].toSVG();
+            } catch (t) {
+                var o = t;
+            }
+            if (e.span.removeChild(this.textSVG), o) throw o;
+            return t.root.data[0].SVGdata.w / 1e3;
+        }
+    });
+}), MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready", function() {
+    MathJax.OutputJax.CommonHTML.Augment({
+        sreGetMetrics: function(t, e) {
+            e.width = t.root.CHTML.w, e.em = 1 / t.CHTML.em / t.CHTML.scale;
+        },
+        sreGetRootWidth: function(t, e) {
+            return e.span = document.getElementById(t.inputID + "-Frame").firstChild, e.tmp = document.createElement("span"), 
+            e.tmp.className = e.span.className, t.root.CHTML.w / t.CHTML.scale;
+        },
+        sreGetActionWidth: function(t, e, n) {
+            e.span.parentNode.replaceChild(e.tmp, e.span), MathJax.OutputJax.CommonHTML.CHTMLnode = e.tmp;
+            try {
+                t.root.data[0].toCommonHTML(e.tmp);
+            } catch (t) {
+                var o = t;
+            }
+            if (e.tmp.parentNode.replaceChild(e.span, e.tmp), o) throw o;
+            return t.root.data[0].CHTML.w / t.CHTML.scale;
+        }
+    });
+}), MathJax.Hub.Register.StartupHook("NativeMML Jax Ready", function() {
+    MathJax.OutputJax.NativeMML.Augment({
+        sreGetMetrics: function(t, e) {
+            var n = document.getElementById(t.inputID + "-Frame");
+            e.width = n.offsetWidth, e.em = 1, e.DOMupdate = !0;
+        },
+        sreGetRootWidth: function(t, e) {
+            return e.span = document.getElementById(t.inputID + "-Frame").firstChild, e.span.offsetWidth;
+        },
+        sreGetActionWidth: function(t, e, n) {
+            return document.getElementById(n.id).setAttribute("selection", 1), e.span.offsetWidth;
+        }
+    });
+}), MathJax.Ajax.Require("[a11y]/collapsible.js"), MathJax.Hub.Register.StartupHook("Collapsible Ready", function() {
+    MathJax.Extension["auto-collapse"].Startup(), MathJax.Hub.Startup.signal.Post("Auto Collapse Ready"), 
+    MathJax.Ajax.loadComplete("[a11y]/auto-collapse.js");
+});
