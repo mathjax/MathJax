@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("lt","MathML",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           BadMglyph: "Netinkamas matematikos glifas: %1",

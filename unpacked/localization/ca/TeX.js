@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("ca","TeX",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Sobra una clau d'apertura o falta una clau de tancament",

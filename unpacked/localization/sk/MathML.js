@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sk","MathML",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           BadMglyph: "Chybn\u00FD mglyph: %1",

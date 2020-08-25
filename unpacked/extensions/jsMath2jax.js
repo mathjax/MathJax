@@ -34,7 +34,7 @@
  */
 
 MathJax.Extension.jsMath2jax = {
-  version: "2.7.8",
+  version: "2.7.9",
   
   config: {
     preview: "TeX"    // Set to "none" to prevent preview strings from being inserted

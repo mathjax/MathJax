@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("sk","TeX",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Prebyto\u010Dn\u00E1 otv\u00E1raj\u00FAca alebo uzavieracia z\u00E1tvorka",

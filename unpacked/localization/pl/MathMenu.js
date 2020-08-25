@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("pl","MathMenu",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           Show: "Poka\u017C wzory jako",

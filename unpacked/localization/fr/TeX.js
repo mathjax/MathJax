@@ -18,7 +18,7 @@
  *
  */
 MathJax.Localization.addTranslation("fr","TeX",{
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           ExtraOpenMissingClose: "Accolade ouvrante superflue ou accolade fermante manquante",

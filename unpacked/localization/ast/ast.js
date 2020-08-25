@@ -19,11 +19,11 @@
  */
 MathJax.Localization.addTranslation("ast",null,{
   menuTitle: "asturianu",
-  version: "2.7.8",
+  version: "2.7.9",
   isLoaded: true,
   domains: {
     "_": {
-        version: "2.7.8",
+        version: "2.7.9",
         isLoaded: true,
         strings: {
           CookieConfig: "MathJax alcontr\u00F3 una cookie de configuraci\u00F3n d'usuariu qu'incluye c\u00F3digu a executar. \u00BFQuier executar esi c\u00F3digu?\n\n(Tendr\u00EDa de calcar \u00ABEncaboxar\u00BB a menos que creara la cookie vust\u00E9 mesmu.)",

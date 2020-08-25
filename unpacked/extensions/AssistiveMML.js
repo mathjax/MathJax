@@ -29,7 +29,7 @@
   var SETTINGS = HUB.config.menuSettings;
   
   var AssistiveMML = MathJax.Extension["AssistiveMML"] = {
-    version: "2.7.8",
+    version: "2.7.9",
     
     config: HUB.CombineConfig("AssistiveMML",{
       disabled: false,
