@@ -120,7 +120,10 @@
       LEFT: 37,
       UP: 38,
       RIGHT: 39,
-      DOWN: 40
+      DOWN: 40,
+      LESS: 188,
+      GREATER: 190,
+      DASH: 189
     },
 
     Mousedown: function (event) {return EVENT.Handler(event,"Mousedown",this)},
