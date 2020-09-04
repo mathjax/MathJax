@@ -35,8 +35,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready", function () {
     //
     // Replace InternalMath with parser that handles some text macros
     //
-    InternalMath: function(text,level) {
-      var mml = TextParser(text, {}).Parse();
+    InternalMath: function(text,level,font) {
+      var mml = TextParser(text, font ? {mathvariant: font} : {}).Parse();
       if (level != null) {
         mml = [MML.mstyle.apply(MML,mml).With({displaystyle:false, scriptlevel:level})];
       } else if (mml.length > 1) {
