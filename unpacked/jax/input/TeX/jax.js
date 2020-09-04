@@ -963,11 +963,11 @@
         mathfrak:          ['Macro','{\\frak #1}',1],
         mathsf:            ['Macro','{\\sf #1}',1],
         mathtt:            ['Macro','{\\tt #1}',1],
-        textrm:            ['Macro','\\mathord{\\rm\\text{#1}}',1],
-        textit:            ['Macro','\\mathord{\\it\\text{#1}}',1],
-        textbf:            ['Macro','\\mathord{\\bf\\text{#1}}',1],
-        textsf:            ['Macro','\\mathord{\\sf\\text{#1}}',1],
-        texttt:            ['Macro','\\mathord{\\tt\\text{#1}}',1],
+        textrm:            ['HBox',null,MML.VARIANT.NORMAL],
+        textit:            ['HBox',null,MML.VARIANT.ITALIC],
+        textbf:            ['HBox',null,MML.VARIANT.BOLD],
+        textsf:            ['HBox',null,MML.VARIANT.SANSSERIF],
+        texttt:            ['HBox',null,MML.VARIANT.MONOSPACE],
         pmb:               ['Macro','\\rlap{#1}\\kern1px{#1}',1],
         TeX:               ['Macro','T\\kern-.14em\\lower.5ex{E}\\kern-.115em X'],
         LaTeX:             ['Macro','L\\kern-.325em\\raise.21em{\\scriptstyle{A}}\\kern-.17em\\TeX'],
@@ -1624,8 +1624,8 @@
       this.Push(MML.TeXAtom(MML.munderover(bot,null,top)).With({texClass: MML.TEXCLASS.REL}));
     },
     
-    HBox: function (name,style) {
-      this.Push.apply(this,this.InternalMath(this.GetArgument(name),style));
+    HBox: function (name,style,font) {
+      this.Push.apply(this,this.InternalMath(this.GetArgument(name),style,font));
     },
     
     FBox: function (name) {
@@ -2108,8 +2108,9 @@
     /*
      *  Break up a string into text and math blocks
      */
-    InternalMath: function (text,level) {
-      var def = (this.stack.env.font ? {mathvariant: this.stack.env.font} : {});
+    InternalMath: function (text,level,font) {
+      var variant = font || this.stack.env.font;
+      var def = (variant ? {mathvariant: variant} : {});
       var mml = [], i = 0, k = 0, c, match = '', braces = 0;
       if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
         while (i < text.length) {
