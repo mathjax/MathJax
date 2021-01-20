@@ -2699,7 +2699,7 @@
 	var scale = this.HTMLgetScale();
 	var t = HTMLCSS.TeX.rule_thickness * scale, p,q, H, W;
 	if (this.Get("displaystyle")) {p = HTMLCSS.TeX.x_height * scale} else {p = t}
-	q = Math.max(t + p/4,1.5*HTMLCSS.TeX.min_rule_thickness/this.em); // force to be at least 1px
+	q = Math.max(t + p/4,1.5*HTMLCSS.TeX.min_rule_thickness*scale/this.em); // force to be at least 1px
 	var BASE = this.HTMLboxChild(0,base);
 	H = BASE.bbox.h + BASE.bbox.d + q + t;
         HTMLCSS.createDelimiter(surd,0x221A,H,scale);
@@ -2716,9 +2716,9 @@
 	}
 	H = BASE.bbox.h + q + t;
         q = H*HTMLCSS.rfuzz; if (surd.isMultiChar) {q = HTMLCSS.rfuzz}
-	x = this.HTMLaddRoot(sqrt,surd,x,surd.bbox.h+surd.bbox.d-H,scale);
+        x = this.HTMLaddRoot(sqrt,surd,x,surd.bbox.h+surd.bbox.d-H,scale);
 	HTMLCSS.placeBox(surd,x,H-surd.bbox.h);
-	HTMLCSS.placeBox(rule,x+surd.bbox.w,H-rule.bbox.h+q);
+	HTMLCSS.placeBox(rule,x+surd.bbox.w,H-rule.bbox.h/scale+q - .01*scale*scale*scale);
 	HTMLCSS.placeBox(base,x+surd.bbox.w,0);
 	this.HTMLhandleSpace(span);
 	this.HTMLhandleColor(span);
