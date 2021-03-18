@@ -1776,11 +1776,14 @@
     
     CrLaTeX: function (name, nobrackets) {
       var n;
-      if (!nobrackets && this.string.charAt(this.i) === "[") {
-        n = this.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
-        if (n && !this.matchDimen(n)) {
-          TEX.Error(["BracketMustBeDimension",
-                     "Bracket argument to %1 must be a dimension",name]);
+      if (!nobrackets) {
+        if (this.string.charAt(this.i) === "*") this.i++;
+        if (this.string.charAt(this.i) === "[") {
+          n = this.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
+          if (n && !this.matchDimen(n)) {
+            TEX.Error(["BracketMustBeDimension",
+                       "Bracket argument to %1 must be a dimension",name]);
+          }
         }
       }
       this.Push(STACKITEM.cell().With({isCR: true, name: name, linebreak: true}));
