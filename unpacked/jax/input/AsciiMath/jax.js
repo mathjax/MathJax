@@ -499,6 +499,7 @@ var AMsymbols = [
 {input:"-=",  tag:"mo", output:"\u2261", tex:"equiv", ttype:CONST},
 {input:"~=",  tag:"mo", output:"\u2245", tex:"cong", ttype:CONST},
 {input:"~~",  tag:"mo", output:"\u2248", tex:"approx", ttype:CONST},
+{input:"~",  tag:"mo", output:"\u223C", tex:"sim", ttype:CONST},
 {input:"prop", tag:"mo", output:"\u221D", tex:"propto", ttype:CONST},
 
 //logical symbols
@@ -544,6 +545,7 @@ var AMsymbols = [
 {input:"del",  tag:"mo", output:"\u2202", tex:"partial", ttype:CONST},
 {input:"grad", tag:"mo", output:"\u2207", tex:"nabla", ttype:CONST},
 {input:"+-",   tag:"mo", output:"\u00B1", tex:"pm", ttype:CONST},
+{input:"-+",   tag:"mo", output:"\u2213", tex:"mp", ttype:CONST},
 {input:"O/",   tag:"mo", output:"\u2205", tex:"emptyset", ttype:CONST},
 {input:"oo",   tag:"mo", output:"\u221E", tex:"infty", ttype:CONST},
 {input:"aleph", tag:"mo", output:"\u2135", tex:null, ttype:CONST},
@@ -791,7 +793,7 @@ function AMgetSymbol(str) {
     st = str.slice(0,1); //take 1 character
     tagst = (("A">st || st>"Z") && ("a">st || st>"z")?"mo":"mi");
   }
-  if (st=="-" && AMpreviousSymbol==INFIX) {
+  if (st=="-" && str.charAt(1)!==' ' && AMpreviousSymbol==INFIX) {
     AMcurrentSymbol = INFIX;  //trick "/" into recognizing "-" on second parse
     return {input:st, tag:tagst, output:st, ttype:UNARY, func:true};
   }
