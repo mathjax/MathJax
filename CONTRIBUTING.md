@@ -66,7 +66,7 @@ Guidelines for bug reports:
 
 4. **Isolate the problem** &mdash; a live sample is a starting point
    but if you want to speed things up, create a [reduced test
-   case](http://css-tricks.com/6263-reduced-test-cases/). Be specific
+   case](https://css-tricks.com/reduced-test-cases/). Be specific
    about your setup (browser, OS versions, etc). Use services like
    [jsbin](http://jsbin.com), [CodePen](http://codepen.io), or
    [jsFiddle](http://jsfiddle.com) to make collaboration on minimal
