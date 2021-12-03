@@ -1213,7 +1213,7 @@ MathJax.Localization = {
     "uk": {menuTitle: "\u0443\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"},
     "vi": {menuTitle: "Ti\u1EBFng Vi\u1EC7t"},
     "zh-hans": {menuTitle: "\u4E2D\u6587\uFF08\u7B80\u4F53\uFF09"},
-    "zh-hant": {menuTitle: "\u6C49\u8BED"}
+    "zh-hant": {menuTitle: "\u4E2D\u6587\uFF08\u7E41\u9AD4\uFF09"}
   },
 
   //
