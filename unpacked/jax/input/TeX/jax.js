@@ -822,6 +822,7 @@
 
         overset:            'Overset',
         underset:           'Underset',
+        overunderset:       'Overunderset',
         stackrel:           ['Macro','\\mathrel{\\mathop{#2}\\limits^{#1}}',2],
           
         over:               'Over',
@@ -1466,12 +1467,17 @@
     Overset: function (name) {
       var top = this.ParseArg(name), base = this.ParseArg(name);
       base.movablelimits = false;
-      this.Push(MML.mover(base,top));
+      this.Push(MML.mover(base,top).With({accent:false}));
     },
     Underset: function (name) {
       var bot = this.ParseArg(name), base = this.ParseArg(name);
       base.movablelimits = false;
-      this.Push(MML.munder(base,bot));
+      this.Push(MML.munder(base,bot).With({accentunder:false}));
+    },
+    Overunderset: function (name) {
+      var top = this.ParseArg(name), bot = this.ParseArg(name), base = this.ParseArg(name);
+      base.movablelimits = false;
+      this.Push(MML.munder(base,bot,top).With({accent:false, accentunder:false}));
     },
     
     TeXAtom: function (name,mclass) {
