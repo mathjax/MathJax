@@ -1389,10 +1389,10 @@ asciimath.translate = translate;
  *
  ******************************************************************/
 
-showasciiformulaonhover = false;
-mathfontfamily = "";
-mathcolor = "";
-mathfontsize = "";
+var showasciiformulaonhover = false;
+var mathfontfamily = "";
+var mathcolor = "";
+var mathfontsize = "";
 
 //
 //  Remove remapping of mathvariants to plane1 (MathJax handles that)
