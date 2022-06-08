@@ -1,9 +1,10 @@
+dist: focal
 language: node_js
 node_js:
-- 17
+  - stable
 sudo: false
 script:
-- npm test
+  - npm test
 branches:
   only:
   - "/^\\d+\\.\\d+/"
