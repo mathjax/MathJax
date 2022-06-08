@@ -7,6 +7,10 @@ assignees: ''
 
 ---
 
+**Replace the text below with the details of the issue you are facing.  
+DO NOT simply erase the form and type a free-form response.**
+-----
+
 ### Issue Summary
 
 A summary of the issue and the browser/OS environment in which it occurs. If
@@ -24,9 +28,23 @@ do you expect to happen instead?
 
 ### Technical details:
 
-* MathJax Version: 2.3 (latest commit: f3aaf3a2a3e964df2770dc4aaaa9c87ce5f47e2c)
-* Client OS: Mac OS X 10.8.4
-* Browser: Chrome 29.0.1547.57
+* MathJax Version: 3.2
+* Client OS: (e.g., Mac OS X 10.8.4)
+* Browser: (e.g., Chrome 29.0.1547.57)
+
+I am using the following MathJax configuration:
+
+``` js
+MathJax = {
+...
+};
+```
+
+and loading MathJax via
+
+``` html
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+```
 
 ### Supporting information:
 
