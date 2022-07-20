@@ -177,14 +177,16 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Process a macro with a parameter template
      */
     MacroWithTemplate: function (name,text,n,params) {
-      if (n) {
+      if (params.length) {
         var args = []; this.GetNext();
         if (params[0] && !this.MatchParam(params[0])) {
           TEX.Error(["MismatchUseDef",
                      "Use of %1 doesn't match its definition",name]);
         }
-        for (var i = 0; i < n; i++) {args.push(this.GetParameter(name,params[i+1]))}
-        text = this.SubstituteArgs(args,text);
+        if (n) {
+          for (var i = 0; i < n; i++) {args.push(this.GetParameter(name,params[i+1]))}
+          text = this.SubstituteArgs(args,text);
+        }
       }
       this.string = this.AddArgs(text,this.string.slice(this.i));
       this.i = 0;
