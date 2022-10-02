@@ -1,10 +1,10 @@
 dist: focal
 language: node_js
 node_js:
-  - stable
+- stable
 sudo: false
 script:
-  - npm test
+- npm test
 branches:
   only:
   - "/^\\d+\\.\\d+/"
@@ -12,6 +12,6 @@ deploy:
   provider: npm
   email: manager@mathjax.org
   api_key:
-    secure: rdvJ27qbw4DZJl49NSf/ybkeHWNWnk2MajS8Y8bMKwI8RaDyEGcAm3frA+CfBw+YHWl71KRJlQHL69YgVwp1nMSzKrGOpwrbL3TMFrFMdBC6tJ30dX1HSvAg9eU5K12E5672MM8qkTwJdYXsvEcyYlzRR+sogR8jTWRl3APuAwY=
+    secure: LPHWQ6sru682JxPEnRt1rV/1oKJvJBejIx+fsFy2a67ZJQQEqNtW61QPBGq4NDNLnV89QiC+ImH13UyWcvaPEcfncXhyqSDpPtCBQN9btIU8MSSHGM51vahWZtbRonR5/She/hjrEPqEAclYKXx0BNb3SrSgRQNHVjaONTQNmiM=
   on:
     tags: true
