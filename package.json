@@ -1,3 +1,69 @@
 {
-  "type": "commonjs"
+  "name": "mathjax",
+  "version": "4.0.0-beta.1",
+  "description": "Beautiful and accessible math in all browsers. MathJax is an open-source JavaScript display engine for LaTeX, MathML, and AsciiMath notation that works in all browsers. This package includes the packaged components (install mathjax-full to get the source code).",
+  "keywords": [
+    "MathJax",
+    "math",
+    "svg",
+    "mathml",
+    "tex",
+    "latex",
+    "asciimath",
+    "browser",
+    "node"
+  ],
+  "license": "Apache-2.0",
+  "maintainers": [
+    "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
+  ],
+  "bugs": {
+    "url": "http://github.com/mathjax/MathJax/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mathjax/MathJax"
+  },
+  "main": "es5/node-main.js",
+  "exports": {
+    ".": {
+      "import": "./node-main.mjs",
+      "require": "./node-main.cjs"
+    },
+    "./es5/*": "./*",
+    "./*": "./*"
+  },
+  "files": [
+    "*.js",
+    "*.mjs",
+    "*.cjs",
+    "a11y",
+    "adaptors",
+    "input",
+    "output",
+    "sre",
+    "ui"
+  ],
+  "scripts": {
+    "test": "echo 'No tests defined'",
+    "===================================================================== clean": "",
+    "clean": "npm run -s clean:bundle && npm run -s clean:node",
+    "clean:bundle": "rm -rf *.*js a11y adaptors input output sre ui",
+    "clean:node": "rm -rf node_modules package-lock.json",
+    "===================================================================== message": "",
+    "message": "msg() { echo \"$(tput setaf 4)$1$(tput setaf 0)\"; }; msg",
+    "===================================================================== install": "",
+    "preinstall:mj4": "npm run -s Message 'Installing MathJax...'",
+    "install:mj4": "npm install",
+    "===================================================================== move": "",
+    "premove": "npm run -s message 'Moving MathJax Components...'",
+    "move": "npm run -s clean:bundle && mv -n node_modules/mathjax-full/bundle/* .",
+    "===================================================================== build": "",
+    "prebuild": "npm run -s clean:node",
+    "build": "npm run -s install:mj4 && npm run -s move",
+    "postbuild": "npm run -s message 'Cleaning Up...' && npm run -s clean:node"
+  },
+  "devDependencies": {
+    "mathjax-full": "4.0.0-beta.1"
+  }
 }
