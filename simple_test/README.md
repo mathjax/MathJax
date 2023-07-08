@@ -1,0 +1,1 @@
+Run this and if you have live-server (`npm install -g live-server`) installed, a local url should open up and you should see MathJax working or not. If it is note working, open the debugger (Chrome debugger is best) and view the console.
