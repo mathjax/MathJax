@@ -69,6 +69,7 @@
   "dependencies": {
     "@xmldom/xmldom": "^0.9.0-beta.8",
     "commander": "^11.0.0",
+    "mathjax-modern-font": "^4.0.0-beta.4",
     "wicked-good-xpath": "^1.3.0"
   }
 }
