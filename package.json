@@ -24,7 +24,7 @@
     "type": "git",
     "url": "https://github.com/mathjax/MathJax"
   },
-  "main": "es5/node-main.js",
+  "main": "node-main.mjs",
   "exports": {
     ".": {
       "import": "./node-main.mjs",
