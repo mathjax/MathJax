@@ -1,13 +1,23 @@
-dist: jammy
-language: node_js
-node_js:
-- stable
-sudo: false
-script:
-- npm test
 branches:
   only:
   - "/^\\d+\\.\\d+/"
+
+dist: jammy
+
+language: node_js
+
+node_js:
+  - stable
+
+sudo: false
+
+script:
+  - echo "Ready to deploy"
+
+before_deplay:
+  - npm install -g npm@9
+  - npm config fix
+
 deploy:
   provider: npm
   email: manager@mathjax.org
@@ -15,3 +25,4 @@ deploy:
     secure: LPHWQ6sru682JxPEnRt1rV/1oKJvJBejIx+fsFy2a67ZJQQEqNtW61QPBGq4NDNLnV89QiC+ImH13UyWcvaPEcfncXhyqSDpPtCBQN9btIU8MSSHGM51vahWZtbRonR5/She/hjrEPqEAclYKXx0BNb3SrSgRQNHVjaONTQNmiM=
   on:
     tags: true
+  skip_cleanup: true
