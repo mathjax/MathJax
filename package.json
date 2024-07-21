@@ -67,7 +67,7 @@
     "postbuild": "npm run -s message 'Cleaning Up...' && npm run -s clean:node"
   },
   "devDependencies": {
-    "mathjax-full": "^4.0.0-beta.6"
+    "mathjax-full": "^4.0.0-beta.7"
   },
   "dependencies": {
     "@xmldom/xmldom": "^0.8.10",
