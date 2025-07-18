@@ -32,6 +32,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: mathjax/mathjax-src
+          ref: develop
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
