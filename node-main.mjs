@@ -1,2 +1,4 @@
 import './node-main-setup.mjs';
-export * from './node-main.js';
+import {MathJax} from './node-main.js';
+export default MathJax;
+export const init = MathJax.init;
