@@ -1,6 +1,9 @@
 # MathJax
 ## Beautiful math in all browsers
 
+> [!WARNING]
+> Note that active development of MathJax has moved to the "develop" branch on a new repo - [MathJax-src](https://github.com/mathjax/MathJax-src)
+
 ![GitHub release version](https://img.shields.io/github/v/release/mathjax/MathJax-src.svg?sort=semver)
 ![GitHub release version (v3)](https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v3.svg?label=release-v3)
 ![GitHub release version (v2)](https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2.svg?label=release-v2)
