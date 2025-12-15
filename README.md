@@ -106,7 +106,6 @@ Alternatively, you can get the files via GitHub:
 ```
 git clone https://github.com/mathjax/MathJax.git mathjax
 mv mathjax <path-to-server-location>/mathjax
-rm -rf mathjax
 ```
 
 Then (in either case) you can use a script tag like the following:
@@ -146,7 +145,7 @@ await MathJax.init({
   loader: {load: ['input/tex', 'output/svg']}
 });
 const svg = await MathJax.tex2svgPromise('\\frac{1}{x^2-1}', {display: true});
-console.log(MathJax.startup.adaptor.outerHTML(svg));
+console.log(MathJax.startup.adaptor.serialize(svg));
 ```
 
 
@@ -166,7 +165,7 @@ MathJax.init({
   loader: {load: ['input/tex', 'output/svg']}
 }).then(() => {
   const svg = MathJax.tex2svg('\\frac{1}{x^2-1}', {display: true});
-  console.log(MathJax.startup.adaptor.outerHTML(svg));
+  console.log(MathJax.startup.adaptor.serializeXML(svg));
 }).catch((err) => console.log(err.message));
 ```
 
