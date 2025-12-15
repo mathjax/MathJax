@@ -145,7 +145,7 @@ await MathJax.init({
   loader: {load: ['input/tex', 'output/svg']}
 });
 const svg = await MathJax.tex2svgPromise('\\frac{1}{x^2-1}', {display: true});
-console.log(MathJax.startup.adaptor.serialize(svg));
+console.log(MathJax.startup.adaptor.serializeXML(svg));
 ```
 
 
@@ -253,4 +253,3 @@ bug tracker) for questions about how to use MathJax.
 * [MathJax Node Examples](https://github.com/mathjax/MathJax-demos-node)
 * [MathJax Bug Tracker](https://github.com/mathjax/MathJax/issues)
 * [MathJax Users' Group](http://groups.google.com/group/mathjax-users)
-
