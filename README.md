@@ -1,6 +1,8 @@
 # MathJax
 ## Beautiful math in all browsers
 
+**Note:**  MathJax code development is performed in the [MathJax-src](https:/github.com/mathjax/MathJax-src) repository.  This repository holds the packaged version of MathJax, along with the main issue tracker for MathJax bugs.
+
 ![GitHub release version](https://img.shields.io/github/v/release/mathjax/MathJax-src.svg?sort=semver)
 ![GitHub release version (v3)](https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v3.svg?label=release-v3)
 ![GitHub release version (v2)](https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2.svg?label=release-v2)
@@ -106,7 +108,6 @@ Alternatively, you can get the files via GitHub:
 ```
 git clone https://github.com/mathjax/MathJax.git mathjax
 mv mathjax <path-to-server-location>/mathjax
-rm -rf mathjax
 ```
 
 Then (in either case) you can use a script tag like the following:
@@ -146,7 +147,7 @@ await MathJax.init({
   loader: {load: ['input/tex', 'output/svg']}
 });
 const svg = await MathJax.tex2svgPromise('\\frac{1}{x^2-1}', {display: true});
-console.log(MathJax.startup.adaptor.outerHTML(svg));
+console.log(MathJax.startup.adaptor.serializeXML(svg));
 ```
 
 
@@ -166,7 +167,7 @@ MathJax.init({
   loader: {load: ['input/tex', 'output/svg']}
 }).then(() => {
   const svg = MathJax.tex2svg('\\frac{1}{x^2-1}', {display: true});
-  console.log(MathJax.startup.adaptor.outerHTML(svg));
+  console.log(MathJax.startup.adaptor.serializeXML(svg));
 }).catch((err) => console.log(err.message));
 ```
 
@@ -254,4 +255,3 @@ bug tracker) for questions about how to use MathJax.
 * [MathJax Node Examples](https://github.com/mathjax/MathJax-demos-node)
 * [MathJax Bug Tracker](https://github.com/mathjax/MathJax/issues)
 * [MathJax Users' Group](http://groups.google.com/group/mathjax-users)
-
