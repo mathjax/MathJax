@@ -1,7 +1,7 @@
 # MathJax
 ## Beautiful math in all browsers
 
-**Note:**  MathJax code development is performed in the [MathJax-src](https:/github.com/mathjax/MathJax-src) repository.  This repository holds the packaged version of MathJax, along with the main issue tracker for MathJax bugs.
+**Note:**  MathJax code development is performed in the [MathJax-src](https://github.com/mathjax/MathJax-src) repository.  This repository holds the packaged version of MathJax, along with the main issue tracker for MathJax bugs.
 
 ![GitHub release version](https://img.shields.io/github/v/release/mathjax/MathJax-src.svg?sort=semver)
 ![GitHub release version (v3)](https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v3.svg?label=release-v3)
